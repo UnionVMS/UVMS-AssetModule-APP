@@ -1,0 +1,113 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>asset-module</artifactId>
+    <name>${project.parent.artifactId}-module</name>
+    <packaging>ear</packaging>
+    
+    <parent>
+        <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+        <artifactId>asset</artifactId>
+        <version>2.0.7-SNAPSHOT</version>
+    </parent>
+
+    <properties>
+        <wildfly.maven.plugin.version>1.0.2.Final</wildfly.maven.plugin.version>
+        <maven.ear.plugin.version>2.7</maven.ear.plugin.version>
+    </properties>
+
+    <build>
+        <finalName>${project.name}</finalName>
+        <plugins>
+            <!-- This configuration specifies what ends up in application.xml -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ear-plugin</artifactId>
+                <version>${maven.ear.plugin.version}</version>
+                <configuration>
+                    <modules>
+                        <ejbModule>
+                            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+                            <artifactId>asset-message</artifactId>
+                        </ejbModule>
+                        <ejbModule>
+                            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+                            <artifactId>asset-service</artifactId>
+                        </ejbModule>
+
+                        <ejbModule>
+                            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+                            <artifactId>asset-model</artifactId>
+                        </ejbModule>
+
+                        <webModule>
+                            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+                            <context-root>${project.parent.artifactId}</context-root>
+                            <artifactId>asset-rest</artifactId>
+                        </webModule>
+                    </modules>
+                    <skinnyWars>true</skinnyWars>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>${maven-release-plugin}</version>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+            <artifactId>asset-message</artifactId>
+            <version>${project.parent.version}</version>
+            <type>ejb</type>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+            <artifactId>asset-service</artifactId>
+            <version>${project.parent.version}</version>
+            <type>ejb</type>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+            <artifactId>asset-model</artifactId>
+            <version>${asset.model.version}</version>
+            <type>ejb</type>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+            <artifactId>asset-rest</artifactId>
+            <version>${project.parent.version}</version>
+            <type>war</type>
+        </dependency>
+
+    </dependencies>
+    
+    <profiles>
+        <profile>
+            <id>wildfly-deploy</id>
+            <build>
+                <plugins>	
+                    <plugin>
+                        <groupId>org.wildfly.plugins</groupId>
+                        <artifactId>wildfly-maven-plugin</artifactId>
+                        <version>${wildfly.maven.plugin.version}</version>
+                        <configuration>
+                            <filename>${project.build.finalName}.${project.packaging}</filename>
+                            <targetDir>${project.build.directory}</targetDir>
+                            <hostname>${hostname}</hostname>
+                            <port>${port}</port>
+                            <username>${username}</username>
+                            <password>${password}</password>
+                            <force>true</force>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>        
+    </profiles>  
+    
+</project>
