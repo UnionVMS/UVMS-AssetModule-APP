@@ -108,7 +108,7 @@
         <module>message</module>
         <module>module</module>
     </modules>
-
+	<!-- test -->
     <build>
         <plugins>
             <plugin>
