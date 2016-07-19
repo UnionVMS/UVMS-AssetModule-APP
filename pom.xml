@@ -20,11 +20,22 @@
         <audit.model.version>2.0.7</audit.model.version>
         <usm4uvms.version>2.0.15</usm4uvms.version>
         <uvms.config.version>2.0.7</uvms.config.version>
+        <uvms.config.artifactId>uvms-config</uvms.config.artifactId>
         <jaxb2.basics.version>0.9.5</jaxb2.basics.version>
         <asset.model.version>2.0.7</asset.model.version>
         <maven-release-plugin>2.5.3</maven-release-plugin>
         <project.scm.id>github</project.scm.id>
     </properties>
+    
+    <profiles>
+        <profile>
+            <id>weblogic</id>
+            <properties>
+                <uvms.config.artifactId>uvms-config_WebLogic-2.1.3_</uvms.config.artifactId>
+                <uvms.config.version>2.0.9</uvms.config.version>
+            </properties>
+        </profile>
+    </profiles>
 
     <dependencies>
 
@@ -99,8 +110,8 @@
 
     <scm>
         <connection>scm:git:https://github.com/UnionVMS/UVMS-AssetModule-APP.git</connection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
     
     <modules>
         <module>rest</module>

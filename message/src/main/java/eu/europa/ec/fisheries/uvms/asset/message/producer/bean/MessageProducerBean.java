@@ -1,13 +1,13 @@
 /*
-﻿Developed with the contribution of the European Commission - Directorate General for Maritime Affairs and Fisheries
-© European Union, 2015-2016.
+ ﻿Developed with the contribution of the European Commission - Directorate General for Maritime Affairs and Fisheries
+ © European Union, 2015-2016.
 
-This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can
-redistribute it and/or modify it under the terms of the GNU General Public License as published by the
-Free Software Foundation, either version 3 of the License, or any later version. The IFDM Suite is distributed in
-the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
-copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
+ This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can
+ redistribute it and/or modify it under the terms of the GNU General Public License as published by the
+ Free Software Foundation, either version 3 of the License, or any later version. The IFDM Suite is distributed in
+ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
+ copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.europa.ec.fisheries.uvms.asset.message.producer.bean;
 
@@ -27,14 +27,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
-import javax.ejb.Stateless;
+import javax.ejb.EJB;
+import javax.ejb.Singleton;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Observes;
-import javax.inject.Inject;
 import javax.jms.*;
 
-@Stateless
+@Singleton
 public class MessageProducerBean implements MessageProducer, ConfigMessageProducer {
 
     @Resource(mappedName = AssetConstants.QUEUE_DATASOURCE_INTERNAL)
@@ -55,17 +55,11 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
     @Resource(mappedName = AssetConstants.QUEUE_ASSET)
     private Queue responseQueue;
 
-//    @Resource(lookup = AssetConstants.CONNECTION_FACTORY)
-//    private ConnectionFactory connectionFactory;
-//
-//    private Connection connection = null;
-//    private Session session = null;
-
     final static Logger LOG = LoggerFactory.getLogger(MessageProducerBean.class);
 
     private static final int CONFIG_TTL = 30000;
 
-    @Inject
+    @EJB
     JMSConnectorBean connector;
 
     @Override
@@ -74,7 +68,6 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
         try {
             LOG.info("[ Sending datasource message to recipient on queue {} ] ", queue.name());
 
-//            connectQueue();
             Session session = connector.getNewSession();
             TextMessage message = session.createTextMessage();
             message.setJMSReplyTo(responseQueue);
@@ -98,8 +91,6 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
         } catch (Exception e) {
             LOG.error("[ Error when sending message. ] {}", e.getMessage(), e.getStackTrace());
             return null;
-//        } finally {
-//            disconnectQueue();
         }
     }
 
@@ -109,7 +100,6 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
         try {
             LOG.info("[ Sending module message to recipient on queue {} ] ", queue.name());
 
-//            connectQueue();
             Session session = connector.getNewSession();
             TextMessage message = session.createTextMessage();
             message.setJMSReplyTo(responseQueue);
@@ -128,8 +118,6 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
         } catch (Exception e) {
             LOG.error("[ Error when sending data source message. ] {}", e.getMessage());
             throw new AssetMessageException(e.getMessage());
-//        } finally {
-//            disconnectQueue();
         }
     }
 
@@ -139,15 +127,12 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
         try {
             LOG.info("Sending message back to recipient from VesselModule with correlationId {} on queue: {}", message.getJMSMessageID(),
                     message.getJMSReplyTo());
-//            connectQueue();
             Session session = connector.getNewSession();
             TextMessage response = session.createTextMessage(text);
             response.setJMSCorrelationID(message.getJMSMessageID());
             getProducer(session, message.getJMSReplyTo()).send(response);
         } catch (JMSException e) {
             LOG.error("[ Error when returning module asset request. ] {} {}", e.getMessage(), e.getStackTrace());
-//        } finally {
-//            disconnectQueue();
         }
     }
 
@@ -157,7 +142,6 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
             LOG.info("Sending error message back from VesselModule to recipient om JMS Queue with correlationID: {}", message.getMessage()
                     .getJMSMessageID());
 
-//            connectQueue();
             Session session = connector.getNewSession();
 
             String data = JAXBMarshaller.marshallJaxBObjectToString(message.getFault());
@@ -167,27 +151,8 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
 
         } catch (JMSException | AssetModelMarshallException e) {
             LOG.error("[ Error when returning Error message to recipient. ] {} ", e.getMessage());
-//        } finally {
-//            disconnectQueue();
         }
     }
-
-//    private void connectQueue() throws JMSException {
-//        connection = connectionFactory.createConnection();
-//        session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-//        connection.start();
-//    }
-//
-//    private void disconnectQueue() {
-//        try {
-//            if (connection != null) {
-//                connection.stop();
-//                connection.close();
-//            }
-//        } catch (JMSException e) {
-//            LOG.error("[ Error when stopping or closing JMS queue. ] {} {}", e.getMessage(), e.getStackTrace());
-//        }
-//    }
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)

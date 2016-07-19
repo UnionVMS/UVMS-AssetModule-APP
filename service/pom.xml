@@ -27,7 +27,28 @@
         <maven.ejb.plugin.version>2.3</maven.ejb.plugin.version>
         <maven.ejb.plugin.ejb.version>3.1</maven.ejb.plugin.ejb.version>
         <properties.maven.plugin.version>1.0-alpha-2</properties.maven.plugin.version>
+        
+        <!-- persistence.xml CONFIGS -->
+        <hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
+        <jta.data-source>java:jboss/datasources/uvms_asset</jta.data-source>
+        <jta.platform>org.hibernate.service.jta.platform.internal.JBossStandAloneJtaPlatform</jta.platform>
     </properties>
+    
+    <profiles>
+        <profile>
+            <id>weblogic</id>
+            <properties>
+                <jta.data-source>jdbc.uvms_asset</jta.data-source>
+                <jta.platform>org.hibernate.service.jta.platform.internal.WeblogicJtaPlatform</jta.platform>
+            </properties>
+        </profile>
+        <profile>
+            <id>oracle</id>
+            <properties>
+                <hibernate.dialect>org.hibernate.dialect.Oracle10gDialect</hibernate.dialect>
+            </properties>
+        </profile>
+    </profiles>
 
     <dependencies>
         <dependency>
@@ -93,6 +114,12 @@
                 <version>${maven-release-plugin}</version>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 
 </project>
