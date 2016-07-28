@@ -1,3 +1,4 @@
+package eu.europa.ec.fisheries.uvms.asset.service;
 /*
 ﻿Developed with the contribution of the European Commission - Directorate General for Maritime Affairs and Fisheries
 © European Union, 2015-2016.
@@ -9,18 +10,15 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.asset.message.event;
 
-import javax.inject.Qualifier;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
+import eu.europa.ec.fisheries.wsdl.asset.fishinggear.FishingGearResponse;
+import eu.europa.ec.fisheries.wsdl.asset.types.FishingGear;
 
-/**
- **/
-@Qualifier
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE})
-public @interface GetAssetMessageEvent {
+import javax.ejb.Local;
+
+@Local
+public interface FishingGearService {
+    FishingGearResponse upsertFishingGears(FishingGear fishingGear, String username) throws AssetMessageException, AssetModelMapperException;
 }
