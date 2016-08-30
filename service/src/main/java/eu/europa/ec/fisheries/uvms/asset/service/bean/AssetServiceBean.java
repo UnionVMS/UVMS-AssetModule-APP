@@ -19,6 +19,10 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.jms.TextMessage;
 
+import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
+import eu.europa.ec.fisheries.uvms.asset.remote.AssetDomainModel;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.GetAssetListResponseDto;
+import eu.europa.ec.fisheries.uvms.asset.service.constants.ServiceConstants;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
@@ -49,6 +53,9 @@ public class AssetServiceBean implements AssetService {
     @EJB
     AssetQueueConsumer reciever;
 
+    @EJB(lookup = ServiceConstants.DB_ACCESS_ASSET_DOMAIN_MODEL)
+    AssetDomainModel assetDomainModel;
+
     /**
      * {@inheritDoc}
      *
@@ -59,12 +66,7 @@ public class AssetServiceBean implements AssetService {
     @Override
     public Asset createAsset(Asset asset, String username) throws AssetException {
         LOG.info("Creating asset.");
-
-        String data = AssetDataSourceRequestMapper.mapCreateAsset(asset, username);
-        String messageId = messageProducer.sendDataSourceMessage(data, AssetDataSourceQueue.INTERNAL);
-        TextMessage response = reciever.getMessage(messageId, TextMessage.class);
-
-        Asset createdAsset = AssetDataSourceResponseMapper.mapToAssetFromResponse(response, messageId);
+        Asset createdAsset = assetDomainModel.createAsset(asset, username);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetCreated(createdAsset.getAssetId().getGuid(), username);
             messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
@@ -85,13 +87,12 @@ public class AssetServiceBean implements AssetService {
     @Override
     public ListAssetResponse getAssetList(AssetListQuery requestQuery) throws AssetException {
         LOG.info("Getting AssetList.");
-
-        String data = AssetDataSourceRequestMapper.mapGetAssetList(requestQuery);
-
-        String messageId = messageProducer.sendDataSourceMessage(data, AssetDataSourceQueue.INTERNAL);
-
-        TextMessage response = reciever.getMessage(messageId, TextMessage.class);
-        return AssetDataSourceResponseMapper.mapToAssetListResponseFromResponse(response, messageId);
+        GetAssetListResponseDto assetList = assetDomainModel.getAssetList(requestQuery);
+        ListAssetResponse listAssetResponse = new ListAssetResponse();
+        listAssetResponse.setCurrentPage(assetList.getCurrentPage());
+        listAssetResponse.setTotalNumberOfPages(assetList.getTotalNumberOfPages());
+        listAssetResponse.getAsset().addAll(assetList.getAssetList());
+        return listAssetResponse;
     }
 
     /**
@@ -135,6 +136,7 @@ public class AssetServiceBean implements AssetService {
 
     private Asset updateAssetInternal(Asset asset, String username) throws AssetException {
         LOG.info("Updating Asset");
+        Asset updatedAsset = null;
 
         if (asset == null) {
             throw new InputArgumentException("No asset to update");
@@ -144,22 +146,15 @@ public class AssetServiceBean implements AssetService {
             throw new InputArgumentException("No id on asset to update");
         }
 
-        Asset storedAsset = getAssetById(asset.getAssetId(), AssetDataSourceQueue.INTERNAL);
-        String assetToUpdate = AssetDataSourceRequestMapper.mapUpdateAsset(asset, username);
-
-        String messageId = null;
-        TextMessage response = null;
-
+        Asset storedAsset = assetDomainModel.getAssetById(asset.getAssetId());
         switch (storedAsset.getSource()) {
             case INTERNAL:
-                messageId = messageProducer.sendDataSourceMessage(assetToUpdate, AssetDataSourceQueue.INTERNAL);
-                response = reciever.getMessage(messageId, TextMessage.class);
+                 updatedAsset = assetDomainModel.updateAsset(asset, username);
                 break;
             default:
                 throw new AssetServiceException("Not allowed to update");
         }
-
-        return AssetDataSourceResponseMapper.mapToAssetFromResponse(response, messageId);
+        return updatedAsset;
     }
 
     @Override
@@ -169,12 +164,8 @@ public class AssetServiceBean implements AssetService {
         if (asset == null) {
             throw new InputArgumentException("No asset to upsert");
         }
-
-        String data = AssetDataSourceRequestMapper.mapUpsertAsset(asset, username);
-        String messageId = messageProducer.sendDataSourceMessage(data, AssetDataSourceQueue.INTERNAL);
-        TextMessage response = reciever.getMessage(messageId, TextMessage.class);
-
-        return AssetDataSourceResponseMapper.mapToAssetFromResponse(response, messageId);
+        Asset upsertAsset = assetDomainModel.upsertAsset(asset, username);
+        return upsertAsset;
 
     }
 
@@ -188,6 +179,8 @@ public class AssetServiceBean implements AssetService {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public Asset getAssetById(AssetId assetId, AssetDataSourceQueue source) throws AssetException {
+        Asset assetById = null;
+
         if (assetId == null) {
             throw new InputArgumentException("AssetId object is null");
         }
@@ -202,11 +195,19 @@ public class AssetServiceBean implements AssetService {
 
         LOG.info("GETTING ASSET BY ID: {} : {} at {}.", assetId.getType(), assetId.getValue(), source.name());
 
-        String data = AssetDataSourceRequestMapper.mapGetAssetById(assetId.getValue(), assetId.getType());
-        String messageId = messageProducer.sendDataSourceMessage(data, source);
-        TextMessage response = reciever.getMessage(messageId, TextMessage.class);
+        switch (source){
+            case INTERNAL:
+                assetById = assetDomainModel.getAssetById(assetId);
+                break;
+            default:
+                String data = AssetDataSourceRequestMapper.mapGetAssetById(assetId.getValue(), assetId.getType());
+                String messageId = messageProducer.sendDataSourceMessage(data, source);
+                TextMessage response = reciever.getMessage(messageId, TextMessage.class);
+                assetById = AssetDataSourceResponseMapper.mapToAssetFromResponse(response, messageId);
+                break;
+        }
+        return assetById;
 
-        return AssetDataSourceResponseMapper.mapToAssetFromResponse(response, messageId);
     }
 
     /**
@@ -221,10 +222,12 @@ public class AssetServiceBean implements AssetService {
         if (guid == null || guid.isEmpty()) {
             throw new InputArgumentException("AssetId is null");
         }
-        String data = AssetDataSourceRequestMapper.mapGetAssetById(guid.toString(), AssetIdType.GUID);
-        String messageId = messageProducer.sendDataSourceMessage(data, AssetDataSourceQueue.INTERNAL);
-        TextMessage response = reciever.getMessage(messageId, TextMessage.class);
-        return AssetDataSourceResponseMapper.mapToAssetFromResponse(response, messageId);
+
+        AssetId assetId = new AssetId();
+        assetId.setType(AssetIdType.GUID);
+        assetId.setValue(guid);
+        Asset assetById = assetDomainModel.getAssetById(assetId);
+        return assetById;
     }
 
     /**
@@ -239,18 +242,18 @@ public class AssetServiceBean implements AssetService {
         if (groups == null || groups.isEmpty()) {
             throw new InputArgumentException("No groups in query");
         }
-        String data = AssetDataSourceRequestMapper.mapGetAssetListByAssetGroupRequest(groups);
-        String messageId = messageProducer.sendDataSourceMessage(data, AssetDataSourceQueue.INTERNAL);
-        TextMessage response = reciever.getMessage(messageId, TextMessage.class);
-        return AssetDataSourceResponseMapper.mapToAssetListFromResponse(response, messageId);
+
+        List<Asset> assetListByAssetGroup = assetDomainModel.getAssetListByAssetGroup(groups);
+        return assetListByAssetGroup;
     }
 
     @Override
     public AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetException {
         LOG.info("Getting asset list by asset ids group by flags State.");
-        String data = AssetDataSourceRequestMapper.mapGetAssetListGroupByFlagStateRequest(assetIds);
-        String messageId = messageProducer.sendDataSourceMessage(data, AssetDataSourceQueue.INTERNAL);
-        TextMessage response = reciever.getMessage(messageId, TextMessage.class);
-        return AssetDataSourceResponseMapper.mapToAssetListGroupByFlagStateResponse(response, messageId);
+        List assetListGroupByFlagState = assetDomainModel.getAssetListGroupByFlagState(assetIds);
+        AssetListGroupByFlagStateResponse assetListGroupByFlagStateResponse = new AssetListGroupByFlagStateResponse();
+        assetListGroupByFlagStateResponse.getNumberOfAssetsGroupByFlagState().addAll(assetListGroupByFlagState);
+        return assetListGroupByFlagStateResponse;
+
     }
 }

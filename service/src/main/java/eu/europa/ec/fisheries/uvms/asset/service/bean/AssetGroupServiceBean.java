@@ -20,7 +20,9 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceRequestMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceResponseMapper;
+import eu.europa.ec.fisheries.uvms.asset.remote.AssetGroupDomainModel;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
+import eu.europa.ec.fisheries.uvms.asset.service.constants.ServiceConstants;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import org.slf4j.Logger;
@@ -40,6 +42,9 @@ public class AssetGroupServiceBean implements AssetGroupService {
     @EJB
     AssetQueueConsumer receiver;
 
+    @EJB(lookup = ServiceConstants.DB_ACCESS_ASSET_GROUP_DOMAIN_MODEL)
+    private AssetGroupDomainModel assetGroupDomainModel;
+
     final static Logger LOG = LoggerFactory.getLogger(AssetGroupServiceBean.class);
 
     @Override
@@ -48,10 +53,9 @@ public class AssetGroupServiceBean implements AssetGroupService {
         if (user == null || user.isEmpty()) {
             throw new InputArgumentException("Invalid user");
         }
-        String data = AssetDataSourceRequestMapper.mapAssetGroupListByUserRequest(user);
-        String messageId = messageProducer.sendDataSourceMessage(data, AssetDataSourceQueue.INTERNAL);
-        TextMessage response = receiver.getMessage(messageId, TextMessage.class);
-        return AssetDataSourceResponseMapper.mapToAssetGroupListFromResponse(response, messageId);
+
+        List<AssetGroup> assetGroupList = assetGroupDomainModel.getAssetGroupListByUser(user);
+        return assetGroupList;
     }
 
     @Override
@@ -60,44 +64,35 @@ public class AssetGroupServiceBean implements AssetGroupService {
         if (assetGuid == null || assetGuid.isEmpty()) {
             throw new InputArgumentException("Invalid asset");
         }
-        String data = AssetDataSourceRequestMapper.mapAssetGroupListByAssetGuidRequest(assetGuid);
-        String messageId = messageProducer.sendDataSourceMessage(data, AssetDataSourceQueue.INTERNAL);
-        TextMessage response = receiver.getMessage(messageId, TextMessage.class);
-        return AssetDataSourceResponseMapper.mapToAssetGroupListFromResponse(response, messageId);
+
+        List<AssetGroup> assetGroups = assetGroupDomainModel.getAssetGroupsByAssetGuid(assetGuid);
+        return assetGroups;
     }
 
     @Override
     public AssetGroup getAssetGroupById(String guid) throws AssetException {
         LOG.info("Getting asset group by id: {}.", guid);
-
         if (guid == null) {
             throw new InputArgumentException("No asset group to get");
         }
-        String data = AssetDataSourceRequestMapper.mapGetAssetGroupById(guid);
-        String messageId = messageProducer.sendDataSourceMessage(data, AssetDataSourceQueue.INTERNAL);
-        TextMessage response = receiver.getMessage(messageId, TextMessage.class);
-        return AssetDataSourceResponseMapper.mapToAssetGroupFromResponse(response, messageId);
+
+        AssetGroup assetGroup = assetGroupDomainModel.getAssetGroup(guid);
+        return assetGroup;
     }
 
     @Override
     public AssetGroup createAssetGroup(AssetGroup assetGroup, String username) throws AssetException {
         LOG.info("Creating asset group.");
-
         if (assetGroup == null) {
             throw new InputArgumentException("No asset group to create");
         }
-        String data = AssetDataSourceRequestMapper.mapCreateAssetGroup(assetGroup, username);
-        String messageId = messageProducer.sendDataSourceMessage(data, AssetDataSourceQueue.INTERNAL);
-        TextMessage response = receiver.getMessage(messageId, TextMessage.class);
-
-        AssetGroup createdAssetGroup = AssetDataSourceResponseMapper.mapToAssetGroupFromResponse(response, messageId);
+        AssetGroup createdAssetGroup = assetGroupDomainModel.createAssetGroup(assetGroup, username);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetGroupCreated(createdAssetGroup.getGuid(), username);
             messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException e) {
             LOG.error("Failed to send audit log message! Asset Group with id {} was created", createdAssetGroup.getGuid());
         }
-
         return createdAssetGroup;
     }
 
@@ -111,12 +106,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         if (assetGroup.getGuid() == null) {
             throw new InputArgumentException("No id on asset group to update");
         }
-
-        String data = AssetDataSourceRequestMapper.mapUpdateAssetGroup(assetGroup, username);
-        String messageId = messageProducer.sendDataSourceMessage(data, AssetDataSourceQueue.INTERNAL);
-        TextMessage response = receiver.getMessage(messageId, TextMessage.class);
-
-        AssetGroup updatedAssetGroup = AssetDataSourceResponseMapper.mapToAssetGroupFromResponse(response, messageId);
+        AssetGroup updatedAssetGroup = assetGroupDomainModel.updateAssetGroup(assetGroup, username);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetGroupUpdated(updatedAssetGroup.getGuid(), username);
             messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
@@ -130,22 +120,17 @@ public class AssetGroupServiceBean implements AssetGroupService {
     @Override
     public AssetGroup deleteAssetGroupById(String guid, String username) throws AssetException {
         LOG.info("Deleting asset group by id: {}.", guid);
-
         if (guid == null) {
             throw new InputArgumentException("No asset group to remove");
         }
-        String data = AssetDataSourceRequestMapper.mapRemoveAssetGroupById(guid, username);
-        String messageId = messageProducer.sendDataSourceMessage(data, AssetDataSourceQueue.INTERNAL);
-        TextMessage response = receiver.getMessage(messageId, TextMessage.class);
 
-        AssetGroup deletedAssetGroup = AssetDataSourceResponseMapper.mapToAssetGroupFromResponse(response, messageId);
+        AssetGroup deletedAssetGroup = assetGroupDomainModel.deleteAssetGroup(guid, username);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetGroupDeleted(deletedAssetGroup.getGuid(), username);
             messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException e) {
             LOG.error("Failed to send audit log message! Asset Group with id {} was deleted", deletedAssetGroup.getGuid());
         }
-
         return deletedAssetGroup;
     }
 

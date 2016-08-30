@@ -27,8 +27,12 @@ import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceRequestMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceResponseMapper;
+import eu.europa.ec.fisheries.uvms.asset.remote.ConfigDomainModel;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.ConfigurationDto;
 import eu.europa.ec.fisheries.uvms.asset.service.ConfigService;
+import eu.europa.ec.fisheries.uvms.asset.service.constants.ServiceConstants;
 import eu.europa.ec.fisheries.wsdl.asset.config.Config;
+import eu.europa.ec.fisheries.wsdl.asset.config.ConfigField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,18 +52,18 @@ public class ConfigServiceBean implements ConfigService {
 	
     @EJB
     ParameterService parameterService;
+
+	@EJB(lookup = ServiceConstants.DB_ACCESS_CONFIG_DOMAIN_MODEL)
+	private ConfigDomainModel configDomainModel;
+
     @Inject
     ConfigHelper configHelper;
     
 	@Override
 	public List<Config> getConfiguration() throws AssetException {
         LOG.info("Get configuration.");
-
-        String data = AssetDataSourceRequestMapper.mapGetAllConfiguration();
-        String messageId = messageProducer.sendDataSourceMessage(data, AssetDataSourceQueue.INTERNAL);
-
-        TextMessage response = reciever.getMessage(messageId, TextMessage.class);
-        return AssetDataSourceResponseMapper.mapToConfiguration(response, messageId);
+		ConfigurationDto configuration = configDomainModel.getConfiguration(ConfigField.ALL);
+		return configuration.getConfigList();
 	}
 
 	@Override
