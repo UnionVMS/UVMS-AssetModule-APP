@@ -80,6 +80,30 @@ public class AssetResource {
 
     /**
      *
+     * @responseMessage 200 Asset list successfully retrieved
+     * @responseMessage 500 Error when retrieving asset list
+     *
+     * @summary Gets a list of assets filtered by a query
+     *
+     */
+    @POST
+    @Consumes(value = { MediaType.APPLICATION_JSON })
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Path("listcount")
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public ResponseDto getAssetListItemCount(final AssetListQuery assetQuery) {
+        try {
+            LOG.info("Getting asset list.");
+            Long assetListCount = assetService.getAssetListCount(assetQuery);
+            return new ResponseDto(assetListCount, ResponseCodeConstant.OK);
+        } catch (Exception e) {
+            LOG.error("[ Error when getting asset list. ] ");
+            return ErrorHandler.getFault(e);
+        }
+    }
+
+    /**
+     *
      * @responseMessage 200 Asset successfully retrieved
      * @responseMessage 500 Error when retrieving asset
      *

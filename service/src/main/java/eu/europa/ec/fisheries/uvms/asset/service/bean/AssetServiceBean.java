@@ -98,6 +98,19 @@ public class AssetServiceBean implements AssetService {
     /**
      * {@inheritDoc}
      *
+     * @param requestQuery
+     * @return
+     * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
+     */
+    @Override
+    public Long getAssetListCount(AssetListQuery requestQuery) throws AssetException {
+        LOG.info("Getting AssetList.");
+        return assetDomainModel.getAssetListCount(requestQuery);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @param asset
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
@@ -136,7 +149,7 @@ public class AssetServiceBean implements AssetService {
 
     private Asset updateAssetInternal(Asset asset, String username) throws AssetException {
         LOG.info("Updating Asset");
-        Asset updatedAsset = null;
+        Asset updatedAsset;
 
         if (asset == null) {
             throw new InputArgumentException("No asset to update");
@@ -164,8 +177,7 @@ public class AssetServiceBean implements AssetService {
         if (asset == null) {
             throw new InputArgumentException("No asset to upsert");
         }
-        Asset upsertAsset = assetDomainModel.upsertAsset(asset, username);
-        return upsertAsset;
+        return assetDomainModel.upsertAsset(asset, username);
 
     }
 
@@ -179,7 +191,7 @@ public class AssetServiceBean implements AssetService {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public Asset getAssetById(AssetId assetId, AssetDataSourceQueue source) throws AssetException {
-        Asset assetById = null;
+        Asset assetById;
 
         if (assetId == null) {
             throw new InputArgumentException("AssetId object is null");
@@ -226,8 +238,7 @@ public class AssetServiceBean implements AssetService {
         AssetId assetId = new AssetId();
         assetId.setType(AssetIdType.GUID);
         assetId.setValue(guid);
-        Asset assetById = assetDomainModel.getAssetById(assetId);
-        return assetById;
+        return assetDomainModel.getAssetById(assetId);
     }
 
     /**
@@ -243,8 +254,7 @@ public class AssetServiceBean implements AssetService {
             throw new InputArgumentException("No groups in query");
         }
 
-        List<Asset> assetListByAssetGroup = assetDomainModel.getAssetListByAssetGroup(groups);
-        return assetListByAssetGroup;
+        return assetDomainModel.getAssetListByAssetGroup(groups);
     }
 
     @Override
