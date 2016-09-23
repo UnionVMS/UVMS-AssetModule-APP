@@ -75,6 +75,7 @@
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>asset-model</artifactId>
             <version>${asset.model.version}</version>
+            <classifier>date</classifier>
             <type>ejb</type>
         </dependency>
         <dependency>
