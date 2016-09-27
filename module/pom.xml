@@ -97,12 +97,14 @@
             <version>${project.parent.version}</version>
             <type>ejb</type>
         </dependency>
+        <!--
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>asset-model</artifactId>
             <version>${asset.model.version}</version>
             <type>jar</type>
         </dependency>
+        -->
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>asset-rest</artifactId>

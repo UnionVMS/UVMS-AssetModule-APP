@@ -1,7 +1,5 @@
-<<<<<<< HEAD
 *.iml
-=======
 target
 logging.properties
 *.iml
->>>>>>> origin/master
+**/.idea
