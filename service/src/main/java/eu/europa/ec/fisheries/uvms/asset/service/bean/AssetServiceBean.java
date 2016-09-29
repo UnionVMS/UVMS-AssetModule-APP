@@ -266,4 +266,8 @@ public class AssetServiceBean implements AssetService {
         return assetListGroupByFlagStateResponse;
 
     }
+
+    public NoteActivityCode getNoteActivityCodes() {
+        return assetDomainModel.getNoteActivityCodes();
+    }
 }

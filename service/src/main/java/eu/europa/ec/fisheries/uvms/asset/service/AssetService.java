@@ -111,4 +111,6 @@ public interface AssetService {
     List<Asset> getAssetListByAssetGroups(List<AssetGroup> groups) throws AssetException;
 
     AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetException;
+
+    NoteActivityCode getNoteActivityCodes();
 }
