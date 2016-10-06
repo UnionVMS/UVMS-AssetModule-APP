@@ -20,10 +20,10 @@
         <jaxb2.basics.version>0.9.5</jaxb2.basics.version>
         <maven-release-plugin>2.5.3</maven-release-plugin>
 
-        <usm4uvms.version>2.1.0-SNAPSHOT</usm4uvms.version>
-        <uvms.config.version>2.1.0-SNAPSHOT</uvms.config.version>
-        <asset.model.version>2.1.0-SNAPSHOT</asset.model.version>
-        <audit.model.version>2.1.0-SNAPSHOT</audit.model.version>
+        <usm4uvms.version>2.1.0</usm4uvms.version>
+        <uvms.config.version>2.1.0</uvms.config.version>
+        <asset.model.version>2.1.1-SNAPSHOT</asset.model.version>
+        <audit.model.version>2.1.0</audit.model.version>
 
         <project.scm.id>github</project.scm.id>
     </properties>
