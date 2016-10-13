@@ -45,6 +45,8 @@ public class JMSConnectorBean {
                     try {
                         Thread.sleep(5000); // Wait 5 seconds (JMS server restarted?)
                         restartJSMConnection();
+                    } catch(JMSException e){
+                        LOG.error("Error reopening connection " + e.getMessage(), exception);
                     } catch (InterruptedException e) {
                         LOG.error("Error pausing thread" + e.getMessage());
                     }
@@ -56,9 +58,9 @@ public class JMSConnectorBean {
         }
     }
 
-    private void restartJSMConnection(){
-        closeConnection();
-        connectToQueue();
+    private void restartJSMConnection() throws JMSException {
+        connection.stop();
+        connection.start();
     }
 
     public Session getNewSession() throws JMSException {
