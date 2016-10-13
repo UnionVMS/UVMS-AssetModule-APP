@@ -38,10 +38,27 @@ public class JMSConnectorBean {
         LOG.debug("Open connection to JMS broker");
         try {
             connection = connectionFactory.createConnection();
+            connection.setExceptionListener(new ExceptionListener() {
+                @Override
+                public void onException(JMSException exception) {
+                    LOG.error("ExceptionListener triggered: " + exception.getMessage(), exception);
+                    try {
+                        Thread.sleep(5000); // Wait 5 seconds (JMS server restarted?)
+                        restartJSMConnection();
+                    } catch (InterruptedException e) {
+                        LOG.error("Error pausing thread" + e.getMessage());
+                    }
+                }
+            });
             connection.start();
         } catch (JMSException ex) {
             LOG.error("Error when open connection to JMS broker");
         }
+    }
+
+    private void restartJSMConnection(){
+        closeConnection();
+        connectToQueue();
     }
 
     public Session getNewSession() throws JMSException {

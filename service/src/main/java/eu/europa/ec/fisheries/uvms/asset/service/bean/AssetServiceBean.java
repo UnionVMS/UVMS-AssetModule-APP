@@ -19,6 +19,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.jms.TextMessage;
 
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.remote.AssetDomainModel;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.GetAssetListResponseDto;
@@ -70,6 +71,8 @@ public class AssetServiceBean implements AssetService {
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetCreated(createdAsset.getAssetId().getGuid(), username);
             messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
+        } catch (AssetMessageException e) {
+            LOG.warn("Failed to send audit log message! Asset with guid {} was created ", createdAsset.getAssetId().getGuid());
         } catch (AuditModelMarshallException e) {
             LOG.error("Failed to send audit log message! Asset with guid {} was created ", createdAsset.getAssetId().getGuid());
         }
