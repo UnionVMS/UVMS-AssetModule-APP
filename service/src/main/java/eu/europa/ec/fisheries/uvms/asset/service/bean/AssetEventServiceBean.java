@@ -137,7 +137,7 @@ public class AssetEventServiceBean implements AssetEventService {
                 return AssetDataSourceQueue.INTERNAL;
             }
         } catch (ConfigServiceException e) {
-            LOG.error("[ Error when deciding data flow. ] ", e);
+            LOG.error("[ Error when deciding data flow. ] ");
             throw new AssetServiceException(e.getMessage());
         }
 
@@ -152,7 +152,7 @@ public class AssetEventServiceBean implements AssetEventService {
             LOG.debug("Send back assetlist response.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), AssetModuleResponseMapper.mapAssetModuleResponse(response));
         } catch (AssetException e) {
-            LOG.error("[ Error when getting assetlist from source. ] ", e);
+            LOG.error("[ Error when getting assetlist from source. ] ");
             assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting assetlist [ " + e.getMessage())));
         }
     }
@@ -167,7 +167,7 @@ public class AssetEventServiceBean implements AssetEventService {
             LOG.debug("Send back assetGroupList response.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), AssetModuleResponseMapper.mapToAssetGroupListResponse(response));
         } catch (AssetException e) {
-            LOG.error("[ Error when getting assetGroupList from source. ] ", e);
+            LOG.error("[ Error when getting assetGroupList from source. ] ");
             assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting AssetGroupByUserName [ " + e.getMessage())));
         }
     }
@@ -180,7 +180,7 @@ public class AssetEventServiceBean implements AssetEventService {
             LOG.debug("Send back assetGroupList response.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), AssetModuleResponseMapper.mapToAssetGroupListResponse(response));
         } catch (AssetException e) {
-            LOG.error("[ Error when getting assetGroupList from source. ] ", e);
+            LOG.error("[ Error when getting assetGroupList from source. ] ");
             assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting AssetGroupByUserName [ " + e.getMessage())));
         }
     }
@@ -201,7 +201,7 @@ public class AssetEventServiceBean implements AssetEventService {
             LOG.debug("Send back Asset List by Groups response from Module.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), AssetModuleResponseMapper.mapToAssetListByAssetGroupResponse(response));
         } catch (AssetException e) {
-            LOG.error("[ Error when getting assetGroupList from source. ] ", e);
+            LOG.error("[ Error when getting assetGroupList from source. ] ");
             assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting AssetListByVesselGroups [ " + e.getMessage())));
         }
     }
