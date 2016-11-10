@@ -35,6 +35,7 @@ import eu.europa.ec.fisheries.uvms.asset.service.AssetEventService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.FishingGearService;
+import eu.europa.ec.fisheries.uvms.asset.service.constants.ServiceConstants;
 import eu.europa.ec.fisheries.uvms.asset.service.property.ParameterKey;
 import eu.europa.ec.fisheries.wsdl.asset.fishinggear.FishingGearListResponse;
 import eu.europa.ec.fisheries.wsdl.asset.fishinggear.FishingGearResponse;
@@ -48,9 +49,9 @@ import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
+import eu.europa.ec.fisheries.uvms.asset.remote.FishingGearDomainModel;
 
 @Stateless
 public class AssetEventServiceBean implements AssetEventService {
@@ -71,6 +72,9 @@ public class AssetEventServiceBean implements AssetEventService {
 
     @EJB
     private FishingGearService fishingGearService;
+
+    @EJB(lookup = ServiceConstants.DB_ACCESS_FISHING_GEAR_DOMAIN_MODEL)
+    private FishingGearDomainModel fishingGearDomainModel;
 
     @Inject
     @AssetMessageErrorEvent
@@ -229,16 +233,6 @@ public class AssetEventServiceBean implements AssetEventService {
 
     @Override
     public void upsertFishingGears(@Observes @UpsertFishingGearsMessageEvent AssetMessageEvent messageEvent){
-        try {
-            FishingGearResponse fishingGearResponse = fishingGearService.upsertFishingGears(messageEvent.getFishingGear(), messageEvent.getUsername());
-            String upsertFishingGearModuleResponse = AssetModuleResponseMapper.createUpsertFishingGearModuleResponse(fishingGearResponse.getFishingGear());
-            // Do we need to send back the response to Vessek Cahche module?
-            messageProducer.sendModuleResponseMessage(messageEvent.getMessage(), upsertFishingGearModuleResponse);
-        } catch (AssetMessageException e) {
-            LOG.error("Could not send update fishing gears");
-        } catch (AssetModelMapperException e) {
-            LOG.error("Could not map FishingGearRequest to String");
-        }
-
+        fishingGearDomainModel.upsertFishingGear(messageEvent.getFishingGear(), messageEvent.getUsername());
     }
 }
