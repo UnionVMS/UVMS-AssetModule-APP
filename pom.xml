@@ -9,7 +9,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <release.branch.name>uvms-2.0.6-kili</release.branch.name>
+        <release.branch.name>release-2.1.2-legolas</release.branch.name>
         <junit.version>4.10</junit.version>
         <mockito.version>1.9.5</mockito.version>
         <javaee.version>7.0</javaee.version>
@@ -22,7 +22,7 @@
 
         <usm4uvms.version>2.1.0</usm4uvms.version>
         <uvms.config.version>2.1.0</uvms.config.version>
-        <asset.model.version>2.1.1-SNAPSHOT</asset.model.version>
+        <asset.model.version>2.1.1</asset.model.version>
         <audit.model.version>2.1.0</audit.model.version>
 
         <project.scm.id>github</project.scm.id>
@@ -110,7 +110,7 @@
         <module>message</module>
         <module>module</module>
     </modules>
-	<!-- test -->
+	
     <build>
         <plugins>
             <plugin>
