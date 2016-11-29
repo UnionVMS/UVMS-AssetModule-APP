@@ -36,6 +36,8 @@ import java.util.List;
 @Stateless
 public class AssetGroupServiceBean implements AssetGroupService {
 
+    private static  final String GROUP_QUALIFIER_PREFIX = "Group: ";
+
     @EJB
     MessageProducer messageProducer;
 
@@ -88,7 +90,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         }
         AssetGroup createdAssetGroup = assetGroupDomainModel.createAssetGroup(assetGroup, username);
         try {
-            String auditData = AuditModuleRequestMapper.mapAuditLogAssetGroupCreated(createdAssetGroup.getGuid(), username);
+            String auditData = AuditModuleRequestMapper.mapAuditLogAssetGroupCreated(createdAssetGroup.getGuid(), username, GROUP_QUALIFIER_PREFIX + createdAssetGroup.getName());
             messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException e) {
             LOG.error("Failed to send audit log message! Asset Group with id {} was created", createdAssetGroup.getGuid());
@@ -108,7 +110,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         }
         AssetGroup updatedAssetGroup = assetGroupDomainModel.updateAssetGroup(assetGroup, username);
         try {
-            String auditData = AuditModuleRequestMapper.mapAuditLogAssetGroupUpdated(updatedAssetGroup.getGuid(), username);
+            String auditData = AuditModuleRequestMapper.mapAuditLogAssetGroupUpdated(updatedAssetGroup.getGuid(), username, GROUP_QUALIFIER_PREFIX + updatedAssetGroup.getName());
             messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException e) {
             LOG.error("Failed to send audit log message! Asset Group with id {} was updated", updatedAssetGroup.getGuid());
@@ -126,7 +128,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
         AssetGroup deletedAssetGroup = assetGroupDomainModel.deleteAssetGroup(guid, username);
         try {
-            String auditData = AuditModuleRequestMapper.mapAuditLogAssetGroupDeleted(deletedAssetGroup.getGuid(), username);
+            String auditData = AuditModuleRequestMapper.mapAuditLogAssetGroupDeleted(deletedAssetGroup.getGuid(),  username, GROUP_QUALIFIER_PREFIX  + deletedAssetGroup.getName() );
             messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException e) {
             LOG.error("Failed to send audit log message! Asset Group with id {} was deleted", deletedAssetGroup.getGuid());

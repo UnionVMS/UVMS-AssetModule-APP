@@ -22,7 +22,7 @@
 
         <usm4uvms.version>2.1.0</usm4uvms.version>
         <uvms.config.version>2.1.0</uvms.config.version>
-        <asset.model.version>2.1.1</asset.model.version>
+        <asset.model.version>2.1.2-SNAPSHOT</asset.model.version>
         <audit.model.version>2.1.0</audit.model.version>
 
         <project.scm.id>github</project.scm.id>
