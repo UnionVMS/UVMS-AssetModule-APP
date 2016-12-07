@@ -29,10 +29,7 @@ import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseCodeConstant;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.asset.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListGroupByFlagStateResponse;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,6 +69,54 @@ public class AssetResource {
             LOG.info("Getting asset list.");
             ListAssetResponse assetList = assetService.getAssetList(assetQuery);
             return new ResponseDto(assetList, ResponseCodeConstant.OK);
+        } catch (Exception e) {
+            LOG.error("[ Error when getting asset list. ] ");
+            return ErrorHandler.getFault(e);
+        }
+    }
+
+    /**
+     *
+     * @responseMessage 200 Asset list successfully retrieved
+     * @responseMessage 500 Error when retrieving asset list
+     *
+     * @summary Gets a list of assets filtered by a query
+     *
+     */
+    @POST
+    @Consumes(value = { MediaType.APPLICATION_JSON })
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Path("listcount")
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public ResponseDto getAssetListItemCount(final AssetListQuery assetQuery) {
+        try {
+            LOG.info("Getting asset list.");
+            Long assetListCount = assetService.getAssetListCount(assetQuery);
+            return new ResponseDto(assetListCount, ResponseCodeConstant.OK);
+        } catch (Exception e) {
+            LOG.error("[ Error when getting asset list. ] ");
+            return ErrorHandler.getFault(e);
+        }
+    }
+
+    /**
+     *
+     * @responseMessage 200 Asset list successfully retrieved
+     * @responseMessage 500 Error when retrieving asset list
+     *
+     * @summary Gets a list of asset note activity codes
+     *
+     */
+    @GET
+    @Consumes(value = { MediaType.APPLICATION_JSON })
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Path("activitycodes")
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public ResponseDto getNoteActivityCodes() {
+        try {
+            LOG.info("Getting asset list.");
+            NoteActivityCode activityCodes = assetService.getNoteActivityCodes();
+            return new ResponseDto(activityCodes, ResponseCodeConstant.OK);
         } catch (Exception e) {
             LOG.error("[ Error when getting asset list. ] ");
             return ErrorHandler.getFault(e);

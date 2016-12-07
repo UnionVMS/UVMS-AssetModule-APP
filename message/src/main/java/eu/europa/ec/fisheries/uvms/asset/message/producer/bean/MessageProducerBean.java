@@ -1,13 +1,13 @@
 /*
- ﻿Developed with the contribution of the European Commission - Directorate General for Maritime Affairs and Fisheries
- © European Union, 2015-2016.
+﻿Developed with the contribution of the European Commission - Directorate General for Maritime Affairs and Fisheries
+© European Union, 2015-2016.
 
- This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can
- redistribute it and/or modify it under the terms of the GNU General Public License as published by the
- Free Software Foundation, either version 3 of the License, or any later version. The IFDM Suite is distributed in
- the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
- copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
+This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or any later version. The IFDM Suite is distributed in
+the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
+copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.europa.ec.fisheries.uvms.asset.message.producer.bean;
 
@@ -23,36 +23,24 @@ import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.config.constants.ConfigConstants;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigMessageException;
 import eu.europa.ec.fisheries.uvms.config.message.ConfigMessageProducer;
+import eu.europa.ec.fisheries.uvms.message.JMSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.Singleton;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import javax.ejb.*;
 import javax.enterprise.event.Observes;
 import javax.jms.*;
+import javax.naming.InitialContext;
 
-@Singleton
+@Stateless
 public class MessageProducerBean implements MessageProducer, ConfigMessageProducer {
 
-    @Resource(mappedName = AssetConstants.QUEUE_DATASOURCE_INTERNAL)
-    private Queue internalSourceQueue;
-
-    @Resource(mappedName = AssetConstants.QUEUE_DATASOURCE_NATIONAL)
     private Queue nationalSourceQueue;
-
-    @Resource(mappedName = AssetConstants.QUEUE_DATASOURCE_XEU)
     private Queue xeuSourceQueue;
-
-    @Resource(mappedName = AssetConstants.AUDIT_MODULE_QUEUE)
     private Queue auditQueue;
-
-    @Resource(mappedName = ConfigConstants.CONFIG_MESSAGE_IN_QUEUE)
     private Queue configQueue;
-
-    @Resource(mappedName = AssetConstants.QUEUE_ASSET)
     private Queue responseQueue;
 
     final static Logger LOG = LoggerFactory.getLogger(MessageProducerBean.class);
@@ -61,6 +49,22 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
 
     @EJB
     JMSConnectorBean connector;
+
+    @PostConstruct
+    public void init() {
+        InitialContext ctx;
+        try {
+            ctx = new InitialContext();
+        } catch (Exception e) {
+            LOG.error("Failed to get InitialContext",e);
+            throw new RuntimeException(e);
+        }
+        responseQueue = JMSUtils.lookupQueue(ctx, AssetConstants.QUEUE_ASSET);
+        nationalSourceQueue = JMSUtils.lookupQueue(ctx, AssetConstants.QUEUE_DATASOURCE_NATIONAL);
+        xeuSourceQueue = JMSUtils.lookupQueue(ctx, AssetConstants.QUEUE_DATASOURCE_XEU);
+        auditQueue = JMSUtils.lookupQueue(ctx, AssetConstants.AUDIT_MODULE_QUEUE);
+        configQueue = JMSUtils.lookupQueue(ctx, ConfigConstants.CONFIG_MESSAGE_IN_QUEUE);
+    }
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -75,7 +79,6 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
 
             switch (queue) {
                 case INTERNAL:
-                    getProducer(session, internalSourceQueue).send(message);
                     break;
                 case NATIONAL:
                     getProducer(session, nationalSourceQueue).send(message);
@@ -125,8 +128,7 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void sendModuleResponseMessage(TextMessage message, String text) {
         try {
-            LOG.info("Sending message back to recipient from VesselModule with correlationId {} on queue: {}", message.getJMSMessageID(),
-                    message.getJMSReplyTo());
+            LOG.info("Sending message back to recipient from VesselModule with correlationId {} on queue: {}", message.getJMSMessageID(), message.getJMSReplyTo());
             Session session = connector.getNewSession();
             TextMessage response = session.createTextMessage(text);
             response.setJMSCorrelationID(message.getJMSMessageID());
@@ -139,8 +141,7 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
     @Override
     public void sendModuleErrorResponseMessage(@Observes @AssetMessageErrorEvent AssetMessageEvent message) {
         try {
-            LOG.info("Sending error message back from VesselModule to recipient om JMS Queue with correlationID: {}", message.getMessage()
-                    .getJMSMessageID());
+            LOG.info("Sending error message back from VesselModule to recipient om JMS Queue with correlationID: {}", message.getMessage().getJMSMessageID());
 
             Session session = connector.getNewSession();
 
@@ -151,6 +152,8 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
 
         } catch (JMSException | AssetModelMarshallException e) {
             LOG.error("[ Error when returning Error message to recipient. ] {} ", e.getMessage());
+        } catch (EJBTransactionRolledbackException e) {
+            LOG.error("[ Error when returning Error message to recipient. Usual cause is NoAssetEntityFoundException ] {} ", e.getMessage());
         }
     }
 

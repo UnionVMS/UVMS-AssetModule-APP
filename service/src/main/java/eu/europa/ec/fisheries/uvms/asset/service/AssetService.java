@@ -30,7 +30,7 @@ public interface AssetService {
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException
      */
-    public Asset createAsset(Asset asset, String username) throws AssetException;
+    Asset createAsset(Asset asset, String username) throws AssetException;
 
     /**
      * Get all Assets
@@ -39,7 +39,16 @@ public interface AssetService {
      * @return
      * @throws AssetException
      */
-    public ListAssetResponse getAssetList(AssetListQuery requestQuery) throws AssetException;
+    ListAssetResponse getAssetList(AssetListQuery requestQuery) throws AssetException;
+
+    /**
+     * Get all Assets
+     *
+     * @param requestQuery
+     * @return
+     * @throws AssetException
+     */
+    Long getAssetListCount(AssetListQuery requestQuery) throws AssetException;
 
     /**
      * Get a Asset by its asset id from the source queue
@@ -49,7 +58,7 @@ public interface AssetService {
      * @return
      * @throws AssetException
      */
-    public Asset getAssetById(AssetId assetId, AssetDataSourceQueue source) throws AssetException;
+    Asset getAssetById(AssetId assetId, AssetDataSourceQueue source) throws AssetException;
 
     /**
      * Get a Asset by guid
@@ -58,7 +67,7 @@ public interface AssetService {
      * @return
      * @throws AssetException
      */
-    public Asset getAssetByGuid(String guid) throws AssetException;
+    Asset getAssetByGuid(String guid) throws AssetException;
 
     /**
      * Update a Asset
@@ -69,7 +78,7 @@ public interface AssetService {
      * @return
      * @throws AssetException
      */
-    public Asset updateAsset(Asset asset,String username, String comment) throws AssetException;
+    Asset updateAsset(Asset asset,String username, String comment) throws AssetException;
 
     /**
      * Archives an asset.
@@ -79,7 +88,7 @@ public interface AssetService {
      * @return the archived asset
      * @throws AssetException if unsuccessful
      */
-    public Asset archiveAsset(Asset asset, String username, String comment) throws AssetException;
+    Asset archiveAsset(Asset asset, String username, String comment) throws AssetException;
 
     /**
      * Create asset if not exists, otherwise update asset
@@ -88,7 +97,7 @@ public interface AssetService {
      * @return
      * @throws AssetException
      */
-    public Asset upsertAsset(Asset asset, String username) throws AssetException;
+    Asset upsertAsset(Asset asset, String username) throws AssetException;
 
     /**
      *
@@ -99,7 +108,9 @@ public interface AssetService {
      * @return
      * @throws AssetException
      */
-    public List<Asset> getAssetListByAssetGroups(List<AssetGroup> groups) throws AssetException;
+    List<Asset> getAssetListByAssetGroups(List<AssetGroup> groups) throws AssetException;
 
     AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetException;
+
+    NoteActivityCode getNoteActivityCodes();
 }
