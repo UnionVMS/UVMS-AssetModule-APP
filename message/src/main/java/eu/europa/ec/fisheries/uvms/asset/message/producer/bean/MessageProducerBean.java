@@ -1,13 +1,13 @@
 /*
- ﻿Developed with the contribution of the European Commission - Directorate General for Maritime Affairs and Fisheries
- © European Union, 2015-2016.
+﻿Developed with the contribution of the European Commission - Directorate General for Maritime Affairs and Fisheries
+© European Union, 2015-2016.
 
- This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can
- redistribute it and/or modify it under the terms of the GNU General Public License as published by the
- Free Software Foundation, either version 3 of the License, or any later version. The IFDM Suite is distributed in
- the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
- copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
+This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or any later version. The IFDM Suite is distributed in
+the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
+copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.europa.ec.fisheries.uvms.asset.message.producer.bean;
 
@@ -27,14 +27,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.Singleton;
+import javax.ejb.EJBTransactionRolledbackException;
+import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Observes;
 import javax.jms.*;
 
-@Singleton
+@Stateless
 public class MessageProducerBean implements MessageProducer, ConfigMessageProducer {
 
     @Resource(mappedName = AssetConstants.QUEUE_DATASOURCE_INTERNAL)
@@ -125,8 +125,7 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void sendModuleResponseMessage(TextMessage message, String text) {
         try {
-            LOG.info("Sending message back to recipient from VesselModule with correlationId {} on queue: {}", message.getJMSMessageID(),
-                    message.getJMSReplyTo());
+            LOG.info("Sending message back to recipient from VesselModule with correlationId {} on queue: {}", message.getJMSMessageID(), message.getJMSReplyTo());
             Session session = connector.getNewSession();
             TextMessage response = session.createTextMessage(text);
             response.setJMSCorrelationID(message.getJMSMessageID());
@@ -139,8 +138,7 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
     @Override
     public void sendModuleErrorResponseMessage(@Observes @AssetMessageErrorEvent AssetMessageEvent message) {
         try {
-            LOG.info("Sending error message back from VesselModule to recipient om JMS Queue with correlationID: {}", message.getMessage()
-                    .getJMSMessageID());
+            LOG.info("Sending error message back from VesselModule to recipient om JMS Queue with correlationID: {}", message.getMessage().getJMSMessageID());
 
             Session session = connector.getNewSession();
 
@@ -151,6 +149,8 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
 
         } catch (JMSException | AssetModelMarshallException e) {
             LOG.error("[ Error when returning Error message to recipient. ] {} ", e.getMessage());
+        } catch (EJBTransactionRolledbackException e) {
+            LOG.error("[ Error when returning Error message to recipient. Usual cause is NoAssetEntityFoundException ] {} ", e.getMessage());
         }
     }
 

@@ -35,20 +35,23 @@ public class AuditModuleRequestMapper {
         return AuditLogMapper.mapToAuditLog(AuditObjectTypeEnum.ASSET.getValue(), AuditOperationEnum.ARCHIVE.getValue(), guid, username);
     }
 
-    public static String mapAuditLogAssetGroupCreated(String guid, String username) throws AuditModelMarshallException {
-        return mapToAuditLog(AuditObjectTypeEnum.ASSET_GROUP.getValue(), AuditOperationEnum.CREATE.getValue(), guid, username);
+    public static String mapAuditLogAssetGroupCreated(String guid, String username,String name) throws AuditModelMarshallException {
+        return mapToAuditLog(AuditObjectTypeEnum.ASSET_GROUP.getValue(), AuditOperationEnum.CREATE.getValue(), guid, username, name);
     }
 
-    public static String mapAuditLogAssetGroupUpdated(String guid, String username) throws AuditModelMarshallException {
-        return mapToAuditLog(AuditObjectTypeEnum.ASSET_GROUP.getValue(), AuditOperationEnum.UPDATE.getValue(), guid, username);
+    public static String mapAuditLogAssetGroupUpdated(String guid, String username, String name) throws AuditModelMarshallException {
+        return mapToAuditLog(AuditObjectTypeEnum.ASSET_GROUP.getValue(), AuditOperationEnum.UPDATE.getValue(), guid, username,name);
     }
 
-    public static String mapAuditLogAssetGroupDeleted(String guid, String username) throws AuditModelMarshallException {
-        return mapToAuditLog(AuditObjectTypeEnum.ASSET_GROUP.getValue(), AuditOperationEnum.ARCHIVE.getValue(), guid, username);
+    public static String mapAuditLogAssetGroupDeleted(String guid, String username, String name) throws AuditModelMarshallException {
+        return mapToAuditLog(AuditObjectTypeEnum.ASSET_GROUP.getValue(), AuditOperationEnum.ARCHIVE.getValue(), guid, username, name);
     }
 
     private static String mapToAuditLog(String objectType, String operation, String affectedObject, String username) throws AuditModelMarshallException {
         return AuditLogMapper.mapToAuditLog(objectType, operation, affectedObject, username);
+    }
+    private static String mapToAuditLog(String objectType, String operation, String affectedObject, String username,String name) throws AuditModelMarshallException {
+        return AuditLogMapper.mapToAuditLog(objectType, operation, affectedObject, name, username);
     }
 
 }

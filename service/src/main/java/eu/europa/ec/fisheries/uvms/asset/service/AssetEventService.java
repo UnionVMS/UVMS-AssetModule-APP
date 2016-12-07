@@ -32,4 +32,7 @@ public interface AssetEventService {
 
     public void ping(@Observes @PingEvent AssetMessageEvent messase);
 
+    void upsertAsset(@Observes @UpsertAssetMessageEvent AssetMessageEvent message);
+
+    void upsertFishingGears(@Observes @UpsertFishingGearsMessageEvent AssetMessageEvent messageEvent);
 }

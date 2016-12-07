@@ -22,8 +22,13 @@ import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceRequestMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceResponseMapper;
+import eu.europa.ec.fisheries.uvms.asset.remote.AssetDomainModel;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
+import eu.europa.ec.fisheries.uvms.asset.service.constants.ServiceConstants;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetHistoryId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,27 +44,29 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
     @EJB
     AssetQueueConsumer reciever;
 
+    @EJB(lookup = ServiceConstants.DB_ACCESS_ASSET_DOMAIN_MODEL)
+    private AssetDomainModel assetDomainModel;
+
     final static Logger LOG = LoggerFactory.getLogger(AssetHistoryServiceBean.class);
 
 
     @Override
     public List<Asset> getAssetHistoryListByAssetId(String assetId, Integer maxNbr) throws AssetException {
         LOG.info("Getting AssetHistoryList by AssetId: {}.", assetId);
-
-        String data = AssetDataSourceRequestMapper.mapGetAssetHistoryListByAssetId(assetId, maxNbr);
-        String messageId = messageProducer.sendDataSourceMessage(data, AssetDataSourceQueue.INTERNAL);
-        TextMessage response = reciever.getMessage(messageId, TextMessage.class);
-        return AssetDataSourceResponseMapper.mapToAssetListFromResponse(response, messageId);
+        AssetId assetIdData = new AssetId();
+        assetIdData.setValue(assetId);
+        assetIdData.setType(AssetIdType.GUID);
+        List<Asset> assetHistoryList = assetDomainModel.getAssetHistoryListByAssetId(assetIdData, maxNbr);
+        return assetHistoryList;
     }
 
     @Override
     public Asset getAssetHistoryByAssetHistGuid(String assetHistId) throws AssetException {
         LOG.info("Getting AssetHistory by AssetHistoryGuid: {}.", assetHistId);
-
-        String data = AssetDataSourceRequestMapper.mapGetAssetHistoryByGuid(assetHistId);
-        String messageId = messageProducer.sendDataSourceMessage(data, AssetDataSourceQueue.INTERNAL);
-        TextMessage response = reciever.getMessage(messageId, TextMessage.class);
-        return AssetDataSourceResponseMapper.mapToAssetFromResponse(response, messageId);
+        AssetHistoryId assetHistoryId = new AssetHistoryId();
+        assetHistoryId.setEventId(assetHistId);
+        Asset assetHistory = assetDomainModel.getAssetHistory(assetHistoryId);
+        return assetHistory;
     }
 
 }

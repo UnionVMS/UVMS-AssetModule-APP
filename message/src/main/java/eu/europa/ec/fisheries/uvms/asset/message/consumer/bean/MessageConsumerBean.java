@@ -70,6 +70,14 @@ public class MessageConsumerBean implements MessageListener {
     @GetAssetGroupListByAssetGuidEvent
     Event<AssetMessageEvent> assetGroupByAssetEvent;
 
+    @Inject
+    @UpsertAssetMessageEvent
+    Event<AssetMessageEvent> upsertAssetEvent;
+
+    @Inject
+    @UpsertFishingGearsMessageEvent
+    Event<AssetMessageEvent> upsertFisMessageEvent;
+
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void onMessage(Message message) {
@@ -109,6 +117,16 @@ public class MessageConsumerBean implements MessageListener {
                     break;
                 case PING:
                     pingEvent.fire(new AssetMessageEvent(textMessage));
+                    break;
+                case UPSERT_ASSET:
+                    UpsertAssetModuleRequest upsertRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, UpsertAssetModuleRequest.class);
+                    AssetMessageEvent upsertAssetMessageEvent = new AssetMessageEvent(textMessage, upsertRequest.getAsset(), upsertRequest.getUserName());
+                    upsertAssetEvent.fire(upsertAssetMessageEvent);
+                    break;
+                case FISHING_GEAR_UPSERT:
+                    UpsertFishingGearModuleRequest upsertFishingGearListModuleRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, UpsertFishingGearModuleRequest.class);
+                    AssetMessageEvent fishingGearMessageEvent = new AssetMessageEvent(textMessage, upsertFishingGearListModuleRequest.getFishingGear(), upsertFishingGearListModuleRequest.getUsername());
+                    upsertFisMessageEvent.fire(fishingGearMessageEvent);
                     break;
                 default:
                     LOG.error("[ Not implemented method consumed: {} ]", method);
