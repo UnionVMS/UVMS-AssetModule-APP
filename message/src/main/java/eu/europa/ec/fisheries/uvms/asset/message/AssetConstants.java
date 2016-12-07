@@ -13,19 +13,19 @@ package eu.europa.ec.fisheries.uvms.asset.message;
 
 public class AssetConstants {
 
-    public static final String CONNECTION_FACTORY = "java:/ConnectionFactory";
+    public static final String CONNECTION_FACTORY = "ConnectionFactory";
 
     public static final String CONNECTION_TYPE = "javax.jms.MessageListener";
     public static final String DESTINATION_TYPE_QUEUE = "javax.jms.Queue";
 
-    public static final String QUEUE_ASSET = "java:/jms/queue/UVMSAsset"; //response queue
-    public static final String QUEUE_ASSET_EVENT = "java:/jms/queue/UVMSAssetEvent"; //request queue, create event
+    public static final String QUEUE_ASSET = "jms/queue/UVMSAsset"; //response queue
+    public static final String QUEUE_ASSET_EVENT = "jms/queue/UVMSAssetEvent"; //request queue, create event
     public static final String QUEUE_NAME_ASSET_EVENT = "UVMSAssetEvent";
 
-    public static final String QUEUE_DATASOURCE_INTERNAL = "java:/jms/queue/UVMSAssetModel"; //asset internal db source
-    public static final String QUEUE_DATASOURCE_NATIONAL = "java:/jms/queue/UVMSAssetNational"; //asset national source
-    public static final String QUEUE_DATASOURCE_XEU = "java:/jms/queue/UVMSAssetXEU"; //asset eu source
+    public static final String QUEUE_DATASOURCE_INTERNAL = "jms/queue/UVMSAssetModel"; //asset internal db source
+    public static final String QUEUE_DATASOURCE_NATIONAL = "jms/queue/UVMSAssetNational"; //asset national source
+    public static final String QUEUE_DATASOURCE_XEU = "jms/queue/UVMSAssetXEU"; //asset eu source
 
-    public static final String AUDIT_MODULE_QUEUE = "java:/jms/queue/UVMSAuditEvent";
+    public static final String AUDIT_MODULE_QUEUE = "jms/queue/UVMSAuditEvent";
 
 }

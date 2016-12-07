@@ -13,10 +13,12 @@ package eu.europa.ec.fisheries.uvms.asset.message.event;
 
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetFault;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
+
 import javax.jms.TextMessage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class AssetMessageEvent {
 
@@ -27,6 +29,9 @@ public class AssetMessageEvent {
     private GetAssetListByAssetGroupsRequest assetListByGroup;
     private AssetFault fault;
     private String assetGuid;
+    private Asset asset;
+    private String username;
+    private FishingGear fishingGear;
 
     public AssetMessageEvent(TextMessage message) {
         this.message = message;
@@ -60,6 +65,18 @@ public class AssetMessageEvent {
     public AssetMessageEvent(TextMessage message, String assetGuid) {
         this.message = message;
         this.assetGuid = assetGuid;
+    }
+
+    public AssetMessageEvent(TextMessage message, Asset asset, String username){
+        this.message = message;
+        this.asset = asset;
+        this.username = username;
+    }
+
+    public AssetMessageEvent(TextMessage message, FishingGear fishingGear, String username){
+        this.message = message;
+        this.username = username;
+        this.fishingGear = fishingGear;
     }
 
     public TextMessage getMessage() {
@@ -108,5 +125,29 @@ public class AssetMessageEvent {
 
     public void setAssetGuid(String assetGuid) {
         this.assetGuid = assetGuid;
+    }
+
+    public Asset getAsset() {
+        return asset;
+    }
+
+    public void setAssets(Asset assets) {
+        this.asset = asset;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public FishingGear getFishingGear() {
+        return fishingGear;
+    }
+
+    public void setFishingGear(FishingGear fishingGear) {
+        this.fishingGear = fishingGear;
     }
 }

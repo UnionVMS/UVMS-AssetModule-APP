@@ -1,7 +1,6 @@
-<<<<<<< HEAD
-*.iml
-=======
 target
 logging.properties
 *.iml
->>>>>>> origin/master
+.idea/
+/rest/src/main/webapp/apidocs
+

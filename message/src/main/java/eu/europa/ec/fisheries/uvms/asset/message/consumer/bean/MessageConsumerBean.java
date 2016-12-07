@@ -1,13 +1,13 @@
 /*
-﻿Developed with the contribution of the European Commission - Directorate General for Maritime Affairs and Fisheries
-© European Union, 2015-2016.
+ ﻿Developed with the contribution of the European Commission - Directorate General for Maritime Affairs and Fisheries
+ © European Union, 2015-2016.
 
-This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can
-redistribute it and/or modify it under the terms of the GNU General Public License as published by the
-Free Software Foundation, either version 3 of the License, or any later version. The IFDM Suite is distributed in
-the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
-copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
+ This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can
+ redistribute it and/or modify it under the terms of the GNU General Public License as published by the
+ Free Software Foundation, either version 3 of the License, or any later version. The IFDM Suite is distributed in
+ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
+ copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.europa.ec.fisheries.uvms.asset.message.consumer.bean;
 
@@ -34,7 +34,10 @@ import javax.jms.TextMessage;
 @MessageDriven(mappedName = AssetConstants.QUEUE_ASSET_EVENT, activationConfig = {
     @ActivationConfigProperty(propertyName = "messagingType", propertyValue = AssetConstants.CONNECTION_TYPE),
     @ActivationConfigProperty(propertyName = "destinationType", propertyValue = AssetConstants.DESTINATION_TYPE_QUEUE),
-    @ActivationConfigProperty(propertyName = "destination", propertyValue = AssetConstants.QUEUE_NAME_ASSET_EVENT)})
+    @ActivationConfigProperty(propertyName = "destination", propertyValue = AssetConstants.QUEUE_NAME_ASSET_EVENT),
+    @ActivationConfigProperty(propertyName = "destinationJndiName", propertyValue = AssetConstants.QUEUE_ASSET_EVENT),
+    @ActivationConfigProperty(propertyName = "connectionFactoryJndiName", propertyValue = AssetConstants.CONNECTION_FACTORY)
+})
 public class MessageConsumerBean implements MessageListener {
 
     final static Logger LOG = LoggerFactory.getLogger(MessageConsumerBean.class);
@@ -66,6 +69,14 @@ public class MessageConsumerBean implements MessageListener {
     @Inject
     @GetAssetGroupListByAssetGuidEvent
     Event<AssetMessageEvent> assetGroupByAssetEvent;
+
+    @Inject
+    @UpsertAssetMessageEvent
+    Event<AssetMessageEvent> upsertAssetEvent;
+
+    @Inject
+    @UpsertFishingGearsMessageEvent
+    Event<AssetMessageEvent> upsertFisMessageEvent;
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -106,6 +117,16 @@ public class MessageConsumerBean implements MessageListener {
                     break;
                 case PING:
                     pingEvent.fire(new AssetMessageEvent(textMessage));
+                    break;
+                case UPSERT_ASSET:
+                    UpsertAssetModuleRequest upsertRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, UpsertAssetModuleRequest.class);
+                    AssetMessageEvent upsertAssetMessageEvent = new AssetMessageEvent(textMessage, upsertRequest.getAsset(), upsertRequest.getUserName());
+                    upsertAssetEvent.fire(upsertAssetMessageEvent);
+                    break;
+                case FISHING_GEAR_UPSERT:
+                    UpsertFishingGearModuleRequest upsertFishingGearListModuleRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, UpsertFishingGearModuleRequest.class);
+                    AssetMessageEvent fishingGearMessageEvent = new AssetMessageEvent(textMessage, upsertFishingGearListModuleRequest.getFishingGear(), upsertFishingGearListModuleRequest.getUsername());
+                    upsertFisMessageEvent.fire(fishingGearMessageEvent);
                     break;
                 default:
                     LOG.error("[ Not implemented method consumed: {} ]", method);
