@@ -56,7 +56,7 @@ public class ConfigServiceBean implements ConfigService {
 	@EJB(lookup = ServiceConstants.DB_ACCESS_CONFIG_DOMAIN_MODEL)
 	private ConfigDomainModel configDomainModel;
 
-    @Inject
+    @EJB
     ConfigHelper configHelper;
     
 	@Override
@@ -71,6 +71,7 @@ public class ConfigServiceBean implements ConfigService {
 		try {
 			LOG.info("Get parameters");
 			Map<String, String> parameters = new HashMap<>();
+			parameterService.init("asset");
 			for (SettingType settingType : parameterService.getAllSettings()) {
 				parameters.put(settingType.getKey(), settingType.getValue());
 			}

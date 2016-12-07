@@ -34,12 +34,10 @@
                             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
                             <artifactId>asset-service</artifactId>
                         </ejbModule>
-
-                        <ejbModule>
+                        <jarModule>
                             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
                             <artifactId>asset-model</artifactId>
-                        </ejbModule>
-
+                        </jarModule>
                         <webModule>
                             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
                             <context-root>${project.parent.artifactId}</context-root>
@@ -47,6 +45,7 @@
                         </webModule>
                     </modules>
                     <skinnyWars>true</skinnyWars>
+                    <defaultLibBundleDir>APP-INF/lib</defaultLibBundleDir>
                 </configuration>
             </plugin>
             <plugin>
@@ -54,6 +53,34 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <version>${maven-release-plugin}</version>
             </plugin>
+
+            <!-- COPY TO FOLDER -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.10</version>
+                <executions>
+                    <execution>
+                        <id>copy-installed</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>${project.artifactId}</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>${project.packaging}</type>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>C:\dev\WebLogic\domain1213\servers\AdminServer\upload</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 
@@ -76,13 +103,40 @@
             <artifactId>asset-model</artifactId>
             <version>${asset.model.version}</version>
             <classifier>date</classifier>
-            <type>ejb</type>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>asset-rest</artifactId>
             <version>${project.parent.version}</version>
             <type>war</type>
+        </dependency>
+
+
+        <!-- Dependencies for skinny WARS -->
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+            <artifactId>asset-model</artifactId>
+            <version>${asset.model.version}</version>
+            <classifier>date</classifier>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+            <artifactId>asset-message</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+            <artifactId>asset-service</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms</groupId>
+            <artifactId>usm4uvms</artifactId>
+            <version>${usm4uvms.version}</version>
         </dependency>
 
     </dependencies>
@@ -105,6 +159,39 @@
                             <password>${password}</password>
                             <force>true</force>
                         </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>copy-ear</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>2.10</version>
+                        <executions>
+                            <execution>
+                                <id>copy-installed</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>${project.groupId}</groupId>
+                                            <artifactId>${project.artifactId}</artifactId>
+                                            <version>${project.version}</version>
+                                            <type>${project.packaging}</type>
+                                        </artifactItem>
+                                    </artifactItems>
+                                    <outputDirectory>C:\dev\WebLogic\domain1213\servers\AdminServer\upload</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>

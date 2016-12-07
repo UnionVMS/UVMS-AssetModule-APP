@@ -21,9 +21,10 @@
         <maven-release-plugin>2.5.3</maven-release-plugin>
 
         <usm4uvms.version>2.1.0</usm4uvms.version>
-        <uvms.config.version>2.1.0</uvms.config.version>
+        <uvms.config.version>2.1.2</uvms.config.version>
         <asset.model.version>2.1.1</asset.model.version>
         <audit.model.version>2.1.0</audit.model.version>
+        <uvms.common.version>2.0.13</uvms.common.version>
 
         <project.scm.id>github</project.scm.id>
     </properties>
@@ -70,8 +71,8 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-            <scope>test</scope>
             <version>${mockito.version}</version>
+            <scope>test</scope>
         </dependency>
  
        
@@ -101,8 +102,8 @@
 
     <scm>
         <connection>scm:git:https://github.com/UnionVMS/UVMS-AssetModule-APP.git</connection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
     
     <modules>
         <module>rest</module>
@@ -110,7 +111,7 @@
         <module>message</module>
         <module>module</module>
     </modules>
-	
+
     <build>
         <plugins>
             <plugin>
