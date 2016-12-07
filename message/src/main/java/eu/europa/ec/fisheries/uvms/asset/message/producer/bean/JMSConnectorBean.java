@@ -21,14 +21,13 @@ import javax.ejb.DependsOn;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.jms.*;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
-@Startup
 @Singleton
-@DependsOn("MessageProducerBean")
 public class JMSConnectorBean {
     final static org.slf4j.Logger LOG = LoggerFactory.getLogger(JMSConnectorBean.class);
 
-    @Resource(lookup = AssetConstants.CONNECTION_FACTORY)
     private ConnectionFactory connectionFactory;
 
     private Connection connection;
@@ -36,31 +35,33 @@ public class JMSConnectorBean {
     @PostConstruct
     private void connectToQueue() {
         LOG.debug("Open connection to JMS broker");
+        InitialContext ctx;
+        try {
+            ctx = new InitialContext();
+        } catch (Exception e) {
+            LOG.error("Failed to get InitialContext",e);
+            throw new RuntimeException(e);
+        }
+        try {
+            connectionFactory = (QueueConnectionFactory) ctx.lookup(AssetConstants.CONNECTION_FACTORY);
+        } catch (NamingException ne) {
+            //if we did not find the connection factory we might need to add java:/ at the start
+            LOG.debug("Connection Factory lookup failed for " + AssetConstants.CONNECTION_FACTORY);
+            String wfName = "java:/" + AssetConstants.CONNECTION_FACTORY;
+            try {
+                LOG.debug("trying " + wfName);
+                connectionFactory = (QueueConnectionFactory) ctx.lookup(wfName);
+            } catch (Exception e) {
+                LOG.error("Connection Factory lookup failed for both " + AssetConstants.CONNECTION_FACTORY  + " and " + wfName);
+                throw new RuntimeException(e);
+            }
+        }
         try {
             connection = connectionFactory.createConnection();
-            connection.setExceptionListener(new ExceptionListener() {
-                @Override
-                public void onException(JMSException exception) {
-                    LOG.error("ExceptionListener triggered: " + exception.getMessage(), exception);
-                    try {
-                        Thread.sleep(5000); // Wait 5 seconds (JMS server restarted?)
-                        restartJSMConnection();
-                    } catch(JMSException e){
-                        LOG.error("Error reopening connection " + e.getMessage(), exception);
-                    } catch (InterruptedException e) {
-                        LOG.error("Error pausing thread" + e.getMessage());
-                    }
-                }
-            });
             connection.start();
         } catch (JMSException ex) {
             LOG.error("Error when open connection to JMS broker");
         }
-    }
-
-    private void restartJSMConnection() throws JMSException {
-        connection.stop();
-        connection.start();
     }
 
     public Session getNewSession() throws JMSException {

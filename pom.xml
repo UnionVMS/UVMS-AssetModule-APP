@@ -24,6 +24,7 @@
         <uvms.config.version>2.1.2</uvms.config.version>
         <asset.model.version>2.1.1</asset.model.version>
         <audit.model.version>2.1.0</audit.model.version>
+        <uvms.common.version>2.0.13</uvms.common.version>
 
         <project.scm.id>github</project.scm.id>
     </properties>
