@@ -20,7 +20,7 @@
         <jaxb2.basics.version>0.9.5</jaxb2.basics.version>
         <maven-release-plugin>2.5.3</maven-release-plugin>
 
-        <usm4uvms.version>2.1.0</usm4uvms.version>
+        <usm4uvms.version>2.1.4-SNAPSHOT</usm4uvms.version>
         <uvms.config.version>2.1.2</uvms.config.version>
         <asset.model.version>2.1.1</asset.model.version>
         <audit.model.version>2.1.0</audit.model.version>
