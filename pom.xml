@@ -4,7 +4,7 @@
 
     <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
     <artifactId>asset</artifactId>
-    <version>2.1.4-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -20,11 +20,11 @@
         <jaxb2.basics.version>0.9.5</jaxb2.basics.version>
         <maven-release-plugin>2.5.3</maven-release-plugin>
 
-        <usm4uvms.version>2.1.4-SNAPSHOT</usm4uvms.version>
-        <uvms.config.version>2.1.2</uvms.config.version>
-        <asset.model.version>2.1.1</asset.model.version>
-        <audit.model.version>2.1.0</audit.model.version>
-        <uvms.common.version>2.0.13</uvms.common.version>
+        <usm4uvms.version>3.0.0-SNAPSHOT</usm4uvms.version>
+        <uvms.config.version>3.0.0-SNAPSHOT</uvms.config.version>
+        <asset.model.version>3.0.0-SNAPSHOT</asset.model.version>
+        <audit.model.version>3.0.0-SNAPSHOT</audit.model.version>
+        <uvms.common.version>2.0.14-SNAPSHOT</uvms.common.version>
 
         <project.scm.id>github</project.scm.id>
     </properties>
