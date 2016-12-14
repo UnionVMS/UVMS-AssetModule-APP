@@ -22,7 +22,11 @@ public enum ParameterKey {
     CERT_HEADER("asset.eu.service.client.cert.header"),
     CERT_VALUE("asset.eu.service.client.cert.value"),
     FLUX_DATAFLOW("asset.eu.service.dataflow"),
-    FLUX_AD("asset.eu.service.flux.ad");
+    FLUX_AD("asset.eu.service.flux.ad"),
+    NATIONAL_VESSEL_COMP_SERVICE_ENDPOINT("NATIONAL_VESSEL_COMP_SERVICE_ENDPOINT"),
+    NATIONAL_VESSEL_NATIONS("NATIONAL_VESSEL_NATIONS"),
+    NATIONAL_GENERAL_NOTIFICATION_SERVICE_ENDPOINT("NATIONAL_GENERAL_NOTIFICATION_SERVICE_ENDPOINT"),
+    NATIONAL_EQUIPMENT_SERVICE_ENDPOINT("NATIONAL_EQUIPMENT_SERVICE_ENDPOINT");
 
     
 
