@@ -9,7 +9,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <release.branch.name>uvms-2.1.3-morgoth</release.branch.name>
+        <release.branch.name>uvms-3.0.0-boba-fett</release.branch.name>
         <junit.version>4.10</junit.version>
         <mockito.version>1.9.5</mockito.version>
         <javaee.version>7.0</javaee.version>
@@ -20,11 +20,11 @@
         <jaxb2.basics.version>0.9.5</jaxb2.basics.version>
         <maven-release-plugin>2.5.3</maven-release-plugin>
 
-        <usm4uvms.version>3.0.0-SNAPSHOT</usm4uvms.version>
-        <uvms.config.version>3.0.0-SNAPSHOT</uvms.config.version>
-        <asset.model.version>3.0.0-SNAPSHOT</asset.model.version>
-        <audit.model.version>3.0.0-SNAPSHOT</audit.model.version>
-        <uvms.common.version>2.0.14-SNAPSHOT</uvms.common.version>
+        <usm4uvms.version>3.0.0</usm4uvms.version>
+        <uvms.config.version>3.0.0</uvms.config.version>
+        <asset.model.version>3.0.0</asset.model.version>
+        <audit.model.version>3.0.0</audit.model.version>
+        <uvms.common.version>2.0.14</uvms.common.version>
 
         <project.scm.id>github</project.scm.id>
     </properties>
