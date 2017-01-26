@@ -20,11 +20,11 @@
         <jaxb2.basics.version>0.9.5</jaxb2.basics.version>
         <maven-release-plugin>2.5.3</maven-release-plugin>
 
-        <usm4uvms.version>3.0.0</usm4uvms.version>
-        <uvms.config.version>3.0.0</uvms.config.version>
-        <asset.model.version>3.0.0</asset.model.version>
-        <audit.model.version>3.0.0</audit.model.version>
-        <uvms.common.version>2.0.14</uvms.common.version>
+        <usm4uvms.version>3.0.4</usm4uvms.version>
+        <uvms.config.version>3.0.4</uvms.config.version>
+        <asset.model.version>3.0.4</asset.model.version>
+        <audit.model.version>3.0.4</audit.model.version>
+        <uvms.common.version>2.0.17</uvms.common.version>
 
         <project.scm.id>github</project.scm.id>
     </properties>
