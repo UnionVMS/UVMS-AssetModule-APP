@@ -48,6 +48,13 @@
             <version>${uvms-common.verson}</version>
         </dependency>
 
+        <dependency>
+            <groupId>fish.focus.uvms.maven</groupId>
+            <artifactId>uvms-pom-arquillian-deps</artifactId>
+            <type>pom</type>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
     
     <build>
