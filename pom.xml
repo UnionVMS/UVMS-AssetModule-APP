@@ -110,6 +110,7 @@
         <module>service</module>
         <module>message</module>
         <module>module</module>
+        <module>domain</module>
     </modules>
 
     <build>
