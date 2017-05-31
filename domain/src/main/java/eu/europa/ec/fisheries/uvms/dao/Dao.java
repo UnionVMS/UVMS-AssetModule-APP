@@ -12,28 +12,11 @@
 
 package eu.europa.ec.fisheries.uvms.dao;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 
 public class Dao {
 
+    @PersistenceContext(unitName = "asset")
     protected EntityManager em;
-
-    @PersistenceContext(unitName = "assetPostgresPU")
-    private EntityManager postgres;
-
-    @PersistenceContext(unitName = "assetOraclePU")
-    private EntityManager oracle;
-
-    @PostConstruct
-    public void initEntityManager() {
-        String dbDialect = System.getProperty("db.dialect");
-        if ("oracle".equalsIgnoreCase(dbDialect)) {
-            em = oracle;
-        } else {
-            em = postgres;
-        }
-    }
 }
