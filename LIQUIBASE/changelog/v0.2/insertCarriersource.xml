@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+	<changeSet id="carrsource-03" author="davijo">
+			<insert tableName="carriersource">
+                <column name="carrsource_id" valueNumeric="1" />
+				<column name="carrsource_name" value="Localdatasource" />
+				<column name="carrsource_desc" value="Localdatabesource." />
+				<column name="carrsource_updattim" valueDate="${now}" />
+				<column name="carrsource_upuser" value="UVMS" />
+			</insert>
+			<insert tableName="carriersource">
+				<column name="carrsource_id" valueNumeric="2" />
+				<column name="carrsource_name" value="National" />
+				<column name="carrsource_desc" value="NationalDatabesource." />
+				<column name="carrsource_updattim" valueDate="${now}" />
+				<column name="carrsource_upuser" value="UVMS" />
+			</insert>
+			<insert tableName="carriersource">
+				<column name="carrsource_id" valueNumeric="3" />
+				<column name="carrsource_name" value="EU" />
+				<column name="carrsource_desc" value="EUDatabesource." />
+				<column name="carrsource_updattim" valueDate="${now}" />
+				<column name="carrsource_upuser" value="UVMS" />
+			</insert>
+			<insert tableName="carriersource">
+				<column name="carrsource_id" valueNumeric="4" />
+				<column name="carrsource_name" value="Third_country" />
+				<column name="carrsource_desc" value="ThirdCountryDatabesource." />
+				<column name="carrsource_updattim" valueDate="${now}" />
+				<column name="carrsource_upuser" value="UVMS" />
+			</insert>			
+			<rollback>
+				<delete tableName="carriersource">
+					<where>
+						carrsource_id in (1,2,3,4)
+					</where>
+				</delete>
+			</rollback>
+	</changeSet>
+</databaseChangeLog>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+	
+    <changeSet id="assetgroupfields" author="johlyn">
+    	<createTable tableName="assetgroupfield">
+    		<column name="filter_id" type="BIGINT">
+    			<constraints primaryKey="true" primaryKeyName="filt_pk"/>
+    		</column>
+    		<column name="filter_group_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+    		<column name="filter_field" type="varchar(80)">
+				<constraints nullable="false" />
+			</column>
+    		<column name="filter_value" type="varchar(100)">
+				<constraints nullable="false" />
+			</column>
+    		<column name="filter_updatetime" type="TIMESTAMP WITH TIME ZONE"/>
+    		<column name="filter_updateuser" type="varchar(60)"/>
+    	</createTable>
+    	
+    	<createSequence sequenceName="filter_id_seq"/>
+
+        <addForeignKeyConstraint
+            baseColumnNames="filter_group_id"
+			baseTableName="assetgroupfield"
+            constraintName="filter_group_fk"
+            deferrable="false"
+			initiallyDeferred="false"
+            onDelete="NO ACTION"
+            onUpdate="NO ACTION"
+			referencedColumnNames="group_id"
+            referencedTableName="assetgroup" />
+        
+    	<rollback>
+    		<dropTable tableName="filter" cascadeConstraints="true"/>
+    	</rollback>
+    </changeSet>
+	
+	<changeSet author="nhily" id="Remove old sequence">
+		<dropSequence sequenceName="filter_id_seq"/>
+	</changeSet>
+	
+	<changeSet author="nhily" id="modify data type time without time zone">
+		<modifyDataType
+            columnName="filter_updatetime"
+            newDataType="TIMESTAMP WITHOUT TIME ZONE"
+            tableName="assetgroupfield"/>
+	</changeSet>
+</databaseChangeLog>	

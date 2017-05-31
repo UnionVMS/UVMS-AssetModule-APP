@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+	<changeSet author="johlyn" id="LICENSE type table">
+		<createTable tableName="licensetype">
+			<column name="license_id" type="BIGINT">
+				<constraints primaryKey="true" primaryKeyName="license_pk" />
+			</column>
+			<column name="license_name" type="VARCHAR(25)" />
+			<column name="license_desc" type="VARCHAR(200)" />
+			<column name="license_updattim" type="TIMESTAMP WITHOUT TIME ZONE" />
+			<column name="license_upuser" type="VARCHAR(60)" />
+		</createTable>
+		<createSequence sequenceName="license_id_seq"/>
+		<rollback>
+			<dropTable tableName="licensetype" cascadeConstraints="true"/>
+		</rollback>
+	</changeSet>
+	<changeSet author="nhily" id="Remove old sequence">
+		<dropSequence sequenceName="license_id_seq"/>
+	</changeSet>
+</databaseChangeLog>

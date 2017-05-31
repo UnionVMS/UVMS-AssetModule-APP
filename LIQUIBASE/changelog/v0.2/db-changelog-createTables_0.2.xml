@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+        <!-- order is important -->
+        <include file="\schema\tables\carrieractive.xml"/>
+        <include file="\schema\tables\carriersource.xml"/>
+        <include file="\schema\tables\carrier.xml"/>
+     	
+        <include file="\schema\tables\aircraft.xml"/>
+        <include file="\schema\tables\aircrafthistory.xml"/>
+        <include file="\schema\tables\eventcode.xml"/>
+        
+        <include file="\schema\tables\fishinggearmobility.xml"/>
+        <include file="\schema\tables\fishinggeartype.xml"/>
+        <include file="\schema\tables\fishingtype.xml"/>
+        <include file="\schema\tables\fishinggear.xml"/>
+        
+        <include file="\schema\tables\hullmaterial.xml"/>
+        <include file="\schema\tables\publicaid.xml"/>
+        <include file="\schema\tables\typeofexport.xml"/>
+        <include file="\schema\tables\vehicle.xml"/>
+        <include file="\schema\tables\vehiclehistory.xml"/>
+        
+        <include file="\schema\tables\vesselsegment.xml"/>
+        <include file="\schema\tables\vessel.xml"/>
+        <include file="\schema\tables\vesselhistory.xml"/>    
+
+		<include file="\schema\tables\parameter.xml"/>
+		
+		<include file="\schema\tables\filtergroup.xml"/> 
+		<include file="\schema\tables\filter.xml"/>   
+		<!--<changeSet id="createTables" author="emtudorsm" runOnChange="true" runAlways="true" runInTransaction="true" failOnError="true">
+		<preConditions onFail="MARK_RAN">
+				<or>
+					<not>
+						<changeSetExecuted changeLogFile="changelog/db-changelog-dropAllObjects.xml" author="emtudorsm" id="dropTableEndPoint"/>
+					</not>
+					<and>
+						<changeSetExecuted changeLogFile="changelog/db-changelog-dropAllObjects.xml" author="emtudorsm" id="dropTableEndPoint"/>
+						<not>
+							<tableExists tableName="organisation_t"/>
+						</not>
+					</and>
+				</or>
+		</preConditions>
+	</changeSet>-->
+	
+</databaseChangeLog>

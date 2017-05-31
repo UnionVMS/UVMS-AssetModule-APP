@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+	<changeSet author="davijo" id="carr-01">
+		<createTable tableName="carrier">
+			<column name="carr_id" type="BIGINT">
+				<constraints primaryKey="true" primaryKeyName="carr_pk" />
+			</column>
+			<column name="carr_carriersource" type="VARCHAR(30)">
+				<constraints nullable="false" />
+			</column>
+			<column name="carr_active" type="BOOLEAN" defaultValueBoolean="true">
+				<constraints nullable="false" />
+			</column>
+			<column name="carr_updattim" type="TIMESTAMP WITHOUT TIME ZONE" />
+			<column name="carr_upuser" type="VARCHAR(60)" />
+		</createTable>
+
+        <createSequence sequenceName="carr_id_seq" minValue="100"/>
+        
+		<rollback>
+			<dropTable tableName="carrier" cascadeConstraints="true"/>
+		</rollback>
+	</changeSet>
+	
+	<changeSet author="nhily" id="Remove old sequence">
+		<dropSequence sequenceName="carr_id_seq"/>
+	</changeSet>
+</databaseChangeLog>

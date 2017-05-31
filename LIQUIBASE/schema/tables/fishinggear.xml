@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+	<changeSet author="davijo" id="fishg-01">
+		<createTable tableName="fishinggear">
+			<column name="fishg_id" type="BIGINT">
+				<constraints primaryKey="true" primaryKeyName="fishg_pk" />
+			</column>
+			<column name="fishg_code" type="VARCHAR(3)" />
+			<column name="fishg_desc" type="VARCHAR(200)" />
+			<column name="fishg_fishgtyp_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="fishg_fishgm_id" type="BIGINT" />
+			<column name="fishg_fishtyp_id" type="BIGINT" />
+			<column name="fishg_updattim" type="TIMESTAMP WITHOUT TIME ZONE" />
+			<column name="fishg_upuser" type="VARCHAR(60)" />
+		</createTable>
+		<createSequence sequenceName="fishg_id_seq"/>
+		<rollback>
+			<dropTable tableName="fishinggear" cascadeConstraints="true"/>
+		</rollback>
+	</changeSet>
+    
+	<changeSet author="davijo" id="fishgfk-01">
+		<addForeignKeyConstraint baseColumnNames="fishg_fishgm_id"
+			baseTableName="fishinggear" constraintName="fishg_fishgm_fk"
+			deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+			onUpdate="NO ACTION" referencedColumnNames="fishgm_id"
+			referencedTableName="fishinggearmobility" />
+        <rollback>
+			<dropForeignKeyConstraint baseTableName="fishinggear" constraintName="fishg_fishgm_fk"/>
+		</rollback>
+	</changeSet>
+    
+	<changeSet author="davijo" id="fishgfk-02">
+		<addForeignKeyConstraint baseColumnNames="fishg_fishgtyp_id"
+			baseTableName="fishinggear" constraintName="fishg_fishgtyp_fk"
+			deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+			onUpdate="NO ACTION" referencedColumnNames="fishgtyp_id"
+			referencedTableName="fishinggeartype" />
+        <rollback>
+			<dropForeignKeyConstraint baseTableName="fishinggear" constraintName="fishg_fishgtyp_fk"/>
+		</rollback>
+	</changeSet>
+    
+	<changeSet author="davijo" id="fishgfk-03">
+		<addForeignKeyConstraint baseColumnNames="fishg_fishtyp_id"
+			baseTableName="fishinggear" constraintName="fishg_fishtyp_fk"
+			deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+			onUpdate="NO ACTION" referencedColumnNames="fishtyp_id"
+			referencedTableName="fishingtype" />
+        <rollback>
+			<dropForeignKeyConstraint baseTableName="fishinggear" constraintName="fishg_fishtyp_fk"/>
+		</rollback>
+	</changeSet>
+	
+	<changeSet author="nhily" id="Remove old sequence">
+		<dropSequence sequenceName="fishg_id_seq"/>
+	</changeSet>
+	
+	<changeSet author="nhily" id="fishingGearExternalId">
+		<addColumn tableName="fishinggear">
+			<column name="fishg_fishtyp_ext_id" type="BIGINT" />
+		</addColumn>
+		<rollback>
+			<dropColumn columnName="fishg_fishtyp_ext_id" tableName="fishinggear"/>
+		</rollback>
+	</changeSet>
+    	
+</databaseChangeLog>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+<changeSet id="filtgrp_01" author="davijo">
+    	<createTable tableName="filtergroup">
+    		<column autoIncrement="true" name="filtgrp_id" type="BIGINT">
+    			<constraints primaryKey="true" primaryKeyName="filtgrp_pk"/>
+    		</column>
+    		<column name="filtgrp_name" type="varchar(80)">
+				<constraints nullable="false" />
+			</column>
+    		<column name="filtgrp_activ" type="varchar(10)"> 
+				<constraints nullable="false" />
+			</column>
+    		<column name="filtgrp_global" type="varchar(10)">
+				<constraints nullable="false" />
+			</column>
+    		<column name="filtgrp_user_id" type="varchar(80)"/>
+    		<column name="filtgrp_updattim" type="TIMESTAMP WITH TIME ZONE"/>
+    		<column name="filtgrp_upuser" type="varchar(60)"/>
+    	</createTable>
+        <!--
+    	<sql splitStatements="true">
+			COMMENT ON TABLE filtergroup IS 'Filtergroup table.';
+			COMMENT ON COLUMN filtergroup.filtgrp_id IS 'Synthetic key.';
+			COMMENT ON COLUMN filtergroup.filtgrp_name IS 'Filtergroup Name.';
+			COMMENT ON COLUMN filtergroup.filtgrp_activ IS 'Acktiv true/false.';
+			COMMENT ON COLUMN filtergroup.filtgrp_global IS 'Is the filter global true/false.';
+			COMMENT ON COLUMN filtergroup.filtgrp_user_id IS 'FK user.';
+			COMMENT ON COLUMN filtergroup.filtgrp_updattim IS 'Last user changed row.';
+			COMMENT ON COLUMN filtergroup.filtgrp_upuser IS 'Last user changed row.';
+		</sql>-->
+		<rollback>
+    		<dropTable tableName="filtergroup" cascadeConstraints="true"/>
+    	</rollback>
+    </changeSet>
+    
+    <changeSet id="filtgrp_02" author="davijo">
+    		<addColumn tableName="filtergroup" >
+    			<column name="filtgrp_dynamic" type="varchar(10)"/>
+    		</addColumn>
+            <!--
+    		<sql splitStatements="true">
+			COMMENT ON COLUMN filtergroup.filtgrp_dynamic IS 'Says whether a filter is dynamic or not.';
+		</sql>-->
+
+		<rollback>
+    		<dropColumn tableName="filtergroup">
+    			<column name="filtgrp_dynamic"/>
+    		</dropColumn>
+    	</rollback>
+    </changeSet>
+    <changeSet id="filtgrp_03" author="davijo">
+    	<renameColumn tableName="filtergroup" oldColumnName="filtgrp_activ" newColumnName="filtgrp_active"/>
+        <!--
+    	<sql splitStatements="false">
+    		COMMENT ON COLUMN filtergroup.filtgrp_active IS 'Active true/false.'
+    	</sql>-->
+    	<rollback>
+    	<renameColumn tableName="filtergroup" oldColumnName="filtgrp_active" newColumnName="filtgrp_activ"/>
+        <!--
+    	<sql splitStatements="false">
+    		COMMENT ON COLUMN filtergroup.filtgrp_activ IS 'Acktiv true/false.'
+    	</sql>-->
+    	</rollback>
+    </changeSet>
+
+    <changeSet id="filtgrp_02" author="davijo">
+    		<addColumn tableName="filtergroup" >
+    			<column name="filtgrp_dynamic" type="varchar(10)"/>
+    		</addColumn>
+            <!--
+    		<sql splitStatements="true">
+			COMMENT ON COLUMN filtergroup.filtgrp_dynamic IS 'Says whether a filter is dynamic or not.';
+		</sql>-->
+
+		<rollback>
+    		<dropColumn tableName="filtergroup">
+    			<column name="filtgrp_dynamic"/>
+    		</dropColumn>
+    	</rollback>
+    </changeSet>
+    <changeSet id="filtgrp_03" author="davijo">
+    	<renameColumn tableName="filtergroup" oldColumnName="filtgrp_activ" newColumnName="filtgrp_active"/>
+        <!--
+    	<sql splitStatements="false">
+    		COMMENT ON COLUMN filtergroup.filtgrp_active IS 'Active true/false.'
+    	</sql>-->
+    	<rollback>
+    	<renameColumn tableName="filtergroup" oldColumnName="filtgrp_active" newColumnName="filtgrp_activ"/>
+        <!--
+    	<sql splitStatements="false">
+    		COMMENT ON COLUMN filtergroup.filtgrp_activ IS 'Acktiv true/false.'
+    	</sql>-->
+    	</rollback>
+    </changeSet>
+	<changeSet author="nhily" id="modify data type time without time zone">
+		<modifyDataType
+            columnName="filtgrp_updattim"
+            newDataType="TIMESTAMP WITHOUT TIME ZONE"
+            tableName="filtergroup"/>
+	</changeSet>
+</databaseChangeLog>
