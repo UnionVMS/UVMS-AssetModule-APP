@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+	<changeSet author="davijo" id="carract-03">
+		<insert tableName="carrieractive">
+			<column name="carract_id" valueNumeric="0" />
+			<column name="carract_state" value="Inactive." />
+			<column name="carract_updattim" valueDate="${now}" />
+			<column name="carract_upuser" value="UVMS" />
+		</insert>
+		<insert tableName="carrieractive">
+			<column name="carract_id" valueNumeric="1" />
+			<column name="carract_state" value="Active." />
+			<column name="carract_updattim" valueDate="${now}" />
+			<column name="carract_upuser" value="UVMS" />
+		</insert>
+		<rollback>
+			<delete tableName="carrieractive">
+				<where>carract_id in (0,1)</where>
+			</delete>
+		</rollback>
+	</changeSet>	
+</databaseChangeLog>

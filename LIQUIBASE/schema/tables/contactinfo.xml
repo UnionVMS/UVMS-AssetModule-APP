@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Developed with the contribution of the European Commission - Directorate General for Maritime Affairs and Fisheries
+  ~ © European Union, 2015-2016.
+  ~
+  ~ This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can
+  ~ redistribute it and/or modify it under the terms of the GNU General Public License as published by the
+  ~ Free Software Foundation, either version 3 of the License, or any later version. The IFDM Suite is distributed in
+  ~ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  ~ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
+  ~ copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+	<changeSet author="osdjup" id="contactInfo-01">
+		<createTable tableName="contactinfo">
+			<column name="contactinfo_id" type="BIGINT">
+				<constraints primaryKey="true" primaryKeyName="contactinfo_pk" />
+			</column>
+			<column name="contactinfo_assethist_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="contactinfo_name" type="VARCHAR(100)">
+				<constraints nullable="false" />
+			</column>
+			<column name="contactinfo_email" type="VARCHAR(40)" />
+			<column name="contactinfo_phone" type="VARCHAR(40)" />
+			<column name="contactinfo_owner" type="BOOLEAN" defaultValueBoolean="false"/>
+			<column name="contactinfo_source" type="VARCHAR(30)" >
+				<constraints nullable="false" />
+			</column>
+			<column name="contactinfo_updattim" type="TIMESTAMP WITHOUT TIME ZONE" />
+			<column name="contactinfo_upuser" type="VARCHAR(60)" />
+		</createTable>
+
+		<addForeignKeyConstraint baseColumnNames="contactinfo_assethist_id"
+								 baseTableName="contactinfo" constraintName="contactinfo_assethist_fk"
+								 referencedColumnNames="assethist_id"
+								 referencedTableName="assethistory" />
+		<rollback>
+			<dropTable tableName="contactinfo" cascadeConstraints="true"/>
+		</rollback>
+	</changeSet>
+</databaseChangeLog>
