@@ -13,6 +13,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGearType;
 
+import javax.ejb.Local;
+
+@Local
 public interface FishingGearTypeDao {
 
 
