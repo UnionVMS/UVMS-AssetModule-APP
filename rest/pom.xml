@@ -8,16 +8,13 @@
 
 
     <parent>
-        <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-        <artifactId>asset</artifactId>
-        <version>3.0.6-SNAPSHOT</version>
+	    <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+	    <artifactId>asset</artifactId>
+	    <version>3.0.6-SNAPSHOT</version>
+	    <relativePath>../pom.xml</relativePath>
     </parent>
 
     <properties>
-        <maven.compiler.plugin.version>3.1</maven.compiler.plugin.version>
-        <maven.compiler.plugin.source>1.7</maven.compiler.plugin.source>
-        <maven.compiler.plugin.target>1.7</maven.compiler.plugin.target>
-        <maven.war.plugin.version>2.4</maven.war.plugin.version>
         <maven.javadoc.plugin.version>2.9.1</maven.javadoc.plugin.version>
         <swagger.doclet.version>1.0.4.2</swagger.doclet.version>
         <replacer.version>1.5.3</replacer.version>
@@ -48,7 +45,17 @@
             <artifactId>usm4uvms</artifactId>
             <version>${usm4uvms.version}</version>
         </dependency>
-
+        <dependency>
+			<groupId>fish.focus.uvms.maven</groupId>
+			<artifactId>uvms-pom-monitoring-deps</artifactId>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>fish.focus.uvms.maven</groupId>
+			<artifactId>uvms-pom-arquillian-deps</artifactId>
+			<type>pom</type>
+			<scope>test</scope>
+		</dependency>				                
     </dependencies>
 
     <build>
@@ -56,28 +63,11 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven.compiler.plugin.version}</version>
-                <configuration>
-                    <source>${maven.compiler.plugin.source}</source>
-                    <target>${maven.compiler.plugin.target}</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>${maven.war.plugin.version}</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>${maven-release-plugin}</version>
-            </plugin>
-
         </plugins>
     </build>
     
