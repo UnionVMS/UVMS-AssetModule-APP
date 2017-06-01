@@ -11,26 +11,21 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
-import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.ModuleQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.mapper.AuditModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.InputArgumentException;
-import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceRequestMapper;
-import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceResponseMapper;
-import eu.europa.ec.fisheries.uvms.asset.remote.AssetGroupDomainModel;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
-import eu.europa.ec.fisheries.uvms.asset.service.constants.ServiceConstants;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
+import eu.europa.ec.fisheries.uvms.bean.AssetGroupDomainModelBean;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.jms.TextMessage;
 import java.util.List;
 
 @Stateless
@@ -44,8 +39,9 @@ public class AssetGroupServiceBean implements AssetGroupService {
     @EJB
     AssetQueueConsumer receiver;
 
-    @EJB(lookup = ServiceConstants.DB_ACCESS_ASSET_GROUP_DOMAIN_MODEL)
-    private AssetGroupDomainModel assetGroupDomainModel;
+    //@EJB(lookup = ServiceConstants.DB_ACCESS_ASSET_GROUP_DOMAIN_MODEL)
+    @EJB
+    private AssetGroupDomainModelBean assetGroupDomainModel;
 
     final static Logger LOG = LoggerFactory.getLogger(AssetGroupServiceBean.class);
 

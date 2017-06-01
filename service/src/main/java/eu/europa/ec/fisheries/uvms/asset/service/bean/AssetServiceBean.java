@@ -19,12 +19,9 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.jms.TextMessage;
 
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
-import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
-import eu.europa.ec.fisheries.uvms.asset.remote.AssetDomainModel;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.GetAssetListResponseDto;
-import eu.europa.ec.fisheries.uvms.asset.service.constants.ServiceConstants;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
+import eu.europa.ec.fisheries.uvms.bean.AssetDomainModelBean;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,8 +51,9 @@ public class AssetServiceBean implements AssetService {
     @EJB
     AssetQueueConsumer reciever;
 
-    @EJB(lookup = ServiceConstants.DB_ACCESS_ASSET_DOMAIN_MODEL)
-    AssetDomainModel assetDomainModel;
+//    @EJB(lookup = ServiceConstants.DB_ACCESS_ASSET_DOMAIN_MODEL)
+    @EJB
+    AssetDomainModelBean assetDomainModel;
 
     /**
      * {@inheritDoc}

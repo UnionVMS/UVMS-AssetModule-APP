@@ -14,8 +14,6 @@ package eu.europa.ec.fisheries.uvms.bean;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.InputArgumentException;
-import eu.europa.ec.fisheries.uvms.asset.remote.AssetGroupDomainModel;
-import eu.europa.ec.fisheries.uvms.asset.remote.ConfigDomainModel;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.GetAssetListResponseDto;
 import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
@@ -44,10 +42,10 @@ public class AssetDomainModelBean  {
     AssetDao assetDao;
 
     @EJB
-    ConfigDomainModel configModel;
+    ConfigDomainModelBean configModel;
 
     @EJB
-    AssetGroupDomainModel assetGroupModel;
+    AssetGroupDomainModelBean assetGroupModel;
 
     private static final Logger LOG = LoggerFactory
             .getLogger(AssetDomainModelBean.class);
