@@ -36,12 +36,10 @@ public abstract class BuildAssetDeployment {
         
         testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.asset.model");
         
-        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.arquillian");
-        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.arquillian.bean");
-        
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.asset.arquillian");
+
         testWar.addPackages(true, "eu.europa.ec.fisheries.schema");
         testWar.addClass(TransactionalTests.class);
-        testWar.addClass(TestMe.class);
 
         testWar.addAsResource("persistence-integration.xml", "META-INF/persistence.xml");
         // Empty beans for EE6 CDI
