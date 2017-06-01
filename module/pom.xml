@@ -6,14 +6,17 @@
     <packaging>ear</packaging>
     
     <parent>
-        <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-        <artifactId>asset</artifactId>
-        <version>3.0.6-SNAPSHOT</version>
+	    <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+	    <artifactId>asset</artifactId>
+	    <version>3.0.6-SNAPSHOT</version>
+	    <relativePath>../pom.xml</relativePath>
     </parent>
 
     <properties>
         <wildfly.maven.plugin.version>1.0.2.Final</wildfly.maven.plugin.version>
         <maven.ear.plugin.version>2.7</maven.ear.plugin.version>
+        <docker.dev.stop.phase>verify</docker.dev.stop.phase>
+        <docker.dev.prestop.phase>install</docker.dev.prestop.phase>        		        
     </properties>
 
     <build>
@@ -23,7 +26,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-ear-plugin</artifactId>
-                <version>${maven.ear.plugin.version}</version>
                 <configuration>
                     <modules>
                         <ejbModule>
@@ -48,17 +50,10 @@
                     <defaultLibBundleDir>APP-INF/lib</defaultLibBundleDir>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>${maven-release-plugin}</version>
-            </plugin>
-
             <!-- COPY TO FOLDER -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.10</version>
                 <executions>
                     <execution>
                         <id>copy-installed</id>

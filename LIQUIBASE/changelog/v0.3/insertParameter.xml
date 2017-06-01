@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet author="davijo" id="Insert static parameter values">
+        
+        <insert tableName="parameter">
+            <column name="param_id" value="asset.national.use" />
+            <column name="param_value" value="FALSE" />
+            <column name="param_description" value="Use national register of assets." />
+        </insert>
+        
+        <insert tableName="parameter">
+            <column name="param_id" value="asset.eu.use" />
+            <column name="param_value" value="FALSE" />
+            <column name="param_description" value="Use EU register of assets." />
+        </insert>
+        
+        <insert tableName="parameter">
+            <column name="param_id" value="NATIONAL_SERVICE_ENDPOINT"/>
+            <column name="param_value" value="http://livmipl02t:8011/esb/Vessel/v2"/>
+            <column name="param_description" value="Endpoint for National proxy service"/>
+        </insert>
+        
+        <insert tableName="parameter">
+            <column name="param_id" value="asset.default.flagstate"/>
+            <column name="param_value" value="SWE"/>
+            <column name="param_description" value="Default flagstate for assets"/>
+        </insert>
+        
+        <rollback>
+            <delete tableName="parameter">
+                <where> 
+                    param_id in ('asset.national.use','asset.eu.use','NATIONAL_SERVICE_ENDPOINT','asset.default.flagstate')
+                </where>
+            </delete>
+        </rollback>
+        
+    </changeSet>
+</databaseChangeLog>

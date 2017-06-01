@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+	<changeSet author="davijo" id="fishgm-03">
+		<insert tableName="fishinggearmobility">
+			<column name="fishgm_id" valueNumeric="1" />
+			<column name="fishgm_code" value="S" />
+			<column name="fishgm_desc" value="Stationary." />
+			<column name="fishgm_updattim" valueDate="${now}" />
+			<column name="fishgm_upuser" value="UVMS" />
+		</insert>
+		<insert tableName="fishinggearmobility">
+			<column name="fishgm_id" valueNumeric="2" />
+			<column name="fishgm_code" value="T" />
+			<column name="fishgm_desc" value="Towed." />
+			<column name="fishgm_updattim" valueDate="${now}" />
+			<column name="fishgm_upuser" value="UVMS" />
+		</insert>
+		<insert tableName="fishinggearmobility">
+			<column name="fishgm_id" valueNumeric="3" />
+			<column name="fishgm_code" value="M" />
+			<column name="fishgm_desc" value="Mobli." />
+			<column name="fishgm_updattim" valueDate="${now}" />
+			<column name="fishgm_upuser" value="UVMS" />
+		</insert>
+		<rollback>
+			<delete tableName="fishinggearmobility">
+				<where>
+					fishgm_id in (1,2,3)
+				</where>
+			</delete>
+		</rollback>
+	</changeSet>	
+</databaseChangeLog>
