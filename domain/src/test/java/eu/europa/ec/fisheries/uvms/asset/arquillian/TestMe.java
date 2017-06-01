@@ -5,6 +5,7 @@ import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -32,6 +33,7 @@ public class TestMe extends TransactionalTests {
 
         try {
             List<AssetEntity> rs = assetDao.getAssetListAll();
+            Assert.assertTrue(rs != null);
         } catch (AssetDaoException e) {
             e.printStackTrace();
         } catch (Throwable e) {
