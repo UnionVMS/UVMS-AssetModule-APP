@@ -17,20 +17,14 @@ import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.jms.TextMessage;
 
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
-import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceRequestMapper;
-import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceResponseMapper;
-import eu.europa.ec.fisheries.uvms.asset.remote.ConfigDomainModel;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.ConfigurationDto;
 import eu.europa.ec.fisheries.uvms.asset.service.ConfigService;
-import eu.europa.ec.fisheries.uvms.asset.service.constants.ServiceConstants;
+import eu.europa.ec.fisheries.uvms.bean.ConfigDomainModelBean;
 import eu.europa.ec.fisheries.wsdl.asset.config.Config;
 import eu.europa.ec.fisheries.wsdl.asset.config.ConfigField;
 import org.slf4j.Logger;
@@ -53,8 +47,9 @@ public class ConfigServiceBean implements ConfigService {
     @EJB
     ParameterService parameterService;
 
-	@EJB(lookup = ServiceConstants.DB_ACCESS_CONFIG_DOMAIN_MODEL)
-	private ConfigDomainModel configDomainModel;
+	//@EJB(lookup = ServiceConstants.DB_ACCESS_CONFIG_DOMAIN_MODEL)
+	@EJB
+	private ConfigDomainModelBean configDomainModel;
 
     @EJB
     ConfigHelper configHelper;

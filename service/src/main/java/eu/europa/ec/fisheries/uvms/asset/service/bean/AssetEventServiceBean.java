@@ -37,6 +37,7 @@ import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.FishingGearService;
 import eu.europa.ec.fisheries.uvms.asset.service.constants.ServiceConstants;
 import eu.europa.ec.fisheries.uvms.asset.service.property.ParameterKey;
+import eu.europa.ec.fisheries.uvms.bean.FishingGearDomainModelBean;
 import eu.europa.ec.fisheries.wsdl.asset.fishinggear.FishingGearListResponse;
 import eu.europa.ec.fisheries.wsdl.asset.fishinggear.FishingGearResponse;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
@@ -51,7 +52,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
-import eu.europa.ec.fisheries.uvms.asset.remote.FishingGearDomainModel;
 
 @Stateless
 public class AssetEventServiceBean implements AssetEventService {
@@ -73,8 +73,9 @@ public class AssetEventServiceBean implements AssetEventService {
     @EJB
     private FishingGearService fishingGearService;
 
-    @EJB(lookup = ServiceConstants.DB_ACCESS_FISHING_GEAR_DOMAIN_MODEL)
-    private FishingGearDomainModel fishingGearDomainModel;
+//    @EJB(lookup = ServiceConstants.DB_ACCESS_FISHING_GEAR_DOMAIN_MODEL)
+    @EJB
+    private FishingGearDomainModelBean fishingGearDomainModel;
 
     @Inject
     @AssetMessageErrorEvent

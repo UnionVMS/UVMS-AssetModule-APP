@@ -1,5 +1,6 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
+import eu.europa.ec.fisheries.uvms.asset.service.bean.*;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
 import org.eu.ingwar.tools.arquillian.extension.suite.annotations.ArquillianSuiteDeployment;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -38,12 +39,17 @@ public abstract class BuildAssetServiceDeployment {
         testWar.addPackages(true, "eu.europa.fisheries.uvms.asset.service");
         testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.asset.service");
         testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.asset.dto");
-        //testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.dao.exception");
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.asset.exception");
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.asset.service.bean");
 
 
         testWar.addClass(TransactionalTests.class);
         testWar.addClass(ConfigServiceException.class);
-
+        testWar.addClass(AssetHistoryServiceBean.class);
+        testWar.addClass(ConfigServiceBean.class);
+        testWar.addClass(AssetServiceBean.class);
+        testWar.addClass(AssetEventServiceBean.class);
+        testWar.addClass(AssetGroupServiceBean.class);
 
 
         // Empty beans for EE6 CDI

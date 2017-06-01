@@ -15,16 +15,10 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.jms.TextMessage;
-
-import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
-import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceRequestMapper;
-import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceResponseMapper;
-import eu.europa.ec.fisheries.uvms.asset.remote.AssetDomainModel;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
-import eu.europa.ec.fisheries.uvms.asset.service.constants.ServiceConstants;
+import eu.europa.ec.fisheries.uvms.bean.AssetDomainModelBean;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetHistoryId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
@@ -44,8 +38,9 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
     @EJB
     AssetQueueConsumer reciever;
 
-    @EJB(lookup = ServiceConstants.DB_ACCESS_ASSET_DOMAIN_MODEL)
-    private AssetDomainModel assetDomainModel;
+//    @EJB(lookup = ServiceConstants.DB_ACCESS_ASSET_DOMAIN_MODEL)
+    @EJB
+    private AssetDomainModelBean assetDomainModel;
 
     final static Logger LOG = LoggerFactory.getLogger(AssetHistoryServiceBean.class);
 

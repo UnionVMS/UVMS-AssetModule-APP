@@ -16,9 +16,6 @@ import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
 
 import javax.jms.TextMessage;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 public class AssetMessageEvent {
 
