@@ -3,6 +3,7 @@ package eu.europa.fisheries.uvms.asset.service.arquillian;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -20,6 +21,7 @@ public class AssetServiceBeanIntTest  extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
+    @Ignore
     public void t1(){
 
         assetService.getNoteActivityCodes();
