@@ -1,0 +1,24 @@
+##initial creation of the dev database database. This command must be executed 
+mvn liquibase:update -P postgres-dev
+
+##test database on postgres
+mvn liquibase:update -P postgres-test
+
+## rolback the database till a specified tag
+mvn liquibase:rollback -P postgres-dev -Dliquibase.rollbackTag=version_0.1
+
+mvn liquibase:status -P postgres-local
+mvn liquibase:rollback -P postgres-local -Dliquibase.rollbackCount=1
+
+
+Regarding contexts:
+- At the moment we use one context ("test" - for test data).
+In order to run all non-context changesets AND selected:
+- mvn liquibase:update -P postgres-local -Dliquibase.contexts=test
+
+In order to only run all non-context changesets, run with a context that doesn't exist:
+- mvn liquibase:update -P postgres-local -Dliquibase.contexts=blurk
+
+## create changeset (get create and insert changesets for current database)
+mvn liquibase:generateChangeLog -Ppostgres-local
+

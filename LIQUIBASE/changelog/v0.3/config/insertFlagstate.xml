@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+	<changeSet author="johlyn" id="FLAGSTATE user data">
+		<insert tableName="flagstate">
+			<column name="flagstate_id" valueNumeric="1" />
+            <column name="flagstate_code" value="SWE" />
+			<column name="flagstate_name" value="Sweden" />
+			<column name="flagstate_updattim" valueDate="${now}" />
+			<column name="flagstate_upuser" value="UVMS" />
+		</insert>
+        <insert tableName="flagstate">
+			<column name="flagstate_id" valueNumeric="2" />
+            <column name="flagstate_code" value="DNK" />
+			<column name="flagstate_name" value="Denmark" />
+			<column name="flagstate_updattim" valueDate="${now}" />
+			<column name="flagstate_upuser" value="UVMS" />
+		</insert>
+        <insert tableName="flagstate">
+			<column name="flagstate_id" valueNumeric="3" />
+            <column name="flagstate_code" value="NOR" />
+			<column name="flagstate_name" value="Norway" />
+			<column name="flagstate_updattim" valueDate="${now}" />
+			<column name="flagstate_upuser" value="UVMS" />
+		</insert>
+		<rollback>
+			<delete tableName="flagstate">
+				<where>
+					flagstate_id in (1, 2, 3)
+				</where>
+			</delete>
+		</rollback>
+	</changeSet>
+</databaseChangeLog>

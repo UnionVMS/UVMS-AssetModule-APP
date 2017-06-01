@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+	<changeSet author="johlyn" id="vessel-version-0.3">
+    	<tagDatabase tag="vessel_version_0.3"/>
+	</changeSet>
+    <changeSet author="johlyn" id="vessel-version-0.5">
+        <tagDatabase tag="vessel_version_0.5"/>
+    </changeSet>
+
+    <include file="changelog\v0.5\db-changelog-createTables_0.5.xml" />
+    
+    <include file="changelog\properties.xml"/>
+
+    <include file="changelog\v0.3\db-changelog-insertConfigValues_0.3.xml" />
+    <include file="changelog\v0.3\db-changelog-insertStaticValues_0.3.xml" />
+    <include file="changelog\v0.4\db-changelog-insertStaticValues_0.4.xml" />
+
+</databaseChangeLog>
