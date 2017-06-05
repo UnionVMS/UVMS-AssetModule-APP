@@ -67,8 +67,7 @@ public class AssetEventServiceBean implements AssetEventService {
 
 
 //    @EJB(lookup = ServiceConstants.DB_ACCESS_FISHING_GEAR_DOMAIN_MODEL)
-    @EJB
-    private FishingGearDomainModelBean fishingGearDomainModel;
+
 
     @Inject
     @AssetMessageErrorEvent
@@ -85,9 +84,4 @@ public class AssetEventServiceBean implements AssetEventService {
         }
     }
 
-
-    @Override
-    public void upsertFishingGears(@Observes @UpsertFishingGearsMessageEvent AssetMessageEvent messageEvent){
-        fishingGearDomainModel.upsertFishingGear(messageEvent.getFishingGear(), messageEvent.getUsername());
-    }
 }

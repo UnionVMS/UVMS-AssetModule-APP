@@ -58,6 +58,9 @@ public class MessageConsumerBean implements MessageListener {
     @EJB
     private UpsertAssetMessageEventBean upsertAssetMessageEventBean;
 
+    @EJB
+    private UpsertFishingGearsMessageEventBean upsertFishingGearsMessageEventBean;
+
     @Inject
     @AssetMessageErrorEvent
     Event<AssetMessageEvent> assetErrorEvent;
@@ -66,9 +69,6 @@ public class MessageConsumerBean implements MessageListener {
     @PingEvent
     Event<AssetMessageEvent> pingEvent;
 
-    @Inject
-    @UpsertFishingGearsMessageEvent
-    Event<AssetMessageEvent> upsertFisMessageEvent;
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -118,7 +118,7 @@ public class MessageConsumerBean implements MessageListener {
                 case FISHING_GEAR_UPSERT:
                     UpsertFishingGearModuleRequest upsertFishingGearListModuleRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, UpsertFishingGearModuleRequest.class);
                     AssetMessageEvent fishingGearMessageEvent = new AssetMessageEvent(textMessage, upsertFishingGearListModuleRequest.getFishingGear(), upsertFishingGearListModuleRequest.getUsername());
-                    upsertFisMessageEvent.fire(fishingGearMessageEvent);
+                    upsertFishingGearsMessageEventBean.upsertFishingGears(fishingGearMessageEvent);
                     break;
                 default:
                     LOG.error("[ Not implemented method consumed: {} ]", method);
