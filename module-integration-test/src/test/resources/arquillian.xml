@@ -18,7 +18,7 @@
     
     <extension qualifier="jacoco">
 	    <property name="excludes">eu.europa.ec.fisheries.schema.*</property>
-	    <property name="includes">eu.europa.ec.fisheries.uvms.movement.*</property>
+	    <property name="includes">eu.europa.ec.fisheries.uvms.asset.*</property>
 	</extension>
   
 </arquillian>
