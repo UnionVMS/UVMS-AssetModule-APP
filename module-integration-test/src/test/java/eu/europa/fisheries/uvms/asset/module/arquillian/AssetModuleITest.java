@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 
 
 @RunWith(Arquillian.class)
-public class MovementModuleITest extends BuildAssetModuleTestDeployment {
+public class AssetModuleITest extends BuildAssetModuleTestDeployment {
 
     @Test
     @OperateOnDeployment("assetmodule")
