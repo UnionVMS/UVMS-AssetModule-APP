@@ -61,8 +61,6 @@ public class AssetEventServiceBean implements AssetEventService {
     @EJB
     AssetService service;
 
-    @EJB
-    ParameterService parameters;
 
     @EJB
     MessageProducer messageProducer;
@@ -80,73 +78,6 @@ public class AssetEventServiceBean implements AssetEventService {
     @Inject
     @AssetMessageErrorEvent
     Event<AssetMessageEvent> assetErrorEvent;
-
-    @Override
-    public void getAsset(@Observes @GetAssetMessageEvent AssetMessageEvent message) {
-        LOG.info("Getting asset.");
-        AssetDataSourceQueue dataSource = null;
-        Asset asset = null;
-        boolean messageSent = false;
-
-        try {
-            dataSource = decideDataflow(message.getAssetId());
-            LOG.debug("Got message to AssetModule, Executing Get asset from datasource {}", dataSource.name());
-            asset = service.getAssetById(message.getAssetId(), dataSource);
-        } catch (AssetException e) {
-            LOG.error("[ Error when getting asset from source {}. ] ", dataSource.name());
-            assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting asset from source : " + dataSource.name() + " Error message: " + e.getMessage())));
-            messageSent = true;
-            asset = null;
-        }
-
-        if (asset != null && !dataSource.equals(AssetDataSourceQueue.INTERNAL)) {
-            try {
-                Asset upsertedAsset = service.upsertAsset(asset, dataSource.name());
-                asset.getAssetId().setGuid(upsertedAsset.getAssetId().getGuid());
-            } catch (AssetException e) {
-                LOG.error("[ Couldn't upsert asset in internal ]");
-                assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, e.getMessage())));
-                messageSent = true;
-            }
-        }
-
-        if (!messageSent) {
-            try {
-                messageProducer.sendModuleResponseMessage(message.getMessage(), AssetModuleResponseMapper.mapAssetModuleResponse(asset));
-            } catch (AssetModelMapperException e) {
-                LOG.error("[ Error when mapping asset ] ");
-                assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when mapping asset" + e.getMessage())));
-            }
-        }
-    }
-
-    private AssetDataSourceQueue decideDataflow(AssetId assetId) throws AssetServiceException {
-
-        try {
-            // If search is made by guid, no other source is relevant
-            if (AssetIdType.GUID.equals(assetId.getType())) {
-                return AssetDataSourceQueue.INTERNAL;
-            }
-
-            Boolean xeu = parameters.getBooleanValue(ParameterKey.EU_USE.getKey());
-            Boolean national = parameters.getBooleanValue(ParameterKey.NATIONAL_USE.getKey());
-            LOG.debug("Settings for dataflow are: XEU: {0} NATIONAL: {1}", new Object[]{xeu, national});
-            if (xeu && national) {
-                return AssetDataSourceQueue.NATIONAL;
-            }
-            if (national) {
-                return AssetDataSourceQueue.NATIONAL;
-            } else if (xeu) {
-                return AssetDataSourceQueue.XEU;
-            } else {
-                return AssetDataSourceQueue.INTERNAL;
-            }
-        } catch (ConfigServiceException e) {
-            LOG.error("[ Error when deciding data flow. ] ");
-            throw new AssetServiceException(e.getMessage());
-        }
-
-    }
 
     @Override
     public void getAssetList(@Observes @GetAssetListMessageEvent AssetMessageEvent message) {

@@ -17,14 +17,12 @@ import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetEventBean;
 import eu.europa.ec.fisheries.wsdl.asset.module.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ejb.ActivationConfigProperty;
-import javax.ejb.MessageDriven;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import javax.ejb.*;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.jms.Message;
@@ -42,9 +40,8 @@ public class MessageConsumerBean implements MessageListener {
 
     final static Logger LOG = LoggerFactory.getLogger(MessageConsumerBean.class);
 
-    @Inject
-    @GetAssetMessageEvent
-    Event<AssetMessageEvent> assetEvent;
+    @EJB
+    private GetAssetEventBean getAssetEventBean;
 
     @Inject
     @GetAssetListMessageEvent
@@ -93,7 +90,7 @@ public class MessageConsumerBean implements MessageListener {
                 case GET_ASSET:
                     GetAssetModuleRequest getRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, GetAssetModuleRequest.class);
                     AssetMessageEvent event = new AssetMessageEvent(textMessage, getRequest.getId());
-                    assetEvent.fire(event);
+                    getAssetEventBean.getAsset(event);
                     break;
                 case ASSET_LIST:
                     AssetListModuleRequest listRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetListModuleRequest.class);

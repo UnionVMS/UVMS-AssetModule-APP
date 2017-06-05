@@ -26,6 +26,11 @@
             <type>jar</type>
         </dependency>
         <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+            <artifactId>asset-service</artifactId>
+            <version>3.0.6-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.audit</groupId>
             <artifactId>audit-model</artifactId>
             <version>${audit.model.version}</version>

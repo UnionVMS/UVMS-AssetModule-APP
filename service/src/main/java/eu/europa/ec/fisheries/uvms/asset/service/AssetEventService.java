@@ -20,8 +20,6 @@ import javax.enterprise.event.Observes;
 @Local
 public interface AssetEventService {
 
-    public void getAsset(@Observes @GetAssetMessageEvent AssetMessageEvent message);
-
     public void getAssetList(@Observes @GetAssetListMessageEvent AssetMessageEvent message);
 
     public void getAssetGroupByUserName(@Observes @GetAssetGroupEvent AssetMessageEvent message);
