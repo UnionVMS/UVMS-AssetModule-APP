@@ -19,6 +19,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetEventBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetGroupEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetListByAssetGroupEventBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetListEventBean;
 import eu.europa.ec.fisheries.wsdl.asset.module.*;
 import org.slf4j.Logger;
@@ -51,13 +52,12 @@ public class MessageConsumerBean implements MessageListener {
     @EJB
     private GetAssetGroupEventBean getAssetGroupEventBean;
 
+    @EJB
+    private GetAssetListByAssetGroupEventBean getAssetListByAssetGroupEventBean;
+
     @Inject
     @AssetMessageErrorEvent
     Event<AssetMessageEvent> assetErrorEvent;
-
-    @Inject
-    @GetAssetListByAssetGroupEvent
-    Event<AssetMessageEvent> assetListByGroupEvent;
 
     @Inject
     @PingEvent
@@ -110,7 +110,7 @@ public class MessageConsumerBean implements MessageListener {
                 case ASSET_LIST_BY_GROUP:
                     GetAssetListByAssetGroupsRequest assetListByGroupListRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, GetAssetListByAssetGroupsRequest.class);
                     AssetMessageEvent assetListByGroupListEvent = new AssetMessageEvent(textMessage, assetListByGroupListRequest);
-                    assetListByGroupEvent.fire(assetListByGroupListEvent);
+                    getAssetListByAssetGroupEventBean.getAssetListByAssetGroups(assetListByGroupListEvent);
                     break;
                 case PING:
                     pingEvent.fire(new AssetMessageEvent(textMessage));
