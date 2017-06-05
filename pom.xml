@@ -97,6 +97,7 @@
         <module>message</module>
         <module>message-impl</module>
         <module>module</module>
+        <module>module-integration-test</module>
         <module>domain</module>
     </modules>
 

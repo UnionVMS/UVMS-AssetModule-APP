@@ -15,8 +15,6 @@
     <properties>
         <wildfly.maven.plugin.version>1.0.2.Final</wildfly.maven.plugin.version>
         <maven.ear.plugin.version>2.7</maven.ear.plugin.version>
-        <docker.dev.stop.phase>verify</docker.dev.stop.phase>
-        <docker.dev.prestop.phase>install</docker.dev.prestop.phase>        		        
     </properties>
 
     <build>
@@ -86,6 +84,12 @@
             <version>${project.parent.version}</version>
             <type>ejb</type>
         </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+            <artifactId>asset-message-impl</artifactId>
+            <version>${project.parent.version}</version>
+            <type>ejb</type>
+        </dependency>        
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>asset-service</artifactId>
