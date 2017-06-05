@@ -13,7 +13,6 @@
             <property name="managementPort">9990</property>
             <property name="username">admin</property>
             <property name="password">admin</property>
-            <!-- <property name="password">wildfly4ever</property> -->
         </configuration>
     </container>
     
@@ -21,5 +20,5 @@
 	    <property name="excludes">eu.europa.ec.fisheries.schema.*</property>
 	    <property name="includes">eu.europa.ec.fisheries.uvms.asset.*</property>
 	</extension>
-    
+  
 </arquillian>
