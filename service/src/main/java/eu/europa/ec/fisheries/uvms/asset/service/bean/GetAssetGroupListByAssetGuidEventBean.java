@@ -23,7 +23,7 @@ import java.util.List;
 @LocalBean
 public class GetAssetGroupListByAssetGuidEventBean {
 
-    private final static Logger LOG = LoggerFactory.getLogger(GetAssetGroupEventBean.class);
+    private final static Logger LOG = LoggerFactory.getLogger(GetAssetGroupListByAssetGuidEventBean.class);
 
     @EJB
     private MessageProducer messageProducer;

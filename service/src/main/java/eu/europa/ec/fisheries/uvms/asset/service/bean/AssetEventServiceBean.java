@@ -85,15 +85,6 @@ public class AssetEventServiceBean implements AssetEventService {
         }
     }
 
-    @Override
-    public void upsertAsset(@Observes @UpsertAssetMessageEvent AssetMessageEvent message){
-            try {
-                service.upsertAsset(message.getAsset(), AssetDataSourceQueue.INTERNAL.name());
-                LOG.error("########## Update asset in the local database");
-            } catch (AssetException e) {
-                LOG.error("Could not update asset in the local database");
-            }
-    }
 
     @Override
     public void upsertFishingGears(@Observes @UpsertFishingGearsMessageEvent AssetMessageEvent messageEvent){

@@ -55,6 +55,9 @@ public class MessageConsumerBean implements MessageListener {
     @EJB
     private GetAssetGroupListByAssetGuidEventBean getAssetGroupListByAssetGuidEventBean;
 
+    @EJB
+    private UpsertAssetMessageEventBean upsertAssetMessageEventBean;
+
     @Inject
     @AssetMessageErrorEvent
     Event<AssetMessageEvent> assetErrorEvent;
@@ -62,10 +65,6 @@ public class MessageConsumerBean implements MessageListener {
     @Inject
     @PingEvent
     Event<AssetMessageEvent> pingEvent;
-
-    @Inject
-    @UpsertAssetMessageEvent
-    Event<AssetMessageEvent> upsertAssetEvent;
 
     @Inject
     @UpsertFishingGearsMessageEvent
@@ -114,7 +113,7 @@ public class MessageConsumerBean implements MessageListener {
                 case UPSERT_ASSET:
                     UpsertAssetModuleRequest upsertRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, UpsertAssetModuleRequest.class);
                     AssetMessageEvent upsertAssetMessageEvent = new AssetMessageEvent(textMessage, upsertRequest.getAsset(), upsertRequest.getUserName());
-                    upsertAssetEvent.fire(upsertAssetMessageEvent);
+                    upsertAssetMessageEventBean.upsertAsset(upsertAssetMessageEvent);
                     break;
                 case FISHING_GEAR_UPSERT:
                     UpsertFishingGearModuleRequest upsertFishingGearListModuleRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, UpsertFishingGearModuleRequest.class);
