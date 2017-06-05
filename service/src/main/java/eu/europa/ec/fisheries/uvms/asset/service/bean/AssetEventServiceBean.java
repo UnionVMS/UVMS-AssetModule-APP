@@ -79,34 +79,7 @@ public class AssetEventServiceBean implements AssetEventService {
     @AssetMessageErrorEvent
     Event<AssetMessageEvent> assetErrorEvent;
 
-    @Override
-    public void getAssetList(@Observes @GetAssetListMessageEvent AssetMessageEvent message) {
-        LOG.info("Get asset list");
-        try {
-            ListAssetResponse response = service.getAssetList(message.getQuery());
 
-            LOG.debug("Send back assetlist response.");
-            messageProducer.sendModuleResponseMessage(message.getMessage(), AssetModuleResponseMapper.mapAssetModuleResponse(response));
-        } catch (AssetException e) {
-            LOG.error("[ Error when getting assetlist from source. ] ");
-            assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting assetlist [ " + e.getMessage())));
-        }
-    }
-
-    @Override
-    public void getAssetGroupByUserName(@Observes @GetAssetGroupEvent AssetMessageEvent message) {
-        LOG.info("Get asset group");
-        try {
-            AssetGroupListByUserRequest request = message.getRequest();
-            List<AssetGroup> response = assetGroup.getAssetGroupList(request.getUser());
-
-            LOG.debug("Send back assetGroupList response.");
-            messageProducer.sendModuleResponseMessage(message.getMessage(), AssetModuleResponseMapper.mapToAssetGroupListResponse(response));
-        } catch (AssetException e) {
-            LOG.error("[ Error when getting assetGroupList from source. ] ");
-            assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting AssetGroupByUserName [ " + e.getMessage())));
-        }
-    }
 
     @Override
     public void getAssetGroupListByAssetEvent(@Observes @GetAssetGroupListByAssetGuidEvent AssetMessageEvent message) {

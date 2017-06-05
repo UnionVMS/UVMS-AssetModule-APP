@@ -19,11 +19,6 @@ import javax.enterprise.event.Observes;
 
 @Local
 public interface AssetEventService {
-
-    public void getAssetList(@Observes @GetAssetListMessageEvent AssetMessageEvent message);
-
-    public void getAssetGroupByUserName(@Observes @GetAssetGroupEvent AssetMessageEvent message);
-
     void getAssetGroupListByAssetEvent(@Observes @GetAssetGroupListByAssetGuidEvent AssetMessageEvent message);
 
     public void getAssetListByAssetGroups(@Observes @GetAssetListByAssetGroupEvent AssetMessageEvent message);
