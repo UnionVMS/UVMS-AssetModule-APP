@@ -65,11 +65,6 @@ public class AssetEventServiceBean implements AssetEventService {
     @EJB
     MessageProducer messageProducer;
 
-    @EJB
-    AssetGroupService assetGroup;
-
-    @EJB
-    private FishingGearService fishingGearService;
 
 //    @EJB(lookup = ServiceConstants.DB_ACCESS_FISHING_GEAR_DOMAIN_MODEL)
     @EJB
@@ -78,22 +73,6 @@ public class AssetEventServiceBean implements AssetEventService {
     @Inject
     @AssetMessageErrorEvent
     Event<AssetMessageEvent> assetErrorEvent;
-
-
-
-    @Override
-    public void getAssetGroupListByAssetEvent(@Observes @GetAssetGroupListByAssetGuidEvent AssetMessageEvent message) {
-        LOG.info("Get asset group by asset guid");
-        try {
-            List<AssetGroup> response = assetGroup.getAssetGroupListByAssetGuid(message.getAssetGuid());
-            LOG.debug("Send back assetGroupList response.");
-            messageProducer.sendModuleResponseMessage(message.getMessage(), AssetModuleResponseMapper.mapToAssetGroupListResponse(response));
-        } catch (AssetException e) {
-            LOG.error("[ Error when getting assetGroupList from source. ] ");
-            assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting AssetGroupByUserName [ " + e.getMessage())));
-        }
-    }
-
 
     @Override
     public void ping(@Observes @PingEvent AssetMessageEvent message) {

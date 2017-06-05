@@ -19,8 +19,6 @@ import javax.enterprise.event.Observes;
 
 @Local
 public interface AssetEventService {
-    void getAssetGroupListByAssetEvent(@Observes @GetAssetGroupListByAssetGuidEvent AssetMessageEvent message);
-
     public void ping(@Observes @PingEvent AssetMessageEvent messase);
 
     void upsertAsset(@Observes @UpsertAssetMessageEvent AssetMessageEvent message);

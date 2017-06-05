@@ -17,10 +17,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetEventBean;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetGroupEventBean;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetListByAssetGroupEventBean;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetListEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.*;
 import eu.europa.ec.fisheries.wsdl.asset.module.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +52,9 @@ public class MessageConsumerBean implements MessageListener {
     @EJB
     private GetAssetListByAssetGroupEventBean getAssetListByAssetGroupEventBean;
 
+    @EJB
+    private GetAssetGroupListByAssetGuidEventBean getAssetGroupListByAssetGuidEventBean;
+
     @Inject
     @AssetMessageErrorEvent
     Event<AssetMessageEvent> assetErrorEvent;
@@ -62,10 +62,6 @@ public class MessageConsumerBean implements MessageListener {
     @Inject
     @PingEvent
     Event<AssetMessageEvent> pingEvent;
-
-    @Inject
-    @GetAssetGroupListByAssetGuidEvent
-    Event<AssetMessageEvent> assetGroupByAssetEvent;
 
     @Inject
     @UpsertAssetMessageEvent
@@ -105,7 +101,7 @@ public class MessageConsumerBean implements MessageListener {
                 case ASSET_GROUP_LIST_BY_ASSET_GUID:
                     GetAssetGroupListByAssetGuidRequest getAssetGroupListByAssetGuidRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, GetAssetGroupListByAssetGuidRequest.class);
                     AssetMessageEvent assetMessageEvent = new AssetMessageEvent(textMessage, getAssetGroupListByAssetGuidRequest.getAssetGuid());
-                    assetGroupByAssetEvent.fire(assetMessageEvent);
+                    getAssetGroupListByAssetGuidEventBean.getAssetGroupListByAssetEvent(assetMessageEvent);
                     break;
                 case ASSET_LIST_BY_GROUP:
                     GetAssetListByAssetGroupsRequest assetListByGroupListRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, GetAssetListByAssetGroupsRequest.class);
