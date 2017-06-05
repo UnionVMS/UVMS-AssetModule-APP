@@ -17,14 +17,12 @@ import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.*;
 import eu.europa.ec.fisheries.wsdl.asset.module.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ejb.ActivationConfigProperty;
-import javax.ejb.MessageDriven;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import javax.ejb.*;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.jms.Message;
@@ -42,41 +40,34 @@ public class MessageConsumerBean implements MessageListener {
 
     final static Logger LOG = LoggerFactory.getLogger(MessageConsumerBean.class);
 
-    @Inject
-    @GetAssetMessageEvent
-    Event<AssetMessageEvent> assetEvent;
+    @EJB
+    private GetAssetEventBean getAssetEventBean;
 
-    @Inject
-    @GetAssetListMessageEvent
-    Event<AssetMessageEvent> assetListEvent;
+    @EJB
+    private GetAssetListEventBean getAssetListEventBean;
+
+    @EJB
+    private GetAssetGroupEventBean getAssetGroupEventBean;
+
+    @EJB
+    private GetAssetListByAssetGroupEventBean getAssetListByAssetGroupEventBean;
+
+    @EJB
+    private GetAssetGroupListByAssetGuidEventBean getAssetGroupListByAssetGuidEventBean;
+
+    @EJB
+    private UpsertAssetMessageEventBean upsertAssetMessageEventBean;
+
+    @EJB
+    private UpsertFishingGearsMessageEventBean upsertFishingGearsMessageEventBean;
+
+    @EJB
+    private PingEventBean pingEventBean;
 
     @Inject
     @AssetMessageErrorEvent
     Event<AssetMessageEvent> assetErrorEvent;
 
-    @Inject
-    @GetAssetGroupEvent
-    Event<AssetMessageEvent> assetGroupEvent;
-
-    @Inject
-    @GetAssetListByAssetGroupEvent
-    Event<AssetMessageEvent> assetListByGroupEvent;
-
-    @Inject
-    @PingEvent
-    Event<AssetMessageEvent> pingEvent;
-
-    @Inject
-    @GetAssetGroupListByAssetGuidEvent
-    Event<AssetMessageEvent> assetGroupByAssetEvent;
-
-    @Inject
-    @UpsertAssetMessageEvent
-    Event<AssetMessageEvent> upsertAssetEvent;
-
-    @Inject
-    @UpsertFishingGearsMessageEvent
-    Event<AssetMessageEvent> upsertFisMessageEvent;
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -93,40 +84,40 @@ public class MessageConsumerBean implements MessageListener {
                 case GET_ASSET:
                     GetAssetModuleRequest getRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, GetAssetModuleRequest.class);
                     AssetMessageEvent event = new AssetMessageEvent(textMessage, getRequest.getId());
-                    assetEvent.fire(event);
+                    getAssetEventBean.getAsset(event);
                     break;
                 case ASSET_LIST:
                     AssetListModuleRequest listRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetListModuleRequest.class);
                     AssetMessageEvent listEvent = new AssetMessageEvent(textMessage, listRequest.getQuery());
-                    assetListEvent.fire(listEvent);
+                    getAssetListEventBean.getAssetList(listEvent);
                     break;
                 case ASSET_GROUP:
                     AssetGroupListByUserRequest groupListRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetGroupListByUserRequest.class);
                     AssetMessageEvent assetGroupListEvent = new AssetMessageEvent(textMessage, groupListRequest);
-                    assetGroupEvent.fire(assetGroupListEvent);
+                    getAssetGroupEventBean.getAssetGroupByUserName(assetGroupListEvent);
                     break;
                 case ASSET_GROUP_LIST_BY_ASSET_GUID:
                     GetAssetGroupListByAssetGuidRequest getAssetGroupListByAssetGuidRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, GetAssetGroupListByAssetGuidRequest.class);
                     AssetMessageEvent assetMessageEvent = new AssetMessageEvent(textMessage, getAssetGroupListByAssetGuidRequest.getAssetGuid());
-                    assetGroupByAssetEvent.fire(assetMessageEvent);
+                    getAssetGroupListByAssetGuidEventBean.getAssetGroupListByAssetEvent(assetMessageEvent);
                     break;
                 case ASSET_LIST_BY_GROUP:
                     GetAssetListByAssetGroupsRequest assetListByGroupListRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, GetAssetListByAssetGroupsRequest.class);
                     AssetMessageEvent assetListByGroupListEvent = new AssetMessageEvent(textMessage, assetListByGroupListRequest);
-                    assetListByGroupEvent.fire(assetListByGroupListEvent);
+                    getAssetListByAssetGroupEventBean.getAssetListByAssetGroups(assetListByGroupListEvent);
                     break;
                 case PING:
-                    pingEvent.fire(new AssetMessageEvent(textMessage));
+                    pingEventBean.ping(new AssetMessageEvent(textMessage));
                     break;
                 case UPSERT_ASSET:
                     UpsertAssetModuleRequest upsertRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, UpsertAssetModuleRequest.class);
                     AssetMessageEvent upsertAssetMessageEvent = new AssetMessageEvent(textMessage, upsertRequest.getAsset(), upsertRequest.getUserName());
-                    upsertAssetEvent.fire(upsertAssetMessageEvent);
+                    upsertAssetMessageEventBean.upsertAsset(upsertAssetMessageEvent);
                     break;
                 case FISHING_GEAR_UPSERT:
                     UpsertFishingGearModuleRequest upsertFishingGearListModuleRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, UpsertFishingGearModuleRequest.class);
                     AssetMessageEvent fishingGearMessageEvent = new AssetMessageEvent(textMessage, upsertFishingGearListModuleRequest.getFishingGear(), upsertFishingGearListModuleRequest.getUsername());
-                    upsertFisMessageEvent.fire(fishingGearMessageEvent);
+                    upsertFishingGearsMessageEventBean.upsertFishingGears(fishingGearMessageEvent);
                     break;
                 default:
                     LOG.error("[ Not implemented method consumed: {} ]", method);

@@ -44,13 +44,6 @@ public abstract class BuildAssetServiceDeployment {
 
 
         testWar.addClass(TransactionalTests.class);
-        testWar.addClass(ConfigServiceException.class);
-        testWar.addClass(AssetHistoryServiceBean.class);
-        testWar.addClass(ConfigServiceBean.class);
-        testWar.addClass(AssetServiceBean.class);
-        testWar.addClass(AssetEventServiceBean.class);
-        testWar.addClass(AssetGroupServiceBean.class);
-
 
         // Empty beans for EE6 CDI
         testWar.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
