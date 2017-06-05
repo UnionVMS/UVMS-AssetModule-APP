@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>asset-message</artifactId>
+    <artifactId>asset-message-impl</artifactId>
     <name>${project.parent.artifactId}-message</name>
     <packaging>ejb</packaging>
 
@@ -24,6 +24,11 @@
             <version>${asset.model.version}</version>
             <classifier>date</classifier>
             <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+            <artifactId>asset-service</artifactId>
+            <version>3.0.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.audit</groupId>
