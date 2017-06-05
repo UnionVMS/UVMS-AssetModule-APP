@@ -13,13 +13,12 @@
             <property name="managementPort">9990</property>
             <property name="username">admin</property>
             <property name="password">admin</property>
-            <!-- <property name="password">wildfly4ever</property> -->
         </configuration>
     </container>
     
     <extension qualifier="jacoco">
 	    <property name="excludes">eu.europa.ec.fisheries.schema.*</property>
-	    <property name="includes">eu.europa.ec.fisheries.uvms.asset.*</property>
+	    <property name="includes">eu.europa.ec.fisheries.uvms.movement.*</property>
 	</extension>
-    
+  
 </arquillian>
