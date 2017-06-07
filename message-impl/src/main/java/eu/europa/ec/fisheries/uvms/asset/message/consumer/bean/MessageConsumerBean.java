@@ -83,8 +83,7 @@ public class MessageConsumerBean implements MessageListener {
             switch (method) {
                 case GET_ASSET:
                     GetAssetModuleRequest getRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, GetAssetModuleRequest.class);
-                    AssetMessageEvent event = new AssetMessageEvent(textMessage, getRequest.getId());
-                    getAssetEventBean.getAsset(event);
+                    getAssetEventBean.getAsset(textMessage, getRequest.getId());
                     break;
                 case ASSET_LIST:
                     AssetListModuleRequest listRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetListModuleRequest.class);
