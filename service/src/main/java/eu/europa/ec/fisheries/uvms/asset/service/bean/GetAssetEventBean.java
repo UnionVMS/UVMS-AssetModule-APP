@@ -24,6 +24,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.jms.TextMessage;
 
 @Stateless
 @LocalBean
@@ -44,19 +45,19 @@ public class GetAssetEventBean {
     @AssetMessageErrorEvent
     Event<AssetMessageEvent> assetErrorEvent;
 
-    public void getAsset(AssetMessageEvent message) {
+    public void getAsset(TextMessage textMessage, AssetId assetId) {
         LOG.info("Getting asset.");
         AssetDataSourceQueue dataSource = null;
         Asset asset = null;
         boolean messageSent = false;
 
         try {
-            dataSource = decideDataflow(message.getAssetId());
+            dataSource = decideDataflow(assetId);
             LOG.debug("Got message to AssetModule, Executing Get asset from datasource {}", dataSource.name());
-            asset = service.getAssetById(message.getAssetId(), dataSource);
+            asset = service.getAssetById(assetId, dataSource);
         } catch (AssetException e) {
             LOG.error("[ Error when getting asset from source {}. ] ", dataSource.name());
-            assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting asset from source : " + dataSource.name() + " Error message: " + e.getMessage())));
+            assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting asset from source : " + dataSource.name() + " Error message: " + e.getMessage())));
             messageSent = true;
             asset = null;
         }
@@ -67,17 +68,17 @@ public class GetAssetEventBean {
                 asset.getAssetId().setGuid(upsertedAsset.getAssetId().getGuid());
             } catch (AssetException e) {
                 LOG.error("[ Couldn't upsert asset in internal ]");
-                assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, e.getMessage())));
+                assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, e.getMessage())));
                 messageSent = true;
             }
         }
 
         if (!messageSent) {
             try {
-                messageProducer.sendModuleResponseMessage(message.getMessage(), AssetModuleResponseMapper.mapAssetModuleResponse(asset));
+                messageProducer.sendModuleResponseMessage(textMessage, AssetModuleResponseMapper.mapAssetModuleResponse(asset));
             } catch (AssetModelMapperException e) {
                 LOG.error("[ Error when mapping asset ] ");
-                assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when mapping asset" + e.getMessage())));
+                assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when mapping asset" + e.getMessage())));
             }
         }
     }

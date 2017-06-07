@@ -15,6 +15,8 @@ import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.ModuleQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
+import eu.europa.ec.fisheries.uvms.asset.message.event.AssetSuccessfulTestEvent;
+import eu.europa.ec.fisheries.uvms.asset.message.event.SuccessfulTestEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigMessageException;
@@ -24,7 +26,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
+import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
+import javax.inject.Inject;
 import javax.jms.TextMessage;
 
 @Stateless
@@ -35,6 +39,10 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
 
     private static final int CONFIG_TTL = 30000;
 
+
+    @Inject
+    @AssetSuccessfulTestEvent
+    Event<SuccessfulTestEvent> successfulTestEvent;
 
     @PostConstruct
     public void init() {
@@ -52,6 +60,7 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
 
     @Override
     public void sendModuleResponseMessage(TextMessage message, String text) {
+        successfulTestEvent.fire(new SuccessfulTestEvent(text));
     }
 
     @Override
