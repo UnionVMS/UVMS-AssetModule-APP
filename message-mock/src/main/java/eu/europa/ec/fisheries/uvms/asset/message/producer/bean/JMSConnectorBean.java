@@ -11,79 +11,36 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.message.producer.bean;
 
-import eu.europa.ec.fisheries.uvms.asset.message.AssetConstants;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.Singleton;
-import javax.jms.*;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import javax.jms.JMSException;
+import javax.jms.Session;
+import javax.jms.TextMessage;
 
 @Singleton
 public class JMSConnectorBean {
     final static org.slf4j.Logger LOG = LoggerFactory.getLogger(JMSConnectorBean.class);
 
-    private ConnectionFactory connectionFactory;
-
-    private Connection connection;
 
     @PostConstruct
     private void connectToQueue() {
         LOG.debug("Open connection to JMS broker");
-        InitialContext ctx;
-        try {
-            ctx = new InitialContext();
-        } catch (Exception e) {
-            LOG.error("Failed to get InitialContext",e);
-            throw new RuntimeException(e);
-        }
-        try {
-            connectionFactory = (QueueConnectionFactory) ctx.lookup(AssetConstants.CONNECTION_FACTORY);
-        } catch (NamingException ne) {
-            //if we did not find the connection factory we might need to add java:/ at the start
-            LOG.debug("Connection Factory lookup failed for " + AssetConstants.CONNECTION_FACTORY);
-            String wfName = "java:/" + AssetConstants.CONNECTION_FACTORY;
-            try {
-                LOG.debug("trying " + wfName);
-                connectionFactory = (QueueConnectionFactory) ctx.lookup(wfName);
-            } catch (Exception e) {
-                LOG.error("Connection Factory lookup failed for both " + AssetConstants.CONNECTION_FACTORY  + " and " + wfName);
-                throw new RuntimeException(e);
-            }
-        }
-        try {
-            connection = connectionFactory.createConnection();
-            connection.start();
-        } catch (JMSException ex) {
-            LOG.error("Error when open connection to JMS broker");
-        }
     }
 
     public Session getNewSession() throws JMSException {
-        if (connection == null) {
-            connectToQueue();
-        }
-        Session session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
-        return session;
+        return null;
     }
 
     public TextMessage createTextMessage(Session session, String message) throws JMSException {
-        return session.createTextMessage(message);
+        return null;
     }
 
     @PreDestroy
     private void closeConnection() {
         LOG.debug("Close connection to JMS broker");
-        try {
-            if (connection != null) {
-                connection.stop();
-                connection.close();
-            }
-        } catch (JMSException e) {
-            LOG.warn("[ Error when stopping or closing JMS connection. ] {}", e.getMessage());
-        }
     }
 
 }
