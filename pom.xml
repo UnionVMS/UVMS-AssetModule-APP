@@ -16,7 +16,7 @@
 
     <properties>
     	<docker.dev.version>3.2.0</docker.dev.version>   	
-        <usm4uvms.version>3.0.4</usm4uvms.version>
+        <usm4uvms.version>3.0.5</usm4uvms.version>
         <uvms.config.version>3.0.4</uvms.config.version>
         <asset.model.version>3.0.5-SNAPSHOT</asset.model.version>
         <audit.model.version>3.0.4</audit.model.version>
