@@ -99,6 +99,7 @@
         <module>module</module>
         <module>module-integration-test</module>
         <module>domain</module>
+        <module>message-mock</module>
     </modules>
 
 </project>

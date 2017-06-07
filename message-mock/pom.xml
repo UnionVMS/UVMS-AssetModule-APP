@@ -2,21 +2,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>asset-message-impl</artifactId>
-    <name>${project.parent.artifactId}-message-impl</name>
+    <artifactId>asset-message-mock</artifactId>
+    <name>${project.parent.artifactId}-message-mock</name>
     <packaging>ejb</packaging>
 
     <parent>
-	    <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-	    <artifactId>asset</artifactId>
-	    <version>3.0.6-SNAPSHOT</version>
-	    <relativePath>../pom.xml</relativePath>
+        <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+        <artifactId>asset</artifactId>
+        <version>3.0.6-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <properties>
         <maven.ejb.plugin.ejb.version>3.1</maven.ejb.plugin.ejb.version>
     </properties>
-    
+
     <dependencies>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
@@ -27,9 +27,14 @@
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-            <artifactId>asset-service</artifactId>
+            <artifactId>asset-message</artifactId>
             <version>3.0.6-SNAPSHOT</version>
         </dependency>
+        <!--dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+            <artifactId>asset-service</artifactId>
+            <version>3.0.6-SNAPSHOT</version>
+        </dependency-->
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.audit</groupId>
             <artifactId>audit-model</artifactId>
@@ -47,17 +52,17 @@
             <version>${uvms.common.version}</version>
         </dependency>
         <dependency>
-			<groupId>fish.focus.uvms.maven</groupId>
-			<artifactId>uvms-pom-monitoring-deps</artifactId>
-			<type>pom</type>
-		</dependency>
-		<dependency>
-			<groupId>fish.focus.uvms.maven</groupId>
-			<artifactId>uvms-pom-arquillian-deps</artifactId>
-			<type>pom</type>
-			<scope>test</scope>
-		</dependency>				                
-        
+            <groupId>fish.focus.uvms.maven</groupId>
+            <artifactId>uvms-pom-monitoring-deps</artifactId>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>fish.focus.uvms.maven</groupId>
+            <artifactId>uvms-pom-arquillian-deps</artifactId>
+            <type>pom</type>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -72,5 +77,5 @@
             </plugin>
         </plugins>
     </build>
-    
+
 </project>
