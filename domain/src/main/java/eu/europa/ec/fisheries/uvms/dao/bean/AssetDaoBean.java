@@ -48,7 +48,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
     @Override
     public AssetEntity createAsset(AssetEntity asset) throws AssetDaoException {
         try {
-            LOG.info("Create asset.");
+            LOG.debug("Create asset.");
             em.persist(asset);
             return asset;
         } catch (Exception e) {
@@ -59,7 +59,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
 
     @Override
     public AssetEntity getAssetById(Long id) throws AssetDaoException {
-        LOG.info("Get asset by ID.");
+        LOG.debug("Get asset by ID.");
         try {
             return em.find(AssetEntity.class, id);
         } catch (NoResultException e) {
@@ -70,7 +70,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
 
     @Override
     public AssetEntity updateAsset(AssetEntity asset) throws AssetDaoException {
-        LOG.info("Update asset.");
+        LOG.debug("Update asset.");
         try {
             em.merge(asset);
             em.flush();
@@ -83,14 +83,14 @@ public class AssetDaoBean extends Dao implements AssetDao {
 
     @Override
     public void deleteAsset(Long assetId) throws AssetDaoException {
-        LOG.info("Delete asset.");
+        LOG.debug("Delete asset.");
         throw new AssetDaoException("Not implemented yet");
     }
 
     @Override
     public List<AssetEntity> getAssetListAll() throws AssetDaoException {
         try {
-            LOG.info("Get asset list.");
+            LOG.debug("Get asset list.");
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_ALL, AssetEntity.class);
             return query.getResultList();
         } catch (IllegalArgumentException e) {
@@ -101,7 +101,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
 
     @Override
     public AssetEntity getAssetByCfr(String cfr) throws NoAssetEntityFoundException, AssetDaoException {
-        LOG.info("Get asset by CFR.");
+        LOG.debug("Get asset by CFR.");
         try {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_CFR, AssetEntity.class);
             query.setParameter("cfr", cfr);
@@ -115,7 +115,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
 
     @Override
     public AssetEntity getAssetByIrcs(String ircs) throws NoAssetEntityFoundException, AssetDaoException {
-        LOG.info("Get asset by IRCS.");
+        LOG.debug("Get asset by IRCS.");
         try {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_IRCS, AssetEntity.class);
             query.setParameter("ircs", ircs);
@@ -129,7 +129,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
 
     @Override
     public AssetEntity getAssetByGuid(String guid) throws AssetDaoException {
-        LOG.info("Get asset by GUID.");
+        LOG.debug("Get asset by GUID.");
         try {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_GUID, AssetEntity.class);
             query.setParameter("guid", guid);
@@ -143,7 +143,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
 
 	@Override
 	public AssetEntity getAssetByImo(String imo) throws AssetDaoException {
-		LOG.info("Get asset by IMO");
+		LOG.debug("Get asset by IMO");
 		try {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_IMO, AssetEntity.class);
             query.setParameter("imo", imo);
@@ -157,7 +157,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
 
 	@Override
 	public AssetEntity getAssetByMmsi(String mmsi) throws AssetDaoException {
-		LOG.info("Get asset by MMSI");
+		LOG.debug("Get asset by MMSI");
 		try {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_MMSI, AssetEntity.class);
             query.setParameter("mmsi", mmsi);
@@ -171,7 +171,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
     
     @Override
     public AssetHistory getAssetHistoryByGuid(String guid) throws AssetDaoException {
-        LOG.info("Get assethistory by GUID.");
+        LOG.debug("Get assethistory by GUID.");
         try {
             TypedQuery<AssetHistory> query = em.createNamedQuery(UvmsConstants.ASSETHISTORY_FIND_BY_GUID, AssetHistory.class);
             query.setParameter("guid", guid);
@@ -261,7 +261,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
     @Override
     public List<AssetHistory> getAssetListByAssetGuids(List<String> assetGuids) throws AssetDaoException {
         try {
-            LOG.info("Get asset list by asset guids.");
+            LOG.debug("Get asset list by asset guids.");
             TypedQuery<AssetHistory> query = em.createNamedQuery(UvmsConstants.ASSETHISTORY_FIND_BY_GUIDS, AssetHistory.class);
             query.setParameter("guids", assetGuids);
             return query.getResultList();
@@ -273,7 +273,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
 
     @Override
     public AssetEntity getAssetByCfrExcludeArchived(String cfr) throws NoAssetEntityFoundException, AssetDaoException {
-        LOG.info("Get asset by CFR.");
+        LOG.debug("Get asset by CFR.");
         try {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_CFR_EXCLUDE_ARCHIVED, AssetEntity.class);
             query.setParameter("cfr", cfr);
@@ -287,7 +287,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
 
     @Override
     public AssetEntity getAssetByIrcsExcludeArchived(String ircs) throws NoAssetEntityFoundException, AssetDaoException {
-        LOG.info("Get asset by IRCS.");
+        LOG.debug("Get asset by IRCS.");
         try {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_IRCS_EXCLUDE_ARCHIVED, AssetEntity.class);
             query.setParameter("ircs", ircs);
@@ -301,7 +301,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
 
     @Override
     public AssetEntity getAssetByImoExcludeArchived(String imo) throws AssetDaoException {
-        LOG.info("Get asset by IMO");
+        LOG.debug("Get asset by IMO");
         try {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_IMO_EXCLUDE_ARCHIVED, AssetEntity.class);
             query.setParameter("imo", imo);
@@ -315,7 +315,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
 
     @Override
     public AssetEntity getAssetByMmsiExcludeArchived(String mmsi) throws AssetDaoException {
-        LOG.info("Get asset by MMSI");
+        LOG.debug("Get asset by MMSI");
         try {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_MMSI_EXCLUDE_ARCHIVED, AssetEntity.class);
             query.setParameter("mmsi", mmsi);

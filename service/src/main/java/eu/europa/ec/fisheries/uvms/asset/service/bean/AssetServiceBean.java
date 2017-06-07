@@ -64,7 +64,7 @@ public class AssetServiceBean implements AssetService {
      */
     @Override
     public Asset createAsset(Asset asset, String username) throws AssetException {
-        LOG.info("Creating asset.");
+        LOG.debug("Creating asset.");
         Asset createdAsset = assetDomainModel.createAsset(asset, username);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetCreated(createdAsset.getAssetId().getGuid(), username);
@@ -87,7 +87,7 @@ public class AssetServiceBean implements AssetService {
      */
     @Override
     public ListAssetResponse getAssetList(AssetListQuery requestQuery) throws AssetException {
-        LOG.info("Getting AssetList.");
+        LOG.debug("Getting AssetList.");
         GetAssetListResponseDto assetList = assetDomainModel.getAssetList(requestQuery);
         ListAssetResponse listAssetResponse = new ListAssetResponse();
         listAssetResponse.setCurrentPage(assetList.getCurrentPage());
@@ -105,7 +105,7 @@ public class AssetServiceBean implements AssetService {
      */
     @Override
     public Long getAssetListCount(AssetListQuery requestQuery) throws AssetException {
-        LOG.info("Getting AssetList.");
+        LOG.debug("Getting AssetList.");
         return assetDomainModel.getAssetListCount(requestQuery);
     }
 
@@ -149,7 +149,7 @@ public class AssetServiceBean implements AssetService {
     }
 
     private Asset updateAssetInternal(Asset asset, String username) throws AssetException {
-        LOG.info("Updating Asset");
+        LOG.debug("Updating Asset");
         Asset updatedAsset;
 
         if (asset == null) {
@@ -172,7 +172,6 @@ public class AssetServiceBean implements AssetService {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public Asset upsertAsset(Asset asset, String username) throws AssetException {
 
         if (asset == null) {
@@ -190,7 +189,6 @@ public class AssetServiceBean implements AssetService {
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
      */
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public Asset getAssetById(AssetId assetId, AssetDataSourceQueue source) throws AssetException {
         Asset assetById;
 
@@ -206,7 +204,7 @@ public class AssetServiceBean implements AssetService {
             throw new InputArgumentException("AssetDataSourceQueue is null");
         }
 
-        LOG.info("GETTING ASSET BY ID: {} : {} at {}.", assetId.getType(), assetId.getValue(), source.name());
+        LOG.debug("GETTING ASSET BY ID: {} : {} at {}.", assetId.getType(), assetId.getValue(), source.name());
 
         switch (source){
             case INTERNAL:
@@ -231,7 +229,7 @@ public class AssetServiceBean implements AssetService {
      */
     @Override
     public Asset getAssetByGuid(String guid) throws AssetException {
-        LOG.info("Getting asset by ID.");
+        LOG.debug("Getting asset by ID.");
         if (guid == null || guid.isEmpty()) {
             throw new InputArgumentException("AssetId is null");
         }
@@ -250,7 +248,7 @@ public class AssetServiceBean implements AssetService {
      */
     @Override
     public List<Asset> getAssetListByAssetGroups(List<AssetGroup> groups) throws AssetException {
-        LOG.info("Getting asset by ID.");
+        LOG.debug("Getting asset by ID.");
         if (groups == null || groups.isEmpty()) {
             throw new InputArgumentException("No groups in query");
         }
@@ -260,7 +258,7 @@ public class AssetServiceBean implements AssetService {
 
     @Override
     public AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetException {
-        LOG.info("Getting asset list by asset ids group by flags State.");
+        LOG.debug("Getting asset list by asset ids group by flags State.");
         List assetListGroupByFlagState = assetDomainModel.getAssetListGroupByFlagState(assetIds);
         AssetListGroupByFlagStateResponse assetListGroupByFlagStateResponse = new AssetListGroupByFlagStateResponse();
         assetListGroupByFlagStateResponse.getNumberOfAssetsGroupByFlagState().addAll(assetListGroupByFlagState);
