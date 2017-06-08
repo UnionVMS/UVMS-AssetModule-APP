@@ -19,7 +19,7 @@ import java.util.Random;
  */
 
 @RunWith(Arquillian.class)
-public class UVMS_3638_deleteAssetIntTest extends TransactionalTests {
+public class DeleteAssetIntTest extends TransactionalTests {
 
 
     @EJB

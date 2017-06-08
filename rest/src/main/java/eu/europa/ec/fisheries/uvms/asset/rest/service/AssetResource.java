@@ -226,22 +226,4 @@ public class AssetResource {
         }
     }
 
-
-    @DELETE
-    @Consumes(value = { MediaType.APPLICATION_JSON })
-    @Produces(value = { MediaType.APPLICATION_JSON })
-    @RequiresFeature(UnionVMSFeature.manageVessels)
-    public ResponseDto deleteAsset(final AssetId assetId) {
-        try {
-            LOG.debug("Delete asset.");
-            assetService.deleteAsset(assetId);
-            return new ResponseDto(null, ResponseCodeConstant.OK);
-        } catch (AssetException e) {
-            LOG.error("[ Error when delete asset. ] {}", e.getMessage(),e);
-            return ErrorHandler.getFault(e);
-        }
-    }
-
-
-
 }
