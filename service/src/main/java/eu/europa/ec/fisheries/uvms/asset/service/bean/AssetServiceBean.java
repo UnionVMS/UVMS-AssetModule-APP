@@ -269,4 +269,13 @@ public class AssetServiceBean implements AssetService {
     public NoteActivityCode getNoteActivityCodes() {
         return assetDomainModel.getNoteActivityCodes();
     }
+
+    @Override
+    public void deleteAsset(AssetId assetId) throws AssetException
+    {
+        assetDomainModel.deleteAsset(assetId);
+    }
+
+
+
 }

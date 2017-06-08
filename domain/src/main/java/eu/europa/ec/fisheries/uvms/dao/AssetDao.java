@@ -20,7 +20,6 @@ import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.uvms.entity.model.NotesActivityCode;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
-import eu.europa.ec.fisheries.wsdl.asset.types.NoteActivityCode;
 
 @Local
 public interface AssetDao {
@@ -100,10 +99,10 @@ public interface AssetDao {
     /**
      * Delete asset from database
      *
-     * @param assetId
+     * @param assetEntity
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
      */
-    public void deleteAsset(Long assetId) throws AssetDaoException;
+    public void deleteAsset(AssetEntity assetEntity) throws AssetDaoException;
 
     /**
      * Get all assets (FIND_ALL)

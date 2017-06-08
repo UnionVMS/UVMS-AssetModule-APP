@@ -36,7 +36,7 @@ import java.util.Set;
 
 @Stateless
 @LocalBean
-public class AssetDomainModelBean  {
+public class AssetDomainModelBean {
 
     @EJB
     AssetDao assetDao;
@@ -108,8 +108,8 @@ public class AssetDomainModelBean  {
             throw new InputArgumentException("Cannot update asset because the asset ID is null.");
         }
 
-        if(asset.getCfr() == null || asset.getCfr().isEmpty()) asset.setCfr(null);
-        if(asset.getImo() == null || asset.getImo().isEmpty()) asset.setImo(null);
+        if (asset.getCfr() == null || asset.getCfr().isEmpty()) asset.setCfr(null);
+        if (asset.getImo() == null || asset.getImo().isEmpty()) asset.setImo(null);
 
         try {
             LOG.info("Update asset.");
@@ -259,7 +259,7 @@ public class AssetDomainModelBean  {
     }
 
     public List<Asset> getAssetHistoryListByAssetId(AssetId assetId,
-            Integer maxNbr) throws AssetModelException {
+                                                    Integer maxNbr) throws AssetModelException {
         LOG.info("Get asset history list by asset ID.");
         AssetEntity vesselHistories = getAssetEntityById(assetId);
         return EntityToModelMapper.toAssetHistoryList(vesselHistories, maxNbr);
@@ -331,4 +331,26 @@ public class AssetDomainModelBean  {
     public NoteActivityCode getNoteActivityCodes() {
         return EntityToModelMapper.mapEntityToNoteActivityCode(assetDao.getNoteActivityCodes());
     }
+
+    public void deleteAsset(AssetId assetId) throws AssetModelException {
+
+        if(assetId == null){
+            LOG.debug("AssetId is null cannot delete");
+            return ;
+        }
+
+        AssetEntity assetEntity = null;
+        try {
+            // get an object based on what type of id it has
+            assetEntity = getAssetEntityById(assetId);
+            // remove it based on its db identity
+            assetDao.deleteAsset(assetEntity);
+        } catch (NoAssetEntityFoundException e) {
+            LOG.debug(e.toString(), e);
+            throw e;
+        }
+
+    }
+
+
 }
