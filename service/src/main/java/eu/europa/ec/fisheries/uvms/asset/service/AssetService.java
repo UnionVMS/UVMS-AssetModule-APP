@@ -113,4 +113,16 @@ public interface AssetService {
     AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetException;
 
     NoteActivityCode getNoteActivityCodes();
+
+
+    /**
+     *
+     *
+     * @param assetId
+     * @return number of entities affected
+     * @throws AssetException
+     */
+    void deleteAsset(AssetId assetId) throws AssetException;
+
+
 }

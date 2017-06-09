@@ -15,13 +15,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
-import javax.naming.NamingException;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.dao.Dao;
@@ -82,9 +77,16 @@ public class AssetDaoBean extends Dao implements AssetDao {
     }
 
     @Override
-    public void deleteAsset(Long assetId) throws AssetDaoException {
+    public void deleteAsset(AssetEntity assetEntity) throws AssetDaoException {
+
+        if(assetEntity == null){
+            // does not destroy anything so just log and return
+            LOG.debug("deleteAsset. assetEntity is null. check you code");
+            return ;
+        }
         LOG.debug("Delete asset.");
-        throw new AssetDaoException("Not implemented yet");
+
+        em.remove(assetEntity);
     }
 
     @Override
