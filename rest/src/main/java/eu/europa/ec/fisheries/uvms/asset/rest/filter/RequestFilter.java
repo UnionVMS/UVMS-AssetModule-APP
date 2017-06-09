@@ -12,6 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.rest.filter;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import eu.europa.ec.fisheries.uvms.asset.rest.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 /**
  **/
@@ -40,6 +42,18 @@ public class RequestFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+
+
+        try {
+            String val = MDC.get("requestId");
+            if(val == null || val.trim().length()< 1){
+                MDC.put("requestId", UUID.randomUUID().toString());
+            }
+        }catch(IllegalArgumentException e){
+            LOG.error("MDC init error. App works but tracing will be unpredictible", e);
+        }
+
+
         HttpServletResponse response = (HttpServletResponse) res;
         response.setHeader(Constant.ACCESS_CONTROL_ALLOW_ORIGIN, Constant.ACCESS_CONTROL_ALLOW_METHODS_ALL);
         response.setHeader(Constant.ACCESS_CONTROL_ALLOW_METHODS, Constant.ACCESS_CONTROL_ALLOWED_METHODS);
