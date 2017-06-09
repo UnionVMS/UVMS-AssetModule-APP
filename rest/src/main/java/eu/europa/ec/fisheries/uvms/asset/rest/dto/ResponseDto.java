@@ -11,6 +11,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.rest.dto;
 
+import org.slf4j.MDC;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -21,6 +23,8 @@ public class ResponseDto<T> implements Serializable{
 
     private T data;
     private final Integer code;
+    private String requestId = MDC.get("requestId");
+
 
     public ResponseDto(T data, ResponseCodeConstant code) {
         this.data = data;
@@ -42,6 +46,10 @@ public class ResponseDto<T> implements Serializable{
 
     public int getCode() {
         return code;
+    }
+
+    public String getRequestId() {
+        return requestId ;
     }
 
     @Override
