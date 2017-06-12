@@ -88,6 +88,48 @@ public class GetAssetListEventBeanIntTest  extends TransactionalTests {
 
     }
 
+    @Test
+    @OperateOnDeployment("normal")
+    public void testGetAssetList_FAIL_ON_LENGTH() throws AssetException {
+
+        // create a tiny list
+        Asset asset1 = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID, "4"), "test1");
+        Asset asset2 = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID,"5"), "test2");
+        Asset asset3 = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID,"6"), "test3");
+
+        TextMessage textMessage = null;
+
+        AssetListPagination pagination = new AssetListPagination();
+        pagination.setListSize(20);
+        pagination.setPage(1);
+        AssetListQuery assetListQuery = new AssetListQuery();
+        assetListQuery.setPagination(pagination);
+
+        AssetListCriteria assetListCriteria = new AssetListCriteria();
+        assetListCriteria.setIsDynamic(false);
+
+        AssetListCriteriaPair assetListCriteriaPair = new AssetListCriteriaPair();
+        assetListCriteriaPair.setKey(ConfigSearchField.MAX_LENGTH);
+        assetListCriteriaPair.setValue("10");
+
+        assetListCriteria.getCriterias().add(assetListCriteriaPair);
+        assetListQuery.setAssetSearchCriteria(assetListCriteria);
+
+        AssetMessageEvent assetMessageEvent = new AssetMessageEvent(textMessage, assetListQuery);
+        getAssetListEventBean.getAssetList(assetMessageEvent);
+
+        Assert.assertFalse(interceptorForTests.isFailed());
+        String message = interceptorForTests.getSuccessfulTestEvent().getMessage();
+
+        // ALL 3 ID:s MUST exist
+        Boolean ok = message.contains(asset1.getAssetId().getValue()) &&
+                message.contains(asset2.getAssetId().getValue()) &&
+                message.contains(asset3.getAssetId().getValue()) ;
+
+        Assert.assertTrue(!ok);
+
+    }
+
 
 }
 
