@@ -1,14 +1,9 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
-import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
-import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
-import eu.europa.ec.fisheries.uvms.asset.message.event.AssetSuccessfulTestEvent;
-import eu.europa.ec.fisheries.uvms.asset.message.event.SuccessfulTestEvent;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetEventBean;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetFault;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
@@ -19,14 +14,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.enterprise.event.Observes;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.jms.TextMessage;
 
-
-import java.util.UUID;
 
 import static eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType.GUID;
 
@@ -88,40 +78,4 @@ public class GetAssetEventBeanIntTest extends TransactionalTests {
 
 }
 
-@LocalBean
-@Singleton
-class InterceptorForTest {
-
-    private boolean failed;
-    private AssetFault assetFault;
-    private SuccessfulTestEvent successfulTestEvent;
-
-    public void listenForAssetMessageErrorEvent(@Observes @AssetMessageErrorEvent AssetMessageEvent message) {
-        failed = true;
-        assetFault = message.getFault();
-    }
-
-    public void listenForAssetSuccessfulTestEvent(@Observes @AssetSuccessfulTestEvent SuccessfulTestEvent successfulTestEvent) {
-        this.successfulTestEvent = successfulTestEvent;
-    }
-
-    public boolean isFailed() {
-        return failed;
-    }
-
-    public AssetFault getAssetFault() {
-        return assetFault;
-    }
-
-    public SuccessfulTestEvent getSuccessfulTestEvent() {
-        return successfulTestEvent;
-    }
-
-    public void recycle() {
-        failed = false;
-        assetFault = null;
-        successfulTestEvent = null;
-    }
-
-}
 

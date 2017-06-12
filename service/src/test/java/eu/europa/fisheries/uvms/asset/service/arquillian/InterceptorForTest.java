@@ -17,7 +17,7 @@ import javax.inject.Singleton;
 
 @LocalBean
 @Singleton
-public class InterceptorForTests {
+public class InterceptorForTest {
 
 
     private boolean failed;
@@ -42,6 +42,7 @@ public class InterceptorForTests {
     }
 
     public SuccessfulTestEvent getSuccessfulTestEvent() {
+
         return successfulTestEvent;
     }
 

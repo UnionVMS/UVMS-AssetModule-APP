@@ -10,7 +10,8 @@ import java.util.UUID;
 
 public abstract class AssetHelper {
 
-    public static Asset helper_createAsset(AssetIdType assetIdType) {
+    public static Asset helper_createAsset(AssetIdType assetIdType, String ircs) {
+
 
         Asset asset = new Asset();
         AssetId assetId = new AssetId();
@@ -35,13 +36,12 @@ public abstract class AssetHelper {
         asset.setGearType(GearFishingTypeEnum.UNKNOWN.name());
         asset.setHasIrcs("1");
 
-        String ircs = generateARandomStringWithMaxLength(1);
         asset.setIrcs(ircs);
         asset.setExternalMarking("13");
 
         String cfr = "CF" + UUID.randomUUID().toString();
 
-        asset.setCfr(cfr.substring(0,12));
+        asset.setCfr(cfr.substring(0, 12));
 
         String imo = generateARandomStringWithMaxLength(2);
         asset.setImo(imo);
@@ -73,11 +73,19 @@ public abstract class AssetHelper {
 
         return asset;
 
+
     }
 
-    public static String generateARandomStringWithMaxLength(int len){
+
+    public static Asset helper_createAsset(AssetIdType assetIdType) {
+        String ircs = generateARandomStringWithMaxLength(1);
+        return AssetHelper.helper_createAsset(assetIdType, ircs);
+
+    }
+
+    public static String generateARandomStringWithMaxLength(int len) {
         String ret = "";
-        for (int i = 0 ; i < len ; i++){
+        for (int i = 0; i < len; i++) {
             int val = new Random().nextInt(10);
             ret += String.valueOf(val);
         }
