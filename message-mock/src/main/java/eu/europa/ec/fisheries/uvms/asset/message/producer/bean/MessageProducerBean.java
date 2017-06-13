@@ -55,7 +55,7 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
 
     @Override
     public String sendModuleMessage(String text, ModuleQueue queue) throws AssetMessageException {
-        return "MOCK";
+        return text;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
 
     @Override
     public String sendConfigMessage(String text) throws ConfigMessageException {
-        return "MOCK";
+        return text;
     }
 
 
