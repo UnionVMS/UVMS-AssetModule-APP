@@ -11,24 +11,20 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.message.consumer.bean;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.jms.*;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-
 import eu.europa.ec.fisheries.uvms.asset.message.AssetConstants;
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
+import eu.europa.ec.fisheries.uvms.config.exception.ConfigMessageException;
+import eu.europa.ec.fisheries.uvms.config.message.ConfigMessageConsumer;
 import eu.europa.ec.fisheries.uvms.message.JMSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.europa.ec.fisheries.uvms.config.exception.ConfigMessageException;
-import eu.europa.ec.fisheries.uvms.config.message.ConfigMessageConsumer;
+import javax.annotation.PostConstruct;
+import javax.ejb.Stateless;
+import javax.jms.*;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 @Stateless
 public class AssetQueueConsumerBean implements AssetQueueConsumer, ConfigMessageConsumer {
@@ -71,7 +67,6 @@ public class AssetQueueConsumerBean implements AssetQueueConsumer, ConfigMessage
         responseAssetQueue = JMSUtils.lookupQueue(ctx, AssetConstants.QUEUE_ASSET);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     @Override
     public <T> T getMessage(String correlationId, Class type) throws AssetMessageException {
         try {
@@ -97,7 +92,6 @@ public class AssetQueueConsumerBean implements AssetQueueConsumer, ConfigMessage
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public <T> T getConfigMessage(String correlationId, Class type) throws ConfigMessageException {
         try {
             return getMessage(correlationId, type);
