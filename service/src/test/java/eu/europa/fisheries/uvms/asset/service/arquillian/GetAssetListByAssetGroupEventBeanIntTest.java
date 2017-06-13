@@ -101,5 +101,4 @@ public class GetAssetListByAssetGroupEventBeanIntTest extends TransactionalTests
 
 
 
-
 }
