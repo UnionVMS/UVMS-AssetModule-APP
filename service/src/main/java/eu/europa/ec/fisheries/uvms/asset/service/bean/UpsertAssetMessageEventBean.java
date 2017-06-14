@@ -32,7 +32,6 @@ public class UpsertAssetMessageEventBean {
     public void upsertAsset(AssetMessageEvent message){
         try {
             service.upsertAsset(message.getAsset(), AssetDataSourceQueue.INTERNAL.name());
-            LOG.error("########## Update asset in the local database");
         } catch (AssetException e) {
             LOG.error("Could not update asset in the local database");
         }
