@@ -128,7 +128,7 @@ public class AssetMessageEvent {
         return asset;
     }
 
-    public void setAssets(Asset assets) {
+    public void setAsset(Asset asset) {
         this.asset = asset;
     }
 
