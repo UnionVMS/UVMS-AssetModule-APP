@@ -1,5 +1,6 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
+import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetGroupEventBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetGroupListByAssetGuidEventBean;
@@ -12,6 +13,7 @@ import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
 import javax.inject.Inject;
+import javax.jms.TextMessage;
 
 /**
  * Created by thofan on 2017-06-16.
@@ -41,6 +43,16 @@ public class GetAssetGroupListByAssetGuidEventBeanIntTest extends TransactionalT
     @OperateOnDeployment("normal")
     public void testSetup() {
         Assert.assertNotNull(getAssetGroupListByAssetGuidEventBean);
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetGroupListByAssetEvent_FAIL_NO_GUID() {
+        TextMessage textMessage = null;
+        AssetMessageEvent assetMessageEvent = new AssetMessageEvent(textMessage);
+        getAssetGroupListByAssetGuidEventBean.getAssetGroupListByAssetEvent(assetMessageEvent);
+        Boolean ok = interceptorForTest.isFailed();
+        Assert.assertTrue(ok);
     }
 
 
