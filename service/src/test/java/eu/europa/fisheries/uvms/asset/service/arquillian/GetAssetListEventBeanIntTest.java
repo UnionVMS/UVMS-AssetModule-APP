@@ -9,6 +9,7 @@ import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -47,6 +48,7 @@ public class GetAssetListEventBeanIntTest  extends TransactionalTests {
 
 
     @Test
+    @Ignore
     @OperateOnDeployment("normal")
     public void testGetAssetList() throws AssetException {
 

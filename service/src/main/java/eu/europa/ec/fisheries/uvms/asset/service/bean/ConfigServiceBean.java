@@ -23,20 +23,22 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.ConfigurationDto;
 import eu.europa.ec.fisheries.uvms.asset.service.ConfigService;
 import eu.europa.ec.fisheries.uvms.bean.ConfigDomainModelBean;
+import eu.europa.ec.fisheries.uvms.dao.ParameterDao;
+import eu.europa.ec.fisheries.uvms.dao.bean.ParameterDaoBean;
 import eu.europa.ec.fisheries.wsdl.asset.config.Config;
 import eu.europa.ec.fisheries.wsdl.asset.config.ConfigField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
-import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
+
 
 @Stateless
 public class ConfigServiceBean implements ConfigService {
 	final static Logger LOG = LoggerFactory.getLogger(ConfigServiceBean.class);
 
-    @EJB
-    ParameterService parameterService;
+
+	@EJB
+	ParameterDaoBean parameterService;
 
 	@EJB
 	private ConfigDomainModelBean configDomainModel;
@@ -53,14 +55,13 @@ public class ConfigServiceBean implements ConfigService {
 		try {
 			LOG.info("Get parameters");
 			Map<String, String> parameters = new HashMap<>();
-			parameterService.init("asset");
+			//parameterService.init("asset");
 			for (SettingType settingType : parameterService.getAllSettings()) {
 				parameters.put(settingType.getKey(), settingType.getValue());
 			}
 
 			return parameters;
-		}
-		catch (ConfigServiceException e) {
+		} catch (eu.europa.ec.fisheries.uvms.dao.exception.ConfigServiceException e) {
 			LOG.error("[ Error when getting asset parameters from local database. ] {}", e);
 			throw new AssetException("Couldn't get parameters");
 		}

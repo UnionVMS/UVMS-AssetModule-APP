@@ -34,6 +34,15 @@
             <classifier>date</classifier>
             <type>jar</type>
         </dependency>
+
+        <!--  NEW  OBS VERSIOn -->
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.config</groupId>
+            <artifactId>config-model</artifactId>
+            <version>2.1.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <!--  NEW  END -->
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms</groupId>
             <artifactId>uvms-commons</artifactId>
