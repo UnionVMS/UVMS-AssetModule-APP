@@ -21,7 +21,7 @@ public abstract class BuildAssetDeployment {
 
         // Import Maven runtime dependencies
         File[] files = Maven.resolver().loadPomFromFile("pom.xml")
-                .importRuntimeDependencies().resolve().withTransitivity().asFile();
+                .importRuntimeAndTestDependencies().resolve().withTransitivity().asFile();
 
         // Embedding war package which contains the test class is needed
         // So that Arquillian can invoke test class through its servlet test runner
