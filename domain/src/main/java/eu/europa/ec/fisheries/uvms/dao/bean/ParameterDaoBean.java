@@ -9,6 +9,7 @@ import eu.europa.ec.fisheries.uvms.dao.exception.ConfigServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
@@ -19,7 +20,8 @@ import java.util.List;
  */
 
 @Stateless
-public class ParameterDaoBean  extends Dao implements ParameterDao {
+@LocalBean
+public class ParameterDaoBean  extends Dao  implements ParameterDao {
 
     final static Logger LOG = LoggerFactory.getLogger(ParameterDaoBean.class);
 

@@ -10,7 +10,7 @@ import java.util.List;
  * Created by thofan on 2017-06-21.
  */
 
-@Local
+//@Local
 public interface ParameterDao {
 
 

@@ -24,6 +24,7 @@ import eu.europa.ec.fisheries.uvms.asset.remote.dto.ConfigurationDto;
 import eu.europa.ec.fisheries.uvms.asset.service.ConfigService;
 import eu.europa.ec.fisheries.uvms.bean.ConfigDomainModelBean;
 import eu.europa.ec.fisheries.uvms.dao.ParameterDao;
+import eu.europa.ec.fisheries.uvms.dao.bean.ParameterDaoBean;
 import eu.europa.ec.fisheries.wsdl.asset.config.Config;
 import eu.europa.ec.fisheries.wsdl.asset.config.ConfigField;
 import org.slf4j.Logger;
@@ -37,7 +38,7 @@ public class ConfigServiceBean implements ConfigService {
 
 
 	@EJB
-	ParameterDao parameterService;
+	ParameterDaoBean parameterService;
 
 	@EJB
 	private ConfigDomainModelBean configDomainModel;
