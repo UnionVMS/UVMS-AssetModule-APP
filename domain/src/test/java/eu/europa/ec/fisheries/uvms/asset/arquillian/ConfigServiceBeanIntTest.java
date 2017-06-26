@@ -16,13 +16,13 @@ import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.wsdl.asset.config.Config;
 
 @RunWith(Arquillian.class)
-@Ignore
 public class ConfigServiceBeanIntTest extends TransactionalTests {
 
 	@EJB
 	ConfigServiceBean configServiceBean;
 
 	@Test
+	@Ignore
 	@OperateOnDeployment("normal")
 	public void getConfigurationTest() throws Exception {
 		List<Config> configuration = configServiceBean.getConfiguration();

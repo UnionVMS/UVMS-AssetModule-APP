@@ -18,7 +18,7 @@ public class TransactionalTests extends BuildAssetServiceDeployment {
     @Inject
     protected UserTransaction userTransaction;
 
-    @PersistenceContext
+    @PersistenceContext(name = "asset")
     protected EntityManager em;
 
     @Before

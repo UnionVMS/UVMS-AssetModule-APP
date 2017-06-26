@@ -18,6 +18,9 @@ import java.util.Map;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
@@ -43,6 +46,9 @@ public class ConfigServiceBean {
 	@EJB
 	private ConfigDomainModelBean configDomainModel;
 
+	@PersistenceContext
+    private EntityManager entityManager;
+
 	public List<Config> getConfiguration() throws AssetException {
         LOG.info("Get configuration.");
 		ConfigurationDto configuration = configDomainModel.getConfiguration(ConfigField.ALL);
@@ -53,16 +59,18 @@ public class ConfigServiceBean {
 		try {
 			LOG.info("Get parameters");
 			Map<String, String> parameters = new HashMap<>();
-			parameterService.init("asset");
+			parameterService.init(entityManager);
 			for (SettingType settingType : parameterService.getAllSettings()) {
 				parameters.put(settingType.getKey(), settingType.getValue());
 			}
 
 			return parameters;
-		} catch (ConfigServiceException e) {
+		} catch (RuntimeException | ConfigServiceException e) {
 			LOG.error("[ Error when getting asset parameters from local database. ] {}", e);
 			throw new AssetException("Couldn't get parameters");
 		}
 	}
+
+
 
 }
