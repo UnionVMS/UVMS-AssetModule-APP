@@ -10,7 +10,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.uvms.asset.service.property.ParameterKey;
+import eu.europa.ec.fisheries.uvms.bean.property.ParameterKey;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
