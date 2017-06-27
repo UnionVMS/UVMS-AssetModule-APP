@@ -9,18 +9,20 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.asset.service.bean;
+package eu.europa.ec.fisheries.uvms.bean;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
-import eu.europa.ec.fisheries.uvms.asset.service.constants.ServiceConstants;
-import eu.europa.ec.fisheries.uvms.asset.service.property.ParameterKey;
+import eu.europa.ec.fisheries.uvms.bean.constants.ServiceConstants;
+import eu.europa.ec.fisheries.uvms.bean.property.ParameterKey;
 import eu.europa.ec.fisheries.uvms.config.constants.ConfigHelper;
 
 @Stateless
+@LocalBean
 public class AssetConfigHelper implements ConfigHelper {
 
     @Override

@@ -1,5 +1,9 @@
 package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
+import eu.europa.ec.fisheries.uvms.bean.AssetConfigHelper;
+import eu.europa.ec.fisheries.uvms.bean.ConfigDomainModelBean;
+import eu.europa.ec.fisheries.uvms.bean.ConfigServiceBean;
+import eu.europa.ec.fisheries.uvms.config.service.entity.Parameter;
 import org.eu.ingwar.tools.arquillian.extension.suite.annotations.ArquillianSuiteDeployment;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -28,6 +32,7 @@ public abstract class BuildAssetDeployment {
         WebArchive testWar = ShrinkWrap.create(WebArchive.class, "test.war");
 
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.constant");
+
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.entity");
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.dao");
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.mapper");
@@ -40,6 +45,13 @@ public abstract class BuildAssetDeployment {
 
         testWar.addPackages(true, "eu.europa.ec.fisheries.schema");
         testWar.addClass(TransactionalTests.class);
+        testWar.addClass(AssetConfigHelper.class);
+        testWar.addClass(ConfigServiceBean.class);
+        testWar.addClass(ConfigDomainModelBean.class);
+        testWar.addClass(Parameter.class);
+
+
+
 
         testWar.addAsResource("persistence-integration.xml", "META-INF/persistence.xml");
         // Empty beans for EE6 CDI
