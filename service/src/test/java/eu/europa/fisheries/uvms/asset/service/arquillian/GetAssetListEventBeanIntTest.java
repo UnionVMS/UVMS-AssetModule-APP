@@ -91,6 +91,7 @@ public class GetAssetListEventBeanIntTest  extends TransactionalTests {
     }
 
     @Test
+    @Ignore
     @OperateOnDeployment("normal")
     public void testGetAssetList_FAIL_ON_LENGTH() throws AssetException {
 
