@@ -9,7 +9,6 @@ import eu.europa.ec.fisheries.uvms.bean.ConfigServiceBean;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -22,7 +21,6 @@ public class ConfigServiceBeanIntTest extends TransactionalTests {
 	ConfigServiceBean configServiceBean;
 
 	@Test
-	@Ignore
 	@OperateOnDeployment("normal")
 	public void getConfigurationTest() throws Exception {
 		List<Config> configuration = configServiceBean.getConfiguration();
