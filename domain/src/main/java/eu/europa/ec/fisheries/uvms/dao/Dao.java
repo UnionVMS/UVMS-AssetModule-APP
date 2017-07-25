@@ -17,7 +17,6 @@ import javax.persistence.PersistenceContext;
 
 public class Dao {
 
-//    @PersistenceContext(unitName = "asset")
-    @PersistenceContext
+    @PersistenceContext(unitName = "assetPU")
     protected EntityManager em;
 }
