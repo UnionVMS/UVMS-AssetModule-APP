@@ -15,12 +15,12 @@
     </parent>
 
     <properties>
-    	<docker.dev.version>3.3.0</docker.dev.version>   	
-        <usm4uvms.version>3.0.5</usm4uvms.version>
+    	<docker.dev.version>3.3.0</docker.dev.version>
+        <usm4uvms.version>3.0.4</usm4uvms.version>
         <uvms.config.version>3.0.4.1</uvms.config.version>
         <asset.model.version>3.0.5</asset.model.version>
         <audit.model.version>3.0.4</audit.model.version>
-        <uvms.common.version>2.0.20</uvms.common.version>
+        <uvms.common.version>2.0.17</uvms.common.version>
         <project.scm.id>github</project.scm.id>
     </properties>
 
@@ -62,7 +62,7 @@
 				<version>1.8</version>
 				<type>pom</type>
 			</dependency>
-        </dependencies>        
+        </dependencies>
     </dependencyManagement>
 
     <repositories>
@@ -90,7 +90,7 @@
         <connection>scm:git:https://github.com/UnionVMS/UVMS-AssetModule-APP.git</connection>
         <tag>HEAD</tag>
     </scm>
-    
+
     <modules>
         <module>rest</module>
         <module>service</module>
