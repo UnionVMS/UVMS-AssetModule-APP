@@ -26,7 +26,7 @@ public class AssetConfigHelper implements ConfigHelper {
 
     private final static String ASSET_PU = "asset";
 
-    @PersistenceContext(unitName = ASSET_PU)
+    @PersistenceContext
     protected EntityManager em;
 
     @Override
