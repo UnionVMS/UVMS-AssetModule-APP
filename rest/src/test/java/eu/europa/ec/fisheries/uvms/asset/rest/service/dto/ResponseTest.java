@@ -13,7 +13,7 @@ package eu.europa.ec.fisheries.uvms.asset.rest.service.dto;
 
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseCodeConstant;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseDto;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.After;
 import org.junit.AfterClass;
