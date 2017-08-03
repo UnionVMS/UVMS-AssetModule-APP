@@ -11,18 +11,18 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.message.producer.bean;
 
-import eu.europa.ec.fisheries.uvms.asset.message.AssetConstants;
-import org.slf4j.LoggerFactory;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
-import javax.ejb.DependsOn;
 import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.jms.*;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.JMSException;
+import javax.jms.Session;
+import javax.jms.TextMessage;
+
+import org.slf4j.LoggerFactory;
+
+import eu.europa.ec.fisheries.uvms.message.JMSUtils;
 
 @Singleton
 public class JMSConnectorBean {
@@ -34,28 +34,7 @@ public class JMSConnectorBean {
 
     @PostConstruct
     private void connectToQueue() {
-        LOG.debug("Open connection to JMS broker");
-        InitialContext ctx;
-        try {
-            ctx = new InitialContext();
-        } catch (Exception e) {
-            LOG.error("Failed to get InitialContext",e);
-            throw new RuntimeException(e);
-        }
-        try {
-            connectionFactory = (QueueConnectionFactory) ctx.lookup(AssetConstants.CONNECTION_FACTORY);
-        } catch (NamingException ne) {
-            //if we did not find the connection factory we might need to add java:/ at the start
-            LOG.debug("Connection Factory lookup failed for " + AssetConstants.CONNECTION_FACTORY);
-            String wfName = "java:/" + AssetConstants.CONNECTION_FACTORY;
-            try {
-                LOG.debug("trying " + wfName);
-                connectionFactory = (QueueConnectionFactory) ctx.lookup(wfName);
-            } catch (Exception e) {
-                LOG.error("Connection Factory lookup failed for both " + AssetConstants.CONNECTION_FACTORY  + " and " + wfName);
-                throw new RuntimeException(e);
-            }
-        }
+    	connectionFactory = JMSUtils.lookupConnectionFactory();
         try {
             connection = connectionFactory.createConnection();
             connection.start();

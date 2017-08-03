@@ -11,23 +11,44 @@
  */
 package eu.europa.ec.fisheries.uvms.asset.message.consumer.bean;
 
-import eu.europa.ec.fisheries.uvms.asset.message.AssetConstants;
-import eu.europa.ec.fisheries.uvms.asset.message.event.*;
-import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
-import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
-import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.*;
-import eu.europa.ec.fisheries.wsdl.asset.module.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.ejb.*;
+import javax.ejb.ActivationConfigProperty;
+import javax.ejb.EJB;
+import javax.ejb.MessageDriven;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import eu.europa.ec.fisheries.uvms.asset.message.AssetConstants;
+import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
+import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
+import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
+import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
+import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetGroupEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetGroupListByAssetGuidEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetListByAssetGroupEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetListEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.PingEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.UpsertAssetMessageEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.UpsertFishingGearsMessageEventBean;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetListModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetModuleMethod;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetGroupListByAssetGuidRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.UpsertAssetModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.UpsertFishingGearModuleRequest;
 
 @MessageDriven(mappedName = AssetConstants.QUEUE_ASSET_EVENT, activationConfig = {
     @ActivationConfigProperty(propertyName = "messagingType", propertyValue = AssetConstants.CONNECTION_TYPE),

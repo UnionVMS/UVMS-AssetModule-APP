@@ -11,18 +11,19 @@
  */
 package eu.europa.ec.fisheries.uvms.asset.message.consumer.bean;
 
-import eu.europa.ec.fisheries.uvms.asset.message.AssetConstants;
-import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
-import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.jms.Message;
 import javax.jms.MessageListener;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import eu.europa.ec.fisheries.uvms.asset.message.AssetConstants;
+import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
+import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 
 @MessageDriven(mappedName = AssetConstants.QUEUE_ASSET_EVENT, activationConfig = {
     @ActivationConfigProperty(propertyName = "messagingType", propertyValue = AssetConstants.CONNECTION_TYPE),

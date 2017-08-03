@@ -11,14 +11,14 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.message.producer.bean;
 
-import org.slf4j.LoggerFactory;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.Singleton;
 import javax.jms.JMSException;
 import javax.jms.Session;
 import javax.jms.TextMessage;
+
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class JMSConnectorBean {

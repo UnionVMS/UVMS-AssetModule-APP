@@ -11,6 +11,23 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.message.producer.bean;
 
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.ejb.EJBTransactionRolledbackException;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.enterprise.event.Observes;
+import javax.jms.DeliveryMode;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Queue;
+import javax.jms.Session;
+import javax.jms.TextMessage;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import eu.europa.ec.fisheries.uvms.asset.message.AssetConstants;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.ModuleQueue;
@@ -24,15 +41,6 @@ import eu.europa.ec.fisheries.uvms.config.constants.ConfigConstants;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigMessageException;
 import eu.europa.ec.fisheries.uvms.config.message.ConfigMessageProducer;
 import eu.europa.ec.fisheries.uvms.message.JMSUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.ejb.*;
-import javax.enterprise.event.Observes;
-import javax.jms.*;
-import javax.naming.InitialContext;
 
 @Stateless
 public class MessageProducerBean implements MessageProducer, ConfigMessageProducer {
@@ -45,25 +53,16 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
 
     final static Logger LOG = LoggerFactory.getLogger(MessageProducerBean.class);
 
-    private static final int CONFIG_TTL = 30000;
-
     @EJB
     JMSConnectorBean connector;
 
     @PostConstruct
     public void init() {
-        InitialContext ctx;
-        try {
-            ctx = new InitialContext();
-        } catch (Exception e) {
-            LOG.error("Failed to get InitialContext",e);
-            throw new RuntimeException(e);
-        }
-        responseQueue = JMSUtils.lookupQueue(ctx, AssetConstants.QUEUE_ASSET);
-        nationalSourceQueue = JMSUtils.lookupQueue(ctx, AssetConstants.QUEUE_DATASOURCE_NATIONAL);
-        xeuSourceQueue = JMSUtils.lookupQueue(ctx, AssetConstants.QUEUE_DATASOURCE_XEU);
-        auditQueue = JMSUtils.lookupQueue(ctx, AssetConstants.AUDIT_MODULE_QUEUE);
-        configQueue = JMSUtils.lookupQueue(ctx, ConfigConstants.CONFIG_MESSAGE_IN_QUEUE);
+        responseQueue = JMSUtils.lookupQueue(AssetConstants.QUEUE_ASSET);
+        nationalSourceQueue = JMSUtils.lookupQueue(AssetConstants.QUEUE_DATASOURCE_NATIONAL);
+        xeuSourceQueue = JMSUtils.lookupQueue(AssetConstants.QUEUE_DATASOURCE_XEU);
+        auditQueue = JMSUtils.lookupQueue(AssetConstants.AUDIT_MODULE_QUEUE);
+        configQueue = JMSUtils.lookupQueue(ConfigConstants.CONFIG_MESSAGE_IN_QUEUE);
     }
 
     @Override
