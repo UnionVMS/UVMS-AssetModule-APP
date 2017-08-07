@@ -8,6 +8,13 @@
         <param-value>true</param-value>
     </context-param>
     
+    <context-param>
+        <param-name>datasources</param-name>
+        <param-value>java:/jdbc/uvms_asset</param-value>
+    </context-param>
+	<listener>
+		<listener-class>net.bull.javamelody.SessionListener</listener-class>
+	</listener>    
     <filter>
 		<filter-name>javamelody</filter-name>
 		<filter-class>net.bull.javamelody.MonitoringFilter</filter-class>
