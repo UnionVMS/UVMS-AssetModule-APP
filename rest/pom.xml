@@ -18,6 +18,8 @@
         <maven.javadoc.plugin.version>2.9.1</maven.javadoc.plugin.version>
         <swagger.doclet.version>1.0.4.2</swagger.doclet.version>
         <replacer.version>1.5.3</replacer.version>
+        <docker.dev.stop.phase>verify</docker.dev.stop.phase>
+        <docker.dev.prestop.phase>install</docker.dev.prestop.phase>        	
     </properties>
     
     <dependencies>

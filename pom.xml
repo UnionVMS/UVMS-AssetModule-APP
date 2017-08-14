@@ -100,7 +100,6 @@
         <module>message-impl</module>
         <module>module</module>
         <module>message-mock</module>
-        <module>module-integration-test</module>
     </modules>
 
 </project>
