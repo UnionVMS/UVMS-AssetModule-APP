@@ -92,14 +92,15 @@
     </scm>
 
     <modules>
+        <module>LIQUIBASE</module>        
+        <module>domain</module>
         <module>rest</module>
         <module>service</module>
         <module>message</module>
         <module>message-impl</module>
         <module>module</module>
-        <module>module-integration-test</module>
-        <module>domain</module>
         <module>message-mock</module>
+        <module>module-integration-test</module>
     </modules>
 
 </project>
