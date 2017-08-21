@@ -12,12 +12,13 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.message.producer.bean;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Observes;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
 import javax.jms.DeliveryMode;
 import javax.jms.Destination;
 import javax.jms.JMSException;
@@ -50,14 +51,14 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
     private Queue auditQueue;
     private Queue configQueue;
     private Queue responseQueue;
+    private ConnectionFactory connectionFactory;
+    
 
     final static Logger LOG = LoggerFactory.getLogger(MessageProducerBean.class);
 
-    @EJB
-    JMSConnectorBean connector;
-
     @PostConstruct
     public void init() {
+    	connectionFactory = JMSUtils.lookupConnectionFactory();
         responseQueue = JMSUtils.lookupQueue(AssetConstants.QUEUE_ASSET);
         nationalSourceQueue = JMSUtils.lookupQueue(AssetConstants.QUEUE_DATASOURCE_NATIONAL);
         xeuSourceQueue = JMSUtils.lookupQueue(AssetConstants.QUEUE_DATASOURCE_XEU);
@@ -68,10 +69,14 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public String sendDataSourceMessage(String text, AssetDataSourceQueue queue) {
-        try {
+    	Connection connection=null;
+
+    	try {
             LOG.info("[ Sending datasource message to recipient on queue {} ] ", queue.name());
 
-            Session session = connector.getNewSession();
+            connection = connectionFactory.createConnection();
+            final Session session = JMSUtils.connectToQueue(connection);
+
             TextMessage message = session.createTextMessage();
             message.setJMSReplyTo(responseQueue);
             message.setText(text);
@@ -93,16 +98,22 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
         } catch (Exception e) {
             LOG.error("[ Error when sending message. ] {}", e.getMessage(), e.getStackTrace());
             return null;
+        } finally {
+        	JMSUtils.disconnectQueue(connection);
         }
     }
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public String sendModuleMessage(String text, ModuleQueue queue) throws AssetMessageException {
-        try {
+
+    	Connection connection=null;
+    	try {
             LOG.info("[ Sending module message to recipient on queue {} ] ", queue.name());
 
-            Session session = connector.getNewSession();
+            connection = connectionFactory.createConnection();
+            final Session session = JMSUtils.connectToQueue(connection);
+            
             TextMessage message = session.createTextMessage();
             message.setJMSReplyTo(responseQueue);
             message.setText(text);
@@ -120,29 +131,39 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
         } catch (Exception e) {
             LOG.error("[ Error when sending data source message. ] {}", e.getMessage());
             throw new AssetMessageException(e.getMessage());
+        } finally {
+        	JMSUtils.disconnectQueue(connection);
         }
     }
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void sendModuleResponseMessage(TextMessage message, String text) {
-        try {
+    	Connection connection=null;
+
+    	try {
             LOG.info("Sending message back to recipient from VesselModule with correlationId {} on queue: {}", message.getJMSMessageID(), message.getJMSReplyTo());
-            Session session = connector.getNewSession();
+            connection = connectionFactory.createConnection();
+            final Session session = JMSUtils.connectToQueue(connection);
             TextMessage response = session.createTextMessage(text);
             response.setJMSCorrelationID(message.getJMSMessageID());
             getProducer(session, message.getJMSReplyTo()).send(response);
         } catch (JMSException e) {
             LOG.error("[ Error when returning module asset request. ] {} {}", e.getMessage(), e.getStackTrace());
+        } finally {
+        	JMSUtils.disconnectQueue(connection);
         }
     }
 
     @Override
     public void sendModuleErrorResponseMessage(@Observes @AssetMessageErrorEvent AssetMessageEvent message) {
-        try {
+    	Connection connection=null;
+
+    	try {
             LOG.info("Sending error message back from VesselModule to recipient om JMS Queue with correlationID: {}", message.getMessage().getJMSMessageID());
 
-            Session session = connector.getNewSession();
+            connection = connectionFactory.createConnection();
+            final Session session = JMSUtils.connectToQueue(connection);
 
             String data = JAXBMarshaller.marshallJaxBObjectToString(message.getFault());
             TextMessage response = session.createTextMessage(data);
@@ -153,6 +174,8 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
             LOG.error("[ Error when returning Error message to recipient. ] {} ", e.getMessage());
         } catch (EJBTransactionRolledbackException e) {
             LOG.error("[ Error when returning Error message to recipient. Usual cause is NoAssetEntityFoundException ] {} ", e.getMessage());
+        } finally {
+        	JMSUtils.disconnectQueue(connection);
         }
     }
 
