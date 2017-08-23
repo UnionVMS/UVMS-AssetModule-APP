@@ -43,7 +43,6 @@ public class AssetDaoBean extends Dao implements AssetDao {
     @Override
     public AssetEntity createAsset(AssetEntity asset) throws AssetDaoException {
         try {
-            LOG.debug("Create asset.");
             em.persist(asset);
             return asset;
         } catch (Exception e) {
@@ -54,18 +53,15 @@ public class AssetDaoBean extends Dao implements AssetDao {
 
     @Override
     public AssetEntity getAssetById(Long id) throws AssetDaoException {
-        LOG.debug("Get asset by ID.");
         try {
             return em.find(AssetEntity.class, id);
         } catch (NoResultException e) {
-            LOG.error("[ Error when getting asset by ID. ] ");
             throw new NoAssetEntityFoundException("No asset found for " + id);
         }
     }
 
     @Override
     public AssetEntity updateAsset(AssetEntity asset) throws AssetDaoException {
-        LOG.debug("Update asset.");
         try {
             em.merge(asset);
             em.flush();
@@ -84,15 +80,12 @@ public class AssetDaoBean extends Dao implements AssetDao {
             LOG.debug("deleteAsset. assetEntity is null. check you code");
             return ;
         }
-        LOG.debug("Delete asset.");
-
         em.remove(assetEntity);
     }
 
     @Override
     public List<AssetEntity> getAssetListAll() throws AssetDaoException {
         try {
-            LOG.debug("Get asset list.");
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_ALL, AssetEntity.class);
             return query.getResultList();
         } catch (IllegalArgumentException e) {
@@ -103,84 +96,72 @@ public class AssetDaoBean extends Dao implements AssetDao {
 
     @Override
     public AssetEntity getAssetByCfr(String cfr) throws NoAssetEntityFoundException, AssetDaoException {
-        LOG.debug("Get asset by CFR.");
         try {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_CFR, AssetEntity.class);
             query.setParameter("cfr", cfr);
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            LOG.error("[ Error when getting asset by CFR. ] ");
             throw new NoAssetEntityFoundException("No asset found for " + cfr);
         }
     }
 
     @Override
     public AssetEntity getAssetByIrcs(String ircs) throws NoAssetEntityFoundException, AssetDaoException {
-        LOG.debug("Get asset by IRCS.");
         try {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_IRCS, AssetEntity.class);
             query.setParameter("ircs", ircs);
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            LOG.error("[ Error when getting asset by IRCS. ]");
             throw new NoAssetEntityFoundException("No asset found for " + ircs);
         }
     }
 
     @Override
     public AssetEntity getAssetByGuid(String guid) throws AssetDaoException {
-        LOG.debug("Get asset by GUID.");
         try {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_GUID, AssetEntity.class);
             query.setParameter("guid", guid);
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            LOG.error("[ Error when getting asset by GUID. ]");
             throw new NoAssetEntityFoundException("No asset found for " + guid);
         }
     }
 
 	@Override
 	public AssetEntity getAssetByImo(String imo) throws AssetDaoException {
-		LOG.debug("Get asset by IMO");
 		try {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_IMO, AssetEntity.class);
             query.setParameter("imo", imo);
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            LOG.error("[ Error when getting asset by IMO. ]");
             throw new NoAssetEntityFoundException("No asset found for " + imo);
         }
 	}
 
 	@Override
 	public AssetEntity getAssetByMmsi(String mmsi) throws AssetDaoException {
-		LOG.debug("Get asset by MMSI");
 		try {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_MMSI, AssetEntity.class);
             query.setParameter("mmsi", mmsi);
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            LOG.error("[ Error when getting asset by MMSI. ]");
             throw new NoAssetEntityFoundException("No asset found for " + mmsi);
         }
 	}
     
     @Override
     public AssetHistory getAssetHistoryByGuid(String guid) throws AssetDaoException {
-        LOG.debug("Get assethistory by GUID.");
         try {
             TypedQuery<AssetHistory> query = em.createNamedQuery(UvmsConstants.ASSETHISTORY_FIND_BY_GUID, AssetHistory.class);
             query.setParameter("guid", guid);
             AssetHistory singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            LOG.error("[ Error when getting assethistory by GUID. ] ");
             throw new NoAssetEntityFoundException("No asset history found for " + guid);
         }
     }
@@ -263,68 +244,58 @@ public class AssetDaoBean extends Dao implements AssetDao {
     @Override
     public List<AssetHistory> getAssetListByAssetGuids(List<String> assetGuids) throws AssetDaoException {
         try {
-            LOG.debug("Get asset list by asset guids.");
             TypedQuery<AssetHistory> query = em.createNamedQuery(UvmsConstants.ASSETHISTORY_FIND_BY_GUIDS, AssetHistory.class);
             query.setParameter("guids", assetGuids);
             return query.getResultList();
         } catch (IllegalArgumentException e) {
-            LOG.error("[ Error when getting asset list. ] ");
             throw new AssetDaoException("[ get all asset ] " + e.getMessage());
         }
     }
 
     @Override
     public AssetEntity getAssetByCfrExcludeArchived(String cfr) throws NoAssetEntityFoundException, AssetDaoException {
-        LOG.debug("Get asset by CFR.");
         try {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_CFR_EXCLUDE_ARCHIVED, AssetEntity.class);
             query.setParameter("cfr", cfr);
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            LOG.error("[ Error when getting asset by CFR. ] ");
             throw new NoAssetEntityFoundException("No asset found for " + cfr);
         }
     }
 
     @Override
     public AssetEntity getAssetByIrcsExcludeArchived(String ircs) throws NoAssetEntityFoundException, AssetDaoException {
-        LOG.debug("Get asset by IRCS.");
         try {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_IRCS_EXCLUDE_ARCHIVED, AssetEntity.class);
             query.setParameter("ircs", ircs);
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            LOG.error("[ Error when getting asset by IRCS. ]");
             throw new NoAssetEntityFoundException("No asset found for " + ircs);
         }
     }
 
     @Override
     public AssetEntity getAssetByImoExcludeArchived(String imo) throws AssetDaoException {
-        LOG.debug("Get asset by IMO");
         try {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_IMO_EXCLUDE_ARCHIVED, AssetEntity.class);
             query.setParameter("imo", imo);
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            LOG.error("[ Error when getting asset by IMO. ]");
             throw new NoAssetEntityFoundException("No asset found for " + imo);
         }
     }
 
     @Override
     public AssetEntity getAssetByMmsiExcludeArchived(String mmsi) throws AssetDaoException {
-        LOG.debug("Get asset by MMSI");
         try {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_MMSI_EXCLUDE_ARCHIVED, AssetEntity.class);
             query.setParameter("mmsi", mmsi);
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            LOG.error("[ Error when getting asset by MMSI. ]");
             throw new NoAssetEntityFoundException("No asset found for " + mmsi);
         }
     }
