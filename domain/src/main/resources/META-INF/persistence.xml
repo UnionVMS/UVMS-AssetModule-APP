@@ -5,7 +5,10 @@
     <persistence-unit name="assetPU" transaction-type="JTA">
         <jta-data-source>jdbc/uvms_asset</jta-data-source>
         <properties>
-            <property name="hibernate.dialect" value="${hibernate.dialect}"/>
+            <property name="hibernate.dialect" value="${hibernate.dialect}"/>           
+			<property name="hibernate.cache.use_second_level_cache" value="true"/>
+			<property name="hibernate.cache.default_cache_concurrency_strategy" value="TRANSACTIONAL" />
         </properties>
+        <shared-cache-mode>ALL</shared-cache-mode>
     </persistence-unit>
 </persistence>
