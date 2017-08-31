@@ -32,7 +32,6 @@ public class GetAssetListEventBean {
         try {
             ListAssetResponse response = service.getAssetList(message.getQuery());
 
-            LOG.debug("Send back assetlist response: {}",message);
             messageProducer.sendModuleResponseMessage(message.getMessage(), AssetModuleResponseMapper.mapAssetModuleResponse(response));
         } catch (AssetException e) {
             assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting assetlist [ " + e.getMessage())));
