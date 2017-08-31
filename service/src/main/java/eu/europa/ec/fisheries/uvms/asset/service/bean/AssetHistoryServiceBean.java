@@ -38,7 +38,6 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
     @EJB
     AssetQueueConsumer reciever;
 
-//    @EJB(lookup = ServiceConstants.DB_ACCESS_ASSET_DOMAIN_MODEL)
     @EJB
     private AssetDomainModelBean assetDomainModel;
 

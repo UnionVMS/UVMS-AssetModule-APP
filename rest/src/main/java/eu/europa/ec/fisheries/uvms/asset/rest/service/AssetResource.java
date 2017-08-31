@@ -60,7 +60,7 @@ public class AssetResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public ResponseDto getAssetList(final AssetListQuery assetQuery) {
         try {
-            LOG.info("Getting asset list.");
+            LOG.info("Getting asset list:{}",assetQuery);
             ListAssetResponse assetList = assetService.getAssetList(assetQuery);
             return new ResponseDto(assetList, ResponseCodeConstant.OK);
         } catch (Exception e) {
@@ -84,11 +84,11 @@ public class AssetResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public ResponseDto getAssetListItemCount(final AssetListQuery assetQuery) {
         try {
-            LOG.info("Getting asset list.");
+            LOG.info("Get Asset List Item Count: {}",assetQuery);
             Long assetListCount = assetService.getAssetListCount(assetQuery);
             return new ResponseDto(assetListCount, ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset list. ] ");
+            LOG.error("[ Error when getting asset list: {} ] {}",assetQuery,e);
             return ErrorHandler.getFault(e);
         }
     }
@@ -108,11 +108,10 @@ public class AssetResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public ResponseDto getNoteActivityCodes() {
         try {
-            LOG.info("Getting asset list.");
             NoteActivityCode activityCodes = assetService.getNoteActivityCodes();
             return new ResponseDto(activityCodes, ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset list. ] ");
+            LOG.error("[ getNoteActivityCodes error. ] ",e);
             return ErrorHandler.getFault(e);
         }
     }
@@ -132,10 +131,10 @@ public class AssetResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public ResponseDto getAssetById(@PathParam(value = "id") final String id) {
         try {
-            LOG.info("Getting asset by ID.");
+            LOG.info("Getting asset by ID: {}",id);
             return new ResponseDto(assetService.getAssetByGuid(id), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset by ID. ] ");
+            LOG.error("[ Error when getting asset by ID. {}] {} ",id,e);
             return ErrorHandler.getFault(e);
         }
     }
@@ -162,11 +161,11 @@ public class AssetResource {
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public ResponseDto createAsset(final Asset asset) {
         try {
-            LOG.info("Creating asset.");
+            LOG.info("Creating asset: {}",asset);
             String remoteUser = servletRequest.getRemoteUser();
             return new ResponseDto(assetService.createAsset(asset, remoteUser), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when creating asset. {}] ", e.getMessage());
+            LOG.error("[ Error when creating asset. {}] {}",asset, e.getMessage());
             return ErrorHandler.getFault(e);
         }
     }
@@ -185,11 +184,11 @@ public class AssetResource {
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public ResponseDto updateAsset(final Asset asset, @QueryParam("comment") String comment) {
         try {
-            LOG.info("Updating asset.");
+            LOG.info("Updating asset:{}",asset);
             String remoteUser = servletRequest.getRemoteUser();
             return new ResponseDto(assetService.updateAsset(asset, remoteUser, comment), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when updating asset. ] {}", e.getMessage());
+            LOG.error("[ Error when updating asset. {}] {}",asset, e.getMessage());
             return ErrorHandler.getFault(e);
         }
     }
@@ -205,7 +204,7 @@ public class AssetResource {
             Asset archivedAsset = assetService.archiveAsset(asset, remoteUser, comment);
             return new ResponseDto(archivedAsset, ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when archiving asset. ] {}", e.getMessage());
+            LOG.error("[ Error when archiving asset. {}] {}",asset, e.getMessage());
             return ErrorHandler.getFault(e);
         }
     }
@@ -217,11 +216,11 @@ public class AssetResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public ResponseDto assetListGroupByFlagState(final List<String> assetIds) {
         try {
-            LOG.info("Getting asset list group by flag state.");
+            LOG.info("Getting asset list group by flag state:{}",assetIds);
             AssetListGroupByFlagStateResponse assetListGroupByFlagState = assetService.getAssetListGroupByFlagState(assetIds);
             return new ResponseDto(assetListGroupByFlagState, ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset list. ] ");
+            LOG.error("[ Error when getting asset list:{} ] {}",assetIds,e);
             return ErrorHandler.getFault(e);
         }
     }

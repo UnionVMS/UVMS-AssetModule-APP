@@ -72,7 +72,7 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
     	Connection connection=null;
 
     	try {
-            LOG.info("[ Sending datasource message to recipient on queue {} ] ", queue.name());
+            LOG.info("[ Sending datasource message {}  to recipient on queue {} ] ",text, queue.name());
 
             connection = connectionFactory.createConnection();
             final Session session = JMSUtils.connectToQueue(connection);
@@ -96,7 +96,7 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
 
             return message.getJMSMessageID();
         } catch (Exception e) {
-            LOG.error("[ Error when sending message. ] {}", e.getMessage(), e.getStackTrace());
+            LOG.error("[ Error when sending message {} ] {}",text, e.getMessage());
             return null;
         } finally {
         	JMSUtils.disconnectQueue(connection);

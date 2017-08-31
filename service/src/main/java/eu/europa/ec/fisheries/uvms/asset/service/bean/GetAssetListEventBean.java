@@ -8,9 +8,6 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -20,8 +17,6 @@ import javax.inject.Inject;
 @Stateless
 @LocalBean
 public class GetAssetListEventBean {
-
-    final static Logger LOG = LoggerFactory.getLogger(GetAssetListEventBean.class);
 
     @EJB
     MessageProducer messageProducer;
@@ -34,14 +29,12 @@ public class GetAssetListEventBean {
     Event<AssetMessageEvent> assetErrorEvent;
 
     public void getAssetList(AssetMessageEvent message) {
-        LOG.info("Get asset list");
         try {
             ListAssetResponse response = service.getAssetList(message.getQuery());
 
-            LOG.debug("Send back assetlist response.");
+            LOG.debug("Send back assetlist response: {}",message);
             messageProducer.sendModuleResponseMessage(message.getMessage(), AssetModuleResponseMapper.mapAssetModuleResponse(response));
         } catch (AssetException e) {
-            LOG.error("[ Error when getting assetlist from source. ] ");
             assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting assetlist [ " + e.getMessage())));
         }
     }

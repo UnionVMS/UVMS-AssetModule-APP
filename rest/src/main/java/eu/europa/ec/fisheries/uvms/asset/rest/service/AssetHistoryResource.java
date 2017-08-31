@@ -57,10 +57,10 @@ public class AssetHistoryResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public ResponseDto getAssetHistoryListByAssetId(@QueryParam("assetId") String assetId, @QueryParam("maxNbr") Integer maxNbr) {
         try {
-            LOG.info("Getting asset history list by asset ID.");
+            LOG.info("Getting asset history list by asset ID: {}",assetId);
             return new ResponseDto(assetHistoryService.getAssetHistoryListByAssetId(assetId, maxNbr), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset history list by asset ID. ]");
+            LOG.error("[ Error when getting asset history list by asset ID. {}]",assetId);
             return ErrorHandler.getFault(e);
         }
     }
@@ -79,10 +79,10 @@ public class AssetHistoryResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
    public ResponseDto getAssetHistoryByAssetHistGuid(@PathParam("guid") String guid) {
         try {
-            LOG.info("Getting asset history by asset history guid.");
+            LOG.info("Getting asset history by asset history guid: {}",guid);
             return new ResponseDto(assetHistoryService.getAssetHistoryByAssetHistGuid(guid), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset history by asset history guid. ] ");
+            LOG.error("[ Error when getting asset history by asset history guid. {}] ",guid);
             return ErrorHandler.getFault(e);
         }
     }

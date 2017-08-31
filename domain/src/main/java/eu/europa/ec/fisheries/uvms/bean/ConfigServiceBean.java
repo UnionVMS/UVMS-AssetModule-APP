@@ -50,14 +50,12 @@ public class ConfigServiceBean {
     private EntityManager entityManager;
 
 	public List<Config> getConfiguration() throws AssetException {
-        LOG.info("Get configuration.");
 		ConfigurationDto configuration = configDomainModel.getConfiguration(ConfigField.ALL);
 		return configuration.getConfigList();
 	}
 
 	public Map<String, String> getParameters() throws AssetException {
 		try {
-			LOG.info("Get parameters");
 			Map<String, String> parameters = new HashMap<>();
 			for (SettingType settingType : parameterService.getAllSettings()) {
 				parameters.put(settingType.getKey(), settingType.getValue());

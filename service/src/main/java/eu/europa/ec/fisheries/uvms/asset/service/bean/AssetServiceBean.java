@@ -51,7 +51,6 @@ public class AssetServiceBean implements AssetService {
     @EJB
     AssetQueueConsumer reciever;
 
-//    @EJB(lookup = ServiceConstants.DB_ACCESS_ASSET_DOMAIN_MODEL)
     @EJB
     AssetDomainModelBean assetDomainModel;
 

@@ -44,11 +44,10 @@ public class AssetGroupDomainModelBean  {
         }
 
         try {
-            LOG.info("Get asset group.");
             AssetGroup groupEntity = getAssetGroupById(guid);
             return AssetGroupMapper.toAssetGroup(groupEntity);
         } catch (AssetGroupDaoException e) {
-            LOG.error("[ Error when getting asset group. ] {}", e.getMessage());
+            LOG.error("[ Error when getting asset group. ] guid {} exception {}",guid, e.getMessage());
             throw new AssetModelException(e.getMessage());
         }
     }
@@ -68,12 +67,11 @@ public class AssetGroupDomainModelBean  {
         }
 
         try {
-            LOG.info("Create asset group.");
             AssetGroup groupEntity = AssetGroupMapper.toGroupEntity(assetGroup, username);
             assetGroupDao.createAssetGroup(groupEntity);
             return AssetGroupMapper.toAssetGroup(groupEntity);
         } catch (AssetGroupDaoException | AssetDaoMappingException e) {
-        	LOG.error("[ Error when creating asset group. ] {}", e.getMessage());
+        	LOG.error("[ Error when creating asset group. ] assetGroup: {} username: {} exception: {}", assetGroup, username, e.getMessage());
             throw new AssetModelException(e.getMessage());
         }
     }
@@ -84,12 +82,11 @@ public class AssetGroupDomainModelBean  {
         }
 
         try {
-        	LOG.info("Update asset group");
         	AssetGroup groupEntity = getAssetGroupById(assetGroup.getGuid());
             groupEntity = AssetGroupMapper.toGroupEntity(groupEntity, assetGroup, username);
             return AssetGroupMapper.toAssetGroup(groupEntity);
         } catch (AssetGroupDaoException | AssetDaoMappingException e) {
-            LOG.error("[ Error when updating asset group. ] {}", e.getMessage());
+            LOG.error("[ Error when updating asset group. ] assetGroup: {} username: {} exception: {}", assetGroup, username, e.getMessage());
             throw new AssetModelException(e.getMessage());
         }
     }
@@ -100,7 +97,6 @@ public class AssetGroupDomainModelBean  {
         }
 
         try {
-            LOG.info("Get asset group list by assetGuid.");
             List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup> vesselGroupList = new ArrayList<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup>();
             List<AssetGroup> filterGroupList = assetGroupDao.getAssetGroupAll();
             for (AssetGroup group : filterGroupList) {
@@ -114,7 +110,7 @@ public class AssetGroupDomainModelBean  {
             }
             return vesselGroupList;
         } catch (AssetGroupDaoException e) {
-            LOG.error("[ Error when getting asset group list by assetGuid. ] {}", e.getMessage());
+            LOG.error("[ Error when getting asset group list by assetGuid. ] assetGuid: {} exception: {}",assetGuid, e.getMessage());
             throw new AssetModelException(e.getMessage());
         }
     }
@@ -125,7 +121,6 @@ public class AssetGroupDomainModelBean  {
         }
 
         try {
-            LOG.info("Get asset group list by user.");
             List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup> assetGroupList = new ArrayList<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup>();
             List<AssetGroup> filterGroupList = assetGroupDao.getAssetGroupByUser(user);
             for (AssetGroup group : filterGroupList) {
@@ -134,7 +129,7 @@ public class AssetGroupDomainModelBean  {
 
             return assetGroupList;
         } catch (AssetGroupDaoException e) {
-            LOG.error("[ Error when getting asset group list by user. ] {}", e.getMessage());
+            LOG.error("[ Error when getting asset group list by user. ] user: {} exception: {}",user, e.getMessage());
             throw new AssetModelException(e.getMessage());
         }
     }
@@ -145,14 +140,13 @@ public class AssetGroupDomainModelBean  {
         }
 
         try {
-            LOG.info("Delete asset group.");
             AssetGroup groupEntity = getAssetGroupById(guid);
             groupEntity.setArchived(true);
             groupEntity.setUpdatedBy(username);
             groupEntity.setUpdateTime(DateUtils.getNowDateUTC());
             return AssetGroupMapper.toAssetGroup(groupEntity);
         } catch (AssetGroupDaoException e) {
-            LOG.error("[ Error when deleting asset group. ] {}", e.getMessage());
+            LOG.error("[ Error when deleting asset group. ] guid: {} username: {} exception: {}",guid,username, e.getMessage());
             throw new AssetModelException(e.getMessage());
         }
     }
@@ -180,7 +174,7 @@ public class AssetGroupDomainModelBean  {
 
             return vesselGroupList;
         } catch (AssetGroupDaoException e) {
-            LOG.error("[ Error when getting asset group list by user. ] {}", e.getMessage());
+            LOG.error("[ Error when getting asset group list by List. ] groups {} exception: {}",groups, e.getMessage());
             throw new AssetModelException(e.getMessage());
         }
 	}

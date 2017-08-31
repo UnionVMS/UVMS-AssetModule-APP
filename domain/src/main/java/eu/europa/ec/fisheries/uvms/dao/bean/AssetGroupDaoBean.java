@@ -40,7 +40,6 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
     @Override
     public AssetGroup createAssetGroup(AssetGroup group) throws AssetGroupDaoException {
         try {
-            LOG.info("Create asset group.");
             em.persist(group);
             return group;
         } catch (EntityExistsException | IllegalArgumentException | TransactionRequiredException e) {
@@ -55,7 +54,6 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
     @Override
     public AssetGroup getAssetGroupByGuid(String groupId) throws AssetGroupDaoException {
         try {
-            LOG.info("Get asset group by guid.");
             TypedQuery<AssetGroup> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_GUID, AssetGroup.class);
             query.setParameter("guid", groupId);
             return query.getSingleResult();
@@ -68,7 +66,6 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
     @Override
     public AssetGroup updateAssetGroup(AssetGroup group) throws AssetGroupDaoException {
         try {
-            LOG.info("Update asset group.");
             em.merge(group);
             return group;
         } catch (IllegalArgumentException | TransactionRequiredException e) {
@@ -83,7 +80,6 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
     @Override
     public AssetGroup deleteAssetGroup(AssetGroup group) throws AssetGroupDaoException {
         try {
-            LOG.info("Delete asset group.");
             em.remove(group);
             return group;
         } catch (IllegalArgumentException | TransactionRequiredException e) {
@@ -99,31 +95,23 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
     @Override
     public List<AssetGroup> getAssetGroupAll() throws AssetGroupDaoException {
         try {
-            LOG.info("Get asset groups.");
             TypedQuery<AssetGroup> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_FIND_ALL, AssetGroup.class);
             return query.getResultList();
-        } catch (IllegalArgumentException e) {
-            LOG.error("[ Error when getting asset groups. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ get all asset groups ] " + e.getMessage());
         } catch (Exception e) {
             LOG.error("[ Error when getting asset groups. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ create asset ] " + e.getMessage());
-        }
+            throw new AssetGroupDaoException("[ get all asset groups ] " + e.getMessage());
+        } 
     }
 
     @Override
     public List<AssetGroup> getAssetGroupByUser(String user) throws AssetGroupDaoException {
         try {
-            LOG.info("Get asset groups by user.");
             TypedQuery<AssetGroup> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_USER, AssetGroup.class);
             query.setParameter("owner", user);
             return query.getResultList();
-        } catch (IllegalArgumentException e) {
-            LOG.error("[ Error when getting asset groups by user. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ get asset groups, by user: " + user + " ] " + e.getMessage());
         } catch (Exception e) {
             LOG.error("[ Error when getting asset groups by user. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ create asset ] " + e.getMessage());
+            throw new AssetGroupDaoException("[ get asset groups, by user: " + user + " ] " + e.getMessage());
         }
     }
 
@@ -133,9 +121,6 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
             TypedQuery<AssetGroup> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_GUID_LIST, AssetGroup.class);
             query.setParameter("guidList", guidList);
             return query.getResultList();
-        } catch (IllegalArgumentException e) {
-            LOG.error("[ Error when getting asset groups by id. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ get asset groups ] " + e.getMessage());
         } catch (Exception e) {
             LOG.error("[ Error when getting asset groups by idlist. ] {}", e.getMessage());
             throw new AssetGroupDaoException("[ get asset groups by idlist ] " + e.getMessage());

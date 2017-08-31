@@ -52,8 +52,6 @@ public class AssetDomainModelBean {
 
     public Asset createAsset(Asset asset, String username) throws AssetModelException {
         assertAssetDoesNotExist(asset);
-
-        LOG.info("Create asset.");
         AssetEntity assetEntity = ModelToEntityMapper.mapToNewAssetEntity(
                 asset, configModel.getLicenseType(), username);
         assetDao.createAsset(assetEntity);
@@ -61,7 +59,6 @@ public class AssetDomainModelBean {
     }
 
     public Asset getAssetById(AssetId id) throws AssetModelException {
-        LOG.info("Get asset.");
         AssetEntity assetEntity = getAssetEntityById(id);
         return EntityToModelMapper.toAssetFromEntity(assetEntity);
     }
@@ -112,20 +109,16 @@ public class AssetDomainModelBean {
         if (asset.getImo() == null || asset.getImo().isEmpty()) asset.setImo(null);
 
         try {
-            LOG.info("Update asset.");
-
             AssetEntity assetEntity = getAssetEntityById(asset.getAssetId());
             Asset assetFromDb = EntityToModelMapper.toAssetFromEntity(assetEntity);
 
             if (MapperUtil.vesselEquals(asset, assetFromDb)) {
-                LOG.debug("The asset has not changed.");
                 if (asset.getAssetId() != null) {
                     asset.getAssetId().setGuid(assetFromDb.getAssetId().getGuid());
                 }
                 return asset;
             }
 
-            LOG.debug("The asset has changed.");
             assetEntity = ModelToEntityMapper.mapToAssetEntity(assetEntity, asset, configModel.getLicenseType(), username);
             AssetEntity updated = assetDao.updateAsset(assetEntity);
 
@@ -138,7 +131,6 @@ public class AssetDomainModelBean {
     }
 
     public List<Asset> getAssetListByAssetGroup(List<AssetGroup> groups) throws AssetModelException {
-        LOG.info("Get asset list by asset group");
         if (groups == null || groups.isEmpty()) {
             throw new InputArgumentException("Cannot get asset list because criteria are null.");
         }
@@ -164,8 +156,6 @@ public class AssetDomainModelBean {
 
     public GetAssetListResponseDto getAssetList(AssetListQuery query)
             throws AssetModelException {
-        LOG.info("Get asset list.");
-
         if (query == null) {
             throw new InputArgumentException("Cannot get asset list because query is null.");
         }
@@ -220,8 +210,6 @@ public class AssetDomainModelBean {
 
     public Long getAssetListCount(AssetListQuery query)
             throws AssetModelException {
-        LOG.info("Get asset list.");
-
         if (query == null) {
             throw new InputArgumentException("Cannot get asset list count because query is null.");
         }
@@ -249,7 +237,6 @@ public class AssetDomainModelBean {
     }
 
     public Asset upsertAsset(Asset asset, String username) throws AssetModelException {
-        LOG.info("Upsert asset.");
         try {
             getAssetEntityById(asset.getAssetId());
             return updateAsset(asset, username);
@@ -260,14 +247,12 @@ public class AssetDomainModelBean {
 
     public List<Asset> getAssetHistoryListByAssetId(AssetId assetId,
                                                     Integer maxNbr) throws AssetModelException {
-        LOG.info("Get asset history list by asset ID.");
         AssetEntity vesselHistories = getAssetEntityById(assetId);
         return EntityToModelMapper.toAssetHistoryList(vesselHistories, maxNbr);
     }
 
     public Asset getAssetHistory(AssetHistoryId historyId)
             throws AssetModelException {
-        LOG.info("Asset history by history ID.");
         if (historyId == null || historyId.getEventId() == null) {
             throw new InputArgumentException(
                     "Cannot get asset history because asset history ID is null.");
@@ -335,7 +320,6 @@ public class AssetDomainModelBean {
     public void deleteAsset(AssetId assetId) throws AssetModelException {
 
         if(assetId == null){
-            LOG.debug("AssetId is null cannot delete");
             return ;
         }
 
@@ -346,7 +330,7 @@ public class AssetDomainModelBean {
             // remove it based on its db identity
             assetDao.deleteAsset(assetEntity);
         } catch (NoAssetEntityFoundException e) {
-            LOG.debug(e.toString(), e);
+            LOG.warn(e.toString(), e);
             throw e;
         }
 

@@ -39,7 +39,6 @@ public class AssetGroupServiceBean implements AssetGroupService {
     @EJB
     AssetQueueConsumer receiver;
 
-    //@EJB(lookup = ServiceConstants.DB_ACCESS_ASSET_GROUP_DOMAIN_MODEL)
     @EJB
     private AssetGroupDomainModelBean assetGroupDomainModel;
 
@@ -80,7 +79,6 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
     @Override
     public AssetGroup createAssetGroup(AssetGroup assetGroup, String username) throws AssetException {
-        LOG.info("Creating asset group.");
         if (assetGroup == null) {
             throw new InputArgumentException("No asset group to create");
         }
@@ -96,8 +94,6 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
     @Override
     public AssetGroup updateAssetGroup(AssetGroup assetGroup, String username) throws AssetException {
-        LOG.info("Updating asset group.");
-
         if (assetGroup == null) {
             throw new InputArgumentException("No asset group to update");
         }
