@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="config.asset.wsdl.fisheries.ec.europa.eu"
+            xmlns:config="config.asset.wsdl.fisheries.ec.europa.eu"
+            xmlns:t="types.asset.wsdl.fisheries.ec.europa.eu"
+            targetNamespace="config.asset.wsdl.fisheries.ec.europa.eu"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified" 
+            version="1.0">
+    
+    <xsd:import namespace="types.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetElement.xsd"/>
+            
+    <xsd:element name="configRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="t:AssetDataSourceRequest">
+                    <xsd:sequence>
+                        <xsd:element name="config" type="ConfigField"/>
+                    </xsd:sequence>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <xsd:element name="configResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="config" type="config:Config" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <xsd:simpleType name="ConfigField">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="ALL"/>
+            <xsd:enumeration value="FLAG_STATE"/>
+            <xsd:enumeration value="UNIT_LENGTH"/>
+            <xsd:enumeration value="UNIT_TONNAGE"/>
+            
+            <xsd:enumeration value="ASSET_TYPE"/>
+            <xsd:enumeration value="LICENSE_TYPE"/>
+            
+            <xsd:enumeration value="GEAR_TYPE"/>
+            <xsd:enumeration value="SPAN_LENGTH_LOA"/>
+            <xsd:enumeration value="SPAN_POWER_MAIN"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:complexType name="Config">
+        <xsd:sequence>
+            <xsd:element name="field" type="config:ConfigField" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="values" type="config:ConfigValue" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ConfigValue">
+        <xsd:sequence>
+            <xsd:element name="keyValue" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="values" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+</xsd:schema>
