@@ -31,7 +31,6 @@
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>asset-model</artifactId>
             <version>${project.version}</version>
-            <classifier>date</classifier>
             <type>jar</type>
         </dependency>
 
