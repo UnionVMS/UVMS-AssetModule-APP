@@ -9,7 +9,7 @@
     <parent>
 	    <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
 	    <artifactId>asset</artifactId>
-	    <version>3.0.16-SNAPSHOT</version>
+	    <version>4.0.0-SNAPSHOT</version>
 	    <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -21,8 +21,7 @@
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>asset-model</artifactId>
-            <version>${asset.model.version}</version>
-            <classifier>date</classifier>
+            <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>

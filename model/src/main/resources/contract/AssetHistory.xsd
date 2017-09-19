@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns="history.asset.wsdl.fisheries.ec.europa.eu"
+    xmlns:t="types.asset.wsdl.fisheries.ec.europa.eu"
+    targetNamespace="history.asset.wsdl.fisheries.ec.europa.eu"
+    version="1.0">
+       
+    <xsd:import namespace="types.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetElement.xsd"/>
+ 
+    <xsd:element name="GetAssetHistoryRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="t:AssetDataSourceRequest">
+                    <xsd:sequence>
+                        <xsd:element name="id" type="t:AssetHistoryId"/>
+                    </xsd:sequence>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+            
+    <xsd:element name="AssetHistoryListByAssetIdRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="t:AssetDataSourceRequest">
+                    <xsd:sequence>
+                        <xsd:element name="assetId" type="t:AssetId"/>
+                        <xsd:element name="maxNbr" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+                        <!-- <xsd:element name="pagination" type="t:Pagination"/> -->
+                    </xsd:sequence>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+</xsd:schema>

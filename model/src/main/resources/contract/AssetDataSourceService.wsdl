@@ -1,0 +1,564 @@
+<definitions name="AssetDataSource"
+             targetNamespace="asset.wsdl.fisheries.ec.europa.eu"
+             xmlns:v="asset.wsdl.fisheries.ec.europa.eu"
+             xmlns:s="source.asset.wsdl.fisheries.ec.europa.eu"
+             xmlns:t="types.asset.wsdl.fisheries.ec.europa.eu"
+             xmlns:h="history.asset.wsdl.fisheries.ec.europa.eu"
+             xmlns:g="group.asset.wsdl.fisheries.ec.europa.eu"
+             xmlns:config="config.asset.wsdl.fisheries.ec.europa.eu"
+             xmlns:f="fishinggear.asset.wsdl.fisheries.ec.europa.eu"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+>
+
+    <types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                    targetNamespace="asset.wsdl.fisheries.ec.europa.eu">
+            <xsd:import namespace="types.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetElement.xsd"/>
+            <xsd:import namespace="source.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="Asset.xsd"/>
+            <xsd:import namespace="history.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetHistory.xsd"/>
+            <xsd:import namespace="group.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetGroup.xsd"/>
+            <xsd:import namespace="config.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetConfig.xsd"/>
+            <xsd:import namespace="fishinggear.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="FishingGear.xsd"/>
+        </xsd:schema>
+    </types>
+    
+    <!-- fault exceptions -->
+    <message name="AssetFaultException">
+        <part name="body" element="t:AssetFault"/>
+    </message>
+
+    <message name="AssetHistoryFaultException">
+        <part name="body" element="t:AssetFault"/>
+    </message>
+
+    <message name="AssetGroupFaultException">
+        <part name="body" element="t:AssetFault"/>
+    </message>
+
+    <!-- Asset requests -->
+    <message name="CreateAssetRequest">
+        <part name="body" element="s:CreateAssetRequest"/>
+    </message>
+
+    <message name="DeleteAssetRequest">
+        <part name="body" element="s:DeleteAssetRequest"/>
+    </message>
+  
+    <message name="GetAssetRequest">
+        <part name="body" element="s:GetAssetRequest"/>
+    </message>
+
+    <message name="UpdateAssetRequest">
+        <part name="body" element="s:UpdateAssetRequest"/>
+    </message>
+
+    <message name="AssetListRequest">
+        <part name="body" element="s:AssetListRequest"/>
+    </message>
+    
+    <message name="UpsertAssetRequest">
+        <part name="body" element="s:UpsertAssetRequest"/>
+    </message>
+  
+    <!-- Asset responses -->
+    <message name="GetAssetResponse">
+        <part name="body" element="t:SingleAssetResponse"/>
+    </message>
+
+    <message name="DeleteAssetResponse">
+        <part name="body" element="t:SingleAssetResponse"/>
+    </message>
+
+    <message name="CreateAssetResponse">
+        <part name="body" element="t:SingleAssetResponse"/>
+    </message>
+
+    <message name="UpdateAssetResponse">
+        <part name="body" element="t:SingleAssetResponse"/>
+    </message>
+    
+    <message name="AssetListResponse">
+        <part name="body" element="t:ListAssetResponse"/>
+    </message>
+
+    <message name="UpsertAssetResponse">
+        <part name="body" element="t:SingleAssetResponse"/>
+    </message>
+
+    <!-- Asset history requests -->
+    <message name="GetAssetHistoryRequest">
+        <part name="body" element="h:GetAssetHistoryRequest"/>
+    </message>
+
+    <message name="AssetHistoryListRequest">
+        <part name="body" element="h:AssetHistoryListByAssetIdRequest"/>
+    </message>
+  
+    <!-- Asset history responses -->
+    <message name="GetAssetHistoryResponse">
+        <part name="body" element="t:SingleAssetResponse"/>
+    </message>
+    
+    <message name="AssetHistoryListResponse">
+        <part name="body" element="t:ListAssetResponse"/>
+    </message>
+    
+    <!-- Asset group requests -->
+    <message name="GetAssetGroupRequest">
+        <part name="body" element="g:GetAssetGroupRequest"/>
+    </message>
+    
+    <message name="CreateAssetGroupRequest">
+        <part name="body" element="g:CreateAssetGroupRequest"/>
+    </message>
+    
+    <message name="UpdateAssetGroupRequest">
+        <part name="body" element="g:UpdateAssetGroupRequest"/>
+    </message>
+
+    <message name="AssetGroupListRequest">
+        <part name="body" element="g:AssetGroupListByUserRequest"/>
+    </message>
+
+    <message name="GetAssetGroupListByAssetGuidRequest">
+        <part name="body" element="g:GetAssetGroupListByAssetGuidRequest"/>
+    </message>
+
+    <message name="DeleteAssetGroupRequest">
+        <part name="body" element="g:DeleteAssetGroupRequest"/>
+    </message>
+    
+    <!-- Asset history responses -->
+    <message name="GetAssetGroupResponse">
+        <part name="body" element="g:SingleAssetGroupResponse"/>
+    </message>
+
+    <message name="CreateAssetGroupResponse">
+        <part name="body" element="g:SingleAssetGroupResponse"/>
+    </message>
+    
+    <message name="UpdateAssetGroupResponse">
+        <part name="body" element="g:SingleAssetGroupResponse"/>
+    </message>
+    
+    <message name="AssetGroupListResponse">
+        <part name="body" element="g:ListAssetGroupResponse"/>
+    </message>
+    
+    <message name="DeleteAssetGroupResponse">
+        <part name="body" element="g:SingleAssetGroupResponse"/>
+    </message>
+    
+    <!-- Move theese 2 to the right spot -->
+    <message name="AssetListByGroupRequest">
+        <part name="body" element="s:AssetListByAssetGroupRequest"/>
+    </message>
+    <message name="AssetListByGroupResponse">
+        <part name="body" element="t:ListAssetResponse"/>
+    </message>
+
+	<message name="PingRequest">
+		<part name="body" element="s:pingRequest"/>
+	</message>
+	<message name="PingResponse">
+		<part name="body" element="s:pingResponse"/>
+	</message>
+
+    <message name="ConfigRequest">
+        <part name="body" element="config:configRequest"/>
+    </message>
+    
+    <message name="ConfigResponse">
+        <part name="body" element="config:configResponse"/>
+    </message>
+
+    <message name="AssetListGroupByFlagStateRequest">
+        <part name="body" element="s:AssetListGroupByFlagStateRequest"/>
+    </message>
+    <message name="AssetListGroupByFlagStateResponse">
+        <part name="body" element="s:AssetListGroupByFlagStateResponse"/>
+    </message>
+
+    <!-- Fishing gear -->
+    <message name="GetFishingGearListRequest">
+        <part name="body" element="f:FishingGearListRequest"/>
+    </message>
+    <message name="GetFishingGearListResponse">
+        <part name="body" element="f:FishingGearListResponse"/>
+    </message>
+    <message name="GetFishingGearByIdRequest">
+        <part name="body" element="f:FishingGearByIdRequest"/>
+    </message>
+    <message name="GetFishingGearByIdResponse">
+        <part name="body" element="f:FishingGearResponse"/>
+    </message>
+    <message name="GetFishingGearByExternalIdRequest">
+        <part name="body" element="f:FishingGearByExternalIdRequest"/>
+    </message>
+    <message name="GetFishingGearByExternalIdResponse">
+        <part name="body" element="f:FishingGearResponse"/>
+    </message>
+    <message name="UpsertFishingGearRequest">
+        <part name="body" element="f:UpsertFishingGearRequest"/>
+    </message>
+    <message name="UpsertFishingGearResponse">
+        <part name="body" element="f:FishingGearResponse"/>
+    </message>
+
+
+    <portType name="AssetDataSourcePortType">
+        <operation name="GetAssetListByAssetGroup">
+            <input message="v:AssetListByGroupRequest"/>
+            <output message="v:AssetListByGroupResponse"/>
+            <fault name="GetAssetFaultException" message="v:AssetFaultException"/>
+        </operation>
+        <operation name="GetAsset">
+            <input message="v:GetAssetRequest"/>
+            <output message="v:GetAssetResponse"/>
+            <fault name="GetAssetFaultException" message="v:AssetFaultException"/>
+        </operation>
+        <operation name="CreateAsset">
+            <input message="v:CreateAssetRequest"/>
+            <output message="v:CreateAssetResponse"/>
+            <fault name="CreateAssetFaultException" message="v:AssetFaultException"/>
+        </operation>
+        <operation name="UpdateAsset">
+            <input message="v:UpdateAssetRequest"/>
+            <output message="v:UpdateAssetResponse"/>
+            <fault name="UpdateAssetFaultException" message="v:AssetFaultException"/>
+        </operation>
+        <operation name="DeleteAsset">
+            <input message="v:DeleteAssetRequest"/>
+            <output message="v:DeleteAssetResponse"/>
+            <fault name="DeleteAssetFaultException" message="v:AssetFaultException"/>
+        </operation>
+        <operation name="AssetList">
+            <input message="v:AssetListRequest"/>
+            <output message="v:AssetListResponse"/>
+            <fault name="AssetListFaultException" message="v:AssetFaultException"/>
+        </operation>
+        <operation name="UpsertAsset">
+            <input message="v:UpsertAssetRequest"/>
+            <output message="v:UpsertAssetResponse"/>
+            <fault name="UpsertAssetFaultException" message="v:AssetFaultException"/>
+        </operation>
+        <operation name="GetAssetHistory">
+            <input message="v:GetAssetHistoryRequest"/>
+            <output message="v:GetAssetHistoryResponse"/>
+            <fault name="GetAssetHistoryFaultException" message="v:AssetHistoryFaultException"/>
+        </operation>
+        <operation name="AssetHistoryList">
+            <input message="v:AssetHistoryListRequest"/>
+            <output message="v:AssetHistoryListResponse"/>
+            <fault name="AssetHistoryListFaultException" message="v:AssetHistoryFaultException"/>
+        </operation>
+        <operation name="GetAssetGroup">
+            <input message="v:GetAssetGroupRequest"/>
+            <output message="v:GetAssetGroupResponse"/>
+            <fault name="GetAssetGroupFaultException" message="v:AssetGroupFaultException"/>
+        </operation>
+        <operation name="CreateAssetGroup">
+            <input message="v:CreateAssetGroupRequest"/>
+            <output message="v:CreateAssetGroupResponse"/>
+            <fault name="CreateAssetGroupFaultException" message="v:AssetGroupFaultException"/>
+        </operation>
+        <operation name="UpdateAssetGroup">
+            <input message="v:UpdateAssetGroupRequest"/>
+            <output message="v:UpdateAssetGroupResponse"/>
+            <fault name="UpdateAssetGroupFaultException" message="v:AssetGroupFaultException"/>
+        </operation>
+        <operation name="AssetGroupList">
+            <input message="v:AssetGroupListRequest"/>
+            <output message="v:AssetGroupListResponse"/>
+            <fault name="AssetGroupListFaultException" message="v:AssetGroupFaultException"/>
+        </operation>
+        <operation name="GetAssetGroupListByAssetGuid">
+            <input message="v:GetAssetGroupListByAssetGuidRequest"/>
+            <output message="v:AssetGroupListResponse"/>
+            <fault name="AssetGroupListFaultException" message="v:AssetGroupFaultException"/>
+        </operation>
+        <operation name="DeleteAssetGroup">
+            <input message="v:DeleteAssetGroupRequest"/>
+            <output message="v:DeleteAssetGroupResponse"/>
+            <fault name="AssetGroupListFaultException" message="v:AssetGroupFaultException"/>
+        </operation>
+		<operation name="Ping">
+			<input message="v:PingRequest"/>
+			<output message="v:PingResponse"/>
+		</operation>
+		<operation name="Config">
+            <input message="v:ConfigRequest"/>
+            <output message="v:ConfigResponse"/>
+            <fault name="ConfigFaultException" message="v:AssetFaultException"/>
+        </operation>
+        <operation name="AssetListGroupByFlagState">
+            <input message="v:AssetListGroupByFlagStateRequest"/>
+            <output message="v:AssetListGroupByFlagStateResponse"/>
+            <fault name="AssetListFaultException" message="v:AssetFaultException"/>
+        </operation>
+
+        <!-- Fishing gear -->
+        <operation name="FishingGearList">
+            <input message="v:GetFishingGearListRequest"/>
+            <output message="v:GetFishingGearListResponse"/>
+            <fault name="FishingGearFaultException" message="v:AssetFaultException"/>
+        </operation>
+        <operation name="FishingGearById">
+            <input message="v:GetFishingGearByIdRequest"/>
+            <output message="v:GetFishingGearByIdResponse"/>
+            <fault name="FishingGearFaultException" message="v:AssetFaultException"/>
+        </operation>
+        <operation name="FishingGearByExternalId">
+            <input message="v:GetFishingGearByExternalIdRequest"/>
+            <output message="v:GetFishingGearByExternalIdResponse"/>
+            <fault name="FishingGearFaultException" message="v:AssetFaultException"/>
+        </operation>
+        <operation name="UpsertFishingGear">
+            <input message="v:UpsertFishingGearRequest"/>
+            <output message="v:UpsertFishingGearResponse"/>
+            <fault name="FishingGearFaultException" message="v:AssetFaultException"/>
+        </operation>
+
+
+
+    </portType>
+
+    <binding name="AssetDataSourceSoapBinding" type="v:AssetDataSourcePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="GetAsset">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="GetAssetFaultException">
+                <soap:fault name="GetAssetFaultException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="CreateAsset">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="CreateAssetFaultException">
+                <soap:fault name="CreateAssetFaultException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="UpdateAsset">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="UpdateAssetFaultException">
+                <soap:fault name="UpdateAssetFaultException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="DeleteAsset">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="DeleteAssetFaultException">
+                <soap:fault name="DeleteAssetFaultException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="AssetList">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="AssetListFaultException">
+                <soap:fault name="AssetListFaultException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="UpsertAsset">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="UpsertAssetFaultException">
+                <soap:fault name="UpsertAssetFaultException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="GetAssetHistory">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="GetAssetHistoryFaultException">
+                <soap:fault name="GetAssetHistoryFaultException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="AssetHistoryList">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="AssetHistoryListFaultException">
+                <soap:fault name="AssetHistoryListFaultException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="GetAssetGroup">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="GetAssetGroupFaultException">
+                <soap:fault name="GetAssetGroupFaultException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="CreateAssetGroup">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="CreateAssetGroupFaultException">
+                <soap:fault name="CreateAssetGroupFaultException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="UpdateAssetGroup">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="UpdateAssetGroupFaultException">
+                <soap:fault name="UpdateAssetGroupFaultException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="AssetGroupList">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="AssetGroupListFaultException">
+                <soap:fault name="AssetGroupListFaultException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="GetAssetGroupListByAssetGuid">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="AssetGroupListFaultException">
+                <soap:fault name="AssetGroupListFaultException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="DeleteAssetGroup">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="AssetGroupListFaultException">
+                <soap:fault name="AssetGroupListFaultException" use="literal"/>
+            </fault>
+        </operation>
+		<operation name="Ping">
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+        <operation name="Config">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="AssetListGroupByFlagState">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="AssetListFaultException">
+                <soap:fault name="AssetListFaultException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="FishingGearList">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="FishingGearFaultException">
+                <soap:fault name="FishingGearFaultException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="FishingGearById">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="FishingGearFaultException">
+                <soap:fault name="FishingGearFaultException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="FishingGearByExternalId">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="FishingGearFaultException">
+                <soap:fault name="FishingGearFaultException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="UpsertFishingGear">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="FishingGearFaultException">
+                <soap:fault name="FishingGearFaultException" use="literal"/>
+            </fault>
+        </operation>
+
+    </binding>
+
+    <service name="AssetDataSourceQueueService">
+        <port name="AssetDataSourcePortType" binding="v:AssetDataSourceSoapBinding">
+            <soap:address location="http://REPLACE_ME"/>
+        </port>
+    </service>
+
+</definitions>

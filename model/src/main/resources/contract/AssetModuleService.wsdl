@@ -1,0 +1,400 @@
+<definitions name="AssetModule"
+             targetNamespace="module.asset.wsdl.fisheries.ec.europa.eu"
+             xmlns:v="module.asset.wsdl.fisheries.ec.europa.eu"
+             xmlns:tv="types.asset.wsdl.fisheries.ec.europa.eu"
+             xmlns:group="group.asset.wsdl.fisheries.ec.europa.eu"
+             xmlns:fg="fishinggear.asset.wsdl.fisheries.ec.europa.eu"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+    <types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="module.asset.wsdl.fisheries.ec.europa.eu">
+            
+            <xsd:import namespace="types.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetElement.xsd"/>
+            <xsd:import namespace="group.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetGroup.xsd"/>
+            <xsd:import namespace="fishinggear.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="FishingGear.xsd"/>
+            
+            <xsd:simpleType name="AssetModuleMethod">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="GET_ASSET"/>
+                    <xsd:enumeration value="ASSET_LIST"/>
+                    <xsd:enumeration value="ASSET_GROUP"/>
+                    <xsd:enumeration value="ASSET_LIST_BY_GROUP"/>
+                    <xsd:enumeration value="PING"/>
+                    <xsd:enumeration value="ASSET_GROUP_LIST_BY_ASSET_GUID"/>
+                    <xsd:enumeration value="ASSET_LIST_GROUP_BY_FLAGSTATE"/>
+                    <xsd:enumeration value="UPSERT_ASSET"/>
+                    <xsd:enumeration value="FISHING_GEAR_LIST"/>
+                    <xsd:enumeration value="FISHING_GEAR_BY_ID"/>
+                    <xsd:enumeration value="FISHING_GEAR_BY_EXT_ID"/>
+                    <xsd:enumeration value="FISHING_GEAR_UPSERT"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            
+            <xsd:complexType name="AssetModuleRequest" abstract="true">
+                <xsd:sequence>
+                    <xsd:element name="method" type="v:AssetModuleMethod" minOccurs="1"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
+            <xsd:element name="GetAssetListByAssetGroupsRequest">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest">
+                            <xsd:sequence>
+                                <xsd:element name="groups" type="group:AssetGroup" minOccurs="0" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="AssetGroupListByUserRequest">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest">
+                            <xsd:sequence>
+                                <xsd:element name="user" type="xsd:string"/>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="GetAssetModuleRequest">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest">
+                            <xsd:sequence>
+                                <xsd:element name="id" type="tv:AssetId"/>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+            
+            <xsd:element name="AssetListModuleRequest">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest">
+                            <xsd:sequence>
+                                <xsd:element name="query" type="tv:AssetListQuery"/>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+            
+            <xsd:element name="GetAssetModuleResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="asset" type="tv:Asset"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            
+            <!-- Ping request -->
+            <xsd:element name="pingRequest">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest"/>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="pingResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="response" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="GetAssetGroupListByAssetGuidRequest">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest">
+                            <xsd:sequence>
+                                <xsd:element name="assetGuid" type="xsd:string"/>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="GetAssetGroupListByAssetGuidResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="groups" type="group:AssetGroup" minOccurs="0" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="AssetListGroupByFlagStateRequest">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest">
+                            <xsd:sequence>
+                                <xsd:element name="assetId" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="UpsertAssetModuleRequest">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest">
+                            <xsd:sequence>
+                                <xsd:element name="userName" type="xsd:string"/>
+                                <xsd:element name="asset" type="tv:Asset" minOccurs="1" maxOccurs="1"/>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="UpsertAssetModuleResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="asset" type="tv:Asset"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+
+            <xsd:element name="UpsertFishingGearModuleRequest">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                    <xsd:extension base="v:AssetModuleRequest">
+                        <xsd:sequence>
+                            <xsd:element name="username" type="xsd:string"/>
+                            <xsd:element name="fishingGear" type="tv:FishingGear" minOccurs="1" maxOccurs="1"/>
+                        </xsd:sequence>
+                    </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="UpsertFishingGearModuleResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="fishingGear" type="tv:FishingGear" minOccurs="0" maxOccurs="1"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+        </xsd:schema>
+    </types>
+    
+    <message name="AssetModuleFaultException">
+        <part name="body" element="tv:AssetFault"/>
+    </message>
+    
+    <message name="AssetModuleRequest">
+        <part name="body" element="v:GetAssetModuleRequest"/>
+    </message>
+
+    <message name="AssetModuleResponse">
+        <part name="body" element="v:UpsertAssetModuleResponse"/>
+    </message>
+
+    <message name="UpsertAssetModuleRequest">
+        <part name="body" element="v:UpsertAssetModuleRequest"/>
+    </message>
+
+    <message name="UpsertAssetListModuleResponse">
+        <part name="body" element="v:UpsertAssetModuleResponse"/>
+    </message>
+
+    <message name="AssetListModuleRequest">
+        <part name="body" element="v:AssetListModuleRequest"/>
+    </message>
+
+    <message name="AssetListModuleResponse">
+        <part name="body" element="tv:ListAssetResponse"/>
+    </message>
+    
+    <message name="AssetGroupByUserRequest">
+        <part name="body" element="v:AssetGroupListByUserRequest"/>
+    </message>
+
+    <message name="AssetGroupListResponse">
+        <part name="body" element="group:ListAssetGroupResponse"/>
+    </message>
+    
+    <message name="AssetListByGroupRequest">
+        <part name="body" element="v:GetAssetListByAssetGroupsRequest"/>
+    </message>
+
+    <message name="PingRequest">
+        <part name="body" element="v:pingRequest"/>
+    </message>
+
+    <message name="PingResponse">
+        <part name="body" element="v:pingResponse"/>
+    </message>
+
+    <message name="GetAssetGroupListByAssetGuidRequest">
+        <part name="body" element="v:GetAssetGroupListByAssetGuidRequest"/>
+    </message>
+    <message name="GetAssetGroupListByAssetGuidResponse">
+        <part name="body" element="v:GetAssetGroupListByAssetGuidResponse"/>
+    </message>
+
+    <message name="AssetListGroupByFlagStateRequest">
+        <part name="body" element="v:AssetListGroupByFlagStateRequest"/>
+    </message>
+
+    <message name="AssetListGroupByFlagStateResponse">
+        <part name="body" element="tv:AssetListGroupByFlagStateResponse"/>
+    </message>
+
+    <message name="UpsertFishingGearModuleRequest">
+        <part name="body" element="v:UpsertFishingGearModuleRequest"/>
+    </message>
+
+    <message name="UpsertFishingGearModuleResponse">
+        <part name="body" element="v:UpsertFishingGearModuleResponse"/>
+    </message>
+
+    <portType name="AssetModulePortType">
+        <operation name="GetAsset">
+            <input message="v:AssetModuleRequest"/>
+            <output message="v:AssetModuleResponse"/>
+            <fault name="AssetModuleFaultException" message="v:AssetModuleFaultException"/>
+        </operation>
+        <operation name="AssetListByGroup">
+            <input message="v:AssetListByGroupRequest"/>
+            <output message="v:AssetListModuleResponse"/>
+            <fault name="AssetModuleFaultException" message="v:AssetModuleFaultException"/>
+        </operation>
+        <operation name="AssetList">
+            <input message="v:AssetListModuleRequest"/>
+            <output message="v:AssetListModuleResponse"/>
+            <fault name="AssetModuleFaultException" message="v:AssetModuleFaultException"/>
+        </operation>
+        <operation name="AssetGroupList">
+            <input message="v:AssetGroupByUserRequest"/>
+            <output message="v:AssetGroupListResponse"/>
+            <fault name="AssetModuleFaultException" message="v:AssetModuleFaultException"/>
+        </operation>
+        <operation name="Ping">
+            <input message="v:PingRequest"/>
+            <output message="v:PingResponse"/>
+        </operation>
+        <operation name="GetAssetGroupListByAssetGuid">
+            <input message="v:GetAssetGroupListByAssetGuidRequest"/>
+            <output message="v:GetAssetGroupListByAssetGuidResponse"/>
+        </operation>
+        <operation name="AssetListGroupByFlagState">
+            <input message="v:AssetListGroupByFlagStateRequest"/>
+            <output message="v:AssetListGroupByFlagStateResponse"/>
+            <fault name="AssetModuleFaultException" message="v:AssetModuleFaultException"/>
+        </operation>
+        <operation name="UpsertFishingGear">
+            <input message="v:UpsertFishingGearModuleRequest"/>
+            <output message="v:UpsertFishingGearModuleResponse"/>
+            <fault name="AssetModuleFaultException" message="v:AssetModuleFaultException"/>
+        </operation>
+    </portType>
+
+    <binding name="AssetModuleSoapBinding" type="v:AssetModulePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="GetAsset">
+            <!-- <soap:operation soapAction="http://www.snowboard-info.com/EndorsementSearch"/> -->
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="AssetModuleFaultException">
+                <soap:fault name="AssetModuleFaultException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="AssetList">
+            <!-- <soap:operation soapAction="http://www.snowboard-info.com/EndorsementSearch"/> -->
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="AssetModuleFaultException">
+                <soap:fault name="AssetModuleFaultException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="AssetGroupList">
+            <!-- <soap:operation soapAction="http://www.snowboard-info.com/EndorsementSearch"/> -->
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="AssetModuleFaultException">
+                <soap:fault name="AssetModuleFaultException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="AssetListByGroup">
+            <!-- <soap:operation soapAction="http://www.snowboard-info.com/EndorsementSearch"/> -->
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="AssetModuleFaultException">
+                <soap:fault name="AssetModuleFaultException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="Ping">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="GetAssetGroupListByAssetGuid">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="AssetListGroupByFlagState">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="AssetModuleFaultException">
+                <soap:fault name="AssetModuleFaultException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="UpsertFishingGear">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="AssetModuleFaultException">
+                <soap:fault name="AssetModuleFaultException" use="literal"/>
+            </fault>
+        </operation>
+    </binding>
+
+    <service name="AssetModuleService">
+        <port name="AssetModulePortType" binding="v:AssetModuleSoapBinding">
+            <soap:address location="http://REPLACE_ME"/>
+        </port>
+    </service>
+
+</definitions>
