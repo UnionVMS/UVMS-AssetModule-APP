@@ -123,7 +123,6 @@
 							<groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
 							<artifactId>asset-model</artifactId>
 							<version>${asset.api.check.against.version}</version>
-							<classifier>date</classifier>
 							<type>jar</type>
 						</dependency>
 					</oldVersion>
