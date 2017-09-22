@@ -132,7 +132,7 @@
 						</file>
 					</newVersion>
 					<parameter>
-						<breakBuildBasedOnSemanticVersioning>true</breakBuildBasedOnSemanticVersioning>
+						<breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
 					</parameter>
 				</configuration>
 				<executions>
