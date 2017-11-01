@@ -26,9 +26,9 @@ import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetConstants;
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
+import eu.europa.ec.fisheries.uvms.commons.message.impl.JMSUtils;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigMessageException;
 import eu.europa.ec.fisheries.uvms.config.message.ConfigMessageConsumer;
-import eu.europa.ec.fisheries.uvms.message.JMSUtils;
 
 @Stateless
 public class AssetQueueConsumerBean implements AssetQueueConsumer, ConfigMessageConsumer {

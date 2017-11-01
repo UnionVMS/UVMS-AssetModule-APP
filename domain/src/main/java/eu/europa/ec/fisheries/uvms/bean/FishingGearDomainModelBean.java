@@ -11,7 +11,7 @@ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more d
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import eu.europa.ec.fisheries.uvms.common.DateUtils;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.dao.FishingGearDao;
 import eu.europa.ec.fisheries.uvms.dao.FishingGearTypeDao;
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGear;
