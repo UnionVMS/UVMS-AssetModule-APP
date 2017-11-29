@@ -30,7 +30,6 @@
         <properties.maven.plugin.version>1.0-alpha-2</properties.maven.plugin.version>
         
         <!-- persistence.xml CONFIGS -->
-        <hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
         <jta.data-source>java:jboss/datasources/uvms_asset</jta.data-source>
         <jta.platform>org.hibernate.service.jta.platform.internal.JBossStandAloneJtaPlatform</jta.platform>
     </properties>
@@ -122,11 +121,5 @@
                 </executions>
             </plugin>
         </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
     </build>
 </project>
