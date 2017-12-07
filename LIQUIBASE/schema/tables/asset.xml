@@ -72,4 +72,14 @@
 			<dropSequence sequenceName="HIBERNATE_SEQUENCE"/>
 		</rollback>
 	</changeSet>
+
+	<changeSet author="thofan" id="Add iccat, uvi, gfcm to asset">
+		<addColumn tableName="asset">
+			<column name="asset_iccat" type="VARCHAR(50)" />
+			<column name="asset_uvi" type="VARCHAR(50)" />
+			<column name="asset_gfcm" type="VARCHAR(50)" />
+		</addColumn>
+	</changeSet>
+
 </databaseChangeLog>
+

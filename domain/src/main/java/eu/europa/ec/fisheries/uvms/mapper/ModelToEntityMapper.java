@@ -183,6 +183,10 @@ public class ModelToEntityMapper {
         entity.setUpdateTime(DateUtils.getNowDateUTC());
         entity.setUpdatedBy(username);
 
+        entity.setIccat(asset.getIccat());
+        entity.setUvi(asset.getUvi());
+        entity.setGfcm(asset.getGfcm());
+
         return entity;
     }
 

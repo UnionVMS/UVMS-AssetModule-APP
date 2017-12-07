@@ -141,6 +141,19 @@ public class AssetEntity implements Serializable {
     @NotNull
     private List<Notes> notes;
 
+    @Size(max = 50)
+    @Column(name = "asset_iccat", unique = true)
+    private String iccat;
+
+    @Size(max = 50)
+    @Column(name = "asset_uvi", unique = true)
+    private String uvi;
+
+    @Size(max = 50)
+    @Column(name = "asset_gfcm", unique = true)
+    private String gfcm;
+
+
     public AssetEntity() {
     }
 
@@ -292,5 +305,23 @@ public class AssetEntity implements Serializable {
     public void setHistories(List<AssetHistory> histories) {
         this.histories = histories;
     }
+
+
+    public String getIccat() { return iccat; }
+
+    public void setIccat(String iccat) { this.iccat = iccat; }
+
+    public String getUvi() {return uvi; }
+
+    public void setUvi(String uvi) {this.uvi = uvi; }
+
+    public String getGfcm() { return gfcm; }
+
+    public void setGfcm(String gfcm) { this.gfcm = gfcm; }
+
+
+
+
+
 
 }
