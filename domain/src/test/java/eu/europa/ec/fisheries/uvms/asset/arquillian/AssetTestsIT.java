@@ -133,45 +133,91 @@ public class AssetTestsIT extends TransactionalTests {
         ah.setSegment(SegmentFUP.CA3);
 
 
-        // TODO
         // all fields
         ah.setOwnerAddress("owneradress_" + rnd.nextInt());
         ah.setAssetAgentAddress("assetagentadress_" + rnd.nextInt());
         ah.setCountryOfImportOrExport("SWE");
         ah.setCountryOfRegistration("SWE");
+        ah.setDateOfEvent(new Date());
+        ah.setExternalMarking("EXTMARK");
 
-        ah.setAdministrativeDecisionDate(null);
-        ah.setDateOfEvent(null);
-        ah.setSegmentOfAdministrativeDecision(null);
-        ah.setEventCode(null);
+        ah.setAdministrativeDecisionDate("19431139");
 
-        ah.setExternalMarking(null);
-        ah.setSafteyGrossTonnage(null);
-        ah.setAssetAgentIsAlsoOwner(null);
-        ah.setLengthBetweenPerpendiculars(null);
-        ah.setHasLicence(null);
-        ah.setLicenceType(null);
-        ah.setLengthOverAll(null);
-        ah.setMainFishingGear(null);
+        ah.setSegmentOfAdministrativeDecision(SegmentFUP.CA3);
+        ah.setEventCode(EventCodeEnum.UNK);
+        ah.setAssetAgentIsAlsoOwner(true);
+        ah.setLengthBetweenPerpendiculars(new BigDecimal(17));
+
+
+        FishingGear fishingGear = new FishingGear();
+        ah.setMainFishingGear(fishingGear);
+        
+        AssetProdOrg assetProdOrg = new AssetProdOrg();
+        assetProdOrg.setAddress("prodorgaddress");
+        assetProdOrg.setCity("prodorgcity");
+        assetProdOrg.setCode("prodorgcode");
+        assetProdOrg.setFax("fax");
+        assetProdOrg.setName("prodorg name");
+        assetProdOrg.setPhone("0091-1-123-456");
+        assetProdOrg.setMobile("004631112233");
+        assetProdOrg.setZipCode(41523);
+
+        ah.setAssetProdOrg(assetProdOrg);
+
+        ah.setHasLicence(true);
+        ah.setLicenceType("AllFish");
+
+        ah.setLengthOverAll(new BigDecimal(25));
         ah.setName("Name_" + rnd.nextInt());
         ah.setOwnerName("Ownername_" + rnd.nextInt());
-        ah.setOtherTonnage(null);
         ah.setPortOfRegistration("GBG");
-        ah.setPowerOfAuxEngine(null);
-        ah.setPowerOfMainEngine(null);
-        ah.setPublicAid(null);
-        ah.setRegistrationNumber(null);
-        ah.setSubFishingGear(null);
-        ah.setGrossTonnage(null);
 
-        ah.setTypeOfExport(null);
+        ah.setPowerOfAuxEngine(new BigDecimal(1000));
+        ah.setPowerOfMainEngine(new BigDecimal(7000));
+        ah.setPublicAid(PublicAidEnum.EG);
+        String regnbr = "THOFAN" + rnd.nextInt();
+        if(regnbr.length() > 14) regnbr = regnbr.substring(0, 14);
+        ah.setRegistrationNumber(regnbr);
+
+        ah.setGrossTonnage(new BigDecimal(25000));
+        ah.setSafteyGrossTonnage(new BigDecimal(24000));
+        ah.setOtherTonnage(new BigDecimal(23000));
+
+        ah.setTypeOfExport(TypeOfExportEnum.SM);
         ah.setUpdateTime(ae.getUpdateTime());
         ah.setUpdatedBy(ae.getUpdatedBy());
         ah.setHasVms(false);
-        ah.setAssetProdOrg(null);
 
         return assetHistories;
     }
+
+
+    public FishingGear createFishingGearHelper() {
+
+        FishingGear fishingGear = new FishingGear();
+
+        fishingGear.setCode("OTB");
+
+        FishingGearType fishingGearType = createFishingGearTypeHelper();
+        fishingGear.setFishingGearType(fishingGearType);
+
+        fishingGear.setDescription("BESKR KOD1");
+        fishingGear.setExternalId(4242L);
+
+        return fishingGear;
+    }
+
+
+    public FishingGearType createFishingGearTypeHelper() {
+
+
+        FishingGearType fishingGearType = new FishingGearType();
+        fishingGearType.setCode(4l);
+
+        return fishingGearType;
+    }
+
+
 
     public Carrier createCarrierHelper(Date date) {
 
