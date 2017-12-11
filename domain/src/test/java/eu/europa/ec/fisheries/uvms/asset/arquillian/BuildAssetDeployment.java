@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
+
 import eu.europa.ec.fisheries.uvms.bean.ConfigDomainModelBean;
 import eu.europa.ec.fisheries.uvms.config.service.entity.Parameter;
 import org.eu.ingwar.tools.arquillian.extension.suite.annotations.ArquillianSuiteDeployment;
@@ -29,21 +30,24 @@ public abstract class BuildAssetDeployment {
         // So that Arquillian can invoke test class through its servlet test runner
         WebArchive testWar = ShrinkWrap.create(WebArchive.class, "test.war");
 
-        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.constant");
 
+        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.bean");
+        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.constant");
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.entity");
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.dao");
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.mapper");
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.util");
+
         testWar.addPackages(true, "com.tocea.easycoverage.framework.api");
-        
-        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.asset.model");
-        
+
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.model");
+
         testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.asset.arquillian");
 
         testWar.addPackages(true, "eu.europa.ec.fisheries.schema");
         testWar.addClass(TransactionalTests.class);
         testWar.addClass(ConfigDomainModelBean.class);
+        testWar.addClass(AssetConfigHelperTest.class);
         testWar.addClass(Parameter.class);
 
 
