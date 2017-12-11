@@ -14,10 +14,7 @@ import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @RunWith(Arquillian.class)
 public class AssetTestsIT extends TransactionalTests {
@@ -32,22 +29,59 @@ public class AssetTestsIT extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void createAsset() {
-
+    public void create_Asset_IRCS() {
         Date date = new Date();
-
-        AssetEntity assetEntity = createAssetHelper(AssetIdType.IRCS, "IRCSVAL", date);
-
-        try {
-            assetDao.createAsset(assetEntity);
-            Assert.assertTrue(true);
-        } catch (AssetDaoException e) {
-            e.printStackTrace();
-            Assert.fail();
-        }
-
-
+        create(AssetIdType.IRCS, "IRCSVAL", date);
     }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void create_Asset_MMSI() {
+        Date date = new Date();
+        create(AssetIdType.MMSI, "123456789", date); // MUST be 9 in length
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void create_Asset_CFR() {
+        Date date = new Date();
+        create(AssetIdType.CFR, "CFR_VAL" + UUID.randomUUID().toString(), date);
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void create_Asset_IMO() {
+        Date date = new Date();
+        create(AssetIdType.IMO, "IMO_VAL", date);
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void create_Asset_GUID() {
+        Date date = new Date();
+        String theGuid = UUID.randomUUID().toString();
+        AssetEntity theCreatedAsset = create(AssetIdType.GUID, theGuid, date);
+        String theCreatedAssetsUUID = theCreatedAsset.getGuid();
+        Assert.assertNotEquals(theGuid, theCreatedAssetsUUID);
+    }
+
+
+    private AssetEntity create(AssetIdType key, String value, Date date ){
+
+        AssetEntity assetEntity = createAssetHelper(key, value, date);
+        try {
+            AssetEntity createdAsset = assetDao.createAsset(assetEntity);
+            em.flush();
+            String guid = createdAsset.getGuid();
+            AssetEntity fetchedAsset = assetDao.getAssetByGuid(guid);
+            Assert.assertEquals(createdAsset.getId(), fetchedAsset.getId());
+            return fetchedAsset;
+        } catch (AssetDaoException e) {
+            Assert.fail();
+            return null;
+        }
+    }
+
 
 
     public AssetEntity createAssetHelper(AssetIdType assetIdType, String value, Date date) {
@@ -66,6 +100,7 @@ public class AssetTestsIT extends TransactionalTests {
 
         switch (assetIdType) {
             case CFR:
+                if(value.length() > 12) value = value.substring(0,12);
                 assetEntity.setCFR(value);
                 break;
             case GUID:
@@ -73,9 +108,6 @@ public class AssetTestsIT extends TransactionalTests {
                 break;
             case IMO:
                 assetEntity.setIMO(value);
-                break;
-            case INTERNAL_ID:
-                // ??????
                 break;
             case IRCS:
                 assetEntity.setIRCS(value);
@@ -149,9 +181,10 @@ public class AssetTestsIT extends TransactionalTests {
         ah.setLengthBetweenPerpendiculars(new BigDecimal(17));
 
 
-        FishingGear fishingGear = new FishingGear();
-        ah.setMainFishingGear(fishingGear);
-        
+        // ?????
+        //FishingGear fishingGear =createFishingGearHelper();
+        //ah.setMainFishingGear(fishingGear);
+
         AssetProdOrg assetProdOrg = new AssetProdOrg();
         assetProdOrg.setAddress("prodorgaddress");
         assetProdOrg.setCity("prodorgcity");
@@ -196,7 +229,7 @@ public class AssetTestsIT extends TransactionalTests {
 
         FishingGear fishingGear = new FishingGear();
 
-        fishingGear.setCode("OTB");
+        fishingGear.setCode("NK");
 
         FishingGearType fishingGearType = createFishingGearTypeHelper();
         fishingGear.setFishingGearType(fishingGearType);
@@ -212,7 +245,7 @@ public class AssetTestsIT extends TransactionalTests {
 
 
         FishingGearType fishingGearType = new FishingGearType();
-        fishingGearType.setCode(4l);
+        fishingGearType.setCode(7l);
 
         return fishingGearType;
     }
