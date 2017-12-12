@@ -26,6 +26,9 @@ public class AssetTestsIT extends TransactionalTests {
     @EJB
     private AssetDao assetDao;
 
+    /*--------------------------------------
+     *  create tests
+     ---------------------------------------*/
 
     @Test
     @OperateOnDeployment("normal")
@@ -65,8 +68,139 @@ public class AssetTestsIT extends TransactionalTests {
         Assert.assertNotEquals(theGuid, theCreatedAssetsUUID);
     }
 
+    /*--------------------------------------
+     *  get tests
+     ---------------------------------------*/
 
-    private AssetEntity create(AssetIdType key, String value, Date date ){
+    @Test
+    @OperateOnDeployment("normal")
+    public void get_Asset_IRCS() {
+
+        Date date = new Date();
+        AssetIdType keyType = AssetIdType.IRCS;
+        String val =  UUID.randomUUID().toString();
+        if(val.length() > 8) val = val.substring(0, 8);
+        AssetEntity createsEntity = create(keyType, val, date);
+        String createdIRCS = createsEntity.getIRCS();
+        try {
+            AssetEntity fetchedEntity = get(keyType, createdIRCS);
+            String fetchedIRCS = fetchedEntity.getIRCS();
+            Assert.assertEquals(createdIRCS, fetchedIRCS);
+        } catch (AssetDaoException e) {
+            Assert.fail();
+        }
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void get_Asset_MMSI() {
+
+        Date date = new Date();
+        AssetIdType keyType = AssetIdType.MMSI;
+        String val =  UUID.randomUUID().toString();
+        if(val.length() > 9) val = val.substring(0, 9);
+        AssetEntity createsEntity = create(keyType, val, date);
+        String createdMMSI = createsEntity.getMMSI();
+        try {
+            AssetEntity fetchedEntity = get(keyType, createdMMSI);
+            String fetchedMMSI = fetchedEntity.getMMSI();
+            Assert.assertEquals(createdMMSI, fetchedMMSI);
+        } catch (AssetDaoException e) {
+            Assert.fail();
+        }
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void get_Asset_CFR() {
+
+        Date date = new Date();
+        AssetIdType keyType = AssetIdType.CFR;
+        String val =  UUID.randomUUID().toString();
+        if(val.length() > 12) val = val.substring(0, 12);
+        AssetEntity createsEntity = create(keyType, val, date);
+        String createdCFR = createsEntity.getCFR();
+        try {
+            AssetEntity fetchedEntity = get(keyType, createdCFR);
+            String fetchedCFR = fetchedEntity.getCFR();
+            Assert.assertEquals(createdCFR, fetchedCFR);
+        } catch (AssetDaoException e) {
+            Assert.fail();
+        }
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void get_Asset_IMO() {
+
+        Date date = new Date();
+        AssetIdType keyType = AssetIdType.IMO;
+        String val =  UUID.randomUUID().toString();
+        if(val.length() > 7) val = val.substring(0, 7);
+        AssetEntity createsEntity = create(keyType, val, date);
+        String createdIMO = createsEntity.getIMO();
+        try {
+            AssetEntity fetchedEntity = get(keyType, createdIMO);
+            String fetchedIMO = fetchedEntity.getIMO();
+            Assert.assertEquals(createdIMO, fetchedIMO);
+        } catch (AssetDaoException e) {
+            Assert.fail();
+        }
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void get_Asset_GUID() {
+
+        Date date = new Date();
+        AssetIdType keyType = AssetIdType.GUID;
+        String val =  UUID.randomUUID().toString();
+        if(val.length() > 7) val = val.substring(0, 7);
+        AssetEntity createsEntity = create(keyType, val, date);
+        String createdUUID = createsEntity.getGuid();
+        try {
+            AssetEntity fetchedEntity = get(keyType, createdUUID);
+            String fetchedUUID = fetchedEntity.getGuid();
+            Assert.assertEquals(createdUUID, fetchedUUID);
+        } catch (AssetDaoException e) {
+            Assert.fail();
+        }
+    }
+
+
+
+
+    private AssetEntity get(AssetIdType assetIdType, String value) throws AssetDaoException {
+        AssetEntity fetchedEntity = getAssetHelper(assetIdType, value);
+        return fetchedEntity;
+
+    }
+
+    private AssetEntity getAssetHelper(AssetIdType assetIdType, String value) throws AssetDaoException {
+
+        AssetEntity fetchedAsset = null;
+        switch (assetIdType) {
+            case CFR:
+                fetchedAsset = assetDao.getAssetByCfr(value);
+                break;
+            case GUID:
+                fetchedAsset = assetDao.getAssetByGuid(value);
+                break;
+            case IMO:
+                fetchedAsset = assetDao.getAssetByImo(value);
+                break;
+            case IRCS:
+                fetchedAsset = assetDao.getAssetByIrcs(value);
+                break;
+            case MMSI:
+                fetchedAsset = assetDao.getAssetByMmsi(value);
+                break;
+        }
+        return fetchedAsset;
+    }
+
+
+    private AssetEntity create(AssetIdType key, String value, Date date) {
 
         AssetEntity assetEntity = createAssetHelper(key, value, date);
         try {
@@ -81,7 +215,6 @@ public class AssetTestsIT extends TransactionalTests {
             return null;
         }
     }
-
 
 
     public AssetEntity createAssetHelper(AssetIdType assetIdType, String value, Date date) {
@@ -100,7 +233,7 @@ public class AssetTestsIT extends TransactionalTests {
 
         switch (assetIdType) {
             case CFR:
-                if(value.length() > 12) value = value.substring(0,12);
+                if (value.length() > 12) value = value.substring(0, 12);
                 assetEntity.setCFR(value);
                 break;
             case GUID:
@@ -209,7 +342,7 @@ public class AssetTestsIT extends TransactionalTests {
         ah.setPowerOfMainEngine(new BigDecimal(7000));
         ah.setPublicAid(PublicAidEnum.EG);
         String regnbr = "THOFAN" + rnd.nextInt();
-        if(regnbr.length() > 14) regnbr = regnbr.substring(0, 14);
+        if (regnbr.length() > 14) regnbr = regnbr.substring(0, 14);
         ah.setRegistrationNumber(regnbr);
 
         ah.setGrossTonnage(new BigDecimal(25000));
@@ -249,7 +382,6 @@ public class AssetTestsIT extends TransactionalTests {
 
         return fishingGearType;
     }
-
 
 
     public Carrier createCarrierHelper(Date date) {
