@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.asset.arquillian;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.dao.AssetDao;
+import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.*;
 import eu.europa.ec.fisheries.uvms.entity.model.*;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
@@ -16,12 +17,15 @@ import javax.ejb.EJB;
 import java.math.BigDecimal;
 import java.util.*;
 
-@RunWith(Arquillian.class)
-public class AssetTestsIT extends TransactionalTests {
 
+/** Main focus for this testclass is to verify that the keyhandling is ok
+ *  since it is divided with different columns for different keytypes
+ */
+
+@RunWith(Arquillian.class)
+public class AssetKeyTestsIT extends TransactionalTests {
 
     private Random rnd = new Random();
-
 
     @EJB
     private AssetDao assetDao;
@@ -61,6 +65,12 @@ public class AssetTestsIT extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void create_Asset_GUID() {
+
+        // OBS since guid is always overwritten at before persist
+        // the seted guid can never be the same as the retrieved one
+        // the method shoud be private or nonexsisting
+        // since it is pointless
+
         Date date = new Date();
         String theGuid = UUID.randomUUID().toString();
         AssetEntity theCreatedAsset = create(AssetIdType.GUID, theGuid, date);
@@ -168,7 +178,121 @@ public class AssetTestsIT extends TransactionalTests {
     }
 
 
+    /*--------------------------------------
+     *  delete tests
+     ---------------------------------------*/
 
+    @Test
+    @OperateOnDeployment("normal")
+    public void delete_Asset_IRCS() {
+
+        Date date = new Date();
+        AssetIdType keyType = AssetIdType.IRCS;
+        String val =  UUID.randomUUID().toString();
+        if(val.length() > 8) val = val.substring(0, 8);
+        AssetEntity createsEntity = create(keyType, val, date);
+        String createdIRCS = createsEntity.getIRCS();
+        try {
+            assetDao.deleteAsset(createsEntity);
+            get(keyType, createdIRCS);
+            Assert.fail();
+        } catch (NoAssetEntityFoundException e) {
+            Assert.assertTrue(true);
+        } catch (AssetDaoException e) {
+            Assert.fail();
+        }
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void delete_Asset_MMSI() {
+
+        Date date = new Date();
+        AssetIdType keyType = AssetIdType.MMSI;
+        String val =  UUID.randomUUID().toString();
+        if(val.length() > 9) val = val.substring(0, 9);
+        AssetEntity createsEntity = create(keyType, val, date);
+        String createdMMSI = createsEntity.getMMSI();
+        try {
+            assetDao.deleteAsset(createsEntity);
+            get(keyType, createdMMSI);
+            Assert.fail();
+        } catch (NoAssetEntityFoundException e) {
+            Assert.assertTrue(true);
+        } catch (AssetDaoException e) {
+            Assert.fail();
+        }
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void delete_Asset_CFR() {
+
+        Date date = new Date();
+        AssetIdType keyType = AssetIdType.CFR;
+        String val =  UUID.randomUUID().toString();
+        if(val.length() > 12) val = val.substring(0, 12);
+        AssetEntity createsEntity = create(keyType, val, date);
+        String createdCFR = createsEntity.getCFR();
+        try {
+            assetDao.deleteAsset(createsEntity);
+            get(keyType, createdCFR);
+            Assert.fail();
+        } catch (NoAssetEntityFoundException e) {
+            Assert.assertTrue(true);
+        } catch (AssetDaoException e) {
+            Assert.fail();
+        }
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void delete_Asset_IMO() {
+
+        Date date = new Date();
+        AssetIdType keyType = AssetIdType.IMO;
+        String val =  UUID.randomUUID().toString();
+        if(val.length() > 7) val = val.substring(0, 7);
+        AssetEntity createsEntity = create(keyType, val, date);
+        String createdIMO = createsEntity.getIMO();
+        try {
+            assetDao.deleteAsset(createsEntity);
+            get(keyType, createdIMO);
+            Assert.fail();
+        } catch (NoAssetEntityFoundException e) {
+            Assert.assertTrue(true);
+        } catch (AssetDaoException e) {
+            Assert.fail();
+        }
+    }
+
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void delete_Asset_GUID() {
+
+        Date date = new Date();
+        AssetIdType keyType = AssetIdType.GUID;
+        String val =  UUID.randomUUID().toString();
+        if(val.length() > 7) val = val.substring(0, 7);
+        AssetEntity createsEntity = create(keyType, val, date);
+        String createdUUID = createsEntity.getGuid();
+        try {
+            assetDao.deleteAsset(createsEntity);
+            get(keyType, createdUUID);
+            Assert.fail();
+        } catch (NoAssetEntityFoundException e) {
+            Assert.assertTrue(true);
+        } catch (AssetDaoException e) {
+            Assert.fail();
+        }
+    }
+
+
+
+    /*--------------------------------------
+     *  helper/convinience mehods
+     ---------------------------------------*/
 
     private AssetEntity get(AssetIdType assetIdType, String value) throws AssetDaoException {
         AssetEntity fetchedEntity = getAssetHelper(assetIdType, value);
