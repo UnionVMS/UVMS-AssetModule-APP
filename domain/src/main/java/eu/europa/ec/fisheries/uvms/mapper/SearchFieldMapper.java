@@ -53,6 +53,12 @@ public class SearchFieldMapper {
                 return SearchFields.FLAG_STATE;
             case HOMEPORT:
                 return SearchFields.HOMEPORT;
+            case ICCAT:
+                return SearchFields.ICCAT;
+            case UVI:
+                return SearchFields.UVI;
+            case GFCM:
+                return SearchFields.GFCM;
             case IRCS:
                 return SearchFields.IRCS;
             case LICENSE_TYPE:
