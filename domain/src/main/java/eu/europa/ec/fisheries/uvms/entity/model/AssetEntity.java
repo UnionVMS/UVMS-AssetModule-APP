@@ -58,10 +58,14 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_GUID, query = "SELECT v FROM AssetEntity v WHERE v.guid = :guid"),
     @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_IMO, query = "SELECT v FROM AssetEntity v WHERE v.imo = :imo"),
     @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_MMSI, query = "SELECT v FROM AssetEntity v WHERE v.mmsi = :mmsi"),
+    @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_ICCAT, query = "SELECT v FROM AssetEntity v WHERE v.iccat = :iccat"),
+    @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_UVI, query = "SELECT v FROM AssetEntity v WHERE v.uvi = :uvi"),
+    @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_GFCM, query = "SELECT v FROM AssetEntity v WHERE v.gfcm = :gfcm"),
     @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_CFR_EXCLUDE_ARCHIVED, query = "SELECT v FROM AssetEntity v WHERE v.cfr = :cfr AND v.carrier.active = true"),
     @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_IRCS_EXCLUDE_ARCHIVED, query = "SELECT v FROM AssetEntity v WHERE v.ircs = :ircs AND v.carrier.active = true"),
     @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_IMO_EXCLUDE_ARCHIVED, query = "SELECT v FROM AssetEntity v WHERE v.imo = :imo AND v.carrier.active = true"),
     @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_MMSI_EXCLUDE_ARCHIVED, query = "SELECT v FROM AssetEntity v WHERE v.mmsi = :mmsi AND v.carrier.active = true")
+
 })
 public class AssetEntity implements Serializable {
 
