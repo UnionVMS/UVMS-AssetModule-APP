@@ -305,4 +305,37 @@ public class AssetDaoBean extends Dao implements AssetDao {
         TypedQuery<NotesActivityCode> query = em.createNamedQuery(UvmsConstants.ASSET_NOTE_ACTIVITY_CODE_FIND_ALL, NotesActivityCode.class);
         return query.getResultList();
     }
+
+    @Override
+    public AssetEntity getAssetByIccat(String iccat) throws AssetDaoException {
+        try {
+        TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_ICCAT, AssetEntity.class);
+        query.setParameter("iccat", iccat);
+        return query.getSingleResult();
+    } catch (NoResultException e) {
+        throw new NoAssetEntityFoundException("No asset found for " + iccat);
+    }
+    }
+
+    @Override
+    public AssetEntity getAssetByUvi(String uvi) throws AssetDaoException {
+        try {
+        TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_UVI, AssetEntity.class);
+        query.setParameter("uvi", uvi);
+        return query.getSingleResult();
+    } catch (NoResultException e) {
+        throw new NoAssetEntityFoundException("No asset found for " + uvi);
+        }
+    }
+
+    @Override
+    public AssetEntity getAssetByGfcm(String gfcm) throws AssetDaoException {
+        try {
+        TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_GFCM, AssetEntity.class);
+        query.setParameter("gfcm", gfcm);
+        return query.getSingleResult();
+        } catch (NoResultException e) {
+        throw new NoAssetEntityFoundException("No asset found for " + gfcm);
+        }
+    }
 }

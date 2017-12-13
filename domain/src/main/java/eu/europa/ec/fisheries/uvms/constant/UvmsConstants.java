@@ -21,7 +21,10 @@ public class UvmsConstants {
     public static final String ASSET_FIND_BY_IMO = "Asset.findByImo";
 	public static final String ASSET_FIND_BY_MMSI = "Asset.findByMMSI";
     public static final String ASSETHISTORY_FIND_BY_GUIDS = "Asset.findByGuids";
-	
+    public static final String ASSET_FIND_BY_ICCAT = "Asset.findByIccat";
+    public static final String ASSET_FIND_BY_UVI = "Asset.findByUvi";
+    public static final String ASSET_FIND_BY_GFCM = "Asset.findByGfcm";
+
     public static final String ASSETHISTORY_FIND_BY_GUID = "Assethistory.findByGuid";
 
     public static final String GROUP_ASSET_FIND_ALL = "AssetGroup.findAll";
