@@ -146,15 +146,15 @@ public class AssetEntity implements Serializable {
     private List<Notes> notes;
 
     @Size(max = 50)
-    @Column(name = "asset_iccat", unique = true)
+    @Column(name = "asset_iccat")
     private String iccat;
 
     @Size(max = 50)
-    @Column(name = "asset_uvi", unique = true)
+    @Column(name = "asset_uvi")
     private String uvi;
 
     @Size(max = 50)
-    @Column(name = "asset_gfcm", unique = true)
+    @Column(name = "asset_gfcm")
     private String gfcm;
 
 

@@ -70,6 +70,9 @@ public class ModelToEntityMapper {
         entity.setCFR(asset.getCfr());
         entity.setMMSI(asset.getMmsiNo());
         entity.setIMO(asset.getImo());
+        entity.setIccat(asset.getIccat());
+        entity.setUvi(asset.getUvi());
+        entity.setGfcm(asset.getGfcm());
 
         entity.setIrcsIndicator(asset.getHasIrcs());
 
@@ -125,6 +128,10 @@ public class ModelToEntityMapper {
         assetHistory.setImo(asset.getImo());
         assetHistory.setMmsi(asset.getMmsiNo());
         assetHistory.setCfr(asset.getCfr());
+        assetHistory.setIccat(asset.getIccat());
+        assetHistory.setUvi(asset.getUvi());
+        assetHistory.setGfcm(asset.getGfcm());
+
 
         List<AssetContact> contacts = asset.getContact();
         if (contacts != null) {

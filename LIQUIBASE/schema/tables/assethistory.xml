@@ -112,4 +112,13 @@
 		</addColumn>
 	</changeSet>
 
+	<changeSet author="thofan" id="Add iccat, uvi, gfcm to asset">
+		<addColumn tableName="assethistory">
+			<column name="assethist_iccat" type="VARCHAR(50)" />
+			<column name="assethist_uvi" type="VARCHAR(50)" />
+			<column name="assethist_gfcm" type="VARCHAR(50)" />
+		</addColumn>
+	</changeSet>
+
+
 </databaseChangeLog>
