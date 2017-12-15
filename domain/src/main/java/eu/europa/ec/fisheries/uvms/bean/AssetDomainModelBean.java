@@ -83,6 +83,12 @@ public class AssetDomainModelBean {
             case MMSI:
                 checkNumberAssetId(id.getValue());
                 return assetDao.getAssetByMmsi(id.getValue());
+            case ICCAT:
+                return assetDao.getAssetByIccat(id.getValue());
+            case UVI:
+                return assetDao.getAssetByUvi(id.getValue());
+            case GFCM:
+                return assetDao.getAssetByGfcm(id.getValue());
             default:
                 throw new NoAssetEntityFoundException("Non valid asset id type");
         }

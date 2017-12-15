@@ -166,4 +166,8 @@ public interface AssetDao {
     public AssetEntity getAssetByImoExcludeArchived(String value) throws AssetDaoException;
     public AssetEntity getAssetByMmsiExcludeArchived(String value) throws AssetDaoException;
     List<NotesActivityCode> getNoteActivityCodes();
+
+    AssetEntity getAssetByIccat(String value)  throws AssetDaoException;
+    AssetEntity getAssetByUvi(String value) throws AssetDaoException;
+    AssetEntity getAssetByGfcm(String value) throws AssetDaoException;
 }

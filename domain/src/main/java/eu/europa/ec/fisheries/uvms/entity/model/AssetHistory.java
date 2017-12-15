@@ -235,6 +235,23 @@ public class AssetHistory implements Serializable {
     @NotNull
     private List<ContactInfo> contactInfo;
 
+    @Size(max = 50)
+    @Column(name = "assethist_iccat")
+    private String iccat;
+
+    @Size(max = 50)
+    @Column(name = "assethist_uvi")
+    private String uvi;
+
+    @Size(max = 50)
+    @Column(name = "assethist_gfcm")
+    private String gfcm;
+
+
+
+
+
+
 
     public AssetHistory() {
     }
@@ -630,4 +647,21 @@ public class AssetHistory implements Serializable {
     public void setMmsi(String mmsi) {
         this.mmsi = mmsi;
     }
+
+    public String getIccat() { return iccat; }
+
+    public void setIccat(String iccat) { this.iccat = iccat; }
+
+    public String getUvi() {return uvi; }
+
+    public void setUvi(String uvi) {this.uvi = uvi; }
+
+    public String getGfcm() { return gfcm; }
+
+    public void setGfcm(String gfcm) { this.gfcm = gfcm; }
+
+
+
+
+
 }

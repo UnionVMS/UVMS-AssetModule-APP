@@ -62,6 +62,9 @@ public class EntityToModelMapper {
         asset.setHasIrcs(entity.getIrcsIndicator());
         asset.setImo(entity.getIMO());
         asset.setIrcs(entity.getIRCS());
+        asset.setIccat(entity.getIccat());
+        asset.setUvi(entity.getUvi());
+        asset.setGfcm(entity.getGfcm());
 
         if (entity.getNotes() != null) {
             List<AssetNotes> noteList = new ArrayList<>();
@@ -120,6 +123,10 @@ public class EntityToModelMapper {
             asset.setCfr(historyEntity.getCfr());
             asset.setMmsiNo(historyEntity.getMmsi());
             asset.setImo(historyEntity.getImo());
+            asset.setIccat(historyEntity.getIccat());
+            asset.setUvi(historyEntity.getUvi());
+            asset.setGfcm(historyEntity.getGfcm());
+
 
             if (historyEntity.getContactInfo() == null) {
                 historyEntity.setContactInfo(new ArrayList<ContactInfo>());

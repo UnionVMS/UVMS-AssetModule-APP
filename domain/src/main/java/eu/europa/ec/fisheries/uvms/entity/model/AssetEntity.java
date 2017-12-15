@@ -58,10 +58,14 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_GUID, query = "SELECT v FROM AssetEntity v WHERE v.guid = :guid"),
     @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_IMO, query = "SELECT v FROM AssetEntity v WHERE v.imo = :imo"),
     @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_MMSI, query = "SELECT v FROM AssetEntity v WHERE v.mmsi = :mmsi"),
+    @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_ICCAT, query = "SELECT v FROM AssetEntity v WHERE v.iccat = :iccat"),
+    @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_UVI, query = "SELECT v FROM AssetEntity v WHERE v.uvi = :uvi"),
+    @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_GFCM, query = "SELECT v FROM AssetEntity v WHERE v.gfcm = :gfcm"),
     @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_CFR_EXCLUDE_ARCHIVED, query = "SELECT v FROM AssetEntity v WHERE v.cfr = :cfr AND v.carrier.active = true"),
     @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_IRCS_EXCLUDE_ARCHIVED, query = "SELECT v FROM AssetEntity v WHERE v.ircs = :ircs AND v.carrier.active = true"),
     @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_IMO_EXCLUDE_ARCHIVED, query = "SELECT v FROM AssetEntity v WHERE v.imo = :imo AND v.carrier.active = true"),
     @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_MMSI_EXCLUDE_ARCHIVED, query = "SELECT v FROM AssetEntity v WHERE v.mmsi = :mmsi AND v.carrier.active = true")
+
 })
 public class AssetEntity implements Serializable {
 
@@ -140,6 +144,19 @@ public class AssetEntity implements Serializable {
     @OneToMany(mappedBy = "asset", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @NotNull
     private List<Notes> notes;
+
+    @Size(max = 50)
+    @Column(name = "asset_iccat")
+    private String iccat;
+
+    @Size(max = 50)
+    @Column(name = "asset_uvi")
+    private String uvi;
+
+    @Size(max = 50)
+    @Column(name = "asset_gfcm")
+    private String gfcm;
+
 
     public AssetEntity() {
     }
@@ -292,5 +309,23 @@ public class AssetEntity implements Serializable {
     public void setHistories(List<AssetHistory> histories) {
         this.histories = histories;
     }
+
+
+    public String getIccat() { return iccat; }
+
+    public void setIccat(String iccat) { this.iccat = iccat; }
+
+    public String getUvi() {return uvi; }
+
+    public void setUvi(String uvi) {this.uvi = uvi; }
+
+    public String getGfcm() { return gfcm; }
+
+    public void setGfcm(String gfcm) { this.gfcm = gfcm; }
+
+
+
+
+
 
 }

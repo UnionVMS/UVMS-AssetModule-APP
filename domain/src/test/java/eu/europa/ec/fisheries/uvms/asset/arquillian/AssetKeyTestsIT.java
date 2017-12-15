@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
+import javax.persistence.NoResultException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -77,6 +78,31 @@ public class AssetKeyTestsIT extends TransactionalTests {
         String theCreatedAssetsUUID = theCreatedAsset.getGuid();
         Assert.assertNotEquals(theGuid, theCreatedAssetsUUID);
     }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void create_Asset_UVI() {
+        Date date = new Date();
+        String val = UUID.randomUUID().toString();
+        create(AssetIdType.UVI, val, date);
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void create_Asset_ICCAT() {
+        Date date = new Date();
+        String val = UUID.randomUUID().toString();
+        create(AssetIdType.ICCAT, val, date);
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void create_Asset_GFCM() {
+        Date date = new Date();
+        String val = UUID.randomUUID().toString();
+        create(AssetIdType.GFCM, val, date);
+    }
+
 
     /*--------------------------------------
      *  get tests
@@ -176,6 +202,63 @@ public class AssetKeyTestsIT extends TransactionalTests {
             Assert.fail();
         }
     }
+
+
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void get_Asset_ICCAT() {
+
+        Date date = new Date();
+        AssetIdType keyType = AssetIdType.ICCAT;
+        String val =  UUID.randomUUID().toString();
+        AssetEntity theCreatedAsset = create(keyType, val, date);
+        String createdICCAT = theCreatedAsset.getIccat();
+        try {
+            AssetEntity fetchedEntity = get(keyType, createdICCAT);
+            String fetchedUUID = fetchedEntity.getIccat();
+            Assert.assertEquals(createdICCAT, fetchedUUID);
+        } catch (AssetDaoException e) {
+            Assert.fail();
+        }
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void get_Asset_UVI() {
+
+        Date date = new Date();
+        AssetIdType keyType = AssetIdType.UVI;
+        String val =  UUID.randomUUID().toString();
+        AssetEntity theCreatedAsset = create(keyType, val, date);
+        String createdUvi = theCreatedAsset.getUvi();
+        try {
+            AssetEntity fetchedEntity = get(keyType, createdUvi);
+            String fetchedUvi= fetchedEntity.getUvi();
+            Assert.assertEquals(createdUvi, fetchedUvi);
+        } catch (AssetDaoException e) {
+            Assert.fail();
+        }
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void get_Asset_GFCM() {
+
+        Date date = new Date();
+        AssetIdType keyType = AssetIdType.GFCM;
+        String val =  UUID.randomUUID().toString();
+        AssetEntity theCreatedAsset = create(keyType, val, date);
+        String createdGfcm = theCreatedAsset.getGfcm();
+        try {
+            AssetEntity fetchedEntity = get(keyType, createdGfcm);
+            String fetchedGfcm= fetchedEntity.getGfcm();
+            Assert.assertEquals(fetchedGfcm, createdGfcm);
+        } catch (AssetDaoException e) {
+            Assert.fail();
+        }
+    }
+
 
 
     /*--------------------------------------
@@ -287,6 +370,70 @@ public class AssetKeyTestsIT extends TransactionalTests {
             Assert.fail();
         }
     }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void delete_Asset_ICCAT() {
+
+        Date date = new Date();
+        AssetIdType keyType = AssetIdType.ICCAT;
+        String val =  UUID.randomUUID().toString();
+        AssetEntity theCreatedAsset = create(keyType, val, date);
+        String createdIccat = theCreatedAsset.getIccat();
+        try {
+            assetDao.deleteAsset(theCreatedAsset);
+            get(keyType, createdIccat);
+            Assert.fail();
+        } catch (NoAssetEntityFoundException e) {
+            Assert.assertTrue(true);
+        } catch (AssetDaoException e) {
+            Assert.fail();
+        }
+    }
+
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void delete_Asset_UVI() {
+
+        Date date = new Date();
+        AssetIdType keyType = AssetIdType.UVI;
+        String val =  UUID.randomUUID().toString();
+        AssetEntity theCreatedAsset = create(keyType, val, date);
+        String createdUvi = theCreatedAsset.getUvi();
+        try {
+            assetDao.deleteAsset(theCreatedAsset);
+            get(keyType, createdUvi);
+            Assert.fail();
+        } catch (NoAssetEntityFoundException e) {
+            Assert.assertTrue(true);
+        } catch (AssetDaoException e) {
+            Assert.fail();
+        }
+    }
+
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void delete_Asset_GFCM() {
+
+        Date date = new Date();
+        AssetIdType keyType = AssetIdType.GFCM;
+        String val =  UUID.randomUUID().toString();
+        AssetEntity theCreatedAsset = create(keyType, val, date);
+        String createdGFCM = theCreatedAsset.getGfcm();
+        try {
+            assetDao.deleteAsset(theCreatedAsset);
+            get(keyType, createdGFCM);
+            Assert.fail();
+        } catch (NoAssetEntityFoundException e) {
+            Assert.assertTrue(true);
+        } catch (AssetDaoException e) {
+            Assert.fail();
+        }
+    }
+
+
 
     /*--------------------------------------
      *  update tests
@@ -408,6 +555,73 @@ public class AssetKeyTestsIT extends TransactionalTests {
         }
     }
 
+    @Test
+    @OperateOnDeployment("normal")
+    public void update_Asset_ICCAT() {
+
+        Date date = new Date();
+        AssetIdType keyType = AssetIdType.ICCAT;
+        String val =  UUID.randomUUID().toString();
+        AssetEntity theCreatedAsset = create(keyType, val, date);
+        String createdICCAT = theCreatedAsset.getIccat();
+        try {
+            theCreatedAsset.setUpdatedBy("CHANGED");
+            assetDao.updateAsset(theCreatedAsset);
+            em.flush();
+            AssetEntity fetchedAsset = get(keyType, createdICCAT);
+            Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
+        } catch (NoAssetEntityFoundException e) {
+            Assert.fail();
+        } catch (AssetDaoException e) {
+            Assert.fail();
+        }
+    }
+
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void update_Asset_UVI() {
+
+        Date date = new Date();
+        AssetIdType keyType = AssetIdType.UVI;
+        String val =  UUID.randomUUID().toString();
+        AssetEntity theCreatedAsset = create(keyType, val, date);
+        String createdUVI = theCreatedAsset.getUvi();
+        try {
+            theCreatedAsset.setUpdatedBy("CHANGED");
+            assetDao.updateAsset(theCreatedAsset);
+            em.flush();
+            AssetEntity fetchedAsset = get(keyType, createdUVI);
+            Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
+        } catch (NoAssetEntityFoundException e) {
+            Assert.fail();
+        } catch (AssetDaoException e) {
+            Assert.fail();
+        }
+    }
+
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void update_Asset_GFCM() {
+
+        Date date = new Date();
+        AssetIdType keyType = AssetIdType.GFCM;
+        String val =  UUID.randomUUID().toString();
+        AssetEntity theCreatedAsset = create(keyType, val, date);
+        String createdGFCM = theCreatedAsset.getGfcm();
+        try {
+            theCreatedAsset.setUpdatedBy("CHANGED");
+            assetDao.updateAsset(theCreatedAsset);
+            em.flush();
+            AssetEntity fetchedAsset = get(keyType, createdGFCM);
+            Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
+        } catch (NoAssetEntityFoundException e) {
+            Assert.fail();
+        } catch (AssetDaoException e) {
+            Assert.fail();
+        }
+    }
 
 
 
@@ -442,6 +656,15 @@ public class AssetKeyTestsIT extends TransactionalTests {
                 break;
             case MMSI:
                 fetchedAsset = assetDao.getAssetByMmsi(value);
+                break;
+            case ICCAT:
+                fetchedAsset = assetDao.getAssetByIccat(value);
+                break;
+            case UVI:
+                fetchedAsset = assetDao.getAssetByUvi(value);
+                break;
+            case GFCM:
+                fetchedAsset = assetDao.getAssetByGfcm(value);
                 break;
         }
         return fetchedAsset;
@@ -478,6 +701,9 @@ public class AssetKeyTestsIT extends TransactionalTests {
         assetEntity.setIRCS(null);
         assetEntity.setMMSI(null);
         assetEntity.setIrcsIndicator(null);
+        assetEntity.setIccat(null);
+        assetEntity.setUvi(null);
+        assetEntity.setGfcm(null);
 
         switch (assetIdType) {
             case CFR:
@@ -496,6 +722,15 @@ public class AssetKeyTestsIT extends TransactionalTests {
                 break;
             case MMSI:
                 assetEntity.setMMSI(value);
+                break;
+            case ICCAT:
+                assetEntity.setIccat(value);
+                break;
+            case UVI:
+                assetEntity.setUvi(value);
+                break;
+            case GFCM:
+                assetEntity.setGfcm(value);
                 break;
         }
 
