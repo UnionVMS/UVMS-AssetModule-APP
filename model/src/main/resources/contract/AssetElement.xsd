@@ -161,6 +161,7 @@
             <xsd:enumeration value="CFR"/>
             <xsd:enumeration value="MMSI"/>
             <xsd:enumeration value="GUID"/>
+            <xsd:enumeration value="HIST_GUID"/>
             <xsd:enumeration value="ICCAT" />
             <xsd:enumeration value="UVI" />
             <xsd:enumeration value="GFCM" />
