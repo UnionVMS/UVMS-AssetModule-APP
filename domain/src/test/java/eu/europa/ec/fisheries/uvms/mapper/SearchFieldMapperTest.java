@@ -11,17 +11,17 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mapper;
 
-import eu.europa.ec.fisheries.uvms.constant.SearchFields;
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.core.StringContains.containsString;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
-/**
- **/
-@RunWith(MockitoJUnitRunner.class)
+import org.junit.Test;
+
+import eu.europa.ec.fisheries.uvms.constant.SearchFields;
+
 public class SearchFieldMapperTest {
 
     @Test
@@ -43,5 +43,34 @@ public class SearchFieldMapperTest {
         //System.out.println(SearchFieldMapper.createSelectSearchSql(searchFields, true));
 
     }
+    
+    @Test
+    public void testHistoryGUIDSQL() {
+    	List<SearchKeyValue> searchFields = new ArrayList<>();
 
+        SearchKeyValue searchValue = new SearchKeyValue();
+        searchValue.setSearchField(SearchFields.HIST_GUID);
+        searchValue.setSearchValues(Arrays.asList("history_guid"));
+
+        searchFields.add(searchValue);
+        
+        String createSelectSearchSql = SearchFieldMapper.createSelectSearchSql(searchFields, true);
+        String expected = "active IN (true,false)";
+		assertThat(createSelectSearchSql, containsString(expected));
+    }
+    
+    @Test
+    public void testNoHistoryGUIDSQL() {
+    	List<SearchKeyValue> searchFields = new ArrayList<>();
+
+        SearchKeyValue searchValue = new SearchKeyValue();
+        searchValue.setSearchField(SearchFields.GUID);
+        searchValue.setSearchValues(Arrays.asList("guid"));
+
+        searchFields.add(searchValue);
+        
+        String createSelectSearchSql = SearchFieldMapper.createSelectSearchSql(searchFields, true);
+        String expected = "active IN (true)";
+		assertThat(createSelectSearchSql, containsString(expected));
+    }
 }

@@ -71,6 +71,8 @@ public class SearchFieldMapper {
                 return SearchFields.GEAR_TYPE;
             case GUID:
                 return SearchFields.GUID;
+            case HIST_GUID:
+            	return SearchFields.HIST_GUID;
             case IMO:
                 return SearchFields.IMO;
             case MAX_LENGTH:
@@ -170,6 +172,17 @@ public class SearchFieldMapper {
         return builder.toString();
     }
 
+    private static String getHistoryCriterias(List<SearchKeyValue> criterias) {
+    	StringBuilder builder = new StringBuilder();
+    	builder.append(true);
+    	for (SearchKeyValue searchKeyValue : criterias) {
+			if (searchKeyValue.getSearchField().equals(SearchFields.HIST_GUID)) {
+				builder.append(",").append(false);
+			}
+		}
+    	return builder.toString();
+    }
+    
     public static String createSearchSql(List<SearchKeyValue> criterias, boolean dynamic, boolean fetch) {
 
         String OPERATOR = " OR ";
@@ -181,7 +194,7 @@ public class SearchFieldMapper {
         builder.append(getJoin(fetch, JoinType.INNER)).append(SearchTables.ASSET_HIST.getTableAlias()).append(".asset ").append(SearchTables.ASSET.getTableAlias());
         builder.append(getJoin(fetch, JoinType.INNER)).append(SearchTables.ASSET.getTableAlias()).append(".carrier ").append(SearchTables.CARRIER.getTableAlias());
 
-        builder.append(" WHERE ").append(SearchTables.ASSET_HIST.getTableAlias()).append(".active = '1' ");
+        builder.append(" WHERE ").append(SearchTables.ASSET_HIST.getTableAlias()).append(".active IN (").append(getHistoryCriterias(criterias)).append(") ");
 
         if (!criterias.isEmpty()) {
 
