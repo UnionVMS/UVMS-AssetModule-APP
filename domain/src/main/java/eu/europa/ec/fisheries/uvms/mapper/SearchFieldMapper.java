@@ -173,16 +173,16 @@ public class SearchFieldMapper {
     }
 
     private static String getHistoryCriterias(List<SearchKeyValue> criterias) {
-    	StringBuilder builder = new StringBuilder();
-    	builder.append(true);
-    	for (SearchKeyValue searchKeyValue : criterias) {
-			if (searchKeyValue.getSearchField().equals(SearchFields.HIST_GUID)) {
-				builder.append(",").append(false);
-			}
-		}
-    	return builder.toString();
+        StringBuilder builder = new StringBuilder();
+        builder.append(true);
+        for (SearchKeyValue searchKeyValue : criterias) {
+            if (searchKeyValue.getSearchField().equals(SearchFields.HIST_GUID)) {
+                builder.append(",").append(false);
+            }
+        }
+        return builder.toString();
     }
-    
+
     public static String createSearchSql(List<SearchKeyValue> criterias, boolean dynamic, boolean fetch) {
 
         String OPERATOR = " OR ";

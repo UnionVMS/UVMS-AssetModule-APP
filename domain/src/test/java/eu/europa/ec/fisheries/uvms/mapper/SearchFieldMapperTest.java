@@ -13,13 +13,10 @@ package eu.europa.ec.fisheries.uvms.mapper;
 
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.core.StringContains.containsString;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.junit.Test;
-
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
 
 public class SearchFieldMapperTest {
@@ -40,37 +37,37 @@ public class SearchFieldMapperTest {
         searchFields.add(val1);
         searchFields.add(val2);
 
-        //System.out.println(SearchFieldMapper.createSelectSearchSql(searchFields, true));
+        // System.out.println(SearchFieldMapper.createSelectSearchSql(searchFields, true));
 
     }
-    
+
     @Test
     public void testHistoryGUIDSQL() {
-    	List<SearchKeyValue> searchFields = new ArrayList<>();
+        List<SearchKeyValue> searchFields = new ArrayList<>();
 
         SearchKeyValue searchValue = new SearchKeyValue();
         searchValue.setSearchField(SearchFields.HIST_GUID);
         searchValue.setSearchValues(Arrays.asList("history_guid"));
 
         searchFields.add(searchValue);
-        
+
         String createSelectSearchSql = SearchFieldMapper.createSelectSearchSql(searchFields, true);
         String expected = "active IN (true,false)";
-		assertThat(createSelectSearchSql, containsString(expected));
+        assertThat(createSelectSearchSql, containsString(expected));
     }
-    
+
     @Test
     public void testNoHistoryGUIDSQL() {
-    	List<SearchKeyValue> searchFields = new ArrayList<>();
+        List<SearchKeyValue> searchFields = new ArrayList<>();
 
         SearchKeyValue searchValue = new SearchKeyValue();
         searchValue.setSearchField(SearchFields.GUID);
         searchValue.setSearchValues(Arrays.asList("guid"));
 
         searchFields.add(searchValue);
-        
+
         String createSelectSearchSql = SearchFieldMapper.createSelectSearchSql(searchFields, true);
         String expected = "active IN (true)";
-		assertThat(createSelectSearchSql, containsString(expected));
+        assertThat(createSelectSearchSql, containsString(expected));
     }
 }
