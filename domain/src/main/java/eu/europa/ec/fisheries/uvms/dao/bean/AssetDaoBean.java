@@ -356,15 +356,32 @@ public class AssetDaoBean extends Dao implements AssetDao {
         Timestamp eventDate = new Timestamp(date);
 
         //@formatter:off
+        /*
         String sql = "select ah.assethist_countryregistration  from asset.assethistory as ah  " +
                 "join asset.asset as a  on a.asset_id = ah.assethist_asset_id  " +
                 "where a.asset_guid = :guid  " +
                 "and ah.assethist_dateofevent <= :dateofevent  " +
                 "order by  ah.assethist_dateofevent desc";
-
+*/
         //@formatter:on
+        String hql = "select ah.countryOfRegistration from AssetHistory ah where ah.asset.guid = :guid and ah.dateOfEvent <= :dateofevent order by ah.dateOfEvent DESC";
+        Query q = em.createQuery(hql);
+        q.setParameter("guid", assetGuid);
+        q.setParameter("dateofevent", eventDate);
+        q.setMaxResults(1);
+        try {
+            String countryOfRegistration = (String) q.getSingleResult();
+            TypedQuery<FlagState> query_flagstate = em.createNamedQuery(UvmsConstants.FLAGSTATE_GET_BY_CODE, FlagState.class);
+            query_flagstate.setParameter("code", countryOfRegistration);
+            FlagState flagState = query_flagstate.getSingleResult();
+            return flagState;
+        } catch(NoResultException ex) {
+            // Throw user exception
+            String msg = "This code was not found in database. Check your setup";
+            throw new AssetDaoException(msg);
+        }
 
-
+        /*
         try {
             Query query = em.createNativeQuery(sql);
             query.setParameter("guid", assetGuid);
@@ -389,6 +406,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
         } catch (RuntimeException  e) {
             throw new AssetDaoException("No record found");
         }
+        */
 
 
 
