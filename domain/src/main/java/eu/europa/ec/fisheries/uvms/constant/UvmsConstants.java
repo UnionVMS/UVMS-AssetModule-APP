@@ -65,4 +65,6 @@ public class UvmsConstants {
 
     public static final String ASSET_NOTE_ACTIVITY_CODE_FIND_ALL = "AssetNoteActivity.findAll";
 
+    public static final String FLAGSTATE_GET_BY_CODE = "FlagState.getByCode";
+    public static final String ASSETHISTORY_FIND_BY_GUID_AND_DATE = "Assethistory.findByGuidAndDate";
 }

@@ -19,6 +19,7 @@ import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
+import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
 import eu.europa.ec.fisheries.uvms.mapper.*;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
@@ -29,10 +30,7 @@ import org.slf4j.LoggerFactory;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Stateless
 @LocalBean
@@ -46,6 +44,7 @@ public class AssetDomainModelBean {
 
     @EJB
     AssetGroupDomainModelBean assetGroupModel;
+
 
     private static final Logger LOG = LoggerFactory
             .getLogger(AssetDomainModelBean.class);
@@ -343,4 +342,23 @@ public class AssetDomainModelBean {
     }
 
 
+    public FlagState getFlagStateByIdAndDate(String assetGuid, Long date) throws InputArgumentException, AssetDaoException {
+
+        if (assetGuid == null ) {
+            throw new InputArgumentException(
+                    "Cannot get asset  because asset  ID is null.");
+        }
+        if (date == null ) {
+            throw new InputArgumentException(
+                    "Cannot get asset  because date   is null.");
+        }
+
+        try {
+            FlagState flagState = assetDao.getAssetFlagStateByIdAndDate(assetGuid, date);
+            return flagState;
+        } catch (AssetDaoException e) {
+            LOG.warn(e.toString(), e);
+            throw e;
+        }
+    }
 }

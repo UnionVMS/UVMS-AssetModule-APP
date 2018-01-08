@@ -12,7 +12,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.dao.bean;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -22,7 +24,9 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.dao.Dao;
 import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
 import eu.europa.ec.fisheries.uvms.entity.model.NotesActivityCode;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,10 +79,10 @@ public class AssetDaoBean extends Dao implements AssetDao {
     @Override
     public void deleteAsset(AssetEntity assetEntity) throws AssetDaoException {
 
-        if(assetEntity == null){
+        if (assetEntity == null) {
             // does not destroy anything so just log and return
             LOG.debug("deleteAsset. assetEntity is null. check you code");
-            return ;
+            return;
         }
         em.remove(assetEntity);
     }
@@ -130,9 +134,9 @@ public class AssetDaoBean extends Dao implements AssetDao {
         }
     }
 
-	@Override
-	public AssetEntity getAssetByImo(String imo) throws AssetDaoException {
-		try {
+    @Override
+    public AssetEntity getAssetByImo(String imo) throws AssetDaoException {
+        try {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_IMO, AssetEntity.class);
             query.setParameter("imo", imo);
             AssetEntity singleResult = query.getSingleResult();
@@ -140,11 +144,11 @@ public class AssetDaoBean extends Dao implements AssetDao {
         } catch (NoResultException e) {
             throw new NoAssetEntityFoundException("No asset found for " + imo);
         }
-	}
+    }
 
-	@Override
-	public AssetEntity getAssetByMmsi(String mmsi) throws AssetDaoException {
-		try {
+    @Override
+    public AssetEntity getAssetByMmsi(String mmsi) throws AssetDaoException {
+        try {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_MMSI, AssetEntity.class);
             query.setParameter("mmsi", mmsi);
             AssetEntity singleResult = query.getSingleResult();
@@ -152,8 +156,8 @@ public class AssetDaoBean extends Dao implements AssetDao {
         } catch (NoResultException e) {
             throw new NoAssetEntityFoundException("No asset found for " + mmsi);
         }
-	}
-    
+    }
+
     @Override
     public AssetHistory getAssetHistoryByGuid(String guid) throws AssetDaoException {
         try {
@@ -186,9 +190,9 @@ public class AssetDaoBean extends Dao implements AssetDao {
                     }
                     query.setParameter(field.getSearchField().getValueName(), parameter);
                 } else if (field.getSearchField().getFieldType().equals(SearchFieldType.LIST)) {
-                	query.setParameter(field.getSearchField().getValueName(), field.getSearchValues());
+                    query.setParameter(field.getSearchField().getValueName(), field.getSearchValues());
                 } else if (field.getSearchField().getFieldType().equals(SearchFieldType.BOOLEAN)) { //BOOLEAN only one value
-                	query.setParameter(field.getSearchField().getValueName(), Boolean.parseBoolean(field.getSearchValues().get(0)));
+                    query.setParameter(field.getSearchField().getValueName(), Boolean.parseBoolean(field.getSearchValues().get(0)));
                 } else { //DECIMAL, only one value
                     query.setParameter(field.getSearchField().getValueName(), new BigDecimal(field.getSearchValues().get(0)));
                 }
@@ -230,9 +234,9 @@ public class AssetDaoBean extends Dao implements AssetDao {
                     }
                     query.setParameter(field.getSearchField().getValueName(), parameter);
                 } else if (field.getSearchField().getFieldType().equals(SearchFieldType.LIST)) {
-                	query.setParameter(field.getSearchField().getValueName(), field.getSearchValues());
+                    query.setParameter(field.getSearchField().getValueName(), field.getSearchValues());
                 } else if (field.getSearchField().getFieldType().equals(SearchFieldType.BOOLEAN)) { //BOOLEAN only one value
-                	query.setParameter(field.getSearchField().getValueName(), Boolean.parseBoolean(field.getSearchValues().get(0)));
+                    query.setParameter(field.getSearchField().getValueName(), Boolean.parseBoolean(field.getSearchValues().get(0)));
                 } else { //DECIMAL, only one value
                     query.setParameter(field.getSearchField().getValueName(), new BigDecimal(field.getSearchValues().get(0)));
                 }
@@ -309,33 +313,58 @@ public class AssetDaoBean extends Dao implements AssetDao {
     @Override
     public AssetEntity getAssetByIccat(String iccat) throws AssetDaoException {
         try {
-        TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_ICCAT, AssetEntity.class);
-        query.setParameter("iccat", iccat);
-        return query.getSingleResult();
-    } catch (NoResultException e) {
-        throw new NoAssetEntityFoundException("No asset found for " + iccat);
-    }
+            TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_ICCAT, AssetEntity.class);
+            query.setParameter("iccat", iccat);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            throw new NoAssetEntityFoundException("No asset found for " + iccat);
+        }
     }
 
     @Override
     public AssetEntity getAssetByUvi(String uvi) throws AssetDaoException {
         try {
-        TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_UVI, AssetEntity.class);
-        query.setParameter("uvi", uvi);
-        return query.getSingleResult();
-    } catch (NoResultException e) {
-        throw new NoAssetEntityFoundException("No asset found for " + uvi);
+            TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_UVI, AssetEntity.class);
+            query.setParameter("uvi", uvi);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            throw new NoAssetEntityFoundException("No asset found for " + uvi);
         }
     }
 
     @Override
     public AssetEntity getAssetByGfcm(String gfcm) throws AssetDaoException {
         try {
-        TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_GFCM, AssetEntity.class);
-        query.setParameter("gfcm", gfcm);
-        return query.getSingleResult();
+            TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_GFCM, AssetEntity.class);
+            query.setParameter("gfcm", gfcm);
+            return query.getSingleResult();
         } catch (NoResultException e) {
-        throw new NoAssetEntityFoundException("No asset found for " + gfcm);
+            throw new NoAssetEntityFoundException("No asset found for " + gfcm);
         }
     }
+
+
+    @Override
+    public FlagState getAssetFlagStateByIdAndDate(String assetGuid, Long date) throws AssetDaoException {
+
+        Timestamp eventDate = new Timestamp(date);
+
+        String hql = "select ah.countryOfRegistration from AssetHistory ah where ah.asset.guid = :guid and ah.dateOfEvent <= :dateofevent order by ah.dateOfEvent DESC";
+        Query q = em.createQuery(hql);
+        q.setParameter("guid", assetGuid);
+        q.setParameter("dateofevent", eventDate);
+        q.setMaxResults(1);
+        try {
+            String countryOfRegistration = (String) q.getSingleResult();
+            TypedQuery<FlagState> query_flagstate = em.createNamedQuery(UvmsConstants.FLAGSTATE_GET_BY_CODE, FlagState.class);
+            query_flagstate.setParameter("code", countryOfRegistration);
+            FlagState flagState = query_flagstate.getSingleResult();
+            return flagState;
+        } catch(NoResultException ex) {
+            // Throw user exception
+            String msg = "This code was not found in database. Check your setup";
+            throw new AssetDaoException(msg);
+        }
+    }
+
 }

@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Local;
@@ -18,8 +19,10 @@ import javax.ejb.Local;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
+import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
 import eu.europa.ec.fisheries.uvms.entity.model.NotesActivityCode;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 
 @Local
 public interface AssetDao {
@@ -71,22 +74,22 @@ public interface AssetDao {
 
     /**
      * Get asset by IMO
-     * 
+     *
      * @param value
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
      */
-	public AssetEntity getAssetByImo(String value) throws AssetDaoException;
+    public AssetEntity getAssetByImo(String value) throws AssetDaoException;
 
-	/**
-	 * Get asset by MMSI
-	 * 
-	 * @param value
-	 * @return
-	 * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
-	 */
-	public AssetEntity getAssetByMmsi(String value) throws AssetDaoException;
-    
+    /**
+     * Get asset by MMSI
+     *
+     * @param value
+     * @return
+     * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
+     */
+    public AssetEntity getAssetByMmsi(String value) throws AssetDaoException;
+
     /**
      * Update asset in database
      *
@@ -147,7 +150,6 @@ public interface AssetDao {
     public List<AssetHistory> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize, String sql, List<SearchKeyValue> searchFields, boolean isDynamic) throws AssetDaoException;
 
     /**
-     *
      * Get a page of the list with assets matching the search in sql. This
      * search is not Paginated
      *
@@ -162,12 +164,21 @@ public interface AssetDao {
     List<AssetHistory> getAssetListByAssetGuids(List<String> assetGuids) throws AssetDaoException;
 
     public AssetEntity getAssetByCfrExcludeArchived(String cfr) throws AssetDaoException;
+
     public AssetEntity getAssetByIrcsExcludeArchived(String ircs) throws AssetDaoException;
+
     public AssetEntity getAssetByImoExcludeArchived(String value) throws AssetDaoException;
+
     public AssetEntity getAssetByMmsiExcludeArchived(String value) throws AssetDaoException;
+
     List<NotesActivityCode> getNoteActivityCodes();
 
-    AssetEntity getAssetByIccat(String value)  throws AssetDaoException;
+    AssetEntity getAssetByIccat(String value) throws AssetDaoException;
+
     AssetEntity getAssetByUvi(String value) throws AssetDaoException;
+
     AssetEntity getAssetByGfcm(String value) throws AssetDaoException;
+
+    FlagState getAssetFlagStateByIdAndDate(String  assetGuid, Long date) throws AssetDaoException;
+
 }

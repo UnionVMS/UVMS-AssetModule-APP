@@ -31,6 +31,8 @@ import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 
+import java.util.Date;
+
 /**
  **/
 @Path("/history")
@@ -64,6 +66,21 @@ public class AssetHistoryResource {
             return ErrorHandler.getFault(e);
         }
     }
+
+    @GET
+    @Path("/assetflagstate")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public ResponseDto getFlagStateByIdAndDate(@QueryParam("assetGuid") String assetGuid, @QueryParam("date") Long date ) {
+        try {
+            LOG.info("Getting asset history list by asset GUID: {} Date: {}",assetGuid, date.toString());
+            return new ResponseDto(assetHistoryService.getFlagStateByIdAndDate(assetGuid, date ), ResponseCodeConstant.OK);
+        } catch (Exception e) {
+            LOG.error("[ Error when getting asset history list by asset ID. {}]",assetGuid);
+            return ErrorHandler.getFault(e);
+        }
+    }
+
 
     /**
      *

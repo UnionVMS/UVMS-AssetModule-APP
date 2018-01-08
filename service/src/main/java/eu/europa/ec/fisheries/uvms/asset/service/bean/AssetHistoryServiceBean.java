@@ -11,7 +11,10 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -19,6 +22,7 @@ import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
 import eu.europa.ec.fisheries.uvms.bean.AssetDomainModelBean;
+import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetHistoryId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
@@ -41,6 +45,8 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
     @EJB
     private AssetDomainModelBean assetDomainModel;
 
+
+
     final static Logger LOG = LoggerFactory.getLogger(AssetHistoryServiceBean.class);
 
 
@@ -62,5 +68,22 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
         Asset assetHistory = assetDomainModel.getAssetHistory(assetHistoryId);
         return assetHistory;
     }
+
+
+
+    @Override
+    public Map<String, Object > getFlagStateByIdAndDate(String assetGuid, Long date) throws AssetException {
+        Map<String, Object> ret = new HashMap<>();
+        FlagState flagState = assetDomainModel.getFlagStateByIdAndDate(assetGuid, date);
+        if(flagState != null) {
+            ret.put("code", flagState.getCode());
+            ret.put("name", flagState.getName());
+            ret.put("updatedBy", flagState.getUpdatedBy());
+            ret.put("updateTime", flagState.getUpdateTime());
+            ret.put("id", String.valueOf(flagState.getId()));
+        }
+        return ret;
+    }
+
 
 }
