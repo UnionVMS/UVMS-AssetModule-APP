@@ -14,15 +14,7 @@ package eu.europa.ec.fisheries.uvms.entity.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
@@ -32,7 +24,12 @@ import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
  * 
  */
 @Entity
-@NamedQuery(name=UvmsConstants.FLAG_STATE_LIST, query="SELECT f FROM FlagState f")
+@NamedQueries({
+		@NamedQuery(name=UvmsConstants.FLAG_STATE_LIST, query="SELECT f FROM FlagState f"),
+		@NamedQuery(name=UvmsConstants.FLAGSTATE_GET_BY_CODE, query="select f from FlagState f where f.code=:code")
+})
+
+
 public class FlagState implements Serializable {
 	private static final long serialVersionUID = 1L;
 
