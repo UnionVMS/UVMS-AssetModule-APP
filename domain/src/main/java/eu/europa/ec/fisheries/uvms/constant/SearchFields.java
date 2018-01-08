@@ -28,6 +28,7 @@ public enum SearchFields {
     HOMEPORT("portOfRegistration", SearchTables.ASSET_HIST, "homeport"),
     LICENSE("licenceType", SearchTables.ASSET_HIST, "license"),
     GUID("guid", SearchTables.ASSET, "guid"),
+    HIST_GUID("guid", SearchTables.ASSET_HIST, "histGuid"),
     GEAR_TYPE("gearFishingType", SearchTables.ASSET_HIST, "gearFishingType", SearchFieldType.NUMBER),
     MAX_LENGTH("lengthOverAll", SearchTables.ASSET_HIST, "maxLength", SearchFieldType.MAX_DECIMAL),
     MIN_LENGTH("lengthOverAll", SearchTables.ASSET_HIST, "minLength", SearchFieldType.MIN_DECIMAL),
