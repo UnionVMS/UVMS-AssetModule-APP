@@ -11,13 +11,11 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
@@ -36,19 +34,13 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 @Stateless
 public class AssetHistoryServiceBean implements AssetHistoryService {
 
+    final static Logger LOG = LoggerFactory.getLogger(AssetHistoryServiceBean.class);
     @EJB
     MessageProducer messageProducer;
-
     @EJB
     AssetQueueConsumer reciever;
-
     @EJB
     private AssetDomainModelBean assetDomainModel;
-
-
-
-    final static Logger LOG = LoggerFactory.getLogger(AssetHistoryServiceBean.class);
-
 
     @Override
     public List<Asset> getAssetHistoryListByAssetId(String assetId, Integer maxNbr) throws AssetException {
@@ -70,12 +62,16 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
     }
 
 
-
     @Override
-    public Map<String, Object > getFlagStateByIdAndDate(String assetGuid, Long date) throws AssetException {
+    public Map<String, Object> getFlagStateByIdAndDate(String assetGuid, Long date) throws AssetException {
+
         Map<String, Object> ret = new HashMap<>();
+        if (!verifyDate(date)) {
+            throw new AssetException("not a valid date");
+        }
+
         FlagState flagState = assetDomainModel.getFlagStateByIdAndDate(assetGuid, date);
-        if(flagState != null) {
+        if (flagState != null) {
             ret.put("code", flagState.getCode());
             ret.put("name", flagState.getName());
             ret.put("updatedBy", flagState.getUpdatedBy());
@@ -83,6 +79,40 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
             ret.put("id", String.valueOf(flagState.getId()));
         }
         return ret;
+    }
+
+
+    @Override
+    public Asset getAssetByCfrAndDate(String cfr, Long date) throws AssetException {
+
+        if (cfr == null || cfr.length() < 1 || cfr.length() > 12) {
+            throw new AssetException("not a valid CFR");
+        }
+        if (!verifyDate(date)) {
+            throw new AssetException("not a valid date");
+        }
+        Asset asset = assetDomainModel.getAssetByCfrAndDate(cfr, date);
+        return asset;
+    }
+
+
+
+
+    private boolean verifyDate(Long aLongDate) {
+        if (aLongDate == null) {
+            return false;
+        }
+        long longDate = aLongDate.longValue();
+        Date date = new Date(longDate);
+        Calendar cal = Calendar.getInstance();
+        cal.setLenient(false);
+        cal.setTime(date);
+        try {
+            cal.getTime();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 

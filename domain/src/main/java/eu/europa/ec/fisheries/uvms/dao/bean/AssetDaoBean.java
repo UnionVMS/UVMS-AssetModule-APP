@@ -367,4 +367,23 @@ public class AssetDaoBean extends Dao implements AssetDao {
         }
     }
 
+    @Override
+    public AssetEntity getAssetByCfrAndDate(String cfr, Long date) throws AssetDaoException {
+
+        Timestamp dateTs = new Timestamp(date);
+
+        String hql = "select ah.asset from AssetHistory ah where ah.assethist_cfr = :cfr and ah.dateOfEvent <= :dateTs order by ah.dateOfEvent DESC";
+        Query q = em.createQuery(hql);
+        q.setParameter("cfr", cfr);
+        q.setParameter("dateTs", dateTs);
+        q.setMaxResults(1);
+        try {
+            AssetEntity  assetEntity =  (AssetEntity) q.getSingleResult();
+            return assetEntity;
+        } catch(NoResultException ex) {
+            throw new AssetDaoException(ex.toString());
+        }
+    }
+
+
 }

@@ -181,4 +181,5 @@ public interface AssetDao {
 
     FlagState getAssetFlagStateByIdAndDate(String  assetGuid, Long date) throws AssetDaoException;
 
+    AssetEntity getAssetByCfrAndDate(String cfr, Long date) throws AssetDaoException;
 }

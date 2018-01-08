@@ -361,4 +361,14 @@ public class AssetDomainModelBean {
             throw e;
         }
     }
+
+    public Asset getAssetByCfrAndDate(String cfr, Long date) throws AssetModelException {
+        try {
+            AssetEntity assetEntity = assetDao.getAssetByCfrAndDate(cfr, date);
+            Asset asset = EntityToModelMapper.toAssetFromEntity(assetEntity);
+            return asset;
+        } catch (AssetDaoException e) {
+            throw new AssetModelException(e.toString());
+        }
+    }
 }
