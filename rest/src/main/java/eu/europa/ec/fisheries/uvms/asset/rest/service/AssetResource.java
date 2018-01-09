@@ -231,21 +231,5 @@ public class AssetResource {
     }
 
 
-    @GET
-    @Path("/assetFromCfrAndDate")
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    public ResponseDto getAssetFromCFrAndDateAsLong(@QueryParam("cfr") String cfr, @QueryParam("date") Long date ) {
-        try {
-            return new ResponseDto(assetHistoryService.getAssetByCfrAndDate(cfr, date), ResponseCodeConstant.OK);
-        } catch (Exception e) {
-            LOG.error("[ Error when getting asset {}{} ]from cfr and date", cfr, new Date(date).toString() );
-            return ErrorHandler.getFault(e);
-        }
-    }
-
-
-
-
 
 }

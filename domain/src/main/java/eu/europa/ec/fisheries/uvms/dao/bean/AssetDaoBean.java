@@ -14,6 +14,7 @@ package eu.europa.ec.fisheries.uvms.dao.bean;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +28,7 @@ import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
 import eu.europa.ec.fisheries.uvms.entity.model.NotesActivityCode;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +38,8 @@ import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.uvms.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.mapper.SearchFieldType;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
+
+import static eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType.INTERNAL_ID;
 
 /**
  **/
@@ -343,16 +347,23 @@ public class AssetDaoBean extends Dao implements AssetDao {
         }
     }
 
+    private Date lowerResolution(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.MILLISECOND, 999);
+        return cal.getTime();
+
+    }
 
     @Override
-    public FlagState getAssetFlagStateByIdAndDate(String assetGuid, Long date) throws AssetDaoException {
+    public FlagState getAssetFlagStateByIdAndDate(String assetGuid, Date date) throws AssetDaoException {
 
-        Timestamp eventDate = new Timestamp(date);
+        Date d = lowerResolution(date);
 
         String hql = "select ah.countryOfRegistration from AssetHistory ah where ah.asset.guid = :guid and ah.dateOfEvent <= :dateofevent order by ah.dateOfEvent DESC";
         Query q = em.createQuery(hql);
         q.setParameter("guid", assetGuid);
-        q.setParameter("dateofevent", eventDate);
+        q.setParameter("dateofevent", d);
         q.setMaxResults(1);
         try {
             String countryOfRegistration = (String) q.getSingleResult();
@@ -360,7 +371,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             query_flagstate.setParameter("code", countryOfRegistration);
             FlagState flagState = query_flagstate.getSingleResult();
             return flagState;
-        } catch(NoResultException ex) {
+        } catch (NoResultException ex) {
             // Throw user exception
             String msg = "This code was not found in database. Check your setup";
             throw new AssetDaoException(msg);
@@ -368,20 +379,54 @@ public class AssetDaoBean extends Dao implements AssetDao {
     }
 
     @Override
-    public AssetEntity getAssetByCfrAndDate(String cfr, Long date) throws AssetDaoException {
+    public AssetEntity getAssetFromAssetIdAndDate(AssetId assetId, Date date) throws AssetDaoException {
 
-        Timestamp dateTs = new Timestamp(date);
+        Date d = lowerResolution(date);
+        AssetIdType assetIdType = assetId.getType();
+        String keyval = assetId.getValue();
 
-        String hql = "select ah.asset from AssetHistory ah where ah.assethist_cfr = :cfr and ah.dateOfEvent <= :dateTs order by ah.dateOfEvent DESC";
-        Query q = em.createQuery(hql);
-        q.setParameter("cfr", cfr);
-        q.setParameter("dateTs", dateTs);
-        q.setMaxResults(1);
-        try {
-            AssetEntity  assetEntity =  (AssetEntity) q.getSingleResult();
-            return assetEntity;
-        } catch(NoResultException ex) {
-            throw new AssetDaoException(ex.toString());
+        String hql = null;
+        switch (assetIdType) {
+            case INTERNAL_ID:
+                break;
+            case CFR:
+                hql = "select ah.asset from AssetHistory ah where ah.cfr = :keyval and ah.dateOfEvent <= :date order by ah.dateOfEvent DESC";
+                break;
+            case IRCS:
+                break;
+            case IMO:
+                break;
+            case MMSI:
+                break;
+            case GUID:
+                break;
+            case ICCAT:
+                break;
+            case UVI:
+                break;
+            case GFCM:
+                break;
+        }
+        if(hql != null) {
+
+            Query q = em.createQuery(hql);
+            q.setParameter("keyval", keyval);
+            q.setParameter("date", d);
+            q.setMaxResults(1);
+            try {
+                List<AssetEntity> assetEntityList =  q.getResultList();
+                if(assetEntityList.size() > 0) {
+                    return assetEntityList.get(0);
+                }
+                else{
+                    throw new AssetDaoException("Nothing in resultset for query " + hql);
+                }
+            } catch (NoResultException ex) {
+                throw new AssetDaoException(ex.toString());
+            }
+        }
+        else{
+            throw new AssetDaoException("Could not create query check your code");
         }
     }
 

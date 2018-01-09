@@ -32,8 +32,8 @@ public interface AssetHistoryService {
 
     public Asset getAssetHistoryByAssetHistGuid(String assetHistId) throws AssetException;
 
-    Map<String, Object > getFlagStateByIdAndDate(String assetGuid, Long date) throws AssetException;
+    Map<String, Object > getFlagStateByIdAndDate(String assetGuid, Date date) throws AssetException;
 
-    Asset getAssetByCfrAndDate(String cfr, Long date) throws AssetException ;
+    Asset getAssetByIdAndDate(String type, String value, Date date) throws AssetException ;
 
     }

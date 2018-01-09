@@ -23,6 +23,7 @@ import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
 import eu.europa.ec.fisheries.uvms.entity.model.NotesActivityCode;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 
 @Local
 public interface AssetDao {
@@ -179,7 +180,8 @@ public interface AssetDao {
 
     AssetEntity getAssetByGfcm(String value) throws AssetDaoException;
 
-    FlagState getAssetFlagStateByIdAndDate(String  assetGuid, Long date) throws AssetDaoException;
+    FlagState getAssetFlagStateByIdAndDate(String  assetGuid, Date date) throws AssetDaoException;
 
-    AssetEntity getAssetByCfrAndDate(String cfr, Long date) throws AssetDaoException;
-}
+    AssetEntity getAssetFromAssetIdAndDate(AssetId assetId, Date date) throws AssetDaoException;
+
+    }

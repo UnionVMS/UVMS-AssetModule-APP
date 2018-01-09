@@ -25,12 +25,15 @@ import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseCodeConstant;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.asset.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 
+import java.net.URLDecoder;
 import java.util.Date;
 
 /**
@@ -71,15 +74,31 @@ public class AssetHistoryResource {
     @Path("/assetflagstate")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public ResponseDto getFlagStateByIdAndDate(@QueryParam("assetGuid") String assetGuid, @QueryParam("date") Long date ) {
+    public ResponseDto getFlagStateByIdAndDate(@QueryParam("assetGuid") String assetGuid, @QueryParam("date") String dateStr ) {
         try {
-            LOG.info("Getting asset history list by asset GUID: {} Date: {}",assetGuid, date.toString());
-            return new ResponseDto(assetHistoryService.getFlagStateByIdAndDate(assetGuid, date ), ResponseCodeConstant.OK);
+            LOG.info("Getting asset history list by asset GUID: {} Date: {}",assetGuid, dateStr);
+            return new ResponseDto(assetHistoryService.getFlagStateByIdAndDate(assetGuid, DateUtils.parseToUTCDate( dateStr, DateUtils.FORMAT) ), ResponseCodeConstant.OK);
         } catch (Exception e) {
             LOG.error("[ Error when getting asset history list by asset ID. {}]",assetGuid);
             return ErrorHandler.getFault(e);
         }
     }
+
+
+
+    @GET
+    @Path("/assetFromAssetIdAndDate")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public ResponseDto getAssetFromAssetIdAndDate(@QueryParam("type") String type,@QueryParam("value") String value,  @QueryParam("date") String dateStr ) {
+        try {
+            return new ResponseDto(assetHistoryService.getAssetByIdAndDate(type, value , DateUtils.parseToUTCDate(dateStr,DateUtils.FORMAT)), ResponseCodeConstant.OK);
+        } catch (Exception e) {
+            LOG.error("[ Error when getting asset {}{}{} ]from cfr and date", type, value, dateStr );
+            return ErrorHandler.getFault(e);
+        }
+    }
+
 
 
     /**

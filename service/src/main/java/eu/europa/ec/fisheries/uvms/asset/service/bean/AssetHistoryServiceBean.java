@@ -63,12 +63,9 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
 
 
     @Override
-    public Map<String, Object> getFlagStateByIdAndDate(String assetGuid, Long date) throws AssetException {
+    public Map<String, Object> getFlagStateByIdAndDate(String assetGuid, Date date) throws AssetException {
 
         Map<String, Object> ret = new HashMap<>();
-        if (!verifyDate(date)) {
-            throw new AssetException("not a valid date");
-        }
 
         FlagState flagState = assetDomainModel.getFlagStateByIdAndDate(assetGuid, date);
         if (flagState != null) {
@@ -83,36 +80,27 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
 
 
     @Override
-    public Asset getAssetByCfrAndDate(String cfr, Long date) throws AssetException {
+    public Asset getAssetByIdAndDate(String type, String value, Date date) throws AssetException {
 
-        if (cfr == null || cfr.length() < 1 || cfr.length() > 12) {
-            throw new AssetException("not a valid CFR");
+        if (type == null) {
+            throw new AssetException("not a valid type");
         }
-        if (!verifyDate(date)) {
+        AssetIdType assetType = AssetIdType.fromValue(type);
+        if (assetType == null) {
+            throw new AssetException("not a valid type " + type);
+        }
+        if (value == null) {
+            throw new AssetException("not a valid value");
+        }
+        if (date == null) {
             throw new AssetException("not a valid date");
         }
-        Asset asset = assetDomainModel.getAssetByCfrAndDate(cfr, date);
+
+        AssetId assetId = new AssetId();
+        assetId.setType(assetType);
+        assetId.setValue(value);
+        Asset asset = assetDomainModel.getAssetByIdAndDate(assetId, date);
         return asset;
-    }
-
-
-
-
-    private boolean verifyDate(Long aLongDate) {
-        if (aLongDate == null) {
-            return false;
-        }
-        long longDate = aLongDate.longValue();
-        Date date = new Date(longDate);
-        Calendar cal = Calendar.getInstance();
-        cal.setLenient(false);
-        cal.setTime(date);
-        try {
-            cal.getTime();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
     }
 
 
