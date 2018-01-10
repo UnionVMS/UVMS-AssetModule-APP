@@ -22,6 +22,8 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
+import eu.europa.ec.fisheries.uvms.asset.service.bean.*;
+import eu.europa.ec.fisheries.wsdl.asset.module.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,23 +34,6 @@ import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetEventBean;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetGroupEventBean;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetGroupListByAssetGuidEventBean;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetListByAssetGroupEventBean;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetListEventBean;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.PingEventBean;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.UpsertAssetMessageEventBean;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.UpsertFishingGearsMessageEventBean;
-import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.AssetListModuleRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.AssetModuleMethod;
-import eu.europa.ec.fisheries.wsdl.asset.module.AssetModuleRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetGroupListByAssetGuidRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.UpsertAssetModuleRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.UpsertFishingGearModuleRequest;
 
 @MessageDriven(mappedName = AssetConstants.QUEUE_ASSET_EVENT, activationConfig = {
     @ActivationConfigProperty(propertyName = "messagingType", propertyValue = AssetConstants.CONNECTION_TYPE),
@@ -81,6 +66,14 @@ public class MessageConsumerBean implements MessageListener {
 
     @EJB
     private UpsertFishingGearsMessageEventBean upsertFishingGearsMessageEventBean;
+
+    @EJB
+    private GetAssetFromAssetIdAndDateBean getAssetFromAssetIdAndDateBean;
+
+    @EJB
+    private GetFlagstateByIdAndDateBean getFlagStateByGuidAndDateBean;
+
+
 
     @EJB
     private PingEventBean pingEventBean;
@@ -139,6 +132,17 @@ public class MessageConsumerBean implements MessageListener {
                     AssetMessageEvent fishingGearMessageEvent = new AssetMessageEvent(textMessage, upsertFishingGearListModuleRequest.getFishingGear(), upsertFishingGearListModuleRequest.getUsername());
                     upsertFishingGearsMessageEventBean.upsertFishingGears(fishingGearMessageEvent);
                     break;
+                case GET_FLAGSTATE_BY_ID_AND_DATE:
+                    GetFlagStateByGuidAndDateRequest getFlagStateByGuidAndDate = JAXBMarshaller.unmarshallTextMessage(textMessage, GetFlagStateByGuidAndDateRequest.class);
+                    AssetMessageEvent getFlagStateByGuidAndDateRequestEvent = new AssetMessageEvent(textMessage, getFlagStateByGuidAndDate);
+                    getFlagStateByGuidAndDateBean.execute(getFlagStateByGuidAndDateRequestEvent);
+                    break;
+                case GET_ASSET_FROMASSETID_AND_DATE:
+                    GetAssetFromAssetIdAndDateRequest getAssetFromAssetIdAndDate = JAXBMarshaller.unmarshallTextMessage(textMessage, GetAssetFromAssetIdAndDateRequest.class);
+                    AssetMessageEvent getAssetFromAssetIdAndDateRequestEvent = new AssetMessageEvent(textMessage, getAssetFromAssetIdAndDate);
+                    getAssetFromAssetIdAndDateBean.execute(getAssetFromAssetIdAndDateRequestEvent);
+                    break;
+
                 default:
                     LOG.error("[ Not implemented method consumed: {} ]", method);
                     assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Method not implemented")));
