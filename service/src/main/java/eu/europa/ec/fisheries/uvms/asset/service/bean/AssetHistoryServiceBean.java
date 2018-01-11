@@ -20,6 +20,7 @@ import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
 import eu.europa.ec.fisheries.uvms.bean.AssetDomainModelBean;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
@@ -70,7 +71,7 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
             flagStateType.setName(flagState.getName());
             flagStateType.setId(flagState.getId());
             flagStateType.setUpdatedBy(flagState.getUpdatedBy());
-            flagStateType.setUpdateTime(flagState.getUpdateTime());
+            flagStateType.setUpdateTime(DateUtils.dateToString(flagState.getUpdateTime()));
             return flagStateType;
         }
         throw new AssetException("FlagSate not found. Check you setup");

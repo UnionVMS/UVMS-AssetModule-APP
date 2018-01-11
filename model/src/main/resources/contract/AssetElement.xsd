@@ -90,7 +90,7 @@
             <xsd:element name="code" type="xsd:string"/>
             <xsd:element name="name" type="xsd:string"/>
             <xsd:element name="updatedBy" type="xsd:string"/>
-            <xsd:element name="updateTime" type="xsd:date"/>
+            <xsd:element name="updateTime" type="xsd:string"/>
             <xsd:element name="id" type="xsd:long"/>
         </xsd:sequence>
     </xsd:complexType>
