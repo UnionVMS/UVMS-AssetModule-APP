@@ -85,6 +85,16 @@
         </xsd:sequence>
     </xsd:complexType>
 
+    <xsd:complexType name="FlagStateType">
+        <xsd:sequence>
+            <xsd:element name="code" type="xsd:string"/>
+            <xsd:element name="name" type="xsd:string"/>
+            <xsd:element name="updatedBy" type="xsd:string"/>
+            <xsd:element name="updateTime" type="xsd:date"/>
+            <xsd:element name="id" type="xsd:long"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
     <xsd:simpleType name="ContactSource">
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="INTERNAL" />
@@ -223,11 +233,19 @@
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
-    
+
     <xsd:element name="SingleAssetResponse">
         <xsd:complexType>
             <xsd:sequence>
                 <xsd:element name="asset" type="Asset"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="FlagStateResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="flagState" type="FlagStateType"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>

@@ -21,10 +21,7 @@ import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
 import eu.europa.ec.fisheries.uvms.bean.AssetDomainModelBean;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetHistoryId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,19 +60,20 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
 
 
     @Override
-    public Map<String, Object> getFlagStateByIdAndDate(String assetGuid, Date date) throws AssetException {
+    public FlagStateType getFlagStateByIdAndDate(String assetGuid, Date date) throws AssetException {
 
-        Map<String, Object> ret = new HashMap<>();
 
         FlagState flagState = assetDomainModel.getFlagStateByIdAndDate(assetGuid, date);
+        FlagStateType flagStateType = new FlagStateType();
         if (flagState != null) {
-            ret.put("code", flagState.getCode());
-            ret.put("name", flagState.getName());
-            ret.put("updatedBy", flagState.getUpdatedBy());
-            ret.put("updateTime", flagState.getUpdateTime());
-            ret.put("id", String.valueOf(flagState.getId()));
+            flagStateType.setCode(flagState.getCode());
+            flagStateType.setName(flagState.getName());
+            flagStateType.setId(flagState.getId());
+            flagStateType.setUpdatedBy(flagState.getUpdatedBy());
+            flagStateType.setUpdateTime(flagState.getUpdateTime());
+            return flagStateType;
         }
-        return ret;
+        throw new AssetException("FlagSate not found. Check you setup");
     }
 
 

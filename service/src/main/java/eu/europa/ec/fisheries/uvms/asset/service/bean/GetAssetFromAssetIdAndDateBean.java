@@ -3,7 +3,9 @@ package eu.europa.ec.fisheries.uvms.asset.service.bean;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
+import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
+import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetFromAssetIdAndDateRequest;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
@@ -40,19 +42,25 @@ public class GetAssetFromAssetIdAndDateBean {
 
 
         if (getAssetFromAssetIdAndDate == null) {
-
+            LOG.error("AssetMessageEvent does not contain a message");
+            return;
         }
-        if (getAssetFromAssetIdAndDate.getAssetId() == null) {
 
+        if (getAssetFromAssetIdAndDate.getAssetId() == null) {
+            LOG.error("AssetMessageEvent does not contain an assetId");
+            return;
         }
         if (getAssetFromAssetIdAndDate.getDate() == null) {
-
+            LOG.error("AssetMessageEvent does not contain a date");
+            return;
         }
         if (getAssetFromAssetIdAndDate.getAssetId().getType() == null) {
-
+            LOG.error("AssetMessageEvent assetId does not contain a valid asset id type");
+            return;
         }
         if (getAssetFromAssetIdAndDate.getAssetId().getValue() == null) {
-
+            LOG.error("AssetMessageEvent assetId does not contain a valid valuue");
+            return;
         }
 
 
@@ -62,13 +70,11 @@ public class GetAssetFromAssetIdAndDateBean {
         Date date = getAssetFromAssetIdAndDate.getDate();
         try {
             Asset response = service.getAssetByIdAndDate(typ, val, date);
-
-            // put it on rersponse queue
-
-            //messageProducer.sendModuleResponseMessage(event.getMessage(), AssetModuleResponseMapper.
+            messageProducer.sendModuleResponseMessage(event.getMessage(), AssetModuleResponseMapper.mapAssetModuleResponse(response));
 
         } catch (AssetException e) {
-            e.printStackTrace();
+            LOG.error("[ Error when getting assetGroupList from source. ] ");
+            assetErrorEvent.fire(new AssetMessageEvent(event.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting GetAssetFromAssetIdAndDate [ " + e.getMessage())));
         }
     }
 }

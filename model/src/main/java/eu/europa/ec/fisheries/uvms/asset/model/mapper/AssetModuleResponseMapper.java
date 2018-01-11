@@ -18,10 +18,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationExc
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import eu.europa.ec.fisheries.wsdl.asset.group.ListAssetGroupResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.*;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetFault;
-import eu.europa.ec.fisheries.wsdl.asset.types.FishingGear;
-import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,6 +101,13 @@ public class AssetModuleResponseMapper {
 
     public static String mapAssetModuleResponse(Asset asset) throws AssetModelMapperException {
         GetAssetModuleResponse response = createGetAssetModuleResponse(asset);
+        return JAXBMarshaller.marshallJaxBObjectToString(response);
+    }
+
+    public static String mapFlagStateModuleResponse(FlagStateType flagState) throws AssetModelMapperException {
+
+        FlagStateResponse response = new FlagStateResponse();
+        response.setFlagState(flagState);
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 
