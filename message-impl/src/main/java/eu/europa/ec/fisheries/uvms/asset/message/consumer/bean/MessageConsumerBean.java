@@ -67,13 +67,6 @@ public class MessageConsumerBean implements MessageListener {
     @EJB
     private UpsertFishingGearsMessageEventBean upsertFishingGearsMessageEventBean;
 
-    @EJB
-    private GetAssetFromAssetIdAndDateBean getAssetFromAssetIdAndDateBean;
-
-    @EJB
-    private GetFlagstateByIdAndDateBean getFlagStateByGuidAndDateBean;
-
-
 
     @EJB
     private PingEventBean pingEventBean;
@@ -131,16 +124,6 @@ public class MessageConsumerBean implements MessageListener {
                     UpsertFishingGearModuleRequest upsertFishingGearListModuleRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, UpsertFishingGearModuleRequest.class);
                     AssetMessageEvent fishingGearMessageEvent = new AssetMessageEvent(textMessage, upsertFishingGearListModuleRequest.getFishingGear(), upsertFishingGearListModuleRequest.getUsername());
                     upsertFishingGearsMessageEventBean.upsertFishingGears(fishingGearMessageEvent);
-                    break;
-                case GET_FLAGSTATE_BY_ID_AND_DATE:
-                    GetFlagStateByGuidAndDateRequest getFlagStateByGuidAndDate = JAXBMarshaller.unmarshallTextMessage(textMessage, GetFlagStateByGuidAndDateRequest.class);
-                    AssetMessageEvent getFlagStateByGuidAndDateRequestEvent = new AssetMessageEvent(textMessage, getFlagStateByGuidAndDate);
-                    getFlagStateByGuidAndDateBean.execute(getFlagStateByGuidAndDateRequestEvent);
-                    break;
-                case GET_ASSET_FROMASSETID_AND_DATE:
-                    GetAssetFromAssetIdAndDateRequest getAssetFromAssetIdAndDate = JAXBMarshaller.unmarshallTextMessage(textMessage, GetAssetFromAssetIdAndDateRequest.class);
-                    AssetMessageEvent getAssetFromAssetIdAndDateRequestEvent = new AssetMessageEvent(textMessage, getAssetFromAssetIdAndDate);
-                    getAssetFromAssetIdAndDateBean.execute(getAssetFromAssetIdAndDateRequestEvent);
                     break;
 
                 default:

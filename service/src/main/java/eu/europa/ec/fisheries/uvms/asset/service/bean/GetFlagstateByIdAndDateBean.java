@@ -7,6 +7,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetFlagStateByGuidAndDateRequest;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
@@ -61,11 +62,12 @@ public class GetFlagstateByIdAndDateBean {
 
 
         String guid = getFlagStateByGuidAndDateRequest.getAssetGuid();
-        Date date = getFlagStateByGuidAndDateRequest.getDate();
+        String dateStr = getFlagStateByGuidAndDateRequest.getDate();
+        Date date = DateUtils.parseToUTCDate(dateStr, DateUtils.FORMAT);
         try {
             FlagStateType response = service.getFlagStateByIdAndDate(guid, date);
 
-            // put it on rersponse queue
+            // put it on response queue
 
             messageProducer.sendModuleResponseMessage(event.getMessage(), AssetModuleResponseMapper.mapFlagStateModuleResponse(response));
 

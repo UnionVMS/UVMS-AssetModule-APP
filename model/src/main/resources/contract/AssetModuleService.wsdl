@@ -46,12 +46,21 @@
                         <xsd:extension base="v:AssetModuleRequest">
                             <xsd:sequence>
                                 <xsd:element name="assetGuid" type="xsd:string" minOccurs="1" maxOccurs="1" />
-                                <xsd:element name="date" type="xsd:date" minOccurs="1" maxOccurs="1"/>
+                                <xsd:element name="date" type="xsd:string" minOccurs="1" maxOccurs="1"/>
                             </xsd:sequence>
                         </xsd:extension>
                     </xsd:complexContent>
                 </xsd:complexType>
             </xsd:element>
+
+            <xsd:element name="FlagStateTypeResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="flagStateType" type="tv:FlagStateType"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
 
             <xsd:element name="GetAssetFromAssetIdAndDateRequest">
                 <xsd:complexType>
@@ -66,9 +75,6 @@
                 </xsd:complexType>
             </xsd:element>
 
-
-
-
             <xsd:element name="GetAssetListByAssetGroupsRequest">
                 <xsd:complexType>
                     <xsd:complexContent>
@@ -80,6 +86,9 @@
                     </xsd:complexContent>
                 </xsd:complexType>
             </xsd:element>
+
+
+
 
             <xsd:element name="AssetGroupListByUserRequest">
                 <xsd:complexType>
