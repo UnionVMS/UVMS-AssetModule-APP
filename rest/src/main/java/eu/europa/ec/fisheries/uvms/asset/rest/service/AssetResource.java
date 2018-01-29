@@ -22,6 +22,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseCodeConstant;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.asset.rest.error.ErrorHandler;
+import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
@@ -31,6 +32,7 @@ import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Path("/asset")
@@ -39,6 +41,9 @@ public class AssetResource {
 
     @EJB
     AssetService assetService;
+
+    @EJB
+    AssetHistoryService assetHistoryService;
 
     @Context
     private HttpServletRequest servletRequest;
@@ -224,5 +229,7 @@ public class AssetResource {
             return ErrorHandler.getFault(e);
         }
     }
+
+
 
 }

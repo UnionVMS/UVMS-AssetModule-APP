@@ -12,7 +12,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.message.event;
 
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetFromAssetIdAndDateRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetFlagStateByGuidAndDateRequest;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -33,6 +35,9 @@ public class AssetMessageEvent {
     private Asset asset;
     private String username;
     private FishingGear fishingGear;
+    private GetFlagStateByGuidAndDateRequest getFlagStateByGuidAndDateRequest;
+    private GetAssetFromAssetIdAndDateRequest getAssetFromAssetIdAndDateRequest;
+
 
     public AssetMessageEvent(TextMessage message) {
         this.message = message;
@@ -82,6 +87,16 @@ public class AssetMessageEvent {
 
     public TextMessage getMessage() {
         return message;
+    }
+
+    public AssetMessageEvent(TextMessage message, GetFlagStateByGuidAndDateRequest getFlagStateByGuidAndDateRequest){
+        this.message = message;
+        this.getFlagStateByGuidAndDateRequest = getFlagStateByGuidAndDateRequest;
+    }
+
+    public AssetMessageEvent(TextMessage message, GetAssetFromAssetIdAndDateRequest getAssetFromAssetIdAndDateRequest){
+        this.message = message;
+        this.getAssetFromAssetIdAndDateRequest = getAssetFromAssetIdAndDateRequest;
     }
 
     public void setMessage(TextMessage message) {
@@ -167,4 +182,20 @@ public class AssetMessageEvent {
         return HashCodeBuilder.reflectionHashCode(this);
     }
 
+
+    public GetFlagStateByGuidAndDateRequest getGetFlagStateByGuidAndDateRequest() {
+        return getFlagStateByGuidAndDateRequest;
+    }
+
+    public void setGetFlagStateByGuidAndDateRequest(GetFlagStateByGuidAndDateRequest getFlagStateByGuidAndDateRequest) {
+        this.getFlagStateByGuidAndDateRequest = getFlagStateByGuidAndDateRequest;
+    }
+
+    public GetAssetFromAssetIdAndDateRequest getGetAssetFromAssetIdAndDateRequest() {
+        return getAssetFromAssetIdAndDateRequest;
+    }
+
+    public void setGetAssetFromAssetIdAndDateRequest(GetAssetFromAssetIdAndDateRequest getAssetFromAssetIdAndDateRequest) {
+        this.getAssetFromAssetIdAndDateRequest = getAssetFromAssetIdAndDateRequest;
+    }
 }

@@ -17,9 +17,12 @@ import java.util.Map;
 
 import javax.ejb.Local;
 
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.FlagStateType;
 
 /**
  **/
@@ -30,5 +33,8 @@ public interface AssetHistoryService {
 
     public Asset getAssetHistoryByAssetHistGuid(String assetHistId) throws AssetException;
 
-    Map<String, Object > getFlagStateByIdAndDate(String assetGuid, Long date) throws AssetException;
-}
+    FlagStateType getFlagStateByIdAndDate(String assetGuid, Date date) throws AssetException;
+
+    Asset getAssetByIdAndDate(String type, String value, Date date) throws AssetException ;
+
+    }

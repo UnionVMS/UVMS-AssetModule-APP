@@ -342,7 +342,7 @@ public class AssetDomainModelBean {
     }
 
 
-    public FlagState getFlagStateByIdAndDate(String assetGuid, Long date) throws InputArgumentException, AssetDaoException {
+    public FlagState getFlagStateByIdAndDate(String assetGuid, Date date) throws InputArgumentException, AssetDaoException {
 
         if (assetGuid == null ) {
             throw new InputArgumentException(
@@ -359,6 +359,16 @@ public class AssetDomainModelBean {
         } catch (AssetDaoException e) {
             LOG.warn(e.toString(), e);
             throw e;
+        }
+    }
+
+    public Asset getAssetByIdAndDate(AssetId assetId, Date date) throws AssetModelException {
+        try {
+            AssetEntity assetEntity = assetDao.getAssetFromAssetIdAndDate(assetId, date);
+            Asset asset = EntityToModelMapper.toAssetFromEntity(assetEntity);
+            return asset;
+        } catch (AssetDaoException e) {
+            throw new AssetModelException(e.toString());
         }
     }
 }

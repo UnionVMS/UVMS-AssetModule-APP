@@ -29,6 +29,8 @@
                     <xsd:enumeration value="FISHING_GEAR_BY_ID"/>
                     <xsd:enumeration value="FISHING_GEAR_BY_EXT_ID"/>
                     <xsd:enumeration value="FISHING_GEAR_UPSERT"/>
+                    <xsd:enumeration value="GET_FLAGSTATE_BY_ID_AND_DATE"/>
+                    <xsd:enumeration value="GET_ASSET_FROMASSETID_AND_DATE"/>
                 </xsd:restriction>
             </xsd:simpleType>
             
@@ -37,6 +39,41 @@
                     <xsd:element name="method" type="v:AssetModuleMethod" minOccurs="1"/>
                 </xsd:sequence>
             </xsd:complexType>
+
+            <xsd:element name="GetFlagStateByGuidAndDateRequest">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest">
+                            <xsd:sequence>
+                                <xsd:element name="assetGuid" type="xsd:string" minOccurs="1" maxOccurs="1" />
+                                <xsd:element name="date" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="FlagStateTypeResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="flagStateType" type="tv:FlagStateType"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+
+            <xsd:element name="GetAssetFromAssetIdAndDateRequest">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest">
+                            <xsd:sequence>
+                                <xsd:element name="assetId" type="tv:AssetId" minOccurs="1" maxOccurs="1" />
+                                <xsd:element name="date" type="xsd:date" minOccurs="1" maxOccurs="1"/>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
 
             <xsd:element name="GetAssetListByAssetGroupsRequest">
                 <xsd:complexType>
@@ -49,6 +86,9 @@
                     </xsd:complexContent>
                 </xsd:complexType>
             </xsd:element>
+
+
+
 
             <xsd:element name="AssetGroupListByUserRequest">
                 <xsd:complexType>

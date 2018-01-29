@@ -20,6 +20,11 @@ import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 
@@ -114,5 +119,40 @@ public class AssetModuleRequestMapper {
         request.setFishingGear(fishingGear);
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
+
+    public static String createFlagStateRequest(String guid, Date date) throws AssetModelMarshallException {
+
+
+        //DateUtils
+        String dateStr = "";
+     //   try {
+            //dateStr = URLEncoder.encode(parseUTCDateToString(date), "UTF-8");
+            dateStr = parseUTCDateToString(date);
+      //  } catch (UnsupportedEncodingException e) {
+      //      throw new AssetModelMarshallException(e.toString());
+      //  }
+
+
+        GetFlagStateByGuidAndDateRequest request = new GetFlagStateByGuidAndDateRequest();
+        request.setAssetGuid(guid);
+        request.setDate(dateStr);
+        request.setMethod(AssetModuleMethod.GET_FLAGSTATE_BY_ID_AND_DATE);
+        return JAXBMarshaller.marshallJaxBObjectToString(request);
+    }
+
+    private static String dateToString(Date date) {
+        String dateString = null;
+        if (date != null) {
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+            dateString = df.format(date);
+        }
+
+        return dateString;
+    }
+
+    private static String parseUTCDateToString(Date date) {
+        return dateToString(date);
+    }
+
 
 }

@@ -11,22 +11,18 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
 import eu.europa.ec.fisheries.uvms.bean.AssetDomainModelBean;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetHistoryId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,19 +32,13 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 @Stateless
 public class AssetHistoryServiceBean implements AssetHistoryService {
 
+    final static Logger LOG = LoggerFactory.getLogger(AssetHistoryServiceBean.class);
     @EJB
     MessageProducer messageProducer;
-
     @EJB
     AssetQueueConsumer reciever;
-
     @EJB
     private AssetDomainModelBean assetDomainModel;
-
-
-
-    final static Logger LOG = LoggerFactory.getLogger(AssetHistoryServiceBean.class);
-
 
     @Override
     public List<Asset> getAssetHistoryListByAssetId(String assetId, Integer maxNbr) throws AssetException {
@@ -70,19 +60,46 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
     }
 
 
+    @Override
+    public FlagStateType getFlagStateByIdAndDate(String assetGuid, Date date) throws AssetException {
+
+
+        FlagState flagState = assetDomainModel.getFlagStateByIdAndDate(assetGuid, date);
+        FlagStateType flagStateType = new FlagStateType();
+        if (flagState != null) {
+            flagStateType.setCode(flagState.getCode());
+            flagStateType.setName(flagState.getName());
+            flagStateType.setId(flagState.getId());
+            flagStateType.setUpdatedBy(flagState.getUpdatedBy());
+            flagStateType.setUpdateTime(DateUtils.dateToString(flagState.getUpdateTime()));
+            return flagStateType;
+        }
+        throw new AssetException("FlagSate not found. Check you setup");
+    }
+
 
     @Override
-    public Map<String, Object > getFlagStateByIdAndDate(String assetGuid, Long date) throws AssetException {
-        Map<String, Object> ret = new HashMap<>();
-        FlagState flagState = assetDomainModel.getFlagStateByIdAndDate(assetGuid, date);
-        if(flagState != null) {
-            ret.put("code", flagState.getCode());
-            ret.put("name", flagState.getName());
-            ret.put("updatedBy", flagState.getUpdatedBy());
-            ret.put("updateTime", flagState.getUpdateTime());
-            ret.put("id", String.valueOf(flagState.getId()));
+    public Asset getAssetByIdAndDate(String type, String value, Date date) throws AssetException {
+
+        if (type == null) {
+            throw new AssetException("not a valid type");
         }
-        return ret;
+        AssetIdType assetType = AssetIdType.fromValue(type);
+        if (assetType == null) {
+            throw new AssetException("not a valid type " + type);
+        }
+        if (value == null) {
+            throw new AssetException("not a valid value");
+        }
+        if (date == null) {
+            throw new AssetException("not a valid date");
+        }
+
+        AssetId assetId = new AssetId();
+        assetId.setType(assetType);
+        assetId.setValue(value);
+        Asset asset = assetDomainModel.getAssetByIdAndDate(assetId, date);
+        return asset;
     }
 
 
