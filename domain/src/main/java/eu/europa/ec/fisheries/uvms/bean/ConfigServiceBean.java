@@ -25,7 +25,6 @@ import javax.persistence.PersistenceUnit;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.ConfigurationDto;
-import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
 import eu.europa.ec.fisheries.wsdl.asset.config.Config;
 import eu.europa.ec.fisheries.wsdl.asset.config.ConfigField;
@@ -62,7 +61,7 @@ public class ConfigServiceBean {
 			}
 
 			return parameters;
-		} catch (RuntimeException | ConfigServiceException e) {
+		} catch (Exception e) {
 			LOG.error("[ Error when getting asset parameters from local database. ] {}", e);
 			throw new AssetException("Couldn't get parameters");
 		}
