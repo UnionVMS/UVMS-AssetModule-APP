@@ -1,22 +1,65 @@
 package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
-import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.*;
-import eu.europa.ec.fisheries.uvms.entity.model.*;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
-import org.junit.Assert;
-
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.CarrierSourceEnum;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.ContactInfoSourceEnum;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.EventCodeEnum;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.HullMaterialEnum;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.NotesSourceEnum;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.PublicAidEnum;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.SegmentFUP;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.TypeOfExportEnum;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetProdOrg;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
+import eu.europa.ec.fisheries.uvms.entity.model.Carrier;
+import eu.europa.ec.fisheries.uvms.entity.model.ContactInfo;
+import eu.europa.ec.fisheries.uvms.entity.model.FishingGear;
+import eu.europa.ec.fisheries.uvms.entity.model.FishingGearType;
+import eu.europa.ec.fisheries.uvms.entity.model.Notes;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 
 public class AssetTestsHelper {
 
     private Random rnd = new Random();
 
+    public static AssetSE createBasicAsset() {
+        AssetSE asset = new AssetSE();
+        
+        asset.setName("Test asset");
+        asset.setActive(true);
+        asset.setExternalMarking("EXT123");
+        asset.setFlagStateCode("SWE");
+        
+        asset.setCommissionDate(LocalDateTime.now(ZoneOffset.UTC));
+        asset.setCfr("CRF" + getRandomIntegers(9));
+        asset.setIrcs("F" + getRandomIntegers(7));
+        asset.setImo(getRandomIntegers(7));
+        asset.setMmsi("MMSI" + getRandomIntegers(5));
+        asset.setIccat("ICCAT");
+        asset.setUvi("UVI");
+        asset.setGfcm("GFCM");
+        
+        asset.setGrossTonnage(BigDecimal.TEN);
+        asset.setPowerOfMainEngine(BigDecimal.TEN);
+        
+        asset.setOwnerName("Foo Bar");
+        asset.setOwnerAddress("Hacker st. 1337");
+        
+        asset.setProdOrgCode("ORGCODE");
+        asset.setProdOrgCode("ORGNAME");
+        
+        return asset;
+    }
 
     public AssetEntity createAssetHelper(AssetIdType assetIdType, String value, Date date) {
 
@@ -228,8 +271,12 @@ public class AssetTestsHelper {
         return notes;
     }
 
-
-
-
-
+    public static String getRandomIntegers(int length) {
+        return new Random()
+                .ints(0,9)
+                .mapToObj(i -> String.valueOf(i))
+                .limit(length)
+                .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+                .toString();
+    }
 }
