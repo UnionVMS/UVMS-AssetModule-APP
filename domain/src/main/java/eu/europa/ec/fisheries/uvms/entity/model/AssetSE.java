@@ -22,7 +22,6 @@ import static eu.europa.ec.fisheries.uvms.entity.model.AssetSE.*;
 @Table(name = "AssetSE")
 @NamedQueries({
           @NamedQuery(name = ASSET_FIND_ALL, query = "SELECT v FROM AssetSE v"),
-//        @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_ID, query = "SELECT v FROM AssetSE v WHERE v.id = :id"),
           @NamedQuery(name = ASSET_FIND_BY_CFR, query = "SELECT v FROM AssetSE v WHERE v.cfr = :cfr"),
           @NamedQuery(name = ASSET_FIND_BY_IRCS, query = "SELECT v FROM AssetSE v WHERE v.ircs = :ircs"),
           @NamedQuery(name = ASSET_FIND_BY_IMO, query = "SELECT v FROM AssetSE v WHERE v.imo = :imo"),
@@ -30,12 +29,8 @@ import static eu.europa.ec.fisheries.uvms.entity.model.AssetSE.*;
           @NamedQuery(name = ASSET_FIND_BY_ICCAT, query = "SELECT v FROM AssetSE v WHERE v.iccat = :iccat"),
           @NamedQuery(name = ASSET_FIND_BY_UVI, query = "SELECT v FROM AssetSE v WHERE v.uvi = :uvi"),
           @NamedQuery(name = ASSET_FIND_BY_GFCM, query = "SELECT v FROM AssetSE v WHERE v.gfcm = :gfcm"),
-//        @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_CFR_EXCLUDE_ARCHIVED, query = "SELECT v FROM AssetSE v WHERE v.cfr = :cfr AND v.carrier.active = true"),
-//        @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_IRCS_EXCLUDE_ARCHIVED, query = "SELECT v FROM AssetSE v WHERE v.ircs = :ircs AND v.carrier.active = true"),
-//        @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_IMO_EXCLUDE_ARCHIVED, query = "SELECT v FROM AssetSE v WHERE v.imo = :imo AND v.carrier.active = true"),
-//        @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_MMSI_EXCLUDE_ARCHIVED, query = "SELECT v FROM AssetSE v WHERE v.mmsi = :mmsi AND v.carrier.active = true"),
-//        @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_ICCAT_EXCLUDE_ARCHIVED, query = "SELECT v FROM AssetSE v WHERE v.iccat = :iccat AND v.carrier.active = true"),
-//        @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_GFCM_EXCLUDE_ARCHIVED, query = "SELECT v FROM AssetSE v WHERE v.gfcm = :gfcm AND v.carrier.active = true")
+          @NamedQuery(name = ASSET_FIND_BY_IDS, query = "SELECT v FROM AssetSE v WHERE v.id in :idList"),
+
 })
 
 public class AssetSE implements Serializable{
@@ -48,12 +43,12 @@ public class AssetSE implements Serializable{
     public static final String ASSET_FIND_BY_UVI = "Asset.findByUvi";
     public static final String ASSET_FIND_BY_GFCM = "Asset.findByGfcm";
     public static final String ASSET_FIND_ALL = "Asset.findAll";
+    public static final String ASSET_FIND_BY_IDS = "Asset.findByIds";
 
 
     /*
     public static final String ASSET_FIND_BY_ID = "Asset.findById";
     public static final String ASSET_FIND_BY_GUID = "Asset.findByGuid";
-    public static final String ASSETHISTORY_FIND_BY_GUIDS = "Asset.findByGuids";
 
     public static final String ASSETHISTORY_FIND_BY_GUID = "Assethistory.findByGuid";
 

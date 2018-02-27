@@ -31,4 +31,40 @@ public class UvmsConstants {
 
     public static final String FLAGSTATE_GET_BY_CODE = "FlagState.getByCode";
     public static final String ASSETHISTORY_FIND_BY_GUID_AND_DATE = "Assethistory.findByGuidAndDate";
+
+
+
+
+
+
+    public static final String ASSET_FIND_BY_ID = "Asset.findById";
+    public static final String ASSET_FIND_BY_GUID = "Asset.findByGuid";
+
+    public static final String ASSETHISTORY_FIND_BY_GUID = "Assethistory.findByGuid";
+
+    public static final String GROUP_ASSET_FIND_ALL = "AssetGroup.findAll";
+    public static final String GROUP_ASSET_BY_USER = "AssetGroup.findByUser";
+    public static final String GROUP_ASSET_BY_GUID = "AssetGroup.findByGuid";
+    public static final String GROUP_ASSET_BY_GUID_LIST = "AssetGroup.findByGuidList";
+
+    public static final String LICENSE_TYPE_LIST = "LicenseType.findAll";
+    public static final String FLAG_STATE_LIST = "FlagState.findAll";
+    public static final String SETTING_LIST = "Setting.findAll";
+    public static final String SETTING_BY_FIELD = "Setting.findByField";
+
+    public static final String QUEUE_DOMAIN_MODEL = "jms/queue/UVMSAssetModel";
+    public static final String QUEUE_NAME_DOMAIN_MODEL = "UVMSAssetModel";
+
+    public static final String VESSEL_CONNECTION_FACTORY = "java:jboss/DefaultJMSConnectionFactory";
+    public static final String CONNECTION_TYPE = "javax.jms.MessageListener";
+    public static final String DESTINATION_TYPE_QUEUE = "javax.jms.Queue";
+    public static final String CONNECTION_FACTORY = "ConnectionFactory";
+
+    public static final String ASSET_FIND_BY_CFR_EXCLUDE_ARCHIVED = "Asset.findByCfrExcludeArchived";
+    public static final String ASSET_FIND_BY_IRCS_EXCLUDE_ARCHIVED = "Asset.findByIrcsExcludeArchived";
+    public static final String ASSET_FIND_BY_IMO_EXCLUDE_ARCHIVED = "Asset.findByImoExcludeArchived";
+    public static final String ASSET_FIND_BY_MMSI_EXCLUDE_ARCHIVED = "Asset.findByMMSIExcludeArchived";
+
+
+
 }

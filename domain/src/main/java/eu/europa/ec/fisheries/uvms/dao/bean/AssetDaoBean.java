@@ -50,6 +50,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
 
     @Override
     public AssetEntity createAsset(AssetEntity asset) throws AssetDaoException {
+        /*
         try {
             em.persist(asset);
             return asset;
@@ -57,6 +58,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             LOG.error("[ Error when creating asset. ] ");
             throw new AssetDaoException("[ Error when creating asset ] " + e.getMessage());
         }
+        */
     }
 
     @Override

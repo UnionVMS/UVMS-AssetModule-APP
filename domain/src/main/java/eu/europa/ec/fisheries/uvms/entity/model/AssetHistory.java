@@ -40,8 +40,8 @@ import eu.europa.ec.fisheries.uvms.entity.asset.types.TypeOfExportEnum;
 @Entity
 @Table(name = "Assethistory")
 @NamedQueries({
-    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_GUID, query = "SELECT v FROM AssetHistory v WHERE v.guid = :guid"),
-    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_GUIDS, query = " SELECT DISTINCT vh FROM AssetHistory vh  INNER JOIN FETCH vh.asset v INNER JOIN FETCH v.carrier c WHERE c.active = '1' AND vh.active = '1' AND v.guid  IN :guids")
+//    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_GUID, query = "SELECT v FROM AssetHistory v WHERE v.guid = :guid"),
+//    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_GUIDS, query = " SELECT DISTINCT vh FROM AssetHistory vh  INNER JOIN FETCH vh.asset v INNER JOIN FETCH v.carrier c WHERE c.active = '1' AND vh.active = '1' AND v.guid  IN :guids")
 })
 
 public class AssetHistory implements Serializable {

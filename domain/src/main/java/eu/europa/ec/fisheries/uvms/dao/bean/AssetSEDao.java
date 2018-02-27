@@ -6,6 +6,7 @@ import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
 import eu.europa.ec.fisheries.uvms.entity.model.NotesActivityCode;
 import eu.europa.ec.fisheries.uvms.mapper.SearchFieldType;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 
@@ -15,9 +16,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -239,10 +238,10 @@ public class AssetSEDao {
         }
     }
 
-    public  Date asDate(LocalDateTime localDate) {
-        ZonedDateTime zdt = localDate.atZone(ZoneId.systemDefault());
-        Date output = Date.from(zdt.toInstant());
-        return output;
+    private  Date asDate(LocalDateTime localDate) {
+        Instant instant = localDate.toInstant(ZoneOffset.UTC);
+        Date date = Date.from(instant);
+        return date;
     }
 
     public AssetSE getAssetAtDate(AssetSE asset, LocalDateTime theDate ) throws AssetDaoException {
@@ -257,15 +256,26 @@ public class AssetSEDao {
         }
     }
 
+    public List<AssetSE> getAssetListByAssetGuids(List<UUID> idList) throws AssetDaoException {
+        try {
+            TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_BY_IDS, AssetSE.class);
+            query.setParameter("idList", idList);
+            return query.getResultList();
+        } catch (IllegalArgumentException e) {
+            throw new AssetDaoException("[ get all asset ] " + e.getMessage());
+        }
+    }
 
 
-    public List<AssetSE> getAssetListByAssetGuids(List<String> assetGuids) throws AssetDaoException { throw new IllegalStateException("Not implemented yet!");}
+    public List<NotesActivityCode> getNoteActivityCodes() {
+        throw new IllegalStateException("Not implemented yet!");
+    }
 
-    public AssetSE getAssetByCfrExcludeArchived(String cfr) throws AssetDaoException { throw new IllegalStateException("Not implemented yet!");}
+    public FlagState getAssetFlagStateByIdAndDate(String  assetGuid, Date date) throws AssetDaoException {
+        throw new IllegalStateException("Not implemented yet!");
+    }
 
-    public List<NotesActivityCode> getNoteActivityCodes() { throw new IllegalStateException("Not implemented yet!");}
-
-    public FlagState getAssetFlagStateByIdAndDate(String  assetGuid, Date date) throws AssetDaoException { throw new IllegalStateException("Not implemented yet!");}
-
-    //public AssetSE getAssetFromAssetIdAndDate(AssetId assetId, Date date) throws AssetDaoException { throw new IllegalStateException("Not implemented yet!");}
+    public AssetSE getAssetFromAssetIdAndDate(AssetId assetId, Date date) throws AssetDaoException {
+        throw new IllegalStateException("Not implemented yet!");
+    }
 }
