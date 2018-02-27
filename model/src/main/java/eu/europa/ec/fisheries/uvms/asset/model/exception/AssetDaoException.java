@@ -10,10 +10,27 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-public class AssetDaoException extends AssetModelException {
+public class AssetDaoException extends Exception {
     private static final long serialVersionUID = 2869522947805820298L;
+
+
+    public AssetDaoException() {
+        super();
+    }
 
     public AssetDaoException(String message) {
         super(message);
+    }
+
+    public AssetDaoException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public AssetDaoException(Throwable cause) {
+        super(cause);
+    }
+
+    protected AssetDaoException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

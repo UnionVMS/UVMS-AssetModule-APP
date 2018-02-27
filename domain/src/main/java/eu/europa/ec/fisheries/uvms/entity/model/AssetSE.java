@@ -15,10 +15,73 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static eu.europa.ec.fisheries.uvms.entity.model.AssetSE.*;
+
 @Audited
 @Entity
 @Table(name = "AssetSE")
+@NamedQueries({
+          @NamedQuery(name = ASSET_FIND_ALL, query = "SELECT v FROM AssetSE v"),
+//        @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_ID, query = "SELECT v FROM AssetSE v WHERE v.id = :id"),
+          @NamedQuery(name = ASSET_FIND_BY_CFR, query = "SELECT v FROM AssetSE v WHERE v.cfr = :cfr"),
+          @NamedQuery(name = ASSET_FIND_BY_IRCS, query = "SELECT v FROM AssetSE v WHERE v.ircs = :ircs"),
+          @NamedQuery(name = ASSET_FIND_BY_IMO, query = "SELECT v FROM AssetSE v WHERE v.imo = :imo"),
+          @NamedQuery(name = ASSET_FIND_BY_MMSI, query = "SELECT v FROM AssetSE v WHERE v.mmsi = :mmsi"),
+          @NamedQuery(name = ASSET_FIND_BY_ICCAT, query = "SELECT v FROM AssetSE v WHERE v.iccat = :iccat"),
+          @NamedQuery(name = ASSET_FIND_BY_UVI, query = "SELECT v FROM AssetSE v WHERE v.uvi = :uvi"),
+          @NamedQuery(name = ASSET_FIND_BY_GFCM, query = "SELECT v FROM AssetSE v WHERE v.gfcm = :gfcm"),
+//        @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_CFR_EXCLUDE_ARCHIVED, query = "SELECT v FROM AssetSE v WHERE v.cfr = :cfr AND v.carrier.active = true"),
+//        @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_IRCS_EXCLUDE_ARCHIVED, query = "SELECT v FROM AssetSE v WHERE v.ircs = :ircs AND v.carrier.active = true"),
+//        @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_IMO_EXCLUDE_ARCHIVED, query = "SELECT v FROM AssetSE v WHERE v.imo = :imo AND v.carrier.active = true"),
+//        @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_MMSI_EXCLUDE_ARCHIVED, query = "SELECT v FROM AssetSE v WHERE v.mmsi = :mmsi AND v.carrier.active = true"),
+//        @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_ICCAT_EXCLUDE_ARCHIVED, query = "SELECT v FROM AssetSE v WHERE v.iccat = :iccat AND v.carrier.active = true"),
+//        @NamedQuery(name = UvmsConstants.ASSET_FIND_BY_GFCM_EXCLUDE_ARCHIVED, query = "SELECT v FROM AssetSE v WHERE v.gfcm = :gfcm AND v.carrier.active = true")
+})
+
 public class AssetSE implements Serializable{
+
+    public static final String ASSET_FIND_BY_CFR = "Asset.findByCfr";
+    public static final String ASSET_FIND_BY_IRCS = "Asset.findByIrcs";
+    public static final String ASSET_FIND_BY_IMO = "Asset.findByImo";
+    public static final String ASSET_FIND_BY_MMSI = "Asset.findByMMSI";
+    public static final String ASSET_FIND_BY_ICCAT = "Asset.findByIccat";
+    public static final String ASSET_FIND_BY_UVI = "Asset.findByUvi";
+    public static final String ASSET_FIND_BY_GFCM = "Asset.findByGfcm";
+    public static final String ASSET_FIND_ALL = "Asset.findAll";
+
+
+    /*
+    public static final String ASSET_FIND_BY_ID = "Asset.findById";
+    public static final String ASSET_FIND_BY_GUID = "Asset.findByGuid";
+    public static final String ASSETHISTORY_FIND_BY_GUIDS = "Asset.findByGuids";
+
+    public static final String ASSETHISTORY_FIND_BY_GUID = "Assethistory.findByGuid";
+
+    public static final String GROUP_ASSET_FIND_ALL = "AssetGroup.findAll";
+    public static final String GROUP_ASSET_BY_USER = "AssetGroup.findByUser";
+    public static final String GROUP_ASSET_BY_GUID = "AssetGroup.findByGuid";
+    public static final String GROUP_ASSET_BY_GUID_LIST = "AssetGroup.findByGuidList";
+
+    public static final String LICENSE_TYPE_LIST = "LicenseType.findAll";
+    public static final String FLAG_STATE_LIST = "FlagState.findAll";
+    public static final String SETTING_LIST = "Setting.findAll";
+    public static final String SETTING_BY_FIELD = "Setting.findByField";
+
+    public static final String QUEUE_DOMAIN_MODEL = "jms/queue/UVMSAssetModel";
+    public static final String QUEUE_NAME_DOMAIN_MODEL = "UVMSAssetModel";
+
+    public static final String VESSEL_CONNECTION_FACTORY = "java:jboss/DefaultJMSConnectionFactory";
+    public static final String CONNECTION_TYPE = "javax.jms.MessageListener";
+    public static final String DESTINATION_TYPE_QUEUE = "javax.jms.Queue";
+    public static final String CONNECTION_FACTORY = "ConnectionFactory";
+
+    public static final String ASSET_FIND_BY_CFR_EXCLUDE_ARCHIVED = "Asset.findByCfrExcludeArchived";
+    public static final String ASSET_FIND_BY_IRCS_EXCLUDE_ARCHIVED = "Asset.findByIrcsExcludeArchived";
+    public static final String ASSET_FIND_BY_IMO_EXCLUDE_ARCHIVED = "Asset.findByImoExcludeArchived";
+    public static final String ASSET_FIND_BY_MMSI_EXCLUDE_ARCHIVED = "Asset.findByMMSIExcludeArchived";
+    */
+
+
 
     private static final long serialVersionUID = -320627625723663100L;
 
