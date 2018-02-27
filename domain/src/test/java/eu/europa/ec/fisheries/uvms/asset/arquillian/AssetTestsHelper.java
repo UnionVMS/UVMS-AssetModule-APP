@@ -45,9 +45,9 @@ public class AssetTestsHelper {
         asset.setIrcs("F" + getRandomIntegers(7));
         asset.setImo(getRandomIntegers(7));
         asset.setMmsi("MMSI" + getRandomIntegers(5));
-        asset.setIccat("ICCAT");
-        asset.setUvi("UVI");
-        asset.setGfcm("GFCM");
+        asset.setIccat("ICCAT" + getRandomIntegers(20));
+        asset.setUvi("UVI" + getRandomIntegers(20));
+        asset.setGfcm("GFCM" + getRandomIntegers(20));
         
         asset.setGrossTonnage(BigDecimal.TEN);
         asset.setPowerOfMainEngine(BigDecimal.TEN);

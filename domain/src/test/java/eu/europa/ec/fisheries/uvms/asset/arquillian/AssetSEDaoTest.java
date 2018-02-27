@@ -12,7 +12,9 @@ package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import java.util.UUID;
 import javax.inject.Inject;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -77,6 +79,14 @@ public class AssetSEDaoTest extends TransactionalTests {
     
     @Test
     @OperateOnDeployment("normal")
+    public void getAssetByCfrTestNonExistingCrf() throws AssetDaoException {
+        String randomCrf = UUID.randomUUID().toString();
+        AssetSE fetchedAsset = assetDao.getAssetByCfr(randomCrf);
+        assertThat(fetchedAsset, is(nullValue()));
+    }
+    
+    @Test
+    @OperateOnDeployment("normal")
     public void getAssetByIrcsTest() throws AssetDaoException {
         AssetSE asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
@@ -123,11 +133,39 @@ public class AssetSEDaoTest extends TransactionalTests {
         AssetSE asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
         
-        AssetSE fetchedAsset = assetDao.getAssetByMmsi(asset.getIccat());
+        AssetSE fetchedAsset = assetDao.getAssetByIccat(asset.getIccat());
 
         assertThat(fetchedAsset.getId(), is(asset.getId()));
         assertThat(fetchedAsset.getName(), is(asset.getName()));
         assertThat(fetchedAsset.getIccat(), is(asset.getIccat()));
+        assertThat(fetchedAsset.getActive(), is(asset.getActive()));
+    }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetByUviTest() throws AssetDaoException {
+        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        asset = assetDao.createAsset(asset);
+        
+        AssetSE fetchedAsset = assetDao.getAssetByUvi(asset.getUvi());
+
+        assertThat(fetchedAsset.getId(), is(asset.getId()));
+        assertThat(fetchedAsset.getName(), is(asset.getName()));
+        assertThat(fetchedAsset.getUvi(), is(asset.getUvi()));
+        assertThat(fetchedAsset.getActive(), is(asset.getActive()));
+    }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetByGfcmTest() throws AssetDaoException {
+        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        asset = assetDao.createAsset(asset);
+        
+        AssetSE fetchedAsset = assetDao.getAssetByGfcm(asset.getGfcm());
+
+        assertThat(fetchedAsset.getId(), is(asset.getId()));
+        assertThat(fetchedAsset.getName(), is(asset.getName()));
+        assertThat(fetchedAsset.getGfcm(), is(asset.getGfcm()));
         assertThat(fetchedAsset.getActive(), is(asset.getActive()));
     }
     

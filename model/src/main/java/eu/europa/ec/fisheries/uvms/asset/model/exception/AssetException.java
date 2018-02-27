@@ -14,7 +14,22 @@ package eu.europa.ec.fisheries.uvms.asset.model.exception;
 public class AssetException extends Exception {
 	private static final long serialVersionUID = 1L;
 
+    public AssetException() {
+        super();
+    }
 	public AssetException(String message) {
 		super(message);
 	}
+	public AssetException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public AssetException(Throwable cause) {
+        super(cause);
+    }
+
+    protected AssetException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
+	
 }
