@@ -7,6 +7,7 @@ import eu.europa.ec.fisheries.uvms.entity.model.NotesActivityCode;
 import eu.europa.ec.fisheries.uvms.mapper.SearchFieldType;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 
@@ -21,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import static eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType.INTERNAL_ID;
 
 
 @Stateless
@@ -184,9 +187,9 @@ public class AssetSEDao {
     }
 
 
-    public Long getAssetCount(String countSql, List<SearchKeyValue> searchFields) throws AssetDaoException {
+    private <T> TypedQuery<T>  createQuery(String theSQL, List<SearchKeyValue> searchFields, Class<T> resultClass){
 
-        TypedQuery<Long> query = em.createQuery(countSql, Long.class);
+        TypedQuery<T> query = em.createQuery(theSQL, resultClass);
 
         for (SearchKeyValue field : searchFields) {
             if (useLike(field)) {
@@ -213,6 +216,14 @@ public class AssetSEDao {
             }
         }
 
+        return query;
+    }
+
+
+
+    public Long getAssetCount(String countSql, List<SearchKeyValue> searchFields) throws AssetDaoException {
+
+        TypedQuery<Long> query = createQuery(countSql, searchFields, Long.class);
         try {
             return query.getSingleResult();
         }catch(Exception e){
@@ -266,16 +277,76 @@ public class AssetSEDao {
         }
     }
 
+    private String assembleQueryString(AssetId assetId) throws AssetDaoException {
 
+        AssetIdType assetIdType = assetId.getType();
+        String hql = "select ah.asset from AssetSE ah where %s = :keyval ";
+        switch (assetIdType) {
+            case INTERNAL_ID:
+                break;
+            case CFR:
+                hql = String.format(hql, "ah.cfr");
+                break;
+            case IRCS:
+                hql = String.format(hql, "ah.ircs");
+                break;
+            case IMO:
+                hql = String.format(hql, "ah.imo");
+                break;
+            case MMSI:
+                hql = String.format(hql, "ah.mmsi");
+                break;
+            case GUID:
+                hql = String.format(hql, "ah.guid");
+                break;
+            case ICCAT:
+                hql = String.format(hql, "ah.iccat");
+                break;
+            case UVI:
+                hql = String.format(hql, "ah.uvi");
+                break;
+            case GFCM:
+                hql = String.format(hql, "ah.gfcm");
+                break;
+            default:
+                throw new AssetDaoException("Could not create query. Check your code AssetIdType is invalid");
+        }
+        return hql;
+     }
+
+    public AssetSE getAssetFromAssetId(AssetId assetId) throws AssetDaoException {
+
+        String keyval = assetId.getValue();
+        String hql = assembleQueryString(assetId);
+
+        TypedQuery<AssetSE> query = em.createQuery(hql,AssetSE.class);
+        query.setParameter("keyval", keyval);
+        try {
+            AssetSE asset = query.getSingleResult();
+            return asset;
+        } catch (NoResultException e) {
+            return null;
+        } catch (Exception e) {
+            throw new AssetDaoException(e.toString(), e);
+        }
+    }
+
+    public AssetSE getAssetFromAssetIdAtDate(AssetId assetId, LocalDateTime date) throws AssetDaoException {
+
+        AssetSE asset = getAssetFromAssetId(assetId);
+        if(asset != null) {
+            return getAssetAtDate(asset, date);
+        }else{
+            throw new AssetDaoException("Internal error");
+        }
+
+    }
+    
+    // TODO should these be moved to appropriate dao:s
     public List<NotesActivityCode> getNoteActivityCodes() {
         throw new IllegalStateException("Not implemented yet!");
     }
 
-    public FlagState getAssetFlagStateByIdAndDate(String  assetGuid, Date date) throws AssetDaoException {
-        throw new IllegalStateException("Not implemented yet!");
-    }
 
-    public AssetSE getAssetFromAssetIdAndDate(AssetId assetId, Date date) throws AssetDaoException {
-        throw new IllegalStateException("Not implemented yet!");
-    }
+
 }
