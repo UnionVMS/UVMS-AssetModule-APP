@@ -56,7 +56,7 @@ public class AssetTestsHelper {
         asset.setOwnerAddress("Hacker st. 1337");
         
         asset.setProdOrgCode("ORGCODE");
-        asset.setProdOrgCode("ORGNAME");
+        asset.setProdOrgName("ORGNAME");
         
         return asset;
     }

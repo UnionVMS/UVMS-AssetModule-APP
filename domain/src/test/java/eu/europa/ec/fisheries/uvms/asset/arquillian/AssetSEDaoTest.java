@@ -310,14 +310,14 @@ public class AssetSEDaoTest extends TransactionalTests {
         AssetSE asset1 = AssetTestsHelper.createBasicAsset();
         asset1 = assetDao.createAsset(asset1);
         String firstName = asset1.getName();
-        LocalDateTime firstDate = LocalDateTime.now(ZoneOffset.UTC);
         commit();
+        LocalDateTime firstDate = LocalDateTime.now(ZoneOffset.UTC);
 
         String newName = "NewName";
         asset1.setName(newName);
         AssetSE asset2 = assetDao.updateAsset(asset1);
-        LocalDateTime secondDate = LocalDateTime.now(ZoneOffset.UTC);
         commit();
+        LocalDateTime secondDate = LocalDateTime.now(ZoneOffset.UTC);
 
         AssetSE assetAtFirstDate = assetDao.getAssetAtDate(asset2, firstDate);
         assertThat(assetAtFirstDate.getName(), is(firstName));

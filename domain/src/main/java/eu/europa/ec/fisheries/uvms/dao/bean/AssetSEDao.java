@@ -341,7 +341,7 @@ public class AssetSEDao {
         }
 
     }
-    
+
     // TODO should these be moved to appropriate dao:s
     public List<NotesActivityCode> getNoteActivityCodes() {
         throw new IllegalStateException("Not implemented yet!");
