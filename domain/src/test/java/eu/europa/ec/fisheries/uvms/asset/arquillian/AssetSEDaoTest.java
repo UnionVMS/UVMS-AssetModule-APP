@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertEquals;
@@ -329,6 +330,29 @@ public class AssetSEDaoTest extends TransactionalTests {
             cleanUpDB(asset1);
         }
     }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void verifyAssetHistoryUpdatesCorrectlyTest() throws Exception {
+
+        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        asset = assetDao.createAsset(asset);
+        commit();
+        assertThat(asset.getHistoryId(), is(notNullValue()));
+
+
+        String newName = "UpdatedName";
+        asset.setName(newName);
+        AssetSE updatedAsset = assetDao.updateAsset(asset);
+        commit();
+
+        assertThat(updatedAsset.getHistoryId(), is(notNullValue()));
+        assertThat(asset.getHistoryId(), is(not(updatedAsset.getHistoryId())));
+
+    }
+
+
+
 
     private void commit() throws Exception {
         userTransaction.commit();

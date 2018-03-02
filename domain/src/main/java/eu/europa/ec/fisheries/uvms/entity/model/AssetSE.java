@@ -91,9 +91,10 @@ public class AssetSE implements Serializable{
             strategy="org.hibernate.id.UUIDGenerator"
     )
     @Column(name="id")
-    @NotAudited
     private UUID id;
 
+    @Column(name="historyid")
+    private UUID historyid;
 
     @Size(min = 1, max = 1)
     @Column(name="ircsindicator")
@@ -295,6 +296,11 @@ public class AssetSE implements Serializable{
     @Column(name="prodorgname")
     private String prodOrgName;
 
+    @PrePersist
+    @PreUpdate
+    private void generateNewHistoryId() {
+        this.historyid = UUID.randomUUID();
+    }
 
     public UUID getId() {
         return id;
@@ -687,6 +693,11 @@ public class AssetSE implements Serializable{
     public void setProdOrgName(String prodOrgName) {
         this.prodOrgName = prodOrgName;
     }
+
+    public UUID getHistoryId() {
+        return this.historyid;
+    }
+
 
 
 

@@ -151,17 +151,20 @@ public class AssetSEDao {
     public AssetSE updateAsset(AssetSE asset) throws AssetDaoException {
 
         try {
-            em.merge(asset);
-            return asset;
+            return em.merge(asset);
         } catch (Exception e) {
             throw new AssetDaoException("[ update asset, id: " + asset.getId() + " ] " + e.getMessage(), e);
         }
 
     }
 
-    public void deleteAsset(AssetSE assetSE)  {
+    public void deleteAsset(AssetSE assetSE)  throws AssetDaoException{
 
+        try {
         em.remove(assetSE);
+        } catch (Exception e) {
+            throw new AssetDaoException("[ remove asset, id: " + assetSE.getId() + " ] " + e.getMessage(), e);
+        }
 
     }
 
