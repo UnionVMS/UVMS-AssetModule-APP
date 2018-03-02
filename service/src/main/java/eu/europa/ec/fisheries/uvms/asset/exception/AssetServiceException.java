@@ -14,13 +14,22 @@ package eu.europa.ec.fisheries.uvms.asset.exception;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 
-/**
- **/
 public class AssetServiceException extends AssetException {
 	private static final long serialVersionUID = 1L;
 
 	public AssetServiceException(String message) {
         super(message);
     }
+	
+	public AssetServiceException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
+    public AssetServiceException(Throwable cause) {
+        super(cause);
+    }
+
+    protected AssetServiceException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }
