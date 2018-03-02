@@ -38,7 +38,7 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
     @EJB
     AssetQueueConsumer reciever;
     @EJB
-    private AssetDomainModelBean assetDomainModel;
+    AssetDomainModelBean assetDomainModel;
 
     @Override
     public List<Asset> getAssetHistoryListByAssetId(String assetId, Integer maxNbr) throws AssetException {

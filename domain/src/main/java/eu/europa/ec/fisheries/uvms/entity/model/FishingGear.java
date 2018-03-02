@@ -34,8 +34,8 @@ import java.util.Date;
 @Entity
 @NamedQueries({
 	@NamedQuery(name= UvmsConstants.FISHING_GEAR_FIND_ALL, query="SELECT f FROM FishingGear f"),
-	@NamedQuery(name=UvmsConstants.FISHING_GEAR_FIND_BY_ID, query="SELECT f FROM FishingGear f where id = :id"),
-	@NamedQuery(name=UvmsConstants.FISHING_GEAR_FIND_BY_EXT_ID, query="SELECT f FROM FishingGear f where externalId = :externalId")
+	@NamedQuery(name=UvmsConstants.FISHING_GEAR_FIND_BY_ID, query="SELECT f FROM FishingGear f where f.id = :id"),
+	@NamedQuery(name=UvmsConstants.FISHING_GEAR_FIND_BY_EXT_ID, query="SELECT f FROM FishingGear f where f.externalId = :externalId")
 })
 
 public class FishingGear implements Serializable {
