@@ -23,7 +23,7 @@ import eu.europa.ec.fisheries.uvms.entity.model.AssetProdOrg;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
 import eu.europa.ec.fisheries.uvms.entity.model.Carrier;
 import eu.europa.ec.fisheries.uvms.entity.model.ContactInfo;
-import eu.europa.ec.fisheries.uvms.entity.model.FishingGear;
+import eu.europa.ec.fisheries.uvms.entity.model.FishingGearEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGearType;
 import eu.europa.ec.fisheries.uvms.entity.model.Notes;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
@@ -214,9 +214,9 @@ public class AssetTestsHelper {
     }
 
 
-    public FishingGear createFishingGearHelper() {
+    public FishingGearEntity createFishingGearHelper() {
 
-        FishingGear fishingGear = new FishingGear();
+        FishingGearEntity fishingGear = new FishingGearEntity();
 
         fishingGear.setCode("NK");
 

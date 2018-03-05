@@ -14,15 +14,13 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
 import eu.europa.ec.fisheries.uvms.dao.Dao;
 import eu.europa.ec.fisheries.uvms.dao.FishingGearDao;
-import eu.europa.ec.fisheries.uvms.entity.model.FishingGear;
+import eu.europa.ec.fisheries.uvms.entity.model.FishingGearEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.*;
 import java.util.List;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 
 @Stateless
 public class FishingGearDaoBean extends Dao implements FishingGearDao {
@@ -30,18 +28,18 @@ public class FishingGearDaoBean extends Dao implements FishingGearDao {
     private Logger LOG = LoggerFactory.getLogger(FishingGearDaoBean.class);
 
     @Override
-    public List<FishingGear> getAllFishingGear(){
-        TypedQuery<FishingGear> query = em.createNamedQuery(UvmsConstants.FISHING_GEAR_FIND_ALL, FishingGear.class);
-        List<FishingGear> resultList = query.getResultList();
+    public List<FishingGearEntity> getAllFishingGear(){
+        TypedQuery<FishingGearEntity> query = em.createNamedQuery(UvmsConstants.FISHING_GEAR_FIND_ALL, FishingGearEntity.class);
+        List<FishingGearEntity> resultList = query.getResultList();
         return resultList;
     }
 
     @Override
-    public FishingGear getFishingGearById(Long id) throws Exception{
+    public FishingGearEntity getFishingGearById(Long id) throws Exception{
         try {
-            TypedQuery<FishingGear> query = em.createNamedQuery(UvmsConstants.FISHING_GEAR_FIND_BY_ID, FishingGear.class);
+            TypedQuery<FishingGearEntity> query = em.createNamedQuery(UvmsConstants.FISHING_GEAR_FIND_BY_ID, FishingGearEntity.class);
             query.setParameter("id", id);
-            FishingGear singleResult = query.getSingleResult();
+            FishingGearEntity singleResult = query.getSingleResult();
             return singleResult;
         }catch (NoResultException e){
             LOG.debug("getFishingGearById: " + id + " has no entity found");
@@ -56,11 +54,11 @@ public class FishingGearDaoBean extends Dao implements FishingGearDao {
     }
 
     @Override
-    public FishingGear getFishingGearByExternalId(Long externalId) throws Exception{
+    public FishingGearEntity getFishingGearByExternalId(Long externalId) throws Exception{
         try {
-            TypedQuery<FishingGear> query = em.createNamedQuery(UvmsConstants.FISHING_GEAR_FIND_BY_EXT_ID, FishingGear.class);
+            TypedQuery<FishingGearEntity> query = em.createNamedQuery(UvmsConstants.FISHING_GEAR_FIND_BY_EXT_ID, FishingGearEntity.class);
             query.setParameter("externalId", externalId);
-            FishingGear singleResult = query.getSingleResult();
+            FishingGearEntity singleResult = query.getSingleResult();
             return singleResult;
         }catch (NoResultException e){
             LOG.debug("GetFishingGearByExternalId: " + externalId + " has no entity found");
@@ -75,13 +73,13 @@ public class FishingGearDaoBean extends Dao implements FishingGearDao {
     }
 
     @Override
-    public void create(FishingGear fishingGear){
+    public void create(FishingGearEntity fishingGear){
         em.persist(fishingGear);
     }
 
     @Override
-    public FishingGear update(FishingGear fishingGear){
-        FishingGear result = em.merge(fishingGear);
+    public FishingGearEntity update(FishingGearEntity fishingGear){
+        FishingGearEntity result = em.merge(fishingGear);
         return result;
     }
 }

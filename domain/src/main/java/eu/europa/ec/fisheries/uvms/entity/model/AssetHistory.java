@@ -26,7 +26,6 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.EventCodeEnum;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.PublicAidEnum;
@@ -127,11 +126,11 @@ public class AssetHistory implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "assethist_main_fishgear_id")
-    private FishingGear mainFishingGear;
+    private FishingGearEntity mainFishingGear;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "assethist_sub_fishgear_id")
-    private FishingGear subFishingGear;
+    private FishingGearEntity subFishingGear;
 
     @Column(name = "assethist_fishingtype")
     private int gearFishingType;
@@ -419,11 +418,11 @@ public class AssetHistory implements Serializable {
         this.lengthOverAll = loa;
     }
 
-    public FishingGear getMainFishingGear() {
+    public FishingGearEntity getMainFishingGear() {
         return this.mainFishingGear;
     }
 
-    public void setMainFishingGear(FishingGear fishingGear) {
+    public void setMainFishingGear(FishingGearEntity fishingGear) {
         this.mainFishingGear = fishingGear;
     }
 
@@ -508,11 +507,11 @@ public class AssetHistory implements Serializable {
         this.segment = segment;
     }
 
-    public FishingGear getSubFishingGear() {
+    public FishingGearEntity getSubFishingGear() {
         return this.subFishingGear;
     }
 
-    public void setSubFishingGear(FishingGear gear) {
+    public void setSubFishingGear(FishingGearEntity gear) {
         this.subFishingGear = gear;
     }
 

@@ -2,6 +2,7 @@ package eu.europa.fisheries.uvms.asset.service.arquillian;
 
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.UpsertFishingGearsMessageEventBean;
+import eu.europa.ec.fisheries.uvms.entity.model.FishingGearEntity;
 import eu.europa.ec.fisheries.uvms.mapper.EntityToModelMapper;
 import eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO;
 import eu.europa.ec.fisheries.wsdl.asset.types.FishingGearType;
@@ -17,7 +18,6 @@ import javax.inject.Inject;
 import javax.jms.TextMessage;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -118,11 +118,11 @@ public class UpsertFishingGearsMessageEventBeanIntTest extends TransactionalTest
         em.flush();
 
 
-        TypedQuery query = em.createQuery("SELECT f FROM FishingGear f where externalId = :externalId and description = :description", eu.europa.ec.fisheries.uvms.entity.model.FishingGear.class);
+        TypedQuery query = em.createQuery("SELECT f FROM FishingGear f where externalId = :externalId and description = :description", FishingGearEntity.class);
         query.setParameter("externalId", 42L);
         query.setParameter("description",description);
 
-        eu.europa.ec.fisheries.uvms.entity.model.FishingGear  tmpFetchedFishingGear = (eu.europa.ec.fisheries.uvms.entity.model.FishingGear) query.getSingleResult();
+        FishingGearEntity tmpFetchedFishingGear = (FishingGearEntity) query.getSingleResult();
         eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fetchedFishingGear = EntityToModelMapper.mapEntityToFishingGear(tmpFetchedFishingGear);
 
         description = "CHANGEDDescription";
@@ -132,10 +132,10 @@ public class UpsertFishingGearsMessageEventBeanIntTest extends TransactionalTest
         upsertFishingGearsMessageEventBean.upsertFishingGears(assetMessageEvent);
         em.flush();
 
-        query = em.createQuery("SELECT f FROM FishingGear f where externalId = :externalId and description = :description", eu.europa.ec.fisheries.uvms.entity.model.FishingGear.class);
+        query = em.createQuery("SELECT f FROM FishingGear f where externalId = :externalId and description = :description", FishingGearEntity.class);
         query.setParameter("externalId", 52L);
         query.setParameter("description",description);
-        eu.europa.ec.fisheries.uvms.entity.model.FishingGear  tmpFetchedFishingGear2 = (eu.europa.ec.fisheries.uvms.entity.model.FishingGear) query.getSingleResult();
+        FishingGearEntity tmpFetchedFishingGear2 = (FishingGearEntity) query.getSingleResult();
         eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fetchedFishingGear2 = EntityToModelMapper.mapEntityToFishingGear(tmpFetchedFishingGear2);
 
 

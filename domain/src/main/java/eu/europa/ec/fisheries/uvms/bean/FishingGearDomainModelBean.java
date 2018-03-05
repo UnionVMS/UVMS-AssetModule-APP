@@ -14,7 +14,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.dao.FishingGearDao;
 import eu.europa.ec.fisheries.uvms.dao.FishingGearTypeDao;
-import eu.europa.ec.fisheries.uvms.entity.model.FishingGear;
+import eu.europa.ec.fisheries.uvms.entity.model.FishingGearEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGearType;
 import eu.europa.ec.fisheries.uvms.mapper.EntityToModelMapper;
 import eu.europa.ec.fisheries.uvms.mapper.ModelToEntityMapper;
@@ -38,17 +38,17 @@ public class FishingGearDomainModelBean  {
     private FishingGearTypeDao fishingGearTypeBean;
 
     public eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO upsertFishingGear(eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO gear, String username) {
-        FishingGear fishingGearEntity = updateFishinGear(gear, username);
+        FishingGearEntity fishingGearEntity = updateFishinGear(gear, username);
         eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear = EntityToModelMapper.mapEntityToFishingGear(fishingGearEntity);
         return fishingGear;
     }
 
-    private FishingGear updateFishinGear(eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear, String username){
-        FishingGear fishingGearByExternalIdEntity = null;
+    private FishingGearEntity updateFishinGear(eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear, String username){
+        FishingGearEntity fishingGearByExternalIdEntity = null;
         try {
             fishingGearByExternalIdEntity = fishingGearBean.getFishingGearByExternalId(fishingGear.getExternalId());
             if(fishingGearByExternalIdEntity == null){
-                FishingGear fishingGearEntity;
+                FishingGearEntity fishingGearEntity;
                 FishingGearType fishingGearTypeByCodeEntity = fishingGearTypeBean.getFishingGearByCode(fishingGear.getFishingGearType().getCode());
                 if(fishingGearTypeByCodeEntity == null){
                     FishingGearType fishingGearTypeEntity = ModelToEntityMapper.mapFishingGearTypeToEntity(fishingGear.getFishingGearType(), username);
@@ -89,7 +89,7 @@ public class FishingGearDomainModelBean  {
         fishingGearTypeByCodeEntity.setUpdateDateTime(DateUtils.getNowDateUTC());
     }
 
-    private void updateFishingGearProperties(eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear, String username, FishingGear fishingGearByExternalIdEntity, FishingGearType fishingGearType) {
+    private void updateFishingGearProperties(eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear, String username, FishingGearEntity fishingGearByExternalIdEntity, FishingGearType fishingGearType) {
         fishingGearByExternalIdEntity.setFishingGearType(fishingGearType);
         fishingGearByExternalIdEntity.setCode(fishingGear.getCode());
         fishingGearByExternalIdEntity.setUpdatedBy(username);

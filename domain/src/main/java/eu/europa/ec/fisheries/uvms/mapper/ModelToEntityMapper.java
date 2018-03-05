@@ -16,7 +16,7 @@ import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.*;
 import eu.europa.ec.fisheries.uvms.entity.model.*;
-import eu.europa.ec.fisheries.uvms.entity.model.FishingGear;
+import eu.europa.ec.fisheries.uvms.entity.model.FishingGearEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGearType;
 import eu.europa.ec.fisheries.uvms.util.DateUtil;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
@@ -240,8 +240,8 @@ public class ModelToEntityMapper {
         throw new AssetModelValidationException(errorMsg);
     }
 
-    public static FishingGear mapFishingGearToEntity(eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear, String username){
-        FishingGear entity = new FishingGear();
+    public static FishingGearEntity mapFishingGearToEntity(eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear, String username){
+        FishingGearEntity entity = new FishingGearEntity();
         entity.setCode(fishingGear.getCode());
         entity.setDescription(fishingGear.getDescription());
         entity.setExternalId(fishingGear.getExternalId());

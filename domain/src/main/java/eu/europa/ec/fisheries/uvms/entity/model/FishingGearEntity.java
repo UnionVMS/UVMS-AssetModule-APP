@@ -33,12 +33,12 @@ import java.util.Date;
  */
 @Entity
 @NamedQueries({
-	@NamedQuery(name= UvmsConstants.FISHING_GEAR_FIND_ALL, query="SELECT f FROM FishingGear f"),
-	@NamedQuery(name=UvmsConstants.FISHING_GEAR_FIND_BY_ID, query="SELECT f FROM FishingGear f where f.id = :id"),
-	@NamedQuery(name=UvmsConstants.FISHING_GEAR_FIND_BY_EXT_ID, query="SELECT f FROM FishingGear f where f.externalId = :externalId")
+	@NamedQuery(name= UvmsConstants.FISHING_GEAR_FIND_ALL, query="SELECT f FROM FishingGearEntity f"),
+	@NamedQuery(name=UvmsConstants.FISHING_GEAR_FIND_BY_ID, query="SELECT f FROM FishingGearEntity f where f.id = :id"),
+	@NamedQuery(name=UvmsConstants.FISHING_GEAR_FIND_BY_EXT_ID, query="SELECT f FROM FishingGearEntity f where f.externalId = :externalId")
 })
 
-public class FishingGear implements Serializable {
+public class FishingGearEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -73,7 +73,7 @@ public class FishingGear implements Serializable {
 	@Column(name="fishg_fishtyp_ext_id")
 	private Long externalId;
 
-	public FishingGear() {
+	public FishingGearEntity() {
 	}
 
 	public Long getId() {

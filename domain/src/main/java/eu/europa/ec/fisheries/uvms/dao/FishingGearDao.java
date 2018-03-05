@@ -11,7 +11,7 @@ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more d
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import eu.europa.ec.fisheries.uvms.entity.model.FishingGear;
+import eu.europa.ec.fisheries.uvms.entity.model.FishingGearEntity;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -19,13 +19,13 @@ import java.util.List;
 @Local
 public interface FishingGearDao {
 
-    public List<FishingGear> getAllFishingGear();
+    public List<FishingGearEntity> getAllFishingGear();
 
-    public FishingGear getFishingGearById(Long id) throws Exception;
+    public FishingGearEntity getFishingGearById(Long id) throws Exception;
 
-    public FishingGear getFishingGearByExternalId(Long externalId) throws Exception;
+    public FishingGearEntity getFishingGearByExternalId(Long externalId) throws Exception;
 
-    public void create(FishingGear fishingGear);
+    public void create(FishingGearEntity fishingGear);
 
-    public FishingGear update(FishingGear fishingGear);
+    public FishingGearEntity update(FishingGearEntity fishingGear);
 }

@@ -17,8 +17,6 @@ import eu.europa.ec.fisheries.uvms.util.DateUtil;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO;
 import eu.europa.ec.fisheries.wsdl.asset.types.FishingGearType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 import java.util.*;
@@ -258,7 +256,7 @@ public class EntityToModelMapper {
         return list;
     }
 
-    public static FishingGearDTO mapEntityToFishingGear(eu.europa.ec.fisheries.uvms.entity.model.FishingGear entity){
+    public static FishingGearDTO mapEntityToFishingGear(FishingGearEntity entity){
         FishingGearDTO fishingGear = new FishingGearDTO();
         fishingGear.setName(entity.getDescription());
         fishingGear.setId(entity.getId());

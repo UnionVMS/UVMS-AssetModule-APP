@@ -50,7 +50,7 @@ public class FishingGearType implements Serializable {
     private String updateUser;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "fishingGearType")
-    private List<FishingGear> fishingGears;
+    private List<FishingGearEntity> fishingGears;
 
     public Long getId() {
         return id;
@@ -100,11 +100,11 @@ public class FishingGearType implements Serializable {
         this.updateUser = updateUser;
     }
 
-    public List<FishingGear> getFishingGears() {
+    public List<FishingGearEntity> getFishingGears() {
         return fishingGears;
     }
 
-    public void setFishingGears(List<FishingGear> fishingGears) {
+    public void setFishingGears(List<FishingGearEntity> fishingGears) {
         this.fishingGears = fishingGears;
     }
 }

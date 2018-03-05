@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.entity.model;
 
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
@@ -229,12 +228,12 @@ public class AssetSE implements Serializable{
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="mainfishinggear")
     @NotAudited
-    private FishingGear mainFishingGear;
+    private FishingGearEntity mainFishingGear;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="subfishinggear")
     @NotAudited
-    private FishingGear subFishingGear;
+    private FishingGearEntity subFishingGear;
 
     @Column(name="gearfishingtype")
     private int gearFishingType;
@@ -558,19 +557,19 @@ public class AssetSE implements Serializable{
         this.licenceType = licenceType;
     }
 
-    public FishingGear getMainFishingGear() {
+    public FishingGearEntity getMainFishingGear() {
         return mainFishingGear;
     }
 
-    public void setMainFishingGear(FishingGear mainFishingGear) {
+    public void setMainFishingGear(FishingGearEntity mainFishingGear) {
         this.mainFishingGear = mainFishingGear;
     }
 
-    public FishingGear getSubFishingGear() {
+    public FishingGearEntity getSubFishingGear() {
         return subFishingGear;
     }
 
-    public void setSubFishingGear(FishingGear subFishingGear) {
+    public void setSubFishingGear(FishingGearEntity subFishingGear) {
         this.subFishingGear = subFishingGear;
     }
 
