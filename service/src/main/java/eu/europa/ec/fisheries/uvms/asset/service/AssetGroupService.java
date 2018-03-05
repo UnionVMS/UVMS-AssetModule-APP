@@ -16,22 +16,23 @@ import java.util.List;
 import javax.ejb.Local;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
+import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL;
 
 @Local
 public interface AssetGroupService {
 
-	public List<AssetGroupWSDL> getAssetGroupList(String user) throws AssetException;
+	public List<AssetGroupEntity> getAssetGroupList(String user) throws AssetException;
 
-	List<AssetGroupWSDL> getAssetGroupListByAssetGuid(String assetGuid) throws AssetException;
+	List<AssetGroupEntity> getAssetGroupListByAssetGuid(String assetGuid) throws AssetException;
 
-	public AssetGroupWSDL getAssetGroupById(String guid) throws AssetException;
+	public AssetGroupEntity getAssetGroupById(String guid) throws AssetException;
 
-	public AssetGroupWSDL createAssetGroup(AssetGroupWSDL assetGroup, String username) throws AssetException;
+	public AssetGroupEntity createAssetGroup(AssetGroupEntity assetGroup, String username) throws AssetException;
 
-	public AssetGroupWSDL updateAssetGroup(AssetGroupWSDL assetGroup, String username) throws AssetException;
+	public AssetGroupEntity updateAssetGroup(AssetGroupEntity assetGroup, String username) throws AssetException;
 
-	public AssetGroupWSDL deleteAssetGroupById(String guid, String username) throws AssetException;
+	public AssetGroupEntity deleteAssetGroupById(String guid, String username) throws AssetException;
 
 
 }

@@ -15,6 +15,7 @@ import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseCodeConstant;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.asset.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
+import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL;
@@ -98,7 +99,7 @@ public class AssetGroupResource {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     @Produces(value = { MediaType.APPLICATION_JSON })
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public ResponseDto createAssetGroup(final AssetGroupWSDL assetGroup) {
+    public ResponseDto createAssetGroup(final AssetGroupEntity assetGroup) {
         try {
             LOG.info("Creating asset group: {}",assetGroup);
             return new ResponseDto(assetGroupService.createAssetGroup(assetGroup, servletRequest.getRemoteUser()), ResponseCodeConstant.OK);
@@ -120,7 +121,7 @@ public class AssetGroupResource {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     @Produces(value = { MediaType.APPLICATION_JSON })
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public ResponseDto updateAssetGroup(final AssetGroupWSDL assetGroup) {
+    public ResponseDto updateAssetGroup(final AssetGroupEntity assetGroup) {
         try {
             LOG.info("Updating asset group:{}",assetGroup);
             return new ResponseDto(assetGroupService.updateAssetGroup(assetGroup, servletRequest.getRemoteUser()), ResponseCodeConstant.OK);
