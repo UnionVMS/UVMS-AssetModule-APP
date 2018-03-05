@@ -21,7 +21,6 @@ import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
 import eu.europa.ec.fisheries.uvms.bean.AssetGroupDomainModelBean;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
-import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroup;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

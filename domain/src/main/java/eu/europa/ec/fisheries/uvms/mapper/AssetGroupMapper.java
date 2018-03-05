@@ -13,7 +13,7 @@ package eu.europa.ec.fisheries.uvms.mapper;
 
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetDaoMappingException;
-import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroup;
+import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
 import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField;
 import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
@@ -23,13 +23,13 @@ import java.util.List;
 
 public class AssetGroupMapper {
 
-    public static AssetGroup toGroupEntity(eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL group, String username) throws AssetDaoMappingException {
-    	AssetGroup groupEntity = new AssetGroup();
+    public static AssetGroupEntity toGroupEntity(eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL group, String username) throws AssetDaoMappingException {
+    	AssetGroupEntity groupEntity = new AssetGroupEntity();
         toGroupEntity(groupEntity, group, username);
         return groupEntity;
     }
 
-    private static AssetGroupField toFilterEntity(AssetGroup parent, eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField searchField, String username) {
+    private static AssetGroupField toFilterEntity(AssetGroupEntity parent, eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField searchField, String username) {
     	AssetGroupField filter = new AssetGroupField();
         filter.setAssetGroup(parent);
 
@@ -41,7 +41,7 @@ public class AssetGroupMapper {
         return filter;
     }
 
-    public static eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL toAssetGroup(AssetGroup groupEntity) {
+    public static eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL toAssetGroup(AssetGroupEntity groupEntity) {
         eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL group = new eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL();
         group.setGuid(groupEntity.getGuid());
         group.setDynamic(groupEntity.getDynamic());
@@ -63,7 +63,7 @@ public class AssetGroupMapper {
         return searchField;
     }
 
-    public static AssetGroup toGroupEntity(AssetGroup groupEntity, eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL assetGroup, String username) throws AssetDaoMappingException {
+    public static AssetGroupEntity toGroupEntity(AssetGroupEntity groupEntity, eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL assetGroup, String username) throws AssetDaoMappingException {
         groupEntity.setGlobal(false);
         groupEntity.setArchived(false);
         groupEntity.setDynamic(assetGroup.isDynamic());

@@ -13,12 +13,9 @@ package eu.europa.ec.fisheries.uvms.dao.bean;
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityExistsException;
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TransactionRequiredException;
 import javax.persistence.TypedQuery;
 
@@ -29,8 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
-import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroup;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
+import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
 
 @Stateless
 public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
@@ -38,7 +34,7 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
     private static final Logger LOG = LoggerFactory.getLogger(AssetGroupDaoBean.class);
 
     @Override
-    public AssetGroup createAssetGroup(AssetGroup group) throws AssetGroupDaoException {
+    public AssetGroupEntity createAssetGroup(AssetGroupEntity group) throws AssetGroupDaoException {
         try {
             em.persist(group);
             return group;
@@ -52,9 +48,9 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
     }
 
     @Override
-    public AssetGroup getAssetGroupByGuid(String groupId) throws AssetGroupDaoException {
+    public AssetGroupEntity getAssetGroupByGuid(String groupId) throws AssetGroupDaoException {
         try {
-            TypedQuery<AssetGroup> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_GUID, AssetGroup.class);
+            TypedQuery<AssetGroupEntity> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_GUID, AssetGroupEntity.class);
             query.setParameter("guid", groupId);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -64,7 +60,7 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
     }
 
     @Override
-    public AssetGroup updateAssetGroup(AssetGroup group) throws AssetGroupDaoException {
+    public AssetGroupEntity updateAssetGroup(AssetGroupEntity group) throws AssetGroupDaoException {
         try {
             em.merge(group);
             return group;
@@ -78,7 +74,7 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
     }
 
     @Override
-    public AssetGroup deleteAssetGroup(AssetGroup group) throws AssetGroupDaoException {
+    public AssetGroupEntity deleteAssetGroup(AssetGroupEntity group) throws AssetGroupDaoException {
         try {
             em.remove(group);
             return group;
@@ -93,9 +89,9 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
     }
 
     @Override
-    public List<AssetGroup> getAssetGroupAll() throws AssetGroupDaoException {
+    public List<AssetGroupEntity> getAssetGroupAll() throws AssetGroupDaoException {
         try {
-            TypedQuery<AssetGroup> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_FIND_ALL, AssetGroup.class);
+            TypedQuery<AssetGroupEntity> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_FIND_ALL, AssetGroupEntity.class);
             return query.getResultList();
         } catch (Exception e) {
             LOG.error("[ Error when getting asset groups. ] {}", e.getMessage());
@@ -104,9 +100,9 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
     }
 
     @Override
-    public List<AssetGroup> getAssetGroupByUser(String user) throws AssetGroupDaoException {
+    public List<AssetGroupEntity> getAssetGroupByUser(String user) throws AssetGroupDaoException {
         try {
-            TypedQuery<AssetGroup> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_USER, AssetGroup.class);
+            TypedQuery<AssetGroupEntity> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_USER, AssetGroupEntity.class);
             query.setParameter("owner", user);
             return query.getResultList();
         } catch (Exception e) {
@@ -116,9 +112,9 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
     }
 
 	@Override
-	public List<AssetGroup> getAssetGroupsByGroupGuidList(List<String> guidList) throws AssetGroupDaoException {
+	public List<AssetGroupEntity> getAssetGroupsByGroupGuidList(List<String> guidList) throws AssetGroupDaoException {
         try {
-            TypedQuery<AssetGroup> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_GUID_LIST, AssetGroup.class);
+            TypedQuery<AssetGroupEntity> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_GUID_LIST, AssetGroupEntity.class);
             query.setParameter("guidList", guidList);
             return query.getResultList();
         } catch (Exception e) {

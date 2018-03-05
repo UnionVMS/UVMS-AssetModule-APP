@@ -34,7 +34,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
-import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroup;
+import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -55,7 +55,7 @@ public class AssetGroupDaoBeanTest {
 	
 	@Test
 	public void testCreateVesselGroup() throws AssetGroupDaoException {
-		AssetGroup group = MockData.getFiltergroup(TEST_USER, "1");
+		AssetGroupEntity group = MockData.getFiltergroup(TEST_USER, "1");
 		
 		dao.createAssetGroup(group);
 		verify(em).persist(group);
@@ -66,12 +66,12 @@ public class AssetGroupDaoBeanTest {
 	public void testGetVesselGroupById() throws AssetGroupDaoException {
 		String id = "1";
 		
-		AssetGroup entity = new AssetGroup();
+		AssetGroupEntity entity = new AssetGroupEntity();
 		entity.setGuid(id);
-		when(em.find(AssetGroup.class, id)).thenReturn(entity);
+		when(em.find(AssetGroupEntity.class, id)).thenReturn(entity);
 		
-		AssetGroup result = dao.getAssetGroupByGuid(id);
-		verify(em).find(AssetGroup.class, id);
+		AssetGroupEntity result = dao.getAssetGroupByGuid(id);
+		verify(em).find(AssetGroupEntity.class, id);
 		assertSame(id, result.getGuid());
 	}
 	
@@ -79,14 +79,14 @@ public class AssetGroupDaoBeanTest {
 	public void testUpdateVesselGroup() throws AssetGroupDaoException {
 		String id = "11";
 		
-		AssetGroup group = MockData.getFiltergroup(TEST_USER, id);
+		AssetGroupEntity group = MockData.getFiltergroup(TEST_USER, id);
 		
-		AssetGroup result = new AssetGroup();
+		AssetGroupEntity result = new AssetGroupEntity();
 		result.setGuid(group.getGuid());
 		
 		when(em.merge(group)).thenReturn(result);
 		
-		AssetGroup resultEntity = dao.updateAssetGroup(group);
+		AssetGroupEntity resultEntity = dao.updateAssetGroup(group);
 		
 		verify(em).merge(group);
 		assertSame(id, resultEntity.getGuid());
@@ -99,29 +99,29 @@ public class AssetGroupDaoBeanTest {
 	
 	@Test
 	public void testVesselGroupList() throws AssetGroupDaoException {
-		TypedQuery<AssetGroup> query = mock(TypedQuery.class);
-		when(em.createNamedQuery(UvmsConstants.GROUP_ASSET_FIND_ALL, AssetGroup.class)).thenReturn(query);
+		TypedQuery<AssetGroupEntity> query = mock(TypedQuery.class);
+		when(em.createNamedQuery(UvmsConstants.GROUP_ASSET_FIND_ALL, AssetGroupEntity.class)).thenReturn(query);
 		
-		List<AssetGroup> dummyResult = new ArrayList<AssetGroup>();
+		List<AssetGroupEntity> dummyResult = new ArrayList<AssetGroupEntity>();
 		when(query.getResultList()).thenReturn(dummyResult);
-		List<AssetGroup> result = dao.getAssetGroupAll();
+		List<AssetGroupEntity> result = dao.getAssetGroupAll();
 		
-		verify(em).createNamedQuery(UvmsConstants.GROUP_ASSET_FIND_ALL, AssetGroup.class);
+		verify(em).createNamedQuery(UvmsConstants.GROUP_ASSET_FIND_ALL, AssetGroupEntity.class);
 		verify(query).getResultList();
 		assertSame(dummyResult, result);
 	}
 	
 	@Test
 	public void testVesselGroupListByUser() throws AssetGroupDaoException {
-		TypedQuery<AssetGroup> query = mock(TypedQuery.class);
-		when(em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_USER, AssetGroup.class)).thenReturn(query);
+		TypedQuery<AssetGroupEntity> query = mock(TypedQuery.class);
+		when(em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_USER, AssetGroupEntity.class)).thenReturn(query);
 		
-		List<AssetGroup> dummyResult = new ArrayList<AssetGroup>();
+		List<AssetGroupEntity> dummyResult = new ArrayList<AssetGroupEntity>();
 		when(query.getResultList()).thenReturn(dummyResult);
 		
-		List<AssetGroup> result = dao.getAssetGroupByUser(TEST_USER);
+		List<AssetGroupEntity> result = dao.getAssetGroupByUser(TEST_USER);
 		
-		verify(em).createNamedQuery(UvmsConstants.GROUP_ASSET_BY_USER, AssetGroup.class);
+		verify(em).createNamedQuery(UvmsConstants.GROUP_ASSET_BY_USER, AssetGroupEntity.class);
 		verify(query).getResultList();
 		assertSame(dummyResult, result);
 	}

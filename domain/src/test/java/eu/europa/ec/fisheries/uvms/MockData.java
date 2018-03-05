@@ -19,7 +19,7 @@ import java.util.List;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.Carrier;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
-import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroup;
+import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
 import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField;
 
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField;
@@ -101,8 +101,8 @@ public class MockData {
 		return assetHistory;
 	}
 	
-	public static AssetGroup getFiltergroup(String user, String id) {
-		AssetGroup group = new AssetGroup();
+	public static AssetGroupEntity getFiltergroup(String user, String id) {
+		AssetGroupEntity group = new AssetGroupEntity();
 		group.setGlobal(false);
 		group.setGuid(id);
 		group.setName("GROUPNAME");

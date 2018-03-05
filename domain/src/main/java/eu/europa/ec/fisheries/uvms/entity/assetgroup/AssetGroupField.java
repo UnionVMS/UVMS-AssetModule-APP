@@ -24,7 +24,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -67,7 +66,7 @@ public class AssetGroupField implements Serializable {
 
 	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name="filter_group_id")
-	private AssetGroup assetgroup;
+	private AssetGroupEntity assetgroup;
 
 	public AssetGroupField() {
 	}
@@ -112,11 +111,11 @@ public class AssetGroupField implements Serializable {
 		this.value = value;
 	}
 
-	public AssetGroup getAssetGroup() {
+	public AssetGroupEntity getAssetGroup() {
 		return this.assetgroup;
 	}
 
-	public void setAssetGroup(AssetGroup assetgroup) {
+	public void setAssetGroup(AssetGroupEntity assetgroup) {
 		this.assetgroup = assetgroup;
 	}
 

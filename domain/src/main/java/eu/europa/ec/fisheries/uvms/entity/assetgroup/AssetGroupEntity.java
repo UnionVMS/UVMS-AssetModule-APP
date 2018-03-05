@@ -45,12 +45,12 @@ import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
 @Entity
 @Table(name="Assetgroup")
 @NamedQueries({
-	@NamedQuery(name=UvmsConstants.GROUP_ASSET_FIND_ALL, query="SELECT a FROM AssetGroup a WHERE a.archived = false"),
-	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_USER, query="SELECT a FROM AssetGroup a WHERE a.archived = false AND a.owner = :owner"),
-	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_GUID, query="SELECT a FROM AssetGroup a WHERE a.guid = :guid"),
-	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_GUID_LIST, query="SELECT a FROM AssetGroup a WHERE a.archived = false AND a.guid IN :guidList")
+	@NamedQuery(name=UvmsConstants.GROUP_ASSET_FIND_ALL, query="SELECT a FROM AssetGroupEntity a WHERE a.archived = false"),
+	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_USER, query="SELECT a FROM AssetGroupEntity a WHERE a.archived = false AND a.owner = :owner"),
+	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_GUID, query="SELECT a FROM AssetGroupEntity a WHERE a.guid = :guid"),
+	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_GUID_LIST, query="SELECT a FROM AssetGroupEntity a WHERE a.archived = false AND a.guid IN :guidList")
 })
-public class AssetGroup implements Serializable {
+public class AssetGroupEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -93,7 +93,7 @@ public class AssetGroup implements Serializable {
 	@OneToMany(mappedBy="assetgroup", fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval=true)
 	private List<AssetGroupField> fields;
 
-	public AssetGroup() {
+	public AssetGroupEntity() {
 	}
 
 	@PrePersist

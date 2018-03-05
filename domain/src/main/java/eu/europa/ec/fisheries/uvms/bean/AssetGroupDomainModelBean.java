@@ -17,7 +17,7 @@ import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetDaoMappingException;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
-import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroup;
+import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
 import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField;
 import eu.europa.ec.fisheries.uvms.mapper.AssetGroupMapper;
 import org.slf4j.Logger;
@@ -44,7 +44,7 @@ public class AssetGroupDomainModelBean  {
         }
 
         try {
-            AssetGroup groupEntity = getAssetGroupById(guid);
+            AssetGroupEntity groupEntity = getAssetGroupById(guid);
             return AssetGroupMapper.toAssetGroup(groupEntity);
         } catch (AssetGroupDaoException e) {
             LOG.error("[ Error when getting asset group. ] guid {} exception {}",guid, e.getMessage());
@@ -52,8 +52,8 @@ public class AssetGroupDomainModelBean  {
         }
     }
 
-    private AssetGroup getAssetGroupById(String guid) throws AssetGroupDaoException {
-    	AssetGroup filterGroup = assetGroupDao.getAssetGroupByGuid(guid);
+    private AssetGroupEntity getAssetGroupById(String guid) throws AssetGroupDaoException {
+    	AssetGroupEntity filterGroup = assetGroupDao.getAssetGroupByGuid(guid);
         if (filterGroup == null) {
             throw new AssetGroupDaoException("No assetgroup found.");
         }
@@ -67,7 +67,7 @@ public class AssetGroupDomainModelBean  {
         }
 
         try {
-            AssetGroup groupEntity = AssetGroupMapper.toGroupEntity(assetGroup, username);
+            AssetGroupEntity groupEntity = AssetGroupMapper.toGroupEntity(assetGroup, username);
             assetGroupDao.createAssetGroup(groupEntity);
             return AssetGroupMapper.toAssetGroup(groupEntity);
         } catch (AssetGroupDaoException | AssetDaoMappingException e) {
@@ -82,7 +82,7 @@ public class AssetGroupDomainModelBean  {
         }
 
         try {
-        	AssetGroup groupEntity = getAssetGroupById(assetGroup.getGuid());
+        	AssetGroupEntity groupEntity = getAssetGroupById(assetGroup.getGuid());
             groupEntity = AssetGroupMapper.toGroupEntity(groupEntity, assetGroup, username);
             return AssetGroupMapper.toAssetGroup(groupEntity);
         } catch (AssetGroupDaoException | AssetDaoMappingException e) {
@@ -98,8 +98,8 @@ public class AssetGroupDomainModelBean  {
 
         try {
             List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL> vesselGroupList = new ArrayList<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL>();
-            List<AssetGroup> filterGroupList = assetGroupDao.getAssetGroupAll();
-            for (AssetGroup group : filterGroupList) {
+            List<AssetGroupEntity> filterGroupList = assetGroupDao.getAssetGroupAll();
+            for (AssetGroupEntity group : filterGroupList) {
                 List<AssetGroupField> fields = group.getFields();
                 for (AssetGroupField field : fields) {
                     String x = field.getField();
@@ -122,8 +122,8 @@ public class AssetGroupDomainModelBean  {
 
         try {
             List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL> assetGroupList = new ArrayList<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL>();
-            List<AssetGroup> filterGroupList = assetGroupDao.getAssetGroupByUser(user);
-            for (AssetGroup group : filterGroupList) {
+            List<AssetGroupEntity> filterGroupList = assetGroupDao.getAssetGroupByUser(user);
+            for (AssetGroupEntity group : filterGroupList) {
                 assetGroupList.add(AssetGroupMapper.toAssetGroup(group));
             }
 
@@ -140,7 +140,7 @@ public class AssetGroupDomainModelBean  {
         }
 
         try {
-            AssetGroup groupEntity = getAssetGroupById(guid);
+            AssetGroupEntity groupEntity = getAssetGroupById(guid);
             groupEntity.setArchived(true);
             groupEntity.setUpdatedBy(username);
             groupEntity.setUpdateTime(DateUtils.getNowDateUTC());
@@ -167,8 +167,8 @@ public class AssetGroupDomainModelBean  {
 		
         try {
             List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL> vesselGroupList = new ArrayList<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL>();
-            List<AssetGroup> filterGroupList = assetGroupDao.getAssetGroupsByGroupGuidList(guidList);
-            for (AssetGroup group : filterGroupList) {
+            List<AssetGroupEntity> filterGroupList = assetGroupDao.getAssetGroupsByGroupGuidList(guidList);
+            for (AssetGroupEntity group : filterGroupList) {
                 vesselGroupList.add(AssetGroupMapper.toAssetGroup(group));
             }
 
