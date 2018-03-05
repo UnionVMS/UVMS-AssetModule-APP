@@ -20,7 +20,9 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
 import eu.europa.ec.fisheries.uvms.bean.AssetGroupDomainModelBean;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
+import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
+import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroup;
+import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,48 +43,49 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
     @EJB
     private AssetGroupDomainModelBean assetGroupDomainModel;
+    private AssetGroupDao assetGroupDao;
 
     final static Logger LOG = LoggerFactory.getLogger(AssetGroupServiceBean.class);
 
     @Override
-    public List<AssetGroup> getAssetGroupList(String user) throws AssetException {
+    public List<AssetGroupWSDL> getAssetGroupList(String user) throws AssetException {
         LOG.info("Getting asset group list by user: {}.", user);
         if (user == null || user.isEmpty()) {
             throw new InputArgumentException("Invalid user");
         }
 
-        List<AssetGroup> assetGroupList = assetGroupDomainModel.getAssetGroupListByUser(user);
+        List<AssetGroupWSDL> assetGroupList = assetGroupDomainModel.getAssetGroupListByUser(user);
         return assetGroupList;
     }
 
     @Override
-    public List<AssetGroup> getAssetGroupListByAssetGuid(String assetGuid) throws AssetException {
+    public List<AssetGroupWSDL> getAssetGroupListByAssetGuid(String assetGuid) throws AssetException {
         LOG.info("Getting asset group list by asset guid: {}.", assetGuid);
         if (assetGuid == null || assetGuid.isEmpty()) {
             throw new InputArgumentException("Invalid asset");
         }
 
-        List<AssetGroup> assetGroups = assetGroupDomainModel.getAssetGroupsByAssetGuid(assetGuid);
+        List<AssetGroupWSDL> assetGroups = assetGroupDomainModel.getAssetGroupsByAssetGuid(assetGuid);
         return assetGroups;
     }
 
     @Override
-    public AssetGroup getAssetGroupById(String guid) throws AssetException {
+    public AssetGroupWSDL getAssetGroupById(String guid) throws AssetException {
         LOG.info("Getting asset group by id: {}.", guid);
         if (guid == null) {
             throw new InputArgumentException("No asset group to get");
         }
 
-        AssetGroup assetGroup = assetGroupDomainModel.getAssetGroup(guid);
+        AssetGroupWSDL assetGroup = assetGroupDomainModel.getAssetGroup(guid);
         return assetGroup;
     }
 
     @Override
-    public AssetGroup createAssetGroup(AssetGroup assetGroup, String username) throws AssetException {
+    public AssetGroupWSDL createAssetGroup(AssetGroupWSDL assetGroup, String username) throws AssetException {
         if (assetGroup == null) {
             throw new InputArgumentException("No asset group to create");
         }
-        AssetGroup createdAssetGroup = assetGroupDomainModel.createAssetGroup(assetGroup, username);
+        AssetGroupWSDL createdAssetGroup = assetGroupDomainModel.createAssetGroup(assetGroup, username);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetGroupCreated(createdAssetGroup.getGuid(), username, GROUP_QUALIFIER_PREFIX + createdAssetGroup.getName());
             messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
@@ -93,14 +96,14 @@ public class AssetGroupServiceBean implements AssetGroupService {
     }
 
     @Override
-    public AssetGroup updateAssetGroup(AssetGroup assetGroup, String username) throws AssetException {
+    public AssetGroupWSDL updateAssetGroup(AssetGroupWSDL assetGroup, String username) throws AssetException {
         if (assetGroup == null) {
             throw new InputArgumentException("No asset group to update");
         }
         if (assetGroup.getGuid() == null) {
             throw new InputArgumentException("No id on asset group to update");
         }
-        AssetGroup updatedAssetGroup = assetGroupDomainModel.updateAssetGroup(assetGroup, username);
+        AssetGroupWSDL updatedAssetGroup = assetGroupDomainModel.updateAssetGroup(assetGroup, username);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetGroupUpdated(updatedAssetGroup.getGuid(), username, GROUP_QUALIFIER_PREFIX + updatedAssetGroup.getName());
             messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
@@ -112,13 +115,13 @@ public class AssetGroupServiceBean implements AssetGroupService {
     }
 
     @Override
-    public AssetGroup deleteAssetGroupById(String guid, String username) throws AssetException {
+    public AssetGroupWSDL deleteAssetGroupById(String guid, String username) throws AssetException {
         LOG.info("Deleting asset group by id: {}.", guid);
         if (guid == null) {
             throw new InputArgumentException("No asset group to remove");
         }
 
-        AssetGroup deletedAssetGroup = assetGroupDomainModel.deleteAssetGroup(guid, username);
+        AssetGroupWSDL deletedAssetGroup = assetGroupDomainModel.deleteAssetGroup(guid, username);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetGroupDeleted(deletedAssetGroup.getGuid(),  username, GROUP_QUALIFIER_PREFIX  + deletedAssetGroup.getName() );
             messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);

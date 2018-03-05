@@ -259,14 +259,14 @@ public class AssetDataSourceRequestMapper {
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
     
-    public static String mapCreateAssetGroup(AssetGroup assetGroup, String username) throws AssetModelMapperException {
+    public static String mapCreateAssetGroup(AssetGroupWSDL assetGroup, String username) throws AssetModelMapperException {
         CreateAssetGroupRequest request = createCreateAssetGroupRequest();
         request.setUsername(username);
         request.setAssetGroup(assetGroup);
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
     
-    public static String mapUpdateAssetGroup(AssetGroup assetGroup, String username) throws AssetModelMapperException {
+    public static String mapUpdateAssetGroup(AssetGroupWSDL assetGroup, String username) throws AssetModelMapperException {
         UpdateAssetGroupRequest request = createUpdateAssetGroupRequest();
         request.setUsername(username);
         request.setAssetGroup(assetGroup);
@@ -300,7 +300,7 @@ public class AssetDataSourceRequestMapper {
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
     
-    public static String mapGetAssetListByAssetGroupRequest(List<AssetGroup> groups) throws AssetModelMapperException {
+    public static String mapGetAssetListByAssetGroupRequest(List<AssetGroupWSDL> groups) throws AssetModelMapperException {
         AssetListByAssetGroupRequest request = createGetAssetListByAssetGroupRequest();
         request.getGroups().addAll(groups);
         return JAXBMarshaller.marshallJaxBObjectToString(request);

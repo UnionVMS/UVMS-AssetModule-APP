@@ -80,7 +80,7 @@
                     <xsd:complexContent>
                         <xsd:extension base="v:AssetModuleRequest">
                             <xsd:sequence>
-                                <xsd:element name="groups" type="group:AssetGroup" minOccurs="0" maxOccurs="unbounded"/>
+                                <xsd:element name="groups" type="group:AssetGroupWSDL" minOccurs="0" maxOccurs="unbounded"/>
                             </xsd:sequence>
                         </xsd:extension>
                     </xsd:complexContent>
@@ -166,7 +166,7 @@
             <xsd:element name="GetAssetGroupListByAssetGuidResponse">
                 <xsd:complexType>
                     <xsd:sequence>
-                        <xsd:element name="groups" type="group:AssetGroup" minOccurs="0" maxOccurs="unbounded"/>
+                        <xsd:element name="groups" type="group:AssetGroupWSDL" minOccurs="0" maxOccurs="unbounded"/>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>

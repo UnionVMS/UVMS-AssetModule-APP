@@ -38,7 +38,7 @@ public class AssetGroupDomainModelBean  {
 
     private static final Logger LOG = LoggerFactory.getLogger(AssetGroupDomainModelBean.class);
 
-    public eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup getAssetGroup(String guid) throws AssetModelException {
+    public eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL getAssetGroup(String guid) throws AssetModelException {
         if (guid == null) {
             throw new InputArgumentException("Cannot get asset group because ID is null.");
         }
@@ -61,7 +61,7 @@ public class AssetGroupDomainModelBean  {
         return filterGroup;
     }
 
-    public eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup createAssetGroup(eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup assetGroup, String username) throws AssetModelException {
+    public eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL createAssetGroup(eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL assetGroup, String username) throws AssetModelException {
         if (assetGroup == null) {
             throw new InputArgumentException("Cannot create asset group because the group is null.");
         }
@@ -76,7 +76,7 @@ public class AssetGroupDomainModelBean  {
         }
     }
 
-    public eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup updateAssetGroup(eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup assetGroup, String username) throws AssetModelException {
+    public eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL updateAssetGroup(eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL assetGroup, String username) throws AssetModelException {
         if (assetGroup == null || assetGroup.getGuid() == null) {
             throw new InputArgumentException("Cannot update asset group because group or ID is null.");
         }
@@ -91,13 +91,13 @@ public class AssetGroupDomainModelBean  {
         }
     }
 
-    public List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup> getAssetGroupsByAssetGuid(String assetGuid) throws AssetModelException {
+    public List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL> getAssetGroupsByAssetGuid(String assetGuid) throws AssetModelException {
         if (assetGuid == null) {
             throw new InputArgumentException("Cannot get asset group list because the vesselGuid is null.");
         }
 
         try {
-            List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup> vesselGroupList = new ArrayList<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup>();
+            List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL> vesselGroupList = new ArrayList<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL>();
             List<AssetGroup> filterGroupList = assetGroupDao.getAssetGroupAll();
             for (AssetGroup group : filterGroupList) {
                 List<AssetGroupField> fields = group.getFields();
@@ -115,13 +115,13 @@ public class AssetGroupDomainModelBean  {
         }
     }
 
-    public List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup> getAssetGroupListByUser(String user) throws AssetModelException {
+    public List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL> getAssetGroupListByUser(String user) throws AssetModelException {
         if (user == null) {
             throw new InputArgumentException("Cannot get asset group list because the user is null.");
         }
 
         try {
-            List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup> assetGroupList = new ArrayList<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup>();
+            List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL> assetGroupList = new ArrayList<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL>();
             List<AssetGroup> filterGroupList = assetGroupDao.getAssetGroupByUser(user);
             for (AssetGroup group : filterGroupList) {
                 assetGroupList.add(AssetGroupMapper.toAssetGroup(group));
@@ -134,7 +134,7 @@ public class AssetGroupDomainModelBean  {
         }
     }
 
-    public eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup deleteAssetGroup(String guid, String username) throws AssetModelException {
+    public eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL deleteAssetGroup(String guid, String username) throws AssetModelException {
         if (guid == null) {
             throw new InputArgumentException("Cannot delete asset group because the group ID is null.");
         }
@@ -151,13 +151,13 @@ public class AssetGroupDomainModelBean  {
         }
     }
 
-	public List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup> getAssetGroupsByGroupList(List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup> groups) throws AssetModelException {
+	public List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL> getAssetGroupsByGroupList(List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL> groups) throws AssetModelException {
 		if (groups == null) {
             throw new InputArgumentException("Cannot get asset group list because the input is null.");
         }
 
 		List<String> guidList = new ArrayList<>();
-		for(eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup group : groups) {
+		for(eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL group : groups) {
 			guidList.add(group.getGuid());
 		}
 		
@@ -166,7 +166,7 @@ public class AssetGroupDomainModelBean  {
 		}
 		
         try {
-            List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup> vesselGroupList = new ArrayList<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup>();
+            List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL> vesselGroupList = new ArrayList<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL>();
             List<AssetGroup> filterGroupList = assetGroupDao.getAssetGroupsByGroupGuidList(guidList);
             for (AssetGroup group : filterGroupList) {
                 vesselGroupList.add(AssetGroupMapper.toAssetGroup(group));

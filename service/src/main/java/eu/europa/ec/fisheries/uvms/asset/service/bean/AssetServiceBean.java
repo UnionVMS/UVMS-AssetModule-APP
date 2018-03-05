@@ -54,7 +54,7 @@ import eu.europa.ec.fisheries.uvms.mapper.MapperUtil;
 import eu.europa.ec.fisheries.uvms.mapper.ModelToEntityMapper;
 import eu.europa.ec.fisheries.uvms.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
+import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetHistoryId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
@@ -291,7 +291,7 @@ public class AssetServiceBean implements AssetService {
 	 * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
 	 */
 	@Override
-	public List<Asset> getAssetListByAssetGroups(List<AssetGroup> groups) throws AssetException {
+	public List<Asset> getAssetListByAssetGroups(List<AssetGroupWSDL> groups) throws AssetException {
 		LOG.debug("Getting asset by ID.");
 		if (groups == null || groups.isEmpty()) {
 			throw new InputArgumentException("No groups in query");
@@ -643,16 +643,16 @@ public class AssetServiceBean implements AssetService {
 		}
 	}
 
-	public List<Asset> getAssetListByAssetGroup(List<AssetGroup> groups)
+	public List<Asset> getAssetListByAssetGroup(List<AssetGroupWSDL> groups)
 			throws AssetModelException, InputArgumentException {
 		if (groups == null || groups.isEmpty()) {
 			throw new InputArgumentException("Cannot get asset list because criteria are null.");
 		}
 
-		List<AssetGroup> dbAssetGroups = getAssetGroupsByGroupList(groups);
+		List<AssetGroupWSDL> dbAssetGroups = getAssetGroupsByGroupList(groups);
 
 		Set<AssetHistory> assetHistories = new HashSet<>();
-		for (AssetGroup group : dbAssetGroups) {
+		for (AssetGroupWSDL group : dbAssetGroups) {
 			List<SearchKeyValue> searchFields = SearchFieldMapper
 					.createSearchFieldsFromGroupCriterias(group.getSearchFields());
 			String sql = SearchFieldMapper.createSelectSearchSql(searchFields, group.isDynamic());
@@ -669,15 +669,15 @@ public class AssetServiceBean implements AssetService {
 
 	}
 
-	public List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup> getAssetGroupsByGroupList(
-			List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup> groups)
+	public List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL> getAssetGroupsByGroupList(
+			List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL> groups)
 			throws AssetModelException, InputArgumentException {
 		if (groups == null) {
 			throw new InputArgumentException("Cannot get asset group list because the input is null.");
 		}
 
 		List<String> guidList = new ArrayList<>();
-		for (eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup group : groups) {
+		for (eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL group : groups) {
 			guidList.add(group.getGuid());
 		}
 
@@ -686,7 +686,7 @@ public class AssetServiceBean implements AssetService {
 		}
 
 		try {
-			List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup> vesselGroupList = new ArrayList<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup>();
+			List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL> vesselGroupList = new ArrayList<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL>();
 			// List<AssetGroup> filterGroupList =
 			// assetGroupDao.getAssetGroupsByGroupGuidList(guidList);
 			// for (AssetGroup group : filterGroupList) {

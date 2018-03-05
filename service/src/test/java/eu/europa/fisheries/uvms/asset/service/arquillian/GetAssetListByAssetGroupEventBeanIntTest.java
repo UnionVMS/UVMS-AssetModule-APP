@@ -5,7 +5,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetListByAssetGroupEventBean;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
+import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
@@ -58,7 +58,7 @@ public class GetAssetListByAssetGroupEventBeanIntTest extends TransactionalTests
     @OperateOnDeployment("normal")
     public void testGetAssetListByAssetGroups() throws AssetException {
 
-        AssetGroup assetGroup = AssetHelper.create_asset_group();
+        AssetGroupWSDL assetGroup = AssetHelper.create_asset_group();
         assetGroup = assetGroupService.createAssetGroup(assetGroup, "TEST");
         em.flush();
 

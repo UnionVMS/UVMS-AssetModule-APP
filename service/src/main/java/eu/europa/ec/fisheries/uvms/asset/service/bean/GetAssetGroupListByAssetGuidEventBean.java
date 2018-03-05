@@ -8,7 +8,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
+import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +38,7 @@ public class GetAssetGroupListByAssetGuidEventBean {
     public void getAssetGroupListByAssetEvent(AssetMessageEvent message) {
         LOG.info("Get asset group by asset guid");
         try {
-            List<AssetGroup> response = assetGroup.getAssetGroupListByAssetGuid(message.getAssetGuid());
+            List<AssetGroupWSDL> response = assetGroup.getAssetGroupListByAssetGuid(message.getAssetGuid());
             LOG.debug("Send back assetGroupList response.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), AssetModuleResponseMapper.mapToAssetGroupListResponse(response));
         } catch (AssetException e) {

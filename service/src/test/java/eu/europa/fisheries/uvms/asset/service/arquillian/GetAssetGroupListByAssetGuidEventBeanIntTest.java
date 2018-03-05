@@ -7,7 +7,7 @@ import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetGroupEventBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetGroupListByAssetGuidEventBean;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
+import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
@@ -86,13 +86,13 @@ public class GetAssetGroupListByAssetGuidEventBeanIntTest extends TransactionalT
         // result should contain the group id for given asset
 
 
-        AssetGroup ag = AssetHelper.create_asset_group();
+        AssetGroupWSDL ag = AssetHelper.create_asset_group();
         List<AssetGroupSearchField> searchFields =  ag.getSearchFields();
         AssetGroupSearchField assetGroupSearchField = new AssetGroupSearchField();
         assetGroupSearchField.setKey(ConfigSearchField.GUID);
         assetGroupSearchField.setValue(a1.getAssetId().getGuid());
         searchFields.add(assetGroupSearchField);
-        AssetGroup  assetGroup = assetGroupService.createAssetGroup(ag, "TEST");
+        AssetGroupWSDL  assetGroup = assetGroupService.createAssetGroup(ag, "TEST");
         String assetGroupGUID = assetGroup.getGuid();
         em.flush();
 

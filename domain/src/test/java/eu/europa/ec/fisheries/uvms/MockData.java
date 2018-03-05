@@ -125,8 +125,8 @@ public class MockData {
 		return group;
 	}
 	
-	public static eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup getAssetGroup(String user, String id) {
-        eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup group = new eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup();
+	public static eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL getAssetGroup(String user, String id) {
+        eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL group = new eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL();
 		group.setGuid(id);
 		group.setName("GROUPNAME2");
 		group.setUser(user);

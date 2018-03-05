@@ -7,7 +7,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
+import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +39,7 @@ public class GetAssetGroupEventBean {
         LOG.info("Get asset group");
         try {
             AssetGroupListByUserRequest request = message.getRequest();
-            List<AssetGroup> response = assetGroup.getAssetGroupList(request.getUser());
+            List<AssetGroupWSDL> response = assetGroup.getAssetGroupList(request.getUser());
 
             LOG.debug("Send back assetGroupList response.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), AssetModuleResponseMapper.mapToAssetGroupListResponse(response));

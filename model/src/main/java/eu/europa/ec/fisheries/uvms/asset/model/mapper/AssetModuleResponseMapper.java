@@ -15,7 +15,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
+import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL;
 import eu.europa.ec.fisheries.wsdl.asset.group.ListAssetGroupResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.*;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
@@ -76,7 +76,7 @@ public class AssetModuleResponseMapper {
         }
     }
 
-    public static List<AssetGroup> mapToAssetGroupListFromResponse(TextMessage response, String correlationId) throws AssetModelMapperException {
+    public static List<AssetGroupWSDL> mapToAssetGroupListFromResponse(TextMessage response, String correlationId) throws AssetModelMapperException {
         try {
             validateResponse(response, correlationId);
             ListAssetGroupResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, ListAssetGroupResponse.class);
@@ -93,7 +93,7 @@ public class AssetModuleResponseMapper {
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 
-    public static String mapToAssetGroupListResponse(List<AssetGroup> assetGrup) throws AssetModelMarshallException {
+    public static String mapToAssetGroupListResponse(List<AssetGroupWSDL> assetGrup) throws AssetModelMarshallException {
         ListAssetGroupResponse response = new ListAssetGroupResponse();
         response.getAssetGroup().addAll(assetGrup);
         return JAXBMarshaller.marshallJaxBObjectToString(response);

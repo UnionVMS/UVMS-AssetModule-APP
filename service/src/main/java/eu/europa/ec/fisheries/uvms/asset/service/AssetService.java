@@ -17,7 +17,7 @@ import javax.ejb.Local;
 
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
+import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
 
 @Local
@@ -108,7 +108,7 @@ public interface AssetService {
      * @return
      * @throws AssetException
      */
-    List<Asset> getAssetListByAssetGroups(List<AssetGroup> groups) throws AssetException;
+    List<Asset> getAssetListByAssetGroups(List<AssetGroupWSDL> groups) throws AssetException;
 
     AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetException;
 

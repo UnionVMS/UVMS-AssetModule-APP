@@ -6,7 +6,7 @@ import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetListByAssetGroupEventBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.PingEventBean;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
+import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;

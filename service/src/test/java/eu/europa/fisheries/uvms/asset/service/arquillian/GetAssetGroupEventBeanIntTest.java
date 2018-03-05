@@ -4,7 +4,7 @@ import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetGroupEventBean;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
+import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -50,8 +50,8 @@ public class GetAssetGroupEventBeanIntTest extends TransactionalTests {
     public void testGetAssetGroup() throws AssetException {
 
 
-        AssetGroup assetGroup = AssetHelper.create_asset_group();
-        AssetGroup  createdAssetGroup = assetGroupService.createAssetGroup(assetGroup, "TEST");
+        AssetGroupWSDL assetGroup = AssetHelper.create_asset_group();
+        AssetGroupWSDL  createdAssetGroup = assetGroupService.createAssetGroup(assetGroup, "TEST");
         em.flush();
 
         AssetMessageEvent assetMessageEvent = new AssetMessageEvent(null);

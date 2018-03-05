@@ -14,7 +14,7 @@ package eu.europa.ec.fisheries.uvms.asset.model.mapper;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
+import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL;
 import eu.europa.ec.fisheries.wsdl.asset.module.*;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
@@ -70,7 +70,7 @@ public class AssetModuleRequestMapper {
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException
      */
-    public static String createAssetListModuleRequest(List<AssetGroup> assetGroups) throws AssetModelMapperException {
+    public static String createAssetListModuleRequest(List<AssetGroupWSDL> assetGroups) throws AssetModelMapperException {
         GetAssetListByAssetGroupsRequest request = new GetAssetListByAssetGroupsRequest();
         request.setMethod(AssetModuleMethod.ASSET_LIST_BY_GROUP);
         request.getGroups().addAll(assetGroups);

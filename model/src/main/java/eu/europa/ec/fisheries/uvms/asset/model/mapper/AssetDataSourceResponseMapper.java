@@ -18,7 +18,7 @@ import eu.europa.ec.fisheries.wsdl.asset.config.Config;
 import eu.europa.ec.fisheries.wsdl.asset.config.ConfigResponse;
 import eu.europa.ec.fisheries.wsdl.asset.fishinggear.FishingGearListResponse;
 import eu.europa.ec.fisheries.wsdl.asset.fishinggear.FishingGearResponse;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
+import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL;
 import eu.europa.ec.fisheries.wsdl.asset.group.ListAssetGroupResponse;
 import eu.europa.ec.fisheries.wsdl.asset.group.SingleAssetGroupResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
@@ -91,7 +91,7 @@ public class AssetDataSourceResponseMapper {
         }
     }
 
-    public static AssetGroup mapToAssetGroupFromResponse(TextMessage response, String correlationId) throws AssetModelMapperException {
+    public static AssetGroupWSDL mapToAssetGroupFromResponse(TextMessage response, String correlationId) throws AssetModelMapperException {
         try {
             validateResponse(response, correlationId);
             SingleAssetGroupResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, SingleAssetGroupResponse.class);
@@ -102,7 +102,7 @@ public class AssetDataSourceResponseMapper {
         }
     }
 
-    public static List<AssetGroup> mapToAssetGroupListFromResponse(TextMessage response, String correlationId) throws AssetModelMapperException {
+    public static List<AssetGroupWSDL> mapToAssetGroupListFromResponse(TextMessage response, String correlationId) throws AssetModelMapperException {
         try {
             validateResponse(response, correlationId);
             ListAssetGroupResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, ListAssetGroupResponse.class);

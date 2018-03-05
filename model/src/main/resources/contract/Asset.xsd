@@ -86,7 +86,7 @@
             <xsd:complexContent>
                 <xsd:extension base="t:AssetDataSourceRequest">
                     <xsd:sequence>
-                        <xsd:element name="groups" type="g:AssetGroup" minOccurs="0" maxOccurs="unbounded"/>
+                        <xsd:element name="groups" type="g:AssetGroupWSDL" minOccurs="0" maxOccurs="unbounded"/>
                     </xsd:sequence>
                 </xsd:extension>
             </xsd:complexContent>
