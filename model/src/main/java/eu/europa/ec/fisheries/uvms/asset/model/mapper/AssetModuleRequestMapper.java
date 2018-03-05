@@ -112,7 +112,7 @@ public class AssetModuleRequestMapper {
         return JAXBMarshaller.marshallJaxBObjectToString(upsertAssetModuleRequest);
     }
 
-    public static String createUpsertFishingGearModuleRequest(FishingGear fishingGear, String username) throws AssetModelMarshallException {
+    public static String createUpsertFishingGearModuleRequest(FishingGearDTO fishingGear, String username) throws AssetModelMarshallException {
         UpsertFishingGearModuleRequest request = new UpsertFishingGearModuleRequest();
         request.setMethod(AssetModuleMethod.FISHING_GEAR_UPSERT);
         request.setUsername(username);

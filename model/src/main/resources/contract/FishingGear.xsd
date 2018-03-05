@@ -46,7 +46,7 @@
             <xsd:complexContent>
                 <xsd:extension base="t:AssetDataSourceRequest">
                     <xsd:sequence>
-                        <xsd:element name="fishingGear" type="t:FishingGear" minOccurs="1" maxOccurs="1"/>
+                        <xsd:element name="fishingGear" type="t:FishingGearDTO" minOccurs="1" maxOccurs="1"/>
                     </xsd:sequence>
                 </xsd:extension>
             </xsd:complexContent>
@@ -58,7 +58,7 @@
     <xsd:element name="FishingGearResponse">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element name="FishingGear" type="t:FishingGear" minOccurs="0" maxOccurs="1"/>
+                <xsd:element name="FishingGear" type="t:FishingGearDTO" minOccurs="0" maxOccurs="1"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
@@ -66,7 +66,7 @@
     <xsd:element name="FishingGearListResponse">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element name="FishingGears" type="t:FishingGear" minOccurs="0" maxOccurs="unbounded"/>
+                <xsd:element name="FishingGears" type="t:FishingGearDTO" minOccurs="0" maxOccurs="unbounded"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>

@@ -15,7 +15,7 @@ import eu.europa.ec.fisheries.uvms.entity.asset.types.EventCodeEnum;
 import eu.europa.ec.fisheries.uvms.entity.model.*;
 import eu.europa.ec.fisheries.uvms.util.DateUtil;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
-import eu.europa.ec.fisheries.wsdl.asset.types.FishingGear;
+import eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO;
 import eu.europa.ec.fisheries.wsdl.asset.types.FishingGearType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ import java.util.*;
 
 public class EntityToModelMapper {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EntityToModelMapper.class);
+    //private static final Logger LOG = LoggerFactory.getLogger(EntityToModelMapper.class);
 
     private static Asset toAssetFromAssetAndEntity(Asset asset, AssetEntity entity) {
 
@@ -258,8 +258,8 @@ public class EntityToModelMapper {
         return list;
     }
 
-    public static FishingGear mapEntityToFishingGear(eu.europa.ec.fisheries.uvms.entity.model.FishingGear entity){
-        FishingGear fishingGear = new FishingGear();
+    public static FishingGearDTO mapEntityToFishingGear(eu.europa.ec.fisheries.uvms.entity.model.FishingGear entity){
+        FishingGearDTO fishingGear = new FishingGearDTO();
         fishingGear.setName(entity.getDescription());
         fishingGear.setId(entity.getId());
         fishingGear.setDescription(entity.getDescription());

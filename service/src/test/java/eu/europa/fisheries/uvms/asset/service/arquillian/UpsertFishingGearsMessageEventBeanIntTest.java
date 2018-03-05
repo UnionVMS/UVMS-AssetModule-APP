@@ -3,7 +3,7 @@ package eu.europa.fisheries.uvms.asset.service.arquillian;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.UpsertFishingGearsMessageEventBean;
 import eu.europa.ec.fisheries.uvms.mapper.EntityToModelMapper;
-import eu.europa.ec.fisheries.wsdl.asset.types.FishingGear;
+import eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO;
 import eu.europa.ec.fisheries.wsdl.asset.types.FishingGearType;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -57,7 +57,7 @@ public class UpsertFishingGearsMessageEventBeanIntTest extends TransactionalTest
 
         TextMessage message = null;
         AssetMessageEvent assetMessageEvent = new AssetMessageEvent(message);
-        FishingGear fishingGear = new FishingGear();
+        FishingGearDTO fishingGear = new FishingGearDTO();
 
         FishingGearType fishingGearType = new FishingGearType();
         fishingGearType.setCode(43L);
@@ -98,7 +98,7 @@ public class UpsertFishingGearsMessageEventBeanIntTest extends TransactionalTest
 
         TextMessage message = null;
         AssetMessageEvent assetMessageEvent = new AssetMessageEvent(message);
-        FishingGear fishingGear = new FishingGear();
+        FishingGearDTO fishingGear = new FishingGearDTO();
 
         FishingGearType fishingGearType = new FishingGearType();
         fishingGearType.setCode(43L);
@@ -123,7 +123,7 @@ public class UpsertFishingGearsMessageEventBeanIntTest extends TransactionalTest
         query.setParameter("description",description);
 
         eu.europa.ec.fisheries.uvms.entity.model.FishingGear  tmpFetchedFishingGear = (eu.europa.ec.fisheries.uvms.entity.model.FishingGear) query.getSingleResult();
-        eu.europa.ec.fisheries.wsdl.asset.types.FishingGear fetchedFishingGear = EntityToModelMapper.mapEntityToFishingGear(tmpFetchedFishingGear);
+        eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fetchedFishingGear = EntityToModelMapper.mapEntityToFishingGear(tmpFetchedFishingGear);
 
         description = "CHANGEDDescription";
         fetchedFishingGear.setDescription(description);
@@ -136,7 +136,7 @@ public class UpsertFishingGearsMessageEventBeanIntTest extends TransactionalTest
         query.setParameter("externalId", 52L);
         query.setParameter("description",description);
         eu.europa.ec.fisheries.uvms.entity.model.FishingGear  tmpFetchedFishingGear2 = (eu.europa.ec.fisheries.uvms.entity.model.FishingGear) query.getSingleResult();
-        eu.europa.ec.fisheries.wsdl.asset.types.FishingGear fetchedFishingGear2 = EntityToModelMapper.mapEntityToFishingGear(tmpFetchedFishingGear2);
+        eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fetchedFishingGear2 = EntityToModelMapper.mapEntityToFishingGear(tmpFetchedFishingGear2);
 
 
 

@@ -140,7 +140,7 @@ public class AssetModuleResponseMapper {
         return response;
     }
 
-    public static String createUpsertFishingGearModuleResponse(FishingGear fishingGear) throws AssetModelMapperException {
+    public static String createUpsertFishingGearModuleResponse(FishingGearDTO fishingGear) throws AssetModelMapperException {
             UpsertFishingGearModuleResponse upsertResponse = new UpsertFishingGearModuleResponse();
             upsertResponse.setFishingGear(fishingGear);
             return JAXBMarshaller.marshallJaxBObjectToString(upsertResponse);

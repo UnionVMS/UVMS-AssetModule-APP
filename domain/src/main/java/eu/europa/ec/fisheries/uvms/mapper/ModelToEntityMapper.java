@@ -240,7 +240,7 @@ public class ModelToEntityMapper {
         throw new AssetModelValidationException(errorMsg);
     }
 
-    public static FishingGear mapFishingGearToEntity(eu.europa.ec.fisheries.wsdl.asset.types.FishingGear fishingGear, String username){
+    public static FishingGear mapFishingGearToEntity(eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear, String username){
         FishingGear entity = new FishingGear();
         entity.setCode(fishingGear.getCode());
         entity.setDescription(fishingGear.getDescription());

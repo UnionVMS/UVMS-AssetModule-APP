@@ -211,7 +211,7 @@
                     <xsd:extension base="v:AssetModuleRequest">
                         <xsd:sequence>
                             <xsd:element name="username" type="xsd:string"/>
-                            <xsd:element name="fishingGear" type="tv:FishingGear" minOccurs="1" maxOccurs="1"/>
+                            <xsd:element name="fishingGear" type="tv:FishingGearDTO" minOccurs="1" maxOccurs="1"/>
                         </xsd:sequence>
                     </xsd:extension>
                     </xsd:complexContent>
@@ -221,7 +221,7 @@
             <xsd:element name="UpsertFishingGearModuleResponse">
                 <xsd:complexType>
                     <xsd:sequence>
-                        <xsd:element name="fishingGear" type="tv:FishingGear" minOccurs="0" maxOccurs="1"/>
+                        <xsd:element name="fishingGear" type="tv:FishingGearDTO" minOccurs="0" maxOccurs="1"/>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>

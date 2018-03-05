@@ -37,13 +37,13 @@ public class FishingGearDomainModelBean  {
     @EJB
     private FishingGearTypeDao fishingGearTypeBean;
 
-    public eu.europa.ec.fisheries.wsdl.asset.types.FishingGear upsertFishingGear(eu.europa.ec.fisheries.wsdl.asset.types.FishingGear gear, String username) {
+    public eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO upsertFishingGear(eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO gear, String username) {
         FishingGear fishingGearEntity = updateFishinGear(gear, username);
-        eu.europa.ec.fisheries.wsdl.asset.types.FishingGear fishingGear = EntityToModelMapper.mapEntityToFishingGear(fishingGearEntity);
+        eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear = EntityToModelMapper.mapEntityToFishingGear(fishingGearEntity);
         return fishingGear;
     }
 
-    private FishingGear updateFishinGear(eu.europa.ec.fisheries.wsdl.asset.types.FishingGear fishingGear, String username){
+    private FishingGear updateFishinGear(eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear, String username){
         FishingGear fishingGearByExternalIdEntity = null;
         try {
             fishingGearByExternalIdEntity = fishingGearBean.getFishingGearByExternalId(fishingGear.getExternalId());
@@ -81,7 +81,7 @@ public class FishingGearDomainModelBean  {
         return fishingGearByExternalIdEntity;
     }
 
-    private void updateFishingGearTypeProperties(eu.europa.ec.fisheries.wsdl.asset.types.FishingGear fishingGear, String username, FishingGearType fishingGearTypeByCodeEntity) {
+    private void updateFishingGearTypeProperties(eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear, String username, FishingGearType fishingGearTypeByCodeEntity) {
         fishingGearTypeByCodeEntity.setUpdateUser(username);
         fishingGearTypeByCodeEntity.setDescription(fishingGear.getFishingGearType().getName());
         fishingGearTypeByCodeEntity.setCode(fishingGear.getFishingGearType().getCode());
@@ -89,7 +89,7 @@ public class FishingGearDomainModelBean  {
         fishingGearTypeByCodeEntity.setUpdateDateTime(DateUtils.getNowDateUTC());
     }
 
-    private void updateFishingGearProperties(eu.europa.ec.fisheries.wsdl.asset.types.FishingGear fishingGear, String username, FishingGear fishingGearByExternalIdEntity, FishingGearType fishingGearType) {
+    private void updateFishingGearProperties(eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear, String username, FishingGear fishingGearByExternalIdEntity, FishingGearType fishingGearType) {
         fishingGearByExternalIdEntity.setFishingGearType(fishingGearType);
         fishingGearByExternalIdEntity.setCode(fishingGear.getCode());
         fishingGearByExternalIdEntity.setUpdatedBy(username);

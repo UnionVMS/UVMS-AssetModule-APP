@@ -34,7 +34,7 @@ public class AssetMessageEvent {
     private String assetGuid;
     private Asset asset;
     private String username;
-    private FishingGear fishingGear;
+    private FishingGearDTO fishingGear;
     private GetFlagStateByGuidAndDateRequest getFlagStateByGuidAndDateRequest;
     private GetAssetFromAssetIdAndDateRequest getAssetFromAssetIdAndDateRequest;
 
@@ -79,7 +79,7 @@ public class AssetMessageEvent {
         this.username = username;
     }
 
-    public AssetMessageEvent(TextMessage message, FishingGear fishingGear, String username){
+    public AssetMessageEvent(TextMessage message, FishingGearDTO fishingGear, String username){
         this.message = message;
         this.username = username;
         this.fishingGear = fishingGear;
@@ -159,11 +159,11 @@ public class AssetMessageEvent {
         this.username = username;
     }
 
-    public FishingGear getFishingGear() {
+    public FishingGearDTO getFishingGear() {
         return fishingGear;
     }
 
-    public void setFishingGear(FishingGear fishingGear) {
+    public void setFishingGear(FishingGearDTO fishingGear) {
         this.fishingGear = fishingGear;
     }
     

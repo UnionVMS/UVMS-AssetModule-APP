@@ -268,7 +268,7 @@
         </xsd:complexType>
     </xsd:element>
 
-    <xsd:complexType name="FishingGear">
+    <xsd:complexType name="FishingGearDTO">
         <xsd:sequence>
             <xsd:element name="id" type="xsd:long"/>
             <xsd:element name="name" type="xsd:string"/>

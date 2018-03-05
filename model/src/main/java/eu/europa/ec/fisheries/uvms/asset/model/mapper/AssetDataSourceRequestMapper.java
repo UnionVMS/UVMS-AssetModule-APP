@@ -332,7 +332,7 @@ public class AssetDataSourceRequestMapper {
         return JAXBMarshaller.marshallJaxBObjectToString(assetListGroupByFlagStateRequest);
     }
 
-    public static String mapUpsertFishingGearRequest(FishingGear fishingGear, String username) throws AssetModelMarshallException {
+    public static String mapUpsertFishingGearRequest(FishingGearDTO fishingGear, String username) throws AssetModelMarshallException {
         UpsertFishingGearRequest upsertFishingGearListRequest = new UpsertFishingGearRequest();
         upsertFishingGearListRequest.setMethod(AssetDataSourceMethod.FISHING_GEAR_UPSERT);
         upsertFishingGearListRequest.setUsername(username);
