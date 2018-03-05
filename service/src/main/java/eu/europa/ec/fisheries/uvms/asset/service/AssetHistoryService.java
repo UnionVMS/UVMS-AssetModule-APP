@@ -13,28 +13,18 @@ package eu.europa.ec.fisheries.uvms.asset.service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-
-import javax.ejb.Local;
-
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
-import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
+import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.FlagStateType;
 
-/**
- **/
-@Local
 public interface AssetHistoryService {
 
-    public List<Asset> getAssetHistoryListByAssetId(String assetId, Integer maxNbr) throws AssetException;
+    List<Asset> getAssetHistoryListByAssetId(String assetId, Integer maxNbr) throws AssetServiceException;
 
-    public Asset getAssetHistoryByAssetHistGuid(String assetHistId) throws AssetException;
+    Asset getAssetHistoryByAssetHistGuid(String assetHistId) throws AssetServiceException;
 
-    FlagStateType getFlagStateByIdAndDate(String assetGuid, Date date) throws AssetException;
+    FlagStateType getFlagStateByIdAndDate(String assetGuid, Date date) throws AssetServiceException;
 
-    Asset getAssetByIdAndDate(String type, String value, Date date) throws AssetException ;
+    Asset getAssetByIdAndDate(String type, String value, Date date) throws AssetServiceException;
 
-    }
+}

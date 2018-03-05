@@ -11,26 +11,29 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
-import java.util.*;
-
-import javax.ejb.EJB;
+import java.util.Date;
+import java.util.List;
 import javax.ejb.Stateless;
-
-import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
-import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
+import javax.inject.Inject;
+import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
+import eu.europa.ec.fisheries.uvms.asset.exception.InputArgumentException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
+import eu.europa.ec.fisheries.uvms.dao.AssetDao;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
-import eu.europa.ec.fisheries.wsdl.asset.types.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import eu.europa.ec.fisheries.uvms.mapper.EntityToModelMapper;
+import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
+import eu.europa.ec.fisheries.wsdl.asset.types.FlagStateType;
 
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-
-/***/
 @Stateless
 public class AssetHistoryServiceBean implements AssetHistoryService {
 
+<<<<<<< HEAD
     final static Logger LOG = LoggerFactory.getLogger(AssetHistoryServiceBean.class);
     @EJB
     MessageProducer messageProducer;
@@ -38,68 +41,80 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
     AssetQueueConsumer reciever;
     @EJB
     AssetDomainModelBean assetDomainModel;
+=======
+    @Inject
+    private AssetDao assetDao;
+>>>>>>> 9f1fcd1c1ccb49fd4bf5103b914da90c1276439b
 
     @Override
-    public List<Asset> getAssetHistoryListByAssetId(String assetId, Integer maxNbr) throws AssetException {
-        LOG.info("Getting AssetHistoryList by AssetId: {}.", assetId);
-        AssetId assetIdData = new AssetId();
-        assetIdData.setValue(assetId);
-        assetIdData.setType(AssetIdType.GUID);
-        List<Asset> assetHistoryList = assetDomainModel.getAssetHistoryListByAssetId(assetIdData, maxNbr);
-        return assetHistoryList;
+    public List<Asset> getAssetHistoryListByAssetId(String assetId, Integer maxNbr) throws AssetServiceException {
+        try {
+            AssetEntity asset = assetDao.getAssetByGuid(assetId);
+            return EntityToModelMapper.toAssetHistoryList(asset, maxNbr);
+        } catch (AssetDaoException e) {
+            throw new AssetServiceException("Could not find asset histories from id " + assetId, e);
+        }
     }
 
     @Override
-    public Asset getAssetHistoryByAssetHistGuid(String assetHistId) throws AssetException {
-        LOG.info("Getting AssetHistory by AssetHistoryGuid: {}.", assetHistId);
-        AssetHistoryId assetHistoryId = new AssetHistoryId();
-        assetHistoryId.setEventId(assetHistId);
-        Asset assetHistory = assetDomainModel.getAssetHistory(assetHistoryId);
-        return assetHistory;
+    public Asset getAssetHistoryByAssetHistGuid(String assetHistId) throws AssetServiceException {
+        try {
+            AssetHistory assetHistory = assetDao.getAssetHistoryByGuid(assetHistId);
+            return EntityToModelMapper.toAssetFromAssetHistory(assetHistory);
+        } catch (AssetDaoException e) {
+            throw new AssetServiceException("Could not find asset history by id " + assetHistId, e);
+        }
     }
 
-
     @Override
-    public FlagStateType getFlagStateByIdAndDate(String assetGuid, Date date) throws AssetException {
+    public FlagStateType getFlagStateByIdAndDate(String assetGuid, Date date) throws AssetServiceException {
+        if (assetGuid == null) {
+            throw new InputArgumentException("Cannot get asset because asset ID is null.");
+        }
+        if (date == null) {
+            throw new InputArgumentException("Cannot get asset because date is null.");
+        }
 
+        try {
+            FlagState flagState = assetDao.getAssetFlagStateByIdAndDate(assetGuid, date);
 
-        FlagState flagState = assetDomainModel.getFlagStateByIdAndDate(assetGuid, date);
-        FlagStateType flagStateType = new FlagStateType();
-        if (flagState != null) {
+            FlagStateType flagStateType = new FlagStateType();
             flagStateType.setCode(flagState.getCode());
             flagStateType.setName(flagState.getName());
             flagStateType.setId(flagState.getId());
             flagStateType.setUpdatedBy(flagState.getUpdatedBy());
             flagStateType.setUpdateTime(DateUtils.dateToString(flagState.getUpdateTime()));
             return flagStateType;
+        } catch (AssetDaoException e) {
+            throw new AssetServiceException("Could not get flag state by id " + assetGuid, e);
         }
-        throw new AssetException("FlagSate not found. Check you setup");
     }
 
-
     @Override
-    public Asset getAssetByIdAndDate(String type, String value, Date date) throws AssetException {
+    public Asset getAssetByIdAndDate(String type, String value, Date date) throws AssetServiceException {
 
         if (type == null) {
-            throw new AssetException("not a valid type");
+            throw new InputArgumentException("Type is null");
         }
         AssetIdType assetType = AssetIdType.fromValue(type);
         if (assetType == null) {
-            throw new AssetException("not a valid type " + type);
+            throw new InputArgumentException("Not a valid type: " + type);
         }
         if (value == null) {
-            throw new AssetException("not a valid value");
+            throw new InputArgumentException("Value is null");
         }
         if (date == null) {
-            throw new AssetException("not a valid date");
+            throw new InputArgumentException("Date is null");
         }
 
-        AssetId assetId = new AssetId();
-        assetId.setType(assetType);
-        assetId.setValue(value);
-        Asset asset = assetDomainModel.getAssetByIdAndDate(assetId, date);
-        return asset;
+        try {
+            AssetId assetId = new AssetId();
+            assetId.setType(assetType);
+            assetId.setValue(value);
+            AssetEntity assetEntity = assetDao.getAssetFromAssetIdAndDate(assetId, date);
+            return EntityToModelMapper.toAssetFromEntity(assetEntity);
+        } catch (AssetDaoException e) {
+            throw new AssetServiceException("Could not get asset by id and date", e);
+        }
     }
-
-
 }
