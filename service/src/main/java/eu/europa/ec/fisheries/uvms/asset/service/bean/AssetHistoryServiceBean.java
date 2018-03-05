@@ -19,7 +19,6 @@ import javax.ejb.Stateless;
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
-import eu.europa.ec.fisheries.uvms.bean.AssetDomainModelBean;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
