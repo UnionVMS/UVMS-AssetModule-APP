@@ -25,10 +25,10 @@ public class EntityToModelMapper {
 
     //private static final Logger LOG = LoggerFactory.getLogger(EntityToModelMapper.class);
 
-    private static Asset toAssetFromAssetAndEntity(Asset asset, AssetEntity entity) {
+    private static AssetDTO toAssetFromAssetAndEntity(AssetDTO asset, AssetEntity entity) {
 
         if (asset == null) {
-            asset = new Asset();
+            asset = new AssetDTO();
         }
 
         AssetId assetId = new AssetId();
@@ -88,7 +88,7 @@ public class EntityToModelMapper {
         return asset;
     }
 
-    private static void toAssetFromAssetHistory(Asset asset, AssetHistory historyEntity) {
+    private static void toAssetFromAssetHistory(AssetDTO asset, AssetHistory historyEntity) {
 
         if (historyEntity != null) {
             AssetHistoryId assetHistoryId = new AssetHistoryId();
@@ -166,8 +166,8 @@ public class EntityToModelMapper {
         }
     }
 
-    public static Asset toAssetFromEntity(AssetEntity entity) {
-        Asset asset = toAssetFromAssetAndEntity(null, entity);
+    public static AssetDTO toAssetFromEntity(AssetEntity entity) {
+        AssetDTO asset = toAssetFromAssetAndEntity(null, entity);
         List<AssetHistory> historyList = entity.getHistories();
 
         if (historyList != null && !historyList.isEmpty()) {
@@ -180,9 +180,9 @@ public class EntityToModelMapper {
         return asset;
     }
 
-    public static List<Asset> toAssetHistoryList(AssetEntity assetHistory, Integer maxNbr) {
+    public static List<AssetDTO> toAssetHistoryList(AssetEntity assetHistory, Integer maxNbr) {
 
-        List<Asset> assets = new ArrayList<>();
+        List<AssetDTO> assets = new ArrayList<>();
         if (assetHistory == null) {
             return assets;
         }
@@ -215,7 +215,7 @@ public class EntityToModelMapper {
 
         if (historyList != null) {
             for (AssetHistory history : historyList) {
-                Asset asset = toAssetFromAssetAndEntity(null, assetHistory);
+                AssetDTO asset = toAssetFromAssetAndEntity(null, assetHistory);
                 toAssetFromAssetHistory(asset, history);
                 assets.add(asset);
             }
@@ -224,8 +224,8 @@ public class EntityToModelMapper {
         return assets;
     }
 
-    public static Asset toAssetFromAssetHistory(AssetHistory assetHistory) {
-        Asset asset = toAssetFromAssetAndEntity(null, assetHistory.getAsset());
+    public static AssetDTO toAssetFromAssetHistory(AssetHistory assetHistory) {
+        AssetDTO asset = toAssetFromAssetAndEntity(null, assetHistory.getAsset());
         toAssetFromAssetHistory(asset, assetHistory);
         return asset;
     }

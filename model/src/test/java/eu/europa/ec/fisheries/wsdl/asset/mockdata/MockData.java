@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetDTO;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import eu.europa.ec.fisheries.wsdl.asset.types.CarrierSource;
 
@@ -23,8 +23,8 @@ import eu.europa.ec.fisheries.wsdl.asset.types.CarrierSource;
  **/
 public class MockData {
 
-    public static Asset getAssetDto(Integer id) {
-        Asset dto = new Asset();
+    public static AssetDTO getAssetDto(Integer id) {
+        AssetDTO dto = new AssetDTO();
 
         dto.setCfr("CFR" + id);
         dto.setCountryCode("SWE" + id);
@@ -66,8 +66,8 @@ public class MockData {
         return dto;
     }
 
-    public static List<Asset> getAssetDtoList(Integer amount) {
-        List<Asset> dtoList = new ArrayList<>();
+    public static List<AssetDTO> getAssetDtoList(Integer amount) {
+        List<AssetDTO> dtoList = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
             dtoList.add(getAssetDto(i));
         }

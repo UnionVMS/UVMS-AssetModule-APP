@@ -129,7 +129,7 @@
             <xsd:element name="GetAssetModuleResponse">
                 <xsd:complexType>
                     <xsd:sequence>
-                        <xsd:element name="asset" type="tv:Asset"/>
+                        <xsd:element name="asset" type="tv:AssetDTO"/>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
@@ -189,7 +189,7 @@
                         <xsd:extension base="v:AssetModuleRequest">
                             <xsd:sequence>
                                 <xsd:element name="userName" type="xsd:string"/>
-                                <xsd:element name="asset" type="tv:Asset" minOccurs="1" maxOccurs="1"/>
+                                <xsd:element name="asset" type="tv:AssetDTO" minOccurs="1" maxOccurs="1"/>
                             </xsd:sequence>
                         </xsd:extension>
                     </xsd:complexContent>
@@ -199,7 +199,7 @@
             <xsd:element name="UpsertAssetModuleResponse">
                 <xsd:complexType>
                     <xsd:sequence>
-                        <xsd:element name="asset" type="tv:Asset"/>
+                        <xsd:element name="asset" type="tv:AssetDTO"/>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>

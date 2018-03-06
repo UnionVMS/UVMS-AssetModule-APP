@@ -6,7 +6,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetListEventBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.UpsertAssetMessageEventBean;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetDTO;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -54,7 +54,7 @@ public class UpsertAssetMessageEventBeanIntTest extends TransactionalTests {
     public void upsertAsset_existing() throws AssetException {
 
         // create one first
-        Asset createdAsset = null;
+        AssetDTO createdAsset = null;
         // create an Asset
         createdAsset = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID), "test");
         em.flush();
@@ -70,7 +70,7 @@ public class UpsertAssetMessageEventBeanIntTest extends TransactionalTests {
         em.flush();
 
         // then get it and compare changed values
-        Asset  fetchedAsset = assetService.getAssetByGuid(createdAssetGuid);
+        AssetDTO  fetchedAsset = assetService.getAssetByGuid(createdAssetGuid);
         String fetchedAssetGuid = fetchedAsset.getAssetId().getGuid();
 
         Assert.assertTrue(!interceptorForTests.isFailed() && createdAssetGuid.equals(fetchedAssetGuid));
@@ -81,7 +81,7 @@ public class UpsertAssetMessageEventBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void upsertAsset_nonexisting() throws AssetException {
 
-        Asset anAsset = AssetHelper.helper_createAsset(AssetIdType.GUID);
+        AssetDTO anAsset = AssetHelper.helper_createAsset(AssetIdType.GUID);
 
         // then update it
         TextMessage message = null;

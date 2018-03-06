@@ -32,7 +32,7 @@ public class AssetMessageEvent {
     private GetAssetListByAssetGroupsRequest assetListByGroup;
     private AssetFault fault;
     private String assetGuid;
-    private Asset asset;
+    private AssetDTO asset;
     private String username;
     private FishingGearDTO fishingGear;
     private GetFlagStateByGuidAndDateRequest getFlagStateByGuidAndDateRequest;
@@ -73,7 +73,7 @@ public class AssetMessageEvent {
         this.assetGuid = assetGuid;
     }
 
-    public AssetMessageEvent(TextMessage message, Asset asset, String username){
+    public AssetMessageEvent(TextMessage message, AssetDTO asset, String username){
         this.message = message;
         this.asset = asset;
         this.username = username;
@@ -143,11 +143,11 @@ public class AssetMessageEvent {
         this.assetGuid = assetGuid;
     }
 
-    public Asset getAsset() {
+    public AssetDTO getAsset() {
         return asset;
     }
 
-    public void setAsset(Asset asset) {
+    public void setAsset(AssetDTO asset) {
         this.asset = asset;
     }
 

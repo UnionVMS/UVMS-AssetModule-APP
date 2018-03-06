@@ -30,7 +30,7 @@ public interface AssetService {
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException
      */
-    Asset createAsset(Asset asset, String username) throws AssetException;
+    AssetDTO createAsset(AssetDTO asset, String username) throws AssetException;
 
     /**
      * Get all Assets
@@ -58,7 +58,7 @@ public interface AssetService {
      * @return
      * @throws AssetException
      */
-    Asset getAssetById(AssetId assetId, AssetDataSourceQueue source) throws AssetException;
+    AssetDTO getAssetById(AssetId assetId, AssetDataSourceQueue source) throws AssetException;
 
     /**
      * Get a Asset by guid
@@ -67,7 +67,7 @@ public interface AssetService {
      * @return
      * @throws AssetException
      */
-    Asset getAssetByGuid(String guid) throws AssetException;
+    AssetDTO getAssetByGuid(String guid) throws AssetException;
 
     /**
      * Update a Asset
@@ -78,7 +78,7 @@ public interface AssetService {
      * @return
      * @throws AssetException
      */
-    Asset updateAsset(Asset asset,String username, String comment) throws AssetException;
+    AssetDTO updateAsset(AssetDTO asset,String username, String comment) throws AssetException;
 
     /**
      * Archives an asset.
@@ -88,7 +88,7 @@ public interface AssetService {
      * @return the archived asset
      * @throws AssetException if unsuccessful
      */
-    Asset archiveAsset(Asset asset, String username, String comment) throws AssetException;
+    AssetDTO archiveAsset(AssetDTO asset, String username, String comment) throws AssetException;
 
     /**
      * Create asset if not exists, otherwise update asset
@@ -97,7 +97,7 @@ public interface AssetService {
      * @return
      * @throws AssetException
      */
-    Asset upsertAsset(Asset asset, String username) throws AssetException;
+    AssetDTO upsertAsset(AssetDTO asset, String username) throws AssetException;
 
     /**
      *
@@ -108,7 +108,7 @@ public interface AssetService {
      * @return
      * @throws AssetException
      */
-    List<Asset> getAssetListByAssetGroups(List<AssetGroupWSDL> groups) throws AssetException;
+    List<AssetDTO> getAssetListByAssetGroups(List<AssetGroupWSDL> groups) throws AssetException;
 
     AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetException;
 

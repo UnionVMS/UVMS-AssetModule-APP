@@ -11,10 +11,10 @@ import java.util.UUID;
 
 public abstract class AssetHelper {
 
-    public static Asset helper_createAsset(AssetIdType assetIdType, String ircs) {
+    public static AssetDTO helper_createAsset(AssetIdType assetIdType, String ircs) {
 
 
-        Asset asset = new Asset();
+        AssetDTO asset = new AssetDTO();
         AssetId assetId = new AssetId();
         assetId.setType(assetIdType);
         switch (assetIdType) {
@@ -78,7 +78,7 @@ public abstract class AssetHelper {
     }
 
 
-    public static Asset helper_createAsset(AssetIdType assetIdType) {
+    public static AssetDTO helper_createAsset(AssetIdType assetIdType) {
         String ircs = generateARandomStringWithMaxLength(1);
         return AssetHelper.helper_createAsset(assetIdType, ircs);
 

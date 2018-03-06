@@ -30,7 +30,7 @@ public class ModelToEntityMapper {
 
     private static final Logger LOG = LoggerFactory.getLogger(ModelToEntityMapper.class);
 
-    public static AssetEntity mapToNewAssetEntity(Asset asset, List<String> validLicenseTypes, String username) throws AssetModelValidationException {
+    public static AssetEntity mapToNewAssetEntity(AssetDTO asset, List<String> validLicenseTypes, String username) throws AssetModelValidationException {
         AssetEntity entity = new AssetEntity();
         Carrier carrier = new Carrier();
 
@@ -62,7 +62,7 @@ public class ModelToEntityMapper {
         return mapToAssetEntity(entity, asset, validLicenseTypes, username);
     }
 
-    public static AssetEntity mapToAssetEntity(AssetEntity entity, Asset asset, List<String> validLicenseTypes, String username) throws AssetModelValidationException {
+    public static AssetEntity mapToAssetEntity(AssetEntity entity, AssetDTO asset, List<String> validLicenseTypes, String username) throws AssetModelValidationException {
 
         entity.getCarrier().setActive(asset.isActive());
 

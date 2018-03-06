@@ -12,7 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.model.mapper;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetDTO;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 
 public class AssetDataSourceRequestValidator {
@@ -27,11 +27,11 @@ public class AssetDataSourceRequestValidator {
 	private static final String MMSI_PATTERN = "^\\d{9}$";
 	private static final String[] YES_NO_UNKNOWN = new String[]{"Y","N","U"};
 
-    public static void validateCreateAsset(Asset asset) throws AssetModelValidationException {
+    public static void validateCreateAsset(AssetDTO asset) throws AssetModelValidationException {
         validateAsset(asset);
     }
 
-    public static void validateUpdateAsset(Asset asset) throws AssetModelValidationException {
+    public static void validateUpdateAsset(AssetDTO asset) throws AssetModelValidationException {
         validateAssetId(asset.getAssetId());
         validateAsset(asset);
     }
@@ -45,7 +45,7 @@ public class AssetDataSourceRequestValidator {
         }
     }
 
-    private static void validateAsset(Asset asset) throws AssetModelValidationException {
+    private static void validateAsset(AssetDTO asset) throws AssetModelValidationException {
         validateCFR(asset.getCfr());
         validateIRCS(asset.getIrcs());
         validateIrcsIndicator(asset.getHasIrcs());

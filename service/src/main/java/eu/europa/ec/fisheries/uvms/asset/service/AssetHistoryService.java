@@ -14,17 +14,17 @@ package eu.europa.ec.fisheries.uvms.asset.service;
 import java.util.Date;
 import java.util.List;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetDTO;
 import eu.europa.ec.fisheries.wsdl.asset.types.FlagStateType;
 
 public interface AssetHistoryService {
 
-    List<Asset> getAssetHistoryListByAssetId(String assetId, Integer maxNbr) throws AssetServiceException;
+    List<AssetDTO> getAssetHistoryListByAssetId(String assetId, Integer maxNbr) throws AssetServiceException;
 
-    Asset getAssetHistoryByAssetHistGuid(String assetHistId) throws AssetServiceException;
+    AssetDTO getAssetHistoryByAssetHistGuid(String assetHistId) throws AssetServiceException;
 
     FlagStateType getFlagStateByIdAndDate(String assetGuid, Date date) throws AssetServiceException;
 
-    Asset getAssetByIdAndDate(String type, String value, Date date) throws AssetServiceException;
+    AssetDTO getAssetByIdAndDate(String type, String value, Date date) throws AssetServiceException;
 
 }

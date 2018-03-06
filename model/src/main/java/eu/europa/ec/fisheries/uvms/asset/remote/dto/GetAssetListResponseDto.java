@@ -11,22 +11,22 @@ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more d
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetDTO;
 
 import java.io.Serializable;
 import java.util.List;
 
 public class GetAssetListResponseDto implements Serializable{
 
-    List<Asset> assetList;
+    List<AssetDTO> assetList;
     Integer totalNumberOfPages;
     Integer currentPage;
 
-    public List<Asset> getAssetList() {
+    public List<AssetDTO> getAssetList() {
         return assetList;
     }
 
-    public void setAssetList(List<Asset> assetList) {
+    public void setAssetList(List<AssetDTO> assetList) {
         this.assetList = assetList;
     }
 

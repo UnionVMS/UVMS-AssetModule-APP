@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetDTO;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import eu.europa.ec.fisheries.wsdl.asset.types.CarrierSource;
 import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
@@ -24,8 +24,8 @@ import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
  **/
 public class TestMockData {
 
-    public static Asset getAssetDto(Integer id) {
-        Asset dto = new Asset();
+    public static AssetDTO getAssetDto(Integer id) {
+        AssetDTO dto = new AssetDTO();
 
         dto.setCfr("CFR" + id);
         dto.setCountryCode("SWE" + id);

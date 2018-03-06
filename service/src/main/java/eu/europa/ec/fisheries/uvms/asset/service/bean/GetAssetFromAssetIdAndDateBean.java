@@ -8,7 +8,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetFromAssetIdAndDateRequest;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetDTO;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +69,7 @@ public class GetAssetFromAssetIdAndDateBean {
         String val = assetId.getValue();
         Date date = getAssetFromAssetIdAndDate.getDate();
         try {
-            Asset response = service.getAssetByIdAndDate(typ, val, date);
+            AssetDTO response = service.getAssetByIdAndDate(typ, val, date);
             messageProducer.sendModuleResponseMessage(event.getMessage(), AssetModuleResponseMapper.mapAssetModuleResponse(response));
 
         } catch (AssetException e) {

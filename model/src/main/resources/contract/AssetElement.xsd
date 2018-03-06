@@ -4,7 +4,7 @@
             targetNamespace="types.asset.wsdl.fisheries.ec.europa.eu"
             version="1.0">
     
-    <xsd:complexType name="Asset">
+    <xsd:complexType name="AssetDTO">
         <xsd:sequence>
             <xsd:element name="assetId" type="AssetId"/>
             <xsd:element name="active" type="xsd:boolean"/>
@@ -237,7 +237,7 @@
     <xsd:element name="SingleAssetResponse">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element name="asset" type="Asset"/>
+                <xsd:element name="asset" type="AssetDTO"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
@@ -255,7 +255,7 @@
             <xsd:sequence>
                 <xsd:element name="totalNumberOfPages" type="xsd:int" minOccurs="1" maxOccurs="1"/>
                 <xsd:element name="currentPage" type="xsd:int" minOccurs="1" maxOccurs="1"/>
-                <xsd:element name="asset" type="Asset" minOccurs="0" maxOccurs="unbounded"/>
+                <xsd:element name="asset" type="AssetDTO" minOccurs="0" maxOccurs="unbounded"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>

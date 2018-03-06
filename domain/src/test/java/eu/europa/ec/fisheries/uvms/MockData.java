@@ -25,7 +25,7 @@ import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField;
 import eu.europa.ec.fisheries.wsdl.asset.types.CarrierSource;
 import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetDTO;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 
@@ -34,8 +34,8 @@ public class MockData {
 	private static final String TRUE = "TRUE";
 	private static final String FALSE = "FALSE";
 	
-	public static Asset getAsset(int id) {
-		Asset dto = new Asset();
+	public static AssetDTO getAsset(int id) {
+		AssetDTO dto = new AssetDTO();
 		AssetId assetId = new AssetId();
 		assetId.setType(AssetIdType.INTERNAL_ID);
 		assetId.setValue(""+id);

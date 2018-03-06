@@ -37,7 +37,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     public void crtAssert() {
 
         // this test is to ensure that create actually works
-        Asset createdAsset = null;
+        AssetDTO createdAsset = null;
         try {
             // create an Asset
             createdAsset = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID), "test");
@@ -53,8 +53,8 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void getAssetById_INTERNAL_TYPE_GUID() {
 
-        Asset createdAsset = null;
-        Asset fetched_asset = null;
+        AssetDTO createdAsset = null;
+        AssetDTO fetched_asset = null;
         try {
             // create an Asset
             createdAsset = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID), "test");
@@ -82,10 +82,10 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         try {
             // create an Asset
-            Asset createdAsset = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.INTERNAL_ID), "test");
+            AssetDTO createdAsset = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.INTERNAL_ID), "test");
             em.flush();
             // fetch it and compare guid to verify
-            Asset fetched_asset = assetService.getAssetById(createdAsset.getAssetId(), AssetDataSourceQueue.INTERNAL);
+            AssetDTO fetched_asset = assetService.getAssetById(createdAsset.getAssetId(), AssetDataSourceQueue.INTERNAL);
 // @formatter:off
             boolean ok = fetched_asset != null &&
                     fetched_asset.getAssetId() != null &&
@@ -106,8 +106,8 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void upsert_createVersion() {
 
-        Asset createdAsset = null;
-        Asset fetched_asset = null;
+        AssetDTO createdAsset = null;
+        AssetDTO fetched_asset = null;
         try {
             // create an Asset
             createdAsset = assetService.upsertAsset(AssetHelper.helper_createAsset(AssetIdType.GUID), "test");

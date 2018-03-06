@@ -164,7 +164,7 @@ public class AssetResource {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     @Produces(value = { MediaType.APPLICATION_JSON })
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public ResponseDto createAsset(final Asset asset) {
+    public ResponseDto createAsset(final AssetDTO asset) {
         try {
             LOG.info("Creating asset: {}",asset);
             String remoteUser = servletRequest.getRemoteUser();
@@ -187,7 +187,7 @@ public class AssetResource {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     @Produces(value = { MediaType.APPLICATION_JSON })
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public ResponseDto updateAsset(final Asset asset, @QueryParam("comment") String comment) {
+    public ResponseDto updateAsset(final AssetDTO asset, @QueryParam("comment") String comment) {
         try {
             LOG.info("Updating asset:{}",asset);
             String remoteUser = servletRequest.getRemoteUser();
@@ -203,10 +203,10 @@ public class AssetResource {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     @Produces(value = { MediaType.APPLICATION_JSON })
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public ResponseDto archiveAsset(final Asset asset, @QueryParam("comment") String comment) {
+    public ResponseDto archiveAsset(final AssetDTO asset, @QueryParam("comment") String comment) {
         try {
             String remoteUser = servletRequest.getRemoteUser();
-            Asset archivedAsset = assetService.archiveAsset(asset, remoteUser, comment);
+            AssetDTO archivedAsset = assetService.archiveAsset(asset, remoteUser, comment);
             return new ResponseDto(archivedAsset, ResponseCodeConstant.OK);
         } catch (Exception e) {
             LOG.error("[ Error when archiving asset. {}] {}",asset, e.getMessage());

@@ -104,7 +104,7 @@ public class AssetModuleRequestMapper {
         return criteria;
     }
 
-    public static String createUpsertAssetModuleRequest(Asset asset, String username) throws AssetModelMarshallException {
+    public static String createUpsertAssetModuleRequest(AssetDTO asset, String username) throws AssetModelMarshallException {
         UpsertAssetModuleRequest upsertAssetModuleRequest = new UpsertAssetModuleRequest();
         upsertAssetModuleRequest.setMethod(AssetModuleMethod.UPSERT_ASSET);
         upsertAssetModuleRequest.setAsset(asset);

@@ -24,7 +24,7 @@ import eu.europa.ec.fisheries.wsdl.asset.types.AssetContact;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetDTO;
 import java.math.BigDecimal;
 import java.util.TimeZone;
 
@@ -52,7 +52,7 @@ public class MapperUtil {
         return one.compareTo(two) == 0;
     }
 
-    public static boolean vesselEquals(Asset newAsset, Asset originalAsset) {
+    public static boolean vesselEquals(AssetDTO newAsset, AssetDTO originalAsset) {
         if (newAsset != null && originalAsset != null) {
             if (newAsset.isActive() != originalAsset.isActive()) {
                 return false;

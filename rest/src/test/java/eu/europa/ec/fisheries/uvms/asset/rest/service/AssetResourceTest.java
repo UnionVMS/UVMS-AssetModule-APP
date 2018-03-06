@@ -33,7 +33,7 @@ import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseCodeConstant;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.asset.rest.service.mockdata.TestMockData;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetDTO;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
 
@@ -47,7 +47,7 @@ public class AssetResourceTest {
     private static final Integer ASSET_LIST_SIZE = 3;
 
     ListAssetResponse ASSET_DTO_LIST = TestMockData.getAssetDtoList(ASSET_LIST_SIZE);
-    Asset ASSET_DTO = TestMockData.getAssetDto(1);
+    AssetDTO ASSET_DTO = TestMockData.getAssetDto(1);
 
     private final ResponseDto ERROR_RESULT;
     private final ResponseDto SUCCESS_RESULT;

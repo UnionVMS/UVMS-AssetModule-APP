@@ -55,7 +55,7 @@ public class AssetDataSourceResponseMapper {
         }
     }
 
-    public static Asset mapToAssetFromResponse(TextMessage response, String correlationId) throws AssetModelMapperException {
+    public static AssetDTO mapToAssetFromResponse(TextMessage response, String correlationId) throws AssetModelMapperException {
         try {
             long start = System.currentTimeMillis();
             validateResponse(response, correlationId);
@@ -69,7 +69,7 @@ public class AssetDataSourceResponseMapper {
         }
     }
 
-    public static List<Asset> mapToAssetListFromResponse(TextMessage response, String correlationId) throws AssetModelMapperException {
+    public static List<AssetDTO> mapToAssetListFromResponse(TextMessage response, String correlationId) throws AssetModelMapperException {
         try {
             validateResponse(response, correlationId);
             ListAssetResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, ListAssetResponse.class);

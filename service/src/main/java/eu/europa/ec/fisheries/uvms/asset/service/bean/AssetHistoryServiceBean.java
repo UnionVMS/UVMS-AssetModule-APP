@@ -33,7 +33,7 @@ import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
 import eu.europa.ec.fisheries.uvms.mapper.EntityToModelMapper;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetDTO;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 import eu.europa.ec.fisheries.wsdl.asset.types.FlagStateType;
@@ -53,7 +53,7 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
 	private AssetDao assetDao;
 
 	@Override
-	public List<Asset> getAssetHistoryListByAssetId(String assetId, Integer maxNbr) throws AssetServiceException {
+	public List<AssetDTO> getAssetHistoryListByAssetId(String assetId, Integer maxNbr) throws AssetServiceException {
 		try {
 			AssetEntity asset = assetDao.getAssetByGuid(assetId);
 			return EntityToModelMapper.toAssetHistoryList(asset, maxNbr);
@@ -63,7 +63,7 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
 	}
 
 	@Override
-	public Asset getAssetHistoryByAssetHistGuid(String assetHistId) throws AssetServiceException {
+	public AssetDTO getAssetHistoryByAssetHistGuid(String assetHistId) throws AssetServiceException {
 		try {
 			AssetHistory assetHistory = assetDao.getAssetHistoryByGuid(assetHistId);
 			return EntityToModelMapper.toAssetFromAssetHistory(assetHistory);
@@ -97,7 +97,7 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
 	}
 
 	@Override
-	public Asset getAssetByIdAndDate(String type, String value, Date date) throws AssetServiceException {
+	public AssetDTO getAssetByIdAndDate(String type, String value, Date date) throws AssetServiceException {
 
 		if (type == null) {
 			throw new InputArgumentException("Type is null");

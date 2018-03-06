@@ -105,7 +105,7 @@ public class AssetDataSourceRequestMapper {
         return request;
     }
     
-    private static SingleAssetResponse createSingleAssetResponse(Asset asset) {
+    private static SingleAssetResponse createSingleAssetResponse(AssetDTO asset) {
         SingleAssetResponse response = new SingleAssetResponse();
         response.setAsset(asset);
         return response;
@@ -220,7 +220,7 @@ public class AssetDataSourceRequestMapper {
      * @return
      * @throws AssetModelMapperException
      */
-    public static String mapCreateAsset(Asset asset, String username) throws AssetModelMapperException {
+    public static String mapCreateAsset(AssetDTO asset, String username) throws AssetModelMapperException {
         AssetDataSourceRequestValidator.validateCreateAsset(asset);
         CreateAssetRequest request = createCreateAssetRequest();
         request.setUsername(username);
@@ -236,7 +236,7 @@ public class AssetDataSourceRequestMapper {
      * @return
      * @throws AssetModelMapperException
      */
-    public static String mapUpdateAsset(Asset asset, String username) throws AssetModelMapperException {
+    public static String mapUpdateAsset(AssetDTO asset, String username) throws AssetModelMapperException {
         AssetDataSourceRequestValidator.validateUpdateAsset(asset);
         UpdateAssetRequest request = createUpdateAssetRequest();
         request.setUsername(username);
@@ -292,7 +292,7 @@ public class AssetDataSourceRequestMapper {
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
     
-    public static String mapUpsertAsset(Asset asset, String username) throws AssetModelMapperException {
+    public static String mapUpsertAsset(AssetDTO asset, String username) throws AssetModelMapperException {
         AssetDataSourceRequestValidator.validateCreateAsset(asset);
         UpsertAssetRequest request = createUpsertAssetRequest();
         request.setUsername(username);

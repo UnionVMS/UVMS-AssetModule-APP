@@ -54,7 +54,7 @@ public class AssetModuleResponseMapper {
         }
     }
 
-    public static Asset mapToAssetFromResponse(TextMessage response, String correlationId) throws AssetModelMapperException {
+    public static AssetDTO mapToAssetFromResponse(TextMessage response, String correlationId) throws AssetModelMapperException {
         try {
             validateResponse(response, correlationId);
             GetAssetModuleResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, GetAssetModuleResponse.class);
@@ -65,7 +65,7 @@ public class AssetModuleResponseMapper {
         }
     }
 
-    public static List<Asset> mapToAssetListFromResponse(TextMessage response, String correlationId) throws AssetModelMapperException {
+    public static List<AssetDTO> mapToAssetListFromResponse(TextMessage response, String correlationId) throws AssetModelMapperException {
         try {
             validateResponse(response, correlationId);
             ListAssetResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, ListAssetResponse.class);
@@ -87,7 +87,7 @@ public class AssetModuleResponseMapper {
         }
     }
 
-    public static String mapToAssetListByAssetGroupResponse(List<Asset> assets) throws AssetModelMarshallException {
+    public static String mapToAssetListByAssetGroupResponse(List<AssetDTO> assets) throws AssetModelMarshallException {
         ListAssetResponse response = new ListAssetResponse();
         response.getAsset().addAll(assets);
         return JAXBMarshaller.marshallJaxBObjectToString(response);
@@ -99,7 +99,7 @@ public class AssetModuleResponseMapper {
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 
-    public static String mapAssetModuleResponse(Asset asset) throws AssetModelMapperException {
+    public static String mapAssetModuleResponse(AssetDTO asset) throws AssetModelMapperException {
         GetAssetModuleResponse response = createGetAssetModuleResponse(asset);
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
@@ -115,7 +115,7 @@ public class AssetModuleResponseMapper {
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 
-    private static GetAssetModuleResponse createGetAssetModuleResponse(Asset asset) {
+    private static GetAssetModuleResponse createGetAssetModuleResponse(AssetDTO asset) {
         GetAssetModuleResponse response = new GetAssetModuleResponse();
         response.setAsset(asset);
         return response;
@@ -128,13 +128,13 @@ public class AssetModuleResponseMapper {
         return fault;
     }
 
-    public static UpsertAssetModuleResponse createUpsertAssetModuleResponse(Asset asset){
+    public static UpsertAssetModuleResponse createUpsertAssetModuleResponse(AssetDTO asset){
         UpsertAssetModuleResponse response = new UpsertAssetModuleResponse();
         response.setAsset(asset);
         return response;
     }
 
-    public static UpsertAssetModuleResponse createUpsertAssetListModuleResponse(Asset asset){
+    public static UpsertAssetModuleResponse createUpsertAssetListModuleResponse(AssetDTO asset){
         UpsertAssetModuleResponse response = new UpsertAssetModuleResponse();
         response.setAsset(asset);
         return response;

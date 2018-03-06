@@ -53,9 +53,9 @@ public class GetAssetListEventBeanIntTest  extends TransactionalTests {
     public void testGetAssetList() throws AssetException {
 
         // create a tiny list
-        Asset asset1 = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID, "1"), "test1");
-        Asset asset2 = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID,"2"), "test2");
-        Asset asset3 = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID,"3"), "test3");
+        AssetDTO asset1 = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID, "1"), "test1");
+        AssetDTO asset2 = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID,"2"), "test2");
+        AssetDTO asset3 = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID,"3"), "test3");
 
         TextMessage textMessage = null;
 
@@ -96,9 +96,9 @@ public class GetAssetListEventBeanIntTest  extends TransactionalTests {
     public void testGetAssetList_FAIL_ON_LENGTH() throws AssetException {
 
         // create a tiny list
-        Asset asset1 = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID, "4"), "test1");
-        Asset asset2 = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID,"5"), "test2");
-        Asset asset3 = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID,"6"), "test3");
+        AssetDTO asset1 = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID, "4"), "test1");
+        AssetDTO asset2 = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID,"5"), "test2");
+        AssetDTO asset3 = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID,"6"), "test3");
 
         TextMessage textMessage = null;
 

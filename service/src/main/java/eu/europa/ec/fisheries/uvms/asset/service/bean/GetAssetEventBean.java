@@ -13,7 +13,7 @@ import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.constants.ParameterKey;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetDTO;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 import org.slf4j.Logger;
@@ -48,7 +48,7 @@ public class GetAssetEventBean {
     public void getAsset(TextMessage textMessage, AssetId assetId) {
         LOG.info("Getting asset.");
         AssetDataSourceQueue dataSource = null;
-        Asset asset = null;
+        AssetDTO asset = null;
         boolean messageSent = false;
 
         try {
@@ -64,7 +64,7 @@ public class GetAssetEventBean {
 
         if (asset != null && !dataSource.equals(AssetDataSourceQueue.INTERNAL)) {
             try {
-                Asset upsertedAsset = service.upsertAsset(asset, dataSource.name());
+                AssetDTO upsertedAsset = service.upsertAsset(asset, dataSource.name());
                 asset.getAssetId().setGuid(upsertedAsset.getAssetId().getGuid());
             } catch (AssetException e) {
                 LOG.error("[ Couldn't upsert asset in internal ]");

@@ -38,7 +38,7 @@
             <xsd:complexContent>
                 <xsd:extension base="t:AssetDataSourceRequest">
                     <xsd:sequence>
-                        <xsd:element name="asset" type="t:Asset"/>
+                        <xsd:element name="asset" type="t:AssetDTO"/>
                     </xsd:sequence>
                 </xsd:extension>
             </xsd:complexContent>
@@ -50,7 +50,7 @@
             <xsd:complexContent>
                 <xsd:extension base="t:AssetDataSourceRequest">
                     <xsd:sequence>
-                        <xsd:element name="asset" type="t:Asset"/>
+                        <xsd:element name="asset" type="t:AssetDTO"/>
                     </xsd:sequence>
                 </xsd:extension>
             </xsd:complexContent>
@@ -62,7 +62,7 @@
             <xsd:complexContent>
                 <xsd:extension base="t:AssetDataSourceRequest">
                     <xsd:sequence>
-                        <xsd:element name="asset" type="t:Asset"/>
+                        <xsd:element name="asset" type="t:AssetDTO"/>
                     </xsd:sequence>
                 </xsd:extension>
             </xsd:complexContent>
