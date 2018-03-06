@@ -48,7 +48,7 @@
                         </jarModule>
                         <webModule>
                             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-                            <context-root>${project.parent.artifactId}</context-root>
+                            <context-root>${context.root}${project.parent.artifactId}</context-root>
                             <artifactId>asset-rest</artifactId>
                         </webModule>
                     </modules>
