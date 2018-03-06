@@ -19,14 +19,25 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperExcepti
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceRequestMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.FishingGearService;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
+import eu.europa.ec.fisheries.uvms.dao.FishingGearDao;
+import eu.europa.ec.fisheries.uvms.dao.FishingGearTypeDao;
+import eu.europa.ec.fisheries.uvms.entity.model.FishingGearEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.FishingGearType;
+import eu.europa.ec.fisheries.uvms.mapper.EntityToModelMapper;
+import eu.europa.ec.fisheries.uvms.mapper.ModelToEntityMapper;
 import eu.europa.ec.fisheries.wsdl.asset.fishinggear.FishingGearResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
+import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.jms.TextMessage;
 
 @Stateless
+@Local
 public class FishingGearServiceBean implements FishingGearService {
 
     @EJB
@@ -34,6 +45,20 @@ public class FishingGearServiceBean implements FishingGearService {
 
     @EJB
     AssetQueueConsumer reciever;
+
+
+    @EJB
+    private FishingGearDao fishingGearBean;
+
+    @EJB
+    private FishingGearTypeDao fishingGearTypeBean;
+
+    private static final Logger LOG = LoggerFactory.getLogger(FishingGearServiceBean.class);
+
+
+
+
+
 
     @Override
     public FishingGearResponse upsertFishingGears(FishingGearDTO fishingGear, String username) throws AssetMessageException, AssetModelMapperException {
@@ -44,4 +69,75 @@ public class FishingGearServiceBean implements FishingGearService {
         //FishingGearListResponse fishingGearListResponse = AssetDataSourceResponseMapper.mapToFishingGearResponse(response, messageId);
         return fishingGearResponse;
     }
+
+
+
+    @Override
+    public eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO upsertFishingGear(eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO gear, String username) {
+        FishingGearEntity fishingGearEntity = updateFishinGear(gear, username);
+        eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear = EntityToModelMapper.mapEntityToFishingGear(fishingGearEntity);
+        return fishingGear;
+    }
+
+    @Override
+    public FishingGearEntity updateFishinGear(eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear, String username){
+        FishingGearEntity fishingGearByExternalIdEntity = null;
+        try {
+            fishingGearByExternalIdEntity = fishingGearBean.getFishingGearByExternalId(fishingGear.getExternalId());
+            if(fishingGearByExternalIdEntity == null){
+                FishingGearEntity fishingGearEntity;
+                FishingGearType fishingGearTypeByCodeEntity = fishingGearTypeBean.getFishingGearByCode(fishingGear.getFishingGearType().getCode());
+                if(fishingGearTypeByCodeEntity == null){
+                    FishingGearType fishingGearTypeEntity = ModelToEntityMapper.mapFishingGearTypeToEntity(fishingGear.getFishingGearType(), username);
+                    fishingGearEntity = ModelToEntityMapper.mapFishingGearToEntity(fishingGear, username);
+                    fishingGearEntity.setFishingGearType(fishingGearTypeEntity);
+                }else{
+                    fishingGearEntity = ModelToEntityMapper.mapFishingGearToEntity(fishingGear, username);
+                    fishingGearEntity.setFishingGearType(fishingGearTypeByCodeEntity);
+                    updateFishingGearTypeProperties(fishingGear, username, fishingGearTypeByCodeEntity);
+
+                }
+                fishingGearBean.create(fishingGearEntity);
+                return fishingGearEntity;
+            }else{
+                FishingGearType fishingGearTypeByCodeEntity = fishingGearTypeBean.getFishingGearByCode(fishingGear.getFishingGearType().getCode());
+                if(fishingGearTypeByCodeEntity == null){
+                    FishingGearType fishingGearType = ModelToEntityMapper.mapFishingGearTypeToEntity(fishingGear.getFishingGearType(), username);
+                    updateFishingGearProperties(fishingGear, username, fishingGearByExternalIdEntity, fishingGearType);
+                } else {
+                    updateFishingGearProperties(fishingGear, username, fishingGearByExternalIdEntity, fishingGearTypeByCodeEntity);
+                    updateFishingGearTypeProperties(fishingGear, username, fishingGearTypeByCodeEntity);
+                    fishingGearByExternalIdEntity.setFishingGearType(fishingGearTypeByCodeEntity);
+                }
+                fishingGearBean.update(fishingGearByExternalIdEntity);
+            }
+        } catch (Exception e) {
+            LOG.error("Could not creae or update the fishing gear with external id: " + fishingGear.getExternalId());
+        }
+
+        return fishingGearByExternalIdEntity;
+    }
+
+    @Override
+    public void updateFishingGearTypeProperties(eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear, String username, FishingGearType fishingGearTypeByCodeEntity) {
+        fishingGearTypeByCodeEntity.setUpdateUser(username);
+        fishingGearTypeByCodeEntity.setDescription(fishingGear.getFishingGearType().getName());
+        fishingGearTypeByCodeEntity.setCode(fishingGear.getFishingGearType().getCode());
+        fishingGearTypeByCodeEntity.setName(fishingGear.getFishingGearType().getName());
+        fishingGearTypeByCodeEntity.setUpdateDateTime(DateUtils.getNowDateUTC());
+    }
+
+    @Override
+    public void updateFishingGearProperties(eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear, String username, FishingGearEntity fishingGearByExternalIdEntity, FishingGearType fishingGearType) {
+        fishingGearByExternalIdEntity.setFishingGearType(fishingGearType);
+        fishingGearByExternalIdEntity.setCode(fishingGear.getCode());
+        fishingGearByExternalIdEntity.setUpdatedBy(username);
+        fishingGearByExternalIdEntity.setDescription(fishingGear.getDescription());
+        fishingGearByExternalIdEntity.setExternalId(fishingGear.getExternalId());
+        fishingGearByExternalIdEntity.setUpdateTime(DateUtils.getNowDateUTC());
+    }
+
+
+
+
 }

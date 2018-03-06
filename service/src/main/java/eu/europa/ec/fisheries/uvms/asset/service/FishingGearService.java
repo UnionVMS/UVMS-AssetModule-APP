@@ -13,6 +13,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 
 import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
+import eu.europa.ec.fisheries.uvms.entity.model.FishingGearEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.FishingGearType;
 import eu.europa.ec.fisheries.wsdl.asset.fishinggear.FishingGearResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO;
 
@@ -21,4 +23,12 @@ import javax.ejb.Local;
 @Local
 public interface FishingGearService {
     FishingGearResponse upsertFishingGears(FishingGearDTO fishingGear, String username) throws AssetMessageException, AssetModelMapperException;
+
+    FishingGearDTO upsertFishingGear(FishingGearDTO gear, String username);
+
+    FishingGearEntity updateFishinGear(FishingGearDTO fishingGear, String username);
+
+    void updateFishingGearTypeProperties(FishingGearDTO fishingGear, String username, FishingGearType fishingGearTypeByCodeEntity);
+
+    void updateFishingGearProperties(FishingGearDTO fishingGear, String username, FishingGearEntity fishingGearByExternalIdEntity, FishingGearType fishingGearType);
 }
