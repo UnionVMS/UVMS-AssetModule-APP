@@ -62,14 +62,14 @@ public class AssetSEDaoTest extends TransactionalTests {
     }
 
     // TODO should test history GUID
-    @Ignore
     @Test
     @OperateOnDeployment("normal")
     public void createAssetCheckHistoryGuid() throws AssetDaoException {
         AssetSE asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
 
-        // assertThat(asset.getHistoryGuid()), is(notNullValue()));
+
+        assertThat(asset.getHistoryId(), is(notNullValue()));
     }
 
     @Test
