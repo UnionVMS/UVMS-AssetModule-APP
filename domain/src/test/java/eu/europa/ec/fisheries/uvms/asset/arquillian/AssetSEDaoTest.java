@@ -354,8 +354,12 @@ public class AssetSEDaoTest extends TransactionalTests {
         String newName = "UpdatedName";
         asset.setName(newName);
 
-        asset.setProdOrgCode("ORGCODE" + rnd.nextInt() );
-        asset.setProdOrgName("ORGNAME" + rnd.nextInt());
+
+        String newOrgCode = "ORGCODE" + rnd.nextInt();
+        String newOrgName = "ORGNAME" + rnd.nextInt();
+
+        asset.setProdOrgCode(newOrgCode);
+        asset.setProdOrgName(newOrgName);
         asset.setGrossTonnageUnit(UnitTonnage.OSLO);
         asset.setLicenceType(GearFishingTypeEnum.PELAGIC.toString());
         asset.setSegment(SegmentFUP.CA2);
@@ -370,6 +374,8 @@ public class AssetSEDaoTest extends TransactionalTests {
 
         assertThat(updatedAsset.getHistoryId(), is(notNullValue()));
         assertThat(asset.getHistoryId(), is(not(updatedAsset.getHistoryId())));
+        assertThat(newOrgCode, is(updatedAsset.getProdOrgCode()));
+        assertThat(newOrgName, is(updatedAsset.getProdOrgName()));
 
     }
 
