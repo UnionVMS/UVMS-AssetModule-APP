@@ -10,6 +10,7 @@ import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.query.AuditQueryCreator;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -344,6 +345,19 @@ public class AssetSEDao {
         }
 
     }
+
+
+    public List<AssetSE> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize, String sql, List<SearchKeyValue> searchFields, boolean isDynamic) throws AssetDaoException {
+
+
+        // TODO also add searchFields Logic
+
+        TypedQuery<AssetSE> query = em.createQuery(sql, AssetSE.class);
+        query.setFirstResult(pageSize * (pageNumber - 1));
+        query.setMaxResults(pageSize);
+        return query.getResultList();
+    }
+
 
     // TODO should these be moved to appropriate dao:s
     public List<NotesActivityCode> getNoteActivityCodes() {

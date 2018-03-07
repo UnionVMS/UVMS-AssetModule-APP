@@ -22,6 +22,9 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.jms.TextMessage;
 
+import eu.europa.ec.fisheries.uvms.dao.bean.AssetSEDao;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetListResponsePaginated;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,8 +80,8 @@ public class AssetServiceBean implements AssetService {
 	@EJB
 	ConfigDomainModelBean configModel;
 
-	//@EJB
-	//AssetDao assetDao;
+	@EJB
+	AssetSEDao assetSEDao;
 
 	@EJB
 	AssetGroupDao assetGroupDao;
@@ -88,49 +91,82 @@ public class AssetServiceBean implements AssetService {
 	 *
 	 * @param asset
 	 * @return
-	 * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
+	 * @throws AssetException
 	 */
 	@Override
-	public AssetDTO createAsset(AssetDTO asset, String username) throws AssetException {
-		/*
+	public AssetSE createAsset(AssetSE asset, String username) throws AssetException {
+
 		assertAssetDoesNotExist(asset);
-		AssetEntity assetEntity = ModelToEntityMapper.mapToNewAssetEntity(asset, configModel.getLicenseType(),
-				username);
-		AssetEntity createdAssetEntity = assetDao.createAsset(assetEntity);
-		AssetDTO createdAsset = EntityToModelMapper.toAssetFromEntity(createdAssetEntity);
+		AssetSE createdAssetEntity = assetSEDao.createAsset(asset);
 
 		try {
-			String auditData = AuditModuleRequestMapper.mapAuditLogAssetCreated(createdAsset.getAssetId().getGuid(),
+			String auditData = AuditModuleRequestMapper.mapAuditLogAssetCreated(createdAssetEntity.getId().toString(),
 					username);
 			messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
 		} catch (AssetMessageException e) {
 			LOG.warn("Failed to send audit log message! Asset with guid {} was created ",
-					createdAsset.getAssetId().getGuid());
+					createdAssetEntity.getId());
 		} catch (AuditModelMarshallException e) {
 			LOG.error("Failed to send audit log message! Asset with guid {} was created ",
-					createdAsset.getAssetId().getGuid());
+					createdAssetEntity.getId());
 		}
 
-		return createdAsset;
-		*/
-		return null;
+		return createdAssetEntity;
+
 	}
 
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @param requestQuery
+	 * @param query
 	 * @return
-	 * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
+	 * @throws AssetException
 	 */
 	@Override
-	public ListAssetResponse getAssetList(AssetListQuery requestQuery) throws AssetException {
-		LOG.debug("Getting AssetList.");
-		GetAssetListResponseDto assetList = getAssetList_FROM_DOMAINMODEL(requestQuery);
-		ListAssetResponse listAssetResponse = new ListAssetResponse();
-		listAssetResponse.setCurrentPage(assetList.getCurrentPage());
-		listAssetResponse.setTotalNumberOfPages(assetList.getTotalNumberOfPages());
-		listAssetResponse.getAsset().addAll(assetList.getAssetList());
+	public AssetListResponsePaginated getAssetList(AssetListQuery query) throws AssetException {
+
+
+		if (query == null) {
+			throw new InputArgumentException("Cannot get asset list because query is null.");
+		}
+
+		if (query.getAssetSearchCriteria() == null || query.getAssetSearchCriteria().isIsDynamic() == null
+				|| query.getAssetSearchCriteria().getCriterias() == null) {
+			throw new InputArgumentException("Cannot get asset list because criteria are null.");
+		}
+
+		if (query.getPagination() == null) {
+			throw new InputArgumentException("Cannot get asset list because criteria pagination is null.");
+		}
+
+
+		int page = query.getPagination().getPage();
+		int listSize = query.getPagination().getListSize();
+		boolean isDynamic = query.getAssetSearchCriteria().isIsDynamic();
+
+		List<SearchKeyValue> searchFields = SearchFieldMapper
+				.createSearchFields(query.getAssetSearchCriteria().getCriterias());
+
+		String sql = SearchFieldMapper.createSelectSearchSql(searchFields, isDynamic);
+		String countSql = SearchFieldMapper.createCountSearchSql(searchFields, isDynamic);
+		Long numberOfAssets = assetSEDao.getAssetCount(countSql, searchFields);
+
+		int numberOfPages = 0;
+		if (listSize != 0) {
+			numberOfPages = (int) (numberOfAssets / listSize);
+			if (numberOfAssets % listSize != 0) {
+				numberOfPages += 1;
+			}
+		}
+
+		List<AssetSE> assetEntityList = assetSEDao.getAssetListSearchPaginated(page, listSize, sql, searchFields,
+				isDynamic);
+
+
+		AssetListResponsePaginated listAssetResponse = new AssetListResponsePaginated();
+		listAssetResponse.setCurrentPage(page);
+		listAssetResponse.setTotalNumberOfPages(numberOfPages);
+		listAssetResponse.getAssetList().addAll(assetEntityList);
 		return listAssetResponse;
 	}
 
@@ -329,12 +365,12 @@ public class AssetServiceBean implements AssetService {
 		//deleteAsset_FRROM_DOMAINMODEL(assetId);
 	}
 
-	private void assertAssetDoesNotExist(AssetDTO asset) throws AssetModelException {
+	private void assertAssetDoesNotExist(AssetSE asset) throws AssetModelException {
 
-		/*
+
 		List<String> messages = new ArrayList<>();
 		try {
-			if (asset.getCfr() != null && assetDao.getAssetByCfrExcludeArchived(asset.getCfr()) != null) {
+			if (asset.getCfr() != null && assetSEDao.getAssetByCfr(asset.getCfr()) != null) {
 				messages.add("An asset with this CFR value already exists.");
 			}
 		} catch (NoAssetEntityFoundException e) {
@@ -342,7 +378,7 @@ public class AssetServiceBean implements AssetService {
 		}
 
 		try {
-			if (asset.getImo() != null && assetDao.getAssetByImoExcludeArchived(asset.getImo()) != null) {
+			if (asset.getImo() != null && assetSEDao.getAssetByImo(asset.getImo()) != null) {
 				messages.add("An asset with this IMO value already exists.");
 			}
 		} catch (NoAssetEntityFoundException e) {
@@ -350,14 +386,14 @@ public class AssetServiceBean implements AssetService {
 		}
 
 		try {
-			if (asset.getMmsiNo() != null && assetDao.getAssetByMmsiExcludeArchived(asset.getMmsiNo()) != null) {
+			if (asset.getMmsi() != null && assetSEDao.getAssetByMmsi(asset.getMmsi()) != null) {
 				messages.add("An asset with this MMSI value already exists.");
 			}
 		} catch (NoAssetEntityFoundException e) {
 			// OK
 		}
 		try {
-			if (asset.getIrcs() != null && assetDao.getAssetByIrcsExcludeArchived(asset.getIrcs()) != null) {
+			if (asset.getIrcs() != null && assetSEDao.getAssetByIrcs(asset.getIrcs()) != null) {
 				messages.add("An asset with this IRCS value already exists.");
 			}
 		} catch (NoAssetEntityFoundException e) {
@@ -367,68 +403,9 @@ public class AssetServiceBean implements AssetService {
 		if (!messages.isEmpty()) {
 			throw new AssetModelException(StringUtils.join(messages, " "));
 		}
-		*/
-	}
-
-	public GetAssetListResponseDto getAssetList_FROM_DOMAINMODEL(AssetListQuery query)
-
-			throws AssetModelException, InputArgumentException {
-
-		/*
-
-		if (query == null) {
-			throw new InputArgumentException("Cannot get asset list because query is null.");
-		}
-
-		if (query.getAssetSearchCriteria() == null || query.getAssetSearchCriteria().isIsDynamic() == null
-				|| query.getAssetSearchCriteria().getCriterias() == null) {
-			throw new InputArgumentException("Cannot get asset list because criteria are null.");
-		}
-
-		if (query.getPagination() == null) {
-			throw new InputArgumentException("Cannot get asset list because criteria pagination is null.");
-		}
-
-		GetAssetListResponseDto response = new GetAssetListResponseDto();
-		List<AssetDTO> arrayList = new ArrayList<>();
-
-		int page = query.getPagination().getPage();
-		int listSize = query.getPagination().getListSize();
-
-		boolean isDynamic = query.getAssetSearchCriteria().isIsDynamic();
-
-		List<SearchKeyValue> searchFields = SearchFieldMapper
-				.createSearchFields(query.getAssetSearchCriteria().getCriterias());
-		String sql = SearchFieldMapper.createSelectSearchSql(searchFields, isDynamic);
-
-		String countSql = SearchFieldMapper.createCountSearchSql(searchFields, isDynamic);
-		Long numberOfAssets = assetDao.getAssetCount(countSql, searchFields, isDynamic);
-
-		int numberOfPages = 0;
-		if (listSize != 0) {
-			numberOfPages = (int) (numberOfAssets / listSize);
-			if (numberOfAssets % listSize != 0) {
-				numberOfPages += 1;
-			}
-		}
-
-		List<AssetHistory> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, sql, searchFields,
-				isDynamic);
-
-		for (AssetHistory entity : assetEntityList) {
-			arrayList.add(EntityToModelMapper.toAssetFromAssetHistory(entity));
-		}
-
-		response.setTotalNumberOfPages(numberOfPages);
-		response.setCurrentPage(page);
-		response.setAssetList(arrayList);
-
-		return response;
-
-		*/
-		return null;
 
 	}
+
 
 	public Long getAssetListCount_FROM_DOMAINMODEL(AssetListQuery query)
 			throws AssetModelException, InputArgumentException {

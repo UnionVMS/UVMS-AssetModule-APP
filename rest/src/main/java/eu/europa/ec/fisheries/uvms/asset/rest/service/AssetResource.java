@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseCodeConstant;
@@ -24,15 +25,16 @@ import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.asset.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetListResponsePaginated;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
+import org.slf4j.MDC;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Path("/asset")
@@ -66,7 +68,7 @@ public class AssetResource {
     public ResponseDto getAssetList(final AssetListQuery assetQuery) {
         try {
             LOG.info("Getting asset list:{}",assetQuery);
-            ListAssetResponse assetList = assetService.getAssetList(assetQuery);
+            AssetListResponsePaginated assetList = assetService.getAssetList(assetQuery);
             return new ResponseDto(assetList, ResponseCodeConstant.OK);
         } catch (Exception e) {
             LOG.error("[ Error when getting asset list. ] ");
@@ -164,14 +166,18 @@ public class AssetResource {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     @Produces(value = { MediaType.APPLICATION_JSON })
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public ResponseDto createAsset(final AssetDTO asset) {
+    public Response createAsset(final AssetSE asset) throws AssetException {
         try {
-            LOG.info("Creating asset: {}",asset);
             String remoteUser = servletRequest.getRemoteUser();
-            return new ResponseDto(assetService.createAsset(asset, remoteUser), ResponseCodeConstant.OK);
-        } catch (Exception e) {
-            LOG.error("[ Error when creating asset. {}] {}",asset, e.getMessage());
-            return ErrorHandler.getFault(e);
+            AssetSE createdAssetSE = assetService.createAsset(asset, remoteUser);
+
+            Response.ResponseBuilder rb = Response.status(200).entity(createdAssetSE).type(MediaType.APPLICATION_JSON )
+                    .header("MDC", MDC.get("requestId"));
+
+            return rb.build();
+        } catch (AssetException e) {
+            LOG.error("[ Error when creating asset. {}] {}" , asset, e.getMessage());
+            throw e;
         }
     }
 

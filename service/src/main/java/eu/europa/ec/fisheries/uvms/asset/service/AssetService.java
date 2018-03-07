@@ -17,6 +17,8 @@ import javax.ejb.Local;
 
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetListResponsePaginated;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
 
@@ -30,7 +32,7 @@ public interface AssetService {
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException
      */
-    AssetDTO createAsset(AssetDTO asset, String username) throws AssetException;
+    AssetSE createAsset(AssetSE asset, String username) throws AssetException;
 
     /**
      * Get all Assets
@@ -39,7 +41,7 @@ public interface AssetService {
      * @return
      * @throws AssetException
      */
-    ListAssetResponse getAssetList(AssetListQuery requestQuery) throws AssetException;
+    AssetListResponsePaginated getAssetList(AssetListQuery requestQuery) throws AssetException;
 
     /**
      * Get all Assets
