@@ -19,8 +19,13 @@ import static org.junit.Assert.assertThat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import javax.inject.Inject;
+
+import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.SegmentFUP;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Ignore;
@@ -36,6 +41,8 @@ public class AssetSEDaoTest extends TransactionalTests {
     // Envers requires a commit for auditing
     // Set this to true to clean up test data 
     private boolean cleanUpDB = true;
+    private static Random rnd = new Random();
+
 
     @Inject
     AssetSEDao assetDao;
@@ -43,7 +50,8 @@ public class AssetSEDaoTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void createAssetTest() throws AssetDaoException {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        //AssetSE asset = AssetTestsHelper.createBasicAsset();
+        AssetSE asset = AssetTestsHelper.createBiggerAsset();
         asset = assetDao.createAsset(asset);
 
         assertThat(asset.getId(), is(notNullValue()));
@@ -180,13 +188,15 @@ public class AssetSEDaoTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void updateAssetTest() throws AssetDaoException {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+    public void updateAssetTest() throws Exception {
+        AssetSE asset = AssetTestsHelper.createBiggerAsset();
         asset = assetDao.createAsset(asset);
+        commit();
 
         String newName = "UpdatedName";
         asset.setName(newName);
         asset = assetDao.updateAsset(asset);
+        commit();
         assertThat(asset.getName(), is(newName));
 
         AssetSE updatedAsset = assetDao.getAssetById(asset.getId());
@@ -335,7 +345,7 @@ public class AssetSEDaoTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void verifyAssetHistoryUpdatesCorrectlyTest() throws Exception {
 
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        AssetSE asset = AssetTestsHelper.createBiggerAsset();
         asset = assetDao.createAsset(asset);
         commit();
         assertThat(asset.getHistoryId(), is(notNullValue()));
@@ -343,6 +353,18 @@ public class AssetSEDaoTest extends TransactionalTests {
 
         String newName = "UpdatedName";
         asset.setName(newName);
+
+        asset.setProdOrgCode("ORGCODE" + rnd.nextInt() );
+        asset.setProdOrgName("ORGNAME" + rnd.nextInt());
+        asset.setGrossTonnageUnit(UnitTonnage.OSLO);
+        asset.setLicenceType(GearFishingTypeEnum.PELAGIC.toString());
+        asset.setSegment(SegmentFUP.CA2);
+        asset.setConstructionYear("1924");
+        asset.setConstructionPlace("BEJ");
+
+
+
+
         AssetSE updatedAsset = assetDao.updateAsset(asset);
         commit();
 

@@ -8,174 +8,92 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.CarrierSourceEnum;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.ContactInfoSourceEnum;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.EventCodeEnum;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.HullMaterialEnum;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.NotesSourceEnum;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.PublicAidEnum;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.SegmentFUP;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.TypeOfExportEnum;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.*;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetProdOrg;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
 import eu.europa.ec.fisheries.uvms.entity.model.ContactInfo;
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGearEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGearType;
 import eu.europa.ec.fisheries.uvms.entity.model.Notes;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 
 public class AssetTestsHelper {
 
-
-
-    private Random rnd = new Random();
+    private static Random rnd = new Random();
 
     public static AssetSE createBasicAsset() {
-        AssetSE asset = new AssetSE();
+        AssetSE assetEntity = new AssetSE();
         
-        asset.setName("Test asset");
-        asset.setActive(true);
-        asset.setExternalMarking("EXT123");
-        asset.setFlagStateCode("SWE");
+        assetEntity.setName("Test asset");
+        assetEntity.setActive(true);
+        assetEntity.setExternalMarking("EXT123");
+        assetEntity.setFlagStateCode("SWE");
         
-        asset.setCommissionDate(LocalDateTime.now(ZoneOffset.UTC));
-        asset.setCfr("CRF" + getRandomIntegers(9));
-        asset.setIrcs("F" + getRandomIntegers(7));
-        asset.setImo(getRandomIntegers(7));
-        asset.setMmsi("MMSI" + getRandomIntegers(5));
-        asset.setIccat("ICCAT" + getRandomIntegers(20));
-        asset.setUvi("UVI" + getRandomIntegers(20));
-        asset.setGfcm("GFCM" + getRandomIntegers(20));
+        assetEntity.setCommissionDate(LocalDateTime.now(ZoneOffset.UTC));
+        assetEntity.setCfr("CRF" + getRandomIntegers(9));
+        assetEntity.setIrcs("F" + getRandomIntegers(7));
+        assetEntity.setImo(getRandomIntegers(7));
+        assetEntity.setMmsi("MMSI" + getRandomIntegers(5));
+        assetEntity.setIccat("ICCAT" + getRandomIntegers(20));
+        assetEntity.setUvi("UVI" + getRandomIntegers(20));
+        assetEntity.setGfcm("GFCM" + getRandomIntegers(20));
         
-        asset.setGrossTonnage(BigDecimal.TEN);
-        asset.setPowerOfMainEngine(BigDecimal.TEN);
+        assetEntity.setGrossTonnage(BigDecimal.TEN);
+        assetEntity.setPowerOfMainEngine(BigDecimal.TEN);
         
-        asset.setOwnerName("Foo Bar");
-        asset.setOwnerAddress("Hacker st. 1337");
+        assetEntity.setOwnerName("Foo Bar");
+        assetEntity.setOwnerAddress("Hacker st. 1337");
         
-        asset.setProdOrgCode("ORGCODE");
-        asset.setProdOrgName("ORGNAME");
+        assetEntity.setProdOrgCode("ORGCODE");
+        assetEntity.setProdOrgName("ORGNAME");
         
-        return asset;
+        return assetEntity;
     }
 
 
-    /*
 
-    public AssetEntity createAssetHelper(AssetIdType assetIdType, String value, Date date) {
 
-        AssetEntity assetEntity = new AssetEntity();
+    public static AssetSE createBiggerAsset() {
 
-        Carrier carrier = createCarrierHelper(date);
-        assetEntity.setCarrier(carrier);
+        AssetSE assetEntity = new AssetSE();
+        LocalDateTime  now =  LocalDateTime.now(ZoneOffset.UTC);
 
-        assetEntity.setCFR(null);
-        assetEntity.setGuid(null);
-        assetEntity.setIMO(null);
-        assetEntity.setIRCS(null);
-        assetEntity.setMMSI(null);
-        assetEntity.setIrcsIndicator(null);
-        assetEntity.setIccat(null);
-        assetEntity.setUvi(null);
-        assetEntity.setGfcm(null);
 
-        switch (assetIdType) {
-            case CFR:
-                if (value.length() > 12) value = value.substring(0, 12);
-                assetEntity.setCFR(value);
-                break;
-            case GUID:
-                assetEntity.setGuid(value);
-                break;
-            case IMO:
-                assetEntity.setIMO(value);
-                break;
-            case IRCS:
-                assetEntity.setIRCS(value);
-                assetEntity.setIrcsIndicator("I");
-                break;
-            case MMSI:
-                assetEntity.setMMSI(value);
-                break;
-            case ICCAT:
-                assetEntity.setIccat(value);
-                break;
-            case UVI:
-                assetEntity.setUvi(value);
-                break;
-            case GFCM:
-                assetEntity.setGfcm(value);
-                break;
-        }
+        assetEntity.setName("Test asset");
+        assetEntity.setActive(true);
+        assetEntity.setExternalMarking("EXT123");
+        assetEntity.setFlagStateCode("SWE");
 
-        assetEntity.setCommissionDay("10");
-        assetEntity.setCommissionMonth("10");
-        assetEntity.setCommissionYear("1961");
+        assetEntity.setCommissionDate(LocalDateTime.now(ZoneOffset.UTC));
+        assetEntity.setCfr("CRF" + getRandomIntegers(9));
+        assetEntity.setIrcs("F" + getRandomIntegers(7));
+        assetEntity.setImo(getRandomIntegers(7));
+        assetEntity.setMmsi("MMSI" + getRandomIntegers(5));
+        assetEntity.setIccat("ICCAT" + getRandomIntegers(20));
+        assetEntity.setUvi("UVI" + getRandomIntegers(20));
+        assetEntity.setGfcm("GFCM" + getRandomIntegers(20));
 
+        assetEntity.setGrossTonnage(BigDecimal.TEN);
+        assetEntity.setPowerOfMainEngine(BigDecimal.TEN);
+
+        assetEntity.setOwnerName("Foo Bar");
+        assetEntity.setOwnerAddress("Hacker st. 1337");
+
+        assetEntity.setProdOrgCode("ORGCODE");
+        assetEntity.setProdOrgName("ORGNAME");
+        assetEntity.setGrossTonnageUnit(UnitTonnage.LONDON);
+        assetEntity.setLicenceType(GearFishingTypeEnum.DEMERSAL_AND_PELAGIC.toString());
+        assetEntity.setSegment(SegmentFUP.CA3);
         assetEntity.setConstructionYear("1914");
         assetEntity.setConstructionPlace("GBG");
 
         assetEntity.setHullMaterial(HullMaterialEnum.GLAS_PLASTIC_FIBER);
-        assetEntity.setUpdateTime(date);
+        assetEntity.setUpdateTime(now);
         assetEntity.setUpdatedBy("TEST");
-
-
-        List<Notes> notes = createNotesHelper(assetEntity, date);
-        assetEntity.setNotes(notes);
-
-        List<AssetHistory> assetHistories = createHistoriesHelper(assetEntity, date);
-        assetEntity.setHistories(assetHistories);
-
-
-        return assetEntity;
-    }
-
-    public List<AssetHistory> createHistoriesHelper(AssetEntity ae, Date date) {
-
-        List<AssetHistory> assetHistories = new ArrayList<>();
-        AssetHistory ah = new AssetHistory();
-        ah.setActive(true);
-        ah.setAsset(ae);
-        ah.setCfr(ae.getCFR());
-        ah.setIrcs(ae.getIRCS());
-        ah.setImo(ae.getIMO());
-        assetHistories.add(ah);
-        ah.setMmsi(ae.getMMSI());
-
-        List<ContactInfo> contacts = new ArrayList<>();
-        ContactInfo ci = new ContactInfo();
-        ci.setAsset(ah);
-        ci.setName("contactInfoName");
-        ci.setSource(ContactInfoSourceEnum.INTERNAL);
-        contacts.add(ci);
-        ah.setContactInfo(contacts);
-
-        ah.setGrossTonnageUnit(UnitTonnage.LONDON);
-        ah.setType(GearFishingTypeEnum.DEMERSAL_AND_PELAGIC);
-        ah.setSegment(SegmentFUP.CA3);
-
-
-        // all fields
-        ah.setOwnerAddress("owneradress_" + rnd.nextInt());
-        ah.setAssetAgentAddress("assetagentadress_" + rnd.nextInt());
-        ah.setCountryOfImportOrExport("SWE");
-        ah.setCountryOfRegistration("SWE");
-        ah.setDateOfEvent(new Date());
-        ah.setExternalMarking("EXTMARK");
-
-        ah.setAdministrativeDecisionDate("19431139");
-
-        ah.setSegmentOfAdministrativeDecision(SegmentFUP.CA3);
-        ah.setEventCode(EventCodeEnum.UNK);
-        ah.setAssetAgentIsAlsoOwner(true);
-        ah.setLengthBetweenPerpendiculars(new BigDecimal(17));
-
-
-        // ?????
-        //FishingGear fishingGear =createFishingGearHelper();
-        //ah.setMainFishingGear(fishingGear);
-
+        assetEntity.setAssetAgentAddress("assetagentadress_" + rnd.nextInt());
+        assetEntity.setCountryOfImportOrExport("SWE");
+        assetEntity.setAdministrativeDecisionDate(now);
+        assetEntity.setSegmentOfAdministrativeDecision(SegmentFUP.CA3);
+        assetEntity.setLengthBetweenPerpendiculars(new BigDecimal(17));
         AssetProdOrg assetProdOrg = new AssetProdOrg();
         assetProdOrg.setAddress("prodorgaddress");
         assetProdOrg.setCity("prodorgcity");
@@ -185,35 +103,38 @@ public class AssetTestsHelper {
         assetProdOrg.setPhone("0091-1-123-456");
         assetProdOrg.setMobile("004631112233");
         assetProdOrg.setZipCode(41523);
-
-        ah.setAssetProdOrg(assetProdOrg);
-
-        ah.setHasLicence(true);
-        ah.setLicenceType("AllFish");
-
-        ah.setLengthOverAll(new BigDecimal(25));
-        ah.setName("Name_" + rnd.nextInt());
-        ah.setOwnerName("Ownername_" + rnd.nextInt());
-        ah.setPortOfRegistration("GBG");
-
-        ah.setPowerOfAuxEngine(new BigDecimal(1000));
-        ah.setPowerOfMainEngine(new BigDecimal(7000));
-        ah.setPublicAid(PublicAidEnum.EG);
+        assetEntity.setHasLicence(true);
+        assetEntity.setLicenceType("AllFish");
+        assetEntity.setLengthOverAll(new BigDecimal(25));
+        assetEntity.setPortOfRegistration("GBG");
+        assetEntity.setPowerOfAuxEngine(new BigDecimal(1000));
+        assetEntity.setPublicAid(PublicAidEnum.EG);
         String regnbr = "THOFAN" + rnd.nextInt();
         if (regnbr.length() > 14) regnbr = regnbr.substring(0, 14);
-        ah.setRegistrationNumber(regnbr);
+        assetEntity.setRegistrationNumber(regnbr);
 
-        ah.setGrossTonnage(new BigDecimal(25000));
-        ah.setSafteyGrossTonnage(new BigDecimal(24000));
-        ah.setOtherTonnage(new BigDecimal(23000));
+        assetEntity.setSafteyGrossTonnage(new BigDecimal(24000));
+        assetEntity.setOtherTonnage(new BigDecimal(23000));
+        assetEntity.setTypeOfExport(TypeOfExportEnum.SM);
+        assetEntity.setHasVms(false);
+        assetEntity.setAgentIsAlsoOwner(true);
+        assetEntity.setEventCodeId(rnd.nextLong());
+        assetEntity.setIrcsIndicator("I");
+        assetEntity.setSource(CarrierSourceEnum.INTERNAL);
 
-        ah.setTypeOfExport(TypeOfExportEnum.SM);
-        ah.setUpdateTime(ae.getUpdateTime());
-        ah.setUpdatedBy(ae.getUpdatedBy());
-        ah.setHasVms(false);
 
-        return assetHistories;
+
+
+        List<ContactInfo> contacts = new ArrayList<>();
+        ContactInfo ci = new ContactInfo();
+        ci.setSource(ContactInfoSourceEnum.INTERNAL);
+        contacts.add(ci);
+
+
+
+        return assetEntity;
     }
+
 
 
     public FishingGearEntity createFishingGearHelper() {
@@ -242,22 +163,12 @@ public class AssetTestsHelper {
     }
 
 
-    public Carrier createCarrierHelper(Date date) {
 
-        Carrier carrier = new Carrier();
-        carrier.setActive(true);
-        carrier.setSource(CarrierSourceEnum.INTERNAL);
-        carrier.setUpdatedBy("TEST");
-        carrier.setUpdatetime(date);
-        return carrier;
-    }
-
-    public List<Notes> createNotesHelper(AssetEntity assetEntity, Date date) {
+    public List<Notes> createNotesHelper(AssetSE assetEntity, Date date) {
 
         List<Notes> notes = new ArrayList<>();
         Notes note = new Notes();
         note.setActivity("EL3");
-        note.setAsset(assetEntity);
         note.setContact("TESTContact");
         note.setDate(date);
         note.setDocument("this is a document text");
@@ -274,7 +185,7 @@ public class AssetTestsHelper {
     }
 
 
-    */
+
 
     public static String getRandomIntegers(int length) {
         return new Random()
