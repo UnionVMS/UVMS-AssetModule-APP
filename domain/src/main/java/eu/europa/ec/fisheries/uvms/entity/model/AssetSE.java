@@ -97,36 +97,29 @@ public class AssetSE implements Serializable{
 
     @Size(min = 1, max = 1)
     @Column(name="ircsindicator")
-    @NotAudited
     private String ircsIndicator;
 
     @Enumerated(EnumType.STRING)
     @Column(name="hullmaterial")
-    @NotAudited
     private HullMaterialEnum hullMaterial;
 
     @Column(name="commissiondate")
-    @NotAudited
     private LocalDateTime commissionDate;
 
     @Size(min = 4, max = 4)
     @Column(name="constructionyear")
-    @NotAudited
     private String constructionYear;
 
     @Size(max = 100)
     @Column(name="constructionplace")
-    @NotAudited
     private String constructionPlace;
 
     @Column(name="updatetime")
-    @NotAudited
     private LocalDateTime updateTime;
 
 
     @Enumerated(EnumType.STRING)
     @Column(name="source")
-    @NotAudited
     private CarrierSourceEnum source;
 
     /**********************************

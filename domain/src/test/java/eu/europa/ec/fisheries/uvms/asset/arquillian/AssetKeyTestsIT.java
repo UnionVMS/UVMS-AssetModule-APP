@@ -2,7 +2,6 @@ package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.*;
 import eu.europa.ec.fisheries.uvms.entity.model.*;
@@ -25,6 +24,8 @@ import java.util.*;
 @RunWith(Arquillian.class)
 public class AssetKeyTestsIT extends TransactionalTests {
 
+    /*
+
 
     private AssetTestsHelper assetTestsHelper = new AssetTestsHelper();
 
@@ -33,9 +34,6 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @EJB
     private AssetDao assetDao;
 
-    /*--------------------------------------
-     *  create tests
-     ---------------------------------------*/
 
     @Test
     @OperateOnDeployment("normal")
@@ -106,9 +104,6 @@ public class AssetKeyTestsIT extends TransactionalTests {
     }
 
 
-    /*--------------------------------------
-     *  get tests
-     ---------------------------------------*/
 
     @Test
     @OperateOnDeployment("normal")
@@ -263,9 +258,6 @@ public class AssetKeyTestsIT extends TransactionalTests {
 
 
 
-    /*--------------------------------------
-     *  delete tests
-     ---------------------------------------*/
 
     @Test
     @OperateOnDeployment("normal")
@@ -437,9 +429,6 @@ public class AssetKeyTestsIT extends TransactionalTests {
 
 
 
-    /*--------------------------------------
-     *  update tests
-     ---------------------------------------*/
 
 
     @Test
@@ -630,9 +619,6 @@ public class AssetKeyTestsIT extends TransactionalTests {
 
 
 
-    /*--------------------------------------
-     *  helper/convinience mehods
-     ---------------------------------------*/
 
     private AssetEntity get(AssetIdType assetIdType, String value) throws AssetDaoException {
         AssetEntity fetchedEntity = getAssetHelper(assetIdType, value);
@@ -688,6 +674,9 @@ public class AssetKeyTestsIT extends TransactionalTests {
             return null;
         }
     }
+
+
+    */
 
 
 

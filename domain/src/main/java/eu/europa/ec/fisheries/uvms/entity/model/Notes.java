@@ -59,10 +59,10 @@ public class Notes implements Serializable {
 	@Column(name="notes_id")
 	private Long id;
 
-	@Fetch(FetchMode.JOIN)
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "notes_asset_id")
-	private AssetEntity asset;
+	//@Fetch(FetchMode.JOIN)
+	//@ManyToOne(fetch = FetchType.LAZY)
+	//@JoinColumn(name = "notes_asset_id")
+	//private AssetEntity asset;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="notes_date")
@@ -116,13 +116,13 @@ public class Notes implements Serializable {
 		this.id = id;
 	}
 
-	public AssetEntity getAsset() {
-		return asset;
-	}
+	//public AssetEntity getAsset() {
+//		return asset;
+//	}
 
-	public void setAsset(AssetEntity asset) {
-		this.asset = asset;
-	}
+	//public void setAsset(AssetEntity asset) {
+	//	this.asset = asset;
+	//}
 
 	public Date getDate() {
 		return date;

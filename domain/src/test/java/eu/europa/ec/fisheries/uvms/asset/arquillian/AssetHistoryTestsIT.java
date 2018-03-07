@@ -1,9 +1,6 @@
 package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
-import eu.europa.ec.fisheries.uvms.dao.AssetDao;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -17,6 +14,8 @@ import java.util.UUID;
 
 @RunWith(Arquillian.class)
 public class AssetHistoryTestsIT  extends TransactionalTests {
+
+    /*
 
     private AssetTestsHelper assetTestsHelper = new AssetTestsHelper();
 
@@ -55,6 +54,6 @@ public class AssetHistoryTestsIT  extends TransactionalTests {
         }
     }
 
-
+*/
 
 }

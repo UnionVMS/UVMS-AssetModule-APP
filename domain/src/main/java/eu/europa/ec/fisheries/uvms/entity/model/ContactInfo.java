@@ -46,10 +46,10 @@ public class ContactInfo implements Serializable {
 	@Column(name="contactinfo_id")
 	private Long id;
 
-	@Fetch(FetchMode.JOIN)
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "contactinfo_assethist_id")
-	private AssetHistory assetHistory;
+	//@Fetch(FetchMode.JOIN)
+	//@ManyToOne(fetch = FetchType.LAZY)
+	//@JoinColumn(name = "contactinfo_assethist_id")
+	//private AssetHistory assetHistory;
 
 	@Column(name="contactinfo_name")
 	private String name;
@@ -86,13 +86,13 @@ public class ContactInfo implements Serializable {
 		this.id = id;
 	}
 
-	public AssetHistory getAsset() {
-		return assetHistory;
-	}
+	//public AssetHistory getAsset() {
+	//	return assetHistory;
+	//}
 
-	public void setAsset(AssetHistory assetHistory) {
-		this.assetHistory = assetHistory;
-	}
+	//public void setAsset(AssetHistory assetHistory) {
+	//	this.assetHistory = assetHistory;
+	//}
 
 	public String getName() {
 		return name;

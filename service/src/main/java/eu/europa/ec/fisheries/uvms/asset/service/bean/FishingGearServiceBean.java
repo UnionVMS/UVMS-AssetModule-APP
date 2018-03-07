@@ -24,8 +24,6 @@ import eu.europa.ec.fisheries.uvms.dao.FishingGearDao;
 import eu.europa.ec.fisheries.uvms.dao.FishingGearTypeDao;
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGearEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGearType;
-import eu.europa.ec.fisheries.uvms.mapper.EntityToModelMapper;
-import eu.europa.ec.fisheries.uvms.mapper.ModelToEntityMapper;
 import eu.europa.ec.fisheries.wsdl.asset.fishinggear.FishingGearResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO;
 import org.slf4j.Logger;
@@ -74,13 +72,17 @@ public class FishingGearServiceBean implements FishingGearService {
 
     @Override
     public eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO upsertFishingGear(eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO gear, String username) {
-        FishingGearEntity fishingGearEntity = updateFishinGear(gear, username);
-        eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear = EntityToModelMapper.mapEntityToFishingGear(fishingGearEntity);
-        return fishingGear;
+        //FishingGearEntity fishingGearEntity = updateFishinGear(gear, username);
+        //eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear = EntityToModelMapper.mapEntityToFishingGear(fishingGearEntity);
+        //return fishingGear;
+        return null;
     }
 
     @Override
     public FishingGearEntity updateFishinGear(eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear, String username){
+
+        /*
+
         FishingGearEntity fishingGearByExternalIdEntity = null;
         try {
             fishingGearByExternalIdEntity = fishingGearBean.getFishingGearByExternalId(fishingGear.getExternalId());
@@ -116,6 +118,8 @@ public class FishingGearServiceBean implements FishingGearService {
         }
 
         return fishingGearByExternalIdEntity;
+        */
+        return null;
     }
 
     @Override

@@ -17,11 +17,8 @@ import eu.europa.ec.fisheries.uvms.entity.asset.types.NotesSourceEnum;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.PublicAidEnum;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.SegmentFUP;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.TypeOfExportEnum;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetProdOrg;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
-import eu.europa.ec.fisheries.uvms.entity.model.Carrier;
 import eu.europa.ec.fisheries.uvms.entity.model.ContactInfo;
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGearEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGearType;
@@ -29,6 +26,8 @@ import eu.europa.ec.fisheries.uvms.entity.model.Notes;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 
 public class AssetTestsHelper {
+
+
 
     private Random rnd = new Random();
 
@@ -60,6 +59,9 @@ public class AssetTestsHelper {
         
         return asset;
     }
+
+
+    /*
 
     public AssetEntity createAssetHelper(AssetIdType assetIdType, String value, Date date) {
 
@@ -271,6 +273,9 @@ public class AssetTestsHelper {
         return notes;
     }
 
+
+    */
+
     public static String getRandomIntegers(int length) {
         return new Random()
                 .ints(0,9)
@@ -279,4 +284,8 @@ public class AssetTestsHelper {
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();
     }
+
+
+
+
 }

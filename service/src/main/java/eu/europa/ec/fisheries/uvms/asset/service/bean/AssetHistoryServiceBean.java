@@ -28,11 +28,7 @@ import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
-import eu.europa.ec.fisheries.uvms.dao.AssetDao;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
-import eu.europa.ec.fisheries.uvms.mapper.EntityToModelMapper;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetDTO;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
@@ -49,27 +45,34 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
 
 	// @EJB
 	// AssetDomainModelBean assetDomainModel;
-	@Inject
-	private AssetDao assetDao;
+	//@Inject
+	//private AssetDao assetDao;
 
 	@Override
 	public List<AssetDTO> getAssetHistoryListByAssetId(String assetId, Integer maxNbr) throws AssetServiceException {
+
+		/*
 		try {
 			AssetEntity asset = assetDao.getAssetByGuid(assetId);
 			return EntityToModelMapper.toAssetHistoryList(asset, maxNbr);
 		} catch (AssetDaoException e) {
 			throw new AssetServiceException("Could not find asset histories from id " + assetId, e);
 		}
+
+		 */
+		return null;
 	}
 
 	@Override
 	public AssetDTO getAssetHistoryByAssetHistGuid(String assetHistId) throws AssetServiceException {
-		try {
-			AssetHistory assetHistory = assetDao.getAssetHistoryByGuid(assetHistId);
-			return EntityToModelMapper.toAssetFromAssetHistory(assetHistory);
-		} catch (AssetDaoException e) {
-			throw new AssetServiceException("Could not find asset history by id " + assetHistId, e);
-		}
+//		try {
+//			AssetHistory assetHistory = assetDao.getAssetHistoryByGuid(assetHistId);
+//			return EntityToModelMapper.toAssetFromAssetHistory(assetHistory);
+//		} catch (AssetDaoException e) {
+//			throw new AssetServiceException("Could not find asset history by id " + assetHistId, e);
+//		}
+
+		return null;
 	}
 
 	@Override
@@ -81,19 +84,20 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
 			throw new InputArgumentException("Cannot get asset because date is null.");
 		}
 
-		try {
-			FlagState flagState = assetDao.getAssetFlagStateByIdAndDate(assetGuid, date);
+//		try {
+//			FlagState flagState = assetDao.getAssetFlagStateByIdAndDate(assetGuid, date);
 
-			FlagStateType flagStateType = new FlagStateType();
-			flagStateType.setCode(flagState.getCode());
-			flagStateType.setName(flagState.getName());
-			flagStateType.setId(flagState.getId());
-			flagStateType.setUpdatedBy(flagState.getUpdatedBy());
-			flagStateType.setUpdateTime(DateUtils.dateToString(flagState.getUpdateTime()));
-			return flagStateType;
-		} catch (AssetDaoException e) {
-			throw new AssetServiceException("Could not get flag state by id " + assetGuid, e);
-		}
+//			FlagStateType flagStateType = new FlagStateType();
+//			flagStateType.setCode(flagState.getCode());
+//			flagStateType.setName(flagState.getName());
+//			flagStateType.setId(flagState.getId());
+//			flagStateType.setUpdatedBy(flagState.getUpdatedBy());
+//			flagStateType.setUpdateTime(DateUtils.dateToString(flagState.getUpdateTime()));
+//			return flagStateType;
+//		} catch (AssetDaoException e) {
+//			throw new AssetServiceException("Could not get flag state by id " + assetGuid, e);
+//		}
+		return null;
 	}
 
 	@Override
@@ -113,14 +117,15 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
 			throw new InputArgumentException("Date is null");
 		}
 
-		try {
-			AssetId assetId = new AssetId();
-			assetId.setType(assetType);
-			assetId.setValue(value);
-			AssetEntity assetEntity = assetDao.getAssetFromAssetIdAndDate(assetId, date);
-			return EntityToModelMapper.toAssetFromEntity(assetEntity);
-		} catch (AssetDaoException e) {
-			throw new AssetServiceException("Could not get asset by id and date", e);
-		}
+//		try {
+//			AssetId assetId = new AssetId();
+//			assetId.setType(assetType);
+//			assetId.setValue(value);
+//			AssetEntity assetEntity = assetDao.getAssetFromAssetIdAndDate(assetId, date);
+//			return EntityToModelMapper.toAssetFromEntity(assetEntity);
+//		} catch (AssetDaoException e) {
+//			throw new AssetServiceException("Could not get asset by id and date", e);
+//		}
+		return  null;
 	}
 }

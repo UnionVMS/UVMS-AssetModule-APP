@@ -43,15 +43,10 @@ import eu.europa.ec.fisheries.uvms.asset.remote.dto.GetAssetListResponseDto;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
 import eu.europa.ec.fisheries.uvms.bean.ConfigDomainModelBean;
-import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
 import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
-import eu.europa.ec.fisheries.uvms.mapper.EntityToModelMapper;
 import eu.europa.ec.fisheries.uvms.mapper.MapperUtil;
-import eu.europa.ec.fisheries.uvms.mapper.ModelToEntityMapper;
 import eu.europa.ec.fisheries.uvms.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL;
@@ -82,8 +77,8 @@ public class AssetServiceBean implements AssetService {
 	@EJB
 	ConfigDomainModelBean configModel;
 
-	@EJB
-	AssetDao assetDao;
+	//@EJB
+	//AssetDao assetDao;
 
 	@EJB
 	AssetGroupDao assetGroupDao;
@@ -97,8 +92,7 @@ public class AssetServiceBean implements AssetService {
 	 */
 	@Override
 	public AssetDTO createAsset(AssetDTO asset, String username) throws AssetException {
-		LOG.debug("Creating asset.");
-
+		/*
 		assertAssetDoesNotExist(asset);
 		AssetEntity assetEntity = ModelToEntityMapper.mapToNewAssetEntity(asset, configModel.getLicenseType(),
 				username);
@@ -118,6 +112,8 @@ public class AssetServiceBean implements AssetService {
 		}
 
 		return createdAsset;
+		*/
+		return null;
 	}
 
 	/**
@@ -206,6 +202,8 @@ public class AssetServiceBean implements AssetService {
 			throw new InputArgumentException("No id on asset to update");
 		}
 
+
+		/*
 		AssetDTO storedAsset = getAssetById(asset.getAssetId());
 		switch (storedAsset.getSource()) {
 		case INTERNAL:
@@ -215,6 +213,8 @@ public class AssetServiceBean implements AssetService {
 			throw new AssetServiceException("Not allowed to update");
 		}
 		return updatedAsset;
+		*/
+		return null;
 	}
 
 	@Override
@@ -223,7 +223,9 @@ public class AssetServiceBean implements AssetService {
 		if (asset == null) {
 			throw new InputArgumentException("No asset to upsert");
 		}
-		return upsertAsset_FROM_DOMAINMODEL(asset, username);
+
+		//return upsertAsset_FROM_DOMAINMODEL(asset, username);
+		return null;
 
 	}
 
@@ -236,7 +238,7 @@ public class AssetServiceBean implements AssetService {
 	 */
 	@Override
 	public AssetDTO getAssetById(AssetId assetId, AssetDataSourceQueue source) throws AssetException {
-		AssetDTO assetById;
+		AssetDTO assetById = null;
 
 		if (assetId == null) {
 			throw new InputArgumentException("AssetId object is null");
@@ -254,7 +256,7 @@ public class AssetServiceBean implements AssetService {
 
 		switch (source) {
 		case INTERNAL:
-			assetById = getAssetById(assetId);
+			//assetById = getAssetById(assetId);
 			break;
 		default:
 			String data = AssetDataSourceRequestMapper.mapGetAssetById(assetId.getValue(), assetId.getType());
@@ -283,7 +285,8 @@ public class AssetServiceBean implements AssetService {
 		AssetId assetId = new AssetId();
 		assetId.setType(AssetIdType.GUID);
 		assetId.setValue(guid);
-		return getAssetById(assetId);
+//		return getAssetById(assetId);
+		return null;
 	}
 
 	/**
@@ -299,29 +302,36 @@ public class AssetServiceBean implements AssetService {
 			throw new InputArgumentException("No groups in query");
 		}
 
-		return getAssetListByAssetGroup(groups);
+		//return getAssetListByAssetGroup(groups);
+		return null;
 	}
 
 	@Override
 	public AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetException {
 		LOG.debug("Getting asset list by asset ids group by flags State.");
+		/*
 		List assetListGroupByFlagState = getAssetListGroupByFlagState_FROM_DOMAINMODEL(assetIds);
 		AssetListGroupByFlagStateResponse assetListGroupByFlagStateResponse = new AssetListGroupByFlagStateResponse();
 		assetListGroupByFlagStateResponse.getNumberOfAssetsGroupByFlagState().addAll(assetListGroupByFlagState);
 		return assetListGroupByFlagStateResponse;
+		*/
+		return null;
 
 	}
 
 	public NoteActivityCode getNoteActivityCodes() {
-		return getNoteActivityCodes_FROM_DOMAINMODEL();
+		//return getNoteActivityCodes_FROM_DOMAINMODEL();
+		return null;
 	}
 
 	@Override
 	public void deleteAsset(AssetId assetId) throws AssetException {
-		deleteAsset_FRROM_DOMAINMODEL(assetId);
+		//deleteAsset_FRROM_DOMAINMODEL(assetId);
 	}
 
 	private void assertAssetDoesNotExist(AssetDTO asset) throws AssetModelException {
+
+		/*
 		List<String> messages = new ArrayList<>();
 		try {
 			if (asset.getCfr() != null && assetDao.getAssetByCfrExcludeArchived(asset.getCfr()) != null) {
@@ -357,10 +367,15 @@ public class AssetServiceBean implements AssetService {
 		if (!messages.isEmpty()) {
 			throw new AssetModelException(StringUtils.join(messages, " "));
 		}
+		*/
 	}
 
 	public GetAssetListResponseDto getAssetList_FROM_DOMAINMODEL(AssetListQuery query)
+
 			throws AssetModelException, InputArgumentException {
+
+		/*
+
 		if (query == null) {
 			throw new InputArgumentException("Cannot get asset list because query is null.");
 		}
@@ -410,6 +425,9 @@ public class AssetServiceBean implements AssetService {
 
 		return response;
 
+		*/
+		return null;
+
 	}
 
 	public Long getAssetListCount_FROM_DOMAINMODEL(AssetListQuery query)
@@ -427,6 +445,8 @@ public class AssetServiceBean implements AssetService {
 			throw new InputArgumentException("Cannot get asset list count because criteria pagination is null.");
 		}
 
+		/*
+
 		GetAssetListResponseDto response = new GetAssetListResponseDto();
 
 		boolean isDynamic = query.getAssetSearchCriteria().isIsDynamic();
@@ -438,8 +458,12 @@ public class AssetServiceBean implements AssetService {
 
 		return assetDao.getAssetCount(countSql, searchFields, isDynamic);
 
+		*/
+		return null;
+
 	}
 
+	/*
 	private AssetEntity getAssetEntityById_FROM_DOMAINMODEL(AssetId id)
 			throws AssetDaoException, InputArgumentException {
 		if (id == null) {
@@ -471,6 +495,7 @@ public class AssetServiceBean implements AssetService {
 			throw new NoAssetEntityFoundException("Non valid asset id type");
 		}
 	}
+	*/
 
 	private void checkNumberAssetId(String id) throws InputArgumentException {
 		try {
@@ -480,11 +505,14 @@ public class AssetServiceBean implements AssetService {
 		}
 	}
 
+	/*
 	public AssetDTO getAssetById(AssetId id) throws AssetModelException, InputArgumentException {
 		AssetEntity assetEntity = getAssetEntityById_FROM_DOMAINMODEL(id);
 		return EntityToModelMapper.toAssetFromEntity(assetEntity);
 	}
+	*/
 
+	/*
 	public AssetDTO updateAsset_FROM_DOMAINMODEL(AssetDTO asset, String username)
 			throws AssetModelException, InputArgumentException {
 		if (asset == null) {
@@ -522,7 +550,9 @@ public class AssetServiceBean implements AssetService {
 			throw new AssetModelException(e.getMessage());
 		}
 	}
+	*/
 
+	/*
 	public AssetDTO upsertAsset_FROM_DOMAINMODEL(AssetDTO asset, String username) throws AssetException {
 		try {
 			getAssetEntityById_FROM_DOMAINMODEL(asset.getAssetId());
@@ -531,13 +561,17 @@ public class AssetServiceBean implements AssetService {
 			return createAsset(asset, username);
 		}
 	}
+	*/
 
+	/*
 	public List<AssetDTO> getAssetHistoryListByAssetId(AssetId assetId, Integer maxNbr)
 			throws AssetModelException, InputArgumentException {
 		AssetEntity vesselHistories = getAssetEntityById_FROM_DOMAINMODEL(assetId);
 		return EntityToModelMapper.toAssetHistoryList(vesselHistories, maxNbr);
 	}
+	*/
 
+	/*
 	public AssetDTO getAssetHistory_FROM_DOMAINMODEL(AssetHistoryId historyId)
 			throws AssetModelException, InputArgumentException {
 		if (historyId == null || historyId.getEventId() == null) {
@@ -547,14 +581,18 @@ public class AssetServiceBean implements AssetService {
 		AssetHistory assetHistory = assetDao.getAssetHistoryByGuid(historyId.getEventId());
 		return EntityToModelMapper.toAssetFromAssetHistory(assetHistory);
 	}
+	*/
 
+	/*
 	public List<NumberOfAssetsGroupByFlagState> getAssetListGroupByFlagState_FROM_DOMAINMODEL(List<String> assetIds)
 			throws AssetDaoException {
 		List<AssetHistory> assetListByAssetGuids = assetDao.getAssetListByAssetGuids(assetIds);
 		return EntityToModelMapper.mapEntityToNumberOfAssetsGroupByFlagState(assetListByAssetGuids);
 
 	}
+	*/
 
+	/*
 	private void assertAssetDoesNotExist_FROM_DOMAINMODEL(AssetDTO asset) throws AssetModelException {
 		List<String> messages = new ArrayList<>();
 		try {
@@ -592,11 +630,16 @@ public class AssetServiceBean implements AssetService {
 			throw new AssetModelException(StringUtils.join(messages, " "));
 		}
 	}
+	*/
 
+
+	/*
 	public NoteActivityCode getNoteActivityCodes_FROM_DOMAINMODEL() {
 		return EntityToModelMapper.mapEntityToNoteActivityCode(assetDao.getNoteActivityCodes());
 	}
+	*/
 
+	/*
 	public void deleteAsset_FRROM_DOMAINMODEL(AssetId assetId) throws AssetModelException, InputArgumentException {
 
 		if (assetId == null) {
@@ -615,7 +658,9 @@ public class AssetServiceBean implements AssetService {
 		}
 
 	}
+	*/
 
+	/*
 	public FlagState getFlagStateByIdAndDate_FROM_DOMAINMODEL(String assetGuid, Date date)
 			throws InputArgumentException, AssetDaoException {
 
@@ -634,6 +679,9 @@ public class AssetServiceBean implements AssetService {
 			throw e;
 		}
 	}
+	*/
+
+	/*
 
 	public AssetDTO getAssetByIdAndDate_FROM_DOMAINMODEL(AssetId assetId, Date date) throws AssetModelException {
 		try {
@@ -644,7 +692,9 @@ public class AssetServiceBean implements AssetService {
 			throw new AssetModelException(e.toString());
 		}
 	}
+	*/
 
+	/*
 	public List<AssetDTO> getAssetListByAssetGroup(List<AssetGroupWSDL> groups)
 			throws AssetModelException, InputArgumentException {
 		if (groups == null || groups.isEmpty()) {
@@ -670,6 +720,7 @@ public class AssetServiceBean implements AssetService {
 		return arrayList;
 
 	}
+	*/
 
 	public List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL> getAssetGroupsByGroupList(
 			List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL> groups)

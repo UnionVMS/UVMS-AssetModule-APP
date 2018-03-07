@@ -52,7 +52,9 @@ public class AssetGroupDaoBeanTest {
 	}
 
 	private static final String TEST_USER = "testUser";
-	
+
+	/*
+
 	@Test
 	public void testCreateVesselGroup() throws AssetGroupDaoException {
 		AssetGroupEntity group = MockData.getFiltergroup(TEST_USER, "1");
@@ -125,4 +127,7 @@ public class AssetGroupDaoBeanTest {
 		verify(query).getResultList();
 		assertSame(dummyResult, result);
 	}
+
+
+	*/
 }
