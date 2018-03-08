@@ -13,7 +13,7 @@ package eu.europa.ec.fisheries.wsdl.asset.mockdata;
 
 import eu.europa.ec.fisheries.asset.types.AssetDTO;
 import eu.europa.ec.fisheries.asset.types.AssetId;
-import eu.europa.ec.fisheries.asset.types.CarrierSource;
+import eu.europa.ec.fisheries.asset.enums.CarrierSourceEnum;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class MockData {
         dto.setPowerAux(BigDecimal.valueOf(123.4 + id));
         dto.setPowerMain(BigDecimal.valueOf(586.2 + id));
         dto.setSafetyGrossTonnage(BigDecimal.valueOf(54.3 + id));
-        dto.setSource(CarrierSource.INTERNAL);
+        dto.setSource(CarrierSourceEnum.INTERNAL);
         dto.setActive(true);
 
         /*if (id % 3 == 0) {

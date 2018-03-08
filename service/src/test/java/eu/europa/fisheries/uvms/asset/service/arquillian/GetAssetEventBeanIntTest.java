@@ -1,7 +1,7 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
 import eu.europa.ec.fisheries.asset.types.AssetId;
-import eu.europa.ec.fisheries.asset.types.AssetIdType;
+import eu.europa.ec.fisheries.asset.enums.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetEventBean;
@@ -47,7 +47,7 @@ public class GetAssetEventBeanIntTest extends TransactionalTests {
     public void testBadUUIDGetAsset() {
         TextMessage textMessage = null;
         AssetId assetId = new AssetId();
-        assetId.setType(AssetIdType.GUID);
+        assetId.setType(AssetIdTypeEnum.GUID);
         assetId.setValue("<BAD UUID>");
 
         getAssetEventBean.getAsset(textMessage, assetId);

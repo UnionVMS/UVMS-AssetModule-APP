@@ -14,6 +14,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
+
+import eu.europa.ec.fisheries.asset.enums.NoteSourceEnum;
 import org.jvnet.jaxb2_commons.lang.Equals;
 import org.jvnet.jaxb2_commons.lang.EqualsStrategy;
 import org.jvnet.jaxb2_commons.lang.HashCode;
@@ -92,7 +94,7 @@ public class AssetNotes implements Equals, HashCode
     protected String document;
     @XmlElement(required = true)
     @XmlSchemaType(name = "string")
-    protected NoteSource source;
+    protected NoteSourceEnum source;
 
     /**
      * Default no-arg constructor
@@ -106,7 +108,7 @@ public class AssetNotes implements Equals, HashCode
      * Fully-initialising value constructor
      * 
      */
-    public AssetNotes(final BigInteger id, final String date, final String activity, final String user, final String readyDate, final String licenseHolder, final String contact, final String sheetNumber, final String notes, final String document, final NoteSource source) {
+    public AssetNotes(final BigInteger id, final String date, final String activity, final String user, final String readyDate, final String licenseHolder, final String contact, final String sheetNumber, final String notes, final String document, final NoteSourceEnum source) {
         this.id = id;
         this.date = date;
         this.activity = activity;
@@ -365,10 +367,10 @@ public class AssetNotes implements Equals, HashCode
      * 
      * @return
      *     possible object is
-     *     {@link NoteSource }
+     *     {@link NoteSourceEnum }
      *     
      */
-    public NoteSource getSource() {
+    public NoteSourceEnum getSource() {
         return source;
     }
 
@@ -377,10 +379,10 @@ public class AssetNotes implements Equals, HashCode
      * 
      * @param value
      *     allowed object is
-     *     {@link NoteSource }
+     *     {@link NoteSourceEnum }
      *     
      */
-    public void setSource(NoteSource value) {
+    public void setSource(NoteSourceEnum value) {
         this.source = value;
     }
 
@@ -483,9 +485,9 @@ public class AssetNotes implements Equals, HashCode
             }
         }
         {
-            NoteSource lhsSource;
+            NoteSourceEnum lhsSource;
             lhsSource = this.getSource();
-            NoteSource rhsSource;
+            NoteSourceEnum rhsSource;
             rhsSource = that.getSource();
             if (!strategy.equals(LocatorUtils.property(thisLocator, "source", lhsSource), LocatorUtils.property(thatLocator, "source", rhsSource), lhsSource, rhsSource)) {
                 return false;
@@ -552,7 +554,7 @@ public class AssetNotes implements Equals, HashCode
             currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "document", theDocument), currentHashCode, theDocument);
         }
         {
-            NoteSource theSource;
+            NoteSourceEnum theSource;
             theSource = this.getSource();
             currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "source", theSource), currentHashCode, theSource);
         }

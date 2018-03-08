@@ -16,6 +16,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
+
+import eu.europa.ec.fisheries.asset.enums.CarrierSourceEnum;
 import org.jvnet.jaxb2_commons.lang.Equals;
 import org.jvnet.jaxb2_commons.lang.EqualsStrategy;
 import org.jvnet.jaxb2_commons.lang.HashCode;
@@ -115,7 +117,7 @@ public class AssetDTO implements Equals, HashCode
     protected boolean active;
     @XmlElement(required = true)
     @XmlSchemaType(name = "string")
-    protected CarrierSource source;
+    protected CarrierSourceEnum source;
     protected String eventHistory;
     protected String name;
     protected String countryCode;
@@ -156,7 +158,7 @@ public class AssetDTO implements Equals, HashCode
      * Fully-initialising value constructor
      * 
      */
-    public AssetDTO(final AssetId assetId, final boolean active, final CarrierSource source, final String eventHistory, final String name, final String countryCode, final String gearType, final String hasIrcs, final String ircs, final String externalMarking, final String cfr, final String imo, final String mmsiNo, final boolean hasLicense, final String licenseType, final String homePort, final BigDecimal lengthOverAll, final BigDecimal lengthBetweenPerpendiculars, final BigDecimal grossTonnage, final String grossTonnageUnit, final BigDecimal otherGrossTonnage, final BigDecimal safetyGrossTonnage, final BigDecimal powerMain, final BigDecimal powerAux, final AssetProdOrgModel producer, final List<AssetContact> contact, final List<AssetNotes> notes, final String iccat, final String uvi, final String gfcm) {
+    public AssetDTO(final AssetId assetId, final boolean active, final CarrierSourceEnum source, final String eventHistory, final String name, final String countryCode, final String gearType, final String hasIrcs, final String ircs, final String externalMarking, final String cfr, final String imo, final String mmsiNo, final boolean hasLicense, final String licenseType, final String homePort, final BigDecimal lengthOverAll, final BigDecimal lengthBetweenPerpendiculars, final BigDecimal grossTonnage, final String grossTonnageUnit, final BigDecimal otherGrossTonnage, final BigDecimal safetyGrossTonnage, final BigDecimal powerMain, final BigDecimal powerAux, final AssetProdOrgModel producer, final List<AssetContact> contact, final List<AssetNotes> notes, final String iccat, final String uvi, final String gfcm) {
         this.assetId = assetId;
         this.active = active;
         this.source = source;
@@ -234,10 +236,10 @@ public class AssetDTO implements Equals, HashCode
      * 
      * @return
      *     possible object is
-     *     {@link CarrierSource }
+     *     {@link CarrierSourceEnum }
      *     
      */
-    public CarrierSource getSource() {
+    public CarrierSourceEnum getSource() {
         return source;
     }
 
@@ -246,10 +248,10 @@ public class AssetDTO implements Equals, HashCode
      * 
      * @param value
      *     allowed object is
-     *     {@link CarrierSource }
+     *     {@link CarrierSourceEnum }
      *     
      */
-    public void setSource(CarrierSource value) {
+    public void setSource(CarrierSourceEnum value) {
         this.source = value;
     }
 
@@ -930,9 +932,9 @@ public class AssetDTO implements Equals, HashCode
             }
         }
         {
-            CarrierSource lhsSource;
+            CarrierSourceEnum lhsSource;
             lhsSource = this.getSource();
-            CarrierSource rhsSource;
+            CarrierSourceEnum rhsSource;
             rhsSource = that.getSource();
             if (!strategy.equals(LocatorUtils.property(thisLocator, "source", lhsSource), LocatorUtils.property(thatLocator, "source", rhsSource), lhsSource, rhsSource)) {
                 return false;
@@ -1202,7 +1204,7 @@ public class AssetDTO implements Equals, HashCode
             currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "active", theActive), currentHashCode, theActive);
         }
         {
-            CarrierSource theSource;
+            CarrierSourceEnum theSource;
             theSource = this.getSource();
             currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "source", theSource), currentHashCode, theSource);
         }

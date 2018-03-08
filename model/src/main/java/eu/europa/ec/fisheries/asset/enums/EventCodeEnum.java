@@ -6,53 +6,53 @@
 //
 
 
-package eu.europa.ec.fisheries.asset.types;
+package eu.europa.ec.fisheries.asset.enums;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for AssetIdType.
+ * <p>Java class for EventCode.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
  * <pre>
- * &lt;simpleType name="AssetIdType"&gt;
+ * &lt;simpleType name="EventCode"&gt;
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
- *     &lt;enumeration value="INTERNAL_ID"/&gt;
- *     &lt;enumeration value="CFR"/&gt;
- *     &lt;enumeration value="IRCS"/&gt;
- *     &lt;enumeration value="IMO"/&gt;
- *     &lt;enumeration value="MMSI"/&gt;
- *     &lt;enumeration value="GUID"/&gt;
- *     &lt;enumeration value="ICCAT"/&gt;
- *     &lt;enumeration value="UVI"/&gt;
- *     &lt;enumeration value="GFCM"/&gt;
+ *     &lt;enumeration value="CEN"/&gt;
+ *     &lt;enumeration value="CST"/&gt;
+ *     &lt;enumeration value="CHA"/&gt;
+ *     &lt;enumeration value="IMP"/&gt;
+ *     &lt;enumeration value="MOD"/&gt;
+ *     &lt;enumeration value="DES"/&gt;
+ *     &lt;enumeration value="RET"/&gt;
+ *     &lt;enumeration value="EXP"/&gt;
+ *     &lt;enumeration value="UNK"/&gt;
  *   &lt;/restriction&gt;
  * &lt;/simpleType&gt;
  * </pre>
  * 
  */
-@XmlType(name = "AssetIdType")
+@XmlType(name = "EventCodeEnum")
 @XmlEnum
-public enum AssetIdType {
+public enum EventCodeEnum {
 
-    INTERNAL_ID,
-    CFR,
-    IRCS,
-    IMO,
-    MMSI,
-    GUID,
-    ICCAT,
-    UVI,
-    GFCM;
+    CEN,
+    CST,
+    CHA,
+    IMP,
+    MOD,
+    DES,
+    RET,
+    EXP,
+    UNK;
 
     public String value() {
         return name();
     }
 
-    public static AssetIdType fromValue(String v) {
+    public static EventCodeEnum fromValue(String v) {
         return valueOf(v);
     }
 

@@ -132,17 +132,6 @@
         </xsd:restriction>
     </xsd:simpleType>
 
-    <!--
-    <xsd:complexType name="AssetHistoryId">
-        <xsd:sequence>
-            <xsd:element name="eventId" type="xsd:string"/>
-            <xsd:element name="eventCode" type="EventCode"/>
-            <xsd:element name="eventDate" type="xsd:dateTime"/>
-        </xsd:sequence>
-    </xsd:complexType>
-    -->
-
-    
     <xsd:complexType name="AssetId">
         <xsd:sequence>
             <xsd:element name="type" type="AssetIdType" />
@@ -313,7 +302,7 @@
         </xsd:sequence>
     </xsd:complexType>
 
-    <xsd:complexType name="AssetGroupWSDL">
+    <xsd:complexType name="AssetGroupDTO">
         <xsd:sequence>
             <xsd:element name="guid" type="xsd:string"/>
             <xsd:element name="name" type="xsd:string"/>

@@ -49,7 +49,7 @@ import org.jvnet.jaxb2_commons.locator.util.LocatorUtils;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "AssetGroupWSDL", propOrder = {
+@XmlType(name = "AssetGroupDTO", propOrder = {
     "guid",
     "name",
     "user",
@@ -57,7 +57,7 @@ import org.jvnet.jaxb2_commons.locator.util.LocatorUtils;
     "global",
     "searchFields"
 })
-public class AssetGroupWSDL implements Equals, HashCode
+public class AssetGroupDTO implements Equals, HashCode
 {
 
     @XmlElement(required = true)
@@ -74,7 +74,7 @@ public class AssetGroupWSDL implements Equals, HashCode
      * Default no-arg constructor
      * 
      */
-    public AssetGroupWSDL() {
+    public AssetGroupDTO() {
         super();
     }
 
@@ -82,7 +82,7 @@ public class AssetGroupWSDL implements Equals, HashCode
      * Fully-initialising value constructor
      * 
      */
-    public AssetGroupWSDL(final String guid, final String name, final String user, final boolean dynamic, final boolean global, final List<AssetGroupSearchField> searchFields) {
+    public AssetGroupDTO(final String guid, final String name, final String user, final boolean dynamic, final boolean global, final List<AssetGroupSearchField> searchFields) {
         this.guid = guid;
         this.name = name;
         this.user = user;
@@ -225,13 +225,13 @@ public class AssetGroupWSDL implements Equals, HashCode
     }
 
     public boolean equals(ObjectLocator thisLocator, ObjectLocator thatLocator, Object object, EqualsStrategy strategy) {
-        if (!(object instanceof AssetGroupWSDL)) {
+        if (!(object instanceof AssetGroupDTO)) {
             return false;
         }
         if (this == object) {
             return true;
         }
-        final AssetGroupWSDL that = ((AssetGroupWSDL) object);
+        final AssetGroupDTO that = ((AssetGroupDTO) object);
         {
             String lhsGuid;
             lhsGuid = this.getGuid();

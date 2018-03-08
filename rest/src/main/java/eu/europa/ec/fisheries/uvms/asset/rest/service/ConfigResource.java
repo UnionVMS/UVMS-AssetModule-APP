@@ -23,7 +23,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import eu.europa.ec.fisheries.asset.types.Config;
-import eu.europa.ec.fisheries.asset.types.ConfigSearchField;
+import eu.europa.ec.fisheries.asset.enums.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseCodeConstant;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.asset.rest.error.ErrorHandler;
@@ -53,7 +53,7 @@ public class ConfigResource {
     @Path(value = "/searchfields")
     public ResponseDto getConfigSearchFields() {
         try {
-            return new ResponseDto(ConfigSearchField.values(), ResponseCodeConstant.OK);
+            return new ResponseDto(ConfigSearchFieldEnum.values(), ResponseCodeConstant.OK);
         } catch (Exception e) {
             LOG.error("[ Error when getting config search fields. ]");
             return ErrorHandler.getFault(e);

@@ -6,7 +6,7 @@
 //
 
 
-package eu.europa.ec.fisheries.asset.types;
+package eu.europa.ec.fisheries.asset.enums;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlType;
@@ -27,9 +27,9 @@ import javax.xml.bind.annotation.XmlType;
  * </pre>
  * 
  */
-@XmlType(name = "ContactSource")
+@XmlType(name = "ContactSourceEnum")
 @XmlEnum
-public enum ContactSource {
+public enum ContactSourceEnum {
 
     INTERNAL,
     NATIONAL;
@@ -38,7 +38,7 @@ public enum ContactSource {
         return name();
     }
 
-    public static ContactSource fromValue(String v) {
+    public static ContactSourceEnum fromValue(String v) {
         return valueOf(v);
     }
 

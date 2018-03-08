@@ -12,7 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mapper;
 
 import eu.europa.ec.fisheries.asset.types.AssetListCriteriaPair;
-import eu.europa.ec.fisheries.asset.types.ConfigSearchField;
+import eu.europa.ec.fisheries.asset.enums.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.constant.SearchTables;
@@ -42,7 +42,7 @@ public class SearchFieldMapper {
         return searchKeyValue;
     }
 
-    private static SearchFields getSearchFields(ConfigSearchField field) throws AssetSearchMapperException {
+    private static SearchFields getSearchFields(ConfigSearchFieldEnum field) throws AssetSearchMapperException {
         switch (field) {
             case CFR:
                 return SearchFields.CFR;

@@ -13,6 +13,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
+
+import eu.europa.ec.fisheries.asset.enums.ContactSourceEnum;
 import org.jvnet.jaxb2_commons.lang.Equals;
 import org.jvnet.jaxb2_commons.lang.EqualsStrategy;
 import org.jvnet.jaxb2_commons.lang.HashCode;
@@ -66,7 +68,7 @@ public class AssetContact implements Equals, HashCode
     protected boolean owner;
     @XmlElement(required = true)
     @XmlSchemaType(name = "string")
-    protected ContactSource source;
+    protected ContactSourceEnum source;
 
     /**
      * Default no-arg constructor
@@ -80,7 +82,7 @@ public class AssetContact implements Equals, HashCode
      * Fully-initialising value constructor
      * 
      */
-    public AssetContact(final String name, final String number, final String email, final boolean owner, final ContactSource source) {
+    public AssetContact(final String name, final String number, final String email, final boolean owner, final ContactSourceEnum source) {
         this.name = name;
         this.number = number;
         this.email = email;
@@ -181,10 +183,10 @@ public class AssetContact implements Equals, HashCode
      * 
      * @return
      *     possible object is
-     *     {@link ContactSource }
+     *     {@link ContactSourceEnum }
      *     
      */
-    public ContactSource getSource() {
+    public ContactSourceEnum getSource() {
         return source;
     }
 
@@ -193,10 +195,10 @@ public class AssetContact implements Equals, HashCode
      * 
      * @param value
      *     allowed object is
-     *     {@link ContactSource }
+     *     {@link ContactSourceEnum }
      *     
      */
-    public void setSource(ContactSource value) {
+    public void setSource(ContactSourceEnum value) {
         this.source = value;
     }
 
@@ -245,9 +247,9 @@ public class AssetContact implements Equals, HashCode
             }
         }
         {
-            ContactSource lhsSource;
+            ContactSourceEnum lhsSource;
             lhsSource = this.getSource();
-            ContactSource rhsSource;
+            ContactSourceEnum rhsSource;
             rhsSource = that.getSource();
             if (!strategy.equals(LocatorUtils.property(thisLocator, "source", lhsSource), LocatorUtils.property(thatLocator, "source", rhsSource), lhsSource, rhsSource)) {
                 return false;
@@ -284,7 +286,7 @@ public class AssetContact implements Equals, HashCode
             currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "owner", theOwner), currentHashCode, theOwner);
         }
         {
-            ContactSource theSource;
+            ContactSourceEnum theSource;
             theSource = this.getSource();
             currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "source", theSource), currentHashCode, theSource);
         }

@@ -12,6 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
+import eu.europa.ec.fisheries.asset.enums.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.asset.types.*;
 import eu.europa.ec.fisheries.uvms.asset.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
@@ -38,7 +39,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.jms.TextMessage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -297,7 +297,7 @@ public class AssetServiceBean implements AssetService {
 		}
 
 		AssetId assetId = new AssetId();
-		assetId.setType(AssetIdType.GUID);
+		assetId.setType(AssetIdTypeEnum.GUID);
 		assetId.setValue(guid);
 //		return getAssetById(assetId);
 		return null;
@@ -310,7 +310,7 @@ public class AssetServiceBean implements AssetService {
 	 * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
 	 */
 	@Override
-		public List<AssetDTO> getAssetListByAssetGroups(List<AssetGroupWSDL> groups) throws AssetException {
+		public List<AssetDTO> getAssetListByAssetGroups(List<AssetGroupDTO> groups) throws AssetException {
 		LOG.debug("Getting asset by ID.");
 		if (groups == null || groups.isEmpty()) {
 			throw new InputArgumentException("No groups in query");
@@ -678,15 +678,15 @@ public class AssetServiceBean implements AssetService {
 	}
 	*/
 
-	public List<AssetGroupWSDL> getAssetGroupsByGroupList(
-			List<AssetGroupWSDL> groups)
+	public List<AssetGroupDTO> getAssetGroupsByGroupList(
+			List<AssetGroupDTO> groups)
 			throws AssetModelException, InputArgumentException {
 		if (groups == null) {
 			throw new InputArgumentException("Cannot get asset group list because the input is null.");
 		}
 
 		List<String> guidList = new ArrayList<>();
-		for (AssetGroupWSDL group : groups) {
+		for (AssetGroupDTO group : groups) {
 			guidList.add(group.getGuid());
 		}
 
@@ -695,7 +695,7 @@ public class AssetServiceBean implements AssetService {
 		}
 
 		try {
-			List<AssetGroupWSDL> vesselGroupList = new ArrayList<>();
+			List<AssetGroupDTO> vesselGroupList = new ArrayList<>();
 			// List<AssetGroup> filterGroupList =
 			// assetGroupDao.getAssetGroupsByGroupGuidList(guidList);
 			// for (AssetGroup group : filterGroupList) {

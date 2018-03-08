@@ -6,7 +6,7 @@
 //
 
 
-package eu.europa.ec.fisheries.asset.types;
+package eu.europa.ec.fisheries.asset.enums;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlType;
@@ -34,9 +34,9 @@ import javax.xml.bind.annotation.XmlType;
  * </pre>
  * 
  */
-@XmlType(name = "ConfigField")
+@XmlType(name = "ConfigFieldEnum")
 @XmlEnum
-public enum ConfigField {
+public enum ConfigFieldEnum {
 
     ALL,
     FLAG_STATE,
@@ -52,7 +52,7 @@ public enum ConfigField {
         return name();
     }
 
-    public static ConfigField fromValue(String v) {
+    public static ConfigFieldEnum fromValue(String v) {
         return valueOf(v);
     }
 

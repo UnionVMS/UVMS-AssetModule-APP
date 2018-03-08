@@ -13,6 +13,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
+
+import eu.europa.ec.fisheries.asset.enums.ConfigSearchFieldEnum;
 import org.jvnet.jaxb2_commons.lang.Equals;
 import org.jvnet.jaxb2_commons.lang.EqualsStrategy;
 import org.jvnet.jaxb2_commons.lang.HashCode;
@@ -53,7 +55,7 @@ public class AssetGroupSearchField implements Equals, HashCode
 
     @XmlElement(required = true)
     @XmlSchemaType(name = "string")
-    protected ConfigSearchField key;
+    protected ConfigSearchFieldEnum key;
     @XmlElement(required = true)
     protected String value;
 
@@ -69,7 +71,7 @@ public class AssetGroupSearchField implements Equals, HashCode
      * Fully-initialising value constructor
      * 
      */
-    public AssetGroupSearchField(final ConfigSearchField key, final String value) {
+    public AssetGroupSearchField(final ConfigSearchFieldEnum key, final String value) {
         this.key = key;
         this.value = value;
     }
@@ -79,10 +81,10 @@ public class AssetGroupSearchField implements Equals, HashCode
      * 
      * @return
      *     possible object is
-     *     {@link ConfigSearchField }
+     *     {@link ConfigSearchFieldEnum }
      *     
      */
-    public ConfigSearchField getKey() {
+    public ConfigSearchFieldEnum getKey() {
         return key;
     }
 
@@ -91,10 +93,10 @@ public class AssetGroupSearchField implements Equals, HashCode
      * 
      * @param value
      *     allowed object is
-     *     {@link ConfigSearchField }
+     *     {@link ConfigSearchFieldEnum }
      *     
      */
-    public void setKey(ConfigSearchField value) {
+    public void setKey(ConfigSearchFieldEnum value) {
         this.key = value;
     }
 
@@ -131,9 +133,9 @@ public class AssetGroupSearchField implements Equals, HashCode
         }
         final AssetGroupSearchField that = ((AssetGroupSearchField) object);
         {
-            ConfigSearchField lhsKey;
+            ConfigSearchFieldEnum lhsKey;
             lhsKey = this.getKey();
-            ConfigSearchField rhsKey;
+            ConfigSearchFieldEnum rhsKey;
             rhsKey = that.getKey();
             if (!strategy.equals(LocatorUtils.property(thisLocator, "key", lhsKey), LocatorUtils.property(thatLocator, "key", rhsKey), lhsKey, rhsKey)) {
                 return false;
@@ -159,7 +161,7 @@ public class AssetGroupSearchField implements Equals, HashCode
     public int hashCode(ObjectLocator locator, HashCodeStrategy strategy) {
         int currentHashCode = 1;
         {
-            ConfigSearchField theKey;
+            ConfigSearchFieldEnum theKey;
             theKey = this.getKey();
             currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "key", theKey), currentHashCode, theKey);
         }

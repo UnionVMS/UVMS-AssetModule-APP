@@ -15,6 +15,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
+
+import eu.europa.ec.fisheries.asset.enums.ConfigFieldEnum;
 import org.jvnet.jaxb2_commons.lang.Equals;
 import org.jvnet.jaxb2_commons.lang.EqualsStrategy;
 import org.jvnet.jaxb2_commons.lang.HashCode;
@@ -55,7 +57,7 @@ public class Config implements Equals, HashCode
 
     @XmlElement(required = true)
     @XmlSchemaType(name = "string")
-    protected ConfigField field;
+    protected ConfigFieldEnum field;
     @XmlElement(required = true)
     protected List<ConfigValue> values;
 
@@ -71,7 +73,7 @@ public class Config implements Equals, HashCode
      * Fully-initialising value constructor
      * 
      */
-    public Config(final ConfigField field, final List<ConfigValue> values) {
+    public Config(final ConfigFieldEnum field, final List<ConfigValue> values) {
         this.field = field;
         this.values = values;
     }
@@ -81,10 +83,10 @@ public class Config implements Equals, HashCode
      * 
      * @return
      *     possible object is
-     *     {@link ConfigField }
+     *     {@link ConfigFieldEnum }
      *     
      */
-    public ConfigField getField() {
+    public ConfigFieldEnum getField() {
         return field;
     }
 
@@ -93,10 +95,10 @@ public class Config implements Equals, HashCode
      * 
      * @param value
      *     allowed object is
-     *     {@link ConfigField }
+     *     {@link ConfigFieldEnum }
      *     
      */
-    public void setField(ConfigField value) {
+    public void setField(ConfigFieldEnum value) {
         this.field = value;
     }
 
@@ -138,9 +140,9 @@ public class Config implements Equals, HashCode
         }
         final Config that = ((Config) object);
         {
-            ConfigField lhsField;
+            ConfigFieldEnum lhsField;
             lhsField = this.getField();
-            ConfigField rhsField;
+            ConfigFieldEnum rhsField;
             rhsField = that.getField();
             if (!strategy.equals(LocatorUtils.property(thisLocator, "field", lhsField), LocatorUtils.property(thatLocator, "field", rhsField), lhsField, rhsField)) {
                 return false;
@@ -166,7 +168,7 @@ public class Config implements Equals, HashCode
     public int hashCode(ObjectLocator locator, HashCodeStrategy strategy) {
         int currentHashCode = 1;
         {
-            ConfigField theField;
+            ConfigFieldEnum theField;
             theField = this.getField();
             currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "field", theField), currentHashCode, theField);
         }

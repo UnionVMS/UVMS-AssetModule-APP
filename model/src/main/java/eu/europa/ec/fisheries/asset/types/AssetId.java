@@ -13,6 +13,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
+
+import eu.europa.ec.fisheries.asset.enums.AssetIdTypeEnum;
 import org.jvnet.jaxb2_commons.lang.Equals;
 import org.jvnet.jaxb2_commons.lang.EqualsStrategy;
 import org.jvnet.jaxb2_commons.lang.HashCode;
@@ -55,7 +57,7 @@ public class AssetId implements Equals, HashCode
 
     @XmlElement(required = true)
     @XmlSchemaType(name = "string")
-    protected AssetIdType type;
+    protected AssetIdTypeEnum type;
     @XmlElement(required = true)
     protected String value;
     @XmlElement(required = true)
@@ -73,7 +75,7 @@ public class AssetId implements Equals, HashCode
      * Fully-initialising value constructor
      * 
      */
-    public AssetId(final AssetIdType type, final String value, final String guid) {
+    public AssetId(final AssetIdTypeEnum type, final String value, final String guid) {
         this.type = type;
         this.value = value;
         this.guid = guid;
@@ -84,10 +86,10 @@ public class AssetId implements Equals, HashCode
      * 
      * @return
      *     possible object is
-     *     {@link AssetIdType }
+     *     {@link AssetIdTypeEnum }
      *     
      */
-    public AssetIdType getType() {
+    public AssetIdTypeEnum getType() {
         return type;
     }
 
@@ -96,10 +98,10 @@ public class AssetId implements Equals, HashCode
      * 
      * @param value
      *     allowed object is
-     *     {@link AssetIdType }
+     *     {@link AssetIdTypeEnum }
      *     
      */
-    public void setType(AssetIdType value) {
+    public void setType(AssetIdTypeEnum value) {
         this.type = value;
     }
 
@@ -160,9 +162,9 @@ public class AssetId implements Equals, HashCode
         }
         final AssetId that = ((AssetId) object);
         {
-            AssetIdType lhsType;
+            AssetIdTypeEnum lhsType;
             lhsType = this.getType();
-            AssetIdType rhsType;
+            AssetIdTypeEnum rhsType;
             rhsType = that.getType();
             if (!strategy.equals(LocatorUtils.property(thisLocator, "type", lhsType), LocatorUtils.property(thatLocator, "type", rhsType), lhsType, rhsType)) {
                 return false;
@@ -197,7 +199,7 @@ public class AssetId implements Equals, HashCode
     public int hashCode(ObjectLocator locator, HashCodeStrategy strategy) {
         int currentHashCode = 1;
         {
-            AssetIdType theType;
+            AssetIdTypeEnum theType;
             theType = this.getType();
             currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "type", theType), currentHashCode, theType);
         }

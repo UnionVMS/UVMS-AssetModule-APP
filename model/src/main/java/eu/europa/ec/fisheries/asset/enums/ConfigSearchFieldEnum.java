@@ -6,7 +6,7 @@
 //
 
 
-package eu.europa.ec.fisheries.asset.types;
+package eu.europa.ec.fisheries.asset.enums;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlType;
@@ -46,9 +46,9 @@ import javax.xml.bind.annotation.XmlType;
  * </pre>
  * 
  */
-@XmlType(name = "ConfigSearchField")
+@XmlType(name = "ConfigSearchFieldEnum")
 @XmlEnum
-public enum ConfigSearchField {
+public enum ConfigSearchFieldEnum {
 
     FLAG_STATE,
     EXTERNAL_MARKING,
@@ -76,7 +76,7 @@ public enum ConfigSearchField {
         return name();
     }
 
-    public static ConfigSearchField fromValue(String v) {
+    public static ConfigSearchFieldEnum fromValue(String v) {
         return valueOf(v);
     }
 

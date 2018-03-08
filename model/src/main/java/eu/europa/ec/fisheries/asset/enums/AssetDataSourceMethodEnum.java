@@ -6,7 +6,7 @@
 //
 
 
-package eu.europa.ec.fisheries.asset.types;
+package eu.europa.ec.fisheries.asset.enums;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlType;
@@ -47,9 +47,9 @@ import javax.xml.bind.annotation.XmlType;
  * </pre>
  * 
  */
-@XmlType(name = "AssetDataSourceMethod")
+@XmlType(name = "AssetDataSourceMethodEnum")
 @XmlEnum
-public enum AssetDataSourceMethod {
+public enum AssetDataSourceMethodEnum {
 
     CREATE,
     UPDATE,
@@ -78,7 +78,7 @@ public enum AssetDataSourceMethod {
         return name();
     }
 
-    public static AssetDataSourceMethod fromValue(String v) {
+    public static AssetDataSourceMethodEnum fromValue(String v) {
         return valueOf(v);
     }
 

@@ -1,5 +1,7 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
+import eu.europa.ec.fisheries.asset.enums.AssetIdTypeEnum;
+import eu.europa.ec.fisheries.asset.enums.CarrierSourceEnum;
 import eu.europa.ec.fisheries.asset.types.*;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
@@ -10,7 +12,7 @@ import java.util.UUID;
 
 public abstract class AssetHelper {
 
-    public static AssetDTO helper_createAsset(AssetIdType assetIdType, String ircs) {
+    public static AssetDTO helper_createAsset(AssetIdTypeEnum assetIdType, String ircs) {
 
 
         AssetDTO asset = new AssetDTO();
@@ -29,7 +31,7 @@ public abstract class AssetHelper {
         asset.setAssetId(assetId);
         asset.setActive(true);
 
-        asset.setSource(CarrierSource.INTERNAL);
+        asset.setSource(CarrierSourceEnum.INTERNAL);
         //asset.setEventHistory();
         asset.setName("TEST_NAME");
         asset.setCountryCode("SWE");
@@ -77,7 +79,7 @@ public abstract class AssetHelper {
     }
 
 
-    public static AssetDTO helper_createAsset(AssetIdType assetIdType) {
+    public static AssetDTO helper_createAsset(AssetIdTypeEnum assetIdType) {
         String ircs = generateARandomStringWithMaxLength(1);
         return AssetHelper.helper_createAsset(assetIdType, ircs);
 
@@ -92,8 +94,8 @@ public abstract class AssetHelper {
         return ret;
     }
 
-    public static AssetGroupWSDL create_asset_group(){
-        AssetGroupWSDL ag = new AssetGroupWSDL();
+    public static AssetGroupDTO create_asset_group(){
+        AssetGroupDTO ag = new AssetGroupDTO();
         ag.setDynamic(false);
         ag.setGlobal(true);
         ag.setName("TEST_NAME");

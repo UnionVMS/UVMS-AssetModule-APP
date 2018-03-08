@@ -12,8 +12,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.entity.asset.types;
 
 
-import eu.europa.ec.fisheries.asset.types.EventCode;
-
 public enum EventCodeEnum {
 
 	CEN(1L), CST(2L), CHA(3L), IMP(4L), MOD(5L), DES(6L), RET(7L), EXP(8L), UNK(9L);
@@ -26,7 +24,7 @@ public enum EventCodeEnum {
 	
 	public static EventCodeEnum getType(Long id) {
 		if(id != null) {
-			for(EventCodeEnum code : EventCodeEnum.values()) {
+			for(EventCodeEnum code : eu.europa.ec.fisheries.uvms.entity.asset.types.EventCodeEnum.values()) {
 				if(id.equals(code.id)) {
 					return code;
 				}
@@ -39,57 +37,57 @@ public enum EventCodeEnum {
 		return id;
 	}
 
-	public static EventCodeEnum getType(EventCode eventCode) {
+	public static EventCodeEnum getType(eu.europa.ec.fisheries.asset.enums.EventCodeEnum eventCode) {
 		if(eventCode != null) {
 			switch(eventCode) {
 			case CEN:
-				return EventCodeEnum.CEN;
+				return eu.europa.ec.fisheries.uvms.entity.asset.types.EventCodeEnum.CEN;
 			case CHA:
-				return EventCodeEnum.CHA;
+				return eu.europa.ec.fisheries.uvms.entity.asset.types.EventCodeEnum.CHA;
 			case CST:
-				return EventCodeEnum.CST;
+				return eu.europa.ec.fisheries.uvms.entity.asset.types.EventCodeEnum.CST;
 			case DES:
-				return EventCodeEnum.DES;
+				return eu.europa.ec.fisheries.uvms.entity.asset.types.EventCodeEnum.DES;
 			case EXP:
-				return EventCodeEnum.EXP;
+				return eu.europa.ec.fisheries.uvms.entity.asset.types.EventCodeEnum.EXP;
 			case IMP:
-				return EventCodeEnum.IMP;
+				return eu.europa.ec.fisheries.uvms.entity.asset.types.EventCodeEnum.IMP;
 			case RET:
-				return EventCodeEnum.RET;
+				return eu.europa.ec.fisheries.uvms.entity.asset.types.EventCodeEnum.RET;
 			case UNK:
-				return EventCodeEnum.UNK;
+				return eu.europa.ec.fisheries.uvms.entity.asset.types.EventCodeEnum.UNK;
 			case MOD:
 			default:
-				return EventCodeEnum.MOD;
+				return eu.europa.ec.fisheries.uvms.entity.asset.types.EventCodeEnum.MOD;
 			}
 		}
-		return EventCodeEnum.MOD;
+		return eu.europa.ec.fisheries.uvms.entity.asset.types.EventCodeEnum.MOD;
 	}
 	
-	public static EventCode getModel(EventCodeEnum eventCode) {
+	public static eu.europa.ec.fisheries.asset.enums.EventCodeEnum getModel(EventCodeEnum eventCode) {
 		if(eventCode != null) {
 			switch(eventCode) {
 			case CEN:
-				return EventCode.CEN;
+				return eu.europa.ec.fisheries.asset.enums.EventCodeEnum.CEN;
 			case CHA:
-				return EventCode.CHA;
+				return eu.europa.ec.fisheries.asset.enums.EventCodeEnum.CHA;
 			case CST:
-				return EventCode.CST;
+				return eu.europa.ec.fisheries.asset.enums.EventCodeEnum.CST;
 			case DES:
-				return EventCode.DES;
+				return eu.europa.ec.fisheries.asset.enums.EventCodeEnum.DES;
 			case EXP:
-				return EventCode.EXP;
+				return eu.europa.ec.fisheries.asset.enums.EventCodeEnum.EXP;
 			case IMP:
-				return EventCode.IMP;
+				return eu.europa.ec.fisheries.asset.enums.EventCodeEnum.IMP;
 			case RET:
-				return EventCode.RET;
+				return eu.europa.ec.fisheries.asset.enums.EventCodeEnum.RET;
 			case UNK:
-				return EventCode.UNK;
+				return eu.europa.ec.fisheries.asset.enums.EventCodeEnum.UNK;
 			case MOD:
 			default:
-				return EventCode.MOD;
+				return eu.europa.ec.fisheries.asset.enums.EventCodeEnum.MOD;
 			}
 		}
-		return EventCode.MOD;
+		return eu.europa.ec.fisheries.asset.enums.EventCodeEnum.MOD;
 	}
 }

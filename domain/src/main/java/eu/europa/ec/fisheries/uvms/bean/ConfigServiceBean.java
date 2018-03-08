@@ -20,10 +20,9 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceUnit;
 
 import eu.europa.ec.fisheries.asset.types.Config;
-import eu.europa.ec.fisheries.asset.types.ConfigField;
+import eu.europa.ec.fisheries.asset.enums.ConfigFieldEnum;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.ConfigurationDto;
@@ -49,7 +48,7 @@ public class ConfigServiceBean {
     private EntityManager entityManager;
 
 	public List<Config> getConfiguration() throws AssetException {
-		ConfigurationDto configuration = configDomainModel.getConfiguration(ConfigField.ALL);
+		ConfigurationDto configuration = configDomainModel.getConfiguration(ConfigFieldEnum.ALL);
 		return configuration.getConfigList();
 	}
 

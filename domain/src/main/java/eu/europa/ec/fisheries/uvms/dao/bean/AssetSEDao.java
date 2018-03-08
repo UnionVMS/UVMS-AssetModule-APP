@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.dao.bean;
 
 import eu.europa.ec.fisheries.asset.types.AssetId;
-import eu.europa.ec.fisheries.asset.types.AssetIdType;
+import eu.europa.ec.fisheries.asset.enums.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
 import eu.europa.ec.fisheries.uvms.entity.model.NotesActivityCode;
@@ -281,7 +281,7 @@ public class AssetSEDao {
 
     private String assembleQueryString(AssetId assetId) throws AssetDaoException {
 
-        AssetIdType assetIdType = assetId.getType();
+        AssetIdTypeEnum assetIdType = assetId.getType();
         String hql = "select ah.asset from AssetSE ah where %s = :keyval ";
         switch (assetIdType) {
             case INTERNAL_ID:

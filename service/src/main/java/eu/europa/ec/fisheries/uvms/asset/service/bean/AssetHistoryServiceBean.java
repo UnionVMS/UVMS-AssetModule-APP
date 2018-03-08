@@ -16,10 +16,9 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 
 import eu.europa.ec.fisheries.asset.types.AssetDTO;
-import eu.europa.ec.fisheries.asset.types.AssetIdType;
+import eu.europa.ec.fisheries.asset.enums.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.asset.types.FlagStateType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +27,7 @@ import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.asset.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
-import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
-import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
 
 @Stateless
 public class AssetHistoryServiceBean implements AssetHistoryService {
@@ -105,7 +101,7 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
 		if (type == null) {
 			throw new InputArgumentException("Type is null");
 		}
-		AssetIdType assetType = AssetIdType.fromValue(type);
+		AssetIdTypeEnum assetType = AssetIdTypeEnum.fromValue(type);
 		if (assetType == null) {
 			throw new InputArgumentException("Not a valid type: " + type);
 		}

@@ -109,7 +109,7 @@ public interface AssetService {
      * @return
      * @throws AssetException
      */
-    List<AssetDTO> getAssetListByAssetGroups(List<AssetGroupWSDL> groups) throws AssetException;
+    List<AssetDTO> getAssetListByAssetGroups(List<AssetGroupDTO> groups) throws AssetException;
 
     //AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetException;
     Object getAssetListGroupByFlagState(List assetIds) throws AssetException;

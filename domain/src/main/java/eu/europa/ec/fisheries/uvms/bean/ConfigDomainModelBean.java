@@ -12,7 +12,7 @@
 package eu.europa.ec.fisheries.uvms.bean;
 
 import eu.europa.ec.fisheries.asset.types.Config;
-import eu.europa.ec.fisheries.asset.types.ConfigField;
+import eu.europa.ec.fisheries.asset.enums.ConfigFieldEnum;
 import eu.europa.ec.fisheries.asset.types.ConfigValue;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.ConfigModelException;
@@ -92,7 +92,7 @@ public class ConfigDomainModelBean  {
         }
     }
 
-    public ConfigurationDto getConfiguration(ConfigField config) throws ConfigModelException {
+    public ConfigurationDto getConfiguration(ConfigFieldEnum config) throws ConfigModelException {
         //TODO fix if config != ALL
         ConfigurationDto dto = new ConfigurationDto();
         Map<String, List<String>> settings = getSettings();
@@ -145,7 +145,7 @@ public class ConfigDomainModelBean  {
         return values;
     }
 
-    private Config createConfigFromList(ConfigField field, List<String> values) {
+    private Config createConfigFromList(ConfigFieldEnum field, List<String> values) {
         Config config = new Config();
         config.setField(field);
         List<ConfigValue> configValues = new ArrayList<>();
