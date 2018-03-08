@@ -11,11 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.message.event;
 
-//import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
-//import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetFromAssetIdAndDateRequest;
-//import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
-//import eu.europa.ec.fisheries.wsdl.asset.module.GetFlagStateByGuidAndDateRequest;
-//import eu.europa.ec.fisheries.wsdl.asset.types.*;
+import eu.europa.ec.fisheries.uvms.asset.types.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -31,26 +27,18 @@ public class AssetMessageEvent {
     }
 
 
-    /*
+
 
     private AssetId assetId;
     private AssetListQuery query;
-    private AssetGroupListByUserRequest request;
-    private GetAssetListByAssetGroupsRequest assetListByGroup;
     private AssetFault fault;
     private String assetGuid;
     private AssetDTO asset;
     private String username;
     private FishingGearDTO fishingGear;
-    private GetFlagStateByGuidAndDateRequest getFlagStateByGuidAndDateRequest;
-    private GetAssetFromAssetIdAndDateRequest getAssetFromAssetIdAndDateRequest;
 
 
 
-    public AssetMessageEvent(TextMessage message, GetAssetListByAssetGroupsRequest assetId) {
-        this.message = message;
-        this.assetListByGroup = assetId;
-    }
 
     public AssetMessageEvent(TextMessage message, AssetId assetId) {
         this.message = message;
@@ -62,10 +50,6 @@ public class AssetMessageEvent {
         this.query = query;
     }
 
-    public AssetMessageEvent(TextMessage message, AssetGroupListByUserRequest query) {
-        this.message = message;
-        this.request = query;
-    }
 
     public AssetMessageEvent(TextMessage message, AssetFault fault) {
         this.message = message;
@@ -93,16 +77,6 @@ public class AssetMessageEvent {
         return message;
     }
 
-    public AssetMessageEvent(TextMessage message, GetFlagStateByGuidAndDateRequest getFlagStateByGuidAndDateRequest){
-        this.message = message;
-        this.getFlagStateByGuidAndDateRequest = getFlagStateByGuidAndDateRequest;
-    }
-
-    public AssetMessageEvent(TextMessage message, GetAssetFromAssetIdAndDateRequest getAssetFromAssetIdAndDateRequest){
-        this.message = message;
-        this.getAssetFromAssetIdAndDateRequest = getAssetFromAssetIdAndDateRequest;
-    }
-
     public void setMessage(TextMessage message) {
         this.message = message;
     }
@@ -121,22 +95,6 @@ public class AssetMessageEvent {
 
     public void setFault(AssetFault fault) {
         this.fault = fault;
-    }
-
-    public AssetGroupListByUserRequest getRequest() {
-        return request;
-    }
-
-    public void setRequest(AssetGroupListByUserRequest request) {
-        this.request = request;
-    }
-
-    public GetAssetListByAssetGroupsRequest getAssetListByGroup() {
-        return assetListByGroup;
-    }
-
-    public void setAssetListByGroup(GetAssetListByAssetGroupsRequest assetListByGroup) {
-        this.assetListByGroup = assetListByGroup;
     }
 
     public String getAssetGuid() {
@@ -187,22 +145,7 @@ public class AssetMessageEvent {
     }
 
 
-    public GetFlagStateByGuidAndDateRequest getGetFlagStateByGuidAndDateRequest() {
-        return getFlagStateByGuidAndDateRequest;
-    }
-
-    public void setGetFlagStateByGuidAndDateRequest(GetFlagStateByGuidAndDateRequest getFlagStateByGuidAndDateRequest) {
-        this.getFlagStateByGuidAndDateRequest = getFlagStateByGuidAndDateRequest;
-    }
-
-    public GetAssetFromAssetIdAndDateRequest getGetAssetFromAssetIdAndDateRequest() {
-        return getAssetFromAssetIdAndDateRequest;
-    }
-
-    public void setGetAssetFromAssetIdAndDateRequest(GetAssetFromAssetIdAndDateRequest getAssetFromAssetIdAndDateRequest) {
-        this.getAssetFromAssetIdAndDateRequest = getAssetFromAssetIdAndDateRequest;
-    }
 
 
-    */
+
 }

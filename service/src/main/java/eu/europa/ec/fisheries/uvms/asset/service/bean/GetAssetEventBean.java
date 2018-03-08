@@ -1,6 +1,12 @@
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetDTO;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetFault;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
 import eu.europa.ec.fisheries.uvms.asset.enums.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
@@ -12,6 +18,7 @@ import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.constants.ParameterKey;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,8 +35,10 @@ public class GetAssetEventBean {
 
     final static Logger LOG = LoggerFactory.getLogger(GetAssetEventBean.class);
 
+    private ObjectMapper MAPPER = new ObjectMapper();
+
     @EJB
-    private AssetService service;
+    private AssetService assetService;
 
     @EJB
     private ParameterService parameters;
@@ -42,45 +51,43 @@ public class GetAssetEventBean {
     Event<AssetMessageEvent> assetErrorEvent;
 
     public void getAsset(TextMessage textMessage, AssetId assetId) {
-        LOG.info("Getting asset.");
+
         AssetDataSourceQueue dataSource = null;
-        AssetDTO asset = null;
+        AssetSE asset = null;
         boolean messageSent = false;
-
-
-        /*
 
         try {
             dataSource = decideDataflow(assetId);
-            LOG.debug("Got message to AssetModule, Executing Get asset from datasource {}", dataSource.name());
-            asset = service.getAssetById(assetId, dataSource);
+            asset = assetService.getAssetById(assetId, dataSource);
         } catch (AssetException e) {
             LOG.error("[ Error when getting asset from source {}. ] ", dataSource.name());
-            assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting asset from source : " + dataSource.name() + " Error message: " + e.getMessage())));
+            assetErrorEvent.fire(new AssetMessageEvent(textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting asset from source : " + dataSource.name() + " Error message: " + e.getMessage())));
             messageSent = true;
             asset = null;
         }
 
+        /*
         if (asset != null && !dataSource.equals(AssetDataSourceQueue.INTERNAL)) {
             try {
                 AssetDTO upsertedAsset = service.upsertAsset(asset, dataSource.name());
                 asset.getAssetId().setGuid(upsertedAsset.getAssetId().getGuid());
             } catch (AssetException e) {
                 LOG.error("[ Couldn't upsert asset in internal ]");
-                assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, e.getMessage())));
+                assetErrorEvent.fire(new AssetMessageEvent(textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, e.getMessage())));
                 messageSent = true;
             }
         }
+        */
 
         if (!messageSent) {
             try {
-                messageProducer.sendModuleResponseMessage(textMessage, AssetModuleResponseMapper.mapAssetModuleResponse(asset));
+                messageProducer.sendModuleResponseMessage(textMessage, mapAssetModuleResponse(asset));
             } catch (AssetModelMapperException e) {
                 LOG.error("[ Error when mapping asset ] ");
-                assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when mapping asset" + e.getMessage())));
+                assetErrorEvent.fire(new AssetMessageEvent(textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when mapping asset" + e.getMessage())));
             }
         }
-        */
+
     }
 
     private AssetDataSourceQueue decideDataflow(AssetId assetId) throws AssetServiceException {
@@ -110,6 +117,25 @@ public class GetAssetEventBean {
         }
 
     }
+
+    public AssetFault createFaultMessage(FaultCode code, String message) {
+        AssetFault fault = new AssetFault();
+        fault.setCode(code.getCode());
+        fault.setFault(message);
+        return fault;
+    }
+
+    public  String mapAssetModuleResponse(AssetSE asset) throws AssetModelMapperException {
+
+        String json = null;
+        try {
+            json = MAPPER.writeValueAsString(asset);
+            return json;
+        } catch (JsonProcessingException e) {
+            throw new AssetModelMapperException(e.toString(), e);
+        }
+    }
+
 
 
 }

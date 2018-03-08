@@ -20,6 +20,7 @@ import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
 import eu.europa.ec.fisheries.uvms.asset.message.mapper.AuditModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
@@ -87,7 +88,6 @@ public class AssetServiceBean implements AssetService {
 			LOG.error("Failed to send audit log message! Asset with guid {} was created ",
 					createdAssetEntity.getId());
 		}
-
 		return createdAssetEntity;
 
 	}
@@ -251,8 +251,8 @@ public class AssetServiceBean implements AssetService {
 	 * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
 	 */
 	@Override
-	public AssetDTO getAssetById(AssetId assetId, AssetDataSourceQueue source) throws AssetException {
-		AssetDTO assetById = null;
+	public AssetSE getAssetById(AssetId assetId, AssetDataSourceQueue source) throws AssetException {
+		AssetSE assetById = null;
 
 		if (assetId == null) {
 			throw new InputArgumentException("AssetId object is null");
@@ -266,12 +266,32 @@ public class AssetServiceBean implements AssetService {
 			throw new InputArgumentException("AssetDataSourceQueue is null");
 		}
 
-		LOG.debug("GETTING ASSET BY ID: {} : {} at {}.", assetId.getType(), assetId.getValue(), source.name());
 
 		switch (source) {
 		case INTERNAL:
-			//assetById = getAssetById(assetId);
-			break;
+			switch (assetId.getType()) {
+				case CFR:
+					return assetSEDao.getAssetByCfr(assetId.getValue());
+				case IRCS:
+					return assetSEDao.getAssetByIrcs(assetId.getValue());
+				case INTERNAL_ID:
+					//checkNumberAssetId(assetId.getValue());
+					//return assetSEDao.getAssetById(assetId.getValue());
+				case IMO:
+					checkNumberAssetId(assetId.getValue());
+					return assetSEDao.getAssetByImo(assetId.getValue());
+				case MMSI:
+					checkNumberAssetId(assetId.getValue());
+					return assetSEDao.getAssetByMmsi(assetId.getValue());
+				case ICCAT:
+					return assetSEDao.getAssetByIccat(assetId.getValue());
+				case UVI:
+					return assetSEDao.getAssetByUvi(assetId.getValue());
+				case GFCM:
+					return assetSEDao.getAssetByGfcm(assetId.getValue());
+				default:
+					throw new NoAssetEntityFoundException("Non valid asset id type");
+			}
 		default:
 //			String data = AssetDataSourceRequestMapper.mapGetAssetById(assetId.getValue(), assetId.getType());
 //			String messageId = messageProducer.sendDataSourceMessage(data, source);
@@ -419,39 +439,6 @@ public class AssetServiceBean implements AssetService {
 
 	}
 
-	/*
-	private AssetEntity getAssetEntityById_FROM_DOMAINMODEL(AssetId id)
-			throws AssetDaoException, InputArgumentException {
-		if (id == null) {
-			throw new NoAssetEntityFoundException("No asset id");
-		}
-		switch (id.getType()) {
-		case CFR:
-			return assetDao.getAssetByCfr(id.getValue());
-		case IRCS:
-			return assetDao.getAssetByIrcs(id.getValue());
-		case INTERNAL_ID:
-			checkNumberAssetId(id.getValue());
-			return assetDao.getAssetById(Long.valueOf(id.getValue()));
-		case GUID:
-			return assetDao.getAssetByGuid(id.getValue());
-		case IMO:
-			checkNumberAssetId(id.getValue());
-			return assetDao.getAssetByImo(id.getValue());
-		case MMSI:
-			checkNumberAssetId(id.getValue());
-			return assetDao.getAssetByMmsi(id.getValue());
-		case ICCAT:
-			return assetDao.getAssetByIccat(id.getValue());
-		case UVI:
-			return assetDao.getAssetByUvi(id.getValue());
-		case GFCM:
-			return assetDao.getAssetByGfcm(id.getValue());
-		default:
-			throw new NoAssetEntityFoundException("Non valid asset id type");
-		}
-	}
-	*/
 
 	private void checkNumberAssetId(String id) throws InputArgumentException {
 		try {

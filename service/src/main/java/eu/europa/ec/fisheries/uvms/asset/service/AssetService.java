@@ -59,7 +59,7 @@ public interface AssetService {
      * @return
      * @throws AssetException
      */
-    AssetDTO getAssetById(AssetId assetId, AssetDataSourceQueue source) throws AssetException;
+    AssetSE getAssetById(AssetId assetId, AssetDataSourceQueue source) throws AssetException;
 
     /**
      * Get a Asset by guid
