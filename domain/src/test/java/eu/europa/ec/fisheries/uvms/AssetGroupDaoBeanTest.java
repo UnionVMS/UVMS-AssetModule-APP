@@ -17,13 +17,16 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import eu.europa.ec.fisheries.uvms.asset.types.AssetGroupDTO;
 import eu.europa.ec.fisheries.uvms.dao.bean.AssetGroupDaoBean;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
+import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -53,50 +56,14 @@ public class AssetGroupDaoBeanTest {
 
 	private static final String TEST_USER = "testUser";
 
-	/*
+
 
 	@Test
 	public void testCreateVesselGroup() throws AssetGroupDaoException {
-		AssetGroupEntity group = MockData.getFiltergroup(TEST_USER, "1");
+		AssetGroupEntity group = getFiltergroup(TEST_USER, 1);
 		
 		dao.createAssetGroup(group);
 		verify(em).persist(group);
-	}
-	
-	@Test
-	@Ignore
-	public void testGetVesselGroupById() throws AssetGroupDaoException {
-		String id = "1";
-		
-		AssetGroupEntity entity = new AssetGroupEntity();
-		entity.setGuid(id);
-		when(em.find(AssetGroupEntity.class, id)).thenReturn(entity);
-		
-		AssetGroupEntity result = dao.getAssetGroupByGuid(id);
-		verify(em).find(AssetGroupEntity.class, id);
-		assertSame(id, result.getGuid());
-	}
-	
-	@Test
-	public void testUpdateVesselGroup() throws AssetGroupDaoException {
-		String id = "11";
-		
-		AssetGroupEntity group = MockData.getFiltergroup(TEST_USER, id);
-		
-		AssetGroupEntity result = new AssetGroupEntity();
-		result.setGuid(group.getGuid());
-		
-		when(em.merge(group)).thenReturn(result);
-		
-		AssetGroupEntity resultEntity = dao.updateAssetGroup(group);
-		
-		verify(em).merge(group);
-		assertSame(id, resultEntity.getGuid());
-	}
-	
-	@Test
-	public void testDeleteVesselGroup() throws AssetGroupDaoException {
-		//em.remove(arg0);
 	}
 	
 	@Test
@@ -129,5 +96,34 @@ public class AssetGroupDaoBeanTest {
 	}
 
 
-	*/
+
+
+	public static AssetGroupEntity getFiltergroup(String user, long id) {
+		AssetGroupEntity group = new AssetGroupEntity();
+		group.setGlobal(false);
+		group.setGuid(id+"");
+		group.setName("GROUPNAME");
+		group.setUpdateTime(new Date());
+		group.setUpdatedBy("DAOTEST");
+		group.setOwner(user);
+
+		List<AssetGroupField> filters = new ArrayList<AssetGroupField>();
+		AssetGroupField filter = new AssetGroupField();
+		filter.setId(id+10);
+		filter.setAssetGroup(group);
+		//filter.setField(ConfigSearchField.NAME.name());
+		filter.setValue("ASSET-NAME");
+
+		filter.setUpdatedBy("DAOTEST");
+		filter.setUpdateTime(new Date());
+
+		group.getFields().addAll(filters);
+
+		return group;
+	}
+
+
+
+
+
 }
