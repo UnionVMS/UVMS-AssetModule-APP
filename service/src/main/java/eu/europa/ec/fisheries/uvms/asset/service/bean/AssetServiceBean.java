@@ -25,7 +25,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.types.*;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
-import eu.europa.ec.fisheries.uvms.bean.ConfigDomainModelBean;
+import eu.europa.ec.fisheries.uvms.bean.ConfigServiceBean;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
 import eu.europa.ec.fisheries.uvms.dao.bean.AssetSEDao;
 import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
@@ -55,7 +55,7 @@ public class AssetServiceBean implements AssetService {
 
 
 	@EJB
-	ConfigDomainModelBean configModel;
+	ConfigServiceBean configModel;
 
 	@EJB
 	AssetSEDao assetSEDao;

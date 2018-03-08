@@ -23,6 +23,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import eu.europa.ec.fisheries.uvms.asset.enums.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetGroupDTO;
 import eu.europa.ec.fisheries.uvms.dao.bean.AssetGroupDaoBean;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
@@ -111,7 +112,7 @@ public class AssetGroupDaoBeanTest {
 		AssetGroupField filter = new AssetGroupField();
 		filter.setId(id+10);
 		filter.setAssetGroup(group);
-		//filter.setField(ConfigSearchField.NAME.name());
+		filter.setField(ConfigSearchFieldEnum.NAME.name());
 		filter.setValue("ASSET-NAME");
 
 		filter.setUpdatedBy("DAOTEST");

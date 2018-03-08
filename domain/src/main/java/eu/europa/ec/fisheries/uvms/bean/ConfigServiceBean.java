@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.bean;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,12 +22,24 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.ConfigModelException;
 import eu.europa.ec.fisheries.uvms.asset.types.Config;
 import eu.europa.ec.fisheries.uvms.asset.enums.ConfigFieldEnum;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
+import eu.europa.ec.fisheries.uvms.asset.types.ConfigValue;
 import eu.europa.ec.fisheries.uvms.asset.types.ConfigurationDto;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
+import eu.europa.ec.fisheries.uvms.constant.UnitLength;
+import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
+import eu.europa.ec.fisheries.uvms.dao.FlagStateDao;
+import eu.europa.ec.fisheries.uvms.dao.LicenseTypeDao;
+import eu.europa.ec.fisheries.uvms.dao.SettingDao;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
+import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
+import eu.europa.ec.fisheries.uvms.entity.model.LicenseType;
+import eu.europa.ec.fisheries.uvms.entity.model.Setting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,14 +54,12 @@ public class ConfigServiceBean {
 	@EJB
 	private ParameterService parameterService;
 
-	@EJB
-	private ConfigDomainModelBean configDomainModel;
 
 	@PersistenceContext
     private EntityManager entityManager;
 
 	public List<Config> getConfiguration() throws AssetException {
-		ConfigurationDto configuration = configDomainModel.getConfiguration(ConfigFieldEnum.ALL);
+		ConfigurationDto configuration = getConfiguration(ConfigFieldEnum.ALL);
 		return configuration.getConfigList();
 	}
 
@@ -64,6 +75,131 @@ public class ConfigServiceBean {
 			LOG.error("[ Error when getting asset parameters from local database. ] {}", e);
 			throw new AssetException("Couldn't get parameters");
 		}
+	}
+
+
+	/**
+	 *
+	 */
+
+
+	@EJB
+	LicenseTypeDao licenseDao;
+
+	@EJB
+	FlagStateDao flagStateDao;
+
+	@EJB
+	SettingDao settingDao;
+
+	public List<String> getLicenseType() throws ConfigModelException {
+		try {
+			List<String> licenseTypes = new ArrayList<>();
+			List<LicenseType> list = licenseDao.getAllLicenseType();
+			for (LicenseType type : list) {
+				licenseTypes.add(type.getName());
+			}
+			return licenseTypes;
+		} catch (AssetDaoException e) {
+			throw new ConfigModelException("Couldn't fetch license types " + e.getMessage());
+		}
+	}
+
+	public List<String> getFlagState() throws ConfigModelException {
+		try {
+			List<String> flagStateList = new ArrayList<>();
+			List<FlagState> list = flagStateDao.getAllFlagState();
+			for (FlagState flagState : list) {
+				flagStateList.add(flagState.getCode());
+			}
+			return flagStateList;
+		} catch (AssetDaoException e) {
+			throw new ConfigModelException("Couldn't fetch flag states " + e.getMessage());
+		}
+	}
+
+	public Map<String, List<String>> getSettings() throws ConfigModelException {
+		try {
+			Map<String, List<String>> settings = new HashMap<>();
+			List<Setting> list = settingDao.getAllSettings();
+			for (Setting setting : list) {
+				List<String> fieldSettings = settings.get(setting.getField());
+				if (fieldSettings == null) {
+					fieldSettings = new ArrayList<>();
+				}
+				fieldSettings.add(setting.getLabel());
+				settings.put(setting.getField(), fieldSettings);
+			}
+			return settings;
+		} catch (AssetDaoException e) {
+			throw new ConfigModelException("Couldn't fetch settings " + e.getMessage());
+		}
+	}
+
+	public ConfigurationDto getConfiguration(ConfigFieldEnum config) throws ConfigModelException {
+		//TODO fix if config != ALL
+		ConfigurationDto dto = new ConfigurationDto();
+		Map<String, List<String>> settings = getSettings();
+
+
+		switch (config) {
+			case ALL:
+			case ASSET_TYPE:
+				dto.addConfig(createConfigFromList(ConfigFieldEnum.ASSET_TYPE, settings.get(ConfigFieldEnum.ASSET_TYPE.name())));
+			case FLAG_STATE:
+				dto.addConfig(createConfigFromList(ConfigFieldEnum.FLAG_STATE, getFlagState()));
+			case GEAR_TYPE:
+				dto.addConfig(createConfigFromList(ConfigFieldEnum.GEAR_TYPE, getGearTypes()));
+			case LICENSE_TYPE:
+				dto.addConfig(createConfigFromList(ConfigFieldEnum.LICENSE_TYPE, getLicenseType()));
+			case SPAN_LENGTH_LOA:
+				dto.addConfig(createConfigFromList(ConfigFieldEnum.SPAN_LENGTH_LOA, settings.get(ConfigFieldEnum.SPAN_LENGTH_LOA.name())));
+			case SPAN_POWER_MAIN:
+				dto.addConfig(createConfigFromList(ConfigFieldEnum.SPAN_POWER_MAIN, settings.get(ConfigFieldEnum.SPAN_POWER_MAIN.name())));
+			case UNIT_LENGTH:
+				dto.addConfig(createConfigFromList(ConfigFieldEnum.UNIT_LENGTH, getLengthUnit()));
+			case UNIT_TONNAGE:
+				dto.addConfig(createConfigFromList(ConfigFieldEnum.UNIT_TONNAGE, getTonnageUnit()));
+		}
+
+		return dto;
+	}
+
+	private  List<String> getGearTypes() {
+		List<String> values = new ArrayList<>();
+		for (GearFishingTypeEnum gearType : GearFishingTypeEnum.values()) {
+			values.add(gearType.name());
+		}
+		return values;
+	}
+
+	private  List<String> getLengthUnit() {
+		List<String> values = new ArrayList<>();
+		for (UnitLength unit : UnitLength.values()) {
+			values.add(unit.name());
+		}
+		return values;
+	}
+
+	private  List<String> getTonnageUnit() {
+		List<String> values = new ArrayList<>();
+		for (UnitTonnage unit : UnitTonnage.values()) {
+			values.add(unit.name());
+		}
+		return values;
+	}
+
+	private Config createConfigFromList(ConfigFieldEnum field, List<String> values) {
+		Config config = new Config();
+		config.setField(field);
+		List<ConfigValue> configValues = new ArrayList<>();
+		for (String keyValue : values) {
+			ConfigValue value = new ConfigValue();
+			value.setKeyValue(keyValue);
+			configValues.add(value);
+		}
+		config.getValues().addAll(configValues);
+		return config;
 	}
 
 
