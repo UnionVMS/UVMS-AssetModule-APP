@@ -18,6 +18,9 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import eu.europa.ec.fisheries.asset.types.AssetDTO;
+import eu.europa.ec.fisheries.asset.types.AssetIdType;
+import eu.europa.ec.fisheries.asset.types.FlagStateType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,10 +32,6 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetDTO;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
-import eu.europa.ec.fisheries.wsdl.asset.types.FlagStateType;
 
 @Stateless
 public class AssetHistoryServiceBean implements AssetHistoryService {

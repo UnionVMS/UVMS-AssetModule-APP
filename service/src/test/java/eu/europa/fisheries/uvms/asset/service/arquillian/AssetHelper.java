@@ -1,9 +1,8 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
+import eu.europa.ec.fisheries.asset.types.*;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL;
-import eu.europa.ec.fisheries.wsdl.asset.types.*;
 
 import java.math.BigDecimal;
 import java.util.Random;

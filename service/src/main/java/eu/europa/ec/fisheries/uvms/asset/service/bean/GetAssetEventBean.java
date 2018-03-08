@@ -1,21 +1,17 @@
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
+import eu.europa.ec.fisheries.asset.types.AssetDTO;
+import eu.europa.ec.fisheries.asset.types.AssetId;
+import eu.europa.ec.fisheries.asset.types.AssetIdType;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
-import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
-import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.constants.ParameterKey;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetDTO;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +47,9 @@ public class GetAssetEventBean {
         AssetDTO asset = null;
         boolean messageSent = false;
 
+
+        /*
+
         try {
             dataSource = decideDataflow(assetId);
             LOG.debug("Got message to AssetModule, Executing Get asset from datasource {}", dataSource.name());
@@ -81,6 +80,7 @@ public class GetAssetEventBean {
                 assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when mapping asset" + e.getMessage())));
             }
         }
+        */
     }
 
     private AssetDataSourceQueue decideDataflow(AssetId assetId) throws AssetServiceException {

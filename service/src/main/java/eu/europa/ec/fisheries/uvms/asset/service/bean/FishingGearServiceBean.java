@@ -11,21 +11,18 @@ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more d
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import eu.europa.ec.fisheries.asset.types.FishingGearDTO;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
-import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceRequestMapper;
-import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.FishingGearService;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.dao.FishingGearDao;
 import eu.europa.ec.fisheries.uvms.dao.FishingGearTypeDao;
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGearEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGearType;
-import eu.europa.ec.fisheries.wsdl.asset.fishinggear.FishingGearResponse;
-import eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,19 +56,23 @@ public class FishingGearServiceBean implements FishingGearService {
 
 
     @Override
-    public FishingGearResponse upsertFishingGears(FishingGearDTO fishingGear, String username) throws AssetMessageException, AssetModelMapperException {
+    public Object  upsertFishingGears(FishingGearDTO fishingGear, String username) throws AssetMessageException, AssetModelMapperException {
+
+        /*
         String request = AssetDataSourceRequestMapper.mapUpsertFishingGearRequest(fishingGear, username);
         String messageId = messageProducer.sendDataSourceMessage(request, AssetDataSourceQueue.INTERNAL);
         TextMessage response = reciever.getMessage(messageId, TextMessage.class);
         FishingGearResponse fishingGearResponse = AssetDataSourceResponseMapper.mapToUpsertFishingGearResponse(response, messageId);
         //FishingGearListResponse fishingGearListResponse = AssetDataSourceResponseMapper.mapToFishingGearResponse(response, messageId);
         return fishingGearResponse;
+        */
+        return null;
     }
 
 
 
     @Override
-    public eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO upsertFishingGear(eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO gear, String username) {
+    public FishingGearDTO upsertFishingGear(FishingGearDTO gear, String username) {
         //FishingGearEntity fishingGearEntity = updateFishinGear(gear, username);
         //eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear = EntityToModelMapper.mapEntityToFishingGear(fishingGearEntity);
         //return fishingGear;
@@ -79,7 +80,7 @@ public class FishingGearServiceBean implements FishingGearService {
     }
 
     @Override
-    public FishingGearEntity updateFishinGear(eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear, String username){
+    public FishingGearEntity updateFishinGear(FishingGearDTO fishingGear, String username){
 
         /*
 
@@ -123,7 +124,7 @@ public class FishingGearServiceBean implements FishingGearService {
     }
 
     @Override
-    public void updateFishingGearTypeProperties(eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear, String username, FishingGearType fishingGearTypeByCodeEntity) {
+    public void updateFishingGearTypeProperties(FishingGearDTO fishingGear, String username, FishingGearType fishingGearTypeByCodeEntity) {
         fishingGearTypeByCodeEntity.setUpdateUser(username);
         fishingGearTypeByCodeEntity.setDescription(fishingGear.getFishingGearType().getName());
         fishingGearTypeByCodeEntity.setCode(fishingGear.getFishingGearType().getCode());
@@ -132,7 +133,7 @@ public class FishingGearServiceBean implements FishingGearService {
     }
 
     @Override
-    public void updateFishingGearProperties(eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear, String username, FishingGearEntity fishingGearByExternalIdEntity, FishingGearType fishingGearType) {
+    public void updateFishingGearProperties(FishingGearDTO fishingGear, String username, FishingGearEntity fishingGearByExternalIdEntity, FishingGearType fishingGearType) {
         fishingGearByExternalIdEntity.setFishingGearType(fishingGearType);
         fishingGearByExternalIdEntity.setCode(fishingGear.getCode());
         fishingGearByExternalIdEntity.setUpdatedBy(username);

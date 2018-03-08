@@ -1,20 +1,8 @@
 package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
-import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.*;
-import eu.europa.ec.fisheries.uvms.entity.model.*;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
-import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Assert;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.ejb.EJB;
-import java.math.BigDecimal;
-import java.util.*;
 
 
 /** Main focus for this testclass is to verify that the keyhandling is ok

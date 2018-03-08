@@ -1,11 +1,10 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
+import eu.europa.ec.fisheries.asset.types.AssetId;
+import eu.europa.ec.fisheries.asset.types.AssetIdType;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetEventBean;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetDTO;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
@@ -18,7 +17,6 @@ import javax.inject.Inject;
 import javax.jms.TextMessage;
 
 
-import static eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType.GUID;
 
 @RunWith(Arquillian.class)
 public class GetAssetEventBeanIntTest extends TransactionalTests {
@@ -49,7 +47,7 @@ public class GetAssetEventBeanIntTest extends TransactionalTests {
     public void testBadUUIDGetAsset() {
         TextMessage textMessage = null;
         AssetId assetId = new AssetId();
-        assetId.setType(GUID);
+        assetId.setType(AssetIdType.GUID);
         assetId.setValue("<BAD UUID>");
 
         getAssetEventBean.getAsset(textMessage, assetId);

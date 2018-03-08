@@ -17,7 +17,6 @@ import javax.ejb.Local;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL;
 
 @Local
 public interface AssetGroupService {

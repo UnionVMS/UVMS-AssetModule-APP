@@ -20,11 +20,11 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetContact;
+import eu.europa.ec.fisheries.asset.types.AssetContact;
+import eu.europa.ec.fisheries.asset.types.AssetDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetDTO;
 import java.math.BigDecimal;
 import java.util.TimeZone;
 

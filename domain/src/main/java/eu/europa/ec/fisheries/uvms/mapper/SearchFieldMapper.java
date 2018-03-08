@@ -11,15 +11,14 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mapper;
 
+import eu.europa.ec.fisheries.asset.types.AssetListCriteriaPair;
+import eu.europa.ec.fisheries.asset.types.ConfigSearchField;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.constant.SearchTables;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetDaoMappingException;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetSearchMapperException;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteriaPair;
-import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -115,7 +114,8 @@ public class SearchFieldMapper {
         value = value.toUpperCase();
         return value;
     }
-    
+
+    /*
     public static SearchKeyValue mapSearchFieldForAssetGroupField(AssetGroupSearchField pair, Map<SearchFields, SearchKeyValue> searchKeys) throws AssetDaoMappingException {
         if (pair == null || pair.getKey() == null || pair.getValue() == null) {
             throw new AssetSearchMapperException("Non valid search criteria");
@@ -126,6 +126,7 @@ public class SearchFieldMapper {
         searchKeyValue.getSearchValues().add(value);
         return searchKeyValue;
     }
+    */
 
     public static List<SearchKeyValue> createSearchFields(List<AssetListCriteriaPair> criterias) throws AssetDaoMappingException {
         Map<SearchFields, SearchKeyValue> searchKeyValues = new HashMap<>();
@@ -136,6 +137,7 @@ public class SearchFieldMapper {
         return new ArrayList<>(searchKeyValues.values());
     }
 
+    /*
     public static List<SearchKeyValue> createSearchFieldsFromGroupCriterias(List<AssetGroupSearchField> criterias) throws AssetDaoMappingException {
 
         Map<SearchFields, SearchKeyValue> searchKeyValues = new HashMap<>();
@@ -146,6 +148,7 @@ public class SearchFieldMapper {
         return new ArrayList<>(searchKeyValues.values());
 
     }
+    */
 
     public static boolean useLike(SearchKeyValue entry) {
         for (String searchValue : entry.getSearchValues()) {

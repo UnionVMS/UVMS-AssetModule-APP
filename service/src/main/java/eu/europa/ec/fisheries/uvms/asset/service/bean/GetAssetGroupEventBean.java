@@ -5,10 +5,8 @@ import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
-import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +34,8 @@ public class GetAssetGroupEventBean {
     Event<AssetMessageEvent> assetErrorEvent;
 
     public void getAssetGroupByUserName(AssetMessageEvent message) {
+
+        /*
         LOG.info("Get asset group");
         try {
             AssetGroupListByUserRequest request = message.getRequest();
@@ -48,6 +48,7 @@ public class GetAssetGroupEventBean {
             LOG.error("[ Error when getting assetGroupList from source. ] ");
             assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting AssetGroupByUserName [ " + e.getMessage())));
         }
+        */
     }
 
 }

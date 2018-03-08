@@ -12,7 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.entity.asset.types;
 
 
-import eu.europa.ec.fisheries.wsdl.asset.types.EventCode;
+import eu.europa.ec.fisheries.asset.types.EventCode;
 
 public enum EventCodeEnum {
 

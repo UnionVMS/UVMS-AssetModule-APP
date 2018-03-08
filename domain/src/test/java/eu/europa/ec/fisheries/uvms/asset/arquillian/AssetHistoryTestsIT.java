@@ -1,16 +1,8 @@
 package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
-import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Assert;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.ejb.EJB;
-import java.util.Date;
-import java.util.UUID;
 
 @RunWith(Arquillian.class)
 public class AssetHistoryTestsIT  extends TransactionalTests {

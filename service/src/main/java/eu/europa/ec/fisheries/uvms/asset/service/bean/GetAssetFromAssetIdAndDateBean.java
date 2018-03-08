@@ -3,13 +3,7 @@ package eu.europa.ec.fisheries.uvms.asset.service.bean;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
-import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
-import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetFromAssetIdAndDateRequest;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetDTO;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,8 +12,6 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import javax.jms.TextMessage;
-import java.util.Date;
 
 @Stateless
 @LocalBean
@@ -36,6 +28,8 @@ public class GetAssetFromAssetIdAndDateBean {
 
 
     public void execute(AssetMessageEvent event) {
+
+        /*
 
 
         GetAssetFromAssetIdAndDateRequest getAssetFromAssetIdAndDate = event.getGetAssetFromAssetIdAndDateRequest();
@@ -76,5 +70,7 @@ public class GetAssetFromAssetIdAndDateBean {
             LOG.error("[ Error when getting assetGroupList from source. ] ");
             assetErrorEvent.fire(new AssetMessageEvent(event.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting GetAssetFromAssetIdAndDate [ " + e.getMessage())));
         }
+
+        */
     }
 }

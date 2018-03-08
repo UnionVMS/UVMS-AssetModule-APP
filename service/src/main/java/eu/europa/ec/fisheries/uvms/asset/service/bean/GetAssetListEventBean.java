@@ -5,7 +5,6 @@ import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetListResponsePaginated;
 import javax.ejb.EJB;
@@ -29,6 +28,7 @@ public class GetAssetListEventBean {
     Event<AssetMessageEvent> assetErrorEvent;
 
     public void getAssetList(AssetMessageEvent message) {
+        /*
         try {
             AssetListResponsePaginated response = service.getAssetList(message.getQuery());
 
@@ -36,6 +36,7 @@ public class GetAssetListEventBean {
         } catch (AssetException e) {
             assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting assetlist [ " + e.getMessage())));
         }
+        */
     }
 
 

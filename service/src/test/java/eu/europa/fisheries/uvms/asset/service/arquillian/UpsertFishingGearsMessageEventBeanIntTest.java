@@ -1,10 +1,9 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
+import eu.europa.ec.fisheries.asset.types.FishingGearDTO;
+import eu.europa.ec.fisheries.asset.types.FishingGearType;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.UpsertFishingGearsMessageEventBean;
-import eu.europa.ec.fisheries.uvms.entity.model.FishingGearEntity;
-import eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO;
-import eu.europa.ec.fisheries.wsdl.asset.types.FishingGearType;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
@@ -16,7 +15,6 @@ import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.jms.TextMessage;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import java.util.UUID;
 
 /**
@@ -70,7 +68,7 @@ public class UpsertFishingGearsMessageEventBeanIntTest extends TransactionalTest
         fishingGear.setName("Name");
         fishingGear.setExternalId(42L);
 
-        assetMessageEvent.setFishingGear(fishingGear);
+        //assetMessageEvent.setFishingGear(fishingGear);
         upsertFishingGearsMessageEventBean.upsertFishingGears(assetMessageEvent);
 
         if (interceptorForTests.isFailed()) {

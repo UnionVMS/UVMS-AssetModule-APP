@@ -15,12 +15,11 @@ import java.util.List;
 
 import javax.ejb.Local;
 
+import eu.europa.ec.fisheries.asset.types.*;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetListResponsePaginated;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL;
-import eu.europa.ec.fisheries.wsdl.asset.types.*;
 
 @Local
 public interface AssetService {
@@ -112,7 +111,8 @@ public interface AssetService {
      */
     List<AssetDTO> getAssetListByAssetGroups(List<AssetGroupWSDL> groups) throws AssetException;
 
-    AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetException;
+    //AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetException;
+    Object getAssetListGroupByFlagState(List assetIds) throws AssetException;
 
     NoteActivityCode getNoteActivityCodes();
 

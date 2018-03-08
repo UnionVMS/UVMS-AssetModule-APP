@@ -11,11 +11,11 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.message.event;
 
-import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetFromAssetIdAndDateRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.GetFlagStateByGuidAndDateRequest;
-import eu.europa.ec.fisheries.wsdl.asset.types.*;
+//import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
+//import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetFromAssetIdAndDateRequest;
+//import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
+//import eu.europa.ec.fisheries.wsdl.asset.module.GetFlagStateByGuidAndDateRequest;
+//import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -26,6 +26,13 @@ import javax.jms.TextMessage;
 public class AssetMessageEvent {
 
     private TextMessage message;
+    public AssetMessageEvent(TextMessage message) {
+        this.message = message;
+    }
+
+
+    /*
+
     private AssetId assetId;
     private AssetListQuery query;
     private AssetGroupListByUserRequest request;
@@ -39,9 +46,6 @@ public class AssetMessageEvent {
     private GetAssetFromAssetIdAndDateRequest getAssetFromAssetIdAndDateRequest;
 
 
-    public AssetMessageEvent(TextMessage message) {
-        this.message = message;
-    }
 
     public AssetMessageEvent(TextMessage message, GetAssetListByAssetGroupsRequest assetId) {
         this.message = message;
@@ -198,4 +202,7 @@ public class AssetMessageEvent {
     public void setGetAssetFromAssetIdAndDateRequest(GetAssetFromAssetIdAndDateRequest getAssetFromAssetIdAndDateRequest) {
         this.getAssetFromAssetIdAndDateRequest = getAssetFromAssetIdAndDateRequest;
     }
+
+
+    */
 }

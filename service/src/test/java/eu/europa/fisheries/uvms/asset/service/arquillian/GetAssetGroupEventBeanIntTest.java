@@ -1,11 +1,8 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
-import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetGroupEventBean;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL;
-import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;

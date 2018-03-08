@@ -11,13 +11,14 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.wsdl.asset.mockdata;
 
+import eu.europa.ec.fisheries.asset.types.AssetDTO;
+import eu.europa.ec.fisheries.asset.types.AssetId;
+import eu.europa.ec.fisheries.asset.types.CarrierSource;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetDTO;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.CarrierSource;
 
 /**
  **/

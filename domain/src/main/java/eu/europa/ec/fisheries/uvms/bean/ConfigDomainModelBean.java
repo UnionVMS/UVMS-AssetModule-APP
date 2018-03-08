@@ -11,6 +11,9 @@
  */
 package eu.europa.ec.fisheries.uvms.bean;
 
+import eu.europa.ec.fisheries.asset.types.Config;
+import eu.europa.ec.fisheries.asset.types.ConfigField;
+import eu.europa.ec.fisheries.asset.types.ConfigValue;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.ConfigModelException;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.ConfigurationDto;
@@ -23,9 +26,6 @@ import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
 import eu.europa.ec.fisheries.uvms.entity.model.LicenseType;
 import eu.europa.ec.fisheries.uvms.entity.model.Setting;
-import eu.europa.ec.fisheries.wsdl.asset.config.Config;
-import eu.europa.ec.fisheries.wsdl.asset.config.ConfigField;
-import eu.europa.ec.fisheries.wsdl.asset.config.ConfigValue;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -97,6 +97,7 @@ public class ConfigDomainModelBean  {
         ConfigurationDto dto = new ConfigurationDto();
         Map<String, List<String>> settings = getSettings();
 
+        /*
         switch (config) {
             case ALL:
             case ASSET_TYPE:
@@ -116,10 +117,11 @@ public class ConfigDomainModelBean  {
             case UNIT_TONNAGE:
                 dto.addConfig(createConfigFromList(ConfigField.UNIT_TONNAGE, getTonnageUnit()));
         }
+        */
         return dto;
     }
 
-    private static List<String> getGearTypes() {
+    private  List<String> getGearTypes() {
         List<String> values = new ArrayList<>();
         for (GearFishingTypeEnum gearType : GearFishingTypeEnum.values()) {
             values.add(gearType.name());
@@ -127,7 +129,7 @@ public class ConfigDomainModelBean  {
         return values;
     }
 
-    private static List<String> getLengthUnit() {
+    private  List<String> getLengthUnit() {
         List<String> values = new ArrayList<>();
         for (UnitLength unit : UnitLength.values()) {
             values.add(unit.name());
@@ -135,7 +137,7 @@ public class ConfigDomainModelBean  {
         return values;
     }
 
-    private static List<String> getTonnageUnit() {
+    private  List<String> getTonnageUnit() {
         List<String> values = new ArrayList<>();
         for (UnitTonnage unit : UnitTonnage.values()) {
             values.add(unit.name());

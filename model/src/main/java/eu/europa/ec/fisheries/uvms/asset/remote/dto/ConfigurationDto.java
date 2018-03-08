@@ -11,7 +11,8 @@ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more d
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import eu.europa.ec.fisheries.wsdl.asset.config.Config;
+
+import eu.europa.ec.fisheries.asset.types.Config;
 
 import java.io.Serializable;
 import java.util.ArrayList;

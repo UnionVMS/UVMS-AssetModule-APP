@@ -15,7 +15,7 @@ public class UpsertFishingGearsMessageEventBean {
     private FishingGearService fishingGearService;
 
     public void upsertFishingGears(AssetMessageEvent messageEvent){
-        fishingGearService.upsertFishingGear(messageEvent.getFishingGear(), messageEvent.getUsername());
+        //fishingGearService.upsertFishingGear(messageEvent.getFishingGear(), messageEvent.getUsername());
     }
 
 }

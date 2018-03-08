@@ -19,6 +19,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import eu.europa.ec.fisheries.asset.types.AssetDTO;
+import eu.europa.ec.fisheries.asset.types.AssetListQuery;
+import eu.europa.ec.fisheries.asset.types.NoteActivityCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseCodeConstant;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseDto;
@@ -27,7 +30,6 @@ import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetListResponsePaginated;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
-import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -228,8 +230,9 @@ public class AssetResource {
     public ResponseDto assetListGroupByFlagState(final List<String> assetIds) {
         try {
             LOG.info("Getting asset list group by flag state:{}",assetIds);
-            AssetListGroupByFlagStateResponse assetListGroupByFlagState = assetService.getAssetListGroupByFlagState(assetIds);
-            return new ResponseDto(assetListGroupByFlagState, ResponseCodeConstant.OK);
+            //AssetListGroupByFlagStateResponse assetListGroupByFlagState = assetService.getAssetListGroupByFlagState(assetIds);
+            //return new ResponseDto(assetListGroupByFlagState, ResponseCodeConstant.OK);
+            return null;
         } catch (Exception e) {
             LOG.error("[ Error when getting asset list:{} ] {}",assetIds,e);
             return ErrorHandler.getFault(e);

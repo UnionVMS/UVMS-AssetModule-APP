@@ -6,7 +6,6 @@ import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.wsdl.asset.module.PingResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +29,8 @@ public class PingEventBean {
     Event<AssetMessageEvent> assetErrorEvent;
 
     public void ping(AssetMessageEvent message) {
+
+        /*
         try {
             PingResponse pingResponse = new PingResponse();
             pingResponse.setResponse("pong");
@@ -37,5 +38,6 @@ public class PingEventBean {
         } catch (AssetModelMarshallException e) {
             LOG.error("[ Error when marshalling ping response ]");
         }
+        */
     }
 }

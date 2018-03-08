@@ -12,6 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
+import eu.europa.ec.fisheries.asset.types.*;
 import eu.europa.ec.fisheries.uvms.asset.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.ModuleQueue;
@@ -21,8 +22,6 @@ import eu.europa.ec.fisheries.uvms.asset.message.mapper.AuditModuleRequestMapper
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
-import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceRequestMapper;
-import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
 import eu.europa.ec.fisheries.uvms.bean.ConfigDomainModelBean;
@@ -33,8 +32,6 @@ import eu.europa.ec.fisheries.uvms.entity.model.AssetListResponsePaginated;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
 import eu.europa.ec.fisheries.uvms.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL;
-import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,7 +157,8 @@ public class AssetServiceBean implements AssetService {
 	@Override
 	public Long getAssetListCount(AssetListQuery requestQuery) throws AssetException {
 		LOG.debug("Getting AssetList.");
-		return getAssetListCount_FROM_DOMAINMODEL(requestQuery);
+		//return getAssetListCount_FROM_DOMAINMODEL(requestQuery);
+		return 42L;
 	}
 
 	/**
@@ -275,10 +273,10 @@ public class AssetServiceBean implements AssetService {
 			//assetById = getAssetById(assetId);
 			break;
 		default:
-			String data = AssetDataSourceRequestMapper.mapGetAssetById(assetId.getValue(), assetId.getType());
-			String messageId = messageProducer.sendDataSourceMessage(data, source);
-			TextMessage response = reciever.getMessage(messageId, TextMessage.class);
-			assetById = AssetDataSourceResponseMapper.mapToAssetFromResponse(response, messageId);
+//			String data = AssetDataSourceRequestMapper.mapGetAssetById(assetId.getValue(), assetId.getType());
+//			String messageId = messageProducer.sendDataSourceMessage(data, source);
+//			TextMessage response = reciever.getMessage(messageId, TextMessage.class);
+//			assetById = AssetDataSourceResponseMapper.mapToAssetFromResponse(response, messageId);
 			break;
 		}
 		return assetById;
@@ -312,7 +310,7 @@ public class AssetServiceBean implements AssetService {
 	 * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
 	 */
 	@Override
-	public List<AssetDTO> getAssetListByAssetGroups(List<AssetGroupWSDL> groups) throws AssetException {
+		public List<AssetDTO> getAssetListByAssetGroups(List<AssetGroupWSDL> groups) throws AssetException {
 		LOG.debug("Getting asset by ID.");
 		if (groups == null || groups.isEmpty()) {
 			throw new InputArgumentException("No groups in query");
@@ -323,7 +321,8 @@ public class AssetServiceBean implements AssetService {
 	}
 
 	@Override
-	public AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetException {
+	    //public AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetException {
+		public Object getAssetListGroupByFlagState(List assetIds) throws AssetException {
 		LOG.debug("Getting asset list by asset ids group by flags State.");
 		/*
 		List assetListGroupByFlagState = getAssetListGroupByFlagState_FROM_DOMAINMODEL(assetIds);
@@ -679,15 +678,15 @@ public class AssetServiceBean implements AssetService {
 	}
 	*/
 
-	public List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL> getAssetGroupsByGroupList(
-			List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL> groups)
+	public List<AssetGroupWSDL> getAssetGroupsByGroupList(
+			List<AssetGroupWSDL> groups)
 			throws AssetModelException, InputArgumentException {
 		if (groups == null) {
 			throw new InputArgumentException("Cannot get asset group list because the input is null.");
 		}
 
 		List<String> guidList = new ArrayList<>();
-		for (eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL group : groups) {
+		for (AssetGroupWSDL group : groups) {
 			guidList.add(group.getGuid());
 		}
 
@@ -696,7 +695,7 @@ public class AssetServiceBean implements AssetService {
 		}
 
 		try {
-			List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL> vesselGroupList = new ArrayList<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupWSDL>();
+			List<AssetGroupWSDL> vesselGroupList = new ArrayList<>();
 			// List<AssetGroup> filterGroupList =
 			// assetGroupDao.getAssetGroupsByGroupGuidList(guidList);
 			// for (AssetGroup group : filterGroupList) {

@@ -102,65 +102,8 @@
 			</plugin>
 
 
-			<plugin>
-				<groupId>org.apache.cxf</groupId>
-				<artifactId>cxf-codegen-plugin</artifactId>
-				<version>3.1.13</version>
-				<executions>
-					<execution>
-						<id>generate-asset-module</id>
-						<phase>generate-sources</phase>
-						<configuration>
-							<wsdlOptions>
-								<wsdlOption>
-									<wsdl>${basedir}/src/main/resources/contract/${wsdl.contract.name}.wsdl</wsdl>
-									<bindingFiles>
-										<bindingFile>${basedir}/src/main/resources/${binding.xml}</bindingFile>
-									</bindingFiles>
-									<extraargs>
-										<extraarg>-xjc-Xcommons-lang</extraarg>
-										<extraarg>-xjc-Xcommons-lang:ToStringStyle=SHORT_PREFIX_STYLE</extraarg>										
-									</extraargs>
-								</wsdlOption>
-							</wsdlOptions>
-						</configuration>
-						<goals>
-							<goal>wsdl2java</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>generate-asset-datasource</id>
-						<phase>generate-sources</phase>
-						<configuration>
-							<wsdlOptions>
-								<wsdlOption>
-									<wsdl>${basedir}/src/main/resources/contract/${wsdl.source.name}.wsdl</wsdl>
-									<bindingFiles>
-										<bindingFile>${basedir}/src/main/resources/${binding.xml}</bindingFile>
-									</bindingFiles>
-									<extraargs>
-										<extraarg>-xjc-Xcommons-lang</extraarg>
-										<extraarg>-xjc-Xcommons-lang:ToStringStyle=SHORT_PREFIX_STYLE</extraarg>										
-									</extraargs>
-								</wsdlOption>
-							</wsdlOptions>
-						</configuration>
-						<goals>
-							<goal>wsdl2java</goal>
-						</goals>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-					    <groupId>org.jvnet.jaxb2_commons</groupId>
-					    <artifactId>jaxb2-commons-lang</artifactId>
-					    <version>2.4</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-
-
-			<!--  OBS THIS ONE SHOULD Probably REMAIN if we want to generate from schemas. It makes classes well suited for Json  NO WSDL meaning the one above should be removed piece by piece -->
+			<!--  NO Generate from xsd until contracts  are solved -->
+			<!--
 			<plugin>
 				<groupId>org.apache.cxf</groupId>
 				<artifactId>cxf-xjc-plugin</artifactId>
@@ -181,7 +124,6 @@
 							<sourceRoot>${basedir}/target/generated-sources/</sourceRoot>
 							<xsdOptions>
 								<xsdOption>
-									<xsd>${basedir}/src/main/resources/contract/AssetConfig.xsd</xsd>
 									<xsd>${basedir}/src/main/resources/contract/AssetElement.xsd</xsd>
 									<packagename>eu.europa.ec.fisheries.asset.types</packagename>
 									<extension>true</extension>
@@ -217,10 +159,7 @@
 
 				</dependencies>
 			</plugin>
-
-
-
-
+			-->
 
 		</plugins>
 	</build>

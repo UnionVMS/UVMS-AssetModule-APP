@@ -25,6 +25,7 @@
         </xsd:sequence>
     </xsd:complexType>
 
+    <!--
     <xsd:element name="GetAssetGroupRequest">
         <xsd:complexType>
             <xsd:complexContent>
@@ -96,7 +97,9 @@
             </xsd:complexContent>
         </xsd:complexType>
     </xsd:element>
-    
+
+    -->
+
     <xsd:element name="SingleAssetGroupResponse">
         <xsd:complexType>
             <xsd:sequence>
@@ -112,4 +115,17 @@
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
+
+    <xsd:element name="AssetFault">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="code" type="xsd:int" />
+                <xsd:element name="fault" type="xsd:string" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+
+
+
 </xsd:schema>

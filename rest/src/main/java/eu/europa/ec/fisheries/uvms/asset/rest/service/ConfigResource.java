@@ -22,13 +22,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import eu.europa.ec.fisheries.asset.types.Config;
+import eu.europa.ec.fisheries.asset.types.ConfigSearchField;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseCodeConstant;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.asset.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.asset.rest.mapper.ConfigMapper;
 import eu.europa.ec.fisheries.uvms.bean.ConfigServiceBean;
-import eu.europa.ec.fisheries.wsdl.asset.config.Config;
-import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -11,8 +11,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.rest.mapper;
 
-import eu.europa.ec.fisheries.wsdl.asset.config.Config;
-import eu.europa.ec.fisheries.wsdl.asset.config.ConfigValue;
+
+import eu.europa.ec.fisheries.asset.types.Config;
+import eu.europa.ec.fisheries.asset.types.ConfigValue;
 
 import java.util.ArrayList;
 import java.util.HashMap;

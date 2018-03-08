@@ -11,18 +11,17 @@ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more d
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import eu.europa.ec.fisheries.asset.types.FishingGearDTO;
 import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGearEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGearType;
-import eu.europa.ec.fisheries.wsdl.asset.fishinggear.FishingGearResponse;
-import eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO;
 
 import javax.ejb.Local;
 
 @Local
 public interface FishingGearService {
-    FishingGearResponse upsertFishingGears(FishingGearDTO fishingGear, String username) throws AssetMessageException, AssetModelMapperException;
+    Object upsertFishingGears(FishingGearDTO fishingGear, String username) throws AssetMessageException, AssetModelMapperException;
 
     FishingGearDTO upsertFishingGear(FishingGearDTO gear, String username);
 
