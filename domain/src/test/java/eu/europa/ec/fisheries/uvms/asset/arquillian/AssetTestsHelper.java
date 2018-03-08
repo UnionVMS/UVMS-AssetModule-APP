@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+
+import eu.europa.ec.fisheries.uvms.asset.enums.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.*;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetProdOrg;
@@ -15,6 +17,8 @@ import eu.europa.ec.fisheries.uvms.entity.model.ContactInfo;
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGearEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGearType;
 import eu.europa.ec.fisheries.uvms.entity.model.Notes;
+
+import static eu.europa.ec.fisheries.uvms.asset.enums.AssetIdTypeEnum.CFR;
 
 public class AssetTestsHelper {
 
@@ -137,7 +141,7 @@ public class AssetTestsHelper {
 
 
 
-    public FishingGearEntity createFishingGearHelper() {
+        public FishingGearEntity createFishingGearHelper() {
 
         FishingGearEntity fishingGear = new FishingGearEntity();
 
@@ -197,6 +201,41 @@ public class AssetTestsHelper {
     }
 
 
+    public AssetSE createAssetHelper(AssetIdTypeEnum key, String value, Date date) {
+        AssetSE assetEntity = createBiggerAsset();
+        assetEntity.setCfr(null);
+        assetEntity.setIrcs(null);
+        assetEntity.setImo(null);
+        assetEntity.setMmsi(null);
+        assetEntity.setIccat(null);
+        assetEntity.setUvi(null);
+        assetEntity.setGfcm(null);
 
-
+        switch (key) {
+            case CFR:
+                if (value.length() > 12) value = value.substring(0, 12);
+                assetEntity.setCfr(value);
+                break;
+            case IMO:
+                assetEntity.setImo(value);
+                break;
+            case IRCS:
+                assetEntity.setIrcs(value);
+                assetEntity.setIrcsIndicator("I");
+                break;
+            case MMSI:
+                assetEntity.setMmsi(value);
+                break;
+            case ICCAT:
+                assetEntity.setIccat(value);
+                break;
+            case UVI:
+                assetEntity.setUvi(value);
+                break;
+            case GFCM:
+                assetEntity.setGfcm(value);
+                break;
+        }
+        return assetEntity;
+    }
 }
