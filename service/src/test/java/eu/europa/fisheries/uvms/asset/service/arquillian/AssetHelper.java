@@ -1,8 +1,11 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
-import eu.europa.ec.fisheries.asset.enums.AssetIdTypeEnum;
-import eu.europa.ec.fisheries.asset.enums.CarrierSourceEnum;
-import eu.europa.ec.fisheries.asset.types.*;
+import eu.europa.ec.fisheries.uvms.asset.enums.AssetIdTypeEnum;
+import eu.europa.ec.fisheries.uvms.asset.enums.CarrierSourceEnum;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetDTO;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetGroupDTO;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetProdOrgModel;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
 

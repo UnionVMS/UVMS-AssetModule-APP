@@ -6,39 +6,53 @@
 //
 
 
-package eu.europa.ec.fisheries.asset.enums;
+package eu.europa.ec.fisheries.uvms.asset.enums;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for NoteSource.
+ * <p>Java class for EventCode.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
  * <pre>
- * &lt;simpleType name="NoteSource"&gt;
+ * &lt;simpleType name="EventCode"&gt;
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
- *     &lt;enumeration value="INTERNAL"/&gt;
- *     &lt;enumeration value="NATIONAL"/&gt;
+ *     &lt;enumeration value="CEN"/&gt;
+ *     &lt;enumeration value="CST"/&gt;
+ *     &lt;enumeration value="CHA"/&gt;
+ *     &lt;enumeration value="IMP"/&gt;
+ *     &lt;enumeration value="MOD"/&gt;
+ *     &lt;enumeration value="DES"/&gt;
+ *     &lt;enumeration value="RET"/&gt;
+ *     &lt;enumeration value="EXP"/&gt;
+ *     &lt;enumeration value="UNK"/&gt;
  *   &lt;/restriction&gt;
  * &lt;/simpleType&gt;
  * </pre>
  * 
  */
-@XmlType(name = "NoteSourceEnum")
+@XmlType(name = "EventCodeEnum")
 @XmlEnum
-public enum NoteSourceEnum {
+public enum EventCodeEnum {
 
-    INTERNAL,
-    NATIONAL;
+    CEN,
+    CST,
+    CHA,
+    IMP,
+    MOD,
+    DES,
+    RET,
+    EXP,
+    UNK;
 
     public String value() {
         return name();
     }
 
-    public static NoteSourceEnum fromValue(String v) {
+    public static EventCodeEnum fromValue(String v) {
         return valueOf(v);
     }
 

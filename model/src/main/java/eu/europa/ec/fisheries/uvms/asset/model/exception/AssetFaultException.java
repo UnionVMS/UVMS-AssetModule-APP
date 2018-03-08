@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.asset.model.exception;
 
-import eu.europa.ec.fisheries.asset.types.AssetFault;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetFault;
 
 public class AssetFaultException extends Exception {
 

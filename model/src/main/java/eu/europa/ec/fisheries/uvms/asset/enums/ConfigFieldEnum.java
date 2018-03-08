@@ -6,7 +6,7 @@
 //
 
 
-package eu.europa.ec.fisheries.asset.enums;
+package eu.europa.ec.fisheries.uvms.asset.enums;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlType;

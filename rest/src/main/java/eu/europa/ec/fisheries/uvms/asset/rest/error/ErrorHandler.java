@@ -11,7 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.rest.error;
 
-import eu.europa.ec.fisheries.asset.types.AssetFault;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetFault;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.asset.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.asset.exception.UnauthorizedException;

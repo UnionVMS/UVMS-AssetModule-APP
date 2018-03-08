@@ -21,11 +21,11 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import eu.europa.ec.fisheries.asset.types.Config;
-import eu.europa.ec.fisheries.asset.enums.ConfigFieldEnum;
+import eu.europa.ec.fisheries.uvms.asset.types.Config;
+import eu.europa.ec.fisheries.uvms.asset.enums.ConfigFieldEnum;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-import eu.europa.ec.fisheries.uvms.asset.remote.dto.ConfigurationDto;
+import eu.europa.ec.fisheries.uvms.asset.types.ConfigurationDto;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

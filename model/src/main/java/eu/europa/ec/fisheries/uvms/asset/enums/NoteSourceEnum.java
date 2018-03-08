@@ -6,53 +6,39 @@
 //
 
 
-package eu.europa.ec.fisheries.asset.enums;
+package eu.europa.ec.fisheries.uvms.asset.enums;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for AssetIdType.
+ * <p>Java class for NoteSource.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
  * <pre>
- * &lt;simpleType name="AssetIdType"&gt;
+ * &lt;simpleType name="NoteSource"&gt;
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
- *     &lt;enumeration value="INTERNAL_ID"/&gt;
- *     &lt;enumeration value="CFR"/&gt;
- *     &lt;enumeration value="IRCS"/&gt;
- *     &lt;enumeration value="IMO"/&gt;
- *     &lt;enumeration value="MMSI"/&gt;
- *     &lt;enumeration value="GUID"/&gt;
- *     &lt;enumeration value="ICCAT"/&gt;
- *     &lt;enumeration value="UVI"/&gt;
- *     &lt;enumeration value="GFCM"/&gt;
+ *     &lt;enumeration value="INTERNAL"/&gt;
+ *     &lt;enumeration value="NATIONAL"/&gt;
  *   &lt;/restriction&gt;
  * &lt;/simpleType&gt;
  * </pre>
  * 
  */
-@XmlType(name = "AssetIdTypeEnum")
+@XmlType(name = "NoteSourceEnum")
 @XmlEnum
-public enum AssetIdTypeEnum {
+public enum NoteSourceEnum {
 
-    INTERNAL_ID,
-    CFR,
-    IRCS,
-    IMO,
-    MMSI,
-    GUID,
-    ICCAT,
-    UVI,
-    GFCM;
+    INTERNAL,
+    NATIONAL;
 
     public String value() {
         return name();
     }
 
-    public static AssetIdTypeEnum fromValue(String v) {
+    public static NoteSourceEnum fromValue(String v) {
         return valueOf(v);
     }
 

@@ -14,8 +14,8 @@ package eu.europa.ec.fisheries.uvms.asset.service;
 import java.util.Date;
 import java.util.List;
 
-import eu.europa.ec.fisheries.asset.types.AssetDTO;
-import eu.europa.ec.fisheries.asset.types.FlagStateType;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetDTO;
+import eu.europa.ec.fisheries.uvms.asset.types.FlagStateType;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 
 public interface AssetHistoryService {

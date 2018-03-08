@@ -6,7 +6,7 @@
 //
 
 
-package eu.europa.ec.fisheries.asset.types;
+package eu.europa.ec.fisheries.uvms.asset.types;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -11,12 +11,12 @@
  */
 package eu.europa.ec.fisheries.uvms.bean;
 
-import eu.europa.ec.fisheries.asset.types.Config;
-import eu.europa.ec.fisheries.asset.enums.ConfigFieldEnum;
-import eu.europa.ec.fisheries.asset.types.ConfigValue;
+import eu.europa.ec.fisheries.uvms.asset.types.Config;
+import eu.europa.ec.fisheries.uvms.asset.enums.ConfigFieldEnum;
+import eu.europa.ec.fisheries.uvms.asset.types.ConfigValue;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.ConfigModelException;
-import eu.europa.ec.fisheries.uvms.asset.remote.dto.ConfigurationDto;
+import eu.europa.ec.fisheries.uvms.asset.types.ConfigurationDto;
 import eu.europa.ec.fisheries.uvms.constant.UnitLength;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.dao.FlagStateDao;

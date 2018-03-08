@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.dao.bean;
 
-import eu.europa.ec.fisheries.asset.types.AssetId;
-import eu.europa.ec.fisheries.asset.enums.AssetIdTypeEnum;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
+import eu.europa.ec.fisheries.uvms.asset.enums.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
 import eu.europa.ec.fisheries.uvms.entity.model.NotesActivityCode;

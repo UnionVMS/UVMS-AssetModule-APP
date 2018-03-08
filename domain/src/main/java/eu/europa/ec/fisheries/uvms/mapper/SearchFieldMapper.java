@@ -11,8 +11,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mapper;
 
-import eu.europa.ec.fisheries.asset.types.AssetListCriteriaPair;
-import eu.europa.ec.fisheries.asset.enums.ConfigSearchFieldEnum;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetListCriteriaPair;
+import eu.europa.ec.fisheries.uvms.asset.enums.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.constant.SearchTables;

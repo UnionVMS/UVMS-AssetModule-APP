@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.asset.remote.dto;
+package eu.europa.ec.fisheries.uvms.asset.types;
 /*
 ﻿Developed with the contribution of the European Commission - Directorate General for Maritime Affairs and Fisheries
 © European Union, 2015-2016.
@@ -12,7 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 
 
-import eu.europa.ec.fisheries.asset.types.Config;
+import eu.europa.ec.fisheries.uvms.asset.types.Config;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -6,7 +6,7 @@
 //
 
 
-package eu.europa.ec.fisheries.asset.types;
+package eu.europa.ec.fisheries.uvms.asset.types;
 
 import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 
-import eu.europa.ec.fisheries.asset.enums.NoteSourceEnum;
+import eu.europa.ec.fisheries.uvms.asset.enums.NoteSourceEnum;
 import org.jvnet.jaxb2_commons.lang.Equals;
 import org.jvnet.jaxb2_commons.lang.EqualsStrategy;
 import org.jvnet.jaxb2_commons.lang.HashCode;

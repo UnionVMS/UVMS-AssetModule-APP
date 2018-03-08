@@ -6,7 +6,7 @@
 //
 
 
-package eu.europa.ec.fisheries.asset.types;
+package eu.europa.ec.fisheries.uvms.asset.types;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 
-import eu.europa.ec.fisheries.asset.enums.AssetIdTypeEnum;
+import eu.europa.ec.fisheries.uvms.asset.enums.ConfigSearchFieldEnum;
 import org.jvnet.jaxb2_commons.lang.Equals;
 import org.jvnet.jaxb2_commons.lang.EqualsStrategy;
 import org.jvnet.jaxb2_commons.lang.HashCode;
@@ -26,18 +26,17 @@ import org.jvnet.jaxb2_commons.locator.util.LocatorUtils;
 
 
 /**
- * <p>Java class for AssetId complex type.
+ * <p>Java class for AssetListCriteriaPair complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="AssetId"&gt;
+ * &lt;complexType name="AssetListCriteriaPair"&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="type" type="{types.asset.wsdl.fisheries.ec.europa.eu}AssetIdType"/&gt;
+ *         &lt;element name="key" type="{types.asset.wsdl.fisheries.ec.europa.eu}ConfigSearchField"/&gt;
  *         &lt;element name="value" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
- *         &lt;element name="guid" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -47,27 +46,24 @@ import org.jvnet.jaxb2_commons.locator.util.LocatorUtils;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "AssetId", propOrder = {
-    "type",
-    "value",
-    "guid"
+@XmlType(name = "AssetListCriteriaPair", propOrder = {
+    "key",
+    "value"
 })
-public class AssetId implements Equals, HashCode
+public class AssetListCriteriaPair implements Equals, HashCode
 {
 
     @XmlElement(required = true)
     @XmlSchemaType(name = "string")
-    protected AssetIdTypeEnum type;
+    protected ConfigSearchFieldEnum key;
     @XmlElement(required = true)
     protected String value;
-    @XmlElement(required = true)
-    protected String guid;
 
     /**
      * Default no-arg constructor
      * 
      */
-    public AssetId() {
+    public AssetListCriteriaPair() {
         super();
     }
 
@@ -75,34 +71,33 @@ public class AssetId implements Equals, HashCode
      * Fully-initialising value constructor
      * 
      */
-    public AssetId(final AssetIdTypeEnum type, final String value, final String guid) {
-        this.type = type;
+    public AssetListCriteriaPair(final ConfigSearchFieldEnum key, final String value) {
+        this.key = key;
         this.value = value;
-        this.guid = guid;
     }
 
     /**
-     * Gets the value of the type property.
+     * Gets the value of the key property.
      * 
      * @return
      *     possible object is
-     *     {@link AssetIdTypeEnum }
+     *     {@link ConfigSearchFieldEnum }
      *     
      */
-    public AssetIdTypeEnum getType() {
-        return type;
+    public ConfigSearchFieldEnum getKey() {
+        return key;
     }
 
     /**
-     * Sets the value of the type property.
+     * Sets the value of the key property.
      * 
      * @param value
      *     allowed object is
-     *     {@link AssetIdTypeEnum }
+     *     {@link ConfigSearchFieldEnum }
      *     
      */
-    public void setType(AssetIdTypeEnum value) {
-        this.type = value;
+    public void setKey(ConfigSearchFieldEnum value) {
+        this.key = value;
     }
 
     /**
@@ -129,44 +124,20 @@ public class AssetId implements Equals, HashCode
         this.value = value;
     }
 
-    /**
-     * Gets the value of the guid property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getGuid() {
-        return guid;
-    }
-
-    /**
-     * Sets the value of the guid property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setGuid(String value) {
-        this.guid = value;
-    }
-
     public boolean equals(ObjectLocator thisLocator, ObjectLocator thatLocator, Object object, EqualsStrategy strategy) {
-        if (!(object instanceof AssetId)) {
+        if (!(object instanceof AssetListCriteriaPair)) {
             return false;
         }
         if (this == object) {
             return true;
         }
-        final AssetId that = ((AssetId) object);
+        final AssetListCriteriaPair that = ((AssetListCriteriaPair) object);
         {
-            AssetIdTypeEnum lhsType;
-            lhsType = this.getType();
-            AssetIdTypeEnum rhsType;
-            rhsType = that.getType();
-            if (!strategy.equals(LocatorUtils.property(thisLocator, "type", lhsType), LocatorUtils.property(thatLocator, "type", rhsType), lhsType, rhsType)) {
+            ConfigSearchFieldEnum lhsKey;
+            lhsKey = this.getKey();
+            ConfigSearchFieldEnum rhsKey;
+            rhsKey = that.getKey();
+            if (!strategy.equals(LocatorUtils.property(thisLocator, "key", lhsKey), LocatorUtils.property(thatLocator, "key", rhsKey), lhsKey, rhsKey)) {
                 return false;
             }
         }
@@ -176,15 +147,6 @@ public class AssetId implements Equals, HashCode
             String rhsValue;
             rhsValue = that.getValue();
             if (!strategy.equals(LocatorUtils.property(thisLocator, "value", lhsValue), LocatorUtils.property(thatLocator, "value", rhsValue), lhsValue, rhsValue)) {
-                return false;
-            }
-        }
-        {
-            String lhsGuid;
-            lhsGuid = this.getGuid();
-            String rhsGuid;
-            rhsGuid = that.getGuid();
-            if (!strategy.equals(LocatorUtils.property(thisLocator, "guid", lhsGuid), LocatorUtils.property(thatLocator, "guid", rhsGuid), lhsGuid, rhsGuid)) {
                 return false;
             }
         }
@@ -199,19 +161,14 @@ public class AssetId implements Equals, HashCode
     public int hashCode(ObjectLocator locator, HashCodeStrategy strategy) {
         int currentHashCode = 1;
         {
-            AssetIdTypeEnum theType;
-            theType = this.getType();
-            currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "type", theType), currentHashCode, theType);
+            ConfigSearchFieldEnum theKey;
+            theKey = this.getKey();
+            currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "key", theKey), currentHashCode, theKey);
         }
         {
             String theValue;
             theValue = this.getValue();
             currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "value", theValue), currentHashCode, theValue);
-        }
-        {
-            String theGuid;
-            theGuid = this.getGuid();
-            currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "guid", theGuid), currentHashCode, theGuid);
         }
         return currentHashCode;
     }

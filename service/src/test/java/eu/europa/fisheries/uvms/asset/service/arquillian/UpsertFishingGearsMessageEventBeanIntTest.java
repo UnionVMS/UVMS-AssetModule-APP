@@ -1,7 +1,7 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
-import eu.europa.ec.fisheries.asset.types.FishingGearDTO;
-import eu.europa.ec.fisheries.asset.types.FishingGearType;
+import eu.europa.ec.fisheries.uvms.asset.types.FishingGearDTO;
+import eu.europa.ec.fisheries.uvms.asset.types.FishingGearType;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.UpsertFishingGearsMessageEventBean;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;

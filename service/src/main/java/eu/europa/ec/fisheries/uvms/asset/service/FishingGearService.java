@@ -11,7 +11,7 @@ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more d
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import eu.europa.ec.fisheries.asset.types.FishingGearDTO;
+import eu.europa.ec.fisheries.uvms.asset.types.FishingGearDTO;
 import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGearEntity;

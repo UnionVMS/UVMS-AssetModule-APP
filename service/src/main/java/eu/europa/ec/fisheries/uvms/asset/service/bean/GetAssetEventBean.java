@@ -1,8 +1,8 @@
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
-import eu.europa.ec.fisheries.asset.types.AssetDTO;
-import eu.europa.ec.fisheries.asset.types.AssetId;
-import eu.europa.ec.fisheries.asset.enums.AssetIdTypeEnum;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetDTO;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
+import eu.europa.ec.fisheries.uvms.asset.enums.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;

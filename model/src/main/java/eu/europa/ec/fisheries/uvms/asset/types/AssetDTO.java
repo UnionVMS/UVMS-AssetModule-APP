@@ -6,7 +6,7 @@
 //
 
 
-package eu.europa.ec.fisheries.asset.types;
+package eu.europa.ec.fisheries.uvms.asset.types;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 
-import eu.europa.ec.fisheries.asset.enums.CarrierSourceEnum;
+import eu.europa.ec.fisheries.uvms.asset.enums.CarrierSourceEnum;
 import org.jvnet.jaxb2_commons.lang.Equals;
 import org.jvnet.jaxb2_commons.lang.EqualsStrategy;
 import org.jvnet.jaxb2_commons.lang.HashCode;

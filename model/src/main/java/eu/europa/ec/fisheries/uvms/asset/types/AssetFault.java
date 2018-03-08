@@ -6,12 +6,12 @@
 //
 
 
-package eu.europa.ec.fisheries.asset.types;
+package eu.europa.ec.fisheries.uvms.asset.types;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import org.jvnet.jaxb2_commons.lang.Equals;
 import org.jvnet.jaxb2_commons.lang.EqualsStrategy;
@@ -24,16 +24,17 @@ import org.jvnet.jaxb2_commons.locator.util.LocatorUtils;
 
 
 /**
- * <p>Java class for NoteActivityCode complex type.
+ * <p>Java class for anonymous complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="NoteActivityCode"&gt;
+ * &lt;complexType&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="code" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded" minOccurs="0"/&gt;
+ *         &lt;element name="code" type="{http://www.w3.org/2001/XMLSchema}int"/&gt;
+ *         &lt;element name="fault" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -43,19 +44,23 @@ import org.jvnet.jaxb2_commons.locator.util.LocatorUtils;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "NoteActivityCode", propOrder = {
-    "code"
+@XmlType(name = "", propOrder = {
+    "code",
+    "fault"
 })
-public class NoteActivityCode implements Equals, HashCode
+@XmlRootElement(name = "AssetFault")
+public class AssetFault implements Equals, HashCode
 {
 
-    protected List<String> code;
+    protected int code;
+    @XmlElement(required = true)
+    protected String fault;
 
     /**
      * Default no-arg constructor
      * 
      */
-    public NoteActivityCode() {
+    public AssetFault() {
         super();
     }
 
@@ -63,53 +68,74 @@ public class NoteActivityCode implements Equals, HashCode
      * Fully-initialising value constructor
      * 
      */
-    public NoteActivityCode(final List<String> code) {
+    public AssetFault(final int code, final String fault) {
         this.code = code;
+        this.fault = fault;
     }
 
     /**
      * Gets the value of the code property.
      * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the code property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getCode().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
-     * 
+     */
+    public int getCode() {
+        return code;
+    }
+
+    /**
+     * Sets the value of the code property.
      * 
      */
-    public List<String> getCode() {
-        if (code == null) {
-            code = new ArrayList<String>();
-        }
-        return this.code;
+    public void setCode(int value) {
+        this.code = value;
+    }
+
+    /**
+     * Gets the value of the fault property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getFault() {
+        return fault;
+    }
+
+    /**
+     * Sets the value of the fault property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setFault(String value) {
+        this.fault = value;
     }
 
     public boolean equals(ObjectLocator thisLocator, ObjectLocator thatLocator, Object object, EqualsStrategy strategy) {
-        if (!(object instanceof NoteActivityCode)) {
+        if (!(object instanceof AssetFault)) {
             return false;
         }
         if (this == object) {
             return true;
         }
-        final NoteActivityCode that = ((NoteActivityCode) object);
+        final AssetFault that = ((AssetFault) object);
         {
-            List<String> lhsCode;
-            lhsCode = (((this.code!= null)&&(!this.code.isEmpty()))?this.getCode():null);
-            List<String> rhsCode;
-            rhsCode = (((that.code!= null)&&(!that.code.isEmpty()))?that.getCode():null);
+            int lhsCode;
+            lhsCode = this.getCode();
+            int rhsCode;
+            rhsCode = that.getCode();
             if (!strategy.equals(LocatorUtils.property(thisLocator, "code", lhsCode), LocatorUtils.property(thatLocator, "code", rhsCode), lhsCode, rhsCode)) {
+                return false;
+            }
+        }
+        {
+            String lhsFault;
+            lhsFault = this.getFault();
+            String rhsFault;
+            rhsFault = that.getFault();
+            if (!strategy.equals(LocatorUtils.property(thisLocator, "fault", lhsFault), LocatorUtils.property(thatLocator, "fault", rhsFault), lhsFault, rhsFault)) {
                 return false;
             }
         }
@@ -124,9 +150,14 @@ public class NoteActivityCode implements Equals, HashCode
     public int hashCode(ObjectLocator locator, HashCodeStrategy strategy) {
         int currentHashCode = 1;
         {
-            List<String> theCode;
-            theCode = (((this.code!= null)&&(!this.code.isEmpty()))?this.getCode():null);
+            int theCode;
+            theCode = this.getCode();
             currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "code", theCode), currentHashCode, theCode);
+        }
+        {
+            String theFault;
+            theFault = this.getFault();
+            currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "fault", theFault), currentHashCode, theFault);
         }
         return currentHashCode;
     }

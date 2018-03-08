@@ -6,14 +6,17 @@
 //
 
 
-package eu.europa.ec.fisheries.asset.types;
+package eu.europa.ec.fisheries.uvms.asset.types;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
+
+import eu.europa.ec.fisheries.uvms.asset.enums.ConfigFieldEnum;
 import org.jvnet.jaxb2_commons.lang.Equals;
 import org.jvnet.jaxb2_commons.lang.EqualsStrategy;
 import org.jvnet.jaxb2_commons.lang.HashCode;
@@ -25,17 +28,17 @@ import org.jvnet.jaxb2_commons.locator.util.LocatorUtils;
 
 
 /**
- * <p>Java class for ConfigValue complex type.
+ * <p>Java class for Config complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="ConfigValue"&gt;
+ * &lt;complexType name="Config"&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="keyValue" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
- *         &lt;element name="values" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded" minOccurs="0"/&gt;
+ *         &lt;element name="field" type="{types.asset.wsdl.fisheries.ec.europa.eu}ConfigField"/&gt;
+ *         &lt;element name="values" type="{types.asset.wsdl.fisheries.ec.europa.eu}ConfigValue" maxOccurs="unbounded"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -45,22 +48,24 @@ import org.jvnet.jaxb2_commons.locator.util.LocatorUtils;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ConfigValue", propOrder = {
-    "keyValue",
+@XmlType(name = "Config", propOrder = {
+    "field",
     "values"
 })
-public class ConfigValue implements Equals, HashCode
+public class Config implements Equals, HashCode
 {
 
     @XmlElement(required = true)
-    protected String keyValue;
-    protected List<String> values;
+    @XmlSchemaType(name = "string")
+    protected ConfigFieldEnum field;
+    @XmlElement(required = true)
+    protected List<ConfigValue> values;
 
     /**
      * Default no-arg constructor
      * 
      */
-    public ConfigValue() {
+    public Config() {
         super();
     }
 
@@ -68,33 +73,33 @@ public class ConfigValue implements Equals, HashCode
      * Fully-initialising value constructor
      * 
      */
-    public ConfigValue(final String keyValue, final List<String> values) {
-        this.keyValue = keyValue;
+    public Config(final ConfigFieldEnum field, final List<ConfigValue> values) {
+        this.field = field;
         this.values = values;
     }
 
     /**
-     * Gets the value of the keyValue property.
+     * Gets the value of the field property.
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link ConfigFieldEnum }
      *     
      */
-    public String getKeyValue() {
-        return keyValue;
+    public ConfigFieldEnum getField() {
+        return field;
     }
 
     /**
-     * Sets the value of the keyValue property.
+     * Sets the value of the field property.
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link ConfigFieldEnum }
      *     
      */
-    public void setKeyValue(String value) {
-        this.keyValue = value;
+    public void setField(ConfigFieldEnum value) {
+        this.field = value;
     }
 
     /**
@@ -115,38 +120,38 @@ public class ConfigValue implements Equals, HashCode
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link String }
+     * {@link ConfigValue }
      * 
      * 
      */
-    public List<String> getValues() {
+    public List<ConfigValue> getValues() {
         if (values == null) {
-            values = new ArrayList<String>();
+            values = new ArrayList<ConfigValue>();
         }
         return this.values;
     }
 
     public boolean equals(ObjectLocator thisLocator, ObjectLocator thatLocator, Object object, EqualsStrategy strategy) {
-        if (!(object instanceof ConfigValue)) {
+        if (!(object instanceof Config)) {
             return false;
         }
         if (this == object) {
             return true;
         }
-        final ConfigValue that = ((ConfigValue) object);
+        final Config that = ((Config) object);
         {
-            String lhsKeyValue;
-            lhsKeyValue = this.getKeyValue();
-            String rhsKeyValue;
-            rhsKeyValue = that.getKeyValue();
-            if (!strategy.equals(LocatorUtils.property(thisLocator, "keyValue", lhsKeyValue), LocatorUtils.property(thatLocator, "keyValue", rhsKeyValue), lhsKeyValue, rhsKeyValue)) {
+            ConfigFieldEnum lhsField;
+            lhsField = this.getField();
+            ConfigFieldEnum rhsField;
+            rhsField = that.getField();
+            if (!strategy.equals(LocatorUtils.property(thisLocator, "field", lhsField), LocatorUtils.property(thatLocator, "field", rhsField), lhsField, rhsField)) {
                 return false;
             }
         }
         {
-            List<String> lhsValues;
+            List<ConfigValue> lhsValues;
             lhsValues = (((this.values!= null)&&(!this.values.isEmpty()))?this.getValues():null);
-            List<String> rhsValues;
+            List<ConfigValue> rhsValues;
             rhsValues = (((that.values!= null)&&(!that.values.isEmpty()))?that.getValues():null);
             if (!strategy.equals(LocatorUtils.property(thisLocator, "values", lhsValues), LocatorUtils.property(thatLocator, "values", rhsValues), lhsValues, rhsValues)) {
                 return false;
@@ -163,12 +168,12 @@ public class ConfigValue implements Equals, HashCode
     public int hashCode(ObjectLocator locator, HashCodeStrategy strategy) {
         int currentHashCode = 1;
         {
-            String theKeyValue;
-            theKeyValue = this.getKeyValue();
-            currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "keyValue", theKeyValue), currentHashCode, theKeyValue);
+            ConfigFieldEnum theField;
+            theField = this.getField();
+            currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "field", theField), currentHashCode, theField);
         }
         {
-            List<String> theValues;
+            List<ConfigValue> theValues;
             theValues = (((this.values!= null)&&(!this.values.isEmpty()))?this.getValues():null);
             currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "values", theValues), currentHashCode, theValues);
         }

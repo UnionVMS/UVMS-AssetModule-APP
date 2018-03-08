@@ -6,12 +6,13 @@
 //
 
 
-package eu.europa.ec.fisheries.asset.types;
+package eu.europa.ec.fisheries.uvms.asset.types;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import org.jvnet.jaxb2_commons.lang.Equals;
 import org.jvnet.jaxb2_commons.lang.EqualsStrategy;
@@ -24,17 +25,17 @@ import org.jvnet.jaxb2_commons.locator.util.LocatorUtils;
 
 
 /**
- * <p>Java class for AssetListCriteria complex type.
+ * <p>Java class for ConfigValue complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="AssetListCriteria"&gt;
+ * &lt;complexType name="ConfigValue"&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="isDynamic" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/&gt;
- *         &lt;element name="criterias" type="{types.asset.wsdl.fisheries.ec.europa.eu}AssetListCriteriaPair" maxOccurs="unbounded" minOccurs="0"/&gt;
+ *         &lt;element name="keyValue" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="values" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded" minOccurs="0"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -44,21 +45,22 @@ import org.jvnet.jaxb2_commons.locator.util.LocatorUtils;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "AssetListCriteria", propOrder = {
-    "isDynamic",
-    "criterias"
+@XmlType(name = "ConfigValue", propOrder = {
+    "keyValue",
+    "values"
 })
-public class AssetListCriteria implements Equals, HashCode
+public class ConfigValue implements Equals, HashCode
 {
 
-    protected Boolean isDynamic;
-    protected List<AssetListCriteriaPair> criterias;
+    @XmlElement(required = true)
+    protected String keyValue;
+    protected List<String> values;
 
     /**
      * Default no-arg constructor
      * 
      */
-    public AssetListCriteria() {
+    public ConfigValue() {
         super();
     }
 
@@ -66,87 +68,87 @@ public class AssetListCriteria implements Equals, HashCode
      * Fully-initialising value constructor
      * 
      */
-    public AssetListCriteria(final Boolean isDynamic, final List<AssetListCriteriaPair> criterias) {
-        this.isDynamic = isDynamic;
-        this.criterias = criterias;
+    public ConfigValue(final String keyValue, final List<String> values) {
+        this.keyValue = keyValue;
+        this.values = values;
     }
 
     /**
-     * Gets the value of the isDynamic property.
+     * Gets the value of the keyValue property.
      * 
      * @return
      *     possible object is
-     *     {@link Boolean }
+     *     {@link String }
      *     
      */
-    public Boolean isIsDynamic() {
-        return isDynamic;
+    public String getKeyValue() {
+        return keyValue;
     }
 
     /**
-     * Sets the value of the isDynamic property.
+     * Sets the value of the keyValue property.
      * 
      * @param value
      *     allowed object is
-     *     {@link Boolean }
+     *     {@link String }
      *     
      */
-    public void setIsDynamic(Boolean value) {
-        this.isDynamic = value;
+    public void setKeyValue(String value) {
+        this.keyValue = value;
     }
 
     /**
-     * Gets the value of the criterias property.
+     * Gets the value of the values property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the criterias property.
+     * This is why there is not a <CODE>set</CODE> method for the values property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getCriterias().add(newItem);
+     *    getValues().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link AssetListCriteriaPair }
+     * {@link String }
      * 
      * 
      */
-    public List<AssetListCriteriaPair> getCriterias() {
-        if (criterias == null) {
-            criterias = new ArrayList<AssetListCriteriaPair>();
+    public List<String> getValues() {
+        if (values == null) {
+            values = new ArrayList<String>();
         }
-        return this.criterias;
+        return this.values;
     }
 
     public boolean equals(ObjectLocator thisLocator, ObjectLocator thatLocator, Object object, EqualsStrategy strategy) {
-        if (!(object instanceof AssetListCriteria)) {
+        if (!(object instanceof ConfigValue)) {
             return false;
         }
         if (this == object) {
             return true;
         }
-        final AssetListCriteria that = ((AssetListCriteria) object);
+        final ConfigValue that = ((ConfigValue) object);
         {
-            Boolean lhsIsDynamic;
-            lhsIsDynamic = this.isIsDynamic();
-            Boolean rhsIsDynamic;
-            rhsIsDynamic = that.isIsDynamic();
-            if (!strategy.equals(LocatorUtils.property(thisLocator, "isDynamic", lhsIsDynamic), LocatorUtils.property(thatLocator, "isDynamic", rhsIsDynamic), lhsIsDynamic, rhsIsDynamic)) {
+            String lhsKeyValue;
+            lhsKeyValue = this.getKeyValue();
+            String rhsKeyValue;
+            rhsKeyValue = that.getKeyValue();
+            if (!strategy.equals(LocatorUtils.property(thisLocator, "keyValue", lhsKeyValue), LocatorUtils.property(thatLocator, "keyValue", rhsKeyValue), lhsKeyValue, rhsKeyValue)) {
                 return false;
             }
         }
         {
-            List<AssetListCriteriaPair> lhsCriterias;
-            lhsCriterias = (((this.criterias!= null)&&(!this.criterias.isEmpty()))?this.getCriterias():null);
-            List<AssetListCriteriaPair> rhsCriterias;
-            rhsCriterias = (((that.criterias!= null)&&(!that.criterias.isEmpty()))?that.getCriterias():null);
-            if (!strategy.equals(LocatorUtils.property(thisLocator, "criterias", lhsCriterias), LocatorUtils.property(thatLocator, "criterias", rhsCriterias), lhsCriterias, rhsCriterias)) {
+            List<String> lhsValues;
+            lhsValues = (((this.values!= null)&&(!this.values.isEmpty()))?this.getValues():null);
+            List<String> rhsValues;
+            rhsValues = (((that.values!= null)&&(!that.values.isEmpty()))?that.getValues():null);
+            if (!strategy.equals(LocatorUtils.property(thisLocator, "values", lhsValues), LocatorUtils.property(thatLocator, "values", rhsValues), lhsValues, rhsValues)) {
                 return false;
             }
         }
@@ -161,14 +163,14 @@ public class AssetListCriteria implements Equals, HashCode
     public int hashCode(ObjectLocator locator, HashCodeStrategy strategy) {
         int currentHashCode = 1;
         {
-            Boolean theIsDynamic;
-            theIsDynamic = this.isIsDynamic();
-            currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "isDynamic", theIsDynamic), currentHashCode, theIsDynamic);
+            String theKeyValue;
+            theKeyValue = this.getKeyValue();
+            currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "keyValue", theKeyValue), currentHashCode, theKeyValue);
         }
         {
-            List<AssetListCriteriaPair> theCriterias;
-            theCriterias = (((this.criterias!= null)&&(!this.criterias.isEmpty()))?this.getCriterias():null);
-            currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "criterias", theCriterias), currentHashCode, theCriterias);
+            List<String> theValues;
+            theValues = (((this.values!= null)&&(!this.values.isEmpty()))?this.getValues():null);
+            currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "values", theValues), currentHashCode, theValues);
         }
         return currentHashCode;
     }

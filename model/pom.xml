@@ -125,7 +125,7 @@
 							<xsdOptions>
 								<xsdOption>
 									<xsd>${basedir}/src/main/resources/contract/AssetElement.xsd</xsd>
-									<packagename>eu.europa.ec.fisheries.asset.types</packagename>
+									<packagename>eu.europa.ec.fisheries.uvms.asset.types</packagename>
 									<extension>true</extension>
 									<extensionArgs>
 										<extensionArg>-Xinheritance</extensionArg>

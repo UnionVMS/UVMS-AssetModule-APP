@@ -1,6 +1,6 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
-import eu.europa.ec.fisheries.asset.types.AssetFault;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetFault;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetSuccessfulTestEvent;

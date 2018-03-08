@@ -19,9 +19,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import eu.europa.ec.fisheries.asset.types.AssetDTO;
-import eu.europa.ec.fisheries.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.asset.types.NoteActivityCode;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetDTO;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
+import eu.europa.ec.fisheries.uvms.asset.types.NoteActivityCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseCodeConstant;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseDto;
