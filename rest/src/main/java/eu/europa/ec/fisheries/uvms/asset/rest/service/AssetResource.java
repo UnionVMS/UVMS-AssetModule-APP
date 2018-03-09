@@ -38,6 +38,7 @@ import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import org.slf4j.MDC;
 
 import java.util.List;
+import java.util.UUID;
 
 @Path("/asset")
 @Stateless
@@ -138,13 +139,19 @@ public class AssetResource {
     @Produces(value = { MediaType.APPLICATION_JSON })
     @Path(value = "/{id}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public ResponseDto getAssetById(@PathParam(value = "id") final String id) {
+    public Response getAssetById(@PathParam(value = "id") final String id) throws AssetException {
         try {
-            LOG.info("Getting asset by ID: {}",id);
-            return new ResponseDto(assetService.getAssetByGuid(id), ResponseCodeConstant.OK);
+            UUID theId = UUID.fromString(id);
+            AssetSE asset = assetService.getAssetById(theId);
+            Response.ResponseBuilder rb = Response.status(200).entity(asset).type(MediaType.APPLICATION_JSON )
+                    .header("MDC", MDC.get("requestId"));
+            return rb.build();
+        } catch (IllegalArgumentException e) {
+            LOG.error("The Id is not a valid UUID",id,e);
+            throw e;
         } catch (Exception e) {
             LOG.error("[ Error when getting asset by ID. {}] {} ",id,e);
-            return ErrorHandler.getFault(e);
+            throw e;
         }
     }
 
@@ -195,14 +202,17 @@ public class AssetResource {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     @Produces(value = { MediaType.APPLICATION_JSON })
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public ResponseDto updateAsset(final AssetDTO asset, @QueryParam("comment") String comment) {
+    public Response updateAsset(final AssetSE asset, @QueryParam("comment") String comment) throws AssetException {
         try {
             LOG.info("Updating asset:{}",asset);
             String remoteUser = servletRequest.getRemoteUser();
-            return new ResponseDto(assetService.updateAsset(asset, remoteUser, comment), ResponseCodeConstant.OK);
+            AssetSE updatedAsset = assetService.updateAsset(asset, remoteUser, comment);
+            Response.ResponseBuilder rb = Response.status(200).entity(updatedAsset).type(MediaType.APPLICATION_JSON )
+                    .header("MDC", MDC.get("requestId"));
+            return rb.build();
         } catch (Exception e) {
             LOG.error("[ Error when updating asset. {}] {}",asset, e.getMessage());
-            return ErrorHandler.getFault(e);
+            throw e;
         }
     }
 
@@ -211,10 +221,10 @@ public class AssetResource {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     @Produces(value = { MediaType.APPLICATION_JSON })
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public ResponseDto archiveAsset(final AssetDTO asset, @QueryParam("comment") String comment) {
+    public ResponseDto archiveAsset(final AssetSE asset, @QueryParam("comment") String comment) {
         try {
             String remoteUser = servletRequest.getRemoteUser();
-            AssetDTO archivedAsset = assetService.archiveAsset(asset, remoteUser, comment);
+            AssetSE archivedAsset = assetService.archiveAsset(asset, remoteUser, comment);
             return new ResponseDto(archivedAsset, ResponseCodeConstant.OK);
         } catch (Exception e) {
             LOG.error("[ Error when archiving asset. {}] {}",asset, e.getMessage());

@@ -223,7 +223,7 @@ public class AssetSEDao {
 
 
 
-    public Long getAssetCount(String countSql, List<SearchKeyValue> searchFields) throws AssetDaoException {
+    public Long getAssetCount(String countSql, List<SearchKeyValue> searchFields, Boolean isDynamic) throws AssetDaoException {
 
         TypedQuery<Long> query = createQuery(countSql, searchFields, Long.class);
         try {

@@ -24,28 +24,9 @@ import org.jvnet.jaxb2_commons.lang.JAXBHashCodeStrategy;
 import org.jvnet.jaxb2_commons.locator.ObjectLocator;
 import org.jvnet.jaxb2_commons.locator.util.LocatorUtils;
 
+import java.util.UUID;
 
-/**
- * <p>Java class for AssetId complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
- * <pre>
- * &lt;complexType name="AssetId"&gt;
- *   &lt;complexContent&gt;
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *       &lt;sequence&gt;
- *         &lt;element name="type" type="{types.asset.wsdl.fisheries.ec.europa.eu}AssetIdType"/&gt;
- *         &lt;element name="value" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
- *         &lt;element name="guid" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
- *       &lt;/sequence&gt;
- *     &lt;/restriction&gt;
- *   &lt;/complexContent&gt;
- * &lt;/complexType&gt;
- * </pre>
- * 
- * 
- */
+
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AssetId", propOrder = {
     "type",
@@ -61,7 +42,7 @@ public class AssetId implements Equals, HashCode
     @XmlElement(required = true)
     protected String value;
     @XmlElement(required = true)
-    protected String guid;
+    protected UUID guid;
 
     /**
      * Default no-arg constructor
@@ -78,8 +59,15 @@ public class AssetId implements Equals, HashCode
     public AssetId(final AssetIdTypeEnum type, final String value, final String guid) {
         this.type = type;
         this.value = value;
+        this.guid = UUID.fromString(guid);
+    }
+
+    public AssetId(final AssetIdTypeEnum type, final String value, final UUID guid) {
+        this.type = type;
+        this.value = value;
         this.guid = guid;
     }
+
 
     /**
      * Gets the value of the type property.
@@ -137,7 +125,7 @@ public class AssetId implements Equals, HashCode
      *     {@link String }
      *     
      */
-    public String getGuid() {
+    public UUID getGuid() {
         return guid;
     }
 
@@ -149,7 +137,7 @@ public class AssetId implements Equals, HashCode
      *     {@link String }
      *     
      */
-    public void setGuid(String value) {
+    public void setGuid(UUID value) {
         this.guid = value;
     }
 
@@ -180,9 +168,9 @@ public class AssetId implements Equals, HashCode
             }
         }
         {
-            String lhsGuid;
+            UUID lhsGuid;
             lhsGuid = this.getGuid();
-            String rhsGuid;
+            UUID rhsGuid;
             rhsGuid = that.getGuid();
             if (!strategy.equals(LocatorUtils.property(thisLocator, "guid", lhsGuid), LocatorUtils.property(thatLocator, "guid", rhsGuid), lhsGuid, rhsGuid)) {
                 return false;
@@ -209,7 +197,7 @@ public class AssetId implements Equals, HashCode
             currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "value", theValue), currentHashCode, theValue);
         }
         {
-            String theGuid;
+            UUID theGuid;
             theGuid = this.getGuid();
             currentHashCode = strategy.hashCode(LocatorUtils.property(locator, "guid", theGuid), currentHashCode, theGuid);
         }

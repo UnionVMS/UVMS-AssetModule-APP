@@ -22,11 +22,10 @@ public abstract class AssetHelper {
         AssetId assetId = new AssetId();
         assetId.setType(assetIdType);
         switch (assetIdType) {
-            case GUID:
-                assetId.setGuid(UUID.randomUUID().toString());
-                break;
             case INTERNAL_ID:
-                assetId.setValue("INTERNALID_" + UUID.randomUUID().toString());
+                UUID tmp = UUID.randomUUID();
+                assetId.setValue("INTERNALID_" + tmp.toString());
+                assetId.setGuid(tmp);
                 break;
         }
 

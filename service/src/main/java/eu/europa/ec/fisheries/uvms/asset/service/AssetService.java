@@ -12,6 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.ejb.Local;
 
@@ -61,14 +62,13 @@ public interface AssetService {
      */
     AssetSE getAssetById(AssetId assetId, AssetDataSourceQueue source) throws AssetException;
 
-    /**
-     * Get a Asset by guid
+    /** Get Asset By internal Id
      *
-     * @param guid
+     * @param id
      * @return
      * @throws AssetException
      */
-    AssetDTO getAssetByGuid(String guid) throws AssetException;
+    AssetSE getAssetById(UUID id) throws AssetException;
 
     /**
      * Update a Asset
@@ -79,7 +79,7 @@ public interface AssetService {
      * @return
      * @throws AssetException
      */
-    AssetDTO updateAsset(AssetDTO asset,String username, String comment) throws AssetException;
+    AssetSE updateAsset(AssetSE asset,String username, String comment) throws AssetException;
 
     /**
      * Archives an asset.
@@ -89,7 +89,7 @@ public interface AssetService {
      * @return the archived asset
      * @throws AssetException if unsuccessful
      */
-    AssetDTO archiveAsset(AssetDTO asset, String username, String comment) throws AssetException;
+    AssetSE archiveAsset(AssetSE asset, String username, String comment) throws AssetException;
 
     /**
      * Create asset if not exists, otherwise update asset
@@ -98,7 +98,7 @@ public interface AssetService {
      * @return
      * @throws AssetException
      */
-    AssetDTO upsertAsset(AssetDTO asset, String username) throws AssetException;
+    AssetSE upsertAsset(AssetSE asset, String username) throws AssetException;
 
     /**
      *
@@ -109,21 +109,13 @@ public interface AssetService {
      * @return
      * @throws AssetException
      */
-    List<AssetDTO> getAssetListByAssetGroups(List<AssetGroupDTO> groups) throws AssetException;
+    List<AssetSE> getAssetListByAssetGroups(List<AssetGroupDTO> groups) throws AssetException;
 
     //AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetException;
     Object getAssetListGroupByFlagState(List assetIds) throws AssetException;
 
     NoteActivityCode getNoteActivityCodes();
 
-
-    /**
-     *
-     *
-     * @param assetId
-     * @return number of entities affected
-     * @throws AssetException
-     */
     void deleteAsset(AssetId assetId) throws AssetException;
 
 
