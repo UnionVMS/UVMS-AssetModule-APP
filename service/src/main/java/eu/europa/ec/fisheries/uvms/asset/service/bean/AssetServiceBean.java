@@ -12,6 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
+import eu.europa.ec.fisheries.uvms.asset.enums.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.asset.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.ModuleQueue;
@@ -245,13 +246,13 @@ public class AssetServiceBean implements AssetService {
 
         try {
             AssetSE assetDB = getAssetById((asset.getId()));
-            if (assetDB.getId().equals(asset.getId())) {
+            if(assetDB != null){
+                asset.setUpdatedBy(username);
                 AssetSE updated = assetSEDao.updateAsset(asset);
                 return updated;
             } else {
-                throw new AssetException("Not equal Ids Nothing updated");
+                throw new AssetException("Asset with that id does not exist");
             }
-
         } catch (AssetException e) {
             LOG.error("[ Error when updating asset. ] {}", e.getMessage());
             throw new AssetModelException(e.getMessage(), e);
@@ -312,7 +313,6 @@ public class AssetServiceBean implements AssetService {
 
 
     public AssetSE getAssetById(AssetId assetId) throws AssetException {
-        AssetSE asset = null;
 
         if (assetId == null) {
             throw new InputArgumentException("AssetId object is null");

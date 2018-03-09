@@ -122,9 +122,9 @@ public class AssetSE implements Serializable{
     @Column(name="source")
     private CarrierSourceEnum source;
 
-    /**********************************
-     *   FROM HISTORY                 *
-     **********************************/
+    ///////////////////////////////////
+    //   FROM HISTORY                //
+    ///////////////////////////////////
 
     @Size(max = 12)
     @Column(unique = true, name="cfr")
@@ -278,9 +278,9 @@ public class AssetSE implements Serializable{
     private String updatedBy;
 
 
-    /**********************************
-     *   FROM ProdOrg                 *
-     **********************************/
+     ///////////////////////////////////
+     //   FROM ProdOrg                //
+     ///////////////////////////////////
 
     @Column(name="prodorgcode")
     private String prodOrgCode;
