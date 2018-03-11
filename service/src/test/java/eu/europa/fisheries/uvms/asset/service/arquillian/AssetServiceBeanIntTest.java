@@ -1,8 +1,12 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
+import eu.europa.ec.fisheries.uvms.asset.enums.AssetIdTypeEnum;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -27,20 +31,24 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void crtAssert() {
 
-        /*
+
 
         // this test is to ensure that create actually works
-        AssetDTO createdAsset = null;
+        AssetSE createdAsset = null;
         try {
             // create an Asset
-            createdAsset = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID), "test");
+
+            AssetSE asset = AssetHelper.createBiggerAsset();
+
+
+            createdAsset = assetService.createAsset(asset, "test");
             em.flush();
             Assert.assertTrue(createdAsset != null);
         } catch (AssetException e) {
             Assert.fail();
         }
 
-        */
+
     }
 
 
