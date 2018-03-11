@@ -3,6 +3,7 @@ package eu.europa.fisheries.uvms.asset.service.arquillian;
 import eu.europa.ec.fisheries.uvms.asset.enums.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -29,7 +30,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void crtAssert() {
+    public void createAssert() {
 
         // this test is to ensure that create actually works
         AssetSE createdAsset = null;
@@ -46,7 +47,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void updAsset() throws AssetException {
+    public void updateAsset() throws AssetException {
 
         // create an asset
         AssetSE asset = AssetHelper.createBiggerAsset();
@@ -62,6 +63,28 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Assert.assertEquals(createdAsset.getName(), fetchedAsset.getName());
     }
 
+    @Test
+    @OperateOnDeployment("normal")
+    public void deleteAsset() throws AssetException {
+
+        // create an asset
+        AssetSE asset = AssetHelper.createBiggerAsset();
+        AssetSE createdAsset = assetService.createAsset(asset, "test");
+        em.flush();
+
+        // delete  it and flush
+        AssetId assetId = new AssetId();
+        assetId.setType(AssetIdTypeEnum.INTERNAL_ID);
+        assetId.setValue(createdAsset.getId().toString());
+        assetId.setGuid(createdAsset.getId());
+
+        assetService.deleteAsset(assetId);
+        em.flush();
+
+        // fetch it and it should be null
+        AssetSE fetchedAsset = assetService.getAssetById(createdAsset.getId());
+        Assert.assertEquals(fetchedAsset, null);
+    }
 
 
 
