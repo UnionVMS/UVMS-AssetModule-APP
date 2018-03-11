@@ -17,8 +17,10 @@ import java.util.UUID;
 import javax.ejb.Local;
 
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.types.*;
+import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetListResponsePaginated;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
 
@@ -62,7 +64,8 @@ public interface AssetService {
      */
     AssetSE getAssetById(AssetId assetId, AssetDataSourceQueue source) throws AssetException;
 
-    /** Get Asset By internal Id
+    /**
+     * Get Asset By internal Id
      *
      * @param id
      * @return
@@ -79,12 +82,12 @@ public interface AssetService {
      * @return
      * @throws AssetException
      */
-    AssetSE updateAsset(AssetSE asset,String username, String comment) throws AssetException;
+    AssetSE updateAsset(AssetSE asset, String username, String comment) throws AssetException;
 
     /**
      * Archives an asset.
-     * 
-     * @param asset an asset
+     *
+     * @param asset   an asset
      * @param comment a comment to the archiving
      * @return the archived asset
      * @throws AssetException if unsuccessful
@@ -101,7 +104,6 @@ public interface AssetService {
     AssetSE upsertAsset(AssetSE asset, String username) throws AssetException;
 
     /**
-     *
      * Returns a list of assets based on the searh criterias in the
      * assetgroups
      *
@@ -119,4 +121,26 @@ public interface AssetService {
     void deleteAsset(AssetId assetId) throws AssetException;
 
 
+    /**
+     * return all revisions for an asset
+     *
+     * @param asset
+     * @return
+     * @throws AssetDaoException
+     */
+    List<AssetSE> getRevisionsForAsset(AssetSE asset) throws AssetDaoException;
+
+
+    /**
+     * return asset for specific historyId
+     *
+     * @param asset
+     * @param historyId
+     * @return
+     * @throws AssetDaoException
+     */
+    AssetSE getAssetRevisionForRevisionId(AssetSE asset, UUID historyId) throws AssetDaoException;
+
+
 }
+

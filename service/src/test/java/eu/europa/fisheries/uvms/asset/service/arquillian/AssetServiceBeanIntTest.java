@@ -12,7 +12,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
+import javax.transaction.*;
+import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * Created by thofan on 2017-06-01.
@@ -38,7 +41,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
             // create an Asset
             AssetSE asset = AssetHelper.createBiggerAsset();
             createdAsset = assetService.createAsset(asset, "test");
-            em.flush();
+            commit();
             Assert.assertTrue(createdAsset != null);
         } catch (AssetException e) {
             Assert.fail();
@@ -52,11 +55,11 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         // create an asset
         AssetSE asset = AssetHelper.createBiggerAsset();
         AssetSE createdAsset = assetService.createAsset(asset, "test");
-        em.flush();
+        commit();
         // change it and store it
         createdAsset.setName("ÄNDRAD");
         AssetSE changedAsset = assetService.updateAsset(createdAsset, "CHG_USER", "En changekommentar");
-        em.flush();
+        commit();
 
         // fetch it and check name
         AssetSE fetchedAsset = assetService.getAssetById(createdAsset.getId());
@@ -70,7 +73,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         // create an asset
         AssetSE asset = AssetHelper.createBiggerAsset();
         AssetSE createdAsset = assetService.createAsset(asset, "test");
-        em.flush();
+        commit();
 
         // delete  it and flush
         AssetId assetId = new AssetId();
@@ -79,7 +82,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         assetId.setGuid(createdAsset.getId());
 
         assetService.deleteAsset(assetId);
-        em.flush();
+        commit();
 
         // fetch it and it should be null
         AssetSE fetchedAsset = assetService.getAssetById(createdAsset.getId());
@@ -88,103 +91,62 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
 
 
-
-
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetById_INTERNAL_TYPE_GUID() {
+    public void updateAssetThreeTimesAndCheckRevisionsAndValues() throws AssetException {
 
-        /*
+        // create an asset
+        AssetSE asset = AssetHelper.createBiggerAsset();
+        AssetSE createdAsset = assetService.createAsset(asset, "test");
+        commit();
+        // change it and store it
+        createdAsset.setName("ÄNDRAD_1");
+        AssetSE changedAsset1 = assetService.updateAsset(createdAsset, "CHG_USER_1", "En changekommentar");
+        commit();
+        UUID historyId1 = changedAsset1.getHistoryId();
 
-        AssetDTO createdAsset = null;
-        AssetDTO fetched_asset = null;
-        try {
-            // create an Asset
-            createdAsset = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID), "test");
-            em.flush();
-            // fetch it and compare guid to verify
-            fetched_asset = assetService.getAssetById(createdAsset.getAssetId(), AssetDataSourceQueue.INTERNAL);
-// @formatter:off
-            boolean ok = fetched_asset != null &&
-                    fetched_asset.getAssetId() != null &&
-                    fetched_asset.getAssetId().getGuid() != null;
-// @formatter:on
-            if (ok) {
-                Assert.assertTrue(createdAsset.getAssetId().getGuid().equals(fetched_asset.getAssetId().getGuid()));
-            } else {
-                Assert.fail();
-            }
-        } catch (AssetException e) {
-            Assert.fail();
-        }
+        // change it and store it
+        createdAsset.setName("ÄNDRAD_2");
+        AssetSE changedAsset2 = assetService.updateAsset(createdAsset, "CHG_USER_2", "En changekommentar");
+        commit();
+        UUID historyId2 = changedAsset2.getHistoryId();
 
-        */
-    }
+        // change it and store it
+        createdAsset.setName("ÄNDRAD_3");
+        AssetSE changedAsset3 = assetService.updateAsset(createdAsset, "CHG_USER_3", "En changekommentar");
+        commit();
+        UUID historyId3 = changedAsset3.getHistoryId();
 
-    @Test
-    @OperateOnDeployment("normal")
-    public void getAssetById_INTERNAL_TYPE_INTERNAL_ID() {
-
-/*
-
-        try {
-            // create an Asset
-            AssetDTO createdAsset = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.INTERNAL_ID), "test");
-            em.flush();
-            // fetch it and compare guid to verify
-            AssetDTO fetched_asset = assetService.getAssetById(createdAsset.getAssetId(), AssetDataSourceQueue.INTERNAL);
-// @formatter:off
-            boolean ok = fetched_asset != null &&
-                    fetched_asset.getAssetId() != null &&
-                    fetched_asset.getAssetId().getGuid() != null;
-// @formatter:on
-            if (ok) {
-                Assert.assertTrue(createdAsset.getAssetId().getGuid().equals(fetched_asset.getAssetId().getGuid()));
-            } else {
-                Assert.fail();
-            }
-        } catch (AssetException e) {
-            Assert.fail();
-        }
+        List<AssetSE> assetVersions = assetService.getRevisionsForAsset(asset);
+        Assert.assertEquals(assetVersions.size(), 4);
+        commit();
 
 
-        */
+        AssetSE  fetchedAssetAtRevision = assetService.getAssetRevisionForRevisionId(changedAsset2, historyId2);
+
+        Assert.assertEquals(historyId2, fetchedAssetAtRevision.getHistoryId());
+
+
+
+
+
 
     }
 
 
-    @Test
-    @OperateOnDeployment("normal")
-    public void upsert_createVersion() {
 
-        /*
 
-        AssetDTO createdAsset = null;
-        AssetDTO fetched_asset = null;
+
+
+    private void commit() throws AssetException {
+
         try {
-            // create an Asset
-            createdAsset = assetService.upsertAsset(AssetHelper.helper_createAsset(AssetIdType.GUID), "test");
-            em.flush();
-            // fetch it and compare guid to verify
-            fetched_asset = assetService.getAssetById(createdAsset.getAssetId(), AssetDataSourceQueue.INTERNAL);
-// @formatter:off
-            boolean ok = fetched_asset != null &&
-                    fetched_asset.getAssetId() != null &&
-                    fetched_asset.getAssetId().getGuid() != null;
-// @formatter:on
-            if (ok) {
-                Assert.assertTrue(createdAsset.getAssetId().getGuid().equals(fetched_asset.getAssetId().getGuid()));
-            } else {
-                Assert.fail();
-            }
-        } catch (AssetException e) {
-            Assert.fail();
+            userTransaction.commit();
+            userTransaction.begin();
+        } catch (RollbackException |HeuristicMixedException | HeuristicRollbackException |SystemException |  NotSupportedException e) {
+            throw new AssetException(e);
         }
-
-        */
     }
-
-
 
 
 

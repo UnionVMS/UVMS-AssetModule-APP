@@ -9,6 +9,7 @@ import eu.europa.ec.fisheries.uvms.mapper.SearchFieldType;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.query.AuditQueryCreator;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -363,5 +364,25 @@ public class AssetSEDao {
     }
 
 
+    // TODO if when the framwork supports querying on specific columns in nnn_AUD table, use that unstead
+    public AssetSE getAssetRevisionForHistoryId(AssetSE asset, UUID historyId) throws AssetDaoException {
 
+        try {
+            AuditReader auditReader = AuditReaderFactory.get(em);
+            List<Number> revisionNumbers = auditReader.getRevisions(AssetSE.class, asset.getId());
+            for (Number rev : revisionNumbers) {
+                AssetSE audited = auditReader.find(AssetSE.class, asset.getId(), rev);
+                if(audited.getHistoryId().equals(historyId)){
+                    return audited;
+                }
+            }
+            return null;
+        }catch(Exception e){
+            throw new AssetDaoException("[ get all asset ] " + e.getMessage(), e);
+        }
+
+
+
+
+    }
 }

@@ -20,6 +20,7 @@ import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
 import eu.europa.ec.fisheries.uvms.asset.message.mapper.AuditModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
@@ -410,6 +411,28 @@ public class AssetServiceBean implements AssetService {
             // get an object based on what type of id it has
             assetEntity = getAssetById(assetId);
             assetSEDao.deleteAsset(assetEntity);
+        } catch (NoAssetEntityFoundException e) {
+            LOG.warn(e.toString(), e);
+            throw e;
+        }
+    }
+
+    @Override
+    public List<AssetSE> getRevisionsForAsset(AssetSE asset) throws AssetDaoException {
+        try {
+            List<AssetSE> ret = assetSEDao.getRevisionsForAsset(asset);
+            return ret;
+        } catch (NoAssetEntityFoundException e) {
+            LOG.warn(e.toString(), e);
+            throw e;
+        }
+    }
+
+    @Override
+    public AssetSE getAssetRevisionForRevisionId(AssetSE asset, UUID historyId) throws AssetDaoException {
+        try {
+            AssetSE ret = assetSEDao.getAssetRevisionForHistoryId(asset, historyId);
+            return ret;
         } catch (NoAssetEntityFoundException e) {
             LOG.warn(e.toString(), e);
             throw e;
