@@ -75,6 +75,11 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         AssetSE createdAsset = assetService.createAsset(asset, "test");
         commit();
 
+        // change it to get an audit
+        createdAsset.setName("ÄNDRAD_1");
+        AssetSE changedAsset1 = assetService.updateAsset(createdAsset, "CHG_USER_1", "En changekommentar");
+        commit();
+
         // delete  it and flush
         AssetId assetId = new AssetId();
         assetId.setType(AssetIdTypeEnum.INTERNAL_ID);
