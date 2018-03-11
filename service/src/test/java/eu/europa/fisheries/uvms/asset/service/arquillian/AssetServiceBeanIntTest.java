@@ -31,25 +31,40 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void crtAssert() {
 
-
-
         // this test is to ensure that create actually works
         AssetSE createdAsset = null;
         try {
             // create an Asset
-
             AssetSE asset = AssetHelper.createBiggerAsset();
-
-
             createdAsset = assetService.createAsset(asset, "test");
             em.flush();
             Assert.assertTrue(createdAsset != null);
         } catch (AssetException e) {
             Assert.fail();
         }
-
-
     }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void updAsset() throws AssetException {
+
+        // create an asset
+        AssetSE asset = AssetHelper.createBiggerAsset();
+        AssetSE createdAsset = assetService.createAsset(asset, "test");
+        em.flush();
+        // change it and store it
+        createdAsset.setName("ÄNDRAD");
+        AssetSE changedAsset = assetService.updateAsset(createdAsset, "CHG_USER", "En changekommentar");
+        em.flush();
+
+        // fetch it and check name
+        AssetSE fetchedAsset = assetService.getAssetById(createdAsset.getId());
+        Assert.assertEquals(createdAsset.getName(), fetchedAsset.getName());
+    }
+
+
+
+
 
 
     @Test
