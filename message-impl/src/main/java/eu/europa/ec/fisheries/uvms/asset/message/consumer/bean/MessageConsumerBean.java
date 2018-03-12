@@ -30,6 +30,7 @@ import eu.europa.ec.fisheries.uvms.asset.service.bean.*;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetFault;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
+import eu.europa.ec.fisheries.uvms.entity.model.FishingGearEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,24 +54,8 @@ public class MessageConsumerBean implements MessageListener {
 
     private static ObjectMapper MAPPER = new ObjectMapper();
 
-
-
-
-
     @EJB
     private GetAssetEventBean getAssetEventBean;
-
-    @EJB
-    private GetAssetListEventBean getAssetListEventBean;
-
-    @EJB
-    private GetAssetGroupEventBean getAssetGroupEventBean;
-
-    @EJB
-    private GetAssetListByAssetGroupEventBean getAssetListByAssetGroupEventBean;
-
-    @EJB
-    private GetAssetGroupListByAssetGuidEventBean getAssetGroupListByAssetGuidEventBean;
 
     @EJB
     private UpsertAssetMessageEventBean upsertAssetMessageEventBean;
@@ -114,11 +99,11 @@ public class MessageConsumerBean implements MessageListener {
 
                 case "UPSERT_ASSET":
                     AssetSE asset = MAPPER.readValue(json, AssetSE.class);
-                    //upsertAssetMessageEventBean.upsertAsset(asset);
+                    upsertAssetMessageEventBean.upsertAsset(asset);
                     break;
                 case "FISHING_GEAR_UPSERT":
-                    //FishingGear fishingGear =  MAPPER.readValue(json, FishingGear.class);
-                    //upsertFishingGearsMessageEventBean.upsertFishingGears(fishingGear, "TEST");
+                    FishingGearEntity fishingGear =  MAPPER.readValue(json, FishingGearEntity.class);
+                    upsertFishingGearsMessageEventBean.upsertFishingGears(fishingGear, "TEST");
                     break;
 
                 default:
