@@ -11,11 +11,13 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 import javax.ejb.Local;
 
+import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
@@ -126,9 +128,9 @@ public interface AssetService {
      *
      * @param asset
      * @return
-     * @throws AssetDaoException
+     * @throws AssetException
      */
-    List<AssetSE> getRevisionsForAsset(AssetSE asset) throws AssetDaoException;
+    List<AssetSE> getRevisionsForAsset(AssetSE asset) throws AssetException;
 
 
     /**
@@ -137,10 +139,19 @@ public interface AssetService {
      * @param asset
      * @param historyId
      * @return
-     * @throws AssetDaoException
+     * @throws AssetException
      */
-    AssetSE getAssetRevisionForRevisionId(AssetSE asset, UUID historyId) throws AssetDaoException;
+    AssetSE getAssetRevisionForRevisionId(AssetSE asset, UUID historyId) throws AssetException;
 
 
+    /** return asset as it was specidied date
+     *
+     * @param idType
+     * @param idValue
+     * @param date
+     * @return
+     * @throws AssetException
+     */
+    AssetSE getAssetFromAssetIdAtDate(String idType, String idValue, LocalDateTime date) throws AssetException;
 }
 

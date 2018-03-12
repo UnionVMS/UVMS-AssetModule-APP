@@ -12,6 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
+import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.asset.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.ModuleQueue;
@@ -23,10 +24,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetGroupDTO;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.uvms.asset.types.NoteActivityCode;
+import eu.europa.ec.fisheries.uvms.asset.types.*;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
 import eu.europa.ec.fisheries.uvms.bean.ConfigServiceBean;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
@@ -42,7 +40,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -348,6 +348,43 @@ public class AssetServiceBean implements AssetService {
         }
     }
 
+    @Override
+    public AssetSE getAssetFromAssetIdAtDate(String idType, String idValue, LocalDateTime date) throws AssetException {
+
+        if (idType == null) {
+            throw new InputArgumentException("Type is null");
+        }
+        AssetIdTypeEnum assetType = AssetIdTypeEnum.fromValue(idType);
+        if (assetType == null) {
+            throw new InputArgumentException("Not a valid type: " + idType);
+        }
+        if (idValue == null) {
+            throw new InputArgumentException("Value is null");
+        }
+        if (date == null) {
+            throw new InputArgumentException("Date is null");
+        }
+        if(assetType == AssetIdTypeEnum.GUID || assetType == AssetIdTypeEnum.INTERNAL_ID){
+            try{
+                UUID.fromString(idValue);
+            }
+            catch(IllegalArgumentException e){
+                throw new InputArgumentException("Not a valid UUID");
+            }
+        }
+
+		try {
+			AssetId assetId = new AssetId();
+			assetId.setType(assetType);
+			assetId.setValue(idValue);
+			assetId.setGuid(idValue);
+			AssetSE asset = assetSEDao.getAssetFromAssetIdAtDate(assetId, date);
+			return asset;
+		} catch (AssetDaoException e) {
+			throw new AssetServiceException("Could not get asset by id and date", e);
+		}
+    }
+
 
     /**
      * @param id
@@ -418,7 +455,7 @@ public class AssetServiceBean implements AssetService {
     }
 
     @Override
-    public List<AssetSE> getRevisionsForAsset(AssetSE asset) throws AssetDaoException {
+    public List<AssetSE> getRevisionsForAsset(AssetSE asset) throws AssetException {
         try {
             List<AssetSE> ret = assetSEDao.getRevisionsForAsset(asset);
             return ret;
@@ -429,7 +466,7 @@ public class AssetServiceBean implements AssetService {
     }
 
     @Override
-    public AssetSE getAssetRevisionForRevisionId(AssetSE asset, UUID historyId) throws AssetDaoException {
+    public AssetSE getAssetRevisionForRevisionId(AssetSE asset, UUID historyId) throws AssetException {
         try {
             AssetSE ret = assetSEDao.getAssetRevisionForHistoryId(asset, historyId);
             return ret;
@@ -439,7 +476,7 @@ public class AssetServiceBean implements AssetService {
         }
     }
 
-    private void assertAssetDoesNotExist(AssetSE asset) throws AssetModelException {
+    private void assertAssetDoesNotExist(AssetSE asset) throws AssetException {
 
 
         List<String> messages = new ArrayList<>();
