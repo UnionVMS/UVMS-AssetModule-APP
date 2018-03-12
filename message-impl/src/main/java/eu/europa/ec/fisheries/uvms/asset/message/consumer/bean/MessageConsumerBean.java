@@ -92,18 +92,23 @@ public class MessageConsumerBean implements MessageListener {
 
             switch (command) {
 
-                case "GET_ASSET":
-                    AssetId assetId = MAPPER.readValue(json, AssetId.class);
-                    getAssetEventBean.getAsset(textMessage, assetId);
-                    break;
+                //case "GET_ASSET":
+                //    AssetId assetId = MAPPER.readValue(json, AssetId.class);
+                //    getAssetEventBean.getAsset(textMessage, assetId);
+                //    break;
 
                 case "UPSERT_ASSET":
                     AssetSE asset = MAPPER.readValue(json, AssetSE.class);
                     upsertAssetMessageEventBean.upsertAsset(asset);
                     break;
+
                 case "FISHING_GEAR_UPSERT":
                     FishingGearEntity fishingGear =  MAPPER.readValue(json, FishingGearEntity.class);
                     upsertFishingGearsMessageEventBean.upsertFishingGears(fishingGear, "TEST");
+                    break;
+
+                case "PING":
+                    pingEventBean.ping(textMessage);
                     break;
 
                 default:

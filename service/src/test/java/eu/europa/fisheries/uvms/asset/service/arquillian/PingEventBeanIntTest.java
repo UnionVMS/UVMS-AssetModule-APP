@@ -42,26 +42,4 @@ public class PingEventBeanIntTest extends TransactionalTests{
         Assert.assertNotNull(pingEventBean);
     }
 
-
-    @Test
-    @OperateOnDeployment("normal")
-    public void testGetAssetListByAssetGroups() throws AssetException {
-
-
-        AssetMessageEvent assertMessageEvent = new AssetMessageEvent( null);
-        //assertMessageEvent.setUsername("TEST");
-
-        pingEventBean.ping(assertMessageEvent);
-
-
-        Assert.assertFalse(interceptorForTests.isFailed());
-        String message = interceptorForTests.getSuccessfulTestEvent().getMessage();
-
-
-        Assert.assertTrue(message.contains("pong"));
-
-    }
-
-
-
 }

@@ -12,6 +12,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import javax.transaction.*;
 import java.util.List;
 import java.util.Random;
@@ -137,10 +139,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
 
     }
-
-
-
-
 
 
     private void commit() throws AssetException {
