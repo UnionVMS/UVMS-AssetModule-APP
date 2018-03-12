@@ -26,7 +26,6 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.types.*;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
-import eu.europa.ec.fisheries.uvms.bean.ConfigServiceBean;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
 import eu.europa.ec.fisheries.uvms.dao.bean.AssetSEDao;
 import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
@@ -42,7 +41,6 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 

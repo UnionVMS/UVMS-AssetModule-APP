@@ -60,6 +60,11 @@
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms</groupId>
+            <artifactId>uvms-config</artifactId>
+            <version>${uvms.config.version}</version>
+        </dependency>
+        <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>asset-message-mock</artifactId>
             <version>${project.parent.version}</version>

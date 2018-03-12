@@ -28,7 +28,7 @@ import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.asset.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.asset.rest.mapper.ConfigMapper;
 import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
-import eu.europa.ec.fisheries.uvms.bean.ConfigServiceBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.ConfigServiceBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
