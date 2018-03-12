@@ -18,7 +18,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 import eu.europa.ec.fisheries.uvms.asset.types.AssetDTO;
-import eu.europa.ec.fisheries.uvms.asset.enums.AssetIdTypeEnum;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.asset.types.FlagStateType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

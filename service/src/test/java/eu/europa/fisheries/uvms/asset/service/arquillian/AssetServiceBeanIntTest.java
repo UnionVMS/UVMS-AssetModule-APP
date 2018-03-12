@@ -1,9 +1,9 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
-import eu.europa.ec.fisheries.uvms.asset.enums.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -84,7 +84,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         AssetId assetId = new AssetId();
         assetId.setType(AssetIdTypeEnum.INTERNAL_ID);
         assetId.setValue(createdAsset.getId().toString());
-        assetId.setGuid(createdAsset.getId());
+        assetId.setGuid(createdAsset.getId().toString());
 
         assetService.deleteAsset(assetId);
         commit();

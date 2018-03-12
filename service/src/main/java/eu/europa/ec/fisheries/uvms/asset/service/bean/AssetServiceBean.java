@@ -12,7 +12,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
-import eu.europa.ec.fisheries.uvms.asset.enums.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.asset.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.ModuleQueue;
@@ -330,7 +329,8 @@ public class AssetServiceBean implements AssetService {
             case IRCS:
                 return assetSEDao.getAssetByIrcs(assetId.getValue());
             case INTERNAL_ID:
-                return assetSEDao.getAssetById(assetId.getGuid());
+                UUID uuid = UUID.fromString(assetId.getGuid());
+                return assetSEDao.getAssetById(uuid);
             case IMO:
                 checkNumberAssetId(assetId.getValue());
                 return assetSEDao.getAssetByImo(assetId.getValue());
