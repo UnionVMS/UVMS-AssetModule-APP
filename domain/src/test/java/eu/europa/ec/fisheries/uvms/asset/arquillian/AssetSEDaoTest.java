@@ -18,22 +18,24 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import javax.inject.Inject;
-
-import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.SegmentFUP;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
+import eu.europa.ec.fisheries.uvms.constant.SearchFields;
+import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.dao.bean.AssetSEDao;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.SegmentFUP;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
+import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 
 @RunWith(Arquillian.class)
 public class AssetSEDaoTest extends TransactionalTests {
@@ -379,8 +381,191 @@ public class AssetSEDaoTest extends TransactionalTests {
 
     }
 
+    @Test
+    public void getAssetCountTest() throws Exception {
+        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset);
+        commit();
+        
+        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
+        SearchKeyValue searchKey = new SearchKeyValue();
+        searchKey.setSearchField(SearchFields.CFR);
+        searchKey.setSearchValues(Arrays.asList(asset.getCfr()));
+        searchKeyValues.add(searchKey);
+        Long count = assetDao.getAssetCount(searchKeyValues, false);
+        assertEquals(new Long(1), count);
+    }
 
+    @Test
+    public void getAssetCountTwoRevisionsTest() throws Exception {
+        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset);
+        commit();
 
+        asset.setName("NewName");
+        assetDao.updateAsset(asset);
+        commit();
+        
+        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
+        SearchKeyValue searchKey = new SearchKeyValue();
+        searchKey.setSearchField(SearchFields.CFR);
+        searchKey.setSearchValues(Arrays.asList(asset.getCfr()));
+        searchKeyValues.add(searchKey);
+        Long count = assetDao.getAssetCount(searchKeyValues, false);
+        assertEquals(new Long(1), count);
+    }
+    
+    @Test
+    public void getAssetCountTwoRevisionsAndTwoAssetsTest() throws Exception {
+        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset);
+        commit();
+
+        asset.setName("NewName");
+        assetDao.updateAsset(asset);
+        commit();
+        
+        assetDao.createAsset(AssetTestsHelper.createBasicAsset());
+        
+        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
+        SearchKeyValue searchKey = new SearchKeyValue();
+        searchKey.setSearchField(SearchFields.CFR);
+        searchKey.setSearchValues(Arrays.asList(asset.getCfr()));
+        searchKeyValues.add(searchKey);
+        Long count = assetDao.getAssetCount(searchKeyValues, false);
+        assertEquals(new Long(1), count);
+    }
+    
+    @Test
+    public void getAssetCountShouldNotFindAssetTest() throws Exception {
+        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset);
+        commit();
+        
+        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
+        SearchKeyValue searchKey = new SearchKeyValue();
+        searchKey.setSearchField(SearchFields.CFR);
+        searchKey.setSearchValues(Arrays.asList("TESTCFR"));
+        searchKeyValues.add(searchKey);
+        Long count = assetDao.getAssetCount(searchKeyValues, false);
+        assertEquals(new Long(0), count);
+    }
+    
+    @Test
+    public void getAssetListSearchPaginatedTest() throws Exception {
+        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset);
+        commit();
+        
+        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
+        SearchKeyValue searchKey = new SearchKeyValue();
+        searchKey.setSearchField(SearchFields.CFR);
+        searchKey.setSearchValues(Arrays.asList(asset.getCfr()));
+        searchKeyValues.add(searchKey);
+        List<AssetSE> assets = assetDao.getAssetListSearchPaginated(0, 10, searchKeyValues, true);
+        
+        assertThat(assets.size(), is(1));
+        assertThat(assets.get(0).getId(), is(asset.getId()));
+    }
+    
+    @Test
+    public void getAssetListSearchPaginatedTestTwoAssest() throws Exception {
+        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset);
+        commit();
+        
+        AssetSE asset2 = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset2);
+        commit();
+        
+        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
+        SearchKeyValue searchKey = new SearchKeyValue();
+        searchKey.setSearchField(SearchFields.CFR);
+        searchKey.setSearchValues(Arrays.asList(asset.getCfr(), asset2.getCfr()));
+        searchKeyValues.add(searchKey);
+        List<AssetSE> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
+        
+        assertEquals(2, assets.size());
+        assertThat(assets.get(0).getId(), is(asset.getId()));
+        assertThat(assets.get(1).getId(), is(asset2.getId()));
+    }
+    
+    @Test
+    public void getAssetListSearchPaginatedTestTwoAssestNotDynamic() throws Exception {
+        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset);
+        commit();
+        
+        AssetSE asset2 = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset2);
+        commit();
+        
+        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
+        SearchKeyValue searchKey = new SearchKeyValue();
+        searchKey.setSearchField(SearchFields.CFR);
+        searchKey.setSearchValues(Arrays.asList(asset.getCfr()));
+        searchKeyValues.add(searchKey);
+        SearchKeyValue searchKey2 = new SearchKeyValue();
+        searchKey2.setSearchField(SearchFields.IRCS);
+        searchKey2.setSearchValues(Arrays.asList(asset2.getIrcs()));
+        searchKeyValues.add(searchKey2);
+        List<AssetSE> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, false);
+        
+        assertEquals(2, assets.size());
+        assertThat(assets.get(0).getId(), is(asset.getId()));
+        assertThat(assets.get(1).getId(), is(asset2.getId()));
+    }
+    
+    @Test
+    public void getAssetListSearchPaginatedTestTwoAssestPageSizeOne() throws Exception {
+        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset);
+        commit();
+        
+        AssetSE asset2 = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset2);
+        commit();
+        
+        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
+        SearchKeyValue searchKey = new SearchKeyValue();
+        searchKey.setSearchField(SearchFields.CFR);
+        searchKey.setSearchValues(Arrays.asList(asset.getCfr()));
+        searchKeyValues.add(searchKey);
+        SearchKeyValue searchKey2 = new SearchKeyValue();
+        searchKey2.setSearchField(SearchFields.IRCS);
+        searchKey2.setSearchValues(Arrays.asList(asset2.getIrcs()));
+        searchKeyValues.add(searchKey2);
+        List<AssetSE> assets = assetDao.getAssetListSearchPaginated(1, 1, searchKeyValues, false);
+        
+        assertEquals(1, assets.size());
+        assertThat(assets.get(0).getId(), is(asset.getId()));
+        
+        assets = assetDao.getAssetListSearchPaginated(2, 1, searchKeyValues, false);
+        
+        assertEquals(1, assets.size());
+        assertThat(assets.get(0).getId(), is(asset2.getId()));
+    }
+
+    @Test
+    public void getAssetListSearchPaginatedTestFlagState() throws Exception {
+        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset);
+        commit();
+        
+        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
+        SearchKeyValue searchKey = new SearchKeyValue();
+        searchKey.setSearchField(SearchFields.FLAG_STATE);
+        searchKey.setSearchValues(Arrays.asList(asset.getFlagStateCode()));
+        searchKeyValues.add(searchKey);
+        SearchKeyValue searchKey2 = new SearchKeyValue();
+        searchKey2.setSearchField(SearchFields.EXTERNAL_MARKING);
+        searchKey2.setSearchValues(Arrays.asList(asset.getExternalMarking()));
+        searchKeyValues.add(searchKey2);
+        List<AssetSE> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
+        
+        assertEquals(1, assets.size());
+        assertThat(assets.get(0).getId(), is(asset.getId()));
+    }
 
     private void commit() throws Exception {
         userTransaction.commit();

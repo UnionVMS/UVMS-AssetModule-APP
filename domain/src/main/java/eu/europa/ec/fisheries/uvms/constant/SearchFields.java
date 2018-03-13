@@ -13,51 +13,39 @@ package eu.europa.ec.fisheries.uvms.constant;
 
 import eu.europa.ec.fisheries.uvms.mapper.SearchFieldType;
 
-
-/**
- **/
 public enum SearchFields {
 
-    FLAG_STATE("countryOfRegistration", SearchTables.ASSET_HIST, "flagState"),
-    EXTERNAL_MARKING("externalMarking", SearchTables.ASSET_HIST, "extMarking"),
-    NAME("name", SearchTables.ASSET_HIST, "name"),
-    IRCS("ircs", SearchTables.ASSET, "ircs"),
-    CFR("cfr", SearchTables.ASSET, "cfr"),
-    MMSI("mmsi", SearchTables.ASSET, "mmsi", SearchFieldType.NUMBER),
-    IMO("imo", SearchTables.ASSET, "imo", SearchFieldType.NUMBER),
-    HOMEPORT("portOfRegistration", SearchTables.ASSET_HIST, "homeport"),
-    LICENSE("licenceType", SearchTables.ASSET_HIST, "license"),
-    GUID("guid", SearchTables.ASSET, "guid"),
-    HIST_GUID("guid", SearchTables.ASSET_HIST, "histGuid"),
-    GEAR_TYPE("gearFishingType", SearchTables.ASSET_HIST, "gearFishingType", SearchFieldType.NUMBER),
-    MAX_LENGTH("lengthOverAll", SearchTables.ASSET_HIST, "maxLength", SearchFieldType.MAX_DECIMAL),
-    MIN_LENGTH("lengthOverAll", SearchTables.ASSET_HIST, "minLength", SearchFieldType.MIN_DECIMAL),
-    MAX_POWER("powerOfMainEngine", SearchTables.ASSET_HIST, "maxPower", SearchFieldType.MAX_DECIMAL),
-    MIN_POWER("powerOfMainEngine", SearchTables.ASSET_HIST, "minPower", SearchFieldType.MIN_DECIMAL),
-    PRODUCER_NAME("producerName", SearchTables.ASSET_HIST, "producerName"),
+    FLAG_STATE("flagStateCode"),
+    EXTERNAL_MARKING("externalMarking"),
+    NAME("name"),
+    IRCS("ircs"),
+    CFR("cfr"),
+    MMSI("mmsi", SearchFieldType.NUMBER),
+    IMO("imo", SearchFieldType.NUMBER),
+    ICCAT("iccat"),
+    UVI("uvi"),
+    GFCM("gfcm"),
+    HOMEPORT("portOfRegistration"),
+    LICENSE("licenceType"),
+    GUID("guid"),
+    HIST_GUID("guid"),
+    GEAR_TYPE("gearFishingType", SearchFieldType.NUMBER),
+    MAX_LENGTH("lengthOverAll", SearchFieldType.MAX_DECIMAL),
+    MIN_LENGTH("lengthOverAll", SearchFieldType.MIN_DECIMAL),
+    MAX_POWER("powerOfMainEngine", SearchFieldType.MAX_DECIMAL),
+    MIN_POWER("powerOfMainEngine", SearchFieldType.MIN_DECIMAL),
+    PRODUCER_NAME("producerName");
 
-    // maybe in history instead history should be renamed to version
-    ICCAT("iccat", SearchTables.ASSET, "iccat"),
-    UVI("uvi", SearchTables.ASSET, "uvi"),
-    GFCM("gfcm", SearchTables.ASSET, "gfcm");
-
-
-    private final String fieldName;
-    private final SearchTables searchTables;
-    private String valueName;
+    private String fieldName;
     private SearchFieldType fieldType;
     
-    private SearchFields(String fieldName, SearchTables searchTables, String valueName) {
+    private SearchFields(String fieldName) {
         this.fieldName = fieldName;
-        this.searchTables = searchTables;
-        this.valueName = valueName;
         this.fieldType = SearchFieldType.LIST;
     }
 
-    private SearchFields(String fieldName, SearchTables searchTables, String valueName, SearchFieldType fieldType) {
+    private SearchFields(String fieldName, SearchFieldType fieldType) {
         this.fieldName = fieldName;
-        this.searchTables = searchTables;
-        this.valueName = valueName;
         this.fieldType = fieldType;
     }
     
@@ -65,15 +53,16 @@ public enum SearchFields {
         return fieldName;
     }
 
+    public SearchFieldType getFieldType() {
+    	return fieldType;
+    }
+    
+    // TODO for compilation, remove these
     public SearchTables getSearchTable() {
-        return searchTables;
+        return null;
     }
     
     public String getValueName() {
-		return valueName;
-	}
-	
-    public SearchFieldType getFieldType() {
-    	return fieldType;
+        return null;
     }
 }

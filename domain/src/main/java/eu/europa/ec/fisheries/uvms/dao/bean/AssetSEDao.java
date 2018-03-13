@@ -1,21 +1,5 @@
 package eu.europa.ec.fisheries.uvms.dao.bean;
 
-import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
-import eu.europa.ec.fisheries.uvms.asset.enums.AssetIdTypeEnum;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
-import eu.europa.ec.fisheries.uvms.entity.model.NotesActivityCode;
-import eu.europa.ec.fisheries.uvms.mapper.SearchFieldType;
-import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
-import org.hibernate.envers.AuditReader;
-import org.hibernate.envers.AuditReaderFactory;
-import org.hibernate.envers.query.AuditQueryCreator;
-
-import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -24,6 +8,26 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import org.hibernate.envers.AuditReader;
+import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.query.AuditEntity;
+import org.hibernate.envers.query.AuditQuery;
+import org.hibernate.envers.query.criteria.AuditCriterion;
+import org.hibernate.envers.query.criteria.AuditDisjunction;
+import org.hibernate.envers.query.criteria.ExtendableCriterion;
+import eu.europa.ec.fisheries.uvms.asset.enums.AssetIdTypeEnum;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
+import eu.europa.ec.fisheries.uvms.constant.SearchFields;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
+import eu.europa.ec.fisheries.uvms.entity.model.NotesActivityCode;
+import eu.europa.ec.fisheries.uvms.mapper.SearchFieldType;
+import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 
 
 @Stateless
@@ -189,8 +193,8 @@ public class AssetSEDao {
         return false;
     }
 
-
-    private <T> TypedQuery<T>  createQuery(String theSQL, List<SearchKeyValue> searchFields, Class<T> resultClass){
+/*
+    private <T> TypedQuery<T> createQuery(String theSQL, List<SearchKeyValue> searchFields, Class<T> resultClass){
 
         TypedQuery<T> query = em.createQuery(theSQL, resultClass);
 
@@ -221,16 +225,55 @@ public class AssetSEDao {
 
         return query;
     }
+*/
+    private AuditQuery createQuery(List<SearchKeyValue> searchFields, boolean isDynamic) {
+        AuditReader auditReader = AuditReaderFactory.get(em);
+        AuditQuery query = auditReader.createQuery().forRevisionsOfEntity(AssetSE.class, true, true);
+        
+        if (!searchRevisions(searchFields)) {
+            query.add(AuditEntity.revisionNumber().maximize().computeAggregationInInstanceContext());
+        }
+
+        ExtendableCriterion operator;
+        if (isDynamic) {
+            operator = AuditEntity.conjunction();
+        } else {
+            operator = AuditEntity.disjunction();
+        }
+        
+        for (SearchKeyValue searchKeyValue : searchFields) {
+            if (useLike(searchKeyValue)) {
+                AuditDisjunction op = AuditEntity.disjunction();
+                for (String value : searchKeyValue.getSearchValues()) {
+                    op.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).like(value.replace("*", "")));
+                }
+                operator.add(op);
+            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.MIN_DECIMAL)) {
+                operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).gt(searchKeyValue.getSearchValues()));
+            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.MAX_DECIMAL)) {
+                operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).lt(searchKeyValue.getSearchValues()));
+            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.LIST) || 
+                    searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.NUMBER)) {
+                operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).in(searchKeyValue.getSearchValues()));
+            } else {
+                operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).eq(searchKeyValue.getSearchValues().get(0)));
+            }
+        }
+        query.add((AuditCriterion) operator);
+        return query;
+    }
+
+    private boolean searchRevisions(List<SearchKeyValue> searchFields) {
+        return searchFields.stream().filter(s -> s.getSearchField().equals(SearchFields.HIST_GUID)).count() > 0;
+    }
 
 
-
-    public Long getAssetCount(String countSql, List<SearchKeyValue> searchFields, Boolean isDynamic) throws AssetDaoException {
-
-        TypedQuery<Long> query = createQuery(countSql, searchFields, Long.class);
+    public Long getAssetCount(List<SearchKeyValue> searchFields, Boolean isDynamic) throws AssetDaoException {
+        AuditQuery query = createQuery(searchFields, isDynamic);
         try {
-            return query.getSingleResult();
-        }catch(Exception e){
-            throw new AssetDaoException("[ get all asset ] " + e.getMessage(), e);
+            return (Long) query.addProjection(AuditEntity.id().count()).getSingleResult();
+        } catch (Exception e) {
+            throw new AssetDaoException("Could not count Assets in query", e);
         }
 
     }
@@ -346,12 +389,8 @@ public class AssetSEDao {
     }
 
 
-    public List<AssetSE> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize, String sql, List<SearchKeyValue> searchFields, boolean isDynamic) throws AssetDaoException {
-
-
-        // TODO also add searchFields Logic
-
-        TypedQuery<AssetSE> query = em.createQuery(sql, AssetSE.class);
+    public List<AssetSE> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize, List<SearchKeyValue> searchFields, boolean isDynamic) throws AssetDaoException {
+        AuditQuery query = createQuery(searchFields, isDynamic);
         query.setFirstResult(pageSize * (pageNumber - 1));
         query.setMaxResults(pageSize);
         return query.getResultList();

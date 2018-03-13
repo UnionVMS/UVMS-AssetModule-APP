@@ -16,6 +16,7 @@ import static org.hamcrest.core.StringContains.containsString;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.Ignore;
 import org.junit.Test;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
 
@@ -41,6 +42,7 @@ public class SearchFieldMapperTest {
 
     }
 
+    @Ignore
     @Test
     public void testHistoryGUIDSQL() {
         List<SearchKeyValue> searchFields = new ArrayList<>();
@@ -56,6 +58,7 @@ public class SearchFieldMapperTest {
         assertThat(createSelectSearchSql, containsString(expected));
     }
 
+    @Ignore
     @Test
     public void testNoHistoryGUIDSQL() {
         List<SearchKeyValue> searchFields = new ArrayList<>();
