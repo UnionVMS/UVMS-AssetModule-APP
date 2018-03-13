@@ -1,9 +1,11 @@
 package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
 
+import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
 import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
+import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
@@ -42,7 +44,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
         // the list from db MUST contain our created Id:s
         Boolean ok = true;
         for (Long aCreated : createdList) {
-            if(!fetchedList.contains(aCreated)){
+            if (!fetchedList.contains(aCreated)) {
                 ok = false;
                 break;
             }
@@ -67,7 +69,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
         String user3 = UUID.randomUUID().toString();
 
         for (int i = 0; i < 3; i++) {
-           createAndStoreAssetGroupEntity(user1);
+            createAndStoreAssetGroupEntity(user1);
         }
         for (int i = 0; i < 8; i++) {
             createAndStoreAssetGroupEntity(user2);
@@ -93,7 +95,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
         String guid = createdAssetGroupEntity.getGuid();
         Assert.assertTrue(guid != null);
 
-        AssetGroupEntity fetchedAssetGroupEntity =  assetGroupDao.getAssetGroupByGuid(guid);
+        AssetGroupEntity fetchedAssetGroupEntity = assetGroupDao.getAssetGroupByGuid(guid);
         Assert.assertEquals(guid, fetchedAssetGroupEntity.getGuid());
     }
 
@@ -104,21 +106,21 @@ public class AssetGroupTestsIT extends TransactionalTests {
 
         List<String> createdList = new ArrayList<>();
         List<String> fetchedList = new ArrayList<>();
-        List<AssetGroupEntity> fetchedEntityList ;
+        List<AssetGroupEntity> fetchedEntityList;
         for (int i = 0; i < 5; i++) {
             AssetGroupEntity createdAssetGroupEntity = createAndStoreAssetGroupEntity("TEST");
             createdList.add(createdAssetGroupEntity.getGuid());
         }
 
         fetchedEntityList = assetGroupDao.getAssetGroupsByGroupGuidList(createdList);
-        for(AssetGroupEntity e : fetchedEntityList){
+        for (AssetGroupEntity e : fetchedEntityList) {
             fetchedList.add(e.getGuid());
         }
 
         // the list from db MUST contain our created GUIDS:s
         Boolean ok = true;
         for (String aCreatedGUID : createdList) {
-            if(!fetchedList.contains(aCreatedGUID)){
+            if (!fetchedList.contains(aCreatedGUID)) {
                 ok = false;
                 break;
             }
@@ -137,8 +139,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
         try {
             AssetGroupEntity fetchedGroup = assetGroupDao.getAssetGroupByGuid(uuid);
             Assert.assertTrue(fetchedGroup == null);
-        }
-        catch(AssetGroupDaoException e){
+        } catch (AssetGroupDaoException e) {
             // throws exception when no record found
             Assert.assertTrue(true);
         }
@@ -155,13 +156,9 @@ public class AssetGroupTestsIT extends TransactionalTests {
         assetGroupDao.updateAssetGroup(assetGroupEntity);
         em.flush();
 
-            AssetGroupEntity fetchedGroup = assetGroupDao.getAssetGroupByGuid(uuid);
-            Assert.assertTrue(fetchedGroup.getOwner().equalsIgnoreCase("NEW OWNER"));
+        AssetGroupEntity fetchedGroup = assetGroupDao.getAssetGroupByGuid(uuid);
+        Assert.assertTrue(fetchedGroup.getOwner().equalsIgnoreCase("NEW OWNER"));
     }
-
-
-
-
 
 
     private AssetGroupEntity createAndStoreAssetGroupEntity(String user) throws AssetGroupDaoException {
@@ -175,13 +172,44 @@ public class AssetGroupTestsIT extends TransactionalTests {
     private AssetGroupEntity createAssetGroupEntity(String user) {
         AssetGroupEntity ag = new AssetGroupEntity();
 
+        Date dt = new Date(System.currentTimeMillis());
+
         ag.setUpdatedBy("test");
-        ag.setUpdateTime(new Date(System.currentTimeMillis()));
+        ag.setUpdateTime(dt);
         ag.setArchived(false);
         ag.setName("The Name");
         ag.setOwner(user);
         ag.setDynamic(false);
         ag.setGlobal(true);
+
+        List<AssetGroupField> groupFields = createAssetGroupFields(ag,dt,user);
+        ag.setFields(groupFields);
+        return ag;
+    }
+
+
+    private  List<AssetGroupField> createAssetGroupFields(AssetGroupEntity assetGroupEntity, Date dt, String user) {
+
+        List<AssetGroupField> groupFields = new ArrayList<>();
+        int n = rnd.nextInt(15) + 1;
+        for (int i = 0; i < n; i++) {
+            String uuid = UUID.randomUUID().toString();
+            AssetGroupField field = createAssetGroupField(assetGroupEntity, ConfigSearchFieldEnum.GUID, uuid, dt, user);
+            groupFields.add(field);
+        }
+        return groupFields;
+    }
+
+
+    private AssetGroupField createAssetGroupField(AssetGroupEntity assetGroupEntity, ConfigSearchFieldEnum key, String keyFieldValue, Date dt, String user) {
+
+        AssetGroupField ag = new AssetGroupField();
+        ag.setAssetGroup(assetGroupEntity);
+        ag.setUpdatedBy(user);
+        ag.setUpdateTime(dt);
+        ag.setField(key.value());
+        ag.setValue(keyFieldValue);
+
 
         return ag;
     }
