@@ -178,7 +178,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
         ag.setUpdatedBy("test");
         ag.setUpdateTime(new Date(System.currentTimeMillis()));
         ag.setArchived(false);
-        ag.setName("Donald the Trumpier Duck");
+        ag.setName("The Name");
         ag.setOwner(user);
         ag.setDynamic(false);
         ag.setGlobal(true);

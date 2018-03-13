@@ -35,12 +35,6 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
     private static  final String GROUP_QUALIFIER_PREFIX = "Group: ";
 
-    @EJB
-    MessageProducer messageProducer;
-
-    @EJB
-    AssetQueueConsumer receiver;
-
 
     @EJB
     private AssetGroupDao assetGroupDao;
@@ -101,7 +95,11 @@ public class AssetGroupServiceBean implements AssetGroupService {
         }
 
         try {
-            AssetGroupEntity groupEntity = getAssetGroupByIdFROM_DOMAIN_MODEL(guid);
+            AssetGroupEntity groupEntity = assetGroupDao.getAssetGroupByGuid(guid);
+            if (groupEntity == null) {
+                throw new AssetGroupDaoException("No assetgroup found.");
+            }
+
             return groupEntity;
         } catch (AssetGroupDaoException e) {
             LOG.error("[ Error when getting asset group. ] guid {} exception {}",guid, e.getMessage());
@@ -117,7 +115,10 @@ public class AssetGroupServiceBean implements AssetGroupService {
         }
 
         try {
-            AssetGroupEntity groupEntity = getAssetGroupByIdFROM_DOMAIN_MODEL(assetGroup.getGuid());
+            AssetGroupEntity groupEntity = assetGroupDao.getAssetGroupByGuid(assetGroup.getGuid());
+            if (groupEntity == null) {
+                throw new AssetGroupDaoException("No assetgroup found.");
+            }
             return groupEntity;
         } catch (AssetGroupDaoException  e) {
             LOG.error("[ Error when updating asset group. ] assetGroup: {} username: {} exception: {}", assetGroup, username, e.getMessage());
@@ -150,7 +151,10 @@ public class AssetGroupServiceBean implements AssetGroupService {
         }
 
         try {
-            AssetGroupEntity groupEntity = getAssetGroupByIdFROM_DOMAIN_MODEL(guid);
+            AssetGroupEntity groupEntity = assetGroupDao.getAssetGroupByGuid(guid);
+            if (groupEntity == null) {
+                throw new AssetGroupDaoException("No assetgroup found.");
+            }
             groupEntity.setArchived(true);
             groupEntity.setUpdatedBy(username);
             groupEntity.setUpdateTime(DateUtils.getNowDateUTC());
@@ -160,18 +164,4 @@ public class AssetGroupServiceBean implements AssetGroupService {
             throw new AssetModelException(e.getMessage());
         }
     }
-
-
-    private AssetGroupEntity getAssetGroupByIdFROM_DOMAIN_MODEL(String guid) throws AssetGroupDaoException {
-        AssetGroupEntity filterGroup = assetGroupDao.getAssetGroupByGuid(guid);
-        if (filterGroup == null) {
-            throw new AssetGroupDaoException("No assetgroup found.");
-        }
-
-        return filterGroup;
-    }
-
-
-
-
 }
