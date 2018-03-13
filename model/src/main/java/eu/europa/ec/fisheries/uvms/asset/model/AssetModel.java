@@ -11,8 +11,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.model;
 
-import eu.europa.ec.fisheries.uvms.asset.types.AssetDTO;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetDTO;
 
 import java.util.List;
 import java.util.Map;

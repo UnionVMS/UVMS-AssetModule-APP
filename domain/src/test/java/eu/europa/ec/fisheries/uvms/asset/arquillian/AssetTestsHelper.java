@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import eu.europa.ec.fisheries.uvms.asset.enums.AssetIdTypeEnum;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.*;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetProdOrg;
@@ -18,7 +18,6 @@ import eu.europa.ec.fisheries.uvms.entity.model.FishingGearEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGearType;
 import eu.europa.ec.fisheries.uvms.entity.model.Notes;
 
-import static eu.europa.ec.fisheries.uvms.asset.enums.AssetIdTypeEnum.CFR;
 
 public class AssetTestsHelper {
 

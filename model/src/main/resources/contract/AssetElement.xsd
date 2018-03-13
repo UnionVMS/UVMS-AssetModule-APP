@@ -1,128 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             xmlns="types.asset.wsdl.fisheries.ec.europa.eu"
+            xmlns:e="enums.asset.fisheries.ec.europa.eu"
             targetNamespace="types.asset.wsdl.fisheries.ec.europa.eu"
             version="1.0">
 
 
-    <xsd:simpleType name="AssetDataSourceMethodEnum">
-        <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="CREATE"/>
-            <xsd:enumeration value="UPDATE"/>
-            <xsd:enumeration value="GET"/>
-            <xsd:enumeration value="LIST"/>
-            <xsd:enumeration value="UPSERT"/>
-            <xsd:enumeration value="DELETE"/>
-            <xsd:enumeration value="HISTORY_GET"/>
-            <xsd:enumeration value="HISTORY_LIST"/>
-            <xsd:enumeration value="GROUP_GET"/>
-            <xsd:enumeration value="LIST_GET_BY_GROUP"/>
-            <xsd:enumeration value="GROUP_CREATE"/>
-            <xsd:enumeration value="GROUP_UPDATE"/>
-            <xsd:enumeration value="GROUP_LIST"/>
-            <xsd:enumeration value="GROUP_DELETE"/>
-            <xsd:enumeration value="PING"/>
-            <xsd:enumeration value="CONFIG"/>
-            <xsd:enumeration value="GROUP_LIST_BY_ASSET_GUID"/>
-            <xsd:enumeration value="ASSET_LIST_GROUP_BY_FLAGSTATE"/>
-            <xsd:enumeration value="FISHING_GEAR_LIST"/>
-            <xsd:enumeration value="FISHING_GEAR_BY_ID"/>
-            <xsd:enumeration value="FISHING_GEAR_BY_EXT_ID"/>
-            <xsd:enumeration value="FISHING_GEAR_UPSERT"/>
-        </xsd:restriction>
-    </xsd:simpleType>
+    <xsd:import namespace="enums.asset.fisheries.ec.europa.eu" schemaLocation="Enums.xsd"/>
 
-    <xsd:simpleType name="AssetIdTypeEnum">
-        <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="INTERNAL_ID" />
-            <xsd:enumeration value="CFR" />
-            <xsd:enumeration value="IRCS" />
-            <xsd:enumeration value="IMO" />
-            <xsd:enumeration value="MMSI" />
-            <xsd:enumeration value="GUID" />
-            <xsd:enumeration value="ICCAT" />
-            <xsd:enumeration value="UVI" />
-            <xsd:enumeration value="GFCM" />
-        </xsd:restriction>
-    </xsd:simpleType>
-
-    <xsd:simpleType name="CarrierSourceEnum">
-        <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="INTERNAL" />
-            <xsd:enumeration value="NATIONAL" />
-            <xsd:enumeration value="XEU" />
-            <xsd:enumeration value="THIRD_COUNTRY" />
-        </xsd:restriction>
-    </xsd:simpleType>
-
-
-    <xsd:simpleType name="ConfigFieldEnum">
-        <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="ALL"/>
-            <xsd:enumeration value="FLAG_STATE"/>
-            <xsd:enumeration value="UNIT_LENGTH"/>
-            <xsd:enumeration value="UNIT_TONNAGE"/>
-            <xsd:enumeration value="ASSET_TYPE"/>
-            <xsd:enumeration value="LICENSE_TYPE"/>
-            <xsd:enumeration value="GEAR_TYPE"/>
-            <xsd:enumeration value="SPAN_LENGTH_LOA"/>
-            <xsd:enumeration value="SPAN_POWER_MAIN"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-
-    <xsd:simpleType name="ConfigSearchFieldEnum">
-        <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="FLAG_STATE"/>
-            <xsd:enumeration value="EXTERNAL_MARKING"/>
-            <xsd:enumeration value="NAME"/>
-            <xsd:enumeration value="IRCS"/>
-            <xsd:enumeration value="CFR"/>
-            <xsd:enumeration value="MMSI"/>
-            <xsd:enumeration value="GUID"/>
-            <xsd:enumeration value="HIST_GUID"/>
-            <xsd:enumeration value="ICCAT" />
-            <xsd:enumeration value="UVI" />
-            <xsd:enumeration value="GFCM" />
-            <xsd:enumeration value="HOMEPORT"/>
-            <xsd:enumeration value="ASSET_TYPE"/> <!-- carrier type, eg. asset -->
-            <xsd:enumeration value="LICENSE_TYPE"/>
-            <xsd:enumeration value="PRODUCER_NAME"/>
-            <xsd:enumeration value="IMO"/>
-            <xsd:enumeration value="GEAR_TYPE"/> <!-- fishing gear type -->
-            <xsd:enumeration value="MIN_LENGTH"/> <!-- LOA decimal meter -->
-            <xsd:enumeration value="MAX_LENGTH"/> <!-- LOA decimal meter -->
-            <xsd:enumeration value="MIN_POWER"/> <!-- main engine decimal kW -->
-            <xsd:enumeration value="MAX_POWER"/> <!-- main engine decimal kW -->
-        </xsd:restriction>
-    </xsd:simpleType>
-
-    <xsd:simpleType name="ContactSourceEnum">
-        <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="INTERNAL" />
-            <xsd:enumeration value="NATIONAL" />
-        </xsd:restriction>
-    </xsd:simpleType>
-
-    <xsd:simpleType name="EventCodeEnum">
-        <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="CEN"/>
-            <xsd:enumeration value="CST"/>
-            <xsd:enumeration value="CHA"/>
-            <xsd:enumeration value="IMP"/>
-            <xsd:enumeration value="MOD"/>
-            <xsd:enumeration value="DES"/>
-            <xsd:enumeration value="RET"/>
-            <xsd:enumeration value="EXP"/>
-            <xsd:enumeration value="UNK"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-
-    <xsd:simpleType name="NoteSourceEnum">
-        <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="INTERNAL" />
-            <xsd:enumeration value="NATIONAL" />
-        </xsd:restriction>
-    </xsd:simpleType>
 
 
 
@@ -130,7 +15,7 @@
         <xsd:sequence>
             <xsd:element name="assetId" type="AssetId"/>
             <xsd:element name="active" type="xsd:boolean"/>
-            <xsd:element name="source" type="CarrierSourceEnum"/>
+            <xsd:element name="source" type="e:CarrierSourceEnum"/>
             <xsd:element name="eventHistory" type="xsd:string" minOccurs="0" maxOccurs="1"/>
             <xsd:element name="name" type="xsd:string" minOccurs="0" maxOccurs="1"/>
             <xsd:element name="countryCode" type="xsd:string" minOccurs="0" maxOccurs="1"/>
@@ -167,7 +52,7 @@
             <xsd:element name="number" type="xsd:string"/>
             <xsd:element name="email" type="xsd:string"/>
             <xsd:element name="owner" type="xsd:boolean"/>
-            <xsd:element name="source" type="ContactSourceEnum"/>
+            <xsd:element name="source" type="e:ContactSourceEnum"/>
         </xsd:sequence>
     </xsd:complexType>
 
@@ -183,7 +68,7 @@
             <xsd:element name="sheetNumber" type="xsd:string" />
             <xsd:element name="notes" type="xsd:string"/>
             <xsd:element name="document" type="xsd:string" />
-            <xsd:element name="source" type="NoteSourceEnum" />
+            <xsd:element name="source" type="e:NoteSourceEnum" />
         </xsd:sequence>
     </xsd:complexType>
 
@@ -221,7 +106,7 @@
 
     <xsd:complexType name="AssetId">
         <xsd:sequence>
-            <xsd:element name="type" type="AssetIdTypeEnum" />
+            <xsd:element name="type" type="e:AssetIdTypeEnum" />
             <xsd:element name="value" type="xsd:string" />
             <xsd:element name="guid" type="xsd:string" />
         </xsd:sequence>
@@ -258,7 +143,7 @@
     
     <xsd:complexType name="AssetListCriteriaPair">
         <xsd:sequence>
-            <xsd:element name="key" type="ConfigSearchFieldEnum" />
+            <xsd:element name="key" type="e:ConfigSearchFieldEnum" />
             <xsd:element name="value" type="xsd:string" />
         </xsd:sequence>
     </xsd:complexType>
@@ -295,7 +180,7 @@
 
     <xsd:complexType name="Config">
         <xsd:sequence>
-            <xsd:element name="field" type="ConfigFieldEnum" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="field" type="e:ConfigFieldEnum" minOccurs="1" maxOccurs="1"/>
             <xsd:element name="values" type="ConfigValue" minOccurs="1" maxOccurs="unbounded"/>
         </xsd:sequence>
     </xsd:complexType>
@@ -320,7 +205,7 @@
 
     <xsd:complexType name="AssetGroupSearchField">
         <xsd:sequence>
-            <xsd:element name="key" type="ConfigSearchFieldEnum"/>
+            <xsd:element name="key" type="e:ConfigSearchFieldEnum"/>
             <xsd:element name="value" type="xsd:string"/>
         </xsd:sequence>
     </xsd:complexType>

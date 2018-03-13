@@ -18,16 +18,18 @@ import eu.europa.ec.fisheries.uvms.entity.model.FishingGearEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.FishingGearType;
 
 import javax.ejb.Local;
+import java.util.List;
 
 @Local
 public interface FishingGearService {
-    Object upsertFishingGears(FishingGearDTO fishingGear, String username) throws AssetMessageException, AssetModelMapperException;
 
-    FishingGearDTO upsertFishingGear(FishingGearDTO gear, String username);
+    List<FishingGearEntity> upsertFishingGears(List<FishingGearEntity> fishingGear, String username) throws AssetMessageException, AssetModelMapperException;
 
-    FishingGearEntity updateFishinGear(FishingGearDTO fishingGear, String username);
+    FishingGearEntity upsertFishingGear(FishingGearEntity gear, String username);
 
-    void updateFishingGearTypeProperties(FishingGearDTO fishingGear, String username, FishingGearType fishingGearTypeByCodeEntity);
+    FishingGearEntity updateFishingGear(FishingGearEntity fishingGear, String username);
 
-    void updateFishingGearProperties(FishingGearDTO fishingGear, String username, FishingGearEntity fishingGearByExternalIdEntity, FishingGearType fishingGearType);
+    void updateFishingGearTypeProperties(FishingGearEntity fishingGear, String username, FishingGearType fishingGearTypeByCodeEntity);
+
+    void updateFishingGearProperties(FishingGearEntity fishingGear, String username, FishingGearEntity fishingGearByExternalIdEntity, FishingGearType fishingGearType);
 }

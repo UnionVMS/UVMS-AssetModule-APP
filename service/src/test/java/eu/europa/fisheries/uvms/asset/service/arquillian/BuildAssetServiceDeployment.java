@@ -44,8 +44,6 @@ public abstract class BuildAssetServiceDeployment extends Assert {
         
 
 
-        testWar.addClass(TransactionalTests.class);
-
         // Empty beans for EE6 CDI
         testWar.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 

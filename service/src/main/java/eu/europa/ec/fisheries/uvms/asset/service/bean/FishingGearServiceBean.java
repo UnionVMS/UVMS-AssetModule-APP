@@ -28,6 +28,8 @@ import org.slf4j.LoggerFactory;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import java.util.ArrayList;
+import java.util.List;
 
 @Stateless
 @Local
@@ -54,31 +56,28 @@ public class FishingGearServiceBean implements FishingGearService {
 
 
     @Override
-    public Object  upsertFishingGears(FishingGearDTO fishingGear, String username) throws AssetMessageException, AssetModelMapperException {
+    public List<FishingGearEntity>  upsertFishingGears(List<FishingGearEntity> fishingGears, String username) throws AssetMessageException, AssetModelMapperException {
 
-        /*
-        String request = AssetDataSourceRequestMapper.mapUpsertFishingGearRequest(fishingGear, username);
-        String messageId = messageProducer.sendDataSourceMessage(request, AssetDataSourceQueue.INTERNAL);
-        TextMessage response = reciever.getMessage(messageId, TextMessage.class);
-        FishingGearResponse fishingGearResponse = AssetDataSourceResponseMapper.mapToUpsertFishingGearResponse(response, messageId);
-        //FishingGearListResponse fishingGearListResponse = AssetDataSourceResponseMapper.mapToFishingGearResponse(response, messageId);
-        return fishingGearResponse;
-        */
-        return null;
+        List<FishingGearEntity> ret = new ArrayList<>();
+        for(FishingGearEntity entity : fishingGears){
+            FishingGearEntity upserted = upsertFishingGear(entity, username);
+            ret.add(upserted);
+        }
+        return ret;
     }
 
 
 
     @Override
-    public FishingGearDTO upsertFishingGear(FishingGearDTO gear, String username) {
-        //FishingGearEntity fishingGearEntity = updateFishinGear(gear, username);
-        //eu.europa.ec.fisheries.wsdl.asset.types.FishingGearDTO fishingGear = EntityToModelMapper.mapEntityToFishingGear(fishingGearEntity);
-        //return fishingGear;
-        return null;
+    public FishingGearEntity upsertFishingGear(FishingGearEntity gear, String username) {
+        FishingGearEntity fishingGearEntity = updateFishingGear(gear, username);
+        return fishingGearEntity;
     }
 
+
+
     @Override
-    public FishingGearEntity updateFishinGear(FishingGearDTO fishingGear, String username){
+    public FishingGearEntity updateFishingGear(FishingGearEntity fishingGear, String username){
 
         /*
 
@@ -122,7 +121,7 @@ public class FishingGearServiceBean implements FishingGearService {
     }
 
     @Override
-    public void updateFishingGearTypeProperties(FishingGearDTO fishingGear, String username, FishingGearType fishingGearTypeByCodeEntity) {
+    public void updateFishingGearTypeProperties(FishingGearEntity fishingGear, String username, FishingGearType fishingGearTypeByCodeEntity) {
         fishingGearTypeByCodeEntity.setUpdateUser(username);
         fishingGearTypeByCodeEntity.setDescription(fishingGear.getFishingGearType().getName());
         fishingGearTypeByCodeEntity.setCode(fishingGear.getFishingGearType().getCode());
@@ -131,7 +130,7 @@ public class FishingGearServiceBean implements FishingGearService {
     }
 
     @Override
-    public void updateFishingGearProperties(FishingGearDTO fishingGear, String username, FishingGearEntity fishingGearByExternalIdEntity, FishingGearType fishingGearType) {
+    public void updateFishingGearProperties(FishingGearEntity fishingGear, String username, FishingGearEntity fishingGearByExternalIdEntity, FishingGearType fishingGearType) {
         fishingGearByExternalIdEntity.setFishingGearType(fishingGearType);
         fishingGearByExternalIdEntity.setCode(fishingGear.getCode());
         fishingGearByExternalIdEntity.setUpdatedBy(username);

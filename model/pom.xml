@@ -102,8 +102,6 @@
 			</plugin>
 
 
-			<!--  NO Generate from xsd until contracts  are solved -->
-			<!--
 			<plugin>
 				<groupId>org.apache.cxf</groupId>
 				<artifactId>cxf-xjc-plugin</artifactId>
@@ -159,8 +157,6 @@
 
 				</dependencies>
 			</plugin>
-
-			-->
 
 		</plugins>
 	</build>

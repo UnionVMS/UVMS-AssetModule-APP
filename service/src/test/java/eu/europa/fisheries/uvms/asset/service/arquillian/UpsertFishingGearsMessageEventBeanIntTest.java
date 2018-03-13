@@ -45,44 +45,6 @@ public class UpsertFishingGearsMessageEventBeanIntTest extends TransactionalTest
         Assert.assertNotNull(upsertFishingGearsMessageEventBean);
     }
 
-    @Test
-    @OperateOnDeployment("normal")
-    public void upsertFishingGears_nonExisting() throws Exception {
-
-        // create
-        // check
-
-        TextMessage message = null;
-        AssetMessageEvent assetMessageEvent = new AssetMessageEvent(message);
-        FishingGearDTO fishingGear = new FishingGearDTO();
-
-        FishingGearType fishingGearType = new FishingGearType();
-        fishingGearType.setCode(43L);
-        fishingGearType.setName("GearType");
-
-        fishingGear.setFishingGearType(fishingGearType);
-
-        fishingGear.setCode("CD");
-        String description = UUID.randomUUID().toString();
-        fishingGear.setDescription(description);
-        fishingGear.setName("Name");
-        fishingGear.setExternalId(42L);
-
-        //assetMessageEvent.setFishingGear(fishingGear);
-        upsertFishingGearsMessageEventBean.upsertFishingGears(assetMessageEvent);
-
-        if (interceptorForTests.isFailed()) {
-            Assert.fail();
-            return;
-        };
-
-        Query query = em.createQuery("SELECT f FROM FishingGear f where externalId = :externalId and description = :description");
-        query.setParameter("externalId", 42L);
-        query.setParameter("description", description);
-
-        Object  obj =  query.getSingleResult();
-        Assert.assertTrue(obj!=null);
-    }
 
 
     @Test

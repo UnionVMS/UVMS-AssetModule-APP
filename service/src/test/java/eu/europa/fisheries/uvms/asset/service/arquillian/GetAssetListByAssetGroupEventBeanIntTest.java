@@ -3,7 +3,6 @@ package eu.europa.fisheries.uvms.asset.service.arquillian;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetListByAssetGroupEventBean;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
@@ -25,8 +24,6 @@ public class GetAssetListByAssetGroupEventBeanIntTest extends TransactionalTests
 
 
 
-    @EJB
-    private GetAssetListByAssetGroupEventBean getAssetListByAssetGroupEventBean;
 
     @EJB
     private AssetService assetService;
@@ -43,11 +40,6 @@ public class GetAssetListByAssetGroupEventBeanIntTest extends TransactionalTests
     }
 
 
-    @Test
-    @OperateOnDeployment("normal")
-    public void testSetup() {
-        Assert.assertNotNull(getAssetListByAssetGroupEventBean);
-    }
 
 
     @Test

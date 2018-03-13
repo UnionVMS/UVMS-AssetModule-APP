@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="enums.asset.fisheries.ec.europa.eu"
+            targetNamespace="enums.asset.fisheries.ec.europa.eu"
+            version="1.0">
+
+
+    <xsd:simpleType name="AssetDataSourceMethodEnum">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="CREATE"/>
+            <xsd:enumeration value="UPDATE"/>
+            <xsd:enumeration value="GET"/>
+            <xsd:enumeration value="LIST"/>
+            <xsd:enumeration value="UPSERT"/>
+            <xsd:enumeration value="DELETE"/>
+            <xsd:enumeration value="HISTORY_GET"/>
+            <xsd:enumeration value="HISTORY_LIST"/>
+            <xsd:enumeration value="GROUP_GET"/>
+            <xsd:enumeration value="LIST_GET_BY_GROUP"/>
+            <xsd:enumeration value="GROUP_CREATE"/>
+            <xsd:enumeration value="GROUP_UPDATE"/>
+            <xsd:enumeration value="GROUP_LIST"/>
+            <xsd:enumeration value="GROUP_DELETE"/>
+            <xsd:enumeration value="PING"/>
+            <xsd:enumeration value="CONFIG"/>
+            <xsd:enumeration value="GROUP_LIST_BY_ASSET_GUID"/>
+            <xsd:enumeration value="ASSET_LIST_GROUP_BY_FLAGSTATE"/>
+            <xsd:enumeration value="FISHING_GEAR_LIST"/>
+            <xsd:enumeration value="FISHING_GEAR_BY_ID"/>
+            <xsd:enumeration value="FISHING_GEAR_BY_EXT_ID"/>
+            <xsd:enumeration value="FISHING_GEAR_UPSERT"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="AssetIdTypeEnum">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="INTERNAL_ID" />
+            <xsd:enumeration value="CFR" />
+            <xsd:enumeration value="IRCS" />
+            <xsd:enumeration value="IMO" />
+            <xsd:enumeration value="MMSI" />
+            <xsd:enumeration value="GUID" />
+            <xsd:enumeration value="ICCAT" />
+            <xsd:enumeration value="UVI" />
+            <xsd:enumeration value="GFCM" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="CarrierSourceEnum">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="INTERNAL" />
+            <xsd:enumeration value="NATIONAL" />
+            <xsd:enumeration value="XEU" />
+            <xsd:enumeration value="THIRD_COUNTRY" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+
+    <xsd:simpleType name="ConfigFieldEnum">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="ALL"/>
+            <xsd:enumeration value="FLAG_STATE"/>
+            <xsd:enumeration value="UNIT_LENGTH"/>
+            <xsd:enumeration value="UNIT_TONNAGE"/>
+            <xsd:enumeration value="ASSET_TYPE"/>
+            <xsd:enumeration value="LICENSE_TYPE"/>
+            <xsd:enumeration value="GEAR_TYPE"/>
+            <xsd:enumeration value="SPAN_LENGTH_LOA"/>
+            <xsd:enumeration value="SPAN_POWER_MAIN"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="ConfigSearchFieldEnum">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="FLAG_STATE"/>
+            <xsd:enumeration value="EXTERNAL_MARKING"/>
+            <xsd:enumeration value="NAME"/>
+            <xsd:enumeration value="IRCS"/>
+            <xsd:enumeration value="CFR"/>
+            <xsd:enumeration value="MMSI"/>
+            <xsd:enumeration value="GUID"/>
+            <xsd:enumeration value="HIST_GUID"/>
+            <xsd:enumeration value="ICCAT" />
+            <xsd:enumeration value="UVI" />
+            <xsd:enumeration value="GFCM" />
+            <xsd:enumeration value="HOMEPORT"/>
+            <xsd:enumeration value="ASSET_TYPE"/> <!-- carrier type, eg. asset -->
+            <xsd:enumeration value="LICENSE_TYPE"/>
+            <xsd:enumeration value="PRODUCER_NAME"/>
+            <xsd:enumeration value="IMO"/>
+            <xsd:enumeration value="GEAR_TYPE"/> <!-- fishing gear type -->
+            <xsd:enumeration value="MIN_LENGTH"/> <!-- LOA decimal meter -->
+            <xsd:enumeration value="MAX_LENGTH"/> <!-- LOA decimal meter -->
+            <xsd:enumeration value="MIN_POWER"/> <!-- main engine decimal kW -->
+            <xsd:enumeration value="MAX_POWER"/> <!-- main engine decimal kW -->
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="ContactSourceEnum">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="INTERNAL" />
+            <xsd:enumeration value="NATIONAL" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="EventCodeEnum">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="CEN"/>
+            <xsd:enumeration value="CST"/>
+            <xsd:enumeration value="CHA"/>
+            <xsd:enumeration value="IMP"/>
+            <xsd:enumeration value="MOD"/>
+            <xsd:enumeration value="DES"/>
+            <xsd:enumeration value="RET"/>
+            <xsd:enumeration value="EXP"/>
+            <xsd:enumeration value="UNK"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="NoteSourceEnum">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="INTERNAL" />
+            <xsd:enumeration value="NATIONAL" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+
+
+
+
+
+</xsd:schema>
