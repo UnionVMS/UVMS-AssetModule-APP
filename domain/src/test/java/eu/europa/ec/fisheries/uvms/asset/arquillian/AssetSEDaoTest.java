@@ -667,7 +667,7 @@ public class AssetSEDaoTest extends TransactionalTests {
         List<SearchKeyValue> searchKeyValues = new ArrayList<>();
         SearchKeyValue searchKey = new SearchKeyValue();
         searchKey.setSearchField(SearchFields.NAME);
-        searchKey.setSearchValues(Arrays.asList("*LikeSearch*"));
+        searchKey.setSearchValues(Arrays.asList("*LikeSearch*", "*Name*"));
         searchKeyValues.add(searchKey);
         SearchKeyValue searchKey2 = new SearchKeyValue();
         searchKey2.setSearchField(SearchFields.NAME);

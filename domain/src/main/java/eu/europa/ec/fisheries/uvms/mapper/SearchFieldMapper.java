@@ -24,6 +24,8 @@ import eu.europa.ec.fisheries.uvms.dao.exception.AssetSearchMapperException;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
 
 public class SearchFieldMapper {
+    
+    private SearchFieldMapper() {}
 
     private static SearchKeyValue getSearchKeyValue(SearchFields field, Map<SearchFields, SearchKeyValue> searchKeys) {
         SearchKeyValue searchKeyValue = searchKeys.get(field);
@@ -102,8 +104,8 @@ public class SearchFieldMapper {
 				throw new AssetDaoMappingException("GearType couldn't be transformed to valid search value");
 			}
         }
-        value = value.replace("-", "");
-        value = value.toUpperCase();
+        // TODO check if upper function is available in auditquery
+        // value = value.toUpperCase();
         return value;
     }
 

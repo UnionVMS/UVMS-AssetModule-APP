@@ -4,6 +4,10 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetIdTypeEnum;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetListCriteriaPair;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
+import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetListResponsePaginated;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -133,13 +137,43 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         Assert.assertEquals(historyId2, fetchedAssetAtRevision.getHistoryId());
 
-
-
-
-
-
     }
 
+    @Test
+    public void getAssetListTestIdQuery() throws Exception {
+        AssetSE asset = AssetHelper.createBiggerAsset();
+        asset = assetService.createAsset(asset, "test");
+        commit();
+        
+        AssetListQuery query = AssetHelper.createBasicQuery();
+        AssetListCriteriaPair criteria = new AssetListCriteriaPair();
+        criteria.setKey(ConfigSearchFieldEnum.GUID);
+        criteria.setValue(asset.getId().toString());
+        query.getAssetSearchCriteria().getCriterias().add(criteria);
+        
+        List<AssetSE> assets = assetService.getAssetList(query).getAssetList();
+        
+        assertEquals(1, assets.size());
+        assertEquals(asset.getCfr(), assets.get(0).getCfr());
+    }
+    
+    @Test
+    public void getAssetListTestNameQuery() throws Exception {
+        AssetSE asset = AssetHelper.createBiggerAsset();
+        asset = assetService.createAsset(asset, "test");
+        commit();
+        
+        AssetListQuery query = AssetHelper.createBasicQuery();
+        AssetListCriteriaPair criteria = new AssetListCriteriaPair();
+        criteria.setKey(ConfigSearchFieldEnum.NAME);
+        criteria.setValue(asset.getName());
+        query.getAssetSearchCriteria().getCriterias().add(criteria);
+        
+        List<AssetSE> assets = assetService.getAssetList(query).getAssetList();
+        
+        assertTrue(!assets.isEmpty());
+    }
+    
 
     private void commit() throws AssetException {
 
