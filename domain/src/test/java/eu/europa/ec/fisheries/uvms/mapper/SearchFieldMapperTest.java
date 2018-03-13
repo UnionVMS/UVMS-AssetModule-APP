@@ -41,36 +41,4 @@ public class SearchFieldMapperTest {
         // System.out.println(SearchFieldMapper.createSelectSearchSql(searchFields, true));
 
     }
-
-    @Ignore
-    @Test
-    public void testHistoryGUIDSQL() {
-        List<SearchKeyValue> searchFields = new ArrayList<>();
-
-        SearchKeyValue searchValue = new SearchKeyValue();
-        searchValue.setSearchField(SearchFields.HIST_GUID);
-        searchValue.setSearchValues(Arrays.asList("history_guid"));
-
-        searchFields.add(searchValue);
-
-        String createSelectSearchSql = SearchFieldMapper.createSelectSearchSql(searchFields, true);
-        String expected = "active IN (true,false)";
-        assertThat(createSelectSearchSql, containsString(expected));
-    }
-
-    @Ignore
-    @Test
-    public void testNoHistoryGUIDSQL() {
-        List<SearchKeyValue> searchFields = new ArrayList<>();
-
-        SearchKeyValue searchValue = new SearchKeyValue();
-        searchValue.setSearchField(SearchFields.GUID);
-        searchValue.setSearchValues(Arrays.asList("guid"));
-
-        searchFields.add(searchValue);
-
-        String createSelectSearchSql = SearchFieldMapper.createSelectSearchSql(searchFields, true);
-        String expected = "active IN (true)";
-        assertThat(createSelectSearchSql, containsString(expected));
-    }
 }

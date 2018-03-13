@@ -85,6 +85,7 @@ public class AssetTestsHelper {
         assetEntity.setProdOrgName("ORGNAME");
         assetEntity.setGrossTonnageUnit(UnitTonnage.LONDON);
         assetEntity.setLicenceType(GearFishingTypeEnum.DEMERSAL_AND_PELAGIC.toString());
+        assetEntity.setGearFishingType(1);
         assetEntity.setSegment(SegmentFUP.CA3);
         assetEntity.setConstructionYear("1914");
         assetEntity.setConstructionPlace("GBG");

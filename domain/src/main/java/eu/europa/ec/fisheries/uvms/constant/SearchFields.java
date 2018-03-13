@@ -20,15 +20,15 @@ public enum SearchFields {
     NAME("name"),
     IRCS("ircs"),
     CFR("cfr"),
-    MMSI("mmsi", SearchFieldType.NUMBER),
-    IMO("imo", SearchFieldType.NUMBER),
+    MMSI("mmsi"),
+    IMO("imo"),
     ICCAT("iccat"),
     UVI("uvi"),
     GFCM("gfcm"),
     HOMEPORT("portOfRegistration"),
     LICENSE("licenceType"),
-    GUID("guid"),
-    HIST_GUID("guid"),
+    GUID("id", SearchFieldType.ID),
+    HIST_GUID("historyid", SearchFieldType.ID),
     GEAR_TYPE("gearFishingType", SearchFieldType.NUMBER),
     MAX_LENGTH("lengthOverAll", SearchFieldType.MAX_DECIMAL),
     MIN_LENGTH("lengthOverAll", SearchFieldType.MIN_DECIMAL),
@@ -55,14 +55,5 @@ public enum SearchFields {
 
     public SearchFieldType getFieldType() {
     	return fieldType;
-    }
-    
-    // TODO for compilation, remove these
-    public SearchTables getSearchTable() {
-        return null;
-    }
-    
-    public String getValueName() {
-        return null;
     }
 }

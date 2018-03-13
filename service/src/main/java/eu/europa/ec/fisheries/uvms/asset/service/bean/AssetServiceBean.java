@@ -47,7 +47,7 @@ import java.util.UUID;
 @Stateless
 public class AssetServiceBean implements AssetService {
 
-    final static Logger LOG = LoggerFactory.getLogger(AssetServiceBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AssetServiceBean.class);
 
     @EJB
     MessageProducer messageProducer;
@@ -103,13 +103,12 @@ public class AssetServiceBean implements AssetService {
     @Override
     public AssetListResponsePaginated getAssetList(AssetListQuery query) throws AssetException {
 
-
         if (query == null) {
             throw new InputArgumentException("Cannot get asset list because query is null.");
         }
 
-        if (query.getAssetSearchCriteria() == null || query.getAssetSearchCriteria().isIsDynamic() == null
-                || query.getAssetSearchCriteria().getCriterias() == null) {
+        if (query.getAssetSearchCriteria() == null || query.getAssetSearchCriteria().isIsDynamic() == null || query
+                .getAssetSearchCriteria().getCriterias() == null) {
             throw new InputArgumentException("Cannot get asset list because criteria are null.");
         }
 
@@ -117,19 +116,14 @@ public class AssetServiceBean implements AssetService {
             throw new InputArgumentException("Cannot get asset list because criteria pagination is null.");
         }
 
-
         int page = query.getPagination().getPage();
         int listSize = query.getPagination().getListSize();
         boolean isDynamic = query.getAssetSearchCriteria().isIsDynamic();
 
-        List<SearchKeyValue> searchFields = SearchFieldMapper
-                .createSearchFields(query.getAssetSearchCriteria().getCriterias());
-        
-        /*
-        String sql = SearchFieldMapper.createSelectSearchSql(searchFields, isDynamic);
-        String countSql = SearchFieldMapper.createCountSearchSql(searchFields, isDynamic);
-        */
-        Long numberOfAssets = assetSEDao.getAssetCount(/*countSql, */searchFields, isDynamic);
+        List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query.getAssetSearchCriteria()
+                .getCriterias());
+
+        Long numberOfAssets = assetSEDao.getAssetCount(searchFields, isDynamic);
 
         int numberOfPages = 0;
         if (listSize != 0) {
@@ -139,9 +133,7 @@ public class AssetServiceBean implements AssetService {
             }
         }
 
-        List<AssetSE> assetEntityList = assetSEDao.getAssetListSearchPaginated(page, listSize,/* sql,*/ searchFields,
-                isDynamic);
-
+        List<AssetSE> assetEntityList = assetSEDao.getAssetListSearchPaginated(page, listSize, searchFields, isDynamic);
 
         AssetListResponsePaginated listAssetResponse = new AssetListResponsePaginated();
         listAssetResponse.setCurrentPage(page);
@@ -163,8 +155,8 @@ public class AssetServiceBean implements AssetService {
             throw new InputArgumentException("Cannot get asset list count because query is null.");
         }
 
-        if (query.getAssetSearchCriteria() == null || query.getAssetSearchCriteria().isIsDynamic() == null
-                || query.getAssetSearchCriteria().getCriterias() == null) {
+        if (query.getAssetSearchCriteria() == null || query.getAssetSearchCriteria().isIsDynamic() == null || query
+                .getAssetSearchCriteria().getCriterias() == null) {
             throw new InputArgumentException("Cannot get asset list count because criteria are null.");
         }
 
@@ -174,14 +166,10 @@ public class AssetServiceBean implements AssetService {
 
         boolean isDynamic = query.getAssetSearchCriteria().isIsDynamic();
 
-        List<SearchKeyValue> searchFields = SearchFieldMapper
-                .createSearchFields(query.getAssetSearchCriteria().getCriterias());
+        List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query.getAssetSearchCriteria()
+                .getCriterias());
 
-        /*
-        String countSql = SearchFieldMapper.createCountSearchSql(searchFields, isDynamic);
-        */
-        Long result = assetSEDao.getAssetCount(/*countSql, */searchFields, isDynamic);
-        return result;
+        return assetSEDao.getAssetCount(searchFields, isDynamic);
     }
 
     /**
@@ -250,8 +238,7 @@ public class AssetServiceBean implements AssetService {
             AssetSE assetDB = getAssetById((asset.getId()));
             if(assetDB != null){
                 asset.setUpdatedBy(username);
-                AssetSE updated = assetSEDao.updateAsset(asset);
-                return updated;
+                return assetSEDao.updateAsset(asset);
             } else {
                 throw new AssetException("Asset with that id does not exist");
             }
@@ -380,8 +367,7 @@ public class AssetServiceBean implements AssetService {
 			assetId.setType(assetType);
 			assetId.setValue(idValue);
 			assetId.setGuid(idValue);
-			AssetSE asset = assetSEDao.getAssetFromAssetIdAtDate(assetId, date);
-			return asset;
+			return assetSEDao.getAssetFromAssetIdAtDate(assetId, date);
 		} catch (AssetDaoException e) {
 			throw new AssetServiceException("Could not get asset by id and date", e);
 		}
@@ -398,8 +384,7 @@ public class AssetServiceBean implements AssetService {
         if (id == null) {
             throw new InputArgumentException("Id is null");
         }
-        AssetSE fetchedAsset = assetSEDao.getAssetById(id);
-        return fetchedAsset;
+        return assetSEDao.getAssetById(id);
     }
 
 
@@ -459,8 +444,7 @@ public class AssetServiceBean implements AssetService {
     @Override
     public List<AssetSE> getRevisionsForAsset(AssetSE asset) throws AssetException {
         try {
-            List<AssetSE> ret = assetSEDao.getRevisionsForAsset(asset);
-            return ret;
+            return assetSEDao.getRevisionsForAsset(asset);
         } catch (NoAssetEntityFoundException e) {
             LOG.warn(e.toString(), e);
             throw e;
@@ -470,8 +454,7 @@ public class AssetServiceBean implements AssetService {
     @Override
     public AssetSE getAssetRevisionForRevisionId(AssetSE asset, UUID historyId) throws AssetException {
         try {
-            AssetSE ret = assetSEDao.getAssetRevisionForHistoryId(asset, historyId);
-            return ret;
+            return assetSEDao.getAssetRevisionForHistoryId(asset, historyId);
         } catch (NoAssetEntityFoundException e) {
             LOG.warn(e.toString(), e);
             throw e;
@@ -479,7 +462,6 @@ public class AssetServiceBean implements AssetService {
     }
 
     private void assertAssetDoesNotExist(AssetSE asset) throws AssetException {
-
 
         List<String> messages = new ArrayList<>();
         try {
