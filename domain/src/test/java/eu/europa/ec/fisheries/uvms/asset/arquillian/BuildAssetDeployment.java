@@ -27,6 +27,7 @@ public abstract class BuildAssetDeployment {
                 .importRuntimeAndTestDependencies().resolve().withTransitivity().asFile();
         testWar.addAsLibraries(files);
 
+
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.bean");
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.constant");
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.entity");
@@ -40,7 +41,7 @@ public abstract class BuildAssetDeployment {
         testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.asset.arquillian");
         testWar.addPackages(true, "eu.europa.ec.fisheries.schema");
 
-        testWar.addClass(TransactionalTests.class);
+        //testWar.addClass(TransactionalTests.class);
 
         testWar.addAsResource("persistence-integration.xml", "META-INF/persistence.xml");
 

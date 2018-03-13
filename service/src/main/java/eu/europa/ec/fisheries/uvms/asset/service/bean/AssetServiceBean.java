@@ -56,8 +56,6 @@ public class AssetServiceBean implements AssetService {
     AssetQueueConsumer reciever;
 
 
-    @EJB
-    ConfigServiceBean configModel;
 
     @EJB
     AssetSEDao assetSEDao;
