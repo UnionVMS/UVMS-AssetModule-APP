@@ -33,7 +33,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
         List<Long> fetchedList = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
-            AssetGroupEntity createdAssetGroupEntity = createAndStoreAssetGroupEntity("TEST");
+            AssetGroupEntity createdAssetGroupEntity = createAndStoreAssetGroupEntity("TEST",1);
             createdList.add(createdAssetGroupEntity.getId());
         }
         List<AssetGroupEntity> rs = assetGroupDao.getAssetGroupAll();
@@ -56,7 +56,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void createAssetGroup() throws AssetGroupDaoException {
 
-        AssetGroupEntity createdAssetGroupEntity1 = createAndStoreAssetGroupEntity("TEST");
+        AssetGroupEntity createdAssetGroupEntity1 = createAndStoreAssetGroupEntity("TEST",1);
         Assert.assertTrue(createdAssetGroupEntity1 != null);
     }
 
@@ -69,13 +69,13 @@ public class AssetGroupTestsIT extends TransactionalTests {
         String user3 = UUID.randomUUID().toString();
 
         for (int i = 0; i < 3; i++) {
-            createAndStoreAssetGroupEntity(user1);
+            createAndStoreAssetGroupEntity(user1,1);
         }
         for (int i = 0; i < 8; i++) {
-            createAndStoreAssetGroupEntity(user2);
+            createAndStoreAssetGroupEntity(user2,1);
         }
         for (int i = 0; i < 11; i++) {
-            createAndStoreAssetGroupEntity(user3);
+            createAndStoreAssetGroupEntity(user3,1);
         }
 
         List<AssetGroupEntity> listUser1 = assetGroupDao.getAssetGroupByUser(user1);
@@ -91,7 +91,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void getAssetGroupByGuid() throws AssetGroupDaoException {
 
-        AssetGroupEntity createdAssetGroupEntity = createAndStoreAssetGroupEntity("TEST");
+        AssetGroupEntity createdAssetGroupEntity = createAndStoreAssetGroupEntity("TEST",1);
         String guid = createdAssetGroupEntity.getGuid();
         Assert.assertTrue(guid != null);
 
@@ -108,7 +108,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
         List<String> fetchedList = new ArrayList<>();
         List<AssetGroupEntity> fetchedEntityList;
         for (int i = 0; i < 5; i++) {
-            AssetGroupEntity createdAssetGroupEntity = createAndStoreAssetGroupEntity("TEST");
+            AssetGroupEntity createdAssetGroupEntity = createAndStoreAssetGroupEntity("TEST",1);
             createdList.add(createdAssetGroupEntity.getGuid());
         }
 
@@ -132,7 +132,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void deleteAssetGroup() throws AssetGroupDaoException {
 
-        AssetGroupEntity assetGroupEntity = createAndStoreAssetGroupEntity("TEST");
+        AssetGroupEntity assetGroupEntity = createAndStoreAssetGroupEntity("TEST",1);
         String uuid = assetGroupEntity.getGuid();
         assetGroupDao.deleteAssetGroup(assetGroupEntity);
 
@@ -149,7 +149,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void updateAssetGroup() throws AssetGroupDaoException {
 
-        AssetGroupEntity assetGroupEntity = createAndStoreAssetGroupEntity("TEST");
+        AssetGroupEntity assetGroupEntity = createAndStoreAssetGroupEntity("TEST",1);
         String uuid = assetGroupEntity.getGuid();
 
         assetGroupEntity.setOwner("NEW OWNER");
@@ -161,15 +161,15 @@ public class AssetGroupTestsIT extends TransactionalTests {
     }
 
 
-    private AssetGroupEntity createAndStoreAssetGroupEntity(String user) throws AssetGroupDaoException {
+    private AssetGroupEntity createAndStoreAssetGroupEntity(String user, int numberOfGroupFields) throws AssetGroupDaoException {
 
-        AssetGroupEntity assetGroupEntity = createAssetGroupEntity(user);
+        AssetGroupEntity assetGroupEntity = createAssetGroupEntity(user,numberOfGroupFields);
         AssetGroupEntity createdAssetGroupEntity = assetGroupDao.createAssetGroup(assetGroupEntity);
         return createdAssetGroupEntity;
     }
 
 
-    private AssetGroupEntity createAssetGroupEntity(String user) {
+    private AssetGroupEntity createAssetGroupEntity(String user, int numberOfGroupFields) {
         AssetGroupEntity ag = new AssetGroupEntity();
 
         Date dt = new Date(System.currentTimeMillis());
@@ -182,16 +182,15 @@ public class AssetGroupTestsIT extends TransactionalTests {
         ag.setDynamic(false);
         ag.setGlobal(true);
 
-        List<AssetGroupField> groupFields = createAssetGroupFields(ag,dt,user);
+        List<AssetGroupField> groupFields = createAssetGroupFields(ag,dt,user, numberOfGroupFields);
         ag.setFields(groupFields);
         return ag;
     }
 
 
-    private  List<AssetGroupField> createAssetGroupFields(AssetGroupEntity assetGroupEntity, Date dt, String user) {
+    private  List<AssetGroupField> createAssetGroupFields(AssetGroupEntity assetGroupEntity, Date dt, String user, int n) {
 
         List<AssetGroupField> groupFields = new ArrayList<>();
-        int n = rnd.nextInt(15) + 1;
         for (int i = 0; i < n; i++) {
             String uuid = UUID.randomUUID().toString();
             AssetGroupField field = createAssetGroupField(assetGroupEntity, ConfigSearchFieldEnum.GUID, uuid, dt, user);
