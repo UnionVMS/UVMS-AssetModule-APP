@@ -124,10 +124,12 @@ public class AssetServiceBean implements AssetService {
 
         List<SearchKeyValue> searchFields = SearchFieldMapper
                 .createSearchFields(query.getAssetSearchCriteria().getCriterias());
-
+        
+        /*
         String sql = SearchFieldMapper.createSelectSearchSql(searchFields, isDynamic);
         String countSql = SearchFieldMapper.createCountSearchSql(searchFields, isDynamic);
-        Long numberOfAssets = assetSEDao.getAssetCount(countSql, searchFields, isDynamic);
+        */
+        Long numberOfAssets = assetSEDao.getAssetCount(/*countSql, */searchFields, isDynamic);
 
         int numberOfPages = 0;
         if (listSize != 0) {
@@ -137,7 +139,7 @@ public class AssetServiceBean implements AssetService {
             }
         }
 
-        List<AssetSE> assetEntityList = assetSEDao.getAssetListSearchPaginated(page, listSize, sql, searchFields,
+        List<AssetSE> assetEntityList = assetSEDao.getAssetListSearchPaginated(page, listSize,/* sql,*/ searchFields,
                 isDynamic);
 
 
@@ -175,8 +177,10 @@ public class AssetServiceBean implements AssetService {
         List<SearchKeyValue> searchFields = SearchFieldMapper
                 .createSearchFields(query.getAssetSearchCriteria().getCriterias());
 
+        /*
         String countSql = SearchFieldMapper.createCountSearchSql(searchFields, isDynamic);
-        Long result = assetSEDao.getAssetCount(countSql, searchFields, isDynamic);
+        */
+        Long result = assetSEDao.getAssetCount(/*countSql, */searchFields, isDynamic);
         return result;
     }
 
