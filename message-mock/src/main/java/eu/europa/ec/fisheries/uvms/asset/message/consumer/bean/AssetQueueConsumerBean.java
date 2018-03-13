@@ -11,63 +11,22 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.message.consumer.bean;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.Queue;
-import javax.jms.Session;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import eu.europa.ec.fisheries.uvms.asset.message.AssetConstants;
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
-import eu.europa.ec.fisheries.uvms.commons.message.impl.JMSUtils;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigMessageException;
 import eu.europa.ec.fisheries.uvms.config.message.ConfigMessageConsumer;
 
 @Stateless
 public class AssetQueueConsumerBean implements AssetQueueConsumer, ConfigMessageConsumer {
 
-    final static Logger LOG = LoggerFactory.getLogger(AssetQueueConsumerBean.class);
-
-    private final static long TIMEOUT = 30000;
-
-    private Queue responseAssetQueue;
-
-    private ConnectionFactory connectionFactory;
-
-    @PostConstruct
-    private void init() {
-        connectionFactory = JMSUtils.lookupConnectionFactory();
-        responseAssetQueue = JMSUtils.lookupQueue(AssetConstants.QUEUE_ASSET);
-    }
-
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T getMessage(String correlationId, Class type) throws AssetMessageException {
-    	if (correlationId == null || correlationId.isEmpty()) {
-    		throw new AssetMessageException("No CorrelationID provided!");
-    	}
-    	
-    	Connection connection=null;
-    	try {
-    		            
-            connection = connectionFactory.createConnection();
-            final Session session = JMSUtils.connectToQueue(connection);
-
-            T response = (T) session.createConsumer(responseAssetQueue, "JMSCorrelationID='" + correlationId + "'").receive(TIMEOUT);
-            if (response == null) {
-                throw new AssetMessageException("[ Timeout reached or message null in AssetQueueConsumerBean. ]");
-            }
-
-            return response;
-        } catch (Exception e) {
-            LOG.error("[ Error when retrieving message. ] {}", e.getMessage());
-            throw new AssetMessageException("Error when retrieving message: " + e.getMessage());
-        } finally {
-        	JMSUtils.disconnectQueue(connection);
+        try {
+            return (T) type.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new AssetMessageException("");
         }
     }
 
@@ -77,10 +36,7 @@ public class AssetQueueConsumerBean implements AssetQueueConsumer, ConfigMessage
             return getMessage(correlationId, type);
         }
         catch (AssetMessageException e) {
-            LOG.error("[ Error when getting config message. ] {}", e.getMessage());
             throw new ConfigMessageException(e.getMessage());
         }
     }
-
 }
-

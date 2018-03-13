@@ -1,5 +1,9 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
+import eu.europa.ec.fisheries.uvms.asset.types.AssetListCriteria;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetListCriteriaPair;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetListPagination;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.*;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetProdOrg;
@@ -143,6 +147,13 @@ public abstract class AssetHelper {
                 .toString();
     }
 
-
+    public static AssetListQuery createBasicQuery() {
+        AssetListQuery query = new AssetListQuery();
+        query.setPagination(new AssetListPagination(1, 100));
+        AssetListCriteria listCriteria = new AssetListCriteria();
+        listCriteria.setIsDynamic(true);
+        query.setAssetSearchCriteria(listCriteria);
+        return query;
+    }
 
 }
