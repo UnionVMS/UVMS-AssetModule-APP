@@ -5,12 +5,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
 import org.eu.ingwar.tools.arquillian.extension.suite.annotations.ArquillianSuiteDeployment;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Assert;
@@ -41,16 +39,10 @@ public abstract class BuildAssetServiceDeployment extends Assert {
         testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.asset.service");
         testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.asset.dto");
         testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.asset.exception");
-        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.asset.service.bean");
+//        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.asset.service.bean");
         testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.entity");
 
-
-        // Empty beans for EE6 CDI
-        testWar.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
-
         testWar.addAsLibraries(files);
-
-
 
         return testWar;
     }

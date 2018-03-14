@@ -40,7 +40,7 @@ public class AssetSEDao {
             em.persist(asset);
             return asset;
         } catch (Exception e) {
-            throw new AssetDaoException(e.toString(), e);
+            throw new AssetDaoException("Could not create asset", e);
         }
     }
 
@@ -48,7 +48,7 @@ public class AssetSEDao {
         try {
             return em.find(AssetSE.class, id);
         } catch (Exception e) {
-            throw new AssetDaoException(e.toString(), e);
+            throw new AssetDaoException("Could not get asset by id: " + id, e);
         }
     }
 
@@ -60,7 +60,7 @@ public class AssetSEDao {
         } catch (NoResultException e) {
             return null;
         } catch (Exception e) {
-            throw new AssetDaoException(e.toString(), e);
+            throw new AssetDaoException("Could not get asset by CFR: " + cfr, e);
         }
     }
 
@@ -72,7 +72,7 @@ public class AssetSEDao {
         } catch (NoResultException e) {
             return null;
         } catch (Exception e) {
-            throw new AssetDaoException(e.toString(), e);
+            throw new AssetDaoException("Could not get asset by IRCS: " + ircs, e);
         }
     }
 
@@ -84,7 +84,7 @@ public class AssetSEDao {
         } catch (NoResultException e) {
             return null;
         } catch (Exception e) {
-            throw new AssetDaoException(e.toString(), e);
+            throw new AssetDaoException("Could not get asset by IMO: " + imo, e);
         }
     }
 
@@ -96,7 +96,7 @@ public class AssetSEDao {
         } catch (NoResultException e) {
             return null;
         } catch (Exception e) {
-            throw new AssetDaoException(e.toString(), e);
+            throw new AssetDaoException("Could not get asset by MMSI: " + mmsi, e);
         }
     }
 
@@ -108,7 +108,7 @@ public class AssetSEDao {
         } catch (NoResultException e) {
             return null;
         } catch (Exception e) {
-            throw new AssetDaoException(e.toString(), e);
+            throw new AssetDaoException("Could not get asset by ICCAT: " + iccat, e);
         }
     }
 
@@ -120,7 +120,7 @@ public class AssetSEDao {
         } catch (NoResultException e) {
             return null;
         } catch (Exception e) {
-            throw new AssetDaoException(e.toString(), e);
+            throw new AssetDaoException("Could not get asset by UVI: " + uvi, e);
         }
     }
 
@@ -132,7 +132,7 @@ public class AssetSEDao {
         } catch (NoResultException e) {
             return null;
         } catch (Exception e) {
-            throw new AssetDaoException(e.toString(), e);
+            throw new AssetDaoException("Could not get asset by GFCM: " + gfcm, e);
         }
     }
 
@@ -173,11 +173,15 @@ public class AssetSEDao {
 
     @SuppressWarnings("unchecked")
     public List<AssetSE> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize,
-            List<SearchKeyValue> searchFields, boolean isDynamic) {
-        AuditQuery query = createQuery(searchFields, isDynamic);
-        query.setFirstResult(pageSize * (pageNumber - 1));
-        query.setMaxResults(pageSize);
-        return query.getResultList();
+            List<SearchKeyValue> searchFields, boolean isDynamic) throws AssetDaoException {
+        try {
+            AuditQuery query = createQuery(searchFields, isDynamic);
+            query.setFirstResult(pageSize * (pageNumber - 1));
+            query.setMaxResults(pageSize);
+            return query.getResultList();
+        } catch (Exception e) {
+            throw new AssetDaoException("Could not get asset list", e);
+        }
     }
 
     private AuditQuery createQuery(List<SearchKeyValue> searchFields, boolean isDynamic) {

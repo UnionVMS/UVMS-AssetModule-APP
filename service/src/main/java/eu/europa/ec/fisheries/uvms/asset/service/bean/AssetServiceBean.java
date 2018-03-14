@@ -12,56 +12,48 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.asset.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
-import eu.europa.ec.fisheries.uvms.asset.message.ModuleQueue;
-import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
-import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
-import eu.europa.ec.fisheries.uvms.asset.message.mapper.AuditModuleRequestMapper;
-import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.uvms.asset.types.*;
-import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetGroupDTO;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetIdTypeEnum;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
+import eu.europa.ec.fisheries.uvms.asset.types.NoteActivityCode;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
 import eu.europa.ec.fisheries.uvms.dao.bean.AssetSEDao;
+import eu.europa.ec.fisheries.uvms.dao.exception.AssetDaoMappingException;
 import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetListResponsePaginated;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
 import eu.europa.ec.fisheries.uvms.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 @Stateless
 public class AssetServiceBean implements AssetService {
 
     private static final Logger LOG = LoggerFactory.getLogger(AssetServiceBean.class);
+    
+    @Inject
+    private AuditServiceBean auditService;
 
-    @EJB
-    MessageProducer messageProducer;
+    @Inject
+    private AssetSEDao assetSEDao;
 
-    @EJB
-    AssetQueueConsumer reciever;
-
-
-
-    @EJB
-    AssetSEDao assetSEDao;
-
-    @EJB
-    AssetGroupDao assetGroupDao;
+    @Inject
+    private AssetGroupDao assetGroupDao;
 
     /**
      * {@inheritDoc}
@@ -71,24 +63,18 @@ public class AssetServiceBean implements AssetService {
      * @throws AssetException
      */
     @Override
-    public AssetSE createAsset(AssetSE asset, String username) throws AssetException {
+    public AssetSE createAsset(AssetSE asset, String username) throws AssetServiceException {
 
-        assertAssetDoesNotExist(asset);
-        AssetSE createdAssetEntity = assetSEDao.createAsset(asset);
-
+        AssetSE createdAssetEntity;
         try {
-            String auditData = AuditModuleRequestMapper.mapAuditLogAssetCreated(createdAssetEntity.getId().toString(),
-                    username);
-            messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-        } catch (AssetMessageException e) {
-            LOG.warn("Failed to send audit log message! Asset with guid {} was created ",
-                    createdAssetEntity.getId());
-        } catch (AuditModelMarshallException e) {
-            LOG.error("Failed to send audit log message! Asset with guid {} was created ",
-                    createdAssetEntity.getId());
+            createdAssetEntity = assetSEDao.createAsset(asset);
+        } catch (AssetDaoException e) {
+            throw new AssetServiceException("Could not create asset", e);
         }
+        
+        auditService.logAssetCreated(createdAssetEntity, username);
+        
         return createdAssetEntity;
-
     }
 
     /**
@@ -99,8 +85,8 @@ public class AssetServiceBean implements AssetService {
      * @throws AssetException
      */
     @Override
-    public AssetListResponsePaginated getAssetList(AssetListQuery query) throws AssetException {
-
+    public AssetListResponsePaginated getAssetList(AssetListQuery query) throws AssetServiceException {
+        
         if (query == null) {
             throw new InputArgumentException("Cannot get asset list because query is null.");
         }
@@ -118,26 +104,31 @@ public class AssetServiceBean implements AssetService {
         int listSize = query.getPagination().getListSize();
         boolean isDynamic = query.getAssetSearchCriteria().isIsDynamic();
 
-        List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query.getAssetSearchCriteria()
-                .getCriterias());
+        try {
+            List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query.getAssetSearchCriteria()
+                    .getCriterias());
 
-        Long numberOfAssets = assetSEDao.getAssetCount(searchFields, isDynamic);
+            Long numberOfAssets = assetSEDao.getAssetCount(searchFields, isDynamic);
 
-        int numberOfPages = 0;
-        if (listSize != 0) {
-            numberOfPages = (int) (numberOfAssets / listSize);
-            if (numberOfAssets % listSize != 0) {
-                numberOfPages += 1;
+            int numberOfPages = 0;
+            if (listSize != 0) {
+                numberOfPages = (int) (numberOfAssets / listSize);
+                if (numberOfAssets % listSize != 0) {
+                    numberOfPages += 1;
+                }
             }
+
+            List<AssetSE> assetEntityList = assetSEDao.getAssetListSearchPaginated(page, listSize, searchFields,
+                    isDynamic);
+
+            AssetListResponsePaginated listAssetResponse = new AssetListResponsePaginated();
+            listAssetResponse.setCurrentPage(page);
+            listAssetResponse.setTotalNumberOfPages(numberOfPages);
+            listAssetResponse.getAssetList().addAll(assetEntityList);
+            return listAssetResponse;
+        } catch (AssetDaoException | AssetDaoMappingException e) {
+            throw new AssetServiceException("Could not get asset list", e);
         }
-
-        List<AssetSE> assetEntityList = assetSEDao.getAssetListSearchPaginated(page, listSize, searchFields, isDynamic);
-
-        AssetListResponsePaginated listAssetResponse = new AssetListResponsePaginated();
-        listAssetResponse.setCurrentPage(page);
-        listAssetResponse.setTotalNumberOfPages(numberOfPages);
-        listAssetResponse.getAssetList().addAll(assetEntityList);
-        return listAssetResponse;
     }
 
     /**
@@ -148,7 +139,7 @@ public class AssetServiceBean implements AssetService {
      * @throws AssetException
      */
     @Override
-    public Long getAssetListCount(AssetListQuery query) throws AssetException {
+    public Long getAssetListCount(AssetListQuery query) throws AssetServiceException {
         if (query == null) {
             throw new InputArgumentException("Cannot get asset list count because query is null.");
         }
@@ -164,10 +155,14 @@ public class AssetServiceBean implements AssetService {
 
         boolean isDynamic = query.getAssetSearchCriteria().isIsDynamic();
 
-        List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query.getAssetSearchCriteria()
-                .getCriterias());
+        try {
+            List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query.getAssetSearchCriteria()
+                    .getCriterias());
 
-        return assetSEDao.getAssetCount(searchFields, isDynamic);
+            return assetSEDao.getAssetCount(searchFields, isDynamic);
+        } catch (AssetDaoException | AssetDaoMappingException e) {
+            throw new AssetServiceException("Could not get asset list count", e);
+        }
     }
 
     /**
@@ -178,42 +173,20 @@ public class AssetServiceBean implements AssetService {
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
      */
     @Override
-    public AssetSE updateAsset(AssetSE asset, String username, String comment) throws AssetException {
+    public AssetSE updateAsset(AssetSE asset, String username, String comment) throws AssetServiceException {
         AssetSE updatedAsset = updateAssetInternal(asset, username);
-        logAssetUpdated(updatedAsset, comment, username);
+        auditService.logAssetUpdated(updatedAsset, comment, username);
         return updatedAsset;
     }
 
     @Override
-    public AssetSE archiveAsset(AssetSE asset, String username, String comment) throws AssetException {
+    public AssetSE archiveAsset(AssetSE asset, String username, String comment) throws AssetServiceException {
         AssetSE archivedAsset = updateAssetInternal(asset, username);
-        logAssetArchived(archivedAsset, comment, username);
+        auditService.logAssetArchived(archivedAsset, comment, username);
         return archivedAsset;
     }
 
-    private void logAssetUpdated(AssetSE asset, String comment, String username) throws AssetMessageException {
-        try {
-            String auditData = AuditModuleRequestMapper.mapAuditLogAssetUpdated(asset.getId().toString(), comment,
-                    username);
-            messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-        } catch (AuditModelMarshallException e) {
-            LOG.error("Failed to send audit log message! Asset with guid {} was updated ",
-                    asset.getId().toString());
-        }
-    }
-
-    private void logAssetArchived(AssetSE asset, String comment, String username) throws AssetMessageException {
-        try {
-            String auditData = AuditModuleRequestMapper.mapAuditLogAssetArchived(asset.getId().toString(), comment,
-                    username);
-            messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-        } catch (AuditModelMarshallException e) {
-            LOG.error("Failed to send audit log message! Asset with guid {} was archived ",
-                    asset.getId().toString());
-        }
-    }
-
-    private AssetSE updateAssetInternal(AssetSE asset, String username) throws AssetException {
+    private AssetSE updateAssetInternal(AssetSE asset, String username) throws AssetServiceException {
 
         if (asset == null) {
             throw new InputArgumentException("No asset to update");
@@ -223,14 +196,7 @@ public class AssetServiceBean implements AssetService {
             throw new InputArgumentException("No id on asset to update");
         }
 
-        if (asset.getCfr() == null || asset.getCfr().isEmpty()) asset.setCfr(null);
-        if (asset.getImo() == null || asset.getImo().isEmpty()) asset.setImo(null);
-        if (asset.getMmsi() == null || asset.getMmsi().isEmpty()) asset.setMmsi(null);
-        if (asset.getIrcs() == null || asset.getIrcs().isEmpty()) asset.setIrcs(null);
-        if (asset.getImo() == null || asset.getImo().isEmpty()) asset.setImo(null);
-        if (asset.getGfcm() == null || asset.getGfcm().isEmpty()) asset.setGfcm(null);
-        if (asset.getIccat() == null || asset.getIccat().isEmpty()) asset.setIccat(null);
-        if (asset.getUvi() == null || asset.getUvi().isEmpty()) asset.setUvi(null);
+        checkIdentifierNullValues(asset);
 
         try {
             AssetSE assetDB = getAssetById((asset.getId()));
@@ -238,17 +204,35 @@ public class AssetServiceBean implements AssetService {
                 asset.setUpdatedBy(username);
                 return assetSEDao.updateAsset(asset);
             } else {
-                throw new AssetException("Asset with that id does not exist");
+                throw new AssetServiceException("Asset with that id does not exist");
             }
         } catch (AssetException e) {
-            LOG.error("[ Error when updating asset. ] {}", e.getMessage());
-            throw new AssetModelException(e.getMessage(), e);
+            throw new AssetServiceException("Could not update asset, id: " + asset.getId(), e);
         }
+    }
+
+    private void checkIdentifierNullValues(AssetSE asset) {
+        if (asset.getCfr() == null || asset.getCfr().isEmpty())
+            asset.setCfr(null);
+        if (asset.getImo() == null || asset.getImo().isEmpty())
+            asset.setImo(null);
+        if (asset.getMmsi() == null || asset.getMmsi().isEmpty())
+            asset.setMmsi(null);
+        if (asset.getIrcs() == null || asset.getIrcs().isEmpty())
+            asset.setIrcs(null);
+        if (asset.getImo() == null || asset.getImo().isEmpty())
+            asset.setImo(null);
+        if (asset.getGfcm() == null || asset.getGfcm().isEmpty())
+            asset.setGfcm(null);
+        if (asset.getIccat() == null || asset.getIccat().isEmpty())
+            asset.setIccat(null);
+        if (asset.getUvi() == null || asset.getUvi().isEmpty())
+            asset.setUvi(null);
     }
 
 
     @Override
-    public AssetSE upsertAsset(AssetSE asset, String username) throws AssetException {
+    public AssetSE upsertAsset(AssetSE asset, String username) throws AssetServiceException {
 
         if (asset == null) {
             throw new InputArgumentException("No asset to upsert");
@@ -267,7 +251,7 @@ public class AssetServiceBean implements AssetService {
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
      */
     @Override
-    public AssetSE getAssetById(AssetId assetId, AssetDataSourceQueue source) throws AssetException {
+    public AssetSE getAssetById(AssetId assetId, AssetDataSourceQueue source) throws AssetServiceException {
         AssetSE asset = null;
 
         if (assetId == null) {
@@ -299,7 +283,7 @@ public class AssetServiceBean implements AssetService {
     }
 
 
-    public AssetSE getAssetById(AssetId assetId) throws AssetException {
+    public AssetSE getAssetById(AssetId assetId) throws AssetServiceException {
 
         if (assetId == null) {
             throw new InputArgumentException("AssetId object is null");
@@ -309,34 +293,38 @@ public class AssetServiceBean implements AssetService {
             throw new InputArgumentException("AssetId value or type is null");
         }
 
-
-        switch (assetId.getType()) {
-            case CFR:
-                return assetSEDao.getAssetByCfr(assetId.getValue());
-            case IRCS:
-                return assetSEDao.getAssetByIrcs(assetId.getValue());
-            case INTERNAL_ID:
-                UUID uuid = UUID.fromString(assetId.getGuid());
-                return assetSEDao.getAssetById(uuid);
-            case IMO:
-                checkNumberAssetId(assetId.getValue());
-                return assetSEDao.getAssetByImo(assetId.getValue());
-            case MMSI:
-                checkNumberAssetId(assetId.getValue());
-                return assetSEDao.getAssetByMmsi(assetId.getValue());
-            case ICCAT:
-                return assetSEDao.getAssetByIccat(assetId.getValue());
-            case UVI:
-                return assetSEDao.getAssetByUvi(assetId.getValue());
-            case GFCM:
-                return assetSEDao.getAssetByGfcm(assetId.getValue());
-            default:
-                throw new NoAssetEntityFoundException("Non valid asset id type");
+        try {
+            switch (assetId.getType()) {
+                case CFR:
+                    return assetSEDao.getAssetByCfr(assetId.getValue());
+                case IRCS:
+                    return assetSEDao.getAssetByIrcs(assetId.getValue());
+                case INTERNAL_ID:
+                    UUID uuid = UUID.fromString(assetId.getGuid());
+                    return assetSEDao.getAssetById(uuid);
+                case IMO:
+                    checkNumberAssetId(assetId.getValue());
+                    return assetSEDao.getAssetByImo(assetId.getValue());
+                case MMSI:
+                    checkNumberAssetId(assetId.getValue());
+                    return assetSEDao.getAssetByMmsi(assetId.getValue());
+                case ICCAT:
+                    return assetSEDao.getAssetByIccat(assetId.getValue());
+                case UVI:
+                    return assetSEDao.getAssetByUvi(assetId.getValue());
+                case GFCM:
+                    return assetSEDao.getAssetByGfcm(assetId.getValue());
+                default:
+                    throw new NoAssetEntityFoundException("Non valid asset id type");
+            }
+        } catch (AssetDaoException e) {
+            throw new AssetServiceException("Could not get asset by id: " + assetId.getType() + "=" + assetId
+                    .getValue(), e);
         }
     }
 
     @Override
-    public AssetSE getAssetFromAssetIdAtDate(String idType, String idValue, LocalDateTime date) throws AssetException {
+    public AssetSE getAssetFromAssetIdAtDate(String idType, String idValue, LocalDateTime date) throws AssetServiceException {
 
         if (idType == null) {
             throw new InputArgumentException("Type is null");
@@ -378,13 +366,17 @@ public class AssetServiceBean implements AssetService {
      * @throws AssetException
      */
     @Override
-    public AssetSE getAssetById(UUID id) throws AssetException {
+    public AssetSE getAssetById(UUID id) throws AssetServiceException {
         if (id == null) {
             throw new InputArgumentException("Id is null");
         }
-        return assetSEDao.getAssetById(id);
-    }
 
+        try {
+            return assetSEDao.getAssetById(id);
+        } catch (AssetDaoException e) {
+            throw new AssetServiceException("Could not get asset by id: " + id, e);
+        }
+    }
 
     /**
      * @param groups
@@ -392,7 +384,7 @@ public class AssetServiceBean implements AssetService {
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
      */
     @Override
-    public List<AssetSE> getAssetListByAssetGroups(List<AssetGroupDTO> groups) throws AssetException {
+    public List<AssetSE> getAssetListByAssetGroups(List<AssetGroupDTO> groups) throws AssetServiceException {
         LOG.debug("Getting asset by ID.");
         if (groups == null || groups.isEmpty()) {
             throw new InputArgumentException("No groups in query");
@@ -404,7 +396,7 @@ public class AssetServiceBean implements AssetService {
 
     @Override
     //public AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetException {
-    public Object getAssetListGroupByFlagState(List assetIds) throws AssetException {
+    public Object getAssetListGroupByFlagState(List assetIds) throws AssetServiceException {
         LOG.debug("Getting asset list by asset ids group by flags State.");
 		/*
 		List assetListGroupByFlagState = getAssetListGroupByFlagState_FROM_DOMAINMODEL(assetIds);
@@ -422,7 +414,7 @@ public class AssetServiceBean implements AssetService {
     }
 
     @Override
-    public void deleteAsset(AssetId assetId) throws AssetException {
+    public void deleteAsset(AssetId assetId) throws AssetServiceException {
 
         if (assetId == null) {
             return;
@@ -433,70 +425,28 @@ public class AssetServiceBean implements AssetService {
             // get an object based on what type of id it has
             assetEntity = getAssetById(assetId);
             assetSEDao.deleteAsset(assetEntity);
-        } catch (NoAssetEntityFoundException e) {
-            LOG.warn(e.toString(), e);
-            throw e;
+        } catch (AssetDaoException e) {
+            throw new AssetServiceException("Could not delet asset with id: " + assetId.getType() + "=" + assetId
+                    .getValue(), e);
         }
     }
 
     @Override
-    public List<AssetSE> getRevisionsForAsset(AssetSE asset) throws AssetException {
+    public List<AssetSE> getRevisionsForAsset(AssetSE asset) throws AssetServiceException {
         try {
             return assetSEDao.getRevisionsForAsset(asset);
-        } catch (NoAssetEntityFoundException e) {
-            LOG.warn(e.toString(), e);
-            throw e;
+        } catch (AssetDaoException e) {
+            throw new AssetServiceException("Could not get revisions for asset: " + asset.getId(), e);
         }
     }
 
     @Override
-    public AssetSE getAssetRevisionForRevisionId(AssetSE asset, UUID historyId) throws AssetException {
+    public AssetSE getAssetRevisionForRevisionId(AssetSE asset, UUID historyId) throws AssetServiceException {
         try {
             return assetSEDao.getAssetRevisionForHistoryId(asset, historyId);
-        } catch (NoAssetEntityFoundException e) {
-            LOG.warn(e.toString(), e);
-            throw e;
+        } catch (AssetDaoException e) {
+            throw new AssetServiceException("Could not get asset for revision id: " + historyId, e);
         }
-    }
-
-    private void assertAssetDoesNotExist(AssetSE asset) throws AssetException {
-
-        List<String> messages = new ArrayList<>();
-        try {
-            if (asset.getCfr() != null && assetSEDao.getAssetByCfr(asset.getCfr()) != null) {
-                messages.add("An asset with this CFR value already exists.");
-            }
-        } catch (NoAssetEntityFoundException e) {
-            // OK
-        }
-
-        try {
-            if (asset.getImo() != null && assetSEDao.getAssetByImo(asset.getImo()) != null) {
-                messages.add("An asset with this IMO value already exists.");
-            }
-        } catch (NoAssetEntityFoundException e) {
-            // OK
-        }
-
-        try {
-            if (asset.getMmsi() != null && assetSEDao.getAssetByMmsi(asset.getMmsi()) != null) {
-                messages.add("An asset with this MMSI value already exists.");
-            }
-        } catch (NoAssetEntityFoundException e) {
-            // OK
-        }
-        try {
-            if (asset.getIrcs() != null && assetSEDao.getAssetByIrcs(asset.getIrcs()) != null) {
-                messages.add("An asset with this IRCS value already exists.");
-            }
-        } catch (NoAssetEntityFoundException e) {
-            // OK
-        }
-
-        if (!messages.isEmpty()) {
-            throw new AssetModelException(StringUtils.join(messages, " "));
-        }
-
     }
 
 

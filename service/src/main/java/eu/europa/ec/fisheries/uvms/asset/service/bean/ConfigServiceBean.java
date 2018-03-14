@@ -15,18 +15,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.ejb.EJB;
-import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.ConfigModelException;
 import eu.europa.ec.fisheries.uvms.asset.types.Config;
-import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.types.ConfigFieldEnum;
 import eu.europa.ec.fisheries.uvms.asset.types.ConfigValue;
 import eu.europa.ec.fisheries.uvms.asset.types.ConfigurationDto;
@@ -40,23 +37,23 @@ import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
 import eu.europa.ec.fisheries.uvms.entity.model.LicenseType;
 import eu.europa.ec.fisheries.uvms.entity.model.Setting;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 
 @Stateless
-@LocalBean
 public class ConfigServiceBean {
-	final static Logger LOG = LoggerFactory.getLogger(ConfigServiceBean.class);
-
+	private static final Logger LOG = LoggerFactory.getLogger(ConfigServiceBean.class);
 
 	@EJB
 	private ParameterService parameterService;
 
-
-	@PersistenceContext
-    private EntityManager entityManager;
+	@EJB
+	LicenseTypeDao licenseDao;
+	
+	@EJB
+	FlagStateDao flagStateDao;
+	
+	@EJB
+	SettingDao settingDao;
 
 	public List<Config> getConfiguration() throws AssetException {
 		ConfigurationDto configuration = getConfiguration(ConfigFieldEnum.ALL);
@@ -76,21 +73,6 @@ public class ConfigServiceBean {
 			throw new AssetException("Couldn't get parameters");
 		}
 	}
-
-
-	/**
-	 *
-	 */
-
-
-	@EJB
-	LicenseTypeDao licenseDao;
-
-	@EJB
-	FlagStateDao flagStateDao;
-
-	@EJB
-	SettingDao settingDao;
 
 	public List<String> getLicenseType() throws ConfigModelException {
 		try {
