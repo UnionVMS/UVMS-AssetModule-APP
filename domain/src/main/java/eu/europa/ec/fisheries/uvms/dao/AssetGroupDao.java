@@ -16,8 +16,7 @@ import java.util.UUID;
 
 import javax.ejb.Local;
 
-import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
-import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
 
 @Local
 public interface AssetGroupDao {

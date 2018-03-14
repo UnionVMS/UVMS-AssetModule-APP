@@ -2,13 +2,9 @@ package eu.europa.ec.fisheries.uvms.dao.bean;
 
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupFieldDao;
 import eu.europa.ec.fisheries.uvms.dao.Dao;
-import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
-import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
-import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField;
 
-import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.persistence.*;
 import java.util.List;

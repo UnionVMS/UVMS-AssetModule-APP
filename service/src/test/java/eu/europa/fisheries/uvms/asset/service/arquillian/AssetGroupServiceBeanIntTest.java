@@ -2,7 +2,7 @@ package eu.europa.fisheries.uvms.asset.service.arquillian;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
-import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;

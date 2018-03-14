@@ -19,7 +19,6 @@ import static org.mockito.Mockito.when;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -28,7 +27,7 @@ import javax.persistence.TypedQuery;
 import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.dao.bean.AssetGroupDaoBean;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
-import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,7 +37,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
-import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
 
 
 @RunWith(MockitoJUnitRunner.class)

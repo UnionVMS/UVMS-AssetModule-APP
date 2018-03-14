@@ -3,10 +3,11 @@ package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
 import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
+import eu.europa.ec.fisheries.uvms.dao.AssetGroupFieldDao;
 import eu.europa.ec.fisheries.uvms.dao.bean.AssetGroupFieldDaoBean;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
-import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
-import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
@@ -28,7 +29,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
     private AssetGroupDao assetGroupDao;
 
     @EJB
-    AssetGroupFieldDaoBean assetGroupFieldDaoBean;
+    AssetGroupFieldDao assetGroupFieldDaoBean;
 
 
     @Test

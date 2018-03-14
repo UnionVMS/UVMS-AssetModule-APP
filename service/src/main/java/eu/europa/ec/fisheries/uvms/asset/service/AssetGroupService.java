@@ -12,7 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.service;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
 
 import javax.ejb.Local;
 import java.util.List;

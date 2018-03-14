@@ -9,7 +9,7 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.entity.assetgroup;
+package eu.europa.ec.fisheries.uvms.entity.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -18,9 +18,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import static eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField.ASSETGROUP_FIELD_CLEAR;
-import static eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField.ASSETGROUP_FIELD_GETBYID;
-import static eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField.ASSETGROUP_RETRIEVE_FIELDS_FOR_GROUP;
+import static eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField.ASSETGROUP_FIELD_CLEAR;
+import static eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField.ASSETGROUP_FIELD_GETBYID;
+import static eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField.ASSETGROUP_RETRIEVE_FIELDS_FOR_GROUP;
 
 
 /**

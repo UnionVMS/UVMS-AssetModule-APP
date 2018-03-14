@@ -14,7 +14,7 @@ package eu.europa.ec.fisheries.uvms.dao.bean;
 import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
 import eu.europa.ec.fisheries.uvms.dao.Dao;
-import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

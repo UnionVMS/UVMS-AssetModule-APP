@@ -1,8 +1,8 @@
 package eu.europa.ec.fisheries.uvms.dao;
 
 
-import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
-import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField;
 
 import javax.ejb.Local;
 import java.util.List;
