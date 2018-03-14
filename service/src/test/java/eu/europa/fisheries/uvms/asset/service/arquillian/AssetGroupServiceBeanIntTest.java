@@ -11,6 +11,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -38,9 +40,9 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     public void deleteAssetGroupById() throws AssetException {
 
         AssetGroupEntity createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
-        String guid = createdAssetGroupEntity.getGuid();
+        UUID guid = createdAssetGroupEntity.getId();
 
-        assetGroupService.deleteAssetGroupById(createdAssetGroupEntity.getGuid(), createdAssetGroupEntity.getOwner());
+        assetGroupService.deleteAssetGroupById(createdAssetGroupEntity.getId(), createdAssetGroupEntity.getOwner());
 
         try {
             AssetGroupEntity fetchedAssetGroupEntity = assetGroupService.getAssetGroupById(guid);
@@ -56,13 +58,13 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     public void getAssetGroupById() throws AssetException {
 
         AssetGroupEntity createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
-        String guid = createdAssetGroupEntity.getGuid();
+        UUID guid = createdAssetGroupEntity.getId();
 
-        assetGroupService.deleteAssetGroupById(createdAssetGroupEntity.getGuid(), createdAssetGroupEntity.getOwner());
+        assetGroupService.deleteAssetGroupById(createdAssetGroupEntity.getId(), createdAssetGroupEntity.getOwner());
 
         try {
             AssetGroupEntity fetchedAssetGroupEntity = assetGroupService.getAssetGroupById(guid);
-            Assert.assertTrue(fetchedAssetGroupEntity.getGuid().equalsIgnoreCase(guid));
+            Assert.assertTrue(fetchedAssetGroupEntity.getId().equals(guid));
         }catch (AssetException s)
         {
             Assert.assertTrue(false);
@@ -74,7 +76,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     public void updateAssetGroup() throws AssetException {
 
         AssetGroupEntity createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
-        String guid = createdAssetGroupEntity.getGuid();
+        UUID guid = createdAssetGroupEntity.getId();
         String oldUserName = createdAssetGroupEntity.getOwner();
         String newUserName = "UPDATED_SERVICE_TEST";
         createdAssetGroupEntity.setOwner(newUserName);
@@ -95,24 +97,24 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     @Ignore
     public void getAssetGroupListByAssetGuid() throws AssetException {
 
-        List<String> createdList = new ArrayList<>();
-        List<String> fetchedList = new ArrayList<>();
+        List<UUID> createdList = new ArrayList<>();
+        List<UUID> fetchedList = new ArrayList<>();
         List<AssetGroupEntity> fetchedEntityList ;
         for (int i = 0; i < 5; i++) {
             AssetGroupEntity createdAssetGroupEntity = createAndStoreAssetGroupEntity("TEST");
-            createdList.add(createdAssetGroupEntity.getGuid());
+            createdList.add(createdAssetGroupEntity.getId());
         }
 
-        String assetGuid = UUID.randomUUID().toString();
+        UUID assetGuid = UUID.randomUUID();
 
         fetchedEntityList = assetGroupService.getAssetGroupListByAssetGuid(assetGuid);
         for(AssetGroupEntity e : fetchedEntityList){
-            fetchedList.add(e.getGuid());
+            fetchedList.add(e.getId());
         }
 
         // the list from db MUST contain our created GUIDS:s
         Boolean ok = true;
-        for (String aCreatedGUID : createdList) {
+        for (UUID aCreatedGUID : createdList) {
             if(!fetchedList.contains(aCreatedGUID)){
                 ok = false;
                 break;
@@ -171,7 +173,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
         AssetGroupEntity ag = new AssetGroupEntity();
 
         ag.setUpdatedBy("test");
-        ag.setUpdateTime(new Date(System.currentTimeMillis()));
+        ag.setUpdateTime(LocalDateTime.now(Clock.systemUTC()));
         ag.setArchived(false);
         ag.setName("The Name");
         ag.setOwner(user);

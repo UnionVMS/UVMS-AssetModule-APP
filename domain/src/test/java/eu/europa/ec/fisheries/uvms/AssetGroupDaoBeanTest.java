@@ -16,6 +16,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -100,9 +102,8 @@ public class AssetGroupDaoBeanTest {
 	public static AssetGroupEntity getFiltergroup(String user, long id) {
 		AssetGroupEntity group = new AssetGroupEntity();
 		group.setGlobal(false);
-		group.setGuid(id+"");
 		group.setName("GROUPNAME");
-		group.setUpdateTime(new Date());
+		group.setUpdateTime(LocalDateTime.now(Clock.systemUTC()));
 		group.setUpdatedBy("DAOTEST");
 		group.setOwner(user);
 
@@ -114,7 +115,7 @@ public class AssetGroupDaoBeanTest {
 		filter.setValue("ASSET-NAME");
 
 		filter.setUpdatedBy("DAOTEST");
-		filter.setUpdateTime(new Date());
+		filter.setUpdateTime(LocalDateTime.now(Clock.systemUTC()));
 
 
 		return group;

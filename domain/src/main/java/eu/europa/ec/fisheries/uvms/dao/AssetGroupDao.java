@@ -12,6 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.dao;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.ejb.Local;
 
@@ -20,56 +21,65 @@ import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
 
 @Local
 public interface AssetGroupDao {
-	
+
 	/**
 	 * Create asset group
+	 *
 	 * @param group
 	 * @return
 	 */
 	public AssetGroupEntity createAssetGroup(AssetGroupEntity group) throws AssetGroupDaoException;
-	
+
 	/**
 	 * Get asset group by guid
+	 *
 	 * @param guid
 	 * @return
 	 */
-	public AssetGroupEntity getAssetGroupByGuid(String guid) throws AssetGroupDaoException;
-	
+	public AssetGroupEntity getAssetGroupByGuid(UUID guid) throws AssetGroupDaoException;
+
 	/**
 	 * Update asset group
+	 *
 	 * @param group
 	 * @return
 	 */
 	public AssetGroupEntity updateAssetGroup(AssetGroupEntity group) throws AssetGroupDaoException;
-	
+
 	/**
 	 * Delete asset group
+	 *
 	 * @param group
 	 * @return
 	 * @throws eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException
 	 */
 	public AssetGroupEntity deleteAssetGroup(AssetGroupEntity group) throws AssetGroupDaoException;
-	
+
 	/**
 	 * Get all asset groups (FIND_ALL)
+	 *
 	 * @return
-     * @throws eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException
+	 * @throws eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException
 	 */
 	public List<AssetGroupEntity> getAssetGroupAll() throws AssetGroupDaoException;
-	
+
 	/**
 	 * Get asset groups by user
+	 *
 	 * @param user
 	 * @return
-     * @throws eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException
+	 * @throws eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException
 	 */
 	public List<AssetGroupEntity> getAssetGroupByUser(String user) throws AssetGroupDaoException;
-	
+
 	/**
 	 * Get asset groups by guidList
+	 *
 	 * @param guidList
 	 * @return
 	 * @throws eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException
 	 */
-	public List<AssetGroupEntity> getAssetGroupsByGroupGuidList(List<String> guidList) throws AssetGroupDaoException;
+	List<AssetGroupEntity> getAssetGroupsByGroupGuidList(List<UUID> guidList) throws AssetGroupDaoException;
+
+
 }

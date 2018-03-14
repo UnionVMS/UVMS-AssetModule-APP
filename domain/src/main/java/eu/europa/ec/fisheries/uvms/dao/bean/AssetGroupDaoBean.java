@@ -12,6 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.dao.bean;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.ejb.Stateless;
 import javax.persistence.*;
@@ -46,7 +47,7 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
     }
 
     @Override
-    public AssetGroupEntity getAssetGroupByGuid(String groupId) throws AssetGroupDaoException {
+    public AssetGroupEntity getAssetGroupByGuid(UUID groupId) throws AssetGroupDaoException {
         try {
             TypedQuery<AssetGroupEntity> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_GUID, AssetGroupEntity.class);
             query.setParameter("guid", groupId);
@@ -64,7 +65,7 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
             return group;
         } catch (IllegalArgumentException | TransactionRequiredException e) {
             LOG.error("[ Error when updating asset group. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ update asset group, id: " + group.getGuid() + " ] " + e.getMessage());
+            throw new AssetGroupDaoException("[ update asset group, id: " + group.getId() + " ] " + e.getMessage());
         } catch (Exception e) {
             LOG.error("[ Error when updating asset group. ] {}", e.getMessage());
             throw new AssetGroupDaoException("[ create asset ] " + e.getMessage());
@@ -78,7 +79,7 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
             return group;
         } catch (IllegalArgumentException | TransactionRequiredException e) {
             LOG.error("[ Error when deleting asset group. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ delete asset group, id: " + group.getGuid() + " ] " + e.getMessage());
+            throw new AssetGroupDaoException("[ delete asset group, id: " + group.getId() + " ] " + e.getMessage());
         } catch (Exception e) {
             LOG.error("[ Error when deleting asset group. ] {}", e.getMessage());
             throw new AssetGroupDaoException("[ create asset ] " + e.getMessage());
@@ -110,7 +111,7 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
     }
 
 	@Override
-	public List<AssetGroupEntity> getAssetGroupsByGroupGuidList(List<String> guidList) throws AssetGroupDaoException {
+	public List<AssetGroupEntity> getAssetGroupsByGroupGuidList(List<UUID> guidList) throws AssetGroupDaoException {
         try {
             TypedQuery<AssetGroupEntity> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_GUID_LIST, AssetGroupEntity.class);
             query.setParameter("guidList", guidList);

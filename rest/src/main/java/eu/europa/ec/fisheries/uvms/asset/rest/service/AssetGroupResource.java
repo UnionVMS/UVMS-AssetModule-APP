@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import java.util.UUID;
 
 @Path("/group")
 @Stateless
@@ -78,8 +79,10 @@ public class AssetGroupResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public ResponseDto getAssetById(@PathParam(value = "id") final String id) {
         try {
+
+            UUID uuid = UUID.fromString(id);
             LOG.info("Getting asset group by ID {}",id);
-            return new ResponseDto(assetGroupService.getAssetGroupById(id), ResponseCodeConstant.OK);
+            return new ResponseDto(assetGroupService.getAssetGroupById(uuid), ResponseCodeConstant.OK);
         } catch (Exception e) {
             LOG.error("[ Error when getting asset by ID. ] {}", e.getMessage(), e.getStackTrace());
             return ErrorHandler.getFault(e);
@@ -122,7 +125,6 @@ public class AssetGroupResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public ResponseDto updateAssetGroup(final AssetGroupEntity assetGroup) {
         try {
-            LOG.info("Updating asset group:{}",assetGroup);
             return new ResponseDto(assetGroupService.updateAssetGroup(assetGroup, servletRequest.getRemoteUser()), ResponseCodeConstant.OK);
         } catch (Exception e) {
             LOG.error("[ Error when updating asset group. ] {}", e.getMessage(), e.getStackTrace());
@@ -144,8 +146,8 @@ public class AssetGroupResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public ResponseDto deleteAssetGroup(@PathParam(value = "id") final String id) {
         try {
-            LOG.info("Deleting asset group: {}",id);
-            return new ResponseDto(assetGroupService.deleteAssetGroupById(id, servletRequest.getRemoteUser()), ResponseCodeConstant.OK);
+            UUID uuid = UUID.fromString(id);
+            return new ResponseDto(assetGroupService.deleteAssetGroupById(uuid, servletRequest.getRemoteUser()), ResponseCodeConstant.OK);
         } catch (Exception e) {
             LOG.error("[ Error when deleting asset group. ] {}", e.getMessage(), e.getStackTrace());
             return ErrorHandler.getFault(e);

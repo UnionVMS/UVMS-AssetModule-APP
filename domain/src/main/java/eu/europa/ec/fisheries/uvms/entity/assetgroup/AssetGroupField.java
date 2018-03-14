@@ -12,6 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.entity.assetgroup;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.*;
@@ -42,29 +43,28 @@ public class AssetGroupField implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="filter_id")
+	@Column(name="id")
 	private Long id;
 
 	@Size(max=80)
 	@NotNull
-	@Column(name="filter_field")
+	@Column(name="field")
 	private String field;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="filter_updatetime")
-	private Date updateTime;
+	@Column(name="updatetime")
+	private LocalDateTime updateTime;
 
 	@Size(max=60)
-	@Column(name="filter_updateuser")
+	@Column(name="updateuser")
 	private String updatedBy;
 
 	@Size(max=100)
 	@NotNull
-	@Column(name="filter_value")
+	@Column(name="value")
 	private String value;
 
 	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-	@JoinColumn(name="filter_group_id")
+	@JoinColumn(name="group_id")
 	private AssetGroupEntity assetgroup;
 
 	public AssetGroupField() {
@@ -86,11 +86,11 @@ public class AssetGroupField implements Serializable {
 		this.field = filterField;
 	}
 
-	public Date getUpdateTime() {
+	public LocalDateTime getUpdateTime() {
 		return this.updateTime;
 	}
 
-	public void setUpdateTime(Date updateTime) {
+	public void setUpdateTime(LocalDateTime updateTime) {
 		this.updateTime = updateTime;
 	}
 

@@ -27,8 +27,11 @@ import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Stateless
 public class AssetGroupServiceBean implements AssetGroupService {
@@ -60,16 +63,16 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
 
     @Override
-    public List<AssetGroupEntity> getAssetGroupListByAssetGuid(String assetGuid) throws AssetException {
+    public List<AssetGroupEntity> getAssetGroupListByAssetGuid(UUID assetGuid) throws AssetException {
         LOG.info("Getting asset group list by asset guid: {}.", assetGuid);
-        if (assetGuid == null || assetGuid.isEmpty()) {
+        if (assetGuid == null ) {
             throw new InputArgumentException("Invalid asset");
         }
 
         try {
             List<AssetGroupEntity> vesselGroupList = new ArrayList<>();
 
-            // DO a join instead
+            // TODO DO a join instead
             List<AssetGroupEntity> filterGroupList = assetGroupDao.getAssetGroupAll();
             /*
             for (AssetGroupEntity group : filterGroupList) {
@@ -91,8 +94,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
 
     @Override
-    public AssetGroupEntity getAssetGroupById(String guid) throws AssetException {
-        LOG.info("Getting asset group by id: {}.", guid);
+    public AssetGroupEntity getAssetGroupById(UUID guid) throws AssetException {
 
         if (guid == null) {
             throw new InputArgumentException("Cannot get asset group because ID is null.");
@@ -114,12 +116,12 @@ public class AssetGroupServiceBean implements AssetGroupService {
     @Override
     public AssetGroupEntity updateAssetGroup(AssetGroupEntity assetGroup, String username) throws AssetException {
 
-        if (assetGroup == null || assetGroup.getGuid() == null) {
+        if (assetGroup == null || assetGroup.getId() == null) {
             throw new InputArgumentException("Cannot update asset group because group or ID is null.");
         }
 
         try {
-            AssetGroupEntity groupEntity = assetGroupDao.getAssetGroupByGuid(assetGroup.getGuid());
+            AssetGroupEntity groupEntity = assetGroupDao.getAssetGroupByGuid(assetGroup.getId());
             if (groupEntity == null) {
                 throw new AssetGroupDaoException("No assetgroup found.");
             }
@@ -147,7 +149,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
 
     @Override
-    public AssetGroupEntity deleteAssetGroupById(String guid, String username) throws AssetException {
+    public AssetGroupEntity deleteAssetGroupById(UUID guid, String username) throws AssetException {
         LOG.info("Deleting asset group by id: {}.", guid);
 
         if (guid == null) {
@@ -161,7 +163,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
             }
             groupEntity.setArchived(true);
             groupEntity.setUpdatedBy(username);
-            groupEntity.setUpdateTime(DateUtils.getNowDateUTC());
+            groupEntity.setUpdateTime(LocalDateTime.now(Clock.systemUTC()));
             return groupEntity;
         } catch (AssetGroupDaoException e) {
             LOG.error("[ Error when deleting asset group. ] guid: {} username: {} exception: {}",guid,username, e.getMessage());

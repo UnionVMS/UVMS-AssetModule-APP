@@ -12,6 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.entity.assetgroup;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +37,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
+import org.hibernate.annotations.GenericGenerator;
 
 
 /**
@@ -47,65 +49,55 @@ import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
 @NamedQueries({
 	@NamedQuery(name=UvmsConstants.GROUP_ASSET_FIND_ALL, query="SELECT a FROM AssetGroupEntity a WHERE a.archived = false"),
 	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_USER, query="SELECT a FROM AssetGroupEntity a WHERE a.archived = false AND a.owner = :owner"),
-	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_GUID, query="SELECT a FROM AssetGroupEntity a WHERE a.guid = :guid"),
-	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_GUID_LIST, query="SELECT a FROM AssetGroupEntity a WHERE a.archived = false AND a.guid IN :guidList")
+	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_GUID, query="SELECT a FROM AssetGroupEntity a WHERE a.id = :guid"),
+	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_GUID_LIST, query="SELECT a FROM AssetGroupEntity a WHERE a.archived = false AND a.id IN :guidList")
 })
 public class AssetGroupEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="group_id")
-	private Long id;
+	@GeneratedValue(generator = "UUID")
+	@GenericGenerator(
+			name="UUID",
+			strategy="org.hibernate.id.UUIDGenerator"
+	)
+	@Column(name="id")
+	private UUID id;
 
-	@Column(name="group_archived")
+	@Column(name="archived")
 	private Boolean archived = false;
 
-	@Column(name="group_dynamic")
+	@Column(name="dynamic")
 	private Boolean dynamic = true;
 
-	@Column(name="group_global")
+	@Column(name="global")
 	private Boolean global = true;
-
-	@Size(max=36)
-	@NotNull
-	@Column(name="group_guid")
-	private String guid;
 
 	@Size(max=80)
 	@NotNull
-	@Column(name="group_name")
+	@Column(name="name")
 	private String name;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="group_updattim")
-	private Date updateTime;
+	@Column(name="updattim")
+	private LocalDateTime updateTime;
 
 	@Size(max=60)
-	@Column(name="group_upuser")
+	@Column(name="upuser")
 	private String updatedBy;
 
 	@Size(max=80)
 	@NotNull
-	@Column(name="group_user_id")
+	@Column(name="user_id")
 	private String owner;
-
-	//@OneToMany(mappedBy="assetgroup", fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval=true)
-	//private List<AssetGroupField> fields;
 
 	public AssetGroupEntity() {
 	}
 
-	@PrePersist
-	private void prepersist() {
-		setGuid(UUID.randomUUID().toString());
-	}
-	
-	public Long getId() {
+	public UUID getId() {
 		return this.id;
 	}
 
-	public void setId(Long id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
@@ -133,14 +125,6 @@ public class AssetGroupEntity implements Serializable {
 		this.global = global;
 	}
 
-	public String getGuid() {
-		return this.guid;
-	}
-
-	public void setGuid(String guid) {
-		this.guid = guid;
-	}
-
 	public String getName() {
 		return this.name;
 	}
@@ -149,11 +133,11 @@ public class AssetGroupEntity implements Serializable {
 		this.name = name;
 	}
 
-	public Date getUpdateTime() {
+	public LocalDateTime getUpdateTime() {
 		return this.updateTime;
 	}
 
-	public void setUpdateTime(Date updateTime) {
+	public void setUpdateTime(LocalDateTime updateTime) {
 		this.updateTime = updateTime;
 	}
 
@@ -173,18 +157,4 @@ public class AssetGroupEntity implements Serializable {
 		this.owner = owner;
 	}
 
-	/*
-	public List<AssetGroupField> getFields() {
-		if(this.fields == null) {
-			this.fields = new ArrayList<>();
-		}
-		return this.fields;
-	}
-
-	public void setFields(List<AssetGroupField> fields) {
-		this.fields = getFields();
-		this.fields.clear();
-		this.fields.addAll(fields);
-	}
-	*/
 }
