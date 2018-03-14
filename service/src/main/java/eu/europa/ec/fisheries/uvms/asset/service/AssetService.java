@@ -14,19 +14,15 @@ package eu.europa.ec.fisheries.uvms.asset.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-
-import javax.ejb.Local;
-
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-import eu.europa.ec.fisheries.uvms.asset.types.*;
-import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetGroupDTO;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
+import eu.europa.ec.fisheries.uvms.asset.types.NoteActivityCode;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetListResponsePaginated;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
 
-@Local
 public interface AssetService {
 
     /**
@@ -36,25 +32,25 @@ public interface AssetService {
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException
      */
-    AssetSE createAsset(AssetSE asset, String username) throws AssetException;
+    AssetSE createAsset(AssetSE asset, String username) throws AssetServiceException;
 
     /**
      * Get all Assets
      *
      * @param requestQuery
      * @return
-     * @throws AssetException
+     * @throws AssetServiceException
      */
-    AssetListResponsePaginated getAssetList(AssetListQuery requestQuery) throws AssetException;
+    AssetListResponsePaginated getAssetList(AssetListQuery requestQuery) throws AssetServiceException;
 
     /**
      * Get all Assets
      *
      * @param requestQuery
      * @return
-     * @throws AssetException
+     * @throws AssetServiceException
      */
-    Long getAssetListCount(AssetListQuery requestQuery) throws AssetException;
+    Long getAssetListCount(AssetListQuery requestQuery) throws AssetServiceException;
 
     /**
      * Get a Asset by its asset id from the source queue
@@ -62,18 +58,18 @@ public interface AssetService {
      * @param assetId
      * @param source
      * @return
-     * @throws AssetException
+     * @throws AssetServiceException
      */
-    AssetSE getAssetById(AssetId assetId, AssetDataSourceQueue source) throws AssetException;
+    AssetSE getAssetById(AssetId assetId, AssetDataSourceQueue source) throws AssetServiceException;
 
     /**
      * Get Asset By internal Id
      *
      * @param id
      * @return
-     * @throws AssetException
+     * @throws AssetServiceException
      */
-    AssetSE getAssetById(UUID id) throws AssetException;
+    AssetSE getAssetById(UUID id) throws AssetServiceException;
 
     /**
      * Update a Asset
@@ -82,9 +78,9 @@ public interface AssetService {
      * @param username
      * @param comment
      * @return
-     * @throws AssetException
+     * @throws AssetServiceException
      */
-    AssetSE updateAsset(AssetSE asset, String username, String comment) throws AssetException;
+    AssetSE updateAsset(AssetSE asset, String username, String comment) throws AssetServiceException;
 
     /**
      * Archives an asset.
@@ -92,18 +88,18 @@ public interface AssetService {
      * @param asset   an asset
      * @param comment a comment to the archiving
      * @return the archived asset
-     * @throws AssetException if unsuccessful
+     * @throws AssetServiceException if unsuccessful
      */
-    AssetSE archiveAsset(AssetSE asset, String username, String comment) throws AssetException;
+    AssetSE archiveAsset(AssetSE asset, String username, String comment) throws AssetServiceException;
 
     /**
      * Create asset if not exists, otherwise update asset
      *
      * @param asset
      * @return
-     * @throws AssetException
+     * @throws AssetServiceException
      */
-    AssetSE upsertAsset(AssetSE asset, String username) throws AssetException;
+    AssetSE upsertAsset(AssetSE asset, String username) throws AssetServiceException;
 
     /**
      * Returns a list of assets based on the searh criterias in the
@@ -111,16 +107,16 @@ public interface AssetService {
      *
      * @param groups
      * @return
-     * @throws AssetException
+     * @throws AssetServiceException
      */
-    List<AssetSE> getAssetListByAssetGroups(List<AssetGroupDTO> groups) throws AssetException;
+    List<AssetSE> getAssetListByAssetGroups(List<AssetGroupDTO> groups) throws AssetServiceException;
 
-    //AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetException;
-    Object getAssetListGroupByFlagState(List assetIds) throws AssetException;
+    //AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetServiceException;
+    Object getAssetListGroupByFlagState(List assetIds) throws AssetServiceException;
 
     NoteActivityCode getNoteActivityCodes();
 
-    void deleteAsset(AssetId assetId) throws AssetException;
+    void deleteAsset(AssetId assetId) throws AssetServiceException;
 
 
     /**
@@ -128,9 +124,9 @@ public interface AssetService {
      *
      * @param asset
      * @return
-     * @throws AssetException
+     * @throws AssetServiceException
      */
-    List<AssetSE> getRevisionsForAsset(AssetSE asset) throws AssetException;
+    List<AssetSE> getRevisionsForAsset(AssetSE asset) throws AssetServiceException;
 
 
     /**
@@ -139,9 +135,9 @@ public interface AssetService {
      * @param asset
      * @param historyId
      * @return
-     * @throws AssetException
+     * @throws AssetServiceException
      */
-    AssetSE getAssetRevisionForRevisionId(AssetSE asset, UUID historyId) throws AssetException;
+    AssetSE getAssetRevisionForRevisionId(AssetSE asset, UUID historyId) throws AssetServiceException;
 
 
     /** return asset as it was specidied date
@@ -150,8 +146,8 @@ public interface AssetService {
      * @param idValue
      * @param date
      * @return
-     * @throws AssetException
+     * @throws AssetServiceException
      */
-    AssetSE getAssetFromAssetIdAtDate(String idType, String idValue, LocalDateTime date) throws AssetException;
+    AssetSE getAssetFromAssetIdAtDate(String idType, String idValue, LocalDateTime date) throws AssetServiceException;
 }
 

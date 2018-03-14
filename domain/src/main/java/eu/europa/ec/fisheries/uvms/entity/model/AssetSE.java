@@ -131,11 +131,11 @@ public class AssetSE implements Serializable{
     private String cfr;
 
     @Size(max = 7)
-    @Column(name="imo")
+    @Column(unique = true, name="imo")
     private String imo;
 
     @Size(max = 8)
-    @Column(name="ircs")
+    @Column(unique = true, name="ircs")
     private String ircs;
 
     @Size(max = 9)
@@ -143,15 +143,15 @@ public class AssetSE implements Serializable{
     private String mmsi;
 
     @Size(max = 50)
-    @Column(name="iccat")
+    @Column(unique = true, name="iccat")
     private String iccat;
 
     @Size(max = 50)
-    @Column(name="uvi")
+    @Column(unique = true, name="uvi")
     private String uvi;
 
     @Size(max = 50)
-    @Column(name="gfcm")
+    @Column(unique = true, name="gfcm")
     private String gfcm;
 
     @Column(name="active")

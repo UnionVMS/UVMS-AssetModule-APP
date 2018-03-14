@@ -1,21 +1,14 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
-import eu.europa.ec.fisheries.uvms.asset.types.AssetFault;
+import javax.ejb.Singleton;
+import javax.enterprise.event.Observes;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetSuccessfulTestEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.SuccessfulTestEvent;
-
-import javax.ejb.LocalBean;
-import javax.enterprise.event.Observes;
-import javax.inject.Singleton;
-
-/**
- * *
- */
+import eu.europa.ec.fisheries.uvms.asset.types.AssetFault;
 
 
-@LocalBean
 @Singleton
 public class InterceptorForTest {
 
