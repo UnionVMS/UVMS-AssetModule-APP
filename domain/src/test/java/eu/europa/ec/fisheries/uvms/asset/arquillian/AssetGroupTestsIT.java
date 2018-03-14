@@ -142,13 +142,8 @@ public class AssetGroupTestsIT extends TransactionalTests {
         UUID uuid = assetGroupEntity.getId();
         assetGroupDao.deleteAssetGroup(assetGroupEntity);
 
-        try {
             AssetGroupEntity fetchedGroup = assetGroupDao.getAssetGroupByGuid(uuid);
             Assert.assertTrue(fetchedGroup == null);
-        } catch (AssetGroupDaoException e) {
-            // throws exception when no record found
-            Assert.assertTrue(true);
-        }
     }
 
     @Test

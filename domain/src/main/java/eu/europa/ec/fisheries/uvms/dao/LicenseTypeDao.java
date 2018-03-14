@@ -21,5 +21,5 @@ import eu.europa.ec.fisheries.uvms.entity.model.LicenseType;
 @Local
 public interface LicenseTypeDao {
 
-	public List<LicenseType> getAllLicenseType() throws AssetDaoException;
+	List<LicenseType> getAllLicenseType() throws AssetDaoException;
 }

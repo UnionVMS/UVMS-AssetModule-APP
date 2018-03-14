@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.dao.bean;
 
+import eu.europa.ec.fisheries.uvms.dao.AssetGroupFieldDao;
 import eu.europa.ec.fisheries.uvms.dao.Dao;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
 import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
@@ -13,15 +14,16 @@ import javax.persistence.*;
 import java.util.List;
 
 @Stateless
-@Local
-public class AssetGroupFieldDaoBean  extends Dao {
+public class AssetGroupFieldDaoBean  extends Dao implements AssetGroupFieldDao {
 
+    @Override
     public AssetGroupField create(AssetGroupField field) {
 
             em.persist(field);
             return field;
     }
 
+    @Override
     public AssetGroupField get(Long id)  {
 
         try {
@@ -33,12 +35,14 @@ public class AssetGroupFieldDaoBean  extends Dao {
         }
     }
 
+    @Override
     public AssetGroupField update(AssetGroupField field) {
 
             em.merge(field);
             return field;
     }
 
+    @Override
     public AssetGroupField delete(AssetGroupField field)  {
 
             em.remove(field);
@@ -46,7 +50,7 @@ public class AssetGroupFieldDaoBean  extends Dao {
     }
 
 
-    // convinience method . . . .
+    @Override
     public List<AssetGroupField> syncFields(AssetGroupEntity assetGroup, List<AssetGroupField> assetGroupFields)  {
 
         Query qry = em.createNamedQuery(AssetGroupField.ASSETGROUP_FIELD_CLEAR);
@@ -59,11 +63,21 @@ public class AssetGroupFieldDaoBean  extends Dao {
         return assetGroupFields;
     }
 
+    @Override
     public void removeFieldsForGroup(AssetGroupEntity assetGroup)  {
 
         Query qry = em.createNamedQuery(AssetGroupField.ASSETGROUP_FIELD_CLEAR);
         qry.setParameter("assetgroup", assetGroup);
         qry.executeUpdate();
+    }
+
+    @Override
+    public List<AssetGroupField>  retrieveFieldsForGroup(AssetGroupEntity assetGroup)  {
+
+        TypedQuery<AssetGroupField> qry = em.createNamedQuery(AssetGroupField.ASSETGROUP_RETRIEVE_FIELDS_FOR_GROUP,AssetGroupField.class);
+        qry.setParameter("assetgroup", assetGroup);
+        List<AssetGroupField> resultSet = qry.getResultList();
+        return resultSet;
     }
 
 

@@ -13,7 +13,6 @@ package eu.europa.ec.fisheries.uvms.entity.assetgroup;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -21,6 +20,7 @@ import javax.validation.constraints.Size;
 
 import static eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField.ASSETGROUP_FIELD_CLEAR;
 import static eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField.ASSETGROUP_FIELD_GETBYID;
+import static eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField.ASSETGROUP_RETRIEVE_FIELDS_FOR_GROUP;
 
 
 /**
@@ -33,12 +33,14 @@ import static eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField.ASSE
 		@NamedQuery(name="Assetgroupfield.findAll", query="SELECT a FROM AssetGroupField a"),
 		@NamedQuery(name=ASSETGROUP_FIELD_GETBYID, query="SELECT a FROM AssetGroupField a where a.id=:id"),
 		@NamedQuery(name=ASSETGROUP_FIELD_CLEAR, query="DELETE  FROM AssetGroupField a where a.assetgroup=:assetgroup"),
+		@NamedQuery(name=ASSETGROUP_RETRIEVE_FIELDS_FOR_GROUP, query="SELECT a  FROM AssetGroupField a where a.assetgroup=:assetgroup"),
 })
 public class AssetGroupField implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final String ASSETGROUP_FIELD_CLEAR = "Assetgroupfield.clear";
 	public static final String ASSETGROUP_FIELD_GETBYID = "Assetgroupfield.getbyid";
+	public static final String ASSETGROUP_RETRIEVE_FIELDS_FOR_GROUP = "Assetgroupfield.retrievefieldsforgroup";
 
 
 	@Id

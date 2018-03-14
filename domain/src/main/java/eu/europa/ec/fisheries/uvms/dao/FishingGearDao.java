@@ -19,13 +19,13 @@ import java.util.List;
 @Local
 public interface FishingGearDao {
 
-    public List<FishingGearEntity> getAllFishingGear();
+    List<FishingGearEntity> getAllFishingGear();
 
-    public FishingGearEntity getFishingGearById(Long id) throws Exception;
+    FishingGearEntity getFishingGearById(Long id) throws Exception;
 
-    public FishingGearEntity getFishingGearByExternalId(Long externalId) throws Exception;
+    FishingGearEntity getFishingGearByExternalId(Long externalId) throws Exception;
 
-    public void create(FishingGearEntity fishingGear);
+    void create(FishingGearEntity fishingGear);
 
-    public FishingGearEntity update(FishingGearEntity fishingGear);
+    FishingGearEntity update(FishingGearEntity fishingGear);
 }

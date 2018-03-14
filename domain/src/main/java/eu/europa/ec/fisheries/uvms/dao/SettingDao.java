@@ -21,6 +21,6 @@ import eu.europa.ec.fisheries.uvms.entity.model.Setting;
 @Local
 public interface SettingDao {
 
-	public List<Setting> getAllSettings() throws AssetDaoException;
-	public List<Setting> getSettingByField(String field) throws AssetDaoException;
+	 List<Setting> getAllSettings() throws AssetDaoException;
+	 List<Setting> getSettingByField(String field) throws AssetDaoException;
 }

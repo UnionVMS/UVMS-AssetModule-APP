@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
 import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
+import eu.europa.ec.fisheries.uvms.dao.AssetGroupFieldDao;
 import eu.europa.ec.fisheries.uvms.dao.bean.AssetGroupFieldDaoBean;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
 import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
@@ -31,7 +32,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     private AssetGroupDao assetGroupDao;
 
     @EJB
-    AssetGroupFieldDaoBean assetGroupFieldDaoBean;
+    AssetGroupFieldDao assetGroupFieldDaoBean;
 
 
     @Test
@@ -75,15 +76,49 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
         String user = "test";
         AssetGroupEntity assetGroup = createAndStoreAssetGroupEntity(user);
         AssetGroupField createdAssetGroupField = createAndStoreAssetGroupFieldEntity(assetGroup);
+        Long createdId = createdAssetGroupField.getId();
+        String createdUpdatedBy = createdAssetGroupField.getUpdatedBy();
+        createdAssetGroupField.setUpdatedBy("PEKKA");
+        assetGroupFieldDaoBean.update(createdAssetGroupField);
+        AssetGroupField fetchedAssetGroupField =  getField(createdId);
+
+        Assert.assertNotNull(fetchedAssetGroupField);
+        Assert.assertNotEquals(createdUpdatedBy, fetchedAssetGroupField.getUpdatedBy());
+
+    }
+
+    @Test
+    public void removeFieldsForGroup() throws AssetGroupDaoException {
+
+        String user = "test";
+        AssetGroupEntity assetGroup1 = createAndStoreAssetGroupEntity(user);
+        AssetGroupEntity assetGroup2 = createAndStoreAssetGroupEntity(user);
+        List<AssetGroupField> createdAssetGroupFields1 = createAndStoreAssetGroupFieldEntityList(assetGroup1, 50);
+        List<AssetGroupField> createdAssetGroupFields2 = createAndStoreAssetGroupFieldEntityList(assetGroup2, 25 );
 
 
-        // update goes here
+        assetGroupFieldDaoBean.removeFieldsForGroup(assetGroup1);
+
+        List<AssetGroupField> retrievedAssetGroupFields1 =  assetGroupFieldDaoBean.retrieveFieldsForGroup(assetGroup1);
+        List<AssetGroupField> retrievedAssetGroupFields2 =  assetGroupFieldDaoBean.retrieveFieldsForGroup(assetGroup2);
+
+        Assert.assertEquals(retrievedAssetGroupFields1.size(), 0);
+        Assert.assertEquals(retrievedAssetGroupFields2.size(), 25);
+
+
+
+
     }
 
 
 
+    private List<AssetGroupField>  createAndStoreAssetGroupFieldEntityList(AssetGroupEntity assetGroup, int n)
+    {
+        LocalDateTime dt = LocalDateTime.now(Clock.systemUTC());
+        List<AssetGroupField> groupFields = createAssetGroupFields(assetGroup,dt,assetGroup.getOwner(), n);
+        return groupFields;
 
-
+    }
 
 
     private AssetGroupField getField(Long id) throws AssetGroupDaoException {
@@ -133,6 +168,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
         for (int i = 0; i < n; i++) {
             String uuid = UUID.randomUUID().toString();
             AssetGroupField field = createAssetGroupField(assetGroupEntity, ConfigSearchFieldEnum.GUID, uuid, dt, user);
+            assetGroupFieldDaoBean.create(field);
             groupFields.add(field);
         }
         return groupFields;

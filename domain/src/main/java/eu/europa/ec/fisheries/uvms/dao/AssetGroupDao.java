@@ -28,7 +28,7 @@ public interface AssetGroupDao {
 	 * @param group
 	 * @return
 	 */
-	public AssetGroupEntity createAssetGroup(AssetGroupEntity group) throws AssetGroupDaoException;
+	AssetGroupEntity createAssetGroup(AssetGroupEntity group);
 
 	/**
 	 * Get asset group by guid
@@ -36,7 +36,7 @@ public interface AssetGroupDao {
 	 * @param guid
 	 * @return
 	 */
-	public AssetGroupEntity getAssetGroupByGuid(UUID guid) throws AssetGroupDaoException;
+	AssetGroupEntity getAssetGroupByGuid(UUID guid);
 
 	/**
 	 * Update asset group
@@ -44,42 +44,38 @@ public interface AssetGroupDao {
 	 * @param group
 	 * @return
 	 */
-	public AssetGroupEntity updateAssetGroup(AssetGroupEntity group) throws AssetGroupDaoException;
+	AssetGroupEntity updateAssetGroup(AssetGroupEntity group);
 
 	/**
 	 * Delete asset group
 	 *
 	 * @param group
 	 * @return
-	 * @throws eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException
 	 */
-	public AssetGroupEntity deleteAssetGroup(AssetGroupEntity group) throws AssetGroupDaoException;
+	AssetGroupEntity deleteAssetGroup(AssetGroupEntity group) ;
 
 	/**
 	 * Get all asset groups (FIND_ALL)
 	 *
 	 * @return
-	 * @throws eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException
 	 */
-	public List<AssetGroupEntity> getAssetGroupAll() throws AssetGroupDaoException;
+	List<AssetGroupEntity> getAssetGroupAll() ;
 
 	/**
 	 * Get asset groups by user
 	 *
 	 * @param user
 	 * @return
-	 * @throws eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException
 	 */
-	public List<AssetGroupEntity> getAssetGroupByUser(String user) throws AssetGroupDaoException;
+	List<AssetGroupEntity> getAssetGroupByUser(String user) ;
 
 	/**
 	 * Get asset groups by guidList
 	 *
 	 * @param guidList
 	 * @return
-	 * @throws eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException
 	 */
-	List<AssetGroupEntity> getAssetGroupsByGroupGuidList(List<UUID> guidList) throws AssetGroupDaoException;
+	List<AssetGroupEntity> getAssetGroupsByGroupGuidList(List<UUID> guidList);
 
 
 }
