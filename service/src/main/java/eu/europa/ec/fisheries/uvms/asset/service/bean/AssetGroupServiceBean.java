@@ -68,7 +68,10 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
         try {
             List<AssetGroupEntity> vesselGroupList = new ArrayList<>();
+
+            // DO a join instead
             List<AssetGroupEntity> filterGroupList = assetGroupDao.getAssetGroupAll();
+            /*
             for (AssetGroupEntity group : filterGroupList) {
                 List<AssetGroupField> fields = group.getFields();
                 for (AssetGroupField field : fields) {
@@ -77,7 +80,8 @@ public class AssetGroupServiceBean implements AssetGroupService {
                     }
                 }
             }
-            return vesselGroupList;
+            */
+            return filterGroupList;
         } catch (AssetGroupDaoException e) {
             LOG.error("[ Error when getting asset group list by assetGuid. ] assetGuid: {} exception: {}",assetGuid, e.getMessage());
             throw new AssetModelException(e.getMessage());

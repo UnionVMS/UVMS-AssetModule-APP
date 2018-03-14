@@ -90,8 +90,8 @@ public class AssetGroupEntity implements Serializable {
 	@Column(name="group_user_id")
 	private String owner;
 
-	@OneToMany(mappedBy="assetgroup", fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval=true)
-	private List<AssetGroupField> fields;
+	//@OneToMany(mappedBy="assetgroup", fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval=true)
+	//private List<AssetGroupField> fields;
 
 	public AssetGroupEntity() {
 	}
@@ -173,6 +173,7 @@ public class AssetGroupEntity implements Serializable {
 		this.owner = owner;
 	}
 
+	/*
 	public List<AssetGroupField> getFields() {
 		if(this.fields == null) {
 			this.fields = new ArrayList<>();
@@ -181,6 +182,9 @@ public class AssetGroupEntity implements Serializable {
 	}
 
 	public void setFields(List<AssetGroupField> fields) {
-		this.fields = fields;
+		this.fields = getFields();
+		this.fields.clear();
+		this.fields.addAll(fields);
 	}
+	*/
 }

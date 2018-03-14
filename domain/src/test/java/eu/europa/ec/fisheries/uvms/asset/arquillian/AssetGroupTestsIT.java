@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
 import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
+import eu.europa.ec.fisheries.uvms.dao.bean.AssetGroupFieldDaoBean;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
 import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
 import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField;
@@ -23,6 +24,9 @@ public class AssetGroupTestsIT extends TransactionalTests {
 
     @EJB
     private AssetGroupDao assetGroupDao;
+
+    @EJB
+    AssetGroupFieldDaoBean assetGroupFieldDaoBean;
 
 
     @Test
@@ -161,6 +165,29 @@ public class AssetGroupTestsIT extends TransactionalTests {
     }
 
 
+    @Test
+    @OperateOnDeployment("normal")
+    public void updateAssetGroupAndFields() throws AssetGroupDaoException {
+
+
+
+
+        AssetGroupEntity assetGroupEntity = createAndStoreAssetGroupEntity("TEST",42);
+        String uuid = assetGroupEntity.getGuid();
+
+        assetGroupEntity.setOwner("NEW OWNER");
+        List<AssetGroupField>  newLines = createAssetGroupFields( assetGroupEntity,  assetGroupEntity.getUpdateTime(), assetGroupEntity.getOwner(), 17);
+
+        assetGroupDao.updateAssetGroup(assetGroupEntity);
+        assetGroupFieldDaoBean.syncFields(assetGroupEntity, newLines);
+        em.flush();
+
+        AssetGroupEntity fetchedGroup = assetGroupDao.getAssetGroupByGuid(uuid);
+        Assert.assertTrue(fetchedGroup.getOwner().equalsIgnoreCase("NEW OWNER"));
+    }
+
+
+
     private AssetGroupEntity createAndStoreAssetGroupEntity(String user, int numberOfGroupFields) throws AssetGroupDaoException {
 
         AssetGroupEntity assetGroupEntity = createAssetGroupEntity(user,numberOfGroupFields);
@@ -183,7 +210,6 @@ public class AssetGroupTestsIT extends TransactionalTests {
         ag.setGlobal(true);
 
         List<AssetGroupField> groupFields = createAssetGroupFields(ag,dt,user, numberOfGroupFields);
-        ag.setFields(groupFields);
         return ag;
     }
 

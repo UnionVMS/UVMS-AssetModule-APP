@@ -14,13 +14,11 @@ package eu.europa.ec.fisheries.uvms.dao.bean;
 import java.util.List;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityExistsException;
-import javax.persistence.NoResultException;
-import javax.persistence.TransactionRequiredException;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 
 import eu.europa.ec.fisheries.uvms.dao.Dao;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
+import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

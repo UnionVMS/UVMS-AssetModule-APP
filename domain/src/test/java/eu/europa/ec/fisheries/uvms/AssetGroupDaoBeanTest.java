@@ -116,7 +116,6 @@ public class AssetGroupDaoBeanTest {
 		filter.setUpdatedBy("DAOTEST");
 		filter.setUpdateTime(new Date());
 
-		group.getFields().addAll(filters);
 
 		return group;
 	}

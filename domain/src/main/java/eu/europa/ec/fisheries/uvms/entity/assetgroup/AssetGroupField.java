@@ -14,21 +14,12 @@ package eu.europa.ec.fisheries.uvms.entity.assetgroup;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import static eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField.ASSETGROUP_FIELD_CLEAR;
+import static eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField.ASSETGROUP_FIELD_GETBYID;
 
 
 /**
@@ -37,9 +28,17 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name="Assetgroupfield")
-@NamedQuery(name="Assetgroupfield.findAll", query="SELECT a FROM AssetGroupField a")
+@NamedQueries({
+		@NamedQuery(name="Assetgroupfield.findAll", query="SELECT a FROM AssetGroupField a"),
+		@NamedQuery(name=ASSETGROUP_FIELD_GETBYID, query="SELECT a FROM AssetGroupField a where a.id=:id"),
+		@NamedQuery(name=ASSETGROUP_FIELD_CLEAR, query="DELETE  FROM AssetGroupField a where a.assetgroup=:assetgroup"),
+})
 public class AssetGroupField implements Serializable {
 	private static final long serialVersionUID = 1L;
+
+	public static final String ASSETGROUP_FIELD_CLEAR = "Assetgroupfield.clear";
+	public static final String ASSETGROUP_FIELD_GETBYID = "Assetgroupfield.getbyid";
+
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
