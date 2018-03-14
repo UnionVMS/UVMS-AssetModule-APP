@@ -11,21 +11,18 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.dao.bean;
 
-import java.util.List;
-import java.util.UUID;
-
-import javax.ejb.Stateless;
-import javax.persistence.*;
-
+import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
+import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
 import eu.europa.ec.fisheries.uvms.dao.Dao;
-import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
-import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField;
+import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
-import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
-import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupEntity;
+import javax.ejb.Stateless;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
+import java.util.List;
+import java.util.UUID;
 
 @Stateless
 public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
@@ -33,93 +30,53 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
     private static final Logger LOG = LoggerFactory.getLogger(AssetGroupDaoBean.class);
 
     @Override
-    public AssetGroupEntity createAssetGroup(AssetGroupEntity group) throws AssetGroupDaoException {
-        try {
-            em.persist(group);
-            return group;
-        } catch (EntityExistsException | IllegalArgumentException | TransactionRequiredException e) {
-            LOG.error("[ Error when creating asset group. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ create asset group ] " + e.getMessage());
-        } catch (Exception e) {
-            LOG.error("[ Error when creating asset group. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ create asset ] " + e.getMessage());
-        }
+    public AssetGroupEntity createAssetGroup(AssetGroupEntity group) {
+
+        em.persist(group);
+        return group;
     }
 
     @Override
-    public AssetGroupEntity getAssetGroupByGuid(UUID groupId) throws AssetGroupDaoException {
+    public AssetGroupEntity getAssetGroupByGuid(UUID groupId) {
         try {
             TypedQuery<AssetGroupEntity> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_GUID, AssetGroupEntity.class);
             query.setParameter("guid", groupId);
             return query.getSingleResult();
         } catch (NoResultException e) {
-            LOG.error("[ Error when getting asset group by guid. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ get asset group, guid: " + groupId + " ] " + e.getMessage());
+            return null;
         }
     }
 
     @Override
-    public AssetGroupEntity updateAssetGroup(AssetGroupEntity group) throws AssetGroupDaoException {
-        try {
-            em.merge(group);
-            return group;
-        } catch (IllegalArgumentException | TransactionRequiredException e) {
-            LOG.error("[ Error when updating asset group. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ update asset group, id: " + group.getId() + " ] " + e.getMessage());
-        } catch (Exception e) {
-            LOG.error("[ Error when updating asset group. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ create asset ] " + e.getMessage());
-        }
+    public AssetGroupEntity updateAssetGroup(AssetGroupEntity group) {
+        em.merge(group);
+        return group;
     }
 
     @Override
-    public AssetGroupEntity deleteAssetGroup(AssetGroupEntity group) throws AssetGroupDaoException {
-        try {
-            em.remove(group);
-            return group;
-        } catch (IllegalArgumentException | TransactionRequiredException e) {
-            LOG.error("[ Error when deleting asset group. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ delete asset group, id: " + group.getId() + " ] " + e.getMessage());
-        } catch (Exception e) {
-            LOG.error("[ Error when deleting asset group. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ create asset ] " + e.getMessage());
-        }
-
+    public AssetGroupEntity deleteAssetGroup(AssetGroupEntity group) {
+        em.remove(group);
+        return group;
     }
 
     @Override
-    public List<AssetGroupEntity> getAssetGroupAll() throws AssetGroupDaoException {
-        try {
-            TypedQuery<AssetGroupEntity> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_FIND_ALL, AssetGroupEntity.class);
-            return query.getResultList();
-        } catch (Exception e) {
-            LOG.error("[ Error when getting asset groups. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ get all asset groups ] " + e.getMessage());
-        } 
+    public List<AssetGroupEntity> getAssetGroupAll() {
+        TypedQuery<AssetGroupEntity> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_FIND_ALL, AssetGroupEntity.class);
+        return query.getResultList();
     }
 
     @Override
-    public List<AssetGroupEntity> getAssetGroupByUser(String user) throws AssetGroupDaoException {
-        try {
-            TypedQuery<AssetGroupEntity> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_USER, AssetGroupEntity.class);
-            query.setParameter("owner", user);
-            return query.getResultList();
-        } catch (Exception e) {
-            LOG.error("[ Error when getting asset groups by user. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ get asset groups, by user: " + user + " ] " + e.getMessage());
-        }
+    public List<AssetGroupEntity> getAssetGroupByUser(String user) {
+        TypedQuery<AssetGroupEntity> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_USER, AssetGroupEntity.class);
+        query.setParameter("owner", user);
+        return query.getResultList();
     }
 
-	@Override
-	public List<AssetGroupEntity> getAssetGroupsByGroupGuidList(List<UUID> guidList) throws AssetGroupDaoException {
-        try {
-            TypedQuery<AssetGroupEntity> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_GUID_LIST, AssetGroupEntity.class);
-            query.setParameter("guidList", guidList);
-            return query.getResultList();
-        } catch (Exception e) {
-            LOG.error("[ Error when getting asset groups by idlist. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ get asset groups by idlist ] " + e.getMessage());
-        }
-	}
+    @Override
+    public List<AssetGroupEntity> getAssetGroupsByGroupGuidList(List<UUID> guidList) {
+        TypedQuery<AssetGroupEntity> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_GUID_LIST, AssetGroupEntity.class);
+        query.setParameter("guidList", guidList);
+        return query.getResultList();
+    }
 
 }

@@ -18,21 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -89,6 +75,14 @@ public class AssetGroupEntity implements Serializable {
 	@NotNull
 	@Column(name="user_id")
 	private String owner;
+
+
+	/////////////////////////////////////////////////////////////
+	// NON PERSISTED THIS WAY THIS IS TO SIMPLIFY SERIALIZATION
+	/////////////////////////////////////////////////////////////
+	@Transient
+	public List<AssetGroupField> fields = new ArrayList<>();
+
 
 	public AssetGroupEntity() {
 	}
@@ -157,4 +151,11 @@ public class AssetGroupEntity implements Serializable {
 		this.owner = owner;
 	}
 
+	public List<AssetGroupField> getFields() {
+		return fields;
+	}
+
+	public void setFields(List<AssetGroupField> fields) {
+		this.fields = fields;
+	}
 }
