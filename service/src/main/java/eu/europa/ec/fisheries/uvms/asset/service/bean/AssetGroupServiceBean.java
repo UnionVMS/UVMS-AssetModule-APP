@@ -32,7 +32,7 @@ import java.util.UUID;
 @Stateless
 public class AssetGroupServiceBean implements AssetGroupService {
 
-    private static  final String GROUP_QUALIFIER_PREFIX = "Group: ";
+    private static final String GROUP_QUALIFIER_PREFIX = "Group: ";
 
 
     @EJB
@@ -48,24 +48,18 @@ public class AssetGroupServiceBean implements AssetGroupService {
             throw new InputArgumentException("Invalid user");
         }
 
-        try {
-            List<AssetGroupEntity> filterGroupList = assetGroupDao.getAssetGroupByUser(user);
-            return filterGroupList;
-        } catch (AssetGroupDaoException e) {
-            LOG.error("[ Error when getting asset group list by user. ] user: {} exception: {}",user, e.getMessage());
-            throw new AssetModelException(e.getMessage());
-        }
+        List<AssetGroupEntity> filterGroupList = assetGroupDao.getAssetGroupByUser(user);
+        return filterGroupList;
     }
 
 
     @Override
     public List<AssetGroupEntity> getAssetGroupListByAssetGuid(UUID assetGuid) throws AssetException {
         LOG.info("Getting asset group list by asset guid: {}.", assetGuid);
-        if (assetGuid == null ) {
+        if (assetGuid == null) {
             throw new InputArgumentException("Invalid asset");
         }
 
-        try {
             List<AssetGroupEntity> vesselGroupList = new ArrayList<>();
 
             // TODO DO a join instead
@@ -81,12 +75,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
             }
             */
             return filterGroupList;
-        } catch (AssetGroupDaoException e) {
-            LOG.error("[ Error when getting asset group list by assetGuid. ] assetGuid: {} exception: {}",assetGuid, e.getMessage());
-            throw new AssetModelException(e.getMessage());
-        }
     }
-
 
 
     @Override
@@ -104,7 +93,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
             return groupEntity;
         } catch (AssetGroupDaoException e) {
-            LOG.error("[ Error when getting asset group. ] guid {} exception {}",guid, e.getMessage());
+            LOG.error("[ Error when getting asset group. ] guid {} exception {}", guid, e.getMessage());
             throw new AssetModelException(e.getMessage());
         }
     }
@@ -122,7 +111,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
                 throw new AssetGroupDaoException("No assetgroup found.");
             }
             return groupEntity;
-        } catch (AssetGroupDaoException  e) {
+        } catch (AssetGroupDaoException e) {
             LOG.error("[ Error when updating asset group. ] assetGroup: {} username: {} exception: {}", assetGroup, username, e.getMessage());
             throw new AssetModelException(e.getMessage());
         }
@@ -134,13 +123,8 @@ public class AssetGroupServiceBean implements AssetGroupService {
             throw new InputArgumentException("Cannot create asset group because the group is null.");
         }
 
-        try {
             AssetGroupEntity createdAssetGroupEntity = assetGroupDao.createAssetGroup(assetGroup);
             return createdAssetGroupEntity;
-        } catch (AssetGroupDaoException  e) {
-            LOG.error("[ Error when creating asset group. ] assetGroup: {} username: {} exception: {}", assetGroup, username, e.getMessage());
-            throw new AssetModelException(e.getMessage());
-        }
     }
 
 
@@ -162,7 +146,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
             groupEntity.setUpdateTime(LocalDateTime.now(Clock.systemUTC()));
             return groupEntity;
         } catch (AssetGroupDaoException e) {
-            LOG.error("[ Error when deleting asset group. ] guid: {} username: {} exception: {}",guid,username, e.getMessage());
+            LOG.error("[ Error when deleting asset group. ] guid: {} username: {} exception: {}", guid, username, e.getMessage());
             throw new AssetModelException(e.getMessage());
         }
     }

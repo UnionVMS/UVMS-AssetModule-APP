@@ -66,12 +66,8 @@ public class AssetServiceBean implements AssetService {
     public AssetSE createAsset(AssetSE asset, String username) throws AssetServiceException {
 
         AssetSE createdAssetEntity;
-        try {
             createdAssetEntity = assetSEDao.createAsset(asset);
-        } catch (AssetDaoException e) {
-            throw new AssetServiceException("Could not create asset", e);
-        }
-        
+
         auditService.logAssetCreated(createdAssetEntity, username);
         
         return createdAssetEntity;
@@ -85,7 +81,7 @@ public class AssetServiceBean implements AssetService {
      * @throws AssetException
      */
     @Override
-    public AssetListResponsePaginated getAssetList(AssetListQuery query) throws AssetServiceException {
+    public AssetListResponsePaginated getAssetList(AssetListQuery query) throws AssetServiceException, AssetDaoMappingException {
         
         if (query == null) {
             throw new InputArgumentException("Cannot get asset list because query is null.");
@@ -104,7 +100,6 @@ public class AssetServiceBean implements AssetService {
         int listSize = query.getPagination().getListSize();
         boolean isDynamic = query.getAssetSearchCriteria().isIsDynamic();
 
-        try {
             List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query.getAssetSearchCriteria()
                     .getCriterias());
 
@@ -126,9 +121,6 @@ public class AssetServiceBean implements AssetService {
             listAssetResponse.setTotalNumberOfPages(numberOfPages);
             listAssetResponse.getAssetList().addAll(assetEntityList);
             return listAssetResponse;
-        } catch (AssetDaoException | AssetDaoMappingException e) {
-            throw new AssetServiceException("Could not get asset list", e);
-        }
     }
 
     /**
@@ -139,7 +131,7 @@ public class AssetServiceBean implements AssetService {
      * @throws AssetException
      */
     @Override
-    public Long getAssetListCount(AssetListQuery query) throws AssetServiceException {
+    public Long getAssetListCount(AssetListQuery query) throws AssetServiceException, AssetDaoMappingException {
         if (query == null) {
             throw new InputArgumentException("Cannot get asset list count because query is null.");
         }
@@ -155,14 +147,10 @@ public class AssetServiceBean implements AssetService {
 
         boolean isDynamic = query.getAssetSearchCriteria().isIsDynamic();
 
-        try {
             List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query.getAssetSearchCriteria()
                     .getCriterias());
 
             return assetSEDao.getAssetCount(searchFields, isDynamic);
-        } catch (AssetDaoException | AssetDaoMappingException e) {
-            throw new AssetServiceException("Could not get asset list count", e);
-        }
     }
 
     /**
@@ -348,15 +336,11 @@ public class AssetServiceBean implements AssetService {
             }
         }
 
-		try {
 			AssetId assetId = new AssetId();
 			assetId.setType(assetType);
 			assetId.setValue(idValue);
 			assetId.setGuid(idValue);
 			return assetSEDao.getAssetFromAssetIdAtDate(assetId, date);
-		} catch (AssetDaoException e) {
-			throw new AssetServiceException("Could not get asset by id and date", e);
-		}
     }
 
 
@@ -371,11 +355,7 @@ public class AssetServiceBean implements AssetService {
             throw new InputArgumentException("Id is null");
         }
 
-        try {
             return assetSEDao.getAssetById(id);
-        } catch (AssetDaoException e) {
-            throw new AssetServiceException("Could not get asset by id: " + id, e);
-        }
     }
 
     /**
@@ -421,32 +401,19 @@ public class AssetServiceBean implements AssetService {
         }
 
         AssetSE assetEntity = null;
-        try {
             // get an object based on what type of id it has
             assetEntity = getAssetById(assetId);
             assetSEDao.deleteAsset(assetEntity);
-        } catch (AssetDaoException e) {
-            throw new AssetServiceException("Could not delet asset with id: " + assetId.getType() + "=" + assetId
-                    .getValue(), e);
-        }
     }
 
     @Override
     public List<AssetSE> getRevisionsForAsset(AssetSE asset) throws AssetServiceException {
-        try {
             return assetSEDao.getRevisionsForAsset(asset);
-        } catch (AssetDaoException e) {
-            throw new AssetServiceException("Could not get revisions for asset: " + asset.getId(), e);
-        }
     }
 
     @Override
     public AssetSE getAssetRevisionForRevisionId(AssetSE asset, UUID historyId) throws AssetServiceException {
-        try {
             return assetSEDao.getAssetRevisionForHistoryId(asset, historyId);
-        } catch (AssetDaoException e) {
-            throw new AssetServiceException("Could not get asset for revision id: " + historyId, e);
-        }
     }
 
 

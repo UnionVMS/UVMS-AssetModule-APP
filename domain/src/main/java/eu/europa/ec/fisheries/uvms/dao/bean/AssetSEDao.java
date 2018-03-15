@@ -35,153 +35,109 @@ public class AssetSEDao {
     @PersistenceContext
     private EntityManager em;
 
-    public AssetSE createAsset(AssetSE asset) throws AssetDaoException {
-        try {
+    public AssetSE createAsset(AssetSE asset) {
             em.persist(asset);
             return asset;
-        } catch (Exception e) {
-            throw new AssetDaoException("Could not create asset", e);
-        }
     }
 
-    public AssetSE getAssetById(UUID id) throws AssetDaoException {
-        try {
+    public AssetSE getAssetById(UUID id) {
             return em.find(AssetSE.class, id);
-        } catch (Exception e) {
-            throw new AssetDaoException("Could not get asset by id: " + id, e);
-        }
     }
 
-    public AssetSE getAssetByCfr(String cfr) throws AssetDaoException {
+    public AssetSE getAssetByCfr(String cfr) {
         try {
             TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_BY_CFR, AssetSE.class);
             query.setParameter("cfr", cfr);
             return query.getSingleResult();
         } catch (NoResultException e) {
             return null;
-        } catch (Exception e) {
-            throw new AssetDaoException("Could not get asset by CFR: " + cfr, e);
         }
     }
 
-    public AssetSE getAssetByIrcs(String ircs) throws AssetDaoException {
+    public AssetSE getAssetByIrcs(String ircs) {
         try {
             TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_BY_IRCS, AssetSE.class);
             query.setParameter("ircs", ircs);
             return query.getSingleResult();
         } catch (NoResultException e) {
             return null;
-        } catch (Exception e) {
-            throw new AssetDaoException("Could not get asset by IRCS: " + ircs, e);
         }
     }
 
-    public AssetSE getAssetByImo(String imo) throws AssetDaoException {
+    public AssetSE getAssetByImo(String imo) {
         try {
             TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_BY_IMO, AssetSE.class);
             query.setParameter("imo", imo);
             return query.getSingleResult();
         } catch (NoResultException e) {
             return null;
-        } catch (Exception e) {
-            throw new AssetDaoException("Could not get asset by IMO: " + imo, e);
         }
     }
 
-    public AssetSE getAssetByMmsi(String mmsi) throws AssetDaoException {
+    public AssetSE getAssetByMmsi(String mmsi) {
         try {
             TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_BY_MMSI, AssetSE.class);
             query.setParameter("mmsi", mmsi);
             return query.getSingleResult();
         } catch (NoResultException e) {
             return null;
-        } catch (Exception e) {
-            throw new AssetDaoException("Could not get asset by MMSI: " + mmsi, e);
         }
     }
 
-    public AssetSE getAssetByIccat(String iccat) throws AssetDaoException {
+    public AssetSE getAssetByIccat(String iccat) {
         try {
             TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_BY_ICCAT, AssetSE.class);
             query.setParameter("iccat", iccat);
             return query.getSingleResult();
         } catch (NoResultException e) {
             return null;
-        } catch (Exception e) {
-            throw new AssetDaoException("Could not get asset by ICCAT: " + iccat, e);
         }
     }
 
-    public AssetSE getAssetByUvi(String uvi) throws AssetDaoException {
+    public AssetSE getAssetByUvi(String uvi) {
         try {
             TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_BY_UVI, AssetSE.class);
             query.setParameter("uvi", uvi);
             return query.getSingleResult();
         } catch (NoResultException e) {
             return null;
-        } catch (Exception e) {
-            throw new AssetDaoException("Could not get asset by UVI: " + uvi, e);
         }
     }
 
-    public AssetSE getAssetByGfcm(String gfcm) throws AssetDaoException {
+    public AssetSE getAssetByGfcm(String gfcm) {
         try {
             TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_BY_GFCM, AssetSE.class);
             query.setParameter("gfcm", gfcm);
             return query.getSingleResult();
         } catch (NoResultException e) {
             return null;
-        } catch (Exception e) {
-            throw new AssetDaoException("Could not get asset by GFCM: " + gfcm, e);
         }
     }
 
-    public AssetSE updateAsset(AssetSE asset) throws AssetDaoException {
-        try {
+    public AssetSE updateAsset(AssetSE asset) {
             return em.merge(asset);
-        } catch (Exception e) {
-            throw new AssetDaoException("Could not update asset with id: " + asset.getId(), e);
-        }
     }
 
-    public void deleteAsset(AssetSE asset) throws AssetDaoException {
-        try {
+    public void deleteAsset(AssetSE asset) {
             em.remove(asset);
-        } catch (Exception e) {
-            throw new AssetDaoException("Could not delete asset with id: " + asset.getId(), e);
-        }
     }
 
     public List<AssetSE> getAssetListAll() throws AssetDaoException {
-        try {
             TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_ALL, AssetSE.class);
             return query.getResultList();
-        } catch (IllegalArgumentException e) {
-            throw new AssetDaoException("Could not get all assets", e);
-        }
-
     }
 
-    public Long getAssetCount(List<SearchKeyValue> searchFields, Boolean isDynamic) throws AssetDaoException {
+    public Long getAssetCount(List<SearchKeyValue> searchFields, Boolean isDynamic)  {
         AuditQuery query = createQuery(searchFields, isDynamic);
-        try {
-            return (Long) query.addProjection(AuditEntity.id().count()).getSingleResult();
-        } catch (Exception e) {
-            throw new AssetDaoException("Could not count Assets in query", e);
-        }
+        return (Long) query.addProjection(AuditEntity.id().count()).getSingleResult();
     }
 
-    @SuppressWarnings("unchecked")
     public List<AssetSE> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize,
-            List<SearchKeyValue> searchFields, boolean isDynamic) throws AssetDaoException {
-        try {
+            List<SearchKeyValue> searchFields, boolean isDynamic) {
             AuditQuery query = createQuery(searchFields, isDynamic);
             query.setFirstResult(pageSize * (pageNumber - 1));
             query.setMaxResults(pageSize);
             return query.getResultList();
-        } catch (Exception e) {
-            throw new AssetDaoException("Could not get asset list", e);
-        }
     }
 
     private AuditQuery createQuery(List<SearchKeyValue> searchFields, boolean isDynamic) {
@@ -239,8 +195,7 @@ public class AssetSEDao {
         return false;
     }
 
-    public List<AssetSE> getRevisionsForAsset(AssetSE asset) throws AssetDaoException {
-        try {
+    public List<AssetSE> getRevisionsForAsset(AssetSE asset)  {
             AuditReader auditReader = AuditReaderFactory.get(em);
             List<AssetSE> resultList = new ArrayList<>();
 
@@ -250,32 +205,21 @@ public class AssetSEDao {
                 resultList.add(audited);
             }
             return resultList;
-        } catch (Exception e) {
-            throw new AssetDaoException("Could not get revisions for asset: " + asset.getId(), e);
-        }
     }
 
-    public AssetSE getAssetAtDate(AssetSE asset, LocalDateTime localDateTime) throws AssetDaoException {
-        try {
+    public AssetSE getAssetAtDate(AssetSE asset, LocalDateTime localDateTime)  {
             Date date = Date.from(localDateTime.toInstant(ZoneOffset.UTC));
             AuditReader auditReader = AuditReaderFactory.get(em);
             return auditReader.find(AssetSE.class, asset.getId(), date);
-        } catch (Exception e) {
-            throw new AssetDaoException(String.format("Could not find asset %s by date", asset.getId()), e);
-        }
     }
 
-    public List<AssetSE> getAssetListByAssetGuids(List<UUID> idList) throws AssetDaoException {
-        try {
+    public List<AssetSE> getAssetListByAssetGuids(List<UUID> idList)  {
             TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_BY_IDS, AssetSE.class);
             query.setParameter("idList", idList);
             return query.getResultList();
-        } catch (IllegalArgumentException e) {
-            throw new AssetDaoException("Could not get assets by id list", e);
-        }
     }
 
-    private String assembleQueryString(AssetId assetId) throws AssetDaoException {
+    private String assembleQueryString(AssetId assetId)  {
 
         AssetIdTypeEnum assetIdType = assetId.getType();
         String hql = "select ah.asset from AssetSE ah where %s = :keyval ";
@@ -307,12 +251,12 @@ public class AssetSEDao {
                 hql = String.format(hql, "ah.gfcm");
                 break;
             default:
-                throw new AssetDaoException("Could not create query. Check your code AssetIdType is invalid");
+                throw new RuntimeException("Could not create query. Check your code AssetIdType is invalid");
         }
         return hql;
      }
 
-    public AssetSE getAssetFromAssetId(AssetId assetId) throws AssetDaoException {
+    public AssetSE getAssetFromAssetId(AssetId assetId)  {
 
         String keyval = assetId.getValue();
         String hql = assembleQueryString(assetId);
@@ -323,17 +267,15 @@ public class AssetSEDao {
             return query.getSingleResult();
         } catch (NoResultException e) {
             return null;
-        } catch (Exception e) {
-            throw new AssetDaoException(e.toString(), e);
         }
     }
 
-    public AssetSE getAssetFromAssetIdAtDate(AssetId assetId, LocalDateTime date) throws AssetDaoException {
+    public AssetSE getAssetFromAssetIdAtDate(AssetId assetId, LocalDateTime date)  {
         AssetSE asset = getAssetFromAssetId(assetId);
         if (asset != null) {
             return getAssetAtDate(asset, date);
         } else {
-            throw new AssetDaoException("Internal error");
+            return null;
         }
     }
 
@@ -342,9 +284,8 @@ public class AssetSEDao {
         throw new IllegalStateException("Not implemented yet!");
     }
 
-    // TODO if when the framwork supports querying on specific columns in nnn_AUD table, use that unstead
-    public AssetSE getAssetRevisionForHistoryId(AssetSE asset, UUID historyId) throws AssetDaoException {
-        try {
+    // TODO if when the framework supports querying on specific columns in nnn_AUD table, use that unstead
+    public AssetSE getAssetRevisionForHistoryId(AssetSE asset, UUID historyId)  {
             AuditReader auditReader = AuditReaderFactory.get(em);
             List<Number> revisionNumbers = auditReader.getRevisions(AssetSE.class, asset.getId());
             for (Number rev : revisionNumbers) {
@@ -354,8 +295,5 @@ public class AssetSEDao {
                 }
             }
             return null;
-        }catch(Exception e){
-            throw new AssetDaoException("[ get all asset ] " + e.getMessage(), e);
-        }
     }
 }

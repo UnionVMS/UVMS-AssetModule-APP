@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import javax.ejb.EJBTransactionRolledbackException;
 import javax.inject.Inject;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -66,7 +67,7 @@ public class AssetSEDaoTest extends TransactionalTests {
         assertThat(fetchedAsset.getActive(), is(asset.getActive()));
     }
 
-    @Test(expected = AssetDaoException.class)
+    @Test(expected = EJBTransactionRolledbackException.class)
     @OperateOnDeployment("normal")
     public void createAssetNullInputShouldThrowExceptionTest() throws AssetDaoException {
         assetDao.createAsset(null);

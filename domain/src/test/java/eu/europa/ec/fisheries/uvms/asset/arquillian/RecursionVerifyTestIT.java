@@ -6,13 +6,21 @@ import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import javax.json.stream.JsonParser;
 import java.io.IOException;
 import java.io.StringReader;
@@ -23,11 +31,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class RecursionVerifyTestIT {
+@RunWith(Arquillian.class)
+public class RecursionVerifyTestIT  extends TransactionalTests{
 
 
 
     private ObjectMapper MAPPER ;
+
 
     @Before
     public void before(){
@@ -63,8 +73,14 @@ public class RecursionVerifyTestIT {
     @Test
     public void testJsonWithJEEInternal() throws AssetGroupDaoException, IOException {
 
-
         AssetGroupEntity groupEntity =  createAssetGroupEntity("test",5);
+
+        Jsonb jsonb = JsonbBuilder.create();
+
+        String jsonStr = jsonb.toJson(groupEntity);
+
+
+        System.out.println(jsonStr);
 
 
 
