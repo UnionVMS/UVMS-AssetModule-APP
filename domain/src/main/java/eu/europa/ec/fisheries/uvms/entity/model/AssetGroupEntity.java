@@ -21,6 +21,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -37,6 +40,7 @@ import org.hibernate.annotations.GenericGenerator;
 	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_GUID, query="SELECT a FROM AssetGroupEntity a WHERE a.id = :guid"),
 	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_GUID_LIST, query="SELECT a FROM AssetGroupEntity a WHERE a.archived = false AND a.id IN :guidList")
 })
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 public class AssetGroupEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
