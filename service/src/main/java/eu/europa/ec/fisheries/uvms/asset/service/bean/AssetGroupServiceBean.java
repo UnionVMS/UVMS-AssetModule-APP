@@ -59,6 +59,8 @@ public class AssetGroupServiceBean implements AssetGroupService {
     @Override
     public List<AssetGroupEntity> getAssetGroupListByAssetGuid(UUID assetGuid) throws AssetException {
 
+        // TODO maybe this could be done more efficient if search is from the other side and joining . . . .
+
         if (assetGuid == null) {
             throw new InputArgumentException("Invalid asset");
         }

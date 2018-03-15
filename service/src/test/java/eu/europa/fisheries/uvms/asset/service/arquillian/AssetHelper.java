@@ -84,7 +84,7 @@ public abstract class AssetHelper {
         assetEntity.setProdOrgName("ORGNAME");
         assetEntity.setGrossTonnageUnit(UnitTonnage.LONDON);
         assetEntity.setLicenceType(GearFishingTypeEnum.DEMERSAL_AND_PELAGIC.toString());
-        assetEntity.setSegment(SegmentFUP.CA3);
+        assetEntity.setSegment(3L);
         assetEntity.setConstructionYear("1914");
         assetEntity.setConstructionPlace("GBG");
 
@@ -94,7 +94,7 @@ public abstract class AssetHelper {
         assetEntity.setAssetAgentAddress("assetagentadress_" + rnd.nextInt());
         assetEntity.setCountryOfImportOrExport("SWE");
         assetEntity.setAdministrativeDecisionDate(now);
-        assetEntity.setSegmentOfAdministrativeDecision(SegmentFUP.CA3);
+        assetEntity.setSegmentOfAdministrativeDecision(3L);
         assetEntity.setLengthBetweenPerpendiculars(new BigDecimal(17));
         AssetProdOrg assetProdOrg = new AssetProdOrg();
         assetProdOrg.setAddress("prodorgaddress");
