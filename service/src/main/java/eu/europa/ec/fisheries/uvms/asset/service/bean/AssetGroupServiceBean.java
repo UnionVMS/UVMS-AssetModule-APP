@@ -34,8 +34,8 @@ import java.util.UUID;
 @Stateless
 public class AssetGroupServiceBean implements AssetGroupService {
 
+    final static Logger LOG = LoggerFactory.getLogger(AssetGroupServiceBean.class);
     private static final String GROUP_QUALIFIER_PREFIX = "Group: ";
-
 
     @EJB
     private AssetGroupDao assetGroupDao;
@@ -43,12 +43,10 @@ public class AssetGroupServiceBean implements AssetGroupService {
     @EJB
     private AssetGroupFieldDao assetGroupFieldDao;
 
-    final static Logger LOG = LoggerFactory.getLogger(AssetGroupServiceBean.class);
 
     @Override
     public List<AssetGroupEntity> getAssetGroupList(String user) throws AssetException {
 
-        LOG.info("Getting asset group list by user: {}.", user);
         if (user == null || user.isEmpty()) {
             throw new InputArgumentException("Invalid user");
         }
@@ -60,15 +58,15 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
     @Override
     public List<AssetGroupEntity> getAssetGroupListByAssetGuid(UUID assetGuid) throws AssetException {
-        LOG.info("Getting asset group list by asset guid: {}.", assetGuid);
+
         if (assetGuid == null) {
             throw new InputArgumentException("Invalid asset");
         }
 
-            List<AssetGroupEntity> vesselGroupList = new ArrayList<>();
+        List<AssetGroupEntity> vesselGroupList = new ArrayList<>();
 
-            // TODO DO a join instead
-            List<AssetGroupEntity> filterGroupList = assetGroupDao.getAssetGroupAll();
+        // TODO DO a join instead
+        List<AssetGroupEntity> filterGroupList = assetGroupDao.getAssetGroupAll();
             /*
             for (AssetGroupEntity group : filterGroupList) {
                 List<AssetGroupField> fields = group.getFields();
@@ -79,7 +77,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
                 }
             }
             */
-            return filterGroupList;
+        return filterGroupList;
     }
 
 
@@ -109,6 +107,9 @@ public class AssetGroupServiceBean implements AssetGroupService {
         if (assetGroup == null || assetGroup.getId() == null) {
             throw new InputArgumentException("Cannot update asset group because group or ID is null.");
         }
+        if (username == null || username.isEmpty()) {
+            throw new InputArgumentException("Username must be provided for selected operation");
+        }
 
         try {
             AssetGroupEntity groupEntity = assetGroupDao.getAssetGroupByGuid(assetGroup.getId());
@@ -127,22 +128,22 @@ public class AssetGroupServiceBean implements AssetGroupService {
         if (assetGroup == null) {
             throw new InputArgumentException("Cannot create asset group because the group is null.");
         }
-        if (username == null) {
-            throw new InputArgumentException("User must be provided.");
+        if (username == null || username.isEmpty()) {
+            throw new InputArgumentException("Username must be provided for selected operation");
         }
 
-            assetGroup.setName(username);
-            AssetGroupEntity createdAssetGroupEntity = assetGroupDao.createAssetGroup(assetGroup);
-            List<AssetGroupField> fields = assetGroup.getFields();
-            if(fields != null){
-                for(AssetGroupField field : fields ){
-                    field.setAssetGroup(assetGroup);
-                    field.setUpdateTime(createdAssetGroupEntity.getUpdateTime());
-                    field.setUpdatedBy(createdAssetGroupEntity.getUpdatedBy());
-                    assetGroupFieldDao.create(field);
-                }
+        assetGroup.setName(username);
+        AssetGroupEntity createdAssetGroupEntity = assetGroupDao.createAssetGroup(assetGroup);
+        List<AssetGroupField> fields = assetGroup.getFields();
+        if (fields != null) {
+            for (AssetGroupField field : fields) {
+                field.setAssetGroup(assetGroup);
+                field.setUpdateTime(createdAssetGroupEntity.getUpdateTime());
+                field.setUpdatedBy(createdAssetGroupEntity.getUpdatedBy());
+                assetGroupFieldDao.create(field);
             }
-            return createdAssetGroupEntity;
+        }
+        return createdAssetGroupEntity;
     }
 
 
@@ -151,6 +152,9 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
         if (guid == null) {
             throw new InputArgumentException("Cannot delete asset group because the group ID is null.");
+        }
+        if (username == null || username.isEmpty()) {
+            throw new InputArgumentException("Username must be provided for selected operation");
         }
 
         try {
