@@ -144,7 +144,6 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
     @Override
     public AssetGroupEntity deleteAssetGroupById(UUID guid, String username) throws AssetException {
-        LOG.info("Deleting asset group by id: {}.", guid);
 
         if (guid == null) {
             throw new InputArgumentException("Cannot delete asset group because the group ID is null.");
