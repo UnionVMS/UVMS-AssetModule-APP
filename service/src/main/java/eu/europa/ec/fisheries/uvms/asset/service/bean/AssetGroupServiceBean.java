@@ -16,8 +16,10 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
+import eu.europa.ec.fisheries.uvms.dao.AssetGroupFieldDao;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +39,9 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
     @EJB
     private AssetGroupDao assetGroupDao;
+
+    @EJB
+    private AssetGroupFieldDao assetGroupFieldDao;
 
     final static Logger LOG = LoggerFactory.getLogger(AssetGroupServiceBean.class);
 
@@ -124,6 +129,15 @@ public class AssetGroupServiceBean implements AssetGroupService {
         }
 
             AssetGroupEntity createdAssetGroupEntity = assetGroupDao.createAssetGroup(assetGroup);
+            List<AssetGroupField> fields = assetGroup.getFields();
+            if(fields != null){
+                for(AssetGroupField field : fields ){
+                    field.setAssetGroup(assetGroup);
+                    field.setUpdateTime(createdAssetGroupEntity.getUpdateTime());
+                    field.setUpdatedBy(createdAssetGroupEntity.getUpdatedBy());
+                    assetGroupFieldDao.create(field);
+                }
+            }
             return createdAssetGroupEntity;
     }
 

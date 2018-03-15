@@ -2,7 +2,10 @@ package eu.europa.fisheries.uvms.asset.service.arquillian;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetGroupSearchField;
+import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
@@ -27,6 +30,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     AssetGroupService assetGroupService;
 
 
+
     @Test
     @OperateOnDeployment("normal")
     public void createAssertGroup() throws AssetException {
@@ -34,6 +38,19 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
         AssetGroupEntity createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
         Assert.assertTrue(createdAssetGroupEntity != null);
     }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createAssertGroupAndFields() throws AssetException {
+
+        AssetGroupEntity createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
+        Assert.assertTrue(createdAssetGroupEntity != null);
+
+    }
+
+
+
+
 
     @Test
     @OperateOnDeployment("normal")
@@ -158,13 +175,40 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
 
 
 
+    private List<AssetGroupField> createAndStoreAssetGroupLines( int n) throws AssetException {
+
+        List<AssetGroupField> ret = new ArrayList<>();
+
+        for(int i = 0 ; i < n ; i++){
+            AssetGroupField field = new AssetGroupField();
+            field.setField(ConfigSearchFieldEnum.GUID.value());
+            field.setValue(UUID.randomUUID().toString());
+            ret.add(field);
+        }
+        return ret;
+    }
+
+
 
     private AssetGroupEntity createAndStoreAssetGroupEntity(String user) throws AssetException {
 
         AssetGroupEntity assetGroupEntity = createAssetGroupEntity(user);
         Assert.assertTrue(assetGroupEntity.getId() == null);
+
+
+        List<AssetGroupField> fields =  createAndStoreAssetGroupLines(5);
+
+        assetGroupEntity.setFields(fields);
+
         AssetGroupEntity createdAssetGroupEntity = assetGroupService.createAssetGroup(assetGroupEntity, user);
         Assert.assertTrue(createdAssetGroupEntity.getId() != null);
+
+
+
+
+
+
+
         return createdAssetGroupEntity;
     }
 
