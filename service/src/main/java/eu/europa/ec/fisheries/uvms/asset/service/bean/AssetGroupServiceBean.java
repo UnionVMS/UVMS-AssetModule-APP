@@ -127,7 +127,11 @@ public class AssetGroupServiceBean implements AssetGroupService {
         if (assetGroup == null) {
             throw new InputArgumentException("Cannot create asset group because the group is null.");
         }
+        if (username == null) {
+            throw new InputArgumentException("User must be provided.");
+        }
 
+            assetGroup.setName(username);
             AssetGroupEntity createdAssetGroupEntity = assetGroupDao.createAssetGroup(assetGroup);
             List<AssetGroupField> fields = assetGroup.getFields();
             if(fields != null){
