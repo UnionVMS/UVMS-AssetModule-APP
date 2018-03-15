@@ -63,21 +63,17 @@ public class AssetGroupServiceBean implements AssetGroupService {
             throw new InputArgumentException("Invalid asset");
         }
 
-        List<AssetGroupEntity> vesselGroupList = new ArrayList<>();
-
-        // TODO DO a join instead
+        List<AssetGroupEntity> searchResultList = new ArrayList<>();
         List<AssetGroupEntity> filterGroupList = assetGroupDao.getAssetGroupAll();
-            /*
             for (AssetGroupEntity group : filterGroupList) {
-                List<AssetGroupField> fields = group.getFields();
+                List<AssetGroupField> fields =  assetGroupFieldDao.retrieveFieldsForGroup(group);
                 for (AssetGroupField field : fields) {
                     if ("GUID".equals(field.getField()) && assetGuid.equals(field.getValue())) {
-                        vesselGroupList.add(group);
+                        searchResultList.add(group);
                     }
                 }
             }
-            */
-        return filterGroupList;
+        return searchResultList;
     }
 
 
