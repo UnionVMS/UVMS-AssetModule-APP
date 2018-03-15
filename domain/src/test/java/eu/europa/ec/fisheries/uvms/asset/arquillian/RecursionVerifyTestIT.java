@@ -1,14 +1,22 @@
 package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationConfig;
 import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import javax.json.stream.JsonParser;
 import java.io.IOException;
+import java.io.StringReader;
+import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,7 +27,14 @@ public class RecursionVerifyTestIT {
 
 
 
-    private ObjectMapper MAPPER = new ObjectMapper();
+    private ObjectMapper MAPPER ;
+
+    @Before
+    public void before(){
+        MAPPER = new ObjectMapper();
+        MAPPER.findAndRegisterModules();
+
+    }
 
 
     @Test
@@ -34,7 +49,6 @@ public class RecursionVerifyTestIT {
 
          */
 
-        MAPPER.findAndRegisterModules();
         AssetGroupEntity groupEntity =  createAssetGroupEntity("test",5);
         String json = MAPPER.writeValueAsString(groupEntity);
         AssetGroupEntity deserialized = MAPPER.readValue(json, AssetGroupEntity.class);
@@ -43,6 +57,19 @@ public class RecursionVerifyTestIT {
         Assert.assertEquals(json,json2);
         System.out.println(json);
     }
+
+
+
+    @Test
+    public void testJsonWithJEEInternal() throws AssetGroupDaoException, IOException {
+
+
+        AssetGroupEntity groupEntity =  createAssetGroupEntity("test",5);
+
+
+
+    }
+
 
     private AssetGroupEntity createAssetGroupEntity(String user, int numberOfGroupFields) {
         AssetGroupEntity assetGroupEntity = new AssetGroupEntity();
