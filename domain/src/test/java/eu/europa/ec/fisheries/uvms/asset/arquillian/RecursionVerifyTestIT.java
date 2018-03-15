@@ -41,13 +41,14 @@ public class RecursionVerifyTestIT {
         String json2 = MAPPER.writeValueAsString(deserialized);
 
         Assert.assertEquals(json,json2);
+        System.out.println(json);
     }
 
     private AssetGroupEntity createAssetGroupEntity(String user, int numberOfGroupFields) {
         AssetGroupEntity assetGroupEntity = new AssetGroupEntity();
 
         LocalDateTime dt = LocalDateTime.now(Clock.systemUTC());
-        assetGroupEntity.setId(UUID.randomUUID());
+       // assetGroupEntity.setId(UUID.randomUUID());
         assetGroupEntity.setUpdatedBy("test");
         assetGroupEntity.setUpdateTime(dt);
         assetGroupEntity.setArchived(false);
@@ -65,7 +66,7 @@ public class RecursionVerifyTestIT {
             field.setUpdateTime(dt);
             field.setField(ConfigSearchFieldEnum.GUID.value());
             field.setValue(UUID.randomUUID().toString());
-            field.setId(i);
+         //   field.setId(i);
             groupFields.add(field);
         }
         assetGroupEntity.setFields(groupFields);
