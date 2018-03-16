@@ -255,12 +255,12 @@ public class AssetSE implements Serializable{
 
     @Enumerated(EnumType.STRING)
     @Column(name="segment")
-    private Long segment;
+    private String segment;
 //    private SegmentFUP segment;
 
     @Enumerated(EnumType.STRING)
     @Column(name="segmentofadministrativedecision")
-    private Long segmentOfAdministrativeDecision;
+    private String segmentOfAdministrativeDecision;
 //    private SegmentFUP segmentOfAdministrativeDecision;
 
     @Enumerated(EnumType.STRING)
@@ -624,19 +624,19 @@ public class AssetSE implements Serializable{
         this.administrativeDecisionDate = administrativeDecisionDate;
     }
 
-    public Long getSegment() {
+    public String getSegment() {
         return segment;
     }
 
-    public void setSegment(Long segment) {
+    public void setSegment(String segment) {
         this.segment = segment;
     }
 
-    public Long getSegmentOfAdministrativeDecision() {
+    public String getSegmentOfAdministrativeDecision() {
         return segmentOfAdministrativeDecision;
     }
 
-    public void setSegmentOfAdministrativeDecision(Long segmentOfAdministrativeDecision) {
+    public void setSegmentOfAdministrativeDecision(String segmentOfAdministrativeDecision) {
         this.segmentOfAdministrativeDecision = segmentOfAdministrativeDecision;
     }
 

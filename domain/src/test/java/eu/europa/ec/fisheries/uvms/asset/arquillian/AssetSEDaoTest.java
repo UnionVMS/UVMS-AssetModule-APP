@@ -365,7 +365,7 @@ public class AssetSEDaoTest extends TransactionalTests {
         asset.setProdOrgName(newOrgName);
         asset.setGrossTonnageUnit(UnitTonnage.OSLO);
         asset.setLicenceType(GearFishingTypeEnum.PELAGIC.toString());
-        asset.setSegment(3L);
+        asset.setSegment("3");
         asset.setConstructionYear("1924");
         asset.setConstructionPlace("BEJ");
 
