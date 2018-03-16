@@ -11,70 +11,62 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.dao;
 
+import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
+import eu.europa.ec.fisheries.uvms.dao.Dao;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
+
+import javax.ejb.Local;
+import javax.ejb.Stateless;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.UUID;
 
-import javax.ejb.Local;
-
-import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
-
+@Stateless
 @Local
-public interface AssetGroupDao {
+public class AssetGroupDao extends Dao  {
 
-	/**
-	 * Create asset group
-	 *
-	 * @param group
-	 * @return
-	 */
-	AssetGroupEntity createAssetGroup(AssetGroupEntity group);
+    public AssetGroupEntity createAssetGroup(AssetGroupEntity group) {
 
-	/**
-	 * Get asset group by guid
-	 *
-	 * @param guid
-	 * @return
-	 */
-	AssetGroupEntity getAssetGroupByGuid(UUID guid);
+        em.persist(group);
+        return group;
+    }
 
-	/**
-	 * Update asset group
-	 *
-	 * @param group
-	 * @return
-	 */
-	AssetGroupEntity updateAssetGroup(AssetGroupEntity group);
+    public AssetGroupEntity getAssetGroupByGuid(UUID groupId) {
+        try {
+            TypedQuery<AssetGroupEntity> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_GUID, AssetGroupEntity.class);
+            query.setParameter("guid", groupId);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 
-	/**
-	 * Delete asset group
-	 *
-	 * @param group
-	 * @return
-	 */
-	AssetGroupEntity deleteAssetGroup(AssetGroupEntity group) ;
+    public AssetGroupEntity updateAssetGroup(AssetGroupEntity group) {
+        em.merge(group);
+        return group;
+    }
 
-	/**
-	 * Get all asset groups (FIND_ALL)
-	 *
-	 * @return
-	 */
-	List<AssetGroupEntity> getAssetGroupAll() ;
+    public AssetGroupEntity deleteAssetGroup(AssetGroupEntity group) {
+        em.remove(group);
+        return group;
+    }
 
-	/**
-	 * Get asset groups by user
-	 *
-	 * @param user
-	 * @return
-	 */
-	List<AssetGroupEntity> getAssetGroupByUser(String user) ;
+    public List<AssetGroupEntity> getAssetGroupAll() {
+        TypedQuery<AssetGroupEntity> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_FIND_ALL, AssetGroupEntity.class);
+        return query.getResultList();
+    }
 
-	/**
-	 * Get asset groups by guidList
-	 *
-	 * @param guidList
-	 * @return
-	 */
-	List<AssetGroupEntity> getAssetGroupsByGroupGuidList(List<UUID> guidList);
+    public List<AssetGroupEntity> getAssetGroupByUser(String user) {
+        TypedQuery<AssetGroupEntity> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_USER, AssetGroupEntity.class);
+        query.setParameter("owner", user);
+        return query.getResultList();
+    }
 
+    public List<AssetGroupEntity> getAssetGroupsByGroupGuidList(List<UUID> guidList) {
+        TypedQuery<AssetGroupEntity> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_GUID_LIST, AssetGroupEntity.class);
+        query.setParameter("guidList", guidList);
+        return query.getResultList();
+    }
 
 }

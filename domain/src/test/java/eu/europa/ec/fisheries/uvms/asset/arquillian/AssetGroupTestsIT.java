@@ -4,7 +4,6 @@ package eu.europa.ec.fisheries.uvms.asset.arquillian;
 import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupFieldDao;
-import eu.europa.ec.fisheries.uvms.dao.bean.AssetGroupFieldDaoBean;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField;

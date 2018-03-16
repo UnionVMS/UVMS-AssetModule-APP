@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+
+import eu.europa.ec.fisheries.uvms.dao.SettingDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
@@ -30,7 +32,6 @@ import eu.europa.ec.fisheries.uvms.asset.types.ConfigurationDto;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
 import eu.europa.ec.fisheries.uvms.constant.UnitLength;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.dao.SettingDao;
 import eu.europa.ec.fisheries.uvms.entity.model.Setting;
 
 

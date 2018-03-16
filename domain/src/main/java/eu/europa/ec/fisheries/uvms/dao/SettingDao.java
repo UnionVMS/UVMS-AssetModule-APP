@@ -13,14 +13,40 @@ package eu.europa.ec.fisheries.uvms.dao;
 
 import java.util.List;
 
-import javax.ejb.Local;
+import javax.ejb.Stateless;
+import javax.persistence.TypedQuery;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
 import eu.europa.ec.fisheries.uvms.entity.model.Setting;
 
-@Local
-public interface SettingDao {
+@Stateless
+public class SettingDao extends Dao  {
 
-	 List<Setting> getAllSettings() throws AssetDaoException;
-	 List<Setting> getSettingByField(String field) throws AssetDaoException;
+    private static final Logger LOG = LoggerFactory.getLogger(SettingDao.class);
+
+	public List<Setting> getAllSettings() throws AssetDaoException {
+		try {
+			TypedQuery<Setting> query = em.createNamedQuery(UvmsConstants.SETTING_LIST, Setting.class);
+			return query.getResultList();
+		} catch (Exception e) {
+			LOG.error("[ get settings ]", e.getMessage());
+			throw new AssetDaoException("[ get settings ] " + e.getMessage());
+		}
+	}
+
+	public List<Setting> getSettingByField(String field) throws AssetDaoException {
+		try {
+			TypedQuery<Setting> query = em.createNamedQuery(UvmsConstants.SETTING_BY_FIELD, Setting.class);
+			query.setParameter("field", field);
+			return query.getResultList();
+		} catch (Exception e) {
+			LOG.error("[ get setting by field ]", e.getMessage());
+			throw new AssetDaoException("[ get setting by field] " + e.getMessage());
+		}
+	}
+
 }

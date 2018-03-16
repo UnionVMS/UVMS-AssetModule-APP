@@ -33,7 +33,7 @@ import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.dao.bean.AssetSEDao;
+import eu.europa.ec.fisheries.uvms.dao.AssetSEDao;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 

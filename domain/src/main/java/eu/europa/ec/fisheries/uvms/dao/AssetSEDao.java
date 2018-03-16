@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.dao.bean;
+package eu.europa.ec.fisheries.uvms.dao;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
