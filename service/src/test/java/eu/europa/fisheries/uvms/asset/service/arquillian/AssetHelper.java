@@ -1,22 +1,20 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
-import eu.europa.ec.fisheries.uvms.asset.types.AssetListCriteria;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetListCriteriaPair;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetListPagination;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.*;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetProdOrg;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
-import eu.europa.ec.fisheries.uvms.entity.model.ContactInfo;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetListCriteria;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetListPagination;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
+import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.ContactInfoSourceEnum;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetProdOrg;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
+import eu.europa.ec.fisheries.uvms.entity.model.ContactInfo;
+import eu.europa.ec.fisheries.uvms.entity.model.Note;
 
 public abstract class AssetHelper {
 
@@ -137,6 +135,13 @@ public abstract class AssetHelper {
         return assetEntity;
     }
 
+    public static Note createBasicNote() {
+        Note note = new Note();
+        note.setActivity("Activity");
+        note.setNotes("Notes: " + getRandomIntegers(10));
+        note.setUser("Test");
+        return note;
+    }
 
     public static String getRandomIntegers(int length) {
         return new Random()

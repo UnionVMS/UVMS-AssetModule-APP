@@ -36,12 +36,12 @@ public class AssetSEDao {
     private EntityManager em;
 
     public AssetSE createAsset(AssetSE asset) {
-            em.persist(asset);
-            return asset;
+        em.persist(asset);
+        return asset;
     }
 
     public AssetSE getAssetById(UUID id) {
-            return em.find(AssetSE.class, id);
+        return em.find(AssetSE.class, id);
     }
 
     public AssetSE getAssetByCfr(String cfr) {
@@ -115,29 +115,29 @@ public class AssetSEDao {
     }
 
     public AssetSE updateAsset(AssetSE asset) {
-            return em.merge(asset);
+        return em.merge(asset);
     }
 
     public void deleteAsset(AssetSE asset) {
-            em.remove(asset);
+        em.remove(asset);
     }
 
     public List<AssetSE> getAssetListAll() throws AssetDaoException {
-            TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_ALL, AssetSE.class);
-            return query.getResultList();
+        TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_ALL, AssetSE.class);
+        return query.getResultList();
     }
 
-    public Long getAssetCount(List<SearchKeyValue> searchFields, Boolean isDynamic)  {
+    public Long getAssetCount(List<SearchKeyValue> searchFields, Boolean isDynamic) {
         AuditQuery query = createQuery(searchFields, isDynamic);
         return (Long) query.addProjection(AuditEntity.id().count()).getSingleResult();
     }
 
     public List<AssetSE> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize,
             List<SearchKeyValue> searchFields, boolean isDynamic) {
-            AuditQuery query = createQuery(searchFields, isDynamic);
-            query.setFirstResult(pageSize * (pageNumber - 1));
-            query.setMaxResults(pageSize);
-            return query.getResultList();
+        AuditQuery query = createQuery(searchFields, isDynamic);
+        query.setFirstResult(pageSize * (pageNumber - 1));
+        query.setMaxResults(pageSize);
+        return query.getResultList();
     }
 
     private AuditQuery createQuery(List<SearchKeyValue> searchFields, boolean isDynamic) {
@@ -195,31 +195,31 @@ public class AssetSEDao {
         return false;
     }
 
-    public List<AssetSE> getRevisionsForAsset(AssetSE asset)  {
-            AuditReader auditReader = AuditReaderFactory.get(em);
-            List<AssetSE> resultList = new ArrayList<>();
+    public List<AssetSE> getRevisionsForAsset(AssetSE asset) {
+        AuditReader auditReader = AuditReaderFactory.get(em);
+        List<AssetSE> resultList = new ArrayList<>();
 
-            List<Number> revisionNumbers = auditReader.getRevisions(AssetSE.class, asset.getId());
-            for (Number rev : revisionNumbers) {
-                AssetSE audited = auditReader.find(AssetSE.class, asset.getId(), rev);
-                resultList.add(audited);
-            }
-            return resultList;
+        List<Number> revisionNumbers = auditReader.getRevisions(AssetSE.class, asset.getId());
+        for (Number rev : revisionNumbers) {
+            AssetSE audited = auditReader.find(AssetSE.class, asset.getId(), rev);
+            resultList.add(audited);
+        }
+        return resultList;
     }
 
-    public AssetSE getAssetAtDate(AssetSE asset, LocalDateTime localDateTime)  {
-            Date date = Date.from(localDateTime.toInstant(ZoneOffset.UTC));
-            AuditReader auditReader = AuditReaderFactory.get(em);
-            return auditReader.find(AssetSE.class, asset.getId(), date);
+    public AssetSE getAssetAtDate(AssetSE asset, LocalDateTime localDateTime) {
+        Date date = Date.from(localDateTime.toInstant(ZoneOffset.UTC));
+        AuditReader auditReader = AuditReaderFactory.get(em);
+        return auditReader.find(AssetSE.class, asset.getId(), date);
     }
 
-    public List<AssetSE> getAssetListByAssetGuids(List<UUID> idList)  {
-            TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_BY_IDS, AssetSE.class);
-            query.setParameter("idList", idList);
-            return query.getResultList();
+    public List<AssetSE> getAssetListByAssetGuids(List<UUID> idList) {
+        TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_BY_IDS, AssetSE.class);
+        query.setParameter("idList", idList);
+        return query.getResultList();
     }
 
-    private String assembleQueryString(AssetId assetId)  {
+    private String assembleQueryString(AssetId assetId) {
 
         AssetIdTypeEnum assetIdType = assetId.getType();
         String hql = "select ah.asset from AssetSE ah where %s = :keyval ";
@@ -256,12 +256,12 @@ public class AssetSEDao {
         return hql;
      }
 
-    public AssetSE getAssetFromAssetId(AssetId assetId)  {
+    public AssetSE getAssetFromAssetId(AssetId assetId) {
 
         String keyval = assetId.getValue();
         String hql = assembleQueryString(assetId);
 
-        TypedQuery<AssetSE> query = em.createQuery(hql,AssetSE.class);
+        TypedQuery<AssetSE> query = em.createQuery(hql, AssetSE.class);
         query.setParameter("keyval", keyval);
         try {
             return query.getSingleResult();
@@ -270,7 +270,7 @@ public class AssetSEDao {
         }
     }
 
-    public AssetSE getAssetFromAssetIdAtDate(AssetId assetId, LocalDateTime date)  {
+    public AssetSE getAssetFromAssetIdAtDate(AssetId assetId, LocalDateTime date) {
         AssetSE asset = getAssetFromAssetId(assetId);
         if (asset != null) {
             return getAssetAtDate(asset, date);
@@ -285,15 +285,15 @@ public class AssetSEDao {
     }
 
     // TODO if when the framework supports querying on specific columns in nnn_AUD table, use that unstead
-    public AssetSE getAssetRevisionForHistoryId(AssetSE asset, UUID historyId)  {
-            AuditReader auditReader = AuditReaderFactory.get(em);
-            List<Number> revisionNumbers = auditReader.getRevisions(AssetSE.class, asset.getId());
-            for (Number rev : revisionNumbers) {
-                AssetSE audited = auditReader.find(AssetSE.class, asset.getId(), rev);
-                if(audited.getHistoryId().equals(historyId)){
-                    return audited;
-                }
+    public AssetSE getAssetRevisionForHistoryId(AssetSE asset, UUID historyId) {
+        AuditReader auditReader = AuditReaderFactory.get(em);
+        List<Number> revisionNumbers = auditReader.getRevisions(AssetSE.class, asset.getId());
+        for (Number rev : revisionNumbers) {
+            AssetSE audited = auditReader.find(AssetSE.class, asset.getId(), rev);
+            if (audited.getHistoryId().equals(historyId)) {
+                return audited;
             }
-            return null;
+        }
+        return null;
     }
 }

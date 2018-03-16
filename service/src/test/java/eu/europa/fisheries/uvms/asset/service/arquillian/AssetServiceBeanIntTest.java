@@ -9,6 +9,7 @@ import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetListResponsePaginated;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
+import eu.europa.ec.fisheries.uvms.entity.model.Note;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
@@ -19,6 +20,10 @@ import javax.ejb.EJB;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.transaction.*;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -173,7 +178,59 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         
         assertTrue(!assets.isEmpty());
     }
+
+    @Test
+    public void createNotesTest() throws Exception {
+        AssetSE asset = AssetHelper.createBasicAsset();
+        Note note = AssetHelper.createBasicNote();
+        asset.setNotes(Arrays.asList(note));
+        asset = assetService.createAsset(asset, "test");
+        
+        AssetSE fetchedAsset = assetService.getAssetById(asset.getId());
+        assertEquals(1, fetchedAsset.getNotes().size());
+    }
     
+    @Test
+    public void addNoteTest() throws Exception {
+        AssetSE asset = AssetHelper.createBasicAsset();
+
+        List<Note> notes = new ArrayList<>();
+        Note note = AssetHelper.createBasicNote();
+        notes.add(note);
+        asset.setNotes(notes);
+        
+        asset = assetService.createAsset(asset, "test");
+        commit();
+        
+        asset.getNotes().add(AssetHelper.createBasicNote());
+        assetService.updateAsset(asset, "Test", "Updated");
+        commit();
+        
+        AssetSE fetchedAsset = assetService.getAssetById(asset.getId());
+        
+        assertEquals(2, fetchedAsset.getNotes().size());
+    }
+    
+    @Test
+    public void deleteNoteTest() throws Exception {
+        AssetSE asset = AssetHelper.createBasicAsset();
+
+        List<Note> notes = new ArrayList<>();
+        notes.add(AssetHelper.createBasicNote());
+        notes.add(AssetHelper.createBasicNote());
+        asset.setNotes(notes);
+        
+        asset = assetService.createAsset(asset, "test");
+        commit();
+        
+        asset.getNotes().remove(0);
+        assetService.updateAsset(asset, "Test", "Updated");
+        commit();
+        
+        AssetSE fetchedAsset = assetService.getAssetById(asset.getId());
+        
+        assertEquals(1, fetchedAsset.getNotes().size());
+    }
 
     private void commit() throws AssetException {
 

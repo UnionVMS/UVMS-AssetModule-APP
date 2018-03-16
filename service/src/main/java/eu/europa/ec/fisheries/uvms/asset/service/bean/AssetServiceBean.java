@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.asset.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
@@ -34,10 +33,11 @@ import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.uvms.asset.types.NoteActivityCode;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
 import eu.europa.ec.fisheries.uvms.dao.bean.AssetSEDao;
+import eu.europa.ec.fisheries.uvms.dao.bean.NoteDao;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetDaoMappingException;
-import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetListResponsePaginated;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
+import eu.europa.ec.fisheries.uvms.entity.model.Note;
 import eu.europa.ec.fisheries.uvms.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 
@@ -54,6 +54,9 @@ public class AssetServiceBean implements AssetService {
 
     @Inject
     private AssetGroupDao assetGroupDao;
+    
+    @Inject
+    private NoteDao noteDao;
 
     /**
      * {@inheritDoc}
@@ -63,10 +66,13 @@ public class AssetServiceBean implements AssetService {
      * @throws AssetException
      */
     @Override
-    public AssetSE createAsset(AssetSE asset, String username) throws AssetServiceException {
+    public AssetSE createAsset(AssetSE asset, String username) {
 
-        AssetSE createdAssetEntity;
-            createdAssetEntity = assetSEDao.createAsset(asset);
+        asset.setUpdatedBy(username);
+        AssetSE createdAssetEntity = assetSEDao.createAsset(asset);
+        
+        List<Note> notes = noteDao.createNotes(asset);
+        createdAssetEntity.setNotes(notes);
 
         auditService.logAssetCreated(createdAssetEntity, username);
         
@@ -115,7 +121,9 @@ public class AssetServiceBean implements AssetService {
 
             List<AssetSE> assetEntityList = assetSEDao.getAssetListSearchPaginated(page, listSize, searchFields,
                     isDynamic);
-
+            
+            noteDao.findNotesByAssets(assetEntityList);
+            
             AssetListResponsePaginated listAssetResponse = new AssetListResponsePaginated();
             listAssetResponse.setCurrentPage(page);
             listAssetResponse.setTotalNumberOfPages(numberOfPages);
@@ -147,10 +155,10 @@ public class AssetServiceBean implements AssetService {
 
         boolean isDynamic = query.getAssetSearchCriteria().isIsDynamic();
 
-            List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query.getAssetSearchCriteria()
-                    .getCriterias());
+        List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query.getAssetSearchCriteria()
+                .getCriterias());
 
-            return assetSEDao.getAssetCount(searchFields, isDynamic);
+        return assetSEDao.getAssetCount(searchFields, isDynamic);
     }
 
     /**
@@ -190,7 +198,10 @@ public class AssetServiceBean implements AssetService {
             AssetSE assetDB = getAssetById((asset.getId()));
             if(assetDB != null){
                 asset.setUpdatedBy(username);
-                return assetSEDao.updateAsset(asset);
+                AssetSE updatedAsset = assetSEDao.updateAsset(asset);
+                List<Note> notes = updateNotes(asset);
+                updatedAsset.setNotes(notes);
+                return updatedAsset;
             } else {
                 throw new AssetServiceException("Asset with that id does not exist");
             }
@@ -198,7 +209,13 @@ public class AssetServiceBean implements AssetService {
             throw new AssetServiceException("Could not update asset, id: " + asset.getId(), e);
         }
     }
-
+    
+    private List<Note> updateNotes(AssetSE asset) {
+        List<Note> notes = noteDao.findNotesByAsset(asset);
+        notes.stream().forEach(noteDao::deleteNote);
+        return noteDao.createNotes(asset);
+    }
+    
     private void checkIdentifierNullValues(AssetSE asset) {
         if (asset.getCfr() == null || asset.getCfr().isEmpty())
             asset.setCfr(null);
@@ -270,7 +287,6 @@ public class AssetServiceBean implements AssetService {
 
     }
 
-
     public AssetSE getAssetById(AssetId assetId) throws AssetServiceException {
 
         if (assetId == null) {
@@ -281,38 +297,48 @@ public class AssetServiceBean implements AssetService {
             throw new InputArgumentException("AssetId value or type is null");
         }
 
-        try {
-            switch (assetId.getType()) {
-                case CFR:
-                    return assetSEDao.getAssetByCfr(assetId.getValue());
-                case IRCS:
-                    return assetSEDao.getAssetByIrcs(assetId.getValue());
-                case INTERNAL_ID:
-                    UUID uuid = UUID.fromString(assetId.getGuid());
-                    return assetSEDao.getAssetById(uuid);
-                case IMO:
-                    checkNumberAssetId(assetId.getValue());
-                    return assetSEDao.getAssetByImo(assetId.getValue());
-                case MMSI:
-                    checkNumberAssetId(assetId.getValue());
-                    return assetSEDao.getAssetByMmsi(assetId.getValue());
-                case ICCAT:
-                    return assetSEDao.getAssetByIccat(assetId.getValue());
-                case UVI:
-                    return assetSEDao.getAssetByUvi(assetId.getValue());
-                case GFCM:
-                    return assetSEDao.getAssetByGfcm(assetId.getValue());
-                default:
-                    throw new NoAssetEntityFoundException("Non valid asset id type");
-            }
-        } catch (AssetDaoException e) {
-            throw new AssetServiceException("Could not get asset by id: " + assetId.getType() + "=" + assetId
-                    .getValue(), e);
+        AssetSE asset = null;
+        switch (assetId.getType()) {
+            case CFR:
+                asset = assetSEDao.getAssetByCfr(assetId.getValue());
+                break;
+            case IRCS:
+                asset = assetSEDao.getAssetByIrcs(assetId.getValue());
+                break;
+            case INTERNAL_ID:
+                UUID uuid = UUID.fromString(assetId.getGuid());
+                asset = assetSEDao.getAssetById(uuid);
+                break;
+            case IMO:
+                checkNumberAssetId(assetId.getValue());
+                asset = assetSEDao.getAssetByImo(assetId.getValue());
+                break;
+            case MMSI:
+                checkNumberAssetId(assetId.getValue());
+                asset = assetSEDao.getAssetByMmsi(assetId.getValue());
+                break;
+            case ICCAT:
+                asset = assetSEDao.getAssetByIccat(assetId.getValue());
+                break;
+            case UVI:
+                asset = assetSEDao.getAssetByUvi(assetId.getValue());
+                break;
+            case GFCM:
+                asset = assetSEDao.getAssetByGfcm(assetId.getValue());
+                break;
+            default:
+                throw new AssetServiceException("Non valid asset id type");
         }
+        if (asset != null) {
+            List<Note> notes = noteDao.findNotesByAsset(asset);
+            asset.setNotes(notes);
+        }
+        return asset;
     }
 
     @Override
-    public AssetSE getAssetFromAssetIdAtDate(String idType, String idValue, LocalDateTime date) throws AssetServiceException {
+    public AssetSE getAssetFromAssetIdAtDate(String idType, String idValue, LocalDateTime date)
+            throws AssetServiceException {
 
         if (idType == null) {
             throw new InputArgumentException("Type is null");
@@ -327,20 +353,21 @@ public class AssetServiceBean implements AssetService {
         if (date == null) {
             throw new InputArgumentException("Date is null");
         }
-        if(assetType == AssetIdTypeEnum.GUID || assetType == AssetIdTypeEnum.INTERNAL_ID){
-            try{
+        if (assetType == AssetIdTypeEnum.GUID || assetType == AssetIdTypeEnum.INTERNAL_ID) {
+            try {
                 UUID.fromString(idValue);
-            }
-            catch(IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 throw new InputArgumentException("Not a valid UUID");
             }
         }
 
-			AssetId assetId = new AssetId();
-			assetId.setType(assetType);
-			assetId.setValue(idValue);
-			assetId.setGuid(idValue);
-			return assetSEDao.getAssetFromAssetIdAtDate(assetId, date);
+        AssetId assetId = new AssetId();
+        assetId.setType(assetType);
+        assetId.setValue(idValue);
+        assetId.setGuid(idValue);
+        AssetSE asset = assetSEDao.getAssetFromAssetIdAtDate(assetId, date);
+        asset.setNotes(noteDao.findNotesByAsset(asset));
+        return asset;
     }
 
 
@@ -355,7 +382,12 @@ public class AssetServiceBean implements AssetService {
             throw new InputArgumentException("Id is null");
         }
 
-            return assetSEDao.getAssetById(id);
+        AssetSE asset = assetSEDao.getAssetById(id);
+        if (asset != null) {
+            List<Note> notes = noteDao.findNotesByAsset(asset);
+            asset.setNotes(notes);
+        }
+        return asset;
     }
 
     /**
@@ -401,21 +433,20 @@ public class AssetServiceBean implements AssetService {
         }
 
         AssetSE assetEntity = null;
-            // get an object based on what type of id it has
-            assetEntity = getAssetById(assetId);
-            assetSEDao.deleteAsset(assetEntity);
+        // get an object based on what type of id it has
+        assetEntity = getAssetById(assetId);
+        assetSEDao.deleteAsset(assetEntity);
     }
 
     @Override
     public List<AssetSE> getRevisionsForAsset(AssetSE asset) throws AssetServiceException {
-            return assetSEDao.getRevisionsForAsset(asset);
+        return assetSEDao.getRevisionsForAsset(asset);
     }
 
     @Override
     public AssetSE getAssetRevisionForRevisionId(AssetSE asset, UUID historyId) throws AssetServiceException {
-            return assetSEDao.getAssetRevisionForHistoryId(asset, historyId);
+        return assetSEDao.getAssetRevisionForHistoryId(asset, historyId);
     }
-
 
     private void checkNumberAssetId(String id) throws InputArgumentException {
         try {

@@ -35,77 +35,83 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.entity.model;
 
-import eu.europa.ec.fisheries.uvms.entity.asset.types.ContactInfoSourceEnum;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.NotesSourceEnum;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
-import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.validation.constraints.Size;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.NotesSourceEnum;
 
-
-/**
- * The persistent class for the carrier database table.
- * 
- */
 @Entity
-public class Notes implements Serializable {
-	private static final long serialVersionUID = 1L;
+@Table(name = "Note")
+@NamedQueries({
+    @NamedQuery(name = Note.NOTE_FIND_BY_ASSET, query = "SELECT n FROM Note n WHERE n.asset = :asset"),
+})
+public class Note implements Serializable {
 
-	@Id
+    public static final String NOTE_FIND_BY_ASSET = "Note.findByAsset";
+    
+    private static final long serialVersionUID = 1L;
+
+    @Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="notes_id")
+	@Column(name="id")
 	private Long id;
 
-	//@Fetch(FetchMode.JOIN)
-	//@ManyToOne(fetch = FetchType.LAZY)
-	//@JoinColumn(name = "notes_asset_id")
-	//private AssetEntity asset;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="asset")
+	private AssetSE asset;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="notes_date")
-	private Date date;
+	@Column(name="date")
+	private LocalDateTime date;
 
-	@Column(name="notes_activity")
+	@Column(name="activity")
 	private String activity;
 
-	@Column(name="notes_user")
+	@Column(name="noteuser")
 	private String user;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="notes_ready_date")
-	private Date readyDate;
+	@Column(name="readydate")
+	private LocalDateTime readyDate;
 
-	@Column(name="notes_license_holder")
+	@Column(name="licenseholder")
 	private String licenseHolder;
 
-	@Column(name="notes_contact")
+	@Column(name="contact")
 	private String contact;
 
-	@Column(name="notes_sheet_number")
+	@Column(name="sheetnumber")
 	private String sheetNumber;
 
-	@Column(name="notes_notes")
+	@Column(name="notes")
 	private String notes;
 
-	@Column(name="notes_document")
+	@Column(name="document")
 	private String document;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name="notes_source")
+	@Column(name="source")
 	private NotesSourceEnum source;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="notes_updattim")
-	private Date updateTime;
+	@Column(name="updatetime")
+	private LocalDateTime updateTime;
 
 	@Size(max=60)
-	@Column(name="notes_upuser")
+	@Column(name="updatedby")
 	private String updatedBy;
 
-	public Notes() {
+	public Note() {
 	}
 
 	public Long getId() {
@@ -116,19 +122,19 @@ public class Notes implements Serializable {
 		this.id = id;
 	}
 
-	//public AssetEntity getAsset() {
-//		return asset;
-//	}
+	public AssetSE getAsset() {
+		return asset;
+	}
 
-	//public void setAsset(AssetEntity asset) {
-	//	this.asset = asset;
-	//}
+	public void setAsset(AssetSE asset) {
+		this.asset = asset;
+	}
 
-	public Date getDate() {
+	public LocalDateTime getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(LocalDateTime date) {
 		this.date = date;
 	}
 
@@ -148,11 +154,11 @@ public class Notes implements Serializable {
 		this.user = user;
 	}
 
-	public Date getReadyDate() {
+	public LocalDateTime getReadyDate() {
 		return readyDate;
 	}
 
-	public void setReadyDate(Date readyDate) {
+	public void setReadyDate(LocalDateTime readyDate) {
 		this.readyDate = readyDate;
 	}
 
@@ -204,11 +210,11 @@ public class Notes implements Serializable {
 		this.source = source;
 	}
 
-	public Date getUpdateTime() {
+	public LocalDateTime getUpdateTime() {
 		return updateTime;
 	}
 
-	public void setUpdateTime(Date updateTime) {
+	public void setUpdateTime(LocalDateTime updateTime) {
 		this.updateTime = updateTime;
 	}
 
@@ -219,4 +225,10 @@ public class Notes implements Serializable {
 	public void setUpdatedBy(String updatedBy) {
 		this.updatedBy = updatedBy;
 	}
+
+    @Override
+    public String toString() {
+        return "Note [id=" + id + ", activity=" + activity + ", user=" + user + ", notes=" + notes + "]";
+    }
+
 }

@@ -1,20 +1,37 @@
 package eu.europa.ec.fisheries.uvms.entity.model;
 
-import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
-
-import javax.persistence.*;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
+import static eu.europa.ec.fisheries.uvms.entity.model.AssetSE.ASSET_FIND_ALL;
+import static eu.europa.ec.fisheries.uvms.entity.model.AssetSE.ASSET_FIND_BY_CFR;
+import static eu.europa.ec.fisheries.uvms.entity.model.AssetSE.ASSET_FIND_BY_GFCM;
+import static eu.europa.ec.fisheries.uvms.entity.model.AssetSE.ASSET_FIND_BY_ICCAT;
+import static eu.europa.ec.fisheries.uvms.entity.model.AssetSE.ASSET_FIND_BY_IDS;
+import static eu.europa.ec.fisheries.uvms.entity.model.AssetSE.ASSET_FIND_BY_IMO;
+import static eu.europa.ec.fisheries.uvms.entity.model.AssetSE.ASSET_FIND_BY_IRCS;
+import static eu.europa.ec.fisheries.uvms.entity.model.AssetSE.ASSET_FIND_BY_MMSI;
+import static eu.europa.ec.fisheries.uvms.entity.model.AssetSE.ASSET_FIND_BY_UVI;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
-
-import static eu.europa.ec.fisheries.uvms.entity.model.AssetSE.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Size;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.envers.Audited;
+import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 
 @Audited
 @Entity
@@ -99,7 +116,6 @@ public class AssetSE implements Serializable{
     @Column(name="ircsindicator")
     private String ircsIndicator;
 
-    @Enumerated(EnumType.STRING)
     @Column(name="hullmaterial")
     private String  hullMaterial;
 
@@ -247,12 +263,10 @@ public class AssetSE implements Serializable{
     @Column(name="administrativedecisiondate")
     private LocalDateTime administrativeDecisionDate;
 
-    @Enumerated(EnumType.STRING)
     @Column(name="segment")
     private String segment;
 //    private SegmentFUP segment;
 
-    @Enumerated(EnumType.STRING)
     @Column(name="segmentofadministrativedecision")
     private String segmentOfAdministrativeDecision;
 //    private SegmentFUP segmentOfAdministrativeDecision;
@@ -264,7 +278,6 @@ public class AssetSE implements Serializable{
     @Column(name="registrationnumber")
     private String registrationNumber;
 
-    @Enumerated(EnumType.STRING)
     @Column(name="typeofexport")
     private String typeOfExport;
 
@@ -283,6 +296,9 @@ public class AssetSE implements Serializable{
     @Column(name="prodorgname")
     private String prodOrgName;
 
+    @Transient
+    private List<Note> notes = new ArrayList<>();
+    
     @PrePersist
     @PreUpdate
     private void generateNewHistoryId() {
@@ -685,8 +701,11 @@ public class AssetSE implements Serializable{
         return this.historyid;
     }
 
+    public List<Note> getNotes() {
+        return notes;
+    }
 
-
-
-
+    public void setNotes(List<Note> notes) {
+        this.notes = notes;
+    }
 }

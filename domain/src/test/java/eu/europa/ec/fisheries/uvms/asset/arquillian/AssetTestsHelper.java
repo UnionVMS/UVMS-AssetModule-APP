@@ -7,14 +7,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-
 import eu.europa.ec.fisheries.uvms.asset.types.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.*;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.ContactInfoSourceEnum;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.NotesSourceEnum;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetProdOrg;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
 import eu.europa.ec.fisheries.uvms.entity.model.ContactInfo;
-import eu.europa.ec.fisheries.uvms.entity.model.Notes;
+import eu.europa.ec.fisheries.uvms.entity.model.Note;
 
 
 public class AssetTestsHelper {
@@ -143,10 +143,10 @@ public class AssetTestsHelper {
 
 
 
-    public List<Notes> createNotesHelper(AssetSE assetEntity, Date date) {
+    public List<Note> createNotesHelper(AssetSE assetEntity, LocalDateTime date) {
 
-        List<Notes> notes = new ArrayList<>();
-        Notes note = new Notes();
+        List<Note> notes = new ArrayList<>();
+        Note note = new Note();
         note.setActivity("EL3");
         note.setContact("TESTContact");
         note.setDate(date);
