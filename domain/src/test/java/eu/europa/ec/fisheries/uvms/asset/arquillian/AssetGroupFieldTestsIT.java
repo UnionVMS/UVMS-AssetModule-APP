@@ -5,7 +5,7 @@ import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupFieldDao;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
@@ -38,7 +38,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     public void create() throws AssetGroupDaoException {
 
         String user = "test";
-        AssetGroupEntity assetGroup = createAndStoreAssetGroupEntity(user);
+        AssetGroup assetGroup = createAndStoreAssetGroupEntity(user);
         AssetGroupField createdAssetGroupField = createAndStoreAssetGroupFieldEntity(assetGroup);
         Long createdId = createdAssetGroupField.getId();
         AssetGroupField fetchedAssetGroupField =  getField(createdId);
@@ -50,7 +50,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     public void get() throws AssetGroupDaoException {
 
         String user = "test";
-        AssetGroupEntity assetGroup = createAndStoreAssetGroupEntity(user);
+        AssetGroup assetGroup = createAndStoreAssetGroupEntity(user);
         AssetGroupField createdAssetGroupField = createAndStoreAssetGroupFieldEntity(assetGroup);
         Long createdId = createdAssetGroupField.getId();
         AssetGroupField fetchedAssetGroupField =  getField(createdId);
@@ -61,7 +61,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     public void delete() throws AssetGroupDaoException {
 
         String user = "test";
-        AssetGroupEntity assetGroup = createAndStoreAssetGroupEntity(user);
+        AssetGroup assetGroup = createAndStoreAssetGroupEntity(user);
         AssetGroupField createdAssetGroupField = createAndStoreAssetGroupFieldEntity(assetGroup);
         Long createdId = createdAssetGroupField.getId();
         assetGroupFieldDaoBean.delete(createdAssetGroupField);
@@ -73,7 +73,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     public void update() throws AssetGroupDaoException {
 
         String user = "test";
-        AssetGroupEntity assetGroup = createAndStoreAssetGroupEntity(user);
+        AssetGroup assetGroup = createAndStoreAssetGroupEntity(user);
         AssetGroupField createdAssetGroupField = createAndStoreAssetGroupFieldEntity(assetGroup);
         Long createdId = createdAssetGroupField.getId();
         String createdUpdatedBy = createdAssetGroupField.getUpdatedBy();
@@ -90,8 +90,8 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     public void removeFieldsForGroup() throws AssetGroupDaoException {
 
         String user = "test";
-        AssetGroupEntity assetGroup1 = createAndStoreAssetGroupEntity(user);
-        AssetGroupEntity assetGroup2 = createAndStoreAssetGroupEntity(user);
+        AssetGroup assetGroup1 = createAndStoreAssetGroupEntity(user);
+        AssetGroup assetGroup2 = createAndStoreAssetGroupEntity(user);
         List<AssetGroupField> createdAssetGroupFields1 = createAndStoreAssetGroupFieldEntityList(assetGroup1, 50);
         List<AssetGroupField> createdAssetGroupFields2 = createAndStoreAssetGroupFieldEntityList(assetGroup2, 25 );
 
@@ -111,7 +111,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
 
 
 
-    private List<AssetGroupField>  createAndStoreAssetGroupFieldEntityList(AssetGroupEntity assetGroup, int n)
+    private List<AssetGroupField>  createAndStoreAssetGroupFieldEntityList(AssetGroup assetGroup, int n)
     {
         LocalDateTime dt = LocalDateTime.now(Clock.systemUTC());
         List<AssetGroupField> groupFields = createAssetGroupFields(assetGroup,dt,assetGroup.getOwner(), n);
@@ -127,7 +127,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     }
 
 
-    private AssetGroupField createAndStoreAssetGroupFieldEntity(AssetGroupEntity assetGroup) throws AssetGroupDaoException {
+    private AssetGroupField createAndStoreAssetGroupFieldEntity(AssetGroup assetGroup) throws AssetGroupDaoException {
 
         LocalDateTime dt = LocalDateTime.now(Clock.systemUTC());
         List<AssetGroupField> groupFields = createAssetGroupFields(assetGroup,dt,assetGroup.getOwner(), 1);
@@ -138,15 +138,15 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
 
 
 
-    private AssetGroupEntity createAndStoreAssetGroupEntity(String user) throws AssetGroupDaoException {
+    private AssetGroup createAndStoreAssetGroupEntity(String user) throws AssetGroupDaoException {
 
-        AssetGroupEntity assetGroupEntity = createAssetGroupEntity(user);
-        AssetGroupEntity createdAssetGroupEntity = assetGroupDao.createAssetGroup(assetGroupEntity);
+        AssetGroup assetGroupEntity = createAssetGroupEntity(user);
+        AssetGroup createdAssetGroupEntity = assetGroupDao.createAssetGroup(assetGroupEntity);
         return createdAssetGroupEntity;
     }
 
-    private AssetGroupEntity createAssetGroupEntity(String user) {
-        AssetGroupEntity ag = new AssetGroupEntity();
+    private AssetGroup createAssetGroupEntity(String user) {
+        AssetGroup ag = new AssetGroup();
 
         LocalDateTime dt = LocalDateTime.now(Clock.systemUTC());
 
@@ -161,7 +161,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
 
     }
 
-    private  List<AssetGroupField> createAssetGroupFields(AssetGroupEntity assetGroupEntity, LocalDateTime dt, String user, int n) {
+    private  List<AssetGroupField> createAssetGroupFields(AssetGroup assetGroupEntity, LocalDateTime dt, String user, int n) {
 
         List<AssetGroupField> groupFields = new ArrayList<>();
         for (int i = 0; i < n; i++) {
@@ -174,7 +174,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     }
 
 
-    private AssetGroupField createAssetGroupField(AssetGroupEntity assetGroupEntity, ConfigSearchFieldEnum key, String keyFieldValue, LocalDateTime dt, String user) {
+    private AssetGroupField createAssetGroupField(AssetGroup assetGroupEntity, ConfigSearchFieldEnum key, String keyFieldValue, LocalDateTime dt, String user) {
 
         AssetGroupField ag = new AssetGroupField();
         ag.setAssetGroup(assetGroupEntity);

@@ -1,31 +1,16 @@
 package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationConfig;
 import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
-import javax.json.stream.JsonParser;
 import java.io.IOException;
-import java.io.StringReader;
-import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -61,9 +46,9 @@ import java.util.UUID;
 
          */
 
-        AssetGroupEntity groupEntity =  createAssetGroupEntity("test",5);
+        AssetGroup groupEntity =  createAssetGroupEntity("test",5);
         String json = MAPPER.writeValueAsString(groupEntity);
-        AssetGroupEntity deserialized = MAPPER.readValue(json, AssetGroupEntity.class);
+        AssetGroup deserialized = MAPPER.readValue(json, AssetGroup.class);
         String json2 = MAPPER.writeValueAsString(deserialized);
 
         Assert.assertEquals(json,json2);
@@ -93,8 +78,8 @@ import java.util.UUID;
     }
 
 
-    private AssetGroupEntity createAssetGroupEntity(String user, int numberOfGroupFields) {
-        AssetGroupEntity assetGroupEntity = new AssetGroupEntity();
+    private AssetGroup createAssetGroupEntity(String user, int numberOfGroupFields) {
+        AssetGroup assetGroupEntity = new AssetGroup();
 
         LocalDateTime dt = LocalDateTime.now(Clock.systemUTC());
        // assetGroupEntity.setId(UUID.randomUUID());

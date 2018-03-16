@@ -12,7 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.service;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -21,17 +21,17 @@ import java.util.UUID;
 @Local
 public interface AssetGroupService {
 
-    List<AssetGroupEntity> getAssetGroupList(String user) throws AssetException;
+    List<AssetGroup> getAssetGroupList(String user) throws AssetException;
 
-    List<AssetGroupEntity> getAssetGroupListByAssetGuid(UUID assetGuid) throws AssetException;
+    List<AssetGroup> getAssetGroupListByAssetGuid(UUID assetGuid) throws AssetException;
 
-    AssetGroupEntity getAssetGroupById(UUID guid) throws AssetException;
+    AssetGroup getAssetGroupById(UUID guid) throws AssetException;
 
-    AssetGroupEntity createAssetGroup(AssetGroupEntity assetGroup, String username) throws AssetException;
+    AssetGroup createAssetGroup(AssetGroup assetGroup, String username) throws AssetException;
 
-    AssetGroupEntity updateAssetGroup(AssetGroupEntity assetGroup, String username) throws AssetException;
+    AssetGroup updateAssetGroup(AssetGroup assetGroup, String username) throws AssetException;
 
-    AssetGroupEntity deleteAssetGroupById(UUID guid, String username) throws AssetException;
+    AssetGroup deleteAssetGroupById(UUID guid, String username) throws AssetException;
 
 
 }

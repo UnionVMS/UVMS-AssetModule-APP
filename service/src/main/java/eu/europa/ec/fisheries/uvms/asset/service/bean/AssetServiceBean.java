@@ -20,7 +20,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
@@ -306,8 +306,7 @@ public class AssetServiceBean implements AssetService {
                 asset = assetSEDao.getAssetByIrcs(assetId.getValue());
                 break;
             case INTERNAL_ID:
-                UUID uuid = UUID.fromString(assetId.getGuid());
-                asset = assetSEDao.getAssetById(uuid);
+                asset = assetSEDao.getAssetById(assetId.getGuid());
                 break;
             case IMO:
                 checkNumberAssetId(assetId.getValue());
@@ -364,7 +363,9 @@ public class AssetServiceBean implements AssetService {
         AssetId assetId = new AssetId();
         assetId.setType(assetType);
         assetId.setValue(idValue);
-        assetId.setGuid(idValue);
+        if(assetType == AssetIdTypeEnum.GUID || assetType == AssetIdTypeEnum.INTERNAL_ID){
+            assetId.setGuid(UUID.fromString(idValue));
+        }
         AssetSE asset = assetSEDao.getAssetFromAssetIdAtDate(assetId, date);
         asset.setNotes(noteDao.findNotesByAsset(asset));
         return asset;
@@ -396,7 +397,7 @@ public class AssetServiceBean implements AssetService {
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
      */
     @Override
-    public List<AssetSE> getAssetListByAssetGroups(List<AssetGroupEntity> groups) throws AssetServiceException {
+    public List<AssetSE> getAssetListByAssetGroups(List<AssetGroup> groups) throws AssetServiceException {
         LOG.debug("Getting asset by ID.");
         if (groups == null || groups.isEmpty()) {
             throw new InputArgumentException("No groups in query");
@@ -569,15 +570,15 @@ public class AssetServiceBean implements AssetService {
 	}
 	*/
 
-    public List<AssetGroupEntity> getAssetGroupsByGroupList(
-            List<AssetGroupEntity> groups)
+    public List<AssetGroup> getAssetGroupsByGroupList(
+            List<AssetGroup> groups)
             throws AssetModelException, InputArgumentException {
         if (groups == null) {
             throw new InputArgumentException("Cannot get asset group list because the input is null.");
         }
 
         List<UUID> guidList = new ArrayList<>();
-        for (AssetGroupEntity group : groups) {
+        for (AssetGroup group : groups) {
             guidList.add(group.getId());
         }
 
@@ -586,7 +587,7 @@ public class AssetServiceBean implements AssetService {
         }
 
         try {
-            List<AssetGroupEntity> vesselGroupList = new ArrayList<>();
+            List<AssetGroup> vesselGroupList = new ArrayList<>();
             // List<AssetGroup> filterGroupList =
             // assetGroupDao.getAssetGroupsByGroupGuidList(guidList);
             // for (AssetGroup group : filterGroupList) {

@@ -5,6 +5,7 @@
             targetNamespace="group.asset.wsdl.fisheries.ec.europa.eu"
             version="1.0">
 
+    <!--
     <xsd:import namespace="types.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetElement.xsd"/>
 
     <xsd:complexType name="AssetGroupDTO">
@@ -35,7 +36,7 @@
         </xsd:complexType>
     </xsd:element>
 
-
+-->
 
 
 </xsd:schema>

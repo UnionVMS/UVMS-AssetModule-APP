@@ -95,7 +95,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         AssetId assetId = new AssetId();
         assetId.setType(AssetIdTypeEnum.INTERNAL_ID);
         assetId.setValue(createdAsset.getId().toString());
-        assetId.setGuid(createdAsset.getId().toString());
+        assetId.setGuid(createdAsset.getId());
 
         assetService.deleteAsset(assetId);
         commit();

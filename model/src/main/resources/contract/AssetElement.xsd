@@ -117,7 +117,7 @@
     </xsd:complexType>
 -->
 
-
+<!--
     <xsd:complexType name="AssetId">
         <xsd:sequence>
             <xsd:element name="type" type="e:AssetIdTypeEnum" />
@@ -125,8 +125,8 @@
             <xsd:element name="guid" type="xsd:string" />
         </xsd:sequence>
     </xsd:complexType>
-
-
+-->
+<!--
     <xsd:complexType name="AssetListQuery">
         <xsd:sequence>
             <xsd:element name="pagination" type="AssetListPagination" minOccurs="1" maxOccurs="1"/>
@@ -141,6 +141,8 @@
         </xsd:sequence>
     </xsd:complexType>
 
+    -->
+<!--
     <xsd:complexType name="AssetListPagination">
         <xsd:sequence>
             <xsd:element name="page" type="xsd:int" minOccurs="1" maxOccurs="1"/>
@@ -164,7 +166,7 @@
         </xsd:complexType>
     </xsd:element>
 
-
+-->
 
     <!--
     <xsd:complexType name="NumberOfAssetsGroupByFlagState">

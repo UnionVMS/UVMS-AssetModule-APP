@@ -11,10 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.entity.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -71,7 +67,7 @@ public class AssetGroupField implements Serializable {
 
 	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name="group_id")
-	private AssetGroupEntity assetgroup;
+	private AssetGroup assetgroup;
 
 	public AssetGroupField() {
 	}
@@ -116,11 +112,11 @@ public class AssetGroupField implements Serializable {
 		this.value = value;
 	}
 
-	public AssetGroupEntity getAssetGroup() {
+	public AssetGroup getAssetGroup() {
 		return this.assetgroup;
 	}
 
-	public void setAssetGroup(AssetGroupEntity assetgroup) {
+	public void setAssetGroup(AssetGroup assetgroup) {
 		this.assetgroup = assetgroup;
 	}
 

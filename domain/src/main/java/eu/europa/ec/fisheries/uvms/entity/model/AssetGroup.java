@@ -35,13 +35,13 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table(name="Assetgroup")
 @NamedQueries({
-	@NamedQuery(name=UvmsConstants.GROUP_ASSET_FIND_ALL, query="SELECT a FROM AssetGroupEntity a WHERE a.archived = false"),
-	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_USER, query="SELECT a FROM AssetGroupEntity a WHERE a.archived = false AND a.owner = :owner"),
-	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_GUID, query="SELECT a FROM AssetGroupEntity a WHERE a.id = :guid"),
-	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_GUID_LIST, query="SELECT a FROM AssetGroupEntity a WHERE a.archived = false AND a.id IN :guidList")
+	@NamedQuery(name=UvmsConstants.GROUP_ASSET_FIND_ALL, query="SELECT a FROM AssetGroup a WHERE a.archived = false"),
+	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_USER, query="SELECT a FROM AssetGroup a WHERE a.archived = false AND a.owner = :owner"),
+	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_GUID, query="SELECT a FROM AssetGroup a WHERE a.id = :guid"),
+	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_GUID_LIST, query="SELECT a FROM AssetGroup a WHERE a.archived = false AND a.id IN :guidList")
 })
 @JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
-public class AssetGroupEntity implements Serializable {
+public class AssetGroup implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -87,7 +87,7 @@ public class AssetGroupEntity implements Serializable {
 	public List<AssetGroupField> fields = new ArrayList<>();
 
 
-	public AssetGroupEntity() {
+	public AssetGroup() {
 	}
 
 	public UUID getId() {

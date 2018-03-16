@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.dao;
 
-import eu.europa.ec.fisheries.uvms.dao.Dao;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField;
 
 import javax.ejb.Local;
@@ -43,7 +42,7 @@ public class AssetGroupFieldDao extends Dao  {
     }
 
 
-    public List<AssetGroupField> syncFields(AssetGroupEntity assetGroup, List<AssetGroupField> assetGroupFields)  {
+    public List<AssetGroupField> syncFields(AssetGroup assetGroup, List<AssetGroupField> assetGroupFields)  {
 
         Query qry = em.createNamedQuery(AssetGroupField.ASSETGROUP_FIELD_CLEAR);
         qry.setParameter("assetgroup", assetGroup);
@@ -55,14 +54,14 @@ public class AssetGroupFieldDao extends Dao  {
         return assetGroupFields;
     }
 
-    public void removeFieldsForGroup(AssetGroupEntity assetGroup)  {
+    public void removeFieldsForGroup(AssetGroup assetGroup)  {
 
         Query qry = em.createNamedQuery(AssetGroupField.ASSETGROUP_FIELD_CLEAR);
         qry.setParameter("assetgroup", assetGroup);
         qry.executeUpdate();
     }
 
-    public List<AssetGroupField>  retrieveFieldsForGroup(AssetGroupEntity assetGroup)  {
+    public List<AssetGroupField>  retrieveFieldsForGroup(AssetGroup assetGroup)  {
 
         TypedQuery<AssetGroupField> qry = em.createNamedQuery(AssetGroupField.ASSETGROUP_RETRIEVE_FIELDS_FOR_GROUP,AssetGroupField.class);
         qry.setParameter("assetgroup", assetGroup);

@@ -12,8 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.dao;
 
 import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
-import eu.europa.ec.fisheries.uvms.dao.Dao;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -26,15 +25,15 @@ import java.util.UUID;
 @Local
 public class AssetGroupDao extends Dao  {
 
-    public AssetGroupEntity createAssetGroup(AssetGroupEntity group) {
+    public AssetGroup createAssetGroup(AssetGroup group) {
 
         em.persist(group);
         return group;
     }
 
-    public AssetGroupEntity getAssetGroupByGuid(UUID groupId) {
+    public AssetGroup getAssetGroupByGuid(UUID groupId) {
         try {
-            TypedQuery<AssetGroupEntity> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_GUID, AssetGroupEntity.class);
+            TypedQuery<AssetGroup> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_GUID, AssetGroup.class);
             query.setParameter("guid", groupId);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -42,29 +41,29 @@ public class AssetGroupDao extends Dao  {
         }
     }
 
-    public AssetGroupEntity updateAssetGroup(AssetGroupEntity group) {
+    public AssetGroup updateAssetGroup(AssetGroup group) {
         em.merge(group);
         return group;
     }
 
-    public AssetGroupEntity deleteAssetGroup(AssetGroupEntity group) {
+    public AssetGroup deleteAssetGroup(AssetGroup group) {
         em.remove(group);
         return group;
     }
 
-    public List<AssetGroupEntity> getAssetGroupAll() {
-        TypedQuery<AssetGroupEntity> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_FIND_ALL, AssetGroupEntity.class);
+    public List<AssetGroup> getAssetGroupAll() {
+        TypedQuery<AssetGroup> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_FIND_ALL, AssetGroup.class);
         return query.getResultList();
     }
 
-    public List<AssetGroupEntity> getAssetGroupByUser(String user) {
-        TypedQuery<AssetGroupEntity> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_USER, AssetGroupEntity.class);
+    public List<AssetGroup> getAssetGroupByUser(String user) {
+        TypedQuery<AssetGroup> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_USER, AssetGroup.class);
         query.setParameter("owner", user);
         return query.getResultList();
     }
 
-    public List<AssetGroupEntity> getAssetGroupsByGroupGuidList(List<UUID> guidList) {
-        TypedQuery<AssetGroupEntity> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_GUID_LIST, AssetGroupEntity.class);
+    public List<AssetGroup> getAssetGroupsByGroupGuidList(List<UUID> guidList) {
+        TypedQuery<AssetGroup> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_GUID_LIST, AssetGroup.class);
         query.setParameter("guidList", guidList);
         return query.getResultList();
     }

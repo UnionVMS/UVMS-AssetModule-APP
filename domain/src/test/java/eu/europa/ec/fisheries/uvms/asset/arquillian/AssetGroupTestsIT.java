@@ -5,7 +5,7 @@ import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupFieldDao;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -39,11 +39,11 @@ public class AssetGroupTestsIT extends TransactionalTests {
         List<UUID> fetchedList = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
-            AssetGroupEntity createdAssetGroupEntity = createAndStoreAssetGroupEntity("TEST",1);
+            AssetGroup createdAssetGroupEntity = createAndStoreAssetGroupEntity("TEST",1);
             createdList.add(createdAssetGroupEntity.getId());
         }
-        List<AssetGroupEntity> rs = assetGroupDao.getAssetGroupAll();
-        for (AssetGroupEntity e : rs) {
+        List<AssetGroup> rs = assetGroupDao.getAssetGroupAll();
+        for (AssetGroup e : rs) {
             fetchedList.add(e.getId());
         }
 
@@ -62,7 +62,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void createAssetGroup() throws AssetGroupDaoException {
 
-        AssetGroupEntity createdAssetGroupEntity1 = createAndStoreAssetGroupEntity("TEST",1);
+        AssetGroup createdAssetGroupEntity1 = createAndStoreAssetGroupEntity("TEST",1);
         Assert.assertTrue(createdAssetGroupEntity1 != null);
     }
 
@@ -84,9 +84,9 @@ public class AssetGroupTestsIT extends TransactionalTests {
             createAndStoreAssetGroupEntity(user3,1);
         }
 
-        List<AssetGroupEntity> listUser1 = assetGroupDao.getAssetGroupByUser(user1);
-        List<AssetGroupEntity> listUser2 = assetGroupDao.getAssetGroupByUser(user2);
-        List<AssetGroupEntity> listUser3 = assetGroupDao.getAssetGroupByUser(user3);
+        List<AssetGroup> listUser1 = assetGroupDao.getAssetGroupByUser(user1);
+        List<AssetGroup> listUser2 = assetGroupDao.getAssetGroupByUser(user2);
+        List<AssetGroup> listUser3 = assetGroupDao.getAssetGroupByUser(user3);
 
         Assert.assertTrue(listUser1.size() == 3);
         Assert.assertTrue(listUser2.size() == 8);
@@ -97,11 +97,11 @@ public class AssetGroupTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void getAssetGroupByGuid() throws AssetGroupDaoException {
 
-        AssetGroupEntity createdAssetGroupEntity = createAndStoreAssetGroupEntity("TEST",1);
+        AssetGroup createdAssetGroupEntity = createAndStoreAssetGroupEntity("TEST",1);
         UUID guid = createdAssetGroupEntity.getId();
         Assert.assertTrue(guid != null);
 
-        AssetGroupEntity fetchedAssetGroupEntity = assetGroupDao.getAssetGroupByGuid(guid);
+        AssetGroup fetchedAssetGroupEntity = assetGroupDao.getAssetGroupByGuid(guid);
         Assert.assertEquals(guid, fetchedAssetGroupEntity.getId());
     }
 
@@ -112,14 +112,14 @@ public class AssetGroupTestsIT extends TransactionalTests {
 
         List<UUID> createdList = new ArrayList<>();
         List<UUID> fetchedList = new ArrayList<>();
-        List<AssetGroupEntity> fetchedEntityList;
+        List<AssetGroup> fetchedEntityList;
         for (int i = 0; i < 5; i++) {
-            AssetGroupEntity createdAssetGroupEntity = createAndStoreAssetGroupEntity("TEST",1);
+            AssetGroup createdAssetGroupEntity = createAndStoreAssetGroupEntity("TEST",1);
             createdList.add(createdAssetGroupEntity.getId());
         }
 
         fetchedEntityList = assetGroupDao.getAssetGroupsByGroupGuidList(createdList);
-        for (AssetGroupEntity e : fetchedEntityList) {
+        for (AssetGroup e : fetchedEntityList) {
             fetchedList.add(e.getId());
         }
 
@@ -138,11 +138,11 @@ public class AssetGroupTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void deleteAssetGroup() throws AssetGroupDaoException {
 
-        AssetGroupEntity assetGroupEntity = createAndStoreAssetGroupEntity("TEST",1);
+        AssetGroup assetGroupEntity = createAndStoreAssetGroupEntity("TEST",1);
         UUID uuid = assetGroupEntity.getId();
         assetGroupDao.deleteAssetGroup(assetGroupEntity);
 
-            AssetGroupEntity fetchedGroup = assetGroupDao.getAssetGroupByGuid(uuid);
+            AssetGroup fetchedGroup = assetGroupDao.getAssetGroupByGuid(uuid);
             Assert.assertTrue(fetchedGroup == null);
     }
 
@@ -150,14 +150,14 @@ public class AssetGroupTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void updateAssetGroup() throws AssetGroupDaoException {
 
-        AssetGroupEntity assetGroupEntity = createAndStoreAssetGroupEntity("TEST",1);
+        AssetGroup assetGroupEntity = createAndStoreAssetGroupEntity("TEST",1);
         UUID uuid = assetGroupEntity.getId();
 
         assetGroupEntity.setOwner("NEW OWNER");
         assetGroupDao.updateAssetGroup(assetGroupEntity);
         em.flush();
 
-        AssetGroupEntity fetchedGroup = assetGroupDao.getAssetGroupByGuid(uuid);
+        AssetGroup fetchedGroup = assetGroupDao.getAssetGroupByGuid(uuid);
         Assert.assertTrue(fetchedGroup.getOwner().equalsIgnoreCase("NEW OWNER"));
     }
 
@@ -169,7 +169,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
 
 
 
-        AssetGroupEntity assetGroupEntity = createAndStoreAssetGroupEntity("TEST",42);
+        AssetGroup assetGroupEntity = createAndStoreAssetGroupEntity("TEST",42);
         UUID uuid = assetGroupEntity.getId();
 
         assetGroupEntity.setOwner("NEW OWNER");
@@ -179,22 +179,22 @@ public class AssetGroupTestsIT extends TransactionalTests {
         assetGroupFieldDaoBean.syncFields(assetGroupEntity, newLines);
         em.flush();
 
-        AssetGroupEntity fetchedGroup = assetGroupDao.getAssetGroupByGuid(uuid);
+        AssetGroup fetchedGroup = assetGroupDao.getAssetGroupByGuid(uuid);
         Assert.assertTrue(fetchedGroup.getOwner().equalsIgnoreCase("NEW OWNER"));
     }
 
 
 
-    private AssetGroupEntity createAndStoreAssetGroupEntity(String user, int numberOfGroupFields) throws AssetGroupDaoException {
+    private AssetGroup createAndStoreAssetGroupEntity(String user, int numberOfGroupFields) throws AssetGroupDaoException {
 
-        AssetGroupEntity assetGroupEntity = createAssetGroupEntity(user,numberOfGroupFields);
-        AssetGroupEntity createdAssetGroupEntity = assetGroupDao.createAssetGroup(assetGroupEntity);
+        AssetGroup assetGroupEntity = createAssetGroupEntity(user,numberOfGroupFields);
+        AssetGroup createdAssetGroupEntity = assetGroupDao.createAssetGroup(assetGroupEntity);
         return createdAssetGroupEntity;
     }
 
 
-    private AssetGroupEntity createAssetGroupEntity(String user, int numberOfGroupFields) {
-        AssetGroupEntity ag = new AssetGroupEntity();
+    private AssetGroup createAssetGroupEntity(String user, int numberOfGroupFields) {
+        AssetGroup ag = new AssetGroup();
 
         LocalDateTime dt = LocalDateTime.now(Clock.systemUTC());
 
@@ -211,7 +211,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
     }
 
 
-    private  List<AssetGroupField> createAssetGroupFields(AssetGroupEntity assetGroupEntity, LocalDateTime dt, String user, int n) {
+    private  List<AssetGroupField> createAssetGroupFields(AssetGroup assetGroupEntity, LocalDateTime dt, String user, int n) {
 
         List<AssetGroupField> groupFields = new ArrayList<>();
         for (int i = 0; i < n; i++) {
@@ -223,7 +223,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
     }
 
 
-    private AssetGroupField createAssetGroupField(AssetGroupEntity assetGroupEntity, ConfigSearchFieldEnum key, String keyFieldValue, LocalDateTime dt, String user) {
+    private AssetGroupField createAssetGroupField(AssetGroup assetGroupEntity, ConfigSearchFieldEnum key, String keyFieldValue, LocalDateTime dt, String user) {
 
         AssetGroupField ag = new AssetGroupField();
         ag.setAssetGroup(assetGroupEntity);

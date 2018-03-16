@@ -18,7 +18,7 @@ import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupFieldDao;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,19 +45,19 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
 
     @Override
-    public List<AssetGroupEntity> getAssetGroupList(String user) throws AssetException {
+    public List<AssetGroup> getAssetGroupList(String user) throws AssetException {
 
         if (user == null || user.isEmpty()) {
             throw new InputArgumentException("Invalid user");
         }
 
-        List<AssetGroupEntity> filterGroupList = assetGroupDao.getAssetGroupByUser(user);
+        List<AssetGroup> filterGroupList = assetGroupDao.getAssetGroupByUser(user);
         return filterGroupList;
     }
 
 
     @Override
-    public List<AssetGroupEntity> getAssetGroupListByAssetGuid(UUID assetGuid) throws AssetException {
+    public List<AssetGroup> getAssetGroupListByAssetGuid(UUID assetGuid) throws AssetException {
 
         // TODO maybe this could be done more efficient if search is from the other side and joining . . . .
 
@@ -65,9 +65,9 @@ public class AssetGroupServiceBean implements AssetGroupService {
             throw new InputArgumentException("Invalid asset");
         }
 
-        List<AssetGroupEntity> searchResultList = new ArrayList<>();
-        List<AssetGroupEntity> filterGroupList = assetGroupDao.getAssetGroupAll();
-            for (AssetGroupEntity group : filterGroupList) {
+        List<AssetGroup> searchResultList = new ArrayList<>();
+        List<AssetGroup> filterGroupList = assetGroupDao.getAssetGroupAll();
+            for (AssetGroup group : filterGroupList) {
                 List<AssetGroupField> fields =  assetGroupFieldDao.retrieveFieldsForGroup(group);
                 for (AssetGroupField field : fields) {
                     if ("GUID".equals(field.getField()) && assetGuid.equals(field.getValue())) {
@@ -80,14 +80,14 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
 
     @Override
-    public AssetGroupEntity getAssetGroupById(UUID guid) throws AssetException {
+    public AssetGroup getAssetGroupById(UUID guid) throws AssetException {
 
         if (guid == null) {
             throw new InputArgumentException("Cannot get asset group because ID is null.");
         }
 
         try {
-            AssetGroupEntity groupEntity = assetGroupDao.getAssetGroupByGuid(guid);
+            AssetGroup groupEntity = assetGroupDao.getAssetGroupByGuid(guid);
             if (groupEntity == null) {
                 throw new AssetGroupDaoException("No assetgroup found.");
             }
@@ -100,7 +100,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
     }
 
     @Override
-    public AssetGroupEntity updateAssetGroup(AssetGroupEntity assetGroup, String username) throws AssetException {
+    public AssetGroup updateAssetGroup(AssetGroup assetGroup, String username) throws AssetException {
 
         if (assetGroup == null || assetGroup.getId() == null) {
             throw new InputArgumentException("Cannot update asset group because group or ID is null.");
@@ -110,7 +110,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         }
 
         try {
-            AssetGroupEntity groupEntity = assetGroupDao.getAssetGroupByGuid(assetGroup.getId());
+            AssetGroup groupEntity = assetGroupDao.getAssetGroupByGuid(assetGroup.getId());
             if (groupEntity == null) {
                 throw new AssetGroupDaoException("No assetgroup found.");
             }
@@ -122,7 +122,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
     }
 
     @Override
-    public AssetGroupEntity createAssetGroup(AssetGroupEntity assetGroup, String username) throws AssetException {
+    public AssetGroup createAssetGroup(AssetGroup assetGroup, String username) throws AssetException {
         if (assetGroup == null) {
             throw new InputArgumentException("Cannot create asset group because the group is null.");
         }
@@ -131,7 +131,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         }
 
         assetGroup.setName(username);
-        AssetGroupEntity createdAssetGroupEntity = assetGroupDao.createAssetGroup(assetGroup);
+        AssetGroup createdAssetGroupEntity = assetGroupDao.createAssetGroup(assetGroup);
         List<AssetGroupField> fields = assetGroup.getFields();
         if (fields != null) {
             for (AssetGroupField field : fields) {
@@ -146,7 +146,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
 
     @Override
-    public AssetGroupEntity deleteAssetGroupById(UUID guid, String username) throws AssetException {
+    public AssetGroup deleteAssetGroupById(UUID guid, String username) throws AssetException {
 
         if (guid == null) {
             throw new InputArgumentException("Cannot delete asset group because the group ID is null.");
@@ -156,7 +156,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         }
 
         try {
-            AssetGroupEntity groupEntity = assetGroupDao.getAssetGroupByGuid(guid);
+            AssetGroup groupEntity = assetGroupDao.getAssetGroupByGuid(guid);
             if (groupEntity == null) {
                 throw new AssetGroupDaoException("No assetgroup found.");
             }

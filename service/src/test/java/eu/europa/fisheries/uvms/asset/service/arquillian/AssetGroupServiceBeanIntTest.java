@@ -3,7 +3,7 @@ package eu.europa.fisheries.uvms.asset.service.arquillian;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -34,7 +34,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void createAssertGroup() throws AssetException {
 
-        AssetGroupEntity createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
+        AssetGroup createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
         Assert.assertTrue(createdAssetGroupEntity != null);
     }
 
@@ -42,7 +42,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void createAssertGroupAndFields() throws AssetException {
 
-        AssetGroupEntity createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
+        AssetGroup createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
         Assert.assertTrue(createdAssetGroupEntity != null);
 
     }
@@ -55,13 +55,13 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void deleteAssetGroupById() throws AssetException {
 
-        AssetGroupEntity createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
+        AssetGroup createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
         UUID guid = createdAssetGroupEntity.getId();
 
         assetGroupService.deleteAssetGroupById(createdAssetGroupEntity.getId(), createdAssetGroupEntity.getOwner());
 
         try {
-            AssetGroupEntity fetchedAssetGroupEntity = assetGroupService.getAssetGroupById(guid);
+            AssetGroup fetchedAssetGroupEntity = assetGroupService.getAssetGroupById(guid);
             Assert.assertTrue(fetchedAssetGroupEntity != null);
         }catch (AssetException s)
         {
@@ -73,13 +73,13 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void getAssetGroupById() throws AssetException {
 
-        AssetGroupEntity createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
+        AssetGroup createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
         UUID guid = createdAssetGroupEntity.getId();
 
         assetGroupService.deleteAssetGroupById(createdAssetGroupEntity.getId(), createdAssetGroupEntity.getOwner());
 
         try {
-            AssetGroupEntity fetchedAssetGroupEntity = assetGroupService.getAssetGroupById(guid);
+            AssetGroup fetchedAssetGroupEntity = assetGroupService.getAssetGroupById(guid);
             Assert.assertTrue(fetchedAssetGroupEntity.getId().equals(guid));
         }catch (AssetException s)
         {
@@ -91,15 +91,15 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void updateAssetGroup() throws AssetException {
 
-        AssetGroupEntity createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
+        AssetGroup createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
         UUID guid = createdAssetGroupEntity.getId();
         String oldUserName = createdAssetGroupEntity.getOwner();
         String newUserName = "UPDATED_SERVICE_TEST";
         createdAssetGroupEntity.setOwner(newUserName);
 
         try {
-            AssetGroupEntity updatedAssetGroupEntity =  assetGroupService.updateAssetGroup(createdAssetGroupEntity, newUserName);
-            AssetGroupEntity fetchedAssetGroupEntity = assetGroupService.getAssetGroupById(guid);
+            AssetGroup updatedAssetGroupEntity =  assetGroupService.updateAssetGroup(createdAssetGroupEntity, newUserName);
+            AssetGroup fetchedAssetGroupEntity = assetGroupService.getAssetGroupById(guid);
             Assert.assertFalse(fetchedAssetGroupEntity.getOwner().equalsIgnoreCase(oldUserName));
         }catch (AssetException s)
         {
@@ -115,16 +115,16 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
 
         List<UUID> createdList = new ArrayList<>();
         List<UUID> fetchedList = new ArrayList<>();
-        List<AssetGroupEntity> fetchedEntityList ;
+        List<AssetGroup> fetchedEntityList ;
         for (int i = 0; i < 5; i++) {
-            AssetGroupEntity createdAssetGroupEntity = createAndStoreAssetGroupEntity("TEST");
+            AssetGroup createdAssetGroupEntity = createAndStoreAssetGroupEntity("TEST");
             createdList.add(createdAssetGroupEntity.getId());
         }
 
         UUID assetGuid = UUID.randomUUID();
 
         fetchedEntityList = assetGroupService.getAssetGroupListByAssetGuid(assetGuid);
-        for(AssetGroupEntity e : fetchedEntityList){
+        for(AssetGroup e : fetchedEntityList){
             fetchedList.add(e.getId());
         }
 
@@ -160,9 +160,9 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
             createAndStoreAssetGroupEntity(user3);
         }
 
-        List<AssetGroupEntity> listUser1 = assetGroupService.getAssetGroupList(user1);
-        List<AssetGroupEntity> listUser2 = assetGroupService.getAssetGroupList(user2);
-        List<AssetGroupEntity> listUser3 = assetGroupService.getAssetGroupList(user3);
+        List<AssetGroup> listUser1 = assetGroupService.getAssetGroupList(user1);
+        List<AssetGroup> listUser2 = assetGroupService.getAssetGroupList(user2);
+        List<AssetGroup> listUser3 = assetGroupService.getAssetGroupList(user3);
 
         Assert.assertTrue(listUser1.size() == 3);
         Assert.assertTrue(listUser2.size() == 8);
@@ -188,9 +188,9 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
 
 
 
-    private AssetGroupEntity createAndStoreAssetGroupEntity(String user) throws AssetException {
+    private AssetGroup createAndStoreAssetGroupEntity(String user) throws AssetException {
 
-        AssetGroupEntity assetGroupEntity = createAssetGroupEntity(user);
+        AssetGroup assetGroupEntity = createAssetGroupEntity(user);
         Assert.assertTrue(assetGroupEntity.getId() == null);
 
 
@@ -198,7 +198,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
 
         assetGroupEntity.setFields(fields);
 
-        AssetGroupEntity createdAssetGroupEntity = assetGroupService.createAssetGroup(assetGroupEntity, user);
+        AssetGroup createdAssetGroupEntity = assetGroupService.createAssetGroup(assetGroupEntity, user);
         Assert.assertTrue(createdAssetGroupEntity.getId() != null);
 
 
@@ -211,8 +211,8 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     }
 
 
-    private AssetGroupEntity createAssetGroupEntity(String user) {
-        AssetGroupEntity ag = new AssetGroupEntity();
+    private AssetGroup createAssetGroupEntity(String user) {
+        AssetGroup ag = new AssetGroup();
 
         ag.setUpdatedBy("test");
         ag.setUpdateTime(LocalDateTime.now(Clock.systemUTC()));
