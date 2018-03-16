@@ -6,6 +6,7 @@ import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 
@@ -62,6 +63,13 @@ public abstract class AssetHelper {
         asset.setPowerMain(new BigDecimal(10));
         asset.setPowerAux(new BigDecimal(10));
 
+        asset.setErsIndicator(true);
+        asset.setAisIndicator(true);
+        asset.setVesselType("TEST_VESSEL_TYPE");
+        asset.setVesselDateOfEntry(new Date());
+        asset.setContactType(ContactType.OPERATOR);
+        asset.setContactNationality("TEST_NATIONALITY");
+
         AssetProdOrgModel assetProdOrgModel = new AssetProdOrgModel();
         assetProdOrgModel.setName("NAME");
         assetProdOrgModel.setCity("CITY");
@@ -73,7 +81,28 @@ public abstract class AssetHelper {
 
 
         return asset;
+/*
+@Column(name = "asset_ers_indicator")
+    private Boolean ersIndicator;
 
+    @Column(name = "asset_ais_indicator")
+    private Boolean aisIndicator;
+
+    @Size(max = 100)
+    @Column(name = "asset_vessel_type")
+    private String vesselType;
+
+    @Column(name = "asset_vessel_date_of_entry")
+    private Date vesselDateOfEntry;
+
+    @Size(max = 100)
+    @Column(name = "asset_contact_type")
+    private String contactType;
+
+    @Size(max = 100)
+    @Column(name = "asset_contact_nationality")
+    private String contactNationality;
+ */
 
     }
 

@@ -11,27 +11,23 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.entity.model;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
+import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.*;
+import eu.europa.ec.fisheries.wsdl.asset.types.ContactType;
+import eu.europa.ec.fisheries.wsdl.asset.types.HullMaterial;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
-import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.EventCodeEnum;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.PublicAidEnum;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.SegmentFUP;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.TypeOfExportEnum;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * The persistent class for the assethistory database table.
@@ -248,11 +244,37 @@ public class AssetHistory implements Serializable {
     @Column(name = "assethist_gfcm")
     private String gfcm;
 
+    @Column(name = "assethist_ers_indicator")
+    private Boolean ersIndicator;
 
+    @Column(name = "assethist_ais_indicator")
+    private Boolean aisIndicator;
 
+    @Size(max = 100)
+    @Column(name = "assethist_vessel_type")
+    private String vesselType;
 
+    @Column(name = "assethist_vessel_date_of_entry")
+    private Date vesselDateOfEntry;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "assethist_contact_type")
+    private ContactType contactType;
 
+    @Size(max = 100)
+    @Column(name = "assethist_contact_nationality")
+    private String contactNationality;
+
+    @Size(min = 1, max = 1)
+    @Column(name = "assethist_ircs_indicator")
+    private String assetIrcsindicator;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "assethist_hull_material")
+    private HullMaterial hullMaterial;
+
+    @Column(name = "assethist_year_of_construction")
+    private String constructionYear;
 
     public AssetHistory() {
     }
@@ -661,8 +683,76 @@ public class AssetHistory implements Serializable {
 
     public void setGfcm(String gfcm) { this.gfcm = gfcm; }
 
+    public Boolean getErsIndicator() {
+        return ersIndicator;
+    }
 
+    public void setErsIndicator(Boolean ersIndicator) {
+        this.ersIndicator = ersIndicator;
+    }
 
+    public Boolean getAisIndicator() {
+        return aisIndicator;
+    }
 
+    public void setAisIndicator(Boolean aisIndicator) {
+        this.aisIndicator = aisIndicator;
+    }
 
+    public String getVesselType() {
+        return vesselType;
+    }
+
+    public void setVesselType(String vesselType) {
+        this.vesselType = vesselType;
+    }
+
+    public Date getVesselDateOfEntry() {
+        return vesselDateOfEntry;
+    }
+
+    public void setVesselDateOfEntry(Date vesselDateOfEntry) {
+        this.vesselDateOfEntry = vesselDateOfEntry;
+    }
+
+    public ContactType getContactType() {
+        return contactType;
+    }
+
+    public void setContactType(ContactType contactType) {
+        this.contactType = contactType;
+    }
+
+    public String getContactNationality() {
+        return contactNationality;
+    }
+
+    public void setContactNationality(String contactNationality) {
+        this.contactNationality = contactNationality;
+    }
+
+    public String getAssetIrcsindicator() {
+        return assetIrcsindicator;
+    }
+
+    public void setAssetIrcsindicator(String assetIrcsindicator) {
+        this.assetIrcsindicator = assetIrcsindicator;
+    }
+
+    public HullMaterial getHullMaterial() {
+        return hullMaterial;
+    }
+
+    public void setHullMaterial(HullMaterial hullMaterial) {
+        this.hullMaterial = hullMaterial;
+    }
+
+    public String getConstructionYear() {
+        return constructionYear;
+    }
+
+    public void setConstructionYear(String constructionYear) {
+        this.constructionYear = constructionYear;
+    }
 }
+

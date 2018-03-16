@@ -37,6 +37,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
+import eu.europa.ec.fisheries.wsdl.asset.types.ContactType;
+import eu.europa.ec.fisheries.wsdl.asset.types.HullMaterial;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -102,7 +104,7 @@ public class AssetEntity implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "asset_hullmaterial")
-    private HullMaterialEnum hullMaterial;
+    private HullMaterial hullMaterial;
 
     @Size(min = 2, max = 2)
     @Column(name = "asset_dayofcommissioning")
@@ -116,7 +118,6 @@ public class AssetEntity implements Serializable {
     @Column(name = "asset_yearofcommissioning")
     private String commissionYear;
 
-    @Size(min = 4, max = 4)
     @Column(name = "asset_yearofconstruction")
     private String constructionYear;
 
@@ -157,6 +158,26 @@ public class AssetEntity implements Serializable {
     @Column(name = "asset_gfcm")
     private String gfcm;
 
+    @Column(name = "asset_ers_indicator")
+    private Boolean ersIndicator;
+
+    @Column(name = "asset_ais_indicator")
+    private Boolean aisIndicator;
+
+    @Size(max = 100)
+    @Column(name = "asset_vessel_type")
+    private String vesselType;
+
+    @Column(name = "asset_vessel_date_of_entry")
+    private Date vesselDateOfEntry;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "asset_contact_type")
+    private ContactType contactType;
+
+    @Size(max = 100)
+    @Column(name = "asset_contact_nationality")
+    private String contactNationality;
 
     public AssetEntity() {
     }
@@ -182,6 +203,7 @@ public class AssetEntity implements Serializable {
         this.id = id;
     }
 
+
     public String getCFR() {
         return this.cfr;
     }
@@ -206,11 +228,11 @@ public class AssetEntity implements Serializable {
         this.guid = guid;
     }
 
-    public HullMaterialEnum getHullMaterial() {
+    public HullMaterial getHullMaterial() {
         return this.hullMaterial;
     }
 
-    public void setHullMaterial(HullMaterialEnum hullMaterial) {
+    public void setHullMaterial(HullMaterial hullMaterial) {
         this.hullMaterial = hullMaterial;
     }
 
@@ -323,9 +345,51 @@ public class AssetEntity implements Serializable {
 
     public void setGfcm(String gfcm) { this.gfcm = gfcm; }
 
+    public Boolean getErsIndicator() {
+        return ersIndicator;
+    }
 
+    public void setErsIndicator(Boolean ersIndicator) {
+        this.ersIndicator = ersIndicator;
+    }
 
+    public Boolean getAisIndicator() {
+        return aisIndicator;
+    }
 
+    public void setAisIndicator(Boolean aisIndicator) {
+        this.aisIndicator = aisIndicator;
+    }
 
+    public String getVesselType() {
+        return vesselType;
+    }
 
+    public void setVesselType(String vesselType) {
+        this.vesselType = vesselType;
+    }
+
+    public Date getVesselDateOfEntry() {
+        return vesselDateOfEntry;
+    }
+
+    public void setVesselDateOfEntry(Date vesselDateOfEntry) {
+        this.vesselDateOfEntry = vesselDateOfEntry;
+    }
+
+    public ContactType getContactType() {
+        return contactType;
+    }
+
+    public void setContactType(ContactType contactType) {
+        this.contactType = contactType;
+    }
+
+    public String getContactNationality() {
+        return contactNationality;
+    }
+
+    public void setContactNationality(String contactNationality) {
+        this.contactNationality = contactNationality;
+    }
 }

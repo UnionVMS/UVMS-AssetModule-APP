@@ -66,6 +66,15 @@ public class EntityToModelMapper {
         asset.setUvi(entity.getUvi());
         asset.setGfcm(entity.getGfcm());
 
+        asset.setAisIndicator(entity.getAisIndicator());
+        asset.setErsIndicator(entity.getErsIndicator());
+        asset.setVesselType(entity.getVesselType());
+        asset.setVesselDateOfEntry(entity.getVesselDateOfEntry());
+        asset.setContactType(entity.getContactType());
+        asset.setContactNationality(entity.getContactNationality());
+        asset.setHullMaterial(entity.getHullMaterial());
+        asset.setYearOfConstruction(entity.getConstructionYear());
+
         if (entity.getNotes() != null) {
             List<AssetNotes> noteList = new ArrayList<>();
             for (Notes notes : entity.getNotes()) {
@@ -127,6 +136,14 @@ public class EntityToModelMapper {
             asset.setUvi(historyEntity.getUvi());
             asset.setGfcm(historyEntity.getGfcm());
 
+            asset.setErsIndicator(historyEntity.getErsIndicator());
+            asset.setAisIndicator(historyEntity.getAisIndicator());
+            asset.setVesselType(historyEntity.getVesselType());
+            asset.setVesselDateOfEntry(historyEntity.getVesselDateOfEntry());
+            asset.setContactType(historyEntity.getContactType());
+            asset.setContactNationality(historyEntity.getContactNationality());
+            asset.setHullMaterial(historyEntity.getHullMaterial());
+            asset.setYearOfConstruction(historyEntity.getConstructionYear());
 
             if (historyEntity.getContactInfo() == null) {
                 historyEntity.setContactInfo(new ArrayList<ContactInfo>());

@@ -74,9 +74,16 @@ public class ModelToEntityMapper {
         entity.setUvi(asset.getUvi());
         entity.setGfcm(asset.getGfcm());
 
+        entity.setAisIndicator(asset.isAisIndicator());
+        entity.setErsIndicator(asset.isErsIndicator());
+        entity.setVesselType(asset.getVesselType());
+        entity.setVesselDateOfEntry(asset.getVesselDateOfEntry());
+        entity.setContactType(asset.getContactType());
+        entity.setContactNationality(asset.getContactNationality());
+        entity.setHullMaterial(asset.getHullMaterial());
+        entity.setConstructionYear(asset.getYearOfConstruction());
         entity.setIrcsIndicator(asset.getHasIrcs());
 
-        entity.setHullMaterial(null);
 
         List<Notes> notesList = new ArrayList<>();
         for (AssetNotes notes : asset.getNotes()) {
@@ -132,6 +139,15 @@ public class ModelToEntityMapper {
         assetHistory.setUvi(asset.getUvi());
         assetHistory.setGfcm(asset.getGfcm());
 
+        assetHistory.setAisIndicator(asset.isAisIndicator());
+        assetHistory.setErsIndicator(asset.isErsIndicator());
+        assetHistory.setVesselType(asset.getVesselType());
+        assetHistory.setVesselDateOfEntry(asset.getVesselDateOfEntry());
+        assetHistory.setContactType(asset.getContactType());
+        assetHistory.setContactNationality(asset.getContactNationality());
+        assetHistory.setAssetIrcsindicator(asset.getHasIrcs());
+        assetHistory.setHullMaterial(asset.getHullMaterial());
+        assetHistory.setConstructionYear(asset.getYearOfConstruction());
 
         List<AssetContact> contacts = asset.getContact();
         if (contacts != null) {

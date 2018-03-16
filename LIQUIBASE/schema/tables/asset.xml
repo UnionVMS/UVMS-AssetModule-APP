@@ -21,7 +21,7 @@
 			<column name="asset_yearofcommissioning" type="VARCHAR(4)" />
 			<column name="asset_monthofcommissioning" type="VARCHAR(2)" />
 			<column name="asset_dayofcommissioning" type="VARCHAR(2)" />
-			<column name="asset_hullmaterial" type="VARCHAR(22)" />
+			<column name="asset_hullmaterial" type="VARCHAR(100)" />
             <column name="asset_guid" type="VARCHAR(36)"/>
 			<column name="asset_updattim" type="TIMESTAMP WITHOUT TIME ZONE" />
 			<column name="asset_upuser" type="VARCHAR(60)" />
@@ -79,6 +79,19 @@
 			<column name="asset_uvi" type="VARCHAR(50)" />
 			<column name="asset_gfcm" type="VARCHAR(50)" />
 		</addColumn>
+	</changeSet>
+
+	<changeSet author="matbul" id="Add ers and ais indicator">
+		<addColumn tableName="asset">
+			<column name="asset_ers_indicator" type="BOOLEAN" />
+			<column name="asset_ais_indicator" type="BOOLEAN" />
+			<column name="asset_vessel_type" type="VARCHAR(100)" />
+			<column name="asset_vessel_date_of_entry" type="TIMESTAMP" />
+			<column name="asset_contact_type" type="VARCHAR(100)" />
+			<column name="asset_contact_nationality" type="VARCHAR(100)" />
+		</addColumn>
+
+
 	</changeSet>
 
 </databaseChangeLog>

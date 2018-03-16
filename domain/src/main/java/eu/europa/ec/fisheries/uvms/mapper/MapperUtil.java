@@ -160,6 +160,39 @@ public class MapperUtil {
             if(!equals(newAsset.getCountryCode(), originalAsset.getCountryCode())){
                 return false;
             }
+
+            if (!equals(newAsset.isAisIndicator(), originalAsset.isAisIndicator())) {
+                return false;
+            }
+
+            if (!equals(newAsset.isErsIndicator(), originalAsset.isErsIndicator())) {
+                return false;
+            }
+
+            if (!equals(newAsset.getVesselType(), originalAsset.getVesselType())) {
+                return false;
+            }
+
+            if (!equals(newAsset.getVesselDateOfEntry(), originalAsset.getVesselDateOfEntry())) {
+                return false;
+            }
+
+            if (!equals(newAsset.getContactType(), originalAsset.getContactType())) {
+                return false;
+            }
+
+            if (!equals(newAsset.getContactNationality(), originalAsset.getContactNationality())) {
+                return false;
+            }
+
+            if (!equals(newAsset.getHullMaterial(), originalAsset.getHullMaterial())) {
+                return false;
+            }
+
+            if (!equals(newAsset.getYearOfConstruction(), originalAsset.getYearOfConstruction())) {
+                return false;
+            }
+
             return true;
         }
         return false;

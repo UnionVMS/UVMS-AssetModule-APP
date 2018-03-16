@@ -36,9 +36,33 @@
             <xsd:element name="iccat" type="xsd:string" minOccurs="0" maxOccurs="1"/>
             <xsd:element name="uvi" type="xsd:string" minOccurs="0" maxOccurs="1"/>
             <xsd:element name="gfcm" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="ersIndicator" type="xsd:boolean" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="aisIndicator" type="xsd:boolean" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="vesselType" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="vesselDateOfEntry" type="xsd:dateTime" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="contactType" type="contactType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="contactNationality" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="hullMaterial" type="hullMaterial" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="yearOfConstruction" type="xsd:string" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    
+
+    <xsd:simpleType name="hullMaterial">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="WOOD" />
+            <xsd:enumeration value="METAL" />
+            <xsd:enumeration value="GLAS_PLASTIC_FIBER" />
+            <xsd:enumeration value="OTHER" />
+            <xsd:enumeration value="UNKNOWN" />
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="contactType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="OWNER" />
+            <xsd:enumeration value="OPERATOR" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
     <xsd:complexType name="AssetContact">
         <xsd:sequence>
             <xsd:element name="name" type="xsd:string"/>
