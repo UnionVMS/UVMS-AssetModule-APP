@@ -67,9 +67,9 @@ public class ErrorHandler {
     }
 
     private static ResponseDto<String> extractFault(AssetFaultException ex) {
-        AssetFault fault = ex.getFaultInfo();
+        String fault = ex.getMessage();
         if (fault != null) {
-            return new ResponseDto<String>(fault.getFault(), fault.getCode());
+            return new ResponseDto<String>(ex.getMessage(), ResponseCodeConstant.MAPPING_ERROR);
         }
         return new ResponseDto<String>(ex.getMessage(), ResponseCodeConstant.DOMAIN_ERROR);
     }

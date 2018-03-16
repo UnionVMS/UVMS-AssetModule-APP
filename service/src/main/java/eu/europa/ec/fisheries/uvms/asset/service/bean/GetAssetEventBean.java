@@ -60,7 +60,7 @@ public class GetAssetEventBean {
             asset = assetService.getAssetById(assetId, dataSource);
         } catch (AssetException e) {
             LOG.error("[ Error when getting asset from source {}. ] ", dataSource.name());
-            assetErrorEvent.fire(new AssetMessageEvent(textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting asset from source : " + dataSource.name() + " Error message: " + e.getMessage())));
+            //assetErrorEvent.fire(new AssetMessageEvent(textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting asset from source : " + dataSource.name() + " Error message: " + e.getMessage())));
             messageSent = true;
             asset = null;
         }
@@ -83,7 +83,7 @@ public class GetAssetEventBean {
                 messageProducer.sendModuleResponseMessage(textMessage, mapAssetModuleResponse(asset));
             } catch (AssetModelMapperException e) {
                 LOG.error("[ Error when mapping asset ] ");
-                assetErrorEvent.fire(new AssetMessageEvent(textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when mapping asset" + e.getMessage())));
+                //assetErrorEvent.fire(new AssetMessageEvent(textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when mapping asset" + e.getMessage())));
             }
         }
 

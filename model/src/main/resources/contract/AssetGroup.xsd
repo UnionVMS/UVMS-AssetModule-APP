@@ -20,7 +20,7 @@
 
     <xsd:complexType name="AssetGroupSearchField">
         <xsd:sequence>
-            <xsd:element name="key" type="t:ConfigSearchFieldEnum"/>
+            <xsd:element name="key" type="xsd:string"/>
             <xsd:element name="value" type="xsd:string"/>
         </xsd:sequence>
     </xsd:complexType>

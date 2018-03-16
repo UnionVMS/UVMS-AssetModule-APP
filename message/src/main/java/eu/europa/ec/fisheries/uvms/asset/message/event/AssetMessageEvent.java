@@ -30,12 +30,8 @@ public class AssetMessageEvent {
 
 
     private AssetId assetId;
-    private AssetListQuery query;
-    private AssetFault fault;
     private String assetGuid;
-    private AssetDTO asset;
     private String username;
-    private FishingGearDTO fishingGear;
 
 
 
@@ -45,33 +41,15 @@ public class AssetMessageEvent {
         this.assetId = assetId;
     }
 
-    public AssetMessageEvent(TextMessage message, AssetListQuery query) {
-        this.message = message;
-        this.query = query;
-    }
 
 
-    public AssetMessageEvent(TextMessage message, AssetFault fault) {
-        this.message = message;
-        this.fault = fault;
-    }
 
     public AssetMessageEvent(TextMessage message, String assetGuid) {
         this.message = message;
         this.assetGuid = assetGuid;
     }
 
-    public AssetMessageEvent(TextMessage message, AssetDTO asset, String username){
-        this.message = message;
-        this.asset = asset;
-        this.username = username;
-    }
 
-    public AssetMessageEvent(TextMessage message, FishingGearDTO fishingGear, String username){
-        this.message = message;
-        this.username = username;
-        this.fishingGear = fishingGear;
-    }
 
     public TextMessage getMessage() {
         return message;
@@ -85,17 +63,7 @@ public class AssetMessageEvent {
         return assetId;
     }
 
-    public AssetListQuery getQuery() {
-        return query;
-    }
 
-    public AssetFault getFault() {
-        return fault;
-    }
-
-    public void setFault(AssetFault fault) {
-        this.fault = fault;
-    }
 
     public String getAssetGuid() {
         return assetGuid;
@@ -103,14 +71,6 @@ public class AssetMessageEvent {
 
     public void setAssetGuid(String assetGuid) {
         this.assetGuid = assetGuid;
-    }
-
-    public AssetDTO getAsset() {
-        return asset;
-    }
-
-    public void setAsset(AssetDTO asset) {
-        this.asset = asset;
     }
 
     public String getUsername() {
@@ -121,14 +81,7 @@ public class AssetMessageEvent {
         this.username = username;
     }
 
-    public FishingGearDTO getFishingGear() {
-        return fishingGear;
-    }
 
-    public void setFishingGear(FishingGearDTO fishingGear) {
-        this.fishingGear = fishingGear;
-    }
-    
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);

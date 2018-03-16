@@ -20,7 +20,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.uvms.asset.types.NoteActivityCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseCodeConstant;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseDto;
@@ -114,7 +113,7 @@ public class AssetResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public ResponseDto getNoteActivityCodes() {
         try {
-            NoteActivityCode activityCodes = assetService.getNoteActivityCodes();
+            String activityCodes = assetService.getNoteActivityCodes();
             return new ResponseDto(activityCodes, ResponseCodeConstant.OK);
         } catch (Exception e) {
             LOG.error("[ getNoteActivityCodes error. ] ",e);

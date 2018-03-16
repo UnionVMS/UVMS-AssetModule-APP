@@ -16,11 +16,10 @@ import java.util.List;
 import java.util.UUID;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetGroupDTO;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.uvms.asset.types.NoteActivityCode;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetDaoMappingException;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetListResponsePaginated;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
 
@@ -110,12 +109,12 @@ public interface AssetService {
      * @return
      * @throws AssetServiceException
      */
-    List<AssetSE> getAssetListByAssetGroups(List<AssetGroupDTO> groups) throws AssetServiceException;
+    List<AssetSE> getAssetListByAssetGroups(List<AssetGroupEntity> groups) throws AssetServiceException;
 
     //AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetServiceException;
     Object getAssetListGroupByFlagState(List assetIds) throws AssetServiceException;
 
-    NoteActivityCode getNoteActivityCodes();
+    String getNoteActivityCodes();
 
     void deleteAsset(AssetId assetId) throws AssetServiceException;
 

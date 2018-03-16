@@ -22,7 +22,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import eu.europa.ec.fisheries.uvms.asset.types.Config;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseCodeConstant;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.asset.rest.error.ErrorHandler;
@@ -66,7 +65,7 @@ public class ConfigResource {
     @Path(value = "/")
     public ResponseDto getConfiguration() {
         try {
-        	List<Config> configuration = configService.getConfiguration();
+        	List<Object> configuration = configService.getConfiguration();
             return new ResponseDto(ConfigMapper.mapConfiguration(configuration), ResponseCodeConstant.OK);
         } catch (Exception e) {
             LOG.error("[ Error when getting config search fields. ] ");

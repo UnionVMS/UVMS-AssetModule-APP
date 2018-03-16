@@ -20,6 +20,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
@@ -28,11 +29,9 @@ import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetGroupDTO;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.uvms.asset.types.NoteActivityCode;
 import eu.europa.ec.fisheries.uvms.dao.AssetSEDao;
 import eu.europa.ec.fisheries.uvms.dao.NoteDao;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetDaoMappingException;
@@ -397,7 +396,7 @@ public class AssetServiceBean implements AssetService {
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
      */
     @Override
-    public List<AssetSE> getAssetListByAssetGroups(List<AssetGroupDTO> groups) throws AssetServiceException {
+    public List<AssetSE> getAssetListByAssetGroups(List<AssetGroupEntity> groups) throws AssetServiceException {
         LOG.debug("Getting asset by ID.");
         if (groups == null || groups.isEmpty()) {
             throw new InputArgumentException("No groups in query");
@@ -421,7 +420,7 @@ public class AssetServiceBean implements AssetService {
 
     }
 
-    public NoteActivityCode getNoteActivityCodes() {
+    public String getNoteActivityCodes() {
         //return getNoteActivityCodes_FROM_DOMAINMODEL();
         return null;
     }
@@ -570,16 +569,16 @@ public class AssetServiceBean implements AssetService {
 	}
 	*/
 
-    public List<AssetGroupDTO> getAssetGroupsByGroupList(
-            List<AssetGroupDTO> groups)
+    public List<AssetGroupEntity> getAssetGroupsByGroupList(
+            List<AssetGroupEntity> groups)
             throws AssetModelException, InputArgumentException {
         if (groups == null) {
             throw new InputArgumentException("Cannot get asset group list because the input is null.");
         }
 
-        List<String> guidList = new ArrayList<>();
-        for (AssetGroupDTO group : groups) {
-            guidList.add(group.getGuid());
+        List<UUID> guidList = new ArrayList<>();
+        for (AssetGroupEntity group : groups) {
+            guidList.add(group.getId());
         }
 
         if (guidList.isEmpty()) {
@@ -587,7 +586,7 @@ public class AssetServiceBean implements AssetService {
         }
 
         try {
-            List<AssetGroupDTO> vesselGroupList = new ArrayList<>();
+            List<AssetGroupEntity> vesselGroupList = new ArrayList<>();
             // List<AssetGroup> filterGroupList =
             // assetGroupDao.getAssetGroupsByGroupGuidList(guidList);
             // for (AssetGroup group : filterGroupList) {

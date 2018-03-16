@@ -9,6 +9,7 @@ import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -44,6 +45,7 @@ public class GetAssetEventBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
+    @Ignore
     public void testBadUUIDGetAsset() {
         TextMessage textMessage = null;
         AssetId assetId = new AssetId();

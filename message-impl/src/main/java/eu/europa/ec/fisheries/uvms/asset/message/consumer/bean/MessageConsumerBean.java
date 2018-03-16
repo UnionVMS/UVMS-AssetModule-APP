@@ -98,24 +98,24 @@ public class MessageConsumerBean implements MessageListener {
 
                 default:
                     LOG.error("[ Not implemented method consumed: {} ]", command);
-                    assetErrorEvent.fire(new AssetMessageEvent(textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, "Command not implemented")));
+                    //assetErrorEvent.fire(new AssetMessageEvent(textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, "Command not implemented")));
             }
 
         } catch (IllegalArgumentException e) {
             LOG.error("Could not interpret command");
-            assetErrorEvent.fire(new AssetMessageEvent( textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, "Could not interpret command")));
+            //assetErrorEvent.fire(new AssetMessageEvent( textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, "Could not interpret command")));
         } catch (JMSException e) {
             LOG.error("[ Error when receiving message in AssetModule. ]");
-            assetErrorEvent.fire(new AssetMessageEvent( textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, e.toString())));
+            //assetErrorEvent.fire(new AssetMessageEvent( textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, e.toString())));
         } catch (JsonParseException e) {
             LOG.error("JsonParseException");
-            assetErrorEvent.fire(new AssetMessageEvent( textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, "JsonParseException")));
+           // assetErrorEvent.fire(new AssetMessageEvent( textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, "JsonParseException")));
         } catch (JsonMappingException e) {
             LOG.error("JsonMappingException");
-            assetErrorEvent.fire(new AssetMessageEvent( textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, "JsonMappingException")));
+           // assetErrorEvent.fire(new AssetMessageEvent( textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, "JsonMappingException")));
         } catch (IOException e) {
             LOG.error("IOException");
-            assetErrorEvent.fire(new AssetMessageEvent( textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, "IOException")));
+            //assetErrorEvent.fire(new AssetMessageEvent( textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, "IOException")));
         }
 
     }

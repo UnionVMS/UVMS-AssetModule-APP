@@ -12,8 +12,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.rest.mapper;
 
 
-import eu.europa.ec.fisheries.uvms.asset.types.Config;
-import eu.europa.ec.fisheries.uvms.asset.types.ConfigValue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,8 +21,10 @@ import java.util.Map;
 
 public class ConfigMapper {
 
-	public static Map<String, List> mapConfiguration(List<Config> configuration) {
+//	public static Map<String, List> mapConfiguration(List<Config> configuration) {
+		public static Map<String, List> mapConfiguration(List<Object> configuration) {
 		Map<String, List> config = new HashMap<>();
+		/*
 		if(configuration != null) {
 			for(Config conf : configuration) {
 				List retValues = new ArrayList();
@@ -41,6 +41,7 @@ public class ConfigMapper {
 				config.put(conf.getField().name(), retValues);
 			}
 		}
+		*/
 		return config;
 	}
 

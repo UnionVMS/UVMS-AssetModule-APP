@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListCriteriaPair;
 import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;

@@ -25,10 +25,7 @@ import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.ConfigModelException;
-import eu.europa.ec.fisheries.uvms.asset.types.Config;
 import eu.europa.ec.fisheries.uvms.asset.types.ConfigFieldEnum;
-import eu.europa.ec.fisheries.uvms.asset.types.ConfigValue;
-import eu.europa.ec.fisheries.uvms.asset.types.ConfigurationDto;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
 import eu.europa.ec.fisheries.uvms.constant.UnitLength;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
@@ -46,9 +43,11 @@ public class ConfigServiceBean {
 	@EJB
 	SettingDao settingDao;
 
-	public List<Config> getConfiguration() throws AssetException {
-		ConfigurationDto configuration = getConfiguration(ConfigFieldEnum.ALL);
-		return configuration.getConfigList();
+//	public List<Config> getConfiguration() throws AssetException {
+		public List<Object> getConfiguration() throws AssetException {
+		//ConfigurationDto configuration = getConfiguration(ConfigFieldEnum.ALL);
+		//return configuration.getConfigList();
+		return null;
 	}
 
 	public Map<String, String> getParameters() throws AssetException {
@@ -85,7 +84,10 @@ public class ConfigServiceBean {
 		}
 	}
 
-	public ConfigurationDto getConfiguration(ConfigFieldEnum config) throws ConfigModelException {
+//	public ConfigurationDto getConfiguration(ConfigFieldEnum config) throws ConfigModelException {
+		public Object getConfiguration(ConfigFieldEnum config) throws ConfigModelException {
+
+			/*
 		//TODO fix if config != ALL
 		ConfigurationDto dto = new ConfigurationDto();
 		Map<String, List<String>> settings = getSettings();
@@ -108,6 +110,11 @@ public class ConfigServiceBean {
 		}
 
 		return dto;
+
+		*/
+
+
+			return null;
 	}
 
 	private  List<String> getGearTypes() {
@@ -131,7 +138,9 @@ public class ConfigServiceBean {
 		return values;
 	}
 
-	private Config createConfigFromList(ConfigFieldEnum field, List<String> values) {
+//	private Config createConfigFromList(ConfigFieldEnum field, List<String> values) {
+		private Object createConfigFromList(ConfigFieldEnum field, List<String> values) {
+			/*
 		Config config = new Config();
 		config.setField(field);
 		List<ConfigValue> configValues = new ArrayList<>();
@@ -142,6 +151,7 @@ public class ConfigServiceBean {
 		}
 		config.getValues().addAll(configValues);
 		return config;
+		*/ return null;
 	}
 
 
