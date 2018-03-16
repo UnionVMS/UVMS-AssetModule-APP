@@ -30,12 +30,7 @@ import eu.europa.ec.fisheries.uvms.asset.types.ConfigurationDto;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
 import eu.europa.ec.fisheries.uvms.constant.UnitLength;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.dao.FlagStateDao;
-import eu.europa.ec.fisheries.uvms.dao.LicenseTypeDao;
 import eu.europa.ec.fisheries.uvms.dao.SettingDao;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
-import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
-import eu.europa.ec.fisheries.uvms.entity.model.LicenseType;
 import eu.europa.ec.fisheries.uvms.entity.model.Setting;
 
 
@@ -46,12 +41,7 @@ public class ConfigServiceBean {
 	@EJB
 	private ParameterService parameterService;
 
-	@EJB
-	LicenseTypeDao licenseDao;
-	
-	@EJB
-	FlagStateDao flagStateDao;
-	
+
 	@EJB
 	SettingDao settingDao;
 
@@ -74,31 +64,7 @@ public class ConfigServiceBean {
 		}
 	}
 
-	public List<String> getLicenseType() throws ConfigModelException {
-		try {
-			List<String> licenseTypes = new ArrayList<>();
-			List<LicenseType> list = licenseDao.getAllLicenseType();
-			for (LicenseType type : list) {
-				licenseTypes.add(type.getName());
-			}
-			return licenseTypes;
-		} catch (AssetDaoException e) {
-			throw new ConfigModelException("Couldn't fetch license types " + e.getMessage());
-		}
-	}
 
-	public List<String> getFlagState() throws ConfigModelException {
-		try {
-			List<String> flagStateList = new ArrayList<>();
-			List<FlagState> list = flagStateDao.getAllFlagState();
-			for (FlagState flagState : list) {
-				flagStateList.add(flagState.getCode());
-			}
-			return flagStateList;
-		} catch (AssetDaoException e) {
-			throw new ConfigModelException("Couldn't fetch flag states " + e.getMessage());
-		}
-	}
 
 	public Map<String, List<String>> getSettings() throws ConfigModelException {
 		try {
@@ -128,12 +94,8 @@ public class ConfigServiceBean {
 			case ALL:
 			case ASSET_TYPE:
 				dto.addConfig(createConfigFromList(ConfigFieldEnum.ASSET_TYPE, settings.get(ConfigFieldEnum.ASSET_TYPE.name())));
-			case FLAG_STATE:
-				dto.addConfig(createConfigFromList(ConfigFieldEnum.FLAG_STATE, getFlagState()));
 			case GEAR_TYPE:
 				dto.addConfig(createConfigFromList(ConfigFieldEnum.GEAR_TYPE, getGearTypes()));
-			case LICENSE_TYPE:
-				dto.addConfig(createConfigFromList(ConfigFieldEnum.LICENSE_TYPE, getLicenseType()));
 			case SPAN_LENGTH_LOA:
 				dto.addConfig(createConfigFromList(ConfigFieldEnum.SPAN_LENGTH_LOA, settings.get(ConfigFieldEnum.SPAN_LENGTH_LOA.name())));
 			case SPAN_POWER_MAIN:
@@ -149,9 +111,6 @@ public class ConfigServiceBean {
 
 	private  List<String> getGearTypes() {
 		List<String> values = new ArrayList<>();
-		for (GearFishingTypeEnum gearType : GearFishingTypeEnum.values()) {
-			values.add(gearType.name());
-		}
 		return values;
 	}
 

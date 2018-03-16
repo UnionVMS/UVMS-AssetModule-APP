@@ -83,12 +83,12 @@ public abstract class AssetHelper {
         assetEntity.setProdOrgCode("ORGCODE");
         assetEntity.setProdOrgName("ORGNAME");
         assetEntity.setGrossTonnageUnit(UnitTonnage.LONDON);
-        assetEntity.setLicenceType(GearFishingTypeEnum.DEMERSAL_AND_PELAGIC.toString());
+        assetEntity.setLicenceType("DEMERSAL_AND_PELAGIC");
         assetEntity.setSegment("3");
         assetEntity.setConstructionYear("1914");
         assetEntity.setConstructionPlace("GBG");
 
-        assetEntity.setHullMaterial(HullMaterialEnum.GLAS_PLASTIC_FIBER);
+        assetEntity.setHullMaterial("GLAS_PLASTIC_FIBER");
         assetEntity.setUpdateTime(now);
         assetEntity.setUpdatedBy("TEST");
         assetEntity.setAssetAgentAddress("assetagentadress_" + rnd.nextInt());
@@ -110,19 +110,19 @@ public abstract class AssetHelper {
         assetEntity.setLengthOverAll(new BigDecimal(25));
         assetEntity.setPortOfRegistration("GBG");
         assetEntity.setPowerOfAuxEngine(new BigDecimal(1000));
-        assetEntity.setPublicAid(PublicAidEnum.EG);
+        assetEntity.setPublicAid("EG");
         String regnbr = "THOFAN" + rnd.nextInt();
         if (regnbr.length() > 14) regnbr = regnbr.substring(0, 14);
         assetEntity.setRegistrationNumber(regnbr);
 
         assetEntity.setSafteyGrossTonnage(new BigDecimal(24000));
         assetEntity.setOtherTonnage(new BigDecimal(23000));
-        assetEntity.setTypeOfExport(TypeOfExportEnum.SM);
+        assetEntity.setTypeOfExport("SM");
         assetEntity.setHasVms(false);
         assetEntity.setAgentIsAlsoOwner(true);
         assetEntity.setEventCodeId(rnd.nextLong());
         assetEntity.setIrcsIndicator("I");
-        assetEntity.setSource(eu.europa.ec.fisheries.uvms.entity.asset.types.CarrierSourceEnum.INTERNAL);
+        assetEntity.setSource("INTERNAL");
 
 
 

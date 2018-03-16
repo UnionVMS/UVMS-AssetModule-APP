@@ -28,9 +28,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.*;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetFault;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
-import eu.europa.ec.fisheries.uvms.entity.model.FishingGearEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,9 +57,6 @@ public class MessageConsumerBean implements MessageListener {
 
     @EJB
     private UpsertAssetMessageEventBean upsertAssetMessageEventBean;
-
-    @EJB
-    private UpsertFishingGearsMessageEventBean upsertFishingGearsMessageEventBean;
 
 
     @EJB
@@ -92,19 +87,9 @@ public class MessageConsumerBean implements MessageListener {
 
             switch (command) {
 
-                //case "GET_ASSET":
-                //    AssetId assetId = MAPPER.readValue(json, AssetId.class);
-                //    getAssetEventBean.getAsset(textMessage, assetId);
-                //    break;
-
                 case "UPSERT_ASSET":
                     AssetSE asset = MAPPER.readValue(json, AssetSE.class);
                     upsertAssetMessageEventBean.upsertAsset(asset);
-                    break;
-
-                case "FISHING_GEAR_UPSERT":
-                    FishingGearEntity fishingGear =  MAPPER.readValue(json, FishingGearEntity.class);
-                    upsertFishingGearsMessageEventBean.upsertFishingGears(fishingGear, "TEST");
                     break;
 
                 case "PING":

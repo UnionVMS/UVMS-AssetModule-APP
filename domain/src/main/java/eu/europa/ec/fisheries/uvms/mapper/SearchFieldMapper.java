@@ -15,13 +15,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListCriteriaPair;
 import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetDaoMappingException;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetSearchMapperException;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
 
 public class SearchFieldMapper {
     
@@ -97,15 +95,6 @@ public class SearchFieldMapper {
 
     private static String prepareSearchValue(SearchFields searchField, String searchValue) throws AssetDaoMappingException {
     	String value = searchValue;
-        if(SearchFields.GEAR_TYPE.equals(searchField)) {
-        	try {
-				value = GearFishingTypeEnum.getValue(searchValue);
-			} catch (AssetModelValidationException e) {
-				throw new AssetDaoMappingException("GearType couldn't be transformed to valid search value");
-			}
-        }
-        // TODO check if upper function is available in auditquery
-        // value = value.toUpperCase();
         return value;
     }
 

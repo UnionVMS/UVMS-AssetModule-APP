@@ -34,7 +34,6 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.dao.bean.AssetSEDao;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 
@@ -364,7 +363,7 @@ public class AssetSEDaoTest extends TransactionalTests {
         asset.setProdOrgCode(newOrgCode);
         asset.setProdOrgName(newOrgName);
         asset.setGrossTonnageUnit(UnitTonnage.OSLO);
-        asset.setLicenceType(GearFishingTypeEnum.PELAGIC.toString());
+        asset.setLicenceType("PELAGIC");
         asset.setSegment("3");
         asset.setConstructionYear("1924");
         asset.setConstructionPlace("BEJ");

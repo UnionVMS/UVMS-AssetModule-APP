@@ -101,7 +101,7 @@ public class AssetSE implements Serializable{
 
     @Enumerated(EnumType.STRING)
     @Column(name="hullmaterial")
-    private HullMaterialEnum hullMaterial;
+    private String  hullMaterial;
 
     @Column(name="commissiondate")
     private LocalDateTime commissionDate;
@@ -117,10 +117,8 @@ public class AssetSE implements Serializable{
     @Column(name="updatetime")
     private LocalDateTime updateTime;
 
-
-    @Enumerated(EnumType.STRING)
     @Column(name="source")
-    private CarrierSourceEnum source;
+    private String source;
 
     ///////////////////////////////////
     //   FROM HISTORY                //
@@ -218,15 +216,11 @@ public class AssetSE implements Serializable{
     @Column(name="licensetype")
     private String licenceType;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="mainfishinggear")
-    @NotAudited
-    private FishingGearEntity mainFishingGear;
+    @Column(name="mainfishinggear")
+    private String mainFishingGear;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="subfishinggear")
-    @NotAudited
-    private FishingGearEntity subFishingGear;
+    @Column(name="subfishinggear")
+    private String subFishingGear;
 
     @Column(name="gearfishingtype")
     private int gearFishingType;
@@ -263,9 +257,8 @@ public class AssetSE implements Serializable{
     private String segmentOfAdministrativeDecision;
 //    private SegmentFUP segmentOfAdministrativeDecision;
 
-    @Enumerated(EnumType.STRING)
     @Column(name="publicaid")
-    private PublicAidEnum publicAid;
+    private String publicAid;
 
     @Size(max = 14)
     @Column(name="registrationnumber")
@@ -273,7 +266,7 @@ public class AssetSE implements Serializable{
 
     @Enumerated(EnumType.STRING)
     @Column(name="typeofexport")
-    private TypeOfExportEnum typeOfExport;
+    private String typeOfExport;
 
     @Size(max = 60)
     @Column(name="updatedby")
@@ -312,11 +305,11 @@ public class AssetSE implements Serializable{
         this.ircsIndicator = ircsIndicator;
     }
 
-    public HullMaterialEnum getHullMaterial() {
+    public String getHullMaterial() {
         return hullMaterial;
     }
 
-    public void setHullMaterial(HullMaterialEnum hullMaterial) {
+    public void setHullMaterial(String hullMaterial) {
         this.hullMaterial = hullMaterial;
     }
 
@@ -352,11 +345,11 @@ public class AssetSE implements Serializable{
         this.updateTime = updateTime;
     }
 
-    public CarrierSourceEnum getSource() {
+    public String getSource() {
         return source;
     }
 
-    public void setSource(CarrierSourceEnum source) {
+    public void setSource(String source) {
         this.source = source;
     }
 
@@ -552,19 +545,19 @@ public class AssetSE implements Serializable{
         this.licenceType = licenceType;
     }
 
-    public FishingGearEntity getMainFishingGear() {
+    public String getMainFishingGear() {
         return mainFishingGear;
     }
 
-    public void setMainFishingGear(FishingGearEntity mainFishingGear) {
+    public void setMainFishingGear(String mainFishingGear) {
         this.mainFishingGear = mainFishingGear;
     }
 
-    public FishingGearEntity getSubFishingGear() {
+    public String getSubFishingGear() {
         return subFishingGear;
     }
 
-    public void setSubFishingGear(FishingGearEntity subFishingGear) {
+    public void setSubFishingGear(String subFishingGear) {
         this.subFishingGear = subFishingGear;
     }
 
@@ -640,11 +633,11 @@ public class AssetSE implements Serializable{
         this.segmentOfAdministrativeDecision = segmentOfAdministrativeDecision;
     }
 
-    public PublicAidEnum getPublicAid() {
+    public String getPublicAid() {
         return publicAid;
     }
 
-    public void setPublicAid(PublicAidEnum publicAid) {
+    public void setPublicAid(String publicAid) {
         this.publicAid = publicAid;
     }
 
@@ -656,11 +649,11 @@ public class AssetSE implements Serializable{
         this.registrationNumber = registrationNumber;
     }
 
-    public TypeOfExportEnum getTypeOfExport() {
+    public String getTypeOfExport() {
         return typeOfExport;
     }
 
-    public void setTypeOfExport(TypeOfExportEnum typeOfExport) {
+    public void setTypeOfExport(String typeOfExport) {
         this.typeOfExport = typeOfExport;
     }
 
