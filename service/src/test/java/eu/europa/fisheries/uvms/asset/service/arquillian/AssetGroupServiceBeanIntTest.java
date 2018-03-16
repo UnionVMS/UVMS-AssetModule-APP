@@ -175,7 +175,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
 
 
 
-    private List<AssetGroupField> createAndStoreAssetGroupLines( int n) throws AssetException {
+    private List<AssetGroupField> createAssetGroupLines( int n) throws AssetException {
 
         List<AssetGroupField> ret = new ArrayList<>();
 
@@ -196,7 +196,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
         Assert.assertTrue(assetGroupEntity.getId() == null);
 
 
-        List<AssetGroupField> fields =  createAndStoreAssetGroupLines(5);
+        List<AssetGroupField> fields =  createAssetGroupLines(5);
 
         assetGroupEntity.setFields(fields);
 
