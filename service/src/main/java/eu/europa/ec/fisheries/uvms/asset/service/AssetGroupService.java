@@ -11,8 +11,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service;
 
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -21,17 +22,30 @@ import java.util.UUID;
 @Local
 public interface AssetGroupService {
 
-    List<AssetGroup> getAssetGroupList(String user) throws AssetException;
+    List<AssetGroup> getAssetGroupList(String user) throws InputArgumentException;
 
-    List<AssetGroup> getAssetGroupListByAssetGuid(UUID assetGuid) throws AssetException;
+    List<AssetGroup> getAssetGroupListByAssetGuid(UUID assetGuid) throws InputArgumentException;
 
-    AssetGroup getAssetGroupById(UUID guid) throws AssetException;
+    AssetGroup getAssetGroupById(UUID guid) throws InputArgumentException;
 
-    AssetGroup createAssetGroup(AssetGroup assetGroup, String username) throws AssetException;
+    AssetGroup createAssetGroup(AssetGroup assetGroup, String username) throws InputArgumentException;
 
-    AssetGroup updateAssetGroup(AssetGroup assetGroup, String username) throws AssetException;
+    AssetGroup updateAssetGroup(AssetGroup assetGroup, String username) throws InputArgumentException;
 
-    AssetGroup deleteAssetGroupById(UUID guid, String username) throws AssetException;
+    AssetGroup deleteAssetGroupById(UUID guid, String username) throws InputArgumentException;
+
+
+    AssetGroupField createAssetGroupField(UUID parentAssetgroupId, AssetGroupField assetGroupField, String username) throws InputArgumentException;
+
+    AssetGroupField updateAssetGroupField(AssetGroupField assetGroupField, String username) throws InputArgumentException;
+
+    AssetGroupField getAssetGroupField(Long id) throws InputArgumentException;
+
+    AssetGroupField deleteAssetGroupField(Long id, String username)  throws InputArgumentException;
+
+    List<AssetGroupField> retrieveFieldsForGroup(AssetGroup assetGroup) throws InputArgumentException;
+
+    void removeFieldsForGroup(AssetGroup assetGroup)  throws InputArgumentException;
 
 
 }

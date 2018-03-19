@@ -35,9 +35,7 @@ public class AssetGroupFieldDao   {
     }
 
     public AssetGroupField update(AssetGroupField field) {
-
-            em.merge(field);
-            return field;
+            return em.merge(field);
     }
 
     public AssetGroupField delete(AssetGroupField field)  {

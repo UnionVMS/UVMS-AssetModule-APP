@@ -49,8 +49,6 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
 
 
 
-
-
     @Test
     @OperateOnDeployment("normal")
     public void deleteAssetGroupById() throws AssetException {
@@ -173,18 +171,6 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
 
 
 
-    private List<AssetGroupField> createAssetGroupLines( int n) throws AssetException {
-
-        List<AssetGroupField> ret = new ArrayList<>();
-
-        for(int i = 0 ; i < n ; i++){
-            AssetGroupField field = new AssetGroupField();
-            field.setField(ConfigSearchFieldEnum.GUID.value());
-            field.setValue(UUID.randomUUID().toString());
-            ret.add(field);
-        }
-        return ret;
-    }
 
 
 
