@@ -258,7 +258,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
      * @throws InputArgumentException
      */
     @Override
-    public AssetGroupField getAssetGroupField(Long id) throws InputArgumentException {
+    public AssetGroupField getAssetGroupField(UUID id) throws InputArgumentException {
 
         if (id == null) {
             throw new InputArgumentException("Cannot get assetGroupField because ID is null.");
@@ -277,7 +277,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
      * @throws InputArgumentException
      */
     @Override
-    public AssetGroupField deleteAssetGroupField(Long id, String username) throws InputArgumentException {
+    public AssetGroupField deleteAssetGroupField(UUID id, String username) throws InputArgumentException {
 
         if (id == null) {
             throw new InputArgumentException("Cannot delete assetGroupId because ID is null.");

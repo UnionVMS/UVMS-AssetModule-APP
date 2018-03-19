@@ -40,7 +40,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
         String user = "test";
         AssetGroup assetGroup = createAndStoreAssetGroupEntity(user);
         AssetGroupField createdAssetGroupField = createAndStoreAssetGroupFieldEntity(assetGroup);
-        Long createdId = createdAssetGroupField.getId();
+        UUID createdId = createdAssetGroupField.getId();
         AssetGroupField fetchedAssetGroupField =  getField(createdId);
         Assert.assertTrue(fetchedAssetGroupField != null);
 
@@ -52,7 +52,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
         String user = "test";
         AssetGroup assetGroup = createAndStoreAssetGroupEntity(user);
         AssetGroupField createdAssetGroupField = createAndStoreAssetGroupFieldEntity(assetGroup);
-        Long createdId = createdAssetGroupField.getId();
+        UUID createdId = createdAssetGroupField.getId();
         AssetGroupField fetchedAssetGroupField =  getField(createdId);
         Assert.assertEquals(createdId, fetchedAssetGroupField.getId());
     }
@@ -63,7 +63,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
         String user = "test";
         AssetGroup assetGroup = createAndStoreAssetGroupEntity(user);
         AssetGroupField createdAssetGroupField = createAndStoreAssetGroupFieldEntity(assetGroup);
-        Long createdId = createdAssetGroupField.getId();
+        UUID createdId = createdAssetGroupField.getId();
         assetGroupFieldDaoBean.delete(createdAssetGroupField);
         AssetGroupField fetchedAssetGroupField =  getField(createdId);
         Assert.assertTrue(fetchedAssetGroupField == null);
@@ -75,7 +75,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
         String user = "test";
         AssetGroup assetGroup = createAndStoreAssetGroupEntity(user);
         AssetGroupField createdAssetGroupField = createAndStoreAssetGroupFieldEntity(assetGroup);
-        Long createdId = createdAssetGroupField.getId();
+        UUID createdId = createdAssetGroupField.getId();
         String createdUpdatedBy = createdAssetGroupField.getUpdatedBy();
         createdAssetGroupField.setUpdatedBy("PEKKA");
         assetGroupFieldDaoBean.update(createdAssetGroupField);
@@ -120,7 +120,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     }
 
 
-    private AssetGroupField getField(Long id) throws AssetGroupDaoException {
+    private AssetGroupField getField(UUID id) throws AssetGroupDaoException {
 
         AssetGroupField assetGroupField =  assetGroupFieldDaoBean.get(id);
         return assetGroupField;

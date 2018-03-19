@@ -11,8 +11,11 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.entity.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -43,10 +46,14 @@ public class AssetGroupField implements Serializable {
 	public static final String ASSETGROUP_RETRIEVE_FIELDS_FOR_GROUP = "Assetgroupfield.retrievefieldsforgroup";
 
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id")
-	private Long id;
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name="UUID",
+            strategy="org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name="id")
+    private UUID id;
 
 	@Size(max=80)
 	@NotNull
@@ -72,11 +79,11 @@ public class AssetGroupField implements Serializable {
 	public AssetGroupField() {
 	}
 
-	public Long getId() {
+	public UUID getId() {
 		return this.id;
 	}
 
-	public void setId(Long id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 

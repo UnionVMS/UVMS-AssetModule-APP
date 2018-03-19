@@ -109,7 +109,6 @@ public class AssetGroupDaoBeanTest {
 
 		List<AssetGroupField> filters = new ArrayList<AssetGroupField>();
 		AssetGroupField filter = new AssetGroupField();
-		filter.setId(id+10);
 		filter.setAssetGroup(group);
 		filter.setField(ConfigSearchFieldEnum.NAME.name());
 		filter.setValue("ASSET-NAME");

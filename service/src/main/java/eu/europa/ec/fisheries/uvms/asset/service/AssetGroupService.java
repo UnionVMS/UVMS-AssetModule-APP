@@ -39,9 +39,9 @@ public interface AssetGroupService {
 
     AssetGroupField updateAssetGroupField(AssetGroupField assetGroupField, String username) throws InputArgumentException;
 
-    AssetGroupField getAssetGroupField(Long id) throws InputArgumentException;
+    AssetGroupField getAssetGroupField(UUID id) throws InputArgumentException;
 
-    AssetGroupField deleteAssetGroupField(Long id, String username)  throws InputArgumentException;
+    AssetGroupField deleteAssetGroupField(UUID id, String username)  throws InputArgumentException;
 
     List<AssetGroupField> retrieveFieldsForGroup(AssetGroup assetGroup) throws InputArgumentException;
 

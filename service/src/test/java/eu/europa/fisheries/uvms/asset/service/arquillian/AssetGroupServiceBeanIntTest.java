@@ -32,21 +32,11 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void createAssertGroup() throws AssetException {
+    public void createAssetGroup() throws AssetException {
 
         AssetGroup createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
         Assert.assertTrue(createdAssetGroupEntity != null);
     }
-
-    @Test
-    @OperateOnDeployment("normal")
-    public void createAssertGroupAndFields() throws AssetException {
-
-        AssetGroup createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
-        Assert.assertTrue(createdAssetGroupEntity != null);
-
-    }
-
 
 
     @Test
@@ -55,9 +45,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
 
         AssetGroup createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
         UUID guid = createdAssetGroupEntity.getId();
-
         assetGroupService.deleteAssetGroupById(createdAssetGroupEntity.getId(), createdAssetGroupEntity.getOwner());
-
         try {
             AssetGroup fetchedAssetGroupEntity = assetGroupService.getAssetGroupById(guid);
             Assert.assertTrue(fetchedAssetGroupEntity != null);
@@ -142,9 +130,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void getAssetGroupList() throws AssetException {
 
-
-
-        String user1 = UUID.randomUUID().toString();
+    String user1 = UUID.randomUUID().toString();
         String user2 = UUID.randomUUID().toString();
         String user3 = UUID.randomUUID().toString();
 
@@ -179,24 +165,14 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
         AssetGroup assetGroupEntity = createAssetGroupEntity(user);
         Assert.assertTrue(assetGroupEntity.getId() == null);
 
-
-
         AssetGroup createdAssetGroupEntity = assetGroupService.createAssetGroup(assetGroupEntity, user);
         Assert.assertTrue(createdAssetGroupEntity.getId() != null);
-
-
-
-
-
-
-
         return createdAssetGroupEntity;
     }
 
 
     private AssetGroup createAssetGroupEntity(String user) {
         AssetGroup ag = new AssetGroup();
-
         ag.setUpdatedBy("test");
         ag.setUpdateTime(LocalDateTime.now(Clock.systemUTC()));
         ag.setArchived(false);

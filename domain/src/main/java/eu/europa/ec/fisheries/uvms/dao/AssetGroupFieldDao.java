@@ -7,6 +7,7 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.persistence.*;
 import java.util.List;
+import java.util.UUID;
 
 @Stateless
 @Local
@@ -23,7 +24,7 @@ public class AssetGroupFieldDao   {
             return field;
     }
 
-    public AssetGroupField get(Long id)  {
+    public AssetGroupField get(UUID id)  {
 
         try {
             TypedQuery<AssetGroupField> query = em.createNamedQuery(AssetGroupField.ASSETGROUP_FIELD_GETBYID, AssetGroupField.class);
