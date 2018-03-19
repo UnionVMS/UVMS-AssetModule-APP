@@ -171,14 +171,6 @@ public class AssetEntity implements Serializable {
     @Column(name = "asset_vessel_date_of_entry")
     private Date vesselDateOfEntry;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "asset_contact_type")
-    private ContactType contactType;
-
-    @Size(max = 100)
-    @Column(name = "asset_contact_nationality")
-    private String contactNationality;
-
     public AssetEntity() {
     }
 
@@ -377,19 +369,4 @@ public class AssetEntity implements Serializable {
         this.vesselDateOfEntry = vesselDateOfEntry;
     }
 
-    public ContactType getContactType() {
-        return contactType;
-    }
-
-    public void setContactType(ContactType contactType) {
-        this.contactType = contactType;
-    }
-
-    public String getContactNationality() {
-        return contactNationality;
-    }
-
-    public void setContactNationality(String contactNationality) {
-        this.contactNationality = contactNationality;
-    }
 }

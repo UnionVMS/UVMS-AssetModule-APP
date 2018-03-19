@@ -257,14 +257,6 @@ public class AssetHistory implements Serializable {
     @Column(name = "assethist_vessel_date_of_entry")
     private Date vesselDateOfEntry;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "assethist_contact_type")
-    private ContactType contactType;
-
-    @Size(max = 100)
-    @Column(name = "assethist_contact_nationality")
-    private String contactNationality;
-
     @Size(min = 1, max = 1)
     @Column(name = "assethist_ircs_indicator")
     private String assetIrcsindicator;
@@ -713,22 +705,6 @@ public class AssetHistory implements Serializable {
 
     public void setVesselDateOfEntry(Date vesselDateOfEntry) {
         this.vesselDateOfEntry = vesselDateOfEntry;
-    }
-
-    public ContactType getContactType() {
-        return contactType;
-    }
-
-    public void setContactType(ContactType contactType) {
-        this.contactType = contactType;
-    }
-
-    public String getContactNationality() {
-        return contactNationality;
-    }
-
-    public void setContactNationality(String contactNationality) {
-        this.contactNationality = contactNationality;
     }
 
     public String getAssetIrcsindicator() {

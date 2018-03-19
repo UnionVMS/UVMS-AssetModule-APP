@@ -40,8 +40,6 @@
             <xsd:element name="aisIndicator" type="xsd:boolean" minOccurs="0" maxOccurs="1"/>
             <xsd:element name="vesselType" type="xsd:string" minOccurs="0" maxOccurs="1"/>
             <xsd:element name="vesselDateOfEntry" type="xsd:dateTime" minOccurs="0" maxOccurs="1"/>
-            <xsd:element name="contactType" type="contactType" minOccurs="0" maxOccurs="1"/>
-            <xsd:element name="contactNationality" type="xsd:string" minOccurs="0" maxOccurs="1"/>
             <xsd:element name="hullMaterial" type="hullMaterial" minOccurs="0" maxOccurs="1"/>
             <xsd:element name="yearOfConstruction" type="xsd:string" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
@@ -70,6 +68,13 @@
             <xsd:element name="email" type="xsd:string"/>
             <xsd:element name="owner" type="xsd:boolean"/>
             <xsd:element name="source" type="ContactSource"/>
+            <xsd:element name="type" type="contactType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="nationality" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="cityName" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="countryCode" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="postOfficeBox" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="postalCode" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="streetName" type="xsd:string" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
 

@@ -70,8 +70,6 @@ public class EntityToModelMapper {
         asset.setErsIndicator(entity.getErsIndicator());
         asset.setVesselType(entity.getVesselType());
         asset.setVesselDateOfEntry(entity.getVesselDateOfEntry());
-        asset.setContactType(entity.getContactType());
-        asset.setContactNationality(entity.getContactNationality());
         asset.setHullMaterial(entity.getHullMaterial());
         asset.setYearOfConstruction(entity.getConstructionYear());
 
@@ -140,8 +138,6 @@ public class EntityToModelMapper {
             asset.setAisIndicator(historyEntity.getAisIndicator());
             asset.setVesselType(historyEntity.getVesselType());
             asset.setVesselDateOfEntry(historyEntity.getVesselDateOfEntry());
-            asset.setContactType(historyEntity.getContactType());
-            asset.setContactNationality(historyEntity.getContactNationality());
             asset.setHullMaterial(historyEntity.getHullMaterial());
             asset.setYearOfConstruction(historyEntity.getConstructionYear());
 
@@ -155,6 +151,13 @@ public class EntityToModelMapper {
                 contact.setNumber(contactInfo.getPhoneNumber());
                 contact.setEmail(contactInfo.getEmail());
                 contact.setOwner(contactInfo.getOwner());
+                contact.setNationality(contactInfo.getNationality());
+                contact.setType(contactInfo.getType());
+                contact.setCountryCode(contactInfo.getCountryCode());
+                contact.setPostOfficeBox(contactInfo.getPostOfficeBox());
+                contact.setCityName(contactInfo.getCityName());
+                contact.setPostalCode(contactInfo.getPostalCode());
+                contact.setStreetName(contactInfo.getStreetName());
 
                 if (contactInfo.getSource() != null) {
                     contact.setSource(ContactSource.valueOf(contactInfo.getSource().toString()));

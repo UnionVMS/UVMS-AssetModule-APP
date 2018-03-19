@@ -126,8 +126,6 @@
 			<column name="assethist_ais_indicator" type="BOOLEAN" />
 			<column name="assethist_vessel_type" type="VARCHAR(100)" />
 			<column name="assethist_vessel_date_of_entry" type="TIMESTAMP" />
-			<column name="assethist_contact_type" type="VARCHAR(100)" />
-			<column name="assethist_contact_nationality" type="VARCHAR(100)" />
 			<column name="assethist_ircs_indicator" type="VARCHAR(1)" />
 			<column name="assethist_hull_material" type="VARCHAR(100)" />
 			<column name="assethist_year_of_construction" type="VARCHAR(100)" />

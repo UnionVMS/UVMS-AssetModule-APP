@@ -67,8 +67,6 @@ public abstract class AssetHelper {
         asset.setAisIndicator(true);
         asset.setVesselType("TEST_VESSEL_TYPE");
         asset.setVesselDateOfEntry(new Date());
-        asset.setContactType(ContactType.OPERATOR);
-        asset.setContactNationality("TEST_NATIONALITY");
 
         AssetProdOrgModel assetProdOrgModel = new AssetProdOrgModel();
         assetProdOrgModel.setName("NAME");

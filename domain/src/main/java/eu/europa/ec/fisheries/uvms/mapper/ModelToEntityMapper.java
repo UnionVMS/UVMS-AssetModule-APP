@@ -78,8 +78,6 @@ public class ModelToEntityMapper {
         entity.setErsIndicator(asset.isErsIndicator());
         entity.setVesselType(asset.getVesselType());
         entity.setVesselDateOfEntry(asset.getVesselDateOfEntry());
-        entity.setContactType(asset.getContactType());
-        entity.setContactNationality(asset.getContactNationality());
         entity.setHullMaterial(asset.getHullMaterial());
         entity.setConstructionYear(asset.getYearOfConstruction());
         entity.setIrcsIndicator(asset.getHasIrcs());
@@ -143,8 +141,6 @@ public class ModelToEntityMapper {
         assetHistory.setErsIndicator(asset.isErsIndicator());
         assetHistory.setVesselType(asset.getVesselType());
         assetHistory.setVesselDateOfEntry(asset.getVesselDateOfEntry());
-        assetHistory.setContactType(asset.getContactType());
-        assetHistory.setContactNationality(asset.getContactNationality());
         assetHistory.setAssetIrcsindicator(asset.getHasIrcs());
         assetHistory.setHullMaterial(asset.getHullMaterial());
         assetHistory.setConstructionYear(asset.getYearOfConstruction());
@@ -161,6 +157,14 @@ public class ModelToEntityMapper {
                 contactInfo.setName(contact.getName());
                 contactInfo.setOwner(contact.isOwner());
                 contactInfo.setPhoneNumber(contact.getNumber());
+                contactInfo.setNationality(contact.getNationality());
+                contactInfo.setType(contact.getType());
+                contactInfo.setCountryCode(contact.getCountryCode());
+                contactInfo.setPostOfficeBox(contact.getPostOfficeBox());
+                contactInfo.setCityName(contact.getCityName());
+                contactInfo.setPostalCode(contact.getPostalCode());
+                contactInfo.setStreetName(contact.getStreetName());
+
                 if (contact.getSource() != null) {
                     contactInfo.setSource(ContactInfoSourceEnum.valueOf(contact.getSource().toString()));
                 } else {
