@@ -11,6 +11,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms;
 
+import static eu.europa.ec.fisheries.uvms.entity.model.AssetGroup.GROUP_ASSET_BY_USER;
+import static eu.europa.ec.fisheries.uvms.entity.model.AssetGroup.GROUP_ASSET_FIND_ALL;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -36,7 +38,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
 
 
@@ -69,13 +70,13 @@ public class AssetGroupDaoBeanTest {
 	@Test
 	public void testVesselGroupList() throws AssetGroupDaoException {
 		TypedQuery<AssetGroup> query = mock(TypedQuery.class);
-		when(em.createNamedQuery(UvmsConstants.GROUP_ASSET_FIND_ALL, AssetGroup.class)).thenReturn(query);
+		when(em.createNamedQuery(GROUP_ASSET_FIND_ALL, AssetGroup.class)).thenReturn(query);
 		
 		List<AssetGroup> dummyResult = new ArrayList<AssetGroup>();
 		when(query.getResultList()).thenReturn(dummyResult);
 		List<AssetGroup> result = dao.getAssetGroupAll();
 		
-		verify(em).createNamedQuery(UvmsConstants.GROUP_ASSET_FIND_ALL, AssetGroup.class);
+		verify(em).createNamedQuery(GROUP_ASSET_FIND_ALL, AssetGroup.class);
 		verify(query).getResultList();
 		assertSame(dummyResult, result);
 	}
@@ -83,14 +84,14 @@ public class AssetGroupDaoBeanTest {
 	@Test
 	public void testVesselGroupListByUser() throws AssetGroupDaoException {
 		TypedQuery<AssetGroup> query = mock(TypedQuery.class);
-		when(em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_USER, AssetGroup.class)).thenReturn(query);
+		when(em.createNamedQuery(GROUP_ASSET_BY_USER, AssetGroup.class)).thenReturn(query);
 		
 		List<AssetGroup> dummyResult = new ArrayList<AssetGroup>();
 		when(query.getResultList()).thenReturn(dummyResult);
 		
 		List<AssetGroup> result = dao.getAssetGroupByUser(TEST_USER);
 		
-		verify(em).createNamedQuery(UvmsConstants.GROUP_ASSET_BY_USER, AssetGroup.class);
+		verify(em).createNamedQuery(GROUP_ASSET_BY_USER, AssetGroup.class);
 		verify(query).getResultList();
 		assertSame(dummyResult, result);
 	}

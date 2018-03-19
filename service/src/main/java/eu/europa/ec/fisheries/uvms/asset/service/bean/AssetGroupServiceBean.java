@@ -44,6 +44,12 @@ public class AssetGroupServiceBean implements AssetGroupService {
     private AssetGroupFieldDao assetGroupFieldDao;
 
 
+    /**
+     *
+     * @param user
+     * @return
+     * @throws AssetException
+     */
     @Override
     public List<AssetGroup> getAssetGroupList(String user) throws AssetException {
 

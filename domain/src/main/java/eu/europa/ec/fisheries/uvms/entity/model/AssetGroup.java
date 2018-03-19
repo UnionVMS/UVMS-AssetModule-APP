@@ -13,19 +13,15 @@ package eu.europa.ec.fisheries.uvms.entity.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
 import org.hibernate.annotations.GenericGenerator;
+
+import static eu.europa.ec.fisheries.uvms.entity.model.AssetGroup.*;
 
 
 /**
@@ -35,13 +31,20 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table(name="Assetgroup")
 @NamedQueries({
-	@NamedQuery(name=UvmsConstants.GROUP_ASSET_FIND_ALL, query="SELECT a FROM AssetGroup a WHERE a.archived = false"),
-	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_USER, query="SELECT a FROM AssetGroup a WHERE a.archived = false AND a.owner = :owner"),
-	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_GUID, query="SELECT a FROM AssetGroup a WHERE a.id = :guid"),
-	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_GUID_LIST, query="SELECT a FROM AssetGroup a WHERE a.archived = false AND a.id IN :guidList")
+	@NamedQuery(name=GROUP_ASSET_FIND_ALL, query="SELECT a FROM AssetGroup a WHERE a.archived = false"),
+	@NamedQuery(name=GROUP_ASSET_BY_USER, query="SELECT a FROM AssetGroup a WHERE a.archived = false AND a.owner = :owner"),
+	@NamedQuery(name=GROUP_ASSET_BY_GUID, query="SELECT a FROM AssetGroup a WHERE a.id = :guid"),
+	@NamedQuery(name=GROUP_ASSET_BY_GUID_LIST, query="SELECT a FROM AssetGroup a WHERE a.archived = false AND a.id IN :guidList")
 })
 public class AssetGroup implements Serializable {
 	private static final long serialVersionUID = 1L;
+
+	public static final String GROUP_ASSET_FIND_ALL = "AssetGroup.findAll";
+	public static final String GROUP_ASSET_BY_USER = "AssetGroup.findByUser";
+	public static final String GROUP_ASSET_BY_GUID = "AssetGroup.findByGuid";
+	public static final String GROUP_ASSET_BY_GUID_LIST = "AssetGroup.findByGuidList";
+
+
 
 	@Id
 	@GeneratedValue(generator = "UUID")

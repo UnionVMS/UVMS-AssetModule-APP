@@ -14,11 +14,7 @@ package eu.europa.ec.fisheries.uvms.constant;
 public class UvmsConstants {
 
 
-    public static final String GROUP_ASSET_FIND_ALL = "AssetGroup.findAll";
-    public static final String GROUP_ASSET_BY_USER = "AssetGroup.findByUser";
-    public static final String GROUP_ASSET_BY_GUID = "AssetGroup.findByGuid";
-    public static final String GROUP_ASSET_BY_GUID_LIST = "AssetGroup.findByGuidList";
-    
+
     public static final String LICENSE_TYPE_LIST = "LicenseType.findAll";
     public static final String FLAG_STATE_LIST = "FlagState.findAll";
     public static final String SETTING_LIST = "Setting.findAll";

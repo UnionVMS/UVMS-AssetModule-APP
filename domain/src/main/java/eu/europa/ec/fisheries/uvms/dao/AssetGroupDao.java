@@ -11,7 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.dao;
 
-import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
 
 import javax.ejb.Local;
@@ -20,6 +19,8 @@ import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.UUID;
+
+import static eu.europa.ec.fisheries.uvms.entity.model.AssetGroup.*;
 
 @Stateless
 @Local
@@ -33,7 +34,7 @@ public class AssetGroupDao extends Dao  {
 
     public AssetGroup getAssetGroupByGuid(UUID groupId) {
         try {
-            TypedQuery<AssetGroup> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_GUID, AssetGroup.class);
+            TypedQuery<AssetGroup> query = em.createNamedQuery(GROUP_ASSET_BY_GUID, AssetGroup.class);
             query.setParameter("guid", groupId);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -52,18 +53,18 @@ public class AssetGroupDao extends Dao  {
     }
 
     public List<AssetGroup> getAssetGroupAll() {
-        TypedQuery<AssetGroup> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_FIND_ALL, AssetGroup.class);
+        TypedQuery<AssetGroup> query = em.createNamedQuery(GROUP_ASSET_FIND_ALL, AssetGroup.class);
         return query.getResultList();
     }
 
     public List<AssetGroup> getAssetGroupByUser(String user) {
-        TypedQuery<AssetGroup> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_USER, AssetGroup.class);
+        TypedQuery<AssetGroup> query = em.createNamedQuery(GROUP_ASSET_BY_USER, AssetGroup.class);
         query.setParameter("owner", user);
         return query.getResultList();
     }
 
     public List<AssetGroup> getAssetGroupsByGroupGuidList(List<UUID> guidList) {
-        TypedQuery<AssetGroup> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_GUID_LIST, AssetGroup.class);
+        TypedQuery<AssetGroup> query = em.createNamedQuery(GROUP_ASSET_BY_GUID_LIST, AssetGroup.class);
         query.setParameter("guidList", guidList);
         return query.getResultList();
     }
