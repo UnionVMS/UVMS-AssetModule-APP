@@ -176,7 +176,6 @@ public class AssetGroupTestsIT extends TransactionalTests {
         List<AssetGroupField>  newLines = createAssetGroupFields( assetGroupEntity,  assetGroupEntity.getUpdateTime(), assetGroupEntity.getOwner(), 17);
 
         assetGroupDao.updateAssetGroup(assetGroupEntity);
-        assetGroupFieldDaoBean.syncFields(assetGroupEntity, newLines);
         em.flush();
 
         AssetGroup fetchedGroup = assetGroupDao.getAssetGroupByGuid(uuid);

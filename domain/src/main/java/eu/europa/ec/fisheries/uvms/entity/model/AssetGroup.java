@@ -40,7 +40,6 @@ import org.hibernate.annotations.GenericGenerator;
 	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_GUID, query="SELECT a FROM AssetGroup a WHERE a.id = :guid"),
 	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_GUID_LIST, query="SELECT a FROM AssetGroup a WHERE a.archived = false AND a.id IN :guidList")
 })
-@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 public class AssetGroup implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -78,14 +77,6 @@ public class AssetGroup implements Serializable {
 	@NotNull
 	@Column(name="user_id")
 	private String owner;
-
-
-	/////////////////////////////////////////////////////////////
-	// NON PERSISTED THIS WAY THIS IS TO SIMPLIFY SERIALIZATION
-	/////////////////////////////////////////////////////////////
-	@Transient
-	public List<AssetGroupField> fields = new ArrayList<>();
-
 
 	public AssetGroup() {
 	}
@@ -154,11 +145,4 @@ public class AssetGroup implements Serializable {
 		this.owner = owner;
 	}
 
-	public List<AssetGroupField> getFields() {
-		return fields;
-	}
-
-	public void setFields(List<AssetGroupField> fields) {
-		this.fields = fields;
-	}
 }

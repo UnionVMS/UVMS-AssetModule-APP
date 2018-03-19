@@ -194,9 +194,6 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
         Assert.assertTrue(assetGroupEntity.getId() == null);
 
 
-        List<AssetGroupField> fields =  createAssetGroupLines(5);
-
-        assetGroupEntity.setFields(fields);
 
         AssetGroup createdAssetGroupEntity = assetGroupService.createAssetGroup(assetGroupEntity, user);
         Assert.assertTrue(createdAssetGroupEntity.getId() != null);

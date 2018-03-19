@@ -56,6 +56,12 @@ public class AssetGroupServiceBean implements AssetGroupService {
     }
 
 
+    /** get all assetgroups for an asset with specified UUID
+     *
+     * @param assetGuid
+     * @return
+     * @throws AssetException
+     */
     @Override
     public List<AssetGroup> getAssetGroupListByAssetGuid(UUID assetGuid) throws AssetException {
 
@@ -79,6 +85,12 @@ public class AssetGroupServiceBean implements AssetGroupService {
     }
 
 
+    /** get an assetgroup via its UUID
+     *
+     * @param guid
+     * @return
+     * @throws AssetException
+     */
     @Override
     public AssetGroup getAssetGroupById(UUID guid) throws AssetException {
 
@@ -99,6 +111,14 @@ public class AssetGroupServiceBean implements AssetGroupService {
         }
     }
 
+
+    /** update assetgroup OBS not the childlist (that goes with
+     *
+     * @param assetGroup
+     * @param username
+     * @return
+     * @throws AssetException
+     */
     @Override
     public AssetGroup updateAssetGroup(AssetGroup assetGroup, String username) throws AssetException {
 
@@ -110,11 +130,14 @@ public class AssetGroupServiceBean implements AssetGroupService {
         }
 
         try {
-            AssetGroup groupEntity = assetGroupDao.getAssetGroupByGuid(assetGroup.getId());
-            if (groupEntity == null) {
+            AssetGroup fetchedAssetGroup = assetGroupDao.getAssetGroupByGuid(assetGroup.getId());
+            if (fetchedAssetGroup == null) {
                 throw new AssetGroupDaoException("No assetgroup found.");
             }
-            return groupEntity;
+            assetGroup.setUpdatedBy(username);
+            assetGroup.setUpdateTime(LocalDateTime.now(Clock.systemUTC()));
+            AssetGroup changedAssetGroup = assetGroupDao.updateAssetGroup(assetGroup);
+            return changedAssetGroup;
         } catch (AssetGroupDaoException e) {
             LOG.error("[ Error when updating asset group. ] assetGroup: {} username: {} exception: {}", assetGroup, username, e.getMessage());
             throw new AssetModelException(e.getMessage());
@@ -132,15 +155,6 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
         assetGroup.setName(username);
         AssetGroup createdAssetGroupEntity = assetGroupDao.createAssetGroup(assetGroup);
-        List<AssetGroupField> fields = assetGroup.getFields();
-        if (fields != null) {
-            for (AssetGroupField field : fields) {
-                field.setAssetGroup(assetGroup);
-                field.setUpdateTime(createdAssetGroupEntity.getUpdateTime());
-                field.setUpdatedBy(createdAssetGroupEntity.getUpdatedBy());
-                assetGroupFieldDao.create(field);
-            }
-        }
         return createdAssetGroupEntity;
     }
 

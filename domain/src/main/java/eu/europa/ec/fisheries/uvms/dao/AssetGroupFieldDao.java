@@ -41,19 +41,6 @@ public class AssetGroupFieldDao extends Dao  {
             return field;
     }
 
-
-    public List<AssetGroupField> syncFields(AssetGroup assetGroup, List<AssetGroupField> assetGroupFields)  {
-
-        Query qry = em.createNamedQuery(AssetGroupField.ASSETGROUP_FIELD_CLEAR);
-        qry.setParameter("assetgroup", assetGroup);
-        qry.executeUpdate();
-
-        for(AssetGroupField assetGroupField : assetGroupFields){
-            em.persist(assetGroupField);
-        }
-        return assetGroupFields;
-    }
-
     public void removeFieldsForGroup(AssetGroup assetGroup)  {
 
         Query qry = em.createNamedQuery(AssetGroupField.ASSETGROUP_FIELD_CLEAR);
