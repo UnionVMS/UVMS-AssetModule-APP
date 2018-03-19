@@ -20,7 +20,6 @@ import org.hibernate.envers.query.AuditQuery;
 import org.hibernate.envers.query.criteria.AuditCriterion;
 import org.hibernate.envers.query.criteria.AuditDisjunction;
 import org.hibernate.envers.query.criteria.ExtendableCriterion;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
@@ -122,7 +121,7 @@ public class AssetSEDao {
         em.remove(asset);
     }
 
-    public List<AssetSE> getAssetListAll() throws AssetDaoException {
+    public List<AssetSE> getAssetListAll() {
         TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_ALL, AssetSE.class);
         return query.getResultList();
     }
@@ -132,6 +131,7 @@ public class AssetSEDao {
         return (Long) query.addProjection(AuditEntity.id().count()).getSingleResult();
     }
 
+    @SuppressWarnings("unchecked")
     public List<AssetSE> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize,
             List<SearchKeyValue> searchFields, boolean isDynamic) {
         AuditQuery query = createQuery(searchFields, isDynamic);
@@ -207,67 +207,45 @@ public class AssetSEDao {
         return resultList;
     }
 
-    public AssetSE getAssetAtDate(AssetSE asset, LocalDateTime localDateTime) {
-        Date date = Date.from(localDateTime.toInstant(ZoneOffset.UTC));
-        AuditReader auditReader = AuditReaderFactory.get(em);
-        return auditReader.find(AssetSE.class, asset.getId(), date);
-    }
-
     public List<AssetSE> getAssetListByAssetGuids(List<UUID> idList) {
         TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_BY_IDS, AssetSE.class);
         query.setParameter("idList", idList);
         return query.getResultList();
     }
 
-    private String assembleQueryString(AssetId assetId) {
-
-        AssetIdTypeEnum assetIdType = assetId.getType();
-        String hql = "select ah.asset from AssetSE ah where %s = :keyval ";
-        switch (assetIdType) {
+    public AssetSE getAssetFromAssetId(AssetId assetId) {
+        AssetSE asset = null;
+        switch (assetId.getType()) {
             case INTERNAL_ID:
                 break;
             case CFR:
-                hql = String.format(hql, "ah.cfr");
+                asset = getAssetByCfr(assetId.getValue());
                 break;
             case IRCS:
-                hql = String.format(hql, "ah.ircs");
+                asset = getAssetByIrcs(assetId.getValue());
                 break;
             case IMO:
-                hql = String.format(hql, "ah.imo");
+                asset = getAssetByImo(assetId.getValue());
                 break;
             case MMSI:
-                hql = String.format(hql, "ah.mmsi");
+                asset = getAssetByMmsi(assetId.getValue());
                 break;
             case GUID:
-                hql = String.format(hql, "ah.guid");
+                asset = getAssetById(UUID.fromString(assetId.getValue()));
                 break;
             case ICCAT:
-                hql = String.format(hql, "ah.iccat");
+                asset = getAssetByIccat(assetId.getValue());
                 break;
             case UVI:
-                hql = String.format(hql, "ah.uvi");
+                asset = getAssetByUvi(assetId.getValue());
                 break;
             case GFCM:
-                hql = String.format(hql, "ah.gfcm");
+                asset = getAssetByGfcm(assetId.getValue());
                 break;
             default:
-                throw new RuntimeException("Could not create query. Check your code AssetIdType is invalid");
+                throw new IllegalArgumentException("Could not create query. Check your code AssetIdType is invalid");
         }
-        return hql;
-     }
-
-    public AssetSE getAssetFromAssetId(AssetId assetId) {
-
-        String keyval = assetId.getValue();
-        String hql = assembleQueryString(assetId);
-
-        TypedQuery<AssetSE> query = em.createQuery(hql, AssetSE.class);
-        query.setParameter("keyval", keyval);
-        try {
-            return query.getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
+        return asset;
     }
 
     public AssetSE getAssetFromAssetIdAtDate(AssetId assetId, LocalDateTime date) {
@@ -278,14 +256,24 @@ public class AssetSEDao {
             return null;
         }
     }
+    
+    public AssetSE getAssetAtDate(AssetSE asset, LocalDateTime localDateTime) {
+        Date date = Date.from(localDateTime.toInstant(ZoneOffset.UTC));
+        AuditReader auditReader = AuditReaderFactory.get(em);
+        return auditReader.find(AssetSE.class, asset.getId(), date);
+    }
 
     // TODO should these be moved to appropriate dao:s
     public List<NotesActivityCode> getNoteActivityCodes() {
         throw new IllegalStateException("Not implemented yet!");
     }
 
-    // TODO if when the framework supports querying on specific columns in nnn_AUD table, use that unstead
-    public AssetSE getAssetRevisionForHistoryId(AssetSE asset, UUID historyId) {
+    public AssetSE getAssetRevisionForHistoryId(UUID historyId) {
+        AuditReader auditReader = AuditReaderFactory.get(em);
+        return (AssetSE) auditReader.createQuery().forRevisionsOfEntity(AssetSE.class, true, true)
+                .add(AuditEntity.property("historyid").eq(historyId))
+                .getSingleResult();
+        /*
         AuditReader auditReader = AuditReaderFactory.get(em);
         List<Number> revisionNumbers = auditReader.getRevisions(AssetSE.class, asset.getId());
         for (Number rev : revisionNumbers) {
@@ -295,5 +283,6 @@ public class AssetSEDao {
             }
         }
         return null;
+        */
     }
 }

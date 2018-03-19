@@ -22,6 +22,7 @@ import eu.europa.ec.fisheries.uvms.dao.exception.AssetDaoMappingException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetListResponsePaginated;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
+import eu.europa.ec.fisheries.uvms.entity.model.Note;
 
 public interface AssetService {
 
@@ -137,7 +138,7 @@ public interface AssetService {
      * @return
      * @throws AssetServiceException
      */
-    AssetSE getAssetRevisionForRevisionId(AssetSE asset, UUID historyId) throws AssetServiceException;
+    AssetSE getAssetRevisionForRevisionId(UUID historyId) throws AssetServiceException;
 
 
     /** return asset as it was specidied date
@@ -149,5 +150,38 @@ public interface AssetService {
      * @throws AssetServiceException
      */
     AssetSE getAssetFromAssetIdAtDate(String idType, String idValue, LocalDateTime date) throws AssetServiceException;
+    
+    /**
+     * Returns all notes for given asset UUID.
+     * 
+     * @param assetId
+     * @return
+     */
+    List<Note> getNotesForAsset(UUID assetId);
+    
+
+    /**
+     * Create a note for given asset UUID.
+     * 
+     * @param assetId
+     * @param note
+     * @return
+     */
+    Note createNoteForAsset(UUID assetId, Note note, String username);
+    
+    /**
+     * Update a note.
+     * 
+     * @param note
+     * @return
+     */
+    Note updateNote(Note note, String username);
+    
+    /**
+     * Delete a note with given id
+     * 
+     * @param id
+     */
+    void deleteNote(Long id);
 }
 

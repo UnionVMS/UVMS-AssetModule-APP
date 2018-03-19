@@ -11,44 +11,49 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.rest.service;
 
-import javax.ejb.EJB;
+import java.util.List;
+import java.util.UUID;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseCodeConstant;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.asset.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetListResponsePaginated;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import eu.europa.ec.fisheries.uvms.entity.model.Note;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
-import org.slf4j.MDC;
-
-import java.util.List;
-import java.util.UUID;
 
 @Path("/asset")
 @Stateless
 public class AssetResource {
 
-    @EJB
+    @Inject
     AssetService assetService;
-
 
     @Context
     private HttpServletRequest servletRequest;
 
-    final static Logger LOG = LoggerFactory.getLogger(AssetResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AssetResource.class);
 
     /**
      *
@@ -244,6 +249,43 @@ public class AssetResource {
         }
     }
 
+    @GET
+    @Path("{id}/notes")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public Response getNotesForAsset(@PathParam("id") UUID assetId) {
+        List<Note> notes = assetService.getNotesForAsset(assetId);
+        return Response.ok(notes).build();
+    }
 
+    @POST
+    @Path("{id}/notes")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @RequiresFeature(UnionVMSFeature.manageVessels)
+    public Response createNoteForAsset(@PathParam("id") UUID assetId, Note note) {
+        String user = servletRequest.getRemoteUser();
+        Note createdNote = assetService.createNoteForAsset(assetId, note, user);
+        return Response.ok(createdNote).build();
+    }
+    
+    @PUT
+    @Path("/notes")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @RequiresFeature(UnionVMSFeature.manageVessels)
+    public Response udpateNote(Note note) {
+        String user = servletRequest.getRemoteUser();
+        Note updatedNote = assetService.updateNote(note, user);
+        return Response.ok(updatedNote).build();
+    }
+    
+    @DELETE
+    @Path("/notes/{id}")
+    @RequiresFeature(UnionVMSFeature.manageVessels)
+    public Response deleteNote(@PathParam("id") Long id) {
+        assetService.deleteNote(id);
+        return Response.ok().build();
+    }
 
 }
