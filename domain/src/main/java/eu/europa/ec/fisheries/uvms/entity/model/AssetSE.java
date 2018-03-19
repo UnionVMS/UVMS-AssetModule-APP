@@ -12,8 +12,6 @@ import static eu.europa.ec.fisheries.uvms.entity.model.AssetSE.ASSET_FIND_BY_UVI
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,7 +24,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
@@ -48,7 +45,6 @@ import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
           @NamedQuery(name = ASSET_FIND_BY_IDS, query = "SELECT v FROM AssetSE v WHERE v.id in :idList"),
 
 })
-
 public class AssetSE implements Serializable{
 
     public static final String ASSET_FIND_BY_CFR = "Asset.findByCfr";
@@ -60,39 +56,6 @@ public class AssetSE implements Serializable{
     public static final String ASSET_FIND_BY_GFCM = "Asset.findByGfcm";
     public static final String ASSET_FIND_ALL = "Asset.findAll";
     public static final String ASSET_FIND_BY_IDS = "Asset.findByIds";
-
-
-    /*
-    public static final String ASSET_FIND_BY_ID = "Asset.findById";
-    public static final String ASSET_FIND_BY_GUID = "Asset.findByGuid";
-
-    public static final String ASSETHISTORY_FIND_BY_GUID = "Assethistory.findByGuid";
-
-    public static final String GROUP_ASSET_FIND_ALL = "AssetGroup.findAll";
-    public static final String GROUP_ASSET_BY_USER = "AssetGroup.findByUser";
-    public static final String GROUP_ASSET_BY_GUID = "AssetGroup.findByGuid";
-    public static final String GROUP_ASSET_BY_GUID_LIST = "AssetGroup.findByGuidList";
-
-    public static final String LICENSE_TYPE_LIST = "LicenseType.findAll";
-    public static final String FLAG_STATE_LIST = "FlagState.findAll";
-    public static final String SETTING_LIST = "Setting.findAll";
-    public static final String SETTING_BY_FIELD = "Setting.findByField";
-
-    public static final String QUEUE_DOMAIN_MODEL = "jms/queue/UVMSAssetModel";
-    public static final String QUEUE_NAME_DOMAIN_MODEL = "UVMSAssetModel";
-
-    public static final String VESSEL_CONNECTION_FACTORY = "java:jboss/DefaultJMSConnectionFactory";
-    public static final String CONNECTION_TYPE = "javax.jms.MessageListener";
-    public static final String DESTINATION_TYPE_QUEUE = "javax.jms.Queue";
-    public static final String CONNECTION_FACTORY = "ConnectionFactory";
-
-    public static final String ASSET_FIND_BY_CFR_EXCLUDE_ARCHIVED = "Asset.findByCfrExcludeArchived";
-    public static final String ASSET_FIND_BY_IRCS_EXCLUDE_ARCHIVED = "Asset.findByIrcsExcludeArchived";
-    public static final String ASSET_FIND_BY_IMO_EXCLUDE_ARCHIVED = "Asset.findByImoExcludeArchived";
-    public static final String ASSET_FIND_BY_MMSI_EXCLUDE_ARCHIVED = "Asset.findByMMSIExcludeArchived";
-    */
-
-
 
     private static final long serialVersionUID = -320627625723663100L;
 
@@ -109,7 +72,7 @@ public class AssetSE implements Serializable{
     @Column(name="id")
     private UUID id;
 
-    @Column(name="historyid")
+    @Column(unique = true, name="historyid")
     private UUID historyid;
 
     @Size(min = 1, max = 1)
@@ -296,9 +259,6 @@ public class AssetSE implements Serializable{
     @Column(name="prodorgname")
     private String prodOrgName;
 
-    @Transient
-    private List<Note> notes = new ArrayList<>();
-    
     @PrePersist
     @PreUpdate
     private void generateNewHistoryId() {
@@ -699,13 +659,5 @@ public class AssetSE implements Serializable{
 
     public UUID getHistoryId() {
         return this.historyid;
-    }
-
-    public List<Note> getNotes() {
-        return notes;
-    }
-
-    public void setNotes(List<Note> notes) {
-        this.notes = notes;
     }
 }

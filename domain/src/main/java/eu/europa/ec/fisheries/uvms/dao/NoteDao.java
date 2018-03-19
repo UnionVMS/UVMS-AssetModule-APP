@@ -10,9 +10,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.dao;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -27,21 +24,13 @@ public class NoteDao {
     @PersistenceContext
     EntityManager em;
     
+    public Note findNote(Long id) {
+        return em.find(Note.class, id);
+    }
+    
     public Note createNote(Note note) {
         em.persist(note);
         return note;
-    }
-    
-    public List<Note> createNotes(AssetSE asset) {
-        List<Note> notes = new ArrayList<>();
-        for (Note note : asset.getNotes()) {
-            note.setAsset(asset);
-            note.setUpdatedBy(asset.getUpdatedBy());
-            note.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
-            updateNote(note);
-            notes.add(note);
-        }
-        return notes;
     }
 
     public Note updateNote(Note note) {
@@ -52,15 +41,9 @@ public class NoteDao {
         em.remove(note);
     }
     
-    public List<Note> findNotesByAsset(AssetSE asset) {
+    public List<Note> getNotesByAsset(AssetSE asset) {
         TypedQuery<Note> query = em.createNamedQuery(Note.NOTE_FIND_BY_ASSET, Note.class);
         query.setParameter("asset", asset);
         return query.getResultList();
-    }
-    
-    public void findNotesByAssets(List<AssetSE> assets) {
-        for (AssetSE asset : assets) {
-            asset.setNotes(findNotesByAsset(asset));
-        }
     }
 }

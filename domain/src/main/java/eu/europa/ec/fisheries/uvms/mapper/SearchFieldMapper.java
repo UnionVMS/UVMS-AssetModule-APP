@@ -12,15 +12,12 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mapper;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListCriteriaPair;
 import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
-import eu.europa.ec.fisheries.uvms.dao.exception.AssetDaoMappingException;
-import eu.europa.ec.fisheries.uvms.dao.exception.AssetSearchMapperException;
 
 public class SearchFieldMapper {
     
@@ -35,7 +32,7 @@ public class SearchFieldMapper {
         return searchKeyValue;
     }
 
-    private static SearchFields getSearchFields(ConfigSearchFieldEnum field) throws AssetSearchMapperException {
+    private static SearchFields getSearchFields(ConfigSearchFieldEnum field) {
         switch (field) {
             case CFR:
                 return SearchFields.CFR;
@@ -79,13 +76,13 @@ public class SearchFieldMapper {
             	return SearchFields.PRODUCER_NAME;
             case ASSET_TYPE:
             default:
-                throw new AssetSearchMapperException("No field found: " + field.name());
+                throw new IllegalArgumentException("No field found: " + field.name());
         }
     }
 
-    public static SearchKeyValue mapSearchFieldForAssetListCriteria(AssetListCriteriaPair pair, Map<SearchFields, SearchKeyValue> searchKeys) throws AssetDaoMappingException {
+    public static SearchKeyValue mapSearchFieldForAssetListCriteria(AssetListCriteriaPair pair, Map<SearchFields, SearchKeyValue> searchKeys) {
         if (pair == null || pair.getKey() == null || pair.getValue() == null) {
-            throw new AssetSearchMapperException("Non valid search criteria");
+            throw new IllegalArgumentException("Non valid search criteria");
         }
 
         SearchKeyValue searchKeyValue = getSearchKeyValue(getSearchFields(pair.getKey()), searchKeys);
@@ -94,13 +91,13 @@ public class SearchFieldMapper {
         return searchKeyValue;
     }
 
-    private static String prepareSearchValue(SearchFields searchField, String searchValue) throws AssetDaoMappingException {
+    private static String prepareSearchValue(SearchFields searchField, String searchValue) {
     	String value = searchValue;
         return value;
     }
 
-    public static List<SearchKeyValue> createSearchFields(List<AssetListCriteriaPair> criterias) throws AssetDaoMappingException {
-        Map<SearchFields, SearchKeyValue> searchKeyValues = new HashMap<>();
+    public static List<SearchKeyValue> createSearchFields(List<AssetListCriteriaPair> criterias) {
+        Map<SearchFields, SearchKeyValue> searchKeyValues = new EnumMap<>(SearchFields.class);
         for (AssetListCriteriaPair criteria : criterias) {
             SearchKeyValue searchField = mapSearchFieldForAssetListCriteria(criteria, searchKeyValues);
             searchKeyValues.put(searchField.getSearchField(), searchField);

@@ -28,10 +28,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-/**
- * Created by thofan on 2017-06-01.
- */
-
 @RunWith(Arquillian.class)
 public class AssetServiceBeanIntTest extends TransactionalTests {
 
@@ -138,7 +134,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         commit();
 
 
-        AssetSE  fetchedAssetAtRevision = assetService.getAssetRevisionForRevisionId(changedAsset2, historyId2);
+        AssetSE  fetchedAssetAtRevision = assetService.getAssetRevisionForRevisionId(historyId2);
 
         Assert.assertEquals(historyId2, fetchedAssetAtRevision.getHistoryId());
 
@@ -182,54 +178,46 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     @Test
     public void createNotesTest() throws Exception {
         AssetSE asset = AssetHelper.createBasicAsset();
-        Note note = AssetHelper.createBasicNote();
-        asset.setNotes(Arrays.asList(note));
         asset = assetService.createAsset(asset, "test");
         
-        AssetSE fetchedAsset = assetService.getAssetById(asset.getId());
-        assertEquals(1, fetchedAsset.getNotes().size());
+        Note note = AssetHelper.createBasicNote();
+        assetService.createNoteForAsset(asset.getId(), note, "test");
+        
+        List<Note> notes = assetService.getNotesForAsset(asset.getId());
+        assertEquals(1, notes.size());
     }
     
     @Test
     public void addNoteTest() throws Exception {
         AssetSE asset = AssetHelper.createBasicAsset();
-
-        List<Note> notes = new ArrayList<>();
-        Note note = AssetHelper.createBasicNote();
-        notes.add(note);
-        asset.setNotes(notes);
-        
         asset = assetService.createAsset(asset, "test");
-        commit();
         
-        asset.getNotes().add(AssetHelper.createBasicNote());
-        assetService.updateAsset(asset, "Test", "Updated");
-        commit();
+        Note note = AssetHelper.createBasicNote();
+        assetService.createNoteForAsset(asset.getId(), note, "test");
+
+        Note note2 = AssetHelper.createBasicNote();
+        assetService.createNoteForAsset(asset.getId(), note2, "test");
+
+        List<Note> notes = assetService.getNotesForAsset(asset.getId());
         
-        AssetSE fetchedAsset = assetService.getAssetById(asset.getId());
-        
-        assertEquals(2, fetchedAsset.getNotes().size());
+        assertEquals(2, notes.size());
     }
     
     @Test
     public void deleteNoteTest() throws Exception {
         AssetSE asset = AssetHelper.createBasicAsset();
-
-        List<Note> notes = new ArrayList<>();
-        notes.add(AssetHelper.createBasicNote());
-        notes.add(AssetHelper.createBasicNote());
-        asset.setNotes(notes);
-        
         asset = assetService.createAsset(asset, "test");
-        commit();
+
+        assetService.createNoteForAsset(asset.getId(), AssetHelper.createBasicNote(), "test");
+        assetService.createNoteForAsset(asset.getId(), AssetHelper.createBasicNote(), "test");
+
+        List<Note> notes = assetService.getNotesForAsset(asset.getId());
+        assertEquals(2, notes.size());
         
-        asset.getNotes().remove(0);
-        assetService.updateAsset(asset, "Test", "Updated");
-        commit();
-        
-        AssetSE fetchedAsset = assetService.getAssetById(asset.getId());
-        
-        assertEquals(1, fetchedAsset.getNotes().size());
+        assetService.deleteNote(notes.get(0).getId());
+
+        notes = assetService.getNotesForAsset(asset.getId());
+        assertEquals(1, notes.size());
     }
 
     private void commit() throws AssetException {
