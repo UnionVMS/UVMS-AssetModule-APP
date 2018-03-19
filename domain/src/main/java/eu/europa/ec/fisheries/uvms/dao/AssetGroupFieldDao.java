@@ -10,7 +10,12 @@ import java.util.List;
 
 @Stateless
 @Local
-public class AssetGroupFieldDao extends Dao  {
+public class AssetGroupFieldDao   {
+
+
+    @PersistenceContext
+    private EntityManager em;
+
 
     public AssetGroupField create(AssetGroupField field) {
 

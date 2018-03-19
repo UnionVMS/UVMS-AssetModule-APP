@@ -15,7 +15,9 @@ import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.UUID;
@@ -24,7 +26,11 @@ import static eu.europa.ec.fisheries.uvms.entity.model.AssetGroup.*;
 
 @Stateless
 @Local
-public class AssetGroupDao extends Dao  {
+public class AssetGroupDao  {
+
+    @PersistenceContext
+    private EntityManager em;
+
 
     public AssetGroup createAssetGroup(AssetGroup group) {
 

@@ -14,6 +14,8 @@ package eu.europa.ec.fisheries.uvms.dao;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
@@ -24,9 +26,13 @@ import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
 import eu.europa.ec.fisheries.uvms.entity.model.Setting;
 
 @Stateless
-public class SettingDao extends Dao  {
+public class SettingDao   {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SettingDao.class);
+	@PersistenceContext
+	private EntityManager em;
+
+
+	private static final Logger LOG = LoggerFactory.getLogger(SettingDao.class);
 
 	public List<Setting> getAllSettings() throws AssetDaoException {
 		try {
