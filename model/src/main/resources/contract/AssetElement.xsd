@@ -323,6 +323,7 @@
             <xsd:enumeration value="GET"/>
             <xsd:enumeration value="LIST"/>
             <xsd:enumeration value="UPSERT"/>
+            <xsd:enumeration value="UPSERT_LIST"/>
             <xsd:enumeration value="DELETE"/>
             <xsd:enumeration value="HISTORY_GET"/>
             <xsd:enumeration value="HISTORY_LIST"/>

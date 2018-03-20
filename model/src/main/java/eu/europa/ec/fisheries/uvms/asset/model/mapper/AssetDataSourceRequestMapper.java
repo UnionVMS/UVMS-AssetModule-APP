@@ -29,15 +29,16 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-//import eu.europa.ec.fisheries.wsdl.asset.module.AssetListGroupByFlagStateRequest;
-
-/**
- **/
 public class AssetDataSourceRequestMapper {
-    
-    final static Logger LOG = LoggerFactory.getLogger(AssetDataSourceRequestMapper.class);
+
+    private AssetDataSourceRequestMapper() {
+        //hide public constructor
+    }
+
+    static final Logger LOG = LoggerFactory.getLogger(AssetDataSourceRequestMapper.class);
     
     private static GetAssetRequest createGetAssetRequest() {
         GetAssetRequest request = new GetAssetRequest();
@@ -104,13 +105,13 @@ public class AssetDataSourceRequestMapper {
         request.setMethod(AssetDataSourceMethod.UPSERT);
         return request;
     }
-    
-    private static SingleAssetResponse createSingleAssetResponse(Asset asset) {
-        SingleAssetResponse response = new SingleAssetResponse();
-        response.setAsset(asset);
-        return response;
+
+    private static UpsertAssetListRequest createUpsertAssetListRequest() {
+        UpsertAssetListRequest request = new UpsertAssetListRequest();
+        request.setMethod(AssetDataSourceMethod.UPSERT_LIST);
+        return request;
     }
-    
+
     private static AssetId createAssetId(String value, AssetIdType type) {
         AssetId vesseId = new AssetId();
         vesseId.setType(type);
@@ -291,12 +292,22 @@ public class AssetDataSourceRequestMapper {
         request.setGuid(id);
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
-    
+
     public static String mapUpsertAsset(Asset asset, String username) throws AssetModelMapperException {
         AssetDataSourceRequestValidator.validateCreateAsset(asset);
         UpsertAssetRequest request = createUpsertAssetRequest();
         request.setUsername(username);
         request.setAsset(asset);
+        return JAXBMarshaller.marshallJaxBObjectToString(request);
+    }
+
+    public static String mapUpsertAssetList(Collection<Asset> assets, String username) throws AssetModelMapperException {
+        for (Asset asset: assets) {
+            AssetDataSourceRequestValidator.validateCreateAsset(asset);
+        }
+        UpsertAssetListRequest request = createUpsertAssetListRequest();
+        request.setUsername(username);
+        request.getAsset().addAll(assets);
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
     
