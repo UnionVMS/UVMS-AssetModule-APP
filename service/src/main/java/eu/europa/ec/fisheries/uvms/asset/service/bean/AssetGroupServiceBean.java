@@ -292,8 +292,8 @@ public class AssetGroupServiceBean implements AssetGroupService {
             return null;
         }
 
-        AssetGroupField groupEntity = assetGroupFieldDao.delete(fetchedAssetGroupField);
-        return groupEntity;
+        AssetGroupField groupField = assetGroupFieldDao.delete(fetchedAssetGroupField);
+        return groupField;
     }
 
     @Override
