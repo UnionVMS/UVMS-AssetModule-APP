@@ -34,10 +34,6 @@ import java.util.List;
 
 public class AssetDataSourceRequestMapper {
 
-    private AssetDataSourceRequestMapper() {
-        //hide public constructor
-    }
-
     static final Logger LOG = LoggerFactory.getLogger(AssetDataSourceRequestMapper.class);
     
     private static GetAssetRequest createGetAssetRequest() {
