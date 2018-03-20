@@ -160,18 +160,18 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
 
     /**
-     * get all assetgroups for an asset with specified UUID
+     * get all assetgroups for an asset with specified Id
      *
-     * @param assetGuid
+     * @param assetId
      * @return
      * @throws InputArgumentException
      */
     @Override
-    public List<AssetGroup> getAssetGroupListByAssetGuid(UUID assetGuid) throws InputArgumentException {
+    public List<AssetGroup> getAssetGroupListByAssetId(UUID assetId) throws InputArgumentException {
 
         // TODO maybe this could be done more efficient if search is from the other side and joining . . . .
 
-        if (assetGuid == null) {
+        if (assetId == null) {
             throw new InputArgumentException("Invalid asset");
         }
 
@@ -180,7 +180,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         for (AssetGroup group : filterGroupList) {
             List<AssetGroupField> fields = assetGroupFieldDao.retrieveFieldsForGroup(group);
             for (AssetGroupField field : fields) {
-                if ("GUID".equals(field.getField()) && assetGuid.toString().equals(field.getValue())) {
+                if ("GUID".equals(field.getField()) && assetId.toString().equals(field.getValue())) {
                     searchResultList.add(group);
                 }
             }

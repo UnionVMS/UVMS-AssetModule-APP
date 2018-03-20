@@ -129,7 +129,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
         commit();
 
 
-        List<AssetGroup> fetchedEntityList = assetGroupService.getAssetGroupListByAssetGuid(assetGuid);
+        List<AssetGroup> fetchedEntityList = assetGroupService.getAssetGroupListByAssetId(assetGuid);
         List<UUID> fetchedList = new ArrayList<>();
         for (AssetGroup e : fetchedEntityList) {
             fetchedList.add(e.getId());

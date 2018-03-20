@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetDaoMappingException;
@@ -112,7 +113,8 @@ public interface AssetService {
      */
     List<AssetSE> getAssetListByAssetGroups(List<AssetGroup> groups) throws AssetServiceException;
 
-    //AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetServiceException;
+
+        //AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetServiceException;
     Object getAssetListGroupByFlagState(List assetIds) throws AssetServiceException;
 
     String getNoteActivityCodes();

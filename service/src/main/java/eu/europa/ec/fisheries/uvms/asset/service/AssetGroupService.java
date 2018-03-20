@@ -24,7 +24,7 @@ public interface AssetGroupService {
 
     List<AssetGroup> getAssetGroupList(String user) throws InputArgumentException;
 
-    List<AssetGroup> getAssetGroupListByAssetGuid(UUID assetGuid) throws InputArgumentException;
+    List<AssetGroup> getAssetGroupListByAssetId(UUID assetId) throws InputArgumentException ;
 
     AssetGroup getAssetGroupById(UUID guid) throws InputArgumentException;
 
