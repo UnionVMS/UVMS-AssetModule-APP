@@ -1,21 +1,17 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
-import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
 import javax.inject.Inject;
-import javax.jms.TextMessage;
-import java.util.List;
 
 /**
  * Created by thofan on 2017-06-16.
