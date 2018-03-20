@@ -565,12 +565,18 @@ public class AssetServiceBean implements AssetService {
     @Override
     public List<Note> getNotesForAsset(UUID assetId) {
         AssetSE asset = assetDao.getAssetById(assetId);
+        if (asset == null) {
+            throw new IllegalArgumentException("Could not find any asset with id: " + assetId);
+        }
         return noteDao.getNotesByAsset(asset);
     }
     
     @Override
     public Note createNoteForAsset(UUID assetId, Note note, String username) {
         AssetSE asset = assetDao.getAssetById(assetId);
+        if (asset == null) {
+            throw new IllegalArgumentException("Could not find any asset with id: " + assetId);
+        }
         note.setAsset(asset);
         note.setUpdatedBy(username);
         note.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
@@ -585,8 +591,11 @@ public class AssetServiceBean implements AssetService {
     }
     
     @Override
-    public void deleteNote(Long id) {
+    public void deleteNote(UUID id) {
         Note note = noteDao.findNote(id);
+        if (note == null) {
+            throw new IllegalArgumentException("Could not find any note with id: " + id);
+        }
         noteDao.deleteNote(note);
     }
 }

@@ -283,7 +283,7 @@ public class AssetResource {
     @DELETE
     @Path("/notes/{id}")
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response deleteNote(@PathParam("id") Long id) {
+    public Response deleteNote(@PathParam("id") UUID id) {
         assetService.deleteNote(id);
         return Response.ok().build();
     }

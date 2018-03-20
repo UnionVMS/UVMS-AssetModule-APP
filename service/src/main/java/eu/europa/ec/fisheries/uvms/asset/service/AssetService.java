@@ -184,6 +184,6 @@ public interface AssetService {
      * 
      * @param id
      */
-    void deleteNote(Long id);
+    void deleteNote(UUID id);
 }
 

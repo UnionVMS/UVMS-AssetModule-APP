@@ -26,6 +26,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
@@ -43,8 +44,8 @@ import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
           @NamedQuery(name = ASSET_FIND_BY_UVI, query = "SELECT v FROM AssetSE v WHERE v.uvi = :uvi"),
           @NamedQuery(name = ASSET_FIND_BY_GFCM, query = "SELECT v FROM AssetSE v WHERE v.gfcm = :gfcm"),
           @NamedQuery(name = ASSET_FIND_BY_IDS, query = "SELECT v FROM AssetSE v WHERE v.id in :idList"),
-
 })
+@XmlRootElement
 public class AssetSE implements Serializable{
 
     public static final String ASSET_FIND_BY_CFR = "Asset.findByCfr";

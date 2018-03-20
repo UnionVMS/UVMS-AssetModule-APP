@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.dao;
 
 import java.util.List;
+import java.util.UUID;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -24,7 +25,7 @@ public class NoteDao {
     @PersistenceContext
     EntityManager em;
     
-    public Note findNote(Long id) {
+    public Note findNote(UUID id) {
         return em.find(Note.class, id);
     }
     

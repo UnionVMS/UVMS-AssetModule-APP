@@ -37,13 +37,14 @@ package eu.europa.ec.fisheries.uvms.entity.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.UUID;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -51,6 +52,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import org.hibernate.annotations.GenericGenerator;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.NotesSourceEnum;
 
 @Entity
@@ -60,15 +62,20 @@ import eu.europa.ec.fisheries.uvms.entity.asset.types.NotesSourceEnum;
 })
 public class Note implements Serializable {
 
+    private static final long serialVersionUID = 6790572532903829338L;
+
     public static final String NOTE_FIND_BY_ASSET = "Note.findByAsset";
     
-    private static final long serialVersionUID = 1L;
-
     @Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(generator="UUID")
+    @GenericGenerator(
+            name="UUID",
+            strategy="org.hibernate.id.UUIDGenerator"
+    )
 	@Column(name="id")
-	private Long id;
+	private UUID id;
 
+    @JsonbTransient
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="asset")
 	private AssetSE asset;
@@ -114,11 +121,11 @@ public class Note implements Serializable {
 	public Note() {
 	}
 
-	public Long getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
