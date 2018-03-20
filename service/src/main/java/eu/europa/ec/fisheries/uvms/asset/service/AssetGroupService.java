@@ -22,29 +22,109 @@ import java.util.UUID;
 @Local
 public interface AssetGroupService {
 
+    /**
+     *
+     * @param user
+     * @return
+     * @throws InputArgumentException
+     */
     List<AssetGroup> getAssetGroupList(String user) throws InputArgumentException;
 
+    /**
+     *
+     * @param assetId
+     * @return
+     * @throws InputArgumentException
+     */
     List<AssetGroup> getAssetGroupListByAssetId(UUID assetId) throws InputArgumentException ;
 
+    /**
+     *
+     * @param guid
+     * @return
+     * @throws InputArgumentException
+     */
     AssetGroup getAssetGroupById(UUID guid) throws InputArgumentException;
 
+    /**
+     *
+     * @param assetGroup
+     * @param username
+     * @return
+     * @throws InputArgumentException
+     */
     AssetGroup createAssetGroup(AssetGroup assetGroup, String username) throws InputArgumentException;
 
+    /**
+     *
+     * @param assetGroup
+     * @param username
+     * @return
+     * @throws InputArgumentException
+     */
     AssetGroup updateAssetGroup(AssetGroup assetGroup, String username) throws InputArgumentException;
 
+    /**
+     *
+     * @param guid
+     * @param username
+     * @return
+     * @throws InputArgumentException
+     */
     AssetGroup deleteAssetGroupById(UUID guid, String username) throws InputArgumentException;
 
 
+    /**
+     *
+     * @param parentAssetgroup
+     * @param assetGroupField
+     * @param username
+     * @return
+     * @throws InputArgumentException
+     */
     AssetGroupField createAssetGroupField(AssetGroup parentAssetgroup, AssetGroupField assetGroupField, String username) throws InputArgumentException;
 
+    /**
+     *
+     * @param assetGroupField
+     * @param username
+     * @return
+     * @throws InputArgumentException
+     */
     AssetGroupField updateAssetGroupField(AssetGroupField assetGroupField, String username) throws InputArgumentException;
 
+    /**
+     *
+     * @param id
+     * @return
+     * @throws InputArgumentException
+     */
     AssetGroupField getAssetGroupField(UUID id) throws InputArgumentException;
 
+
+    /**
+     *
+     * @param id
+     * @param username
+     * @return
+     * @throws InputArgumentException
+     */
     AssetGroupField deleteAssetGroupField(UUID id, String username)  throws InputArgumentException;
 
+
+    /**
+     *
+     * @param assetGroup
+     * @return
+     * @throws InputArgumentException
+     */
     List<AssetGroupField> retrieveFieldsForGroup(AssetGroup assetGroup) throws InputArgumentException;
 
+    /**
+     *
+     * @param assetGroup
+     * @throws InputArgumentException
+     */
     void removeFieldsForGroup(AssetGroup assetGroup)  throws InputArgumentException;
 
 
