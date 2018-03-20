@@ -35,7 +35,7 @@ public interface AssetGroupService {
     AssetGroup deleteAssetGroupById(UUID guid, String username) throws InputArgumentException;
 
 
-    AssetGroupField createAssetGroupField(UUID parentAssetgroupId, AssetGroupField assetGroupField, String username) throws InputArgumentException;
+    AssetGroupField createAssetGroupField(AssetGroup parentAssetgroup, AssetGroupField assetGroupField, String username) throws InputArgumentException;
 
     AssetGroupField updateAssetGroupField(AssetGroupField assetGroupField, String username) throws InputArgumentException;
 

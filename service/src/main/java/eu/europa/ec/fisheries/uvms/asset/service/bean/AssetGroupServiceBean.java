@@ -180,7 +180,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         for (AssetGroup group : filterGroupList) {
             List<AssetGroupField> fields = assetGroupFieldDao.retrieveFieldsForGroup(group);
             for (AssetGroupField field : fields) {
-                if ("GUID".equals(field.getField()) && assetGuid.equals(field.getValue())) {
+                if ("GUID".equals(field.getField()) && assetGuid.toString().equals(field.getValue())) {
                     searchResultList.add(group);
                 }
             }
@@ -191,16 +191,16 @@ public class AssetGroupServiceBean implements AssetGroupService {
     /**
      * create assetGroupField  assetGroup MUST exist before
      *
-     * @param parentAssetgroupId
+     * @param parentAssetgroup
      * @param assetGroupField
      * @param username
      * @return
      * @throws InputArgumentException
      */
     @Override
-    public AssetGroupField createAssetGroupField(UUID parentAssetgroupId, AssetGroupField assetGroupField, String username) throws InputArgumentException {
+    public AssetGroupField createAssetGroupField(AssetGroup parentAssetgroup, AssetGroupField assetGroupField, String username) throws InputArgumentException {
 
-        if (parentAssetgroupId == null) {
+        if (parentAssetgroup == null) {
             throw new InputArgumentException("Cannot create assetGroupField because the assetGroup is null.");
         }
         if (assetGroupField == null) {
@@ -210,13 +210,14 @@ public class AssetGroupServiceBean implements AssetGroupService {
             throw new InputArgumentException("Username must be provided for selected operation");
         }
 
-        AssetGroup fetchedAssetGroup = assetGroupDao.getAssetGroupByGuid(parentAssetgroupId);
-        if (fetchedAssetGroup == null) {
-            throw new InputArgumentException("Assetgroup with id does not exist " + parentAssetgroupId.toString());
+        AssetGroup parentAssetGroup = assetGroupDao.getAssetGroupByGuid(parentAssetgroup.getId());
+        if (parentAssetGroup == null) {
+            throw new InputArgumentException("Assetgroup with id does not exist " + parentAssetgroup.toString());
         }
 
-        assetGroupField.setAssetGroup(fetchedAssetGroup);
+        assetGroupField.setAssetGroup(parentAssetgroup);
         assetGroupField.setUpdatedBy(username);
+        assetGroupField.setUpdateTime(LocalDateTime.now(Clock.systemUTC()));
         AssetGroupField createdAssetGroupField = assetGroupFieldDao.create(assetGroupField);
         return createdAssetGroupField;
     }

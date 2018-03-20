@@ -2,9 +2,11 @@ package eu.europa.fisheries.uvms.asset.service.arquillian;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
+import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
@@ -13,6 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
+import javax.transaction.*;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -23,6 +26,10 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
 
 
     Random rnd = new Random();
+
+
+    @EJB
+    AssetService assetService;
 
 
     @EJB
@@ -96,31 +103,43 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    @Ignore
-    public void getAssetGroupListByAssetGuid() throws AssetException {
+    public void getAssetGroupListByAssetGuid() throws AssetException, HeuristicRollbackException, RollbackException, NotSupportedException, HeuristicMixedException, SystemException {
+
+
+        AssetSE asset = AssetHelper.createBiggerAsset();
+        AssetSE  createdAsset = assetService.createAsset(asset, "test");
+        commit();
+        UUID assetGuid = createdAsset.getId();
 
         List<UUID> createdList = new ArrayList<>();
-        List<UUID> fetchedList = new ArrayList<>();
-        List<AssetGroup> fetchedEntityList ;
         for (int i = 0; i < 5; i++) {
             AssetGroup createdAssetGroupEntity = createAndStoreAssetGroupEntity("TEST");
             createdList.add(createdAssetGroupEntity.getId());
         }
 
-        UUID assetGuid = UUID.randomUUID();
+        // HÄR GÖR NÅGOT VETTIGT  skapa en rad med ett GUID från en asset
+        UUID uuidAssetGroup = createdList.get(3);
+        AssetGroup anAssetGroup = assetGroupService.getAssetGroupById(uuidAssetGroup);
 
-        fetchedEntityList = assetGroupService.getAssetGroupListByAssetGuid(assetGuid);
+        AssetGroupField assetGroupField = new AssetGroupField();
+        assetGroupField.setAssetGroup(anAssetGroup );
+        assetGroupField.setField("GUID");
+        assetGroupField.setValue(assetGuid.toString() );
+        assetGroupField.setUpdateTime(LocalDateTime.now(Clock.systemUTC()));
+
+        assetGroupService.createAssetGroupField(anAssetGroup, assetGroupField,"TEST");
+        commit();
+
+
+        List<AssetGroup>  fetchedEntityList = assetGroupService.getAssetGroupListByAssetGuid(assetGuid);
+        List<UUID> fetchedList = new ArrayList<>();
         for(AssetGroup e : fetchedEntityList){
             fetchedList.add(e.getId());
         }
-
-        // the list from db MUST contain our created GUIDS:s
-        Boolean ok = true;
-        for (UUID aCreatedGUID : createdList) {
-            if(!fetchedList.contains(aCreatedGUID)){
-                ok = false;
-                break;
-            }
+        // the list from db MUST contain our created GUID:s
+        Boolean ok = false;
+        if(createdList.contains(fetchedList.get(0))){
+            ok = true;
         }
         Assert.assertTrue(ok);
     }
@@ -185,6 +204,13 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     }
 
 
+    private void commit() throws HeuristicRollbackException, RollbackException, HeuristicMixedException, SystemException, NotSupportedException {
+
+        userTransaction.commit();
+        userTransaction.begin();
+
+
+    }
 
 
 }
