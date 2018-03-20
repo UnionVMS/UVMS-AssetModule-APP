@@ -171,6 +171,11 @@ public class AssetEntity implements Serializable {
     @Column(name = "asset_vessel_date_of_entry")
     private Date vesselDateOfEntry;
 
+    @Size(max = 14)
+    @Column(name = "asset_registrationnumber")
+    private String registrationNumber;
+
+
     public AssetEntity() {
     }
 
@@ -324,7 +329,6 @@ public class AssetEntity implements Serializable {
         this.histories = histories;
     }
 
-
     public String getIccat() { return iccat; }
 
     public void setIccat(String iccat) { this.iccat = iccat; }
@@ -369,4 +373,11 @@ public class AssetEntity implements Serializable {
         this.vesselDateOfEntry = vesselDateOfEntry;
     }
 
+    public String getRegistrationNumber() {
+        return registrationNumber;
+    }
+
+    public void setRegistrationNumber(String registrationNumber) {
+        this.registrationNumber = registrationNumber;
+    }
 }
