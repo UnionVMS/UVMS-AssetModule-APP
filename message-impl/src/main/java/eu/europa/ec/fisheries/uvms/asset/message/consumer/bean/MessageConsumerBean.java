@@ -71,6 +71,8 @@ public class MessageConsumerBean implements MessageListener {
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void onMessage(Message message) {
 
+        MAPPER.findAndRegisterModules();  // JSR310 must be in classpath
+
         if(message == null){
             return;
         }

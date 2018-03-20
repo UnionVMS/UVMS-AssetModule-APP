@@ -139,8 +139,8 @@ public class AssetSE implements Serializable{
     @Column(name="flagstatecode")
     private String flagStateCode;
 
-    @Column(name="eventcodeid")
-    private Long eventCodeId;
+    @Column(name="eventcode")
+    private String eventCode;
 
     @Size(max = 40)
     @Column(name="name")
@@ -402,12 +402,12 @@ public class AssetSE implements Serializable{
         this.flagStateCode = flagStateCode;
     }
 
-    public Long getEventCodeId() {
-        return eventCodeId;
+    public String getEventCode() {
+        return eventCode;
     }
 
-    public void setEventCodeId(Long eventCodeId) {
-        this.eventCodeId = eventCodeId;
+    public void setEventCode(String eventCode) {
+        this.eventCode = eventCode;
     }
 
     public String getName() {

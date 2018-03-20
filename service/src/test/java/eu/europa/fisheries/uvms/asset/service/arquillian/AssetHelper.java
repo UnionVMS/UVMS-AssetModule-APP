@@ -118,7 +118,7 @@ public abstract class AssetHelper {
         assetEntity.setTypeOfExport("SM");
         assetEntity.setHasVms(false);
         assetEntity.setAgentIsAlsoOwner(true);
-        assetEntity.setEventCodeId(rnd.nextLong());
+        assetEntity.setEventCode("EC" + rnd.nextLong());
         assetEntity.setIrcsIndicator("I");
         assetEntity.setSource("INTERNAL");
 
