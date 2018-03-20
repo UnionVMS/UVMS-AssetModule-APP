@@ -87,6 +87,7 @@
 			<column name="asset_ais_indicator" type="BOOLEAN" />
 			<column name="asset_vessel_type" type="VARCHAR(100)" />
 			<column name="asset_vessel_date_of_entry" type="TIMESTAMP" />
+			<column name="asset_registrationnumber" type="VARCHAR(14)" />
 		</addColumn>
 
 
