@@ -37,8 +37,8 @@ public abstract class AssetHelper {
         assetEntity.setUvi("UVI" + getRandomIntegers(20));
         assetEntity.setGfcm("GFCM" + getRandomIntegers(20));
 
-        assetEntity.setGrossTonnage(BigDecimal.TEN);
-        assetEntity.setPowerOfMainEngine(BigDecimal.TEN);
+        assetEntity.setGrossTonnage(10D);
+        assetEntity.setPowerOfMainEngine(10D);
 
         assetEntity.setOwnerName("Foo Bar");
         assetEntity.setOwnerAddress("Hacker st. 1337");
@@ -72,8 +72,8 @@ public abstract class AssetHelper {
         assetEntity.setUvi("UVI" + getRandomIntegers(20));
         assetEntity.setGfcm("GFCM" + getRandomIntegers(20));
 
-        assetEntity.setGrossTonnage(BigDecimal.TEN);
-        assetEntity.setPowerOfMainEngine(BigDecimal.TEN);
+        assetEntity.setGrossTonnage(10D);
+        assetEntity.setPowerOfMainEngine(10D);
 
         assetEntity.setOwnerName("Foo Bar");
         assetEntity.setOwnerAddress("Hacker st. 1337");
@@ -93,7 +93,7 @@ public abstract class AssetHelper {
         assetEntity.setCountryOfImportOrExport("SWE");
         assetEntity.setAdministrativeDecisionDate(now);
         assetEntity.setSegmentOfAdministrativeDecision("3");
-        assetEntity.setLengthBetweenPerpendiculars(new BigDecimal(17));
+        assetEntity.setLengthBetweenPerpendiculars(17D);
         AssetProdOrg assetProdOrg = new AssetProdOrg();
         assetProdOrg.setAddress("prodorgaddress");
         assetProdOrg.setCity("prodorgcity");
@@ -105,16 +105,16 @@ public abstract class AssetHelper {
         assetProdOrg.setZipCode(41523);
         assetEntity.setHasLicence(true);
         assetEntity.setLicenceType("AllFish");
-        assetEntity.setLengthOverAll(new BigDecimal(25));
+        assetEntity.setLengthOverAll(25D);
         assetEntity.setPortOfRegistration("GBG");
-        assetEntity.setPowerOfAuxEngine(new BigDecimal(1000));
+        assetEntity.setPowerOfAuxEngine(1000D);
         assetEntity.setPublicAid("EG");
         String regnbr = "THOFAN" + rnd.nextInt();
         if (regnbr.length() > 14) regnbr = regnbr.substring(0, 14);
         assetEntity.setRegistrationNumber(regnbr);
 
-        assetEntity.setSafteyGrossTonnage(new BigDecimal(24000));
-        assetEntity.setOtherTonnage(new BigDecimal(23000));
+        assetEntity.setSafteyGrossTonnage(4000D);
+        assetEntity.setOtherTonnage(23000D);
         assetEntity.setTypeOfExport("SM");
         assetEntity.setHasVms(false);
         assetEntity.setAgentIsAlsoOwner(true);

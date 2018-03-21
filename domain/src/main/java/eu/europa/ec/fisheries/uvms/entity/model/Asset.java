@@ -155,23 +155,23 @@ public class Asset implements Serializable{
 
     @Digits(integer = 6, fraction = 2)
     @Column(name="lengthoverall")
-    private BigDecimal lengthOverAll;
+    private Double lengthOverAll;
 
     @Digits(integer = 6, fraction = 2)
     @Column(name="lengthbetweenperpendiculars")
-    private BigDecimal lengthBetweenPerpendiculars;
+    private Double lengthBetweenPerpendiculars;
 
     @Digits(integer = 7, fraction = 2)
     @Column(name="safetygrosstonnage")
-    private BigDecimal safteyGrossTonnage;
+    private Double safteyGrossTonnage;
 
     @Digits(integer = 8, fraction = 2)
     @Column(name="othertonnage")
-    private BigDecimal otherTonnage;
+    private Double otherTonnage;
 
     @Digits(integer = 8, fraction = 2)
     @Column(name="grosstonnage")
-    private BigDecimal grossTonnage;
+    private Double grossTonnage;
 
     @Enumerated(EnumType.STRING)
     @Column(name="grosstonnageunit")
@@ -183,11 +183,11 @@ public class Asset implements Serializable{
 
     @Digits(integer = 8, fraction = 2)
     @Column(name="powerofauxengine")
-    private BigDecimal powerOfAuxEngine;
+    private Double powerOfAuxEngine;
 
     @Digits(integer = 8, fraction = 2)
     @Column(name="powerofmainengine")
-    private BigDecimal powerOfMainEngine;
+    private Double powerOfMainEngine;
 
     @Column(name="haslicense")
     private Boolean hasLicence;
@@ -203,7 +203,7 @@ public class Asset implements Serializable{
     private String subFishingGear;
 
     @Column(name="gearfishingtype")
-    private int gearFishingType;
+    private Integer gearFishingType;
 
     @Size(max = 100)
     @Column(name="ownername")
@@ -434,43 +434,43 @@ public class Asset implements Serializable{
         this.agentIsAlsoOwner = agentIsAlsoOwner;
     }
 
-    public BigDecimal getLengthOverAll() {
+    public Double getLengthOverAll() {
         return lengthOverAll;
     }
 
-    public void setLengthOverAll(BigDecimal lengthOverAll) {
+    public void setLengthOverAll(Double lengthOverAll) {
         this.lengthOverAll = lengthOverAll;
     }
 
-    public BigDecimal getLengthBetweenPerpendiculars() {
+    public Double getLengthBetweenPerpendiculars() {
         return lengthBetweenPerpendiculars;
     }
 
-    public void setLengthBetweenPerpendiculars(BigDecimal lengthBetweenPerpendiculars) {
+    public void setLengthBetweenPerpendiculars(Double lengthBetweenPerpendiculars) {
         this.lengthBetweenPerpendiculars = lengthBetweenPerpendiculars;
     }
 
-    public BigDecimal getSafteyGrossTonnage() {
+    public Double getSafteyGrossTonnage() {
         return safteyGrossTonnage;
     }
 
-    public void setSafteyGrossTonnage(BigDecimal safteyGrossTonnage) {
+    public void setSafteyGrossTonnage(Double safteyGrossTonnage) {
         this.safteyGrossTonnage = safteyGrossTonnage;
     }
 
-    public BigDecimal getOtherTonnage() {
+    public Double getOtherTonnage() {
         return otherTonnage;
     }
 
-    public void setOtherTonnage(BigDecimal otherTonnage) {
+    public void setOtherTonnage(Double otherTonnage) {
         this.otherTonnage = otherTonnage;
     }
 
-    public BigDecimal getGrossTonnage() {
+    public Double getGrossTonnage() {
         return grossTonnage;
     }
 
-    public void setGrossTonnage(BigDecimal grossTonnage) {
+    public void setGrossTonnage(Double grossTonnage) {
         this.grossTonnage = grossTonnage;
     }
 
@@ -490,19 +490,19 @@ public class Asset implements Serializable{
         this.portOfRegistration = portOfRegistration;
     }
 
-    public BigDecimal getPowerOfAuxEngine() {
+    public Double getPowerOfAuxEngine() {
         return powerOfAuxEngine;
     }
 
-    public void setPowerOfAuxEngine(BigDecimal powerOfAuxEngine) {
+    public void setPowerOfAuxEngine(Double powerOfAuxEngine) {
         this.powerOfAuxEngine = powerOfAuxEngine;
     }
 
-    public BigDecimal getPowerOfMainEngine() {
+    public Double getPowerOfMainEngine() {
         return powerOfMainEngine;
     }
 
-    public void setPowerOfMainEngine(BigDecimal powerOfMainEngine) {
+    public void setPowerOfMainEngine(Double powerOfMainEngine) {
         this.powerOfMainEngine = powerOfMainEngine;
     }
 

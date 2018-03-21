@@ -162,9 +162,9 @@ public class AssetDao {
                 }
                 operator.add(op);
             } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.MIN_DECIMAL)) {
-                operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).ge(new BigDecimal(searchKeyValue.getSearchValues().get(0))));
+                operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).ge(Double.valueOf(searchKeyValue.getSearchValues().get(0))));
             } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.MAX_DECIMAL)) {
-                operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).le(new BigDecimal(searchKeyValue.getSearchValues().get(0))));
+                operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).le(Double.valueOf(searchKeyValue.getSearchValues().get(0))));
             } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.LIST)) {
                 operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).in(searchKeyValue.getSearchValues()));
             } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.NUMBER)) {
