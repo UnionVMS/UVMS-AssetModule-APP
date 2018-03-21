@@ -33,6 +33,7 @@ public class AssetActivator extends Application {
         set.add(AssetGroupResource.class);
         set.add(ConfigResource.class);
         set.add(UnionVMSFeatureFilter.class);
+        set.add(ObjectMapperContextResolver.class);
     }
 
     @Override

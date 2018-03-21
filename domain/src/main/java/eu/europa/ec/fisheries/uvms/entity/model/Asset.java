@@ -537,11 +537,11 @@ public class Asset implements Serializable{
         this.subFishingGear = subFishingGear;
     }
 
-    public int getGearFishingType() {
+    public Integer getGearFishingType() {
         return gearFishingType;
     }
 
-    public void setGearFishingType(int gearFishingType) {
+    public void setGearFishingType(Integer gearFishingType) {
         this.gearFishingType = gearFishingType;
     }
 
