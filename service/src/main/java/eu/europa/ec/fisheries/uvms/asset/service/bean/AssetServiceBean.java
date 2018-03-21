@@ -29,12 +29,12 @@ import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.uvms.dao.AssetSEDao;
+import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.NoteDao;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetDaoMappingException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetListResponsePaginated;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
+import eu.europa.ec.fisheries.uvms.entity.model.Asset;
 import eu.europa.ec.fisheries.uvms.entity.model.Note;
 import eu.europa.ec.fisheries.uvms.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
@@ -48,7 +48,7 @@ public class AssetServiceBean implements AssetService {
     private AuditServiceBean auditService;
 
     @Inject
-    private AssetSEDao assetDao;
+    private AssetDao assetDao;
     
     @Inject
     private NoteDao noteDao;
@@ -61,10 +61,10 @@ public class AssetServiceBean implements AssetService {
      * @throws AssetException
      */
     @Override
-    public AssetSE createAsset(AssetSE asset, String username) {
+    public Asset createAsset(Asset asset, String username) {
 
         asset.setUpdatedBy(username);
-        AssetSE createdAssetEntity = assetDao.createAsset(asset);
+        Asset createdAssetEntity = assetDao.createAsset(asset);
 
         auditService.logAssetCreated(createdAssetEntity, username);
         
@@ -111,7 +111,7 @@ public class AssetServiceBean implements AssetService {
             }
         }
 
-        List<AssetSE> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, searchFields, isDynamic);
+        List<Asset> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, searchFields, isDynamic);
 
         AssetListResponsePaginated listAssetResponse = new AssetListResponsePaginated();
         listAssetResponse.setCurrentPage(page);
@@ -158,20 +158,20 @@ public class AssetServiceBean implements AssetService {
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
      */
     @Override
-    public AssetSE updateAsset(AssetSE asset, String username, String comment) throws AssetServiceException {
-        AssetSE updatedAsset = updateAssetInternal(asset, username);
+    public Asset updateAsset(Asset asset, String username, String comment) throws AssetServiceException {
+        Asset updatedAsset = updateAssetInternal(asset, username);
         auditService.logAssetUpdated(updatedAsset, comment, username);
         return updatedAsset;
     }
 
     @Override
-    public AssetSE archiveAsset(AssetSE asset, String username, String comment) throws AssetServiceException {
-        AssetSE archivedAsset = updateAssetInternal(asset, username);
+    public Asset archiveAsset(Asset asset, String username, String comment) throws AssetServiceException {
+        Asset archivedAsset = updateAssetInternal(asset, username);
         auditService.logAssetArchived(archivedAsset, comment, username);
         return archivedAsset;
     }
 
-    private AssetSE updateAssetInternal(AssetSE asset, String username) throws AssetServiceException {
+    private Asset updateAssetInternal(Asset asset, String username) throws AssetServiceException {
 
         if (asset == null) {
             throw new InputArgumentException("No asset to update");
@@ -187,7 +187,7 @@ public class AssetServiceBean implements AssetService {
         return assetDao.updateAsset(asset);
     }
     
-    private void checkIdentifierNullValues(AssetSE asset) {
+    private void checkIdentifierNullValues(Asset asset) {
         if (asset.getCfr() == null || asset.getCfr().isEmpty())
             asset.setCfr(null);
         if (asset.getImo() == null || asset.getImo().isEmpty())
@@ -208,7 +208,7 @@ public class AssetServiceBean implements AssetService {
 
 
     @Override
-    public AssetSE upsertAsset(AssetSE asset, String username) throws AssetServiceException {
+    public Asset upsertAsset(Asset asset, String username) throws AssetServiceException {
 
         if (asset == null) {
             throw new InputArgumentException("No asset to upsert");
@@ -227,8 +227,8 @@ public class AssetServiceBean implements AssetService {
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
      */
     @Override
-    public AssetSE getAssetById(AssetId assetId, AssetDataSourceQueue source) throws AssetServiceException {
-        AssetSE asset = null;
+    public Asset getAssetById(AssetId assetId, AssetDataSourceQueue source) throws AssetServiceException {
+        Asset asset = null;
 
         if (assetId == null) {
             throw new InputArgumentException("AssetId object is null");
@@ -258,7 +258,7 @@ public class AssetServiceBean implements AssetService {
 
     }
 
-    public AssetSE getAssetById(AssetId assetId) throws AssetServiceException {
+    public Asset getAssetById(AssetId assetId) throws AssetServiceException {
 
         if (assetId == null) {
             throw new InputArgumentException("AssetId object is null");
@@ -268,7 +268,7 @@ public class AssetServiceBean implements AssetService {
             throw new InputArgumentException("AssetId value or type is null");
         }
 
-        AssetSE asset = null;
+        Asset asset = null;
         switch (assetId.getType()) {
             case CFR:
                 asset = assetDao.getAssetByCfr(assetId.getValue());
@@ -303,7 +303,7 @@ public class AssetServiceBean implements AssetService {
     }
 
     @Override
-    public AssetSE getAssetFromAssetIdAtDate(String idType, String idValue, LocalDateTime date)
+    public Asset getAssetFromAssetIdAtDate(String idType, String idValue, LocalDateTime date)
             throws AssetServiceException {
 
         if (idType == null) {
@@ -333,7 +333,7 @@ public class AssetServiceBean implements AssetService {
         if(assetType == AssetIdTypeEnum.GUID || assetType == AssetIdTypeEnum.INTERNAL_ID){
             assetId.setGuid(UUID.fromString(idValue));
         }
-        AssetSE asset = assetDao.getAssetFromAssetIdAtDate(assetId, date);
+        Asset asset = assetDao.getAssetFromAssetIdAtDate(assetId, date);
         return asset;
     }
 
@@ -344,7 +344,7 @@ public class AssetServiceBean implements AssetService {
      * @throws AssetException
      */
     @Override
-    public AssetSE getAssetById(UUID id) throws AssetServiceException {
+    public Asset getAssetById(UUID id) throws AssetServiceException {
         if (id == null) {
             throw new InputArgumentException("Id is null");
         }
@@ -358,7 +358,7 @@ public class AssetServiceBean implements AssetService {
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
      */
     @Override
-    public List<AssetSE> getAssetListByAssetGroups(List<AssetGroup> groups) throws AssetServiceException {
+    public List<Asset> getAssetListByAssetGroups(List<AssetGroup> groups) throws AssetServiceException {
         LOG.debug("Getting asset by ID.");
         if (groups == null || groups.isEmpty()) {
             throw new InputArgumentException("No groups in query");
@@ -395,17 +395,17 @@ public class AssetServiceBean implements AssetService {
         }
 
         // get an object based on what type of id it has
-        AssetSE assetEntity = getAssetById(assetId);
+        Asset assetEntity = getAssetById(assetId);
         assetDao.deleteAsset(assetEntity);
     }
 
     @Override
-    public List<AssetSE> getRevisionsForAsset(AssetSE asset) throws AssetServiceException {
+    public List<Asset> getRevisionsForAsset(Asset asset) throws AssetServiceException {
         return assetDao.getRevisionsForAsset(asset);
     }
 
     @Override
-    public AssetSE getAssetRevisionForRevisionId(UUID historyId) throws AssetServiceException {
+    public Asset getAssetRevisionForRevisionId(UUID historyId) throws AssetServiceException {
         return assetDao.getAssetRevisionForHistoryId(historyId);
     }
 
@@ -564,7 +564,7 @@ public class AssetServiceBean implements AssetService {
 
     @Override
     public List<Note> getNotesForAsset(UUID assetId) {
-        AssetSE asset = assetDao.getAssetById(assetId);
+        Asset asset = assetDao.getAssetById(assetId);
         if (asset == null) {
             throw new IllegalArgumentException("Could not find any asset with id: " + assetId);
         }
@@ -573,7 +573,7 @@ public class AssetServiceBean implements AssetService {
     
     @Override
     public Note createNoteForAsset(UUID assetId, Note note, String username) {
-        AssetSE asset = assetDao.getAssetById(assetId);
+        Asset asset = assetDao.getAssetById(assetId);
         if (asset == null) {
             throw new IllegalArgumentException("Could not find any asset with id: " + assetId);
         }

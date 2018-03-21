@@ -17,7 +17,7 @@ import eu.europa.ec.fisheries.uvms.asset.service.constants.ParameterKey;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
+import eu.europa.ec.fisheries.uvms.entity.model.Asset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +52,7 @@ public class GetAssetEventBean {
     public void getAsset(TextMessage textMessage, AssetId assetId) {
 
         AssetDataSourceQueue dataSource = null;
-        AssetSE asset = null;
+        Asset asset = null;
         boolean messageSent = false;
 
         try {
@@ -124,7 +124,7 @@ public class GetAssetEventBean {
         return fault;
     }
 
-    public  String mapAssetModuleResponse(AssetSE asset) throws AssetModelMapperException {
+    public  String mapAssetModuleResponse(Asset asset) throws AssetModelMapperException {
 
         String json = null;
         try {

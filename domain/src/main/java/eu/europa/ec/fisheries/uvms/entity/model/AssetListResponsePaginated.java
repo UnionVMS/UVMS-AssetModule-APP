@@ -18,15 +18,15 @@ import java.util.List;
 
 public class AssetListResponsePaginated implements Serializable{
 
-    List<AssetSE> assetList = new ArrayList<>();
+    List<Asset> assetList = new ArrayList<>();
     Integer totalNumberOfPages = 0;
     Integer currentPage = 0;
 
-    public List<AssetSE> getAssetList() {
+    public List<Asset> getAssetList() {
         return assetList;
     }
 
-    public void setAssetList(List<AssetSE> assetList) {
+    public void setAssetList(List<Asset> assetList) {
         this.assetList = assetList;
     }
 

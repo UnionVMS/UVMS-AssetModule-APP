@@ -19,7 +19,7 @@ import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException
 import eu.europa.ec.fisheries.uvms.asset.message.mapper.AuditModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
+import eu.europa.ec.fisheries.uvms.entity.model.Asset;
 
 @Stateless
 public class AuditServiceBean {
@@ -29,7 +29,7 @@ public class AuditServiceBean {
     @Inject
     private MessageProducer messageProducer;
     
-    public void logAssetCreated(AssetSE asset, String username) {
+    public void logAssetCreated(Asset asset, String username) {
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetCreated(asset.getId().toString(),
                     username);
@@ -41,7 +41,7 @@ public class AuditServiceBean {
         }
     }
     
-    public void logAssetUpdated(AssetSE asset, String comment, String username) {
+    public void logAssetUpdated(Asset asset, String comment, String username) {
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetUpdated(asset.getId().toString(), comment,
                     username);
@@ -52,7 +52,7 @@ public class AuditServiceBean {
         }
     }
 
-    public void logAssetArchived(AssetSE asset, String comment, String username) {
+    public void logAssetArchived(Asset asset, String comment, String username) {
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetArchived(asset.getId().toString(), comment,
                     username);

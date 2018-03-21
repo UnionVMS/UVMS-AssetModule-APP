@@ -1,12 +1,11 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
+import eu.europa.ec.fisheries.uvms.entity.model.Asset;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
@@ -104,8 +103,8 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     public void getAssetGroupListByAssetGuid() throws AssetException, HeuristicRollbackException, RollbackException, NotSupportedException, HeuristicMixedException, SystemException {
 
 
-        AssetSE asset = AssetHelper.createBiggerAsset();
-        AssetSE createdAsset = assetService.createAsset(asset, "test");
+        Asset asset = AssetHelper.createBiggerAsset();
+        Asset createdAsset = assetService.createAsset(asset, "test");
         commit();
         UUID assetGuid = createdAsset.getId();
 

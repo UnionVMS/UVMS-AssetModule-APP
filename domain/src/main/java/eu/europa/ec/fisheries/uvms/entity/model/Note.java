@@ -78,7 +78,7 @@ public class Note implements Serializable {
     @JsonbTransient
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="asset")
-	private AssetSE asset;
+	private Asset asset;
 
 	@Column(name="date")
 	private LocalDateTime date;
@@ -129,11 +129,11 @@ public class Note implements Serializable {
 		this.id = id;
 	}
 
-	public AssetSE getAsset() {
+	public Asset getAsset() {
 		return asset;
 	}
 
-	public void setAsset(AssetSE asset) {
+	public void setAsset(Asset asset) {
 		this.asset = asset;
 	}
 

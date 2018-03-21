@@ -21,31 +21,30 @@ import org.hibernate.envers.query.criteria.AuditCriterion;
 import org.hibernate.envers.query.criteria.AuditDisjunction;
 import org.hibernate.envers.query.criteria.ExtendableCriterion;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
+import eu.europa.ec.fisheries.uvms.entity.model.Asset;
 import eu.europa.ec.fisheries.uvms.entity.model.NotesActivityCode;
 import eu.europa.ec.fisheries.uvms.mapper.SearchFieldType;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 
 @Stateless
-public class AssetSEDao {
+public class AssetDao {
 
     @PersistenceContext
     private EntityManager em;
 
-    public AssetSE createAsset(AssetSE asset) {
+    public Asset createAsset(Asset asset) {
         em.persist(asset);
         return asset;
     }
 
-    public AssetSE getAssetById(UUID id) {
-        return em.find(AssetSE.class, id);
+    public Asset getAssetById(UUID id) {
+        return em.find(Asset.class, id);
     }
 
-    public AssetSE getAssetByCfr(String cfr) {
+    public Asset getAssetByCfr(String cfr) {
         try {
-            TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_BY_CFR, AssetSE.class);
+            TypedQuery<Asset> query = em.createNamedQuery(Asset.ASSET_FIND_BY_CFR, Asset.class);
             query.setParameter("cfr", cfr);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -53,9 +52,9 @@ public class AssetSEDao {
         }
     }
 
-    public AssetSE getAssetByIrcs(String ircs) {
+    public Asset getAssetByIrcs(String ircs) {
         try {
-            TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_BY_IRCS, AssetSE.class);
+            TypedQuery<Asset> query = em.createNamedQuery(Asset.ASSET_FIND_BY_IRCS, Asset.class);
             query.setParameter("ircs", ircs);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -63,9 +62,9 @@ public class AssetSEDao {
         }
     }
 
-    public AssetSE getAssetByImo(String imo) {
+    public Asset getAssetByImo(String imo) {
         try {
-            TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_BY_IMO, AssetSE.class);
+            TypedQuery<Asset> query = em.createNamedQuery(Asset.ASSET_FIND_BY_IMO, Asset.class);
             query.setParameter("imo", imo);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -73,9 +72,9 @@ public class AssetSEDao {
         }
     }
 
-    public AssetSE getAssetByMmsi(String mmsi) {
+    public Asset getAssetByMmsi(String mmsi) {
         try {
-            TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_BY_MMSI, AssetSE.class);
+            TypedQuery<Asset> query = em.createNamedQuery(Asset.ASSET_FIND_BY_MMSI, Asset.class);
             query.setParameter("mmsi", mmsi);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -83,9 +82,9 @@ public class AssetSEDao {
         }
     }
 
-    public AssetSE getAssetByIccat(String iccat) {
+    public Asset getAssetByIccat(String iccat) {
         try {
-            TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_BY_ICCAT, AssetSE.class);
+            TypedQuery<Asset> query = em.createNamedQuery(Asset.ASSET_FIND_BY_ICCAT, Asset.class);
             query.setParameter("iccat", iccat);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -93,9 +92,9 @@ public class AssetSEDao {
         }
     }
 
-    public AssetSE getAssetByUvi(String uvi) {
+    public Asset getAssetByUvi(String uvi) {
         try {
-            TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_BY_UVI, AssetSE.class);
+            TypedQuery<Asset> query = em.createNamedQuery(Asset.ASSET_FIND_BY_UVI, Asset.class);
             query.setParameter("uvi", uvi);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -103,9 +102,9 @@ public class AssetSEDao {
         }
     }
 
-    public AssetSE getAssetByGfcm(String gfcm) {
+    public Asset getAssetByGfcm(String gfcm) {
         try {
-            TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_BY_GFCM, AssetSE.class);
+            TypedQuery<Asset> query = em.createNamedQuery(Asset.ASSET_FIND_BY_GFCM, Asset.class);
             query.setParameter("gfcm", gfcm);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -113,16 +112,16 @@ public class AssetSEDao {
         }
     }
 
-    public AssetSE updateAsset(AssetSE asset) {
+    public Asset updateAsset(Asset asset) {
         return em.merge(asset);
     }
 
-    public void deleteAsset(AssetSE asset) {
+    public void deleteAsset(Asset asset) {
         em.remove(asset);
     }
 
-    public List<AssetSE> getAssetListAll() {
-        TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_ALL, AssetSE.class);
+    public List<Asset> getAssetListAll() {
+        TypedQuery<Asset> query = em.createNamedQuery(Asset.ASSET_FIND_ALL, Asset.class);
         return query.getResultList();
     }
 
@@ -132,8 +131,8 @@ public class AssetSEDao {
     }
 
     @SuppressWarnings("unchecked")
-    public List<AssetSE> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize,
-            List<SearchKeyValue> searchFields, boolean isDynamic) {
+    public List<Asset> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize,
+                                                   List<SearchKeyValue> searchFields, boolean isDynamic) {
         AuditQuery query = createQuery(searchFields, isDynamic);
         query.setFirstResult(pageSize * (pageNumber - 1));
         query.setMaxResults(pageSize);
@@ -142,7 +141,7 @@ public class AssetSEDao {
 
     private AuditQuery createQuery(List<SearchKeyValue> searchFields, boolean isDynamic) {
         AuditReader auditReader = AuditReaderFactory.get(em);
-        AuditQuery query = auditReader.createQuery().forRevisionsOfEntity(AssetSE.class, true, true);
+        AuditQuery query = auditReader.createQuery().forRevisionsOfEntity(Asset.class, true, true);
 
         if (!searchRevisions(searchFields)) {
             query.add(AuditEntity.revisionNumber().maximize().computeAggregationInInstanceContext());
@@ -195,26 +194,26 @@ public class AssetSEDao {
         return false;
     }
 
-    public List<AssetSE> getRevisionsForAsset(AssetSE asset) {
+    public List<Asset> getRevisionsForAsset(Asset asset) {
         AuditReader auditReader = AuditReaderFactory.get(em);
-        List<AssetSE> resultList = new ArrayList<>();
+        List<Asset> resultList = new ArrayList<>();
 
-        List<Number> revisionNumbers = auditReader.getRevisions(AssetSE.class, asset.getId());
+        List<Number> revisionNumbers = auditReader.getRevisions(Asset.class, asset.getId());
         for (Number rev : revisionNumbers) {
-            AssetSE audited = auditReader.find(AssetSE.class, asset.getId(), rev);
+            Asset audited = auditReader.find(Asset.class, asset.getId(), rev);
             resultList.add(audited);
         }
         return resultList;
     }
 
-    public List<AssetSE> getAssetListByAssetGuids(List<UUID> idList) {
-        TypedQuery<AssetSE> query = em.createNamedQuery(AssetSE.ASSET_FIND_BY_IDS, AssetSE.class);
+    public List<Asset> getAssetListByAssetGuids(List<UUID> idList) {
+        TypedQuery<Asset> query = em.createNamedQuery(Asset.ASSET_FIND_BY_IDS, Asset.class);
         query.setParameter("idList", idList);
         return query.getResultList();
     }
 
-    public AssetSE getAssetFromAssetId(AssetId assetId) {
-        AssetSE asset = null;
+    public Asset getAssetFromAssetId(AssetId assetId) {
+        Asset asset = null;
         switch (assetId.getType()) {
             case INTERNAL_ID:
                 break;
@@ -248,8 +247,8 @@ public class AssetSEDao {
         return asset;
     }
 
-    public AssetSE getAssetFromAssetIdAtDate(AssetId assetId, LocalDateTime date) {
-        AssetSE asset = getAssetFromAssetId(assetId);
+    public Asset getAssetFromAssetIdAtDate(AssetId assetId, LocalDateTime date) {
+        Asset asset = getAssetFromAssetId(assetId);
         if (asset != null) {
             return getAssetAtDate(asset, date);
         } else {
@@ -257,10 +256,10 @@ public class AssetSEDao {
         }
     }
     
-    public AssetSE getAssetAtDate(AssetSE asset, LocalDateTime localDateTime) {
+    public Asset getAssetAtDate(Asset asset, LocalDateTime localDateTime) {
         Date date = Date.from(localDateTime.toInstant(ZoneOffset.UTC));
         AuditReader auditReader = AuditReaderFactory.get(em);
-        return auditReader.find(AssetSE.class, asset.getId(), date);
+        return auditReader.find(Asset.class, asset.getId(), date);
     }
 
     // TODO should these be moved to appropriate dao:s
@@ -268,9 +267,9 @@ public class AssetSEDao {
         throw new IllegalStateException("Not implemented yet!");
     }
 
-    public AssetSE getAssetRevisionForHistoryId(UUID historyId) {
+    public Asset getAssetRevisionForHistoryId(UUID historyId) {
         AuditReader auditReader = AuditReaderFactory.get(em);
-        return (AssetSE) auditReader.createQuery().forRevisionsOfEntity(AssetSE.class, true, true)
+        return (Asset) auditReader.createQuery().forRevisionsOfEntity(Asset.class, true, true)
                 .add(AuditEntity.property("historyid").eq(historyId))
                 .getSingleResult();
         /*

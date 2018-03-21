@@ -16,7 +16,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
+import eu.europa.ec.fisheries.uvms.entity.model.Asset;
 import eu.europa.ec.fisheries.uvms.entity.model.Note;
 
 @Stateless
@@ -42,7 +42,7 @@ public class NoteDao {
         em.remove(note);
     }
     
-    public List<Note> getNotesByAsset(AssetSE asset) {
+    public List<Note> getNotesByAsset(Asset asset) {
         TypedQuery<Note> query = em.createNamedQuery(Note.NOTE_FIND_BY_ASSET, Note.class);
         query.setParameter("asset", asset);
         return query.getResultList();

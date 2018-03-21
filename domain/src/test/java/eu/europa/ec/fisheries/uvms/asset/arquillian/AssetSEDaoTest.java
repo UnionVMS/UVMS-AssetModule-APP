@@ -33,8 +33,8 @@ import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.dao.AssetSEDao;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
+import eu.europa.ec.fisheries.uvms.dao.AssetDao;
+import eu.europa.ec.fisheries.uvms.entity.model.Asset;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 
 @RunWith(Arquillian.class)
@@ -47,18 +47,18 @@ public class AssetSEDaoTest extends TransactionalTests {
 
 
     @Inject
-    AssetSEDao assetDao;
+    AssetDao assetDao;
 
     @Test
     @OperateOnDeployment("normal")
     public void createAssetTest() throws AssetDaoException {
         //AssetSE asset = AssetTestsHelper.createBasicAsset();
-        AssetSE asset = AssetTestsHelper.createBiggerAsset();
+        Asset asset = AssetTestsHelper.createBiggerAsset();
         asset = assetDao.createAsset(asset);
 
         assertThat(asset.getId(), is(notNullValue()));
 
-        AssetSE fetchedAsset = assetDao.getAssetById(asset.getId());
+        Asset fetchedAsset = assetDao.getAssetById(asset.getId());
 
         assertThat(fetchedAsset.getName(), is(asset.getName()));
         assertThat(fetchedAsset.getCfr(), is(asset.getCfr()));
@@ -75,7 +75,7 @@ public class AssetSEDaoTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void createAssetCheckHistoryGuid() throws AssetDaoException {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
 
 
@@ -85,10 +85,10 @@ public class AssetSEDaoTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void getAssetByCfrTest() throws AssetDaoException {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
 
-        AssetSE fetchedAsset = assetDao.getAssetByCfr(asset.getCfr());
+        Asset fetchedAsset = assetDao.getAssetByCfr(asset.getCfr());
 
         assertThat(fetchedAsset.getId(), is(asset.getId()));
         assertThat(fetchedAsset.getName(), is(asset.getName()));
@@ -100,17 +100,17 @@ public class AssetSEDaoTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void getAssetByCfrTestNonExistingCrf() throws AssetDaoException {
         String randomCrf = UUID.randomUUID().toString();
-        AssetSE fetchedAsset = assetDao.getAssetByCfr(randomCrf);
+        Asset fetchedAsset = assetDao.getAssetByCfr(randomCrf);
         assertThat(fetchedAsset, is(nullValue()));
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void getAssetByIrcsTest() throws AssetDaoException {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
 
-        AssetSE fetchedAsset = assetDao.getAssetByIrcs(asset.getIrcs());
+        Asset fetchedAsset = assetDao.getAssetByIrcs(asset.getIrcs());
 
         assertThat(fetchedAsset.getId(), is(asset.getId()));
         assertThat(fetchedAsset.getName(), is(asset.getName()));
@@ -121,10 +121,10 @@ public class AssetSEDaoTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void getAssetByImoTest() throws AssetDaoException {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
 
-        AssetSE fetchedAsset = assetDao.getAssetByImo(asset.getImo());
+        Asset fetchedAsset = assetDao.getAssetByImo(asset.getImo());
 
         assertThat(fetchedAsset.getId(), is(asset.getId()));
         assertThat(fetchedAsset.getName(), is(asset.getName()));
@@ -135,10 +135,10 @@ public class AssetSEDaoTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void getAssetByMmsiTest() throws AssetDaoException {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
 
-        AssetSE fetchedAsset = assetDao.getAssetByMmsi(asset.getMmsi());
+        Asset fetchedAsset = assetDao.getAssetByMmsi(asset.getMmsi());
 
         assertThat(fetchedAsset.getId(), is(asset.getId()));
         assertThat(fetchedAsset.getName(), is(asset.getName()));
@@ -149,10 +149,10 @@ public class AssetSEDaoTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void getAssetByIccatTest() throws AssetDaoException {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
 
-        AssetSE fetchedAsset = assetDao.getAssetByIccat(asset.getIccat());
+        Asset fetchedAsset = assetDao.getAssetByIccat(asset.getIccat());
 
         assertThat(fetchedAsset.getId(), is(asset.getId()));
         assertThat(fetchedAsset.getName(), is(asset.getName()));
@@ -163,10 +163,10 @@ public class AssetSEDaoTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void getAssetByUviTest() throws AssetDaoException {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
 
-        AssetSE fetchedAsset = assetDao.getAssetByUvi(asset.getUvi());
+        Asset fetchedAsset = assetDao.getAssetByUvi(asset.getUvi());
 
         assertThat(fetchedAsset.getId(), is(asset.getId()));
         assertThat(fetchedAsset.getName(), is(asset.getName()));
@@ -177,10 +177,10 @@ public class AssetSEDaoTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void getAssetByGfcmTest() throws AssetDaoException {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
 
-        AssetSE fetchedAsset = assetDao.getAssetByGfcm(asset.getGfcm());
+        Asset fetchedAsset = assetDao.getAssetByGfcm(asset.getGfcm());
 
         assertThat(fetchedAsset.getId(), is(asset.getId()));
         assertThat(fetchedAsset.getName(), is(asset.getName()));
@@ -191,7 +191,7 @@ public class AssetSEDaoTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void updateAssetTest() throws Exception {
-        AssetSE asset = AssetTestsHelper.createBiggerAsset();
+        Asset asset = AssetTestsHelper.createBiggerAsset();
         asset = assetDao.createAsset(asset);
         commit();
 
@@ -201,7 +201,7 @@ public class AssetSEDaoTest extends TransactionalTests {
         commit();
         assertThat(asset.getName(), is(newName));
 
-        AssetSE updatedAsset = assetDao.getAssetById(asset.getId());
+        Asset updatedAsset = assetDao.getAssetById(asset.getId());
         assertThat(updatedAsset.getId(), is(asset.getId()));
         assertThat(updatedAsset.getName(), is(newName));
     }
@@ -209,9 +209,9 @@ public class AssetSEDaoTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void getAssetListAllTest() throws AssetDaoException {
-        List<AssetSE> assetListBefore = assetDao.getAssetListAll();
+        List<Asset> assetListBefore = assetDao.getAssetListAll();
         assetDao.createAsset(AssetTestsHelper.createBasicAsset());
-        List<AssetSE> assetListAfter = assetDao.getAssetListAll();
+        List<Asset> assetListAfter = assetDao.getAssetListAll();
 
         assertThat(assetListAfter.size(), is(assetListBefore.size() + 1));
     }
@@ -219,11 +219,11 @@ public class AssetSEDaoTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void getRevisionsForAssetSingleRevisionTest() throws Exception {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
         commit();
 
-        List<AssetSE> assetRevisions = assetDao.getRevisionsForAsset(asset);
+        List<Asset> assetRevisions = assetDao.getRevisionsForAsset(asset);
 
         assertEquals(1, assetRevisions.size());
 
@@ -235,17 +235,17 @@ public class AssetSEDaoTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void getRevisionsForAssetTwoVersionsCheckSizeTest() throws Exception {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
         commit();
 
-        AssetSE fetchedAsset = assetDao.getAssetById(asset.getId());
+        Asset fetchedAsset = assetDao.getAssetById(asset.getId());
         String newName1 = "NewName1";
         fetchedAsset.setName(newName1);
         assetDao.updateAsset(fetchedAsset);
         commit();
 
-        List<AssetSE> assetRevisions = assetDao.getRevisionsForAsset(fetchedAsset);
+        List<Asset> assetRevisions = assetDao.getRevisionsForAsset(fetchedAsset);
 
         assertEquals(2, assetRevisions.size());
 
@@ -257,22 +257,22 @@ public class AssetSEDaoTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void getRevisionsForAssetCompareRevisionsTest() throws Exception {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
-        AssetSE assetVersion1 = assetDao.createAsset(asset);
+        Asset asset = AssetTestsHelper.createBasicAsset();
+        Asset assetVersion1 = assetDao.createAsset(asset);
         commit();
 
         String newName1 = "NewName1";
         assetVersion1.setName(newName1);
-        AssetSE assetVersion2 = assetDao.updateAsset(assetVersion1);
+        Asset assetVersion2 = assetDao.updateAsset(assetVersion1);
         commit();
 
         String newName2 = "NewName2";
         assetVersion2.setName(newName2);
-        AssetSE assetVersion3 = assetDao.updateAsset(assetVersion2);
+        Asset assetVersion3 = assetDao.updateAsset(assetVersion2);
         commit();
 
         assertThat(assetVersion3.getId(), is(notNullValue()));
-        List<AssetSE> assetRevisions = assetDao.getRevisionsForAsset(assetVersion3);
+        List<Asset> assetRevisions = assetDao.getRevisionsForAsset(assetVersion3);
 
         assertEquals(3, assetRevisions.size());
 
@@ -300,11 +300,11 @@ public class AssetSEDaoTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void getAssetAtDateSingleAssetTest() throws Exception {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
         commit();
 
-        AssetSE assetAtDate = assetDao.getAssetAtDate(asset, LocalDateTime.now(ZoneOffset.UTC));
+        Asset assetAtDate = assetDao.getAssetAtDate(asset, LocalDateTime.now(ZoneOffset.UTC));
 
         assertThat(assetAtDate.getId(), is(notNullValue()));
 
@@ -320,7 +320,7 @@ public class AssetSEDaoTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void getAssetAtDateMultipleAssetsTest() throws Exception {
-        AssetSE asset1 = AssetTestsHelper.createBasicAsset();
+        Asset asset1 = AssetTestsHelper.createBasicAsset();
         asset1 = assetDao.createAsset(asset1);
         String firstName = asset1.getName();
         commit();
@@ -328,14 +328,14 @@ public class AssetSEDaoTest extends TransactionalTests {
 
         String newName = "NewName";
         asset1.setName(newName);
-        AssetSE asset2 = assetDao.updateAsset(asset1);
+        Asset asset2 = assetDao.updateAsset(asset1);
         commit();
         LocalDateTime secondDate = LocalDateTime.now(ZoneOffset.UTC);
 
-        AssetSE assetAtFirstDate = assetDao.getAssetAtDate(asset2, firstDate);
+        Asset assetAtFirstDate = assetDao.getAssetAtDate(asset2, firstDate);
         assertThat(assetAtFirstDate.getName(), is(firstName));
 
-        AssetSE assetAtSecondDate = assetDao.getAssetAtDate(asset2, secondDate);
+        Asset assetAtSecondDate = assetDao.getAssetAtDate(asset2, secondDate);
         assertThat(assetAtSecondDate.getName(), is(newName));
 
         if (cleanUpDB) {
@@ -347,7 +347,7 @@ public class AssetSEDaoTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void verifyAssetHistoryUpdatesCorrectlyTest() throws Exception {
 
-        AssetSE asset = AssetTestsHelper.createBiggerAsset();
+        Asset asset = AssetTestsHelper.createBiggerAsset();
         asset = assetDao.createAsset(asset);
         commit();
         assertThat(asset.getHistoryId(), is(notNullValue()));
@@ -371,7 +371,7 @@ public class AssetSEDaoTest extends TransactionalTests {
 
 
 
-        AssetSE updatedAsset = assetDao.updateAsset(asset);
+        Asset updatedAsset = assetDao.updateAsset(asset);
         commit();
 
         assertThat(updatedAsset.getHistoryId(), is(notNullValue()));
@@ -383,7 +383,7 @@ public class AssetSEDaoTest extends TransactionalTests {
 
     @Test
     public void getAssetCountTest() throws Exception {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset);
         commit();
         
@@ -398,7 +398,7 @@ public class AssetSEDaoTest extends TransactionalTests {
 
     @Test
     public void getAssetCountTwoRevisionsTest() throws Exception {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset);
         commit();
 
@@ -417,7 +417,7 @@ public class AssetSEDaoTest extends TransactionalTests {
     
     @Test
     public void getAssetCountTwoRevisionsAndTwoAssetsTest() throws Exception {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset);
         commit();
 
@@ -438,7 +438,7 @@ public class AssetSEDaoTest extends TransactionalTests {
     
     @Test
     public void getAssetCountShouldNotFindAssetTest() throws Exception {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset);
         commit();
         
@@ -453,7 +453,7 @@ public class AssetSEDaoTest extends TransactionalTests {
     
     @Test
     public void getAssetListSearchPaginatedTest() throws Exception {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset);
         commit();
         
@@ -462,7 +462,7 @@ public class AssetSEDaoTest extends TransactionalTests {
         searchKey.setSearchField(SearchFields.CFR);
         searchKey.setSearchValues(Arrays.asList(asset.getCfr()));
         searchKeyValues.add(searchKey);
-        List<AssetSE> assets = assetDao.getAssetListSearchPaginated(0, 10, searchKeyValues, true);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(0, 10, searchKeyValues, true);
         
         assertThat(assets.size(), is(1));
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -470,11 +470,11 @@ public class AssetSEDaoTest extends TransactionalTests {
     
     @Test
     public void getAssetListSearchPaginatedTestTwoAssest() throws Exception {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset);
         commit();
         
-        AssetSE asset2 = AssetTestsHelper.createBasicAsset();
+        Asset asset2 = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset2);
         commit();
         
@@ -483,7 +483,7 @@ public class AssetSEDaoTest extends TransactionalTests {
         searchKey.setSearchField(SearchFields.CFR);
         searchKey.setSearchValues(Arrays.asList(asset.getCfr(), asset2.getCfr()));
         searchKeyValues.add(searchKey);
-        List<AssetSE> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
         
         assertEquals(2, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -492,11 +492,11 @@ public class AssetSEDaoTest extends TransactionalTests {
     
     @Test
     public void getAssetListSearchPaginatedTestTwoAssestNotDynamic() throws Exception {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset);
         commit();
         
-        AssetSE asset2 = AssetTestsHelper.createBasicAsset();
+        Asset asset2 = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset2);
         commit();
         
@@ -509,7 +509,7 @@ public class AssetSEDaoTest extends TransactionalTests {
         searchKey2.setSearchField(SearchFields.IRCS);
         searchKey2.setSearchValues(Arrays.asList(asset2.getIrcs()));
         searchKeyValues.add(searchKey2);
-        List<AssetSE> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, false);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, false);
         
         assertEquals(2, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -518,11 +518,11 @@ public class AssetSEDaoTest extends TransactionalTests {
     
     @Test
     public void getAssetListSearchPaginatedTestTwoAssestPageSizeOne() throws Exception {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset);
         commit();
         
-        AssetSE asset2 = AssetTestsHelper.createBasicAsset();
+        Asset asset2 = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset2);
         commit();
         
@@ -535,7 +535,7 @@ public class AssetSEDaoTest extends TransactionalTests {
         searchKey2.setSearchField(SearchFields.IRCS);
         searchKey2.setSearchValues(Arrays.asList(asset2.getIrcs()));
         searchKeyValues.add(searchKey2);
-        List<AssetSE> assets = assetDao.getAssetListSearchPaginated(1, 1, searchKeyValues, false);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 1, searchKeyValues, false);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -548,7 +548,7 @@ public class AssetSEDaoTest extends TransactionalTests {
 
     @Test
     public void getAssetListSearchPaginatedTestFlagStateAndExtMarking() throws Exception {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset);
         commit();
         
@@ -565,7 +565,7 @@ public class AssetSEDaoTest extends TransactionalTests {
         searchKey3.setSearchField(SearchFields.CFR);
         searchKey3.setSearchValues(Arrays.asList(asset.getCfr()));
         searchKeyValues.add(searchKey3);
-        List<AssetSE> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -573,7 +573,7 @@ public class AssetSEDaoTest extends TransactionalTests {
     
     @Test
     public void getAssetListSearchPaginatedTestGuid() throws Exception {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
         commit();
         
@@ -582,7 +582,7 @@ public class AssetSEDaoTest extends TransactionalTests {
         searchKey.setSearchField(SearchFields.GUID);
         searchKey.setSearchValues(Arrays.asList(asset.getId().toString()));
         searchKeyValues.add(searchKey);
-        List<AssetSE> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -590,14 +590,14 @@ public class AssetSEDaoTest extends TransactionalTests {
     
     @Test
     public void getAssetListSearchPaginatedTestHistoryGuid() throws Exception {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
         commit();
         
-        AssetSE fetchedAsset = assetDao.getAssetById(asset.getId());
+        Asset fetchedAsset = assetDao.getAssetById(asset.getId());
         String newName = "newName";
         fetchedAsset.setName(newName);
-        AssetSE updatedAsset = assetDao.updateAsset(fetchedAsset);
+        Asset updatedAsset = assetDao.updateAsset(fetchedAsset);
         commit();
         
         List<SearchKeyValue> searchKeyValues = new ArrayList<>();
@@ -605,7 +605,7 @@ public class AssetSEDaoTest extends TransactionalTests {
         searchKey.setSearchField(SearchFields.HIST_GUID);
         searchKey.setSearchValues(Arrays.asList(asset.getHistoryId().toString()));
         searchKeyValues.add(searchKey);
-        List<AssetSE> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getHistoryId(), is(asset.getHistoryId()));
@@ -621,7 +621,7 @@ public class AssetSEDaoTest extends TransactionalTests {
     
     @Test
     public void getAssetListSearchPaginatedTestMinLength() throws Exception {
-        AssetSE asset = AssetTestsHelper.createBiggerAsset();
+        Asset asset = AssetTestsHelper.createBiggerAsset();
         assetDao.createAsset(asset);
         commit();
         
@@ -630,14 +630,14 @@ public class AssetSEDaoTest extends TransactionalTests {
         searchKey.setSearchField(SearchFields.MIN_LENGTH);
         searchKey.setSearchValues(Arrays.asList((asset.getLengthOverAll().toString())));
         searchKeyValues.add(searchKey);
-        List<AssetSE> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
         
         assertTrue(!assets.isEmpty());
     }
     
     @Test
     public void getAssetListSearchPaginatedTestNumber() throws Exception {
-        AssetSE asset = AssetTestsHelper.createBiggerAsset();
+        Asset asset = AssetTestsHelper.createBiggerAsset();
         assetDao.createAsset(asset);
         commit();
         
@@ -650,14 +650,14 @@ public class AssetSEDaoTest extends TransactionalTests {
         searchKey2.setSearchField(SearchFields.CFR);
         searchKey2.setSearchValues(Arrays.asList((asset.getCfr())));
         searchKeyValues.add(searchKey2);
-        List<AssetSE> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
         
         assertEquals(1, assets.size());
     }
     
     @Test
     public void getAssetListSearchPaginatedTestWildcardSearch() throws Exception {
-        AssetSE asset = AssetTestsHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         String searchName = "TestLikeSearchName";
         asset.setName(searchName);
         assetDao.createAsset(asset);
@@ -672,7 +672,7 @@ public class AssetSEDaoTest extends TransactionalTests {
         searchKey2.setSearchField(SearchFields.NAME);
         searchKey2.setSearchValues(Arrays.asList("*Name*"));
         searchKeyValues.add(searchKey2);
-        List<AssetSE> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getName(), is(searchName));
@@ -684,7 +684,7 @@ public class AssetSEDaoTest extends TransactionalTests {
         userTransaction.begin();
     }
 
-    private void cleanUpDB(AssetSE asset) throws Exception {
+    private void cleanUpDB(Asset asset) throws Exception {
         String sql = "delete from assetse where id = '" + asset.getId() + "'";
         em.createNativeQuery(sql).executeUpdate();
         sql = "delete from assetse_aud where id = '" + asset.getId() + "'";

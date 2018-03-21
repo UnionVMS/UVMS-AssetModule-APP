@@ -1,14 +1,14 @@
 package eu.europa.ec.fisheries.uvms.entity.model;
 
-import static eu.europa.ec.fisheries.uvms.entity.model.AssetSE.ASSET_FIND_ALL;
-import static eu.europa.ec.fisheries.uvms.entity.model.AssetSE.ASSET_FIND_BY_CFR;
-import static eu.europa.ec.fisheries.uvms.entity.model.AssetSE.ASSET_FIND_BY_GFCM;
-import static eu.europa.ec.fisheries.uvms.entity.model.AssetSE.ASSET_FIND_BY_ICCAT;
-import static eu.europa.ec.fisheries.uvms.entity.model.AssetSE.ASSET_FIND_BY_IDS;
-import static eu.europa.ec.fisheries.uvms.entity.model.AssetSE.ASSET_FIND_BY_IMO;
-import static eu.europa.ec.fisheries.uvms.entity.model.AssetSE.ASSET_FIND_BY_IRCS;
-import static eu.europa.ec.fisheries.uvms.entity.model.AssetSE.ASSET_FIND_BY_MMSI;
-import static eu.europa.ec.fisheries.uvms.entity.model.AssetSE.ASSET_FIND_BY_UVI;
+import static eu.europa.ec.fisheries.uvms.entity.model.Asset.ASSET_FIND_ALL;
+import static eu.europa.ec.fisheries.uvms.entity.model.Asset.ASSET_FIND_BY_CFR;
+import static eu.europa.ec.fisheries.uvms.entity.model.Asset.ASSET_FIND_BY_GFCM;
+import static eu.europa.ec.fisheries.uvms.entity.model.Asset.ASSET_FIND_BY_ICCAT;
+import static eu.europa.ec.fisheries.uvms.entity.model.Asset.ASSET_FIND_BY_IDS;
+import static eu.europa.ec.fisheries.uvms.entity.model.Asset.ASSET_FIND_BY_IMO;
+import static eu.europa.ec.fisheries.uvms.entity.model.Asset.ASSET_FIND_BY_IRCS;
+import static eu.europa.ec.fisheries.uvms.entity.model.Asset.ASSET_FIND_BY_MMSI;
+import static eu.europa.ec.fisheries.uvms.entity.model.Asset.ASSET_FIND_BY_UVI;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -35,18 +35,18 @@ import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 @Entity
 @Table(name = "AssetSE")
 @NamedQueries({
-          @NamedQuery(name = ASSET_FIND_ALL, query = "SELECT v FROM AssetSE v"),
-          @NamedQuery(name = ASSET_FIND_BY_CFR, query = "SELECT v FROM AssetSE v WHERE v.cfr = :cfr"),
-          @NamedQuery(name = ASSET_FIND_BY_IRCS, query = "SELECT v FROM AssetSE v WHERE v.ircs = :ircs"),
-          @NamedQuery(name = ASSET_FIND_BY_IMO, query = "SELECT v FROM AssetSE v WHERE v.imo = :imo"),
-          @NamedQuery(name = ASSET_FIND_BY_MMSI, query = "SELECT v FROM AssetSE v WHERE v.mmsi = :mmsi"),
-          @NamedQuery(name = ASSET_FIND_BY_ICCAT, query = "SELECT v FROM AssetSE v WHERE v.iccat = :iccat"),
-          @NamedQuery(name = ASSET_FIND_BY_UVI, query = "SELECT v FROM AssetSE v WHERE v.uvi = :uvi"),
-          @NamedQuery(name = ASSET_FIND_BY_GFCM, query = "SELECT v FROM AssetSE v WHERE v.gfcm = :gfcm"),
-          @NamedQuery(name = ASSET_FIND_BY_IDS, query = "SELECT v FROM AssetSE v WHERE v.id in :idList"),
+          @NamedQuery(name = ASSET_FIND_ALL, query = "SELECT v FROM Asset v"),
+          @NamedQuery(name = ASSET_FIND_BY_CFR, query = "SELECT v FROM Asset v WHERE v.cfr = :cfr"),
+          @NamedQuery(name = ASSET_FIND_BY_IRCS, query = "SELECT v FROM Asset v WHERE v.ircs = :ircs"),
+          @NamedQuery(name = ASSET_FIND_BY_IMO, query = "SELECT v FROM Asset v WHERE v.imo = :imo"),
+          @NamedQuery(name = ASSET_FIND_BY_MMSI, query = "SELECT v FROM Asset v WHERE v.mmsi = :mmsi"),
+          @NamedQuery(name = ASSET_FIND_BY_ICCAT, query = "SELECT v FROM Asset v WHERE v.iccat = :iccat"),
+          @NamedQuery(name = ASSET_FIND_BY_UVI, query = "SELECT v FROM Asset v WHERE v.uvi = :uvi"),
+          @NamedQuery(name = ASSET_FIND_BY_GFCM, query = "SELECT v FROM Asset v WHERE v.gfcm = :gfcm"),
+          @NamedQuery(name = ASSET_FIND_BY_IDS, query = "SELECT v FROM Asset v WHERE v.id in :idList"),
 })
 @XmlRootElement
-public class AssetSE implements Serializable{
+public class Asset implements Serializable{
 
     public static final String ASSET_FIND_BY_CFR = "Asset.findByCfr";
     public static final String ASSET_FIND_BY_IRCS = "Asset.findByIrcs";
@@ -60,7 +60,7 @@ public class AssetSE implements Serializable{
 
     private static final long serialVersionUID = -320627625723663100L;
 
-    public AssetSE() {
+    public Asset() {
         // json serialization
     }
 

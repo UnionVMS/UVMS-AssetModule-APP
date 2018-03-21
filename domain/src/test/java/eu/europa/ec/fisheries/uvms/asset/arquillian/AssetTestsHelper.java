@@ -12,7 +12,7 @@ import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.ContactInfoSourceEnum;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.NotesSourceEnum;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetProdOrg;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
+import eu.europa.ec.fisheries.uvms.entity.model.Asset;
 import eu.europa.ec.fisheries.uvms.entity.model.ContactInfo;
 import eu.europa.ec.fisheries.uvms.entity.model.Note;
 
@@ -21,8 +21,8 @@ public class AssetTestsHelper {
 
     private static Random rnd = new Random();
 
-    public static AssetSE createBasicAsset() {
-        AssetSE assetEntity = new AssetSE();
+    public static Asset createBasicAsset() {
+        Asset assetEntity = new Asset();
         
         assetEntity.setName("Test asset");
         assetEntity.setActive(true);
@@ -53,9 +53,9 @@ public class AssetTestsHelper {
 
 
 
-    public static AssetSE createBiggerAsset() {
+    public static Asset createBiggerAsset() {
 
-        AssetSE assetEntity = new AssetSE();
+        Asset assetEntity = new Asset();
         LocalDateTime  now =  LocalDateTime.now(ZoneOffset.UTC);
 
 
@@ -143,7 +143,7 @@ public class AssetTestsHelper {
 
 
 
-    public List<Note> createNotesHelper(AssetSE assetEntity, LocalDateTime date) {
+    public List<Note> createNotesHelper(Asset assetEntity, LocalDateTime date) {
 
         List<Note> notes = new ArrayList<>();
         Note note = new Note();
@@ -176,8 +176,8 @@ public class AssetTestsHelper {
     }
 
 
-    public AssetSE createAssetHelper(AssetIdTypeEnum key, String value, Date date) {
-        AssetSE assetEntity = createBiggerAsset();
+    public Asset createAssetHelper(AssetIdTypeEnum key, String value, Date date) {
+        Asset assetEntity = createBiggerAsset();
         assetEntity.setCfr(null);
         assetEntity.setIrcs(null);
         assetEntity.setImo(null);

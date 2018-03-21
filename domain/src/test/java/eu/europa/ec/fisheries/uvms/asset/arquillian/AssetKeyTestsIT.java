@@ -2,9 +2,9 @@ package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetIdTypeEnum;
-import eu.europa.ec.fisheries.uvms.dao.AssetSEDao;
+import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
+import eu.europa.ec.fisheries.uvms.entity.model.Asset;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
@@ -31,7 +31,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     private Random rnd = new Random();
 
     @EJB
-    private AssetSEDao assetDao;
+    private AssetDao assetDao;
 
 
     @Test
@@ -95,10 +95,10 @@ public class AssetKeyTestsIT extends TransactionalTests {
         AssetIdTypeEnum keyType = AssetIdTypeEnum.IRCS;
         String val = UUID.randomUUID().toString();
         if (val.length() > 8) val = val.substring(0, 8);
-        AssetSE theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val, date);
         String createdIRCS = theCreatedAsset.getIrcs();
         try {
-            AssetSE fetchedEntity = get(keyType, createdIRCS);
+            Asset fetchedEntity = get(keyType, createdIRCS);
             String fetchedIRCS = fetchedEntity.getIrcs();
             Assert.assertEquals(createdIRCS, fetchedIRCS);
         } catch (AssetDaoException e) {
@@ -114,10 +114,10 @@ public class AssetKeyTestsIT extends TransactionalTests {
         AssetIdTypeEnum keyType = AssetIdTypeEnum.MMSI;
         String val = UUID.randomUUID().toString();
         if (val.length() > 9) val = val.substring(0, 9);
-        AssetSE theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val, date);
         String createdMMSI = theCreatedAsset.getMmsi();
         try {
-            AssetSE fetchedEntity = get(keyType, createdMMSI);
+            Asset fetchedEntity = get(keyType, createdMMSI);
             String fetchedMMSI = fetchedEntity.getMmsi();
             Assert.assertEquals(createdMMSI, fetchedMMSI);
         } catch (AssetDaoException e) {
@@ -133,10 +133,10 @@ public class AssetKeyTestsIT extends TransactionalTests {
         AssetIdTypeEnum keyType = AssetIdTypeEnum.CFR;
         String val = UUID.randomUUID().toString();
         if (val.length() > 12) val = val.substring(0, 12);
-        AssetSE theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val, date);
         String createdCFR = theCreatedAsset.getCfr();
         try {
-            AssetSE fetchedEntity = get(keyType, createdCFR);
+            Asset fetchedEntity = get(keyType, createdCFR);
             String fetchedCFR = fetchedEntity.getCfr();
             Assert.assertEquals(createdCFR, fetchedCFR);
         } catch (AssetDaoException e) {
@@ -152,10 +152,10 @@ public class AssetKeyTestsIT extends TransactionalTests {
         AssetIdTypeEnum keyType = AssetIdTypeEnum.IMO;
         String val = UUID.randomUUID().toString();
         if (val.length() > 7) val = val.substring(0, 7);
-        AssetSE theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val, date);
         String createdIMO = theCreatedAsset.getImo();
         try {
-            AssetSE fetchedEntity = get(keyType, createdIMO);
+            Asset fetchedEntity = get(keyType, createdIMO);
             String fetchedIMO = fetchedEntity.getImo();
             Assert.assertEquals(createdIMO, fetchedIMO);
         } catch (AssetDaoException e) {
@@ -171,10 +171,10 @@ public class AssetKeyTestsIT extends TransactionalTests {
         Date date = new Date();
         AssetIdTypeEnum keyType = AssetIdTypeEnum.ICCAT;
         String val = UUID.randomUUID().toString();
-        AssetSE theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val, date);
         String createdICCAT = theCreatedAsset.getIccat();
         try {
-            AssetSE fetchedEntity = get(keyType, createdICCAT);
+            Asset fetchedEntity = get(keyType, createdICCAT);
             String fetchedUUID = fetchedEntity.getIccat();
             Assert.assertEquals(createdICCAT, fetchedUUID);
         } catch (AssetDaoException e) {
@@ -189,10 +189,10 @@ public class AssetKeyTestsIT extends TransactionalTests {
         Date date = new Date();
         AssetIdTypeEnum keyType = AssetIdTypeEnum.UVI;
         String val = UUID.randomUUID().toString();
-        AssetSE theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val, date);
         String createdUvi = theCreatedAsset.getUvi();
         try {
-            AssetSE fetchedEntity = get(keyType, createdUvi);
+            Asset fetchedEntity = get(keyType, createdUvi);
             String fetchedUvi = fetchedEntity.getUvi();
             Assert.assertEquals(createdUvi, fetchedUvi);
         } catch (AssetDaoException e) {
@@ -207,10 +207,10 @@ public class AssetKeyTestsIT extends TransactionalTests {
         Date date = new Date();
         AssetIdTypeEnum keyType = AssetIdTypeEnum.GFCM;
         String val = UUID.randomUUID().toString();
-        AssetSE theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val, date);
         String createdGfcm = theCreatedAsset.getGfcm();
         try {
-            AssetSE fetchedEntity = get(keyType, createdGfcm);
+            Asset fetchedEntity = get(keyType, createdGfcm);
             String fetchedGfcm = fetchedEntity.getGfcm();
             Assert.assertEquals(fetchedGfcm, createdGfcm);
         } catch (AssetDaoException e) {
@@ -227,11 +227,11 @@ public class AssetKeyTestsIT extends TransactionalTests {
         AssetIdTypeEnum keyType = AssetIdTypeEnum.IRCS;
         String val = UUID.randomUUID().toString();
         if (val.length() > 8) val = val.substring(0, 8);
-        AssetSE theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val, date);
         String createdIRCS = theCreatedAsset.getIrcs();
         try {
             assetDao.deleteAsset(theCreatedAsset);
-            AssetSE fetchedAsset = get(keyType, createdIRCS);
+            Asset fetchedAsset = get(keyType, createdIRCS);
             if (fetchedAsset != null) {
                 Assert.fail();
             }
@@ -250,11 +250,11 @@ public class AssetKeyTestsIT extends TransactionalTests {
         AssetIdTypeEnum keyType = AssetIdTypeEnum.MMSI;
         String val = UUID.randomUUID().toString();
         if (val.length() > 9) val = val.substring(0, 9);
-        AssetSE theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val, date);
         String createdMMSI = theCreatedAsset.getMmsi();
         try {
             assetDao.deleteAsset(theCreatedAsset);
-            AssetSE fetchedAsset = get(keyType, createdMMSI);
+            Asset fetchedAsset = get(keyType, createdMMSI);
             if (fetchedAsset != null) {
                 Assert.fail();
             }
@@ -273,11 +273,11 @@ public class AssetKeyTestsIT extends TransactionalTests {
         AssetIdTypeEnum keyType = AssetIdTypeEnum.CFR;
         String val = UUID.randomUUID().toString();
         if (val.length() > 12) val = val.substring(0, 12);
-        AssetSE theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val, date);
         String createdCFR = theCreatedAsset.getCfr();
         try {
             assetDao.deleteAsset(theCreatedAsset);
-            AssetSE fetchedAsset = get(keyType, createdCFR);
+            Asset fetchedAsset = get(keyType, createdCFR);
             if (fetchedAsset != null) {
                 Assert.fail();
             }
@@ -296,11 +296,11 @@ public class AssetKeyTestsIT extends TransactionalTests {
         AssetIdTypeEnum keyType = AssetIdTypeEnum.IMO;
         String val = UUID.randomUUID().toString();
         if (val.length() > 7) val = val.substring(0, 7);
-        AssetSE theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val, date);
         String createdIMO = theCreatedAsset.getImo();
         try {
             assetDao.deleteAsset(theCreatedAsset);
-            AssetSE fetchedAsset = get(keyType, createdIMO);
+            Asset fetchedAsset = get(keyType, createdIMO);
             if (fetchedAsset != null) {
                 Assert.fail();
             }
@@ -319,11 +319,11 @@ public class AssetKeyTestsIT extends TransactionalTests {
         Date date = new Date();
         AssetIdTypeEnum keyType = AssetIdTypeEnum.ICCAT;
         String val = UUID.randomUUID().toString();
-        AssetSE theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val, date);
         String createdIccat = theCreatedAsset.getIccat();
         try {
             assetDao.deleteAsset(theCreatedAsset);
-            AssetSE fetchedAsset = get(keyType, createdIccat);
+            Asset fetchedAsset = get(keyType, createdIccat);
             if (fetchedAsset != null) {
                 Assert.fail();
             }
@@ -342,11 +342,11 @@ public class AssetKeyTestsIT extends TransactionalTests {
         Date date = new Date();
         AssetIdTypeEnum keyType = AssetIdTypeEnum.UVI;
         String val = UUID.randomUUID().toString();
-        AssetSE theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val, date);
         String createdUvi = theCreatedAsset.getUvi();
         try {
             assetDao.deleteAsset(theCreatedAsset);
-            AssetSE fetchedAsset = get(keyType, createdUvi);
+            Asset fetchedAsset = get(keyType, createdUvi);
             if (fetchedAsset != null) {
                 Assert.fail();
             }
@@ -365,11 +365,11 @@ public class AssetKeyTestsIT extends TransactionalTests {
         Date date = new Date();
         AssetIdTypeEnum keyType = AssetIdTypeEnum.GFCM;
         String val = UUID.randomUUID().toString();
-        AssetSE theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val, date);
         String createdGFCM = theCreatedAsset.getGfcm();
         try {
             assetDao.deleteAsset(theCreatedAsset);
-            AssetSE fetchedAsset = get(keyType, createdGFCM);
+            Asset fetchedAsset = get(keyType, createdGFCM);
             if (fetchedAsset != null) {
                 Assert.fail();
             }
@@ -389,13 +389,13 @@ public class AssetKeyTestsIT extends TransactionalTests {
         AssetIdTypeEnum keyType = AssetIdTypeEnum.IRCS;
         String val = UUID.randomUUID().toString();
         if (val.length() > 8) val = val.substring(0, 8);
-        AssetSE theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val, date);
         String createdIRCS = theCreatedAsset.getIrcs();
         try {
             theCreatedAsset.setUpdatedBy("CHANGED");
             assetDao.updateAsset(theCreatedAsset);
             em.flush();
-            AssetSE fetchedAsset = get(keyType, createdIRCS);
+            Asset fetchedAsset = get(keyType, createdIRCS);
             Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
         } catch (NoAssetEntityFoundException e) {
             Assert.fail();
@@ -412,13 +412,13 @@ public class AssetKeyTestsIT extends TransactionalTests {
         AssetIdTypeEnum keyType = AssetIdTypeEnum.MMSI;
         String val = UUID.randomUUID().toString();
         if (val.length() > 9) val = val.substring(0, 9);
-        AssetSE theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val, date);
         String createdMMSI = theCreatedAsset.getMmsi();
         try {
             theCreatedAsset.setUpdatedBy("CHANGED");
             assetDao.updateAsset(theCreatedAsset);
             em.flush();
-            AssetSE fetchedAsset = get(keyType, createdMMSI);
+            Asset fetchedAsset = get(keyType, createdMMSI);
             Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
         } catch (NoAssetEntityFoundException e) {
             Assert.fail();
@@ -435,13 +435,13 @@ public class AssetKeyTestsIT extends TransactionalTests {
         AssetIdTypeEnum keyType = AssetIdTypeEnum.CFR;
         String val = UUID.randomUUID().toString();
         if (val.length() > 12) val = val.substring(0, 12);
-        AssetSE theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val, date);
         String createdCFR = theCreatedAsset.getCfr();
         try {
             theCreatedAsset.setUpdatedBy("CHANGED");
             assetDao.updateAsset(theCreatedAsset);
             em.flush();
-            AssetSE fetchedAsset = get(keyType, createdCFR);
+            Asset fetchedAsset = get(keyType, createdCFR);
             Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
         } catch (NoAssetEntityFoundException e) {
             Assert.fail();
@@ -458,13 +458,13 @@ public class AssetKeyTestsIT extends TransactionalTests {
         AssetIdTypeEnum keyType = AssetIdTypeEnum.IMO;
         String val = UUID.randomUUID().toString();
         if (val.length() > 7) val = val.substring(0, 7);
-        AssetSE theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val, date);
         String createdIMO = theCreatedAsset.getImo();
         try {
             theCreatedAsset.setUpdatedBy("CHANGED");
             assetDao.updateAsset(theCreatedAsset);
             em.flush();
-            AssetSE fetchedAsset = get(keyType, createdIMO);
+            Asset fetchedAsset = get(keyType, createdIMO);
             Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
         } catch (NoAssetEntityFoundException e) {
             Assert.fail();
@@ -481,13 +481,13 @@ public class AssetKeyTestsIT extends TransactionalTests {
         Date date = new Date();
         AssetIdTypeEnum keyType = AssetIdTypeEnum.ICCAT;
         String val = UUID.randomUUID().toString();
-        AssetSE theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val, date);
         String createdICCAT = theCreatedAsset.getIccat();
         try {
             theCreatedAsset.setUpdatedBy("CHANGED");
             assetDao.updateAsset(theCreatedAsset);
             em.flush();
-            AssetSE fetchedAsset = get(keyType, createdICCAT);
+            Asset fetchedAsset = get(keyType, createdICCAT);
             Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
         } catch (NoAssetEntityFoundException e) {
             Assert.fail();
@@ -504,13 +504,13 @@ public class AssetKeyTestsIT extends TransactionalTests {
         Date date = new Date();
         AssetIdTypeEnum keyType = AssetIdTypeEnum.UVI;
         String val = UUID.randomUUID().toString();
-        AssetSE theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val, date);
         String createdUVI = theCreatedAsset.getUvi();
         try {
             theCreatedAsset.setUpdatedBy("CHANGED");
             assetDao.updateAsset(theCreatedAsset);
             em.flush();
-            AssetSE fetchedAsset = get(keyType, createdUVI);
+            Asset fetchedAsset = get(keyType, createdUVI);
             Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
         } catch (NoAssetEntityFoundException e) {
             Assert.fail();
@@ -527,13 +527,13 @@ public class AssetKeyTestsIT extends TransactionalTests {
         Date date = new Date();
         AssetIdTypeEnum keyType = AssetIdTypeEnum.GFCM;
         String val = UUID.randomUUID().toString();
-        AssetSE theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val, date);
         String createdGFCM = theCreatedAsset.getGfcm();
         try {
             theCreatedAsset.setUpdatedBy("CHANGED");
             assetDao.updateAsset(theCreatedAsset);
             em.flush();
-            AssetSE fetchedAsset = get(keyType, createdGFCM);
+            Asset fetchedAsset = get(keyType, createdGFCM);
             Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
         } catch (NoAssetEntityFoundException e) {
             Assert.fail();
@@ -543,15 +543,15 @@ public class AssetKeyTestsIT extends TransactionalTests {
     }
 
 
-    private AssetSE get(AssetIdTypeEnum assetIdType, String value) throws AssetDaoException {
-        AssetSE fetchedEntity = getAssetHelper(assetIdType, value);
+    private Asset get(AssetIdTypeEnum assetIdType, String value) throws AssetDaoException {
+        Asset fetchedEntity = getAssetHelper(assetIdType, value);
         return fetchedEntity;
 
     }
 
-    private AssetSE getAssetHelper(AssetIdTypeEnum assetIdType, String value) throws AssetDaoException {
+    private Asset getAssetHelper(AssetIdTypeEnum assetIdType, String value) throws AssetDaoException {
 
-        AssetSE fetchedAsset = null;
+        Asset fetchedAsset = null;
         switch (assetIdType) {
             case CFR:
                 fetchedAsset = assetDao.getAssetByCfr(value);
@@ -579,13 +579,13 @@ public class AssetKeyTestsIT extends TransactionalTests {
     }
 
 
-    private AssetSE create(AssetIdTypeEnum key, String value, Date date) {
+    private Asset create(AssetIdTypeEnum key, String value, Date date) {
 
-        AssetSE assetEntity = assetTestsHelper.createAssetHelper(key, value, date);
-        AssetSE createdAsset = assetDao.createAsset(assetEntity);
+        Asset assetEntity = assetTestsHelper.createAssetHelper(key, value, date);
+        Asset createdAsset = assetDao.createAsset(assetEntity);
         em.flush();
         UUID guid = createdAsset.getId();
-        AssetSE fetchedAsset = assetDao.getAssetById(guid);
+        Asset fetchedAsset = assetDao.getAssetById(guid);
         Assert.assertEquals(createdAsset.getId(), fetchedAsset.getId());
         return fetchedAsset;
     }

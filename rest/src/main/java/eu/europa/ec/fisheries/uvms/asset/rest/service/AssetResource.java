@@ -38,7 +38,7 @@ import eu.europa.ec.fisheries.uvms.asset.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetListResponsePaginated;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
+import eu.europa.ec.fisheries.uvms.entity.model.Asset;
 import eu.europa.ec.fisheries.uvms.entity.model.Note;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
@@ -142,7 +142,7 @@ public class AssetResource {
     public Response getAssetById(@PathParam(value = "id") final String id) throws AssetException {
         try {
             UUID theId = UUID.fromString(id);
-            AssetSE asset = assetService.getAssetById(theId);
+            Asset asset = assetService.getAssetById(theId);
             Response.ResponseBuilder rb = Response.status(200).entity(asset).type(MediaType.APPLICATION_JSON )
                     .header("MDC", MDC.get("requestId"));
             return rb.build();
@@ -175,10 +175,10 @@ public class AssetResource {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     @Produces(value = { MediaType.APPLICATION_JSON })
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response createAsset(final AssetSE asset) throws AssetException {
+    public Response createAsset(final Asset asset) throws AssetException {
         try {
             String remoteUser = servletRequest.getRemoteUser();
-            AssetSE createdAssetSE = assetService.createAsset(asset, remoteUser);
+            Asset createdAssetSE = assetService.createAsset(asset, remoteUser);
 
             Response.ResponseBuilder rb = Response.status(200).entity(createdAssetSE).type(MediaType.APPLICATION_JSON )
                     .header("MDC", MDC.get("requestId"));
@@ -202,11 +202,11 @@ public class AssetResource {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     @Produces(value = { MediaType.APPLICATION_JSON })
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response updateAsset(final AssetSE asset, @QueryParam("comment") String comment) throws AssetException {
+    public Response updateAsset(final Asset asset, @QueryParam("comment") String comment) throws AssetException {
         try {
             LOG.info("Updating asset:{}",asset);
             String remoteUser = servletRequest.getRemoteUser();
-            AssetSE updatedAsset = assetService.updateAsset(asset, remoteUser, comment);
+            Asset updatedAsset = assetService.updateAsset(asset, remoteUser, comment);
             Response.ResponseBuilder rb = Response.status(200).entity(updatedAsset).type(MediaType.APPLICATION_JSON )
                     .header("MDC", MDC.get("requestId"));
             return rb.build();
@@ -221,10 +221,10 @@ public class AssetResource {
     @Consumes(value = { MediaType.APPLICATION_JSON })
     @Produces(value = { MediaType.APPLICATION_JSON })
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public ResponseDto archiveAsset(final AssetSE asset, @QueryParam("comment") String comment) {
+    public ResponseDto archiveAsset(final Asset asset, @QueryParam("comment") String comment) {
         try {
             String remoteUser = servletRequest.getRemoteUser();
-            AssetSE archivedAsset = assetService.archiveAsset(asset, remoteUser, comment);
+            Asset archivedAsset = assetService.archiveAsset(asset, remoteUser, comment);
             return new ResponseDto(archivedAsset, ResponseCodeConstant.OK);
         } catch (Exception e) {
             LOG.error("[ Error when archiving asset. {}] {}",asset, e.getMessage());

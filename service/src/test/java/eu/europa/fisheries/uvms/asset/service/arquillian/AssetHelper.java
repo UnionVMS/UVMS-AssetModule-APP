@@ -12,7 +12,7 @@ import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.ContactInfoSourceEnum;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetProdOrg;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetSE;
+import eu.europa.ec.fisheries.uvms.entity.model.Asset;
 import eu.europa.ec.fisheries.uvms.entity.model.ContactInfo;
 import eu.europa.ec.fisheries.uvms.entity.model.Note;
 
@@ -20,8 +20,8 @@ public abstract class AssetHelper {
 
     private static Random rnd = new Random();
 
-    public static AssetSE createBasicAsset() {
-        AssetSE assetEntity = new AssetSE();
+    public static Asset createBasicAsset() {
+        Asset assetEntity = new Asset();
 
         assetEntity.setName("Test asset");
         assetEntity.setActive(true);
@@ -52,9 +52,9 @@ public abstract class AssetHelper {
 
 
 
-    public static AssetSE createBiggerAsset() {
+    public static Asset createBiggerAsset() {
 
-        AssetSE assetEntity = new AssetSE();
+        Asset assetEntity = new Asset();
         LocalDateTime  now =  LocalDateTime.now(ZoneOffset.UTC);
 
 
