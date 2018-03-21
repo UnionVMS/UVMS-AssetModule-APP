@@ -10,7 +10,6 @@ import static eu.europa.ec.fisheries.uvms.entity.model.Asset.ASSET_FIND_BY_IRCS;
 import static eu.europa.ec.fisheries.uvms.entity.model.Asset.ASSET_FIND_BY_MMSI;
 import static eu.europa.ec.fisheries.uvms.entity.model.Asset.ASSET_FIND_BY_UVI;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import javax.persistence.Column;
@@ -33,7 +32,7 @@ import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 
 @Audited
 @Entity
-@Table(name = "AssetSE")
+@Table(name = "Asset")
 @NamedQueries({
           @NamedQuery(name = ASSET_FIND_ALL, query = "SELECT v FROM Asset v"),
           @NamedQuery(name = ASSET_FIND_BY_CFR, query = "SELECT v FROM Asset v WHERE v.cfr = :cfr"),
