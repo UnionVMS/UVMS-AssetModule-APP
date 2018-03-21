@@ -88,6 +88,7 @@
 			<column name="asset_vessel_type" type="VARCHAR(100)" />
 			<column name="asset_vessel_date_of_entry" type="TIMESTAMP" />
 			<column name="asset_registrationnumber" type="VARCHAR(14)" />
+			<column name="asset_vmsindicator" type="BOOLEAN" />
 		</addColumn>
 
 

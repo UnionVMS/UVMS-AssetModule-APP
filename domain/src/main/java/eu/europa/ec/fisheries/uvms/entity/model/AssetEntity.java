@@ -175,6 +175,8 @@ public class AssetEntity implements Serializable {
     @Column(name = "asset_registrationnumber")
     private String registrationNumber;
 
+    @Column(name = "asset_vmsindicator")
+    private Boolean hasVms;
 
     public AssetEntity() {
     }
@@ -379,5 +381,13 @@ public class AssetEntity implements Serializable {
 
     public void setRegistrationNumber(String registrationNumber) {
         this.registrationNumber = registrationNumber;
+    }
+
+    public Boolean getHasVms() {
+        return hasVms;
+    }
+
+    public void setHasVms(Boolean hasVms) {
+        this.hasVms = hasVms;
     }
 }

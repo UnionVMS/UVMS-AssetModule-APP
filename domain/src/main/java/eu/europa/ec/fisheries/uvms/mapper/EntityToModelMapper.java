@@ -73,6 +73,7 @@ public class EntityToModelMapper {
         asset.setHullMaterial(entity.getHullMaterial());
         asset.setYearOfConstruction(entity.getConstructionYear());
         asset.setRegistrationNumber(entity.getRegistrationNumber());
+        asset.setVmsIndicator(entity.getHasVms());
 
         if (entity.getNotes() != null) {
             List<AssetNotes> noteList = new ArrayList<>();
@@ -142,6 +143,7 @@ public class EntityToModelMapper {
             asset.setHullMaterial(historyEntity.getHullMaterial());
             asset.setYearOfConstruction(historyEntity.getConstructionYear());
             asset.setRegistrationNumber(historyEntity.getRegistrationNumber());
+            asset.setVmsIndicator(historyEntity.getHasVms());
 
             if (historyEntity.getContactInfo() == null) {
                 historyEntity.setContactInfo(new ArrayList<ContactInfo>());
