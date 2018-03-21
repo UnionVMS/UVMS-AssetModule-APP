@@ -38,7 +38,7 @@ import eu.europa.ec.fisheries.uvms.entity.model.Asset;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 
 @RunWith(Arquillian.class)
-public class AssetSEDaoTest extends TransactionalTests {
+public class AssetDaoTest extends TransactionalTests {
 
     // Envers requires a commit for auditing
     // Set this to true to clean up test data 
@@ -685,11 +685,11 @@ public class AssetSEDaoTest extends TransactionalTests {
     }
 
     private void cleanUpDB(Asset asset) throws Exception {
-        String sql = "delete from assetse where id = '" + asset.getId() + "'";
+        String sql = "delete from asset where id = '" + asset.getId() + "'";
         em.createNativeQuery(sql).executeUpdate();
-        sql = "delete from assetse_aud where id = '" + asset.getId() + "'";
+        sql = "delete from asset_aud where id = '" + asset.getId() + "'";
         em.createNativeQuery(sql).executeUpdate();
-        sql = "delete from revinfo where rev not in (select rev from assetse_aud)";
+        sql = "delete from revinfo where rev not in (select rev from asset_aud)";
         em.createNativeQuery(sql).executeUpdate();
         commit();
     }
