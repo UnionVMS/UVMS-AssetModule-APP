@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ModelToEntityMapper {
@@ -105,12 +106,27 @@ public class ModelToEntityMapper {
         assetHistory.setActive(true);
 
         AssetHistoryId history = asset.getEventHistory();
-        EventCodeEnum eventCode = EventCodeEnum.MOD;
-        if (history != null) {
+
+        EventCodeEnum eventCode;
+
+        if (asset.getVesselEventType() == null) {
+            eventCode = EventCodeEnum.MOD;
+        } else if (history != null) {
             eventCode = EventCodeEnum.getType(history.getEventCode());
+        } else {
+            eventCode = EventCodeEnum.valueOf(asset.getVesselEventType().toString());
         }
+
         assetHistory.setEventCode(eventCode);
-        assetHistory.setDateOfEvent(DateUtils.getNowDateUTC());
+
+        Date dateOfEvent;
+        if (asset.getDateOfEvent() == null) {
+            dateOfEvent = DateUtils.getNowDateUTC();
+        } else {
+            dateOfEvent = asset.getDateOfEvent();
+        }
+
+        assetHistory.setDateOfEvent(dateOfEvent);
 
         //TODO set gear fishing type
         assetHistory.setType(GearFishingTypeEnum.getType(asset.getGearType()));
