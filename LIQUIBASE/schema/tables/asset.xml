@@ -91,6 +91,11 @@
 			<column name="asset_vmsindicator" type="BOOLEAN" />
             <column name="asset_main_fishing_gear_code" type="VARCHAR(100)" />
             <column name="asset_sub_fishing_gear_code" type="VARCHAR(100)" />
+            <column name="asset_segment" type="VARCHAR(100)" />
+            <column name="asset_country_of_import_or_export" type="VARCHAR(100)" />
+            <column name="asset_type_of_export" type="VARCHAR(100)" />
+            <column name="asset_public_aid" type="VARCHAR(100)" />
+            <column name="asset_place_of_construction" type="VARCHAR(100)" />
 		</addColumn>
 	</changeSet>
 

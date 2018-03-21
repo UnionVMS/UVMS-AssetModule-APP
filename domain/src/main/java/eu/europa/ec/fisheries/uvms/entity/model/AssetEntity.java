@@ -37,6 +37,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
+import eu.europa.ec.fisheries.uvms.entity.asset.types.PublicAidEnum;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.SegmentFUP;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.TypeOfExportEnum;
 import eu.europa.ec.fisheries.wsdl.asset.types.ContactType;
 import eu.europa.ec.fisheries.wsdl.asset.types.HullMaterial;
 import org.hibernate.annotations.Fetch;
@@ -185,6 +188,23 @@ public class AssetEntity implements Serializable {
     @Size(max = 100)
     @Column(name = "asset_sub_fishing_gear_code")
     private String subFishingGearCode;
+
+    @Column(name = "asset_segment")
+    private SegmentFUP segment;
+
+    @Size(max = 100)
+    @Column(name = "asset_country_of_import_or_export")
+    private String countryOfImportOrExport;
+
+    @Column(name = "asset_type_of_export")
+    private TypeOfExportEnum typeOfExport;
+
+    @Column(name = "asset_public_aid")
+    private PublicAidEnum publicAid;
+
+    @Size(max = 100)
+    @Column(name = "asset_place_of_construction")
+    private String placeOfConstruction;
 
     public AssetEntity() {
     }
@@ -413,5 +433,45 @@ public class AssetEntity implements Serializable {
 
     public void setSubFishingGearCode(String subFishingGearCode) {
         this.subFishingGearCode = subFishingGearCode;
+    }
+
+    public SegmentFUP getSegment() {
+        return segment;
+    }
+
+    public void setSegment(SegmentFUP segment) {
+        this.segment = segment;
+    }
+
+    public String getCountryOfImportOrExport() {
+        return countryOfImportOrExport;
+    }
+
+    public void setCountryOfImportOrExport(String countryOfImportOrExport) {
+        this.countryOfImportOrExport = countryOfImportOrExport;
+    }
+
+    public TypeOfExportEnum getTypeOfExport() {
+        return typeOfExport;
+    }
+
+    public void setTypeOfExport(TypeOfExportEnum typeOfExport) {
+        this.typeOfExport = typeOfExport;
+    }
+
+    public PublicAidEnum getPublicAid() {
+        return publicAid;
+    }
+
+    public void setPublicAid(PublicAidEnum publicAid) {
+        this.publicAid = publicAid;
+    }
+
+    public String getPlaceOfConstruction() {
+        return placeOfConstruction;
+    }
+
+    public void setPlaceOfConstruction(String placeOfConstruction) {
+        this.placeOfConstruction = placeOfConstruction;
     }
 }

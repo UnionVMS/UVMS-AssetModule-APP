@@ -275,6 +275,11 @@ public class AssetHistory implements Serializable {
     @Column(name = "assethist_sub_fishing_gear_code")
     private String subsidiaryFishingGearCode;
 
+    @Size(max = 100)
+    @Column(name = "assethist_place_of_construction")
+    private String placeOfConstruction;
+
+
     public AssetHistory() {
     }
 
@@ -752,6 +757,14 @@ public class AssetHistory implements Serializable {
 
     public void setSubsidiaryFishingGearCode(String subsidiaryFishingGearCode) {
         this.subsidiaryFishingGearCode = subsidiaryFishingGearCode;
+    }
+
+    public String getPlaceOfConstruction() {
+        return placeOfConstruction;
+    }
+
+    public void setPlaceOfConstruction(String placeOfConstruction) {
+        this.placeOfConstruction = placeOfConstruction;
     }
 }
 

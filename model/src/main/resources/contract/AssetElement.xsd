@@ -48,6 +48,11 @@
             <xsd:element name="dateOfEvent" type="xsd:dateTime" minOccurs="0" maxOccurs="1"/>
             <xsd:element name="mainFishingGear" type="xsd:string" minOccurs="0" maxOccurs="1"/>
             <xsd:element name="subsidiaryFishingGear" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="segment" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="countryOfImportOrExport" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="typeOfExport" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="publicAid" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="placeOfConstruction" type="xsd:string" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
 

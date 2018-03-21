@@ -131,6 +131,7 @@
 			<column name="assethist_year_of_construction" type="VARCHAR(100)" />
 			<column name="assethist_main_fishing_gear_code" type="VARCHAR(100)" />
 			<column name="assethist_sub_fishing_gear_code" type="VARCHAR(100)" />
+			<column name="assethist_place_of_construction" type="VARCHAR(100)" />
 		</addColumn>
 	</changeSet>
 
