@@ -14,7 +14,6 @@ package eu.europa.ec.fisheries.uvms.entity.model;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.*;
-import eu.europa.ec.fisheries.wsdl.asset.types.ContactType;
 import eu.europa.ec.fisheries.wsdl.asset.types.HullMaterial;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -267,6 +266,14 @@ public class AssetHistory implements Serializable {
 
     @Column(name = "assethist_year_of_construction")
     private String constructionYear;
+
+    @Size(max = 100)
+    @Column(name = "assethist_main_fishing_gear_code")
+    private String mainFishingGearCode;
+
+    @Size(max = 100)
+    @Column(name = "assethist_sub_fishing_gear_code")
+    private String subsidiaryFishingGearCode;
 
     public AssetHistory() {
     }
@@ -729,6 +736,22 @@ public class AssetHistory implements Serializable {
 
     public void setConstructionYear(String constructionYear) {
         this.constructionYear = constructionYear;
+    }
+
+    public String getMainFishingGearCode() {
+        return mainFishingGearCode;
+    }
+
+    public void setMainFishingGearCode(String mainFishingGearCode) {
+        this.mainFishingGearCode = mainFishingGearCode;
+    }
+
+    public String getSubsidiaryFishingGearCode() {
+        return subsidiaryFishingGearCode;
+    }
+
+    public void setSubsidiaryFishingGearCode(String subsidiaryFishingGearCode) {
+        this.subsidiaryFishingGearCode = subsidiaryFishingGearCode;
     }
 }
 

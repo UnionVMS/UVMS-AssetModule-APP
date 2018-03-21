@@ -178,6 +178,14 @@ public class AssetEntity implements Serializable {
     @Column(name = "asset_vmsindicator")
     private Boolean hasVms;
 
+    @Size(max = 100)
+    @Column(name = "asset_main_fishing_gear_code")
+    private String mainFishingGearCode;
+
+    @Size(max = 100)
+    @Column(name = "asset_sub_fishing_gear_code")
+    private String subFishingGearCode;
+
     public AssetEntity() {
     }
 
@@ -389,5 +397,21 @@ public class AssetEntity implements Serializable {
 
     public void setHasVms(Boolean hasVms) {
         this.hasVms = hasVms;
+    }
+
+    public String getMainFishingGearCode() {
+        return mainFishingGearCode;
+    }
+
+    public void setMainFishingGearCode(String mainFishingGearCode) {
+        this.mainFishingGearCode = mainFishingGearCode;
+    }
+
+    public String getSubFishingGearCode() {
+        return subFishingGearCode;
+    }
+
+    public void setSubFishingGearCode(String subFishingGearCode) {
+        this.subFishingGearCode = subFishingGearCode;
     }
 }

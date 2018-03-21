@@ -74,6 +74,9 @@ public class EntityToModelMapper {
         asset.setYearOfConstruction(entity.getConstructionYear());
         asset.setRegistrationNumber(entity.getRegistrationNumber());
         asset.setVmsIndicator(entity.getHasVms());
+        asset.setMainFishingGear(asset.getMainFishingGear());
+        asset.setSubsidiaryFishingGear(asset.getSubsidiaryFishingGear());
+
 
         if (entity.getNotes() != null) {
             List<AssetNotes> noteList = new ArrayList<>();
@@ -144,6 +147,8 @@ public class EntityToModelMapper {
             asset.setYearOfConstruction(historyEntity.getConstructionYear());
             asset.setRegistrationNumber(historyEntity.getRegistrationNumber());
             asset.setVmsIndicator(historyEntity.getHasVms());
+            asset.setMainFishingGear(historyEntity.getMainFishingGearCode());
+            asset.setSubsidiaryFishingGear(historyEntity.getSubsidiaryFishingGearCode());
 
             if (historyEntity.getContactInfo() == null) {
                 historyEntity.setContactInfo(new ArrayList<ContactInfo>());

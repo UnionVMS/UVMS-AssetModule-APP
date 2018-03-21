@@ -84,6 +84,8 @@ public class ModelToEntityMapper {
         entity.setIrcsIndicator(asset.getHasIrcs());
         entity.setRegistrationNumber(asset.getRegistrationNumber());
         entity.setHasVms(asset.isVmsIndicator());
+        entity.setMainFishingGearCode(asset.getMainFishingGear());
+        entity.setSubFishingGearCode(asset.getSubsidiaryFishingGear());
 
         List<Notes> notesList = new ArrayList<>();
         for (AssetNotes notes : asset.getNotes()) {
@@ -163,6 +165,8 @@ public class ModelToEntityMapper {
         assetHistory.setConstructionYear(asset.getYearOfConstruction());
         assetHistory.setRegistrationNumber(asset.getRegistrationNumber());
         assetHistory.setHasVms(asset.isVmsIndicator());
+        assetHistory.setMainFishingGearCode(asset.getMainFishingGear());
+        assetHistory.setSubsidiaryFishingGearCode(asset.getSubsidiaryFishingGear());
 
         List<AssetContact> contacts = asset.getContact();
         if (contacts != null) {
