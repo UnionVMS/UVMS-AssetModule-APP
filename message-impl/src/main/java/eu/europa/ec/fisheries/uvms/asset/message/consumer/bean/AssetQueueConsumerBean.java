@@ -13,16 +13,12 @@ package eu.europa.ec.fisheries.uvms.asset.message.consumer.bean;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Queue;
 import javax.jms.Session;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import eu.europa.ec.fisheries.uvms.asset.message.AssetConstants;
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
@@ -33,9 +29,9 @@ import eu.europa.ec.fisheries.uvms.config.message.ConfigMessageConsumer;
 @Stateless
 public class AssetQueueConsumerBean implements AssetQueueConsumer, ConfigMessageConsumer {
 
-    final static Logger LOG = LoggerFactory.getLogger(AssetQueueConsumerBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AssetQueueConsumerBean.class);
 
-    private final static long TIMEOUT = 30000;
+    private static final long TIMEOUT = 30000;
 
     private Queue responseAssetQueue;
 
@@ -47,7 +43,6 @@ public class AssetQueueConsumerBean implements AssetQueueConsumer, ConfigMessage
         responseAssetQueue = JMSUtils.lookupQueue(AssetConstants.QUEUE_ASSET);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     @Override
     public <T> T getMessage(String correlationId, Class type) throws AssetMessageException {
     	if (correlationId == null || correlationId.isEmpty()) {
@@ -75,7 +70,6 @@ public class AssetQueueConsumerBean implements AssetQueueConsumer, ConfigMessage
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public <T> T getConfigMessage(String correlationId, Class type) throws ConfigMessageException {
         try {
             return getMessage(correlationId, type);

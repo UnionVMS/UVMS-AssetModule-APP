@@ -48,7 +48,7 @@ import java.io.IOException;
 })
 public class MessageConsumerBean implements MessageListener {
 
-    final static Logger LOG = LoggerFactory.getLogger(MessageConsumerBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MessageConsumerBean.class);
 
     private static ObjectMapper MAPPER = new ObjectMapper();
 
