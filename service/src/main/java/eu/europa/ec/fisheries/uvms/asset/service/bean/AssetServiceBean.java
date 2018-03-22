@@ -31,10 +31,9 @@ import eu.europa.ec.fisheries.uvms.asset.types.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.NoteDao;
-import eu.europa.ec.fisheries.uvms.dao.exception.AssetDaoMappingException;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
-import eu.europa.ec.fisheries.uvms.entity.model.Asset;
-import eu.europa.ec.fisheries.uvms.entity.model.Note;
+import eu.europa.ec.fisheries.uvms.entity.Asset;
+import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
+import eu.europa.ec.fisheries.uvms.entity.Note;
 import eu.europa.ec.fisheries.uvms.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 
@@ -127,7 +126,7 @@ public class AssetServiceBean implements AssetService {
      * @throws AssetException
      */
     @Override
-    public Long getAssetListCount(AssetListQuery query) throws AssetServiceException, AssetDaoMappingException {
+    public Long getAssetListCount(AssetListQuery query) throws AssetServiceException {
         if (query == null) {
             throw new InputArgumentException("Cannot get asset list count because query is null.");
         }

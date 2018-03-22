@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.dao;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -22,8 +21,7 @@ import org.hibernate.envers.query.criteria.AuditDisjunction;
 import org.hibernate.envers.query.criteria.ExtendableCriterion;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
-import eu.europa.ec.fisheries.uvms.entity.model.Asset;
-import eu.europa.ec.fisheries.uvms.entity.model.NotesActivityCode;
+import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mapper.SearchFieldType;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 
@@ -262,26 +260,10 @@ public class AssetDao {
         return auditReader.find(Asset.class, asset.getId(), date);
     }
 
-    // TODO should these be moved to appropriate dao:s
-    public List<NotesActivityCode> getNoteActivityCodes() {
-        throw new IllegalStateException("Not implemented yet!");
-    }
-
     public Asset getAssetRevisionForHistoryId(UUID historyId) {
         AuditReader auditReader = AuditReaderFactory.get(em);
         return (Asset) auditReader.createQuery().forRevisionsOfEntity(Asset.class, true, true)
                 .add(AuditEntity.property("historyid").eq(historyId))
                 .getSingleResult();
-        /*
-        AuditReader auditReader = AuditReaderFactory.get(em);
-        List<Number> revisionNumbers = auditReader.getRevisions(AssetSE.class, asset.getId());
-        for (Number rev : revisionNumbers) {
-            AssetSE audited = auditReader.find(AssetSE.class, asset.getId(), rev);
-            if (audited.getHistoryId().equals(historyId)) {
-                return audited;
-            }
-        }
-        return null;
-        */
     }
 }

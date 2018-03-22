@@ -15,7 +15,7 @@ import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseCodeConstant;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.asset.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
+import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import org.slf4j.Logger;

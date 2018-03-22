@@ -12,11 +12,10 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 
 
-import eu.europa.ec.fisheries.uvms.entity.model.Asset;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import eu.europa.ec.fisheries.uvms.entity.Asset;
 
 public class AssetListResponsePaginated implements Serializable{
 

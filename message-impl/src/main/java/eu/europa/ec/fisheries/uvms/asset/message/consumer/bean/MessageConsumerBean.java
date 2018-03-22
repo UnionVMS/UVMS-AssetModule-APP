@@ -28,7 +28,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.*;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetFault;
-import eu.europa.ec.fisheries.uvms.entity.model.Asset;
+import eu.europa.ec.fisheries.uvms.entity.Asset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

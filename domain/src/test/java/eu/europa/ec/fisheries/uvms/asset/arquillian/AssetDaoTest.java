@@ -34,7 +34,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.dao.AssetDao;
-import eu.europa.ec.fisheries.uvms.entity.model.Asset;
+import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 
 @RunWith(Arquillian.class)

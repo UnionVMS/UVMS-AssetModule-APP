@@ -8,10 +8,9 @@ import java.util.List;
 import java.util.Random;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetProdOrg;
-import eu.europa.ec.fisheries.uvms.entity.model.Asset;
-import eu.europa.ec.fisheries.uvms.entity.model.ContactInfo;
-import eu.europa.ec.fisheries.uvms.entity.model.Note;
+import eu.europa.ec.fisheries.uvms.entity.Asset;
+import eu.europa.ec.fisheries.uvms.entity.ContactInfo;
+import eu.europa.ec.fisheries.uvms.entity.Note;
 
 
 public class AssetTestsHelper {
@@ -93,15 +92,8 @@ public class AssetTestsHelper {
         assetEntity.setAdministrativeDecisionDate(now);
         assetEntity.setSegmentOfAdministrativeDecision("3");
         assetEntity.setLengthBetweenPerpendiculars(17D);
-        AssetProdOrg assetProdOrg = new AssetProdOrg();
-        assetProdOrg.setAddress("prodorgaddress");
-        assetProdOrg.setCity("prodorgcity");
-        assetProdOrg.setCode("prodorgcode");
-        assetProdOrg.setFax("fax");
-        assetProdOrg.setName("prodorg name");
-        assetProdOrg.setPhone("0091-1-123-456");
-        assetProdOrg.setMobile("004631112233");
-        assetProdOrg.setZipCode(41523);
+        assetEntity.setProdOrgCode("prodorgcode");
+        assetEntity.setProdOrgName("prodorg name");
         assetEntity.setHasLicence(true);
         assetEntity.setLicenceType("AllFish");
         assetEntity.setLengthOverAll(25D);

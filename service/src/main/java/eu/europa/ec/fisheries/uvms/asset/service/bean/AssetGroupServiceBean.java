@@ -11,38 +11,31 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.InputArgumentException;
-import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
-import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
-import eu.europa.ec.fisheries.uvms.dao.AssetGroupFieldDao;
-import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.InputArgumentException;
+import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
+import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
+import eu.europa.ec.fisheries.uvms.dao.AssetGroupFieldDao;
+import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
+import eu.europa.ec.fisheries.uvms.entity.AssetGroupField;
 
 @Stateless
 public class AssetGroupServiceBean implements AssetGroupService {
 
-    final static Logger LOG = LoggerFactory.getLogger(AssetGroupServiceBean.class);
-    private static final String GROUP_QUALIFIER_PREFIX = "Group: ";
-
-    @EJB
+    @Inject
     private AssetGroupDao assetGroupDao;
 
-    @EJB
+    @Inject
     private AssetGroupFieldDao assetGroupFieldDao;
-
 
     /**
      * create assetGroup
@@ -62,8 +55,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         }
 
         assetGroup.setName(username);
-        AssetGroup createdAssetGroupEntity = assetGroupDao.createAssetGroup(assetGroup);
-        return createdAssetGroupEntity;
+        return assetGroupDao.createAssetGroup(assetGroup);
     }
 
     /**
@@ -90,8 +82,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         }
         assetGroup.setUpdatedBy(username);
         assetGroup.setUpdateTime(LocalDateTime.now(Clock.systemUTC()));
-        AssetGroup changedAssetGroup = assetGroupDao.updateAssetGroup(assetGroup);
-        return changedAssetGroup;
+        return assetGroupDao.updateAssetGroup(assetGroup);
     }
 
     /**
@@ -108,8 +99,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
             throw new InputArgumentException("Cannot get asset group because ID is null.");
         }
 
-        AssetGroup groupEntity = assetGroupDao.getAssetGroupByGuid(guid);
-        return groupEntity;
+        return assetGroupDao.getAssetGroupByGuid(guid);
     }
 
     /**
@@ -154,8 +144,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
             throw new InputArgumentException("Invalid user");
         }
 
-        List<AssetGroup> filterGroupList = assetGroupDao.getAssetGroupByUser(user);
-        return filterGroupList;
+        return assetGroupDao.getAssetGroupByUser(user);
     }
 
 
@@ -218,8 +207,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         assetGroupField.setAssetGroup(parentAssetgroup);
         assetGroupField.setUpdatedBy(username);
         assetGroupField.setUpdateTime(LocalDateTime.now(Clock.systemUTC()));
-        AssetGroupField createdAssetGroupField = assetGroupFieldDao.create(assetGroupField);
-        return createdAssetGroupField;
+        return assetGroupFieldDao.create(assetGroupField);
     }
 
     /**
@@ -246,9 +234,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
         assetGroupField.setUpdatedBy(username);
         assetGroupField.setUpdateTime(LocalDateTime.now(Clock.systemUTC()));
-        AssetGroupField updatedAssetGroupField = assetGroupFieldDao.update(assetGroupField);
-        return updatedAssetGroupField;
-
+        return assetGroupFieldDao.update(assetGroupField);
     }
 
     /**
@@ -265,8 +251,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
             throw new InputArgumentException("Cannot get assetGroupField because ID is null.");
         }
 
-        AssetGroupField assetGroupField = assetGroupFieldDao.get(id);
-        return assetGroupField;
+        return assetGroupFieldDao.get(id);
     }
 
     /**
@@ -292,8 +277,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
             return null;
         }
 
-        AssetGroupField groupField = assetGroupFieldDao.delete(fetchedAssetGroupField);
-        return groupField;
+        return assetGroupFieldDao.delete(fetchedAssetGroupField);
     }
 
     @Override
@@ -303,12 +287,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
             throw new InputArgumentException("Cannot retrieve list for group because assetGroup is null.");
         }
 
-        List<AssetGroupField> fetchedAssetGroupFieldList = assetGroupFieldDao.retrieveFieldsForGroup(assetGroup);
-        if (fetchedAssetGroupFieldList == null) {
-            return null;
-        }
-
-        return fetchedAssetGroupFieldList;
+        return assetGroupFieldDao.retrieveFieldsForGroup(assetGroup);
     }
 
     @Override

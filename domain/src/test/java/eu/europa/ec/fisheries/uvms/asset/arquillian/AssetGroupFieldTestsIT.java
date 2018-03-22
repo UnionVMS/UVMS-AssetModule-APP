@@ -1,41 +1,32 @@
 package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
-
-import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
-import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
-import eu.europa.ec.fisheries.uvms.dao.AssetGroupFieldDao;
-import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField;
-import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import javax.ejb.EJB;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
+import javax.inject.Inject;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
+import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
+import eu.europa.ec.fisheries.uvms.dao.AssetGroupFieldDao;
+import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
+import eu.europa.ec.fisheries.uvms.entity.AssetGroupField;
 
 @RunWith(Arquillian.class)
 public class AssetGroupFieldTestsIT extends TransactionalTests {
 
-    private Random rnd = new Random();
-
-
-
-    @EJB
+    @Inject
     private AssetGroupDao assetGroupDao;
 
-    @EJB
-    AssetGroupFieldDao assetGroupFieldDaoBean;
-
+    @Inject
+    private AssetGroupFieldDao assetGroupFieldDaoBean;
 
     @Test
-    public void create() throws AssetGroupDaoException {
+    public void create() {
 
         String user = "test";
         AssetGroup assetGroup = createAndStoreAssetGroupEntity(user);
@@ -47,7 +38,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     }
 
     @Test
-    public void get() throws AssetGroupDaoException {
+    public void get() {
 
         String user = "test";
         AssetGroup assetGroup = createAndStoreAssetGroupEntity(user);
@@ -58,7 +49,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     }
 
     @Test
-    public void delete() throws AssetGroupDaoException {
+    public void delete() {
 
         String user = "test";
         AssetGroup assetGroup = createAndStoreAssetGroupEntity(user);
@@ -70,7 +61,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     }
 
     @Test
-    public void update() throws AssetGroupDaoException {
+    public void update() {
 
         String user = "test";
         AssetGroup assetGroup = createAndStoreAssetGroupEntity(user);
@@ -87,7 +78,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     }
 
     @Test
-    public void removeFieldsForGroup() throws AssetGroupDaoException {
+    public void removeFieldsForGroup() {
 
         String user = "test";
         AssetGroup assetGroup1 = createAndStoreAssetGroupEntity(user);
@@ -120,14 +111,14 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     }
 
 
-    private AssetGroupField getField(UUID id) throws AssetGroupDaoException {
+    private AssetGroupField getField(UUID id) {
 
         AssetGroupField assetGroupField =  assetGroupFieldDaoBean.get(id);
         return assetGroupField;
     }
 
 
-    private AssetGroupField createAndStoreAssetGroupFieldEntity(AssetGroup assetGroup) throws AssetGroupDaoException {
+    private AssetGroupField createAndStoreAssetGroupFieldEntity(AssetGroup assetGroup) {
 
         LocalDateTime dt = LocalDateTime.now(Clock.systemUTC());
         List<AssetGroupField> groupFields = createAssetGroupFields(assetGroup,dt,assetGroup.getOwner(), 1);
@@ -138,7 +129,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
 
 
 
-    private AssetGroup createAndStoreAssetGroupEntity(String user) throws AssetGroupDaoException {
+    private AssetGroup createAndStoreAssetGroupEntity(String user) {
 
         AssetGroup assetGroupEntity = createAssetGroupEntity(user);
         AssetGroup createdAssetGroupEntity = assetGroupDao.createAssetGroup(assetGroupEntity);

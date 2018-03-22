@@ -45,29 +45,26 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.entity.model;
+package eu.europa.ec.fisheries.uvms.entity;
 
-import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
-
-import javax.persistence.*;
+import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import java.io.Serializable;
 
-
-/**
- * The persistent class for the carrier database table.
- * 
- */
 @Entity
 @Table(name = "notesactcode")
 @NamedQueries({
-		@NamedQuery(name = UvmsConstants.ASSET_NOTE_ACTIVITY_CODE_FIND_ALL, query = "SELECT v FROM NotesActivityCode v")
+		@NamedQuery(name = NotesActivityCode.ASSET_NOTE_ACTIVITY_CODE_FIND_ALL, query = "SELECT v FROM NotesActivityCode v")
 })
 public class NotesActivityCode implements Serializable {
-	private static final long serialVersionUID = 1L;
+    
+    public static final String ASSET_NOTE_ACTIVITY_CODE_FIND_ALL = "AssetNoteActivity.findAll";
+
+    private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name="notesactcode_id")

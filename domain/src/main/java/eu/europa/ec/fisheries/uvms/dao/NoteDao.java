@@ -16,8 +16,9 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import eu.europa.ec.fisheries.uvms.entity.model.Asset;
-import eu.europa.ec.fisheries.uvms.entity.model.Note;
+import eu.europa.ec.fisheries.uvms.entity.Asset;
+import eu.europa.ec.fisheries.uvms.entity.Note;
+import eu.europa.ec.fisheries.uvms.entity.NotesActivityCode;
 
 @Stateless
 public class NoteDao {
@@ -47,4 +48,9 @@ public class NoteDao {
         query.setParameter("asset", asset);
         return query.getResultList();
     }
+    
+    public List<NotesActivityCode> getNoteActivityCodes() {
+        throw new IllegalStateException("Not implemented yet!");
+    }
+
 }

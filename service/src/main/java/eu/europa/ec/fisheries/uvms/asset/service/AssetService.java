@@ -19,10 +19,9 @@ import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.AssetListResponsePaginated;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.uvms.dao.exception.AssetDaoMappingException;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
-import eu.europa.ec.fisheries.uvms.entity.model.Asset;
-import eu.europa.ec.fisheries.uvms.entity.model.Note;
+import eu.europa.ec.fisheries.uvms.entity.Asset;
+import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
+import eu.europa.ec.fisheries.uvms.entity.Note;
 
 public interface AssetService {
 
@@ -42,7 +41,7 @@ public interface AssetService {
      * @return
      * @throws AssetServiceException
      */
-    AssetListResponsePaginated getAssetList(AssetListQuery requestQuery) throws AssetServiceException, AssetDaoMappingException;
+    AssetListResponsePaginated getAssetList(AssetListQuery requestQuery) throws AssetServiceException;
 
     /**
      * Get all Assets
@@ -51,7 +50,7 @@ public interface AssetService {
      * @return
      * @throws AssetServiceException
      */
-    Long getAssetListCount(AssetListQuery requestQuery) throws AssetServiceException, AssetDaoMappingException;
+    Long getAssetListCount(AssetListQuery requestQuery) throws AssetServiceException;
 
     /**
      * Get a Asset by its asset id from the source queue

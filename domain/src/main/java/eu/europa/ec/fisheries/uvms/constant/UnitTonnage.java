@@ -11,19 +11,13 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.constant;
 
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
-
 public enum UnitTonnage {
 	LONDON, OSLO;
 
-	public static UnitTonnage getType(String grossTonnageUnit) throws AssetModelValidationException {
-		if(grossTonnageUnit != null && !grossTonnageUnit.isEmpty()) {
-			try {
-				return UnitTonnage.valueOf(grossTonnageUnit);
-			} catch (IllegalArgumentException e) {
-				throw new AssetModelValidationException("Non valid gross tonnage unit");
-			}
-		}
-		return UnitTonnage.LONDON;
-	}
+    public static UnitTonnage getType(String grossTonnageUnit) {
+        if (grossTonnageUnit != null && !grossTonnageUnit.isEmpty()) {
+            return UnitTonnage.valueOf(grossTonnageUnit);
+        }
+        return UnitTonnage.LONDON;
+    }
 }

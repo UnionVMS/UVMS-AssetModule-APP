@@ -19,7 +19,7 @@ import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException
 import eu.europa.ec.fisheries.uvms.asset.message.mapper.AuditModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
-import eu.europa.ec.fisheries.uvms.entity.model.Asset;
+import eu.europa.ec.fisheries.uvms.entity.Asset;
 
 @Stateless
 public class AuditServiceBean {

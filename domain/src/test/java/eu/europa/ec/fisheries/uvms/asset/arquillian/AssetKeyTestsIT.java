@@ -1,20 +1,17 @@
 package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetIdTypeEnum;
-import eu.europa.ec.fisheries.uvms.dao.AssetDao;
-import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
-import eu.europa.ec.fisheries.uvms.entity.model.Asset;
+import java.util.Date;
+import java.util.UUID;
+import javax.inject.Inject;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import javax.ejb.EJB;
-import java.util.Date;
-import java.util.Random;
-import java.util.UUID;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetIdTypeEnum;
+import eu.europa.ec.fisheries.uvms.dao.AssetDao;
+import eu.europa.ec.fisheries.uvms.entity.Asset;
 
 
 /**
@@ -25,12 +22,9 @@ import java.util.UUID;
 @RunWith(Arquillian.class)
 public class AssetKeyTestsIT extends TransactionalTests {
 
-
     private AssetTestsHelper assetTestsHelper = new AssetTestsHelper();
 
-    private Random rnd = new Random();
-
-    @EJB
+    @Inject
     private AssetDao assetDao;
 
 
@@ -101,7 +95,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
             Asset fetchedEntity = get(keyType, createdIRCS);
             String fetchedIRCS = fetchedEntity.getIrcs();
             Assert.assertEquals(createdIRCS, fetchedIRCS);
-        } catch (AssetDaoException e) {
+        } catch (Exception e) {
             Assert.fail();
         }
     }
@@ -120,7 +114,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
             Asset fetchedEntity = get(keyType, createdMMSI);
             String fetchedMMSI = fetchedEntity.getMmsi();
             Assert.assertEquals(createdMMSI, fetchedMMSI);
-        } catch (AssetDaoException e) {
+        } catch (Exception e) {
             Assert.fail();
         }
     }
@@ -139,7 +133,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
             Asset fetchedEntity = get(keyType, createdCFR);
             String fetchedCFR = fetchedEntity.getCfr();
             Assert.assertEquals(createdCFR, fetchedCFR);
-        } catch (AssetDaoException e) {
+        } catch (Exception e) {
             Assert.fail();
         }
     }
@@ -158,7 +152,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
             Asset fetchedEntity = get(keyType, createdIMO);
             String fetchedIMO = fetchedEntity.getImo();
             Assert.assertEquals(createdIMO, fetchedIMO);
-        } catch (AssetDaoException e) {
+        } catch (Exception e) {
             Assert.fail();
         }
     }
@@ -177,7 +171,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
             Asset fetchedEntity = get(keyType, createdICCAT);
             String fetchedUUID = fetchedEntity.getIccat();
             Assert.assertEquals(createdICCAT, fetchedUUID);
-        } catch (AssetDaoException e) {
+        } catch (Exception e) {
             Assert.fail();
         }
     }
@@ -195,7 +189,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
             Asset fetchedEntity = get(keyType, createdUvi);
             String fetchedUvi = fetchedEntity.getUvi();
             Assert.assertEquals(createdUvi, fetchedUvi);
-        } catch (AssetDaoException e) {
+        } catch (Exception e) {
             Assert.fail();
         }
     }
@@ -213,7 +207,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
             Asset fetchedEntity = get(keyType, createdGfcm);
             String fetchedGfcm = fetchedEntity.getGfcm();
             Assert.assertEquals(fetchedGfcm, createdGfcm);
-        } catch (AssetDaoException e) {
+        } catch (Exception e) {
             Assert.fail();
         }
     }
@@ -235,9 +229,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
             if (fetchedAsset != null) {
                 Assert.fail();
             }
-        } catch (NoAssetEntityFoundException e) {
-            Assert.assertTrue(true);
-        } catch (AssetDaoException e) {
+        } catch (Exception e) {
             Assert.fail();
         }
     }
@@ -258,9 +250,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
             if (fetchedAsset != null) {
                 Assert.fail();
             }
-        } catch (NoAssetEntityFoundException e) {
-            Assert.assertTrue(true);
-        } catch (AssetDaoException e) {
+        } catch (Exception e) {
             Assert.fail();
         }
     }
@@ -281,9 +271,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
             if (fetchedAsset != null) {
                 Assert.fail();
             }
-        } catch (NoAssetEntityFoundException e) {
-            Assert.assertTrue(true);
-        } catch (AssetDaoException e) {
+        } catch (Exception e) {
             Assert.fail();
         }
     }
@@ -304,9 +292,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
             if (fetchedAsset != null) {
                 Assert.fail();
             }
-        } catch (NoAssetEntityFoundException e) {
-            Assert.assertTrue(true);
-        } catch (AssetDaoException e) {
+        } catch (Exception e) {
             Assert.fail();
         }
     }
@@ -327,9 +313,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
             if (fetchedAsset != null) {
                 Assert.fail();
             }
-        } catch (NoAssetEntityFoundException e) {
-            Assert.assertTrue(true);
-        } catch (AssetDaoException e) {
+        } catch (Exception e) {
             Assert.fail();
         }
     }
@@ -350,9 +334,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
             if (fetchedAsset != null) {
                 Assert.fail();
             }
-        } catch (NoAssetEntityFoundException e) {
-            Assert.assertTrue(true);
-        } catch (AssetDaoException e) {
+        } catch (Exception e) {
             Assert.fail();
         }
     }
@@ -373,9 +355,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
             if (fetchedAsset != null) {
                 Assert.fail();
             }
-        } catch (NoAssetEntityFoundException e) {
-            Assert.assertTrue(true);
-        } catch (AssetDaoException e) {
+        } catch (Exception e) {
             Assert.fail();
         }
     }
@@ -397,9 +377,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
             em.flush();
             Asset fetchedAsset = get(keyType, createdIRCS);
             Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
-        } catch (NoAssetEntityFoundException e) {
-            Assert.fail();
-        } catch (AssetDaoException e) {
+        } catch (Exception e) {
             Assert.fail();
         }
     }
@@ -420,9 +398,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
             em.flush();
             Asset fetchedAsset = get(keyType, createdMMSI);
             Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
-        } catch (NoAssetEntityFoundException e) {
-            Assert.fail();
-        } catch (AssetDaoException e) {
+        } catch (Exception e) {
             Assert.fail();
         }
     }
@@ -443,9 +419,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
             em.flush();
             Asset fetchedAsset = get(keyType, createdCFR);
             Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
-        } catch (NoAssetEntityFoundException e) {
-            Assert.fail();
-        } catch (AssetDaoException e) {
+        } catch (Exception e) {
             Assert.fail();
         }
     }
@@ -466,9 +440,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
             em.flush();
             Asset fetchedAsset = get(keyType, createdIMO);
             Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
-        } catch (NoAssetEntityFoundException e) {
-            Assert.fail();
-        } catch (AssetDaoException e) {
+        } catch (Exception e) {
             Assert.fail();
         }
     }
@@ -489,9 +461,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
             em.flush();
             Asset fetchedAsset = get(keyType, createdICCAT);
             Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
-        } catch (NoAssetEntityFoundException e) {
-            Assert.fail();
-        } catch (AssetDaoException e) {
+        } catch (Exception e) {
             Assert.fail();
         }
     }
@@ -512,9 +482,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
             em.flush();
             Asset fetchedAsset = get(keyType, createdUVI);
             Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
-        } catch (NoAssetEntityFoundException e) {
-            Assert.fail();
-        } catch (AssetDaoException e) {
+        } catch (Exception e) {
             Assert.fail();
         }
     }
@@ -535,9 +503,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
             em.flush();
             Asset fetchedAsset = get(keyType, createdGFCM);
             Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
-        } catch (NoAssetEntityFoundException e) {
-            Assert.fail();
-        } catch (AssetDaoException e) {
+        } catch (Exception e) {
             Assert.fail();
         }
     }

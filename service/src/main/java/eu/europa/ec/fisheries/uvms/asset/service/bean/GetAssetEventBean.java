@@ -1,40 +1,35 @@
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetFault;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
-import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
-import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
-import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
-import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
-import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
-import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.uvms.asset.service.constants.ParameterKey;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetIdTypeEnum;
-import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
-import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
-import eu.europa.ec.fisheries.uvms.entity.model.Asset;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.jms.TextMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
+import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
+import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
+import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
+import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
+import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
+import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.service.constants.ParameterKey;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetFault;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
+import eu.europa.ec.fisheries.uvms.asset.types.AssetIdTypeEnum;
+import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
+import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
+import eu.europa.ec.fisheries.uvms.entity.Asset;
 
 @Stateless
 @LocalBean
 public class GetAssetEventBean {
 
     final static Logger LOG = LoggerFactory.getLogger(GetAssetEventBean.class);
-
-    private ObjectMapper MAPPER = new ObjectMapper();
 
     @EJB
     private AssetService assetService;
@@ -127,12 +122,12 @@ public class GetAssetEventBean {
     public  String mapAssetModuleResponse(Asset asset) throws AssetModelMapperException {
 
         String json = null;
-        try {
-            json = MAPPER.writeValueAsString(asset);
+//        try {
+//            json = MAPPER.writeValueAsString(asset);
             return json;
-        } catch (JsonProcessingException e) {
-            throw new AssetModelMapperException(e.toString(), e);
-        }
+//        } catch (JsonProcessingException e) {
+//            throw new AssetModelMapperException(e.toString(), e);
+//        }
     }
 
 

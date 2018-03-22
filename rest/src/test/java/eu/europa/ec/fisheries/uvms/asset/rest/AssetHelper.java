@@ -9,10 +9,9 @@ import eu.europa.ec.fisheries.uvms.asset.types.AssetListCriteria;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListPagination;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.entity.model.Asset;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetProdOrg;
-import eu.europa.ec.fisheries.uvms.entity.model.ContactInfo;
-import eu.europa.ec.fisheries.uvms.entity.model.Note;
+import eu.europa.ec.fisheries.uvms.entity.Asset;
+import eu.europa.ec.fisheries.uvms.entity.ContactInfo;
+import eu.europa.ec.fisheries.uvms.entity.Note;
 
 public abstract class AssetHelper {
 
@@ -94,15 +93,8 @@ public abstract class AssetHelper {
         assetEntity.setAdministrativeDecisionDate(now);
         assetEntity.setSegmentOfAdministrativeDecision("3");
         assetEntity.setLengthBetweenPerpendiculars(17d);
-        AssetProdOrg assetProdOrg = new AssetProdOrg();
-        assetProdOrg.setAddress("prodorgaddress");
-        assetProdOrg.setCity("prodorgcity");
-        assetProdOrg.setCode("prodorgcode");
-        assetProdOrg.setFax("fax");
-        assetProdOrg.setName("prodorg name");
-        assetProdOrg.setPhone("0091-1-123-456");
-        assetProdOrg.setMobile("004631112233");
-        assetProdOrg.setZipCode(41523);
+        assetEntity.setProdOrgCode("prodorgcode");
+        assetEntity.setProdOrgName("prodorg name");
         assetEntity.setHasLicence(true);
         assetEntity.setLicenceType("AllFish");
         assetEntity.setLengthOverAll(25d);

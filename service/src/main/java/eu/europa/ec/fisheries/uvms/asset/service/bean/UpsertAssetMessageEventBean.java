@@ -5,7 +5,7 @@ import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.uvms.entity.model.Asset;
+import eu.europa.ec.fisheries.uvms.entity.Asset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

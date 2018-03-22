@@ -1,39 +1,35 @@
 package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
 
-import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
-import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
-import eu.europa.ec.fisheries.uvms.dao.AssetGroupFieldDao;
-import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetGroupField;
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import javax.inject.Inject;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import javax.ejb.EJB;
-import java.time.Clock;
-import java.time.LocalDateTime;
-import java.util.*;
+import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
+import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
+import eu.europa.ec.fisheries.uvms.dao.AssetGroupFieldDao;
+import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
+import eu.europa.ec.fisheries.uvms.entity.AssetGroupField;
 
 @RunWith(Arquillian.class)
 public class AssetGroupTestsIT extends TransactionalTests {
 
-
-    private Random rnd = new Random();
-
-    @EJB
+    @Inject
     private AssetGroupDao assetGroupDao;
 
-    @EJB
-    AssetGroupFieldDao assetGroupFieldDaoBean;
-
+    @Inject
+    private AssetGroupFieldDao assetGroupFieldDaoBean;
 
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetGroupAll() throws AssetGroupDaoException {
+    public void getAssetGroupAll() {
 
         List<UUID> createdList = new ArrayList<>();
         List<UUID> fetchedList = new ArrayList<>();
@@ -60,7 +56,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void createAssetGroup() throws AssetGroupDaoException {
+    public void createAssetGroup() {
 
         AssetGroup createdAssetGroupEntity1 = createAndStoreAssetGroupEntity("TEST",1);
         Assert.assertTrue(createdAssetGroupEntity1 != null);
@@ -68,7 +64,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetGroupByUser() throws AssetGroupDaoException {
+    public void getAssetGroupByUser() {
 
         String user1 = UUID.randomUUID().toString();
         String user2 = UUID.randomUUID().toString();
@@ -95,7 +91,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetGroupByGuid() throws AssetGroupDaoException {
+    public void getAssetGroupByGuid() {
 
         AssetGroup createdAssetGroupEntity = createAndStoreAssetGroupEntity("TEST",1);
         UUID guid = createdAssetGroupEntity.getId();
@@ -108,7 +104,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetGroupByGUIDS() throws AssetGroupDaoException {
+    public void getAssetGroupByGUIDS() {
 
         List<UUID> createdList = new ArrayList<>();
         List<UUID> fetchedList = new ArrayList<>();
@@ -136,7 +132,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void deleteAssetGroup() throws AssetGroupDaoException {
+    public void deleteAssetGroup() {
 
         AssetGroup assetGroupEntity = createAndStoreAssetGroupEntity("TEST",1);
         UUID uuid = assetGroupEntity.getId();
@@ -148,7 +144,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void updateAssetGroup() throws AssetGroupDaoException {
+    public void updateAssetGroup() {
 
         AssetGroup assetGroupEntity = createAndStoreAssetGroupEntity("TEST",1);
         UUID uuid = assetGroupEntity.getId();
@@ -164,7 +160,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void updateAssetGroupAndFields() throws AssetGroupDaoException {
+    public void updateAssetGroupAndFields() {
 
 
 
@@ -184,7 +180,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
 
 
 
-    private AssetGroup createAndStoreAssetGroupEntity(String user, int numberOfGroupFields) throws AssetGroupDaoException {
+    private AssetGroup createAndStoreAssetGroupEntity(String user, int numberOfGroupFields) {
 
         AssetGroup assetGroupEntity = createAssetGroupEntity(user,numberOfGroupFields);
         AssetGroup createdAssetGroupEntity = assetGroupDao.createAssetGroup(assetGroupEntity);

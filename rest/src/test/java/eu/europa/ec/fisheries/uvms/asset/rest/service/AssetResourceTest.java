@@ -15,7 +15,7 @@ import eu.europa.ec.fisheries.uvms.asset.rest.AssetHelper;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListCriteriaPair;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
-import eu.europa.ec.fisheries.uvms.entity.model.Asset;
+import eu.europa.ec.fisheries.uvms.entity.Asset;
 
 @RunWith(Arquillian.class)
 public class AssetResourceTest extends AbstractAssetRestTest {
