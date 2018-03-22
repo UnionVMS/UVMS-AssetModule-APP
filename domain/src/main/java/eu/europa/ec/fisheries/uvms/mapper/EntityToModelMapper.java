@@ -66,6 +66,22 @@ public class EntityToModelMapper {
         asset.setUvi(entity.getUvi());
         asset.setGfcm(entity.getGfcm());
 
+        asset.setAisIndicator(entity.getAisIndicator());
+        asset.setErsIndicator(entity.getErsIndicator());
+        asset.setVesselType(entity.getVesselType());
+        asset.setVesselDateOfEntry(entity.getVesselDateOfEntry());
+        asset.setHullMaterial(entity.getHullMaterial());
+        asset.setYearOfConstruction(entity.getConstructionYear());
+        asset.setRegistrationNumber(entity.getRegistrationNumber());
+        asset.setVmsIndicator(entity.getHasVms());
+        asset.setMainFishingGear(entity.getMainFishingGearCode());
+        asset.setSubsidiaryFishingGear(entity.getSubFishingGearCode());
+        asset.setSegment(entity.getSegment().toString());
+        asset.setCountryOfImportOrExport(entity.getCountryOfImportOrExport());
+        asset.setTypeOfExport(entity.getTypeOfExport().toString());
+        asset.setPublicAid(entity.getPublicAid().toString());
+        asset.setPlaceOfConstruction(entity.getPlaceOfConstruction());
+
         if (entity.getNotes() != null) {
             List<AssetNotes> noteList = new ArrayList<>();
             for (Notes notes : entity.getNotes()) {
@@ -127,6 +143,21 @@ public class EntityToModelMapper {
             asset.setUvi(historyEntity.getUvi());
             asset.setGfcm(historyEntity.getGfcm());
 
+            asset.setErsIndicator(historyEntity.getErsIndicator());
+            asset.setAisIndicator(historyEntity.getAisIndicator());
+            asset.setVesselType(historyEntity.getVesselType());
+            asset.setVesselDateOfEntry(historyEntity.getVesselDateOfEntry());
+            asset.setHullMaterial(historyEntity.getHullMaterial());
+            asset.setYearOfConstruction(historyEntity.getConstructionYear());
+            asset.setRegistrationNumber(historyEntity.getRegistrationNumber());
+            asset.setVmsIndicator(historyEntity.getHasVms());
+            asset.setMainFishingGear(historyEntity.getMainFishingGearCode());
+            asset.setSubsidiaryFishingGear(historyEntity.getSubsidiaryFishingGearCode());
+            asset.setSegment(historyEntity.getSegment().toString());
+            asset.setCountryOfImportOrExport(historyEntity.getCountryOfImportOrExport());
+            asset.setTypeOfExport(historyEntity.getTypeOfExport().toString());
+            asset.setPublicAid(historyEntity.getPublicAid().toString());
+            asset.setPlaceOfConstruction(historyEntity.getPlaceOfConstruction());
 
             if (historyEntity.getContactInfo() == null) {
                 historyEntity.setContactInfo(new ArrayList<ContactInfo>());
@@ -138,6 +169,13 @@ public class EntityToModelMapper {
                 contact.setNumber(contactInfo.getPhoneNumber());
                 contact.setEmail(contactInfo.getEmail());
                 contact.setOwner(contactInfo.getOwner());
+                contact.setNationality(contactInfo.getNationality());
+                contact.setType(contactInfo.getType());
+                contact.setCountryCode(contactInfo.getCountryCode());
+                contact.setPostOfficeBox(contactInfo.getPostOfficeBox());
+                contact.setCityName(contactInfo.getCityName());
+                contact.setPostalCode(contactInfo.getPostalCode());
+                contact.setStreetName(contactInfo.getStreetName());
 
                 if (contactInfo.getSource() != null) {
                     contact.setSource(ContactSource.valueOf(contactInfo.getSource().toString()));

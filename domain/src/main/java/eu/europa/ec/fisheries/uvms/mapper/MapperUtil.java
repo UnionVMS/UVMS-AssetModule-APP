@@ -144,7 +144,9 @@ public class MapperUtil {
                     for (AssetContact newContact : newAsset.getContact()) {
                         if (equals(newContact.getName(), originalContact.getName()) &&
                                 equals(newContact.getNumber(), originalContact.getNumber()) &&
-                                equals(newContact.getEmail(), originalContact.getEmail())) {
+                                equals(newContact.getEmail(), originalContact.getEmail()) &&
+                                equals(newContact.getNationality(), originalContact.getNationality()) &&
+                                equals(newContact.getType(), originalContact.getType())) {
                             inNew = true;
                         }
                     }
@@ -160,6 +162,32 @@ public class MapperUtil {
             if(!equals(newAsset.getCountryCode(), originalAsset.getCountryCode())){
                 return false;
             }
+
+            if (!equals(newAsset.isAisIndicator(), originalAsset.isAisIndicator())) {
+                return false;
+            }
+
+            if (!equals(newAsset.isErsIndicator(), originalAsset.isErsIndicator())) {
+                return false;
+            }
+
+            if (!equals(newAsset.getVesselType(), originalAsset.getVesselType())) {
+                return false;
+            }
+
+            if (!equals(newAsset.getVesselDateOfEntry(), originalAsset.getVesselDateOfEntry())) {
+                return false;
+            }
+
+
+            if (!equals(newAsset.getHullMaterial(), originalAsset.getHullMaterial())) {
+                return false;
+            }
+
+            if (!equals(newAsset.getYearOfConstruction(), originalAsset.getYearOfConstruction())) {
+                return false;
+            }
+
             return true;
         }
         return false;

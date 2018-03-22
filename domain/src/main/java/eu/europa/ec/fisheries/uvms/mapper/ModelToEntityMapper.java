@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ModelToEntityMapper {
@@ -74,9 +75,23 @@ public class ModelToEntityMapper {
         entity.setUvi(asset.getUvi());
         entity.setGfcm(asset.getGfcm());
 
+        entity.setAisIndicator(asset.isAisIndicator());
+        entity.setErsIndicator(asset.isErsIndicator());
+        entity.setVesselType(asset.getVesselType());
+        entity.setVesselDateOfEntry(asset.getVesselDateOfEntry());
+        entity.setHullMaterial(asset.getHullMaterial());
+        entity.setConstructionYear(asset.getYearOfConstruction());
         entity.setIrcsIndicator(asset.getHasIrcs());
+        entity.setRegistrationNumber(asset.getRegistrationNumber());
+        entity.setHasVms(asset.isVmsIndicator());
+        entity.setMainFishingGearCode(asset.getMainFishingGear());
+        entity.setSubFishingGearCode(asset.getSubsidiaryFishingGear());
+        entity.setSegment(SegmentFUP.valueOf(asset.getSegment()));
+        entity.setCountryOfImportOrExport(asset.getCountryOfImportOrExport());
+        entity.setTypeOfExport(TypeOfExportEnum.valueOf(asset.getTypeOfExport()));
+        entity.setPublicAid(PublicAidEnum.valueOf(asset.getPublicAid()));
+        entity.setPlaceOfConstruction(asset.getPlaceOfConstruction());
 
-        entity.setHullMaterial(null);
 
         List<Notes> notesList = new ArrayList<>();
         for (AssetNotes notes : asset.getNotes()) {
@@ -99,12 +114,27 @@ public class ModelToEntityMapper {
         assetHistory.setActive(true);
 
         AssetHistoryId history = asset.getEventHistory();
-        EventCodeEnum eventCode = EventCodeEnum.MOD;
-        if (history != null) {
+
+        EventCodeEnum eventCode;
+
+        if (asset.getVesselEventType() == null) {
+            eventCode = EventCodeEnum.MOD;
+        } else if (history != null) {
             eventCode = EventCodeEnum.getType(history.getEventCode());
+        } else {
+            eventCode = EventCodeEnum.valueOf(asset.getVesselEventType().toString());
         }
+
         assetHistory.setEventCode(eventCode);
-        assetHistory.setDateOfEvent(DateUtils.getNowDateUTC());
+
+        Date dateOfEvent;
+        if (asset.getDateOfEvent() == null) {
+            dateOfEvent = DateUtils.getNowDateUTC();
+        } else {
+            dateOfEvent = asset.getDateOfEvent();
+        }
+
+        assetHistory.setDateOfEvent(dateOfEvent);
 
         //TODO set gear fishing type
         assetHistory.setType(GearFishingTypeEnum.getType(asset.getGearType()));
@@ -132,6 +162,22 @@ public class ModelToEntityMapper {
         assetHistory.setUvi(asset.getUvi());
         assetHistory.setGfcm(asset.getGfcm());
 
+        assetHistory.setAisIndicator(asset.isAisIndicator());
+        assetHistory.setErsIndicator(asset.isErsIndicator());
+        assetHistory.setVesselType(asset.getVesselType());
+        assetHistory.setVesselDateOfEntry(asset.getVesselDateOfEntry());
+        assetHistory.setAssetIrcsindicator(asset.getHasIrcs());
+        assetHistory.setHullMaterial(asset.getHullMaterial());
+        assetHistory.setConstructionYear(asset.getYearOfConstruction());
+        assetHistory.setRegistrationNumber(asset.getRegistrationNumber());
+        assetHistory.setHasVms(asset.isVmsIndicator());
+        assetHistory.setMainFishingGearCode(asset.getMainFishingGear());
+        assetHistory.setSubsidiaryFishingGearCode(asset.getSubsidiaryFishingGear());
+        assetHistory.setSegment(SegmentFUP.valueOf(asset.getSegment()));
+        assetHistory.setCountryOfImportOrExport(asset.getCountryOfImportOrExport());
+        assetHistory.setTypeOfExport(TypeOfExportEnum.valueOf(asset.getTypeOfExport()));
+        assetHistory.setPublicAid(PublicAidEnum.valueOf(asset.getPublicAid()));
+        assetHistory.setPlaceOfConstruction(asset.getPlaceOfConstruction());
 
         List<AssetContact> contacts = asset.getContact();
         if (contacts != null) {
@@ -145,6 +191,14 @@ public class ModelToEntityMapper {
                 contactInfo.setName(contact.getName());
                 contactInfo.setOwner(contact.isOwner());
                 contactInfo.setPhoneNumber(contact.getNumber());
+                contactInfo.setNationality(contact.getNationality());
+                contactInfo.setType(contact.getType());
+                contactInfo.setCountryCode(contact.getCountryCode());
+                contactInfo.setPostOfficeBox(contact.getPostOfficeBox());
+                contactInfo.setCityName(contact.getCityName());
+                contactInfo.setPostalCode(contact.getPostalCode());
+                contactInfo.setStreetName(contact.getStreetName());
+
                 if (contact.getSource() != null) {
                     contactInfo.setSource(ContactInfoSourceEnum.valueOf(contact.getSource().toString()));
                 } else {
