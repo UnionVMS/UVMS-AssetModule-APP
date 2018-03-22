@@ -44,4 +44,15 @@
 			<dropTable tableName="contactinfo" cascadeConstraints="true"/>
 		</rollback>
 	</changeSet>
+	<changeSet id="add type, nationality and structured address" author="matbul">
+		<addColumn tableName="contactinfo">
+			<column name="contactinfo_type" type="VARCHAR(100)"/>
+			<column name="contactinfo_nationality" type="VARCHAR(100)"/>
+			<column name="contactinfo_city_name" type="VARCHAR(100)"/>
+			<column name="contactinfo_country" type="VARCHAR(3)"/>
+			<column name="contactinfo_post_office_box" type="VARCHAR(100)"/>
+			<column name="contactinfo_postal_area" type="VARCHAR(100)"/>
+			<column name="contactinfo_street_name" type="VARCHAR(100)"/>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

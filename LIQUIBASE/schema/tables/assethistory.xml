@@ -119,6 +119,20 @@
 			<column name="assethist_gfcm" type="VARCHAR(50)" />
 		</addColumn>
 	</changeSet>
-
+	
+	<changeSet author="matbul" id="Add ers and ais indicator">
+		<addColumn tableName="assethistory">
+			<column name="assethist_ers_indicator" type="BOOLEAN" />
+			<column name="assethist_ais_indicator" type="BOOLEAN" />
+			<column name="assethist_vessel_type" type="VARCHAR(100)" />
+			<column name="assethist_vessel_date_of_entry" type="TIMESTAMP" />
+			<column name="assethist_ircs_indicator" type="VARCHAR(1)" />
+			<column name="assethist_hull_material" type="VARCHAR(100)" />
+			<column name="assethist_year_of_construction" type="VARCHAR(100)" />
+			<column name="assethist_main_fishing_gear_code" type="VARCHAR(100)" />
+			<column name="assethist_sub_fishing_gear_code" type="VARCHAR(100)" />
+			<column name="assethist_place_of_construction" type="VARCHAR(100)" />
+		</addColumn>
+	</changeSet>
 
 </databaseChangeLog>

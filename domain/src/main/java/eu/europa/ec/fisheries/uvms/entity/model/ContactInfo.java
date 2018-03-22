@@ -24,6 +24,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.entity.model;
 
 import eu.europa.ec.fisheries.uvms.entity.asset.types.ContactInfoSourceEnum;
+import eu.europa.ec.fisheries.wsdl.asset.types.ContactType;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -74,6 +75,35 @@ public class ContactInfo implements Serializable {
 	@Size(max=60)
 	@Column(name="contactinfo_upuser")
 	private String updatedBy;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "contactinfo_type")
+	private ContactType type;
+
+    @Size(max = 100)
+    @Column(name = "contactinfo_nationality")
+    private String nationality;
+
+	@Size(max = 100)
+	@Column(name = "contactinfo_city_name")
+	private String cityName;
+
+	@Size(max = 3)
+	@Column(name = "contactinfo_country")
+	private String countryCode;
+
+	@Size(max = 100)
+	@Column(name = "contactinfo_post_office_box")
+	private String postOfficeBox;
+
+	@Size(max = 100)
+	@Column(name = "contactinfo_postal_area")
+	private String postalCode;
+
+	@Size(max = 100)
+	@Column(name = "contactinfo_street_name")
+	private String streetName;
+
 
 	public ContactInfo() {
 	}
@@ -148,5 +178,61 @@ public class ContactInfo implements Serializable {
 
 	public void setUpdatedBy(String updatedBy) {
 		this.updatedBy = updatedBy;
+	}
+
+    public ContactType getType() {
+        return type;
+    }
+
+    public void setType(ContactType contactType) {
+        this.type = contactType;
+    }
+
+    public String getNationality() {
+        return nationality;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+	public String getCityName() {
+		return cityName;
+	}
+
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+
+	public String getCountryCode() {
+		return countryCode;
+	}
+
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
+	}
+
+	public String getPostOfficeBox() {
+		return postOfficeBox;
+	}
+
+	public void setPostOfficeBox(String postOfficeBox) {
+		this.postOfficeBox = postOfficeBox;
+	}
+
+	public String getPostalCode() {
+		return postalCode;
+	}
+
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
+	}
+
+	public String getStreetName() {
+		return streetName;
+	}
+
+	public void setStreetName(String streetName) {
+		this.streetName = streetName;
 	}
 }

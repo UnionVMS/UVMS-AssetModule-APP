@@ -37,6 +37,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
+import eu.europa.ec.fisheries.uvms.entity.asset.types.PublicAidEnum;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.SegmentFUP;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.TypeOfExportEnum;
+import eu.europa.ec.fisheries.wsdl.asset.types.ContactType;
+import eu.europa.ec.fisheries.wsdl.asset.types.HullMaterial;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -102,7 +107,7 @@ public class AssetEntity implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "asset_hullmaterial")
-    private HullMaterialEnum hullMaterial;
+    private HullMaterial hullMaterial;
 
     @Size(min = 2, max = 2)
     @Column(name = "asset_dayofcommissioning")
@@ -116,7 +121,6 @@ public class AssetEntity implements Serializable {
     @Column(name = "asset_yearofcommissioning")
     private String commissionYear;
 
-    @Size(min = 4, max = 4)
     @Column(name = "asset_yearofconstruction")
     private String constructionYear;
 
@@ -157,6 +161,50 @@ public class AssetEntity implements Serializable {
     @Column(name = "asset_gfcm")
     private String gfcm;
 
+    @Column(name = "asset_ers_indicator")
+    private Boolean ersIndicator;
+
+    @Column(name = "asset_ais_indicator")
+    private Boolean aisIndicator;
+
+    @Size(max = 100)
+    @Column(name = "asset_vessel_type")
+    private String vesselType;
+
+    @Column(name = "asset_vessel_date_of_entry")
+    private Date vesselDateOfEntry;
+
+    @Size(max = 14)
+    @Column(name = "asset_registrationnumber")
+    private String registrationNumber;
+
+    @Column(name = "asset_vmsindicator")
+    private Boolean hasVms;
+
+    @Size(max = 100)
+    @Column(name = "asset_main_fishing_gear_code")
+    private String mainFishingGearCode;
+
+    @Size(max = 100)
+    @Column(name = "asset_sub_fishing_gear_code")
+    private String subFishingGearCode;
+
+    @Column(name = "asset_segment")
+    private SegmentFUP segment;
+
+    @Size(max = 100)
+    @Column(name = "asset_country_of_import_or_export")
+    private String countryOfImportOrExport;
+
+    @Column(name = "asset_type_of_export")
+    private TypeOfExportEnum typeOfExport;
+
+    @Column(name = "asset_public_aid")
+    private PublicAidEnum publicAid;
+
+    @Size(max = 100)
+    @Column(name = "asset_place_of_construction")
+    private String placeOfConstruction;
 
     public AssetEntity() {
     }
@@ -182,6 +230,7 @@ public class AssetEntity implements Serializable {
         this.id = id;
     }
 
+
     public String getCFR() {
         return this.cfr;
     }
@@ -206,11 +255,11 @@ public class AssetEntity implements Serializable {
         this.guid = guid;
     }
 
-    public HullMaterialEnum getHullMaterial() {
+    public HullMaterial getHullMaterial() {
         return this.hullMaterial;
     }
 
-    public void setHullMaterial(HullMaterialEnum hullMaterial) {
+    public void setHullMaterial(HullMaterial hullMaterial) {
         this.hullMaterial = hullMaterial;
     }
 
@@ -310,7 +359,6 @@ public class AssetEntity implements Serializable {
         this.histories = histories;
     }
 
-
     public String getIccat() { return iccat; }
 
     public void setIccat(String iccat) { this.iccat = iccat; }
@@ -323,9 +371,107 @@ public class AssetEntity implements Serializable {
 
     public void setGfcm(String gfcm) { this.gfcm = gfcm; }
 
+    public Boolean getErsIndicator() {
+        return ersIndicator;
+    }
 
+    public void setErsIndicator(Boolean ersIndicator) {
+        this.ersIndicator = ersIndicator;
+    }
 
+    public Boolean getAisIndicator() {
+        return aisIndicator;
+    }
 
+    public void setAisIndicator(Boolean aisIndicator) {
+        this.aisIndicator = aisIndicator;
+    }
 
+    public String getVesselType() {
+        return vesselType;
+    }
 
+    public void setVesselType(String vesselType) {
+        this.vesselType = vesselType;
+    }
+
+    public Date getVesselDateOfEntry() {
+        return vesselDateOfEntry;
+    }
+
+    public void setVesselDateOfEntry(Date vesselDateOfEntry) {
+        this.vesselDateOfEntry = vesselDateOfEntry;
+    }
+
+    public String getRegistrationNumber() {
+        return registrationNumber;
+    }
+
+    public void setRegistrationNumber(String registrationNumber) {
+        this.registrationNumber = registrationNumber;
+    }
+
+    public Boolean getHasVms() {
+        return hasVms;
+    }
+
+    public void setHasVms(Boolean hasVms) {
+        this.hasVms = hasVms;
+    }
+
+    public String getMainFishingGearCode() {
+        return mainFishingGearCode;
+    }
+
+    public void setMainFishingGearCode(String mainFishingGearCode) {
+        this.mainFishingGearCode = mainFishingGearCode;
+    }
+
+    public String getSubFishingGearCode() {
+        return subFishingGearCode;
+    }
+
+    public void setSubFishingGearCode(String subFishingGearCode) {
+        this.subFishingGearCode = subFishingGearCode;
+    }
+
+    public SegmentFUP getSegment() {
+        return segment;
+    }
+
+    public void setSegment(SegmentFUP segment) {
+        this.segment = segment;
+    }
+
+    public String getCountryOfImportOrExport() {
+        return countryOfImportOrExport;
+    }
+
+    public void setCountryOfImportOrExport(String countryOfImportOrExport) {
+        this.countryOfImportOrExport = countryOfImportOrExport;
+    }
+
+    public TypeOfExportEnum getTypeOfExport() {
+        return typeOfExport;
+    }
+
+    public void setTypeOfExport(TypeOfExportEnum typeOfExport) {
+        this.typeOfExport = typeOfExport;
+    }
+
+    public PublicAidEnum getPublicAid() {
+        return publicAid;
+    }
+
+    public void setPublicAid(PublicAidEnum publicAid) {
+        this.publicAid = publicAid;
+    }
+
+    public String getPlaceOfConstruction() {
+        return placeOfConstruction;
+    }
+
+    public void setPlaceOfConstruction(String placeOfConstruction) {
+        this.placeOfConstruction = placeOfConstruction;
+    }
 }

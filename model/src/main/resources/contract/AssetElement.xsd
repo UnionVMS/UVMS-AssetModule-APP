@@ -36,9 +36,54 @@
             <xsd:element name="iccat" type="xsd:string" minOccurs="0" maxOccurs="1"/>
             <xsd:element name="uvi" type="xsd:string" minOccurs="0" maxOccurs="1"/>
             <xsd:element name="gfcm" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="ersIndicator" type="xsd:boolean" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="aisIndicator" type="xsd:boolean" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="vesselType" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="vesselDateOfEntry" type="xsd:dateTime" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="hullMaterial" type="hullMaterial" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="yearOfConstruction" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="registrationNumber" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="vmsIndicator" type="xsd:boolean" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="vesselEventType" type="VesselEventType " minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="dateOfEvent" type="xsd:dateTime" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="mainFishingGear" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="subsidiaryFishingGear" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="segment" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="countryOfImportOrExport" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="typeOfExport" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="publicAid" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="placeOfConstruction" type="xsd:string" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    
+
+    <xsd:simpleType name="VesselEventType ">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="CEN" />
+            <xsd:enumeration value="CST" />
+            <xsd:enumeration value="IMP" />
+            <xsd:enumeration value="CHA" />
+            <xsd:enumeration value="MOD" />
+            <xsd:enumeration value="DES" />
+            <xsd:enumeration value="EXP" />
+            <xsd:enumeration value="RET" />
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="hullMaterial">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="WOOD" />
+            <xsd:enumeration value="METAL" />
+            <xsd:enumeration value="GLAS_PLASTIC_FIBER" />
+            <xsd:enumeration value="OTHER" />
+            <xsd:enumeration value="UNKNOWN" />
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="contactType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="OWNER" />
+            <xsd:enumeration value="OPERATOR" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
     <xsd:complexType name="AssetContact">
         <xsd:sequence>
             <xsd:element name="name" type="xsd:string"/>
@@ -46,6 +91,13 @@
             <xsd:element name="email" type="xsd:string"/>
             <xsd:element name="owner" type="xsd:boolean"/>
             <xsd:element name="source" type="ContactSource"/>
+            <xsd:element name="type" type="contactType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="nationality" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="cityName" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="countryCode" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="postOfficeBox" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="postalCode" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="streetName" type="xsd:string" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
 
@@ -294,6 +346,7 @@
             <xsd:enumeration value="GET"/>
             <xsd:enumeration value="LIST"/>
             <xsd:enumeration value="UPSERT"/>
+            <xsd:enumeration value="UPSERT_LIST"/>
             <xsd:enumeration value="DELETE"/>
             <xsd:enumeration value="HISTORY_GET"/>
             <xsd:enumeration value="HISTORY_LIST"/>
