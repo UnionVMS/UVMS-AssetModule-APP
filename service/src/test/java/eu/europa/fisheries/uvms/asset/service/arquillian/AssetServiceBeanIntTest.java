@@ -17,6 +17,8 @@ import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
 import javax.transaction.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;

@@ -10,6 +10,7 @@ import eu.europa.ec.fisheries.uvms.asset.types.AssetListPagination;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
+import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.entity.Note;
 
@@ -133,6 +134,14 @@ public abstract class AssetHelper {
         note.setNotes("Notes: " + getRandomIntegers(10));
         note.setUser("Test");
         return note;
+    }
+    
+    public static AssetGroup createBasicAssetGroup() {
+        AssetGroup assetGroup = new AssetGroup();
+        assetGroup.setName("Group: " + getRandomIntegers(5));
+        assetGroup.setOwner("User: " + getRandomIntegers(5));
+        assetGroup.setArchived(false);
+        return assetGroup;
     }
 
     public static String getRandomIntegers(int length) {

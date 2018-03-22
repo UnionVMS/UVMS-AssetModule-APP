@@ -28,18 +28,16 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseCodeConstant;
-import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseDto;
-import eu.europa.ec.fisheries.uvms.asset.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.AssetListResponsePaginated;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.entity.Note;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.AssetListResponsePaginated;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 
@@ -47,13 +45,13 @@ import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 @Stateless
 public class AssetResource {
 
-    @Inject
-    AssetService assetService;
+    private static final Logger LOG = LoggerFactory.getLogger(AssetResource.class);
 
     @Context
     private HttpServletRequest servletRequest;
 
-    private static final Logger LOG = LoggerFactory.getLogger(AssetResource.class);
+    @Inject
+    private AssetService assetService;
 
     /**
      *
@@ -64,18 +62,17 @@ public class AssetResource {
      *
      */
     @POST
-    @Consumes(value = { MediaType.APPLICATION_JSON })
-    @Produces(value = { MediaType.APPLICATION_JSON })
     @Path("list")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public ResponseDto getAssetList(final AssetListQuery assetQuery) {
+    public Response getAssetList(final AssetListQuery assetQuery) {
         try {
-            LOG.info("Getting asset list:{}",assetQuery);
             AssetListResponsePaginated assetList = assetService.getAssetList(assetQuery);
-            return new ResponseDto(assetList, ResponseCodeConstant.OK);
+            return Response.ok(assetList).build();
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset list. ] ");
-            return ErrorHandler.getFault(e);
+            LOG.error("Error when getting asset list.", e);
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
 
@@ -88,18 +85,17 @@ public class AssetResource {
      *
      */
     @POST
-    @Consumes(value = { MediaType.APPLICATION_JSON })
-    @Produces(value = { MediaType.APPLICATION_JSON })
     @Path("listcount")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public ResponseDto getAssetListItemCount(final AssetListQuery assetQuery) {
+    public Response getAssetListItemCount(final AssetListQuery assetQuery) {
         try {
-            LOG.info("Get Asset List Item Count: {}",assetQuery);
             Long assetListCount = assetService.getAssetListCount(assetQuery);
-            return new ResponseDto(assetListCount, ResponseCodeConstant.OK);
+            return Response.ok(assetListCount).build();
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset list: {} ] {}",assetQuery,e);
-            return ErrorHandler.getFault(e);
+            LOG.error("Error when getting asset list: {}",assetQuery,e);
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
 
@@ -112,17 +108,17 @@ public class AssetResource {
      *
      */
     @GET
-    @Consumes(value = { MediaType.APPLICATION_JSON })
-    @Produces(value = { MediaType.APPLICATION_JSON })
     @Path("activitycodes")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public ResponseDto getNoteActivityCodes() {
+    public Response getNoteActivityCodes() {
         try {
             String activityCodes = assetService.getNoteActivityCodes();
-            return new ResponseDto(activityCodes, ResponseCodeConstant.OK);
+            return Response.ok(activityCodes).build();
         } catch (Exception e) {
-            LOG.error("[ getNoteActivityCodes error. ] ",e);
-            return ErrorHandler.getFault(e);
+            LOG.error("Could not get NoteActivityCodes",e);
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
 
@@ -135,23 +131,18 @@ public class AssetResource {
      *
      */
     @GET
-    @Consumes(value = { MediaType.APPLICATION_JSON })
-    @Produces(value = { MediaType.APPLICATION_JSON })
     @Path(value = "/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetById(@PathParam(value = "id") final String id) throws AssetException {
+    public Response getAssetById(@PathParam("id") UUID id) {
         try {
-            UUID theId = UUID.fromString(id);
-            Asset asset = assetService.getAssetById(theId);
-            Response.ResponseBuilder rb = Response.status(200).entity(asset).type(MediaType.APPLICATION_JSON )
-                    .header("MDC", MDC.get("requestId"));
-            return rb.build();
-        } catch (IllegalArgumentException e) {
-            LOG.error("The Id is not a valid UUID",id,e);
-            throw e;
+            Asset asset = assetService.getAssetById(id);
+            return Response.status(200).entity(asset).type(MediaType.APPLICATION_JSON)
+                    .header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset by ID. {}] {} ",id,e);
-            throw e;
+            LOG.error("Error when getting asset by ID. {}",id,e);
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
 
@@ -172,21 +163,19 @@ public class AssetResource {
      *
      */
     @POST
-    @Consumes(value = { MediaType.APPLICATION_JSON })
-    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public Response createAsset(final Asset asset) throws AssetException {
         try {
             String remoteUser = servletRequest.getRemoteUser();
             Asset createdAssetSE = assetService.createAsset(asset, remoteUser);
 
-            Response.ResponseBuilder rb = Response.status(200).entity(createdAssetSE).type(MediaType.APPLICATION_JSON )
-                    .header("MDC", MDC.get("requestId"));
-
-            return rb.build();
+            return Response.status(200).entity(createdAssetSE).type(MediaType.APPLICATION_JSON )
+                    .header("MDC", MDC.get("requestId")).build();
         } catch (AssetException e) {
-            LOG.error("[ Error when creating asset. {}] {}" , asset, e.getMessage());
-            throw e;
+            LOG.error("Error when creating asset. {}", asset, e);
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
 
@@ -199,53 +188,50 @@ public class AssetResource {
      *
      */
     @PUT
-    @Consumes(value = { MediaType.APPLICATION_JSON })
-    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response updateAsset(final Asset asset, @QueryParam("comment") String comment) throws AssetException {
+    public Response updateAsset(final Asset asset, @QueryParam("comment") String comment) {
         try {
-            LOG.info("Updating asset:{}",asset);
             String remoteUser = servletRequest.getRemoteUser();
             Asset updatedAsset = assetService.updateAsset(asset, remoteUser, comment);
-            Response.ResponseBuilder rb = Response.status(200).entity(updatedAsset).type(MediaType.APPLICATION_JSON )
-                    .header("MDC", MDC.get("requestId"));
-            return rb.build();
+            return Response.status(200).entity(updatedAsset).type(MediaType.APPLICATION_JSON )
+                    .header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            LOG.error("[ Error when updating asset. {}] {}",asset, e.getMessage());
-            throw e;
+            LOG.error("Error when updating asset: {}",asset, e);
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
 
     @PUT
     @Path("/archive")
-    @Consumes(value = { MediaType.APPLICATION_JSON })
-    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public ResponseDto archiveAsset(final Asset asset, @QueryParam("comment") String comment) {
+    public Response archiveAsset(final Asset asset, @QueryParam("comment") String comment) {
         try {
             String remoteUser = servletRequest.getRemoteUser();
             Asset archivedAsset = assetService.archiveAsset(asset, remoteUser, comment);
-            return new ResponseDto(archivedAsset, ResponseCodeConstant.OK);
+            return Response.ok(archivedAsset).build();
         } catch (Exception e) {
-            LOG.error("[ Error when archiving asset. {}] {}",asset, e.getMessage());
-            return ErrorHandler.getFault(e);
+            LOG.error("Error when archiving asset. {}",asset, e);
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
 
     @POST
-    @Consumes(value = { MediaType.APPLICATION_JSON })
-    @Produces(value = { MediaType.APPLICATION_JSON })
     @Path("/listGroupByFlagState")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public ResponseDto assetListGroupByFlagState(final List<String> assetIds) {
+    public Response assetListGroupByFlagState(final List<String> assetIds) {
         try {
-            LOG.info("Getting asset list group by flag state:{}",assetIds);
             //AssetListGroupByFlagStateResponse assetListGroupByFlagState = assetService.getAssetListGroupByFlagState(assetIds);
             //return new ResponseDto(assetListGroupByFlagState, ResponseCodeConstant.OK);
-            return null;
+            return Response.ok().build();
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset list:{} ] {}",assetIds,e);
-            return ErrorHandler.getFault(e);
+            LOG.error("Error when getting asset list: {}", assetIds, e);
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
 

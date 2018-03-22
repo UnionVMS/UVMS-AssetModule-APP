@@ -13,49 +13,43 @@ package eu.europa.ec.fisheries.uvms.asset.rest.service;
 
 import java.util.List;
 import java.util.Map;
-
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseCodeConstant;
-import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseDto;
-import eu.europa.ec.fisheries.uvms.asset.rest.error.ErrorHandler;
-import eu.europa.ec.fisheries.uvms.asset.rest.mapper.ConfigMapper;
-import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.ConfigServiceBean;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import eu.europa.ec.fisheries.uvms.asset.rest.mapper.ConfigMapper;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.ConfigServiceBean;
+import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 
-/**
- **/
 @Path("/config")
 @Stateless
 @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
 public class ConfigResource {
 
-    @EJB
-    ConfigServiceBean configService;
-    
-    final static Logger LOG = LoggerFactory.getLogger(ConfigResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigResource.class);
+
+    @Inject
+    private ConfigServiceBean configService;
 
     @GET
+    @Path("/searchfields")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    @Path(value = "/searchfields")
-    public ResponseDto getConfigSearchFields() {
+    public Response getConfigSearchFields() {
         try {
-            return new ResponseDto(ConfigSearchFieldEnum.values(), ResponseCodeConstant.OK);
+            return Response.ok(ConfigSearchFieldEnum.values()).build();
         } catch (Exception e) {
-            LOG.error("[ Error when getting config search fields. ]");
-            return ErrorHandler.getFault(e);
+            LOG.error("Error when getting config search fields.");
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
 
@@ -63,13 +57,13 @@ public class ConfigResource {
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path(value = "/")
-    public ResponseDto getConfiguration() {
+    public Response getConfiguration() {
         try {
         	List<Object> configuration = configService.getConfiguration();
-            return new ResponseDto(ConfigMapper.mapConfiguration(configuration), ResponseCodeConstant.OK);
+        	return Response.ok(ConfigMapper.mapConfiguration(configuration)).build();
         } catch (Exception e) {
-            LOG.error("[ Error when getting config search fields. ] ");
-            return ErrorHandler.getFault(e);
+            LOG.error("Error when getting config search fields.");
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
     
@@ -77,13 +71,13 @@ public class ConfigResource {
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path(value = "/parameters")
-    public ResponseDto getParameters() {
+    public Response getParameters() {
         try {
         	Map<String, String> parameters = configService.getParameters();
-            return new ResponseDto(parameters, ResponseCodeConstant.OK);
+        	return Response.ok(parameters).build();
         } catch (Exception e) {
-            LOG.error("[ Error when getting config search fields. ] ");
-            return ErrorHandler.getFault(e);
+            LOG.error("Error when getting config search fields.");
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
 }

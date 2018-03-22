@@ -11,35 +11,42 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.rest.service;
 
-import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseCodeConstant;
-import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseDto;
-import eu.europa.ec.fisheries.uvms.asset.rest.error.ErrorHandler;
+import java.util.List;
+import java.util.UUID;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import java.util.UUID;
 
 @Path("/group")
 @Stateless
 public class AssetGroupResource {
 
-    @EJB
-    AssetGroupService assetGroupService;
+    private static final Logger LOG = LoggerFactory.getLogger(AssetGroupResource.class);
 
     @Context
     private HttpServletRequest servletRequest;
 
-    final static Logger LOG = LoggerFactory.getLogger(AssetGroupResource.class);
+    @Inject
+    AssetGroupService assetGroupService;
 
     /**
      *
@@ -50,17 +57,16 @@ public class AssetGroupResource {
      *
      */
     @GET
-    @Consumes(value = { MediaType.APPLICATION_JSON })
-    @Produces(value = { MediaType.APPLICATION_JSON })
     @Path("list")
+    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public ResponseDto getAssetGroupListByUser(@QueryParam(value = "user") String user) {
+    public Response getAssetGroupListByUser(@QueryParam(value = "user") String user) {
         try {
-            LOG.info("Getting asset group list by user {}",user);
-            return new ResponseDto(assetGroupService.getAssetGroupList(user), ResponseCodeConstant.OK);
+            List<AssetGroup> assetGroups = assetGroupService.getAssetGroupList(user);
+            return Response.ok(assetGroups).build();
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset group list by user. ] {}", e.getMessage(), e.getStackTrace());
-            return ErrorHandler.getFault(e);
+            LOG.error("Error when getting asset group list by user. {}", user, e);
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
 
@@ -73,19 +79,16 @@ public class AssetGroupResource {
      *
      */
     @GET
-    @Consumes(value = { MediaType.APPLICATION_JSON })
-    @Produces(value = { MediaType.APPLICATION_JSON })
     @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public ResponseDto getAssetById(@PathParam(value = "id") final String id) {
+    public Response getAssetById(@PathParam(value = "id") final UUID id) {
         try {
-
-            UUID uuid = UUID.fromString(id);
-            LOG.info("Getting asset group by ID {}",id);
-            return new ResponseDto(assetGroupService.getAssetGroupById(uuid), ResponseCodeConstant.OK);
+            AssetGroup assetGroup = assetGroupService.getAssetGroupById(id);
+            return Response.ok(assetGroup).build();
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset by ID. ] {}", e.getMessage(), e.getStackTrace());
-            return ErrorHandler.getFault(e);
+            LOG.error("Error when getting asset by ID. ", id, e);
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
 
@@ -98,16 +101,17 @@ public class AssetGroupResource {
      *
      */
     @POST
-    @Consumes(value = { MediaType.APPLICATION_JSON })
-    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public ResponseDto createAssetGroup(final AssetGroup assetGroup) {
+    public Response createAssetGroup(final AssetGroup assetGroup) {
         try {
-            LOG.info("Creating asset group: {}",assetGroup);
-            return new ResponseDto(assetGroupService.createAssetGroup(assetGroup, servletRequest.getRemoteUser()), ResponseCodeConstant.OK);
+            String user = servletRequest.getRemoteUser();
+            AssetGroup createdAssetGroup = assetGroupService.createAssetGroup(assetGroup, user);
+            return Response.ok(createdAssetGroup).build();
         } catch (Exception e) {
-            LOG.error("[ Error when creating asset group: {} ] {}",assetGroup, e.getMessage());
-            return ErrorHandler.getFault(e);
+            LOG.error("Error when creating asset group: {}",assetGroup, e);
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
 
@@ -120,15 +124,17 @@ public class AssetGroupResource {
      *
      */
     @PUT
-    @Consumes(value = { MediaType.APPLICATION_JSON })
-    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public ResponseDto updateAssetGroup(final AssetGroup assetGroup) {
+    public Response updateAssetGroup(final AssetGroup assetGroup) {
         try {
-            return new ResponseDto(assetGroupService.updateAssetGroup(assetGroup, servletRequest.getRemoteUser()), ResponseCodeConstant.OK);
+            String user = servletRequest.getRemoteUser();
+            AssetGroup updatedAssetGroup = assetGroupService.updateAssetGroup(assetGroup, user);
+            return Response.ok(updatedAssetGroup).build();
         } catch (Exception e) {
-            LOG.error("[ Error when updating asset group. ] {}", e.getMessage(), e.getStackTrace());
-            return ErrorHandler.getFault(e);
+            LOG.error("Error when updating asset group. {}", assetGroup, e);
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
 
@@ -141,16 +147,17 @@ public class AssetGroupResource {
      *
      */
     @DELETE
-    @Produces(value = { MediaType.APPLICATION_JSON })
     @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public ResponseDto deleteAssetGroup(@PathParam(value = "id") final String id) {
+    public Response deleteAssetGroup(@PathParam(value = "id") final UUID id) {
         try {
-            UUID uuid = UUID.fromString(id);
-            return new ResponseDto(assetGroupService.deleteAssetGroupById(uuid, servletRequest.getRemoteUser()), ResponseCodeConstant.OK);
+            String user = servletRequest.getRemoteUser();
+            assetGroupService.deleteAssetGroupById(id, user);
+            return Response.ok().build();
         } catch (Exception e) {
-            LOG.error("[ Error when deleting asset group. ] {}", e.getMessage(), e.getStackTrace());
-            return ErrorHandler.getFault(e);
+            LOG.error("Error when deleting asset group by id: {}", id, e);
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
 }

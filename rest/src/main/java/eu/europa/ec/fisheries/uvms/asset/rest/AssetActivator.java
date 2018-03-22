@@ -12,6 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.rest;
 
 import eu.europa.ec.fisheries.uvms.asset.rest.service.AssetGroupResource;
+import eu.europa.ec.fisheries.uvms.asset.rest.service.AssetHistoryResource;
 import eu.europa.ec.fisheries.uvms.asset.rest.service.AssetResource;
 import eu.europa.ec.fisheries.uvms.asset.rest.service.ConfigResource;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeatureFilter;
@@ -30,6 +31,7 @@ public class AssetActivator extends Application {
 
     public AssetActivator() {
         set.add(AssetResource.class);
+        set.add(AssetHistoryResource.class);
         set.add(AssetGroupResource.class);
         set.add(ConfigResource.class);
         set.add(UnionVMSFeatureFilter.class);
