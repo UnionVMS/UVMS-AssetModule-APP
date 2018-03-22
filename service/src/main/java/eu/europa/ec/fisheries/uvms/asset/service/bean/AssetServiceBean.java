@@ -33,7 +33,6 @@ import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.NoteDao;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetDaoMappingException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetGroup;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetListResponsePaginated;
 import eu.europa.ec.fisheries.uvms.entity.model.Asset;
 import eu.europa.ec.fisheries.uvms.entity.model.Note;
 import eu.europa.ec.fisheries.uvms.mapper.SearchFieldMapper;

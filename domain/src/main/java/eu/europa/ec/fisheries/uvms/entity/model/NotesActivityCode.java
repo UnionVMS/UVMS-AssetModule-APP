@@ -48,17 +48,13 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.entity.model;
 
 import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.NotesSourceEnum;
-import org.hibernate.annotations.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
 
 
 /**

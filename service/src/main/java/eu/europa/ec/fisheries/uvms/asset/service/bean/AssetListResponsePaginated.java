@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.entity.model;
+package eu.europa.ec.fisheries.uvms.asset.service.bean;
 /*
 ﻿Developed with the contribution of the European Commission - Directorate General for Maritime Affairs and Fisheries
 © European Union, 2015-2016.
@@ -11,6 +11,8 @@ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more d
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+import eu.europa.ec.fisheries.uvms.entity.model.Asset;
 
 import java.io.Serializable;
 import java.util.ArrayList;

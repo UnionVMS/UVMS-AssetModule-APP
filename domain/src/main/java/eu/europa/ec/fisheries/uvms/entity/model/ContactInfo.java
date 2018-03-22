@@ -23,9 +23,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.entity.model;
 
-import eu.europa.ec.fisheries.uvms.entity.asset.types.ContactInfoSourceEnum;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -63,9 +60,8 @@ public class ContactInfo implements Serializable {
 	@Column(name="contactinfo_owner")
 	private Boolean owner;
 
-	@Enumerated(EnumType.STRING)
 	@Column(name="contactinfo_source")
-	private ContactInfoSourceEnum source;
+	private String source;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="contactinfo_updattim")
@@ -126,11 +122,11 @@ public class ContactInfo implements Serializable {
 		this.owner = owner;
 	}
 
-	public ContactInfoSourceEnum getSource() {
+	public String getSource() {
 		return source;
 	}
 
-	public void setSource(ContactInfoSourceEnum source) {
+	public void setSource(String source) {
 		this.source = source;
 	}
 

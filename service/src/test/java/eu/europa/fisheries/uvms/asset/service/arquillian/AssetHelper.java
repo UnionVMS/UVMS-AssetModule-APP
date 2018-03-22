@@ -10,7 +10,6 @@ import eu.europa.ec.fisheries.uvms.asset.types.AssetListCriteria;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListPagination;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.ContactInfoSourceEnum;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetProdOrg;
 import eu.europa.ec.fisheries.uvms.entity.model.Asset;
 import eu.europa.ec.fisheries.uvms.entity.model.ContactInfo;
@@ -127,7 +126,7 @@ public abstract class AssetHelper {
 
         List<ContactInfo> contacts = new ArrayList<>();
         ContactInfo ci = new ContactInfo();
-        ci.setSource(ContactInfoSourceEnum.INTERNAL);
+        ci.setSource("INTERNAL");
         contacts.add(ci);
 
 

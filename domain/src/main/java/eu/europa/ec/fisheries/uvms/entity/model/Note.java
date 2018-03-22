@@ -41,8 +41,6 @@ import java.util.UUID;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -53,7 +51,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.NotesSourceEnum;
 
 @Entity
 @Table(name = "Note")
@@ -107,9 +104,8 @@ public class Note implements Serializable {
 	@Column(name="document")
 	private String document;
 
-	@Enumerated(EnumType.STRING)
 	@Column(name="source")
-	private NotesSourceEnum source;
+	private String source;
 
 	@Column(name="updatetime")
 	private LocalDateTime updateTime;
@@ -209,11 +205,11 @@ public class Note implements Serializable {
 		this.document = document;
 	}
 
-	public NotesSourceEnum getSource() {
+	public String getSource() {
 		return source;
 	}
 
-	public void setSource(NotesSourceEnum source) {
+	public void setSource(String source) {
 		this.source = source;
 	}
 

@@ -18,18 +18,15 @@ import java.util.Map;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
-import eu.europa.ec.fisheries.uvms.dao.SettingDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.ConfigModelException;
 import eu.europa.ec.fisheries.uvms.asset.types.ConfigFieldEnum;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
 import eu.europa.ec.fisheries.uvms.constant.UnitLength;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.entity.model.Setting;
 
 
 @Stateless
@@ -40,8 +37,6 @@ public class ConfigServiceBean {
 	private ParameterService parameterService;
 
 
-	@EJB
-	SettingDao settingDao;
 
 //	public List<Config> getConfiguration() throws AssetException {
 		public List<Object> getConfiguration() throws AssetException {
@@ -67,10 +62,11 @@ public class ConfigServiceBean {
 
 
 	public Map<String, List<String>> getSettings() throws ConfigModelException {
+		Map<String, List<String>> settings = new HashMap<>();
+/*
 		try {
-			Map<String, List<String>> settings = new HashMap<>();
-			List<Setting> list = settingDao.getAllSettings();
-			for (Setting setting : list) {
+			List<ManagementAssertion.Setting> list = settingDao.getAllSettings();
+			for (ManagementAssertion.Setting setting : list) {
 				List<String> fieldSettings = settings.get(setting.getField());
 				if (fieldSettings == null) {
 					fieldSettings = new ArrayList<>();
@@ -82,6 +78,8 @@ public class ConfigServiceBean {
 		} catch (AssetDaoException e) {
 			throw new ConfigModelException("Couldn't fetch settings " + e.getMessage());
 		}
+		*/
+		return settings;
 	}
 
 //	public ConfigurationDto getConfiguration(ConfigFieldEnum config) throws ConfigModelException {

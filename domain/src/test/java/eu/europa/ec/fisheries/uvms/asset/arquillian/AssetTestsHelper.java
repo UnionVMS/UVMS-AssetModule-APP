@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -9,8 +8,6 @@ import java.util.List;
 import java.util.Random;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.ContactInfoSourceEnum;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.NotesSourceEnum;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetProdOrg;
 import eu.europa.ec.fisheries.uvms.entity.model.Asset;
 import eu.europa.ec.fisheries.uvms.entity.model.ContactInfo;
@@ -129,7 +126,7 @@ public class AssetTestsHelper {
 
         List<ContactInfo> contacts = new ArrayList<>();
         ContactInfo ci = new ContactInfo();
-        ci.setSource(ContactInfoSourceEnum.INTERNAL);
+        ci.setSource("INTERNAL");
         contacts.add(ci);
 
 
@@ -155,7 +152,7 @@ public class AssetTestsHelper {
         note.setNotes("this is a note in a document");
         note.setReadyDate(date);
         note.setSheetNumber("1");
-        note.setSource(NotesSourceEnum.INTERNAL);
+        note.setSource("INTERNAL");
         note.setUpdatedBy("TEST");
         note.setUser("A USER");
         note.setUpdateTime(date);

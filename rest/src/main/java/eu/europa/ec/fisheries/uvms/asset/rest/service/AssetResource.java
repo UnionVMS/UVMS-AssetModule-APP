@@ -37,7 +37,7 @@ import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.asset.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetListResponsePaginated;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.AssetListResponsePaginated;
 import eu.europa.ec.fisheries.uvms.entity.model.Asset;
 import eu.europa.ec.fisheries.uvms.entity.model.Note;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
