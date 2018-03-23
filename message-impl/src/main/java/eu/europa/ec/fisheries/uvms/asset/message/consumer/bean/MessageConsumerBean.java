@@ -120,6 +120,11 @@ public class MessageConsumerBean implements MessageListener {
                     AssetMessageEvent upsertAssetMessageEvent = new AssetMessageEvent(textMessage, upsertRequest.getAsset(), upsertRequest.getUserName());
                     upsertAssetMessageEventBean.upsertAsset(upsertAssetMessageEvent);
                     break;
+                case UPSERT_ASSET_LIST:
+                    UpsertAssetListModuleRequest upsertAssetListRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, UpsertAssetListModuleRequest.class);
+                    AssetMessageEvent upsertAssetListMessageEvent = new AssetMessageEvent(textMessage, upsertAssetListRequest.getAsset(), upsertAssetListRequest.getUserName());
+                    upsertAssetMessageEventBean.upsertAssets(upsertAssetListMessageEvent);
+                    break;
                 case FISHING_GEAR_UPSERT:
                     UpsertFishingGearModuleRequest upsertFishingGearListModuleRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, UpsertFishingGearModuleRequest.class);
                     AssetMessageEvent fishingGearMessageEvent = new AssetMessageEvent(textMessage, upsertFishingGearListModuleRequest.getFishingGear(), upsertFishingGearListModuleRequest.getUsername());
@@ -132,7 +137,7 @@ public class MessageConsumerBean implements MessageListener {
             }
 
         } catch (AssetModelMarshallException e) {
-            LOG.error("[ Error when receiving message in AssetModule. ]");
+            LOG.error("[ Error when receiving message in AssetModule. ]", e);
             assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Method not implemented")));
         }
     }

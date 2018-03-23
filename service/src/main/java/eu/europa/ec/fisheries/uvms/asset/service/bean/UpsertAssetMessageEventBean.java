@@ -7,6 +7,7 @@ import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
+import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,4 +38,13 @@ public class UpsertAssetMessageEventBean {
         }
     }
 
+    public void upsertAssets(AssetMessageEvent message){
+        try {
+            for (Asset asset : message.getAssets()) {
+                service.upsertAsset(asset, AssetDataSourceQueue.INTERNAL.name());
+            }
+        } catch (AssetException e) {
+            LOG.error("Could not update asset in the local database", e);
+        }
+    }
 }

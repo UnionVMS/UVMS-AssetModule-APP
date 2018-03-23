@@ -44,7 +44,7 @@
 			<dropTable tableName="contactinfo" cascadeConstraints="true"/>
 		</rollback>
 	</changeSet>
-	<changeSet id="add type, nationality and structured address" author="matbul">
+	<changeSet id="Fleet support" author="matbul">
 		<addColumn tableName="contactinfo">
 			<column name="contactinfo_type" type="VARCHAR(100)"/>
 			<column name="contactinfo_nationality" type="VARCHAR(100)"/>
@@ -54,5 +54,9 @@
 			<column name="contactinfo_postal_area" type="VARCHAR(100)"/>
 			<column name="contactinfo_street_name" type="VARCHAR(100)"/>
 		</addColumn>
+
+		<dropNotNullConstraint
+				tableName="contactinfo"
+				columnName="contactinfo_name"/>
 	</changeSet>
 </databaseChangeLog>

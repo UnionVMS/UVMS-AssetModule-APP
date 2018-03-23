@@ -22,6 +22,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.jms.TextMessage;
+import java.util.List;
 
 public class AssetMessageEvent {
 
@@ -33,6 +34,7 @@ public class AssetMessageEvent {
     private AssetFault fault;
     private String assetGuid;
     private Asset asset;
+    private List<Asset> assets;
     private String username;
     private FishingGear fishingGear;
     private GetFlagStateByGuidAndDateRequest getFlagStateByGuidAndDateRequest;
@@ -76,6 +78,12 @@ public class AssetMessageEvent {
     public AssetMessageEvent(TextMessage message, Asset asset, String username){
         this.message = message;
         this.asset = asset;
+        this.username = username;
+    }
+
+    public AssetMessageEvent(TextMessage message, List<Asset> assets, String username){
+        this.message = message;
+        this.assets = assets;
         this.username = username;
     }
 
@@ -166,7 +174,15 @@ public class AssetMessageEvent {
     public void setFishingGear(FishingGear fishingGear) {
         this.fishingGear = fishingGear;
     }
-    
+
+    public List<Asset> getAssets() {
+        return assets;
+    }
+
+    public void setAssets(List<Asset> assets) {
+        this.assets = assets;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);

@@ -86,11 +86,19 @@ public class ModelToEntityMapper {
         entity.setHasVms(asset.isVmsIndicator());
         entity.setMainFishingGearCode(asset.getMainFishingGear());
         entity.setSubFishingGearCode(asset.getSubsidiaryFishingGear());
-        entity.setSegment(SegmentFUP.valueOf(asset.getSegment()));
         entity.setCountryOfImportOrExport(asset.getCountryOfImportOrExport());
-        entity.setTypeOfExport(TypeOfExportEnum.valueOf(asset.getTypeOfExport()));
-        entity.setPublicAid(PublicAidEnum.valueOf(asset.getPublicAid()));
         entity.setPlaceOfConstruction(asset.getPlaceOfConstruction());
+
+        if (asset.getSegment() != null) {
+            entity.setSegment(SegmentFUP.valueOf(asset.getSegment()));
+        }
+        if (asset.getTypeOfExport() != null) {
+            entity.setTypeOfExport(TypeOfExportEnum.valueOf(asset.getTypeOfExport()));
+        }
+        if (asset.getPublicAid() != null) {
+            entity.setPublicAid(PublicAidEnum.valueOf(asset.getPublicAid()));
+        }
+
 
 
         List<Notes> notesList = new ArrayList<>();
@@ -173,11 +181,18 @@ public class ModelToEntityMapper {
         assetHistory.setHasVms(asset.isVmsIndicator());
         assetHistory.setMainFishingGearCode(asset.getMainFishingGear());
         assetHistory.setSubsidiaryFishingGearCode(asset.getSubsidiaryFishingGear());
-        assetHistory.setSegment(SegmentFUP.valueOf(asset.getSegment()));
         assetHistory.setCountryOfImportOrExport(asset.getCountryOfImportOrExport());
-        assetHistory.setTypeOfExport(TypeOfExportEnum.valueOf(asset.getTypeOfExport()));
-        assetHistory.setPublicAid(PublicAidEnum.valueOf(asset.getPublicAid()));
         assetHistory.setPlaceOfConstruction(asset.getPlaceOfConstruction());
+
+        if (asset.getSegment() != null) {
+            assetHistory.setSegment(SegmentFUP.valueOf(asset.getSegment()));
+        }
+        if (asset.getTypeOfExport() != null) {
+            assetHistory.setTypeOfExport(TypeOfExportEnum.valueOf(asset.getTypeOfExport()));
+        }
+        if (asset.getPublicAid() != null) {
+            assetHistory.setPublicAid(PublicAidEnum.valueOf(asset.getPublicAid()));
+        }
 
         List<AssetContact> contacts = asset.getContact();
         if (contacts != null) {

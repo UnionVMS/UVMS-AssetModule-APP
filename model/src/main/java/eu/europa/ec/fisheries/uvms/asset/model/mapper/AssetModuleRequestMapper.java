@@ -24,6 +24,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -110,6 +111,14 @@ public class AssetModuleRequestMapper {
         upsertAssetModuleRequest.setAsset(asset);
         upsertAssetModuleRequest.setUserName(username);
         return JAXBMarshaller.marshallJaxBObjectToString(upsertAssetModuleRequest);
+    }
+
+    public static String createUpsertAssetListModuleRequest(Collection<Asset> assets, String username) throws AssetModelMarshallException {
+        UpsertAssetListModuleRequest upsertAssetListModuleRequest = new UpsertAssetListModuleRequest();
+        upsertAssetListModuleRequest.setMethod(AssetModuleMethod.UPSERT_ASSET_LIST);
+        upsertAssetListModuleRequest.getAsset().addAll(assets);
+        upsertAssetListModuleRequest.setUserName(username);
+        return JAXBMarshaller.marshallJaxBObjectToString(upsertAssetListModuleRequest);
     }
 
     public static String createUpsertFishingGearModuleRequest(FishingGear fishingGear, String username) throws AssetModelMarshallException {

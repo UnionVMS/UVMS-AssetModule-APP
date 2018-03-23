@@ -76,11 +76,18 @@ public class EntityToModelMapper {
         asset.setVmsIndicator(entity.getHasVms());
         asset.setMainFishingGear(entity.getMainFishingGearCode());
         asset.setSubsidiaryFishingGear(entity.getSubFishingGearCode());
-        asset.setSegment(entity.getSegment().toString());
         asset.setCountryOfImportOrExport(entity.getCountryOfImportOrExport());
-        asset.setTypeOfExport(entity.getTypeOfExport().toString());
-        asset.setPublicAid(entity.getPublicAid().toString());
         asset.setPlaceOfConstruction(entity.getPlaceOfConstruction());
+
+        if (entity.getSegment() != null) {
+            asset.setSegment(entity.getSegment().toString());
+        }
+        if (entity.getTypeOfExport() != null) {
+            asset.setTypeOfExport(entity.getTypeOfExport().toString());
+        }
+        if (entity.getPublicAid() != null) {
+            asset.setPublicAid(entity.getPublicAid().toString());
+        }
 
         if (entity.getNotes() != null) {
             List<AssetNotes> noteList = new ArrayList<>();
@@ -153,11 +160,18 @@ public class EntityToModelMapper {
             asset.setVmsIndicator(historyEntity.getHasVms());
             asset.setMainFishingGear(historyEntity.getMainFishingGearCode());
             asset.setSubsidiaryFishingGear(historyEntity.getSubsidiaryFishingGearCode());
-            asset.setSegment(historyEntity.getSegment().toString());
             asset.setCountryOfImportOrExport(historyEntity.getCountryOfImportOrExport());
-            asset.setTypeOfExport(historyEntity.getTypeOfExport().toString());
-            asset.setPublicAid(historyEntity.getPublicAid().toString());
             asset.setPlaceOfConstruction(historyEntity.getPlaceOfConstruction());
+
+            if (historyEntity.getSegment() != null) {
+                asset.setSegment(historyEntity.getSegment().toString());
+            }
+            if (historyEntity.getTypeOfExport() != null) {
+                asset.setTypeOfExport(historyEntity.getTypeOfExport().toString());
+            }
+            if (historyEntity.getPublicAid() != null) {
+                asset.setPublicAid(historyEntity.getPublicAid().toString());
+            }
 
             if (historyEntity.getContactInfo() == null) {
                 historyEntity.setContactInfo(new ArrayList<ContactInfo>());

@@ -25,6 +25,7 @@
                     <xsd:enumeration value="ASSET_GROUP_LIST_BY_ASSET_GUID"/>
                     <xsd:enumeration value="ASSET_LIST_GROUP_BY_FLAGSTATE"/>
                     <xsd:enumeration value="UPSERT_ASSET"/>
+                    <xsd:enumeration value="UPSERT_ASSET_LIST"/>
                     <xsd:enumeration value="FISHING_GEAR_LIST"/>
                     <xsd:enumeration value="FISHING_GEAR_BY_ID"/>
                     <xsd:enumeration value="FISHING_GEAR_BY_EXT_ID"/>
@@ -190,6 +191,18 @@
                             <xsd:sequence>
                                 <xsd:element name="userName" type="xsd:string"/>
                                 <xsd:element name="asset" type="tv:Asset" minOccurs="1" maxOccurs="1"/>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="UpsertAssetListModuleRequest">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest">
+                            <xsd:sequence>
+                                <xsd:element name="userName" type="xsd:string"/>
+                                <xsd:element name="asset" type="tv:Asset" minOccurs="1" maxOccurs="unbounded"/>
                             </xsd:sequence>
                         </xsd:extension>
                     </xsd:complexContent>

@@ -102,12 +102,6 @@ public class AssetDataSourceRequestMapper {
         return request;
     }
 
-    private static UpsertAssetListRequest createUpsertAssetListRequest() {
-        UpsertAssetListRequest request = new UpsertAssetListRequest();
-        request.setMethod(AssetDataSourceMethod.UPSERT_LIST);
-        return request;
-    }
-
     private static AssetId createAssetId(String value, AssetIdType type) {
         AssetId vesseId = new AssetId();
         vesseId.setType(type);
@@ -296,17 +290,6 @@ public class AssetDataSourceRequestMapper {
         request.setAsset(asset);
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
-
-    public static String mapUpsertAssetList(Collection<Asset> assets, String username) throws AssetModelMapperException {
-        for (Asset asset: assets) {
-            AssetDataSourceRequestValidator.validateCreateAsset(asset);
-        }
-        UpsertAssetListRequest request = createUpsertAssetListRequest();
-        request.setUsername(username);
-        request.getAsset().addAll(assets);
-        return JAXBMarshaller.marshallJaxBObjectToString(request);
-    }
-    
     public static String mapGetAssetListByAssetGroupRequest(List<AssetGroup> groups) throws AssetModelMapperException {
         AssetListByAssetGroupRequest request = createGetAssetListByAssetGroupRequest();
         request.getGroups().addAll(groups);
