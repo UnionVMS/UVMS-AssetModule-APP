@@ -36,6 +36,7 @@ public class AssetActivator extends Application {
         set.add(ConfigResource.class);
         set.add(UnionVMSFeatureFilter.class);
         set.add(ObjectMapperContextResolver.class);
+        set.add(com.github.phillipkruger.apiee.ApieeService.class);
     }
 
     @Override
