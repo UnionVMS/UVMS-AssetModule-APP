@@ -1,5 +1,21 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
+import javax.inject.Inject;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import org.jboss.arquillian.container.test.api.OperateOnDeployment;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
@@ -8,30 +24,16 @@ import eu.europa.ec.fisheries.uvms.asset.types.AssetListCriteriaPair;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
+import eu.europa.ec.fisheries.uvms.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.entity.Note;
-import org.jboss.arquillian.container.test.api.OperateOnDeployment;
-import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import javax.ejb.EJB;
-import javax.transaction.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
 
 @RunWith(Arquillian.class)
 public class AssetServiceBeanIntTest extends TransactionalTests {
 
     Random rnd = new Random();
 
-
-    @EJB
+    @Inject
     AssetService assetService;
-
 
     @Test
     @OperateOnDeployment("normal")
@@ -213,6 +215,51 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         notes = assetService.getNotesForAsset(asset.getId());
         assertEquals(1, notes.size());
+    }
+    
+    @Test
+    public void createContactInfoTest() throws Exception {
+        Asset asset = AssetHelper.createBasicAsset();
+        asset = assetService.createAsset(asset, "test");
+        
+        ContactInfo contactInfo = AssetHelper.createBasicContactInfo();
+        assetService.createContactInfoForAsset(asset.getId(), contactInfo, "test");
+        
+        List<ContactInfo> contacts = assetService.getContactInfoForAsset(asset.getId());
+        assertEquals(1, contacts.size());
+    }
+    
+    @Test
+    public void addContactInfoTest() throws Exception {
+        Asset asset = AssetHelper.createBasicAsset();
+        asset = assetService.createAsset(asset, "test");
+        
+        ContactInfo contactInfo = AssetHelper.createBasicContactInfo();
+        assetService.createContactInfoForAsset(asset.getId(), contactInfo, "test");
+
+        ContactInfo contactInfo2 = AssetHelper.createBasicContactInfo();
+        assetService.createContactInfoForAsset(asset.getId(), contactInfo2, "test");
+
+        List<ContactInfo> contacts = assetService.getContactInfoForAsset(asset.getId());
+        
+        assertEquals(2, contacts.size());
+    }
+    
+    @Test
+    public void deleteContactInfoTest() throws Exception {
+        Asset asset = AssetHelper.createBasicAsset();
+        asset = assetService.createAsset(asset, "test");
+
+        assetService.createContactInfoForAsset(asset.getId(), AssetHelper.createBasicContactInfo(), "test");
+        assetService.createContactInfoForAsset(asset.getId(), AssetHelper.createBasicContactInfo(), "test");
+
+        List<ContactInfo> contacts = assetService.getContactInfoForAsset(asset.getId());
+        assertEquals(2, contacts.size());
+        
+        assetService.deleteContactInfo(contacts.get(0).getId());
+
+        contacts = assetService.getContactInfoForAsset(asset.getId());
+        assertEquals(1, contacts.size());
     }
 
     private void commit() throws AssetException {

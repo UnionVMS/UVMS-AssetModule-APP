@@ -30,9 +30,11 @@ import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.uvms.dao.AssetDao;
+import eu.europa.ec.fisheries.uvms.dao.ContactInfoDao;
 import eu.europa.ec.fisheries.uvms.dao.NoteDao;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
+import eu.europa.ec.fisheries.uvms.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.entity.Note;
 import eu.europa.ec.fisheries.uvms.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
@@ -50,6 +52,9 @@ public class AssetServiceBean implements AssetService {
     
     @Inject
     private NoteDao noteDao;
+    
+    @Inject
+    private ContactInfoDao contactDao;
 
     /**
      * {@inheritDoc}
@@ -595,5 +600,42 @@ public class AssetServiceBean implements AssetService {
             throw new IllegalArgumentException("Could not find any note with id: " + id);
         }
         noteDao.deleteNote(note);
+    }
+
+    @Override
+    public List<ContactInfo> getContactInfoForAsset(UUID assetId) {
+        Asset asset = assetDao.getAssetById(assetId);
+        if (asset == null) {
+            throw new IllegalArgumentException("Could not find any asset with id: " + assetId);
+        }
+        return contactDao.getContactInfoByAsset(asset);
+    }
+
+    @Override
+    public ContactInfo createContactInfoForAsset(UUID assetId, ContactInfo contactInfo, String username) {
+        Asset asset = assetDao.getAssetById(assetId);
+        if (asset == null) {
+            throw new IllegalArgumentException("Could not find any asset with id: " + assetId);
+        }
+        contactInfo.setAssetId(asset.getId());
+        contactInfo.setUpdatedBy(username);
+        contactInfo.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
+        return contactDao.createContactInfo(contactInfo);
+    }
+
+    @Override
+    public ContactInfo updateContactInfo(ContactInfo contactInfo, String username) {
+        contactInfo.setUpdatedBy(username);
+        contactInfo.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
+        return contactDao.updateContactInfo(contactInfo);
+    }
+
+    @Override
+    public void deleteContactInfo(UUID id) {
+        ContactInfo contactInfo = contactDao.findContactInfo(id);
+        if (contactInfo == null) {
+            throw new IllegalArgumentException("Could not find any contact info with id: " + id);
+        }
+        contactDao.deleteContactInfo(contactInfo);
     }
 }

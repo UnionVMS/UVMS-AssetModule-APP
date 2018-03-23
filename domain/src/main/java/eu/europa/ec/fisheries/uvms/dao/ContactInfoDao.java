@@ -17,40 +17,34 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
-import eu.europa.ec.fisheries.uvms.entity.Note;
-import eu.europa.ec.fisheries.uvms.entity.NotesActivityCode;
+import eu.europa.ec.fisheries.uvms.entity.ContactInfo;
 
 @Stateless
-public class NoteDao {
-
+public class ContactInfoDao {
+    
     @PersistenceContext
     EntityManager em;
-
-    public Note findNote(UUID id) {
-        return em.find(Note.class, id);
+    
+    public ContactInfo findContactInfo(UUID id) {
+        return em.find(ContactInfo.class, id);
     }
 
-    public Note createNote(Note note) {
-        em.persist(note);
-        return note;
+    public ContactInfo createContactInfo(ContactInfo contactInfo) {
+        em.persist(contactInfo);
+        return contactInfo;
     }
 
-    public Note updateNote(Note note) {
-        return em.merge(note);
+    public ContactInfo updateContactInfo(ContactInfo contactInfo) {
+        return em.merge(contactInfo);
     }
 
-    public void deleteNote(Note note) {
-        em.remove(note);
+    public void deleteContactInfo(ContactInfo contactInfo) {
+        em.remove(contactInfo);
     }
 
-    public List<Note> getNotesByAsset(Asset asset) {
-        TypedQuery<Note> query = em.createNamedQuery(Note.FIND_BY_ASSET, Note.class);
+    public List<ContactInfo> getContactInfoByAsset(Asset asset) {
+        TypedQuery<ContactInfo> query = em.createNamedQuery(ContactInfo.FIND_BY_ASSET, ContactInfo.class);
         query.setParameter("assetId", asset.getId());
         return query.getResultList();
     }
-
-    public List<NotesActivityCode> getNoteActivityCodes() {
-        throw new IllegalStateException("Not implemented yet!");
-    }
-
 }

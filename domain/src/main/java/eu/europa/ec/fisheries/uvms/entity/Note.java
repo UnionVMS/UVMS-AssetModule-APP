@@ -51,11 +51,11 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table(name = "Note")
 @NamedQueries({
-    @NamedQuery(name = Note.NOTE_FIND_BY_ASSET, query = "SELECT n FROM Note n WHERE n.assetId = :assetId"),
+    @NamedQuery(name = Note.FIND_BY_ASSET, query = "SELECT n FROM Note n WHERE n.assetId = :assetId"),
 })
 public class Note implements Serializable {
 
-    public static final String NOTE_FIND_BY_ASSET = "Note.findByAsset";
+    public static final String FIND_BY_ASSET = "Note.findByAsset";
 
     private static final long serialVersionUID = 6790572532903829338L;
 

@@ -40,11 +40,7 @@ import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 @RunWith(Arquillian.class)
 public class AssetDaoTest extends TransactionalTests {
 
-    // Envers requires a commit for auditing
-    // Set this to true to clean up test data 
-    private boolean cleanUpDB = true;
     private static Random rnd = new Random();
-
 
     @Inject
     AssetDao assetDao;
@@ -52,7 +48,6 @@ public class AssetDaoTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void createAssetTest() throws AssetDaoException {
-        //AssetSE asset = AssetTestsHelper.createBasicAsset();
         Asset asset = AssetTestsHelper.createBiggerAsset();
         asset = assetDao.createAsset(asset);
 
@@ -71,13 +66,11 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.createAsset(null);
     }
 
-    // TODO should test history GUID
     @Test
     @OperateOnDeployment("normal")
     public void createAssetCheckHistoryGuid() throws AssetDaoException {
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
-
 
         assertThat(asset.getHistoryId(), is(notNullValue()));
     }
@@ -226,10 +219,6 @@ public class AssetDaoTest extends TransactionalTests {
         List<Asset> assetRevisions = assetDao.getRevisionsForAsset(asset);
 
         assertEquals(1, assetRevisions.size());
-
-        if (cleanUpDB) {
-            cleanUpDB(asset);
-        }
     }
 
     @Test
@@ -248,10 +237,6 @@ public class AssetDaoTest extends TransactionalTests {
         List<Asset> assetRevisions = assetDao.getRevisionsForAsset(fetchedAsset);
 
         assertEquals(2, assetRevisions.size());
-
-        if (cleanUpDB) {
-            cleanUpDB(fetchedAsset);
-        }
     }
 
     @Test
@@ -275,26 +260,15 @@ public class AssetDaoTest extends TransactionalTests {
         List<Asset> assetRevisions = assetDao.getRevisionsForAsset(assetVersion3);
 
         assertEquals(3, assetRevisions.size());
-
-        // TODO 
-//        AssetSE rev1 = assetRevisions.get(0);
-//        assertThat(rev1.getName(), is(asset.getName()));
-//        assertThat(rev1.getCfr(), is(asset.getCfr()));
-//        assertThat(rev1.getActive(), is(asset.getActive()));
+ 
+//        Asset rev1 = assetRevisions.get(0);
+//        assertEquals(rev1.getName(), asset.getName());
 //        
-//        AssetSE rev2 = assetRevisions.get(1);
-//        assertThat(rev2.getName(), is(assetVersion1.getName()));
-//        assertThat(rev2.getCfr(), is(assetVersion1.getCfr()));
-//        assertThat(rev2.getActive(), is(assetVersion1.getActive()));
+//        Asset rev2 = assetRevisions.get(1);
+//        assertEquals(rev2.getName(), newName1);
 //        
-//        AssetSE rev3 = assetRevisions.get(2);
-//        assertThat(rev3.getName(), is(assetVersion2.getName()));
-//        assertThat(rev3.getCfr(), is(assetVersion2.getCfr()));
-//        assertThat(rev3.getActive(), is(assetVersion2.getActive()));
-
-        if (cleanUpDB) {
-            cleanUpDB(assetVersion3);
-        }
+//        Asset rev3 = assetRevisions.get(2);
+//        assertEquals(rev3.getName(), newName2);
     }
 
     @Test
@@ -312,9 +286,6 @@ public class AssetDaoTest extends TransactionalTests {
         assertThat(assetAtDate.getCfr(), is(asset.getCfr()));
         assertThat(assetAtDate.getActive(), is(asset.getActive()));
 
-        if (cleanUpDB) {
-            cleanUpDB(asset);
-        }
     }
 
     @Test
@@ -337,10 +308,6 @@ public class AssetDaoTest extends TransactionalTests {
 
         Asset assetAtSecondDate = assetDao.getAssetAtDate(asset2, secondDate);
         assertThat(assetAtSecondDate.getName(), is(newName));
-
-        if (cleanUpDB) {
-            cleanUpDB(asset1);
-        }
     }
 
     @Test
@@ -678,19 +645,8 @@ public class AssetDaoTest extends TransactionalTests {
         assertThat(assets.get(0).getName(), is(searchName));
     }
 
-
     private void commit() throws Exception {
         userTransaction.commit();
         userTransaction.begin();
-    }
-
-    private void cleanUpDB(Asset asset) throws Exception {
-        String sql = "delete from asset where id = '" + asset.getId() + "'";
-        em.createNativeQuery(sql).executeUpdate();
-        sql = "delete from asset_aud where id = '" + asset.getId() + "'";
-        em.createNativeQuery(sql).executeUpdate();
-        sql = "delete from revinfo where rev not in (select rev from asset_aud)";
-        em.createNativeQuery(sql).executeUpdate();
-        commit();
     }
 }

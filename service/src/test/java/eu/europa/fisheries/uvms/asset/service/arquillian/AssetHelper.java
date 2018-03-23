@@ -46,9 +46,6 @@ public abstract class AssetHelper {
         return assetEntity;
     }
 
-
-
-
     public static Asset createBiggerAsset() {
 
         Asset assetEntity = new Asset();
@@ -112,15 +109,10 @@ public abstract class AssetHelper {
         assetEntity.setIrcsIndicator(true);
         assetEntity.setSource("INTERNAL");
 
-
-
-
         List<ContactInfo> contacts = new ArrayList<>();
         ContactInfo ci = new ContactInfo();
         ci.setSource("INTERNAL");
         contacts.add(ci);
-
-
 
         return assetEntity;
     }
@@ -131,6 +123,15 @@ public abstract class AssetHelper {
         note.setNotes("Notes: " + getRandomIntegers(10));
         note.setUser("Test");
         return note;
+    }
+    
+    public static ContactInfo createBasicContactInfo() {
+        ContactInfo contactInfo = new ContactInfo();
+        contactInfo.setName("Fantomen " + getRandomIntegers(5));
+        contactInfo.setEmail("fantomen@mail.com");
+        contactInfo.setPhoneNumber("" + getRandomIntegers(9));
+        contactInfo.setCountry("SWE");
+        return contactInfo;
     }
 
     public static String getRandomIntegers(int length) {

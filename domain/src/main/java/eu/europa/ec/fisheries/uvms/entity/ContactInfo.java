@@ -24,20 +24,27 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
+@Table(name = "ContactInfo")
+@NamedQueries({
+    @NamedQuery(name = ContactInfo.FIND_BY_ASSET, query = "SELECT n FROM ContactInfo n WHERE n.assetId = :assetId"),
+})
 public class ContactInfo implements Serializable {
 
+    public static final String FIND_BY_ASSET = "ContactInfo.findByAsset";
+    
     private static final long serialVersionUID = -4021324921105230508L;
 
     @Id
@@ -92,9 +99,8 @@ public class ContactInfo implements Serializable {
     @Column(name = "country")
     private String country;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updatetime")
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     @Size(max = 60)
     @Column(name = "updatedby")
@@ -212,11 +218,11 @@ public class ContactInfo implements Serializable {
         this.country = country;
     }
 
-    public Date getUpdateTime() {
+    public LocalDateTime getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
     }
 

@@ -33,7 +33,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name="Assetgroupfield")
+@Table(name = "Assetgroupfield")
 @NamedQueries({
 		@NamedQuery(name="Assetgroupfield.findAll", query="SELECT a FROM AssetGroupField a"),
 		@NamedQuery(name=ASSETGROUP_FIELD_GETBYID, query="SELECT a FROM AssetGroupField a where a.id=:id"),

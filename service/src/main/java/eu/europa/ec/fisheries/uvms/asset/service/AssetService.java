@@ -21,6 +21,7 @@ import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
+import eu.europa.ec.fisheries.uvms.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.entity.Note;
 
 public interface AssetService {
@@ -183,5 +184,38 @@ public interface AssetService {
      * @param id
      */
     void deleteNote(UUID id);
+    
+    /**
+     * Returns all contact info for given asset UUID.
+     * 
+     * @param assetId
+     * @return
+     */
+    List<ContactInfo> getContactInfoForAsset(UUID assetId);
+    
+
+    /**
+     * Create a contact info for given asset UUID.
+     * 
+     * @param assetId
+     * @param note
+     * @return
+     */
+    ContactInfo createContactInfoForAsset(UUID assetId, ContactInfo contactInfo, String username);
+    
+    /**
+     * Update a contact info.
+     * 
+     * @param note
+     * @return
+     */
+    ContactInfo updateContactInfo(ContactInfo contactInfo, String username);
+    
+    /**
+     * Delete the contact info with given id
+     * 
+     * @param id
+     */
+    void deleteContactInfo(UUID id);
 }
 
