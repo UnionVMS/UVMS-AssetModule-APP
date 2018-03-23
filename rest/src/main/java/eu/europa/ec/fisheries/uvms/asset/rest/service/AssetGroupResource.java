@@ -270,7 +270,7 @@ public class AssetGroupResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when retrieving Assetgroupfields"),
             @ApiResponse(code = 200, message = "Assetgroupfields successfully retrieved")})
-    @Path("/{id}/fieldForGroup")
+    @Path("/{id}/fieldsForGroup")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
@@ -292,7 +292,7 @@ public class AssetGroupResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when delete Assetgroupfields"),
             @ApiResponse(code = 200, message = "Assetgroupfields successfully deleted")})
-    @Path("/{id}/fieldForGroup")
+    @Path("/{id}/fieldsForGroup")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
