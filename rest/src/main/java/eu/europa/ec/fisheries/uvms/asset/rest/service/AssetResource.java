@@ -29,8 +29,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
-import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -39,9 +37,11 @@ import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.AssetListResponsePaginated;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
+import eu.europa.ec.fisheries.uvms.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.entity.Note;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
+import io.swagger.annotations.*;
 
 @Path("/asset")
 @Stateless
@@ -293,6 +293,45 @@ public class AssetResource {
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public Response deleteNote(@ApiParam(value="Id of note to be deleted", required=true) @PathParam("id") UUID id) {
         assetService.deleteNote(id);
+        return Response.ok().build();
+    }
+    
+    @GET
+    @Path("{id}/contacts")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public Response getContactInfoForAsset(@PathParam("id") UUID assetId) {
+        List<ContactInfo> contacts = assetService.getContactInfoForAsset(assetId);
+        return Response.ok(contacts).build();
+    }
+
+    @POST
+    @Path("{id}/contacts")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @RequiresFeature(UnionVMSFeature.manageVessels)
+    public Response createContactInfoForAsset(@PathParam("id") UUID assetId, ContactInfo contactInfo) {
+        String user = servletRequest.getRemoteUser();
+        ContactInfo createdContactInfo = assetService.createContactInfoForAsset(assetId, contactInfo, user);
+        return Response.ok(createdContactInfo).build();
+    }
+    
+    @PUT
+    @Path("/contacts")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @RequiresFeature(UnionVMSFeature.manageVessels)
+    public Response udpateContactInfo(ContactInfo contactInfo) {
+        String user = servletRequest.getRemoteUser();
+        ContactInfo updatedContactInfo = assetService.updateContactInfo(contactInfo, user);
+        return Response.ok(updatedContactInfo).build();
+    }
+    
+    @DELETE
+    @Path("/contacts/{id}")
+    @RequiresFeature(UnionVMSFeature.manageVessels)
+    public Response deleteContactInfo(@PathParam("id") UUID id) {
+        assetService.deleteContactInfo(id);
         return Response.ok().build();
     }
 

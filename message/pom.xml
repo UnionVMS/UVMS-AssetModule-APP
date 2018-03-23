@@ -46,7 +46,6 @@
 			<type>pom</type>
 			<scope>test</scope>
 		</dependency>				                
-        
     </dependencies>
 
     <build>
@@ -59,51 +58,7 @@
                     <ejbVersion>${maven.ejb.plugin.ejb.version}</ejbVersion>
                 </configuration>
             </plugin>
-
-
-            <plugin>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.4.1</version>
-                <executions>
-                    <execution>
-                        <id>enforce-jdk-bytecode-version</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <enforceBytecodeVersion>
-                                    <maxJdkVersion>1.8</maxJdkVersion>
-                                </enforceBytecodeVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>enforce-maven-versions</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireMavenVersion>
-                                    <version>3.2.0</version>
-                                </requireMavenVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>extra-enforcer-rules</artifactId>
-                        <version>1.0-beta-6</version>
-                        <scope>compile</scope>
-                    </dependency>
-                </dependencies>
-            </plugin>
-
         </plugins>
-
     </build>
     
 </project>
