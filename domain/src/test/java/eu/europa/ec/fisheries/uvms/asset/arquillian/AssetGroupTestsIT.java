@@ -221,7 +221,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
     private AssetGroupField createAssetGroupField(AssetGroup assetGroupEntity, ConfigSearchFieldEnum key, String keyFieldValue, LocalDateTime dt, String user) {
 
         AssetGroupField ag = new AssetGroupField();
-        ag.setAssetGroup(assetGroupEntity);
+        ag.setAssetGroup(assetGroupEntity.getId());
         ag.setUpdatedBy(user);
         ag.setUpdateTime(dt);
         ag.setField(key.value());

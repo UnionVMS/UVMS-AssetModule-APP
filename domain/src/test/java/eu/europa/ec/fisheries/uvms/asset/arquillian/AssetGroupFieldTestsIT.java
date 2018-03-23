@@ -87,10 +87,10 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
         List<AssetGroupField> createdAssetGroupFields2 = createAndStoreAssetGroupFieldEntityList(assetGroup2, 25 );
 
 
-        assetGroupFieldDaoBean.removeFieldsForGroup(assetGroup1);
+        assetGroupFieldDaoBean.removeFieldsForGroup(assetGroup1.getId());
 
-        List<AssetGroupField> retrievedAssetGroupFields1 =  assetGroupFieldDaoBean.retrieveFieldsForGroup(assetGroup1);
-        List<AssetGroupField> retrievedAssetGroupFields2 =  assetGroupFieldDaoBean.retrieveFieldsForGroup(assetGroup2);
+        List<AssetGroupField> retrievedAssetGroupFields1 =  assetGroupFieldDaoBean.retrieveFieldsForGroup(assetGroup1.getId());
+        List<AssetGroupField> retrievedAssetGroupFields2 =  assetGroupFieldDaoBean.retrieveFieldsForGroup(assetGroup2.getId());
 
         Assert.assertEquals(retrievedAssetGroupFields1.size(), 0);
         Assert.assertEquals(retrievedAssetGroupFields2.size(), 25);
@@ -168,7 +168,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     private AssetGroupField createAssetGroupField(AssetGroup assetGroupEntity, ConfigSearchFieldEnum key, String keyFieldValue, LocalDateTime dt, String user) {
 
         AssetGroupField ag = new AssetGroupField();
-        ag.setAssetGroup(assetGroupEntity);
+        ag.setAssetGroup(assetGroupEntity.getId());
         ag.setUpdatedBy(user);
         ag.setUpdateTime(dt);
         ag.setField(key.value());

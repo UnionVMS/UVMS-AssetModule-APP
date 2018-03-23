@@ -81,7 +81,7 @@ public interface AssetGroupService {
      * @return
      * @throws InputArgumentException
      */
-    AssetGroupField createAssetGroupField(AssetGroup parentAssetgroup, AssetGroupField assetGroupField, String username) throws InputArgumentException;
+    AssetGroupField createAssetGroupField(UUID parentAssetgroup, AssetGroupField assetGroupField, String username) throws InputArgumentException;
 
     /**
      *
@@ -113,18 +113,18 @@ public interface AssetGroupService {
 
     /**
      *
-     * @param assetGroup
+     * @param assetGroupId
      * @return
      * @throws InputArgumentException
      */
-    List<AssetGroupField> retrieveFieldsForGroup(AssetGroup assetGroup) throws InputArgumentException;
+    List<AssetGroupField> retrieveFieldsForGroup(UUID assetGroupId) throws InputArgumentException;
 
     /**
      *
-     * @param assetGroup
+     * @param assetGroupId
      * @throws InputArgumentException
      */
-    void removeFieldsForGroup(AssetGroup assetGroup)  throws InputArgumentException;
+    void removeFieldsForGroup(UUID assetGroupId)  throws InputArgumentException;
 
 
 }

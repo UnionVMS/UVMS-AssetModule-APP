@@ -40,16 +40,16 @@ public class AssetGroupFieldDao {
         return field;
     }
 
-    public void removeFieldsForGroup(AssetGroup assetGroup) {
+    public void removeFieldsForGroup(UUID assetGroupId) {
         Query qry = em.createNamedQuery(AssetGroupField.ASSETGROUP_FIELD_CLEAR);
-        qry.setParameter("assetgroup", assetGroup);
+        qry.setParameter("assetgroup", assetGroupId);
         qry.executeUpdate();
     }
 
-    public List<AssetGroupField> retrieveFieldsForGroup(AssetGroup assetGroup) {
+    public List<AssetGroupField> retrieveFieldsForGroup(UUID assetGroupId) {
         TypedQuery<AssetGroupField> qry = em.createNamedQuery(AssetGroupField.ASSETGROUP_RETRIEVE_FIELDS_FOR_GROUP,
                 AssetGroupField.class);
-        qry.setParameter("assetgroup", assetGroup);
+        qry.setParameter("assetgroup", assetGroupId);
         return qry.getResultList();
     }
 

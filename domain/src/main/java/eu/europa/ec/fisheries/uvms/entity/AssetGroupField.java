@@ -71,9 +71,8 @@ public class AssetGroupField implements Serializable {
     @Column(name = "value")
     private String value;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "group_id")
-    private AssetGroup assetgroup;
+    @Column(name = "assetgroup")
+    private UUID assetgroup;
 
     public UUID getId() {
         return this.id;
@@ -115,11 +114,11 @@ public class AssetGroupField implements Serializable {
         this.value = value;
     }
 
-    public AssetGroup getAssetGroup() {
+    public UUID getAssetGroup() {
         return this.assetgroup;
     }
 
-    public void setAssetGroup(AssetGroup assetgroup) {
+    public void setAssetGroup(UUID assetgroup) {
         this.assetgroup = assetgroup;
     }
 

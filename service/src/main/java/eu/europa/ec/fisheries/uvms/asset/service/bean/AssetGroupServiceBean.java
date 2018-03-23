@@ -167,7 +167,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         List<AssetGroup> searchResultList = new ArrayList<>();
         List<AssetGroup> filterGroupList = assetGroupDao.getAssetGroupAll();
         for (AssetGroup group : filterGroupList) {
-            List<AssetGroupField> fields = assetGroupFieldDao.retrieveFieldsForGroup(group);
+            List<AssetGroupField> fields = assetGroupFieldDao.retrieveFieldsForGroup(group.getId());
             for (AssetGroupField field : fields) {
                 if ("GUID".equals(field.getField()) && assetId.toString().equals(field.getValue())) {
                     searchResultList.add(group);
@@ -180,16 +180,16 @@ public class AssetGroupServiceBean implements AssetGroupService {
     /**
      * create assetGroupField  assetGroup MUST exist before
      *
-     * @param parentAssetgroup
+     * @param parentAssetGroupId
      * @param assetGroupField
      * @param username
      * @return
      * @throws InputArgumentException
      */
     @Override
-    public AssetGroupField createAssetGroupField(AssetGroup parentAssetgroup, AssetGroupField assetGroupField, String username) throws InputArgumentException {
+    public AssetGroupField createAssetGroupField(UUID parentAssetGroupId, AssetGroupField assetGroupField, String username) throws InputArgumentException {
 
-        if (parentAssetgroup == null) {
+        if (parentAssetGroupId == null) {
             throw new InputArgumentException("Cannot create assetGroupField because the assetGroup is null.");
         }
         if (assetGroupField == null) {
@@ -199,12 +199,12 @@ public class AssetGroupServiceBean implements AssetGroupService {
             throw new InputArgumentException("Username must be provided for selected operation");
         }
 
-        AssetGroup parentAssetGroup = assetGroupDao.getAssetGroupByGuid(parentAssetgroup.getId());
+        AssetGroup parentAssetGroup = assetGroupDao.getAssetGroupByGuid(parentAssetGroupId);
         if (parentAssetGroup == null) {
-            throw new InputArgumentException("Assetgroup with id does not exist " + parentAssetgroup.toString());
+            throw new InputArgumentException("Assetgroup with id does not exist " + parentAssetGroupId);
         }
 
-        assetGroupField.setAssetGroup(parentAssetgroup);
+        assetGroupField.setAssetGroup(parentAssetGroup.getId());
         assetGroupField.setUpdatedBy(username);
         assetGroupField.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
         return assetGroupFieldDao.create(assetGroupField);
@@ -281,23 +281,32 @@ public class AssetGroupServiceBean implements AssetGroupService {
     }
 
     @Override
-    public List<AssetGroupField> retrieveFieldsForGroup(AssetGroup assetGroup) throws InputArgumentException {
+    public List<AssetGroupField> retrieveFieldsForGroup(UUID assetGroupId) throws InputArgumentException {
 
-        if (assetGroup == null) {
+        if (assetGroupId == null) {
             throw new InputArgumentException("Cannot retrieve list for group because assetGroup is null.");
         }
 
-        return assetGroupFieldDao.retrieveFieldsForGroup(assetGroup);
+        AssetGroup assetGroup = assetGroupDao.getAssetGroupByGuid(assetGroupId);
+        if (assetGroup == null) {
+            throw new InputArgumentException("Cannot retrieve list for group because assetGroup does not exist.");
+        }
+
+        return assetGroupFieldDao.retrieveFieldsForGroup(assetGroup.getId());
     }
 
     @Override
-    public void removeFieldsForGroup(AssetGroup assetGroup) throws InputArgumentException {
+    public void removeFieldsForGroup(UUID assetGroupId) throws InputArgumentException {
 
-        if (assetGroup == null) {
+        if (assetGroupId == null) {
             throw new InputArgumentException("Cannot retrieve list for group because assetGroup is null.");
         }
+        AssetGroup assetGroup = assetGroupDao.getAssetGroupByGuid(assetGroupId);
+        if (assetGroup == null) {
+            throw new InputArgumentException("Cannot retrieve list for group because assetGroup does not exist.");
+        }
 
-        assetGroupFieldDao.removeFieldsForGroup(assetGroup);
+        assetGroupFieldDao.removeFieldsForGroup(assetGroup.getId());
     }
 
 
