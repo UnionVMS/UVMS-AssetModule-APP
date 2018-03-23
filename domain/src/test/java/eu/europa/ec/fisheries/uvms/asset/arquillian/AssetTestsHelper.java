@@ -12,7 +12,6 @@ import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.entity.Note;
 
-
 public class AssetTestsHelper {
 
     private static Random rnd = new Random();
@@ -45,9 +44,6 @@ public class AssetTestsHelper {
         
         return assetEntity;
     }
-
-
-
 
     public static Asset createBiggerAsset() {
 
@@ -110,7 +106,7 @@ public class AssetTestsHelper {
         assetEntity.setHasVms(false);
         assetEntity.setAgentIsAlsoOwner(true);
         assetEntity.setEventCode("EC" + String.valueOf(rnd.nextLong()));
-        assetEntity.setIrcsIndicator("I");
+        assetEntity.setIrcsIndicator(true);
         assetEntity.setSource("INTERNAL");
 
 
@@ -126,17 +122,11 @@ public class AssetTestsHelper {
         return assetEntity;
     }
 
-
-
-
-
-
-
     public List<Note> createNotesHelper(Asset assetEntity, LocalDateTime date) {
 
         List<Note> notes = new ArrayList<>();
         Note note = new Note();
-        note.setActivity("EL3");
+        note.setActivityCode("EL3");
         note.setContact("TESTContact");
         note.setDate(date);
         note.setDocument("this is a document text");
@@ -152,9 +142,6 @@ public class AssetTestsHelper {
         return notes;
     }
 
-
-
-
     public static String getRandomIntegers(int length) {
         return new Random()
                 .ints(0,9)
@@ -163,7 +150,6 @@ public class AssetTestsHelper {
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();
     }
-
 
     public Asset createAssetHelper(AssetIdTypeEnum key, String value, Date date) {
         Asset assetEntity = createBiggerAsset();
@@ -185,7 +171,7 @@ public class AssetTestsHelper {
                 break;
             case IRCS:
                 assetEntity.setIrcs(value);
-                assetEntity.setIrcsIndicator("I");
+                assetEntity.setIrcsIndicator(true);
                 break;
             case MMSI:
                 assetEntity.setMmsi(value);

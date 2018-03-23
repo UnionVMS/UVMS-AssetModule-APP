@@ -11,22 +11,24 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.entity;
 
-import static eu.europa.ec.fisheries.uvms.entity.AssetGroup.*;
+import static eu.europa.ec.fisheries.uvms.entity.AssetGroup.GROUP_ASSET_BY_GUID;
+import static eu.europa.ec.fisheries.uvms.entity.AssetGroup.GROUP_ASSET_BY_GUID_LIST;
+import static eu.europa.ec.fisheries.uvms.entity.AssetGroup.GROUP_ASSET_BY_USER;
+import static eu.europa.ec.fisheries.uvms.entity.AssetGroup.GROUP_ASSET_FIND_ALL;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
-
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
 import org.hibernate.annotations.GenericGenerator;
 
-
-/**
- * The persistent class for the assetgroup database table.
- * 
- */
 @Entity
 @Table(name="Assetgroup")
 @NamedQueries({
@@ -36,115 +38,110 @@ import org.hibernate.annotations.GenericGenerator;
 	@NamedQuery(name=GROUP_ASSET_BY_GUID_LIST, query="SELECT a FROM AssetGroup a WHERE a.archived = false AND a.id IN :guidList")
 })
 public class AssetGroup implements Serializable {
-	private static final long serialVersionUID = 1L;
 
-	public static final String GROUP_ASSET_FIND_ALL = "AssetGroup.findAll";
-	public static final String GROUP_ASSET_BY_USER = "AssetGroup.findByUser";
-	public static final String GROUP_ASSET_BY_GUID = "AssetGroup.findByGuid";
-	public static final String GROUP_ASSET_BY_GUID_LIST = "AssetGroup.findByGuidList";
+    public static final String GROUP_ASSET_FIND_ALL = "AssetGroup.findAll";
+    public static final String GROUP_ASSET_BY_USER = "AssetGroup.findByUser";
+    public static final String GROUP_ASSET_BY_GUID = "AssetGroup.findByGuid";
+    public static final String GROUP_ASSET_BY_GUID_LIST = "AssetGroup.findByGuidList";
 
+    private static final long serialVersionUID = -6510393348959979962L;
 
+    @Id
+    @GeneratedValue(generator = "GROUP_UUID")
+    @GenericGenerator(name = "GROUP_UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id")
+    private UUID id;
 
-	@Id
-	@GeneratedValue(generator = "UUID")
-	@GenericGenerator(
-			name="UUID",
-			strategy="org.hibernate.id.UUIDGenerator"
-	)
-	@Column(name="id")
-	private UUID id;
+    @Column(name = "archived")
+    private Boolean archived = false;
 
-	@Column(name="archived")
-	private Boolean archived = false;
+    @Column(name = "dynamic")
+    private Boolean dynamic = true;
 
-	@Column(name="dynamic")
-	private Boolean dynamic = true;
+    @Column(name = "global")
+    private Boolean global = true;
 
-	@Column(name="global")
-	private Boolean global = true;
+    @Size(max = 80)
+    @NotNull
+    @Column(name = "name")
+    private String name;
 
-	@Size(max=80)
-	@NotNull
-	@Column(name="name")
-	private String name;
+    @Column(name = "updattim")
+    private LocalDateTime updateTime;
 
-	@Column(name="updattim")
-	private LocalDateTime updateTime;
+    @Size(max = 60)
+    @Column(name = "upuser")
+    private String updatedBy;
 
-	@Size(max=60)
-	@Column(name="upuser")
-	private String updatedBy;
+    @Size(max = 80)
+    @NotNull
+    @Column(name = "user_id")
+    private String owner;
 
-	@Size(max=80)
-	@NotNull
-	@Column(name="user_id")
-	private String owner;
+    public AssetGroup() {}
 
-	public AssetGroup() {
-	}
+    public UUID getId() {
+        return this.id;
+    }
 
-	public UUID getId() {
-		return this.id;
-	}
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
-	public void setId(UUID id) {
-		this.id = id;
-	}
+    public Boolean getArchived() {
+        return this.archived;
+    }
 
-	public Boolean getArchived() {
-		return this.archived;
-	}
+    public void setArchived(Boolean archived) {
+        this.archived = archived;
+    }
 
-	public void setArchived(Boolean archived) {
-		this.archived = archived;
-	}
+    public Boolean getDynamic() {
+        return this.dynamic;
+    }
 
-	public Boolean getDynamic() {
-		return this.dynamic;
-	}
+    public void setDynamic(Boolean dynamic) {
+        this.dynamic = dynamic;
+    }
 
-	public void setDynamic(Boolean dynamic) {
-		this.dynamic = dynamic;
-	}
+    public Boolean getGlobal() {
+        return this.global;
+    }
 
-	public Boolean getGlobal() {
-		return this.global;
-	}
+    public void setGlobal(Boolean global) {
+        this.global = global;
+    }
 
-	public void setGlobal(Boolean global) {
-		this.global = global;
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public LocalDateTime getUpdateTime() {
+        return this.updateTime;
+    }
 
-	public LocalDateTime getUpdateTime() {
-		return this.updateTime;
-	}
+    public void setUpdateTime(LocalDateTime updateTime) {
+        this.updateTime = updateTime;
+    }
 
-	public void setUpdateTime(LocalDateTime updateTime) {
-		this.updateTime = updateTime;
-	}
+    public String getUpdatedBy() {
+        return this.updatedBy;
+    }
 
-	public String getUpdatedBy() {
-		return this.updatedBy;
-	}
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
 
-	public void setUpdatedBy(String updatedBy) {
-		this.updatedBy = updatedBy;
-	}
+    public String getOwner() {
+        return this.owner;
+    }
 
-	public String getOwner() {
-		return this.owner;
-	}
-
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
 
 }

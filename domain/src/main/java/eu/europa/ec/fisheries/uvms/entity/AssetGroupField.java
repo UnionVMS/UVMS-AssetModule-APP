@@ -11,23 +11,27 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.entity;
 
-import org.hibernate.annotations.GenericGenerator;
 import static eu.europa.ec.fisheries.uvms.entity.AssetGroupField.ASSETGROUP_FIELD_CLEAR;
 import static eu.europa.ec.fisheries.uvms.entity.AssetGroupField.ASSETGROUP_FIELD_GETBYID;
 import static eu.europa.ec.fisheries.uvms.entity.AssetGroupField.ASSETGROUP_RETRIEVE_FIELDS_FOR_GROUP;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
-
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.hibernate.annotations.GenericGenerator;
 
-
-/**
- * The persistent class for the assetgroupfield database table.
- * 
- */
 @Entity
 @Table(name="Assetgroupfield")
 @NamedQueries({
@@ -37,92 +41,86 @@ import javax.validation.constraints.Size;
 		@NamedQuery(name=ASSETGROUP_RETRIEVE_FIELDS_FOR_GROUP, query="SELECT a  FROM AssetGroupField a where a.assetgroup=:assetgroup"),
 })
 public class AssetGroupField implements Serializable {
-	private static final long serialVersionUID = 1L;
 
-	public static final String ASSETGROUP_FIELD_CLEAR = "Assetgroupfield.clear";
-	public static final String ASSETGROUP_FIELD_GETBYID = "Assetgroupfield.getbyid";
-	public static final String ASSETGROUP_RETRIEVE_FIELDS_FOR_GROUP = "Assetgroupfield.retrievefieldsforgroup";
+    public static final String ASSETGROUP_FIELD_CLEAR = "Assetgroupfield.clear";
+    public static final String ASSETGROUP_FIELD_GETBYID = "Assetgroupfield.getbyid";
+    public static final String ASSETGROUP_RETRIEVE_FIELDS_FOR_GROUP = "Assetgroupfield.retrievefieldsforgroup";
 
+    private static final long serialVersionUID = 2806956373362523218L;
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name="UUID",
-            strategy="org.hibernate.id.UUIDGenerator"
-    )
-    @Column(name="id")
+    @GeneratedValue(generator = "FIELD_UUID")
+    @GenericGenerator(name = "FIELD_UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id")
     private UUID id;
 
-	@Size(max=80)
-	@NotNull
-	@Column(name="field")
-	private String field;
+    @Size(max = 80)
+    @NotNull
+    @Column(name = "field")
+    private String field;
 
-	@Column(name="updatetime")
-	private LocalDateTime updateTime;
+    @Column(name = "updatetime")
+    private LocalDateTime updateTime;
 
-	@Size(max=60)
-	@Column(name="updateuser")
-	private String updatedBy;
+    @Size(max = 60)
+    @Column(name = "updateuser")
+    private String updatedBy;
 
-	@Size(max=100)
-	@NotNull
-	@Column(name="value")
-	private String value;
+    @Size(max = 100)
+    @NotNull
+    @Column(name = "value")
+    private String value;
 
-	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-	@JoinColumn(name="group_id")
-	private AssetGroup assetgroup;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "group_id")
+    private AssetGroup assetgroup;
 
-	public AssetGroupField() {
-	}
+    public UUID getId() {
+        return this.id;
+    }
 
-	public UUID getId() {
-		return this.id;
-	}
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
-	public void setId(UUID id) {
-		this.id = id;
-	}
+    public String getField() {
+        return this.field;
+    }
 
-	public String getField() {
-		return this.field;
-	}
+    public void setField(String filterField) {
+        this.field = filterField;
+    }
 
-	public void setField(String filterField) {
-		this.field = filterField;
-	}
+    public LocalDateTime getUpdateTime() {
+        return this.updateTime;
+    }
 
-	public LocalDateTime getUpdateTime() {
-		return this.updateTime;
-	}
+    public void setUpdateTime(LocalDateTime updateTime) {
+        this.updateTime = updateTime;
+    }
 
-	public void setUpdateTime(LocalDateTime updateTime) {
-		this.updateTime = updateTime;
-	}
+    public String getUpdatedBy() {
+        return this.updatedBy;
+    }
 
-	public String getUpdatedBy() {
-		return this.updatedBy;
-	}
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
 
-	public void setUpdatedBy(String updatedBy) {
-		this.updatedBy = updatedBy;
-	}
+    public String getValue() {
+        return this.value;
+    }
 
-	public String getValue() {
-		return this.value;
-	}
+    public void setValue(String value) {
+        this.value = value;
+    }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+    public AssetGroup getAssetGroup() {
+        return this.assetgroup;
+    }
 
-	public AssetGroup getAssetGroup() {
-		return this.assetgroup;
-	}
-
-	public void setAssetGroup(AssetGroup assetgroup) {
-		this.assetgroup = assetgroup;
-	}
+    public void setAssetGroup(AssetGroup assetgroup) {
+        this.assetgroup = assetgroup;
+    }
 
 }

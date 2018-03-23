@@ -25,11 +25,11 @@ public class NoteDao {
 
     @PersistenceContext
     EntityManager em;
-    
+
     public Note findNote(UUID id) {
         return em.find(Note.class, id);
     }
-    
+
     public Note createNote(Note note) {
         em.persist(note);
         return note;
@@ -42,13 +42,13 @@ public class NoteDao {
     public void deleteNote(Note note) {
         em.remove(note);
     }
-    
+
     public List<Note> getNotesByAsset(Asset asset) {
         TypedQuery<Note> query = em.createNamedQuery(Note.NOTE_FIND_BY_ASSET, Note.class);
-        query.setParameter("asset", asset);
+        query.setParameter("assetId", asset.getId());
         return query.getResultList();
     }
-    
+
     public List<NotesActivityCode> getNoteActivityCodes() {
         throw new IllegalStateException("Not implemented yet!");
     }

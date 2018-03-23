@@ -575,7 +575,7 @@ public class AssetServiceBean implements AssetService {
         if (asset == null) {
             throw new IllegalArgumentException("Could not find any asset with id: " + assetId);
         }
-        note.setAsset(asset);
+        note.setAssetId(asset.getId());
         note.setUpdatedBy(username);
         note.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
         return noteDao.createNote(note);
