@@ -23,126 +23,208 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.entity;
 
-
-import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.Size;
+import org.hibernate.annotations.GenericGenerator;
 
-
-/**
- * The persistent class for the carrier database table.
- * 
- */
 @Entity
 public class ContactInfo implements Serializable {
-	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="contactinfo_id")
-	private Long id;
+    private static final long serialVersionUID = -4021324921105230508L;
 
-	//@Fetch(FetchMode.JOIN)
-	//@ManyToOne(fetch = FetchType.LAZY)
-	//@JoinColumn(name = "contactinfo_assethist_id")
-	//private AssetHistory assetHistory;
+    @Id
+    @GeneratedValue(generator = "CONTACT_UUID")
+    @GenericGenerator(name = "CONTACT_UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id")
+    private UUID id;
 
-	@Column(name="contactinfo_name")
-	private String name;
+    @Column(name = "assetid")
+    private UUID assetId;
 
-	@Column(name="contactinfo_email")
-	private String email;
+    @Column(name = "name")
+    private String name;
 
-	@Column(name="contactinfo_phone")
-	private String phoneNumber;
+    @Column(name = "email")
+    private String email;
 
-	@Column(name="contactinfo_owner")
-	private Boolean owner;
+    @Column(name = "phone")
+    private String phoneNumber;
 
-	@Column(name="contactinfo_source")
-	private String source;
+    @Column(name = "owner")
+    private Boolean owner;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="contactinfo_updattim")
-	private Date updateTime;
+    @Column(name = "source")
+    private String source;
 
-	@Size(max=60)
-	@Column(name="contactinfo_upuser")
-	private String updatedBy;
+    @Size(max = 100)
+    @Column(name = "type")
+    private String type;
 
-	public ContactInfo() {
-	}
+    @Size(max = 100)
+    @Column(name = "nationality")
+    private String nationality;
 
-	public Long getId() {
-		return id;
-	}
+    @Size(max = 100)
+    @Column(name = "streetname")
+    private String streetName;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @Size(max = 100)
+    @Column(name = "postofficebox")
+    private String postOfficeBox;
 
-	//public AssetHistory getAsset() {
-	//	return assetHistory;
-	//}
+    @Size(max = 100)
+    @Column(name = "postalArea")
+    private String postalArea;
 
-	//public void setAsset(AssetHistory assetHistory) {
-	//	this.assetHistory = assetHistory;
-	//}
+    @Size(max = 100)
+    @Column(name = "cityname")
+    private String cityName;
 
-	public String getName() {
-		return name;
-	}
+    @Size(max = 3)
+    @Column(name = "country")
+    private String country;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updatetime")
+    private Date updateTime;
 
-	public String getEmail() {
-		return email;
-	}
+    @Size(max = 60)
+    @Column(name = "updatedby")
+    private String updatedBy;
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public UUID getId() {
+        return id;
+    }
 
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
+    public UUID getAssetId() {
+        return assetId;
+    }
 
-	public Boolean getOwner() {
-		return owner;
-	}
+    public void setAssetId(UUID assetId) {
+        this.assetId = assetId;
+    }
 
-	public void setOwner(Boolean owner) {
-		this.owner = owner;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getSource() {
-		return source;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setSource(String source) {
-		this.source = source;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public Date getUpdateTime() {
-		return updateTime;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 
-	public String getUpdatedBy() {
-		return updatedBy;
-	}
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
-	public void setUpdatedBy(String updatedBy) {
-		this.updatedBy = updatedBy;
-	}
+    public Boolean getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Boolean owner) {
+        this.owner = owner;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getNationality() {
+        return nationality;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+    public String getStreetName() {
+        return streetName;
+    }
+
+    public void setStreetName(String streetName) {
+        this.streetName = streetName;
+    }
+
+    public String getPostOfficeBox() {
+        return postOfficeBox;
+    }
+
+    public void setPostOfficeBox(String postOfficeBox) {
+        this.postOfficeBox = postOfficeBox;
+    }
+
+    public String getPostalArea() {
+        return postalArea;
+    }
+
+    public void setPostalArea(String postalArea) {
+        this.postalArea = postalArea;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
 }

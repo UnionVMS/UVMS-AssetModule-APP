@@ -31,7 +31,6 @@ public class AssetGroupDao  {
 
 
     public AssetGroup createAssetGroup(AssetGroup group) {
-
         em.persist(group);
         return group;
     }

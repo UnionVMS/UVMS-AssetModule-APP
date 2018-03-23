@@ -263,7 +263,7 @@ public class AssetDao {
     public Asset getAssetRevisionForHistoryId(UUID historyId) {
         AuditReader auditReader = AuditReaderFactory.get(em);
         return (Asset) auditReader.createQuery().forRevisionsOfEntity(Asset.class, true, true)
-                .add(AuditEntity.property("historyid").eq(historyId))
+                .add(AuditEntity.property("historyId").eq(historyId))
                 .getSingleResult();
     }
 }

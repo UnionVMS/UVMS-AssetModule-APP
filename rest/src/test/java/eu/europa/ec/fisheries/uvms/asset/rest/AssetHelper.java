@@ -112,7 +112,7 @@ public abstract class AssetHelper {
         assetEntity.setHasVms(false);
         assetEntity.setAgentIsAlsoOwner(true);
         assetEntity.setEventCode("EVENTCODE");
-        assetEntity.setIrcsIndicator("I");
+        assetEntity.setIrcsIndicator(true);
         assetEntity.setSource("INTERNAL");
 
 
@@ -130,7 +130,7 @@ public abstract class AssetHelper {
 
     public static Note createBasicNote() {
         Note note = new Note();
-        note.setActivity("Activity");
+        note.setActivityCode("Activity");
         note.setNotes("Notes: " + getRandomIntegers(10));
         note.setUser("Test");
         return note;

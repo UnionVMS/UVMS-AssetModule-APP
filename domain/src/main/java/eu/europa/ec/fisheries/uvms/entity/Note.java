@@ -38,14 +38,10 @@ package eu.europa.ec.fisheries.uvms.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -55,183 +51,177 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table(name = "Note")
 @NamedQueries({
-    @NamedQuery(name = Note.NOTE_FIND_BY_ASSET, query = "SELECT n FROM Note n WHERE n.asset = :asset"),
+    @NamedQuery(name = Note.NOTE_FIND_BY_ASSET, query = "SELECT n FROM Note n WHERE n.assetId = :assetId"),
 })
 public class Note implements Serializable {
 
+    public static final String NOTE_FIND_BY_ASSET = "Note.findByAsset";
+
     private static final long serialVersionUID = 6790572532903829338L;
 
-    public static final String NOTE_FIND_BY_ASSET = "Note.findByAsset";
-    
     @Id
-	@GeneratedValue(generator="UUID")
-    @GenericGenerator(
-            name="UUID",
-            strategy="org.hibernate.id.UUIDGenerator"
-    )
-	@Column(name="id")
-	private UUID id;
+    @GeneratedValue(generator = "NOTE_UUID")
+    @GenericGenerator(name = "NOTE_UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id")
+    private UUID id;
 
-    @JsonbTransient
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="asset")
-	private Asset asset;
+    @Column(name = "assetid")
+    private UUID assetId;
 
-	@Column(name="date")
-	private LocalDateTime date;
+    @Column(name = "date")
+    private LocalDateTime date;
 
-	@Column(name="activity")
-	private String activity;
+    @Column(name = "activitycode")
+    private String activityCode;
 
-	@Column(name="noteuser")
-	private String user;
+    @Column(name = "noteuser")
+    private String user;
 
-	@Column(name="readydate")
-	private LocalDateTime readyDate;
+    @Column(name = "readydate")
+    private LocalDateTime readyDate;
 
-	@Column(name="licenseholder")
-	private String licenseHolder;
+    @Column(name = "licenseholder")
+    private String licenseHolder;
 
-	@Column(name="contact")
-	private String contact;
+    @Column(name = "contact")
+    private String contact;
 
-	@Column(name="sheetnumber")
-	private String sheetNumber;
+    @Column(name = "sheetnumber")
+    private String sheetNumber;
 
-	@Column(name="notes")
-	private String notes;
+    @Column(name = "notes")
+    private String notes;
 
-	@Column(name="document")
-	private String document;
+    @Column(name = "document")
+    private String document;
 
-	@Column(name="source")
-	private String source;
+    @Column(name = "source")
+    private String source;
 
-	@Column(name="updatetime")
-	private LocalDateTime updateTime;
+    @Column(name = "updatetime")
+    private LocalDateTime updateTime;
 
-	@Size(max=60)
-	@Column(name="updatedby")
-	private String updatedBy;
+    @Size(max = 60)
+    @Column(name = "updatedby")
+    private String updatedBy;
 
-	public Note() {
-	}
+    public Note() {}
 
-	public UUID getId() {
-		return id;
-	}
+    public UUID getId() {
+        return id;
+    }
 
-	public void setId(UUID id) {
-		this.id = id;
-	}
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
-	public Asset getAsset() {
-		return asset;
-	}
+    public UUID getAssetId() {
+        return assetId;
+    }
 
-	public void setAsset(Asset asset) {
-		this.asset = asset;
-	}
+    public void setAssetId(UUID assetId) {
+        this.assetId = assetId;
+    }
 
-	public LocalDateTime getDate() {
-		return date;
-	}
+    public LocalDateTime getDate() {
+        return date;
+    }
 
-	public void setDate(LocalDateTime date) {
-		this.date = date;
-	}
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
 
-	public String getActivity() {
-		return activity;
-	}
+    public String getActivityCode() {
+        return activityCode;
+    }
 
-	public void setActivity(String activity) {
-		this.activity = activity;
-	}
+    public void setActivityCode(String activityCode) {
+        this.activityCode = activityCode;
+    }
 
-	public String getUser() {
-		return user;
-	}
+    public String getUser() {
+        return user;
+    }
 
-	public void setUser(String user) {
-		this.user = user;
-	}
+    public void setUser(String user) {
+        this.user = user;
+    }
 
-	public LocalDateTime getReadyDate() {
-		return readyDate;
-	}
+    public LocalDateTime getReadyDate() {
+        return readyDate;
+    }
 
-	public void setReadyDate(LocalDateTime readyDate) {
-		this.readyDate = readyDate;
-	}
+    public void setReadyDate(LocalDateTime readyDate) {
+        this.readyDate = readyDate;
+    }
 
-	public String getLicenseHolder() {
-		return licenseHolder;
-	}
+    public String getLicenseHolder() {
+        return licenseHolder;
+    }
 
-	public void setLicenseHolder(String licenseHolder) {
-		this.licenseHolder = licenseHolder;
-	}
+    public void setLicenseHolder(String licenseHolder) {
+        this.licenseHolder = licenseHolder;
+    }
 
-	public String getContact() {
-		return contact;
-	}
+    public String getContact() {
+        return contact;
+    }
 
-	public void setContact(String contact) {
-		this.contact = contact;
-	}
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
 
-	public String getSheetNumber() {
-		return sheetNumber;
-	}
+    public String getSheetNumber() {
+        return sheetNumber;
+    }
 
-	public void setSheetNumber(String sheetNumber) {
-		this.sheetNumber = sheetNumber;
-	}
+    public void setSheetNumber(String sheetNumber) {
+        this.sheetNumber = sheetNumber;
+    }
 
-	public String getNotes() {
-		return notes;
-	}
+    public String getNotes() {
+        return notes;
+    }
 
-	public void setNotes(String notes) {
-		this.notes = notes;
-	}
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
 
-	public String getDocument() {
-		return document;
-	}
+    public String getDocument() {
+        return document;
+    }
 
-	public void setDocument(String document) {
-		this.document = document;
-	}
+    public void setDocument(String document) {
+        this.document = document;
+    }
 
-	public String getSource() {
-		return source;
-	}
+    public String getSource() {
+        return source;
+    }
 
-	public void setSource(String source) {
-		this.source = source;
-	}
+    public void setSource(String source) {
+        this.source = source;
+    }
 
-	public LocalDateTime getUpdateTime() {
-		return updateTime;
-	}
+    public LocalDateTime getUpdateTime() {
+        return updateTime;
+    }
 
-	public void setUpdateTime(LocalDateTime updateTime) {
-		this.updateTime = updateTime;
-	}
+    public void setUpdateTime(LocalDateTime updateTime) {
+        this.updateTime = updateTime;
+    }
 
-	public String getUpdatedBy() {
-		return updatedBy;
-	}
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
 
-	public void setUpdatedBy(String updatedBy) {
-		this.updatedBy = updatedBy;
-	}
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
 
     @Override
     public String toString() {
-        return "Note [id=" + id + ", activity=" + activity + ", user=" + user + ", notes=" + notes + "]";
+        return "Note [id=" + id + ", activity=" + activityCode + ", user=" + user + ", notes=" + notes + "]";
     }
 
 }

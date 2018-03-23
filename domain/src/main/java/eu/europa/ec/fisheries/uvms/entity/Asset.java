@@ -25,7 +25,6 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
@@ -44,8 +43,7 @@ import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
           @NamedQuery(name = ASSET_FIND_BY_GFCM, query = "SELECT v FROM Asset v WHERE v.gfcm = :gfcm"),
           @NamedQuery(name = ASSET_FIND_BY_IDS, query = "SELECT v FROM Asset v WHERE v.id in :idList"),
 })
-@XmlRootElement
-public class Asset implements Serializable{
+public class Asset implements Serializable {
 
     public static final String ASSET_FIND_BY_CFR = "Asset.findByCfr";
     public static final String ASSET_FIND_BY_IRCS = "Asset.findByIrcs";
@@ -59,210 +57,207 @@ public class Asset implements Serializable{
 
     private static final long serialVersionUID = -320627625723663100L;
 
-    public Asset() {
-        // json serialization
-    }
-
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name="UUID",
-            strategy="org.hibernate.id.UUIDGenerator"
-    )
-    @Column(name="id")
+    @GeneratedValue(generator = "ASSET_UUID")
+    @GenericGenerator(name = "ASSET_UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id")
     private UUID id;
 
-    @Column(unique = true, name="historyid")
-    private UUID historyid;
+    @Column(unique = true, name = "historyid")
+    private UUID historyId;
 
-    @Size(min = 1, max = 1)
-    @Column(name="ircsindicator")
-    private String ircsIndicator;
+    @Column(name = "ircsindicator")
+    private Boolean ircsIndicator;
 
-    @Column(name="hullmaterial")
-    private String  hullMaterial;
+    @Column(name = "ersindicator")
+    private Boolean ersIndicator;
 
-    @Column(name="commissiondate")
+    @Column(name = "aisindicator")
+    private Boolean aisIndicator;
+
+    @Column(name = "vmsindicator")
+    private Boolean vmsIndicator;
+
+    @Column(name = "hullmaterial")
+    private String hullMaterial;
+
+    @Column(name = "commissiondate")
     private LocalDateTime commissionDate;
 
     @Size(min = 4, max = 4)
-    @Column(name="constructionyear")
+    @Column(name = "constructionyear")
     private String constructionYear;
 
     @Size(max = 100)
-    @Column(name="constructionplace")
+    @Column(name = "constructionplace")
     private String constructionPlace;
 
-    @Column(name="updatetime")
+    @Column(name = "updatetime")
     private LocalDateTime updateTime;
 
-    @Column(name="source")
+    @Column(name = "source")
     private String source;
 
-    ///////////////////////////////////
-    //   FROM HISTORY                //
-    ///////////////////////////////////
+    @Size(max = 100)
+    @Column(name = "vesseltype")
+    private String vesselType;
+
+    @Column(name = "vesselDateOfEntry")
+    private LocalDateTime vesselDateOfEntry;
 
     @Size(max = 12)
-    @Column(unique = true, name="cfr")
+    @Column(unique = true, name = "cfr")
     private String cfr;
 
     @Size(max = 7)
-    @Column(unique = true, name="imo")
+    @Column(unique = true, name = "imo")
     private String imo;
 
     @Size(max = 8)
-    @Column(unique = true, name="ircs")
+    @Column(unique = true, name = "ircs")
     private String ircs;
 
     @Size(max = 9)
-    @Column(unique = true, name="mmsi")
+    @Column(unique = true, name = "mmsi")
     private String mmsi;
 
     @Size(max = 50)
-    @Column(unique = true, name="iccat")
+    @Column(unique = true, name = "iccat")
     private String iccat;
 
     @Size(max = 50)
-    @Column(unique = true, name="uvi")
+    @Column(unique = true, name = "uvi")
     private String uvi;
 
     @Size(max = 50)
-    @Column(unique = true, name="gfcm")
+    @Column(unique = true, name = "gfcm")
     private String gfcm;
 
-    @Column(name="active")
+    @Column(name = "active")
     private Boolean active;
 
     @Size(min = 3, max = 3)
-    @Column(name="flagstatecode")
+    @Column(name = "flagstatecode")
     private String flagStateCode;
 
-    @Column(name="eventcode")
+    @Column(name = "eventcode")
     private String eventCode;
 
     @Size(max = 40)
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
     @Size(max = 14)
-    @Column(name="externalmarking")
+    @Column(name = "externalmarking")
     private String externalMarking;
 
-    @Column(name="agentisalsoowner")
+    @Column(name = "agentisalsoowner")
     private Boolean agentIsAlsoOwner;
 
     @Digits(integer = 6, fraction = 2)
-    @Column(name="lengthoverall")
+    @Column(name = "lengthoverall")
     private Double lengthOverAll;
 
     @Digits(integer = 6, fraction = 2)
-    @Column(name="lengthbetweenperpendiculars")
+    @Column(name = "lengthbetweenperpendiculars")
     private Double lengthBetweenPerpendiculars;
 
     @Digits(integer = 7, fraction = 2)
-    @Column(name="safetygrosstonnage")
+    @Column(name = "safetygrosstonnage")
     private Double safteyGrossTonnage;
 
     @Digits(integer = 8, fraction = 2)
-    @Column(name="othertonnage")
+    @Column(name = "othertonnage")
     private Double otherTonnage;
 
     @Digits(integer = 8, fraction = 2)
-    @Column(name="grosstonnage")
+    @Column(name = "grosstonnage")
     private Double grossTonnage;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="grosstonnageunit")
+    @Column(name = "grosstonnageunit")
     private UnitTonnage grossTonnageUnit = UnitTonnage.LONDON;
 
     @Size(max = 30)
-    @Column(name="portofregistration")
+    @Column(name = "portofregistration")
     private String portOfRegistration;
 
     @Digits(integer = 8, fraction = 2)
-    @Column(name="powerofauxengine")
+    @Column(name = "powerofauxengine")
     private Double powerOfAuxEngine;
 
     @Digits(integer = 8, fraction = 2)
-    @Column(name="powerofmainengine")
+    @Column(name = "powerofmainengine")
     private Double powerOfMainEngine;
 
-    @Column(name="haslicense")
+    @Column(name = "haslicense")
     private Boolean hasLicence;
 
     @Size(max = 25)
-    @Column(name="licensetype")
+    @Column(name = "licensetype")
     private String licenceType;
 
-    @Column(name="mainfishinggear")
-    private String mainFishingGear;
+    @Column(name = "mainfishinggearcode")
+    private String mainFishingGearCode;
 
-    @Column(name="subfishinggear")
-    private String subFishingGear;
+    @Column(name = "subfishinggearcode")
+    private String subFishingGearCode;
 
-    @Column(name="gearfishingtype")
+    @Column(name = "gearfishingtype")
     private Integer gearFishingType;
 
     @Size(max = 100)
-    @Column(name="ownername")
+    @Column(name = "ownername")
     private String ownerName;
 
-    @Column(name="hasvms")
+    @Column(name = "hasvms")
     private Boolean hasVms;
 
     @Size(max = 100)
-    @Column(name="owneraddress")
+    @Column(name = "owneraddress")
     private String ownerAddress;
 
     @Size(max = 100)
-    @Column(name="assetagentaddress")
+    @Column(name = "assetagentaddress")
     private String assetAgentAddress;
 
     @Size(min = 3, max = 3)
-    @Column(name="countryofimportorexport")
+    @Column(name = "countryofimportorexport")
     private String countryOfImportOrExport;
 
-    @Column(name="administrativedecisiondate")
+    @Column(name = "typeofexport")
+    private String typeOfExport;
+
+    @Column(name = "administrativedecisiondate")
     private LocalDateTime administrativeDecisionDate;
 
-    @Column(name="segment")
+    @Column(name = "segment")
     private String segment;
-//    private SegmentFUP segment;
 
-    @Column(name="segmentofadministrativedecision")
+    @Column(name = "segmentofadministrativedecision")
     private String segmentOfAdministrativeDecision;
-//    private SegmentFUP segmentOfAdministrativeDecision;
 
-    @Column(name="publicaid")
+    @Column(name = "publicaid")
     private String publicAid;
 
     @Size(max = 14)
-    @Column(name="registrationnumber")
+    @Column(name = "registrationnumber")
     private String registrationNumber;
 
-    @Column(name="typeofexport")
-    private String typeOfExport;
-
     @Size(max = 60)
-    @Column(name="updatedby")
+    @Column(name = "updatedby")
     private String updatedBy;
 
-
-     ///////////////////////////////////
-     //   FROM ProdOrg                //
-     ///////////////////////////////////
-
-    @Column(name="prodorgcode")
+    @Column(name = "prodorgcode")
     private String prodOrgCode;
 
-    @Column(name="prodorgname")
+    @Column(name = "prodorgname")
     private String prodOrgName;
 
     @PrePersist
     @PreUpdate
     private void generateNewHistoryId() {
-        this.historyid = UUID.randomUUID();
+        this.historyId = UUID.randomUUID();
     }
 
     public UUID getId() {
@@ -273,12 +268,44 @@ public class Asset implements Serializable{
         this.id = id;
     }
 
-    public String getIrcsIndicator() {
+    public UUID getHistoryId() {
+        return historyId;
+    }
+
+    public void setHistoryId(UUID historyId) {
+        this.historyId = historyId;
+    }
+
+    public Boolean getIrcsIndicator() {
         return ircsIndicator;
     }
 
-    public void setIrcsIndicator(String ircsIndicator) {
+    public void setIrcsIndicator(Boolean ircsIndicator) {
         this.ircsIndicator = ircsIndicator;
+    }
+
+    public Boolean getErsIndicator() {
+        return ersIndicator;
+    }
+
+    public void setErsIndicator(Boolean ersIndicator) {
+        this.ersIndicator = ersIndicator;
+    }
+
+    public Boolean getAisIndicator() {
+        return aisIndicator;
+    }
+
+    public void setAisIndicator(Boolean aisIndicator) {
+        this.aisIndicator = aisIndicator;
+    }
+
+    public Boolean getVmsIndicator() {
+        return vmsIndicator;
+    }
+
+    public void setVmsIndicator(Boolean vmsIndicator) {
+        this.vmsIndicator = vmsIndicator;
     }
 
     public String getHullMaterial() {
@@ -327,6 +354,22 @@ public class Asset implements Serializable{
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public String getVesselType() {
+        return vesselType;
+    }
+
+    public void setVesselType(String vesselType) {
+        this.vesselType = vesselType;
+    }
+
+    public LocalDateTime getVesselDateOfEntry() {
+        return vesselDateOfEntry;
+    }
+
+    public void setVesselDateOfEntry(LocalDateTime vesselDateOfEntry) {
+        this.vesselDateOfEntry = vesselDateOfEntry;
     }
 
     public String getCfr() {
@@ -521,20 +564,20 @@ public class Asset implements Serializable{
         this.licenceType = licenceType;
     }
 
-    public String getMainFishingGear() {
-        return mainFishingGear;
+    public String getMainFishingGearCode() {
+        return mainFishingGearCode;
     }
 
-    public void setMainFishingGear(String mainFishingGear) {
-        this.mainFishingGear = mainFishingGear;
+    public void setMainFishingGearCode(String mainFishingGearCode) {
+        this.mainFishingGearCode = mainFishingGearCode;
     }
 
-    public String getSubFishingGear() {
-        return subFishingGear;
+    public String getSubFishingGearCode() {
+        return subFishingGearCode;
     }
 
-    public void setSubFishingGear(String subFishingGear) {
-        this.subFishingGear = subFishingGear;
+    public void setSubFishingGearCode(String subFishingGearCode) {
+        this.subFishingGearCode = subFishingGearCode;
     }
 
     public Integer getGearFishingType() {
@@ -585,6 +628,14 @@ public class Asset implements Serializable{
         this.countryOfImportOrExport = countryOfImportOrExport;
     }
 
+    public String getTypeOfExport() {
+        return typeOfExport;
+    }
+
+    public void setTypeOfExport(String typeOfExport) {
+        this.typeOfExport = typeOfExport;
+    }
+
     public LocalDateTime getAdministrativeDecisionDate() {
         return administrativeDecisionDate;
     }
@@ -625,14 +676,6 @@ public class Asset implements Serializable{
         this.registrationNumber = registrationNumber;
     }
 
-    public String getTypeOfExport() {
-        return typeOfExport;
-    }
-
-    public void setTypeOfExport(String typeOfExport) {
-        this.typeOfExport = typeOfExport;
-    }
-
     public String getUpdatedBy() {
         return updatedBy;
     }
@@ -655,9 +698,5 @@ public class Asset implements Serializable{
 
     public void setProdOrgName(String prodOrgName) {
         this.prodOrgName = prodOrgName;
-    }
-
-    public UUID getHistoryId() {
-        return this.historyid;
     }
 }
