@@ -24,19 +24,7 @@ import eu.europa.ec.fisheries.uvms.entity.Note;
 
 @RunWith(Arquillian.class)
 public class AssetResourceTest extends AbstractAssetRestTest {
-    
-    @Test
-    @RunAsClient
-    public void getNotesActivityCodesTest() throws Exception {
-        Response response = getWebTarget()
-                .path("/asset/activitycodes")
-                .request(MediaType.APPLICATION_JSON)
-                .get();
-        
-        assertTrue(response != null);
-        assertEquals(200, response.getStatus());
-    }
-    
+       
     @Test
     @RunAsClient
     public void createAssetCheckResponseCodeTest() throws Exception {

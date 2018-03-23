@@ -385,11 +385,6 @@ public class AssetServiceBean implements AssetService {
 
     }
 
-    public String getNoteActivityCodes() {
-        //return getNoteActivityCodes_FROM_DOMAINMODEL();
-        return null;
-    }
-
     @Override
     public void deleteAsset(AssetId assetId) throws AssetServiceException {
 

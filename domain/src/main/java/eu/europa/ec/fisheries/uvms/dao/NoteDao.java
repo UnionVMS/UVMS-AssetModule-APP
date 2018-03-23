@@ -18,7 +18,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.entity.Note;
-import eu.europa.ec.fisheries.uvms.entity.NotesActivityCode;
 
 @Stateless
 public class NoteDao {
@@ -48,9 +47,4 @@ public class NoteDao {
         query.setParameter("assetId", asset.getId());
         return query.getResultList();
     }
-
-    public List<NotesActivityCode> getNoteActivityCodes() {
-        throw new IllegalStateException("Not implemented yet!");
-    }
-
 }

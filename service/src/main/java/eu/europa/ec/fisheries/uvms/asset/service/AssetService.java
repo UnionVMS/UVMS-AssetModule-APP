@@ -116,8 +116,6 @@ public interface AssetService {
         //AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetServiceException;
     Object getAssetListGroupByFlagState(List assetIds) throws AssetServiceException;
 
-    String getNoteActivityCodes();
-
     void deleteAsset(AssetId assetId) throws AssetServiceException;
 
 
