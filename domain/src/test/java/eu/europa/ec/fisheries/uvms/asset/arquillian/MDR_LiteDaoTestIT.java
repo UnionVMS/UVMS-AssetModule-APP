@@ -170,7 +170,7 @@ public class MDR_LiteDaoTestIT extends TransactionalTests {
         mdrlitedao.deleteAllFor(CONSTANT);
 
         rs1 = mdrlitedao.getAllFor(CONSTANT);
-        rs2 = mdrlitedao.getAllFor(CONSTANT);
+        rs2 = mdrlitedao.getAllFor(CONSTANT+"2");
         Assert.assertEquals(rs1.size(), 0);
         Assert.assertEquals(rs2.size(), 0);
     }
