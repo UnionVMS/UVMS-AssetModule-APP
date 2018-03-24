@@ -19,4 +19,7 @@
     <include file="changelog\v0.3\db-changelog-insertStaticValues_0.3.xml" />
     <include file="changelog\v0.4\db-changelog-insertStaticValues_0.4.xml" />
 
+    <include file="changelog\v0.6\db-changelog-createTables_0.6.xml" />
+
+
 </databaseChangeLog>
