@@ -51,7 +51,7 @@ public class MDR_LiteServiceBean implements MDR_LiteService {
 			extradata = "";
 		}
 		MDR_Lite mdr = new MDR_Lite();
-		mdr.setConstant(constant);
+		mdr.setConstant(constant.toUpperCase());
 		mdr.setCode(code);
 		mdr.setDescription(description);
 		mdr.setJsonstr(extradata);
@@ -75,7 +75,7 @@ public class MDR_LiteServiceBean implements MDR_LiteService {
 		if(code.trim().length() < 1){
 			throw new IllegalArgumentException("Code cannot be empty");
 		}
-		return dao.get(constant,code);
+		return dao.get(constant.toUpperCase(),code);
 
 	}
 
@@ -95,7 +95,7 @@ public class MDR_LiteServiceBean implements MDR_LiteService {
 			throw new IllegalArgumentException("Code cannot be empty");
 		}
 
-		return dao.exists(constant,code);
+		return dao.exists(constant.toUpperCase(),code);
 
 	}
 
@@ -114,7 +114,7 @@ public class MDR_LiteServiceBean implements MDR_LiteService {
 		if(code.trim().length() < 1){
 			throw new IllegalArgumentException("Code cannot be empty");
 		}
-		return dao.update(constant,code,newValue,newExtraData);
+		return dao.update(constant.toUpperCase(),code,newValue,newExtraData);
 
 	}
 
@@ -132,7 +132,7 @@ public class MDR_LiteServiceBean implements MDR_LiteService {
 		if(code.trim().length() < 1){
 			throw new IllegalArgumentException("Code cannot be empty");
 		}
-		dao.delete(constant,code);
+		dao.delete(constant.toUpperCase(),code);
 
 	}
 
@@ -144,7 +144,7 @@ public class MDR_LiteServiceBean implements MDR_LiteService {
 		if(constant.trim().length() < 1){
 			throw new IllegalArgumentException("Constant cannot be empty");
 		}
-		return dao.getAllFor(constant);
+		return dao.getAllFor(constant.toUpperCase());
 
 	}
 
@@ -156,7 +156,7 @@ public class MDR_LiteServiceBean implements MDR_LiteService {
 		if(constant.trim().length() < 1){
 			throw new IllegalArgumentException("Constant cannot be empty");
 		}
-		dao.deleteAllFor(constant);
+		dao.deleteAllFor(constant.toUpperCase());
 
 	}
 }
