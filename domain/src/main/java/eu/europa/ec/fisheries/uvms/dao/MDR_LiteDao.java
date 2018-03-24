@@ -16,30 +16,60 @@ public class MDR_LiteDao {
 
     public MDR_Lite create(MDR_Lite record) {
 
-        // NO DUPLICATES
+        // NO DUPLICATES on constant AND code ALLOWED
         MDR_Lite fetched = get(record.getConstant(), record.getCode());
         if (fetched != null) return record;
+        if(record.getDescription() == null){
+            record.setDescription("");
+        }
+        if(record.getJsonstr() == null){
+            record.setJsonstr("");
+        }
 
         em.persist(record);
         return record;
     }
 
-    public MDR_Lite get(String constant, String value) {
+    public MDR_Lite get(String constant, String code) {
         try {
             TypedQuery<MDR_Lite> query = em.createNamedQuery(MDR_Lite.MDRLITE_GET, MDR_Lite.class);
             query.setParameter("constant", constant);
-            query.setParameter("code", value);
+            query.setParameter("code", code);
             return query.getSingleResult();
         } catch (NoResultException e) {
             return null;
         }
     }
 
-    public Boolean exists(String constant, String value) {
-            TypedQuery<MDR_Lite> query = em.createNamedQuery(MDR_Lite.MDRLITE_GET, MDR_Lite.class);
-            query.setParameter("constant", constant);
-            query.setParameter("code", value);
-            return query.getResultList().size() == 1;
+    public MDR_Lite update(String constant, String code, String newDescription, String newJson) {
+
+        MDR_Lite fetchedMDR_lite = get(constant, code);
+        if (fetchedMDR_lite != null) {
+            if(newDescription != null) {
+                fetchedMDR_lite.setDescription(newDescription);
+            }
+            if(newJson != null) {
+                fetchedMDR_lite.setJsonstr(newJson);
+            }
+        }
+        return fetchedMDR_lite;
+    }
+
+
+    public void delete(String constant, String code) {
+
+        MDR_Lite record = get(constant, code);
+        if (record != null) {
+            em.remove(record);
+        }
+    }
+
+
+    public Boolean exists(String constant, String code) {
+        TypedQuery<MDR_Lite> query = em.createNamedQuery(MDR_Lite.MDRLITE_GET, MDR_Lite.class);
+        query.setParameter("constant", constant);
+        query.setParameter("code", code);
+        return query.getResultList().size() == 1;
     }
 
     public List<MDR_Lite> getAllFor(String constant) {
@@ -52,14 +82,6 @@ public class MDR_LiteDao {
         }
     }
 
-
-    public void delete(String constant, String value) {
-
-        MDR_Lite record = get(constant, value);
-        if (record != null) {
-            em.remove(record);
-        }
-    }
 
     public void deleteAllFor(String constant) {
 
