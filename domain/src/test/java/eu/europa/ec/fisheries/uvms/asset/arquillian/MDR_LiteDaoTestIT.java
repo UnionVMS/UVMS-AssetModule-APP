@@ -17,6 +17,8 @@ import java.util.UUID;
 @RunWith(Arquillian.class)
 public class MDR_LiteDaoTestIT  extends TransactionalTests {
 
+    private static final String CONSTANT = "TESTcarrieractiveTEST";
+
     private class ExtraData{
 
         private String data1;
@@ -59,8 +61,8 @@ public class MDR_LiteDaoTestIT  extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void create() throws JsonProcessingException {
 
-        MDR_Lite record_active = createHelper(true);
-        MDR_Lite record_inactive = createHelper(false);
+        MDR_Lite record_active = createHelper(CONSTANT,true);
+        MDR_Lite record_inactive = createHelper(CONSTANT,false);
 
         MDR_Lite createdrecord_active =  mdrlitedao.create(record_active);
         String constant_active = createdrecord_active.getConstant();
@@ -87,7 +89,6 @@ public class MDR_LiteDaoTestIT  extends TransactionalTests {
         mdrlitedao.delete(record_active.getConstant(),record_active.getCode());
         mdrlitedao.delete(record_active.getConstant(),record_inactive.getCode());
 
-
     }
 
 
@@ -95,8 +96,8 @@ public class MDR_LiteDaoTestIT  extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void tryToCreateDups() throws JsonProcessingException {
 
-        MDR_Lite record1 = createHelper(true);
-        MDR_Lite record2 = createHelper(true);
+        MDR_Lite record1 = createHelper(CONSTANT,true);
+        MDR_Lite record2 = createHelper(CONSTANT,true);
 
         MDR_Lite createdrecord1 =  mdrlitedao.create(record1);
         MDR_Lite createdrecord2 =  mdrlitedao.create(record2);
@@ -106,6 +107,71 @@ public class MDR_LiteDaoTestIT  extends TransactionalTests {
         Assert.assertEquals(rs.size(),1);
 
         mdrlitedao.delete(record1.getConstant(),record1.getCode());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void get() throws JsonProcessingException {
+
+        MDR_Lite record = createHelper(CONSTANT,true);
+
+        MDR_Lite createdrecord =  mdrlitedao.create(record);
+
+        MDR_Lite rec =  mdrlitedao.get(CONSTANT,createdrecord.getCode());
+        Assert.assertNotNull(rec);
+
+        mdrlitedao.delete(record.getConstant(),record.getCode());
+    }
+
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void exists() throws JsonProcessingException {
+
+        MDR_Lite record = createHelper(CONSTANT,true);
+
+        MDR_Lite createdrecord =  mdrlitedao.create(record);
+
+        Boolean exists =  mdrlitedao.exists(CONSTANT,createdrecord.getCode());
+        Assert.assertTrue(exists);
+
+        mdrlitedao.delete(record.getConstant(),record.getCode());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAllFor() throws JsonProcessingException {
+
+        for(int i =  0 ; i < 10 ; i++){
+            String iStr = String.valueOf(i);
+            MDR_Lite record = createHelper(CONSTANT, "kod" + iStr, "description" + iStr);
+            mdrlitedao.create(record);
+        }
+
+        for(int i =  0 ; i < 10 ; i++){
+            String iStr = String.valueOf(i);
+            MDR_Lite record = createHelper(CONSTANT + "2", "kod" + iStr, "description" + iStr);
+            mdrlitedao.create(record);
+        }
+
+        List<MDR_Lite>  rs1 =  mdrlitedao.getAllFor(CONSTANT);
+        List<MDR_Lite>  rs2 =  mdrlitedao.getAllFor(CONSTANT + "2");
+        Assert.assertEquals(rs1.size(),10);
+        Assert.assertEquals(rs2.size(),10);
+
+        mdrlitedao.deleteAllFor(CONSTANT + "2");
+
+        rs1 =  mdrlitedao.getAllFor(CONSTANT);
+        rs2 =  mdrlitedao.getAllFor(CONSTANT + "2");
+        Assert.assertEquals(rs1.size(),10);
+        Assert.assertEquals(rs2.size(),0);
+
+        mdrlitedao.deleteAllFor(CONSTANT );
+
+        rs1 =  mdrlitedao.getAllFor(CONSTANT);
+        rs2 =  mdrlitedao.getAllFor(CONSTANT );
+        Assert.assertEquals(rs1.size(),0);
+        Assert.assertEquals(rs2.size(),0);
 
 
     }
@@ -114,32 +180,36 @@ public class MDR_LiteDaoTestIT  extends TransactionalTests {
 
 
 
-
-    private MDR_Lite createHelper(Boolean active ) throws JsonProcessingException {
+    private MDR_Lite createHelper(String constant, Boolean active ) throws JsonProcessingException {
 
         MDR_Lite record = new MDR_Lite();
-
-        record.setConstant("TESTcarrieractiveTEST");
+        record.setConstant(constant);
         if(active) {
             record.setCode("1");
             record.setDescription("Active");
-
             ExtraData extradata   = new ExtraData(UUID.randomUUID().toString(), UUID.randomUUID().toString());
             String extradataJson = MAPPER.writeValueAsString(extradata);
             record.setJsonstr(extradataJson);
         }else{
             record.setCode("0");
             record.setDescription("InActive");
-
             ExtraData extradata   = new ExtraData(UUID.randomUUID().toString(), UUID.randomUUID().toString());
             String extradataJson = MAPPER.writeValueAsString(extradata);
             record.setJsonstr(extradataJson);
-
         }
-
         return record;
-
     }
+
+
+    private MDR_Lite createHelper(String constant, String code, String descr ) throws JsonProcessingException {
+
+        MDR_Lite record = new MDR_Lite();
+        record.setConstant(constant);
+        record.setCode(code);
+        record.setDescription(descr);
+        return record;
+    }
+
 
 }
 

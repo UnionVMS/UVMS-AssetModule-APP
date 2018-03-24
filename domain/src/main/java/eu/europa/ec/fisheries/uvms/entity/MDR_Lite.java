@@ -5,7 +5,6 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.UUID;
 
-import static eu.europa.ec.fisheries.uvms.entity.MDR_Lite.MDRLITE_DELETEALLFOR;
 import static eu.europa.ec.fisheries.uvms.entity.MDR_Lite.MDRLITE_GET;
 import static eu.europa.ec.fisheries.uvms.entity.MDR_Lite.MDRLITE_GETALLFOR;
 
@@ -14,7 +13,6 @@ import static eu.europa.ec.fisheries.uvms.entity.MDR_Lite.MDRLITE_GETALLFOR;
 @NamedQueries({
         @NamedQuery(name = MDRLITE_GET, query = "SELECT m FROM MDR_Lite m where  m.constant=:constant and m.code=:code"),
         @NamedQuery(name = MDRLITE_GETALLFOR, query = "SELECT m FROM MDR_Lite m where  m.constant=:constant"),
-        @NamedQuery(name = MDRLITE_DELETEALLFOR, query = "DELETE FROM MDR_Lite m where  m.constant=:constant"),
 })
 
 
@@ -22,7 +20,6 @@ public class MDR_Lite {
 
     public static final String MDRLITE_GET = "MDRLITE.EXISTS";
     public static final String MDRLITE_GETALLFOR = "MDRLITE.MDRLITE_GETALLFOR";
-    public static final String MDRLITE_DELETEALLFOR = "MDRLITE.MDRLITE_DELETEALLFOR";
 
     public MDR_Lite(){
         // for json

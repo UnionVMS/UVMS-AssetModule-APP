@@ -4,10 +4,7 @@ import eu.europa.ec.fisheries.uvms.entity.MDR_Lite;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.util.List;
 
 @Stateless
@@ -66,7 +63,7 @@ public class MDR_LiteDao {
 
     public void deleteAllFor(String constant) {
 
-        TypedQuery<MDR_Lite> query = em.createNamedQuery(MDR_Lite.MDRLITE_DELETEALLFOR, MDR_Lite.class);
+        Query query = em.createQuery("DELETE FROM MDR_Lite m where  m.constant=:constant");
         query.setParameter("constant", constant);
         query.executeUpdate();
 
