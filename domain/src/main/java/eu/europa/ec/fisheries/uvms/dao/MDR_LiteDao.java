@@ -20,8 +20,8 @@ public class MDR_LiteDao {
     public MDR_Lite create(MDR_Lite record) {
 
         // NO DUPLICATES
-        MDR_Lite fetched = get(record.getConstant(),record.getCode());
-        if(fetched != null) return record;
+        MDR_Lite fetched = get(record.getConstant(), record.getCode());
+        if (fetched != null) return record;
 
         em.persist(record);
         return record;
@@ -29,7 +29,7 @@ public class MDR_LiteDao {
 
     public MDR_Lite get(String constant, String value) {
         try {
-            TypedQuery<MDR_Lite> query = em.createNamedQuery(MDR_Lite.MDRLITE_GET,MDR_Lite.class);
+            TypedQuery<MDR_Lite> query = em.createNamedQuery(MDR_Lite.MDRLITE_GET, MDR_Lite.class);
             query.setParameter("constant", constant);
             query.setParameter("code", value);
             return query.getSingleResult();
@@ -38,9 +38,16 @@ public class MDR_LiteDao {
         }
     }
 
+    public Boolean exists(String constant, String value) {
+            TypedQuery<MDR_Lite> query = em.createNamedQuery(MDR_Lite.MDRLITE_GET, MDR_Lite.class);
+            query.setParameter("constant", constant);
+            query.setParameter("code", value);
+            return query.getResultList().size() == 1;
+    }
+
     public List<MDR_Lite> getAllFor(String constant) {
         try {
-            TypedQuery<MDR_Lite> query = em.createNamedQuery(MDR_Lite.MDRLITE_GETALLFOR,MDR_Lite.class);
+            TypedQuery<MDR_Lite> query = em.createNamedQuery(MDR_Lite.MDRLITE_GETALLFOR, MDR_Lite.class);
             query.setParameter("constant", constant);
             return query.getResultList();
         } catch (NoResultException e) {
@@ -49,17 +56,22 @@ public class MDR_LiteDao {
     }
 
 
-
-
     public void delete(String constant, String value) {
 
-        MDR_Lite record = get(constant,value);
-        if(record != null){
+        MDR_Lite record = get(constant, value);
+        if (record != null) {
             em.remove(record);
         }
     }
 
+    public void deleteAllFor(String constant) {
 
+        TypedQuery<MDR_Lite> query = em.createNamedQuery(MDR_Lite.MDRLITE_DELETEALLFOR, MDR_Lite.class);
+        query.setParameter("constant", constant);
+        query.executeUpdate();
+
+
+    }
 
 
 }
