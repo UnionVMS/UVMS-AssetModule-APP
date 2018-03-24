@@ -42,7 +42,7 @@ public class MDR_LiteServiceBean implements MDR_LiteService {
 		if(code.trim().length() < 1){
 			throw new IllegalArgumentException("Code cannot be empty");
 		}
-		// we allow nonvalues in description and extradata since the code can be a existent nonexistent flag
+		// we allow nonvalues in description and extradata since the code can be an existent nonexistent flag
 		// but we avoid nulls for simplicity
 		if(description == null){
 			description = "";
