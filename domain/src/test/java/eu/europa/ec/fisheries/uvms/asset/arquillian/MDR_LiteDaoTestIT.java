@@ -119,7 +119,7 @@ public class MDR_LiteDaoTestIT  extends TransactionalTests {
 
         MDR_Lite record = new MDR_Lite();
 
-        record.setConstant("carrieractive");
+        record.setConstant("TESTcarrieractiveTEST");
         if(active) {
             record.setCode("1");
             record.setDescription("Active");
