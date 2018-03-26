@@ -14,7 +14,6 @@ package eu.europa.ec.fisheries.uvms.asset.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetListResponse;
 import eu.europa.ec.fisheries.uvms.constant.AssetIdentity;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
@@ -26,134 +25,120 @@ import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 public interface AssetService {
 
     /**
-     * Create a new Asset
-     *
-     * @param asset
-     * @return
-     * @throws eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException
+     * @param asset @description the asset to create
+     * @param username @description username
+     * @return Asset @description the created asset
      */
-    Asset createAsset(Asset asset, String username) throws AssetServiceException;
+    Asset createAsset(Asset asset, String username) ;
 
     /**
-     * Get all Assets
-     *
-     * @param requestQuery
-     * @return
-     * @throws AssetServiceException
+     * @param searchFields @description fields to use in search
+     * @param page  @description page
+     * @param listSize @description size of the list
+     * @param dynamic @description dynamic true or false
+     * @return AssetListResponse
      */
-    AssetListResponse getAssetList(List<SearchKeyValue> searchFields, int page, int listSize, boolean dynamic) throws AssetServiceException;
+    AssetListResponse getAssetList(List<SearchKeyValue> searchFields, int page, int listSize, boolean dynamic) ;
 
     /**
-     * Get all Assets
      *
-     * @param requestQuery
-     * @return
-     * @throws AssetServiceException
+     * @param searchFields @description fields to use in search
+     * @param dynamic @description dynamic true or false
+     * @return Long @description number of assets in search
      */
-    Long getAssetListCount(List<SearchKeyValue> searchFields, boolean dynamic) throws AssetServiceException;
+    Long getAssetListCount(List<SearchKeyValue> searchFields, boolean dynamic) ;
 
     /**
-     * Get a Asset by its asset id from the source queue
      *
-     * @param assetId
-     * @param source
-     * @return
-     * @throws AssetServiceException
+     * @param assetId @description id
+     * @param value @description idvalue
+     * @return Asset @description an asset
      */
-    Asset getAssetById(AssetIdentity assetId, String value) throws AssetServiceException;
-
-    /**
-     * Get Asset By internal Id
-     *
-     * @param id
-     * @return
-     * @throws AssetServiceException
-     */
-    Asset getAssetById(UUID id) throws AssetServiceException;
-
-    /**
-     * Update a Asset
-     *
-     * @param asset
-     * @param username
-     * @param comment
-     * @return
-     * @throws AssetServiceException
-     */
-    Asset updateAsset(Asset asset, String username, String comment) throws AssetServiceException;
-
-    /**
-     * Archives an asset.
-     *
-     * @param asset   an asset
-     * @param comment a comment to the archiving
-     * @return the archived asset
-     * @throws AssetServiceException if unsuccessful
-     */
-    Asset archiveAsset(Asset asset, String username, String comment) throws AssetServiceException;
-
-    /**
-     * Create asset if not exists, otherwise update asset
-     *
-     * @param asset
-     * @return
-     * @throws AssetServiceException
-     */
-    Asset upsertAsset(Asset asset, String username) throws AssetServiceException;
-
-    /**
-     * Returns a list of assets based on the searh criterias in the
-     * assetgroups
-     *
-     * @param groups
-     * @return
-     * @throws AssetServiceException
-     */
-    List<Asset> getAssetListByAssetGroups(List<AssetGroup> groups) throws AssetServiceException;
-
-
-        //AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetServiceException;
-    Object getAssetListGroupByFlagState(List assetIds) throws AssetServiceException;
-
-    void deleteAsset(AssetIdentity assetId, String value) throws AssetServiceException;
+    Asset getAssetById(AssetIdentity assetId, String value) ;
 
 
     /**
-     * return all revisions for an asset
      *
-     * @param asset
-     * @return
-     * @throws AssetServiceException
+     * @param id @description internal id
+     * @return Asset @description an asset
      */
-    List<Asset> getRevisionsForAsset(Asset asset) throws AssetServiceException;
+    Asset getAssetById(UUID id) ;
+
+    /**
+     *
+     * @param asset @description an asset
+     * @param username @description user that performs action
+     * @param comment @description comment , reason of action
+     * @return Asset @description
+     */
+    Asset updateAsset(Asset asset, String username, String comment) ;
+
+    /**
+     *
+     * @param asset @description an asset
+     * @param username @description user that performs action
+     * @param comment @description comment , reason of action
+     * @return Asset @description
+     */
+    Asset archiveAsset(Asset asset, String username, String comment) ;
+
+    /**
+     *
+     * @param asset @description an asset
+     * @param username @description user that performs the action
+     * @return Asset @description an asset
+     */
+    Asset upsertAsset(Asset asset, String username) ;
+
+    /**
+     *
+     * @param groups @description list of assetgroups
+     * @return List of assets @description list of assets
+     */
+    List<Asset> getAssetListByAssetGroups(List<AssetGroup> groups) ;
+
+
+        //AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) ;
+    Object getAssetListGroupByFlagState(List assetIds) ;
+
+    /**
+     *
+     * @param assetId @description id
+     * @param value @description value of id
+     */
+    void deleteAsset(AssetIdentity assetId, String value) ;
 
 
     /**
-     * return asset for specific historyId
      *
-     * @param asset
-     * @param historyId
-     * @return
-     * @throws AssetServiceException
+     * @param asset @description an asset
+     * @return List of assets @description list of historic versions of this asset
      */
-    Asset getAssetRevisionForRevisionId(UUID historyId) throws AssetServiceException;
+    List<Asset> getRevisionsForAsset(Asset asset) ;
 
 
-    /** return asset as it was specidied date
-     *
-     * @param idType
-     * @param idValue
-     * @param date
-     * @return
-     * @throws AssetServiceException
-     */
-    Asset getAssetFromAssetIdAtDate(AssetIdentity idType, String idValue, LocalDateTime date) throws AssetServiceException;
-    
     /**
-     * Returns all notes for given asset UUID.
-     * 
-     * @param assetId
-     * @return
+     *
+     * @param historyId @description id of history
+     * @return asset @description an asset
+     */
+    Asset getAssetRevisionForRevisionId(UUID historyId) ;
+
+
+    /**
+     *
+     * @param idType @description idtype
+     * @param idValue @description value of id
+     * @param date @description date to look up
+     * @return asset @description an asset
+     */
+    Asset getAssetFromAssetIdAtDate(AssetIdentity idType, String idValue, LocalDateTime date) ;
+
+
+    /**
+     *
+     * @param assetId @description an assets internal id
+     * @return list of note @description a list of notes
      */
     List<Note> getNotesForAsset(UUID assetId);
     
@@ -161,57 +146,56 @@ public interface AssetService {
     /**
      * Create a note for given asset UUID.
      * 
-     * @param assetId
-     * @param note
-     * @return
+     * @param assetId @description an assets internal id
+     * @param note @description a note object
+     * @param username @description  user that performs the action
+     * @return a Note @description a note
      */
     Note createNoteForAsset(UUID assetId, Note note, String username);
     
     /**
      * Update a note.
      * 
-     * @param note
-     * @return
+     * @param note @description a note object
+     * @param username @description  user that performs the action
+     * @return a Note @description a note
      */
     Note updateNote(Note note, String username);
     
     /**
      * Delete a note with given id
-     * 
-     * @param id
+     * @param id @description  internal id of note
      */
     void deleteNote(UUID id);
     
     /**
      * Returns all contact info for given asset UUID.
-     * 
-     * @param assetId
-     * @return
+     * @param assetId @description internal id of asset
+     * @return List of ContactInfo @description
      */
     List<ContactInfo> getContactInfoForAsset(UUID assetId);
-    
+
 
     /**
-     * Create a contact info for given asset UUID.
-     * 
-     * @param assetId
-     * @param note
-     * @return
+     *
+     * @param assetId @description internal id of asset
+     * @param contactInfo @description contactinfo object
+     * @param username @description  user that performs the action
+     * @return ContactInfo @description contactinfo
      */
     ContactInfo createContactInfoForAsset(UUID assetId, ContactInfo contactInfo, String username);
-    
+
     /**
-     * Update a contact info.
-     * 
-     * @param note
-     * @return
+     *
+     * @param contactInfo @description a contactinfo object
+     * @param username @description  user that performs the action
+     * @return ContactInfo @description contactinfo
      */
     ContactInfo updateContactInfo(ContactInfo contactInfo, String username);
     
     /**
      * Delete the contact info with given id
-     * 
-     * @param id
+     * @param id @description internal id of contactinfo
      */
     void deleteContactInfo(UUID id);
 }

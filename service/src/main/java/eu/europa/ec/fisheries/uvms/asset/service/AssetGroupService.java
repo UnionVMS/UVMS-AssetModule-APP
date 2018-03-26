@@ -11,7 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service;
 
-import eu.europa.ec.fisheries.uvms.asset.model.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.entity.AssetGroupField;
 import javax.ejb.Local;
@@ -23,108 +22,103 @@ public interface AssetGroupService {
 
     /**
      *
-     * @param user
-     * @return
-     * @throws InputArgumentException
+     * @param user @description user that perforns action
+     * @return @description list of assetgroups
      */
-    List<AssetGroup> getAssetGroupList(String user) throws InputArgumentException;
-
-    /**
-     *
-     * @param assetId
-     * @return
-     * @throws InputArgumentException
-     */
-    List<AssetGroup> getAssetGroupListByAssetId(UUID assetId) throws InputArgumentException ;
-
-    /**
-     *
-     * @param guid
-     * @return
-     * @throws InputArgumentException
-     */
-    AssetGroup getAssetGroupById(UUID guid) throws InputArgumentException;
-
-    /**
-     *
-     * @param assetGroup
-     * @param username
-     * @return
-     * @throws InputArgumentException
-     */
-    AssetGroup createAssetGroup(AssetGroup assetGroup, String username) throws InputArgumentException;
-
-    /**
-     *
-     * @param assetGroup
-     * @param username
-     * @return
-     * @throws InputArgumentException
-     */
-    AssetGroup updateAssetGroup(AssetGroup assetGroup, String username) throws InputArgumentException;
-
-    /**
-     *
-     * @param guid
-     * @param username
-     * @return
-     * @throws InputArgumentException
-     */
-    AssetGroup deleteAssetGroupById(UUID guid, String username) throws InputArgumentException;
+    List<AssetGroup> getAssetGroupList(String user) ;
 
 
     /**
      *
-     * @param parentAssetgroup
-     * @param assetGroupField
-     * @param username
-     * @return
-     * @throws InputArgumentException
+     * @param assetId @description internal assetid
+     * @return @description list of assetgroups
      */
-    AssetGroupField createAssetGroupField(UUID parentAssetgroup, AssetGroupField assetGroupField, String username) throws InputArgumentException;
+    List<AssetGroup> getAssetGroupListByAssetId(UUID assetId)  ;
 
     /**
      *
-     * @param assetGroupField
-     * @param username
-     * @return
-     * @throws InputArgumentException
+     * @param guid @description internal id
+     * @return @description assetgroup
      */
-    AssetGroupField updateAssetGroupField(AssetGroupField assetGroupField, String username) throws InputArgumentException;
-
-    /**
-     *
-     * @param id
-     * @return
-     * @throws InputArgumentException
-     */
-    AssetGroupField getAssetGroupField(UUID id) throws InputArgumentException;
+    AssetGroup getAssetGroupById(UUID guid) ;
 
 
     /**
      *
-     * @param id
-     * @param username
-     * @return
-     * @throws InputArgumentException
+      * @param assetGroup @description an assetgroup object
+     * @param username @description user that perforns action
+     * @return  @description an assetgroup
      */
-    AssetGroupField deleteAssetGroupField(UUID id, String username)  throws InputArgumentException;
+    AssetGroup createAssetGroup(AssetGroup assetGroup, String username) ;
 
 
     /**
      *
-     * @param assetGroupId
-     * @return
-     * @throws InputArgumentException
+     * @param assetGroup @description an assetgroup object
+     * @param username @description user that perforns action
+     * @return @description an assetgroup
      */
-    List<AssetGroupField> retrieveFieldsForGroup(UUID assetGroupId) throws InputArgumentException;
+    AssetGroup updateAssetGroup(AssetGroup assetGroup, String username) ;
+
 
     /**
      *
-     * @param assetGroupId
-     * @throws InputArgumentException
+      * @param guid @description internal id
+     * @param username @description user that perforns action
+     * @return  @description  an assetgroup
      */
-    void removeFieldsForGroup(UUID assetGroupId)  throws InputArgumentException;
+    AssetGroup deleteAssetGroupById(UUID guid, String username) ;
+
+
+    /**
+     *
+     * @param parentAssetgroup @description internal id of parent assetgroup
+     * @param assetGroupField @description an assetgroupfield object
+     * @param username @description user that perforns action
+     * @return @description
+     */
+    AssetGroupField createAssetGroupField(UUID parentAssetgroup, AssetGroupField assetGroupField, String username) ;
+
+
+    /**
+     *
+     * @param assetGroupField @description an assetgroupfield object
+     * @param username @description user that perforns action
+     * @return an assetgroupfield
+     */
+    AssetGroupField updateAssetGroupField(AssetGroupField assetGroupField, String username) ;
+
+
+    /**
+     *
+     * @param id @description an internal id
+     * @return @description an assetgroupfield
+     */
+    AssetGroupField getAssetGroupField(UUID id) ;
+
+
+    /**
+     *
+     * @param id @description internal id
+     * @param username @description user that perforns action
+     * @return @description an assetgroupfield
+     */
+    AssetGroupField deleteAssetGroupField(UUID id, String username)  ;
+
+
+    /**
+     *
+     * @param assetGroupId @description internal id
+     * @return @description list of assetgroupfields
+     */
+    List<AssetGroupField> retrieveFieldsForGroup(UUID assetGroupId) ;
+
+
+    /**
+     *
+     * @param assetGroupId @description internal id of assetgroup
+     */
+    void removeFieldsForGroup(UUID assetGroupId)  ;
 
 
 }

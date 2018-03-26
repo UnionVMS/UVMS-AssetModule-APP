@@ -54,11 +54,10 @@ public class AssetServiceBean implements AssetService {
     private ContactInfoDao contactDao;
 
     /**
-     * {@inheritDoc}
      *
      * @param asset
+     * @param username
      * @return
-     * @throws AssetException
      */
     @Override
     public Asset createAsset(Asset asset, String username) {
@@ -72,11 +71,12 @@ public class AssetServiceBean implements AssetService {
     }
 
     /**
-     * {@inheritDoc}
      *
-     * @param query
+     * @param searchFields
+     * @param page
+     * @param listSize
+     * @param dynamic
      * @return
-     * @throws AssetException
      */
     @Override
     public AssetListResponse getAssetList(List<SearchKeyValue> searchFields, int page, int listSize, boolean dynamic) {
@@ -104,14 +104,13 @@ public class AssetServiceBean implements AssetService {
     }
 
     /**
-     * {@inheritDoc}
      *
-     * @param query
+     * @param searchFields
+     * @param dynamic
      * @return
-     * @throws AssetException
      */
     @Override
-    public Long getAssetListCount(List<SearchKeyValue> searchFields, boolean dynamic) throws AssetServiceException {
+    public Long getAssetListCount(List<SearchKeyValue> searchFields, boolean dynamic)  {
         if (searchFields == null || searchFields.isEmpty()) {
             throw new IllegalArgumentException("Cannot get asset list because query is null.");
         }
@@ -120,34 +119,41 @@ public class AssetServiceBean implements AssetService {
     }
 
     /**
-     * {@inheritDoc}
      *
      * @param asset
+     * @param username
+     * @param comment
      * @return
-     * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
      */
     @Override
-    public Asset updateAsset(Asset asset, String username, String comment) throws AssetServiceException {
+    public Asset updateAsset(Asset asset, String username, String comment)  {
         Asset updatedAsset = updateAssetInternal(asset, username);
         auditService.logAssetUpdated(updatedAsset, comment, username);
         return updatedAsset;
     }
 
+    /**
+     *
+     * @param asset   an asset
+     * @param username
+     * @param comment a comment to the archiving
+     * @return
+     */
     @Override
-    public Asset archiveAsset(Asset asset, String username, String comment) throws AssetServiceException {
+    public Asset archiveAsset(Asset asset, String username, String comment) {
         Asset archivedAsset = updateAssetInternal(asset, username);
         auditService.logAssetArchived(archivedAsset, comment, username);
         return archivedAsset;
     }
 
-    private Asset updateAssetInternal(Asset asset, String username) throws AssetServiceException {
+    private Asset updateAssetInternal(Asset asset, String username)  {
 
         if (asset == null) {
-            throw new InputArgumentException("No asset to update");
+            throw new IllegalArgumentException("No asset to update");
         }
 
         if (asset.getId() == null) {
-            throw new InputArgumentException("No id on asset to update");
+            throw new IllegalArgumentException("No id on asset to update");
         }
 
         checkIdentifierNullValues(asset);
@@ -176,11 +182,17 @@ public class AssetServiceBean implements AssetService {
     }
 
 
+    /**
+     *
+     * @param asset
+     * @param username
+     * @return
+     */
     @Override
-    public Asset upsertAsset(Asset asset, String username) throws AssetServiceException {
+    public Asset upsertAsset(Asset asset, String username)  {
 
         if (asset == null) {
-            throw new InputArgumentException("No asset to upsert");
+            throw new IllegalArgumentException("No asset to upsert");
         }
 
         //return upsertAsset_FROM_DOMAINMODEL(asset, username);
@@ -189,43 +201,49 @@ public class AssetServiceBean implements AssetService {
     }
 
     /**
-     * {@inheritDoc}
      *
      * @param assetId
+     * @param value
      * @return
-     * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
      */
     @Override
-    public Asset getAssetById(AssetIdentity assetId, String value) throws AssetServiceException {
+    public Asset getAssetById(AssetIdentity assetId, String value)  {
+
         if (assetId == null) {
-            throw new InputArgumentException("AssetIdentity object is null");
+            throw new IllegalArgumentException("AssetIdentity object is null");
         }
 
         if (value == null) {
-            throw new InputArgumentException("AssetIdentity value is null");
+            throw new IllegalArgumentException("AssetIdentity value is null");
         }
 
         return assetDao.getAssetFromAssetId(assetId, value);
     }
 
+    /**
+     *
+     * @param idType
+     * @param idValue
+     * @param date
+     * @return
+     */
     @Override
-    public Asset getAssetFromAssetIdAtDate(AssetIdentity idType, String idValue, LocalDateTime date)
-            throws AssetServiceException {
+    public Asset getAssetFromAssetIdAtDate(AssetIdentity idType, String idValue, LocalDateTime date)  {
 
         if (idType == null) {
-            throw new InputArgumentException("Type is null");
+            throw new IllegalArgumentException("Type is null");
         }
         if (idValue == null) {
-            throw new InputArgumentException("Value is null");
+            throw new IllegalArgumentException("Value is null");
         }
         if (date == null) {
-            throw new InputArgumentException("Date is null");
+            throw new IllegalArgumentException("Date is null");
         }
         if (idType == AssetIdentity.GUID) {
             try {
                 UUID.fromString(idValue);
             } catch (IllegalArgumentException e) {
-                throw new InputArgumentException("Not a valid UUID");
+                throw new IllegalArgumentException("Not a valid UUID");
             }
         }
 
@@ -234,29 +252,29 @@ public class AssetServiceBean implements AssetService {
 
 
     /**
+     *
      * @param id
      * @return
-     * @throws AssetException
      */
     @Override
-    public Asset getAssetById(UUID id) throws AssetServiceException {
+    public Asset getAssetById(UUID id)  {
         if (id == null) {
-            throw new InputArgumentException("Id is null");
+            throw new IllegalArgumentException("Id is null");
         }
 
         return assetDao.getAssetById(id);
     }
 
     /**
+     *
      * @param groups
      * @return
-     * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
      */
     @Override
-    public List<Asset> getAssetListByAssetGroups(List<AssetGroup> groups) throws AssetServiceException {
+    public List<Asset> getAssetListByAssetGroups(List<AssetGroup> groups)  {
         LOG.debug("Getting asset by ID.");
         if (groups == null || groups.isEmpty()) {
-            throw new InputArgumentException("No groups in query");
+            throw new IllegalArgumentException("No groups in query");
         }
 
         //return getAssetListByAssetGroup(groups);
@@ -265,7 +283,7 @@ public class AssetServiceBean implements AssetService {
 
     @Override
     //public AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetException {
-    public Object getAssetListGroupByFlagState(List assetIds) throws AssetServiceException {
+    public Object getAssetListGroupByFlagState(List assetIds)  {
         LOG.debug("Getting asset list by asset ids group by flags State.");
 		/*
 		List assetListGroupByFlagState = getAssetListGroupByFlagState_FROM_DOMAINMODEL(assetIds);
@@ -278,7 +296,7 @@ public class AssetServiceBean implements AssetService {
     }
 
     @Override
-    public void deleteAsset(AssetIdentity assetId, String value) throws AssetServiceException {
+    public void deleteAsset(AssetIdentity assetId, String value)  {
 
         if (assetId == null) {
             throw new IllegalArgumentException("AssetId is null");
@@ -290,27 +308,27 @@ public class AssetServiceBean implements AssetService {
     }
 
     @Override
-    public List<Asset> getRevisionsForAsset(Asset asset) throws AssetServiceException {
+    public List<Asset> getRevisionsForAsset(Asset asset)  {
         return assetDao.getRevisionsForAsset(asset);
     }
 
     @Override
-    public Asset getAssetRevisionForRevisionId(UUID historyId) throws AssetServiceException {
+    public Asset getAssetRevisionForRevisionId(UUID historyId)  {
         return assetDao.getAssetRevisionForHistoryId(historyId);
     }
 
-    private void checkNumberAssetId(String id) throws InputArgumentException {
+    private void checkNumberAssetId(String id)  {
         try {
             Integer.parseInt(id);
         } catch (NumberFormatException e) {
-            throw new InputArgumentException(id + " can not be parsed to integer");
+            throw new IllegalArgumentException(id + " can not be parsed to integer");
         }
     }
 
 
 
 	/*
-	public AssetDTO upsertAsset_FROM_DOMAINMODEL(AssetDTO asset, String username) throws AssetException {
+	public AssetDTO upsertAsset_FROM_DOMAINMODEL(AssetDTO asset, String username) {
 		try {
 			getAssetEntityById_FROM_DOMAINMODEL(asset.getAssetId());
 			return updateAsset_FROM_DOMAINMODEL(asset, username);
@@ -321,16 +339,14 @@ public class AssetServiceBean implements AssetService {
 	*/
 
 	/*
-	public List<AssetDTO> getAssetHistoryListByAssetId(AssetId assetId, Integer maxNbr)
-			throws AssetModelException, InputArgumentException {
+	public List<AssetDTO> getAssetHistoryListByAssetId(AssetId assetId, Integer maxNbr) {
 		AssetEntity vesselHistories = getAssetEntityById_FROM_DOMAINMODEL(assetId);
 		return EntityToModelMapper.toAssetHistoryList(vesselHistories, maxNbr);
 	}
 	*/
 
 	/*
-	public AssetDTO getAssetHistory_FROM_DOMAINMODEL(AssetHistoryId historyId)
-			throws AssetModelException, InputArgumentException {
+	public AssetDTO getAssetHistory_FROM_DOMAINMODEL(AssetHistoryId historyId) {
 		if (historyId == null || historyId.getEventId() == null) {
 			throw new InputArgumentException("Cannot get asset history because asset history ID is null.");
 		}
@@ -341,8 +357,7 @@ public class AssetServiceBean implements AssetService {
 	*/
 
 	/*
-	public List<NumberOfAssetsGroupByFlagState> getAssetListGroupByFlagState_FROM_DOMAINMODEL(List<String> assetIds)
-			throws AssetDaoException {
+	public List<NumberOfAssetsGroupByFlagState> getAssetListGroupByFlagState_FROM_DOMAINMODEL(List<String> assetIds) {
 		List<AssetHistory> assetListByAssetGuids = assetDao.getAssetListByAssetGuids(assetIds);
 		return EntityToModelMapper.mapEntityToNumberOfAssetsGroupByFlagState(assetListByAssetGuids);
 
@@ -359,8 +374,7 @@ public class AssetServiceBean implements AssetService {
 
 
 	/*
-	public FlagState getFlagStateByIdAndDate_FROM_DOMAINMODEL(String assetGuid, Date date)
-			throws InputArgumentException, AssetDaoException {
+	public FlagState getFlagStateByIdAndDate_FROM_DOMAINMODEL(String assetGuid, Date date) {
 
 		if (assetGuid == null) {
 			throw new InputArgumentException("Cannot get asset  because asset  ID is null.");
@@ -381,7 +395,7 @@ public class AssetServiceBean implements AssetService {
 
 	/*
 
-	public AssetDTO getAssetByIdAndDate_FROM_DOMAINMODEL(AssetId assetId, Date date) throws AssetModelException {
+	public AssetDTO getAssetByIdAndDate_FROM_DOMAINMODEL(AssetId assetId, Date date) {
 		try {
 			AssetEntity assetEntity = assetDao.getAssetFromAssetIdAndDate(assetId, date);
 			AssetDTO asset = EntityToModelMapper.toAssetFromEntity(assetEntity);
@@ -393,8 +407,7 @@ public class AssetServiceBean implements AssetService {
 	*/
 
 	/*
-	public List<AssetDTO> getAssetListByAssetGroup(List<AssetGroupWSDL> groups)
-			throws AssetModelException, InputArgumentException {
+	public List<AssetDTO> getAssetListByAssetGroup(List<AssetGroupWSDL> groups)  {
 		if (groups == null || groups.isEmpty()) {
 			throw new InputArgumentException("Cannot get asset list because criteria are null.");
 		}
@@ -421,10 +434,9 @@ public class AssetServiceBean implements AssetService {
 	*/
 
     public List<AssetGroup> getAssetGroupsByGroupList(
-            List<AssetGroup> groups)
-            throws AssetModelException, InputArgumentException {
+            List<AssetGroup> groups) {
         if (groups == null) {
-            throw new InputArgumentException("Cannot get asset group list because the input is null.");
+            throw new IllegalArgumentException("Cannot get asset group list because the input is null.");
         }
 
         List<UUID> guidList = new ArrayList<>();
@@ -433,10 +445,9 @@ public class AssetServiceBean implements AssetService {
         }
 
         if (guidList.isEmpty()) {
-            throw new InputArgumentException("Cannot get asset group list because the input missing guid.");
+            throw new IllegalArgumentException("Cannot get asset group list because the input missing guid.");
         }
 
-        try {
             List<AssetGroup> vesselGroupList = new ArrayList<>();
             // List<AssetGroup> filterGroupList =
             // assetGroupDao.getAssetGroupsByGroupGuidList(guidList);
@@ -445,11 +456,6 @@ public class AssetServiceBean implements AssetService {
             // }
 
             return vesselGroupList;
-        } catch (Exception e) {
-            LOG.error("[ Error when getting asset group list by List. ] groups {} exception: {}", groups,
-                    e.getMessage());
-            throw new AssetModelException(e.getMessage());
-        }
     }
 
     @Override

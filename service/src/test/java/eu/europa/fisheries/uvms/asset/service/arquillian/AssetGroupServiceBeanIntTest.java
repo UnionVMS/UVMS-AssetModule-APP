@@ -53,12 +53,8 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
         AssetGroup createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
         UUID guid = createdAssetGroupEntity.getId();
         assetGroupService.deleteAssetGroupById(createdAssetGroupEntity.getId(), createdAssetGroupEntity.getOwner());
-        try {
             AssetGroup fetchedAssetGroupEntity = assetGroupService.getAssetGroupById(guid);
             Assert.assertTrue(fetchedAssetGroupEntity != null);
-        } catch (AssetException s) {
-            Assert.assertTrue(false);
-        }
     }
 
     @Test
@@ -70,12 +66,8 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
 
         assetGroupService.deleteAssetGroupById(createdAssetGroupEntity.getId(), createdAssetGroupEntity.getOwner());
 
-        try {
             AssetGroup fetchedAssetGroupEntity = assetGroupService.getAssetGroupById(guid);
             Assert.assertTrue(fetchedAssetGroupEntity.getId().equals(guid));
-        } catch (AssetException s) {
-            Assert.assertTrue(false);
-        }
     }
 
     @Test
@@ -88,13 +80,10 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
         String newUserName = "UPDATED_SERVICE_TEST";
         createdAssetGroupEntity.setOwner(newUserName);
 
-        try {
             AssetGroup updatedAssetGroupEntity = assetGroupService.updateAssetGroup(createdAssetGroupEntity, newUserName);
             AssetGroup fetchedAssetGroupEntity = assetGroupService.getAssetGroupById(guid);
             Assert.assertFalse(fetchedAssetGroupEntity.getOwner().equalsIgnoreCase(oldUserName));
-        } catch (AssetException s) {
-            Assert.assertTrue(false);
-        }
+//            Assert.assertTrue(false);
     }
 
 
