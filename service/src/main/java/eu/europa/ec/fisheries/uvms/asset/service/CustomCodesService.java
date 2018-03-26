@@ -22,57 +22,57 @@ public interface CustomCodesService {
 
     /**
      *
-     * @param constant
-     * @param code
-     * @param description
-     * @param extradata
-     * @return
+     * @param constant @description constant
+     * @param code @description  the code to be valid for this constant
+     * @param description @description human readable description of the code for dropdowns/prints etc
+     * @param extradata @description free data complementing info for the code  could be a json . . .
+     * @return a CustomCode Object
      */
     CustomCodes create(String constant, String code, String description, String extradata);
 
     /**
      *
-     * @param constant
-     * @param code
-     * @return
+     * @param constant @description constant
+     * @param code @description  the code to be valid for this constant
+     * @return a CustomCodes object
      */
     CustomCodes get(String constant, String code );
 
     /**
      *
-     * @param constant
-     * @param code
-     * @return
+     * @param constant @description constant
+     * @param code @description  the code to be valid for this constant
+     * @return a boolean indicating exists or not  used for validation on incoming data
      */
     Boolean exists(String constant, String code);
 
     /**
      *
-     * @param constant
-     * @param code
-     * @param newValue
-     * @param newExtraData
-     * @return
+     * @param constant @description constant
+     * @param code @description  the code to be valid for this constant
+     * @param newValue @description  new description
+     * @param newExtraData @description  new extradata
+     * @return a the updated CustomCodes Object
      */
     CustomCodes update(String constant, String code, String newValue, String newExtraData);
 
     /**
      *
-     * @param constant
-     * @param code
+     * @param constant @description constant
+     * @param code @description  the code to be valid for this constant
      */
     void delete(String constant, String code);
 
     /**
      *
-     * @param constant
-     * @return
+     * @param constant @description constant
+     * @return a list of CustomCode for a given constant
      */
     List<CustomCodes> getAllFor(String constant);
 
     /**
      *
-     * @param constant
+     * @param constant @description constant delete all codes for this constant
      */
     void deleteAllFor(String constant);
 
