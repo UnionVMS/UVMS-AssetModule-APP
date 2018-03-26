@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.asset.service.bean;
+package eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;

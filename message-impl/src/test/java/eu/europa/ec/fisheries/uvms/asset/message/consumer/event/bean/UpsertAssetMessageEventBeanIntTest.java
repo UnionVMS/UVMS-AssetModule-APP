@@ -1,24 +1,23 @@
-package eu.europa.fisheries.uvms.asset.service.arquillian;
+package eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean;
 
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.UpsertAssetMessageEventBean;
+import javax.ejb.EJB;
+import javax.inject.Inject;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import javax.ejb.EJB;
-import javax.inject.Inject;
+import eu.europa.ec.fisheries.uvms.asset.message.AbstractMessageTest;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
+import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 
 /**
  * Created by thofan on 2017-06-14.
  */
 
 @RunWith(Arquillian.class)
-public class UpsertAssetMessageEventBeanIntTest extends TransactionalTests {
+public class UpsertAssetMessageEventBeanIntTest extends AbstractMessageTest {
 
 
 
@@ -28,12 +27,12 @@ public class UpsertAssetMessageEventBeanIntTest extends TransactionalTests {
     @EJB
     private AssetService assetService;
 
-    @Inject
-    InterceptorForTest interceptorForTests;
+//    @Inject
+//    InterceptorForTest interceptorForTests;
 
     @After
     public void teardown() {
-        interceptorForTests.recycle();
+//        interceptorForTests.recycle();
     }
 
 

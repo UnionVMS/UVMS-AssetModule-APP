@@ -1,7 +1,7 @@
-package eu.europa.fisheries.uvms.asset.service.arquillian;
+package eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean;
 
 import javax.ejb.EJB;
-import javax.inject.Inject;
+import javax.jms.TextMessage;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
@@ -9,14 +9,15 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import eu.europa.ec.fisheries.uvms.asset.message.AbstractMessageTest;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetEventBean;
-
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 
 
 @RunWith(Arquillian.class)
-public class GetAssetEventBeanIntTest extends TransactionalTests {
+public class GetAssetEventBeanIntTest extends AbstractMessageTest {
 
     @EJB
     private GetAssetEventBean getAssetEventBean;
@@ -24,12 +25,12 @@ public class GetAssetEventBeanIntTest extends TransactionalTests {
     @EJB
     private AssetService assetService;
 
-    @Inject
-    InterceptorForTest interceptorForTest;
+//    @Inject
+//    InterceptorForTest interceptorForTest;
 
     @After
     public void teardown() {
-        interceptorForTest.recycle();
+//        interceptorForTest.recycle();
     }
 
 
@@ -45,7 +46,7 @@ public class GetAssetEventBeanIntTest extends TransactionalTests {
     public void testBadUUIDGetAsset() {
 //        TextMessage textMessage = null;
 //        AssetId assetId = new AssetId();
-//        assetId.setType(AssetIdTypeEnum.GUID);
+//        assetId.setType(AssetIdType.GUID);
 //        assetId.setValue("<BAD UUID>");
 //
 //        getAssetEventBean.getAsset(textMessage, assetId);

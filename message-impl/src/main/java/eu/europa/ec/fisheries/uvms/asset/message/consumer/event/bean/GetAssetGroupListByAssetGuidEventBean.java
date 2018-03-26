@@ -1,4 +1,5 @@
-package eu.europa.ec.fisheries.uvms.asset.service.bean;
+package eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean;
+
 
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
@@ -8,7 +9,6 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
-import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,26 +21,24 @@ import java.util.List;
 
 @Stateless
 @LocalBean
-public class GetAssetGroupEventBean {
+public class GetAssetGroupListByAssetGuidEventBean {
 
-    private final static Logger LOG = LoggerFactory.getLogger(GetAssetGroupEventBean.class);
+    private final static Logger LOG = LoggerFactory.getLogger(GetAssetGroupListByAssetGuidEventBean.class);
 
     @EJB
     private MessageProducer messageProducer;
-
-    @EJB
-    private AssetGroupService assetGroup;
 
     @Inject
     @AssetMessageErrorEvent
     Event<AssetMessageEvent> assetErrorEvent;
 
-    public void getAssetGroupByUserName(AssetMessageEvent message) {
-        LOG.info("Get asset group");
-        try {
-            AssetGroupListByUserRequest request = message.getRequest();
-            List<AssetGroup> response = null;//assetGroup.getAssetGroupList(request.getUser());
+    @EJB
+    private AssetGroupService assetGroup;
 
+    public void getAssetGroupListByAssetEvent(AssetMessageEvent message) {
+        LOG.info("Get asset group by asset guid");
+        try {
+            List<AssetGroup> response = null; //assetGroup.getAssetGroupListByAssetGuid(message.getAssetGuid());
             LOG.debug("Send back assetGroupList response.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), AssetModuleResponseMapper.mapToAssetGroupListResponse(response));
         } catch (AssetException e) {
@@ -48,5 +46,6 @@ public class GetAssetGroupEventBean {
             assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting AssetGroupByUserName [ " + e.getMessage())));
         }
     }
+
 
 }

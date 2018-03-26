@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.asset.service.bean;
+package eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean;
 
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
