@@ -19,7 +19,7 @@ import org.hibernate.envers.query.AuditQuery;
 import org.hibernate.envers.query.criteria.AuditCriterion;
 import org.hibernate.envers.query.criteria.AuditDisjunction;
 import org.hibernate.envers.query.criteria.ExtendableCriterion;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
+import eu.europa.ec.fisheries.uvms.constant.AssetIdentity;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mapper.SearchFieldType;
@@ -210,34 +210,32 @@ public class AssetDao {
         return query.getResultList();
     }
 
-    public Asset getAssetFromAssetId(AssetId assetId) {
+    public Asset getAssetFromAssetId(AssetIdentity assetId, String value) {
         Asset asset = null;
-        switch (assetId.getType()) {
-            case INTERNAL_ID:
-                break;
+        switch (assetId) {
             case CFR:
-                asset = getAssetByCfr(assetId.getValue());
+                asset = getAssetByCfr(value);
                 break;
             case IRCS:
-                asset = getAssetByIrcs(assetId.getValue());
+                asset = getAssetByIrcs(value);
                 break;
             case IMO:
-                asset = getAssetByImo(assetId.getValue());
+                asset = getAssetByImo(value);
                 break;
             case MMSI:
-                asset = getAssetByMmsi(assetId.getValue());
+                asset = getAssetByMmsi(value);
                 break;
             case GUID:
-                asset = getAssetById(UUID.fromString(assetId.getValue()));
+                asset = getAssetById(UUID.fromString(value));
                 break;
             case ICCAT:
-                asset = getAssetByIccat(assetId.getValue());
+                asset = getAssetByIccat(value);
                 break;
             case UVI:
-                asset = getAssetByUvi(assetId.getValue());
+                asset = getAssetByUvi(value);
                 break;
             case GFCM:
-                asset = getAssetByGfcm(assetId.getValue());
+                asset = getAssetByGfcm(value);
                 break;
             default:
                 throw new IllegalArgumentException("Could not create query. Check your code AssetIdType is invalid");
@@ -245,8 +243,8 @@ public class AssetDao {
         return asset;
     }
 
-    public Asset getAssetFromAssetIdAtDate(AssetId assetId, LocalDateTime date) {
-        Asset asset = getAssetFromAssetId(assetId);
+    public Asset getAssetFromAssetIdAtDate(AssetIdentity assetId, String value, LocalDateTime date) {
+        Asset asset = getAssetFromAssetId(assetId, value);
         if (asset != null) {
             return getAssetAtDate(asset, date);
         } else {

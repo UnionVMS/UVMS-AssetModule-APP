@@ -5,9 +5,6 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetListCriteria;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetListPagination;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.entity.ContactInfo;
@@ -142,14 +139,4 @@ public abstract class AssetHelper {
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();
     }
-
-    public static AssetListQuery createBasicQuery() {
-        AssetListQuery query = new AssetListQuery();
-        query.setPagination(new AssetListPagination(1, 100));
-        AssetListCriteria listCriteria = new AssetListCriteria();
-        listCriteria.setIsDynamic(true);
-        query.setAssetSearchCriteria(listCriteria);
-        return query;
-    }
-
 }

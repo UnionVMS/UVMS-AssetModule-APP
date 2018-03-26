@@ -10,7 +10,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupFieldDao;
 import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
@@ -157,7 +156,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
         List<AssetGroupField> groupFields = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             String uuid = UUID.randomUUID().toString();
-            AssetGroupField field = createAssetGroupField(assetGroupEntity, ConfigSearchFieldEnum.GUID, uuid, dt, user);
+            AssetGroupField field = createAssetGroupField(assetGroupEntity, "GUID", uuid, dt, user);
             assetGroupFieldDaoBean.create(field);
             groupFields.add(field);
         }
@@ -165,13 +164,13 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     }
 
 
-    private AssetGroupField createAssetGroupField(AssetGroup assetGroupEntity, ConfigSearchFieldEnum key, String keyFieldValue, LocalDateTime dt, String user) {
+    private AssetGroupField createAssetGroupField(AssetGroup assetGroupEntity, String key, String keyFieldValue, LocalDateTime dt, String user) {
 
         AssetGroupField ag = new AssetGroupField();
         ag.setAssetGroup(assetGroupEntity.getId());
         ag.setUpdatedBy(user);
         ag.setUpdateTime(dt);
-        ag.setField(key.value());
+        ag.setField(key);
         ag.setValue(keyFieldValue);
 
 

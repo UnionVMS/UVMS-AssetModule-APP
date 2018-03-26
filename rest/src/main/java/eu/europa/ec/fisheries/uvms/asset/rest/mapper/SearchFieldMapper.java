@@ -9,7 +9,7 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.mapper;
+package eu.europa.ec.fisheries.uvms.asset.rest.mapper;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -18,6 +18,7 @@ import java.util.Map;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListCriteriaPair;
 import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
+import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 
 public class SearchFieldMapper {
     

@@ -2,6 +2,8 @@ package eu.europa.fisheries.uvms.asset.service.arquillian;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -18,14 +20,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetIdTypeEnum;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetListCriteriaPair;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
+import eu.europa.ec.fisheries.uvms.constant.AssetIdentity;
+import eu.europa.ec.fisheries.uvms.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.entity.Note;
+import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 
 @RunWith(Arquillian.class)
 public class AssetServiceBeanIntTest extends TransactionalTests {
@@ -84,13 +84,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Asset changedAsset1 = assetService.updateAsset(createdAsset, "CHG_USER_1", "En changekommentar");
         commit();
 
-        // delete  it and flush
-        AssetId assetId = new AssetId();
-        assetId.setType(AssetIdTypeEnum.INTERNAL_ID);
-        assetId.setValue(createdAsset.getId().toString());
-        assetId.setGuid(createdAsset.getId());
-
-        assetService.deleteAsset(assetId);
+        assetService.deleteAsset(AssetIdentity.GUID, createdAsset.getId().toString());
         commit();
 
         // fetch it and it should be null
@@ -143,13 +137,13 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         asset = assetService.createAsset(asset, "test");
         commit();
         
-        AssetListQuery query = AssetHelper.createBasicQuery();
-        AssetListCriteriaPair criteria = new AssetListCriteriaPair();
-        criteria.setKey(ConfigSearchFieldEnum.GUID);
-        criteria.setValue(asset.getId().toString());
-        query.getAssetSearchCriteria().getCriterias().add(criteria);
+        List<SearchKeyValue> searchValues = new ArrayList<>();
+        SearchKeyValue searchValue = new SearchKeyValue();
+        searchValue.setSearchField(SearchFields.GUID);
+        searchValue.setSearchValues(Arrays.asList(asset.getId().toString()));
+        searchValues.add(searchValue);
         
-        List<Asset> assets = assetService.getAssetList(query).getAssetList();
+        List<Asset> assets = assetService.getAssetList(searchValues, 1, 100, true).getAssetList();
         
         assertEquals(1, assets.size());
         assertEquals(asset.getCfr(), assets.get(0).getCfr());
@@ -161,13 +155,13 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         asset = assetService.createAsset(asset, "test");
         commit();
         
-        AssetListQuery query = AssetHelper.createBasicQuery();
-        AssetListCriteriaPair criteria = new AssetListCriteriaPair();
-        criteria.setKey(ConfigSearchFieldEnum.NAME);
-        criteria.setValue(asset.getName());
-        query.getAssetSearchCriteria().getCriterias().add(criteria);
+        List<SearchKeyValue> searchValues = new ArrayList<>();
+        SearchKeyValue searchValue = new SearchKeyValue();
+        searchValue.setSearchField(SearchFields.NAME);
+        searchValue.setSearchValues(Arrays.asList(asset.getName()));
+        searchValues.add(searchValue);
         
-        List<Asset> assets = assetService.getAssetList(query).getAssetList();
+        List<Asset> assets = assetService.getAssetList(searchValues, 1, 100, true).getAssetList();
         
         assertTrue(!assets.isEmpty());
     }

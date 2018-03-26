@@ -16,13 +16,14 @@ import java.util.List;
 import java.util.UUID;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.AssetListResponsePaginated;
+import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetListResponse;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
+import eu.europa.ec.fisheries.uvms.constant.AssetIdentity;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.entity.Note;
+import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 
 public interface AssetService {
 
@@ -42,7 +43,7 @@ public interface AssetService {
      * @return
      * @throws AssetServiceException
      */
-    AssetListResponsePaginated getAssetList(AssetListQuery requestQuery) throws AssetServiceException;
+    AssetListResponse getAssetList(List<SearchKeyValue> searchFields, int page, int listSize, boolean dynamic) throws AssetServiceException;
 
     /**
      * Get all Assets
@@ -51,7 +52,7 @@ public interface AssetService {
      * @return
      * @throws AssetServiceException
      */
-    Long getAssetListCount(AssetListQuery requestQuery) throws AssetServiceException;
+    Long getAssetListCount(List<SearchKeyValue> searchFields, boolean dynamic) throws AssetServiceException;
 
     /**
      * Get a Asset by its asset id from the source queue
@@ -61,7 +62,7 @@ public interface AssetService {
      * @return
      * @throws AssetServiceException
      */
-    Asset getAssetById(AssetId assetId, AssetDataSourceQueue source) throws AssetServiceException;
+    Asset getAssetById(AssetIdentity assetId, String value) throws AssetServiceException;
 
     /**
      * Get Asset By internal Id
@@ -116,7 +117,7 @@ public interface AssetService {
         //AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetServiceException;
     Object getAssetListGroupByFlagState(List assetIds) throws AssetServiceException;
 
-    void deleteAsset(AssetId assetId) throws AssetServiceException;
+    void deleteAsset(AssetIdentity assetId, String value) throws AssetServiceException;
 
 
     /**
@@ -148,7 +149,7 @@ public interface AssetService {
      * @return
      * @throws AssetServiceException
      */
-    Asset getAssetFromAssetIdAtDate(String idType, String idValue, LocalDateTime date) throws AssetServiceException;
+    Asset getAssetFromAssetIdAtDate(AssetIdentity idType, String idValue, LocalDateTime date) throws AssetServiceException;
     
     /**
      * Returns all notes for given asset UUID.

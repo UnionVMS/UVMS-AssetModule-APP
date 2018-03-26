@@ -52,7 +52,8 @@ public class GetAssetEventBean {
 
         try {
             dataSource = decideDataflow(assetId);
-            asset = assetService.getAssetById(assetId, dataSource);
+            // TODO
+//            asset = assetService.getAssetById(assetId, dataSource);
         } catch (AssetException e) {
             LOG.error("[ Error when getting asset from source {}. ] ", dataSource.name());
             //assetErrorEvent.fire(new AssetMessageEvent(textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting asset from source : " + dataSource.name() + " Error message: " + e.getMessage())));

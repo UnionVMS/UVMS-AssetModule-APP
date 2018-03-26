@@ -30,7 +30,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
 import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.entity.AssetGroupField;
@@ -100,7 +99,7 @@ public class AssetGroupDaoBeanTest {
 		List<AssetGroupField> filters = new ArrayList<AssetGroupField>();
 		AssetGroupField filter = new AssetGroupField();
 		filter.setAssetGroup(group.getId());
-		filter.setField(ConfigSearchFieldEnum.NAME.name());
+		filter.setField("FIELD NAME");
 		filter.setValue("ASSET-NAME");
 
 		filter.setUpdatedBy("DAOTEST");

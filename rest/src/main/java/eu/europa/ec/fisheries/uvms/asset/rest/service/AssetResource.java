@@ -33,12 +33,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
+import eu.europa.ec.fisheries.uvms.asset.rest.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.AssetListResponsePaginated;
+import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetListResponse;
 import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.entity.Note;
+import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import io.swagger.annotations.*;
@@ -75,7 +77,12 @@ public class AssetResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetList(@ApiParam(value="Query to execute", required=true) final AssetListQuery assetQuery) {
         try {
-            AssetListResponsePaginated assetList = assetService.getAssetList(assetQuery);
+            // TODO
+            List<SearchKeyValue> searchValues = SearchFieldMapper.createSearchFields(assetQuery.getAssetSearchCriteria().getCriterias());
+            int page = assetQuery.getPagination().getPage();
+            int listSize = assetQuery.getPagination().getListSize();
+            Boolean dynamic = assetQuery.getAssetSearchCriteria().isIsDynamic();
+            AssetListResponse assetList = assetService.getAssetList(searchValues, page, listSize, dynamic);
             return Response.ok(assetList).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset list.", e);
@@ -102,7 +109,9 @@ public class AssetResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetListItemCount(@ApiParam(value="Query to execute", required=true)  final AssetListQuery assetQuery) {
         try {
-            Long assetListCount = assetService.getAssetListCount(assetQuery);
+            List<SearchKeyValue> searchValues = SearchFieldMapper.createSearchFields(assetQuery.getAssetSearchCriteria().getCriterias());
+            Boolean dynamic = assetQuery.getAssetSearchCriteria().isIsDynamic();
+            Long assetListCount = assetService.getAssetListCount(searchValues, dynamic);
             return Response.ok(assetListCount).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset list: {}",assetQuery,e);

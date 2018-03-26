@@ -22,13 +22,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.asset.exception.InputArgumentException;
-import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetIdTypeEnum;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
+import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetListResponse;
+import eu.europa.ec.fisheries.uvms.constant.AssetIdentity;
 import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.ContactInfoDao;
 import eu.europa.ec.fisheries.uvms.dao.NoteDao;
@@ -36,7 +34,6 @@ import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.entity.Note;
-import eu.europa.ec.fisheries.uvms.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 
 @Stateless
@@ -82,29 +79,12 @@ public class AssetServiceBean implements AssetService {
      * @throws AssetException
      */
     @Override
-    public AssetListResponsePaginated getAssetList(AssetListQuery query) {
-
-        if (query == null) {
-            throw new IllegalArgumentException("Cannot get asset list because query is null.");
+    public AssetListResponse getAssetList(List<SearchKeyValue> searchFields, int page, int listSize, boolean dynamic) {
+        if (searchFields == null || searchFields.isEmpty()) {
+            throw new IllegalArgumentException("Cannot get asset list because search values is null.");
         }
-
-        if (query.getAssetSearchCriteria() == null || query.getAssetSearchCriteria().isIsDynamic() == null || query
-                .getAssetSearchCriteria().getCriterias() == null) {
-            throw new IllegalArgumentException("Cannot get asset list because criteria are null.");
-        }
-
-        if (query.getPagination() == null) {
-            throw new IllegalArgumentException("Cannot get asset list because criteria pagination is null.");
-        }
-
-        int page = query.getPagination().getPage();
-        int listSize = query.getPagination().getListSize();
-        boolean isDynamic = query.getAssetSearchCriteria().isIsDynamic();
-
-        List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query.getAssetSearchCriteria()
-                .getCriterias());
-
-        Long numberOfAssets = assetDao.getAssetCount(searchFields, isDynamic);
+        
+        Long numberOfAssets = assetDao.getAssetCount(searchFields, dynamic);
 
         int numberOfPages = 0;
         if (listSize != 0) {
@@ -114,9 +94,9 @@ public class AssetServiceBean implements AssetService {
             }
         }
 
-        List<Asset> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, searchFields, isDynamic);
+        List<Asset> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, searchFields, dynamic);
 
-        AssetListResponsePaginated listAssetResponse = new AssetListResponsePaginated();
+        AssetListResponse listAssetResponse = new AssetListResponse();
         listAssetResponse.setCurrentPage(page);
         listAssetResponse.setTotalNumberOfPages(numberOfPages);
         listAssetResponse.getAssetList().addAll(assetEntityList);
@@ -131,26 +111,12 @@ public class AssetServiceBean implements AssetService {
      * @throws AssetException
      */
     @Override
-    public Long getAssetListCount(AssetListQuery query) throws AssetServiceException {
-        if (query == null) {
-            throw new InputArgumentException("Cannot get asset list count because query is null.");
+    public Long getAssetListCount(List<SearchKeyValue> searchFields, boolean dynamic) throws AssetServiceException {
+        if (searchFields == null || searchFields.isEmpty()) {
+            throw new IllegalArgumentException("Cannot get asset list because query is null.");
         }
 
-        if (query.getAssetSearchCriteria() == null || query.getAssetSearchCriteria().isIsDynamic() == null || query
-                .getAssetSearchCriteria().getCriterias() == null) {
-            throw new InputArgumentException("Cannot get asset list count because criteria are null.");
-        }
-
-        if (query.getPagination() == null) {
-            throw new InputArgumentException("Cannot get asset list count because criteria pagination is null.");
-        }
-
-        boolean isDynamic = query.getAssetSearchCriteria().isIsDynamic();
-
-        List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query.getAssetSearchCriteria()
-                .getCriterias());
-
-        return assetDao.getAssetCount(searchFields, isDynamic);
+        return assetDao.getAssetCount(searchFields, dynamic);
     }
 
     /**
@@ -230,91 +196,24 @@ public class AssetServiceBean implements AssetService {
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
      */
     @Override
-    public Asset getAssetById(AssetId assetId, AssetDataSourceQueue source) throws AssetServiceException {
-        Asset asset = null;
-
+    public Asset getAssetById(AssetIdentity assetId, String value) throws AssetServiceException {
         if (assetId == null) {
-            throw new InputArgumentException("AssetId object is null");
+            throw new InputArgumentException("AssetIdentity object is null");
         }
 
-        if (assetId.getValue() == null || assetId.getType() == null) {
-            throw new InputArgumentException("AssetId value or type is null");
+        if (value == null) {
+            throw new InputArgumentException("AssetIdentity value is null");
         }
 
-        if (source == null) {
-            throw new InputArgumentException("AssetDataSourceQueue is null");
-        }
-
-
-        switch (source) {
-            case INTERNAL:
-                return getAssetById(assetId);
-
-            default:
-                //String data = AssetDataSourceRequestMapper.mapGetAssetById(assetId.getValue(), assetId.getType());
-                //String messageId = messageProducer.sendDataSourceMessage(data, source);
-                //TextMessage response = reciever.getMessage(messageId, TextMessage.class);
-                //asset = AssetDataSourceResponseMapper.mapToAssetFromResponse(response, messageId);
-                //break;
-        }
-        return asset;
-
-    }
-
-    public Asset getAssetById(AssetId assetId) throws AssetServiceException {
-
-        if (assetId == null) {
-            throw new InputArgumentException("AssetId object is null");
-        }
-
-        if (assetId.getValue() == null || assetId.getType() == null) {
-            throw new InputArgumentException("AssetId value or type is null");
-        }
-
-        Asset asset = null;
-        switch (assetId.getType()) {
-            case CFR:
-                asset = assetDao.getAssetByCfr(assetId.getValue());
-                break;
-            case IRCS:
-                asset = assetDao.getAssetByIrcs(assetId.getValue());
-                break;
-            case INTERNAL_ID:
-                asset = assetDao.getAssetById(assetId.getGuid());
-                break;
-            case IMO:
-                checkNumberAssetId(assetId.getValue());
-                asset = assetDao.getAssetByImo(assetId.getValue());
-                break;
-            case MMSI:
-                checkNumberAssetId(assetId.getValue());
-                asset = assetDao.getAssetByMmsi(assetId.getValue());
-                break;
-            case ICCAT:
-                asset = assetDao.getAssetByIccat(assetId.getValue());
-                break;
-            case UVI:
-                asset = assetDao.getAssetByUvi(assetId.getValue());
-                break;
-            case GFCM:
-                asset = assetDao.getAssetByGfcm(assetId.getValue());
-                break;
-            default:
-                throw new AssetServiceException("Non valid asset id type");
-        }
-        return asset;
+        return assetDao.getAssetFromAssetId(assetId, value);
     }
 
     @Override
-    public Asset getAssetFromAssetIdAtDate(String idType, String idValue, LocalDateTime date)
+    public Asset getAssetFromAssetIdAtDate(AssetIdentity idType, String idValue, LocalDateTime date)
             throws AssetServiceException {
 
         if (idType == null) {
             throw new InputArgumentException("Type is null");
-        }
-        AssetIdTypeEnum assetType = AssetIdTypeEnum.fromValue(idType);
-        if (assetType == null) {
-            throw new InputArgumentException("Not a valid type: " + idType);
         }
         if (idValue == null) {
             throw new InputArgumentException("Value is null");
@@ -322,7 +221,7 @@ public class AssetServiceBean implements AssetService {
         if (date == null) {
             throw new InputArgumentException("Date is null");
         }
-        if (assetType == AssetIdTypeEnum.GUID || assetType == AssetIdTypeEnum.INTERNAL_ID) {
+        if (idType == AssetIdentity.GUID) {
             try {
                 UUID.fromString(idValue);
             } catch (IllegalArgumentException e) {
@@ -330,14 +229,7 @@ public class AssetServiceBean implements AssetService {
             }
         }
 
-        AssetId assetId = new AssetId();
-        assetId.setType(assetType);
-        assetId.setValue(idValue);
-        if(assetType == AssetIdTypeEnum.GUID || assetType == AssetIdTypeEnum.INTERNAL_ID){
-            assetId.setGuid(UUID.fromString(idValue));
-        }
-        Asset asset = assetDao.getAssetFromAssetIdAtDate(assetId, date);
-        return asset;
+        return assetDao.getAssetFromAssetIdAtDate(idType, idValue, date);
     }
 
 
@@ -386,14 +278,14 @@ public class AssetServiceBean implements AssetService {
     }
 
     @Override
-    public void deleteAsset(AssetId assetId) throws AssetServiceException {
+    public void deleteAsset(AssetIdentity assetId, String value) throws AssetServiceException {
 
         if (assetId == null) {
             throw new IllegalArgumentException("AssetId is null");
         }
 
         // get an object based on what type of id it has
-        Asset assetEntity = getAssetById(assetId);
+        Asset assetEntity = getAssetById(assetId, value);
         assetDao.deleteAsset(assetEntity);
     }
 

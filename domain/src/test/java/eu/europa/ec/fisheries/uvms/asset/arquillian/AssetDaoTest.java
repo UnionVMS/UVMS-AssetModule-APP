@@ -30,7 +30,6 @@ import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.dao.AssetDao;
@@ -47,7 +46,7 @@ public class AssetDaoTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void createAssetTest() throws AssetDaoException {
+    public void createAssetTest() {
         Asset asset = AssetTestsHelper.createBiggerAsset();
         asset = assetDao.createAsset(asset);
 
@@ -62,13 +61,13 @@ public class AssetDaoTest extends TransactionalTests {
 
     @Test(expected = EJBTransactionRolledbackException.class)
     @OperateOnDeployment("normal")
-    public void createAssetNullInputShouldThrowExceptionTest() throws AssetDaoException {
+    public void createAssetNullInputShouldThrowExceptionTest() {
         assetDao.createAsset(null);
     }
 
     @Test
     @OperateOnDeployment("normal")
-    public void createAssetCheckHistoryGuid() throws AssetDaoException {
+    public void createAssetCheckHistoryGuid() {
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
 
@@ -77,7 +76,7 @@ public class AssetDaoTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetByCfrTest() throws AssetDaoException {
+    public void getAssetByCfrTest() {
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
 
@@ -91,7 +90,7 @@ public class AssetDaoTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetByCfrTestNonExistingCrf() throws AssetDaoException {
+    public void getAssetByCfrTestNonExistingCrf() {
         String randomCrf = UUID.randomUUID().toString();
         Asset fetchedAsset = assetDao.getAssetByCfr(randomCrf);
         assertThat(fetchedAsset, is(nullValue()));
@@ -99,7 +98,7 @@ public class AssetDaoTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetByIrcsTest() throws AssetDaoException {
+    public void getAssetByIrcsTest() {
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
 
@@ -113,7 +112,7 @@ public class AssetDaoTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetByImoTest() throws AssetDaoException {
+    public void getAssetByImoTest() {
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
 
@@ -127,7 +126,7 @@ public class AssetDaoTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetByMmsiTest() throws AssetDaoException {
+    public void getAssetByMmsiTest() {
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
 
@@ -141,7 +140,7 @@ public class AssetDaoTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetByIccatTest() throws AssetDaoException {
+    public void getAssetByIccatTest() {
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
 
@@ -155,7 +154,7 @@ public class AssetDaoTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetByUviTest() throws AssetDaoException {
+    public void getAssetByUviTest() {
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
 
@@ -169,7 +168,7 @@ public class AssetDaoTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetByGfcmTest() throws AssetDaoException {
+    public void getAssetByGfcmTest() {
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
 
@@ -201,7 +200,7 @@ public class AssetDaoTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetListAllTest() throws AssetDaoException {
+    public void getAssetListAllTest() {
         List<Asset> assetListBefore = assetDao.getAssetListAll();
         assetDao.createAsset(AssetTestsHelper.createBasicAsset());
         List<Asset> assetListAfter = assetDao.getAssetListAll();
