@@ -11,14 +11,14 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service;
 
-import eu.europa.ec.fisheries.uvms.entity.MDR_Lite;
+import eu.europa.ec.fisheries.uvms.entity.CustomCodes;
 
 import javax.ejb.Local;
 import java.util.List;
 
 
 @Local
-public interface MDR_LiteService {
+public interface CustomCodesService {
 
     /**
      *
@@ -28,7 +28,7 @@ public interface MDR_LiteService {
      * @param extradata
      * @return
      */
-    MDR_Lite create(String constant, String code, String description, String extradata);
+    CustomCodes create(String constant, String code, String description, String extradata);
 
     /**
      *
@@ -36,7 +36,7 @@ public interface MDR_LiteService {
      * @param code
      * @return
      */
-    MDR_Lite get(String constant, String code );
+    CustomCodes get(String constant, String code );
 
     /**
      *
@@ -54,7 +54,7 @@ public interface MDR_LiteService {
      * @param newExtraData
      * @return
      */
-    MDR_Lite update(String constant, String code, String newValue, String newExtraData);
+    CustomCodes update(String constant, String code, String newValue, String newExtraData);
 
     /**
      *
@@ -68,7 +68,7 @@ public interface MDR_LiteService {
      * @param constant
      * @return
      */
-    List<MDR_Lite> getAllFor(String constant);
+    List<CustomCodes> getAllFor(String constant);
 
     /**
      *

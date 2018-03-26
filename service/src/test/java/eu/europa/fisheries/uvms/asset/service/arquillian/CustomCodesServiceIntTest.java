@@ -1,7 +1,7 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
-import eu.europa.ec.fisheries.uvms.asset.service.MDR_LiteService;
-import eu.europa.ec.fisheries.uvms.entity.MDR_Lite;
+import eu.europa.ec.fisheries.uvms.asset.service.CustomCodesService;
+import eu.europa.ec.fisheries.uvms.entity.CustomCodes;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
@@ -15,14 +15,14 @@ import java.util.Random;
 
 
 @RunWith(Arquillian.class)
-public class MDR_LiteServiceIntTest extends TransactionalTests {
+public class CustomCodesServiceIntTest extends TransactionalTests {
 
 
     Random rnd = new Random();
 
 
     @EJB
-    MDR_LiteService service;
+    CustomCodesService service;
 
     private static final String CONSTANT = "testconstant";
     private static final String  CODE = "testcode";
@@ -31,8 +31,8 @@ public class MDR_LiteServiceIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void create() {
 
-        MDR_Lite createdMDR_lite = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
-        MDR_Lite fetchedMDR_lite = service.get(CONSTANT,CODE);
+        CustomCodes createdMDR_lite = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
+        CustomCodes fetchedMDR_lite = service.get(CONSTANT,CODE);
         Assert.assertNotNull(fetchedMDR_lite);
         service.delete(CONSTANT,CODE);
     }
@@ -41,9 +41,9 @@ public class MDR_LiteServiceIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void tryToCreateDups() {
 
-        MDR_Lite createdMDR_lite1 = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
-        MDR_Lite createdMDR_lite2 = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
-        List<MDR_Lite> rs = service.getAllFor(CONSTANT);
+        CustomCodes createdMDR_lite1 = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
+        CustomCodes createdMDR_lite2 = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
+        List<CustomCodes> rs = service.getAllFor(CONSTANT);
         Assert.assertEquals(rs.size(), 1);
         service.delete(CONSTANT,CODE);
     }
@@ -52,8 +52,8 @@ public class MDR_LiteServiceIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void get() {
 
-        MDR_Lite createdMDR_lite1 = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
-        MDR_Lite fetchedMDR_lite = service.get(CONSTANT,CODE);
+        CustomCodes createdMDR_lite1 = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
+        CustomCodes fetchedMDR_lite = service.get(CONSTANT,CODE);
         Assert.assertNotNull(fetchedMDR_lite);
         service.delete(CONSTANT,CODE);
     }
@@ -63,7 +63,7 @@ public class MDR_LiteServiceIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void exists() {
 
-        MDR_Lite createdMDR_lite1 = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
+        CustomCodes createdMDR_lite1 = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
         Boolean exist = service.exists(CONSTANT,CODE);
         Assert.assertNotNull(exist);
         service.delete(CONSTANT,CODE);
@@ -83,8 +83,8 @@ public class MDR_LiteServiceIntTest extends TransactionalTests {
             service.create(CONSTANT+"2",CODE+iStr,CODE+"Description", "EXTRADATA");
         }
 
-        List<MDR_Lite> rs1 = service.getAllFor(CONSTANT);
-        List<MDR_Lite> rs2 = service.getAllFor(CONSTANT + "2");
+        List<CustomCodes> rs1 = service.getAllFor(CONSTANT);
+        List<CustomCodes> rs2 = service.getAllFor(CONSTANT + "2");
         Assert.assertEquals(rs1.size(), 10);
         Assert.assertEquals(rs2.size(), 10);
 
@@ -107,7 +107,7 @@ public class MDR_LiteServiceIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void updateDescription() throws HeuristicRollbackException, RollbackException, HeuristicMixedException, SystemException, NotSupportedException {
 
-        MDR_Lite created_record = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
+        CustomCodes created_record = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
         String createdDescription = created_record.getDescription();
 
         created_record.setDescription("CHANGED");
@@ -115,7 +115,7 @@ public class MDR_LiteServiceIntTest extends TransactionalTests {
         userTransaction.commit();
         userTransaction.begin();
 
-        MDR_Lite fetched_record = service.get(created_record.getConstant(), created_record.getCode());
+        CustomCodes fetched_record = service.get(created_record.getConstant(), created_record.getCode());
 
         Assert.assertNotEquals(createdDescription,fetched_record.getDescription());
         Assert.assertEquals("CHANGED",fetched_record.getDescription());

@@ -2,8 +2,8 @@ package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.europa.ec.fisheries.uvms.dao.MDR_LiteDao;
-import eu.europa.ec.fisheries.uvms.entity.MDR_Lite;
+import eu.europa.ec.fisheries.uvms.dao.CustomCodesDao;
+import eu.europa.ec.fisheries.uvms.entity.CustomCodes;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RunWith(Arquillian.class)
-public class MDR_LiteDaoTestIT extends TransactionalTests {
+public class CustomCodesDaoTestIT extends TransactionalTests {
 
     private static final String CONSTANT = "TESTcarrieractiveTEST";
 
@@ -55,35 +55,35 @@ public class MDR_LiteDaoTestIT extends TransactionalTests {
 
 
     @Inject
-    MDR_LiteDao mdrlitedao;
+    CustomCodesDao mdrlitedao;
 
 
     @Test
     @OperateOnDeployment("normal")
     public void create() throws JsonProcessingException {
 
-        MDR_Lite record_active = createHelper(CONSTANT, true);
-        MDR_Lite record_inactive = createHelper(CONSTANT, false);
+        CustomCodes record_active = createHelper(CONSTANT, true);
+        CustomCodes record_inactive = createHelper(CONSTANT, false);
 
-        MDR_Lite createdrecord_active = mdrlitedao.create(record_active);
+        CustomCodes createdrecord_active = mdrlitedao.create(record_active);
         String constant_active = createdrecord_active.getConstant();
         String value_active = createdrecord_active.getCode();
 
-        MDR_Lite fetched_record = mdrlitedao.get(constant_active, value_active);
+        CustomCodes fetched_record = mdrlitedao.get(constant_active, value_active);
 
         Assert.assertEquals(constant_active, fetched_record.getConstant());
         Assert.assertEquals(value_active, fetched_record.getCode());
 
-        MDR_Lite createdrecord_inactive = mdrlitedao.create(record_inactive);
+        CustomCodes createdrecord_inactive = mdrlitedao.create(record_inactive);
         String constant_inactive = createdrecord_inactive.getConstant();
         String value_inactive = createdrecord_inactive.getCode();
 
-        MDR_Lite fetched_inactiverecord = mdrlitedao.get(constant_inactive, value_inactive);
+        CustomCodes fetched_inactiverecord = mdrlitedao.get(constant_inactive, value_inactive);
 
         Assert.assertEquals(constant_inactive, fetched_inactiverecord.getConstant());
         Assert.assertEquals(value_inactive, fetched_inactiverecord.getCode());
 
-        List<MDR_Lite> rs = mdrlitedao.getAllFor(record_active.getConstant());
+        List<CustomCodes> rs = mdrlitedao.getAllFor(record_active.getConstant());
         Assert.assertEquals(rs.size(), 2);
 
 
@@ -97,14 +97,14 @@ public class MDR_LiteDaoTestIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void tryToCreateDups() throws JsonProcessingException {
 
-        MDR_Lite record1 = createHelper(CONSTANT, true);
-        MDR_Lite record2 = createHelper(CONSTANT, true);
+        CustomCodes record1 = createHelper(CONSTANT, true);
+        CustomCodes record2 = createHelper(CONSTANT, true);
 
-        MDR_Lite createdrecord1 = mdrlitedao.create(record1);
-        MDR_Lite createdrecord2 = mdrlitedao.create(record2);
+        CustomCodes createdrecord1 = mdrlitedao.create(record1);
+        CustomCodes createdrecord2 = mdrlitedao.create(record2);
 
 
-        List<MDR_Lite> rs = mdrlitedao.getAllFor(record1.getConstant());
+        List<CustomCodes> rs = mdrlitedao.getAllFor(record1.getConstant());
         Assert.assertEquals(rs.size(), 1);
 
         mdrlitedao.delete(record1.getConstant(), record1.getCode());
@@ -114,11 +114,11 @@ public class MDR_LiteDaoTestIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void get() throws JsonProcessingException {
 
-        MDR_Lite record = createHelper(CONSTANT, true);
+        CustomCodes record = createHelper(CONSTANT, true);
 
-        MDR_Lite createdrecord = mdrlitedao.create(record);
+        CustomCodes createdrecord = mdrlitedao.create(record);
 
-        MDR_Lite rec = mdrlitedao.get(CONSTANT, createdrecord.getCode());
+        CustomCodes rec = mdrlitedao.get(CONSTANT, createdrecord.getCode());
         Assert.assertNotNull(rec);
 
         mdrlitedao.delete(record.getConstant(), record.getCode());
@@ -129,9 +129,9 @@ public class MDR_LiteDaoTestIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void exists() throws JsonProcessingException {
 
-        MDR_Lite record = createHelper(CONSTANT, true);
+        CustomCodes record = createHelper(CONSTANT, true);
 
-        MDR_Lite createdrecord = mdrlitedao.create(record);
+        CustomCodes createdrecord = mdrlitedao.create(record);
 
         Boolean exists = mdrlitedao.exists(CONSTANT, createdrecord.getCode());
         Assert.assertTrue(exists);
@@ -145,18 +145,18 @@ public class MDR_LiteDaoTestIT extends TransactionalTests {
 
         for (int i = 0; i < 10; i++) {
             String iStr = String.valueOf(i);
-            MDR_Lite record = createHelper(CONSTANT, "kod" + iStr, "description" + iStr);
+            CustomCodes record = createHelper(CONSTANT, "kod" + iStr, "description" + iStr);
             mdrlitedao.create(record);
         }
 
         for (int i = 0; i < 10; i++) {
             String iStr = String.valueOf(i);
-            MDR_Lite record = createHelper(CONSTANT + "2", "kod" + iStr, "description" + iStr);
+            CustomCodes record = createHelper(CONSTANT + "2", "kod" + iStr, "description" + iStr);
             mdrlitedao.create(record);
         }
 
-        List<MDR_Lite> rs1 = mdrlitedao.getAllFor(CONSTANT);
-        List<MDR_Lite> rs2 = mdrlitedao.getAllFor(CONSTANT + "2");
+        List<CustomCodes> rs1 = mdrlitedao.getAllFor(CONSTANT);
+        List<CustomCodes> rs2 = mdrlitedao.getAllFor(CONSTANT + "2");
         Assert.assertEquals(rs1.size(), 10);
         Assert.assertEquals(rs2.size(), 10);
 
@@ -179,8 +179,8 @@ public class MDR_LiteDaoTestIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void updateDescription() throws JsonProcessingException, HeuristicRollbackException, HeuristicMixedException, RollbackException, SystemException, NotSupportedException {
 
-        MDR_Lite record = createHelper(CONSTANT, "kod" , "description" );
-        MDR_Lite created_record = mdrlitedao.create(record);
+        CustomCodes record = createHelper(CONSTANT, "kod" , "description" );
+        CustomCodes created_record = mdrlitedao.create(record);
         String createdDescription = created_record.getDescription();
 
         created_record.setDescription("CHANGED");
@@ -188,7 +188,7 @@ public class MDR_LiteDaoTestIT extends TransactionalTests {
         userTransaction.commit();
         userTransaction.begin();
 
-        MDR_Lite fetched_record = mdrlitedao.get(created_record.getConstant(), created_record.getCode());
+        CustomCodes fetched_record = mdrlitedao.get(created_record.getConstant(), created_record.getCode());
 
         Assert.assertNotEquals(createdDescription,fetched_record.getDescription());
         Assert.assertEquals("CHANGED",fetched_record.getDescription());
@@ -197,9 +197,9 @@ public class MDR_LiteDaoTestIT extends TransactionalTests {
     }
 
 
-    private MDR_Lite createHelper(String constant, Boolean active) throws JsonProcessingException {
+    private CustomCodes createHelper(String constant, Boolean active) throws JsonProcessingException {
 
-        MDR_Lite record = new MDR_Lite();
+        CustomCodes record = new CustomCodes();
         record.setConstant(constant);
         if (active) {
             record.setCode("1");
@@ -218,9 +218,9 @@ public class MDR_LiteDaoTestIT extends TransactionalTests {
     }
 
 
-    private MDR_Lite createHelper(String constant, String code, String descr) throws JsonProcessingException {
+    private CustomCodes createHelper(String constant, String code, String descr) throws JsonProcessingException {
 
-        MDR_Lite record = new MDR_Lite();
+        CustomCodes record = new CustomCodes();
         record.setConstant(constant);
         record.setCode(code);
         record.setDescription(descr);

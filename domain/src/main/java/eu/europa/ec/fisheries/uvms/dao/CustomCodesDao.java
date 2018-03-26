@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.dao;
 
-import eu.europa.ec.fisheries.uvms.entity.MDR_Lite;
+import eu.europa.ec.fisheries.uvms.entity.CustomCodes;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -9,15 +9,15 @@ import java.util.List;
 
 @Stateless
 @Local
-public class MDR_LiteDao {
+public class CustomCodesDao {
 
     @PersistenceContext
     private EntityManager em;
 
-    public MDR_Lite create(MDR_Lite record) {
+    public CustomCodes create(CustomCodes record) {
 
         // NO DUPLICATES on constant AND code ALLOWED
-        MDR_Lite fetched = get(record.getConstant(), record.getCode());
+        CustomCodes fetched = get(record.getConstant(), record.getCode());
         if (fetched != null) return record;
         if(record.getDescription() == null){
             record.setDescription("");
@@ -30,9 +30,9 @@ public class MDR_LiteDao {
         return record;
     }
 
-    public MDR_Lite get(String constant, String code) {
+    public CustomCodes get(String constant, String code) {
         try {
-            TypedQuery<MDR_Lite> query = em.createNamedQuery(MDR_Lite.MDRLITE_GET, MDR_Lite.class);
+            TypedQuery<CustomCodes> query = em.createNamedQuery(CustomCodes.CUSTOMCODES_GET, CustomCodes.class);
             query.setParameter("constant", constant);
             query.setParameter("code", code);
             return query.getSingleResult();
@@ -41,9 +41,9 @@ public class MDR_LiteDao {
         }
     }
 
-    public MDR_Lite update(String constant, String code, String newDescription, String newJson) {
+    public CustomCodes update(String constant, String code, String newDescription, String newJson) {
 
-        MDR_Lite fetchedMDR_lite = get(constant, code);
+        CustomCodes fetchedMDR_lite = get(constant, code);
         if (fetchedMDR_lite != null) {
             if(newDescription != null) {
                 fetchedMDR_lite.setDescription(newDescription);
@@ -58,7 +58,7 @@ public class MDR_LiteDao {
 
     public void delete(String constant, String code) {
 
-        MDR_Lite record = get(constant, code);
+        CustomCodes record = get(constant, code);
         if (record != null) {
             em.remove(record);
         }
@@ -66,15 +66,15 @@ public class MDR_LiteDao {
 
 
     public Boolean exists(String constant, String code) {
-        TypedQuery<MDR_Lite> query = em.createNamedQuery(MDR_Lite.MDRLITE_GET, MDR_Lite.class);
+        TypedQuery<CustomCodes> query = em.createNamedQuery(CustomCodes.CUSTOMCODES_GET, CustomCodes.class);
         query.setParameter("constant", constant);
         query.setParameter("code", code);
         return query.getResultList().size() == 1;
     }
 
-    public List<MDR_Lite> getAllFor(String constant) {
+    public List<CustomCodes> getAllFor(String constant) {
         try {
-            TypedQuery<MDR_Lite> query = em.createNamedQuery(MDR_Lite.MDRLITE_GETALLFOR, MDR_Lite.class);
+            TypedQuery<CustomCodes> query = em.createNamedQuery(CustomCodes.CUSTOMCODES_GETALLFOR, CustomCodes.class);
             query.setParameter("constant", constant);
             return query.getResultList();
         } catch (NoResultException e) {
@@ -85,7 +85,7 @@ public class MDR_LiteDao {
 
     public void deleteAllFor(String constant) {
 
-        Query query = em.createQuery("DELETE FROM MDR_Lite m where  m.constant=:constant");
+        Query query = em.createQuery("DELETE FROM CustomCodes m where  m.constant=:constant");
         query.setParameter("constant", constant);
         query.executeUpdate();
 

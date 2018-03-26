@@ -11,9 +11,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
-import eu.europa.ec.fisheries.uvms.asset.service.MDR_LiteService;
-import eu.europa.ec.fisheries.uvms.dao.MDR_LiteDao;
-import eu.europa.ec.fisheries.uvms.entity.MDR_Lite;
+import eu.europa.ec.fisheries.uvms.asset.service.CustomCodesService;
+import eu.europa.ec.fisheries.uvms.dao.CustomCodesDao;
+import eu.europa.ec.fisheries.uvms.entity.CustomCodes;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -21,14 +21,14 @@ import java.util.List;
 
 
 @Stateless
-public class MDR_LiteServiceBean implements MDR_LiteService {
+public class CustomCodesServiceBean implements CustomCodesService {
 
 	@EJB
-	private MDR_LiteDao dao;
+	private CustomCodesDao dao;
 
 
 	@Override
-	public MDR_Lite create(String constant, String code, String description, String extradata){
+	public CustomCodes create(String constant, String code, String description, String extradata){
 
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
@@ -50,7 +50,7 @@ public class MDR_LiteServiceBean implements MDR_LiteService {
 		if(extradata == null){
 			extradata = "";
 		}
-		MDR_Lite mdr = new MDR_Lite();
+		CustomCodes mdr = new CustomCodes();
 		mdr.setConstant(constant.toUpperCase());
 		mdr.setCode(code);
 		mdr.setDescription(description);
@@ -61,7 +61,7 @@ public class MDR_LiteServiceBean implements MDR_LiteService {
 
 
 	@Override
-	public MDR_Lite get(String constant, String code ){
+	public CustomCodes get(String constant, String code ){
 
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
@@ -100,7 +100,7 @@ public class MDR_LiteServiceBean implements MDR_LiteService {
 	}
 
 	@Override
-	public MDR_Lite update(String constant, String code, String newValue, String newExtraData){
+	public CustomCodes update(String constant, String code, String newValue, String newExtraData){
 
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
@@ -137,7 +137,7 @@ public class MDR_LiteServiceBean implements MDR_LiteService {
 	}
 
 	@Override
-	public List<MDR_Lite> getAllFor(String constant){
+	public List<CustomCodes> getAllFor(String constant){
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
 		}
