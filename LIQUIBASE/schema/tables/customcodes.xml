@@ -4,9 +4,9 @@
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
 
 	<changeSet author="fantho" id="mdrlite-01">
-		<createTable tableName="mdrlite">
+		<createTable tableName="customcodes">
 			<column name="id" type="UUID">
-				<constraints primaryKey="true" primaryKeyName="mdrlite_pk" />
+				<constraints primaryKey="true" primaryKeyName="customcodes_pk" />
 			</column>
 			<column name="constant" type="VARCHAR" />
 			<column name="code" type="VARCHAR" />

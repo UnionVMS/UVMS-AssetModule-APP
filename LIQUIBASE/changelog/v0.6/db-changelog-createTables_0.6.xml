@@ -19,6 +19,6 @@
 
 
         <!-- mdrlite -->
-        <include file="\schema\tables\mdrlite.xml"/>
-        <include file="changelog\v0.6\insertMDRLite.xml"/>
+        <include file="\schema\tables\customcodes.xml"/>
+        <include file="changelog\v0.6\insertcustomcodes.xml"/>
 </databaseChangeLog>
