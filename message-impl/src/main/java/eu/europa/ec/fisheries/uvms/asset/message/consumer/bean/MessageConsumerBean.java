@@ -18,26 +18,35 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.*;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetFault;
-import eu.europa.ec.fisheries.uvms.entity.Asset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import eu.europa.ec.fisheries.uvms.asset.message.AssetConstants;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
-
-import java.io.IOException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
+import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
+import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetGroupEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetGroupListByAssetGuidEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetListByAssetGroupEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetListEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.PingEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.UpsertAssetMessageEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.UpsertFishingGearsMessageEventBean;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetListModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetModuleMethod;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetGroupListByAssetGuidRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.UpsertAssetModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.UpsertFishingGearModuleRequest;
 
 @MessageDriven(mappedName = AssetConstants.QUEUE_ASSET_EVENT, activationConfig = {
     @ActivationConfigProperty(propertyName = "messagingType", propertyValue = AssetConstants.CONNECTION_TYPE),
@@ -48,15 +57,28 @@ import java.io.IOException;
 })
 public class MessageConsumerBean implements MessageListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MessageConsumerBean.class);
-
-    private static ObjectMapper MAPPER = new ObjectMapper();
+    final static Logger LOG = LoggerFactory.getLogger(MessageConsumerBean.class);
 
     @EJB
     private GetAssetEventBean getAssetEventBean;
 
     @EJB
+    private GetAssetListEventBean getAssetListEventBean;
+
+    @EJB
+    private GetAssetGroupEventBean getAssetGroupEventBean;
+
+    @EJB
+    private GetAssetListByAssetGroupEventBean getAssetListByAssetGroupEventBean;
+
+    @EJB
+    private GetAssetGroupListByAssetGuidEventBean getAssetGroupListByAssetGuidEventBean;
+
+    @EJB
     private UpsertAssetMessageEventBean upsertAssetMessageEventBean;
+
+    @EJB
+    private UpsertFishingGearsMessageEventBean upsertFishingGearsMessageEventBean;
 
 
     @EJB
@@ -70,65 +92,61 @@ public class MessageConsumerBean implements MessageListener {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void onMessage(Message message) {
-
-        MAPPER.findAndRegisterModules();  // JSR310 must be in classpath
-
-        if(message == null){
-            return;
-        }
-        if(!(message instanceof TextMessage)){
-            return;
-        }
-
+        LOG.info("Message received in AssetModule");
         TextMessage textMessage = (TextMessage) message;
 
         try {
 
-            String command = message.getStringProperty("COMMAND");  // JmsException
-            String json = textMessage.getText();
+            AssetModuleRequest request = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetModuleRequest.class);
+            AssetModuleMethod method = request.getMethod();
 
-            switch (command) {
-
-                case "UPSERT_ASSET":
-                    Asset asset = MAPPER.readValue(json, Asset.class);
-                    upsertAssetMessageEventBean.upsertAsset(asset);
+            switch (method) {
+                case GET_ASSET:
+                    GetAssetModuleRequest getRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, GetAssetModuleRequest.class);
+                    getAssetEventBean.getAsset(textMessage, getRequest.getId());
                     break;
-
-                case "PING":
-                    pingEventBean.ping(textMessage);
+                case ASSET_LIST:
+                    AssetListModuleRequest listRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetListModuleRequest.class);
+                    AssetMessageEvent listEvent = new AssetMessageEvent(textMessage, listRequest.getQuery());
+                    getAssetListEventBean.getAssetList(listEvent);
+                    break;
+                case ASSET_GROUP:
+                    AssetGroupListByUserRequest groupListRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetGroupListByUserRequest.class);
+                    AssetMessageEvent assetGroupListEvent = new AssetMessageEvent(textMessage, groupListRequest);
+                    getAssetGroupEventBean.getAssetGroupByUserName(assetGroupListEvent);
+                    break;
+                case ASSET_GROUP_LIST_BY_ASSET_GUID:
+                    GetAssetGroupListByAssetGuidRequest getAssetGroupListByAssetGuidRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, GetAssetGroupListByAssetGuidRequest.class);
+                    AssetMessageEvent assetMessageEvent = new AssetMessageEvent(textMessage, getAssetGroupListByAssetGuidRequest.getAssetGuid());
+                    getAssetGroupListByAssetGuidEventBean.getAssetGroupListByAssetEvent(assetMessageEvent);
+                    break;
+                case ASSET_LIST_BY_GROUP:
+                    GetAssetListByAssetGroupsRequest assetListByGroupListRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, GetAssetListByAssetGroupsRequest.class);
+                    AssetMessageEvent assetListByGroupListEvent = new AssetMessageEvent(textMessage, assetListByGroupListRequest);
+                    getAssetListByAssetGroupEventBean.getAssetListByAssetGroups(assetListByGroupListEvent);
+                    break;
+                case PING:
+                    pingEventBean.ping(new AssetMessageEvent(textMessage));
+                    break;
+                case UPSERT_ASSET:
+                    UpsertAssetModuleRequest upsertRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, UpsertAssetModuleRequest.class);
+                    AssetMessageEvent upsertAssetMessageEvent = new AssetMessageEvent(textMessage, upsertRequest.getAsset(), upsertRequest.getUserName());
+                    upsertAssetMessageEventBean.upsertAsset(upsertAssetMessageEvent);
+                    break;
+                case FISHING_GEAR_UPSERT:
+                    UpsertFishingGearModuleRequest upsertFishingGearListModuleRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, UpsertFishingGearModuleRequest.class);
+                    AssetMessageEvent fishingGearMessageEvent = new AssetMessageEvent(textMessage, upsertFishingGearListModuleRequest.getFishingGear(), upsertFishingGearListModuleRequest.getUsername());
+                    upsertFishingGearsMessageEventBean.upsertFishingGears(fishingGearMessageEvent);
                     break;
 
                 default:
-                    LOG.error("[ Not implemented method consumed: {} ]", command);
-                    //assetErrorEvent.fire(new AssetMessageEvent(textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, "Command not implemented")));
+                    LOG.error("[ Not implemented method consumed: {} ]", method);
+                    assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Method not implemented")));
             }
 
-        } catch (IllegalArgumentException e) {
-            LOG.error("Could not interpret command");
-            //assetErrorEvent.fire(new AssetMessageEvent( textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, "Could not interpret command")));
-        } catch (JMSException e) {
+        } catch (AssetModelMarshallException e) {
             LOG.error("[ Error when receiving message in AssetModule. ]");
-            //assetErrorEvent.fire(new AssetMessageEvent( textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, e.toString())));
-        } catch (JsonParseException e) {
-            LOG.error("JsonParseException");
-           // assetErrorEvent.fire(new AssetMessageEvent( textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, "JsonParseException")));
-        } catch (JsonMappingException e) {
-            LOG.error("JsonMappingException");
-           // assetErrorEvent.fire(new AssetMessageEvent( textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, "JsonMappingException")));
-        } catch (IOException e) {
-            LOG.error("IOException");
-            //assetErrorEvent.fire(new AssetMessageEvent( textMessage, createFaultMessage(FaultCode.ASSET_MESSAGE, "IOException")));
+            assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Method not implemented")));
         }
-
     }
-
-
-    public AssetFault createFaultMessage(FaultCode code, String message) {
-        AssetFault fault = new AssetFault();
-        fault.setCode(code.getCode());
-        fault.setFault(message);
-        return fault;
-    }
-
-
 }

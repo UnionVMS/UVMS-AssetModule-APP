@@ -159,8 +159,6 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
     public void sendModuleErrorResponseMessage(@Observes @AssetMessageErrorEvent AssetMessageEvent message) {
     	Connection connection=null;
 
-    	/*
-
     	try {
             LOG.info("Sending error message back from VesselModule to recipient om JMS Queue with correlationID: {}", message.getMessage().getJMSMessageID());
 
@@ -179,8 +177,6 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
         } finally {
         	JMSUtils.disconnectQueue(connection);
         }
-
-        */
     }
 
     @Override

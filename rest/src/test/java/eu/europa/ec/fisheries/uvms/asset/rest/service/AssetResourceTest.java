@@ -16,11 +16,11 @@ import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.asset.rest.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.asset.rest.AssetHelper;
 import eu.europa.ec.fisheries.uvms.asset.rest.AssetMatcher;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetListCriteriaPair;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.entity.Note;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteriaPair;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
+import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
 
 @RunWith(Arquillian.class)
 public class AssetResourceTest extends AbstractAssetRestTest {
@@ -87,7 +87,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         
         AssetListQuery query = AssetHelper.createBasicQuery();
         AssetListCriteriaPair criteria = new AssetListCriteriaPair();
-        criteria.setKey(ConfigSearchFieldEnum.CFR);
+        criteria.setKey(ConfigSearchField.CFR);
         criteria.setValue(createdAsset.getCfr());
         query.getAssetSearchCriteria().getCriterias().add(criteria);
         

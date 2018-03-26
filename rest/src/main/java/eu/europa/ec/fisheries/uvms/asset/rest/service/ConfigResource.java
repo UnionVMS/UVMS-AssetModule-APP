@@ -26,9 +26,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.asset.rest.mapper.ConfigMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.ConfigServiceBean;
-import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
+import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
 
 @Path("/config")
 @Stateless
@@ -46,7 +46,7 @@ public class ConfigResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getConfigSearchFields() {
         try {
-            return Response.ok(ConfigSearchFieldEnum.values()).build();
+            return Response.ok(ConfigSearchField.values()).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();

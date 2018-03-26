@@ -15,10 +15,10 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetListCriteriaPair;
-import eu.europa.ec.fisheries.uvms.asset.types.ConfigSearchFieldEnum;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteriaPair;
+import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
 
 public class SearchFieldMapper {
     
@@ -33,7 +33,7 @@ public class SearchFieldMapper {
         return searchKeyValue;
     }
 
-    private static SearchFields getSearchFields(ConfigSearchFieldEnum field) {
+    private static SearchFields getSearchFields(ConfigSearchField field) {
         switch (field) {
             case CFR:
                 return SearchFields.CFR;

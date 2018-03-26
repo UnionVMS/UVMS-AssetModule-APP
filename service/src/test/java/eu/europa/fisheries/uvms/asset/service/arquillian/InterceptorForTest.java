@@ -6,7 +6,7 @@ import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetSuccessfulTestEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.SuccessfulTestEvent;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetFault;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetFault;
 
 
 @Singleton

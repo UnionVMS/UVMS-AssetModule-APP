@@ -11,7 +11,11 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.message.event;
 
-import eu.europa.ec.fisheries.uvms.asset.types.*;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetFromAssetIdAndDateRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetFlagStateByGuidAndDateRequest;
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -22,37 +26,77 @@ import javax.jms.TextMessage;
 public class AssetMessageEvent {
 
     private TextMessage message;
+    private AssetId assetId;
+    private AssetListQuery query;
+    private AssetGroupListByUserRequest request;
+    private GetAssetListByAssetGroupsRequest assetListByGroup;
+    private AssetFault fault;
+    private String assetGuid;
+    private Asset asset;
+    private String username;
+    private FishingGear fishingGear;
+    private GetFlagStateByGuidAndDateRequest getFlagStateByGuidAndDateRequest;
+    private GetAssetFromAssetIdAndDateRequest getAssetFromAssetIdAndDateRequest;
+
+
     public AssetMessageEvent(TextMessage message) {
         this.message = message;
     }
 
-
-
-
-    private AssetId assetId;
-    private String assetGuid;
-    private String username;
-
-
-
+    public AssetMessageEvent(TextMessage message, GetAssetListByAssetGroupsRequest assetId) {
+        this.message = message;
+        this.assetListByGroup = assetId;
+    }
 
     public AssetMessageEvent(TextMessage message, AssetId assetId) {
         this.message = message;
         this.assetId = assetId;
     }
 
+    public AssetMessageEvent(TextMessage message, AssetListQuery query) {
+        this.message = message;
+        this.query = query;
+    }
 
+    public AssetMessageEvent(TextMessage message, AssetGroupListByUserRequest query) {
+        this.message = message;
+        this.request = query;
+    }
 
+    public AssetMessageEvent(TextMessage message, AssetFault fault) {
+        this.message = message;
+        this.fault = fault;
+    }
 
     public AssetMessageEvent(TextMessage message, String assetGuid) {
         this.message = message;
         this.assetGuid = assetGuid;
     }
 
+    public AssetMessageEvent(TextMessage message, Asset asset, String username){
+        this.message = message;
+        this.asset = asset;
+        this.username = username;
+    }
 
+    public AssetMessageEvent(TextMessage message, FishingGear fishingGear, String username){
+        this.message = message;
+        this.username = username;
+        this.fishingGear = fishingGear;
+    }
 
     public TextMessage getMessage() {
         return message;
+    }
+
+    public AssetMessageEvent(TextMessage message, GetFlagStateByGuidAndDateRequest getFlagStateByGuidAndDateRequest){
+        this.message = message;
+        this.getFlagStateByGuidAndDateRequest = getFlagStateByGuidAndDateRequest;
+    }
+
+    public AssetMessageEvent(TextMessage message, GetAssetFromAssetIdAndDateRequest getAssetFromAssetIdAndDateRequest){
+        this.message = message;
+        this.getAssetFromAssetIdAndDateRequest = getAssetFromAssetIdAndDateRequest;
     }
 
     public void setMessage(TextMessage message) {
@@ -63,7 +107,33 @@ public class AssetMessageEvent {
         return assetId;
     }
 
+    public AssetListQuery getQuery() {
+        return query;
+    }
 
+    public AssetFault getFault() {
+        return fault;
+    }
+
+    public void setFault(AssetFault fault) {
+        this.fault = fault;
+    }
+
+    public AssetGroupListByUserRequest getRequest() {
+        return request;
+    }
+
+    public void setRequest(AssetGroupListByUserRequest request) {
+        this.request = request;
+    }
+
+    public GetAssetListByAssetGroupsRequest getAssetListByGroup() {
+        return assetListByGroup;
+    }
+
+    public void setAssetListByGroup(GetAssetListByAssetGroupsRequest assetListByGroup) {
+        this.assetListByGroup = assetListByGroup;
+    }
 
     public String getAssetGuid() {
         return assetGuid;
@@ -71,6 +141,14 @@ public class AssetMessageEvent {
 
     public void setAssetGuid(String assetGuid) {
         this.assetGuid = assetGuid;
+    }
+
+    public Asset getAsset() {
+        return asset;
+    }
+
+    public void setAsset(Asset asset) {
+        this.asset = asset;
     }
 
     public String getUsername() {
@@ -81,7 +159,14 @@ public class AssetMessageEvent {
         this.username = username;
     }
 
+    public FishingGear getFishingGear() {
+        return fishingGear;
+    }
 
+    public void setFishingGear(FishingGear fishingGear) {
+        this.fishingGear = fishingGear;
+    }
+    
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
@@ -98,7 +183,19 @@ public class AssetMessageEvent {
     }
 
 
+    public GetFlagStateByGuidAndDateRequest getGetFlagStateByGuidAndDateRequest() {
+        return getFlagStateByGuidAndDateRequest;
+    }
 
+    public void setGetFlagStateByGuidAndDateRequest(GetFlagStateByGuidAndDateRequest getFlagStateByGuidAndDateRequest) {
+        this.getFlagStateByGuidAndDateRequest = getFlagStateByGuidAndDateRequest;
+    }
 
+    public GetAssetFromAssetIdAndDateRequest getGetAssetFromAssetIdAndDateRequest() {
+        return getAssetFromAssetIdAndDateRequest;
+    }
 
+    public void setGetAssetFromAssetIdAndDateRequest(GetAssetFromAssetIdAndDateRequest getAssetFromAssetIdAndDateRequest) {
+        this.getAssetFromAssetIdAndDateRequest = getAssetFromAssetIdAndDateRequest;
+    }
 }

@@ -5,14 +5,14 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetListCriteria;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetListPagination;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.entity.Note;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteria;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListPagination;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
 
 public abstract class AssetHelper {
 
@@ -155,7 +155,10 @@ public abstract class AssetHelper {
 
     public static AssetListQuery createBasicQuery() {
         AssetListQuery query = new AssetListQuery();
-        query.setPagination(new AssetListPagination(1, 100));
+        AssetListPagination pagination = new AssetListPagination();
+        pagination.setPage(1);
+        pagination.setListSize(100);
+        query.setPagination(pagination);
         AssetListCriteria listCriteria = new AssetListCriteria();
         listCriteria.setIsDynamic(true);
         query.setAssetSearchCriteria(listCriteria);

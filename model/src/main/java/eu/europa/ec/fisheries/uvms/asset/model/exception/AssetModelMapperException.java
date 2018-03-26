@@ -20,19 +20,4 @@ public class AssetModelMapperException extends AssetModelException {
         super(message);
     }
 
-    public AssetModelMapperException() {
-        super();
-    }
-
-    public AssetModelMapperException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public AssetModelMapperException(Throwable cause) {
-        super(cause);
-    }
-
-    protected AssetModelMapperException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
 }

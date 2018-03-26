@@ -18,12 +18,11 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.constants.ParameterKey;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetFault;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetId;
-import eu.europa.ec.fisheries.uvms.asset.types.AssetIdTypeEnum;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetFault;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 
 @Stateless
 @LocalBean
@@ -89,9 +88,9 @@ public class GetAssetEventBean {
 
         try {
             // If search is made by guid, no other source is relevant
-            if (AssetIdTypeEnum.GUID.equals(assetId.getType())) {
-                return AssetDataSourceQueue.INTERNAL;
-            }
+//            if (AssetIdTypeEnum.GUID.equals(assetId.getType())) {
+//                return AssetDataSourceQueue.INTERNAL;
+//            }
 
             Boolean xeu = parameters.getBooleanValue(ParameterKey.EU_USE.getKey());
             Boolean national = parameters.getBooleanValue(ParameterKey.NATIONAL_USE.getKey());

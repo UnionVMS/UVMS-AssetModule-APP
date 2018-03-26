@@ -17,13 +17,11 @@ import java.util.List;
 import java.util.Map;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.ConfigModelException;
-import eu.europa.ec.fisheries.uvms.asset.types.ConfigFieldEnum;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
 import eu.europa.ec.fisheries.uvms.constant.UnitLength;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
@@ -83,7 +81,7 @@ public class ConfigServiceBean {
 	}
 
 //	public ConfigurationDto getConfiguration(ConfigFieldEnum config) throws ConfigModelException {
-		public Object getConfiguration(ConfigFieldEnum config) throws ConfigModelException {
+//		public Object getConfiguration(ConfigFieldEnum config) throws ConfigModelException {
 
 			/*
 		//TODO fix if config != ALL
@@ -112,8 +110,8 @@ public class ConfigServiceBean {
 		*/
 
 
-			return null;
-	}
+//			return null;
+//	}
 
 	private  List<String> getGearTypes() {
 		List<String> values = new ArrayList<>();
@@ -137,20 +135,21 @@ public class ConfigServiceBean {
 	}
 
 //	private Config createConfigFromList(ConfigFieldEnum field, List<String> values) {
-		private Object createConfigFromList(ConfigFieldEnum field, List<String> values) {
-			/*
-		Config config = new Config();
-		config.setField(field);
-		List<ConfigValue> configValues = new ArrayList<>();
-		for (String keyValue : values) {
-			ConfigValue value = new ConfigValue();
-			value.setKeyValue(keyValue);
-			configValues.add(value);
-		}
-		config.getValues().addAll(configValues);
-		return config;
-		*/ return null;
-	}
+//		private Object createConfigFromList(ConfigFieldEnum field, List<String> values) {
+			
+//		Config config = new Config();
+//		config.setField(field);
+//		List<ConfigValue> configValues = new ArrayList<>();
+//		for (String keyValue : values) {
+//			ConfigValue value = new ConfigValue();
+//			value.setKeyValue(keyValue);
+//			configValues.add(value);
+//		}
+//		config.getValues().addAll(configValues);
+//		return config;
+//		 return null;
+		 
+//	}
 
 
 

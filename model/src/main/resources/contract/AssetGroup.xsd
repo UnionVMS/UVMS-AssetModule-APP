@@ -4,11 +4,10 @@
             xmlns:t="types.asset.wsdl.fisheries.ec.europa.eu"
             targetNamespace="group.asset.wsdl.fisheries.ec.europa.eu"
             version="1.0">
-
-    <!--
+    
     <xsd:import namespace="types.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetElement.xsd"/>
 
-    <xsd:complexType name="AssetGroupDTO">
+    <xsd:complexType name="AssetGroup">
         <xsd:sequence>
             <xsd:element name="guid" type="xsd:string"/>
             <xsd:element name="name" type="xsd:string"/>
@@ -21,22 +20,96 @@
 
     <xsd:complexType name="AssetGroupSearchField">
         <xsd:sequence>
-            <xsd:element name="key" type="xsd:string"/>
+            <xsd:element name="key" type="t:ConfigSearchField"/>
             <xsd:element name="value" type="xsd:string"/>
         </xsd:sequence>
     </xsd:complexType>
 
+    <xsd:element name="GetAssetGroupRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="t:AssetDataSourceRequest">
+                    <xsd:sequence>
+                        <xsd:element name="guid" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
 
-    <xsd:element name="AssetFault">
+    <xsd:element name="CreateAssetGroupRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="t:AssetDataSourceRequest">
+                    <xsd:sequence>
+                        <xsd:element name="assetGroup" type="AssetGroup"/>
+                    </xsd:sequence>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="UpdateAssetGroupRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="t:AssetDataSourceRequest">
+                    <xsd:sequence>
+                        <xsd:element name="assetGroup" type="AssetGroup"/>
+                    </xsd:sequence>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="AssetGroupListByUserRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="t:AssetDataSourceRequest">
+                    <xsd:sequence>
+                        <xsd:element name="user" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="GetAssetGroupListByAssetGuidRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="t:AssetDataSourceRequest">
+                    <xsd:sequence>
+                        <xsd:element name="assetGuid" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="DeleteAssetGroupRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="t:AssetDataSourceRequest">
+                    <xsd:sequence>
+                        <xsd:element name="guid" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <xsd:element name="SingleAssetGroupResponse">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element name="code" type="xsd:int" />
-                <xsd:element name="fault" type="xsd:string" />
+                <xsd:element name="assetGroup" type="AssetGroup"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
 
--->
-
-
+    <xsd:element name="ListAssetGroupResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="assetGroup" type="AssetGroup" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
 </xsd:schema>

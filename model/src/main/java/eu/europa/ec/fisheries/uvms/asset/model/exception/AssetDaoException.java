@@ -13,24 +13,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 public class AssetDaoException extends AssetModelException {
     private static final long serialVersionUID = 2869522947805820298L;
 
-
-    public AssetDaoException() {
-        super();
-    }
-
     public AssetDaoException(String message) {
         super(message);
-    }
-
-    public AssetDaoException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public AssetDaoException(Throwable cause) {
-        super(cause);
-    }
-
-    protected AssetDaoException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 }
