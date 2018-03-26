@@ -17,8 +17,8 @@
 
     <changeSet author="thofan" id="data to MDR_Lite">
 
-        <insert tableName="mdrlite">
-            <column name="constant" value="CXX1" />
+        <insert tableName="customcodes">
+            <column name="constant" value="SAMPLE" />
             <column name="code" value="C1" />
             <column name="description" value="Detta är en kodbeskrivning" />
             <column name="jsonstr" value="" />
