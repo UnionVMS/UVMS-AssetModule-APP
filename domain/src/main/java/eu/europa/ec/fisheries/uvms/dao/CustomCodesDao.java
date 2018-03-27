@@ -8,7 +8,6 @@ import javax.persistence.*;
 import java.util.List;
 
 @Stateless
-@Local
 public class CustomCodesDao {
 
     @PersistenceContext

@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Stateless
-@Local
 public class AssetGroupDao  {
 
     @PersistenceContext

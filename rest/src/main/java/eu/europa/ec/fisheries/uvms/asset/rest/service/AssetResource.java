@@ -176,14 +176,14 @@ public class AssetResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response createAsset(@ApiParam(value="An asset to retrieve", required=true)  final Asset asset) throws AssetException {
+    public Response createAsset(@ApiParam(value="An asset to retrieve", required=true)  final Asset asset)  {
         try {
             String remoteUser = servletRequest.getRemoteUser();
             Asset createdAssetSE = assetService.createAsset(asset, remoteUser);
 
             return Response.status(200).entity(createdAssetSE).type(MediaType.APPLICATION_JSON )
                     .header("MDC", MDC.get("requestId")).build();
-        } catch (AssetException e) {
+        } catch (Exception e) {
             LOG.error("Error when creating asset. {}", asset, e);
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
