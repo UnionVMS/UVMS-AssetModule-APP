@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -32,7 +33,7 @@ import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
+import eu.europa.ec.fisheries.uvms.asset.rest.dto.AssetQuery;
 import eu.europa.ec.fisheries.uvms.asset.rest.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetListResponse;
@@ -42,7 +43,6 @@ import eu.europa.ec.fisheries.uvms.entity.Note;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -79,14 +79,13 @@ public class AssetResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetList(@ApiParam(value="Query to execute", required=true) final AssetListQuery assetQuery) {
+    public Response getAssetList(@DefaultValue("1") @QueryParam("page") int page,
+                                 @DefaultValue("100") @QueryParam("size") int size,
+                                 @DefaultValue("true") @QueryParam("dynamic") boolean dynamic, 
+                                 AssetQuery query) {
         try {
-            // TODO
-            List<SearchKeyValue> searchValues = SearchFieldMapper.createSearchFields(assetQuery.getAssetSearchCriteria().getCriterias());
-            int page = assetQuery.getPagination().getPage();
-            int listSize = assetQuery.getPagination().getListSize();
-            Boolean dynamic = assetQuery.getAssetSearchCriteria().isIsDynamic();
-            AssetListResponse assetList = assetService.getAssetList(searchValues, page, listSize, dynamic);
+            List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
+            AssetListResponse assetList = assetService.getAssetList(searchFields, page, size, dynamic);
             return Response.ok(assetList).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset list.", e);
@@ -111,14 +110,14 @@ public class AssetResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetListItemCount(@ApiParam(value="Query to execute", required=true)  final AssetListQuery assetQuery) {
+    public Response getAssetListItemCount(@DefaultValue("true") @QueryParam("dynamic") boolean dynamic, 
+                                          AssetQuery query) {
         try {
-            List<SearchKeyValue> searchValues = SearchFieldMapper.createSearchFields(assetQuery.getAssetSearchCriteria().getCriterias());
-            Boolean dynamic = assetQuery.getAssetSearchCriteria().isIsDynamic();
+            List<SearchKeyValue> searchValues = SearchFieldMapper.createSearchFields(query);
             Long assetListCount = assetService.getAssetListCount(searchValues, dynamic);
             return Response.ok(assetListCount).build();
         } catch (Exception e) {
-            LOG.error("Error when getting asset list: {}",assetQuery,e);
+            LOG.error("Error when getting asset list: {}", query, e);
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }

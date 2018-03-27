@@ -20,17 +20,29 @@ public class SearchKeyValue {
 	
 	private SearchFields searchField;
 	private List<String> searchValues = new ArrayList<>();
-	
-	public SearchFields getSearchField() {
+
+    public SearchKeyValue() {
+        super();
+    }
+
+    public SearchKeyValue(SearchFields searchField, List<String> searchValues) {
+        this.searchField = searchField;
+        this.searchValues = searchValues;
+    }
+    
+    public SearchFields getSearchField() {
 		return searchField;
 	}
+    
 	public void setSearchField(SearchFields searchField) {
 		this.searchField = searchField;
 	}
+	
 	public List<String> getSearchValues() {
 		if(searchValues == null) searchValues = new ArrayList<>();
 		return searchValues;
 	}
+	
 	public void setSearchValues(List<String> searchValues) {
 		this.searchValues = searchValues;
 	}

@@ -11,17 +11,16 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.rest;
 
+import java.util.HashSet;
+import java.util.Set;
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
 import eu.europa.ec.fisheries.uvms.asset.rest.service.AssetGroupResource;
 import eu.europa.ec.fisheries.uvms.asset.rest.service.AssetHistoryResource;
 import eu.europa.ec.fisheries.uvms.asset.rest.service.AssetResource;
 import eu.europa.ec.fisheries.uvms.asset.rest.service.ConfigResource;
+import eu.europa.ec.fisheries.uvms.asset.rest.service.InternalResource;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeatureFilter;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
 
 @ApplicationPath("/rest")
 public class AssetActivator extends Application {
@@ -34,6 +33,7 @@ public class AssetActivator extends Application {
         set.add(AssetHistoryResource.class);
         set.add(AssetGroupResource.class);
         set.add(ConfigResource.class);
+        set.add(InternalResource.class);
         set.add(UnionVMSFeatureFilter.class);
         set.add(ObjectMapperContextResolver.class);
         set.add(com.github.phillipkruger.apiee.ApieeService.class);

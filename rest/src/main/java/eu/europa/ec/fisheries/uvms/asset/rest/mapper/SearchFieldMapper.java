@@ -12,97 +12,82 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.rest.mapper;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import eu.europa.ec.fisheries.uvms.asset.rest.dto.AssetQuery;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteriaPair;
-import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
 
 public class SearchFieldMapper {
     
     private SearchFieldMapper() {}
-
-    private static SearchKeyValue getSearchKeyValue(SearchFields field, Map<SearchFields, SearchKeyValue> searchKeys) {
-        SearchKeyValue searchKeyValue = searchKeys.get(field);
-        if (searchKeyValue == null) {
-            searchKeyValue = new SearchKeyValue();
+    
+    public static List<SearchKeyValue> createSearchFields(AssetQuery query) {
+        List<SearchKeyValue> searchValues = new ArrayList<>();
+        if (query.getId() != null) {
+            List<String> assetIds = query.getId().stream().map(UUID::toString).collect(Collectors.toList());
+            searchValues.add(new SearchKeyValue(SearchFields.GUID, assetIds));
         }
-        searchKeyValue.setSearchField(field);
-        return searchKeyValue;
-    }
-
-    private static SearchFields getSearchFields(ConfigSearchField field) {
-        switch (field) {
-            case CFR:
-                return SearchFields.CFR;
-            case EXTERNAL_MARKING:
-                return SearchFields.EXTERNAL_MARKING;
-            case FLAG_STATE:
-                return SearchFields.FLAG_STATE;
-            case HOMEPORT:
-                return SearchFields.HOMEPORT;
-            case ICCAT:
-                return SearchFields.ICCAT;
-            case UVI:
-                return SearchFields.UVI;
-            case GFCM:
-                return SearchFields.GFCM;
-            case IRCS:
-                return SearchFields.IRCS;
-            case LICENSE_TYPE:
-                return SearchFields.LICENSE;
-            case MMSI:
-                return SearchFields.MMSI;
-            case NAME:
-                return SearchFields.NAME;
-            case GEAR_TYPE:
-                return SearchFields.GEAR_TYPE;
-            case GUID:
-                return SearchFields.GUID;
-            case HIST_GUID:
-            	return SearchFields.HIST_GUID;
-            case IMO:
-                return SearchFields.IMO;
-            case MAX_LENGTH:
-                return SearchFields.MAX_LENGTH;
-            case MAX_POWER:
-                return SearchFields.MAX_POWER;
-            case MIN_POWER:
-                return SearchFields.MIN_POWER;
-            case MIN_LENGTH:
-                return SearchFields.MIN_LENGTH;
-            case PRODUCER_NAME:
-            	return SearchFields.PRODUCER_NAME;
-            case ASSET_TYPE:
-            default:
-                throw new IllegalArgumentException("No field found: " + field.name());
+        if (query.getHistoryId() != null) {
+            List<String> assetHistoryIds = query.getHistoryId().stream().map(UUID::toString).collect(Collectors.toList());
+            searchValues.add(new SearchKeyValue(SearchFields.HIST_GUID, assetHistoryIds));
         }
-    }
-
-    public static SearchKeyValue mapSearchFieldForAssetListCriteria(AssetListCriteriaPair pair, Map<SearchFields, SearchKeyValue> searchKeys) {
-        if (pair == null || pair.getKey() == null || pair.getValue() == null) {
-            throw new IllegalArgumentException("Non valid search criteria");
+        if (query.getCfr() != null) {
+            searchValues.add(new SearchKeyValue(SearchFields.CFR, query.getCfr()));
         }
-
-        SearchKeyValue searchKeyValue = getSearchKeyValue(getSearchFields(pair.getKey()), searchKeys);
-        String value = prepareSearchValue(searchKeyValue.getSearchField(), pair.getValue());
-        searchKeyValue.getSearchValues().add(value);
-        return searchKeyValue;
-    }
-
-    private static String prepareSearchValue(SearchFields searchField, String searchValue) {
-    	String value = searchValue;
-        return value;
-    }
-
-    public static List<SearchKeyValue> createSearchFields(List<AssetListCriteriaPair> criterias) {
-        Map<SearchFields, SearchKeyValue> searchKeyValues = new EnumMap<>(SearchFields.class);
-        for (AssetListCriteriaPair criteria : criterias) {
-            SearchKeyValue searchField = mapSearchFieldForAssetListCriteria(criteria, searchKeyValues);
-            searchKeyValues.put(searchField.getSearchField(), searchField);
+        if (query.getIrcs() != null) {
+            searchValues.add(new SearchKeyValue(SearchFields.IRCS, query.getIrcs()));
         }
-        return new ArrayList<>(searchKeyValues.values());
+        if (query.getMmsi() != null) {
+            searchValues.add(new SearchKeyValue(SearchFields.MMSI, query.getMmsi()));
+        }
+        if (query.getImo() != null) {
+            searchValues.add(new SearchKeyValue(SearchFields.IMO, query.getImo()));
+        }
+        if (query.getIccat() != null) {
+            searchValues.add(new SearchKeyValue(SearchFields.ICCAT, query.getIccat()));
+        }
+        if (query.getUvi() != null) {
+            searchValues.add(new SearchKeyValue(SearchFields.UVI, query.getUvi()));
+        }
+        if (query.getGfcm() != null) {
+            searchValues.add(new SearchKeyValue(SearchFields.GFCM, query.getGfcm()));
+        }
+        if (query.getName() != null) {
+            searchValues.add(new SearchKeyValue(SearchFields.NAME, query.getName()));
+        }
+        if (query.getFlagState() != null) {
+            searchValues.add(new SearchKeyValue(SearchFields.FLAG_STATE, query.getFlagState()));
+        }
+        if (query.getExternalMarking() != null) {
+            searchValues.add(new SearchKeyValue(SearchFields.EXTERNAL_MARKING, query.getExternalMarking()));
+        }
+        if (query.getPortOfRegistration() != null) {
+            searchValues.add(new SearchKeyValue(SearchFields.HOMEPORT, query.getPortOfRegistration()));
+        }
+        if (query.getLicenseType() != null) {
+            searchValues.add(new SearchKeyValue(SearchFields.LICENSE, query.getLicenseType()));
+        }
+        if (query.getProducerName() != null) {
+            searchValues.add(new SearchKeyValue(SearchFields.PRODUCER_NAME, query.getProducerName()));
+        }
+        if (query.getGearType() != null) {
+            searchValues.add(new SearchKeyValue(SearchFields.GEAR_TYPE, Arrays.asList(query.getGearType().toString())));
+        }
+        if (query.getMinLength() != null) {
+            searchValues.add(new SearchKeyValue(SearchFields.MIN_LENGTH, Arrays.asList(query.getMinLength().toString())));
+        }
+        if (query.getMaxLength() != null) {
+            searchValues.add(new SearchKeyValue(SearchFields.MAX_LENGTH, Arrays.asList(query.getMaxLength().toString())));
+        }
+        if (query.getMinPower() != null) {
+            searchValues.add(new SearchKeyValue(SearchFields.MIN_POWER, Arrays.asList(query.getMinPower().toString())));
+        }
+        if (query.getMaxPower() != null) {
+            searchValues.add(new SearchKeyValue(SearchFields.MAX_POWER, Arrays.asList(query.getMaxPower().toString())));
+        }
+        return searchValues;
     }
 }

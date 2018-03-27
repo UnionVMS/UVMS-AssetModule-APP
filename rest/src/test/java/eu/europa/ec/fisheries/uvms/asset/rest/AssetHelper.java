@@ -152,17 +152,4 @@ public abstract class AssetHelper {
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();
     }
-
-    public static AssetListQuery createBasicQuery() {
-        AssetListQuery query = new AssetListQuery();
-        AssetListPagination pagination = new AssetListPagination();
-        pagination.setPage(1);
-        pagination.setListSize(100);
-        query.setPagination(pagination);
-        AssetListCriteria listCriteria = new AssetListCriteria();
-        listCriteria.setIsDynamic(true);
-        query.setAssetSearchCriteria(listCriteria);
-        return query;
-    }
-
 }

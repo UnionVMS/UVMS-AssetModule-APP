@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import java.util.Arrays;
 import java.util.List;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
@@ -16,11 +17,10 @@ import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.asset.rest.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.asset.rest.AssetHelper;
 import eu.europa.ec.fisheries.uvms.asset.rest.AssetMatcher;
+import eu.europa.ec.fisheries.uvms.asset.rest.dto.AssetQuery;
+import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetListResponse;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.entity.Note;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteriaPair;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
 
 @RunWith(Arquillian.class)
 public class AssetResourceTest extends AbstractAssetRestTest {
@@ -85,20 +85,17 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
         
-        AssetListQuery query = AssetHelper.createBasicQuery();
-        AssetListCriteriaPair criteria = new AssetListCriteriaPair();
-        criteria.setKey(ConfigSearchField.CFR);
-        criteria.setValue(createdAsset.getCfr());
-        query.getAssetSearchCriteria().getCriterias().add(criteria);
+        AssetQuery query = new AssetQuery();
+        query.setCfr(Arrays.asList(createdAsset.getCfr()));
         
-        Response response = getWebTarget()
+        AssetListResponse listResponse = getWebTarget()
                 .path("/asset/list")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(query));
+                .post(Entity.json(query), AssetListResponse.class);
         
-        assertTrue(response != null);
-        assertEquals(200, response.getStatus());
-        // TODO check response data
+        assertTrue(listResponse != null);
+        assertThat(listResponse.getAssetList().size(), is(1));
+        assertThat(listResponse.getAssetList().get(0), is(AssetMatcher.assetEquals(createdAsset)));
     }
     
     @Test
