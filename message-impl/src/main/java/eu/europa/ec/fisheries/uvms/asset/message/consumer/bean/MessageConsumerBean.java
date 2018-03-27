@@ -12,10 +12,7 @@
 package eu.europa.ec.fisheries.uvms.asset.message.consumer.bean;
 
 import javax.ejb.ActivationConfigProperty;
-import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.jms.Message;
@@ -31,11 +28,9 @@ import eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean.GetAssetLis
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean.GetAssetListEventBean;
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean.PingEventBean;
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean.UpsertAssetMessageEventBean;
-import eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean.UpsertFishingGearsMessageEventBean;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
@@ -46,7 +41,6 @@ import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetGroupListByAssetGuidRequ
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.UpsertAssetModuleRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.UpsertFishingGearModuleRequest;
 
 @MessageDriven(mappedName = AssetConstants.QUEUE_ASSET_EVENT, activationConfig = {
     @ActivationConfigProperty(propertyName = "messagingType", propertyValue = AssetConstants.CONNECTION_TYPE),
@@ -57,40 +51,34 @@ import eu.europa.ec.fisheries.wsdl.asset.module.UpsertFishingGearModuleRequest;
 })
 public class MessageConsumerBean implements MessageListener {
 
-    final static Logger LOG = LoggerFactory.getLogger(MessageConsumerBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MessageConsumerBean.class);
 
-    @EJB
+    @Inject
     private GetAssetEventBean getAssetEventBean;
 
-    @EJB
+    @Inject
     private GetAssetListEventBean getAssetListEventBean;
 
-    @EJB
+    @Inject
     private GetAssetGroupEventBean getAssetGroupEventBean;
 
-    @EJB
+    @Inject
     private GetAssetListByAssetGroupEventBean getAssetListByAssetGroupEventBean;
 
-    @EJB
+    @Inject
     private GetAssetGroupListByAssetGuidEventBean getAssetGroupListByAssetGuidEventBean;
 
-    @EJB
+    @Inject
     private UpsertAssetMessageEventBean upsertAssetMessageEventBean;
 
-    @EJB
-    private UpsertFishingGearsMessageEventBean upsertFishingGearsMessageEventBean;
-
-
-    @EJB
+    @Inject
     private PingEventBean pingEventBean;
 
     @Inject
     @AssetMessageErrorEvent
     Event<AssetMessageEvent> assetErrorEvent;
 
-
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void onMessage(Message message) {
         LOG.info("Message received in AssetModule");
         TextMessage textMessage = (TextMessage) message;
@@ -133,18 +121,11 @@ public class MessageConsumerBean implements MessageListener {
                     AssetMessageEvent upsertAssetMessageEvent = new AssetMessageEvent(textMessage, upsertRequest.getAsset(), upsertRequest.getUserName());
                     upsertAssetMessageEventBean.upsertAsset(upsertAssetMessageEvent);
                     break;
-                case FISHING_GEAR_UPSERT:
-                    UpsertFishingGearModuleRequest upsertFishingGearListModuleRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, UpsertFishingGearModuleRequest.class);
-                    AssetMessageEvent fishingGearMessageEvent = new AssetMessageEvent(textMessage, upsertFishingGearListModuleRequest.getFishingGear(), upsertFishingGearListModuleRequest.getUsername());
-                    upsertFishingGearsMessageEventBean.upsertFishingGears(fishingGearMessageEvent);
-                    break;
-
                 default:
                     LOG.error("[ Not implemented method consumed: {} ]", method);
                     assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Method not implemented")));
             }
-
-        } catch (AssetModelMarshallException e) {
+        } catch (Exception e) {
             LOG.error("[ Error when receiving message in AssetModule. ]");
             assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Method not implemented")));
         }

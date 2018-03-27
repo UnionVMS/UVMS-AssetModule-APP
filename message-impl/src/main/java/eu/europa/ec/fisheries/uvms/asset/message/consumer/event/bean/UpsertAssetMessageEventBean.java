@@ -1,40 +1,35 @@
 package eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean;
 
-import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
-import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
-import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
-import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
-import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
+import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
+import eu.europa.ec.fisheries.uvms.asset.message.mapper.AssetModelMapper;
+import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
+import eu.europa.ec.fisheries.uvms.entity.Asset;
 
 @Stateless
-@LocalBean
 public class UpsertAssetMessageEventBean {
 
-    private final static Logger LOG = LoggerFactory.getLogger(GetAssetGroupListByAssetGuidEventBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GetAssetGroupListByAssetGuidEventBean.class);
 
     @Inject
     @AssetMessageErrorEvent
     Event<AssetMessageEvent> assetErrorEvent;
 
-    @EJB
+    @Inject
     private AssetService service;
 
     public void upsertAsset(AssetMessageEvent message){
-//        try {
-//            service.upsertAsset(message.getAsset(), AssetDataSourceQueue.INTERNAL.name());
-//        } catch (AssetException e) {
-//            LOG.error("Could not update asset in the local database");
-//        }
+        try {
+            Asset assetEntity = AssetModelMapper.toAssetEntity(message.getAsset());
+            service.upsertAsset(assetEntity, "");
+        } catch (Exception e) {
+            LOG.error("Could not update asset in the local database");
+        }
     }
 
 }

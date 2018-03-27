@@ -1,28 +1,23 @@
 package eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean;
 
+import javax.ejb.Stateless;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
-import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.wsdl.asset.module.PingResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
 
 @Stateless
-@LocalBean
 public class PingEventBean {
 
-    private final static Logger LOG = LoggerFactory.getLogger(PingEventBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PingEventBean.class);
 
-    @EJB
+    @Inject
     private MessageProducer messageProducer;
 
     @Inject

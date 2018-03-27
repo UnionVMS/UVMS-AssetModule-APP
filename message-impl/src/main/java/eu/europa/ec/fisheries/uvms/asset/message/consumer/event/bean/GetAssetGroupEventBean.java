@@ -1,7 +1,16 @@
 package eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
+import eu.europa.ec.fisheries.uvms.asset.message.mapper.AssetModelMapper;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
@@ -9,21 +18,11 @@ import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-import java.util.List;
 
 @Stateless
-@LocalBean
 public class GetAssetGroupEventBean {
 
-    private final static Logger LOG = LoggerFactory.getLogger(GetAssetGroupEventBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GetAssetGroupEventBean.class);
 
     @EJB
     private MessageProducer messageProducer;
@@ -39,9 +38,9 @@ public class GetAssetGroupEventBean {
         LOG.info("Get asset group");
         try {
             AssetGroupListByUserRequest request = message.getRequest();
-            List<AssetGroup> response = null;//assetGroup.getAssetGroupList(request.getUser());
+            List<eu.europa.ec.fisheries.uvms.entity.AssetGroup> assetGroups = assetGroup.getAssetGroupList(request.getUser());
+            List<AssetGroup> response = assetGroups.stream().map(AssetModelMapper::toAssetGroupModel).collect(Collectors.toList());
 
-            LOG.debug("Send back assetGroupList response.");
             messageProducer.sendModuleResponseMessage(message.getMessage(), AssetModuleResponseMapper.mapToAssetGroupListResponse(response));
         } catch (AssetException e) {
             LOG.error("[ Error when getting assetGroupList from source. ] ");
