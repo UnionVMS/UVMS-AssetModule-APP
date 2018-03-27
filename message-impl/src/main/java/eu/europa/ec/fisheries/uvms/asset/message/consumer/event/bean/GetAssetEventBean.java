@@ -11,7 +11,6 @@ import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.mapper.AssetModelMapper;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
@@ -42,7 +41,7 @@ public class GetAssetEventBean {
         try {
             AssetIdentity assetIdentity = AssetModelMapper.mapToAssetIdentity(assetId.getType());
             asset = assetService.getAssetById(assetIdentity, assetId.getValue());
-        } catch (AssetException e) {
+        } catch (Exception e) {
             LOG.error("Error when getting asset by id", assetId.getValue(), e);
             assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting asset by id : " + assetId.getValue() + " Error message: " + e.getMessage())));
             messageSent = true;
