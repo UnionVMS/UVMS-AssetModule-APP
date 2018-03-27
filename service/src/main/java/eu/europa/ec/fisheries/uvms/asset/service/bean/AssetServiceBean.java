@@ -14,16 +14,17 @@ package eu.europa.ec.fisheries.uvms.asset.service.bean;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
-import eu.europa.ec.fisheries.uvms.asset.exception.InputArgumentException;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
+import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetListResponse;
 import eu.europa.ec.fisheries.uvms.constant.AssetIdentity;
@@ -32,6 +33,7 @@ import eu.europa.ec.fisheries.uvms.dao.ContactInfoDao;
 import eu.europa.ec.fisheries.uvms.dao.NoteDao;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
+import eu.europa.ec.fisheries.uvms.entity.AssetGroupField;
 import eu.europa.ec.fisheries.uvms.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.entity.Note;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
@@ -43,6 +45,9 @@ public class AssetServiceBean implements AssetService {
     
     @Inject
     private AuditServiceBean auditService;
+    
+    @Inject
+    private AssetGroupService assetGroupService;
 
     @Inject
     private AssetDao assetDao;
@@ -189,15 +194,16 @@ public class AssetServiceBean implements AssetService {
      * @return
      */
     @Override
-    public Asset upsertAsset(Asset asset, String username)  {
-
+    public Asset upsertAsset(Asset asset, String username) {
         if (asset == null) {
             throw new IllegalArgumentException("No asset to upsert");
         }
 
-        //return upsertAsset_FROM_DOMAINMODEL(asset, username);
-        return null;
+        if (asset.getId() == null) {
+            return createAsset(asset, username);
+        }
 
+        return updateAsset(asset, username, "");
     }
 
     /**
@@ -276,9 +282,18 @@ public class AssetServiceBean implements AssetService {
         if (groups == null || groups.isEmpty()) {
             throw new IllegalArgumentException("No groups in query");
         }
+        List<AssetGroupField> groupFields = groups.stream()
+                                .map(g -> assetGroupService.retrieveFieldsForGroup(g.getId()))
+                                .flatMap(x -> x.stream())
+                                .collect(Collectors.toList());
 
-        //return getAssetListByAssetGroup(groups);
-        return null;
+        Set<Asset> assets = new HashSet<>();
+        for (AssetGroupField groupField : groupFields) {
+            if ("GUID".equals(groupField.getField())) {
+                assets.add(getAssetById(UUID.fromString(groupField.getValue())));
+            }
+        }
+        return new ArrayList<>(assets);
     }
 
     @Override
