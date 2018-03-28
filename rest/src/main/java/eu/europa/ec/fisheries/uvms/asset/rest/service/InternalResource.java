@@ -30,7 +30,7 @@ import eu.europa.ec.fisheries.uvms.asset.rest.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetListResponse;
-import eu.europa.ec.fisheries.uvms.constant.AssetIdentity;
+import eu.europa.ec.fisheries.uvms.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
@@ -49,7 +49,7 @@ public class InternalResource {
     @Path("asset/{idType : (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)}/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAssetById(@PathParam("idType") String type, @PathParam("id") String id) {
-        AssetIdentity assetId = AssetIdentity.valueOf(type.toUpperCase());
+        AssetIdentifier assetId = AssetIdentifier.valueOf(type.toUpperCase());
         Asset asset = assetService.getAssetById(assetId, id);
         return Response.ok(asset).build();
     }

@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetListResponse;
-import eu.europa.ec.fisheries.uvms.constant.AssetIdentity;
+import eu.europa.ec.fisheries.uvms.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.ContactInfoDao;
 import eu.europa.ec.fisheries.uvms.dao.NoteDao;
@@ -211,7 +211,7 @@ public class AssetServiceBean implements AssetService {
      * @return
      */
     @Override
-    public Asset getAssetById(AssetIdentity assetId, String value)  {
+    public Asset getAssetById(AssetIdentifier assetId, String value)  {
 
         if (assetId == null) {
             throw new IllegalArgumentException("AssetIdentity object is null");
@@ -232,7 +232,7 @@ public class AssetServiceBean implements AssetService {
      * @return
      */
     @Override
-    public Asset getAssetFromAssetIdAtDate(AssetIdentity idType, String idValue, LocalDateTime date)  {
+    public Asset getAssetFromAssetIdAtDate(AssetIdentifier idType, String idValue, LocalDateTime date)  {
 
         if (idType == null) {
             throw new IllegalArgumentException("Type is null");
@@ -243,7 +243,7 @@ public class AssetServiceBean implements AssetService {
         if (date == null) {
             throw new IllegalArgumentException("Date is null");
         }
-        if (idType == AssetIdentity.GUID) {
+        if (idType == AssetIdentifier.GUID) {
             try {
                 UUID.fromString(idValue);
             } catch (IllegalArgumentException e) {
@@ -295,7 +295,7 @@ public class AssetServiceBean implements AssetService {
     }
 
     @Override
-    public void deleteAsset(AssetIdentity assetId, String value)  {
+    public void deleteAsset(AssetIdentifier assetId, String value)  {
 
         if (assetId == null) {
             throw new IllegalArgumentException("AssetId is null");

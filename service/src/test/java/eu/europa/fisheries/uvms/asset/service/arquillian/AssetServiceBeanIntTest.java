@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.uvms.constant.AssetIdentity;
+import eu.europa.ec.fisheries.uvms.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.entity.ContactInfo;
@@ -84,7 +84,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Asset changedAsset1 = assetService.updateAsset(createdAsset, "CHG_USER_1", "En changekommentar");
         commit();
 
-        assetService.deleteAsset(AssetIdentity.GUID, createdAsset.getId().toString());
+        assetService.deleteAsset(AssetIdentifier.GUID, createdAsset.getId().toString());
         commit();
 
         // fetch it and it should be null

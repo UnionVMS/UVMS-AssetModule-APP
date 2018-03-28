@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetListResponse;
-import eu.europa.ec.fisheries.uvms.constant.AssetIdentity;
+import eu.europa.ec.fisheries.uvms.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.entity.ContactInfo;
@@ -39,7 +39,7 @@ public interface AssetService {
      * @param dynamic @description dynamic true or false
      * @return AssetListResponse
      */
-    AssetListResponse getAssetList(List<SearchKeyValue> searchFields, int page, int listSize, boolean dynamic) ;
+    AssetListResponse getAssetList(List<SearchKeyValue> searchFields, int page, int listSize, boolean dynamic);
 
     /**
      *
@@ -55,7 +55,7 @@ public interface AssetService {
      * @param value @description idvalue
      * @return Asset @description an asset
      */
-    Asset getAssetById(AssetIdentity assetId, String value) ;
+    Asset getAssetById(AssetIdentifier assetId, String value) ;
 
 
     /**
@@ -103,7 +103,7 @@ public interface AssetService {
      * @param assetId @description id
      * @param value @description value of id
      */
-    void deleteAsset(AssetIdentity assetId, String value) ;
+    void deleteAsset(AssetIdentifier assetId, String value) ;
 
 
     /**
@@ -129,7 +129,7 @@ public interface AssetService {
      * @param date @description date to look up
      * @return asset @description an asset
      */
-    Asset getAssetFromAssetIdAtDate(AssetIdentity idType, String idValue, LocalDateTime date) ;
+    Asset getAssetFromAssetIdAtDate(AssetIdentifier idType, String idValue, LocalDateTime date) ;
 
     /**
      * Returns asset revisions for given asset id. Result size limited by maxNbr

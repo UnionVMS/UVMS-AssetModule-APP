@@ -11,6 +11,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.rest.service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import javax.ejb.Stateless;
@@ -37,6 +40,7 @@ import eu.europa.ec.fisheries.uvms.asset.rest.dto.AssetQuery;
 import eu.europa.ec.fisheries.uvms.asset.rest.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetListResponse;
+import eu.europa.ec.fisheries.uvms.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.entity.Note;
@@ -235,6 +239,78 @@ public class AssetResource {
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
+    
+    /**
+    *
+    * @responseMessage 200 Success
+    * @responseMessage 500 Error
+    *
+    * @summary Gets a list of all revisions for a specific asset
+    *
+    */
+    @GET
+    @Path("/history/asset/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAssetHistoryListByAssetId(@PathParam("id") UUID id,
+                                                 @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
+        try {
+            List<Asset> assetRevisions = assetService.getAssetRevisionsListByAssetId(id, maxNbr);
+            return Response.ok(assetRevisions).build();
+        } catch (Exception e) {
+            LOG.error("Error when getting asset history list by asset ID. {}]", id, e);
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
+
+    /**
+     * @summary Get a specific asset by identifier (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)
+     *          at given date.
+     * 
+     * @param type
+     * @param id
+     * @param date
+     * @return
+     */
+    @GET
+    @Path("/history/{type : (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)}/{id}/{date}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAssetFromAssetIdAndDate(@PathParam("type") String type, 
+                                               @PathParam("id") String id,
+                                               @PathParam("date") Date date) {
+        try {
+            AssetIdentifier assetId = AssetIdentifier.valueOf(type.toUpperCase());
+            LocalDateTime localDateTime = LocalDateTime.ofInstant(date.toInstant(), ZoneOffset.UTC);
+            Asset assetRevision = assetService.getAssetFromAssetIdAtDate(assetId, id, localDateTime);
+            return Response.ok(assetRevision).build();
+        } catch (Exception e) {
+            LOG.error("Error when getting asset. Type: {}, Value: {}, Date: {}", type, id, date, e);
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
+
+   /**
+    *
+    * @responseMessage 200 Success
+    * @responseMessage 500 Error
+    *
+    * @summary Gets a specific asset revision by history id
+    *
+    */
+    @GET
+    @Path("history/{guid}")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getAssetHistoryByAssetHistGuid(@PathParam("guid") UUID guid) {
+        try {
+            Asset asset = assetService.getAssetRevisionForRevisionId(guid);
+            return Response.ok(asset).build();
+        } catch (Exception e) {
+            LOG.error("Error when getting asset by asset history guid. {}] ", guid, e);
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
+    
 
     @GET
     @ApiResponses(value = {

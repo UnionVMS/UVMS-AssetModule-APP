@@ -19,7 +19,7 @@ import org.hibernate.envers.query.AuditQuery;
 import org.hibernate.envers.query.criteria.AuditCriterion;
 import org.hibernate.envers.query.criteria.AuditDisjunction;
 import org.hibernate.envers.query.criteria.ExtendableCriterion;
-import eu.europa.ec.fisheries.uvms.constant.AssetIdentity;
+import eu.europa.ec.fisheries.uvms.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mapper.SearchFieldType;
@@ -210,7 +210,7 @@ public class AssetDao {
         return query.getResultList();
     }
 
-    public Asset getAssetFromAssetId(AssetIdentity assetId, String value) {
+    public Asset getAssetFromAssetId(AssetIdentifier assetId, String value) {
         Asset asset = null;
         switch (assetId) {
             case CFR:
@@ -243,7 +243,7 @@ public class AssetDao {
         return asset;
     }
 
-    public Asset getAssetFromAssetIdAtDate(AssetIdentity assetId, String value, LocalDateTime date) {
+    public Asset getAssetFromAssetIdAtDate(AssetIdentifier assetId, String value, LocalDateTime date) {
         Asset asset = getAssetFromAssetId(assetId, value);
         if (asset != null) {
             return getAssetAtDate(asset, date);

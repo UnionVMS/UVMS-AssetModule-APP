@@ -8,7 +8,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import eu.europa.ec.fisheries.uvms.constant.AssetIdentity;
+import eu.europa.ec.fisheries.uvms.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
 
@@ -31,28 +31,28 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void create_Asset_IRCS() {
         Date date = new Date();
-        create(AssetIdentity.IRCS, "IRCSVAL", date);
+        create(AssetIdentifier.IRCS, "IRCSVAL", date);
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void create_Asset_MMSI() {
         Date date = new Date();
-        create(AssetIdentity.MMSI, "123456789", date); // MUST be 9 in length
+        create(AssetIdentifier.MMSI, "123456789", date); // MUST be 9 in length
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void create_Asset_CFR() {
         Date date = new Date();
-        create(AssetIdentity.CFR, "CFR_VAL" + UUID.randomUUID().toString(), date);
+        create(AssetIdentifier.CFR, "CFR_VAL" + UUID.randomUUID().toString(), date);
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void create_Asset_IMO() {
         Date date = new Date();
-        create(AssetIdentity.IMO, "IMO_VAL", date);
+        create(AssetIdentifier.IMO, "IMO_VAL", date);
     }
 
     @Test
@@ -60,7 +60,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void create_Asset_UVI() {
         Date date = new Date();
         String val = UUID.randomUUID().toString();
-        create(AssetIdentity.UVI, val, date);
+        create(AssetIdentifier.UVI, val, date);
     }
 
     @Test
@@ -68,7 +68,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void create_Asset_ICCAT() {
         Date date = new Date();
         String val = UUID.randomUUID().toString();
-        create(AssetIdentity.ICCAT, val, date);
+        create(AssetIdentifier.ICCAT, val, date);
     }
 
     @Test
@@ -76,7 +76,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void create_Asset_GFCM() {
         Date date = new Date();
         String val = UUID.randomUUID().toString();
-        create(AssetIdentity.GFCM, val, date);
+        create(AssetIdentifier.GFCM, val, date);
     }
 
 
@@ -85,7 +85,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void get_Asset_IRCS() {
 
         Date date = new Date();
-        AssetIdentity keyType = AssetIdentity.IRCS;
+        AssetIdentifier keyType = AssetIdentifier.IRCS;
         String val = UUID.randomUUID().toString();
         if (val.length() > 8) val = val.substring(0, 8);
         Asset theCreatedAsset = create(keyType, val, date);
@@ -104,7 +104,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void get_Asset_MMSI() {
 
         Date date = new Date();
-        AssetIdentity keyType = AssetIdentity.MMSI;
+        AssetIdentifier keyType = AssetIdentifier.MMSI;
         String val = UUID.randomUUID().toString();
         if (val.length() > 9) val = val.substring(0, 9);
         Asset theCreatedAsset = create(keyType, val, date);
@@ -123,7 +123,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void get_Asset_CFR() {
 
         Date date = new Date();
-        AssetIdentity keyType = AssetIdentity.CFR;
+        AssetIdentifier keyType = AssetIdentifier.CFR;
         String val = UUID.randomUUID().toString();
         if (val.length() > 12) val = val.substring(0, 12);
         Asset theCreatedAsset = create(keyType, val, date);
@@ -142,7 +142,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void get_Asset_IMO() {
 
         Date date = new Date();
-        AssetIdentity keyType = AssetIdentity.IMO;
+        AssetIdentifier keyType = AssetIdentifier.IMO;
         String val = UUID.randomUUID().toString();
         if (val.length() > 7) val = val.substring(0, 7);
         Asset theCreatedAsset = create(keyType, val, date);
@@ -162,7 +162,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void get_Asset_ICCAT() {
 
         Date date = new Date();
-        AssetIdentity keyType = AssetIdentity.ICCAT;
+        AssetIdentifier keyType = AssetIdentifier.ICCAT;
         String val = UUID.randomUUID().toString();
         Asset theCreatedAsset = create(keyType, val, date);
         String createdICCAT = theCreatedAsset.getIccat();
@@ -180,7 +180,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void get_Asset_UVI() {
 
         Date date = new Date();
-        AssetIdentity keyType = AssetIdentity.UVI;
+        AssetIdentifier keyType = AssetIdentifier.UVI;
         String val = UUID.randomUUID().toString();
         Asset theCreatedAsset = create(keyType, val, date);
         String createdUvi = theCreatedAsset.getUvi();
@@ -198,7 +198,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void get_Asset_GFCM() {
 
         Date date = new Date();
-        AssetIdentity keyType = AssetIdentity.GFCM;
+        AssetIdentifier keyType = AssetIdentifier.GFCM;
         String val = UUID.randomUUID().toString();
         Asset theCreatedAsset = create(keyType, val, date);
         String createdGfcm = theCreatedAsset.getGfcm();
@@ -217,7 +217,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void delete_Asset_IRCS() {
 
         Date date = new Date();
-        AssetIdentity keyType = AssetIdentity.IRCS;
+        AssetIdentifier keyType = AssetIdentifier.IRCS;
         String val = UUID.randomUUID().toString();
         if (val.length() > 8) val = val.substring(0, 8);
         Asset theCreatedAsset = create(keyType, val, date);
@@ -238,7 +238,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void delete_Asset_MMSI() {
 
         Date date = new Date();
-        AssetIdentity keyType = AssetIdentity.MMSI;
+        AssetIdentifier keyType = AssetIdentifier.MMSI;
         String val = UUID.randomUUID().toString();
         if (val.length() > 9) val = val.substring(0, 9);
         Asset theCreatedAsset = create(keyType, val, date);
@@ -259,7 +259,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void delete_Asset_CFR() {
 
         Date date = new Date();
-        AssetIdentity keyType = AssetIdentity.CFR;
+        AssetIdentifier keyType = AssetIdentifier.CFR;
         String val = UUID.randomUUID().toString();
         if (val.length() > 12) val = val.substring(0, 12);
         Asset theCreatedAsset = create(keyType, val, date);
@@ -280,7 +280,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void delete_Asset_IMO() {
 
         Date date = new Date();
-        AssetIdentity keyType = AssetIdentity.IMO;
+        AssetIdentifier keyType = AssetIdentifier.IMO;
         String val = UUID.randomUUID().toString();
         if (val.length() > 7) val = val.substring(0, 7);
         Asset theCreatedAsset = create(keyType, val, date);
@@ -302,7 +302,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void delete_Asset_ICCAT() {
 
         Date date = new Date();
-        AssetIdentity keyType = AssetIdentity.ICCAT;
+        AssetIdentifier keyType = AssetIdentifier.ICCAT;
         String val = UUID.randomUUID().toString();
         Asset theCreatedAsset = create(keyType, val, date);
         String createdIccat = theCreatedAsset.getIccat();
@@ -323,7 +323,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void delete_Asset_UVI() {
 
         Date date = new Date();
-        AssetIdentity keyType = AssetIdentity.UVI;
+        AssetIdentifier keyType = AssetIdentifier.UVI;
         String val = UUID.randomUUID().toString();
         Asset theCreatedAsset = create(keyType, val, date);
         String createdUvi = theCreatedAsset.getUvi();
@@ -344,7 +344,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void delete_Asset_GFCM() {
 
         Date date = new Date();
-        AssetIdentity keyType = AssetIdentity.GFCM;
+        AssetIdentifier keyType = AssetIdentifier.GFCM;
         String val = UUID.randomUUID().toString();
         Asset theCreatedAsset = create(keyType, val, date);
         String createdGFCM = theCreatedAsset.getGfcm();
@@ -365,7 +365,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void update_Asset_IRCS() {
 
         Date date = new Date();
-        AssetIdentity keyType = AssetIdentity.IRCS;
+        AssetIdentifier keyType = AssetIdentifier.IRCS;
         String val = UUID.randomUUID().toString();
         if (val.length() > 8) val = val.substring(0, 8);
         Asset theCreatedAsset = create(keyType, val, date);
@@ -386,7 +386,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void update_Asset_MMSI() {
 
         Date date = new Date();
-        AssetIdentity keyType = AssetIdentity.MMSI;
+        AssetIdentifier keyType = AssetIdentifier.MMSI;
         String val = UUID.randomUUID().toString();
         if (val.length() > 9) val = val.substring(0, 9);
         Asset theCreatedAsset = create(keyType, val, date);
@@ -407,7 +407,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void update_Asset_CFR() {
 
         Date date = new Date();
-        AssetIdentity keyType = AssetIdentity.CFR;
+        AssetIdentifier keyType = AssetIdentifier.CFR;
         String val = UUID.randomUUID().toString();
         if (val.length() > 12) val = val.substring(0, 12);
         Asset theCreatedAsset = create(keyType, val, date);
@@ -428,7 +428,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void update_Asset_IMO() {
 
         Date date = new Date();
-        AssetIdentity keyType = AssetIdentity.IMO;
+        AssetIdentifier keyType = AssetIdentifier.IMO;
         String val = UUID.randomUUID().toString();
         if (val.length() > 7) val = val.substring(0, 7);
         Asset theCreatedAsset = create(keyType, val, date);
@@ -450,7 +450,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void update_Asset_ICCAT() {
 
         Date date = new Date();
-        AssetIdentity keyType = AssetIdentity.ICCAT;
+        AssetIdentifier keyType = AssetIdentifier.ICCAT;
         String val = UUID.randomUUID().toString();
         Asset theCreatedAsset = create(keyType, val, date);
         String createdICCAT = theCreatedAsset.getIccat();
@@ -471,7 +471,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void update_Asset_UVI() {
 
         Date date = new Date();
-        AssetIdentity keyType = AssetIdentity.UVI;
+        AssetIdentifier keyType = AssetIdentifier.UVI;
         String val = UUID.randomUUID().toString();
         Asset theCreatedAsset = create(keyType, val, date);
         String createdUVI = theCreatedAsset.getUvi();
@@ -492,7 +492,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     public void update_Asset_GFCM() {
 
         Date date = new Date();
-        AssetIdentity keyType = AssetIdentity.GFCM;
+        AssetIdentifier keyType = AssetIdentifier.GFCM;
         String val = UUID.randomUUID().toString();
         Asset theCreatedAsset = create(keyType, val, date);
         String createdGFCM = theCreatedAsset.getGfcm();
@@ -508,13 +508,13 @@ public class AssetKeyTestsIT extends TransactionalTests {
     }
 
 
-    private Asset get(AssetIdentity assetIdType, String value) {
+    private Asset get(AssetIdentifier assetIdType, String value) {
         Asset fetchedEntity = getAssetHelper(assetIdType, value);
         return fetchedEntity;
 
     }
 
-    private Asset getAssetHelper(AssetIdentity assetIdType, String value) {
+    private Asset getAssetHelper(AssetIdentifier assetIdType, String value) {
 
         Asset fetchedAsset = null;
         switch (assetIdType) {
@@ -544,7 +544,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
     }
 
 
-    private Asset create(AssetIdentity key, String value, Date date) {
+    private Asset create(AssetIdentifier key, String value, Date date) {
 
         Asset assetEntity = assetTestsHelper.createAssetHelper(key, value, date);
         Asset createdAsset = assetDao.createAsset(assetEntity);
