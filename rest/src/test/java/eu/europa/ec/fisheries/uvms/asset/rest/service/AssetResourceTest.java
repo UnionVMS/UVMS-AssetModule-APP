@@ -4,7 +4,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import java.util.Arrays;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 import javax.ws.rs.client.Entity;
@@ -19,8 +21,6 @@ import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.asset.rest.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.asset.rest.AssetHelper;
 import eu.europa.ec.fisheries.uvms.asset.rest.AssetMatcher;
-import eu.europa.ec.fisheries.uvms.asset.rest.dto.AssetQuery;
-import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetListResponse;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.entity.Note;
 
@@ -102,6 +102,127 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         
         assertTrue(response != null);
         assertThat(response.getStatus(), is(Status.NOT_FOUND.getStatusCode()));
+    }
+    
+    @Test
+    @RunAsClient
+    public void updateAssetChangedNameTest() throws Exception {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+        
+        String newName = "NewAssetName";
+        createdAsset.setName(newName);
+        Asset updatedAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(createdAsset), Asset.class);
+        
+        assertThat(updatedAsset.getName(), is(newName));
+        
+        Response response = getWebTarget()
+                .path("asset")
+                .path("history/asset")
+                .path(updatedAsset.getId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+        
+        List<Asset> assetRevisions = response.readEntity(new GenericType<List<Asset>>() {});
+        
+        assertTrue(assetRevisions != null);
+        assertThat(assetRevisions.size() , is(2));
+    }
+    
+    @Test
+    @RunAsClient
+    public void updateAssetNonExistingAssetTest() throws Exception {
+        Asset asset = AssetHelper.createBasicAsset();
+        Response response = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(asset));
+        
+        assertTrue(response != null);
+        assertThat(response.getStatus(), is(Status.BAD_REQUEST.getStatusCode()));
+    }
+    
+    @Test
+    @RunAsClient
+    public void archiveAssetTest() throws Exception {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+        
+        Asset archivedAsset = getWebTarget()
+                .path("asset")
+                .path("archive")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(createdAsset), Asset.class);
+        
+        assertTrue(archivedAsset != null);
+        assertThat(archivedAsset.getActive() , is(false));
+    }
+    
+    @Test
+    @RunAsClient
+    public void archiveAssetNonExistingAssetTest() throws Exception {
+        Asset asset = AssetHelper.createBasicAsset();
+        
+        Response response = getWebTarget()
+                .path("asset")
+                .path("archive")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(asset));
+        
+        assertTrue(response != null);
+        assertThat(response.getStatus() , is(Status.BAD_REQUEST.getStatusCode()));
+    }
+    
+    @Test
+    @RunAsClient
+    public void getAssetFromAssetIdAndDateCfrTest() throws Exception {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+        
+        LocalDateTime firstTimeStamp = LocalDateTime.now(ZoneOffset.UTC);
+        
+        String newName = "NewAssetName";
+        createdAsset.setName(newName);
+        getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(createdAsset), Asset.class);
+        
+        LocalDateTime secondTimeStamp = LocalDateTime.now(ZoneOffset.UTC);
+        
+        Asset assetByCfrAndTimestamp1 = getWebTarget()
+                .path("asset")
+                .path("history")
+                .path("cfr")
+                .path(createdAsset.getCfr())
+                .path(firstTimeStamp.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                .request(MediaType.APPLICATION_JSON)
+                .get(Asset.class);
+        
+        assertThat(assetByCfrAndTimestamp1.getName(), is(asset.getName()));
+        
+        Asset assetByCfrAndTimestamp2 = getWebTarget()
+                .path("asset")
+                .path("history")
+                .path("cfr")
+                .path(createdAsset.getCfr())
+                .path(secondTimeStamp.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                .request(MediaType.APPLICATION_JSON)
+                .get(Asset.class);
+        
+        assertThat(assetByCfrAndTimestamp2.getName(), is(newName));
     }
     
     @Test

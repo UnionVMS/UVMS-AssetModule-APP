@@ -1,6 +1,7 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -129,6 +130,51 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         Assert.assertEquals(historyId2, fetchedAssetAtRevision.getHistoryId());
 
+    }
+    
+    @Test
+    public void getRevisionsForAssetLimitedTest() throws Exception {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = assetService.createAsset(asset, "test");
+        commit();
+        
+        createdAsset.setName("NewName");
+        assetService.updateAsset(asset, "test", "comment");
+        commit();
+        
+        List<Asset> revisions = assetService.getRevisionsForAsset(createdAsset.getId());
+        assertEquals(2, revisions.size());
+        
+        List<Asset> revisions2 = assetService.getRevisionsForAssetLimited(createdAsset.getId(), 10);
+        assertEquals(2, revisions2.size());
+    }
+    
+    @Test
+    public void getRevisionsForAssetLimitedMaxNumberTest() throws Exception {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = assetService.createAsset(asset, "test");
+        commit();
+        
+        createdAsset.setName("NewName");
+        assetService.updateAsset(asset, "test", "comment");
+        commit();
+        
+        List<Asset> revisions = assetService.getRevisionsForAsset(createdAsset.getId());
+        assertEquals(2, revisions.size());
+        
+        List<Asset> revisions2 = assetService.getRevisionsForAssetLimited(createdAsset.getId(), 1);
+        assertEquals(1, revisions2.size());
+    }
+    
+    @Test
+    public void archiveAssetTest() throws Exception {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = assetService.createAsset(asset, "test");
+        assetService.archiveAsset(createdAsset, "test", "archived");
+        
+        Asset assetByCfr = assetService.getAssetById(AssetIdentifier.CFR, createdAsset.getCfr());
+        
+        assertNull(assetByCfr);
     }
 
     @Test
