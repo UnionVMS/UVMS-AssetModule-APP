@@ -192,13 +192,13 @@ public class AssetDao {
         return false;
     }
 
-    public List<Asset> getRevisionsForAsset(Asset asset) {
+    public List<Asset> getRevisionsForAsset(UUID id) {
         AuditReader auditReader = AuditReaderFactory.get(em);
         List<Asset> resultList = new ArrayList<>();
 
-        List<Number> revisionNumbers = auditReader.getRevisions(Asset.class, asset.getId());
+        List<Number> revisionNumbers = auditReader.getRevisions(Asset.class, id);
         for (Number rev : revisionNumbers) {
-            Asset audited = auditReader.find(Asset.class, asset.getId(), rev);
+            Asset audited = auditReader.find(Asset.class, id, rev);
             resultList.add(audited);
         }
         return resultList;

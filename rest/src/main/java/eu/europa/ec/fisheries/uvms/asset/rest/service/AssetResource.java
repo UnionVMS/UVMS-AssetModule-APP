@@ -236,27 +236,6 @@ public class AssetResource {
         }
     }
 
-    @POST
-    @ApiOperation(value = "List group by flagstate", notes = "List group by flagstate", response = Asset.class,  responseContainer = "List")
-    @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when executing request"),
-            @ApiResponse(code = 200, message = "Ok") })
-    @Path("/listGroupByFlagState")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response assetListGroupByFlagState(@ApiParam(value="The assetlist", required=true)  final List<String> assetIds) {
-        try {
-            //AssetListGroupByFlagStateResponse assetListGroupByFlagState = assetService.getAssetListGroupByFlagState(assetIds);
-            assetService.getAssetListGroupByFlagState(assetIds);
-            //return new ResponseDto(assetListGroupByFlagState, ResponseCodeConstant.OK);
-            return Response.ok().build();
-        } catch (Exception e) {
-            LOG.error("Error when getting asset list: {}", assetIds, e);
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
-        }
-    }
-
     @GET
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when retrieving notes for asset"),

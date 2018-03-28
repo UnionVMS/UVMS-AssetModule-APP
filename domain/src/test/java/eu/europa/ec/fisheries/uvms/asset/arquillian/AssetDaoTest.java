@@ -215,7 +215,7 @@ public class AssetDaoTest extends TransactionalTests {
         asset = assetDao.createAsset(asset);
         commit();
 
-        List<Asset> assetRevisions = assetDao.getRevisionsForAsset(asset);
+        List<Asset> assetRevisions = assetDao.getRevisionsForAsset(asset.getId());
 
         assertEquals(1, assetRevisions.size());
     }
@@ -233,7 +233,7 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.updateAsset(fetchedAsset);
         commit();
 
-        List<Asset> assetRevisions = assetDao.getRevisionsForAsset(fetchedAsset);
+        List<Asset> assetRevisions = assetDao.getRevisionsForAsset(fetchedAsset.getId());
 
         assertEquals(2, assetRevisions.size());
     }
@@ -256,7 +256,7 @@ public class AssetDaoTest extends TransactionalTests {
         commit();
 
         assertThat(assetVersion3.getId(), is(notNullValue()));
-        List<Asset> assetRevisions = assetDao.getRevisionsForAsset(assetVersion3);
+        List<Asset> assetRevisions = assetDao.getRevisionsForAsset(assetVersion3.getId());
 
         assertEquals(3, assetRevisions.size());
  

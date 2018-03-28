@@ -13,6 +13,7 @@ package eu.europa.ec.fisheries.uvms.asset.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetListResponse;
 import eu.europa.ec.fisheries.uvms.constant.AssetIdentity;
@@ -97,10 +98,6 @@ public interface AssetService {
      */
     List<Asset> getAssetListByAssetGroups(List<AssetGroup> groups) ;
 
-
-        //AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) ;
-    Object getAssetListGroupByFlagState(List assetIds) ;
-
     /**
      *
      * @param assetId @description id
@@ -111,10 +108,10 @@ public interface AssetService {
 
     /**
      *
-     * @param asset @description an asset
+     * @param id @description an asset id
      * @return List of assets @description list of historic versions of this asset
      */
-    List<Asset> getRevisionsForAsset(Asset asset) ;
+    List<Asset> getRevisionsForAsset(UUID id) ;
 
 
     /**
@@ -134,6 +131,14 @@ public interface AssetService {
      */
     Asset getAssetFromAssetIdAtDate(AssetIdentity idType, String idValue, LocalDateTime date) ;
 
+    /**
+     * Returns asset revisions for given asset id. Result size limited by maxNbr
+     * 
+     * @param id
+     * @param maxNbr
+     * @return
+     */
+    List<Asset> getAssetRevisionsListByAssetId(UUID id, Integer maxNbr);
 
     /**
      *

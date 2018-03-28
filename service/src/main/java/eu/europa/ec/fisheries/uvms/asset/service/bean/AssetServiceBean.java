@@ -14,7 +14,6 @@ package eu.europa.ec.fisheries.uvms.asset.service.bean;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -186,7 +185,6 @@ public class AssetServiceBean implements AssetService {
             asset.setUvi(null);
     }
 
-
     /**
      *
      * @param asset
@@ -297,34 +295,19 @@ public class AssetServiceBean implements AssetService {
     }
 
     @Override
-    //public AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetException {
-    public Object getAssetListGroupByFlagState(List assetIds)  {
-        LOG.debug("Getting asset list by asset ids group by flags State.");
-		/*
-		List assetListGroupByFlagState = getAssetListGroupByFlagState_FROM_DOMAINMODEL(assetIds);
-		AssetListGroupByFlagStateResponse assetListGroupByFlagStateResponse = new AssetListGroupByFlagStateResponse();
-		assetListGroupByFlagStateResponse.getNumberOfAssetsGroupByFlagState().addAll(assetListGroupByFlagState);
-		return assetListGroupByFlagStateResponse;
-		*/
-        return null;
-
-    }
-
-    @Override
     public void deleteAsset(AssetIdentity assetId, String value)  {
 
         if (assetId == null) {
             throw new IllegalArgumentException("AssetId is null");
         }
 
-        // get an object based on what type of id it has
         Asset assetEntity = getAssetById(assetId, value);
         assetDao.deleteAsset(assetEntity);
     }
 
     @Override
-    public List<Asset> getRevisionsForAsset(Asset asset)  {
-        return assetDao.getRevisionsForAsset(asset);
+    public List<Asset> getRevisionsForAsset(UUID id)  {
+        return assetDao.getRevisionsForAsset(id);
     }
 
     @Override
@@ -332,146 +315,15 @@ public class AssetServiceBean implements AssetService {
         return assetDao.getAssetRevisionForHistoryId(historyId);
     }
 
-    private void checkNumberAssetId(String id)  {
-        try {
-            Integer.parseInt(id);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(id + " can not be parsed to integer");
-        }
-    }
-
-
-
-	/*
-	public AssetDTO upsertAsset_FROM_DOMAINMODEL(AssetDTO asset, String username) {
-		try {
-			getAssetEntityById_FROM_DOMAINMODEL(asset.getAssetId());
-			return updateAsset_FROM_DOMAINMODEL(asset, username);
-		} catch (NoAssetEntityFoundException e) {
-			return createAsset(asset, username);
-		}
+    @Override
+	public List<Asset> getAssetRevisionsListByAssetId(UUID id, Integer maxNbr) {
+	    List<Asset> revisions = assetDao.getRevisionsForAsset(id);
+	    revisions.sort((a1, a2) -> a1.getUpdateTime().compareTo(a2.getUpdateTime()));
+	    if (revisions.size() > maxNbr) {
+	        return revisions.subList(0, maxNbr);
+	    }
+	    return revisions;
 	}
-	*/
-
-	/*
-	public List<AssetDTO> getAssetHistoryListByAssetId(AssetId assetId, Integer maxNbr) {
-		AssetEntity vesselHistories = getAssetEntityById_FROM_DOMAINMODEL(assetId);
-		return EntityToModelMapper.toAssetHistoryList(vesselHistories, maxNbr);
-	}
-	*/
-
-	/*
-	public AssetDTO getAssetHistory_FROM_DOMAINMODEL(AssetHistoryId historyId) {
-		if (historyId == null || historyId.getEventId() == null) {
-			throw new InputArgumentException("Cannot get asset history because asset history ID is null.");
-		}
-
-		AssetHistory assetHistory = assetDao.getAssetHistoryByGuid(historyId.getEventId());
-		return EntityToModelMapper.toAssetFromAssetHistory(assetHistory);
-	}
-	*/
-
-	/*
-	public List<NumberOfAssetsGroupByFlagState> getAssetListGroupByFlagState_FROM_DOMAINMODEL(List<String> assetIds) {
-		List<AssetHistory> assetListByAssetGuids = assetDao.getAssetListByAssetGuids(assetIds);
-		return EntityToModelMapper.mapEntityToNumberOfAssetsGroupByFlagState(assetListByAssetGuids);
-
-	}
-	*/
-
-
-
-	/*
-	public NoteActivityCode getNoteActivityCodes_FROM_DOMAINMODEL() {
-		return EntityToModelMapper.mapEntityToNoteActivityCode(assetDao.getNoteActivityCodes());
-	}
-	*/
-
-
-	/*
-	public FlagState getFlagStateByIdAndDate_FROM_DOMAINMODEL(String assetGuid, Date date) {
-
-		if (assetGuid == null) {
-			throw new InputArgumentException("Cannot get asset  because asset  ID is null.");
-		}
-		if (date == null) {
-			throw new InputArgumentException("Cannot get asset  because date   is null.");
-		}
-
-		try {
-			FlagState flagState = assetDao.getAssetFlagStateByIdAndDate(assetGuid, date);
-			return flagState;
-		} catch (AssetDaoException e) {
-			LOG.warn(e.toString(), e);
-			throw e;
-		}
-	}
-	*/
-
-	/*
-
-	public AssetDTO getAssetByIdAndDate_FROM_DOMAINMODEL(AssetId assetId, Date date) {
-		try {
-			AssetEntity assetEntity = assetDao.getAssetFromAssetIdAndDate(assetId, date);
-			AssetDTO asset = EntityToModelMapper.toAssetFromEntity(assetEntity);
-			return asset;
-		} catch (AssetDaoException e) {
-			throw new AssetModelException(e.toString());
-		}
-	}
-	*/
-
-	/*
-	public List<AssetDTO> getAssetListByAssetGroup(List<AssetGroupWSDL> groups)  {
-		if (groups == null || groups.isEmpty()) {
-			throw new InputArgumentException("Cannot get asset list because criteria are null.");
-		}
-
-		List<AssetGroupWSDL> dbAssetGroups = getAssetGroupsByGroupList(groups);
-
-		Set<AssetHistory> assetHistories = new HashSet<>();
-		for (AssetGroupWSDL group : dbAssetGroups) {
-			List<SearchKeyValue> searchFields = SearchFieldMapper
-					.createSearchFieldsFromGroupCriterias(group.getSearchFields());
-			String sql = SearchFieldMapper.createSelectSearchSql(searchFields, group.isDynamic());
-			List<AssetHistory> tmp = assetDao.getAssetListSearchNotPaginated(sql, searchFields, group.isDynamic());
-			assetHistories.addAll(tmp);
-		}
-		List<AssetDTO> arrayList = new ArrayList<>();
-
-		for (AssetHistory entity : assetHistories) {
-			arrayList.add(EntityToModelMapper.toAssetFromAssetHistory(entity));
-		}
-
-		return arrayList;
-
-	}
-	*/
-
-    public List<AssetGroup> getAssetGroupsByGroupList(
-            List<AssetGroup> groups) {
-        if (groups == null) {
-            throw new IllegalArgumentException("Cannot get asset group list because the input is null.");
-        }
-
-        List<UUID> guidList = new ArrayList<>();
-        for (AssetGroup group : groups) {
-            guidList.add(group.getId());
-        }
-
-        if (guidList.isEmpty()) {
-            throw new IllegalArgumentException("Cannot get asset group list because the input missing guid.");
-        }
-
-            List<AssetGroup> vesselGroupList = new ArrayList<>();
-            // List<AssetGroup> filterGroupList =
-            // assetGroupDao.getAssetGroupsByGroupGuidList(guidList);
-            // for (AssetGroup group : filterGroupList) {
-            // vesselGroupList.add(AssetGroupMapper.toAssetGroup(group));
-            // }
-
-            return vesselGroupList;
-    }
 
     @Override
     public List<Note> getNotesForAsset(UUID assetId) {

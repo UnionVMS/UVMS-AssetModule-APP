@@ -11,10 +11,15 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.rest.service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -26,6 +31,8 @@ import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
+import eu.europa.ec.fisheries.uvms.constant.AssetIdentity;
+import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 
@@ -48,44 +55,31 @@ public class AssetHistoryResource {
      *
      */
     @GET
-    @Path("/asset")
+    @Path("/asset/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAssetHistoryListByAssetId(@QueryParam("assetId") String assetId, @QueryParam("maxNbr") Integer maxNbr) {
+    public Response getAssetHistoryListByAssetId(@PathParam("id") UUID id, 
+                                                 @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
         try {
-//            Asset assetHistories = assetService.getAssetHistoryListByAssetId(assetId, maxNbr);
-            return Response.ok().build();
+            List<Asset> assetRevisions = assetService.getAssetRevisionsListByAssetId(id, maxNbr);
+            return Response.ok(assetRevisions).build();
         } catch (Exception e) {
-            LOG.error("Error when getting asset history list by asset ID. {}]", assetId, e);
+            LOG.error("Error when getting asset history list by asset ID. {}]", id, e);
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
 
     @GET
-    @Path("/assetflagstate")
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getFlagStateByIdAndDate(@QueryParam("assetGuid") String assetGuid, @QueryParam("date") String dateStr ) {
+    @Path("/asset/{type : (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)}/{id}/{date}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAssetFromAssetIdAndDate(@PathParam("type") String type, @PathParam("id") String id, @PathParam("date") Date date) {
         try {
-//            Date date = DateUtils.parseToUTCDate( dateStr, DateUtils.FORMAT);
-//            FlagState flagState = assetService.getFlagStateByIdAndDate(assetGuid, date );
-            return Response.ok().build();
+            AssetIdentity assetId = AssetIdentity.valueOf(type.toUpperCase());
+            LocalDateTime localDateTime = LocalDateTime.ofInstant(date.toInstant(), ZoneOffset.UTC);
+            Asset assetRevision = assetService.getAssetFromAssetIdAtDate(assetId, id, localDateTime);
+            return Response.ok(assetRevision).build();
         } catch (Exception e) {
-            LOG.error("Error when getting asset flagstate by asset ID. {}]",assetGuid);
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
-        }
-    }
-
-    @GET
-    @Path("/assetFromAssetIdAndDate")
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getAssetFromAssetIdAndDate(@QueryParam("type") String type,@QueryParam("value") String value,  @QueryParam("date") String dateStr ) {
-        try {
-//            Date date = DateUtils.parseToUTCDate(dateStr,DateUtils.FORMAT);
-//            Asset asset = assetService.getAssetByIdAndDate(type, value , date);
-            return Response.ok().build();
-        } catch (Exception e) {
-            LOG.error("Error when getting asset. Type: {}, Value: {}, Date: {}", type, value, dateStr, e);
+            LOG.error("Error when getting asset. Type: {}, Value: {}, Date: {}", type, id, date, e);
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
@@ -104,8 +98,8 @@ public class AssetHistoryResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
    public Response getAssetHistoryByAssetHistGuid(@PathParam("guid") UUID guid) {
         try {
-//            Asset asset = assetService.getAssetHistoryByAssetHistGuid(guid);
-            return Response.ok().build();
+            Asset asset = assetService.getAssetRevisionForRevisionId(guid);
+            return Response.ok(asset).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset by asset history guid. {}] ", guid, e);
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
