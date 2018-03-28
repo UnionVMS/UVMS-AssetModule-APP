@@ -1,29 +1,1538 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
-  ~ Developed with the contribution of the European Commission - Directorate General for Maritime Affairs and Fisheries
-  ~ © European Union, 2015-2016.
-  ~
-  ~ This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can
-  ~ redistribute it and/or modify it under the terms of the GNU General Public License as published by the
-  ~ Free Software Foundation, either version 3 of the License, or any later version. The IFDM Suite is distributed in
-  ~ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  ~ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
-  ~ copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
-  -->
-
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
-
-    <changeSet author="thofan" id="Inser data into customCodes">
-
-        <insert tableName='customcodes'>
-            <column id='00000000-000000-000000-000000000001'/>
-            <column constant='ASSETSEGMENT'/>
-            <column code='AQU'/>
-            <column description='Wateruse.'/>
-            <column jsonstr=''/>
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="tfant (generated)" id="1522254685144-1">
+        <insert tableName="customcodes">
+            <column name="id" value="51feb68a-fa4a-40e7-b1d6-3279213e35da"/>
+            <column name="code" value="0"/>
+            <column name="constant" value="CARRIERACTIVE"/>
+            <column name="description" value="Inactive"/>
+            <column name="jsonstr" value=""/>
         </insert>
-
+        <insert tableName="customcodes">
+            <column name="id" value="a04370c9-e7f7-4093-99c5-ce611bbe7be9"/>
+            <column name="code" value="1"/>
+            <column name="constant" value="CARRIERACTIVE"/>
+            <column name="description" value="Active"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="98684dbf-1f12-41e2-8f7d-30e5036566c9"/>
+            <column name="code" value="LOCALDATASOURCE"/>
+            <column name="constant" value="CARRIERSOURCE"/>
+            <column name="description" value="Localdatabesource."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="d875f717-4b8c-4bdf-b1c8-b9ce99b02d62"/>
+            <column name="code" value="NATIONAL"/>
+            <column name="constant" value="CARRIERSOURCE"/>
+            <column name="description" value="NationalDatabesource."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="5220d820-37c6-4f20-8ae5-5f09eef4fc24"/>
+            <column name="code" value="EU"/>
+            <column name="constant" value="CARRIERSOURCE"/>
+            <column name="description" value="EUDatabesource."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="24389c00-5be3-4bd2-9234-73afe6294f28"/>
+            <column name="code" value="THIRD_COUNTRY"/>
+            <column name="constant" value="CARRIERSOURCE"/>
+            <column name="description" value="ThirdCountryDatabesource."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="065166af-a016-456f-b324-2d9225f00e3c"/>
+            <column name="code" value="GLAS OR PLASTIC FIBER"/>
+            <column name="constant" value="HULLMATERIAL"/>
+            <column name="description" value="Glas or plastic fiber hull."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="a8605440-aec1-4b66-be17-cccde4520d1c"/>
+            <column name="code" value="VESSEL.NATIONAL.USE"/>
+            <column name="constant" value="PARAMETER"/>
+            <column name="description" value="Use national register of vessels."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="ce060e5f-198b-4321-a423-acd222b8dfbc"/>
+            <column name="code" value="VESSEL.EU.USE"/>
+            <column name="constant" value="PARAMETER"/>
+            <column name="description" value="Use EU register of vessels."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="ff147aa8-fb87-46ea-adde-952406c782b5"/>
+            <column name="code" value="EX"/>
+            <column name="constant" value="TYPEOFEXPORT"/>
+            <column name="description" value="Export, transfer between member stages."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="d48b774f-473e-40b3-81e2-eb95b469dcc8"/>
+            <column name="code" value="MLF"/>
+            <column name="constant" value="VESSELSEGMENT"/>
+            <column name="description" value="Shorefleet."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="667cc580-ff30-4740-a632-4ac17aeb22e7"/>
+            <column name="code" value="FPU IV FRA"/>
+            <column name="constant" value="VESSELSEGMENT"/>
+            <column name="description" value="Outer rimarea France."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="947469b8-dd4d-4e35-9daa-feef53730cc0"/>
+            <column name="code" value="FPU IV POR"/>
+            <column name="constant" value="VESSELSEGMENT"/>
+            <column name="description" value="Outer rimarea Portugal."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="879ec93e-49b1-44ff-b505-defbf531262e"/>
+            <column name="code" value="CAN1-CANN"/>
+            <column name="constant" value="VESSELSEGMENT"/>
+            <column name="description" value="Outer rimarea Spain."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="803dc958-f2eb-4e2a-8b1a-0753a71fa74b"/>
+            <column name="code" value="AQU"/>
+            <column name="constant" value="VESSELSEGMENT"/>
+            <column name="description" value="Wateruse."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="fbf626bc-e211-4ebf-a40c-65b95bcdaf88"/>
+            <column name="code" value="MLF"/>
+            <column name="constant" value="ASSETSEGMENT"/>
+            <column name="description" value="Shorefleet."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="89abc27d-3099-417e-b42c-d6eb1ea8970b"/>
+            <column name="code" value="KOM_FUP_IV_FRA"/>
+            <column name="constant" value="ASSETSEGMENT"/>
+            <column name="description" value="Outer rimarea France."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="91af5656-5993-4d29-83bd-2f7112c5a08c"/>
+            <column name="code" value="KOM_FPU_IV_POR"/>
+            <column name="constant" value="ASSETSEGMENT"/>
+            <column name="description" value="Outer rimarea Portugal."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="c404eb86-c50a-4581-8a1e-8a1881bccb71"/>
+            <column name="code" value="KOM_CAN1_CANN_ESP"/>
+            <column name="constant" value="ASSETSEGMENT"/>
+            <column name="description" value="Outer rimarea Spain."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="b4a851fc-e24b-4040-9c8d-0da6e0b62153"/>
+            <column name="code" value="AQU"/>
+            <column name="constant" value="ASSETSEGMENT"/>
+            <column name="description" value="Wateruse."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="9c5b7ecf-153f-4bee-8108-fcf300b1abd1"/>
+            <column name="code" value="CEN"/>
+            <column name="constant" value="EVENTCODE"/>
+            <column name="description" value="Inträde i flottan. Bedömning av omfattning."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="bf4cf897-89d6-4b01-84df-3fda32c12570"/>
+            <column name="code" value="CST"/>
+            <column name="constant" value="EVENTCODE"/>
+            <column name="description" value="Inträde i flottan. Nybygge."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="17327132-52b7-41fc-a8d3-212feba7f9ad"/>
+            <column name="code" value="CHA"/>
+            <column name="constant" value="EVENTCODE"/>
+            <column name="description" value="I flottan. Inträde i flottan. Ändrad verksamhet."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="b646c390-c269-4208-be79-c30a3106e7b3"/>
+            <column name="code" value="IMP"/>
+            <column name="constant" value="EVENTCODE"/>
+            <column name="description" value="I flottan. Inträde i flottan. Ändrad verksamhet."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="ee5e698c-39f5-414a-ad97-a5f3b8dcc0c2"/>
+            <column name="code" value="MOD"/>
+            <column name="constant" value="EVENTCODE"/>
+            <column name="description" value="I flottan. Ändring."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="34b792b6-f3d5-40ba-b1ce-c6076f16948f"/>
+            <column name="code" value="DES"/>
+            <column name="constant" value="EVENTCODE"/>
+            <column name="description" value="Utträde ur flottan. Skrotning, skeppsbrott."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="b72c4fd7-45f4-4ce8-840d-00db3affb229"/>
+            <column name="code" value="RET"/>
+            <column name="constant" value="EVENTCODE"/>
+            <column name="description" value="Utträe ur flottan. Ändrad verksamhet."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="0944c723-4b40-4ad2-8696-20ceb89d7c6c"/>
+            <column name="code" value="EXP"/>
+            <column name="constant" value="EVENTCODE"/>
+            <column name="description" value="Utträde ur flottan. Export, Överföring mellan medlemsstater."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="aa249783-a586-4c01-89b7-7b28b3727bc9"/>
+            <column name="code" value="UNK"/>
+            <column name="constant" value="EVENTCODE"/>
+            <column name="description" value="Okänd, nationellt register."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="31298a83-d8d5-4542-b4c4-f066ba74e15a"/>
+            <column name="code" value="PS"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Purse seines."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;SURROUNDING NETS&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;M&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;P&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="7d83805e-efd0-4064-925c-cb3893dde0df"/>
+            <column name="code" value="LA"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Lampara nets."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;SURROUNDING NETS&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;M&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;P&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="dfe3071f-4cf0-44ce-a182-573cb808a97a"/>
+            <column name="code" value="SB"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Beach seines."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;SEINES&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;T&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;DP&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="d9d5ef6d-02e1-4be9-8ad8-b35de746a7d0"/>
+            <column name="code" value="SDN"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Danish seines."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;SEINES&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;T&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;DP&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="644f9472-84e4-4345-88ec-bbc46c032538"/>
+            <column name="code" value="SSC"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Scottish seines."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;SEINES&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;T&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;DP&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="5b4fb584-dd8a-4246-85f3-62426208f0bf"/>
+            <column name="code" value="SPR"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Pair seines."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;SEINES&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;T&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;DP&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="9c16a4ad-8fe5-4b99-a190-0ee1bbfa3d89"/>
+            <column name="code" value="TBB"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Beam trawls."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;1&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;T&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;D&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="cdfc7b52-a4d3-481c-91cb-6ed448e2885a"/>
+            <column name="code" value="OTB"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Bottom otter trawls."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;TRAWL&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;T&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;D&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="3580bb14-3e9f-4a35-bcec-a13427bd1e55"/>
+            <column name="code" value="PTB"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Bottom pair trawls."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;TRAWL&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;T&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;DP&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="70f1edf9-1003-4926-85d6-2ac79b3ae198"/>
+            <column name="code" value="OTM"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Midwater otter trawls."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;TRAWL&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;T&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;DP&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="37c19045-fb08-4602-a4af-18d9bf008cb7"/>
+            <column name="code" value="PTM"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Pelagic pair trawls."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;TRAWL&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;T&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;DP&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="d920edc8-eaeb-4b02-a7db-06c33696d6a7"/>
+            <column name="code" value="OTT"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Otter twin trawls."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;TRAWL&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;T&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;DP&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="a4574425-6a5a-465e-b768-4174d1a741f5"/>
+            <column name="code" value="DRB"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Boat dredges."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;SCRAPINGTOOL&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;T&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;D&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="994f1c29-c14e-440e-99cc-99973ef1b217"/>
+            <column name="code" value="DRH"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Hand dredges used on board a vessel."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;SCRAPINGTOOL&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;T&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;D&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="20f64b02-b102-4448-a245-e498a712eb74"/>
+            <column name="code" value="HMD"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Mechanised dredges including suction dredges."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;SCRAPINGTOOL&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;T&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;D&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="958e8576-f1c7-4098-8845-35f1e7df2db7"/>
+            <column name="code" value="LNB"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Boat operated lift nets."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;LIFT NETS&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;M&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;P&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="5e1fbc29-dbe0-4723-ae61-9bb703317b62"/>
+            <column name="code" value="LNS"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Shore-operated stationary lift nets."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;LIFT NETS&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;M&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;P&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="23437409-0446-4923-b417-af6e248e2d13"/>
+            <column name="code" value="GNS"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Set (anchored) gillnets."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;4&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;S&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;D&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="c177cf7d-9ade-4720-b5d7-1a08e33b9dc5"/>
+            <column name="code" value="GND"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Driftnets."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;GILLNETS AND SIMILAR NETS&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;S&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;DP&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="c05c4b67-4378-4480-aa53-d776749fcd31"/>
+            <column name="code" value="GNC"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Encircling gillnets."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;GILLNETS AND SIMILAR NETS&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;S&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;DP&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="f936502d-fbd1-4ab0-8611-ddc96e8f30e0"/>
+            <column name="code" value="GTR"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Trammel nets."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;GILLNETS AND SIMILAR NETS&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;S&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;DP&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="e81aade6-151e-4127-9ea7-fab3be3f3eaa"/>
+            <column name="code" value="GTN"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Combined trammel and gillnets."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;GILLNETS AND SIMILAR NETS&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;S&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;DP&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="2a3eebc0-7998-4a68-93ea-193f66fb8edc"/>
+            <column name="code" value="FPO"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Pots (traps)."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;TRAP&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;S&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;D&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="ff60c00f-b549-45fa-ab44-85296e060371"/>
+            <column name="code" value="LHP"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Hand lines and pole lines (hand operated)."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;HOOKS AND LINES&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;S&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;DP&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="9fe736be-607f-4bb6-83c7-e7dd5ff397e1"/>
+            <column name="code" value="LHM"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Hand lines and pole lines (mechanised)."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;HOOKS AND LINES&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;S&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;DP&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="90c42390-1900-4ab8-aa57-fbe15db94e86"/>
+            <column name="code" value="LLS"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Set longlines."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;HOOKS AND LINES&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;S&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;D&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="f25a2efd-e0cb-4024-825b-f960a7cd10bd"/>
+            <column name="code" value="LLD"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Longlines (drifting)."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;HOOKS AND LINES&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;S&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;P&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="e676571f-a736-40e8-9dd9-65093d274ce0"/>
+            <column name="code" value="LTL"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Troll lines."/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;HOOKS AND LINES&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;M&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;P&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="b5bdad42-84f9-409f-8d28-181885c11ea9"/>
+            <column name="code" value="NK"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="Unknown"/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;UNKNOWN&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;U&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;U&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="ca66fcb7-7c3c-4211-b218-1c65cdfee3ed"/>
+            <column name="code" value="NO"/>
+            <column name="constant" value="FISHINGGEAR"/>
+            <column name="description" value="No gear"/>
+            <column name="jsonstr" value="[{&quot;constant&quot;:&quot;FISHINGGEARTYPE&quot;,&quot;code&quot;:&quot;NONE&quot;},{&quot;constant&quot;:&quot;FISHINGGEARMOBILITY&quot;,&quot;code&quot;:&quot;U&quot;},{&quot;constant&quot;:&quot;FISHINGTYPE&quot;,&quot;code&quot;:&quot;U&quot;}]"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="b4006eb7-8610-4b9b-8bd7-567aa509331d"/>
+            <column name="code" value="S"/>
+            <column name="constant" value="FISHINGGEARMOBILITY"/>
+            <column name="description" value="Stationary."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="0a24af13-f6b7-46e2-8a2a-45c7ab1e818e"/>
+            <column name="code" value="T"/>
+            <column name="constant" value="FISHINGGEARMOBILITY"/>
+            <column name="description" value="Towed."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="f90e81e4-18b9-45b2-bbbb-e27d3d71b3f3"/>
+            <column name="code" value="M"/>
+            <column name="constant" value="FISHINGGEARMOBILITY"/>
+            <column name="description" value="Mobil."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="1d867f33-5179-49eb-ae6c-0b3b656a733b"/>
+            <column name="code" value="U"/>
+            <column name="constant" value="FISHINGGEARMOBILITY"/>
+            <column name="description" value="Unknown."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="95cc639e-cf9f-4f23-867d-60a4e3f80321"/>
+            <column name="code" value="TRAWL"/>
+            <column name="constant" value="FISHINGGEARTYPE"/>
+            <column name="description" value="Trawl."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="08ff86bd-39f5-4bb9-a4c5-28fc18560d6b"/>
+            <column name="code" value="SCRAPINGTOOL"/>
+            <column name="constant" value="FISHINGGEARTYPE"/>
+            <column name="description" value="Scrapingtool."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="498e45c3-29db-45aa-afd2-a38656602163"/>
+            <column name="code" value="LIFT NETS"/>
+            <column name="constant" value="FISHINGGEARTYPE"/>
+            <column name="description" value="Lift nets."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="f7c764a0-3bbe-4e10-bf00-19b8d44d2f0b"/>
+            <column name="code" value="GILLNETS AND SIMILAR NETS"/>
+            <column name="constant" value="FISHINGGEARTYPE"/>
+            <column name="description" value="Gillnets and similar nets."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="4feaa3c5-188a-457f-993f-506a5bed8f5e"/>
+            <column name="code" value="TRAP"/>
+            <column name="constant" value="FISHINGGEARTYPE"/>
+            <column name="description" value="Fishing trap."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="866c4eef-074f-45bc-9b48-e618e9bc08f8"/>
+            <column name="code" value="HOOKS AND LINES"/>
+            <column name="constant" value="FISHINGGEARTYPE"/>
+            <column name="description" value="Hooks and Lines."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="f58a610f-646b-4fb7-bab6-b7e7cda700d8"/>
+            <column name="code" value="UNKNOWN"/>
+            <column name="constant" value="FISHINGGEARTYPE"/>
+            <column name="description" value="Unknown fishing tool."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="c2f89fbb-7e8f-4ce6-a3c7-c156bdf2ab46"/>
+            <column name="code" value="NONE"/>
+            <column name="constant" value="FISHINGGEARTYPE"/>
+            <column name="description" value="No fishing tool."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="16f2c33e-952d-4c0c-a919-9d3621035293"/>
+            <column name="code" value="SURROUNDING NETS"/>
+            <column name="constant" value="FISHINGGEARTYPE"/>
+            <column name="description" value="Surrounding nets."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="8856517c-0257-4a4e-8b10-d597eddb67cb"/>
+            <column name="code" value="SEINES"/>
+            <column name="constant" value="FISHINGGEARTYPE"/>
+            <column name="description" value="Seines."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="df08dc82-5f09-41ae-a889-4b65ae7619dc"/>
+            <column name="code" value="P"/>
+            <column name="constant" value="FISHINGTYPE"/>
+            <column name="description" value="Pelagic."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="930ee4db-098e-44f1-935a-2996b169b653"/>
+            <column name="code" value="D"/>
+            <column name="constant" value="FISHINGTYPE"/>
+            <column name="description" value="Dermersal."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="57d70ae3-6852-4ba1-8e14-0cf1d3d6f1a9"/>
+            <column name="code" value="DP"/>
+            <column name="constant" value="FISHINGTYPE"/>
+            <column name="description" value="Demersal and Pelagic."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="af4ac8ba-ca2c-4045-93fe-60b9a5048b46"/>
+            <column name="code" value="U"/>
+            <column name="constant" value="FISHINGTYPE"/>
+            <column name="description" value="Unknown."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="7c2b28e5-593c-4fe1-a665-1d4066aa859b"/>
+            <column name="code" value="SWE"/>
+            <column name="constant" value="FLAGSTATE"/>
+            <column name="description" value="Sweden"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="1b5788ba-6a7a-45e7-a780-02b27eed1350"/>
+            <column name="code" value="DNK"/>
+            <column name="constant" value="FLAGSTATE"/>
+            <column name="description" value="Denmark"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="9b6c2550-90f5-4350-9202-520191fdd44e"/>
+            <column name="code" value="NOR"/>
+            <column name="constant" value="FLAGSTATE"/>
+            <column name="description" value="Norway"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="befc816f-3fb9-47aa-9f6e-66654ceefa11"/>
+            <column name="code" value="WOOD"/>
+            <column name="constant" value="HULLMATERIAL"/>
+            <column name="description" value="Wooden hull."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="c5f21521-8d1c-488e-99d8-ebce5c2c6ae8"/>
+            <column name="code" value="METAL"/>
+            <column name="constant" value="HULLMATERIAL"/>
+            <column name="description" value="Metal hull."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="b0ac5aca-f6c2-4f03-be3a-01aa7b7c8450"/>
+            <column name="code" value="GLAS_PLASTIC_FIBER"/>
+            <column name="constant" value="HULLMATERIAL"/>
+            <column name="description" value="Glas or plastic fiber hull."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="b2f8ef14-8419-424b-ae9a-c56b0d72a3e0"/>
+            <column name="code" value="OTHER"/>
+            <column name="constant" value="HULLMATERIAL"/>
+            <column name="description" value="Other."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="0071c6a6-cf44-4065-a05e-21c7140112c5"/>
+            <column name="code" value="UNKNOWN"/>
+            <column name="constant" value="HULLMATERIAL"/>
+            <column name="description" value="Unknown."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="7c554da0-638e-4284-8c57-474ccafe0675"/>
+            <column name="code" value="MOCK-LICENSE-DB"/>
+            <column name="constant" value="LICENSETYPE"/>
+            <column name="description" value="Mocked value for license"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="429c1224-8ce7-4b51-8e8f-5c2668e0a446"/>
+            <column name="code" value="ASSET.NATIONAL.USE"/>
+            <column name="constant" value="PARAMETER"/>
+            <column name="description" value="Use national register of assets."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="631de043-0941-474d-9289-c005894196a7"/>
+            <column name="code" value="ASSET.EU.USE"/>
+            <column name="constant" value="PARAMETER"/>
+            <column name="description" value="Use EU register of assets."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="6e69c1ff-27b1-447c-88ad-85478cedf3c2"/>
+            <column name="code" value="NATIONAL_SERVICE_ENDPOINT"/>
+            <column name="constant" value="PARAMETER"/>
+            <column name="description" value="http://livmipl02t:8011/esb/Vessel/v2"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="feda847e-f763-403e-9ae5-e57bbfedf02d"/>
+            <column name="code" value="ASSET.DEFAULT.FLAGSTATE"/>
+            <column name="constant" value="PARAMETER"/>
+            <column name="description" value="SWE"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="eda52444-cf41-40aa-87b9-31e0c64e9173"/>
+            <column name="code" value="AE"/>
+            <column name="constant" value="PUBLICAID"/>
+            <column name="description" value="Aid not defined by the union."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="3d66e56e-c790-43a2-af82-4be7ea5c23d3"/>
+            <column name="code" value="AC"/>
+            <column name="constant" value="PUBLICAID"/>
+            <column name="description" value="Aid defined by the union."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="e7074514-189e-420d-a498-dbfc311b97aa"/>
+            <column name="code" value="PA"/>
+            <column name="constant" value="PUBLICAID"/>
+            <column name="description" value="No aid."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="4c8da32a-1875-4026-ae01-e7ace2fa47aa"/>
+            <column name="code" value="EI"/>
+            <column name="constant" value="PUBLICAID"/>
+            <column name="description" value="Aid under the conditions that the engine power are reduced (individual)."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="d5b193c8-337c-4d93-88bb-4e057b5c1758"/>
+            <column name="code" value="EG"/>
+            <column name="constant" value="PUBLICAID"/>
+            <column name="description" value="Aid under the conditions that the engine power are reduced (group)."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="5cc8aa33-f9f9-47fb-bfae-adc63c55e618"/>
+            <column name="code" value="VESSEL"/>
+            <column name="constant" value="SETTINGS"/>
+            <column name="description" value="Vessel type of asset"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="e4c677fb-af60-48c2-8cbb-ab85d551ca97"/>
+            <column name="code" value="0-99"/>
+            <column name="constant" value="SETTINGS"/>
+            <column name="description" value="0-99 kW of main engine"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="5e81c969-e08b-4ef4-8e83-a31db2072260"/>
+            <column name="code" value="100-199"/>
+            <column name="constant" value="SETTINGS"/>
+            <column name="description" value="100-199 kW of main engine"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="f7c26259-22db-4342-a7b2-a96ffa83b036"/>
+            <column name="code" value="200-299"/>
+            <column name="constant" value="SETTINGS"/>
+            <column name="description" value="200-299 kW of main engine"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="a9fb5f31-5b37-438d-8e84-e3920fc75322"/>
+            <column name="code" value="300+"/>
+            <column name="constant" value="SETTINGS"/>
+            <column name="description" value="&gt; 300 kW of main engine"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="b8a49952-facf-47e6-9706-e52aea152986"/>
+            <column name="code" value="0-11,99"/>
+            <column name="constant" value="SETTINGS"/>
+            <column name="description" value="0-11,99 m of LengthOverAll"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="e9893001-d084-4e76-a130-0940c36cde25"/>
+            <column name="code" value="12-14,99"/>
+            <column name="constant" value="SETTINGS"/>
+            <column name="description" value="12-14,99 m of LengthOverAll"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="a57abd28-5da6-4eef-a98f-ea9478610aba"/>
+            <column name="code" value="15-17,99"/>
+            <column name="constant" value="SETTINGS"/>
+            <column name="description" value="15-17,99 m of LengthOverAll"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="7f14373d-7fd9-4b13-885c-35883aa267bb"/>
+            <column name="code" value="18-23,99"/>
+            <column name="constant" value="SETTINGS"/>
+            <column name="description" value="18-23,99 m of LengthOverAll"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="d20391a2-dbe8-4dd8-b287-62b9f54e4e03"/>
+            <column name="code" value="24+"/>
+            <column name="constant" value="SETTINGS"/>
+            <column name="description" value="&gt; 24 m of LengthOverAll"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="5f70dc35-d638-4d8c-a522-93bccf3b91f9"/>
+            <column name="code" value="1"/>
+            <column name="constant" value="TYPEOFEXPORT"/>
+            <column name="description" value="Export, transfer between member stages."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="4904fd28-9a32-42d0-a8fc-402f609539ea"/>
+            <column name="code" value="SM"/>
+            <column name="constant" value="TYPEOFEXPORT"/>
+            <column name="description" value="Export, transfer within company."/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="391a4759-1a0b-42e3-b62c-5877fe9024b9"/>
+            <column name="code" value="ASSET.EU.SERVICE.ENDPOINT"/>
+            <column name="constant" value="PARAMETER"/>
+            <column name="description" value="http://livm58t:8080/BridgeWebApp/connector"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="daee6659-b064-45cb-b657-a2f22588810d"/>
+            <column name="code" value="ASSET.EU.SERVICE.CLIENT.CERT.HEADER"/>
+            <column name="constant" value="PARAMETER"/>
+            <column name="description" value="Client-Cert"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="4430eb1e-496a-4c35-a8c1-b0b21f754132"/>
+            <column name="code" value="ASSET.EU.SERVICE.CLIENT.CERT.VALUE"/>
+            <column name="constant" value="PARAMETER"/>
+            <column name="description" value="jojoha"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="41e6efac-1e1b-493d-8bae-2c41ed10af37"/>
+            <column name="code" value="ASSET.EU.SERVICE.DATAFLOW"/>
+            <column name="constant" value="PARAMETER"/>
+            <column name="description" value="urn:xeu:ec:fisheries:flux-bl:fr-vesseldeclaration:1"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="62b9bef7-80d9-48d8-bb4e-743911ad9f57"/>
+            <column name="code" value="ASSET.EU.SERVICE.FLUX.AD"/>
+            <column name="constant" value="PARAMETER"/>
+            <column name="description" value="XEU"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="53e69578-86ba-452c-bd62-cee6f4d25a7d"/>
+            <column name="code" value="NATIONAL_EQUIPMENT_SERVICE_ENDPOINT"/>
+            <column name="constant" value="PARAMETER"/>
+            <column name="description" value="http://livm60t.havochvatten.se:8080/EquipmentService/EquipmentPortTypeImpl"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="a7c3ddca-da5a-4e82-8bcf-275f92caa754"/>
+            <column name="code" value="NATIONAL_GENERAL_NOTIFICATION_SERVICE_ENDPOINT"/>
+            <column name="constant" value="PARAMETER"/>
+            <column name="description" value="http://livmipl02p:8001/esb/GeneralNotification/v1"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="5452b48f-c70e-4d96-9a5c-a8b11f1be765"/>
+            <column name="code" value="NATIONAL_VESSEL_COMP_SERVICE_ENDPOINT"/>
+            <column name="constant" value="PARAMETER"/>
+            <column name="description" value="http://livmipl02p:8001/esb/VesselComp/v2"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="319ae5ae-9302-4452-b06b-bfd9d8268098"/>
+            <column name="code" value="NATIONAL_VESSEL_NATIONS"/>
+            <column name="constant" value="PARAMETER"/>
+            <column name="description" value="SWE,DNK"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="f944161c-dac2-4e00-b814-e47ebc0e8543"/>
+            <column name="code" value="0"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="0"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="0cc8b457-483e-4d34-bed9-8dae8711da50"/>
+            <column name="code" value="1"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="1"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="5d92d6f7-8edb-4ab2-a354-78dd87216ad4"/>
+            <column name="code" value="10"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="10"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="7f8cf61d-7311-4ef1-a9a0-aa38b8cbbbaa"/>
+            <column name="code" value="12"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="12"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="491c5f76-8768-45fe-9022-f22759fba019"/>
+            <column name="code" value="14"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="14"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="b9deb359-36f5-4120-b6d4-56d049657dee"/>
+            <column name="code" value="2"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="2"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="a74eb151-1693-4d60-be8c-a2fd0471bb86"/>
+            <column name="code" value="3"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="3"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="c04f8bbf-d421-43d7-91ea-af07f97ccaec"/>
+            <column name="code" value="39"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="39"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="9f616955-8583-4365-998d-8a7ce9280046"/>
+            <column name="code" value="4"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="4"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="afc5cfba-10fd-4850-92b4-6da3aea67e44"/>
+            <column name="code" value="5"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="5"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="5b761476-fa3d-43bd-ab19-224241c7bff5"/>
+            <column name="code" value="6"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="6"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="4ea0bb4c-4f25-4f50-bfa3-9c0fc8d7409d"/>
+            <column name="code" value="7"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="7"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="ecaa2eed-5dde-4b08-8542-df7ea4fa6640"/>
+            <column name="code" value="71"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="71"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="a42dcbe3-913e-42e7-9ac2-fe118204e028"/>
+            <column name="code" value="8"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="8"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="4f183dfa-1bc9-4517-bff0-9a0187de6f99"/>
+            <column name="code" value="80"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="80"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="afecec66-666f-4370-ab63-c51c63320eb9"/>
+            <column name="code" value="81"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="81"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="cca4680d-1e6c-44a9-bd1a-8953e2fe9972"/>
+            <column name="code" value="82"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="82"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="173c5990-25d9-4022-9b22-e9f295137d33"/>
+            <column name="code" value="9"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="9"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="e0dcfd8b-77d4-455b-9bce-5983c6472a30"/>
+            <column name="code" value="90"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="90"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="241331a9-31b3-4003-9014-c62d91203421"/>
+            <column name="code" value="98"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="98"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="cac9b76f-007a-4cb8-a3cf-691403173ef3"/>
+            <column name="code" value="99"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="99"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="4220af4c-cd78-44bc-b9d8-a97dd28fede2"/>
+            <column name="code" value="999"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="999"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="5ead4c14-d868-4b23-a8aa-6b206bd07a37"/>
+            <column name="code" value="EL1"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="EL1"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="50fe94ff-8d9f-4452-98aa-6a5ba5132287"/>
+            <column name="code" value="EL2"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="EL2"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="e3ff4983-7fa9-4b43-983d-38b3cadeef6e"/>
+            <column name="code" value="EL3"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="EL3"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="29feb982-50e3-4e63-8634-25f2cdd0b665"/>
+            <column name="code" value="EL4"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="EL4"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="e3163cbd-ca8f-43d1-a703-12d8db56da46"/>
+            <column name="code" value="K01"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="K01"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="b3eb4974-0a1f-4bab-8a0e-31b7d099a50e"/>
+            <column name="code" value="K02"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="K02"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="aa8698a9-5d17-4292-a414-330072d208f5"/>
+            <column name="code" value="K03"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="K03"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="cf66b245-85e7-4cc5-a773-b3cb21e96828"/>
+            <column name="code" value="K04"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="K04"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="d4d6c28a-e0cf-4a16-b376-abed42e035ec"/>
+            <column name="code" value="K06"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="K06"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="4765d7e7-cc3d-4bb1-9674-2f0acdb8cbb7"/>
+            <column name="code" value="K07"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="K07"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="b8b3fa01-38de-4bd9-bfb7-2562d8ca5cde"/>
+            <column name="code" value="K08"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="K08"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="b6c91f34-f515-4129-9d93-f4723b17592e"/>
+            <column name="code" value="K09"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="K09"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="8251fa56-5c2e-4b9a-9a02-cbf56a615039"/>
+            <column name="code" value="SAN"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="SAN"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="8a2a7387-e389-4d41-9f3b-bfd87b62b21f"/>
+            <column name="code" value="SAT"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="SAT"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="48fa6265-0d0b-4e91-8933-66616e559e83"/>
+            <column name="code" value="T1"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="T1"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="f1f47cd4-7389-464a-865d-3a92822adb17"/>
+            <column name="code" value="T2"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="T2"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="13a7f6d5-ab89-4d8b-8830-9b95b6819015"/>
+            <column name="code" value="U1"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="U1"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="b2105bf3-74c5-4067-b4d8-fcd282ac5473"/>
+            <column name="code" value="U2"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="U2"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="736f29f5-1791-456a-b06b-2672c2b52938"/>
+            <column name="code" value="U3"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="U3"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="cdc2955a-586d-43b0-be29-68e540b72883"/>
+            <column name="code" value="V00"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V00"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="65f4503a-680e-4437-8e6c-2b4432eeb92d"/>
+            <column name="code" value="V01"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V01"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="d9cb4d8f-4ce7-4723-bc66-03235e7ef814"/>
+            <column name="code" value="V02"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V02"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="b3140dfa-65cf-4d5d-b511-d8743ae0d1c7"/>
+            <column name="code" value="V03"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V03"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="80adeb78-23d9-43e2-ab50-137c66ed68f6"/>
+            <column name="code" value="V04"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V04"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="d6f9013f-f50b-491b-979a-4f05ac38d913"/>
+            <column name="code" value="V05"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V05"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="ce4be815-e503-4674-bada-92f3da813b3d"/>
+            <column name="code" value="V06"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V06"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="4eccda8e-b2d7-411d-820b-f644c4426c74"/>
+            <column name="code" value="V07"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V07"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="9bbbe04e-4ee8-4b10-aa35-4bde5a007d9c"/>
+            <column name="code" value="V08"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V08"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="ef012d92-9232-4bc3-be52-57ea674452ff"/>
+            <column name="code" value="V09"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V09"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="feffda97-8881-4785-b1b0-dcc9d28fc238"/>
+            <column name="code" value="V10"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V10"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="5ff081d5-090c-4669-a4dd-d977028ee311"/>
+            <column name="code" value="V11"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V11"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="d8b2f1a5-cdf1-40c2-b9d0-b8e0bbe4850b"/>
+            <column name="code" value="V12"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V12"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="deb2d77d-c06f-48d5-86be-0e6a1ab8cf22"/>
+            <column name="code" value="V13"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V13"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="7144c0c5-36d0-45cc-b896-d96da98dbe7c"/>
+            <column name="code" value="V14"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V14"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="15dbc25e-531c-4311-b91d-60cbfd72c309"/>
+            <column name="code" value="V15"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V15"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="7ac8cb95-751c-4688-b0fe-75242818912f"/>
+            <column name="code" value="V16"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V16"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="4fa6e5c0-66f1-40e3-bda9-e51924fec8df"/>
+            <column name="code" value="V17"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V17"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="59d0591a-e707-4d46-8dd8-a93757fb8afe"/>
+            <column name="code" value="V18"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V18"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="d42dbc28-218f-4c48-ad37-2c064daede9c"/>
+            <column name="code" value="V19"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V19"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="06fb5a52-0e96-4f19-92d1-27460bf46222"/>
+            <column name="code" value="V20"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V20"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="2482ce50-ee34-486d-a825-32fb23289d3e"/>
+            <column name="code" value="V21"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V21"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="c4de0b1f-1f9f-4324-844e-9ceb76f7e975"/>
+            <column name="code" value="V22"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V22"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="5192267a-480b-4501-a7a8-dbdcd185e763"/>
+            <column name="code" value="V23"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V23"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="2c58eb93-9d5a-4608-b942-c876a823d32f"/>
+            <column name="code" value="V24"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V24"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="0a0e1bf7-2527-4e6f-afb6-0314c2b2440e"/>
+            <column name="code" value="V25"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V25"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="6dd3b447-32cc-456e-811f-cb7fee0a6bec"/>
+            <column name="code" value="V26"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V26"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="16d73aa3-3264-491c-8271-b7a82a1f8767"/>
+            <column name="code" value="V28"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V28"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="28ec271d-307a-427a-a23d-6b1cb5c5e52d"/>
+            <column name="code" value="V29"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V29"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="fcfbbc8c-5ac2-4398-af28-ca9b37e86ac1"/>
+            <column name="code" value="V30"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V30"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="52e38484-329e-40a0-abdd-3e9c706cb1fe"/>
+            <column name="code" value="V31"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V31"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="6d2c57e1-03be-4e91-9ca6-b977c039fadf"/>
+            <column name="code" value="V32"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V32"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="a5692fa2-b881-4899-80ca-b1f110117258"/>
+            <column name="code" value="V33"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V33"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="a7c72607-d3ce-4c3b-8557-be47ba01a8f5"/>
+            <column name="code" value="V35"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V35"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="0fe590e1-486a-4519-94d9-eb4bd8e45c9b"/>
+            <column name="code" value="V40"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V40"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="a0599fbf-28cd-4555-b3a5-2bfe1fae265a"/>
+            <column name="code" value="V41"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V41"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="6774e85f-222e-4616-bc03-58dd9ba8f9d2"/>
+            <column name="code" value="V42"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V42"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="efecd957-46cc-41d8-a475-91916fae30bb"/>
+            <column name="code" value="V43"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V43"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="2dfe09cc-9a39-4b0f-ae6c-c9936eaa3fbd"/>
+            <column name="code" value="V45"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V45"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="156897cc-e646-4915-ac31-a7ff35d13ad2"/>
+            <column name="code" value="V49"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V49"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="abe89166-caee-4d79-814f-d69cd2868207"/>
+            <column name="code" value="V50"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V50"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="952eaf2d-514a-4359-85d3-2a869bb55f62"/>
+            <column name="code" value="V51"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V51"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="46d1920e-86d3-4ef4-9ca7-19aff57aa5dc"/>
+            <column name="code" value="V52"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V52"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="2d96ed99-18df-43ca-a2fe-df26ac715637"/>
+            <column name="code" value="V53"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V53"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="0583be43-5c1e-408c-91fe-a17baf87c6dc"/>
+            <column name="code" value="V54"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V54"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="46b06560-1de8-443a-964c-c436644e34a0"/>
+            <column name="code" value="V60"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V60"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="a2d8a8d5-070d-4a63-833c-00a36d306b8c"/>
+            <column name="code" value="V61"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V61"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="6907c844-6eb3-4183-8208-ba5a5b821c5b"/>
+            <column name="code" value="V62"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V62"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="3ab0ab21-d2ef-4418-acc8-a2e6e961d96a"/>
+            <column name="code" value="V63"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V63"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="84af2911-8697-4a2f-bb20-5069bd65252a"/>
+            <column name="code" value="V65"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V65"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="f3177b2b-e356-4ddc-a770-91608f0038e1"/>
+            <column name="code" value="V75"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V75"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="33f04687-991b-48ec-bdb5-e98a9a66a2d7"/>
+            <column name="code" value="V80"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V80"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="41045371-a8db-4e80-9d82-6fa93226da8b"/>
+            <column name="code" value="V85"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V85"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="0f9e839a-605d-4c4f-9389-2427abb65b0b"/>
+            <column name="code" value="V86"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V86"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="3aa5541a-6638-4198-a363-d0553448720c"/>
+            <column name="code" value="V90"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V90"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="f3d31d30-a051-44ff-935d-5839939d7272"/>
+            <column name="code" value="V92"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V92"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="a18d28c9-5a39-4d21-a1cc-3cd0137639cd"/>
+            <column name="code" value="V93"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V93"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="d54e7b06-9902-4257-a264-3f7e686d483f"/>
+            <column name="code" value="V95"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V95"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="883c0744-ed86-4295-8af0-8a93d8f9f6ea"/>
+            <column name="code" value="V96"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V96"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="d6a5d227-85e1-46c2-b4cd-d97e5c3df90b"/>
+            <column name="code" value="V98"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V98"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="ad4e8066-08d6-4166-ae31-a4e86603a240"/>
+            <column name="code" value="V99"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="V99"/>
+            <column name="jsonstr" value=""/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="id" value="8d72d14d-473c-403a-b7cb-1a8e4d3f7b6f"/>
+            <column name="code" value="X1"/>
+            <column name="constant" value="NOTESACTCODE"/>
+            <column name="description" value="X1"/>
+            <column name="jsonstr" value=""/>
+        </insert>
     </changeSet>
 </databaseChangeLog>
