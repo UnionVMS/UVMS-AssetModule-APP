@@ -14,7 +14,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.uvms.constant.AssetIdentity;
+import eu.europa.ec.fisheries.uvms.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 
@@ -39,7 +39,7 @@ public class GetAssetEventBean {
         boolean messageSent = false;
 
         try {
-            AssetIdentity assetIdentity = AssetModelMapper.mapToAssetIdentity(assetId.getType());
+            AssetIdentifier assetIdentity = AssetModelMapper.mapToAssetIdentity(assetId.getType());
             asset = assetService.getAssetById(assetIdentity, assetId.getValue());
         } catch (Exception e) {
             LOG.error("Error when getting asset by id", assetId.getValue(), e);
