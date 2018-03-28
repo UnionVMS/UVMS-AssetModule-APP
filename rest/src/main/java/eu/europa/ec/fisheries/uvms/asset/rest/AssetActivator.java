@@ -15,6 +15,8 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
+
+import eu.europa.ec.fisheries.uvms.asset.rest.filter.AssetRestExceptionMapper;
 import eu.europa.ec.fisheries.uvms.asset.rest.service.AssetGroupResource;
 import eu.europa.ec.fisheries.uvms.asset.rest.service.AssetHistoryResource;
 import eu.europa.ec.fisheries.uvms.asset.rest.service.AssetResource;
@@ -29,6 +31,7 @@ public class AssetActivator extends Application {
     private final Set<Class<?>> set = new HashSet<>();
 
     public AssetActivator() {
+        set.add(AssetRestExceptionMapper.class);
         set.add(AssetResource.class);
         set.add(AssetHistoryResource.class);
         set.add(AssetGroupResource.class);
