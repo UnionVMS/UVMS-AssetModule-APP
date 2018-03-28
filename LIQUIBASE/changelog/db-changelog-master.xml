@@ -4,22 +4,12 @@
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-	<changeSet author="johlyn" id="vessel-version-0.3">
-    	<tagDatabase tag="vessel_version_0.3"/>
+	<changeSet author="thofan" id="asset-version-1.0">
+    	<tagDatabase tag="asset-version-1.0"/>
 	</changeSet>
-    <changeSet author="johlyn" id="vessel-version-0.5">
-        <tagDatabase tag="vessel_version_0.5"/>
-    </changeSet>
 
-    <include file="changelog\v0.5\db-changelog-createTables_0.5.xml" />
-    
     <include file="changelog\properties.xml"/>
-
-    <include file="changelog\v0.3\db-changelog-insertConfigValues_0.3.xml" />
-    <include file="changelog\v0.3\db-changelog-insertStaticValues_0.3.xml" />
-    <include file="changelog\v0.4\db-changelog-insertStaticValues_0.4.xml" />
-
-    <include file="changelog\v0.6\db-changelog-createTables_0.6.xml" />
-
+    <include file="changelog\v1.0\db-changelog-createTables.xml" />
+    <include file="changelog\v1.0\insertCustomCodes.xml" />
 
 </databaseChangeLog>

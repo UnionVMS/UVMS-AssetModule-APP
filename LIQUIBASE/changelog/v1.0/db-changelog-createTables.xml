@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="thofan (generated)" id="1522236998882-1">
+        <createSequence sequenceName="assetpo_id_seq"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-2">
+        <createSequence sequenceName="hibernate_sequence"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-3">
+        <createTable tableName="asset">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="BOOLEAN"/>
+            <column name="administrativedecisiondate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="agentisalsoowner" type="BOOLEAN"/>
+            <column name="aisindicator" type="BOOLEAN"/>
+            <column name="assetagentaddress" type="VARCHAR(100)"/>
+            <column name="cfr" type="VARCHAR(12)"/>
+            <column name="commissiondate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="constructionplace" type="VARCHAR(100)"/>
+            <column name="constructionyear" type="VARCHAR(4)"/>
+            <column name="countryofimportorexport" type="VARCHAR(3)"/>
+            <column name="ersindicator" type="BOOLEAN"/>
+            <column name="eventcode" type="VARCHAR(255)"/>
+            <column name="externalmarking" type="VARCHAR(14)"/>
+            <column name="flagstatecode" type="VARCHAR(3)"/>
+            <column name="gearfishingtype" type="INT"/>
+            <column name="gfcm" type="VARCHAR(50)"/>
+            <column name="grosstonnage" type="FLOAT8"/>
+            <column name="grosstonnageunit" type="VARCHAR(255)"/>
+            <column name="haslicense" type="BOOLEAN"/>
+            <column name="hasvms" type="BOOLEAN"/>
+            <column name="historyid" type="UUID"/>
+            <column name="hullmaterial" type="VARCHAR(255)"/>
+            <column name="iccat" type="VARCHAR(50)"/>
+            <column name="imo" type="VARCHAR(7)"/>
+            <column name="ircs" type="VARCHAR(8)"/>
+            <column name="ircsindicator" type="BOOLEAN"/>
+            <column name="lengthbetweenperpendiculars" type="FLOAT8"/>
+            <column name="lengthoverall" type="FLOAT8"/>
+            <column name="licensetype" type="VARCHAR(25)"/>
+            <column name="mainfishinggearcode" type="VARCHAR(255)"/>
+            <column name="mmsi" type="VARCHAR(9)"/>
+            <column name="name" type="VARCHAR(40)"/>
+            <column name="othertonnage" type="FLOAT8"/>
+            <column name="owneraddress" type="VARCHAR(100)"/>
+            <column name="ownername" type="VARCHAR(100)"/>
+            <column name="portofregistration" type="VARCHAR(30)"/>
+            <column name="powerofauxengine" type="FLOAT8"/>
+            <column name="powerofmainengine" type="FLOAT8"/>
+            <column name="prodorgcode" type="VARCHAR(255)"/>
+            <column name="prodorgname" type="VARCHAR(255)"/>
+            <column name="publicaid" type="VARCHAR(255)"/>
+            <column name="registrationnumber" type="VARCHAR(14)"/>
+            <column name="safetygrosstonnage" type="FLOAT8"/>
+            <column name="segment" type="VARCHAR(255)"/>
+            <column name="segmentofadministrativedecision" type="VARCHAR(255)"/>
+            <column name="source" type="VARCHAR(255)"/>
+            <column name="subfishinggearcode" type="VARCHAR(255)"/>
+            <column name="typeofexport" type="VARCHAR(255)"/>
+            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updatedby" type="VARCHAR(60)"/>
+            <column name="uvi" type="VARCHAR(50)"/>
+            <column name="vesseldateofentry" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="vesseltype" type="VARCHAR(100)"/>
+            <column name="vmsindicator" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-4">
+        <createTable tableName="asset_aud">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="active" type="BOOLEAN"/>
+            <column name="administrativedecisiondate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="agentisalsoowner" type="BOOLEAN"/>
+            <column name="aisindicator" type="BOOLEAN"/>
+            <column name="assetagentaddress" type="VARCHAR(255)"/>
+            <column name="cfr" type="VARCHAR(255)"/>
+            <column name="commissiondate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="constructionplace" type="VARCHAR(255)"/>
+            <column name="constructionyear" type="VARCHAR(255)"/>
+            <column name="countryofimportorexport" type="VARCHAR(255)"/>
+            <column name="ersindicator" type="BOOLEAN"/>
+            <column name="eventcode" type="VARCHAR(255)"/>
+            <column name="externalmarking" type="VARCHAR(255)"/>
+            <column name="flagstatecode" type="VARCHAR(255)"/>
+            <column name="gearfishingtype" type="INT"/>
+            <column name="gfcm" type="VARCHAR(255)"/>
+            <column name="grosstonnage" type="FLOAT8"/>
+            <column name="grosstonnageunit" type="VARCHAR(255)"/>
+            <column name="haslicense" type="BOOLEAN"/>
+            <column name="hasvms" type="BOOLEAN"/>
+            <column name="historyid" type="UUID"/>
+            <column name="hullmaterial" type="VARCHAR(255)"/>
+            <column name="iccat" type="VARCHAR(255)"/>
+            <column name="imo" type="VARCHAR(255)"/>
+            <column name="ircs" type="VARCHAR(255)"/>
+            <column name="ircsindicator" type="BOOLEAN"/>
+            <column name="lengthbetweenperpendiculars" type="FLOAT8"/>
+            <column name="lengthoverall" type="FLOAT8"/>
+            <column name="licensetype" type="VARCHAR(255)"/>
+            <column name="mainfishinggearcode" type="VARCHAR(255)"/>
+            <column name="mmsi" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="othertonnage" type="FLOAT8"/>
+            <column name="owneraddress" type="VARCHAR(255)"/>
+            <column name="ownername" type="VARCHAR(255)"/>
+            <column name="portofregistration" type="VARCHAR(255)"/>
+            <column name="powerofauxengine" type="FLOAT8"/>
+            <column name="powerofmainengine" type="FLOAT8"/>
+            <column name="prodorgcode" type="VARCHAR(255)"/>
+            <column name="prodorgname" type="VARCHAR(255)"/>
+            <column name="publicaid" type="VARCHAR(255)"/>
+            <column name="registrationnumber" type="VARCHAR(255)"/>
+            <column name="safetygrosstonnage" type="FLOAT8"/>
+            <column name="segment" type="VARCHAR(255)"/>
+            <column name="segmentofadministrativedecision" type="VARCHAR(255)"/>
+            <column name="source" type="VARCHAR(255)"/>
+            <column name="subfishinggearcode" type="VARCHAR(255)"/>
+            <column name="typeofexport" type="VARCHAR(255)"/>
+            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updatedby" type="VARCHAR(255)"/>
+            <column name="uvi" type="VARCHAR(255)"/>
+            <column name="vesseldateofentry" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="vesseltype" type="VARCHAR(255)"/>
+            <column name="vmsindicator" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-5">
+        <createTable tableName="assetgroup">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="BOOLEAN"/>
+            <column name="dynamic" type="BOOLEAN"/>
+            <column name="global" type="BOOLEAN"/>
+            <column name="name" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="upuser" type="VARCHAR(60)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-6">
+        <createTable tableName="assetgroupfield">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="assetgroup" type="UUID"/>
+            <column name="field" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updateuser" type="VARCHAR(60)"/>
+            <column name="value" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-7">
+        <createTable tableName="contactinfo">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="assetid" type="UUID"/>
+            <column name="cityname" type="VARCHAR(100)"/>
+            <column name="country" type="VARCHAR(3)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="nationality" type="VARCHAR(100)"/>
+            <column name="owner" type="BOOLEAN"/>
+            <column name="phone" type="VARCHAR(255)"/>
+            <column name="postofficebox" type="VARCHAR(100)"/>
+            <column name="postalarea" type="VARCHAR(100)"/>
+            <column name="source" type="VARCHAR(255)"/>
+            <column name="streetname" type="VARCHAR(100)"/>
+            <column name="type" type="VARCHAR(100)"/>
+            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updatedby" type="VARCHAR(60)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-8">
+        <createTable tableName="customcodes">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code" type="VARCHAR(255)"/>
+            <column name="constant" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="jsonstr" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-9">
+        <createTable tableName="note">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="activitycode" type="VARCHAR(255)"/>
+            <column name="assetid" type="UUID"/>
+            <column name="contact" type="VARCHAR(255)"/>
+            <column name="date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="document" type="VARCHAR(255)"/>
+            <column name="licenseholder" type="VARCHAR(255)"/>
+            <column name="notes" type="VARCHAR(255)"/>
+            <column name="readydate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="sheetnumber" type="VARCHAR(255)"/>
+            <column name="source" type="VARCHAR(255)"/>
+            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updatedby" type="VARCHAR(60)"/>
+            <column name="noteuser" type="VARCHAR(255)"/>
+        </createTable>
+
+        <createTable remarks="Table as a placeholder of parameters and its values" tableName="parameter">
+            <column name="param_id" remarks="Name or code for parameter." type="VARCHAR(500)" >
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="param_description" remarks="Description of parameter or value." type="VARCHAR(500)">
+                <constraints nullable="false" />
+            </column>
+            <column name="param_value" remarks="Parameter value." type="VARCHAR(4000)" />
+        </createTable>
+
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-10">
+        <createTable tableName="revinfo">
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtstmp" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-11">
+        <addPrimaryKey columnNames="id, rev" constraintName="asset_aud_pkey" tableName="asset_aud"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-12">
+        <addPrimaryKey columnNames="id" constraintName="asset_pkey" tableName="asset"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-13">
+        <addPrimaryKey columnNames="id" constraintName="assetgroup_pkey" tableName="assetgroup"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-14">
+        <addPrimaryKey columnNames="id" constraintName="assetgroupfield_pkey" tableName="assetgroupfield"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-15">
+        <addPrimaryKey columnNames="id" constraintName="contactinfo_pkey" tableName="contactinfo"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-16">
+        <addPrimaryKey columnNames="id" constraintName="customcodes_pkey" tableName="customcodes"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-17">
+        <addPrimaryKey columnNames="id" constraintName="note_pkey" tableName="note"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-18">
+        <addPrimaryKey columnNames="rev" constraintName="revinfo_pkey" tableName="revinfo"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-19">
+        <addUniqueConstraint columnNames="gfcm" constraintName="uk_1f0suawwxe5rj9b3q2pj040n6" tableName="asset"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-20">
+        <addUniqueConstraint columnNames="historyid" constraintName="uk_4wkxllv5eyh8ua4yv38sg1gvo" tableName="asset"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-21">
+        <addUniqueConstraint columnNames="mmsi" constraintName="uk_7uul14686owisft1q8o2juayu" tableName="asset"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-22">
+        <addUniqueConstraint columnNames="iccat" constraintName="uk_8qkodfqt1w3vtwg43p4x7masv" tableName="asset"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-23">
+        <addUniqueConstraint columnNames="cfr" constraintName="uk_95qo69i86qtbymqtd88jv7jmg" tableName="asset"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-24">
+        <addUniqueConstraint columnNames="ircs" constraintName="uk_ppdhrvpsem0w88sipaxfss9ak" tableName="asset"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-25">
+        <addUniqueConstraint columnNames="imo" constraintName="uk_rumq17sk76wc9bt59rso0ka05" tableName="asset"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-26">
+        <addUniqueConstraint columnNames="uvi" constraintName="uk_tl73p92isumeko0qnpic22xjm" tableName="asset"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1522236998882-27">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="asset_aud" constraintName="fklq7kauhigk0mdew67qs2l39ci" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
+    </changeSet>
+</databaseChangeLog>

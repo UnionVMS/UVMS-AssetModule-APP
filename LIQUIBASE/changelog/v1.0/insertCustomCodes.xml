@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
   ~ Developed with the contribution of the European Commission - Directorate General for Maritime Affairs and Fisheries
   ~ © European Union, 2015-2016.
@@ -13,12 +12,18 @@
   -->
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
 
+    <changeSet author="thofan" id="Inser data into customCodes">
 
-        <!-- mdrlite -->
-        <include file="\schema\tables\customcodes.xml"/>
-        <include file="changelog\v0.6\insertcustomcodes.xml"/>
+        <insert tableName='customcodes'>
+            <column id='00000000-000000-000000-000000000001'/>
+            <column constant='ASSETSEGMENT'/>
+            <column code='AQU'/>
+            <column description='Wateruse.'/>
+            <column jsonstr=''/>
+        </insert>
+
+    </changeSet>
 </databaseChangeLog>
