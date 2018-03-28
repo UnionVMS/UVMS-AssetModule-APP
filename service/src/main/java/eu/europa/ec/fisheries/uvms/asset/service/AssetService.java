@@ -138,7 +138,7 @@ public interface AssetService {
      * @param maxNbr
      * @return
      */
-    List<Asset> getAssetRevisionsListByAssetId(UUID id, Integer maxNbr);
+    List<Asset> getRevisionsForAssetLimited(UUID id, Integer maxNbr);
 
     /**
      *

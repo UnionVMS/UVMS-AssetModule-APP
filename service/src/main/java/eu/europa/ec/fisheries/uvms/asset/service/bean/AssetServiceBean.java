@@ -67,6 +67,8 @@ public class AssetServiceBean implements AssetService {
     public Asset createAsset(Asset asset, String username) {
 
         asset.setUpdatedBy(username);
+        asset.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
+        asset.setActive(true);
         Asset createdAssetEntity = assetDao.createAsset(asset);
 
         auditService.logAssetCreated(createdAssetEntity, username);
@@ -145,6 +147,7 @@ public class AssetServiceBean implements AssetService {
      */
     @Override
     public Asset archiveAsset(Asset asset, String username, String comment) {
+        asset.setActive(false);
         Asset archivedAsset = updateAssetInternal(asset, username);
         auditService.logAssetArchived(archivedAsset, comment, username);
         return archivedAsset;
@@ -163,6 +166,7 @@ public class AssetServiceBean implements AssetService {
         checkIdentifierNullValues(asset);
 
         asset.setUpdatedBy(username);
+        asset.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
         return assetDao.updateAsset(asset);
     }
     
@@ -316,7 +320,7 @@ public class AssetServiceBean implements AssetService {
     }
 
     @Override
-	public List<Asset> getAssetRevisionsListByAssetId(UUID id, Integer maxNbr) {
+	public List<Asset> getRevisionsForAssetLimited(UUID id, Integer maxNbr) {
 	    List<Asset> revisions = assetDao.getRevisionsForAsset(id);
 	    revisions.sort((a1, a2) -> a1.getUpdateTime().compareTo(a2.getUpdateTime()));
 	    if (revisions.size() > maxNbr) {

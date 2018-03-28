@@ -13,7 +13,8 @@ package eu.europa.ec.fisheries.uvms.asset.rest.service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.List;
 import java.util.UUID;
 import javax.ejb.Stateless;
@@ -254,7 +255,7 @@ public class AssetResource {
     public Response getAssetHistoryListByAssetId(@PathParam("id") UUID id,
                                                  @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
         try {
-            List<Asset> assetRevisions = assetService.getAssetRevisionsListByAssetId(id, maxNbr);
+            List<Asset> assetRevisions = assetService.getRevisionsForAssetLimited(id, maxNbr);
             return Response.ok(assetRevisions).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset history list by asset ID. {}]", id, e);
@@ -264,11 +265,11 @@ public class AssetResource {
 
     /**
      * @summary Get a specific asset by identifier (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)
-     *          at given date.
+     *          at given date (DateTimeFormatter.ISO_LOCAL_DATE_TIME format, eg 2018-03-23T18:25:43).
      * 
      * @param type
      * @param id
-     * @param date
+     * @param date DateTimeFormatter.ISO_LOCAL_DATE_TIME format
      * @return
      */
     @GET
@@ -277,10 +278,10 @@ public class AssetResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAssetFromAssetIdAndDate(@PathParam("type") String type, 
                                                @PathParam("id") String id,
-                                               @PathParam("date") Date date) {
+                                               @PathParam("date") String date) {
         try {
             AssetIdentifier assetId = AssetIdentifier.valueOf(type.toUpperCase());
-            LocalDateTime localDateTime = LocalDateTime.ofInstant(date.toInstant(), ZoneOffset.UTC);
+            LocalDateTime localDateTime = LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
             Asset assetRevision = assetService.getAssetFromAssetIdAtDate(assetId, id, localDateTime);
             return Response.ok(assetRevision).build();
         } catch (Exception e) {
