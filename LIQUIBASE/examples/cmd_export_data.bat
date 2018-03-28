@@ -1,2 +1,2 @@
-liquibase --driver=org.postgresql.Driver --classpath=lib\postgresql-42.2.1.jar --changeLogFile=db.changelog.data.xml  --diffTypes="data" --url="jdbc:postgresql://localhost:15432/db71u" --username=asset --password=asset generateChangeLog --includeObjects="customcodes"
+liquibase --driver=org.postgresql.Driver --classpath=lib\postgresql-42.2.1.jar --changeLogFile=db-changelog-data.xml  --diffTypes="data" --url="jdbc:postgresql://localhost:15432/db71u" --username=asset --password=asset generateChangeLog --includeObjects="customcodes"
 	  
