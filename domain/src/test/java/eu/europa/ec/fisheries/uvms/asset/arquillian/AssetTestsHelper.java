@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import eu.europa.ec.fisheries.uvms.constant.AssetIdentity;
+import eu.europa.ec.fisheries.uvms.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.entity.Asset;
 import eu.europa.ec.fisheries.uvms.entity.ContactInfo;
@@ -151,7 +151,7 @@ public class AssetTestsHelper {
                 .toString();
     }
 
-    public Asset createAssetHelper(AssetIdentity key, String value, Date date) {
+    public Asset createAssetHelper(AssetIdentifier key, String value, Date date) {
         Asset assetEntity = createBiggerAsset();
         assetEntity.setCfr(null);
         assetEntity.setIrcs(null);

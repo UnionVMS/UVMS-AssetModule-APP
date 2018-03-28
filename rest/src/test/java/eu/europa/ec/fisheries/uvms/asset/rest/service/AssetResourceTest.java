@@ -6,10 +6,12 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -32,7 +34,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         Asset asset = AssetHelper.createBasicAsset();
         
         Response response = getWebTarget()
-                .path("/asset")
+                .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset));
         
@@ -47,7 +49,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         Asset asset = AssetHelper.createBasicAsset();
         
         Asset createdAsset = getWebTarget()
-                .path("/asset")
+                .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
         
@@ -62,12 +64,13 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
-                .path("/asset")
+                .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
         
         Asset fetchedAsset = getWebTarget()
-                .path("asset/" + createdAsset.getId())
+                .path("asset")
+                .path(createdAsset.getId().toString())
                 .request(MediaType.APPLICATION_JSON)
                 .get(Asset.class);
         
@@ -78,24 +81,27 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     
     @Test
     @RunAsClient
-    public void getAssetListQueryTest() {
-        Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTarget()
-                .path("/asset")
+    public void getAssetByIdRandomValueTest() throws Exception {
+        Asset asset = getWebTarget()
+                .path("asset")
+                .path(UUID.randomUUID().toString())
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(asset), Asset.class);
+                .get(Asset.class);
         
-        AssetQuery query = new AssetQuery();
-        query.setCfr(Arrays.asList(createdAsset.getCfr()));
-        
-        AssetListResponse listResponse = getWebTarget()
-                .path("/asset/list")
+        assertTrue(asset == null);
+    }
+    
+    @Test
+    @RunAsClient
+    public void getAssetByIdInvalidIdTest() throws Exception {
+        Response response = getWebTarget()
+                .path("asset")
+                .path("nonExistingAssetId")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(query), AssetListResponse.class);
+                .get();
         
-        assertTrue(listResponse != null);
-        assertThat(listResponse.getAssetList().size(), is(1));
-        assertThat(listResponse.getAssetList().get(0), is(AssetMatcher.assetEquals(createdAsset)));
+        assertTrue(response != null);
+        assertThat(response.getStatus(), is(Status.NOT_FOUND.getStatusCode()));
     }
     
     @Test
@@ -103,14 +109,16 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     public void createNoteTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
-                .path("/asset")
+                .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
 
         Note note = AssetHelper.createBasicNote();
         
         Note createdNote = getWebTarget()
-                .path("/asset/" + createdAsset.getId() + "/notes")
+                .path("asset")
+                .path(createdAsset.getId().toString())
+                .path("notes")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(note), Note.class);
         
@@ -123,19 +131,23 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     public void getNotesForAssetTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
-                .path("/asset")
+                .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
 
         Note note = AssetHelper.createBasicNote();
         
         Note createdNote = getWebTarget()
-                .path("/asset/" + createdAsset.getId() + "/notes")
+                .path("asset")
+                .path(createdAsset.getId().toString())
+                .path("notes")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(note), Note.class);
         
         Response response = getWebTarget()
-                .path("/asset/" + createdAsset.getId() + "/notes")
+                .path("asset")
+                .path(createdAsset.getId().toString())
+                .path("notes")
                 .request(MediaType.APPLICATION_JSON)
                 .get();
         
@@ -152,7 +164,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     public void deleteNoteTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
-                .path("/asset")
+                .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
 
@@ -160,12 +172,16 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         
         // Create note
         Note createdNote = getWebTarget()
-                .path("/asset/" + createdAsset.getId() + "/notes")
+                .path("asset")
+                .path(createdAsset.getId().toString())
+                .path("notes")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(note), Note.class);
         
         Response response = getWebTarget()
-                .path("/asset/" + createdAsset.getId() + "/notes")
+                .path("asset")
+                .path(createdAsset.getId().toString())
+                .path("notes")
                 .request(MediaType.APPLICATION_JSON)
                 .get();
         
@@ -177,7 +193,9 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         
         // Delete note
         response = getWebTarget()
-                .path("/asset/notes/" + createdNote.getId())
+                .path("asset")
+                .path("notes")
+                .path(createdNote.getId().toString())
                 .request(MediaType.APPLICATION_JSON)
                 .delete();
         
@@ -185,7 +203,9 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         assertEquals(200, response.getStatus());
         
         response = getWebTarget()
-                .path("/asset/" + createdAsset.getId() + "/notes")
+                .path("asset")
+                .path(createdAsset.getId().toString())
+                .path("notes")
                 .request(MediaType.APPLICATION_JSON)
                 .get();
         
