@@ -5,7 +5,6 @@ import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.*;
 import eu.europa.ec.fisheries.uvms.entity.model.*;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
-import eu.europa.ec.fisheries.wsdl.asset.types.HullMaterial;
 import org.junit.Assert;
 
 import java.math.BigDecimal;
@@ -72,7 +71,7 @@ public class AssetTestsHelper {
         assetEntity.setConstructionYear("1914");
         assetEntity.setConstructionPlace("GBG");
 
-        assetEntity.setHullMaterial(HullMaterial.GLAS_PLASTIC_FIBER);
+        assetEntity.setHullMaterial("ALUMINIUM");
         assetEntity.setUpdateTime(date);
         assetEntity.setUpdatedBy("TEST");
 

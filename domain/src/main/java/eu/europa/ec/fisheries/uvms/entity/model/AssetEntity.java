@@ -11,43 +11,20 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.entity.model;
 
+import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.PublicAidEnum;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.SegmentFUP;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.TypeOfExportEnum;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.Size;
-
-import eu.europa.ec.fisheries.uvms.entity.asset.types.PublicAidEnum;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.SegmentFUP;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.TypeOfExportEnum;
-import eu.europa.ec.fisheries.wsdl.asset.types.ContactType;
-import eu.europa.ec.fisheries.wsdl.asset.types.HullMaterial;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
-import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.HullMaterialEnum;
-import javax.validation.constraints.NotNull;
 
 /**
  * The persistent class for the asset database table.
@@ -105,9 +82,9 @@ public class AssetEntity implements Serializable {
     @Column(name = "asset_ircsindicator")
     private String assetIrcsindicator;
 
-    @Enumerated(EnumType.STRING)
+    @Size(max = 100)
     @Column(name = "asset_hullmaterial")
-    private HullMaterial hullMaterial;
+    private String hullMaterial;
 
     @Size(min = 2, max = 2)
     @Column(name = "asset_dayofcommissioning")
@@ -255,11 +232,11 @@ public class AssetEntity implements Serializable {
         this.guid = guid;
     }
 
-    public HullMaterial getHullMaterial() {
+    public String getHullMaterial() {
         return this.hullMaterial;
     }
 
-    public void setHullMaterial(HullMaterial hullMaterial) {
+    public void setHullMaterial(String hullMaterial) {
         this.hullMaterial = hullMaterial;
     }
 

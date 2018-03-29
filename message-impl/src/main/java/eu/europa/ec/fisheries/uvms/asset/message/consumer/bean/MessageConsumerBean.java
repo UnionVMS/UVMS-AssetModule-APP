@@ -123,7 +123,7 @@ public class MessageConsumerBean implements MessageListener {
                 case UPSERT_ASSET_LIST:
                     UpsertAssetListModuleRequest upsertAssetListRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, UpsertAssetListModuleRequest.class);
                     AssetMessageEvent upsertAssetListMessageEvent = new AssetMessageEvent(textMessage, upsertAssetListRequest.getAsset(), upsertAssetListRequest.getUserName());
-                    upsertAssetMessageEventBean.upsertAssets(upsertAssetListMessageEvent);
+                    upsertAssetMessageEventBean.upsertAssetsFromFLUX(upsertAssetListMessageEvent);
                     break;
                 case FISHING_GEAR_UPSERT:
                     UpsertFishingGearModuleRequest upsertFishingGearListModuleRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, UpsertFishingGearModuleRequest.class);

@@ -14,7 +14,6 @@ package eu.europa.ec.fisheries.uvms.entity.model;
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.*;
-import eu.europa.ec.fisheries.wsdl.asset.types.HullMaterial;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -260,9 +259,9 @@ public class AssetHistory implements Serializable {
     @Column(name = "assethist_ircs_indicator")
     private String assetIrcsindicator;
 
-    @Enumerated(EnumType.STRING)
+    @Size(max = 100)
     @Column(name = "assethist_hull_material")
-    private HullMaterial hullMaterial;
+    private String hullMaterial;
 
     @Column(name = "assethist_year_of_construction")
     private String constructionYear;
@@ -727,11 +726,11 @@ public class AssetHistory implements Serializable {
         this.assetIrcsindicator = assetIrcsindicator;
     }
 
-    public HullMaterial getHullMaterial() {
+    public String getHullMaterial() {
         return hullMaterial;
     }
 
-    public void setHullMaterial(HullMaterial hullMaterial) {
+    public void setHullMaterial(String hullMaterial) {
         this.hullMaterial = hullMaterial;
     }
 
