@@ -99,6 +99,9 @@ public interface AssetService {
      */
     Asset upsertAsset(Asset asset, String username) throws AssetException;
 
+
+    void upsertAssetsFromFLUX(List<Asset> assets, String username) throws AssetException;
+
     /**
      *
      * Returns a list of assets based on the searh criterias in the

@@ -250,6 +250,21 @@ public class AssetDomainModelBean {
         }
     }
 
+
+    public void upsertAssets(List<Asset> assets, String username) throws AssetModelException {
+        for (Asset asset : assets) {
+            AssetId assetId = new AssetId();
+            assetId.setType(AssetIdType.CFR);
+            assetId.setValue(asset.getCfr());
+
+            asset.setAssetId(assetId);
+            asset.setSource(CarrierSource.INTERNAL);
+
+            upsertAsset(asset, username);
+        }
+    }
+
+
     public List<Asset> getAssetHistoryListByAssetId(AssetId assetId,
                                                     Integer maxNbr) throws AssetModelException {
         AssetEntity vesselHistories = getAssetEntityById(assetId);

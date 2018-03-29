@@ -3,11 +3,8 @@ package eu.europa.ec.fisheries.uvms.asset.service.bean;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
-import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +27,7 @@ public class UpsertAssetMessageEventBean {
     @EJB
     private AssetService service;
 
-    public void upsertAsset(AssetMessageEvent message){
+    public void upsertAsset(AssetMessageEvent message) {
         try {
             service.upsertAsset(message.getAsset(), AssetDataSourceQueue.INTERNAL.name());
         } catch (AssetException e) {
@@ -38,13 +35,11 @@ public class UpsertAssetMessageEventBean {
         }
     }
 
-    public void upsertAssets(AssetMessageEvent message){
+    public void upsertAssetsFromFLUX(AssetMessageEvent message) {
         try {
-            for (Asset asset : message.getAssets()) {
-                service.upsertAsset(asset, AssetDataSourceQueue.INTERNAL.name());
-            }
+            service.upsertAssetsFromFLUX(message.getAssets(), AssetDataSourceQueue.INTERNAL.name());
         } catch (AssetException e) {
-            LOG.error("Could not update asset in the local database", e);
+            LOG.error("Could not update assets in the local database", e);
         }
     }
 }

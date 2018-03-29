@@ -40,6 +40,8 @@ import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceResponseMap
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 
+import static org.apache.commons.collections.CollectionUtils.isEmpty;
+
 @Stateless
 public class AssetServiceBean implements AssetService {
 
@@ -177,6 +179,16 @@ public class AssetServiceBean implements AssetService {
             throw new InputArgumentException("No asset to upsert");
         }
         return assetDomainModel.upsertAsset(asset, username);
+
+    }
+
+    @Override
+    public void upsertAssetsFromFLUX(List<Asset> assets, String username) throws AssetException {
+
+        if (isEmpty(assets)) {
+            throw new InputArgumentException("No assets to upsert");
+        }
+        assetDomainModel.upsertAssets(assets, username);
 
     }
 
