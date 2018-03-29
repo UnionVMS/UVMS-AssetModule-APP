@@ -1,6 +1,6 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
-    <changeSet author="tfant (generated)" id="1522254685144-1">
+<changeSet author="tfant (generated)" id="1522254685144-1">
 	<insert tableName='customcodes'>
 		<column name='constant' value='ASSETSEGMENT'/>
 		<column name='code' value='AQU'/>
@@ -13,5 +13,5 @@
 		<column name='description' value='Outer rimarea Spain.'/>
 		<column name='jsonstr' value=''/>
 	</insert>
-    </changeSet>
+</changeSet>
 </databaseChangeLog>
