@@ -1,9 +1,9 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
-    <changeSet author="thofan (generated)" id="1522304799715-1">
+    <changeSet author="thofan (generated)" id="1522311740593-1">
         <createSequence sequenceName="hibernate_sequence"/>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-2">
+    <changeSet author="thofan (generated)" id="1522311740593-2">
         <createTable tableName="asset">
             <column name="id" type="UUID">
                 <constraints nullable="false"/>
@@ -64,7 +64,7 @@
             <column name="vmsindicator" type="BOOLEAN"/>
         </createTable>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-3">
+    <changeSet author="thofan (generated)" id="1522311740593-3">
         <createTable tableName="asset_aud">
             <column name="id" type="UUID">
                 <constraints nullable="false"/>
@@ -129,7 +129,7 @@
             <column name="vmsindicator" type="BOOLEAN"/>
         </createTable>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-4">
+    <changeSet author="thofan (generated)" id="1522311740593-4">
         <createTable tableName="assetgroup">
             <column name="id" type="UUID">
                 <constraints nullable="false"/>
@@ -147,7 +147,7 @@
             <column name="upuser" type="VARCHAR(60)"/>
         </createTable>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-5">
+    <changeSet author="thofan (generated)" id="1522311740593-5">
         <createTable tableName="assetgroupfield">
             <column name="id" type="UUID">
                 <constraints nullable="false"/>
@@ -163,7 +163,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-6">
+    <changeSet author="thofan (generated)" id="1522311740593-6">
         <createTable tableName="contactinfo">
             <column name="id" type="UUID">
                 <constraints nullable="false"/>
@@ -185,18 +185,19 @@
             <column name="updatedby" type="VARCHAR(60)"/>
         </createTable>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-7">
+    <changeSet author="thofan (generated)" id="1522311740593-7">
         <createTable tableName="customcodes">
-            <column name="id" type="UUID">
+            <column name="code" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="code" type="VARCHAR(255)"/>
-            <column name="constant" type="VARCHAR(255)"/>
+            <column name="constant" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
             <column name="description" type="VARCHAR(255)"/>
             <column name="jsonstr" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-8">
+    <changeSet author="thofan (generated)" id="1522311740593-8">
         <createTable tableName="note">
             <column name="id" type="UUID">
                 <constraints nullable="false"/>
@@ -216,7 +217,7 @@
             <column name="noteuser" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-9">
+    <changeSet author="thofan (generated)" id="1522311740593-9">
         <createTable tableName="revinfo">
             <column name="rev" type="INT">
                 <constraints nullable="false"/>
@@ -224,55 +225,55 @@
             <column name="revtstmp" type="BIGINT"/>
         </createTable>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-10">
+    <changeSet author="thofan (generated)" id="1522311740593-10">
         <addPrimaryKey columnNames="id, rev" constraintName="asset_aud_pkey" tableName="asset_aud"/>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-11">
+    <changeSet author="thofan (generated)" id="1522311740593-11">
         <addPrimaryKey columnNames="id" constraintName="asset_pkey" tableName="asset"/>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-12">
+    <changeSet author="thofan (generated)" id="1522311740593-12">
         <addPrimaryKey columnNames="id" constraintName="assetgroup_pkey" tableName="assetgroup"/>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-13">
+    <changeSet author="thofan (generated)" id="1522311740593-13">
         <addPrimaryKey columnNames="id" constraintName="assetgroupfield_pkey" tableName="assetgroupfield"/>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-14">
+    <changeSet author="thofan (generated)" id="1522311740593-14">
         <addPrimaryKey columnNames="id" constraintName="contactinfo_pkey" tableName="contactinfo"/>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-15">
-        <addPrimaryKey columnNames="id" constraintName="customcodes_pkey" tableName="customcodes"/>
+    <changeSet author="thofan (generated)" id="1522311740593-15">
+        <addPrimaryKey columnNames="code, constant" constraintName="customcodes_pkey" tableName="customcodes"/>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-16">
+    <changeSet author="thofan (generated)" id="1522311740593-16">
         <addPrimaryKey columnNames="id" constraintName="note_pkey" tableName="note"/>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-17">
+    <changeSet author="thofan (generated)" id="1522311740593-17">
         <addPrimaryKey columnNames="rev" constraintName="revinfo_pkey" tableName="revinfo"/>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-18">
+    <changeSet author="thofan (generated)" id="1522311740593-18">
         <addUniqueConstraint columnNames="gfcm" constraintName="uk_1f0suawwxe5rj9b3q2pj040n6" tableName="asset"/>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-19">
+    <changeSet author="thofan (generated)" id="1522311740593-19">
         <addUniqueConstraint columnNames="historyid" constraintName="uk_4wkxllv5eyh8ua4yv38sg1gvo" tableName="asset"/>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-20">
+    <changeSet author="thofan (generated)" id="1522311740593-20">
         <addUniqueConstraint columnNames="mmsi" constraintName="uk_7uul14686owisft1q8o2juayu" tableName="asset"/>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-21">
+    <changeSet author="thofan (generated)" id="1522311740593-21">
         <addUniqueConstraint columnNames="iccat" constraintName="uk_8qkodfqt1w3vtwg43p4x7masv" tableName="asset"/>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-22">
+    <changeSet author="thofan (generated)" id="1522311740593-22">
         <addUniqueConstraint columnNames="cfr" constraintName="uk_95qo69i86qtbymqtd88jv7jmg" tableName="asset"/>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-23">
+    <changeSet author="thofan (generated)" id="1522311740593-23">
         <addUniqueConstraint columnNames="ircs" constraintName="uk_ppdhrvpsem0w88sipaxfss9ak" tableName="asset"/>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-24">
+    <changeSet author="thofan (generated)" id="1522311740593-24">
         <addUniqueConstraint columnNames="imo" constraintName="uk_rumq17sk76wc9bt59rso0ka05" tableName="asset"/>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-25">
+    <changeSet author="thofan (generated)" id="1522311740593-25">
         <addUniqueConstraint columnNames="uvi" constraintName="uk_tl73p92isumeko0qnpic22xjm" tableName="asset"/>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1522304799715-26">
+    <changeSet author="thofan (generated)" id="1522311740593-26">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="asset_aud" constraintName="fklq7kauhigk0mdew67qs2l39ci" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
     </changeSet>
 </databaseChangeLog>
