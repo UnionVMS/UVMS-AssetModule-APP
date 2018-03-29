@@ -274,6 +274,15 @@
             <xsd:element name="value" type="xsd:string" />
         </xsd:sequence>
     </xsd:complexType>
+
+    <xsd:complexType name="AssetListQueryUpdatesOverFLUX">
+        <xsd:sequence>
+            <xsd:element name="startDate" type="xsd:dateTime" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="endDate" type="xsd:dateTime" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="country" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="onlyUpdates" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
+        </xsd:sequence>
+    </xsd:complexType>
     
     <!-- common request, response, fault -->
     
