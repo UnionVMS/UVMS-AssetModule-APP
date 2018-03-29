@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.dao;
 
 import eu.europa.ec.fisheries.uvms.entity.CustomCodes;
+import eu.europa.ec.fisheries.uvms.entity.CustomCodesPK;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -16,7 +17,7 @@ public class CustomCodesDao {
     public CustomCodes create(CustomCodes record) {
 
         // NO DUPLICATES on constant AND code ALLOWED
-        CustomCodes fetched = get(record.getConstant(), record.getCode());
+        CustomCodes fetched = get(record.getPrimaryKey());
         if (fetched != null) return record;
         if(record.getDescription() == null){
             record.setDescription("");
@@ -29,20 +30,19 @@ public class CustomCodesDao {
         return record;
     }
 
-    public CustomCodes get(String constant, String code) {
+
+    public CustomCodes get(CustomCodesPK primaryKey) {
         try {
-            TypedQuery<CustomCodes> query = em.createNamedQuery(CustomCodes.CUSTOMCODES_GET, CustomCodes.class);
-            query.setParameter("constant", constant);
-            query.setParameter("code", code);
-            return query.getSingleResult();
-        } catch (NoResultException e) {
+            CustomCodes customCodes = em.find(CustomCodes.class, primaryKey);
+            return customCodes;
+        } catch (IllegalArgumentException e) {
             return null;
         }
     }
 
-    public CustomCodes update(String constant, String code, String newDescription, String newJson) {
+    public CustomCodes update(CustomCodesPK primaryKey, String newDescription, String newJson) {
 
-        CustomCodes fetchedMDR_lite = get(constant, code);
+        CustomCodes fetchedMDR_lite = get(primaryKey);
         if (fetchedMDR_lite != null) {
             if(newDescription != null) {
                 fetchedMDR_lite.setDescription(newDescription);
@@ -55,20 +55,18 @@ public class CustomCodesDao {
     }
 
 
-    public void delete(String constant, String code) {
+    public void delete(CustomCodesPK primaryKey) {
 
-        CustomCodes record = get(constant, code);
+        CustomCodes record = get(primaryKey);
         if (record != null) {
             em.remove(record);
         }
     }
 
 
-    public Boolean exists(String constant, String code) {
-        TypedQuery<CustomCodes> query = em.createNamedQuery(CustomCodes.CUSTOMCODES_GET, CustomCodes.class);
-        query.setParameter("constant", constant);
-        query.setParameter("code", code);
-        return query.getResultList().size() == 1;
+    public Boolean exists(CustomCodesPK primaryKey) {
+
+        return get(primaryKey) != null;
     }
 
     public List<CustomCodes> getAllFor(String constant) {
@@ -84,7 +82,7 @@ public class CustomCodesDao {
 
     public void deleteAllFor(String constant) {
 
-        Query query = em.createQuery("DELETE FROM CustomCodes m where  m.constant=:constant");
+        Query query = em.createQuery("DELETE FROM CustomCodes m where  m.primaryKey.constant=:constant");
         query.setParameter("constant", constant);
         query.executeUpdate();
 

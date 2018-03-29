@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.dao.CustomCodesDao;
 import eu.europa.ec.fisheries.uvms.entity.CustomCodes;
+import eu.europa.ec.fisheries.uvms.entity.CustomCodesPK;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
@@ -66,29 +67,29 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
         CustomCodes record_inactive = createHelper(CONSTANT, false);
 
         CustomCodes createdrecord_active = mdrlitedao.create(record_active);
-        String constant_active = createdrecord_active.getConstant();
-        String value_active = createdrecord_active.getCode();
+        String constant_active = createdrecord_active.getPrimaryKey().getConstant();
+        String value_active = createdrecord_active.getPrimaryKey().getCode();
 
-        CustomCodes fetched_record = mdrlitedao.get(constant_active, value_active);
+        CustomCodes fetched_record = mdrlitedao.get(createdrecord_active.getPrimaryKey());
 
-        Assert.assertEquals(constant_active, fetched_record.getConstant());
-        Assert.assertEquals(value_active, fetched_record.getCode());
+        Assert.assertEquals(constant_active, fetched_record.getPrimaryKey().getConstant());
+        Assert.assertEquals(value_active, fetched_record.getPrimaryKey().getCode());
 
         CustomCodes createdrecord_inactive = mdrlitedao.create(record_inactive);
-        String constant_inactive = createdrecord_inactive.getConstant();
-        String value_inactive = createdrecord_inactive.getCode();
+        String constant_inactive = createdrecord_inactive.getPrimaryKey().getConstant();
+        String value_inactive = createdrecord_inactive.getPrimaryKey().getCode();
 
-        CustomCodes fetched_inactiverecord = mdrlitedao.get(constant_inactive, value_inactive);
+        CustomCodes fetched_inactiverecord = mdrlitedao.get(createdrecord_inactive.getPrimaryKey());
 
-        Assert.assertEquals(constant_inactive, fetched_inactiverecord.getConstant());
-        Assert.assertEquals(value_inactive, fetched_inactiverecord.getCode());
+        Assert.assertEquals(constant_inactive, fetched_inactiverecord.getPrimaryKey().getConstant());
+        Assert.assertEquals(value_inactive, fetched_inactiverecord.getPrimaryKey().getCode());
 
-        List<CustomCodes> rs = mdrlitedao.getAllFor(record_active.getConstant());
+        List<CustomCodes> rs = mdrlitedao.getAllFor(record_active.getPrimaryKey().getConstant());
         Assert.assertEquals(rs.size(), 2);
 
 
-        mdrlitedao.delete(record_active.getConstant(), record_active.getCode());
-        mdrlitedao.delete(record_active.getConstant(), record_inactive.getCode());
+        mdrlitedao.delete(record_active.getPrimaryKey());
+        mdrlitedao.delete(record_inactive.getPrimaryKey());
 
     }
 
@@ -104,10 +105,10 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
         CustomCodes createdrecord2 = mdrlitedao.create(record2);
 
 
-        List<CustomCodes> rs = mdrlitedao.getAllFor(record1.getConstant());
+        List<CustomCodes> rs = mdrlitedao.getAllFor(record1.getPrimaryKey().getConstant());
         Assert.assertEquals(rs.size(), 1);
 
-        mdrlitedao.delete(record1.getConstant(), record1.getCode());
+        mdrlitedao.delete(record1.getPrimaryKey());
     }
 
     @Test
@@ -118,10 +119,10 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
 
         CustomCodes createdrecord = mdrlitedao.create(record);
 
-        CustomCodes rec = mdrlitedao.get(CONSTANT, createdrecord.getCode());
+        CustomCodes rec = mdrlitedao.get(createdrecord.getPrimaryKey());
         Assert.assertNotNull(rec);
 
-        mdrlitedao.delete(record.getConstant(), record.getCode());
+        mdrlitedao.delete(record.getPrimaryKey());
     }
 
 
@@ -133,10 +134,10 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
 
         CustomCodes createdrecord = mdrlitedao.create(record);
 
-        Boolean exists = mdrlitedao.exists(CONSTANT, createdrecord.getCode());
+        Boolean exists = mdrlitedao.exists(createdrecord.getPrimaryKey());
         Assert.assertTrue(exists);
 
-        mdrlitedao.delete(record.getConstant(), record.getCode());
+        mdrlitedao.delete(record.getPrimaryKey());
     }
 
     @Test
@@ -184,11 +185,11 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
         String createdDescription = created_record.getDescription();
 
         created_record.setDescription("CHANGED");
-        mdrlitedao.update(created_record.getConstant(), created_record.getCode(),"CHANGED",null);
+        mdrlitedao.update(created_record.getPrimaryKey(),"CHANGED",null);
         userTransaction.commit();
         userTransaction.begin();
 
-        CustomCodes fetched_record = mdrlitedao.get(created_record.getConstant(), created_record.getCode());
+        CustomCodes fetched_record = mdrlitedao.get(created_record.getPrimaryKey());
 
         Assert.assertNotEquals(createdDescription,fetched_record.getDescription());
         Assert.assertEquals("CHANGED",fetched_record.getDescription());
@@ -199,16 +200,18 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
 
     private CustomCodes createHelper(String constant, Boolean active) throws JsonProcessingException {
 
+
         CustomCodes record = new CustomCodes();
-        record.setConstant(constant);
         if (active) {
-            record.setCode("1");
+            CustomCodesPK primaryKey = new CustomCodesPK(constant, "1");
+            record.setPrimaryKey(primaryKey);
             record.setDescription("Active");
             ExtraData extradata = new ExtraData(UUID.randomUUID().toString(), UUID.randomUUID().toString());
             String extradataJson = MAPPER.writeValueAsString(extradata);
             record.setJsonstr(extradataJson);
         } else {
-            record.setCode("0");
+            CustomCodesPK primaryKey = new CustomCodesPK(constant, "0");
+            record.setPrimaryKey(primaryKey);
             record.setDescription("InActive");
             ExtraData extradata = new ExtraData(UUID.randomUUID().toString(), UUID.randomUUID().toString());
             String extradataJson = MAPPER.writeValueAsString(extradata);
@@ -221,8 +224,8 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
     private CustomCodes createHelper(String constant, String code, String descr) throws JsonProcessingException {
 
         CustomCodes record = new CustomCodes();
-        record.setConstant(constant);
-        record.setCode(code);
+        CustomCodesPK primaryKey = new CustomCodesPK(constant, code);
+        record.setPrimaryKey(primaryKey);
         record.setDescription(descr);
         return record;
     }

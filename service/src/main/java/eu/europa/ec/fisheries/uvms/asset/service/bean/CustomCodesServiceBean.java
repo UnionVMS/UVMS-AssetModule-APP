@@ -14,6 +14,7 @@ package eu.europa.ec.fisheries.uvms.asset.service.bean;
 import eu.europa.ec.fisheries.uvms.asset.service.CustomCodesService;
 import eu.europa.ec.fisheries.uvms.dao.CustomCodesDao;
 import eu.europa.ec.fisheries.uvms.entity.CustomCodes;
+import eu.europa.ec.fisheries.uvms.entity.CustomCodesPK;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -51,8 +52,8 @@ public class CustomCodesServiceBean implements CustomCodesService {
 			extradata = "";
 		}
 		CustomCodes mdr = new CustomCodes();
-		mdr.setConstant(constant.toUpperCase());
-		mdr.setCode(code);
+		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code);
+		mdr.setPrimaryKey(primaryKey);
 		mdr.setDescription(description);
 		mdr.setJsonstr(extradata);
 
@@ -75,7 +76,9 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		if(code.trim().length() < 1){
 			throw new IllegalArgumentException("Code cannot be empty");
 		}
-		return dao.get(constant.toUpperCase(),code);
+
+		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code);
+		return dao.get(primaryKey);
 
 	}
 
@@ -95,7 +98,8 @@ public class CustomCodesServiceBean implements CustomCodesService {
 			throw new IllegalArgumentException("Code cannot be empty");
 		}
 
-		return dao.exists(constant.toUpperCase(),code);
+		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code);
+		return dao.exists(primaryKey);
 
 	}
 
@@ -114,7 +118,8 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		if(code.trim().length() < 1){
 			throw new IllegalArgumentException("Code cannot be empty");
 		}
-		return dao.update(constant.toUpperCase(),code,newValue,newExtraData);
+		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code);
+		return dao.update(primaryKey, newValue, newExtraData);
 
 	}
 
@@ -132,7 +137,8 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		if(code.trim().length() < 1){
 			throw new IllegalArgumentException("Code cannot be empty");
 		}
-		dao.delete(constant.toUpperCase(),code);
+		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code);
+		dao.delete(primaryKey);
 
 	}
 

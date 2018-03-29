@@ -111,11 +111,11 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
         String createdDescription = created_record.getDescription();
 
         created_record.setDescription("CHANGED");
-        service.update(created_record.getConstant(), created_record.getCode(),"CHANGED",null);
+        service.update(created_record.getPrimaryKey().getConstant(), created_record.getPrimaryKey().getCode(),"CHANGED",null);
         userTransaction.commit();
         userTransaction.begin();
 
-        CustomCodes fetched_record = service.get(created_record.getConstant(), created_record.getCode());
+        CustomCodes fetched_record = service.get(created_record.getPrimaryKey().getConstant(), created_record.getPrimaryKey().getCode());
 
         Assert.assertNotEquals(createdDescription,fetched_record.getDescription());
         Assert.assertEquals("CHANGED",fetched_record.getDescription());
