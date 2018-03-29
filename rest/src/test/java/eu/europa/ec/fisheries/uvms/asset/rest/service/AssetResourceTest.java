@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.asset.rest.service;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import java.time.LocalDateTime;
@@ -224,6 +225,87 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         
         assertThat(assetByCfrAndTimestamp2.getName(), is(newName));
     }
+    
+    @Test
+    @RunAsClient
+    public void getAssetFromAssetIdPastDateTest() throws Exception {
+        LocalDateTime timeStamp = LocalDateTime.now(ZoneOffset.UTC);
+
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+        
+        Asset assetByCfrAndTimestamp1 = getWebTarget()
+                .path("asset")
+                .path("history")
+                .path("cfr")
+                .path(createdAsset.getCfr())
+                .path(timeStamp.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                .request(MediaType.APPLICATION_JSON)
+                .get(Asset.class);
+        
+        assertNull(assetByCfrAndTimestamp1);
+    }
+    
+    @Test
+    @RunAsClient
+    public void getAssetHistoryByAssetHistGuidTest() {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+        
+        Asset fetchedAsset = getWebTarget()
+                .path("asset")
+                .path("history")
+                .path(createdAsset.getHistoryId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .get(Asset.class);
+        
+        assertThat(fetchedAsset, is(AssetMatcher.assetEquals(createdAsset)));
+    }
+    
+    @Test
+    @RunAsClient
+    public void getAssetHistoryByAssetHistGuidTwoRevisionsTest() throws Exception {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+        
+        
+        String newName = "NewAssetName";
+        createdAsset.setName(newName);
+        Asset updatedAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(createdAsset), Asset.class);
+        
+        
+        Asset fetchedAsset = getWebTarget()
+                .path("asset")
+                .path("history")
+                .path(createdAsset.getHistoryId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .get(Asset.class);
+        
+        assertThat(fetchedAsset.getName(), is(asset.getName()));
+        assertThat(fetchedAsset.getId(), is(createdAsset.getId()));
+        
+        Asset fetchedUpdatedAsset = getWebTarget()
+                .path("asset")
+                .path("history")
+                .path(updatedAsset.getHistoryId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .get(Asset.class);
+        
+        assertThat(fetchedUpdatedAsset, is(AssetMatcher.assetEquals(updatedAsset)));
+    }
+    
     
     @Test
     @RunAsClient

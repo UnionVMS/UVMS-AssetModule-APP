@@ -11,16 +11,18 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.dao;
 
-import javax.ejb.Local;
+import static eu.europa.ec.fisheries.uvms.entity.AssetGroup.GROUP_ASSET_BY_GUID;
+import static eu.europa.ec.fisheries.uvms.entity.AssetGroup.GROUP_ASSET_BY_GUID_LIST;
+import static eu.europa.ec.fisheries.uvms.entity.AssetGroup.GROUP_ASSET_BY_USER;
+import static eu.europa.ec.fisheries.uvms.entity.AssetGroup.GROUP_ASSET_FIND_ALL;
+import java.util.List;
+import java.util.UUID;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
-import static eu.europa.ec.fisheries.uvms.entity.AssetGroup.*;
-import java.util.List;
-import java.util.UUID;
 
 @Stateless
 public class AssetGroupDao  {

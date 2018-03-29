@@ -73,7 +73,7 @@ public class AssetMatcher extends TypeSafeDiagnosingMatcher<Asset> {
         if (!Objects.equals(asset.getName(), otherAsset.getName())) {
             equals = false;
             mismatchDescription.appendText(String.format("Name is not equal. Expected %s, Actual: %s", asset
-                    .getUpdateTime(), otherAsset.getUpdateTime()));
+                    .getName(), otherAsset.getName()));
         }
         return equals;
     }
