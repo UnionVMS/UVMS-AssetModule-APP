@@ -41,6 +41,15 @@
                 </xsd:sequence>
             </xsd:complexType>
 
+            <xsd:element name="FLUXVesselSendInformation">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="asset" type="tv:Asset" minOccurs="1"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+
+            </xsd:element>
+
             <xsd:element name="GetFlagStateByGuidAndDateRequest">
                 <xsd:complexType>
                     <xsd:complexContent>

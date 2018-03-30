@@ -51,6 +51,7 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
     private Queue auditQueue;
     private Queue configQueue;
     private Queue responseQueue;
+    private Queue exchangeQueue;
     private ConnectionFactory connectionFactory;
     
 
@@ -63,6 +64,7 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
         nationalSourceQueue = JMSUtils.lookupQueue(AssetConstants.QUEUE_DATASOURCE_NATIONAL);
         xeuSourceQueue = JMSUtils.lookupQueue(AssetConstants.QUEUE_DATASOURCE_XEU);
         auditQueue = JMSUtils.lookupQueue(AssetConstants.AUDIT_MODULE_QUEUE);
+        exchangeQueue = JMSUtils.lookupQueue(AssetConstants.EXCHANGE_MODULE_QUEUE);
         configQueue = JMSUtils.lookupQueue(ConfigConstants.CONFIG_MESSAGE_IN_QUEUE);
     }
 
@@ -124,6 +126,9 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
                     break;
                 case CONFIG:
                     getProducer(session, configQueue).send(message);
+                    break;
+                case EXCHANGE:
+                    getProducer(session, exchangeQueue).send(message);
                     break;
             }
 
