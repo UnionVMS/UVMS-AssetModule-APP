@@ -32,7 +32,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @Slf4j
 public class UpdatedAssetServiceBean implements UpdatedAssetService {
 
-    private static final int SYNC_TO_FLUX_AFTER_MINUTES = 1;
+    private static final int SYNC_TO_FLUX_AFTER_MINUTES = 30;
 
     @EJB
     private MessageProducer messageProducer;
@@ -54,7 +54,7 @@ public class UpdatedAssetServiceBean implements UpdatedAssetService {
         putCfrAndDate(cfr, DateTime.now());
     }
 
-    @Schedule(hour = "*", minute = "*", second = "*/10", persistent = false)
+    @Schedule(hour = "*", minute = "*/10", persistent = false)
     protected void processUpdatedAssets() {
         List<String> updatedAssetsToBeRemoved = new ArrayList<>();
 
