@@ -27,5 +27,6 @@ public class AssetConstants {
     public static final String QUEUE_DATASOURCE_XEU = "jms/queue/UVMSAssetXEU"; //asset eu source
 
     public static final String AUDIT_MODULE_QUEUE = "jms/queue/UVMSAuditEvent";
+    public static final String EXCHANGE_MODULE_QUEUE = "jms/queue/UVMSExchangeEvent";
 
 }

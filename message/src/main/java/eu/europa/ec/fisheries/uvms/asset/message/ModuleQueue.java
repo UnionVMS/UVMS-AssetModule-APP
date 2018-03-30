@@ -13,6 +13,6 @@ package eu.europa.ec.fisheries.uvms.asset.message;
 
 public enum ModuleQueue {
 
-    AUDIT, CONFIG;
+    AUDIT, CONFIG, EXCHANGE
 
 }

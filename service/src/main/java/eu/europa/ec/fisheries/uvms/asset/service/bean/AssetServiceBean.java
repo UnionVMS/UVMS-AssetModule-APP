@@ -20,6 +20,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.jms.TextMessage;
 
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.GetAssetListResponseDto;
+import eu.europa.ec.fisheries.uvms.asset.service.UpdatedAssetService;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
 import eu.europa.ec.fisheries.uvms.bean.AssetDomainModelBean;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
@@ -56,6 +57,9 @@ public class AssetServiceBean implements AssetService {
     @EJB
     AssetDomainModelBean assetDomainModel;
 
+    @EJB
+    private UpdatedAssetService updatedAssetServiceBean;
+
     /**
      * {@inheritDoc}
      *
@@ -67,6 +71,7 @@ public class AssetServiceBean implements AssetService {
     public Asset createAsset(Asset asset, String username) throws AssetException {
         LOG.debug("Creating asset.");
         Asset createdAsset = assetDomainModel.createAsset(asset, username);
+        updatedAssetServiceBean.assetWasUpdated(createdAsset.getCfr());
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetCreated(createdAsset.getAssetId().getGuid(), username);
             messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
@@ -120,6 +125,7 @@ public class AssetServiceBean implements AssetService {
     @Override
     public Asset updateAsset(Asset asset, String username, String comment) throws AssetException {
         Asset updatedAsset = updateAssetInternal(asset, username);
+        updatedAssetServiceBean.assetWasUpdated(updatedAsset.getCfr());
         logAssetUpdated(updatedAsset, comment, username);
         return updatedAsset;
     }
