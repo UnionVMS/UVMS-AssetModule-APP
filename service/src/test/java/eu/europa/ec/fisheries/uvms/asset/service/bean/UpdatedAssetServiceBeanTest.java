@@ -6,6 +6,7 @@ import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.exchange.model.mapper.ExchangeModuleRequestMapper;
+import eu.europa.ec.fisheries.wsdl.asset.module.FLUXVesselSendInformation;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
@@ -17,6 +18,7 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import static eu.europa.ec.fisheries.uvms.asset.service.bean.UpdatedAssetServiceBean.SYNC_TO_FLUX_AFTER_MINUTES;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -26,8 +28,6 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JAXBMarshaller.class, ExchangeModuleRequestMapper.class})
 public class UpdatedAssetServiceBeanTest {
-
-    private static final int SYNC_TO_FLUX_AFTER_MINUTES = 30;
 
     @InjectMocks
     private UpdatedAssetServiceBean updatedAssetServiceBean;
@@ -56,10 +56,16 @@ public class UpdatedAssetServiceBeanTest {
         Asset asset2 = new Asset();
         asset2.setCfr(cfr2);
 
+        FLUXVesselSendInformation fluxVesselSendInformation1 = new FLUXVesselSendInformation();
+        fluxVesselSendInformation1.setAsset(asset1);
+
+        FLUXVesselSendInformation fluxVesselSendInformation2 = new FLUXVesselSendInformation();
+        fluxVesselSendInformation2.setAsset(asset2);
+
         mockStatic(JAXBMarshaller.class);
         mockStatic(ExchangeModuleRequestMapper.class);
-        when(JAXBMarshaller.marshallJaxBObjectToString(asset1)).thenReturn("asset1");
-        when(JAXBMarshaller.marshallJaxBObjectToString(asset2)).thenReturn("asset2");
+        when(JAXBMarshaller.marshallJaxBObjectToString(fluxVesselSendInformation1)).thenReturn("asset1");
+        when(JAXBMarshaller.marshallJaxBObjectToString(fluxVesselSendInformation2)).thenReturn("asset2");
         when(ExchangeModuleRequestMapper.createSendAssetInformation("asset1", "asset")).thenReturn("asset1 in exchange wrapper");
         when(ExchangeModuleRequestMapper.createSendAssetInformation("asset2", "asset")).thenReturn("asset2 in exchange wrapper");
         doReturn("").when(messageProducer).sendModuleMessage("asset1 in exchange wrapper", ModuleQueue.EXCHANGE);
@@ -70,12 +76,12 @@ public class UpdatedAssetServiceBeanTest {
 
         updatedAssetServiceBean.putCfrAndDate(cfr, DateTime.now().minusMinutes(SYNC_TO_FLUX_AFTER_MINUTES).minusMinutes(1));
         updatedAssetServiceBean.putCfrAndDate(cfr2, DateTime.now().minusMinutes(SYNC_TO_FLUX_AFTER_MINUTES).minusMinutes(1));
-        updatedAssetServiceBean.putCfrAndDate("random cfr", DateTime.now()); // this one shouldn;t be synced
+        updatedAssetServiceBean.putCfrAndDate("random cfr", DateTime.now()); // this one shouldn't be synced
         updatedAssetServiceBean.processUpdatedAssets();
 
         verifyStatic();
-        JAXBMarshaller.marshallJaxBObjectToString(asset1);
-        JAXBMarshaller.marshallJaxBObjectToString(asset2);
+        JAXBMarshaller.marshallJaxBObjectToString(fluxVesselSendInformation1);
+        JAXBMarshaller.marshallJaxBObjectToString(fluxVesselSendInformation2);
         ExchangeModuleRequestMapper.createSendAssetInformation("asset1", "asset");
         ExchangeModuleRequestMapper.createSendAssetInformation("asset2", "asset");
 
