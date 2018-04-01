@@ -89,5 +89,15 @@ public class CustomCodesDao {
 
     }
 
+    public List<String> getAllConstants() {
+        try {
+            TypedQuery<String> query = em.createNamedQuery(CustomCodes.CUSTOMCODES_GETALLCONSTANTS, String.class);
+            return query.getResultList();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+
 
 }
