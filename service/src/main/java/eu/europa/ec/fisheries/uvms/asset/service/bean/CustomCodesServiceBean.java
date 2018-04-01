@@ -165,4 +165,14 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		dao.deleteAllFor(constant.toUpperCase());
 
 	}
+
+	@Override
+	public List<String> getAllConstants(){
+
+		return dao.getAllConstants();
+
+	}
+
+
+
 }

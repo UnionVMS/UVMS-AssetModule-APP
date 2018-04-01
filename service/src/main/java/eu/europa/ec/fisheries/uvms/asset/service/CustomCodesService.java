@@ -76,6 +76,13 @@ public interface CustomCodesService {
      */
     void deleteAllFor(String constant);
 
+    /** Get all constants distinct
+     *
+     * @return
+     */
+    List<String> getAllConstants();
+
+
 }
 
 
