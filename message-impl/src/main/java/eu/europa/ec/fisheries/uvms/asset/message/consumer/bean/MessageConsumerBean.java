@@ -21,13 +21,7 @@ import javax.jms.TextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetConstants;
-import eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean.GetAssetEventBean;
-import eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean.GetAssetGroupEventBean;
-import eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean.GetAssetGroupListByAssetGuidEventBean;
-import eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean.GetAssetListByAssetGroupEventBean;
-import eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean.GetAssetListEventBean;
-import eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean.PingEventBean;
-import eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean.UpsertAssetMessageEventBean;
+import eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean.AssetMessageEventBean;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
@@ -54,26 +48,8 @@ public class MessageConsumerBean implements MessageListener {
     private static final Logger LOG = LoggerFactory.getLogger(MessageConsumerBean.class);
 
     @Inject
-    private GetAssetEventBean getAssetEventBean;
-
-    @Inject
-    private GetAssetListEventBean getAssetListEventBean;
-
-    @Inject
-    private GetAssetGroupEventBean getAssetGroupEventBean;
-
-    @Inject
-    private GetAssetListByAssetGroupEventBean getAssetListByAssetGroupEventBean;
-
-    @Inject
-    private GetAssetGroupListByAssetGuidEventBean getAssetGroupListByAssetGuidEventBean;
-
-    @Inject
-    private UpsertAssetMessageEventBean upsertAssetMessageEventBean;
-
-    @Inject
-    private PingEventBean pingEventBean;
-
+    private AssetMessageEventBean messageEventBean;
+    
     @Inject
     @AssetMessageErrorEvent
     Event<AssetMessageEvent> assetErrorEvent;
@@ -91,35 +67,35 @@ public class MessageConsumerBean implements MessageListener {
             switch (method) {
                 case GET_ASSET:
                     GetAssetModuleRequest getRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, GetAssetModuleRequest.class);
-                    getAssetEventBean.getAsset(textMessage, getRequest.getId());
+                    messageEventBean.getAsset(textMessage, getRequest.getId());
                     break;
                 case ASSET_LIST:
                     AssetListModuleRequest listRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetListModuleRequest.class);
                     AssetMessageEvent listEvent = new AssetMessageEvent(textMessage, listRequest.getQuery());
-                    getAssetListEventBean.getAssetList(listEvent);
+                    messageEventBean.getAssetList(listEvent);
                     break;
                 case ASSET_GROUP:
                     AssetGroupListByUserRequest groupListRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetGroupListByUserRequest.class);
                     AssetMessageEvent assetGroupListEvent = new AssetMessageEvent(textMessage, groupListRequest);
-                    getAssetGroupEventBean.getAssetGroupByUserName(assetGroupListEvent);
+                    messageEventBean.getAssetGroupByUserName(assetGroupListEvent);
                     break;
                 case ASSET_GROUP_LIST_BY_ASSET_GUID:
                     GetAssetGroupListByAssetGuidRequest getAssetGroupListByAssetGuidRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, GetAssetGroupListByAssetGuidRequest.class);
                     AssetMessageEvent assetMessageEvent = new AssetMessageEvent(textMessage, getAssetGroupListByAssetGuidRequest.getAssetGuid());
-                    getAssetGroupListByAssetGuidEventBean.getAssetGroupListByAssetEvent(assetMessageEvent);
+                    messageEventBean.getAssetGroupListByAssetEvent(assetMessageEvent);
                     break;
                 case ASSET_LIST_BY_GROUP:
                     GetAssetListByAssetGroupsRequest assetListByGroupListRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, GetAssetListByAssetGroupsRequest.class);
                     AssetMessageEvent assetListByGroupListEvent = new AssetMessageEvent(textMessage, assetListByGroupListRequest);
-                    getAssetListByAssetGroupEventBean.getAssetListByAssetGroups(assetListByGroupListEvent);
+                    messageEventBean.getAssetListByAssetGroups(assetListByGroupListEvent);
                     break;
                 case PING:
-                    pingEventBean.ping(new AssetMessageEvent(textMessage));
+                    messageEventBean.ping(new AssetMessageEvent(textMessage));
                     break;
                 case UPSERT_ASSET:
                     UpsertAssetModuleRequest upsertRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, UpsertAssetModuleRequest.class);
                     AssetMessageEvent upsertAssetMessageEvent = new AssetMessageEvent(textMessage, upsertRequest.getAsset(), upsertRequest.getUserName());
-                    upsertAssetMessageEventBean.upsertAsset(upsertAssetMessageEvent);
+                    messageEventBean.upsertAsset(upsertAssetMessageEvent);
                     break;
                 default:
                     LOG.error("[ Not implemented method consumed: {} ]", method);

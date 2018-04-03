@@ -53,8 +53,7 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
     private Queue responseQueue;
     private ConnectionFactory connectionFactory;
     
-
-    final static Logger LOG = LoggerFactory.getLogger(MessageProducerBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MessageProducerBean.class);
 
     @PostConstruct
     public void init() {
