@@ -2,9 +2,9 @@ package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.europa.ec.fisheries.uvms.dao.CustomCodesDao;
-import eu.europa.ec.fisheries.uvms.entity.CustomCodes;
-import eu.europa.ec.fisheries.uvms.entity.CustomCodesPK;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.CustomCodesDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodes;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;

@@ -23,19 +23,19 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.ContactInfoDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.NoteDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
+import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetListResponse;
-import eu.europa.ec.fisheries.uvms.constant.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.dao.AssetDao;
-import eu.europa.ec.fisheries.uvms.dao.ContactInfoDao;
-import eu.europa.ec.fisheries.uvms.dao.NoteDao;
-import eu.europa.ec.fisheries.uvms.entity.Asset;
-import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
-import eu.europa.ec.fisheries.uvms.entity.AssetGroupField;
-import eu.europa.ec.fisheries.uvms.entity.ContactInfo;
-import eu.europa.ec.fisheries.uvms.entity.Note;
-import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 
 @Stateless
 public class AssetServiceBean implements AssetService {

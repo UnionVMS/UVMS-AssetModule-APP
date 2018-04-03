@@ -11,8 +11,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms;
 
-import static eu.europa.ec.fisheries.uvms.entity.AssetGroup.GROUP_ASSET_BY_USER;
-import static eu.europa.ec.fisheries.uvms.entity.AssetGroup.GROUP_ASSET_FIND_ALL;
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.GROUP_ASSET_BY_USER;
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.GROUP_ASSET_FIND_ALL;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -30,9 +30,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
-import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
-import eu.europa.ec.fisheries.uvms.entity.AssetGroupField;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetGroupDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
 
 
 @RunWith(MockitoJUnitRunner.class)

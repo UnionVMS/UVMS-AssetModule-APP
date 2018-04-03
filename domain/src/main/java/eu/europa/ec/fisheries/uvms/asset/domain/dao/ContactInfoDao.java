@@ -8,7 +8,7 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.dao;
+package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,34 +16,34 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import eu.europa.ec.fisheries.uvms.entity.Asset;
-import eu.europa.ec.fisheries.uvms.entity.Note;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 
 @Stateless
-public class NoteDao {
-
+public class ContactInfoDao {
+    
     @PersistenceContext
     EntityManager em;
-
-    public Note findNote(UUID id) {
-        return em.find(Note.class, id);
+    
+    public ContactInfo findContactInfo(UUID id) {
+        return em.find(ContactInfo.class, id);
     }
 
-    public Note createNote(Note note) {
-        em.persist(note);
-        return note;
+    public ContactInfo createContactInfo(ContactInfo contactInfo) {
+        em.persist(contactInfo);
+        return contactInfo;
     }
 
-    public Note updateNote(Note note) {
-        return em.merge(note);
+    public ContactInfo updateContactInfo(ContactInfo contactInfo) {
+        return em.merge(contactInfo);
     }
 
-    public void deleteNote(Note note) {
-        em.remove(note);
+    public void deleteContactInfo(ContactInfo contactInfo) {
+        em.remove(contactInfo);
     }
 
-    public List<Note> getNotesByAsset(Asset asset) {
-        TypedQuery<Note> query = em.createNamedQuery(Note.FIND_BY_ASSET, Note.class);
+    public List<ContactInfo> getContactInfoByAsset(Asset asset) {
+        TypedQuery<ContactInfo> query = em.createNamedQuery(ContactInfo.FIND_BY_ASSET, ContactInfo.class);
         query.setParameter("assetId", asset.getId());
         return query.getResultList();
     }

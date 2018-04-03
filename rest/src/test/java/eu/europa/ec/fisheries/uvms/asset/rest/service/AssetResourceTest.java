@@ -19,11 +19,11 @@ import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 import eu.europa.ec.fisheries.uvms.asset.rest.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.asset.rest.AssetHelper;
 import eu.europa.ec.fisheries.uvms.asset.rest.AssetMatcher;
-import eu.europa.ec.fisheries.uvms.entity.Asset;
-import eu.europa.ec.fisheries.uvms.entity.Note;
 
 @RunWith(Arquillian.class)
 public class AssetResourceTest extends AbstractAssetRestTest {

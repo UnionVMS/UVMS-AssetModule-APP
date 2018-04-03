@@ -9,12 +9,15 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.asset.exception;
+package eu.europa.ec.fisheries.uvms.asset.domain.constant;
 
-public class InputArgumentException extends AssetServiceException {
-	private static final long serialVersionUID = 1L;
+public enum UnitTonnage {
+	LONDON, OSLO;
 
-	public InputArgumentException(String message) {
-		super(message);
-	}
+    public static UnitTonnage getType(String grossTonnageUnit) {
+        if (grossTonnageUnit != null && !grossTonnageUnit.isEmpty()) {
+            return UnitTonnage.valueOf(grossTonnageUnit);
+        }
+        return UnitTonnage.LONDON;
+    }
 }

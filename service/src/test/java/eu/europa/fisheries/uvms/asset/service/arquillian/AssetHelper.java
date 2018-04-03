@@ -5,10 +5,10 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.entity.Asset;
-import eu.europa.ec.fisheries.uvms.entity.ContactInfo;
-import eu.europa.ec.fisheries.uvms.entity.Note;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 
 public abstract class AssetHelper {
 

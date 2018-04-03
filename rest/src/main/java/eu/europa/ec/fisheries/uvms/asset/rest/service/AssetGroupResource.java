@@ -11,9 +11,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.rest.service;
 
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
-import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
-import eu.europa.ec.fisheries.uvms.entity.AssetGroupField;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import io.swagger.annotations.*;

@@ -11,11 +11,10 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.CustomCodesDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodes;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 import eu.europa.ec.fisheries.uvms.asset.service.CustomCodesService;
-import eu.europa.ec.fisheries.uvms.dao.CustomCodesDao;
-import eu.europa.ec.fisheries.uvms.entity.CustomCodes;
-import eu.europa.ec.fisheries.uvms.entity.CustomCodesPK;
-
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.util.List;

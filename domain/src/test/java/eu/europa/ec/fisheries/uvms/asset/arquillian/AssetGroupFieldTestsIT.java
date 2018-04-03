@@ -10,10 +10,10 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
-import eu.europa.ec.fisheries.uvms.dao.AssetGroupFieldDao;
-import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
-import eu.europa.ec.fisheries.uvms.entity.AssetGroupField;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetGroupDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetGroupFieldDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
 
 @RunWith(Arquillian.class)
 public class AssetGroupFieldTestsIT extends TransactionalTests {

@@ -1,10 +1,10 @@
-package eu.europa.ec.fisheries.uvms.dao;
+package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.persistence.*;
-import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
-import eu.europa.ec.fisheries.uvms.entity.AssetGroupField;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
 import java.util.List;
 import java.util.UUID;
 

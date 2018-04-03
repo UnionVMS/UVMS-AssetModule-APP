@@ -30,11 +30,11 @@ import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import eu.europa.ec.fisheries.uvms.constant.SearchFields;
-import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.dao.AssetDao;
-import eu.europa.ec.fisheries.uvms.entity.Asset;
-import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 
 @RunWith(Arquillian.class)
 public class AssetDaoTest extends TransactionalTests {

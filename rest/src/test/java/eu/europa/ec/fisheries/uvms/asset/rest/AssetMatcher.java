@@ -13,7 +13,7 @@ package eu.europa.ec.fisheries.uvms.asset.rest;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.jboss.util.Objects;
-import eu.europa.ec.fisheries.uvms.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 
 public class AssetMatcher extends TypeSafeDiagnosingMatcher<Asset> {
 

@@ -19,14 +19,14 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
+import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.uvms.constant.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.constant.SearchFields;
-import eu.europa.ec.fisheries.uvms.entity.Asset;
-import eu.europa.ec.fisheries.uvms.entity.ContactInfo;
-import eu.europa.ec.fisheries.uvms.entity.Note;
-import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 
 @RunWith(Arquillian.class)
 public class AssetServiceBeanIntTest extends TransactionalTests {

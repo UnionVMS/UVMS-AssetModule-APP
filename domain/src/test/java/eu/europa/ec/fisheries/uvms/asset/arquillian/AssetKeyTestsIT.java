@@ -8,9 +8,9 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import eu.europa.ec.fisheries.uvms.constant.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.dao.AssetDao;
-import eu.europa.ec.fisheries.uvms.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 
 
 /**

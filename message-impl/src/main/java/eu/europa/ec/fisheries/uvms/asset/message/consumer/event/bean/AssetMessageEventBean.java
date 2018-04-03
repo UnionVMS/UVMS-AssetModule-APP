@@ -19,6 +19,9 @@ import javax.inject.Inject;
 import javax.jms.TextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.mapper.AssetModelMapper;
@@ -33,9 +36,6 @@ import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetListResponse;
-import eu.europa.ec.fisheries.uvms.constant.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.entity.Asset;
-import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
@@ -110,7 +110,7 @@ public class AssetMessageEventBean {
         LOG.info("Get asset group");
         try {
             AssetGroupListByUserRequest request = message.getRequest();
-            List<eu.europa.ec.fisheries.uvms.entity.AssetGroup> assetGroups = assetGroup.getAssetGroupList(request.getUser());
+            List<eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup> assetGroups = assetGroup.getAssetGroupList(request.getUser());
             List<AssetGroup> response = assetGroups.stream().map(AssetModelMapper::toAssetGroupModel).collect(Collectors.toList());
 
             messageProducer.sendModuleResponseMessage(message.getMessage(), AssetModuleResponseMapper.mapToAssetGroupListResponse(response));
@@ -123,7 +123,7 @@ public class AssetMessageEventBean {
     public void getAssetGroupListByAssetEvent(AssetMessageEvent message) {
         LOG.info("Get asset group by asset guid");
         try {
-            List<eu.europa.ec.fisheries.uvms.entity.AssetGroup> assetGroups = assetGroup.getAssetGroupListByAssetId(UUID.fromString(message.getAssetGuid()));
+            List<eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup> assetGroups = assetGroup.getAssetGroupListByAssetId(UUID.fromString(message.getAssetGuid()));
             List<AssetGroup> response = assetGroups.stream().map(AssetModelMapper::toAssetGroupModel).collect(Collectors.toList());
             messageProducer.sendModuleResponseMessage(message.getMessage(), AssetModuleResponseMapper.mapToAssetGroupListResponse(response));
         } catch (AssetException e) {
@@ -140,7 +140,7 @@ public class AssetMessageEventBean {
                 assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting AssetListByVesselGroups [ Request is null ]")));
                 return;
             }
-            List<eu.europa.ec.fisheries.uvms.entity.AssetGroup> assetGroupModels = request.getGroups().stream().map(AssetModelMapper::toAssetGroupEntity).collect(Collectors.toList());
+            List<eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup> assetGroupModels = request.getGroups().stream().map(AssetModelMapper::toAssetGroupEntity).collect(Collectors.toList());
             List<Asset> assets = assetService.getAssetListByAssetGroups(assetGroupModels);
 
             List<eu.europa.ec.fisheries.wsdl.asset.types.Asset> assetModels = assets.stream().map(AssetModelMapper::toAssetModel).collect(Collectors.toList());

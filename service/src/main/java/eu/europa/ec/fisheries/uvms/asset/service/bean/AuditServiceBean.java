@@ -14,12 +14,12 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.message.ModuleQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
 import eu.europa.ec.fisheries.uvms.asset.message.mapper.AuditModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
-import eu.europa.ec.fisheries.uvms.entity.Asset;
 
 @Stateless
 public class AuditServiceBean {

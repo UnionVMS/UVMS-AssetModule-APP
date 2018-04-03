@@ -9,12 +9,12 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.dao;
+package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 
-import static eu.europa.ec.fisheries.uvms.entity.AssetGroup.GROUP_ASSET_BY_GUID;
-import static eu.europa.ec.fisheries.uvms.entity.AssetGroup.GROUP_ASSET_BY_GUID_LIST;
-import static eu.europa.ec.fisheries.uvms.entity.AssetGroup.GROUP_ASSET_BY_USER;
-import static eu.europa.ec.fisheries.uvms.entity.AssetGroup.GROUP_ASSET_FIND_ALL;
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.GROUP_ASSET_BY_GUID;
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.GROUP_ASSET_BY_GUID_LIST;
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.GROUP_ASSET_BY_USER;
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.GROUP_ASSET_FIND_ALL;
 import java.util.List;
 import java.util.UUID;
 import javax.ejb.Stateless;
@@ -22,7 +22,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 
 @Stateless
 public class AssetGroupDao  {

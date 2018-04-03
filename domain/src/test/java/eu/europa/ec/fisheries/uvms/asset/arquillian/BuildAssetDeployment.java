@@ -14,7 +14,6 @@ import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 @ArquillianSuiteDeployment
 public abstract class BuildAssetDeployment {
 
-
     @Deployment(name = "normal", order = 1)
     public static Archive<?> createDeployment() {
 
@@ -27,22 +26,8 @@ public abstract class BuildAssetDeployment {
                 .importRuntimeAndTestDependencies().resolve().withTransitivity().asFile();
         testWar.addAsLibraries(files);
 
-
-        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.bean");
-        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.constant");
-        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.entity");
-        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.dao");
-        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.mapper");
-        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.util");
-        testWar.addPackages(true, "eu.europa.ec.fisheries.wsdl.asset");
-        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset.model.exception");
-        testWar.addPackages(true, "com.tocea.easycoverage.framework.api");
-        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.model");
-        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.asset.arquillian");
-        testWar.addPackages(true, "eu.europa.ec.fisheries.schema");
-
-
-        //testWar.addClass(TransactionalTests.class);
+        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset.domain");
+        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset.arquillian");
 
         testWar.addAsResource("persistence-integration.xml", "META-INF/persistence.xml");
 

@@ -13,7 +13,7 @@ package eu.europa.ec.fisheries.uvms.asset.service.dto;
 
 import java.util.ArrayList;
 import java.util.List;
-import eu.europa.ec.fisheries.uvms.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 
 public class AssetListResponse {
 

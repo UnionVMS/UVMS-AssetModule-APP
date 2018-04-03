@@ -18,13 +18,13 @@ import java.util.List;
 import java.util.UUID;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetGroupDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetGroupFieldDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
-import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
-import eu.europa.ec.fisheries.uvms.dao.AssetGroupFieldDao;
-import eu.europa.ec.fisheries.uvms.entity.AssetGroup;
-import eu.europa.ec.fisheries.uvms.entity.AssetGroupField;
 
 @Stateless
 public class AssetGroupServiceBean implements AssetGroupService {

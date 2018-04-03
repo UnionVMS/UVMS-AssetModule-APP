@@ -9,8 +9,12 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.constant;
+package eu.europa.ec.fisheries.uvms.asset.service.exception;
 
-public enum UnitLength {
-	LOA, LBP;
+public class InputArgumentException extends AssetServiceException {
+	private static final long serialVersionUID = 1L;
+
+	public InputArgumentException(String message) {
+		super(message);
+	}
 }

@@ -1,10 +1,9 @@
-package eu.europa.ec.fisheries.uvms.entity;
+package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
 
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodes.CUSTOMCODES_GETALLCONSTANTS;
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodes.CUSTOMCODES_GETALLFOR;
 import javax.persistence.*;
-
-import static eu.europa.ec.fisheries.uvms.entity.CustomCodes.CUSTOMCODES_GETALLCONSTANTS;
-import static eu.europa.ec.fisheries.uvms.entity.CustomCodes.CUSTOMCODES_GETALLFOR;
 
 @Entity
 @Table(name = "customcodes")

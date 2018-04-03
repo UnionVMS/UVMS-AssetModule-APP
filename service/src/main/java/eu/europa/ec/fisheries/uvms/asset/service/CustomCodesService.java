@@ -11,9 +11,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service;
 
-import eu.europa.ec.fisheries.uvms.entity.CustomCodes;
-
 import javax.ejb.Local;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodes;
 import java.util.List;
 
 

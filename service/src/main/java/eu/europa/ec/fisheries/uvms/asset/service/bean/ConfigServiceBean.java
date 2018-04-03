@@ -20,11 +20,11 @@ import javax.ejb.Stateless;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitLength;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.ConfigModelException;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
-import eu.europa.ec.fisheries.uvms.constant.UnitLength;
-import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 
 
 @Stateless

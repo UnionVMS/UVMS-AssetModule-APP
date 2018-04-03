@@ -1,14 +1,14 @@
-package eu.europa.ec.fisheries.uvms.entity;
+package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
-import static eu.europa.ec.fisheries.uvms.entity.Asset.ASSET_FIND_ALL;
-import static eu.europa.ec.fisheries.uvms.entity.Asset.ASSET_FIND_BY_CFR;
-import static eu.europa.ec.fisheries.uvms.entity.Asset.ASSET_FIND_BY_GFCM;
-import static eu.europa.ec.fisheries.uvms.entity.Asset.ASSET_FIND_BY_ICCAT;
-import static eu.europa.ec.fisheries.uvms.entity.Asset.ASSET_FIND_BY_IDS;
-import static eu.europa.ec.fisheries.uvms.entity.Asset.ASSET_FIND_BY_IMO;
-import static eu.europa.ec.fisheries.uvms.entity.Asset.ASSET_FIND_BY_IRCS;
-import static eu.europa.ec.fisheries.uvms.entity.Asset.ASSET_FIND_BY_MMSI;
-import static eu.europa.ec.fisheries.uvms.entity.Asset.ASSET_FIND_BY_UVI;
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_ALL;
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_BY_CFR;
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_BY_GFCM;
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_BY_ICCAT;
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_BY_IDS;
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_BY_IMO;
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_BY_IRCS;
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_BY_MMSI;
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_BY_UVI;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -27,7 +27,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
-import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
 
 @Audited
 @Entity

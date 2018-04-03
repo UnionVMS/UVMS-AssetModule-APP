@@ -16,9 +16,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
+import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.AssetQuery;
-import eu.europa.ec.fisheries.uvms.constant.SearchFields;
-import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 
 public class SearchFieldMapper {
     

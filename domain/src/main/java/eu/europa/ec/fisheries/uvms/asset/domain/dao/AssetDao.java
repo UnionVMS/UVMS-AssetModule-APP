@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.dao;
+package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -19,11 +19,11 @@ import org.hibernate.envers.query.AuditQuery;
 import org.hibernate.envers.query.criteria.AuditCriterion;
 import org.hibernate.envers.query.criteria.AuditDisjunction;
 import org.hibernate.envers.query.criteria.ExtendableCriterion;
-import eu.europa.ec.fisheries.uvms.constant.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.constant.SearchFields;
-import eu.europa.ec.fisheries.uvms.entity.Asset;
-import eu.europa.ec.fisheries.uvms.mapper.SearchFieldType;
-import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchFieldType;
+import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 
 @Stateless
 public class AssetDao {

@@ -1,11 +1,10 @@
-package eu.europa.ec.fisheries.uvms.dao;
-
-import eu.europa.ec.fisheries.uvms.entity.CustomCodes;
-import eu.europa.ec.fisheries.uvms.entity.CustomCodesPK;
+package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.persistence.*;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodes;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 import java.util.List;
 
 @Stateless

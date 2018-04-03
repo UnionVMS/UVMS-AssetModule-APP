@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.entity;
+package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
 import javax.persistence.Embeddable;
 import java.io.Serializable;
