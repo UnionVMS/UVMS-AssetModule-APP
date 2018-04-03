@@ -32,7 +32,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @Slf4j
 public class UpdatedAssetServiceBean implements UpdatedAssetService {
 
-    private static final int SYNC_TO_FLUX_AFTER_MINUTES = 30;
+    protected static final int SYNC_TO_FLUX_AFTER_MINUTES = 30;
 
     @EJB
     private MessageProducer messageProducer;
