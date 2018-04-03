@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet author="stihft" id="Insert parameter asset.sync.with.fleet">
+        
+        <insert tableName="parameter">
+            <column name="param_id" value="asset.sync.with.fleet" />
+            <column name="param_value" value="false" />
+            <column name="param_description" value="Boolean, indicating whether new assets should be uploaded to the European Fleet Register, and whether the European Fleet Register should be checked for updates to download in the Asset database" />
+        </insert>
+
+        <rollback>
+            <delete tableName="parameter">
+                <where> 
+                    param_id in ('asset.sync.with.fleet')
+                </where>
+            </delete>
+        </rollback>
+        
+    </changeSet>
+</databaseChangeLog>
