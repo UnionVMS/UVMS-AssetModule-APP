@@ -5,6 +5,8 @@ import eu.europa.ec.fisheries.uvms.asset.message.ModuleQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.service.constants.ParameterKey;
+import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
 import eu.europa.ec.fisheries.uvms.exchange.model.mapper.ExchangeModuleRequestMapper;
 import eu.europa.ec.fisheries.wsdl.asset.module.FLUXVesselSendInformation;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
@@ -19,6 +21,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import static eu.europa.ec.fisheries.uvms.asset.service.bean.UpdatedAssetServiceBean.SYNC_TO_FLUX_AFTER_MINUTES;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -37,6 +40,42 @@ public class UpdatedAssetServiceBeanTest {
 
     @Mock
     private AssetService assetService;
+
+    @Mock
+    private ParameterService parameterService;
+
+    @Test
+    public void testProcessUpdatedAssetsWhenCfrIsNull() throws Exception {
+        updatedAssetServiceBean.assetWasUpdated(null);
+        verifyNoMoreInteractions(messageProducer, assetService, parameterService);
+    }
+
+    @Test
+    public void testProcessUpdatedAssetsWhenSyncWithFleetIsDisabled() throws Exception {
+        doReturn(false).when(parameterService).getBooleanValue(ParameterKey.SYNC_WITH_FLEET.getKey());
+
+        updatedAssetServiceBean.assetWasUpdated("abc");
+
+        verify(parameterService).getBooleanValue(ParameterKey.SYNC_WITH_FLEET.getKey());
+        verifyNoMoreInteractions(messageProducer, assetService, parameterService);
+    }
+
+
+    @Test
+    public void testAssetWasUpdatedWhenSyncWithFleetIsEnabled() throws Exception {
+        final String cfr = "CFR";
+
+        doReturn(true).when(parameterService).getBooleanValue(ParameterKey.SYNC_WITH_FLEET.getKey());
+
+        updatedAssetServiceBean.assetWasUpdated(cfr);
+
+        verify(parameterService).getBooleanValue(ParameterKey.SYNC_WITH_FLEET.getKey());
+        verifyNoMoreInteractions(messageProducer, assetService);
+
+        assertEquals(1, updatedAssetServiceBean.updatedAssets.size());
+        assertTrue(updatedAssetServiceBean.updatedAssets.containsKey(cfr));
+        assertNotNull(updatedAssetServiceBean.updatedAssets.get(cfr));
+    }
 
     @Test
     public void testProcessUpdatedAssets() throws Exception {

@@ -9,6 +9,9 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallExcep
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.UpdatedAssetService;
+import eu.europa.ec.fisheries.uvms.asset.service.constants.ParameterKey;
+import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
+import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
 import eu.europa.ec.fisheries.uvms.exchange.model.exception.ExchangeModelMarshallException;
 import eu.europa.ec.fisheries.uvms.exchange.model.mapper.ExchangeModuleRequestMapper;
 import eu.europa.ec.fisheries.wsdl.asset.module.FLUXVesselSendInformation;
@@ -40,18 +43,23 @@ public class UpdatedAssetServiceBean implements UpdatedAssetService {
     @EJB
     private AssetService assetService;
 
+    @EJB
+    private ParameterService parameters;
 
-    private Map<String, DateTime> updatedAssets = new HashMap<>();
+    protected Map<String, DateTime> updatedAssets = new HashMap<>();
 
 
     @Override
     public void assetWasUpdated(String cfr) {
-        if (isBlank(cfr)) {
-            // If the cfr is blank, we won't send it to fleet
-            return;
+        try {
+            if (isBlank(cfr) || !parameters.getBooleanValue(ParameterKey.SYNC_WITH_FLEET.getKey())) {
+                // If the cfr is blank, or the admin has disabled the sync with Fleet, we won't send it to Fleet
+                return;
+            }
+            putCfrAndDate(cfr, DateTime.now());
+        } catch (ConfigServiceException e) {
+            log.error("Could not retrieve parameter " + ParameterKey.SYNC_WITH_FLEET.getKey(), e);
         }
-
-        putCfrAndDate(cfr, DateTime.now());
     }
 
     @Schedule(hour = "*", minute = "*/10", persistent = false)
@@ -105,7 +113,9 @@ public class UpdatedAssetServiceBean implements UpdatedAssetService {
     }
 
     protected void putCfrAndDate(String cfr, DateTime dateTime) {
-        updatedAssets.putIfAbsent(cfr, dateTime);
+        if (!updatedAssets.containsKey(cfr)) {
+            updatedAssets.put(cfr, dateTime);
+        } //todo: can be replaced with putIfAbsent in Java 8
     }
 
 }
