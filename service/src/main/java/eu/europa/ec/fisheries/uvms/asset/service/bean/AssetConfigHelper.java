@@ -13,29 +13,26 @@ package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import eu.europa.ec.fisheries.uvms.asset.service.constants.ParameterKey;
 import eu.europa.ec.fisheries.uvms.config.constants.ConfigHelper;
 
 @Stateless
 public class AssetConfigHelper implements ConfigHelper {
 
-    private final static String ASSET_PU = "asset";
+    private static final String ASSET_PU = "asset";
 
     @PersistenceContext
     protected EntityManager em;
 
     @Override
     public List<String> getAllParameterKeys() {
-        List<String> keys = new ArrayList<String>();
+        List<String> keys = new ArrayList<>();
         for (ParameterKey parameterKey : ParameterKey.values()) {
             keys.add(parameterKey.getKey());
         }
-
         return keys;
     }
 
@@ -44,9 +41,8 @@ public class AssetConfigHelper implements ConfigHelper {
         return ASSET_PU;
     }
 
-	@Override
-	public EntityManager getEntityManager() {
-		return em;
-	}
-
+    @Override
+    public EntityManager getEntityManager() {
+        return em;
+    }
 }

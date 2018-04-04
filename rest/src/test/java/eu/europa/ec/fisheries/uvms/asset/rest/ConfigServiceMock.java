@@ -10,7 +10,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.rest;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
 import javax.inject.Inject;
@@ -18,6 +18,7 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 import eu.europa.ec.fisheries.schema.config.types.v1.PullSettingsStatus;
+import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleResponseMapper;
@@ -34,7 +35,11 @@ public class ConfigServiceMock implements MessageListener {
     @Override
     public void onMessage(Message message) {
         try {
-            String response = ModuleResponseMapper.toPullSettingsResponse(new ArrayList<>(), PullSettingsStatus.OK);
+            SettingType mockSetting = new SettingType();
+            mockSetting.setKey("Key");
+            mockSetting.setValue("Value");
+            mockSetting.setDescription("From ConfigServiceMock.java");
+            String response = ModuleResponseMapper.toPullSettingsResponse(Arrays.asList(mockSetting), PullSettingsStatus.OK);
             messageProducer.sendModuleResponseMessage((TextMessage) message, response);
         } catch (ModelMarshallException e) {
         }

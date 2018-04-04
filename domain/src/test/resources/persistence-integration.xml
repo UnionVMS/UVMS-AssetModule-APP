@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.0"
-             xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence">
+    xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence">
     <persistence-unit name="assetPU" transaction-type="JTA">
         <jta-data-source>jdbc/uvms_asset</jta-data-source>
+        <class>eu.europa.ec.fisheries.uvms.config.service.entity.Parameter
+        </class>
         <properties>
-            <property name="hibernate.dialect" value="${hibernate.dialect}"/>
-            <property name="hibernate.show_sql" value="true"/>
-            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.dialect" value="${hibernate.dialect}" />
+            <property name="hibernate.show_sql" value="true" />
+            <property name="hibernate.format_sql" value="true" />
 
-            <!--  ONLY FOR TEST  code is in liquibase -->
-            <!--  for test with new fields in table -->
-            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <!-- ONLY FOR TEST code is in liquibase -->
+            <!-- for test with new fields in table -->
+            <property name="hibernate.hbm2ddl.auto" value="create" />
         </properties>
     </persistence-unit>
 </persistence>
