@@ -18,6 +18,7 @@ import java.util.Random;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetContact;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteria;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListPagination;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
@@ -29,8 +30,11 @@ import eu.europa.ec.fisheries.wsdl.asset.types.ContactSource;
 public class AssetTestHelper {
 
     public static Asset createBasicAsset() {
+        String cfr = "CFR" + getRandomIntegers(7);
         Asset asset = new Asset();
         AssetId assetId = new AssetId();
+        assetId.setType(AssetIdType.CFR);
+        assetId.setValue(cfr);
         asset.setAssetId(assetId);
 
         asset.setActive(true);
@@ -44,7 +48,7 @@ public class AssetTestHelper {
         asset.setIrcs("I" + getRandomIntegers(7));
         asset.setExternalMarking("EXT3");
 
-        asset.setCfr("CFR" + getRandomIntegers(7));
+        asset.setCfr(cfr);
 
         asset.setImo("0" + getRandomIntegers(6));
         String mmsi = getRandomIntegers(9);

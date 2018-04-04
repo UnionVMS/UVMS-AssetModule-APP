@@ -166,10 +166,15 @@ public class AssetMessageEventBean {
     
     public void upsertAsset(AssetMessageEvent message){
         try {
-            Asset assetEntity = assetMapper.toAssetEntity(message.getAsset());
+            eu.europa.ec.fisheries.wsdl.asset.types.Asset assetModel = message.getAsset();
+            Asset assetEntity = assetMapper.toAssetEntity(assetModel);
+            Asset existingAsset = assetService.getAssetById(assetMapper.mapToAssetIdentity(assetModel.getAssetId().getType()), assetModel.getAssetId().getValue());
+            if (existingAsset != null) {
+                assetEntity.setId(existingAsset.getId());
+            }
             Asset upsertedAsset = assetService.upsertAsset(assetEntity, message.getUsername());
-            assetMapper.createAssetNotes(upsertedAsset.getId(), message.getAsset().getNotes());
-            assetMapper.createAssetContacts(upsertedAsset.getId(), message.getAsset().getContact());
+            assetMapper.createAssetNotes(upsertedAsset.getId(), assetModel.getNotes());
+            assetMapper.createAssetContacts(upsertedAsset.getId(), assetModel.getContact());
         } catch (Exception e) {
             LOG.error("Could not update asset in the local database");
         }

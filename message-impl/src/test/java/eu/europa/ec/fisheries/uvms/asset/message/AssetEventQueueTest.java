@@ -112,6 +112,27 @@ public class AssetEventQueueTest extends AbstractMessageTest {
         assertTrue(assets.stream().filter(a -> asset.getCfr() == asset.getCfr()).count() > 0);
     }
     
+    @Test
+    @RunAsClient
+    public void upsertAssetTest() throws Exception {
+        Asset asset = AssetTestHelper.createBasicAsset();
+        jmsHelper.upsertAsset(asset);
+        Thread.sleep(5000);
+
+        String newName = "Name upserted";
+        asset.setName(newName);
+        jmsHelper.upsertAsset(asset);
+        Thread.sleep(5000);
+        
+        Asset assetById = jmsHelper.getAssetById(asset.getCfr(), AssetIdType.CFR);
+        
+        assertThat(assetById, is(notNullValue()));
+        assertThat(assetById.getCfr(), is(asset.getCfr()));
+        assertThat(assetById.getName(), is(newName));
+        assertThat(assetById.getExternalMarking(), is(asset.getExternalMarking()));
+        assertThat(assetById.getIrcs(), is(asset.getIrcs()));
+    }
+    
 //    @Test
 //    @RunAsClient
 //    public void getAssetGroupListByUserTest() throws Exception {
