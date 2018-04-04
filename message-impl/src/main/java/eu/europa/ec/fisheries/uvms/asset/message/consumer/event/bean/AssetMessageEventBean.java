@@ -57,6 +57,9 @@ public class AssetMessageEventBean {
 
     @Inject
     private MessageProducer messageProducer;
+    
+    @Inject
+    private AssetModelMapper assetMapper;
 
     @Inject
     @AssetMessageErrorEvent
@@ -68,7 +71,7 @@ public class AssetMessageEventBean {
         boolean messageSent = false;
 
         try {
-            AssetIdentifier assetIdentity = AssetModelMapper.mapToAssetIdentity(assetId.getType());
+            AssetIdentifier assetIdentity = assetMapper.mapToAssetIdentity(assetId.getType());
             asset = assetService.getAssetById(assetIdentity, assetId.getValue());
         } catch (Exception e) {
             LOG.error("Error when getting asset by id", assetId.getValue(), e);
@@ -79,7 +82,7 @@ public class AssetMessageEventBean {
 
         if (!messageSent) {
             try {
-                String response = AssetModuleResponseMapper.mapAssetModuleResponse(AssetModelMapper.toAssetModel(asset));
+                String response = AssetModuleResponseMapper.mapAssetModuleResponse(assetMapper.toAssetModel(asset));
                 messageProducer.sendModuleResponseMessage(textMessage, response);
             } catch (AssetModelMapperException e) {
                 LOG.error("[ Error when mapping asset ] ");
@@ -99,7 +102,7 @@ public class AssetMessageEventBean {
             
             AssetListResponse assetList = assetService.getAssetList(searchValues, page, listSize, dynamic);
             
-            ListAssetResponse response = AssetModelMapper.toListAssetResponse(assetList); 
+            ListAssetResponse response = assetMapper.toListAssetResponse(assetList); 
             messageProducer.sendModuleResponseMessage(message.getMessage(), AssetModuleResponseMapper.mapAssetModuleResponse(response));
         } catch (AssetException e) {
             assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting assetlist: " + e.getMessage())));
@@ -111,7 +114,7 @@ public class AssetMessageEventBean {
         try {
             AssetGroupListByUserRequest request = message.getRequest();
             List<eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup> assetGroups = assetGroup.getAssetGroupList(request.getUser());
-            List<AssetGroup> response = assetGroups.stream().map(AssetModelMapper::toAssetGroupModel).collect(Collectors.toList());
+            List<AssetGroup> response = assetGroups.stream().map(assetMapper::toAssetGroupModel).collect(Collectors.toList());
 
             messageProducer.sendModuleResponseMessage(message.getMessage(), AssetModuleResponseMapper.mapToAssetGroupListResponse(response));
         } catch (AssetException e) {
@@ -124,7 +127,7 @@ public class AssetMessageEventBean {
         LOG.info("Get asset group by asset guid");
         try {
             List<eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup> assetGroups = assetGroup.getAssetGroupListByAssetId(UUID.fromString(message.getAssetGuid()));
-            List<AssetGroup> response = assetGroups.stream().map(AssetModelMapper::toAssetGroupModel).collect(Collectors.toList());
+            List<AssetGroup> response = assetGroups.stream().map(assetMapper::toAssetGroupModel).collect(Collectors.toList());
             messageProducer.sendModuleResponseMessage(message.getMessage(), AssetModuleResponseMapper.mapToAssetGroupListResponse(response));
         } catch (AssetException e) {
             LOG.error("[ Error when getting assetGroupList from source. ] ");
@@ -140,10 +143,10 @@ public class AssetMessageEventBean {
                 assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting AssetListByVesselGroups [ Request is null ]")));
                 return;
             }
-            List<eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup> assetGroupModels = request.getGroups().stream().map(AssetModelMapper::toAssetGroupEntity).collect(Collectors.toList());
+            List<eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup> assetGroupModels = request.getGroups().stream().map(assetMapper::toAssetGroupEntity).collect(Collectors.toList());
             List<Asset> assets = assetService.getAssetListByAssetGroups(assetGroupModels);
 
-            List<eu.europa.ec.fisheries.wsdl.asset.types.Asset> assetModels = assets.stream().map(AssetModelMapper::toAssetModel).collect(Collectors.toList());
+            List<eu.europa.ec.fisheries.wsdl.asset.types.Asset> assetModels = assets.stream().map(assetMapper::toAssetModel).collect(Collectors.toList());
             messageProducer.sendModuleResponseMessage(message.getMessage(), AssetModuleResponseMapper.mapToAssetListByAssetGroupResponse(assetModels));
         } catch (AssetException e) {
             LOG.error("[ Error when getting assetGroupList from source. ] ");
@@ -163,8 +166,10 @@ public class AssetMessageEventBean {
     
     public void upsertAsset(AssetMessageEvent message){
         try {
-            Asset assetEntity = AssetModelMapper.toAssetEntity(message.getAsset());
-            assetService.upsertAsset(assetEntity, "");
+            Asset assetEntity = assetMapper.toAssetEntity(message.getAsset());
+            Asset upsertedAsset = assetService.upsertAsset(assetEntity, message.getUsername());
+            assetMapper.createAssetNotes(upsertedAsset.getId(), message.getAsset().getNotes());
+            assetMapper.createAssetContacts(upsertedAsset.getId(), message.getAsset().getContact());
         } catch (Exception e) {
             LOG.error("Could not update asset in the local database");
         }

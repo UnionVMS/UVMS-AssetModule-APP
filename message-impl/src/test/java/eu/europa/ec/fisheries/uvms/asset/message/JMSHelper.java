@@ -10,6 +10,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.message;
 
+import java.util.List;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Message;
@@ -18,11 +19,16 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleRequestMapper;
+import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
+import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
 
 public class JMSHelper {
 
-    private static final long TIMEOUT = 3000;
+    private static final long TIMEOUT = 20000;
     private static final String ASSET_QUEUE = "UVMSAssetEvent";
     private static final String RESPONSE_QUEUE = "AssetTestQueue";
 
@@ -33,28 +39,52 @@ public class JMSHelper {
         sendAssetMessage(request);
         return asset;
     }
+    
+    public Asset getAssetById(String value, AssetIdType type) throws Exception {
+        String msg = AssetModuleRequestMapper.createGetAssetModuleRequest(value, type);
+        String correlationId = sendAssetMessage(msg);
+        Message response = listenForResponse(correlationId);
+        GetAssetModuleResponse assetModuleResponse = JAXBMarshaller.unmarshallTextMessage((TextMessage) response, GetAssetModuleResponse.class);
+        return assetModuleResponse.getAsset();
+    }
 
+    public List<Asset> getAssetByAssetListQuery(AssetListQuery assetListQuery) throws Exception {
+        String msg = AssetModuleRequestMapper.createAssetListModuleRequest(assetListQuery);
+        String correlationId = sendAssetMessage(msg);
+        Message response = listenForResponse(correlationId);
+        ListAssetResponse assetModuleResponse = JAXBMarshaller.unmarshallTextMessage((TextMessage) response, ListAssetResponse.class);
+        return assetModuleResponse.getAsset();
+    }
+    
     public String sendAssetMessage(String text) throws Exception {
         Connection connection = connectionFactory.createConnection();
-        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        Queue responseQueue = session.createQueue(RESPONSE_QUEUE);
-        Queue assetQueue = session.createQueue(ASSET_QUEUE);
-        
-        TextMessage message = session.createTextMessage();
-        message.setJMSReplyTo(responseQueue);
-        message.setText(text);
+        try {
+            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            Queue responseQueue = session.createQueue(RESPONSE_QUEUE);
+            Queue assetQueue = session.createQueue(ASSET_QUEUE);
 
-        session.createProducer(assetQueue).send(message);
+            TextMessage message = session.createTextMessage();
+            message.setJMSReplyTo(responseQueue);
+            message.setText(text);
 
-        return message.getJMSMessageID();
+            session.createProducer(assetQueue).send(message);
+
+            return message.getJMSMessageID();
+        } finally {
+            connection.close();
+        }
     }
 
     public Message listenForResponse(String correlationId) throws Exception {
         Connection connection = connectionFactory.createConnection();
-        connection.start();
-        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        Queue responseQueue = session.createQueue(RESPONSE_QUEUE);
-        
-        return session.createConsumer(responseQueue).receive(TIMEOUT);
+        try {
+            connection.start();
+            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            Queue responseQueue = session.createQueue(RESPONSE_QUEUE);
+
+            return session.createConsumer(responseQueue).receive(TIMEOUT);
+        } finally {
+            connection.close();
+        }
     }
 }

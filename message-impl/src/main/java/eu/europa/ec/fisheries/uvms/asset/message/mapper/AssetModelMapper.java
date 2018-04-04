@@ -14,30 +14,52 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
+import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
+import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetListResponse;
+import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetContact;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetHistoryId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetNotes;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetProdOrgModel;
 import eu.europa.ec.fisheries.wsdl.asset.types.CarrierSource;
+import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
+import eu.europa.ec.fisheries.wsdl.asset.types.ContactSource;
 import eu.europa.ec.fisheries.wsdl.asset.types.EventCode;
 import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
+import eu.europa.ec.fisheries.wsdl.asset.types.NoteSource;
 
+@Stateless
 public class AssetModelMapper {
 
-    private AssetModelMapper() {}
+    @Inject
+    private AssetService assetService;
     
-    public static Asset toAssetEntity(eu.europa.ec.fisheries.wsdl.asset.types.Asset assetModel) {
+    @Inject
+    private AssetGroupService assetGroupService;
+    
+    public Asset toAssetEntity(eu.europa.ec.fisheries.wsdl.asset.types.Asset assetModel) {
         Asset asset = new Asset();
+        
         if (assetModel.getAssetId() != null && assetModel.getAssetId().getGuid() != null) {
             asset.setId(UUID.fromString(assetModel.getAssetId().getGuid()));
         }
+        
         asset.setActive(assetModel.isActive());
         if (asset.getSource() != null) {
             asset.setSource(assetModel.getSource().toString());
@@ -58,19 +80,34 @@ public class AssetModelMapper {
         asset.setMmsi(assetModel.getMmsiNo());
         asset.setHasLicence(assetModel.isHasLicense());
         asset.setPortOfRegistration(assetModel.getHomePort());
-        asset.setLengthOverAll(assetModel.getLengthOverAll().doubleValue());
-        asset.setLengthBetweenPerpendiculars(assetModel.getLengthBetweenPerpendiculars().doubleValue());
-        asset.setGrossTonnage(assetModel.getGrossTonnage().doubleValue());
-        asset.setGrossTonnageUnit(UnitTonnage.getType(assetModel.getGrossTonnageUnit()));
-        asset.setOtherTonnage(assetModel.getOtherGrossTonnage().doubleValue());
-        asset.setSafteyGrossTonnage(assetModel.getSafetyGrossTonnage().doubleValue());
-        asset.setPowerOfMainEngine(assetModel.getPowerMain().doubleValue());
-        asset.setPowerOfAuxEngine(assetModel.getPowerAux().doubleValue());
+        if (assetModel.getLengthOverAll() != null) {
+            asset.setLengthOverAll(assetModel.getLengthOverAll().doubleValue());
+        }
+        if (assetModel.getLengthBetweenPerpendiculars() != null) {
+            asset.setLengthBetweenPerpendiculars(assetModel.getLengthBetweenPerpendiculars().doubleValue());
+        }
+        if (assetModel.getGrossTonnage() != null) {
+            asset.setGrossTonnage(assetModel.getGrossTonnage().doubleValue());
+        }
+        if (assetModel.getGrossTonnageUnit() != null) {
+            asset.setGrossTonnageUnit(UnitTonnage.getType(assetModel.getGrossTonnageUnit()));
+        }
+        if (assetModel.getOtherGrossTonnage() != null) {
+            asset.setOtherTonnage(assetModel.getOtherGrossTonnage().doubleValue());
+        }
+        if (assetModel.getSafetyGrossTonnage() != null) {
+            asset.setSafteyGrossTonnage(assetModel.getSafetyGrossTonnage().doubleValue());
+        } 
+        if (assetModel.getPowerMain() != null) {
+            asset.setPowerOfMainEngine(assetModel.getPowerMain().doubleValue());
+        }
+        if (assetModel.getPowerAux() != null) {
+            asset.setPowerOfAuxEngine(assetModel.getPowerAux().doubleValue());
+        }
         if (assetModel.getProducer() != null) {
             asset.setProdOrgCode(assetModel.getProducer().getCode());
             asset.setProdOrgName(assetModel.getProducer().getName());
         }
-        // TODO populate Notes and Contacts. Create bean and inject services
         asset.setIccat(assetModel.getIccat());
         asset.setUvi(assetModel.getUvi());
         asset.setGfcm(assetModel.getGfcm());
@@ -78,11 +115,16 @@ public class AssetModelMapper {
         return asset;
     }
     
-    public static eu.europa.ec.fisheries.wsdl.asset.types.Asset toAssetModel(Asset assetEntity) {
+    public eu.europa.ec.fisheries.wsdl.asset.types.Asset toAssetModel(Asset assetEntity) {
+        if (assetEntity == null) {
+            return null;
+        }
+
         eu.europa.ec.fisheries.wsdl.asset.types.Asset assetModel = new eu.europa.ec.fisheries.wsdl.asset.types.Asset();
         
         AssetId assetId = new AssetId();
         assetId.setGuid(assetEntity.getId().toString());
+        
         assetModel.setAssetId(assetId);
         assetModel.setActive(assetEntity.getActive());
         if (assetEntity.getSource() !=  null && !assetEntity.getSource().isEmpty()) {
@@ -90,67 +132,138 @@ public class AssetModelMapper {
         }
         AssetHistoryId assetHistory = new AssetHistoryId();
         assetHistory.setEventId(assetEntity.getHistoryId().toString());
-        assetHistory.setEventDate(Date.from(assetEntity.getUpdateTime().toInstant(ZoneOffset.UTC)));
+        if (assetEntity.getUpdateTime() != null) {
+            assetHistory.setEventDate(Date.from(assetEntity.getUpdateTime().toInstant(ZoneOffset.UTC)));
+        }
         if (assetEntity.getEventCode() != null && !assetEntity.getEventCode().isEmpty()) {
-            assetHistory.setEventCode(EventCode.fromValue(assetEntity.getEventCode()));
+            assetHistory.setEventCode(getEventCode(assetEntity));
         }
         assetModel.setEventHistory(assetHistory);
         assetModel.setName(assetEntity.getName());
         assetModel.setCountryCode(assetEntity.getFlagStateCode());
         assetModel.setGearType(assetEntity.getMainFishingGearCode());
-        assetModel.setHasIrcs(assetEntity.getIrcsIndicator() ? "Y" : "N");
+        assetModel.setHasIrcs(assetEntity.getIrcsIndicator() != null && assetEntity.getIrcsIndicator() ? "Y" : "N");
         assetModel.setIrcs(assetEntity.getIrcs());
         assetModel.setExternalMarking(assetEntity.getExternalMarking());
         assetModel.setCfr(assetEntity.getCfr());
         assetModel.setImo(assetEntity.getImo());
         assetModel.setMmsiNo(assetEntity.getMmsi());
-        assetModel.setHasLicense(assetEntity.getHasLicence());
+        if (assetEntity.getHasLicence() != null) {
+            assetModel.setHasLicense(assetEntity.getHasLicence());
+        }
         assetModel.setHomePort(assetEntity.getPortOfRegistration());
-        assetModel.setLengthOverAll(new BigDecimal(assetEntity.getLengthOverAll()));
-        assetModel.setLengthBetweenPerpendiculars(new BigDecimal(assetEntity.getLengthBetweenPerpendiculars()));
-        assetModel.setGrossTonnage(new BigDecimal(assetEntity.getGrossTonnage()));
+        if (assetEntity.getLengthOverAll() != null) {
+            assetModel.setLengthOverAll(new BigDecimal(assetEntity.getLengthOverAll()));
+        }
+        if (assetEntity.getLengthBetweenPerpendiculars() != null) {
+            assetModel.setLengthBetweenPerpendiculars(new BigDecimal(assetEntity.getLengthBetweenPerpendiculars()));
+        }
+        if (assetEntity.getGrossTonnage() != null) {
+            assetModel.setGrossTonnage(new BigDecimal(assetEntity.getGrossTonnage()));
+        }
         if (assetEntity.getGrossTonnageUnit() != null) {
             assetModel.setGrossTonnageUnit(assetEntity.getGrossTonnageUnit().toString());
         }
-        assetModel.setOtherGrossTonnage(new BigDecimal(assetEntity.getOtherTonnage()));
-        assetModel.setSafetyGrossTonnage(new BigDecimal(assetEntity.getSafteyGrossTonnage()));
-        assetModel.setPowerMain(new BigDecimal(assetEntity.getPowerOfMainEngine()));
-        assetModel.setPowerAux(new BigDecimal(assetEntity.getPowerOfAuxEngine()));
+        if (assetEntity.getOtherTonnage() != null) {
+            assetModel.setOtherGrossTonnage(new BigDecimal(assetEntity.getOtherTonnage()));
+        }
+        if (assetEntity.getSafteyGrossTonnage() != null) {
+            assetModel.setSafetyGrossTonnage(new BigDecimal(assetEntity.getSafteyGrossTonnage()));
+        }
+        if (assetEntity.getPowerOfMainEngine() != null) {
+            assetModel.setPowerMain(new BigDecimal(assetEntity.getPowerOfMainEngine()));
+        }
+        if (assetEntity.getPowerOfAuxEngine() != null) {
+            assetModel.setPowerAux(new BigDecimal(assetEntity.getPowerOfAuxEngine()));
+        }
         AssetProdOrgModel prodOrg = new AssetProdOrgModel();
         prodOrg.setCode(assetEntity.getProdOrgCode());
         prodOrg.setName(assetEntity.getProdOrgName());
         assetModel.setProducer(prodOrg);
-//        // TODO populate Notes and Contacts. Create bean and inject services
+        
+        List<Note> notes = assetService.getNotesForAsset(assetEntity.getId());
+        for (Note note : notes) {
+            AssetNotes assetNote = new AssetNotes();
+            // TODO id?
+            if (note.getDate() != null) {
+                assetNote.setDate(note.getDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+            }
+            assetNote.setActivity(note.getActivityCode());
+            assetNote.setUser(note.getUser());
+            if (note.getReadyDate() != null) {
+                assetNote.setReadyDate(note.getReadyDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+            }
+            assetNote.setLicenseHolder(note.getLicenseHolder());
+            assetNote.setContact(note.getContact());
+            assetNote.setSheetNumber(note.getSheetNumber());
+            assetNote.setNotes(note.getNotes());
+            assetNote.setDocument(note.getDocument());
+            if (note.getSource() != null) {
+                assetNote.setSource(NoteSource.fromValue(note.getSource()));
+            }
+            assetModel.getNotes().add(assetNote);
+        }
+
+        List<ContactInfo> contacts = assetService.getContactInfoForAsset(assetEntity.getId());
+        for (ContactInfo contactInfo : contacts) {
+            AssetContact contact = new AssetContact();
+            contact.setName(contactInfo.getName());
+            contact.setNumber(contactInfo.getPhoneNumber());
+            contact.setEmail(contactInfo.getEmail());
+            if (contactInfo.getOwner() != null) { 
+                contact.setOwner(contactInfo.getOwner());
+            }
+            if (contactInfo.getSource() != null) {
+                contact.setSource(ContactSource.fromValue(contactInfo.getSource()));
+            }
+            assetModel.getContact().add(contact);
+        }
+        
         assetModel.setIccat(assetEntity.getIccat());
         assetModel.setUvi(assetEntity.getUvi());
         assetModel.setGfcm(assetEntity.getGfcm());
         
         return assetModel;
     }
+
+    private EventCode getEventCode(Asset assetEntity) {
+        try {
+            return EventCode.fromValue(assetEntity.getEventCode());
+        } catch (Exception e) {
+            return EventCode.UNK;
+        }
+    }
     
-    public static AssetGroup toAssetGroupEntity(eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup assetGroupModel) {
+    public AssetGroup toAssetGroupEntity(eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup assetGroupModel) {
         AssetGroup assetGroup = new AssetGroup();
         assetGroup.setId(UUID.fromString(assetGroupModel.getGuid()));
         assetGroup.setName(assetGroupModel.getName());
         assetGroup.setOwner(assetGroupModel.getUser());
         assetGroup.setDynamic(assetGroupModel.isDynamic());
         assetGroup.setGlobal(assetGroupModel.isGlobal());
-        // TODO populate group fields
         return assetGroup;
     }
     
-    public static eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup toAssetGroupModel(AssetGroup assetGroupEntity) {
+    public eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup toAssetGroupModel(AssetGroup assetGroupEntity) {
         eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup assetGroupModel = new eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup();
         assetGroupModel.setGuid(assetGroupEntity.getId().toString());
         assetGroupModel.setName(assetGroupEntity.getName());
         assetGroupModel.setUser(assetGroupEntity.getOwner());
         assetGroupModel.setDynamic(assetGroupEntity.getDynamic());
         assetGroupModel.setGlobal(assetGroupEntity.getGlobal());
-        // TODO populate group fields
+
+        List<AssetGroupField> fields = assetGroupService.retrieveFieldsForGroup(assetGroupEntity.getId());
+        for (AssetGroupField assetGroupField : fields) {
+            AssetGroupSearchField field = new AssetGroupSearchField();
+            field.setKey(ConfigSearchField.fromValue(assetGroupField.getField()));
+            field.setValue(assetGroupField.getValue());
+            assetGroupModel.getSearchFields().add(field);
+        }
+        
         return assetGroupModel;
     }
     
-    public static AssetIdentifier mapToAssetIdentity(AssetIdType assetIdType) {
+    public AssetIdentifier mapToAssetIdentity(AssetIdType assetIdType) {
         switch (assetIdType) {
             case CFR:
                 return AssetIdentifier.CFR;
@@ -173,13 +286,54 @@ public class AssetModelMapper {
         }
     }
     
-    public static ListAssetResponse toListAssetResponse(AssetListResponse assetListResponse) {
+    public ListAssetResponse toListAssetResponse(AssetListResponse assetListResponse) {
         ListAssetResponse listAssetResponse = new ListAssetResponse();
         listAssetResponse.setCurrentPage(assetListResponse.getCurrentPage());
         listAssetResponse.setTotalNumberOfPages(assetListResponse.getTotalNumberOfPages());
         listAssetResponse.getAsset().addAll(assetListResponse.getAssetList().stream()
-                                                        .map(AssetModelMapper::toAssetModel)
+                                                        .map(this::toAssetModel)
                                                         .collect(Collectors.toList()));
         return listAssetResponse;
+    }
+    
+    public void createAssetNotes(UUID assetId, List<AssetNotes> assetNotes) {
+        // TODO remove previous notes?
+        for (AssetNotes assetNote : assetNotes) {
+            Note note = new Note();
+            note.setAssetId(assetId);
+            if (assetNote.getDate() != null) {
+                note.setDate(LocalDateTime.parse(assetNote.getDate(), DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+            }
+            note.setActivityCode(assetNote.getActivity());
+            note.setUser(assetNote.getUser());
+            if (assetNote.getReadyDate() != null) {
+                note.setReadyDate(LocalDateTime.parse(assetNote.getReadyDate(), DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+            }
+            note.setLicenseHolder(assetNote.getLicenseHolder());
+            note.setContact(assetNote.getContact());
+            note.setSheetNumber(assetNote.getSheetNumber());
+            note.setNotes(assetNote.getNotes());
+            note.setDocument(assetNote.getDocument());
+            if (assetNote.getSource() != null) {
+                note.setSource(assetNote.getSource().toString());
+            }
+            assetService.updateNote(note, "");
+        }
+    }
+    
+    public void createAssetContacts(UUID assetId, List<AssetContact> contacts) {
+        // TODO remove previous contacts?
+        for (AssetContact assetContact : contacts) {
+            ContactInfo contactInfo = new ContactInfo();
+            contactInfo.setAssetId(assetId);
+            contactInfo.setName(assetContact.getName());
+            contactInfo.setPhoneNumber(assetContact.getNumber());
+            contactInfo.setEmail(assetContact.getEmail());
+            contactInfo.setOwner(assetContact.isOwner());
+            if (assetContact.getSource() != null) {
+                contactInfo.setSource(assetContact.getSource().toString());
+            }
+            assetService.updateContactInfo(contactInfo, "");
+        }
     }
 }
