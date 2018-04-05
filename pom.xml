@@ -4,23 +4,23 @@
 
     <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
     <artifactId>asset</artifactId>
-    <version>4.0.11-SNAPSHOT</version>
+    <version>4.0.12-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <parent>
         <groupId>fish.focus.uvms.maven</groupId>
         <artifactId>uvms-pom</artifactId>
         <relativePath />
-        <version>1.18</version>
+        <version>1.17</version>
     </parent>
 
     <properties>
     	<asset.api.check.against.version>4.0.0</asset.api.check.against.version>
     	<docker.dev.version>3.23.0</docker.dev.version>    	
-        <usm4uvms.version>4.0.4</usm4uvms.version>
+        <usm4uvms.version>4.0.6</usm4uvms.version>
         <uvms.config.version>4.0.0</uvms.config.version>
-		<uvms.common.version>3.0.5</uvms.common.version>
-        <audit.model.version>4.0.4</audit.model.version>
+		<uvms.common.version>3.0.16</uvms.common.version>
+        <audit.model.version>4.0.6</audit.model.version>
         <project.scm.id>github</project.scm.id>
     </properties>
 
@@ -62,11 +62,6 @@
 				<version>1.16</version>
 				<type>pom</type>
 			</dependency>
-            <dependency>
-				<groupId>eu.europa.ec.fisheries.uvms.exchange</groupId>
-				<artifactId>exchange-model</artifactId>
-				<version>4.0.12-SNAPSHOT</version>
-			</dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -95,25 +90,6 @@
         <connection>scm:git:https://github.com/UnionVMS/UVMS-AssetModule-APP.git</connection>
         <tag>HEAD</tag>
     </scm>
-
-    <profiles>
-        <profile>
-            <id>skip-arquillian</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <excludes>
-                                <exclude>**/*IntTest.java</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
     <modules>
     	<module>model</module>
