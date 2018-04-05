@@ -11,13 +11,11 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service;
 
-import javax.ejb.Local;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
 import java.util.List;
 import java.util.UUID;
 
-@Local
 public interface AssetGroupService {
 
     /**
