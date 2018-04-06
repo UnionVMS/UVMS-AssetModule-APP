@@ -4,7 +4,7 @@
 
     <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
     <artifactId>asset</artifactId>
-    <version>4.0.11-SNAPSHOT</version>
+    <version>4.0.12-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <parent>
@@ -17,10 +17,10 @@
     <properties>
     	<asset.api.check.against.version>4.0.0</asset.api.check.against.version>
     	<docker.dev.version>3.23.0</docker.dev.version>    	
-        <usm4uvms.version>4.0.4</usm4uvms.version>
+        <usm4uvms.version>4.0.6</usm4uvms.version>
         <uvms.config.version>4.0.0</uvms.config.version>
-		<uvms.common.version>3.0.5</uvms.common.version>
-        <audit.model.version>4.0.4</audit.model.version>
+		<uvms.common.version>3.0.16</uvms.common.version>
+        <audit.model.version>4.0.6</audit.model.version>
         <project.scm.id>github</project.scm.id>
     </properties>
 
@@ -63,10 +63,10 @@
 				<type>pom</type>
 			</dependency>
             <dependency>
-				<groupId>eu.europa.ec.fisheries.uvms.exchange</groupId>
-				<artifactId>exchange-model</artifactId>
-				<version>4.0.12-SNAPSHOT</version>
-			</dependency>
+                <groupId>eu.europa.ec.fisheries.uvms.exchange</groupId>
+                <artifactId>exchange-model</artifactId>
+                <version>4.0.13-SNAPSHOT</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -112,6 +112,19 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>belgium-local</id>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>lv-snapshots</id>
+                    <url>https://apjenp01.dg3.be/nexus/repository/maven-snapshots/</url>
+                </snapshotRepository>
+                <repository>
+                    <id>lv-releases</id>
+                    <url>https://apjenp01.dg3.be/nexus/repository/maven-releases/</url>
+                </repository>
+            </distributionManagement>
         </profile>
     </profiles>
 
