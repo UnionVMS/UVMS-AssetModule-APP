@@ -52,6 +52,41 @@ public class CustomCodesResource {
         }
     }
 
+    @GET
+    @ApiOperation(value = "Retrieve a customcode", notes = "Retrieve a customcode", response = CustomCodes.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Error when retrieving code list for given constant list"),
+            @ApiResponse(code = 200, message = "Codes for constant  successfully retrieved") })
+    @Path("/{constant}/{code}")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response retrieveCustomCode( @ApiParam(value = "constant", required = true)   @PathParam("constant") String constant, @ApiParam(value = "code", required = true)   @PathParam("code") String code) {
+        try {
+            CustomCodes customCode = customCodesSvc.get(constant, code);
+            return Response.ok(customCode).build();
+        } catch (Exception e) {
+            LOG.error("Error when getting config search fields.");
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
+
+    @GET
+    @ApiOperation(value = "Retrieve a customcode", notes = "Retrieve a customcode", response = Boolean.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Error when retrieving code list for given constant list"),
+            @ApiResponse(code = 200, message = "Codes for constant  successfully retrieved") })
+    @Path("/exists/{constant}/{code}")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response exists( @ApiParam(value = "constant", required = true)   @PathParam("constant") String constant, @ApiParam(value = "code", required = true)   @PathParam("code") String code) {
+        try {
+            Boolean exists = customCodesSvc.exists(constant, code);
+            return Response.ok(exists).build();
+        } catch (Exception e) {
+            LOG.error("Error when getting config search fields.");
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
 
 
 
@@ -60,7 +95,7 @@ public class CustomCodesResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when retrieving constant list"),
             @ApiResponse(code = 200, message = "Constants successfully retrieved") })
-    @Path("/")
+    @Path("/listconstants")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getAllConstants() {
@@ -74,11 +109,11 @@ public class CustomCodesResource {
     }
 
     @GET
-    @ApiOperation(value = "Get a list of codes for given", notes = "Returned as json parse tree in client´´", response = String.class, responseContainer = "List")
+    @ApiOperation(value = "Get a list of codes for given", notes = "Returned as json parse tree in client", response = String.class, responseContainer = "List")
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when retrieving code list for given constant list"),
             @ApiResponse(code = 200, message = "Codes for constant  successfully retrieved") })
-    @Path("/getcodesforconstant/{constant}")
+    @Path("/listcodesforconstant/{constant}")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getCodesForConstant( @PathParam("constant") String constant) {
@@ -90,6 +125,25 @@ public class CustomCodesResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
+
+    @DELETE
+    @ApiOperation(value = "Remove a customcode", notes = "Remove a customcode", response = String.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Error when retrieving code list for given constant list"),
+            @ApiResponse(code = 200, message = "Codes for constant  successfully retrieved") })
+    @Path("/{constant}/{code}")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response deleteCustomCode( @ApiParam(value = "constant", required = true)   @PathParam("constant") String constant, @ApiParam(value = "code", required = true)   @PathParam("code") String code) {
+        try {
+            customCodesSvc.delete(constant, code);
+            return Response.ok().build();
+        } catch (Exception e) {
+            LOG.error("Error when getting config search fields.");
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
+
 
 
 

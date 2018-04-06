@@ -19,6 +19,7 @@ import java.util.UUID;
 
 @RunWith(Arquillian.class)
 public class CustomCodesResourceTest extends AbstractAssetRestTest {
+    // TODO also implement tests for embedded json when the need appears
 
     private ObjectMapper MAPPER = new ObjectMapper();
 
@@ -30,6 +31,7 @@ public class CustomCodesResourceTest extends AbstractAssetRestTest {
         String createdJson = createACustomCodeHelper(txt);
         List<String> constants = getWebTarget()
                 .path("customcodes")
+                .path("listconstants")
                 .request(MediaType.APPLICATION_JSON)
                 .get(List.class);
         // resultset must at least contain a constant with our created customcode
@@ -55,6 +57,7 @@ public class CustomCodesResourceTest extends AbstractAssetRestTest {
         // get a list of constants;
         List<String> constants = getWebTarget()
                 .path("customcodes")
+                .path("listconstants")
                 .request(MediaType.APPLICATION_JSON)
                 .get(List.class);
 
@@ -66,7 +69,7 @@ public class CustomCodesResourceTest extends AbstractAssetRestTest {
 
             String json = getWebTarget()
                     .path("customcodes")
-                    .path("getcodesforconstant")
+                    .path("listcodesforconstant")
                     .path(constant)
                     .request(MediaType.APPLICATION_JSON)
                     .get(String.class);
@@ -97,6 +100,38 @@ public class CustomCodesResourceTest extends AbstractAssetRestTest {
         String createdJson = createACustomCodeHelper(txt);
         CustomCodes customCodes = MAPPER.readValue(createdJson, CustomCodes.class);
 
+        /*
+        System.out.println("       " + txt);
+        System.out.println(customCodes.getPrimaryKey().getConstant());
+        System.out.println(customCodes.getPrimaryKey().getCode());
+        System.out.println(customCodes.getDescription());
+        System.out.println(customCodes.getJsonstr());
+        */
+
+        Assert.assertTrue(customCodes.getPrimaryKey().getConstant().endsWith(txt));
+    }
+
+
+    @Test
+    @RunAsClient
+    public void getACustomCode() throws IOException {
+
+        String txt = UUID.randomUUID().toString().toUpperCase();
+
+        String createdJson = createACustomCodeHelper(txt);
+        String constant = "CST____" + txt;
+        String code = "CODE___" + txt;
+
+
+
+        String json = getWebTarget()
+                .path("customcodes")
+                .path(constant)
+                .path(code)
+                .request(MediaType.APPLICATION_JSON)
+                .get(String.class);
+        CustomCodes customCodes = MAPPER.readValue(json, CustomCodes.class);
+
 
         /*
         System.out.println("       " + txt);
@@ -110,6 +145,65 @@ public class CustomCodesResourceTest extends AbstractAssetRestTest {
 
 
     }
+
+    @Test
+    @RunAsClient
+    public void deleteCustomCode() throws IOException {
+
+        String txt = UUID.randomUUID().toString().toUpperCase();
+
+        String createdJson = createACustomCodeHelper(txt);
+        String constant = "CST____" + txt;
+        String code = "CODE___" + txt;
+
+
+
+        Boolean exists = getWebTarget()
+                .path("customcodes")
+                .path("exists")
+                .path(constant)
+                .path(code)
+                .request(MediaType.APPLICATION_JSON)
+                .get(Boolean.class);
+
+        Assert.assertTrue(exists);
+
+
+        String jsondelete = getWebTarget()
+                .path("customcodes")
+                .path(constant)
+                .path(code)
+                .request(MediaType.APPLICATION_JSON)
+                .delete(String.class);
+
+         exists = getWebTarget()
+                .path("customcodes")
+                .path("exists")
+                .path(constant)
+                .path(code)
+                .request(MediaType.APPLICATION_JSON)
+                .get(Boolean.class);
+
+        Assert.assertFalse(exists);
+
+
+
+
+
+
+        /*
+        CustomCodes customCodes = MAPPER.readValue(json, CustomCodes.class);
+        System.out.println("       " + txt);
+        System.out.println(customCodes.getPrimaryKey().getConstant());
+        System.out.println(customCodes.getPrimaryKey().getCode());
+        System.out.println(customCodes.getDescription());
+        System.out.println(customCodes.getJsonstr());
+        */
+
+
+
+    }
+
 
 
     private String createACustomCodeHelper(String txt) {
