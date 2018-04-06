@@ -213,7 +213,8 @@ public class ModelToEntityMapper {
                 contactInfo.setCityName(contact.getCityName());
                 contactInfo.setPostalCode(contact.getPostalCode());
                 contactInfo.setStreetName(contact.getStreetName());
-
+                contactInfo.setFaxNumber(contact.getFaxNumber());
+                
                 if (contact.getSource() != null) {
                     contactInfo.setSource(ContactInfoSourceEnum.valueOf(contact.getSource().toString()));
                 } else {

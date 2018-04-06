@@ -104,6 +104,10 @@ public class ContactInfo implements Serializable {
 	@Column(name = "contactinfo_street_name")
 	private String streetName;
 
+	@Size(max = 100)
+	@Column(name = "contactinfo_fax_number")
+	private String faxNumber;
+
 
 	public ContactInfo() {
 	}
@@ -234,5 +238,13 @@ public class ContactInfo implements Serializable {
 
 	public void setStreetName(String streetName) {
 		this.streetName = streetName;
+	}
+
+	public String getFaxNumber() {
+		return faxNumber;
+	}
+
+	public void setFaxNumber(String faxNumber) {
+		this.faxNumber = faxNumber;
 	}
 }

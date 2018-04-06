@@ -53,6 +53,7 @@
 			<column name="contactinfo_post_office_box" type="VARCHAR(100)"/>
 			<column name="contactinfo_postal_area" type="VARCHAR(100)"/>
 			<column name="contactinfo_street_name" type="VARCHAR(100)"/>
+			<column name="contactinfo_fax_number" type="VARCHAR(100)"/>
 		</addColumn>
 
 		<dropNotNullConstraint

@@ -190,6 +190,7 @@ public class EntityToModelMapper {
                 contact.setCityName(contactInfo.getCityName());
                 contact.setPostalCode(contactInfo.getPostalCode());
                 contact.setStreetName(contactInfo.getStreetName());
+                contact.setFaxNumber(contactInfo.getFaxNumber());
 
                 if (contactInfo.getSource() != null) {
                     contact.setSource(ContactSource.valueOf(contactInfo.getSource().toString()));
