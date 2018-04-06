@@ -47,7 +47,7 @@ public abstract class AbstractAssetRestTest {
         File[] files = Maven.resolver().loadPomFromFile("pom.xml").importRuntimeAndTestDependencies().resolve()
                 .withTransitivity().asFile();
         testWar.addAsLibraries(files);
-
+            
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset.rest");
 
         testWar.delete("/WEB-INF/web.xml");

@@ -11,10 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service.exception;
 
-
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-
-public class AssetServiceException extends AssetException {
+public class AssetServiceException extends Exception {
 	private static final long serialVersionUID = 1L;
 
 	public AssetServiceException(String message) {

@@ -22,8 +22,7 @@ import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitLength;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.ConfigModelException;
+import eu.europa.ec.fisheries.uvms.asset.service.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
 
 
@@ -37,13 +36,13 @@ public class ConfigServiceBean {
 
 
 //	public List<Config> getConfiguration() throws AssetException {
-		public List<Object> getConfiguration() throws AssetException {
+		public List<Object> getConfiguration() throws AssetServiceException {
 		//ConfigurationDto configuration = getConfiguration(ConfigFieldEnum.ALL);
 		//return configuration.getConfigList();
 		return null;
 	}
 
-	public Map<String, String> getParameters() throws AssetException {
+	public Map<String, String> getParameters() throws AssetServiceException {
 		try {
 			Map<String, String> parameters = new HashMap<>();
 			for (SettingType settingType : parameterService.getAllSettings()) {
@@ -53,13 +52,13 @@ public class ConfigServiceBean {
 			return parameters;
 		} catch (Exception e) {
 			LOG.error("[ Error when getting asset parameters from local database. ] {}", e);
-			throw new AssetException("Couldn't get parameters");
+			throw new AssetServiceException("Couldn't get parameters");
 		}
 	}
 
 
 
-	public Map<String, List<String>> getSettings() throws ConfigModelException {
+	public Map<String, List<String>> getSettings() throws AssetServiceException {
 		Map<String, List<String>> settings = new HashMap<>();
 /*
 		try {

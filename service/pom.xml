@@ -60,6 +60,11 @@
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.audit</groupId>
+            <artifactId>audit-model</artifactId>
+            <version>${audit.model.version}</version>
+        </dependency>
+        <dependency>
             <groupId>eu.europa.ec.fisheries.uvms</groupId>
             <artifactId>uvms-config</artifactId>
             <version>${uvms.config.version}</version>
