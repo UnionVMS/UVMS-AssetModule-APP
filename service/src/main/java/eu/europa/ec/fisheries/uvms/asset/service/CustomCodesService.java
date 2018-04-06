@@ -11,7 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service;
 
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodes;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import java.util.List;
 
 
@@ -25,7 +25,7 @@ public interface CustomCodesService {
      * @param extradata @description free data complementing info for the code  could be a json . . .
      * @return a CustomCode Object
      */
-    CustomCodes create(String constant, String code, String description, String extradata);
+    CustomCode create(String constant, String code, String description, String extradata);
 
     /**
      *
@@ -33,7 +33,7 @@ public interface CustomCodesService {
      * @param code @description  the code to be valid for this constant
      * @return a CustomCodes object
      */
-    CustomCodes get(String constant, String code );
+    CustomCode get(String constant, String code );
 
     /**
      *
@@ -51,7 +51,7 @@ public interface CustomCodesService {
      * @param newExtraData @description  new extradata
      * @return a the updated CustomCodes Object
      */
-    CustomCodes update(String constant, String code, String newValue, String newExtraData);
+    CustomCode update(String constant, String code, String newValue, String newExtraData);
 
     /**
      *
@@ -65,7 +65,7 @@ public interface CustomCodesService {
      * @param constant @description constant
      * @return a list of CustomCode for a given constant
      */
-    List<CustomCodes> getAllFor(String constant);
+    List<CustomCode> getAllFor(String constant);
 
     /**
      *

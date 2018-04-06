@@ -1,12 +1,10 @@
 package eu.europa.ec.fisheries.uvms.asset.rest.service;
 
 
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodes;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.service.CustomCodesService;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
-import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +29,7 @@ public class CustomCodesResource {
     private CustomCodesService customCodesSvc;
 
     @POST
-    @ApiOperation(value = "Create a record", notes = "Create a custom constant code", response = CustomCodes.class)
+    @ApiOperation(value = "Create a record", notes = "Create a custom constant code", response = CustomCode.class)
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when createing custom code"),
             @ApiResponse(code = 200, message = "Success when createing custom code") })
@@ -44,7 +42,7 @@ public class CustomCodesResource {
             ,@ApiParam(value = "description", required = true)  @PathParam(value="description")  String description
             , @ApiParam(value = "embeddedjson", required = true)  @PathParam(value="embeddedjson") String embeddedjson) {
         try {
-             CustomCodes customCodes = customCodesSvc.create(constant,code,description,embeddedjson);
+             CustomCode customCodes = customCodesSvc.create(constant,code,description,embeddedjson);
             return Response.ok(customCodes).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
@@ -53,7 +51,7 @@ public class CustomCodesResource {
     }
 
     @GET
-    @ApiOperation(value = "Retrieve a customcode", notes = "Retrieve a customcode", response = CustomCodes.class)
+    @ApiOperation(value = "Retrieve a customcode", notes = "Retrieve a customcode", response = CustomCode.class)
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when retrieving code list for given constant list"),
             @ApiResponse(code = 200, message = "Codes for constant  successfully retrieved") })
@@ -62,7 +60,7 @@ public class CustomCodesResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response retrieveCustomCode( @ApiParam(value = "constant", required = true)   @PathParam("constant") String constant, @ApiParam(value = "code", required = true)   @PathParam("code") String code) {
         try {
-            CustomCodes customCode = customCodesSvc.get(constant, code);
+            CustomCode customCode = customCodesSvc.get(constant, code);
             return Response.ok(customCode).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
@@ -118,7 +116,7 @@ public class CustomCodesResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getCodesForConstant( @PathParam("constant") String constant) {
         try {
-            List<CustomCodes> customCodes = customCodesSvc.getAllFor(constant);
+            List<CustomCode> customCodes = customCodesSvc.getAllFor(constant);
             return Response.ok(customCodes).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");

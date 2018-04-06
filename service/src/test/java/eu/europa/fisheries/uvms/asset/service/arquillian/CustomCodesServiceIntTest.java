@@ -1,6 +1,6 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodes;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.service.CustomCodesService;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -31,8 +31,8 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void create() {
 
-        CustomCodes createdMDR_lite = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
-        CustomCodes fetchedMDR_lite = service.get(CONSTANT,CODE);
+        CustomCode createdMDR_lite = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
+        CustomCode fetchedMDR_lite = service.get(CONSTANT,CODE);
         Assert.assertNotNull(fetchedMDR_lite);
         service.delete(CONSTANT,CODE);
     }
@@ -41,9 +41,9 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void tryToCreateDups() {
 
-        CustomCodes createdMDR_lite1 = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
-        CustomCodes createdMDR_lite2 = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
-        List<CustomCodes> rs = service.getAllFor(CONSTANT);
+        CustomCode createdMDR_lite1 = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
+        CustomCode createdMDR_lite2 = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
+        List<CustomCode> rs = service.getAllFor(CONSTANT);
         Assert.assertEquals(rs.size(), 1);
         service.delete(CONSTANT,CODE);
     }
@@ -52,8 +52,8 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void get() {
 
-        CustomCodes createdMDR_lite1 = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
-        CustomCodes fetchedMDR_lite = service.get(CONSTANT,CODE);
+        CustomCode createdMDR_lite1 = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
+        CustomCode fetchedMDR_lite = service.get(CONSTANT,CODE);
         Assert.assertNotNull(fetchedMDR_lite);
         service.delete(CONSTANT,CODE);
     }
@@ -63,7 +63,7 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void exists() {
 
-        CustomCodes createdMDR_lite1 = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
+        CustomCode createdMDR_lite1 = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
         Boolean exist = service.exists(CONSTANT,CODE);
         Assert.assertNotNull(exist);
         service.delete(CONSTANT,CODE);
@@ -83,8 +83,8 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
             service.create(CONSTANT+"2",CODE+iStr,CODE+"Description", "EXTRADATA");
         }
 
-        List<CustomCodes> rs1 = service.getAllFor(CONSTANT);
-        List<CustomCodes> rs2 = service.getAllFor(CONSTANT + "2");
+        List<CustomCode> rs1 = service.getAllFor(CONSTANT);
+        List<CustomCode> rs2 = service.getAllFor(CONSTANT + "2");
         Assert.assertEquals(rs1.size(), 10);
         Assert.assertEquals(rs2.size(), 10);
 
@@ -107,7 +107,7 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void updateDescription() throws HeuristicRollbackException, RollbackException, HeuristicMixedException, SystemException, NotSupportedException {
 
-        CustomCodes created_record = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
+        CustomCode created_record = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
         String createdDescription = created_record.getDescription();
 
         created_record.setDescription("CHANGED");
@@ -115,7 +115,7 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
         userTransaction.commit();
         userTransaction.begin();
 
-        CustomCodes fetched_record = service.get(created_record.getPrimaryKey().getConstant(), created_record.getPrimaryKey().getCode());
+        CustomCode fetched_record = service.get(created_record.getPrimaryKey().getConstant(), created_record.getPrimaryKey().getCode());
 
         Assert.assertNotEquals(createdDescription,fetched_record.getDescription());
         Assert.assertEquals("CHANGED",fetched_record.getDescription());

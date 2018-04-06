@@ -2,7 +2,7 @@ package eu.europa.ec.fisheries.uvms.asset.rest.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodes;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.rest.AbstractAssetRestTest;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
@@ -18,7 +18,7 @@ import java.util.UUID;
 
 
 @RunWith(Arquillian.class)
-public class CustomCodesResourceTest extends AbstractAssetRestTest {
+public class CustomCodeResourceTest extends AbstractAssetRestTest {
     // TODO also implement tests for embedded json when the need appears
 
     private ObjectMapper MAPPER = new ObjectMapper();
@@ -98,7 +98,7 @@ public class CustomCodesResourceTest extends AbstractAssetRestTest {
 
         String txt = UUID.randomUUID().toString().toUpperCase();
         String createdJson = createACustomCodeHelper(txt);
-        CustomCodes customCodes = MAPPER.readValue(createdJson, CustomCodes.class);
+        CustomCode customCodes = MAPPER.readValue(createdJson, CustomCode.class);
 
         /*
         System.out.println("       " + txt);
@@ -130,7 +130,7 @@ public class CustomCodesResourceTest extends AbstractAssetRestTest {
                 .path(code)
                 .request(MediaType.APPLICATION_JSON)
                 .get(String.class);
-        CustomCodes customCodes = MAPPER.readValue(json, CustomCodes.class);
+        CustomCode customCodes = MAPPER.readValue(json, CustomCode.class);
 
 
         /*

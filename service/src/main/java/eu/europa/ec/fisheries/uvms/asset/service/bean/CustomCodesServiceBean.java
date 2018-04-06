@@ -11,8 +11,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
-import eu.europa.ec.fisheries.uvms.asset.domain.dao.CustomCodesDao;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodes;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.CustomCodeDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 import eu.europa.ec.fisheries.uvms.asset.service.CustomCodesService;
 import javax.ejb.EJB;
@@ -24,11 +24,11 @@ import java.util.List;
 public class CustomCodesServiceBean implements CustomCodesService {
 
 	@EJB
-	private CustomCodesDao dao;
+	private CustomCodeDao dao;
 
 
 	@Override
-	public CustomCodes create(String constant, String code, String description, String extradata){
+	public CustomCode create(String constant, String code, String description, String extradata){
 
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
@@ -50,7 +50,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		if(extradata == null){
 			extradata = "";
 		}
-		CustomCodes mdr = new CustomCodes();
+		CustomCode mdr = new CustomCode();
 		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code);
 		mdr.setPrimaryKey(primaryKey);
 		mdr.setDescription(description);
@@ -61,7 +61,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 
 
 	@Override
-	public CustomCodes get(String constant, String code ){
+	public CustomCode get(String constant, String code ){
 
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
@@ -103,7 +103,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 	}
 
 	@Override
-	public CustomCodes update(String constant, String code, String newValue, String newExtraData){
+	public CustomCode update(String constant, String code, String newValue, String newExtraData){
 
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
@@ -142,7 +142,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 	}
 
 	@Override
-	public List<CustomCodes> getAllFor(String constant){
+	public List<CustomCode> getAllFor(String constant){
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
 		}

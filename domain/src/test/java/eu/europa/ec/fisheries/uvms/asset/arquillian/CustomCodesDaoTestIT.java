@@ -2,8 +2,8 @@ package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.europa.ec.fisheries.uvms.asset.domain.dao.CustomCodesDao;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodes;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.CustomCodeDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -56,35 +56,35 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
 
 
     @Inject
-    CustomCodesDao mdrlitedao;
+    CustomCodeDao mdrlitedao;
 
 
     @Test
     @OperateOnDeployment("normal")
     public void create() throws JsonProcessingException {
 
-        CustomCodes record_active = createHelper(CONSTANT, true);
-        CustomCodes record_inactive = createHelper(CONSTANT, false);
+        CustomCode record_active = createHelper(CONSTANT, true);
+        CustomCode record_inactive = createHelper(CONSTANT, false);
 
-        CustomCodes createdrecord_active = mdrlitedao.create(record_active);
+        CustomCode createdrecord_active = mdrlitedao.create(record_active);
         String constant_active = createdrecord_active.getPrimaryKey().getConstant();
         String value_active = createdrecord_active.getPrimaryKey().getCode();
 
-        CustomCodes fetched_record = mdrlitedao.get(createdrecord_active.getPrimaryKey());
+        CustomCode fetched_record = mdrlitedao.get(createdrecord_active.getPrimaryKey());
 
         Assert.assertEquals(constant_active, fetched_record.getPrimaryKey().getConstant());
         Assert.assertEquals(value_active, fetched_record.getPrimaryKey().getCode());
 
-        CustomCodes createdrecord_inactive = mdrlitedao.create(record_inactive);
+        CustomCode createdrecord_inactive = mdrlitedao.create(record_inactive);
         String constant_inactive = createdrecord_inactive.getPrimaryKey().getConstant();
         String value_inactive = createdrecord_inactive.getPrimaryKey().getCode();
 
-        CustomCodes fetched_inactiverecord = mdrlitedao.get(createdrecord_inactive.getPrimaryKey());
+        CustomCode fetched_inactiverecord = mdrlitedao.get(createdrecord_inactive.getPrimaryKey());
 
         Assert.assertEquals(constant_inactive, fetched_inactiverecord.getPrimaryKey().getConstant());
         Assert.assertEquals(value_inactive, fetched_inactiverecord.getPrimaryKey().getCode());
 
-        List<CustomCodes> rs = mdrlitedao.getAllFor(record_active.getPrimaryKey().getConstant());
+        List<CustomCode> rs = mdrlitedao.getAllFor(record_active.getPrimaryKey().getConstant());
         Assert.assertEquals(rs.size(), 2);
 
 
@@ -98,14 +98,14 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void tryToCreateDups() throws JsonProcessingException {
 
-        CustomCodes record1 = createHelper(CONSTANT, true);
-        CustomCodes record2 = createHelper(CONSTANT, true);
+        CustomCode record1 = createHelper(CONSTANT, true);
+        CustomCode record2 = createHelper(CONSTANT, true);
 
-        CustomCodes createdrecord1 = mdrlitedao.create(record1);
-        CustomCodes createdrecord2 = mdrlitedao.create(record2);
+        CustomCode createdrecord1 = mdrlitedao.create(record1);
+        CustomCode createdrecord2 = mdrlitedao.create(record2);
 
 
-        List<CustomCodes> rs = mdrlitedao.getAllFor(record1.getPrimaryKey().getConstant());
+        List<CustomCode> rs = mdrlitedao.getAllFor(record1.getPrimaryKey().getConstant());
         Assert.assertEquals(rs.size(), 1);
 
         mdrlitedao.delete(record1.getPrimaryKey());
@@ -115,11 +115,11 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void get() throws JsonProcessingException {
 
-        CustomCodes record = createHelper(CONSTANT, true);
+        CustomCode record = createHelper(CONSTANT, true);
 
-        CustomCodes createdrecord = mdrlitedao.create(record);
+        CustomCode createdrecord = mdrlitedao.create(record);
 
-        CustomCodes rec = mdrlitedao.get(createdrecord.getPrimaryKey());
+        CustomCode rec = mdrlitedao.get(createdrecord.getPrimaryKey());
         Assert.assertNotNull(rec);
 
         mdrlitedao.delete(record.getPrimaryKey());
@@ -130,9 +130,9 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void exists() throws JsonProcessingException {
 
-        CustomCodes record = createHelper(CONSTANT, true);
+        CustomCode record = createHelper(CONSTANT, true);
 
-        CustomCodes createdrecord = mdrlitedao.create(record);
+        CustomCode createdrecord = mdrlitedao.create(record);
 
         Boolean exists = mdrlitedao.exists(createdrecord.getPrimaryKey());
         Assert.assertTrue(exists);
@@ -146,18 +146,18 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
 
         for (int i = 0; i < 10; i++) {
             String iStr = String.valueOf(i);
-            CustomCodes record = createHelper(CONSTANT, "kod" + iStr, "description" + iStr);
+            CustomCode record = createHelper(CONSTANT, "kod" + iStr, "description" + iStr);
             mdrlitedao.create(record);
         }
 
         for (int i = 0; i < 10; i++) {
             String iStr = String.valueOf(i);
-            CustomCodes record = createHelper(CONSTANT + "2", "kod" + iStr, "description" + iStr);
+            CustomCode record = createHelper(CONSTANT + "2", "kod" + iStr, "description" + iStr);
             mdrlitedao.create(record);
         }
 
-        List<CustomCodes> rs1 = mdrlitedao.getAllFor(CONSTANT);
-        List<CustomCodes> rs2 = mdrlitedao.getAllFor(CONSTANT + "2");
+        List<CustomCode> rs1 = mdrlitedao.getAllFor(CONSTANT);
+        List<CustomCode> rs2 = mdrlitedao.getAllFor(CONSTANT + "2");
         Assert.assertEquals(rs1.size(), 10);
         Assert.assertEquals(rs2.size(), 10);
 
@@ -180,8 +180,8 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void updateDescription() throws JsonProcessingException, HeuristicRollbackException, HeuristicMixedException, RollbackException, SystemException, NotSupportedException {
 
-        CustomCodes record = createHelper(CONSTANT, "kod" , "description" );
-        CustomCodes created_record = mdrlitedao.create(record);
+        CustomCode record = createHelper(CONSTANT, "kod" , "description" );
+        CustomCode created_record = mdrlitedao.create(record);
         String createdDescription = created_record.getDescription();
 
         created_record.setDescription("CHANGED");
@@ -189,7 +189,7 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
         userTransaction.commit();
         userTransaction.begin();
 
-        CustomCodes fetched_record = mdrlitedao.get(created_record.getPrimaryKey());
+        CustomCode fetched_record = mdrlitedao.get(created_record.getPrimaryKey());
 
         Assert.assertNotEquals(createdDescription,fetched_record.getDescription());
         Assert.assertEquals("CHANGED",fetched_record.getDescription());
@@ -198,10 +198,10 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
     }
 
 
-    private CustomCodes createHelper(String constant, Boolean active) throws JsonProcessingException {
+    private CustomCode createHelper(String constant, Boolean active) throws JsonProcessingException {
 
 
-        CustomCodes record = new CustomCodes();
+        CustomCode record = new CustomCode();
         if (active) {
             CustomCodesPK primaryKey = new CustomCodesPK(constant, "1");
             record.setPrimaryKey(primaryKey);
@@ -221,9 +221,9 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
     }
 
 
-    private CustomCodes createHelper(String constant, String code, String descr) throws JsonProcessingException {
+    private CustomCode createHelper(String constant, String code, String descr) throws JsonProcessingException {
 
-        CustomCodes record = new CustomCodes();
+        CustomCode record = new CustomCode();
         CustomCodesPK primaryKey = new CustomCodesPK(constant, code);
         record.setPrimaryKey(primaryKey);
         record.setDescription(descr);
