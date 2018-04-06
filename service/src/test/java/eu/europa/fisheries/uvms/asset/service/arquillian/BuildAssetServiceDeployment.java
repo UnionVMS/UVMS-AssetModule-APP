@@ -16,16 +16,22 @@ public abstract class BuildAssetServiceDeployment {
 
         WebArchive testWar = ShrinkWrap.create(WebArchive.class, "test.war");
 
-        File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
-                .importRuntimeAndTestDependencies().resolve().withTransitivity().asFile();
-        testWar.addAsLibraries(files);
+//        File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
+//                .importRuntimeAndTestDependencies().resolve().withTransitivity().asFile();
+//        testWar.addAsLibraries(files);
 
-        testWar.addPackages(true, "com.tocea.easycoverage.framework.api");
+        File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
+                .resolve("eu.europa.ec.fisheries.uvms.asset:asset-dbaccess-domain",
+                         "eu.europa.ec.fisheries.uvms.asset:asset-message",
+                         "eu.europa.ec.fisheries.uvms.asset:asset-message-mock",
+                         "eu.europa.ec.fisheries.uvms.audit:audit-model",
+                         "eu.europa.ec.fisheries.uvms:uvms-config",
+                         "eu.europa.ec.fisheries.uvms.config:config-model:4.0.0")
+                .withoutTransitivity().asFile();
+        testWar.addAsLibraries(files);
+        
         testWar.addPackages(true, "eu.europa.fisheries.uvms.asset.service");
-        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.asset.service");
-        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.asset.dto");
-        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.asset.exception");
-        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.entity");
+        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset.service");
 
         return testWar;
     }

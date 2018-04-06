@@ -17,8 +17,8 @@ import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.message.ModuleQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
-import eu.europa.ec.fisheries.uvms.asset.message.mapper.AuditModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
+import eu.europa.ec.fisheries.uvms.asset.service.mapper.AuditModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
 
 @Stateless

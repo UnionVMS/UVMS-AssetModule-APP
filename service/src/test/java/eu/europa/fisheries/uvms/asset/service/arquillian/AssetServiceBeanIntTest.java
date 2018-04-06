@@ -25,8 +25,8 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.service.exception.AssetServiceException;
 
 @RunWith(Arquillian.class)
 public class AssetServiceBeanIntTest extends TransactionalTests {
@@ -48,14 +48,14 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
             createdAsset = assetService.createAsset(asset, "test");
             commit();
             Assert.assertTrue(createdAsset != null);
-        } catch (AssetException e) {
+        } catch (AssetServiceException e) {
             Assert.fail();
         }
     }
 
     @Test
     @OperateOnDeployment("normal")
-    public void updateAsset() throws AssetException {
+    public void updateAsset() throws AssetServiceException {
 
         // create an asset
         Asset asset = AssetHelper.createBiggerAsset();
@@ -73,7 +73,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void deleteAsset() throws AssetException {
+    public void deleteAsset() throws AssetServiceException {
 
         // create an asset
         Asset asset = AssetHelper.createBiggerAsset();
@@ -97,7 +97,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void updateAssetThreeTimesAndCheckRevisionsAndValues() throws AssetException {
+    public void updateAssetThreeTimesAndCheckRevisionsAndValues() throws AssetServiceException {
 
         // create an asset
         Asset asset = AssetHelper.createBiggerAsset();
@@ -302,13 +302,13 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         assertEquals(1, contacts.size());
     }
 
-    private void commit() throws AssetException {
+    private void commit() throws AssetServiceException {
 
         try {
             userTransaction.commit();
             userTransaction.begin();
         } catch (RollbackException |HeuristicMixedException | HeuristicRollbackException |SystemException |  NotSupportedException e) {
-            throw new AssetException(e);
+            throw new AssetServiceException(e);
         }
     }
 

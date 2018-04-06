@@ -9,42 +9,43 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.asset.message.mapper;
-
-import eu.europa.ec.fisheries.uvms.asset.model.constants.AuditObjectTypeEnum;
-import eu.europa.ec.fisheries.uvms.asset.model.constants.AuditOperationEnum;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package eu.europa.ec.fisheries.uvms.asset.service.mapper;
 
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
 import eu.europa.ec.fisheries.uvms.audit.model.mapper.AuditLogMapper;
 
 public class AuditModuleRequestMapper {
 
-    final static Logger LOG = LoggerFactory.getLogger(AuditModuleRequestMapper.class);
-
+    public static final String ASSET = "Asset";
+    public static final String ASSET_GROUP = "Asset Group";
+    public static final String CREATE = "Create";
+    public static final String UPDATE = "Update";
+    public static final String ARCHIVE = "Archive";
+    
+    private AuditModuleRequestMapper() {}
+    
     public static String mapAuditLogAssetCreated(String guid, String username) throws AuditModelMarshallException {
-        return mapToAuditLog(AuditObjectTypeEnum.ASSET.getValue(), AuditOperationEnum.CREATE.getValue(), guid, username);
+        return mapToAuditLog(ASSET, CREATE, guid, username);
     }
 
     public static String mapAuditLogAssetUpdated(String guid, String comment, String username) throws AuditModelMarshallException {
-        return AuditLogMapper.mapToAuditLog(AuditObjectTypeEnum.ASSET.getValue(), AuditOperationEnum.UPDATE.getValue(), guid, username);
+        return AuditLogMapper.mapToAuditLog(ASSET, UPDATE, guid, comment, username);
     }
 
     public static String mapAuditLogAssetArchived(String guid, String comment, String username) throws AuditModelMarshallException {
-        return AuditLogMapper.mapToAuditLog(AuditObjectTypeEnum.ASSET.getValue(), AuditOperationEnum.ARCHIVE.getValue(), guid, username);
+        return AuditLogMapper.mapToAuditLog(ASSET, ARCHIVE, guid, comment, username);
     }
 
     public static String mapAuditLogAssetGroupCreated(String guid, String username,String name) throws AuditModelMarshallException {
-        return mapToAuditLog(AuditObjectTypeEnum.ASSET_GROUP.getValue(), AuditOperationEnum.CREATE.getValue(), guid, username, name);
+        return mapToAuditLog(ASSET_GROUP, CREATE, guid, username, name);
     }
 
     public static String mapAuditLogAssetGroupUpdated(String guid, String username, String name) throws AuditModelMarshallException {
-        return mapToAuditLog(AuditObjectTypeEnum.ASSET_GROUP.getValue(), AuditOperationEnum.UPDATE.getValue(), guid, username,name);
+        return mapToAuditLog(ASSET_GROUP, UPDATE, guid, username,name);
     }
 
     public static String mapAuditLogAssetGroupDeleted(String guid, String username, String name) throws AuditModelMarshallException {
-        return mapToAuditLog(AuditObjectTypeEnum.ASSET_GROUP.getValue(), AuditOperationEnum.ARCHIVE.getValue(), guid, username, name);
+        return mapToAuditLog(ASSET_GROUP, ARCHIVE, guid, username, name);
     }
 
     private static String mapToAuditLog(String objectType, String operation, String affectedObject, String username) throws AuditModelMarshallException {
