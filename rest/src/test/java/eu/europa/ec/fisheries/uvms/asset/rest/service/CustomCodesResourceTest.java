@@ -6,10 +6,10 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodes;
 import eu.europa.ec.fisheries.uvms.asset.rest.AbstractAssetRestTest;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -25,16 +25,30 @@ public class CustomCodesResourceTest extends AbstractAssetRestTest {
     @Test
     @RunAsClient
     public void getConstants() {
+
+        String txt = UUID.randomUUID().toString().toUpperCase();
+        String createdJson = createACustomCodeHelper(txt);
         List<String> constants = getWebTarget()
                 .path("customcodes")
                 .request(MediaType.APPLICATION_JSON)
                 .get(List.class);
-        System.out.println(constants);
+        // resultset must at least contain a constant with our created customcode
+
+        Boolean found = false;
+        for (String constant : constants) {
+            if (constant.toUpperCase().endsWith(txt.toUpperCase())) {
+                found = true;
+            }
+        }
+        Assert.assertTrue(found);
     }
 
     @Test
     @RunAsClient
     public void getCodesPerConstant() throws IOException {
+
+        String txt = UUID.randomUUID().toString().toUpperCase();
+        String createdJson = createACustomCodeHelper(txt);
 
         // this is actually not a test yet but it shows how to parse resulting json without a DTO
 
@@ -45,9 +59,10 @@ public class CustomCodesResourceTest extends AbstractAssetRestTest {
                 .get(List.class);
 
 
-        // for every constant
-        for(String constant : constants){
 
+        // for every constant
+        Boolean found = false;
+        for (String constant : constants) {
 
             String json = getWebTarget()
                     .path("customcodes")
@@ -56,10 +71,9 @@ public class CustomCodesResourceTest extends AbstractAssetRestTest {
                     .request(MediaType.APPLICATION_JSON)
                     .get(String.class);
 
-
             JsonNode jsonNode = MAPPER.readTree(json);
 
-            for(JsonNode val : jsonNode){
+            for (JsonNode val : jsonNode) {
                 String cst = val.path("primaryKey").path("constant").asText();
                 String cd = val.path("primaryKey").path("code").asText();
                 String description = val.path("description").asText();
@@ -67,47 +81,44 @@ public class CustomCodesResourceTest extends AbstractAssetRestTest {
 
                 // here we could parse the embedded json  (probably different for every constant
 
-
-
-
-                System.out.println("------------------------------------------------------");
-                System.out.println(cst);
-                System.out.println(cd);
-                System.out.println(description);
-                System.out.println(embeddedJson);
+                if (cd.toUpperCase().endsWith(txt.toUpperCase())) {
+                    found = true;
+                }
             }
         }
+        Assert.assertTrue(found);
     }
 
     @Test
     @RunAsClient
     public void createACustomCode() throws IOException {
 
-        String txt = UUID.randomUUID().toString();
+        String txt = UUID.randomUUID().toString().toUpperCase();
         String createdJson = createACustomCodeHelper(txt);
         CustomCodes customCodes = MAPPER.readValue(createdJson, CustomCodes.class);
 
 
+        /*
         System.out.println("       " + txt);
         System.out.println(customCodes.getPrimaryKey().getConstant());
         System.out.println(customCodes.getPrimaryKey().getCode());
         System.out.println(customCodes.getDescription());
         System.out.println(customCodes.getJsonstr());
+        */
 
-
+        Assert.assertTrue(customCodes.getPrimaryKey().getConstant().endsWith(txt));
 
 
     }
 
 
-    private String  createACustomCodeHelper(String txt){
+    private String createACustomCodeHelper(String txt) {
 
 
         String constant = "CST____" + txt;
         String code = "CODE___" + txt;
-        String descr = "DESCR_" +txt;
+        String descr = "DESCR__" + txt;
         String embeddedjson = "EMB____" + txt;
-
 
 
         Response resp = getWebTarget()
@@ -124,12 +135,7 @@ public class CustomCodesResourceTest extends AbstractAssetRestTest {
     }
 
 
-
-
-
-
-
-    }
+}
 
 
 
