@@ -208,14 +208,14 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
             record.setDescription("Active");
             ExtraData extradata = new ExtraData(UUID.randomUUID().toString(), UUID.randomUUID().toString());
             String extradataJson = MAPPER.writeValueAsString(extradata);
-            record.setJsonstr(extradataJson);
+            record.setExtraData(extradataJson);
         } else {
             CustomCodesPK primaryKey = new CustomCodesPK(constant, "0");
             record.setPrimaryKey(primaryKey);
             record.setDescription("InActive");
             ExtraData extradata = new ExtraData(UUID.randomUUID().toString(), UUID.randomUUID().toString());
             String extradataJson = MAPPER.writeValueAsString(extradata);
-            record.setJsonstr(extradataJson);
+            record.setExtraData(extradataJson);
         }
         return record;
     }

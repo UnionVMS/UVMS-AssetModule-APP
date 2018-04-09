@@ -25,8 +25,8 @@ public class CustomCode {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "jsonstr")
-    private String jsonstr;
+    @Column(name = "extradata")
+    private String extradata;
 
 
     @EmbeddedId
@@ -38,12 +38,12 @@ public class CustomCode {
         this.primaryKey = primaryKey;
     }
 
-    public String getJsonstr() {
-        return jsonstr;
+    public String getExtraData() {
+        return extradata;
     }
 
-    public void setJsonstr(String jsonstr) {
-        this.jsonstr = jsonstr;
+    public void setExtraData(String extradata) {
+        this.extradata = extradata;
     }
 
     public String getDescription() {

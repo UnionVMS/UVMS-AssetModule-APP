@@ -20,9 +20,6 @@ public class CustomCodeDao {
         if(record.getDescription() == null){
             record.setDescription("");
         }
-        if(record.getJsonstr() == null){
-            record.setJsonstr("");
-        }
 
         em.persist(record);
         return record;
@@ -38,15 +35,15 @@ public class CustomCodeDao {
         }
     }
 
-    public CustomCode update(CustomCodesPK primaryKey, String newDescription, String newJson) {
+    public CustomCode update(CustomCodesPK primaryKey, String newDescription, String extradata) {
 
         CustomCode fetchedMDR_lite = get(primaryKey);
         if (fetchedMDR_lite != null) {
             if(newDescription != null) {
                 fetchedMDR_lite.setDescription(newDescription);
             }
-            if(newJson != null) {
-                fetchedMDR_lite.setJsonstr(newJson);
+            if(extradata != null) {
+                fetchedMDR_lite.setExtraData(extradata);
             }
         }
         return fetchedMDR_lite;
