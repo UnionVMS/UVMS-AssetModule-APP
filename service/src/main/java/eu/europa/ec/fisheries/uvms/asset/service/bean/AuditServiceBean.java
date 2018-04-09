@@ -16,10 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.message.ModuleQueue;
-import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.service.mapper.AuditModuleRequestMapper;
-import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
 
 @Stateless
 public class AuditServiceBean {
@@ -34,10 +32,8 @@ public class AuditServiceBean {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetCreated(asset.getId().toString(),
                     username);
             messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-        } catch (AssetMessageException e) {
+        } catch (Exception e) {
             LOG.warn("Failed to send audit log message! Asset with guid {} was created ", asset.getId());
-        } catch (AuditModelMarshallException e) {
-            LOG.error("Failed to send audit log message! Asset with guid {} was created ", asset.getId());
         }
     }
     
@@ -46,7 +42,7 @@ public class AuditServiceBean {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetUpdated(asset.getId().toString(), comment,
                     username);
             messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-        } catch (AuditModelMarshallException | AssetMessageException e) {
+        } catch (Exception e) {
             LOG.error("Failed to send audit log message! Asset with guid {} was updated ",
                     asset.getId().toString());
         }
@@ -57,7 +53,7 @@ public class AuditServiceBean {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetArchived(asset.getId().toString(), comment,
                     username);
             messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-        } catch (AuditModelMarshallException | AssetMessageException e) {
+        } catch (Exception e) {
             LOG.error("Failed to send audit log message! Asset with guid {} was archived ",
                     asset.getId().toString());
         }
