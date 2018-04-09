@@ -78,7 +78,7 @@ public class InternalResource {
     @GET
     @Path("group/asset/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAssetGroupByUser(@PathParam("id") UUID assetId) {
+    public Response getAssetGroupByAssetId(@PathParam("id") UUID assetId) {
         List<AssetGroup> assetGroups = assetGroupService.getAssetGroupListByAssetId(assetId);
         return Response.ok(assetGroups).build();
     }
@@ -99,6 +99,10 @@ public class InternalResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response upsertAsset(Asset asset) {
+        Asset existingAsset = assetService.getAssetById(AssetIdentifier.CFR, asset.getCfr());
+        if (existingAsset != null) {
+            asset.setId(existingAsset.getId());
+        }
         Asset upsertedAsset = assetService.upsertAsset(asset, "Internal REST resource");
         return Response.ok(upsertedAsset).build();
     }

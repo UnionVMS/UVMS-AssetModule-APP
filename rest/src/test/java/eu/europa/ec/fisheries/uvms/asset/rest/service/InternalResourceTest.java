@@ -7,6 +7,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -166,5 +167,18 @@ public class InternalResourceTest extends AbstractAssetRestTest {
                 .get(Asset.class);
         
         assertThat(fetchedAsset, is(AssetMatcher.assetEquals(createdAsset)));
+    }
+    
+    @Test
+    @RunAsClient
+    public void upsertAssetTest() {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset upsertedAsset = getWebTarget()
+                .path("internal")
+                .path("/asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+        
+        assertThat(upsertedAsset, is(CoreMatchers.notNullValue()));
     }
 }
