@@ -5,69 +5,87 @@
 
     <changeSet author="jojoha" id="Insert static parameter values_v_04">
         
-        <insert tableName="parameter">
-            <column name="param_id" value="asset.eu.service.endpoint" />
-            <column name="param_value" value="http://livm58t:8080/BridgeWebApp/connector" />
-            <column name="param_description" value="The endpoint where the vesselquery is sent" />
+        <insert tableName='parameter'>
+            <column name='param_description' value='PARAMETER'/>
+            <column name='param_id' value='ASSET.DEFAULT.FLAGSTATE'/>
+            <column name='param_value' value='SWE'/>
         </insert>
-        
-        <insert tableName="parameter">
-            <column name="param_id" value="asset.eu.service.client.cert.header" />
-            <column name="param_value" value="Client-Cert" />
-            <column name="param_description" value="The certification header key to use when querying the vessel" />
+
+        <insert tableName='parameter'>
+            <column name='param_description' value='PARAMETER'/>
+            <column name='param_id' value='ASSET.EU.SERVICE.CLIENT.CERT.HEADER'/>
+            <column name='param_value' value='Client-Cert'/>
         </insert>
-        
-        <insert tableName="parameter">
-            <column name="param_id" value="asset.eu.service.client.cert.value" />
-            <column name="param_value" value="jojoha" />
-            <column name="param_description" value="The certification header value to use when querying the vessel" />
+        <insert tableName='parameter'>
+            <column name='param_description' value='PARAMETER'/>
+            <column name='param_id' value='ASSET.EU.SERVICE.CLIENT.CERT.VALUE'/>
+            <column name='param_value' value='jojoha'/>
         </insert>
-        
-        <insert tableName="parameter">
-            <column name="param_id" value="asset.eu.service.dataflow" />
-            <column name="param_value" value="urn:xeu:ec:fisheries:flux-bl:fr-vesseldeclaration:1" />
-            <column name="param_description" value="The flux dataflow to use when querying for a vessel" />
+        <insert tableName='parameter'>
+            <column name='param_description' value='PARAMETER'/>
+            <column name='param_id' value='ASSET.EU.SERVICE.DATAFLOW'/>
+            <column name='param_value' value='urn:xeu:ec:fisheries:flux-bl:fr-vesseldeclaration:1'/>
         </insert>
-        
-        <insert tableName="parameter">
-            <column name="param_id" value="asset.eu.service.flux.ad" />
-            <column name="param_value" value="XEU" />
-            <column name="param_description" value="The AD value" />
+        <insert tableName='parameter'>
+            <column name='param_description' value='PARAMETER'/>
+            <column name='param_id' value='ASSET.EU.SERVICE.ENDPOINT'/>
+            <column name='param_value' value='http://livm58t:8080/BridgeWebApp/connector'/>
         </insert>
-        
-        <rollback>
-            <delete tableName="parameter">
-                <where> 
-                    param_id in ('asset.eu.service.endpoint','asset.eu.service.client.cert.header','asset.eu.service.client.cert.value','asset.eu.service.dataflow', 'asset.eu.service.flux.ad')
-                </where>
-            </delete>
-        </rollback>
-        
-    </changeSet>
-    <changeSet author="nhily" id="Insert HAV Vessel Cache proxy config">
-        <insert tableName="parameter">
-            <column name="param_id" value="NATIONAL_EQUIPMENT_SERVICE_ENDPOINT"/>
-            <column name="param_description" value="Webservice for equipment/gear type information"/>
-            <column name="param_value" value="http://livm60t.havochvatten.se:8080/EquipmentService/EquipmentPortTypeImpl"/>
+        <insert tableName='parameter'>
+            <column name='param_description' value='PARAMETER'/>
+            <column name='param_id' value='ASSET.EU.SERVICE.FLUX.AD'/>
+            <column name='param_value' value='XEU'/>
         </insert>
-        <insert tableName="parameter">
-            <column name="param_id" value="NATIONAL_GENERAL_NOTIFICATION_SERVICE_ENDPOINT"/>
-            <column name="param_description" value="Webservice for getting what equipment is installed in a vessel"/>
-            <column name="param_value" value="http://livmipl02p:8001/esb/GeneralNotification/v1"/>
+        <insert tableName='parameter'>
+            <column name='param_description' value='PARAMETER'/>
+            <column name='param_id' value='ASSET.EU.USE'/>
+            <column name='param_value' value='Use EU register of assets.'/>
         </insert>
-        <insert tableName="parameter">
-            <column name="param_id" value="NATIONAL_VESSEL_COMP_SERVICE_ENDPOINT"/>
-            <column name="param_description" value="Webservice for getting vessel and owner information"/>
-            <column name="param_value" value="http://livmipl02p:8001/esb/VesselComp/v2"/>
+        <insert tableName='parameter'>
+            <column name='param_description' value='PARAMETER'/>
+            <column name='param_id' value='ASSET.NATIONAL.USE'/>
+            <column name='param_value' value='Use national register of assets.'/>
         </insert>
-        <insert tableName="parameter">
-            <column name="param_id" value="NATIONAL_VESSEL_NATIONS"/>
-            <column name="param_description" value="Nations of vessles you want to fetch from Fartyg2 e.g. SWE, DNK"/>
-            <column name="param_value" value="SWE,DNK"/>
+        <insert tableName='parameter'>
+            <column name='param_description' value='PARAMETER'/>
+            <column name='param_id' value='NATIONAL_EQUIPMENT_SERVICE_ENDPOINT'/>
+            <column name='param_value'
+                    value='http://livm60t.havochvatten.se:8080/EquipmentService/EquipmentPortTypeImpl'/>
         </insert>
-        <update tableName="parameter">
-            <column name="param_value" value="http://livmipl02p:8001/esb/Vessel/v2"/>
-            <where>param_id = 'NATIONAL_SERVICE_ENDPOINT'</where>
-        </update>
+        <insert tableName='parameter'>
+            <column name='param_description' value='PARAMETER'/>
+            <column name='param_id' value='NATIONAL_GENERAL_NOTIFICATION_SERVICE_ENDPOINT'/>
+            <column name='param_value' value='http://livmipl02p:8001/esb/GeneralNotification/v1'/>
+        </insert>
+        <insert tableName='parameter'>
+            <column name='param_description' value='PARAMETER'/>
+            <column name='param_id' value='NATIONAL_SERVICE_ENDPOINT'/>
+            <column name='param_value' value='http://livmipl02t:8011/esb/Vessel/v2'/>
+        </insert>
+        <insert tableName='parameter'>
+            <column name='param_description' value='PARAMETER'/>
+            <column name='param_id' value='NATIONAL_VESSEL_COMP_SERVICE_ENDPOINT'/>
+            <column name='param_value' value='http://livmipl02p:8001/esb/VesselComp/v2'/>
+        </insert>
+        <insert tableName='parameter'>
+            <column name='param_description' value='PARAMETER'/>
+            <column name='param_id' value='NATIONAL_VESSEL_NATIONS'/>
+            <column name='param_value' value='SWE,DNK'/>
+        </insert>
+        <insert tableName='parameter'>
+            <column name='param_description' value='PARAMETER'/>
+            <column name='param_id' value='VESSEL.EU.USE'/>
+            <column name='param_value' value='Use EU register of vessels.'/>
+        </insert>
+        <insert tableName='parameter'>
+            <column name='param_description' value='PARAMETER'/>
+            <column name='param_id' value='VESSEL.NATIONAL.USE'/>
+            <column name='param_value' value='Use national register of vessels.'/>
+        </insert>
+
+
+
+
+
     </changeSet>
 </databaseChangeLog>
