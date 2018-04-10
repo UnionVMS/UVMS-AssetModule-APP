@@ -46,6 +46,10 @@
                             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
                             <artifactId>asset-model</artifactId>
                         </jarModule>
+                        <jarModule>
+                            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+                            <artifactId>asset-client</artifactId>
+                        </jarModule>
                         <webModule>
                             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
                             <context-root>${project.parent.artifactId}</context-root>
@@ -112,6 +116,12 @@
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>asset-model</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+            <artifactId>asset-client</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>

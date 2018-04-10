@@ -10,7 +10,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.client;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import javax.ejb.Stateless;
 import javax.ws.rs.client.Client;
@@ -20,6 +22,7 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ContextResolver;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -28,12 +31,15 @@ import eu.europa.ec.fisheries.uvms.asset.client.model.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.client.model.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.client.model.AssetListResponse;
 import eu.europa.ec.fisheries.uvms.asset.client.model.AssetQuery;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
+import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 
 @Stateless
 public class AssetClient {
 
     // TODO read from config?
-    private static final String ASSET_END_POINT = "http://localhost:8080/asset/rest/internal";
+    private static final String REST_END_POINT = "http://localhost:8080/asset/rest/internal";
     
     private Client client;
     
@@ -51,7 +57,7 @@ public class AssetClient {
     }
     
     public Asset getAssetById(AssetIdentifier type, String value) {
-        return client.target(ASSET_END_POINT)
+        return client.target(REST_END_POINT)
                 .path("asset")
                 .path(type.toString().toLowerCase())
                 .path(value)
@@ -60,7 +66,7 @@ public class AssetClient {
     }
     
     public List<Asset> getAssetList(AssetQuery query) {
-        AssetListResponse assetResponse = client.target(ASSET_END_POINT)
+        AssetListResponse assetResponse = client.target(REST_END_POINT)
                 .path("query")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(query), AssetListResponse.class);
@@ -69,7 +75,7 @@ public class AssetClient {
     }
     
     public List<Asset> getAssetList(AssetQuery query, boolean dynamic) {
-        AssetListResponse assetResponse = client.target(ASSET_END_POINT)
+        AssetListResponse assetResponse = client.target(REST_END_POINT)
                 .path("query")
                 .queryParam("dynamic", dynamic)
                 .request(MediaType.APPLICATION_JSON)
@@ -79,7 +85,7 @@ public class AssetClient {
     }
     
     public List<Asset> getAssetList(AssetQuery query, int page, int size, boolean dynamic) {
-        AssetListResponse assetResponse = client.target(ASSET_END_POINT)
+        AssetListResponse assetResponse = client.target(REST_END_POINT)
                     .path("query")
                     .queryParam("page", page)
                     .queryParam("size", size)
@@ -91,7 +97,7 @@ public class AssetClient {
     }
     
     public List<AssetGroup> getAssetGroupsByUser(String user) {
-        Response response = client.target(ASSET_END_POINT)
+        Response response = client.target(REST_END_POINT)
                     .path("group")
                     .path("user")
                     .path(user)
@@ -103,7 +109,7 @@ public class AssetClient {
     }
     
     public List<AssetGroup> getAssetGroupByAssetId(UUID assetId) {
-        Response response = client.target(ASSET_END_POINT)
+        Response response = client.target(REST_END_POINT)
                 .path("group")
                 .path("asset")
                 .path(assetId.toString())
@@ -127,7 +133,7 @@ public class AssetClient {
     }
      */
     public List<Asset> getAssetsByGroupIds(List<UUID> groupIds) {
-        Response response = client.target(ASSET_END_POINT)
+        Response response = client.target(REST_END_POINT)
                 .path("group")
                 .path("asset")
 //                .path(groupIds)
@@ -139,14 +145,28 @@ public class AssetClient {
     }
     
     public Asset upsertAsset(Asset asset) {
-        return client.target(ASSET_END_POINT)
+        return client.target(REST_END_POINT)
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
     }
+    
+    public void upsertAssetAsync(Asset asset) throws MessageException, JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        
+        Map<String, String> properties = new HashMap<>();
+        properties.put("METHOD", "UPSERT_ASSET");
+        new AbstractProducer() {
+            @Override
+            public String getDestinationName() {
+                return MessageConstants.QUEUE_ASSET_EVENT;
+            }
+        }.sendModuleMessageWithProps(mapper.writeValueAsString(asset), null, properties);
+    }
 
     public String ping() {
-        return client.target(ASSET_END_POINT)
+        return client.target(REST_END_POINT)
                 .path("ping")
                 .request(MediaType.APPLICATION_JSON)
                 .get(String.class);
