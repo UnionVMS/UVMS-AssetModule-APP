@@ -194,7 +194,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="description" type="VARCHAR(255)"/>
-            <column name="jsonstr" type="VARCHAR(255)"/>
+            <column name="extradata" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
     <changeSet author="thofan (generated)" id="1522311740593-8">
