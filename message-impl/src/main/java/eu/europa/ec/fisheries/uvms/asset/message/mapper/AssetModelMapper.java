@@ -15,6 +15,7 @@ import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -29,6 +30,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetBO;
 import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetListResponse;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetContact;
@@ -113,6 +115,14 @@ public class AssetModelMapper {
         asset.setGfcm(assetModel.getGfcm());
         
         return asset;
+    }
+    
+    public AssetBO toAssetBO(eu.europa.ec.fisheries.wsdl.asset.types.Asset assetModel) {
+        AssetBO assetBo = new AssetBO();
+        assetBo.setAsset(toAssetEntity(assetModel));
+        assetBo.setContacts(toAssetContacts(assetModel.getContact()));
+        assetBo.setNotes(toAssetNotes(assetModel.getNotes()));
+        return assetBo;
     }
     
     public eu.europa.ec.fisheries.wsdl.asset.types.Asset toAssetModel(Asset assetEntity) {
@@ -296,11 +306,10 @@ public class AssetModelMapper {
         return listAssetResponse;
     }
     
-    public void createAssetNotes(UUID assetId, List<AssetNotes> assetNotes) {
-        // TODO remove previous notes?
+    public List<Note> toAssetNotes(List<AssetNotes> assetNotes) {
+        List<Note> notes = new ArrayList<>();
         for (AssetNotes assetNote : assetNotes) {
             Note note = new Note();
-            note.setAssetId(assetId);
             if (assetNote.getDate() != null) {
                 note.setDate(LocalDateTime.parse(assetNote.getDate(), DateTimeFormatter.ISO_LOCAL_DATE_TIME));
             }
@@ -317,15 +326,15 @@ public class AssetModelMapper {
             if (assetNote.getSource() != null) {
                 note.setSource(assetNote.getSource().toString());
             }
-            assetService.updateNote(note, "");
+            notes.add(note);
         }
+        return notes;
     }
     
-    public void createAssetContacts(UUID assetId, List<AssetContact> contacts) {
-        // TODO remove previous contacts?
+    public List<ContactInfo> toAssetContacts(List<AssetContact> contacts) {
+        List<ContactInfo> contactInfos = new ArrayList<>();
         for (AssetContact assetContact : contacts) {
             ContactInfo contactInfo = new ContactInfo();
-            contactInfo.setAssetId(assetId);
             contactInfo.setName(assetContact.getName());
             contactInfo.setPhoneNumber(assetContact.getNumber());
             contactInfo.setEmail(assetContact.getEmail());
@@ -333,7 +342,8 @@ public class AssetModelMapper {
             if (assetContact.getSource() != null) {
                 contactInfo.setSource(assetContact.getSource().toString());
             }
-            assetService.updateContactInfo(contactInfo, "");
+            contactInfos.add(contactInfo);
         }
+        return contactInfos;
     }
 }

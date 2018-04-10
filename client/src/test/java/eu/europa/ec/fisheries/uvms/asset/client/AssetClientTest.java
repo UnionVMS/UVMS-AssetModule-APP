@@ -12,15 +12,13 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.asset.client.model.Asset;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetBO;
 import eu.europa.ec.fisheries.uvms.asset.client.model.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.client.model.AssetQuery;
 
 @RunWith(Arquillian.class)
 public class AssetClientTest extends AbstractClientTest {
 
-    @Context
-    Providers provider;
-    
     @Inject
     AssetClient assetClient;
 
@@ -32,7 +30,9 @@ public class AssetClientTest extends AbstractClientTest {
 
     @Test
     public void getAssetByGuidTest() {
-        Asset upsertAsset = assetClient.upsertAsset(AssetHelper.createBasicAsset());
+        AssetBO assetBo = new AssetBO();
+        assetBo.setAsset(AssetHelper.createBasicAsset());
+        Asset upsertAsset = assetClient.upsertAsset(assetBo);
 
         Asset asset = assetClient.getAssetById(AssetIdentifier.GUID, upsertAsset.getId().toString());
         assertThat(asset, CoreMatchers.is(CoreMatchers.notNullValue()));
@@ -41,14 +41,18 @@ public class AssetClientTest extends AbstractClientTest {
     
     @Test
     public void upsertAssetTest() {
-        Asset upsertAsset = assetClient.upsertAsset(AssetHelper.createBasicAsset());
+        AssetBO assetBo = new AssetBO();
+        assetBo.setAsset(AssetHelper.createBasicAsset());
+        Asset upsertAsset = assetClient.upsertAsset(assetBo);
         assertThat(upsertAsset, CoreMatchers.is(CoreMatchers.notNullValue()));
     }
     
     @Test
     public void queryAssetsTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset upsertAsset = assetClient.upsertAsset(asset);
+        AssetBO assetBo = new AssetBO();
+        assetBo.setAsset(asset);
+        Asset upsertAsset = assetClient.upsertAsset(assetBo);
         AssetQuery assetQuery = new AssetQuery();
         assetQuery.setFlagState(Arrays.asList(asset.getFlagStateCode()));
         List<Asset> assets = assetClient.getAssetList(assetQuery);
@@ -60,7 +64,9 @@ public class AssetClientTest extends AbstractClientTest {
     @Test
     public void upsertAssetJMSTest() throws Exception {
         Asset asset = AssetHelper.createBasicAsset();
-        assetClient.upsertAssetAsync(asset);
+        AssetBO assetBo = new AssetBO();
+        assetBo.setAsset(asset);
+        assetClient.upsertAssetAsync(assetBo);
         Thread.sleep(5000); // Needed due to async call
         Asset fetchedAsset = assetClient.getAssetById(AssetIdentifier.CFR, asset.getCfr());
         assertThat(fetchedAsset.getCfr(), CoreMatchers.is(asset.getCfr()));

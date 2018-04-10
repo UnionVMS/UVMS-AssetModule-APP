@@ -16,6 +16,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.rest.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.asset.rest.AssetHelper;
 import eu.europa.ec.fisheries.uvms.asset.rest.AssetMatcher;
+import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetBO;
 
 @RunWith(Arquillian.class)
 public class InternalResourceTest extends AbstractAssetRestTest {
@@ -173,11 +174,13 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     @RunAsClient
     public void upsertAssetTest() {
         Asset asset = AssetHelper.createBasicAsset();
+        AssetBO assetBo = new AssetBO();
+        assetBo.setAsset(asset);
         Asset upsertedAsset = getWebTarget()
                 .path("internal")
                 .path("/asset")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(asset), Asset.class);
+                .post(Entity.json(assetBo), Asset.class);
         
         assertThat(upsertedAsset, is(CoreMatchers.notNullValue()));
     }

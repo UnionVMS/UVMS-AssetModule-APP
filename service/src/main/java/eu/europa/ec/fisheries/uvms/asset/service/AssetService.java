@@ -13,7 +13,6 @@ package eu.europa.ec.fisheries.uvms.asset.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
@@ -21,6 +20,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetBO;
 import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetListResponse;
 
 public interface AssetService {
@@ -90,7 +90,16 @@ public interface AssetService {
      * @return Asset @description an asset
      */
     Asset upsertAsset(Asset asset, String username) ;
-
+    
+    /**
+     * Upsert asset business object. (Asset/Contacts/Notes)
+     * 
+     * @param asset
+     * @param username
+     * @return
+     */
+    Asset upsertAssetBO(AssetBO asset, String username);
+    
     /**
      *
      * @param groups @description list of assetgroups

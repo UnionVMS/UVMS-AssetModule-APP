@@ -33,6 +33,7 @@ import eu.europa.ec.fisheries.uvms.asset.rest.dto.AssetQuery;
 import eu.europa.ec.fisheries.uvms.asset.rest.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetBO;
 import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetListResponse;
 
 @Path("internal")
@@ -98,12 +99,8 @@ public class InternalResource {
     @Path("asset")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response upsertAsset(Asset asset) {
-        Asset existingAsset = assetService.getAssetById(AssetIdentifier.CFR, asset.getCfr());
-        if (existingAsset != null) {
-            asset.setId(existingAsset.getId());
-        }
-        Asset upsertedAsset = assetService.upsertAsset(asset, "Internal REST resource");
+    public Response upsertAsset(AssetBO assetBo) {
+        Asset upsertedAsset = assetService.upsertAssetBO(assetBo, "UVMS (REST)");
         return Response.ok(upsertedAsset).build();
     }
     

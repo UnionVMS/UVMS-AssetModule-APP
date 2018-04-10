@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import eu.europa.ec.fisheries.uvms.asset.client.model.Asset;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetBO;
 import eu.europa.ec.fisheries.uvms.asset.client.model.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.client.model.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.client.model.AssetListResponse;
@@ -144,14 +145,14 @@ public class AssetClient {
         return assets;
     }
     
-    public Asset upsertAsset(Asset asset) {
+    public Asset upsertAsset(AssetBO asset) {
         return client.target(REST_END_POINT)
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
     }
     
-    public void upsertAssetAsync(Asset asset) throws MessageException, JsonProcessingException {
+    public void upsertAssetAsync(AssetBO asset) throws MessageException, JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         

@@ -18,9 +18,8 @@ import javax.jms.TextMessage;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetBO;
 
 @Stateless
 public class AssetMessageJSONBean {
@@ -33,13 +32,8 @@ public class AssetMessageJSONBean {
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         
-        Asset asset = mapper.readValue(message.getText(), Asset.class);
-        
-        Asset existingAsset = assetService.getAssetById(AssetIdentifier.CFR, asset.getCfr());
-        if (existingAsset != null) {
-            asset.setId(existingAsset.getId());
-        }
-        assetService.upsertAsset(asset, "JMS upsert");
+        AssetBO assetBo = mapper.readValue(message.getText(), AssetBO.class);
+        assetService.upsertAssetBO(assetBo, "UVMS (JMS)");
     }
     
 }
