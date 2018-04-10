@@ -54,7 +54,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code);
 		mdr.setPrimaryKey(primaryKey);
 		mdr.setDescription(description);
-		mdr.setJsonstr(extradata);
+		mdr.setExtraData(extradata);
 
 		return dao.create(mdr);
 	}
