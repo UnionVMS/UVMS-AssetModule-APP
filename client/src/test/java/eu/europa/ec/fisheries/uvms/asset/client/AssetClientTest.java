@@ -9,7 +9,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.ext.Providers;
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.asset.client.model.Asset;
@@ -25,14 +24,12 @@ public class AssetClientTest extends AbstractClientTest {
     @Inject
     AssetClient assetClient;
 
-    @Ignore
     @Test
     public void pingTest() {
         String response = assetClient.ping();
         assertThat(response, CoreMatchers.is("pong"));
     }
 
-    @Ignore
     @Test
     public void getAssetByGuidTest() {
         Asset upsertAsset = assetClient.upsertAsset(AssetHelper.createBasicAsset());
@@ -42,14 +39,12 @@ public class AssetClientTest extends AbstractClientTest {
         assertThat(asset.getId(), CoreMatchers.is(upsertAsset.getId()));
     }
     
-    @Ignore
     @Test
     public void upsertAssetTest() {
         Asset upsertAsset = assetClient.upsertAsset(AssetHelper.createBasicAsset());
         assertThat(upsertAsset, CoreMatchers.is(CoreMatchers.notNullValue()));
     }
     
-    @Ignore
     @Test
     public void queryAssetsTest() {
         Asset asset = AssetHelper.createBasicAsset();
@@ -60,5 +55,14 @@ public class AssetClientTest extends AbstractClientTest {
         assertTrue(assets.stream()
                 .filter(a -> a.getId().equals(upsertAsset.getId()))
                 .count() == 1);
+    }
+    
+    @Test
+    public void upsertAssetJMSTest() throws Exception {
+        Asset asset = AssetHelper.createBasicAsset();
+        assetClient.upsertAssetAsync(asset);
+        Thread.sleep(5000); // Needed due to async call
+        Asset fetchedAsset = assetClient.getAssetById(AssetIdentifier.CFR, asset.getCfr());
+        assertThat(fetchedAsset.getCfr(), CoreMatchers.is(asset.getCfr()));
     }
 }

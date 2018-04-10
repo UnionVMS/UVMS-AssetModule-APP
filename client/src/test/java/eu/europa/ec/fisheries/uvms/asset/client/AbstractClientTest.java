@@ -24,9 +24,16 @@ public abstract class AbstractClientTest {
     @Deployment(name = "normal", order = 1)
     public static Archive<?> createDeployment() {
 
-        WebArchive testWar = ShrinkWrap.create(WebArchive.class, "client.war");
-
-        File[] files = Maven.resolver().loadPomFromFile("pom.xml").importRuntimeAndTestDependencies().resolve()
+        WebArchive testWar = ShrinkWrap.create(WebArchive.class, "asset.war");
+        testWar.merge(ShrinkWrap.createFromZipFile(WebArchive.class, 
+                Maven.configureResolver().loadPomFromFile("pom.xml")
+                    .resolve("eu.europa.ec.fisheries.uvms.asset:asset-rest:war:?")
+                    .withoutTransitivity().asSingleFile()));
+        
+        File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
+                .resolve("eu.europa.ec.fisheries.uvms.asset:asset-service",
+                         "eu.europa.ec.fisheries.uvms.asset:asset-message-impl",
+                         "eu.europa.ec.fisheries.uvms.commons:uvms-commons-message")
                 .withTransitivity().asFile();
         testWar.addAsLibraries(files);
         
@@ -34,5 +41,4 @@ public abstract class AbstractClientTest {
         
         return testWar;
     }
-    
 }

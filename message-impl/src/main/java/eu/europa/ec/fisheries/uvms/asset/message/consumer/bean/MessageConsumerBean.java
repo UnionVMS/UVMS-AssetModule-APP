@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetConstants;
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean.AssetMessageEventBean;
+import eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean.AssetMessageJSONBean;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
@@ -51,6 +52,9 @@ public class MessageConsumerBean implements MessageListener {
     private AssetMessageEventBean messageEventBean;
     
     @Inject
+    private AssetMessageJSONBean assetJsonBean;
+    
+    @Inject
     @AssetMessageErrorEvent
     Event<AssetMessageEvent> assetErrorEvent;
 
@@ -60,7 +64,12 @@ public class MessageConsumerBean implements MessageListener {
         TextMessage textMessage = (TextMessage) message;
 
         try {
-
+            String propertyMethod = textMessage.getStringProperty("METHOD");
+            if (propertyMethod != null && propertyMethod.equals("UPSERT_ASSET")) {
+                assetJsonBean.upsertAsset(textMessage);
+                return;
+            }
+            
             AssetModuleRequest request = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetModuleRequest.class);
             AssetModuleMethod method = request.getMethod();
 
