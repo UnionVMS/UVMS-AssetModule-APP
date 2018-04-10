@@ -225,6 +225,22 @@
             <column name="revtstmp" type="BIGINT"/>
         </createTable>
     </changeSet>
+    <changeSet author="jojoha" id="create paremeter table">
+        <createTable remarks="Table as a placeholder of parameters and its values" tableName="parameter">
+            <column name="param_id" remarks="Name or code for parameter." type="VARCHAR(500)" >
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="param_description" remarks="Description of parameter or value." type="VARCHAR(500)">
+                <constraints nullable="false" />
+            </column>
+            <column name="param_value" remarks="Parameter value." type="VARCHAR(4000)" />
+        </createTable>
+        <rollback>
+            <dropTable tableName="parameter" cascadeConstraints="true"/>
+        </rollback>
+    </changeSet>
+
+
     <changeSet author="thofan (generated)" id="1522311740593-10">
         <addPrimaryKey columnNames="id, rev" constraintName="asset_aud_pkey" tableName="asset_aud"/>
     </changeSet>
