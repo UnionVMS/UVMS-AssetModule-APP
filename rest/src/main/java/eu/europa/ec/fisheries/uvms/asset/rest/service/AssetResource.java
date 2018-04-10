@@ -248,10 +248,14 @@ public class AssetResource {
     *
     */
     @GET
+    @ApiOperation(value = "Get an assethistorylist by asset id", notes = "The ID is the internal UUID", response = Asset.class, responseContainer = "List")
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Error when querying the system"),
+            @ApiResponse(code = 200, message = "Successful retrieval of resultset") })
     @Path("/history/asset/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAssetHistoryListByAssetId(@PathParam("id") UUID id,
-                                                 @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
+    public Response getAssetHistoryListByAssetId(@ApiParam(value="The assets GUID", required=true)  @PathParam("id") UUID id,
+                                                 @ApiParam(value="Max size of resultset") @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
         try {
             List<Asset> assetRevisions = assetService.getRevisionsForAssetLimited(id, maxNbr);
             return Response.ok(assetRevisions).build();
@@ -271,12 +275,16 @@ public class AssetResource {
      * @return
      */
     @GET
+    @ApiOperation(value = "Get a specific asset by identifier (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)  at given date", notes = "DateTimeFormatter.ISO_LOCAL_DATE_TIME format, eg 2018-03-23T18:25:43", response = Asset.class, responseContainer = "List")
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Error when querying the system"),
+            @ApiResponse(code = 200, message = "Successful retrieval of resultset") })
     @Path("/history/{type : (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)}/{id}/{date}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAssetFromAssetIdAndDate(@PathParam("type") String type, 
-                                               @PathParam("id") String id,
-                                               @PathParam("date") String date) {
+    public Response getAssetFromAssetIdAndDate(@ApiParam(value="Type of id", required=true) @PathParam("type") String type,
+                                               @ApiParam(value="Value of id", required=true) @PathParam("id") String id,
+                                               @ApiParam(value="Point in time", required=true) @PathParam("date") String date) {
         try {
             AssetIdentifier assetId = AssetIdentifier.valueOf(type.toUpperCase());
             LocalDateTime localDateTime = LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
@@ -297,10 +305,14 @@ public class AssetResource {
     *
     */
     @GET
+    @ApiOperation(value = "Gets a specific asset revision by history id", notes = "Gets a specific asset revision by history id", response = Asset.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Error when querying the system"),
+            @ApiResponse(code = 200, message = "Successful retrieval of resultset") })
     @Path("history/{guid}")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getAssetHistoryByAssetHistGuid(@PathParam("guid") UUID guid) {
+    public Response getAssetHistoryByAssetHistGuid(@ApiParam(value="Id", required=true) @PathParam("guid") UUID guid) {
         try {
             Asset asset = assetService.getAssetRevisionForRevisionId(guid);
             return Response.ok(asset).build();
@@ -312,18 +324,20 @@ public class AssetResource {
     
 
     @GET
+    @ApiOperation(value = "Get notes for an asset", notes = "Get notes for an asset", response = Note.class)
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when retrieving notes for asset"),
             @ApiResponse(code = 200, message = "Notes successfully retrieved") })
     @Path("{id}/notes")
     @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getNotesForAsset(@ApiParam(value="The id of asset to retrieve notes", required=true)  @PathParam("id") UUID assetId) {
+    public Response getNotesForAsset(@ApiParam(value="The id of asset to retrieve notes", required = true)  @PathParam("id") UUID assetId) {
         List<Note> notes = assetService.getNotesForAsset(assetId);
         return Response.ok(notes).build();
     }
 
     @POST
+    @ApiOperation(value = "Create a note for an asset", notes = "Create a note for an asset", response = Note.class)
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when creating note for asset"),
             @ApiResponse(code = 200, message = "Note successfully created") })
@@ -338,6 +352,7 @@ public class AssetResource {
     }
     
     @PUT
+    @ApiOperation(value = "Update a note", notes = "Update a note", response = Note.class)
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when updating note"),
             @ApiResponse(code = 200, message = "Note successfully updated") })
@@ -345,13 +360,14 @@ public class AssetResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response udpateNote(@ApiParam(value="A Note to be updated", required=true)  Note note) {
+    public Response updateNote(@ApiParam(value="A Note to be updated", required=true)  Note note) {
         String user = servletRequest.getRemoteUser();
         Note updatedNote = assetService.updateNote(note, user);
         return Response.ok(updatedNote).build();
     }
     
     @DELETE
+    @ApiOperation(value = "Remove a note", notes = "Remove a note", response = Note.class)
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when deleting note"),
             @ApiResponse(code = 200, message = "Note successfully deleted") })
@@ -363,40 +379,59 @@ public class AssetResource {
     }
     
     @GET
+    @ApiOperation(value = "Get contactinfo for asset", notes = "Get contactinfo for asset", response = ContactInfo.class,  responseContainer = "List")
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Error when querying the system"),
+            @ApiResponse(code = 200, message = "Successful processing of query") })
     @Path("{id}/contacts")
     @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getContactInfoForAsset(@PathParam("id") UUID assetId) {
+    public Response getContactInfoForAsset(@ApiParam(value="Id of asset", required=true)  @PathParam("id") UUID assetId) {
         List<ContactInfo> contacts = assetService.getContactInfoForAsset(assetId);
         return Response.ok(contacts).build();
     }
 
     @POST
+    @ApiOperation(value = "Create contactinfo for asset", notes = "Create contactinfo for asset", response = ContactInfo.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Error when create contact info"),
+            @ApiResponse(code = 200, message = "Successful created contactinfo") })
     @Path("{id}/contacts")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response createContactInfoForAsset(@PathParam("id") UUID assetId, ContactInfo contactInfo) {
+    public Response createContactInfoForAsset(
+            @ApiParam(value="Id of asset", required=true) @PathParam("id") UUID assetId,
+            @ApiParam(value="Contact info", required=true) ContactInfo contactInfo) {
         String user = servletRequest.getRemoteUser();
         ContactInfo createdContactInfo = assetService.createContactInfoForAsset(assetId, contactInfo, user);
         return Response.ok(createdContactInfo).build();
     }
     
     @PUT
+    @ApiOperation(value = "Update contactinfo for asset", notes = "Update contactinfo for asset", response = ContactInfo.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Error when updating contact info"),
+            @ApiResponse(code = 200, message = "Successful updated contactinfo") })
     @Path("/contacts")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response udpateContactInfo(ContactInfo contactInfo) {
+    public Response udpateContactInfo(
+            @ApiParam(value="Contact info", required=true)  ContactInfo contactInfo) {
         String user = servletRequest.getRemoteUser();
         ContactInfo updatedContactInfo = assetService.updateContactInfo(contactInfo, user);
         return Response.ok(updatedContactInfo).build();
     }
     
     @DELETE
+    @ApiOperation(value = "Delete contactinfo for asset", notes = "Delete contactinfo for asset", response = Response.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Error when delete contact info"),
+            @ApiResponse(code = 200, message = "Successful delete contactinfo") })
     @Path("/contacts/{id}")
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response deleteContactInfo(@PathParam("id") UUID id) {
+    public Response deleteContactInfo( @ApiParam(value="Id off contact info", required=true)  @PathParam("id") UUID id) {
         assetService.deleteContactInfo(id);
         return Response.ok().build();
     }
