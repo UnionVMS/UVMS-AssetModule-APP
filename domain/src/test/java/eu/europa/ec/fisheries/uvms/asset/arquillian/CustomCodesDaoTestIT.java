@@ -13,7 +13,9 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 import javax.transaction.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RunWith(Arquillian.class)
@@ -21,35 +23,6 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
 
     private static final String CONSTANT = "TESTcarrieractiveTEST";
 
-    private class ExtraData {
-
-        private String data1;
-        private String data2;
-
-        public ExtraData() {
-        }
-
-        public ExtraData(String data1, String data2) {
-            this.data1 = data1;
-            this.data2 = data2;
-        }
-
-        public String getData1() {
-            return data1;
-        }
-
-        public void setData1(String data1) {
-            this.data1 = data1;
-        }
-
-        public String getData2() {
-            return data2;
-        }
-
-        public void setData2(String data2) {
-            this.data2 = data2;
-        }
-    }
 
 
     private ObjectMapper MAPPER = new ObjectMapper();
@@ -62,6 +35,7 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void create() throws JsonProcessingException {
+
 
         CustomCode record_active = createHelper(CONSTANT, true);
         CustomCode record_inactive = createHelper(CONSTANT, false);
@@ -200,22 +174,18 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
 
     private CustomCode createHelper(String constant, Boolean active) throws JsonProcessingException {
 
-
         CustomCode record = new CustomCode();
         if (active) {
             CustomCodesPK primaryKey = new CustomCodesPK(constant, "1");
             record.setPrimaryKey(primaryKey);
             record.setDescription("Active");
-            ExtraData extradata = new ExtraData(UUID.randomUUID().toString(), UUID.randomUUID().toString());
-            String extradataJson = MAPPER.writeValueAsString(extradata);
-            record.setExtraData(extradataJson);
+            record.getNameValue().put("status","active");
         } else {
             CustomCodesPK primaryKey = new CustomCodesPK(constant, "0");
             record.setPrimaryKey(primaryKey);
             record.setDescription("InActive");
-            ExtraData extradata = new ExtraData(UUID.randomUUID().toString(), UUID.randomUUID().toString());
-            String extradataJson = MAPPER.writeValueAsString(extradata);
-            record.setExtraData(extradataJson);
+            record.getNameValue().put("status","inactive");
+
         }
         return record;
     }

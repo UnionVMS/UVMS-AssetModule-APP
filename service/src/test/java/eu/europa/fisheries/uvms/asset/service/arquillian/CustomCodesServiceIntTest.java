@@ -10,12 +10,20 @@ import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
 import javax.transaction.*;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 
 @RunWith(Arquillian.class)
 public class CustomCodesServiceIntTest extends TransactionalTests {
+
+
+    private Map<String,String> map(){
+        Map<String,String> map = new HashMap<>();
+
+        map.put("KEY" + UUID.randomUUID().toString(), "VALUE" + UUID.randomUUID().toString());
+
+        return map;
+    }
 
 
     Random rnd = new Random();
@@ -31,7 +39,7 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void create() {
 
-        CustomCode createdMDR_lite = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
+        CustomCode createdMDR_lite = service.create(CONSTANT,CODE,CODE+"Description", map());
         CustomCode fetchedMDR_lite = service.get(CONSTANT,CODE);
         Assert.assertNotNull(fetchedMDR_lite);
         service.delete(CONSTANT,CODE);
@@ -41,8 +49,8 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void tryToCreateDups() {
 
-        CustomCode createdMDR_lite1 = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
-        CustomCode createdMDR_lite2 = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
+        CustomCode createdMDR_lite1 = service.create(CONSTANT,CODE,CODE+"Description", map());
+        CustomCode createdMDR_lite2 = service.create(CONSTANT,CODE,CODE+"Description", map());
         List<CustomCode> rs = service.getAllFor(CONSTANT);
         Assert.assertEquals(rs.size(), 1);
         service.delete(CONSTANT,CODE);
@@ -52,7 +60,7 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void get() {
 
-        CustomCode createdMDR_lite1 = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
+        CustomCode createdMDR_lite1 = service.create(CONSTANT,CODE,CODE+"Description", map());
         CustomCode fetchedMDR_lite = service.get(CONSTANT,CODE);
         Assert.assertNotNull(fetchedMDR_lite);
         service.delete(CONSTANT,CODE);
@@ -63,7 +71,7 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void exists() {
 
-        CustomCode createdMDR_lite1 = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
+        CustomCode createdMDR_lite1 = service.create(CONSTANT,CODE,CODE+"Description", map());
         Boolean exist = service.exists(CONSTANT,CODE);
         Assert.assertNotNull(exist);
         service.delete(CONSTANT,CODE);
@@ -75,12 +83,12 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
 
         for (int i = 0; i < 10; i++) {
             String iStr = String.valueOf(i);
-            service.create(CONSTANT,CODE+iStr,CODE+"Description", "EXTRADATA");
+            service.create(CONSTANT,CODE+iStr,CODE+"Description", map());
         }
 
         for (int i = 0; i < 10; i++) {
             String iStr = String.valueOf(i);
-            service.create(CONSTANT+"2",CODE+iStr,CODE+"Description", "EXTRADATA");
+            service.create(CONSTANT+"2",CODE+iStr,CODE+"Description", map());
         }
 
         List<CustomCode> rs1 = service.getAllFor(CONSTANT);
@@ -107,7 +115,7 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void updateDescription() throws HeuristicRollbackException, RollbackException, HeuristicMixedException, SystemException, NotSupportedException {
 
-        CustomCode created_record = service.create(CONSTANT,CODE,CODE+"Description", "EXTRADATA");
+        CustomCode created_record = service.create(CONSTANT,CODE,CODE+"Description", map());
         String createdDescription = created_record.getDescription();
 
         created_record.setDescription("CHANGED");

@@ -15,6 +15,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Map;
 
 @Path("/customcodes")
 @Stateless
@@ -40,9 +41,9 @@ public class CustomCodesResource {
             @ApiParam(value = "constant", required = true)  @PathParam(value="constant") String constant
             ,@ApiParam(value = "code", required = true)  @PathParam(value="code")  String code
             ,@ApiParam(value = "description", required = true)  @PathParam(value="description")  String description
-            , @ApiParam(value = "embeddedjson", required = true)  @PathParam(value="embeddedjson") String embeddedjson) {
+            , @ApiParam(value = "nameValueMap", required = false) Map<String,String> nameValue) {
         try {
-             CustomCode customCodes = customCodesSvc.create(constant,code,description,embeddedjson);
+             CustomCode customCodes = customCodesSvc.create(constant,code,description,nameValue);
             return Response.ok(customCodes).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");

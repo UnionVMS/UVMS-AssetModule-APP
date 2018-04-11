@@ -13,6 +13,7 @@ package eu.europa.ec.fisheries.uvms.asset.service;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import java.util.List;
+import java.util.Map;
 
 
 public interface CustomCodesService {
@@ -22,10 +23,10 @@ public interface CustomCodesService {
      * @param constant @description constant
      * @param code @description  the code to be valid for this constant
      * @param description @description human readable description of the code for dropdowns/prints etc
-     * @param extradata @description free data complementing info for the code  could be a json . . .
+     * @param nameValue @description free data complementing info for the code  could be a json . . .
      * @return a CustomCode Object
      */
-    CustomCode create(String constant, String code, String description, String extradata);
+    CustomCode create(String constant, String code, String description, Map<String,String> nameValue);
 
     /**
      *
@@ -48,10 +49,10 @@ public interface CustomCodesService {
      * @param constant @description constant
      * @param code @description  the code to be valid for this constant
      * @param newValue @description  new description
-     * @param newExtraData @description  new extradata
+     * @param nameValue @description  new extradata
      * @return a the updated CustomCodes Object
      */
-    CustomCode update(String constant, String code, String newValue, String newExtraData);
+    CustomCode update(String constant, String code, String newValue, Map<String,String> nameValue);
 
     /**
      *

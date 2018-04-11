@@ -5,6 +5,7 @@ import javax.persistence.*;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 import java.util.List;
+import java.util.Map;
 
 @Stateless
 public class CustomCodeDao {
@@ -35,17 +36,15 @@ public class CustomCodeDao {
         }
     }
 
-    public CustomCode update(CustomCodesPK primaryKey, String newDescription, String extradata) {
+    public CustomCode update(CustomCodesPK primaryKey, String newDescription, Map<String,String> nameValue) {
 
         CustomCode fetchedMDR_lite = get(primaryKey);
         if (fetchedMDR_lite != null) {
             if(newDescription != null) {
                 fetchedMDR_lite.setDescription(newDescription);
             }
-            if(extradata != null) {
-                fetchedMDR_lite.setExtraData(extradata);
-            }
         }
+        fetchedMDR_lite.setNameValue(nameValue);
         return fetchedMDR_lite;
     }
 

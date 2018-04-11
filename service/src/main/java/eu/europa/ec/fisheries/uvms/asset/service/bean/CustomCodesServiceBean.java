@@ -18,6 +18,7 @@ import eu.europa.ec.fisheries.uvms.asset.service.CustomCodesService;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.util.List;
+import java.util.Map;
 
 
 @Stateless
@@ -28,7 +29,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 
 
 	@Override
-	public CustomCode create(String constant, String code, String description, String extradata){
+	public CustomCode create(String constant, String code, String description, Map<String,String> nameValue){
 
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
@@ -47,15 +48,13 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		if(description == null){
 			description = "";
 		}
-		if(extradata == null){
-			extradata = "";
-		}
 		CustomCode mdr = new CustomCode();
 		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code);
 		mdr.setPrimaryKey(primaryKey);
 		mdr.setDescription(description);
-		mdr.setExtraData(extradata);
-
+		if(nameValue != null && nameValue.size() > 0){
+			mdr.setNameValue(nameValue);
+		}
 		return dao.create(mdr);
 	}
 
@@ -103,7 +102,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 	}
 
 	@Override
-	public CustomCode update(String constant, String code, String newValue, String newExtraData){
+	public CustomCode update(String constant, String code, String newValue, Map<String,String> nameValue){
 
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
@@ -117,8 +116,10 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		if(code.trim().length() < 1){
 			throw new IllegalArgumentException("Code cannot be empty");
 		}
+
 		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code);
-		return dao.update(primaryKey, newValue, newExtraData);
+
+		return dao.update(primaryKey, newValue, nameValue);
 
 	}
 

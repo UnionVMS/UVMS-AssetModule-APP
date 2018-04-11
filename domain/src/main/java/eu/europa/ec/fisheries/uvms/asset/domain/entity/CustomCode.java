@@ -4,6 +4,8 @@ package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode.CUSTOMCODES_GETALLCONSTANTS;
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode.CUSTOMCODES_GETALLFOR;
 import javax.persistence.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 @Table(name = "customcodes")
@@ -25,8 +27,9 @@ public class CustomCode {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "extradata")
-    private String extradata;
+    private Map<String,String> namevalue = new HashMap<>();
+
+
 
 
     @EmbeddedId
@@ -38,14 +41,6 @@ public class CustomCode {
         this.primaryKey = primaryKey;
     }
 
-    public String getExtraData() {
-        return extradata;
-    }
-
-    public void setExtraData(String extradata) {
-        this.extradata = extradata;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -53,4 +48,16 @@ public class CustomCode {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @ElementCollection // this is a collection of primitives
+    @MapKeyColumn(name="key") // column name for map "key"
+    @Column(name="value") // column name for map "value"
+    public Map<String,String> getNameValue() {
+        return namevalue;
+    }
+
+    public void  setNameValue(Map<String,String> namevalue) {
+        this.namevalue=namevalue;
+    }
+
 }
