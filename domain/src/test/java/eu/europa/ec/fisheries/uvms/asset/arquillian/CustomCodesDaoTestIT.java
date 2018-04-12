@@ -13,16 +13,15 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 import javax.transaction.*;
-import java.util.HashMap;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.Random;
 
 @RunWith(Arquillian.class)
 public class CustomCodesDaoTestIT extends TransactionalTests {
 
     private static final String CONSTANT = "TESTcarrieractiveTEST";
-
 
 
     private ObjectMapper MAPPER = new ObjectMapper();
@@ -62,7 +61,7 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
         Assert.assertEquals(rs.size(), 2);
 
 
-        mdrlitedao.delete(record_active.getPrimaryKey());
+       mdrlitedao.delete(record_active.getPrimaryKey());
         mdrlitedao.delete(record_inactive.getPrimaryKey());
 
     }
@@ -72,8 +71,11 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void tryToCreateDups() throws JsonProcessingException {
 
-        CustomCode record1 = createHelper(CONSTANT, true);
-        CustomCode record2 = createHelper(CONSTANT, true);
+        CustomCodesPK primaryKey = createPrmaryKey(CONSTANT,"aKOD");
+
+
+        CustomCode record1 = createHelper(CONSTANT, true, primaryKey);
+        CustomCode record2 = createHelper(CONSTANT, true, primaryKey);
 
         CustomCode createdrecord1 = mdrlitedao.create(record1);
         CustomCode createdrecord2 = mdrlitedao.create(record2);
@@ -84,6 +86,7 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
 
         mdrlitedao.delete(record1.getPrimaryKey());
     }
+
 
     @Test
     @OperateOnDeployment("normal")
@@ -132,8 +135,8 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
 
         List<CustomCode> rs1 = mdrlitedao.getAllFor(CONSTANT);
         List<CustomCode> rs2 = mdrlitedao.getAllFor(CONSTANT + "2");
-        Assert.assertEquals(rs1.size(), 10);
-        Assert.assertEquals(rs2.size(), 10);
+        Assert.assertEquals(10,rs1.size());
+        Assert.assertEquals(10, rs2.size());
 
         mdrlitedao.deleteAllFor(CONSTANT + "2");
 
@@ -145,60 +148,105 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
         mdrlitedao.deleteAllFor(CONSTANT);
 
         rs1 = mdrlitedao.getAllFor(CONSTANT);
-        rs2 = mdrlitedao.getAllFor(CONSTANT+"2");
-        Assert.assertEquals(rs1.size(), 0);
-        Assert.assertEquals(rs2.size(), 0);
+        rs2 = mdrlitedao.getAllFor(CONSTANT + "2");
+        Assert.assertEquals(0,rs1.size());
+        Assert.assertEquals(0, rs2.size());
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void updateDescription() throws JsonProcessingException, HeuristicRollbackException, HeuristicMixedException, RollbackException, SystemException, NotSupportedException {
 
-        CustomCode record = createHelper(CONSTANT, "kod" , "description" );
+        CustomCode record = createHelper(CONSTANT, "kod", "description");
         CustomCode created_record = mdrlitedao.create(record);
         String createdDescription = created_record.getDescription();
 
         created_record.setDescription("CHANGED");
-        mdrlitedao.update(created_record.getPrimaryKey(),"CHANGED",null);
+        mdrlitedao.update(created_record.getPrimaryKey(), "CHANGED", null);
         userTransaction.commit();
         userTransaction.begin();
 
         CustomCode fetched_record = mdrlitedao.get(created_record.getPrimaryKey());
 
-        Assert.assertNotEquals(createdDescription,fetched_record.getDescription());
-        Assert.assertEquals("CHANGED",fetched_record.getDescription());
+        Assert.assertNotEquals(createdDescription, fetched_record.getDescription());
+        Assert.assertEquals("CHANGED", fetched_record.getDescription());
 
         mdrlitedao.deleteAllFor(CONSTANT);
     }
 
 
+    Random rnd = new Random();
+
     private CustomCode createHelper(String constant, Boolean active) throws JsonProcessingException {
+
 
         CustomCode record = new CustomCode();
         if (active) {
-            CustomCodesPK primaryKey = new CustomCodesPK(constant, "1");
+            CustomCodesPK primaryKey = createPrmaryKey(constant, "1");
             record.setPrimaryKey(primaryKey);
             record.setDescription("Active");
-            record.getNameValue().put("status","active");
+            record.getNameValue().put("status", "active");
         } else {
-            CustomCodesPK primaryKey = new CustomCodesPK(constant, "0");
+            CustomCodesPK primaryKey = createPrmaryKey(constant, "0");
             record.setPrimaryKey(primaryKey);
             record.setDescription("InActive");
-            record.getNameValue().put("status","inactive");
+            record.getNameValue().put("status", "inactive");
+
+        }
+        return record;
+    }
+
+    private CustomCode createHelper(String constant, Boolean active, CustomCodesPK primaryKey) throws JsonProcessingException {
+
+        Integer n = rnd.nextInt(10);
+        Integer duration = rnd.nextInt(90);
+        LocalDateTime fromDate = LocalDateTime.now(Clock.systemUTC());
+        fromDate = fromDate.minusDays(n);
+        LocalDateTime toDate = LocalDateTime.now(Clock.systemUTC());
+        toDate = toDate.plusDays(duration);
+
+        CustomCode record = new CustomCode();
+        if (active) {
+            record.setPrimaryKey(primaryKey);
+            record.setDescription("Active");
+            record.getNameValue().put("status", "active");
+        } else {
+            record.setPrimaryKey(primaryKey);
+            record.setDescription("InActive");
+            record.getNameValue().put("status", "inactive");
 
         }
         return record;
     }
 
 
+
+
+
+
     private CustomCode createHelper(String constant, String code, String descr) throws JsonProcessingException {
 
         CustomCode record = new CustomCode();
-        CustomCodesPK primaryKey = new CustomCodesPK(constant, code);
+        CustomCodesPK primaryKey = createPrmaryKey(constant, code);
         record.setPrimaryKey(primaryKey);
         record.setDescription(descr);
         return record;
     }
+
+
+
+    private CustomCodesPK createPrmaryKey(String constant, String code) {
+
+        Integer n = rnd.nextInt(10);
+        Integer duration = rnd.nextInt(90);
+        LocalDateTime fromDate = LocalDateTime.now(Clock.systemUTC());
+        fromDate = fromDate.minusDays(n);
+        LocalDateTime toDate = LocalDateTime.now(Clock.systemUTC());
+        toDate = toDate.plusDays(duration);
+        CustomCodesPK primaryKey = new CustomCodesPK(constant, code, fromDate, toDate);
+        return primaryKey;
+    }
+
 
 
 }

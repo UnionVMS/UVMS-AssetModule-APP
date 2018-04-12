@@ -12,60 +12,83 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.service;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 
 public interface CustomCodesService {
 
+
     /**
      *
      * @param constant @description constant
      * @param code @description  the code to be valid for this constant
+     * @param validFromDate @description code is valid from this date inclusive
+     * @param validToDate @description code is valid to this date inclusive
      * @param description @description human readable description of the code for dropdowns/prints etc
      * @param nameValue @description free data complementing info for the code  could be a json . . .
      * @return a CustomCode Object
      */
-    CustomCode create(String constant, String code, String description, Map<String,String> nameValue);
+    CustomCode create(String constant, String code, LocalDateTime validFromDate, LocalDateTime validToDate, String description, Map<String,String> nameValue);
+
+    CustomCode create(CustomCode customCode);
+
+
+        /**
+         *
+         * @param constant @description constant
+         * @param code @description  the code to be valid for this constant
+         * @param validFromDate @description code is valid from this date inclusive
+         * @param validToDate @description code is valid to this date inclusive
+         * @return a CustomCodes object
+         */
+    CustomCode get(String constant, String code , LocalDateTime validFromDate, LocalDateTime validToDate);
+
+    CustomCode get(CustomCodesPK customCodesPrimaryKey);
+
+
+
+        /**
+         *
+         * @param constant @description constant
+         * @param code @description  the code to be valid for this constant
+         * @param validFromDate @description code is valid from this date inclusive
+         * @param validToDate @description code is valid to this date inclusive
+         * @return a boolean indicating exists or not  used for validation on incoming data
+         */
+    Boolean exists(String constant, String code, LocalDateTime validFromDate, LocalDateTime validToDate );
+
+
+        /**
+         *
+         * @param constant @description constant
+         * @param code @description  the code to be valid for this constant
+         * @param validFromDate @description code is valid from this date inclusive
+         * @param validToDate @description code is valid to this date inclusive
+         * @param newValue @description  new description
+         * @param nameValue @description  new extradata
+         * @return a the updated CustomCodes Object
+         */
+    CustomCode update(String constant, String code,  LocalDateTime validFromDate, LocalDateTime validToDate, String newValue, Map<String,String> nameValue);
 
     /**
      *
      * @param constant @description constant
      * @param code @description  the code to be valid for this constant
-     * @return a CustomCodes object
+     * @param validFromDate @description code is valid from this date inclusive
+     * @param validToDate @description code is valid to this date inclusive
      */
-    CustomCode get(String constant, String code );
+    void delete(String constant, String code,  LocalDateTime validFromDate, LocalDateTime validToDate);
 
-    /**
-     *
-     * @param constant @description constant
-     * @param code @description  the code to be valid for this constant
-     * @return a boolean indicating exists or not  used for validation on incoming data
-     */
-    Boolean exists(String constant, String code);
 
-    /**
-     *
-     * @param constant @description constant
-     * @param code @description  the code to be valid for this constant
-     * @param newValue @description  new description
-     * @param nameValue @description  new extradata
-     * @return a the updated CustomCodes Object
-     */
-    CustomCode update(String constant, String code, String newValue, Map<String,String> nameValue);
-
-    /**
-     *
-     * @param constant @description constant
-     * @param code @description  the code to be valid for this constant
-     */
-    void delete(String constant, String code);
-
-    /**
-     *
-     * @param constant @description constant
-     * @return a list of CustomCode for a given constant
-     */
+        /**
+         *
+         * @param constant @description constant
+         * @return a list of CustomCode for a given constant
+         */
     List<CustomCode> getAllFor(String constant);
 
     /**

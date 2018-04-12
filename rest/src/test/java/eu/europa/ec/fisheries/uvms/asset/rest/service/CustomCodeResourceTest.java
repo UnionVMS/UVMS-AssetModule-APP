@@ -2,26 +2,44 @@ package eu.europa.ec.fisheries.uvms.asset.rest.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 import eu.europa.ec.fisheries.uvms.asset.rest.AbstractAssetRestTest;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
+import java.net.URLEncoder;
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 
 @RunWith(Arquillian.class)
 public class CustomCodeResourceTest extends AbstractAssetRestTest {
     // TODO also implement tests for embedded json when the need appears
 
-    private ObjectMapper MAPPER = new ObjectMapper();
+    private ObjectMapper MAPPER ;
+
+
+    @Before
+    public void before(){
+
+        MAPPER = new ObjectMapper();
+        MAPPER.registerModule(new JavaTimeModule());
+
+    }
 
     @Test
     @RunAsClient
@@ -39,6 +57,8 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         Boolean found = false;
         for (String constant : constants) {
             if (constant.toUpperCase().endsWith(txt.toUpperCase())) {
+
+                //System.out.println(constant);
                 found = true;
             }
         }
@@ -105,12 +125,18 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         System.out.println(customCodes.getPrimaryKey().getConstant());
         System.out.println(customCodes.getPrimaryKey().getCode());
         System.out.println(customCodes.getDescription());
-        System.out.println(customCodes.getJsonstr());
+        System.out.println(customCodes.getNameValue());
         */
 
         Assert.assertTrue(customCodes.getPrimaryKey().getConstant().endsWith(txt));
     }
 
+
+    Date convertToDateViaInstant(LocalDateTime dateToConvert) {
+        return java.util.Date
+                .from(dateToConvert.atZone(ZoneId.systemDefault())
+                        .toInstant());
+    }
 
     @Test
     @RunAsClient
@@ -123,11 +149,18 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         String code = "CODE___" + txt;
 
 
+        CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
+        CustomCodesPK customCodesPk = customCode.getPrimaryKey();
+
+
+
 
         String json = getWebTarget()
                 .path("customcodes")
-                .path(constant)
-                .path(code)
+                .path(customCodesPk.getConstant())
+                .path(customCodesPk.getCode())
+                .path(customCodesPk.getValidFromDate().)
+                .path(customCodesPk.getValidToDate().toString())
                 .request(MediaType.APPLICATION_JSON)
                 .get(String.class);
         CustomCode customCodes = MAPPER.readValue(json, CustomCode.class);
@@ -141,8 +174,9 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         System.out.println(customCodes.getJsonstr());
         */
 
-        Assert.assertTrue(customCodes.getPrimaryKey().getConstant().endsWith(txt));
+       // Assert.assertTrue(customCodes.getPrimaryKey().getConstant().endsWith(txt));
 
+        System.out.println();
 
     }
 
@@ -208,23 +242,38 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
     private String createACustomCodeHelper(String txt) {
 
+        LocalDateTime from = LocalDateTime.now(Clock.systemUTC());
+        from = from.minusDays(5);
+        LocalDateTime to = LocalDateTime.now(Clock.systemUTC());
+        to = from.plusDays(5);
+
+
 
         String constant = "CST____" + txt;
         String code = "CODE___" + txt;
         String descr = "DESCR__" + txt;
-        String embeddedjson = "EMB____" + txt;
+
+        CustomCodesPK primaryKey = new CustomCodesPK(constant,code,from,to);
+        CustomCode customCode = new CustomCode();
+        customCode.setPrimaryKey(primaryKey);
+        customCode.setDescription(descr);
+
+        Map<String,String> map = new HashMap<>();
+        map.put("key1","data1");
+        map.put("key2","data2");
+        customCode.setNameValue(map);
 
 
-        Response resp = getWebTarget()
+
+        String created = getWebTarget()
                 .path("customcodes")
-                .path(constant)
-                .path(code)
-                .path(descr)
-                .path(embeddedjson)
                 .request(MediaType.APPLICATION_JSON)
-                .post(null, Response.class);
-        String entity = resp.readEntity(String.class);
-        return entity;
+                .post(Entity.json(customCode), String.class);
+
+
+        return created;
+
+
 
     }
 

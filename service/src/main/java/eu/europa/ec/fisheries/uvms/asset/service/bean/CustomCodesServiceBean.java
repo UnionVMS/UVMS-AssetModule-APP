@@ -17,6 +17,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 import eu.europa.ec.fisheries.uvms.asset.service.CustomCodesService;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 
 
 	@Override
-	public CustomCode create(String constant, String code, String description, Map<String,String> nameValue){
+	public CustomCode create(String constant, String code, LocalDateTime validFromDate, LocalDateTime validToDate, String description, Map<String,String> nameValue){
 
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
@@ -43,13 +44,19 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		if(code.trim().length() < 1){
 			throw new IllegalArgumentException("Code cannot be empty");
 		}
+		if(validFromDate == null){
+			throw new IllegalArgumentException("ValifFromDate cannot be null");
+		}
+		if(validToDate == null){
+			throw new IllegalArgumentException("ValifToDate cannot be null");
+		}
 		// we allow nonvalues in description and extradata since the code can be an existent nonexistent flag
 		// but we avoid nulls for simplicity
 		if(description == null){
 			description = "";
 		}
 		CustomCode mdr = new CustomCode();
-		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code);
+		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code, validFromDate, validToDate);
 		mdr.setPrimaryKey(primaryKey);
 		mdr.setDescription(description);
 		if(nameValue != null && nameValue.size() > 0){
@@ -58,9 +65,26 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		return dao.create(mdr);
 	}
 
+	@Override
+	public CustomCode create(CustomCode customCode){
+
+		if(customCode == null){
+			throw new IllegalArgumentException("CustomCode cannot be null");
+		}
+
+		return create(
+				customCode.getPrimaryKey().getConstant(),
+				customCode.getPrimaryKey().getCode(),
+				customCode.getPrimaryKey().getValidFromDate(),
+				customCode.getPrimaryKey().getValidToDate(),
+				customCode.getDescription(),
+				customCode.getNameValue());
+	}
+
+
 
 	@Override
-	public CustomCode get(String constant, String code ){
+	public CustomCode get(String constant, String code , LocalDateTime validFromDate, LocalDateTime validToDate){
 
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
@@ -74,14 +98,32 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		if(code.trim().length() < 1){
 			throw new IllegalArgumentException("Code cannot be empty");
 		}
+		if(validFromDate == null){
+			throw new IllegalArgumentException("ValidFromDate cannot be null");
+		}
+		if(validToDate == null){
+			throw new IllegalArgumentException("ValidToDate cannot be null");
+		}
 
-		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code);
+		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code,validFromDate,validToDate);
 		return dao.get(primaryKey);
-
 	}
 
 	@Override
-	public Boolean exists(String constant, String code){
+	public CustomCode get(CustomCodesPK customCodesPrimaryKey){
+
+		if(customCodesPrimaryKey == null){
+			throw new IllegalArgumentException("CustomCodesPk cannot be null");
+		}
+		return get(customCodesPrimaryKey.getConstant(),
+				customCodesPrimaryKey.getCode(),
+				customCodesPrimaryKey.getValidFromDate(),
+				customCodesPrimaryKey.getValidToDate());
+	}
+
+
+	@Override
+	public Boolean exists(String constant, String code, LocalDateTime validFromDate, LocalDateTime validToDate ){
 
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
@@ -95,14 +137,20 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		if(code.trim().length() < 1){
 			throw new IllegalArgumentException("Code cannot be empty");
 		}
+		if(validFromDate == null){
+			throw new IllegalArgumentException("ValifFromDate cannot be null");
+		}
+		if(validToDate == null){
+			throw new IllegalArgumentException("ValifToDate cannot be null");
+		}
 
-		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code);
+		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code,validFromDate,validToDate);
 		return dao.exists(primaryKey);
 
 	}
 
 	@Override
-	public CustomCode update(String constant, String code, String newValue, Map<String,String> nameValue){
+	public CustomCode update(String constant, String code,  LocalDateTime validFromDate, LocalDateTime validToDate, String newValue, Map<String,String> nameValue){
 
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
@@ -116,15 +164,22 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		if(code.trim().length() < 1){
 			throw new IllegalArgumentException("Code cannot be empty");
 		}
+		if(validFromDate == null){
+			throw new IllegalArgumentException("ValifFromDate cannot be null");
+		}
+		if(validToDate == null){
+			throw new IllegalArgumentException("ValifToDate cannot be null");
+		}
 
-		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code);
+
+		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code,validFromDate,validToDate);
 
 		return dao.update(primaryKey, newValue, nameValue);
 
 	}
 
 	@Override
-	public void delete(String constant, String code){
+	public void delete(String constant, String code,  LocalDateTime validFromDate, LocalDateTime validToDate){
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
 		}
@@ -137,7 +192,14 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		if(code.trim().length() < 1){
 			throw new IllegalArgumentException("Code cannot be empty");
 		}
-		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code);
+		if(validFromDate == null){
+			throw new IllegalArgumentException("ValifFromDate cannot be null");
+		}
+		if(validToDate == null){
+			throw new IllegalArgumentException("ValifToDate cannot be null");
+		}
+
+		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code,validFromDate,validToDate);
 		dao.delete(primaryKey);
 
 	}

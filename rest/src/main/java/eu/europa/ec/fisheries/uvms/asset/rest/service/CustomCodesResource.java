@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.asset.rest.service;
 
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 import eu.europa.ec.fisheries.uvms.asset.service.CustomCodesService;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
@@ -14,6 +15,8 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.time.*;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -33,17 +36,14 @@ public class CustomCodesResource {
     @ApiOperation(value = "Create a record", notes = "Create a custom constant code", response = CustomCode.class)
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when createing custom code"),
-            @ApiResponse(code = 200, message = "Success when createing custom code") })
-    @Path("/{constant}/{code}/{description}/{embeddedjson}")
+            @ApiResponse(code = 200, message = "Success when createing custom code")})
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response createCustomCode(
-            @ApiParam(value = "constant", required = true)  @PathParam(value="constant") String constant
-            ,@ApiParam(value = "code", required = true)  @PathParam(value="code")  String code
-            ,@ApiParam(value = "description", required = true)  @PathParam(value="description")  String description
-            , @ApiParam(value = "nameValueMap", required = false) Map<String,String> nameValue) {
+             @ApiParam(value = "customCode", required = true) CustomCode customCode) {
         try {
-             CustomCode customCodes = customCodesSvc.create(constant,code,description,nameValue);
+
+            CustomCode customCodes = customCodesSvc.create(customCode);
             return Response.ok(customCodes).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
@@ -55,13 +55,36 @@ public class CustomCodesResource {
     @ApiOperation(value = "Retrieve a customcode", notes = "Retrieve a customcode", response = CustomCode.class)
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when retrieving code list for given constant list"),
-            @ApiResponse(code = 200, message = "Codes for constant  successfully retrieved") })
-    @Path("/{constant}/{code}")
+            @ApiResponse(code = 200, message = "Codes for constant  successfully retrieved")})
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response retrieveCustomCode( @ApiParam(value = "constant", required = true)   @PathParam("constant") String constant, @ApiParam(value = "code", required = true)   @PathParam("code") String code) {
+    @Path("/{constant}/{code}/{validFromDate}/{validToDate}")
+    public Response retrieveCustomCode(
+            @ApiParam(value = "constant", required = true) @PathParam("constant") String constant,
+            @ApiParam(value = "code", required = true) @PathParam("code") String code,
+            @ApiParam(value = "validFromDate", required = true) @PathParam(value = "validFromDate")  Date   validFromDate,
+            @ApiParam(value = "validToDate", required = true) @PathParam(value = "validToDate") Date validToDate)
+    {
         try {
-            CustomCode customCode = customCodesSvc.get(constant, code);
+
+            CustomCodesPK pk = new CustomCodesPK();
+            pk.setConstant(constant);
+            pk.setCode(code);
+
+            LocalDateTime f = Instant.ofEpochMilli(validFromDate.getTime())
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime();
+            LocalDateTime t = Instant.ofEpochMilli(validToDate.getTime())
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime();
+
+
+            pk.setValidFromDate(f);
+            pk.setValidToDate(t);
+
+
+
+            CustomCode customCode = customCodesSvc.get(pk);
             return Response.ok(customCode).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
@@ -73,13 +96,26 @@ public class CustomCodesResource {
     @ApiOperation(value = "Retrieve a customcode", notes = "Retrieve a customcode", response = Boolean.class)
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when retrieving code list for given constant list"),
-            @ApiResponse(code = 200, message = "Codes for constant  successfully retrieved") })
-    @Path("/exists/{constant}/{code}")
+            @ApiResponse(code = 200, message = "Codes for constant  successfully retrieved")})
+    @Path("/exists/{constant}/{code}/{validFromDate}/{validToDate}")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response exists( @ApiParam(value = "constant", required = true)   @PathParam("constant") String constant, @ApiParam(value = "code", required = true)   @PathParam("code") String code) {
+    public Response exists(@ApiParam(value = "constant", required = true) @PathParam("constant") String constant,
+                           @ApiParam(value = "code", required = true) @PathParam("code") String code,
+                           @ApiParam(value = "validFromDate", required = true) @PathParam(value = "validFromDate") Date validFromDate,
+                           @ApiParam(value = "validToDate", required = true) @PathParam(value = "validToDate") Date validToDate)
+    {
         try {
-            Boolean exists = customCodesSvc.exists(constant, code);
+
+            LocalDateTime fromDate = Instant.ofEpochMilli(validFromDate.getTime())
+                    .atZone(ZoneId.of("UTC"))
+                    .toLocalDateTime();
+            LocalDateTime toDate = Instant.ofEpochMilli(validToDate.getTime())
+                    .atZone(ZoneId.of("UTC"))
+                    .toLocalDateTime();
+
+
+            Boolean exists = customCodesSvc.exists(constant, code,fromDate,toDate);
             return Response.ok(exists).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
@@ -88,12 +124,11 @@ public class CustomCodesResource {
     }
 
 
-
     @GET
     @ApiOperation(value = "Get a list of constants", notes = "Get a list of constants from Custom Code", response = String.class, responseContainer = "List")
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when retrieving constant list"),
-            @ApiResponse(code = 200, message = "Constants successfully retrieved") })
+            @ApiResponse(code = 200, message = "Constants successfully retrieved")})
     @Path("/listconstants")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -111,11 +146,11 @@ public class CustomCodesResource {
     @ApiOperation(value = "Get a list of codes for given", notes = "Returned as json parse tree in client", response = String.class, responseContainer = "List")
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when retrieving code list for given constant list"),
-            @ApiResponse(code = 200, message = "Codes for constant  successfully retrieved") })
+            @ApiResponse(code = 200, message = "Codes for constant  successfully retrieved")})
     @Path("/listcodesforconstant/{constant}")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getCodesForConstant( @PathParam("constant") String constant) {
+    public Response getCodesForConstant(@PathParam("constant") String constant) {
         try {
             List<CustomCode> customCodes = customCodesSvc.getAllFor(constant);
             return Response.ok(customCodes).build();
@@ -129,21 +164,33 @@ public class CustomCodesResource {
     @ApiOperation(value = "Remove a customcode", notes = "Remove a customcode", response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when retrieving code list for given constant list"),
-            @ApiResponse(code = 200, message = "Codes for constant  successfully retrieved") })
-    @Path("/{constant}/{code}")
+            @ApiResponse(code = 200, message = "Codes for constant  successfully retrieved")})
+    @Path("/{constant}/{code}{validFromDate}{validToDate}")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response deleteCustomCode( @ApiParam(value = "constant", required = true)   @PathParam("constant") String constant, @ApiParam(value = "code", required = true)   @PathParam("code") String code) {
+    public Response deleteCustomCode(@ApiParam(value = "constant", required = true) @PathParam("constant") String constant,
+                                     @ApiParam(value = "code", required = true) @PathParam("code") String code,
+                                     @ApiParam(value = "validFromDate", required = true) @PathParam(value = "validFromDate") Date validFromDate,
+                                     @ApiParam(value = "validToDate", required = true) @PathParam(value = "validToDate") Date validToDate
+
+    )
+    {
         try {
-            customCodesSvc.delete(constant, code);
+
+            LocalDateTime fromDate = Instant.ofEpochMilli(validFromDate.getTime())
+                    .atZone(ZoneId.of("UTC"))
+                    .toLocalDateTime();
+            LocalDateTime toDate = Instant.ofEpochMilli(validToDate.getTime())
+                    .atZone(ZoneId.of("UTC"))
+                    .toLocalDateTime();
+
+            customCodesSvc.delete(constant, code,fromDate,toDate);
             return Response.ok().build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
-
-
 
 
 }

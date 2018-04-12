@@ -74,13 +74,15 @@ public class CustomCodeDao {
     }
 
 
+
     public void deleteAllFor(String constant) {
 
-        Query query = em.createQuery("DELETE FROM CustomCode m where  m.primaryKey.constant=:constant");
-        query.setParameter("constant", constant);
-        query.executeUpdate();
-
-
+        List<CustomCode> rs = getAllFor(constant);
+        if(rs != null) {
+            for (CustomCode customCode : rs) {
+                em.remove(customCode);
+            }
+        }
     }
 
     public List<String> getAllConstants() {
