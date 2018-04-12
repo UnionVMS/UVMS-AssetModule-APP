@@ -11,21 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
-import java.util.List;
-
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.jms.TextMessage;
-
-import eu.europa.ec.fisheries.uvms.asset.remote.dto.GetAssetListResponseDto;
-import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
-import eu.europa.ec.fisheries.uvms.bean.AssetDomainModelBean;
-import eu.europa.ec.fisheries.wsdl.asset.types.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.asset.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
@@ -35,10 +21,23 @@ import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException
 import eu.europa.ec.fisheries.uvms.asset.message.mapper.AuditModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceRequestMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceResponseMapper;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.GetAssetListResponseDto;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
+import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
+import eu.europa.ec.fisheries.uvms.bean.AssetDomainModelBean;
+import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.jms.TextMessage;
+import java.util.List;
 
 @Stateless
 public class AssetServiceBean implements AssetService {
@@ -275,6 +274,12 @@ public class AssetServiceBean implements AssetService {
         assetDomainModel.deleteAsset(assetId);
     }
 
-
-
+    @Override
+    public List<Asset> getAssetHistoryListByAssetId(AssetId assetId, Integer maxResults) throws AssetModelException {
+        try {
+            return assetDomainModel.getAssetHistoryListByAssetId(assetId, maxResults);
+        } catch (NoAssetEntityFoundException e) {
+            return Lists.newArrayList();
+        }
+    }
 }

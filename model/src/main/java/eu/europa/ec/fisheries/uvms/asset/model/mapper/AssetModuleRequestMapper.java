@@ -20,10 +20,9 @@ import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -118,6 +117,19 @@ public class AssetModuleRequestMapper {
         request.setUsername(username);
         request.setFishingGear(fishingGear);
         return JAXBMarshaller.marshallJaxBObjectToString(request);
+    }
+
+    public static String createFindAssetByCfrRequest(String cfr) throws AssetModelMarshallException {
+        FindAssetHistoriesByCfrModuleRequest findAssetByCfrModuleRequest = new FindAssetHistoriesByCfrModuleRequest();
+        findAssetByCfrModuleRequest.setMethod(AssetModuleMethod.FIND_ASSET_HISTORIES_BY_CFR);
+        findAssetByCfrModuleRequest.setCfr(cfr);
+        return JAXBMarshaller.marshallJaxBObjectToString(findAssetByCfrModuleRequest);
+    }
+
+    public static String createFindAssetByCfrResponse(Collection<Asset> assets) throws AssetModelMarshallException {
+        FindAssetHistoriesByCfrModuleResponse findAssetByCfrModuleResponse = new FindAssetHistoriesByCfrModuleResponse();
+        findAssetByCfrModuleResponse.getAssetHistories().addAll(assets);
+        return JAXBMarshaller.marshallJaxBObjectToString(findAssetByCfrModuleResponse);
     }
 
     public static String createFlagStateRequest(String guid, Date date) throws AssetModelMarshallException {

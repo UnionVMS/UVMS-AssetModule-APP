@@ -11,22 +11,6 @@
  */
 package eu.europa.ec.fisheries.uvms.asset.message.consumer.bean;
 
-import javax.ejb.ActivationConfigProperty;
-import javax.ejb.EJB;
-import javax.ejb.MessageDriven;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.TextMessage;
-
-import eu.europa.ec.fisheries.uvms.asset.service.bean.*;
-import eu.europa.ec.fisheries.wsdl.asset.module.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import eu.europa.ec.fisheries.uvms.asset.message.AssetConstants;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
@@ -34,6 +18,17 @@ import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.*;
+import eu.europa.ec.fisheries.wsdl.asset.module.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ejb.*;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
+import javax.jms.Message;
+import javax.jms.MessageListener;
+import javax.jms.TextMessage;
 
 @MessageDriven(mappedName = AssetConstants.QUEUE_ASSET_EVENT, activationConfig = {
     @ActivationConfigProperty(propertyName = "messagingType", propertyValue = AssetConstants.CONNECTION_TYPE),
@@ -66,6 +61,9 @@ public class MessageConsumerBean implements MessageListener {
 
     @EJB
     private UpsertFishingGearsMessageEventBean upsertFishingGearsMessageEventBean;
+
+    @EJB
+    private FindAssetByCfrBean findAssetByCfrBean;
 
 
     @EJB
@@ -125,7 +123,10 @@ public class MessageConsumerBean implements MessageListener {
                     AssetMessageEvent fishingGearMessageEvent = new AssetMessageEvent(textMessage, upsertFishingGearListModuleRequest.getFishingGear(), upsertFishingGearListModuleRequest.getUsername());
                     upsertFishingGearsMessageEventBean.upsertFishingGears(fishingGearMessageEvent);
                     break;
-
+                case FIND_ASSET_HISTORIES_BY_CFR:
+                    FindAssetHistoriesByCfrModuleRequest findAssetByCfrModuleRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, FindAssetHistoriesByCfrModuleRequest.class);
+                    findAssetByCfrBean.findAssetByCfr(findAssetByCfrModuleRequest, textMessage);
+                    break;
                 default:
                     LOG.error("[ Not implemented method consumed: {} ]", method);
                     assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Method not implemented")));

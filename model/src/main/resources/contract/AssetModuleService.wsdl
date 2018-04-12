@@ -3,7 +3,6 @@
              xmlns:v="module.asset.wsdl.fisheries.ec.europa.eu"
              xmlns:tv="types.asset.wsdl.fisheries.ec.europa.eu"
              xmlns:group="group.asset.wsdl.fisheries.ec.europa.eu"
-             xmlns:fg="fishinggear.asset.wsdl.fisheries.ec.europa.eu"
              xmlns:xsd="http://www.w3.org/2001/XMLSchema"
              xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
              xmlns="http://schemas.xmlsoap.org/wsdl/">
@@ -31,6 +30,7 @@
                     <xsd:enumeration value="FISHING_GEAR_UPSERT"/>
                     <xsd:enumeration value="GET_FLAGSTATE_BY_ID_AND_DATE"/>
                     <xsd:enumeration value="GET_ASSET_FROMASSETID_AND_DATE"/>
+                    <xsd:enumeration value="FIND_ASSET_HISTORIES_BY_CFR"/>
                 </xsd:restriction>
             </xsd:simpleType>
             
@@ -226,6 +226,29 @@
                 </xsd:complexType>
             </xsd:element>
 
+            <xsd:element name="FindAssetHistoriesByCfrModuleRequest">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest">
+                            <xsd:sequence>
+                                <xsd:element name="cfr" type="xsd:string"/>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="FindAssetHistoriesByCfrModuleResponse">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest">
+                            <xsd:sequence>
+                                <xsd:element name="assetHistories" type="tv:Asset" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
         </xsd:schema>
     </types>
     
