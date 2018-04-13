@@ -1,6 +1,8 @@
 package eu.europa.ec.fisheries.uvms.asset.rest.service;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 import eu.europa.ec.fisheries.uvms.asset.service.CustomCodesService;
@@ -9,22 +11,38 @@ import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.URLDecoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import static org.reflections.util.ConfigurationBuilder.build;
 
 @Path("/customcodes")
 @Stateless
 @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
 @Api(value = "CustomCodes Service")
 public class CustomCodesResource {
+
+    ObjectMapper MAPPER;
+    public CustomCodesResource() {
+        MAPPER = new ObjectMapper();
+        MAPPER.registerModule(new JavaTimeModule());
+    }
+
 
 
     private static final Logger LOG = LoggerFactory.getLogger(ConfigResource.class);
@@ -62,32 +80,18 @@ public class CustomCodesResource {
     public Response retrieveCustomCode(
             @ApiParam(value = "constant", required = true) @PathParam("constant") String constant,
             @ApiParam(value = "code", required = true) @PathParam("code") String code,
-            @ApiParam(value = "validFromDate", required = true) @PathParam(value = "validFromDate")  Date   validFromDate,
-            @ApiParam(value = "validToDate", required = true) @PathParam(value = "validToDate") Date validToDate)
+            @ApiParam(value = "validFromDate", required = true) @PathParam(value = "validFromDate")  String   validFromDate,
+            @ApiParam(value = "validToDate", required = true) @PathParam(value = "validToDate") String validToDate)
     {
         try {
-
-            CustomCodesPK pk = new CustomCodesPK();
-            pk.setConstant(constant);
-            pk.setCode(code);
-
-            LocalDateTime f = Instant.ofEpochMilli(validFromDate.getTime())
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDateTime();
-            LocalDateTime t = Instant.ofEpochMilli(validToDate.getTime())
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDateTime();
-
-
-            pk.setValidFromDate(f);
-            pk.setValidToDate(t);
-
-
-
-            CustomCode customCode = customCodesSvc.get(pk);
-            return Response.ok(customCode).build();
+            LocalDateTime fromDate = LocalDateTime.parse(validFromDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            LocalDateTime toDate = LocalDateTime.parse(validToDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            CustomCode customCode = customCodesSvc.get(constant,code,fromDate,toDate);
+            String json = MAPPER.writeValueAsString(customCode);
+            return Response.status(200).entity(json).type(MediaType.APPLICATION_JSON)
+                    .header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            LOG.error("Error when getting config search fields.");
+            LOG.error("Error when fetching CustomCode. " + validFromDate + " " +  validToDate);
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
@@ -102,21 +106,23 @@ public class CustomCodesResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response exists(@ApiParam(value = "constant", required = true) @PathParam("constant") String constant,
                            @ApiParam(value = "code", required = true) @PathParam("code") String code,
-                           @ApiParam(value = "validFromDate", required = true) @PathParam(value = "validFromDate") Date validFromDate,
-                           @ApiParam(value = "validToDate", required = true) @PathParam(value = "validToDate") Date validToDate)
+                           @ApiParam(value = "validFromDate", required = true) @PathParam(value = "validFromDate") String validFromDate,
+                           @ApiParam(value = "validToDate", required = true) @PathParam(value = "validToDate") String validToDate)
     {
         try {
 
-            LocalDateTime fromDate = Instant.ofEpochMilli(validFromDate.getTime())
-                    .atZone(ZoneId.of("UTC"))
-                    .toLocalDateTime();
-            LocalDateTime toDate = Instant.ofEpochMilli(validToDate.getTime())
-                    .atZone(ZoneId.of("UTC"))
-                    .toLocalDateTime();
-
-
+            LocalDateTime fromDate = LocalDateTime.parse(validFromDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            LocalDateTime toDate = LocalDateTime.parse(validToDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            CustomCodesPK pk = new CustomCodesPK();
+            pk.setConstant(constant);
+            pk.setCode(code);
+            pk.setValidFromDate(fromDate);
+            pk.setValidToDate(toDate);
             Boolean exists = customCodesSvc.exists(constant, code,fromDate,toDate);
-            return Response.ok(exists).build();
+
+            return Response.status(200).entity(exists).type(MediaType.APPLICATION_JSON)
+                    .header("MDC", MDC.get("requestId")).build();
+
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -153,7 +159,8 @@ public class CustomCodesResource {
     public Response getCodesForConstant(@PathParam("constant") String constant) {
         try {
             List<CustomCode> customCodes = customCodesSvc.getAllFor(constant);
-            return Response.ok(customCodes).build();
+            String json = MAPPER.writeValueAsString(customCodes);
+            return Response.ok(json).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -170,20 +177,13 @@ public class CustomCodesResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteCustomCode(@ApiParam(value = "constant", required = true) @PathParam("constant") String constant,
                                      @ApiParam(value = "code", required = true) @PathParam("code") String code,
-                                     @ApiParam(value = "validFromDate", required = true) @PathParam(value = "validFromDate") Date validFromDate,
-                                     @ApiParam(value = "validToDate", required = true) @PathParam(value = "validToDate") Date validToDate
-
-    )
+                                     @ApiParam(value = "validFromDate", required = true) @PathParam(value = "validFromDate") String validFromDate,
+                                     @ApiParam(value = "validToDate", required = true) @PathParam(value = "validToDate") String validToDate)
     {
         try {
 
-            LocalDateTime fromDate = Instant.ofEpochMilli(validFromDate.getTime())
-                    .atZone(ZoneId.of("UTC"))
-                    .toLocalDateTime();
-            LocalDateTime toDate = Instant.ofEpochMilli(validToDate.getTime())
-                    .atZone(ZoneId.of("UTC"))
-                    .toLocalDateTime();
-
+            LocalDateTime fromDate = LocalDateTime.parse(validFromDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            LocalDateTime toDate = LocalDateTime.parse(validToDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
             customCodesSvc.delete(constant, code,fromDate,toDate);
             return Response.ok().build();
         } catch (Exception e) {

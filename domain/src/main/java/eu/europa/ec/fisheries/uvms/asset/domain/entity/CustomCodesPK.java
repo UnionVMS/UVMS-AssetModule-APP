@@ -1,5 +1,10 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -10,6 +15,7 @@ public class CustomCodesPK  implements Serializable {
 
     private String constant;
     private String code;
+
     private LocalDateTime validFromDate;
     private LocalDateTime validToDate;
 
