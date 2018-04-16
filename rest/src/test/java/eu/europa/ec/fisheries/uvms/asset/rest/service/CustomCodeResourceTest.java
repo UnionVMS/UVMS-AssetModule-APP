@@ -158,7 +158,6 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
     @Test
     @RunAsClient
-    @Ignore
     public void deleteCustomCode() throws IOException {
 
         String txt = UUID.randomUUID().toString().toUpperCase();
@@ -170,7 +169,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         String fromDate = customCodesPk.getValidFromDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         String toDate = customCodesPk.getValidToDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
-        Response response = getWebTarget()
+        Boolean exists = getWebTarget()
                 .path("customcodes")
                 .path("exists")
                 .path(customCodesPk.getConstant())
@@ -178,12 +177,9 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .path(fromDate)
                 .path(toDate)
                 .request(MediaType.APPLICATION_JSON)
-                .get(Response.class);
+                .get(Boolean.class);
 
-        String exists = response.readEntity(String.class);
-
-        Assert.assertTrue(exists.equalsIgnoreCase("ok"));
-
+        Assert.assertTrue(exists);
 
         String jsondelete = getWebTarget()
                 .path("customcodes")
@@ -194,6 +190,8 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .delete(String.class);
 
+
+
         exists = getWebTarget()
                 .path("customcodes")
                 .path("exists")
@@ -202,24 +200,9 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .path(fromDate)
                 .path(toDate)
                 .request(MediaType.APPLICATION_JSON)
-                .get(String.class);
+                .get(Boolean.class);
 
-      //  Assert.assertFalse(exists);
-
-
-
-
-
-
-        /*
-        CustomCodes customCodes = MAPPER.readValue(json, CustomCodes.class);
-        System.out.println("       " + txt);
-        System.out.println(customCodes.getPrimaryKey().getConstant());
-        System.out.println(customCodes.getPrimaryKey().getCode());
-        System.out.println(customCodes.getDescription());
-        System.out.println(customCodes.getJsonstr());
-        */
-
+        Assert.assertFalse(exists);
 
     }
 

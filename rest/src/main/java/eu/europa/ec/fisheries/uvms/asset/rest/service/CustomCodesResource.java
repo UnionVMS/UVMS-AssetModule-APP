@@ -43,8 +43,6 @@ public class CustomCodesResource {
         MAPPER.registerModule(new JavaTimeModule());
     }
 
-
-
     private static final Logger LOG = LoggerFactory.getLogger(ConfigResource.class);
 
     @Inject
@@ -62,10 +60,10 @@ public class CustomCodesResource {
         try {
 
             CustomCode customCodes = customCodesSvc.create(customCode);
-            return Response.ok(customCodes).build();
+            return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -92,12 +90,12 @@ public class CustomCodesResource {
                     .header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when fetching CustomCode. " + validFromDate + " " +  validToDate);
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
         }
     }
 
     @GET
-    @ApiOperation(value = "Retrieve a customcode", notes = "Retrieve a customcode", response = Boolean.class)
+    @ApiOperation(value = "Check if customCode exists", notes = "Check if customCode exists", response = Boolean.class)
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when retrieving code list for given constant list"),
             @ApiResponse(code = 200, message = "Codes for constant  successfully retrieved")})
@@ -125,7 +123,7 @@ public class CustomCodesResource {
 
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -141,10 +139,10 @@ public class CustomCodesResource {
     public Response getAllConstants() {
         try {
             List<String> constants = customCodesSvc.getAllConstants();
-            return Response.ok(constants).build();
+            return Response.ok(constants).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -160,10 +158,10 @@ public class CustomCodesResource {
         try {
             List<CustomCode> customCodes = customCodesSvc.getAllFor(constant);
             String json = MAPPER.writeValueAsString(customCodes);
-            return Response.ok(json).build();
+            return Response.ok(json).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -172,7 +170,7 @@ public class CustomCodesResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when retrieving code list for given constant list"),
             @ApiResponse(code = 200, message = "Codes for constant  successfully retrieved")})
-    @Path("/{constant}/{code}{validFromDate}{validToDate}")
+    @Path("/{constant}/{code}/{validFromDate}/{validToDate}")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response deleteCustomCode(@ApiParam(value = "constant", required = true) @PathParam("constant") String constant,
@@ -185,10 +183,10 @@ public class CustomCodesResource {
             LocalDateTime fromDate = LocalDateTime.parse(validFromDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
             LocalDateTime toDate = LocalDateTime.parse(validToDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
             customCodesSvc.delete(constant, code,fromDate,toDate);
-            return Response.ok().build();
+            return Response.ok().header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
         }
     }
 

@@ -2,6 +2,8 @@ package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 
 import javax.ejb.Stateless;
 import javax.persistence.*;
+import javax.ws.rs.NotFoundException;
+
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 import java.util.List;
@@ -60,7 +62,13 @@ public class CustomCodeDao {
 
     public Boolean exists(CustomCodesPK primaryKey) {
 
-        return get(primaryKey) != null;
+        try {
+            CustomCode customCode = get(primaryKey);
+            return customCode != null;
+        }
+        catch(NotFoundException e){
+            return false;
+        }
     }
 
     public List<CustomCode> getAllFor(String constant) {
