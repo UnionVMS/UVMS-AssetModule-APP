@@ -283,6 +283,70 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
     }
 
 
+    @Test
+    @RunAsClient
+    public void existsCustomCodeInDateRangePositive() throws IOException {
+
+        String txt = UUID.randomUUID().toString().toUpperCase();
+        String createdJson = createACustomCodeHelper(txt);
+
+        CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
+        CustomCodesPK customCodesPk = customCode.getPrimaryKey();
+
+        LocalDateTime  date  = customCodesPk.getValidFromDate();
+
+        LocalDateTime  dateWithinRange = date.plusDays(1);
+
+        String dateToTest = dateWithinRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+
+        Boolean ret = getWebTarget()
+                .path("customcodes")
+                .path("verify")
+                .path(customCodesPk.getConstant())
+                .path(customCodesPk.getCode())
+                .path(dateToTest)
+                .request(MediaType.APPLICATION_JSON)
+                .get(Boolean.class);
+        // record existed alles ok
+        Assert.assertTrue(ret);
+    }
+
+
+    @Test
+    @RunAsClient
+    public void existsCustomCodeInDateRangeNegative() throws IOException {
+
+        String txt = UUID.randomUUID().toString().toUpperCase();
+        String createdJson = createACustomCodeHelper(txt);
+
+        CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
+        CustomCodesPK customCodesPk = customCode.getPrimaryKey();
+
+        LocalDateTime  date  = customCodesPk.getValidFromDate();
+
+        LocalDateTime  dateWithoutRange = date.minusDays(2);
+
+        String dateToTest = dateWithoutRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+
+        Boolean ret = getWebTarget()
+                .path("customcodes")
+                .path("verify")
+                .path(customCodesPk.getConstant())
+                .path(customCodesPk.getCode())
+                .path(dateToTest)
+                .request(MediaType.APPLICATION_JSON)
+                .get(Boolean.class);
+
+        // record existed NOT as expected alles ok
+        Assert.assertFalse(ret);
+
+
+    }
+
+
+
+
+
 
 }
 

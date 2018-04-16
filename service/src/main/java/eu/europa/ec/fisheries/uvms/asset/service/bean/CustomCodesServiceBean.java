@@ -257,5 +257,27 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		return dao.getForDate(constant,code,aDate);
 	}
 
+	@Override
+	public Boolean verify(String constant, String code, LocalDateTime aDate) {
+		if(constant == null){
+			throw new IllegalArgumentException("Constant cannot be null");
+		}
+		if(constant.trim().length() < 1){
+			throw new IllegalArgumentException("Constant cannot be empty");
+		}
+		if(code == null){
+			throw new IllegalArgumentException("Code cannot be null");
+		}
+		if(code.trim().length() < 1){
+			throw new IllegalArgumentException("Code cannot be empty");
+		}
+		if(aDate == null){
+			throw new IllegalArgumentException("ValifFromDate cannot be null");
+		}
+
+		return dao.verify(constant,code,aDate);
+
+	}
+
 
 }

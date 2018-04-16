@@ -105,6 +105,8 @@ public interface CustomCodesService {
 
 
     CustomCode getForDate(String constant, String code, LocalDateTime aDate);
+
+    Boolean verify(String constant, String code, LocalDateTime aDate);
 }
 
 

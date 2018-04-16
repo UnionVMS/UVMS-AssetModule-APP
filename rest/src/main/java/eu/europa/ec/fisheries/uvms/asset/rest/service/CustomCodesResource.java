@@ -154,6 +154,33 @@ public class CustomCodesResource {
         }
     }
 
+    @GET
+    @ApiOperation(value = "Check if a Custom Code exists for given date", notes = "Check if a Custom Code exists for given date", response = Boolean.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Error when processing request"),
+            @ApiResponse(code = 200, message = "Successfully proccessed request")})
+    @Path("/verify/{constant}/{code}/{date}")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response verify(@ApiParam(value = "constant", required = true) @PathParam("constant") String constant,
+                               @ApiParam(value = "code", required = true) @PathParam("code") String code,
+                               @ApiParam(value = "validToDate", required = true) @PathParam(value = "date") String date)
+    {
+        try {
+
+            LocalDateTime aDate = LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            Boolean exists = customCodesSvc.verify(constant, code, aDate);
+
+            String json = MAPPER.writeValueAsString(exists);
+            return Response.status(200).entity(json).type(MediaType.APPLICATION_JSON)
+                    .header("MDC", MDC.get("requestId")).build();
+
+        } catch (Exception e) {
+            LOG.error("Error when getting config search fields.");
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+        }
+    }
+
 
 
 
