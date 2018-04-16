@@ -10,6 +10,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.client;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,15 +26,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ContextResolver;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import eu.europa.ec.fisheries.uvms.asset.client.model.Asset;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetBO;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetGroup;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetListResponse;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetQuery;
+import eu.europa.ec.fisheries.uvms.asset.client.model.*;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
@@ -172,4 +171,65 @@ public class AssetClient {
                 .request(MediaType.APPLICATION_JSON)
                 .get(String.class);
     }
+
+    public List<String> getConstants() {
+
+        List<String> constants = client.target(REST_END_POINT)
+                .path("customcodes")
+                .path("listconstants")
+                .request(MediaType.APPLICATION_JSON)
+                .get(List.class);
+        return constants;
+    }
+
+
+    public List<CustomCode> getCodesForConstant(String constant) throws IOException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
+        String json = client.target(REST_END_POINT)
+                .path("customcodes")
+                .path("listcodesforconstant")
+                .path(constant)
+                .request(MediaType.APPLICATION_JSON)
+                .get(String.class);
+        TypeReference typeref = new TypeReference<List<CustomCode>>() {};
+        List<CustomCode> codes = mapper.readValue(json, typeref);
+        return codes;
+
+    }
+
+    public Boolean isCodeValid(String constant, String code, LocalDateTime date){
+
+        String theDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        Boolean ret = client.target(REST_END_POINT)
+                .path("customcodes")
+                .path("verify")
+                .path(constant)
+                .path(code)
+                .path(theDate)
+                .request(MediaType.APPLICATION_JSON)
+                .get(Boolean.class);
+        return ret;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

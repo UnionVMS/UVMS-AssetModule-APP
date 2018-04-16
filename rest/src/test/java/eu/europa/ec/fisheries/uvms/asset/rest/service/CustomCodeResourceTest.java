@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.asset.rest.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
@@ -66,8 +67,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
     public void getCodesPerConstant() throws IOException {
 
         String txt = UUID.randomUUID().toString().toUpperCase();
-        String createdJson = createACustomCodeHelper(txt);
-        CustomCode cc = MAPPER.readValue(createdJson, CustomCode.class);
+        createACustomCodeHelperMultipleCodesPerConstant(txt);
 
         // this is actually not a test yet but it shows how to parse resulting json without a DTO
 
@@ -87,13 +87,10 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                     .path(constant)
                     .request(MediaType.APPLICATION_JSON)
                     .get(String.class);
-            cc = MAPPER.readValue(createdJson, CustomCode.class);
-            // here we could parse the embedded json  (probably different for every constant
-            if (cc.getPrimaryKey().getCode().toUpperCase().endsWith(txt.toUpperCase())) {
-                found = true;
-            }
+            TypeReference typeref = new TypeReference<List<CustomCode>>() {};
+            List<CustomCode> codes = MAPPER.readValue(json, typeref);
         }
-        Assert.assertTrue(found);
+       // Assert.assertTrue(found);
     }
 
     @Test
@@ -221,6 +218,42 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .post(Entity.json(customCode), String.class);
         return created;
     }
+
+    private void createACustomCodeHelperMultipleCodesPerConstant(String txt) {
+
+        LocalDateTime from = LocalDateTime.now(Clock.systemUTC());
+        from = from.minusDays(5);
+        LocalDateTime to = LocalDateTime.now(Clock.systemUTC());
+        to = from.plusDays(5);
+
+
+        for(int i = 0 ; i < 5 ; i++) {
+
+            String constant = "CST____" + txt;
+            String code = "CODE___" + String.valueOf(i) + "_"+txt;
+            String descr = "DESCR__" + txt;
+
+            CustomCodesPK primaryKey = new CustomCodesPK(constant, code, from, to);
+            CustomCode customCode = new CustomCode();
+            customCode.setPrimaryKey(primaryKey);
+            customCode.setDescription(descr);
+
+            Map<String, String> map = new HashMap<>();
+            map.put("key1", code);
+            map.put("key2", "data2");
+            customCode.setNameValue(map);
+
+
+            String created = getWebTarget()
+                    .path("customcodes")
+                    .request(MediaType.APPLICATION_JSON)
+                    .post(Entity.json(customCode), String.class);
+
+        }
+    }
+
+
+
 
     @Test
     @RunAsClient
