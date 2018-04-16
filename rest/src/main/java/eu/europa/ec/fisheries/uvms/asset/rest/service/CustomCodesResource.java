@@ -127,6 +127,35 @@ public class CustomCodesResource {
         }
     }
 
+    @GET
+    @ApiOperation(value = "retrieve Customcode for specified date", notes = "retrieve Customcode for specified date", response = CustomCode.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Error when processing request"),
+            @ApiResponse(code = 200, message = "Successfully proccessed request")})
+    @Path("/getfordate/{constant}/{code}/{date}")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getForDate(@ApiParam(value = "constant", required = true) @PathParam("constant") String constant,
+                           @ApiParam(value = "code", required = true) @PathParam("code") String code,
+                           @ApiParam(value = "validToDate", required = true) @PathParam(value = "date") String date)
+    {
+        try {
+
+            LocalDateTime aDate = LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            CustomCode customCode = customCodesSvc.getForDate(constant, code,aDate);
+
+            String json = MAPPER.writeValueAsString(customCode);
+            return Response.status(200).entity(json).type(MediaType.APPLICATION_JSON)
+                    .header("MDC", MDC.get("requestId")).build();
+
+        } catch (Exception e) {
+            LOG.error("Error when getting config search fields.");
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+        }
+    }
+
+
+
 
     @GET
     @ApiOperation(value = "Get a list of constants", notes = "Get a list of constants from Custom Code", response = String.class, responseContainer = "List")

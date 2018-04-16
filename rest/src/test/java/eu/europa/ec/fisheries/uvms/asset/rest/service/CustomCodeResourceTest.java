@@ -104,22 +104,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         String createdJson = createACustomCodeHelper(txt);
         CustomCode customCodes = MAPPER.readValue(createdJson, CustomCode.class);
 
-        /*
-        System.out.println("       " + txt);
-        System.out.println(customCodes.getPrimaryKey().getConstant());
-        System.out.println(customCodes.getPrimaryKey().getCode());
-        System.out.println(customCodes.getDescription());
-        System.out.println(customCodes.getNameValue());
-        */
-
         Assert.assertTrue(customCodes.getPrimaryKey().getConstant().endsWith(txt));
-    }
-
-
-    Date convertToDateViaInstant(LocalDateTime dateToConvert) {
-        return java.util.Date
-                .from(dateToConvert.atZone(ZoneId.systemDefault())
-                        .toInstant());
     }
 
     @Test
@@ -234,12 +219,69 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .path("customcodes")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(customCode), String.class);
-
-
         return created;
+    }
+
+    @Test
+    @RunAsClient
+    public void verifyCustomCodeInDateRangePositive() throws IOException {
+
+        String txt = UUID.randomUUID().toString().toUpperCase();
+        String createdJson = createACustomCodeHelper(txt);
+
+        CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
+        CustomCodesPK customCodesPk = customCode.getPrimaryKey();
+
+        LocalDateTime  date  = customCodesPk.getValidFromDate();
+
+        LocalDateTime  dateWithinRange = date.plusDays(1);
+
+        String dateToTest = dateWithinRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+
+        CustomCode retrievedCustomCode = getWebTarget()
+                .path("customcodes")
+                .path("getfordate")
+                .path(customCodesPk.getConstant())
+                .path(customCodesPk.getCode())
+                .path(dateToTest)
+                .request(MediaType.APPLICATION_JSON)
+                .get(CustomCode.class);
+        // record existed alles ok
+        Assert.assertTrue(retrievedCustomCode != null);
+    }
+
+
+    @Test
+    @RunAsClient
+    public void verifyCustomCodeInDateRangeNegative() throws IOException {
+
+        String txt = UUID.randomUUID().toString().toUpperCase();
+        String createdJson = createACustomCodeHelper(txt);
+
+        CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
+        CustomCodesPK customCodesPk = customCode.getPrimaryKey();
+
+        LocalDateTime  date  = customCodesPk.getValidFromDate();
+
+        LocalDateTime  dateWithoutRange = date.minusDays(2);
+
+        String dateToTest = dateWithoutRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+
+        CustomCode retrievedCustomCode = getWebTarget()
+                .path("customcodes")
+                .path("getfordate")
+                .path(customCodesPk.getConstant())
+                .path(customCodesPk.getCode())
+                .path(dateToTest)
+                .request(MediaType.APPLICATION_JSON)
+                .get(CustomCode.class);
+
+        // record existed NOT as expected alles ok
+        Assert.assertTrue(retrievedCustomCode == null);
 
 
     }
+
 
 
 }
