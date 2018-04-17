@@ -95,7 +95,7 @@ public class AssetClientTest extends AbstractClientTest {
     }
 
     @Test
-    public void isCodeValid() throws Exception {
+    public void isCodeValidTest() throws Exception {
 
         String constant = "Test_Constant" + UUID.randomUUID().toString();
         CustomCode customCode = AssetHelper.createCustomCode(constant);
@@ -108,6 +108,22 @@ public class AssetClientTest extends AbstractClientTest {
 
         Boolean ok =  assetClient.isCodeValid(cst,code,validFromDate.plusDays(5));
         Assert.assertTrue(ok);
+    }
+
+    @Test
+    public void isCodeValidNegativeTest() throws Exception {
+
+        String constant = "Test_Constant" + UUID.randomUUID().toString();
+        CustomCode customCode = AssetHelper.createCustomCode(constant);
+        CustomCode createdCustomCode = assetClient.createCustomCode(customCode);
+        Assert.assertTrue(createdCustomCode != null);
+
+        String cst = createdCustomCode.getPrimaryKey().getConstant();
+        String code = createdCustomCode.getPrimaryKey().getCode();
+        LocalDateTime validToDate = createdCustomCode.getPrimaryKey().getValidToDate();
+
+        Boolean ok =  assetClient.isCodeValid(cst,code,validToDate.plusDays(5));
+        Assert.assertFalse(ok);
     }
 
 
