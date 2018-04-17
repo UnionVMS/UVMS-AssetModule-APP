@@ -71,7 +71,7 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void tryToCreateDups() throws JsonProcessingException {
 
-        CustomCodesPK primaryKey = createPrmaryKey(CONSTANT,"aKOD");
+        CustomCodesPK primaryKey = createPrimaryKey(CONSTANT,"aKOD");
 
 
         CustomCode record1 = createHelper(CONSTANT, true, primaryKey);
@@ -178,16 +178,14 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
     Random rnd = new Random();
 
     private CustomCode createHelper(String constant, Boolean active) throws JsonProcessingException {
-
-
         CustomCode record = new CustomCode();
         if (active) {
-            CustomCodesPK primaryKey = createPrmaryKey(constant, "1");
+            CustomCodesPK primaryKey = createPrimaryKey(constant, "1");
             record.setPrimaryKey(primaryKey);
             record.setDescription("Active");
             record.getNameValue().put("status", "active");
         } else {
-            CustomCodesPK primaryKey = createPrmaryKey(constant, "0");
+            CustomCodesPK primaryKey = createPrimaryKey(constant, "0");
             record.setPrimaryKey(primaryKey);
             record.setDescription("InActive");
             record.getNameValue().put("status", "inactive");
@@ -197,7 +195,6 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
     }
 
     private CustomCode createHelper(String constant, Boolean active, CustomCodesPK primaryKey) throws JsonProcessingException {
-
         Integer n = rnd.nextInt(10);
         Integer duration = rnd.nextInt(90);
         LocalDateTime fromDate = LocalDateTime.now(Clock.systemUTC());
@@ -214,20 +211,14 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
             record.setPrimaryKey(primaryKey);
             record.setDescription("InActive");
             record.getNameValue().put("status", "inactive");
-
         }
         return record;
     }
 
-
-
-
-
-
     private CustomCode createHelper(String constant, String code, String descr) throws JsonProcessingException {
 
         CustomCode record = new CustomCode();
-        CustomCodesPK primaryKey = createPrmaryKey(constant, code);
+        CustomCodesPK primaryKey = createPrimaryKey(constant, code);
         record.setPrimaryKey(primaryKey);
         record.setDescription(descr);
         return record;
@@ -235,7 +226,7 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
 
 
 
-    private CustomCodesPK createPrmaryKey(String constant, String code) {
+    private CustomCodesPK createPrimaryKey(String constant, String code) {
 
         Integer n = rnd.nextInt(10);
         Integer duration = rnd.nextInt(90);

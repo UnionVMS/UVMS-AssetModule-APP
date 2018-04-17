@@ -142,9 +142,9 @@ public class CustomCodesResource {
         try {
 
             LocalDateTime aDate = LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-            CustomCode customCode = customCodesSvc.getForDate(constant, code,aDate);
+            List<CustomCode> customCodes = customCodesSvc.getForDate(constant, code,aDate);
 
-            String json = MAPPER.writeValueAsString(customCode);
+            String json = MAPPER.writeValueAsString(customCodes);
             return Response.status(200).entity(json).type(MediaType.APPLICATION_JSON)
                     .header("MDC", MDC.get("requestId")).build();
 

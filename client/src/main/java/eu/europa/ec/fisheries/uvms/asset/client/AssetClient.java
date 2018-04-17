@@ -226,4 +226,25 @@ public class AssetClient {
         return ret;
     }
 
+    public List<CustomCode> getCodeForDate(String constant, String code, LocalDateTime date) throws IOException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
+
+        String theDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String json = client.target(REST_END_POINT)
+                .path("getfordate")
+                .path(constant)
+                .path(code)
+                .path(theDate)
+                .request(MediaType.APPLICATION_JSON)
+                .get(String.class);
+
+        TypeReference typeref = new TypeReference<List<CustomCode>>() {};
+        List<CustomCode> codes = mapper.readValue(json, typeref);
+        return codes;
+
+    }
+
 }

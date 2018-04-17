@@ -127,4 +127,40 @@ public class AssetClientTest extends AbstractClientTest {
     }
 
 
+    @Test
+    public void getCodeForDateTest() throws Exception {
+
+        String constant = "Test_Constant" + UUID.randomUUID().toString();
+        CustomCode customCode = AssetHelper.createCustomCode(constant);
+        CustomCode createdCustomCode = assetClient.createCustomCode(customCode);
+        Assert.assertTrue(createdCustomCode != null);
+
+        String cst = createdCustomCode.getPrimaryKey().getConstant();
+        String code = createdCustomCode.getPrimaryKey().getCode();
+        LocalDateTime validFromDate = createdCustomCode.getPrimaryKey().getValidFromDate();
+        LocalDateTime validToDate = createdCustomCode.getPrimaryKey().getValidToDate();
+
+        List<CustomCode> retrievedCustomCode = assetClient.getCodeForDate(cst, code, validToDate);
+        Assert.assertTrue(retrievedCustomCode != null );
+        Assert.assertTrue(retrievedCustomCode.size() > 0 );
+    }
+
+    @Test
+    public void getCodeForDateNegativeTest() throws Exception {
+
+        String constant = "Test_Constant" + UUID.randomUUID().toString();
+        CustomCode customCode = AssetHelper.createCustomCode(constant);
+        CustomCode createdCustomCode = assetClient.createCustomCode(customCode);
+        Assert.assertTrue(createdCustomCode != null);
+
+        String cst = createdCustomCode.getPrimaryKey().getConstant();
+        String code = createdCustomCode.getPrimaryKey().getCode();
+        LocalDateTime validFromDate = createdCustomCode.getPrimaryKey().getValidFromDate();
+        LocalDateTime validToDate = createdCustomCode.getPrimaryKey().getValidToDate();
+
+        List<CustomCode> retrievedCustomCode = assetClient.getCodeForDate(cst, code, validToDate.plusDays(5));
+        Assert.assertTrue(retrievedCustomCode != null );
+        Assert.assertTrue(retrievedCustomCode.size() == 0 );
+    }
+
 }

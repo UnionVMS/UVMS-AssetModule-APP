@@ -104,30 +104,22 @@ public class CustomCodeDao {
     }
 
 
-    public CustomCode getForDate(String constant, String code, LocalDateTime aDate) {
+    public List<CustomCode> getForDate(String constant, String code, LocalDateTime aDate) {
 
-        try {
             TypedQuery<CustomCode> query = em.createNamedQuery(CustomCode.CUSTOMCODES_GETCUSTOMCODE_FOR_SPECIFIC_DATE, CustomCode.class);
             query.setParameter("constant", constant);
             query.setParameter("code", code);
             query.setParameter("aDate", aDate);
-            CustomCode  customCode = query.getSingleResult();
-            return customCode;
-        } catch (NoResultException e) {
-            return null;
-        }
+            List<CustomCode>  customCodes = query.getResultList();
+            return customCodes;
     }
 
     public Boolean verify(String constant, String code, LocalDateTime aDate) {
-        try {
             TypedQuery<CustomCode> query = em.createNamedQuery(CustomCode.CUSTOMCODES_GETCUSTOMCODE_FOR_SPECIFIC_DATE, CustomCode.class);
             query.setParameter("constant", constant);
             query.setParameter("code", code);
             query.setParameter("aDate", aDate);
-            CustomCode  customCode = query.getSingleResult();
-            return true;
-        } catch (NoResultException e) {
-            return false;
-        }
+            List<CustomCode>  customCodes = query.getResultList();
+            return customCodes.size() > 0;
     }
 }

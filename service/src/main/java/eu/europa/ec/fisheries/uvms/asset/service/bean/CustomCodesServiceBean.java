@@ -236,7 +236,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 	}
 
 	@Override
-	public CustomCode getForDate(String constant, String code, LocalDateTime aDate) {
+	public List<CustomCode> getForDate(String constant, String code, LocalDateTime aDate) {
 
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");

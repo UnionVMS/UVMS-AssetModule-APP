@@ -271,16 +271,20 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
         String dateToTest = dateWithinRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
-        CustomCode retrievedCustomCode = getWebTarget()
+        String  json = getWebTarget()
                 .path("customcodes")
                 .path("getfordate")
                 .path(customCodesPk.getConstant())
                 .path(customCodesPk.getCode())
                 .path(dateToTest)
                 .request(MediaType.APPLICATION_JSON)
-                .get(CustomCode.class);
+                .get(String.class);
         // record existed alles ok
-        Assert.assertTrue(retrievedCustomCode != null);
+        TypeReference typeref = new TypeReference<List<CustomCode>>() {};
+        List<CustomCode> codes = MAPPER.readValue(json, typeref);
+
+        Assert.assertTrue(codes != null);
+        Assert.assertTrue(codes.size() > 0);
     }
 
 
@@ -300,17 +304,20 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
         String dateToTest = dateWithoutRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
-        CustomCode retrievedCustomCode = getWebTarget()
+        String json = getWebTarget()
                 .path("customcodes")
                 .path("getfordate")
                 .path(customCodesPk.getConstant())
                 .path(customCodesPk.getCode())
                 .path(dateToTest)
                 .request(MediaType.APPLICATION_JSON)
-                .get(CustomCode.class);
+                .get(String.class);
 
         // record existed NOT as expected alles ok
-        Assert.assertTrue(retrievedCustomCode == null);
+        TypeReference typeref = new TypeReference<List<CustomCode>>() {};
+        List<CustomCode> codes = MAPPER.readValue(json, typeref);
+        Assert.assertTrue(codes != null);
+        Assert.assertTrue(codes.size() == 0);
 
 
     }
@@ -372,9 +379,39 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
         // record existed NOT as expected alles ok
         Assert.assertFalse(ret);
+    }
+
+    @Test
+    @RunAsClient
+    public void getCodeAtDateWithinRange() throws IOException {
+
+        String txt = UUID.randomUUID().toString().toUpperCase();
+        String createdJson = createACustomCodeHelper(txt);
+        CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
+        CustomCodesPK customCodesPk = customCode.getPrimaryKey();
+        LocalDateTime  date  = customCodesPk.getValidFromDate();
+
+        LocalDateTime  dateWithinRange = date.plusDays(2);
+
+        String dateWithin = dateWithinRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+
+        String json = getWebTarget()
+                .path("customcodes")
+                .path("getfordate")
+                .path(customCodesPk.getConstant())
+                .path(customCodesPk.getCode())
+                .path(dateWithin)
+                .request(MediaType.APPLICATION_JSON)
+                .get(String.class);
+
+        TypeReference typeref = new TypeReference<List<CustomCode>>() {};
+        List<CustomCode> codes = MAPPER.readValue(json, typeref);
+        Assert.assertTrue(codes != null);
+        Assert.assertTrue(codes.size() > 0);
 
 
     }
+
 
 
 

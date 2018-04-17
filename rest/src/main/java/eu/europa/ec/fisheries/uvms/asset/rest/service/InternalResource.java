@@ -156,7 +156,7 @@ public class InternalResource {
     }
 
     @GET
-    @Path("/listcodesforconstant/{constant}")
+    @Path("listcodesforconstant/{constant}")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getCodesForConstant(@PathParam("constant") String constant) {
@@ -172,7 +172,7 @@ public class InternalResource {
     }
 
     @GET
-    @Path("/verify/{constant}/{code}/{date}")
+    @Path("verify/{constant}/{code}/{date}")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response verify(@ApiParam(value = "constant", required = true) @PathParam("constant") String constant,
@@ -194,8 +194,32 @@ public class InternalResource {
         }
     }
 
+    @GET
+    @Path("getfordate/{constant}/{code}/{date}")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getForDate(@PathParam("constant") String constant,
+                               @PathParam("code") String code,
+                               @PathParam(value = "date") String date)
+    {
+        try {
+
+            ObjectMapper MAPPER = new ObjectMapper();
+            MAPPER.registerModule(new JavaTimeModule());
 
 
+            LocalDateTime aDate = LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            List<CustomCode> customCodes = customCodesService.getForDate(constant, code,aDate);
 
+            String json = MAPPER.writeValueAsString(customCodes);
+            return Response.status(200).entity(json).type(MediaType.APPLICATION_JSON)
+                    .header("MDC", MDC.get("requestId")).build();
 
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+        }
+    }
 }
+
+
+

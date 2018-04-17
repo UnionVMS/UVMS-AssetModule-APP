@@ -104,7 +104,7 @@ public interface CustomCodesService {
     List<String> getAllConstants();
 
 
-    CustomCode getForDate(String constant, String code, LocalDateTime aDate);
+    List<CustomCode> getForDate(String constant, String code, LocalDateTime aDate);
 
     Boolean verify(String constant, String code, LocalDateTime aDate);
 }
