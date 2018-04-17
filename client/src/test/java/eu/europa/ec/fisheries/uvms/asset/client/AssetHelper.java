@@ -2,13 +2,9 @@ package eu.europa.ec.fisheries.uvms.asset.client;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import eu.europa.ec.fisheries.uvms.asset.client.model.Asset;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetGroup;
-import eu.europa.ec.fisheries.uvms.asset.client.model.ContactInfo;
-import eu.europa.ec.fisheries.uvms.asset.client.model.Note;
+import java.util.*;
+
+import eu.europa.ec.fisheries.uvms.asset.client.model.*;
 
 public abstract class AssetHelper {
 
@@ -147,5 +143,20 @@ public abstract class AssetHelper {
                 .limit(length)
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();
+    }
+
+    public static CustomCode createCustomCode(String constant) {
+
+        CustomCode cc = new CustomCode();
+        LocalDateTime validFrom = LocalDateTime.now();
+        LocalDateTime validTo = validFrom.plusDays(30);
+        CustomCodesPK pk = new CustomCodesPK(constant, "TEST_Code_" + UUID.randomUUID().toString(),validFrom, validTo);
+        cc.setPrimaryKey(pk);
+        cc.setDescription("This is a description");
+        Map<String , String> props = new HashMap<>();
+        props.put("extra1", UUID.randomUUID().toString());
+        props.put("extra2", UUID.randomUUID().toString());
+        cc.setNameValue(props);
+        return cc;
     }
 }

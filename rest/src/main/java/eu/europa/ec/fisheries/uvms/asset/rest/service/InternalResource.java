@@ -10,6 +10,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.rest.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -25,16 +27,26 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.AssetQuery;
 import eu.europa.ec.fisheries.uvms.asset.rest.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.service.CustomCodesService;
 import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetBO;
 import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetListResponse;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import org.slf4j.MDC;
 
 @Path("internal")
 @Stateless
@@ -45,7 +57,11 @@ public class InternalResource {
     
     @Inject
     private AssetGroupService assetGroupService;
-    
+
+    @Inject
+    private CustomCodesService customCodesService;
+
+
     @GET
     @Path("asset/{idType : (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)}/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -110,4 +126,76 @@ public class InternalResource {
     public Response ping() {
         return Response.ok("pong").build();
     }
+
+
+    @POST
+    @Path("customcode")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response createCustomCode(CustomCode customCode) {
+        try {
+            CustomCode customCodes = customCodesService.create(customCode);
+            return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+        }
+    }
+
+
+    @GET
+    @Path("listconstants")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getAllConstants() {
+        try {
+            List<String> constants = customCodesService.getAllConstants();
+            return Response.ok(constants).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+        }
+    }
+
+    @GET
+    @Path("/listcodesforconstant/{constant}")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getCodesForConstant(@PathParam("constant") String constant) {
+        try {
+            ObjectMapper MAPPER = new ObjectMapper();
+            MAPPER.registerModule(new JavaTimeModule());
+            List<CustomCode> customCodes = customCodesService.getAllFor(constant);
+            String json = MAPPER.writeValueAsString(customCodes);
+            return Response.ok(json).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+        }
+    }
+
+    @GET
+    @Path("/verify/{constant}/{code}/{date}")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response verify(@ApiParam(value = "constant", required = true) @PathParam("constant") String constant,
+                           @ApiParam(value = "code", required = true) @PathParam("code") String code,
+                           @ApiParam(value = "validToDate", required = true) @PathParam(value = "date") String date)
+    {
+        try {
+            ObjectMapper MAPPER = new ObjectMapper();
+            MAPPER.registerModule(new JavaTimeModule());
+
+            LocalDateTime aDate = LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            Boolean exists = customCodesService.verify(constant, code, aDate);
+            String json = MAPPER.writeValueAsString(exists);
+            return Response.status(200).entity(json).type(MediaType.APPLICATION_JSON)
+                    .header("MDC", MDC.get("requestId")).build();
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+        }
+    }
+
+
+
+
+
 }

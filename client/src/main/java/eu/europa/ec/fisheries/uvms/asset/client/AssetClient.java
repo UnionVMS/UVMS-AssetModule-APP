@@ -172,10 +172,24 @@ public class AssetClient {
                 .get(String.class);
     }
 
+
+    public CustomCode createCustomCode(CustomCode customCode) throws IOException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
+        String str = client.target(REST_END_POINT)
+                .path("customcode")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(customCode), String.class);
+        CustomCode cc =  mapper.readValue(str,CustomCode.class);
+        return cc;
+    }
+
+
     public List<String> getConstants() {
 
         List<String> constants = client.target(REST_END_POINT)
-                .path("customcodes")
                 .path("listconstants")
                 .request(MediaType.APPLICATION_JSON)
                 .get(List.class);
@@ -189,7 +203,6 @@ public class AssetClient {
         mapper.registerModule(new JavaTimeModule());
 
         String json = client.target(REST_END_POINT)
-                .path("customcodes")
                 .path("listcodesforconstant")
                 .path(constant)
                 .request(MediaType.APPLICATION_JSON)
@@ -204,7 +217,6 @@ public class AssetClient {
 
         String theDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         Boolean ret = client.target(REST_END_POINT)
-                .path("customcodes")
                 .path("verify")
                 .path(constant)
                 .path(code)
@@ -213,23 +225,5 @@ public class AssetClient {
                 .get(Boolean.class);
         return ret;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
