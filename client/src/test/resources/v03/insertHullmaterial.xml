@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog>
+	<changeSet author="davijo" id="hullm-03">
+		<insert tableName="hullmaterial">
+			<column name="code" value="WOOD" />
+			<column name="description" value="Wooden hull." />
+		</insert>
+		<insert tableName="hullmaterial">
+			<column name="code" value="METAL" />
+			<column name="description" value="Metal hull." />
+		</insert>
+		<insert tableName="hullmaterial">
+			<column name="code" value="GLAS_PLASTIC_FIBER" />
+			<column name="description" value="Glas or plastic fiber hull." />
+		</insert>
+		<insert tableName="hullmaterial">
+			<column name="code" value="OTHER" />
+			<column name="description" value="Other." />
+		</insert>
+		<insert tableName="hullmaterial">
+			<column name="code" value="UNKNOWN" />
+			<column name="description" value="Unknown." />
+		</insert>
+	</changeSet>
+</databaseChangeLog>

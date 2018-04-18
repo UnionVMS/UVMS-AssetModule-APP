@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog>
+	<changeSet author="davijo" id="fishg-03">
+		<insert tableName="fishinggear">
+			<column name="code" value="PS" />
+			<column name="description" value="Purse seines." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Surrounding nets" /> <!-- Surrounding nets -->
+			<column name="fishg_fishgm_id" valueNumeric="M" /> <!-- Mobile -->
+			<column name="fishg_fishtyp_id" valueNumeric="P" /> <!-- Dermersal -->
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="LA" />
+			<column name="description" value="Lampara nets." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Surrounding nets" />
+			<column name="fishg_fishgm_id" valueNumeric="M" />
+			<column name="fishg_fishtyp_id" valueNumeric="P" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="SB" />
+			<column name="description" value="Beach seines." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Seines" />
+			<column name="fishg_fishgm_id" valueNumeric="T" />
+			<column name="fishg_fishtyp_id" valueNumeric="DP" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="SDN" />
+			<column name="description" value="Danish seines." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Seines" />
+			<column name="fishg_fishgm_id" valueNumeric="T" />
+			<column name="fishg_fishtyp_id" valueNumeric="DP" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="SSC" />
+			<column name="description" value="Scottish seines." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Seines" />
+			<column name="fishg_fishgm_id" valueNumeric="T" />
+			<column name="fishg_fishtyp_id" valueNumeric="DP" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="SPR" />
+			<column name="description" value="Pair seines." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Seines" />
+			<column name="fishg_fishgm_id" valueNumeric="T" />
+			<column name="fishg_fishtyp_id" valueNumeric="DP" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="TBB" />
+			<column name="description" value="Beam trawls." />
+			<column name="fishg_fishgtyp_id" valueNumeric="1" />
+			<column name="fishg_fishgm_id" valueNumeric="T" />
+			<column name="fishg_fishtyp_id" valueNumeric="D" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="OTB" />
+			<column name="description" value="Bottom otter trawls." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Trawl" />
+			<column name="fishg_fishgm_id" valueNumeric="T" />
+			<column name="fishg_fishtyp_id" valueNumeric="D" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="PTB" />
+			<column name="description" value="Bottom pair trawls." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Trawl" />
+			<column name="fishg_fishgm_id" valueNumeric="T" />
+			<column name="fishg_fishtyp_id" valueNumeric="DP" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="OTM" />
+			<column name="description" value="Midwater otter trawls." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Trawl" />
+			<column name="fishg_fishgm_id" valueNumeric="T" />
+			<column name="fishg_fishtyp_id" valueNumeric="DP" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="PTM" />
+			<column name="description" value="Pelagic pair trawls." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Trawl" />
+			<column name="fishg_fishgm_id" valueNumeric="T" />
+			<column name="fishg_fishtyp_id" valueNumeric="DP" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="OTT" />
+			<column name="description" value="Otter twin trawls." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Trawl" />
+			<column name="fishg_fishgm_id" valueNumeric="T" />
+			<column name="fishg_fishtyp_id" valueNumeric="DP" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="DRB" />
+			<column name="description" value="Boat dredges." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Scrapingtool" />
+			<column name="fishg_fishgm_id" valueNumeric="T" />
+			<column name="fishg_fishtyp_id" valueNumeric="D" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="DRH" />
+			<column name="description" value="Hand dredges used on board a vessel." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Scrapingtool" />
+			<column name="fishg_fishgm_id" valueNumeric="T" />
+			<column name="fishg_fishtyp_id" valueNumeric="D" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="HMD" />
+			<column name="description" value="Mechanised dredges including suction dredges." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Scrapingtool" />
+			<column name="fishg_fishgm_id" valueNumeric="T" />
+			<column name="fishg_fishtyp_id" valueNumeric="D" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="LNB" />
+			<column name="description" value="Boat operated lift nets." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Lift nets" />
+			<column name="fishg_fishgm_id" valueNumeric="M" />
+			<column name="fishg_fishtyp_id" valueNumeric="P" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="LNS" />
+			<column name="description" value="Shore-operated stationary lift nets." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Lift nets" />
+			<column name="fishg_fishgm_id" valueNumeric="M" />
+			<column name="fishg_fishtyp_id" valueNumeric="P" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="GNS" />
+			<column name="description" value="Set (anchored) gillnets." />
+			<column name="fishg_fishgtyp_id" valueNumeric="4" />
+			<column name="fishg_fishgm_id" valueNumeric="S" />
+			<column name="fishg_fishtyp_id" valueNumeric="D" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="GND" />
+			<column name="description" value="Driftnets." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Gillnets and similar nets" />
+			<column name="fishg_fishgm_id" valueNumeric="S" />
+			<column name="fishg_fishtyp_id" valueNumeric="DP" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="GNC" />
+			<column name="description" value="Encircling gillnets." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Gillnets and similar nets" />
+			<column name="fishg_fishgm_id" valueNumeric="S" />
+			<column name="fishg_fishtyp_id" valueNumeric="DP" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="GTR" />
+			<column name="description" value="Trammel nets." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Gillnets and similar nets" />
+			<column name="fishg_fishgm_id" valueNumeric="S" />
+			<column name="fishg_fishtyp_id" valueNumeric="DP" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="GTN" />
+			<column name="description" value="Combined trammel and gillnets." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Gillnets and similar nets" />
+			<column name="fishg_fishgm_id" valueNumeric="S" />
+			<column name="fishg_fishtyp_id" valueNumeric="DP" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="FPO" />
+			<column name="description" value="Pots (traps)." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Trap" />
+			<column name="fishg_fishgm_id" valueNumeric="S" />
+			<column name="fishg_fishtyp_id" valueNumeric="D" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="LHP" />
+			<column name="description" value="Hand lines and pole lines (hand operated)." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Hooks and lines" />
+			<column name="fishg_fishgm_id" valueNumeric="S" />
+			<column name="fishg_fishtyp_id" valueNumeric="DP" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="LHM" />
+			<column name="description" value="Hand lines and pole lines (mechanised)." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Hooks and lines" />
+			<column name="fishg_fishgm_id" valueNumeric="S" />
+			<column name="fishg_fishtyp_id" valueNumeric="DP" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="LLS" />
+			<column name="description" value="Set longlines." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Hooks and lines" />
+			<column name="fishg_fishgm_id" valueNumeric="S" />
+			<column name="fishg_fishtyp_id" valueNumeric="D" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="LLD" />
+			<column name="description" value="Longlines (drifting)." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Hooks and lines" />
+			<column name="fishg_fishgm_id" valueNumeric="S" />
+			<column name="fishg_fishtyp_id" valueNumeric="P" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="LTL" />
+			<column name="description" value="Troll lines." />
+			<column name="fishg_fishgtyp_id" valueNumeric="Hooks and lines" />
+			<column name="fishg_fishgm_id" valueNumeric="M" />
+			<column name="fishg_fishtyp_id" valueNumeric="P" />
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="NK" />
+			<column name="description" value="Unknown"/>
+			<column name="fishg_fishgtyp_id" valueNumeric="Unknown" />
+			<column name="fishg_fishgm_id" valueNumeric="U"/>
+			<column name="fishg_fishtyp_id" valueNumeric="U"/>
+		</insert>
+		<insert tableName="fishinggear">
+			<column name="code" value="NO" />
+			<column name="description" value="No gear"/>
+			<column name="fishg_fishgtyp_id" valueNumeric="None" />
+			<column name="fishg_fishgm_id" valueNumeric="U"/>
+			<column name="fishg_fishtyp_id" valueNumeric="U"/>
+		</insert>
+	</changeSet>
+</databaseChangeLog>

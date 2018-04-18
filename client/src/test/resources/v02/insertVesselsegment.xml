@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog>
+	<changeSet author="davijo" id="seg-03">
+		<insert tableName="vesselsegment">
+			<column name="code" value="MLF" />
+			<column name="description" value="Shorefleet." />
+		</insert>
+		<insert tableName="vesselsegment">
+			<column name="code" value="FPU IV FRA" />
+			<column name="description" value="Outer rimarea France." />
+		</insert>
+		<insert tableName="vesselsegment">
+			<column name="code" value="FPU IV POR" />
+			<column name="description" value="Outer rimarea Portugal." />
+		</insert>
+		<insert tableName="vesselsegment">
+			<column name="code" value="CAN1-CANn" />
+			<column name="description" value="Outer rimarea Spain." />
+		</insert>
+		<insert tableName="vesselsegment">
+			<column name="code" value="AQU" />
+			<column name="description" value="Wateruse." />
+		</insert>
+	</changeSet>
+</databaseChangeLog>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog>
+	<changeSet author="johlyn" id="LICENSE user data">
+		<insert tableName="licensetype">
+			<column name="code" value="MOCK-license-DB" />
+			<column name="description" value="Mocked value for license" />
+		</insert>
+	</changeSet>
+</databaseChangeLog>

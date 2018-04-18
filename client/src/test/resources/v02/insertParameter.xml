@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog>
+    <changeSet author="davijo" id="Insert static parameter values">
+        <insert tableName="parameter">
+            <column name="code" value="vessel.national.use" />
+            <column name="description" value="Use national register of vessels." />
+        </insert>        
+        <insert tableName="parameter">
+            <column name="code" value="vessel.eu.use" />
+            <column name="description" value="Use EU register of vessels." />
+        </insert>
+    </changeSet>
+</databaseChangeLog>

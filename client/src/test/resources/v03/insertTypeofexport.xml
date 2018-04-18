@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog>
+	<changeSet author="davijo" id="typexp-03">
+		<insert tableName="typeofexport">
+			<column name="code" value="1" />
+			<column name="description" value="Export, transfer between member stages." />
+		</insert>
+		<insert tableName="typeofexport">
+			<column name="code" value="SM" />
+			<column name="description" value="Export, transfer within company." />
+		</insert>
+	</changeSet>
+</databaseChangeLog>

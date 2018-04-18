@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog>
+	<changeSet author="davijo" id="fishgtyp-03">
+		<insert tableName="fishinggeartype">
+			<column name="code" value="Trawl" />
+			<column name="description" value="Trawl." />
+		</insert>
+		<insert tableName="fishinggeartype">
+			<column name="code" value="Scrapingtool" />
+			<column name="description" value="Scrapingtool." />
+		</insert>
+		<insert tableName="fishinggeartype">
+			<column name="code" value="Lift nets" />
+			<column name="description" value="Lift nets." />
+		</insert>
+		<insert tableName="fishinggeartype">
+			<column name="code" value="Gillnets and similar nets" />
+			<column name="description" value="Gillnets and similar nets." />
+		</insert>
+		<insert tableName="fishinggeartype">
+			<column name="code" value="Trap" />
+			<column name="description" value="Fishing trap." />
+		</insert>
+		<insert tableName="fishinggeartype">
+			<column name="code" value="Hooks and lines" />
+			<column name="description" value="Hooks and Lines." />
+		</insert>
+		<insert tableName="fishinggeartype">
+			<column name="code" value="Unknown" />
+			<column name="description" value="Unknown fishing tool." />
+		</insert>
+		<insert tableName="fishinggeartype">
+			<column name="code" value="None" />
+			<column name="description" value="No fishing tool." />
+		</insert>
+		<insert tableName="fishinggeartype">
+			<column name="code" value="Surrounding nets" />
+			<column name="description" value="Surrounding nets." />
+		</insert>
+		<insert tableName="fishinggeartype">
+			<column name="code" value="Seines" />
+			<column name="description" value="Seines." />
+		</insert>
+	</changeSet>
+</databaseChangeLog>

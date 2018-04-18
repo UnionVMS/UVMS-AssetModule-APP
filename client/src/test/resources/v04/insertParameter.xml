@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog>
+    <changeSet author="jojoha" id="Insert static parameter values_v_04">        
+        <insert tableName="parameter">
+            <column name="code" value="asset.eu.service.endpoint" />
+            <column name="description" value="http://livm58t:8080/BridgeWebApp/connector" />
+            <column name="text" value="The endpoint where the vesselquery is sent" />
+        </insert>        
+        <insert tableName="parameter">
+            <column name="code" value="asset.eu.service.client.cert.header" />
+            <column name="description" value="Client-Cert" />
+            <column name="text" value="The certification header key to use when querying the vessel" />
+        </insert>        
+        <insert tableName="parameter">
+            <column name="code" value="asset.eu.service.client.cert.value" />
+            <column name="description" value="jojoha" />
+            <column name="text" value="The certification header value to use when querying the vessel" />
+        </insert>        
+        <insert tableName="parameter">
+            <column name="code" value="asset.eu.service.dataflow" />
+            <column name="description" value="urn:xeu:ec:fisheries:flux-bl:fr-vesseldeclaration:1" />
+            <column name="text" value="The flux dataflow to use when querying for a vessel" />
+        </insert>        
+        <insert tableName="parameter">
+            <column name="code" value="asset.eu.service.flux.ad" />
+            <column name="description" value="XEU" />
+            <column name="text" value="The AD value" />
+        </insert>               
+        <insert tableName="parameter">
+            <column name="code" value="NATIONAL_EQUIPMENT_SERVICE_ENDPOINT"/>
+            <column name="text" value="Webservice for equipment/gear type information"/>
+            <column name="description" value="http://livm60t.havochvatten.se:8080/EquipmentService/EquipmentPortTypeImpl"/>
+        </insert>
+        <insert tableName="parameter">
+            <column name="code" value="NATIONAL_GENERAL_NOTIFICATION_SERVICE_ENDPOINT"/>
+            <column name="text" value="Webservice for getting what equipment is installed in a vessel"/>
+            <column name="description" value="http://livmipl02p:8001/esb/GeneralNotification/v1"/>
+        </insert>
+        <insert tableName="parameter">
+            <column name="code" value="NATIONAL_VESSEL_COMP_SERVICE_ENDPOINT"/>
+            <column name="text" value="Webservice for getting vessel and owner information"/>
+            <column name="description" value="http://livmipl02p:8001/esb/VesselComp/v2"/>
+        </insert>
+        <insert tableName="parameter">
+            <column name="code" value="NATIONAL_VESSEL_NATIONS"/>
+            <column name="text" value="Nations of vessles you want to fetch from Fartyg2 e.g. SWE, DNK"/>
+            <column name="description" value="SWE,DNK"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

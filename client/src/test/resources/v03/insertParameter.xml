@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog>
+    <changeSet author="davijo" id="Insert static parameter values">       
+        <insert tableName="parameter">
+            <column name="code" value="asset.national.use" />
+            <column name="description" value="Use national register of assets." />
+        </insert>       
+        <insert tableName="parameter">
+            <column name="code" value="asset.eu.use" />
+            <column name="description" value="Use EU register of assets." />
+        </insert>        
+        <insert tableName="parameter">
+            <column name="code" value="NATIONAL_SERVICE_ENDPOINT"/>
+            <column name="description" value="http://livmipl02t:8011/esb/Vessel/v2"/>
+            <column name="text" value="Endpoint for National proxy service"/>
+        </insert>        
+        <insert tableName="parameter">
+            <column name="code" value="asset.default.flagstate"/>
+            <column name="description" value="SWE"/>
+            <column name="text" value="Default flagstate for assets"/>
+        </insert>               
+    </changeSet>
+</databaseChangeLog>

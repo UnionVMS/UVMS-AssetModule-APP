@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<databaseChangeLog> 
+	<changeSet author="davijo" id="carract-03">
+		<insert tableName="carrieractive">
+			<column name="code" value="0" />
+			<column name="description" value="Inactive" />
+		</insert>
+		<insert tableName="carrieractive">
+			<column name="code" value="1" />
+			<column name="description" value="Active" />
+		</insert>
+	</changeSet>	
+</databaseChangeLog>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog>
+	<changeSet author="davijo" id="pubaid-03">
+		<insert tableName="publicaid">
+			<column name="code" value="AE" />
+			<column name="description" value="Aid not defined by the union." />
+		</insert>
+		<insert tableName="publicaid">
+			<column name="code" value="AC" />
+			<column name="description" value="Aid defined by the union." />
+		</insert>
+		<insert tableName="publicaid">
+			<column name="code" value="PA" />
+			<column name="description" value="No aid." />
+		</insert>
+		<insert tableName="publicaid">
+			<column name="code" value="EI" />
+			<column name="description" value="Aid under the conditions that the engine power are reduced (individual)." />
+		</insert>
+		<insert tableName="publicaid">
+			<column name="code" value="EG" />
+			<column name="description" value="Aid under the conditions that the engine power are reduced (group)." />
+		</insert>
+	</changeSet>
+</databaseChangeLog>

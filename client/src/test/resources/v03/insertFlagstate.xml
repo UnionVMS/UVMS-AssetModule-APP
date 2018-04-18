@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog>
+	<changeSet author="johlyn" id="FLAGSTATE user data">
+		<insert tableName="flagstate">
+            <column name="code" value="SWE" />
+			<column name="description" value="Sweden" />
+		</insert>
+        <insert tableName="flagstate">
+            <column name="code" value="DNK" />
+			<column name="description" value="Denmark" />
+		</insert>
+        <insert tableName="flagstate">
+            <column name="code" value="NOR" />
+			<column name="description" value="Norway" />
+		</insert>
+	</changeSet>
+</databaseChangeLog>

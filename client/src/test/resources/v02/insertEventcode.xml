@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog>
+	<changeSet author="davijo" id="ecode-03">
+		<insert tableName="eventcode">
+			<column name="code" value="CEN" />
+			<column name="description" value="Inträde i flottan. Bedömning av omfattning." />
+		</insert>
+		<insert tableName="eventcode">
+			<column name="code" value="CST" />
+			<column name="description" value="Inträde i flottan. Nybygge." />
+		</insert>
+		<insert tableName="eventcode">
+			<column name="code" value="CHA" />
+			<column name="description" value="I flottan. Inträde i flottan. Ändrad verksamhet." />
+		</insert>
+		<insert tableName="eventcode">
+			<column name="code" value="IMP" />
+			<column name="description" value="I flottan. Inträde i flottan. Ändrad verksamhet." />
+		</insert>
+		<insert tableName="eventcode">
+			<column name="code" value="MOD" />
+			<column name="description" value="I flottan. Ändring." />
+		</insert>
+		<insert tableName="eventcode">
+			<column name="code" value="DES" />
+			<column name="description" value="Utträde ur flottan. Skrotning, skeppsbrott." />
+		</insert>
+		<insert tableName="eventcode">
+			<column name="code" value="RET" />
+			<column name="description" value="Utträe ur flottan. Ändrad verksamhet." />
+		</insert>
+		<insert tableName="eventcode">
+			<column name="code" value="EXP" />
+			<column name="description" value="Utträde ur flottan. Export, Överföring mellan medlemsstater." />
+		</insert>
+		<insert tableName="eventcode">
+			<column name="code" value="UNK" />
+			<column name="description" value="Okänd, nationellt register." />
+		</insert>
+	</changeSet>
+</databaseChangeLog>

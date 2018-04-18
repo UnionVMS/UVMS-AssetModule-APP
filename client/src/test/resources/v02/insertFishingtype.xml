@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog>
+	<changeSet author="davijo" id="fishtyp-03">
+		<insert tableName="fishingtype">
+			<column name="code" value="P" />
+			<column name="description" value="Pelagic." />
+		</insert>
+		<insert tableName="fishingtype">
+			<column name="code" value="D" />
+			<column name="description" value="Dermersal." />
+		</insert>
+		<insert tableName="fishingtype">
+			<column name="code" value="DP" />
+			<column name="description" value="Demersal and Pelagic." />
+		</insert>
+	</changeSet>
+</databaseChangeLog>

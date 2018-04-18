@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog>
+	<changeSet author="johlyn" id="SETTINGS user data">
+		<insert tableName="settings">
+			<column name="field" value="ASSET_TYPE" />
+            <column name="code" value="VESSEL"/>
+			<column name="description" value="Vessel type of asset" />
+		</insert>
+        <insert tableName="settings">
+			<column name="field" value="SPAN_POWER_MAIN" />
+            <column name="code" value="0-99"/>
+			<column name="description" value="0-99 kW of main engine" />
+		</insert>
+        <insert tableName="settings">
+			<column name="field" value="SPAN_POWER_MAIN" />
+            <column name="code" value="100-199"/>
+			<column name="description" value="100-199 kW of main engine" />
+		</insert>
+        <insert tableName="settings">
+			<column name="field" value="SPAN_POWER_MAIN" />
+            <column name="code" value="200-299"/>
+			<column name="description" value="200-299 kW of main engine" />
+		</insert>
+        <insert tableName="settings">
+			<column name="field" value="SPAN_POWER_MAIN" />
+            <column name="code" value="300+"/>
+			<column name="description" value="> 300 kW of main engine" />
+		</insert>
+        <insert tableName="settings">
+			<column name="field" value="SPAN_LENGTH_LOA" />
+            <column name="code" value="0-11,99"/>
+			<column name="description" value="0-11,99 m of LengthOverAll" />
+		</insert>
+        <insert tableName="settings">
+			<column name="field" value="SPAN_LENGTH_LOA" />
+            <column name="code" value="12-14,99"/>
+			<column name="description" value="12-14,99 m of LengthOverAll" />
+		</insert>
+        <insert tableName="settings">
+			<column name="field" value="SPAN_LENGTH_LOA" />
+            <column name="code" value="15-17,99"/>
+			<column name="description" value="15-17,99 m of LengthOverAll" />
+		</insert>
+        <insert tableName="settings">
+			<column name="field" value="SPAN_LENGTH_LOA" />
+            <column name="code" value="18-23,99"/>
+			<column name="description" value="18-23,99 m of LengthOverAll" />
+		</insert>
+        <insert tableName="settings">
+			<column name="field" value="SPAN_LENGTH_LOA" />
+            <column name="code" value="24+"/>
+			<column name="description" value="> 24 m of LengthOverAll" />
+		</insert>        
+	</changeSet>
+</databaseChangeLog>

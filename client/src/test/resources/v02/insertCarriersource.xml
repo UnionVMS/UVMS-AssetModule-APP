@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog>
+	<changeSet id="carrsource-03" author="davijo">
+			<insert tableName="carriersource">
+				<column name="code" value="Localdatasource" />
+				<column name="description" value="Localdatabesource." />
+			</insert>
+			<insert tableName="carriersource">
+				<column name="code" value="National" />
+				<column name="description" value="NationalDatabesource." />
+			</insert>
+			<insert tableName="carriersource">
+				<column name="code" value="EU" />
+				<column name="description" value="EUDatabesource." />
+			</insert>
+			<insert tableName="carriersource">
+				<column name="code" value="Third_country" />
+				<column name="description" value="ThirdCountryDatabesource." />
+			</insert>			
+	</changeSet>
+</databaseChangeLog>

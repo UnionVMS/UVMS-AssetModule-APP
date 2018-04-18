@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog>
+	<changeSet author="davijo" id="seg-03">
+		<insert tableName="assetsegment">
+			<column name="code" value="MLF" />
+			<column name="description" value="Shorefleet." />
+		</insert>
+		<insert tableName="assetsegment">
+			<column name="code" value="KOM_FUP_IV_FRA" />
+			<column name="description" value="Outer rimarea France." />
+		</insert>
+		<insert tableName="assetsegment">
+			<column name="code" value="KOM_FPU_IV_POR" />
+			<column name="description" value="Outer rimarea Portugal." />
+		</insert>
+		<insert tableName="assetsegment">
+			<column name="code" value="KOM_CAN1_CANN_ESP" />
+			<column name="description" value="Outer rimarea Spain." />
+		</insert>
+		<insert tableName="assetsegment">
+			<column name="code" value="AQU" />
+			<column name="description" value="Wateruse." />
+		</insert>
+	</changeSet>
+</databaseChangeLog>

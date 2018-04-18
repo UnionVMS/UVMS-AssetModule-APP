@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog>
+	<changeSet author="davijo" id="fishgm-03">
+		<insert tableName="fishinggearmobility">
+			<column name="code" value="S" />
+			<column name="description" value="Stationary." />
+		</insert>
+		<insert tableName="fishinggearmobility">
+			<column name="code" value="T" />
+			<column name="description" value="Towed." />
+		</insert>
+		<insert tableName="fishinggearmobility">
+			<column name="code" value="M" />
+			<column name="description" value="Mobil." />
+		</insert>
+		<insert tableName="fishinggearmobility">
+			<column name="code" value="U" />
+			<column name="description" value="Unknown." />
+		</insert>
+	</changeSet>	
+</databaseChangeLog>

@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<databaseChangeLog>
+    <changeSet author="osdjup" id="Insert static note activity codes">
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="0"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="1"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="10"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="12"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="14"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="2"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="3"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="39"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="4"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="5"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="6"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="7"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="71"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="8"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="80"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="81"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="82"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="9"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="90"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="98"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="99"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="999"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="EL1"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="EL2"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="EL3"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="EL4"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="K01"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="K02"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="K03"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="K04"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="K06"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="K07"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="K08"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="K09"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="SAN"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="SAT"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="T1"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="T2"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="U1"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="U2"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="U3"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V00"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V01"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V02"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V03"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V04"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V05"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V06"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V07"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V08"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V09"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V10"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V11"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V12"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V13"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V14"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V15"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V16"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V17"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V18"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V19"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V20"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V21"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V22"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V23"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V24"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V25"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V26"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V28"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V29"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V30"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V31"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V32"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V33"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V35"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V40"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V41"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V42"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V43"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V45"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V49"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V50"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V51"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V52"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V53"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V54"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V60"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V61"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V62"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V63"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V65"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V75"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V80"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V85"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V86"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V90"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V92"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V93"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V95"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V96"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V98"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="V99"/>
+        </insert>
+        <insert tableName="notesactcode">
+            <column name="notesactcode_id" value="X1"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
