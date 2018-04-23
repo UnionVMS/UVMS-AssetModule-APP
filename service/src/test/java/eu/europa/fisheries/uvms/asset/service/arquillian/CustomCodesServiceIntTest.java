@@ -20,22 +20,18 @@ import java.util.*;
 public class CustomCodesServiceIntTest extends TransactionalTests {
 
 
+    private static final String CONSTANT = "testconstant";
+    private static final String CODE = "testcode";
+    Random rnd = new Random();
+    @EJB
+    CustomCodesService service;
+
     private Map<String, String> map() {
 
         Map<String, String> map = new HashMap<>();
         map.put("KEY" + UUID.randomUUID().toString(), "VALUE" + UUID.randomUUID().toString());
         return map;
     }
-
-
-    Random rnd = new Random();
-
-
-    @EJB
-    CustomCodesService service;
-
-    private static final String CONSTANT = "testconstant";
-    private static final String CODE = "testcode";
 
     @Test
     @OperateOnDeployment("normal")
@@ -48,10 +44,10 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
         LocalDateTime toDate = LocalDateTime.now(Clock.systemUTC());
         toDate = toDate.plusDays(duration);
 
-        CustomCode createdMDR_lite = service.create(CONSTANT, CODE, fromDate,toDate, CODE + "Description", map());
-        CustomCode fetchedMDR_lite = service.get(CONSTANT, CODE,fromDate,toDate);
+        CustomCode createdMDR_lite = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description", map());
+        CustomCode fetchedMDR_lite = service.get(CONSTANT, CODE, fromDate, toDate);
         Assert.assertNotNull(fetchedMDR_lite);
-        service.delete(CONSTANT, CODE,fromDate,toDate);
+        service.delete(CONSTANT, CODE, fromDate, toDate);
     }
 
     @Test
@@ -65,11 +61,11 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
         LocalDateTime toDate = LocalDateTime.now(Clock.systemUTC());
         toDate = toDate.plusDays(duration);
 
-        CustomCode createdMDR_lite1 = service.create(CONSTANT, CODE, fromDate,toDate, CODE + "Description", map());
-        CustomCode createdMDR_lite2 = service.create(CONSTANT, CODE, fromDate,toDate,CODE + "Description", map());
+        CustomCode createdMDR_lite1 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description", map());
+        CustomCode createdMDR_lite2 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description", map());
         List<CustomCode> rs = service.getAllFor(CONSTANT);
         Assert.assertEquals(1, rs.size());
-        service.delete(CONSTANT, CODE,fromDate,toDate);
+        service.delete(CONSTANT, CODE, fromDate, toDate);
     }
 
     @Test
@@ -84,10 +80,10 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
         toDate = toDate.plusDays(duration);
 
 
-        CustomCode createdMDR_lite1 = service.create(CONSTANT, CODE, fromDate,toDate,CODE + "Description", map());
-        CustomCode fetchedMDR_lite = service.get(CONSTANT, CODE,fromDate,toDate);
+        CustomCode createdMDR_lite1 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description", map());
+        CustomCode fetchedMDR_lite = service.get(CONSTANT, CODE, fromDate, toDate);
         Assert.assertNotNull(fetchedMDR_lite);
-        service.delete(CONSTANT, CODE,fromDate,toDate);
+        service.delete(CONSTANT, CODE, fromDate, toDate);
     }
 
 
@@ -102,10 +98,10 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
         LocalDateTime toDate = LocalDateTime.now(Clock.systemUTC());
         toDate = toDate.plusDays(duration);
 
-        CustomCode createdMDR_lite1 = service.create(CONSTANT, CODE, fromDate,toDate,CODE + "Description", map());
-        Boolean exist = service.exists(CONSTANT, CODE,fromDate,toDate);
+        CustomCode createdMDR_lite1 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description", map());
+        Boolean exist = service.exists(CONSTANT, CODE, fromDate, toDate);
         Assert.assertNotNull(exist);
-        service.delete(CONSTANT, CODE,fromDate,toDate);
+        service.delete(CONSTANT, CODE, fromDate, toDate);
     }
 
     @Test
@@ -122,12 +118,12 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
 
         for (int i = 0; i < 10; i++) {
             String iStr = String.valueOf(i);
-            service.create(CONSTANT, CODE + iStr, fromDate,toDate,CODE + "Description", map());
+            service.create(CONSTANT, CODE + iStr, fromDate, toDate, CODE + "Description", map());
         }
 
         for (int i = 0; i < 10; i++) {
             String iStr = String.valueOf(i);
-            service.create(CONSTANT + "2", CODE + iStr,fromDate,toDate, CODE + "Description", map());
+            service.create(CONSTANT + "2", CODE + iStr, fromDate, toDate, CODE + "Description", map());
         }
 
         List<CustomCode> rs1 = service.getAllFor(CONSTANT);
@@ -166,21 +162,69 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
         toDate = toDate.plusDays(duration);
 
 
-
-        CustomCode created_record = service.create(CONSTANT, CODE, fromDate,toDate,CODE + "Description", map());
+        CustomCode created_record = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description", map());
         String createdDescription = created_record.getDescription();
 
         created_record.setDescription("CHANGED");
-        service.update(created_record.getPrimaryKey().getConstant(), created_record.getPrimaryKey().getCode(),fromDate,toDate, "CHANGED", null);
+        service.update(created_record.getPrimaryKey().getConstant(), created_record.getPrimaryKey().getCode(), fromDate, toDate, "CHANGED", null);
         userTransaction.commit();
         userTransaction.begin();
 
-        CustomCode fetched_record = service.get(created_record.getPrimaryKey().getConstant(), created_record.getPrimaryKey().getCode(),fromDate,toDate);
+        CustomCode fetched_record = service.get(created_record.getPrimaryKey().getConstant(), created_record.getPrimaryKey().getCode(), fromDate, toDate);
 
         Assert.assertNotEquals(createdDescription, fetched_record.getDescription());
         Assert.assertEquals("CHANGED", fetched_record.getDescription());
 
         service.deleteAllFor(CONSTANT);
+    }
+
+
+    private CustomCodesPK createPrimaryKey() {
+
+        Integer n = rnd.nextInt(10);
+        Integer duration = rnd.nextInt(90);
+        LocalDateTime fromDate = LocalDateTime.now(Clock.systemUTC());
+        fromDate = fromDate.minusDays(n);
+        LocalDateTime toDate = LocalDateTime.now(Clock.systemUTC());
+        toDate = toDate.plusDays(duration);
+        CustomCodesPK primaryKey = new CustomCodesPK();
+        primaryKey.setConstant("TEST_constant_TEST");
+        primaryKey.setCode("TEST_code_TEST");
+        primaryKey.setValidFromDate(fromDate);
+        primaryKey.setValidToDate(toDate);
+        return primaryKey;
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void storeLatest() throws HeuristicRollbackException, HeuristicMixedException, RollbackException, SystemException, NotSupportedException {
+        CustomCode customCode = new CustomCode();
+        CustomCodesPK primaryKey = createPrimaryKey();
+
+        customCode.setPrimaryKey(primaryKey);
+        customCode.setDescription("TEST_DESCRIPTION_TEST");
+        Map<String,String> nvp = new HashMap<>();
+        nvp.put("FIRST","DATA1");
+        nvp.put("SECOND","DATA2");
+        customCode.setNameValue(nvp);
+        CustomCode created_record = service.storeLatest(customCode);
+
+
+        CustomCode aSecondCustomCode = new CustomCode();
+        aSecondCustomCode.setPrimaryKey(primaryKey);
+        aSecondCustomCode.setDescription("TEST_DESCRIPTION_TEST_SECONF");
+        Map<String,String> nvp2 = new HashMap<>();
+        nvp2.put("THIRD","DATA3");
+        aSecondCustomCode.setNameValue(nvp2);
+        CustomCode creasted_ASecond = service.storeLatest(aSecondCustomCode);
+
+
+        CustomCode fetched_record = service.get(primaryKey);
+        Map<String, String> fetchedProps = fetched_record.getNameValue();
+        Assert.assertNotNull(fetchedProps);
+        Assert.assertTrue(fetchedProps.containsKey("THIRD"));
+
+        service.deleteAllFor("TEST_constant_TEST");
     }
 
 

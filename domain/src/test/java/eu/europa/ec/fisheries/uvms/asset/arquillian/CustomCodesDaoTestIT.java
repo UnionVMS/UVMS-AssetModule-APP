@@ -161,8 +161,6 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
 
         CustomCode record = createHelper(CONSTANT, "kod", "description");
         CustomCode created_record = mdrlitedao.storeLatest(record);
-        String createdDescription = created_record.getDescription();
-
 
         CustomCode aNewCustomCode = new CustomCode();
 
@@ -170,7 +168,6 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
         aNewCustomCode.setDescription("STORE_LATEST");
 
         Map<String,String> props = new HashMap<>();
-
 
         props.put("A_STORED_ONE", "DATA_DATA_DATA");
 
@@ -180,11 +177,12 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
         userTransaction.begin();
 
         CustomCode fetched_record = mdrlitedao.get(created_record.getPrimaryKey());
+        Map<String,String> fetchedProps = fetched_record.getNameValue();
+        Assert.assertNotNull(fetchedProps);
+        Assert.assertTrue(fetchedProps.containsKey("A_STORED_ONE"));
+        Assert.assertTrue(!fetchedProps.containsKey("status"));
 
-        //Assert.assertNotEquals(createdDescription, fetched_record.getDescription());
-        //Assert.assertEquals("CHANGED", fetched_record.getDescription());
-
-        //mdrlitedao.deleteAllFor(CONSTANT);
+        mdrlitedao.deleteAllFor(CONSTANT);
     }
 
 

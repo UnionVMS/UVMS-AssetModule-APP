@@ -110,15 +110,12 @@ public class CustomCodesServiceBean implements CustomCodesService {
 	}
 
 	@Override
-	public CustomCode get(CustomCodesPK customCodesPrimaryKey){
+	public CustomCode get(CustomCodesPK primaryKey){
 
-		if(customCodesPrimaryKey == null){
+		if(primaryKey == null){
 			throw new IllegalArgumentException("CustomCodesPk cannot be null");
 		}
-		return get(customCodesPrimaryKey.getConstant(),
-				customCodesPrimaryKey.getCode(),
-				customCodesPrimaryKey.getValidFromDate(),
-				customCodesPrimaryKey.getValidToDate());
+		return dao.get(primaryKey);
 	}
 
 
@@ -278,6 +275,46 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		return dao.verify(constant,code,aDate);
 
 	}
+
+	@Override
+	public CustomCode storeLatest(CustomCode customCode){
+
+		if(customCode == null){
+			throw new IllegalArgumentException("No CustomCode is null");
+		}
+		if(customCode.getPrimaryKey() == null){
+			throw new IllegalArgumentException("CustomCode primaryKey is null");
+		}
+		CustomCodesPK pk = customCode.getPrimaryKey();
+		String constant = pk.getConstant();
+		String code = pk.getCode();
+		LocalDateTime validFromDate = pk.getValidFromDate();
+		LocalDateTime validToDate = pk.getValidToDate();
+		if(constant == null){
+			throw new IllegalArgumentException("Constant cannot be null");
+		}
+		if(constant.trim().length() < 1){
+			throw new IllegalArgumentException("Constant cannot be empty");
+		}
+		if(code == null){
+			throw new IllegalArgumentException("Code cannot be null");
+		}
+		if(code.trim().length() < 1){
+			throw new IllegalArgumentException("Code cannot be empty");
+		}
+		if(validFromDate == null){
+			throw new IllegalArgumentException("ValifFromDate cannot be null");
+		}
+		if(validToDate == null){
+			throw new IllegalArgumentException("ValifToDate cannot be null");
+		}
+
+		CustomCode storedCustomCode = dao.storeLatest(customCode);
+		return storedCustomCode;
+
+
+	}
+
 
 
 }
