@@ -122,4 +122,17 @@ public class CustomCodeDao {
             List<CustomCode>  customCodes = query.getResultList();
             return customCodes.size() > 0;
     }
+
+    // delets old and adds new
+    public CustomCode storeLatest(CustomCode customCode) {
+        CustomCodesPK primaryKey = customCode.getPrimaryKey();
+        if(exists(primaryKey)){
+            delete(primaryKey);
+        }
+        CustomCode createdCustomCode = create(customCode);
+        return createdCustomCode;
+    }
+
+
+
 }
