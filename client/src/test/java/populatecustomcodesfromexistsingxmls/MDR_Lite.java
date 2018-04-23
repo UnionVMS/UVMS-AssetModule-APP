@@ -35,11 +35,6 @@ ALTER TABLE asset.customcodes
  */
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -47,149 +42,54 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.TreeMap;
-import java.util.UUID;
 
+import javax.inject.Inject;
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
+import eu.europa.ec.fisheries.uvms.asset.client.AbstractClientTest;
+import eu.europa.ec.fisheries.uvms.asset.client.AssetClient;
+import eu.europa.ec.fisheries.uvms.asset.client.model.CustomCode;
+import eu.europa.ec.fisheries.uvms.asset.client.model.CustomCodesPK;
+import org.jboss.arquillian.junit.Arquillian;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.xml.sax.SAXException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class MDR_Lite {
 
+@RunWith(Arquillian.class)
+public class MDR_Lite extends AbstractClientTest {
+
+
+	@Inject
+	AssetClient assetClient;
 
 	static int counter = 0;
 
 	private Map<String, Map<String, String>> MDR = new TreeMap<>();
 
 	private String url = "jdbc:postgresql://localhost:25432/db71u";
-	private Properties props = new Properties();
-	private Connection conn = null;
-	private PreparedStatement stmt_exists = null;
-	private PreparedStatement stmt_insert = null;
-	private PreparedStatement stmt_delete = null;
-	private PreparedStatement stmt_select = null;
-	private String sql_exists = "select count(*) from customcodes where constant=? and code=?";
-	private String sql_insert = "insert into customcodes (constant,code,description,extradata) values(?,?,?,?)";
-	private String sql_delete = "delete from customcodes where constant=? and code=?";
-	private String sql_select = "select constant,code,description,extradata from asset.customcodes order by constant,code";
 
 	private ObjectMapper MAPPER = new ObjectMapper();
 
 	private static int lines = 0;
 
-	public void exec() {
-		try {
-
-			props.setProperty("user", "asset");
-			props.setProperty("password", "asset");
-			// props.setProperty("ssl", "true");
-			conn = DriverManager.getConnection(url, props);
-			stmt_exists = conn.prepareStatement(sql_exists);
-			stmt_insert = conn.prepareStatement(sql_insert);
-			stmt_delete = conn.prepareStatement(sql_delete);
-			stmt_select = conn.prepareStatement(sql_select);
-
-			load();
-			
-
-
-			try {
-				stmt_select = conn.prepareStatement(sql_select);
-				ResultSet rs = stmt_select.executeQuery();
-				StringBuilder  xml = new StringBuilder();
-				xml.append("<root>");
-				while (rs.next()) {
-					lines++;
-					xml.append("<insert tableName=\'customcodes\'>");
-					xml.append("<column name=\'constant\' value=\'" + rs.getString(1) + "\'/>");
-					
-					String code = rs.getString(2);
-					code = code.replace(">", "");
-					xml.append("<column name=\'code\' value=\'" + code + "\'/>");
-					String descr = rs.getString(3);
-					descr = descr.replaceAll(">", "");
-					xml.append("<column name=\'description\' value=\'" + descr + "\'/>");
-					xml.append("<column name=\'extradata\' value=\'" + rs.getString(4) + "\'/>");
-					xml.append("</insert>");
-					xml.append("\n");
-				}
-				xml.append("</root>");
-
-				System.out.println(xml.toString());
-				rs.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		} catch (JDOMException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		finally {
-			if (stmt_exists != null) {
-				try {
-					stmt_exists.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			if (stmt_insert != null) {
-				try {
-					stmt_insert.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			if (stmt_delete != null) {
-				try {
-					stmt_delete.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			if (stmt_select != null) {
-				try {
-					stmt_select.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-
-	}
 
 	private Collection<String> getResources() {
 
 		final ArrayList<String> retval = new ArrayList<String>();
-		final String classPath = System.getProperty("java.class.path", ".");
+		final String userDir = System.getProperty("user.dir" );
+
+		final String classPath = "/opt/jboss/wildfly/standalone/tmp/asset.war";
 		final String[] classPathElements = classPath.split(System.getProperty("path.separator"));
 		for (final String element : classPathElements) {
 			final File file = new File(element);
@@ -225,11 +125,9 @@ public class MDR_Lite {
 	/**
 	 * list the resources that match args[0]
 	 * 
-	 * @param args
 	 *            args[0] is the pattern to match, or list all resources if there
 	 *            are no args
 	 * @throws JDOMException
-	 * @throws DocumentException
 	 * @throws ParserConfigurationException
 	 * @throws IOException
 	 * @throws SAXException
@@ -237,7 +135,8 @@ public class MDR_Lite {
 	 * @throws JAXBException
 	 */
 
-	public void load() throws JDOMException, IOException {
+	@Test
+	public void exec() throws JDOMException, IOException {
 
 		SAXBuilder reader = new SAXBuilder();
 		String now = LocalDateTime.now(Clock.systemUTC()).toString();
@@ -302,7 +201,7 @@ public class MDR_Lite {
 		}
 	}
 
-	private void interpret(Document document, String now) throws JsonProcessingException {
+	private void interpret(Document document, String now) throws IOException {
 
 		Element classElement = document.getRootElement();
 
@@ -401,64 +300,16 @@ public class MDR_Lite {
 									
 									String json = MAPPER.writeValueAsString(internalreferencesList);
 									internalreferencesList.clear();
-									
+									// OBS här kan även props stoppas i med lite fiffel
+									insert(tableName.toUpperCase(), codeStr.toUpperCase(), descrStr);
 
-									try {
-										stmt_exists.setString(1, tableName.toUpperCase());
-										stmt_exists.setString(2, codeStr.toUpperCase());
-										ResultSet rs = stmt_exists.executeQuery();
-										rs.next();
-										int n = rs.getInt(1);
-										if (n > 0) {
-
-											stmt_delete.setString(1, tableName.toUpperCase());
-											stmt_delete.setString(2, codeStr.toUpperCase());
-											stmt_delete.executeUpdate();
-										}
-										stmt_insert.setString(1, tableName.toUpperCase());
-										stmt_insert.setString(2, codeStr.toUpperCase());
-										stmt_insert.setString(3, descrStr);
-										stmt_insert.setString(4, json);
-										stmt_insert.executeUpdate();
-
-										rs.close();
-
-									} catch (SQLException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
 								}
 								
 							} else {
 								if (codeReceived && valueReceived) {
 									codeReceived = false;
 									valueReceived = false;
-
-									try {
-										stmt_exists.setString(1, tableName.toUpperCase());
-										stmt_exists.setString(2, codeStr.toUpperCase());
-										ResultSet rs = stmt_exists.executeQuery();
-										rs.next();
-										int n = rs.getInt(1);
-										if (n > 0) {
-
-											stmt_delete.setString(1, tableName.toUpperCase());
-											stmt_delete.setString(2, codeStr.toUpperCase());
-											stmt_delete.executeUpdate();
-										}
-										stmt_insert.setString(1, tableName.toUpperCase());
-										stmt_insert.setString(2, codeStr.toUpperCase());
-										stmt_insert.setString(3, descrStr);
-										stmt_insert.setString(4, "");
-										stmt_insert.executeUpdate();
-
-										rs.close();
-
-									} catch (SQLException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-
+									insert(tableName.toUpperCase(), codeStr.toUpperCase(), descrStr);
 								}
 							}
 						}
@@ -467,17 +318,23 @@ public class MDR_Lite {
 				}
 			}
 		}
-
 	}
 
-	public static void main(final String[] args) {
 
-		MDR_Lite app = new MDR_Lite();
-		app.exec();
 
-		//System.out.println("Number of lines          = " + lines);
-		//System.out.println("Number of xmls processed = " + counter);
+	LocalDateTime validStartDate = LocalDateTime.of(1827, 01,01,1,1);
+	LocalDateTime validEndDate = LocalDateTime.of(2999, 01,01,1,1);
 
+	private void insert(String constant, String code , String description) throws IOException {
+
+		CustomCode customCode = new CustomCode();
+		CustomCodesPK pk = new CustomCodesPK();
+		pk.setConstant(constant);
+		pk.setCode(code);
+		pk.setValidFromDate(validStartDate);
+		pk.setValidToDate(validEndDate);
+		customCode.setPrimaryKey(pk);
+		customCode.setDescription(description);
+		assetClient.createCustomCode(customCode);
 	}
-
 }
