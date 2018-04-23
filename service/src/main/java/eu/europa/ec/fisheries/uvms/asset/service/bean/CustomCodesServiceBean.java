@@ -55,6 +55,11 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		if(description == null){
 			description = "";
 		}
+
+		if(exists(constant, code,validFromDate,validToDate)){
+			throw new IllegalArgumentException("CustomCode already exists");
+		}
+
 		CustomCode mdr = new CustomCode();
 		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code, validFromDate, validToDate);
 		mdr.setPrimaryKey(primaryKey);
@@ -277,7 +282,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 	}
 
 	@Override
-	public CustomCode storeLatest(CustomCode customCode){
+	public CustomCode replace(CustomCode customCode){
 
 		if(customCode == null){
 			throw new IllegalArgumentException("No CustomCode is null");
@@ -309,7 +314,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 			throw new IllegalArgumentException("ValifToDate cannot be null");
 		}
 
-		CustomCode storedCustomCode = dao.storeLatest(customCode);
+		CustomCode storedCustomCode = dao.replace(customCode);
 		return storedCustomCode;
 
 

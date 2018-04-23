@@ -9,9 +9,7 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -162,5 +160,20 @@ public class AssetClientTest extends AbstractClientTest {
         Assert.assertTrue(retrievedCustomCode != null );
         Assert.assertTrue(retrievedCustomCode.size() == 0 );
     }
+
+    @Test
+    public void customCodesReplaceTest() throws Exception {
+
+        String constant = "Test_Constant" + UUID.randomUUID().toString();
+        CustomCode customCode = AssetHelper.createCustomCode(constant);
+         assetClient.replace(customCode);
+        customCode.setDescription("replaced");
+        Map<String,String> nvp = new HashMap<>();
+        nvp.put("replaced","replacedvalue");
+        customCode.setNameValue(nvp);
+        assetClient.replace(customCode);
+
+    }
+
 
 }

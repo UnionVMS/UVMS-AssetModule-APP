@@ -109,12 +109,12 @@ public interface CustomCodesService {
     Boolean verify(String constant, String code, LocalDateTime aDate);
 
 
-    /** Destructive  removes old one and adds the supplied
+    /**
      *
      * @param customCode
      * @return
      */
-    CustomCode storeLatest(CustomCode customCode);
+    CustomCode replace(CustomCode customCode);
 
 
 

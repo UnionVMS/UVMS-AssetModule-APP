@@ -62,21 +62,6 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void tryToCreateDups() throws JsonProcessingException {
-
-        CustomCodesPK primaryKey = createPrimaryKey(CONSTANT,"aKOD");
-        CustomCode record1 = createHelper(CONSTANT, true, primaryKey);
-        CustomCode record2 = createHelper(CONSTANT, true, primaryKey);
-        CustomCode createdrecord1 = mdrlitedao.create(record1);
-        CustomCode createdrecord2 = mdrlitedao.create(record2);
-        List<CustomCode> rs = mdrlitedao.getAllFor(record1.getPrimaryKey().getConstant());
-        Assert.assertEquals(rs.size(), 1);
-        mdrlitedao.delete(record1.getPrimaryKey());
-    }
-
-
-    @Test
-    @OperateOnDeployment("normal")
     public void get() throws JsonProcessingException {
 
         CustomCode record = createHelper(CONSTANT, true);
@@ -160,7 +145,7 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
     public void storeLatest() throws JsonProcessingException, HeuristicRollbackException, HeuristicMixedException, RollbackException, SystemException, NotSupportedException {
 
         CustomCode record = createHelper(CONSTANT, "kod", "description");
-        CustomCode created_record = mdrlitedao.storeLatest(record);
+        CustomCode created_record = mdrlitedao.replace(record);
 
         CustomCode aNewCustomCode = new CustomCode();
 
@@ -172,7 +157,7 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
         props.put("A_STORED_ONE", "DATA_DATA_DATA");
 
         aNewCustomCode.setNameValue(props);
-        mdrlitedao.storeLatest(aNewCustomCode);
+        mdrlitedao.replace(aNewCustomCode);
         userTransaction.commit();
         userTransaction.begin();
 

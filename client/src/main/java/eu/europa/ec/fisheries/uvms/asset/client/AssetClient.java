@@ -247,4 +247,19 @@ public class AssetClient {
 
     }
 
+    public CustomCode replace(CustomCode customCode) throws IOException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
+        String str = client.target(REST_END_POINT)
+                .path("replace")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(customCode), String.class);
+        CustomCode cc =  mapper.readValue(str,CustomCode.class);
+        return cc;
+    }
+
+
+
 }

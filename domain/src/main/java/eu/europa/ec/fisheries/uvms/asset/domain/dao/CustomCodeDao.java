@@ -19,11 +19,11 @@ public class CustomCodeDao {
     public CustomCode create(CustomCode record) {
 
         // NO DUPLICATES on constant AND code ALLOWED
-        CustomCode fetched = get(record.getPrimaryKey());
-        if (fetched != null) return record;
-        if(record.getDescription() == null){
-            record.setDescription("");
-        }
+        //CustomCode fetched = get(record.getPrimaryKey());
+        //if (fetched != null) return record;
+        //if(record.getDescription() == null){
+        //    record.setDescription("");
+        //}
 
         em.persist(record);
         return record;
@@ -124,12 +124,12 @@ public class CustomCodeDao {
     }
 
     // delets old and adds new
-    public CustomCode storeLatest(CustomCode customCode) {
+    public CustomCode replace(CustomCode customCode) {
         CustomCodesPK primaryKey = customCode.getPrimaryKey();
         if(exists(primaryKey)){
             delete(primaryKey);
         }
-        CustomCode createdCustomCode = create(customCode);
+        CustomCode createdCustomCode =  em.merge(customCode);
         return createdCustomCode;
     }
 

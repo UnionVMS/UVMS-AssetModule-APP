@@ -56,13 +56,36 @@ public class CustomCodesResource {
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response createCustomCode(
-             @ApiParam(value = "customCode", required = true) CustomCode customCode) {
+            @ApiParam(value = "customCode", required = true) CustomCode customCode) {
         try {
 
             CustomCode customCodes = customCodesSvc.create(customCode);
             return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+        }
+    }
+
+    @POST
+    @ApiOperation(value = "Store latest permutation of a customCode original is destroyed", notes = "replace", response = CustomCode.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Error when createing custom code"),
+            @ApiResponse(code = 200, message = "Success when createing custom code")})
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("replace")
+    public Response replace(
+            @ApiParam(value = "customCode", required = true) CustomCode customCode) {
+        try {
+            ObjectMapper MAPPER = new ObjectMapper();
+            MAPPER.registerModule(new JavaTimeModule());
+
+            CustomCode customCodes = customCodesSvc.replace(customCode);
+            String json = MAPPER.writeValueAsString(customCodes);
+            return Response.status(200).entity(json).type(MediaType.APPLICATION_JSON)
+                    .header("MDC", MDC.get("requestId")).build();
+        } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
         }
     }

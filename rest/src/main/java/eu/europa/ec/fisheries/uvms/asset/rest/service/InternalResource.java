@@ -219,6 +219,25 @@ public class InternalResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
         }
     }
+
+    @POST
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("replace")
+    public Response replace(CustomCode customCode) {
+        try {
+            ObjectMapper MAPPER = new ObjectMapper();
+            MAPPER.registerModule(new JavaTimeModule());
+
+            CustomCode customCodes = customCodesService.replace(customCode);
+            String json = MAPPER.writeValueAsString(customCodes);
+            return Response.status(200).entity(json).type(MediaType.APPLICATION_JSON)
+                    .header("MDC", MDC.get("requestId")).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+        }
+    }
+
 }
 
 
