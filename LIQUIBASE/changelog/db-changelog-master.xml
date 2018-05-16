@@ -10,7 +10,7 @@
 
     <include file="changelog\properties.xml"/>
     <include file="changelog\v1.0\db-changelog-createTables.xml" />
-	<include file="changelog\v1.0\insertCustomCodes.xml" />
+	<!--include file="changelog\v1.0\insertCustomCodes.xml" /-->
 	<include file="changelog\v1.0\insertParameter.xml" />
 
 </databaseChangeLog>
