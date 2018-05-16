@@ -31,6 +31,7 @@ public class CustomCode {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "namevalue")
     private Map<String,String> namevalue = new HashMap<>();
 
 
