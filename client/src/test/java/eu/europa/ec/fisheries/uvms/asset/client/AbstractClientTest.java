@@ -17,8 +17,6 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
-import org.jdom2.Document;
-import populatecustomcodesfromexistsingxmls.MDR_Lite;
 
 @ArquillianSuiteDeployment
 public abstract class AbstractClientTest {
@@ -41,9 +39,7 @@ public abstract class AbstractClientTest {
 
         testWar.addPackages(true, "org.jdom2");
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset.client");
-        testWar.addClass(MDR_Lite.class);
-        testWar.addPackage(Document.class.getPackage());
-        
+
         return testWar;
     }
 }
