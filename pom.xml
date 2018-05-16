@@ -103,11 +103,11 @@
         <module>domain</module>
         <module>rest</module>
         <module>service</module>
-        <module>deprecated-message</module>
-        <module>deprecated-message-impl</module>
+        <module>message</module>
+        <module>message-impl</module>
         <module>client</module>
         <module>module</module>
-        <module>deprecated-message-mock</module>
+        <module>message-mock</module>
     </modules>
 
 </project>
