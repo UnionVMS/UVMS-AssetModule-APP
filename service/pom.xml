@@ -56,7 +56,7 @@
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-            <artifactId>asset-message</artifactId>
+            <artifactId>deprecated-asset-message</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
@@ -82,12 +82,12 @@
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-            <artifactId>asset-message-mock</artifactId>
+            <artifactId>deprecated-asset-message-mock</artifactId>
             <version>${project.parent.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>${project.groupId}</groupId>
-                    <artifactId>asset-message-impl</artifactId>
+                    <artifactId>deprecated-asset-message-impl</artifactId>
                 </exclusion>
             </exclusions>
             <scope>test</scope>
