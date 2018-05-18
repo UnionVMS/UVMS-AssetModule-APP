@@ -30,7 +30,7 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
 
 
     @Inject
-    CustomCodeDao mdrlitedao;
+    CustomCodeDao customCodesDao;
 
 
     @Test
@@ -40,22 +40,22 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
 
         CustomCode record_active = createHelper(CONSTANT, true);
         CustomCode record_inactive = createHelper(CONSTANT, false);
-        CustomCode createdrecord_active = mdrlitedao.create(record_active);
+        CustomCode createdrecord_active = customCodesDao.create(record_active);
         String constant_active = createdrecord_active.getPrimaryKey().getConstant();
         String value_active = createdrecord_active.getPrimaryKey().getCode();
-        CustomCode fetched_record = mdrlitedao.get(createdrecord_active.getPrimaryKey());
+        CustomCode fetched_record = customCodesDao.get(createdrecord_active.getPrimaryKey());
         Assert.assertEquals(constant_active, fetched_record.getPrimaryKey().getConstant());
         Assert.assertEquals(value_active, fetched_record.getPrimaryKey().getCode());
-        CustomCode createdrecord_inactive = mdrlitedao.create(record_inactive);
+        CustomCode createdrecord_inactive = customCodesDao.create(record_inactive);
         String constant_inactive = createdrecord_inactive.getPrimaryKey().getConstant();
         String value_inactive = createdrecord_inactive.getPrimaryKey().getCode();
-        CustomCode fetched_inactiverecord = mdrlitedao.get(createdrecord_inactive.getPrimaryKey());
+        CustomCode fetched_inactiverecord = customCodesDao.get(createdrecord_inactive.getPrimaryKey());
         Assert.assertEquals(constant_inactive, fetched_inactiverecord.getPrimaryKey().getConstant());
         Assert.assertEquals(value_inactive, fetched_inactiverecord.getPrimaryKey().getCode());
-        List<CustomCode> rs = mdrlitedao.getAllFor(record_active.getPrimaryKey().getConstant());
+        List<CustomCode> rs = customCodesDao.getAllFor(record_active.getPrimaryKey().getConstant());
         Assert.assertEquals(rs.size(), 2);
-        mdrlitedao.delete(record_active.getPrimaryKey());
-        mdrlitedao.delete(record_inactive.getPrimaryKey());
+        customCodesDao.delete(record_active.getPrimaryKey());
+        customCodesDao.delete(record_inactive.getPrimaryKey());
 
     }
 
@@ -65,10 +65,10 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
     public void get() throws JsonProcessingException {
 
         CustomCode record = createHelper(CONSTANT, true);
-        CustomCode createdrecord = mdrlitedao.create(record);
-        CustomCode rec = mdrlitedao.get(createdrecord.getPrimaryKey());
+        CustomCode createdrecord = customCodesDao.create(record);
+        CustomCode rec = customCodesDao.get(createdrecord.getPrimaryKey());
         Assert.assertNotNull(rec);
-        mdrlitedao.delete(record.getPrimaryKey());
+        customCodesDao.delete(record.getPrimaryKey());
     }
 
 
@@ -77,10 +77,10 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
     public void exists() throws JsonProcessingException {
 
         CustomCode record = createHelper(CONSTANT, true);
-        CustomCode createdrecord = mdrlitedao.create(record);
-        Boolean exists = mdrlitedao.exists(createdrecord.getPrimaryKey());
+        CustomCode createdrecord = customCodesDao.create(record);
+        Boolean exists = customCodesDao.exists(createdrecord.getPrimaryKey());
         Assert.assertTrue(exists);
-        mdrlitedao.delete(record.getPrimaryKey());
+        customCodesDao.delete(record.getPrimaryKey());
     }
 
     @Test
@@ -90,31 +90,31 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
         for (int i = 0; i < 10; i++) {
             String iStr = String.valueOf(i);
             CustomCode record = createHelper(CONSTANT, "kod" + iStr, "description" + iStr);
-            mdrlitedao.create(record);
+            customCodesDao.create(record);
         }
 
         for (int i = 0; i < 10; i++) {
             String iStr = String.valueOf(i);
             CustomCode record = createHelper(CONSTANT + "2", "kod" + iStr, "description" + iStr);
-            mdrlitedao.create(record);
+            customCodesDao.create(record);
         }
 
-        List<CustomCode> rs1 = mdrlitedao.getAllFor(CONSTANT);
-        List<CustomCode> rs2 = mdrlitedao.getAllFor(CONSTANT + "2");
+        List<CustomCode> rs1 = customCodesDao.getAllFor(CONSTANT);
+        List<CustomCode> rs2 = customCodesDao.getAllFor(CONSTANT + "2");
         Assert.assertEquals(10,rs1.size());
         Assert.assertEquals(10, rs2.size());
 
-        mdrlitedao.deleteAllFor(CONSTANT + "2");
+        customCodesDao.deleteAllFor(CONSTANT + "2");
 
-        rs1 = mdrlitedao.getAllFor(CONSTANT);
-        rs2 = mdrlitedao.getAllFor(CONSTANT + "2");
+        rs1 = customCodesDao.getAllFor(CONSTANT);
+        rs2 = customCodesDao.getAllFor(CONSTANT + "2");
         Assert.assertEquals(rs1.size(), 10);
         Assert.assertEquals(rs2.size(), 0);
 
-        mdrlitedao.deleteAllFor(CONSTANT);
+        customCodesDao.deleteAllFor(CONSTANT);
 
-        rs1 = mdrlitedao.getAllFor(CONSTANT);
-        rs2 = mdrlitedao.getAllFor(CONSTANT + "2");
+        rs1 = customCodesDao.getAllFor(CONSTANT);
+        rs2 = customCodesDao.getAllFor(CONSTANT + "2");
         Assert.assertEquals(0,rs1.size());
         Assert.assertEquals(0, rs2.size());
     }
@@ -124,20 +124,20 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
     public void updateDescription() throws JsonProcessingException, HeuristicRollbackException, HeuristicMixedException, RollbackException, SystemException, NotSupportedException {
 
         CustomCode record = createHelper(CONSTANT, "kod", "description");
-        CustomCode created_record = mdrlitedao.create(record);
+        CustomCode created_record = customCodesDao.create(record);
         String createdDescription = created_record.getDescription();
 
         created_record.setDescription("CHANGED");
-        mdrlitedao.update(created_record.getPrimaryKey(), "CHANGED", null);
+        customCodesDao.update(created_record.getPrimaryKey(), "CHANGED", null);
         userTransaction.commit();
         userTransaction.begin();
 
-        CustomCode fetched_record = mdrlitedao.get(created_record.getPrimaryKey());
+        CustomCode fetched_record = customCodesDao.get(created_record.getPrimaryKey());
 
         Assert.assertNotEquals(createdDescription, fetched_record.getDescription());
         Assert.assertEquals("CHANGED", fetched_record.getDescription());
 
-        mdrlitedao.deleteAllFor(CONSTANT);
+        customCodesDao.deleteAllFor(CONSTANT);
     }
 
     @Test
@@ -145,7 +145,7 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
     public void storeLatest() throws JsonProcessingException, HeuristicRollbackException, HeuristicMixedException, RollbackException, SystemException, NotSupportedException {
 
         CustomCode record = createHelper(CONSTANT, "kod", "description");
-        CustomCode created_record = mdrlitedao.replace(record);
+        CustomCode created_record = customCodesDao.replace(record);
 
         CustomCode aNewCustomCode = new CustomCode();
 
@@ -157,17 +157,17 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
         props.put("A_STORED_ONE", "DATA_DATA_DATA");
 
         aNewCustomCode.setNameValue(props);
-        mdrlitedao.replace(aNewCustomCode);
+        customCodesDao.replace(aNewCustomCode);
         userTransaction.commit();
         userTransaction.begin();
 
-        CustomCode fetched_record = mdrlitedao.get(created_record.getPrimaryKey());
+        CustomCode fetched_record = customCodesDao.get(created_record.getPrimaryKey());
         Map<String,String> fetchedProps = fetched_record.getNameValue();
         Assert.assertNotNull(fetchedProps);
         Assert.assertTrue(fetchedProps.containsKey("A_STORED_ONE"));
         Assert.assertTrue(!fetchedProps.containsKey("status"));
 
-        mdrlitedao.deleteAllFor(CONSTANT);
+        customCodesDao.deleteAllFor(CONSTANT);
     }
 
 

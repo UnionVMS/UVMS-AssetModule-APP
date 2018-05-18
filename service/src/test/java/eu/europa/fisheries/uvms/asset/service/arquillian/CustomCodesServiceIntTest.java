@@ -45,9 +45,9 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
         LocalDateTime toDate = LocalDateTime.now(Clock.systemUTC());
         toDate = toDate.plusDays(duration);
 
-        CustomCode createdMDR_lite = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description", map());
-        CustomCode fetchedMDR_lite = service.get(CONSTANT, CODE, fromDate, toDate);
-        Assert.assertNotNull(fetchedMDR_lite);
+        CustomCode createdCustomCode = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description", map());
+        CustomCode fetchedCustomCode = service.get(CONSTANT, CODE, fromDate, toDate);
+        Assert.assertNotNull(fetchedCustomCode);
         service.delete(CONSTANT, CODE, fromDate, toDate);
     }
 
@@ -63,9 +63,9 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
         LocalDateTime toDate = LocalDateTime.now(Clock.systemUTC());
         toDate = toDate.plusDays(duration);
 
-        CustomCode createdMDR_lite1 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description", map());
+        CustomCode createdCustomCode1 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description", map());
         try {
-            CustomCode createdMDR_lite2 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description", map());
+            CustomCode createdCustomCode2 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description", map());
         }catch(IllegalArgumentException e) {
             Assert.assertTrue(true);
         }finally {
@@ -85,9 +85,9 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
         toDate = toDate.plusDays(duration);
 
 
-        CustomCode createdMDR_lite1 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description", map());
-        CustomCode fetchedMDR_lite = service.get(CONSTANT, CODE, fromDate, toDate);
-        Assert.assertNotNull(fetchedMDR_lite);
+        CustomCode createdCustomCode1 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description", map());
+        CustomCode fetchedCustomCode = service.get(CONSTANT, CODE, fromDate, toDate);
+        Assert.assertNotNull(fetchedCustomCode);
         service.delete(CONSTANT, CODE, fromDate, toDate);
     }
 
@@ -103,7 +103,7 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
         LocalDateTime toDate = LocalDateTime.now(Clock.systemUTC());
         toDate = toDate.plusDays(duration);
 
-        CustomCode createdMDR_lite1 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description", map());
+        CustomCode createdCustomCode1 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description", map());
         Boolean exist = service.exists(CONSTANT, CODE, fromDate, toDate);
         Assert.assertNotNull(exist);
         service.delete(CONSTANT, CODE, fromDate, toDate);

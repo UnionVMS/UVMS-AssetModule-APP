@@ -41,14 +41,14 @@ public class CustomCodeDao {
 
     public CustomCode update(CustomCodesPK primaryKey, String newDescription, Map<String,String> nameValue) {
 
-        CustomCode fetchedMDR_lite = get(primaryKey);
-        if (fetchedMDR_lite != null) {
+        CustomCode customCode = get(primaryKey);
+        if (customCode != null) {
             if(newDescription != null) {
-                fetchedMDR_lite.setDescription(newDescription);
+                customCode.setDescription(newDescription);
             }
         }
-        fetchedMDR_lite.setNameValue(nameValue);
-        return fetchedMDR_lite;
+        customCode.setNameValue(nameValue);
+        return customCode;
     }
 
 

@@ -60,14 +60,14 @@ public class CustomCodesServiceBean implements CustomCodesService {
 			throw new IllegalArgumentException("CustomCode already exists");
 		}
 
-		CustomCode mdr = new CustomCode();
+		CustomCode customCode = new CustomCode();
 		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code, validFromDate, validToDate);
-		mdr.setPrimaryKey(primaryKey);
-		mdr.setDescription(description);
+		customCode.setPrimaryKey(primaryKey);
+		customCode.setDescription(description);
 		if(nameValue != null && nameValue.size() > 0){
-			mdr.setNameValue(nameValue);
+			customCode.setNameValue(nameValue);
 		}
-		return dao.create(mdr);
+		return dao.create(customCode);
 	}
 
 	@Override
