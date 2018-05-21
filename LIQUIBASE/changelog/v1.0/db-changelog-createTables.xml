@@ -188,26 +188,6 @@
             <column name="updatedby" type="VARCHAR(60)"/>
         </createTable>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1523875639713-8">
-        <createTable tableName="customcode_namevalue">
-            <column name="customcode_code" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="customcode_constant" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="customcode_validfromdate" type="TIMESTAMP(6) WITHOUT TIME ZONE">
-                <constraints nullable="false"/>
-            </column>
-            <column name="customcode_validtodate" type="TIMESTAMP(6) WITHOUT TIME ZONE">
-                <constraints nullable="false"/>
-            </column>
-            <column name="value" type="VARCHAR(255)"/>
-            <column name="key" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
     <changeSet author="thofan (generated)" id="1523875639713-9">
         <createTable tableName="customcodes">
             <column name="code" type="VARCHAR(255)">
@@ -268,9 +248,6 @@
     <changeSet author="thofan (generated)" id="1523875639713-16">
         <addPrimaryKey columnNames="id" constraintName="contactinfo_pkey" tableName="contactinfo"/>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1523875639713-17">
-        <addPrimaryKey columnNames="customcode_code, customcode_constant, customcode_validfromdate, customcode_validtodate, key" constraintName="customcode_namevalue_pkey" tableName="customcode_namevalue"/>
-    </changeSet>
     <changeSet author="thofan (generated)" id="1523875639713-18">
         <addPrimaryKey columnNames="code, constant, validfromdate, validtodate" constraintName="customcodes_pkey" tableName="customcodes"/>
     </changeSet>
@@ -306,8 +283,5 @@
     </changeSet>
     <changeSet author="thofan (generated)" id="1523875639713-29">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="asset_aud" constraintName="fklq7kauhigk0mdew67qs2l39ci" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1523875639713-30">
-        <addForeignKeyConstraint baseColumnNames="customcode_code,customcode_constant,customcode_validfromdate,customcode_validtodate" baseTableName="customcode_namevalue" constraintName="fkuo2aknb32aq3ctvt8ns9mtv7" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="code,constant,validfromdate,validtodate" referencedTableName="customcodes"/>
     </changeSet>
 </databaseChangeLog>
