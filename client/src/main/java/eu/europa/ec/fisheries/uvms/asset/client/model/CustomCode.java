@@ -27,10 +27,4 @@ public class CustomCode {
     public void setDescription(String description) {
         this.description = description;
     }
-    public Map<String,String> getNameValue() {
-        return namevalue;
-    }
-    public void  setNameValue(Map<String,String> namevalue) {
-        this.namevalue=namevalue;
-    }
 }

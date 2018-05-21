@@ -153,10 +153,6 @@ public abstract class AssetHelper {
         CustomCodesPK pk = new CustomCodesPK(constant, "TEST_Code_" + UUID.randomUUID().toString(),validFrom, validTo);
         cc.setPrimaryKey(pk);
         cc.setDescription("This is a description");
-        Map<String , String> props = new HashMap<>();
-        props.put("extra1", UUID.randomUUID().toString());
-        props.put("extra2", UUID.randomUUID().toString());
-        cc.setNameValue(props);
         return cc;
     }
 }
