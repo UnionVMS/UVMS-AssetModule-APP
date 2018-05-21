@@ -168,9 +168,6 @@ public class AssetClientTest extends AbstractClientTest {
         CustomCode customCode = AssetHelper.createCustomCode(constant);
          assetClient.replace(customCode);
         customCode.setDescription("replaced");
-        Map<String,String> nvp = new HashMap<>();
-        nvp.put("replaced","replacedvalue");
-        customCode.setNameValue(nvp);
         assetClient.replace(customCode);
 
     }
