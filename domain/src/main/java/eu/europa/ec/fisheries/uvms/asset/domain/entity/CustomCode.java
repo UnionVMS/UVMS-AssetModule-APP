@@ -31,11 +31,6 @@ public class CustomCode {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "namevalue")
-    private Map<String,String> namevalue = new HashMap<>();
-
-
-
 
     @EmbeddedId
     public CustomCodesPK getPrimaryKey() {
@@ -52,17 +47,6 @@ public class CustomCode {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    @ElementCollection // this is a collection of primitives
-    @MapKeyColumn(name="key") // column name for map "key"
-    @Column(name="value") // column name for map "value"
-    public Map<String,String> getNameValue() {
-        return namevalue;
-    }
-
-    public void  setNameValue(Map<String,String> namevalue) {
-        this.namevalue=namevalue;
     }
 
 }

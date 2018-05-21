@@ -30,7 +30,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 
 
 	@Override
-	public CustomCode create(String constant, String code, LocalDateTime validFromDate, LocalDateTime validToDate, String description, Map<String,String> nameValue){
+	public CustomCode create(String constant, String code, LocalDateTime validFromDate, LocalDateTime validToDate, String description){
 
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
@@ -64,9 +64,6 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code, validFromDate, validToDate);
 		customCode.setPrimaryKey(primaryKey);
 		customCode.setDescription(description);
-		if(nameValue != null && nameValue.size() > 0){
-			customCode.setNameValue(nameValue);
-		}
 		return dao.create(customCode);
 	}
 
@@ -82,8 +79,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 				customCode.getPrimaryKey().getCode(),
 				customCode.getPrimaryKey().getValidFromDate(),
 				customCode.getPrimaryKey().getValidToDate(),
-				customCode.getDescription(),
-				customCode.getNameValue());
+				customCode.getDescription());
 	}
 
 
@@ -152,7 +148,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 	}
 
 	@Override
-	public CustomCode update(String constant, String code,  LocalDateTime validFromDate, LocalDateTime validToDate, String newValue, Map<String,String> nameValue){
+	public CustomCode update(String constant, String code,  LocalDateTime validFromDate, LocalDateTime validToDate, String newValue){
 
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
@@ -176,7 +172,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 
 		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code,validFromDate,validToDate);
 
-		return dao.update(primaryKey, newValue, nameValue);
+		return dao.update(primaryKey, newValue);
 
 	}
 
