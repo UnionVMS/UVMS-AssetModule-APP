@@ -206,10 +206,6 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         customCode.setPrimaryKey(primaryKey);
         customCode.setDescription(descr);
 
-        Map<String, String> map = new HashMap<>();
-        map.put("key1", "data1");
-        map.put("key2", "data2");
-        customCode.setNameValue(map);
 
 
         String created = getWebTarget()
@@ -237,12 +233,6 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
             CustomCode customCode = new CustomCode();
             customCode.setPrimaryKey(primaryKey);
             customCode.setDescription(descr);
-
-            Map<String, String> map = new HashMap<>();
-            map.put("key1", code);
-            map.put("key2", "data2");
-            customCode.setNameValue(map);
-
 
             String created = getWebTarget()
                     .path("customcodes")

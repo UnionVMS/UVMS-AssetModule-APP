@@ -8,7 +8,6 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Stateless
 public class CustomCodeDao {
@@ -39,7 +38,7 @@ public class CustomCodeDao {
         }
     }
 
-    public CustomCode update(CustomCodesPK primaryKey, String newDescription, Map<String,String> nameValue) {
+    public CustomCode update(CustomCodesPK primaryKey, String newDescription) {
 
         CustomCode customCode = get(primaryKey);
         if (customCode != null) {
@@ -47,7 +46,6 @@ public class CustomCodeDao {
                 customCode.setDescription(newDescription);
             }
         }
-        customCode.setNameValue(nameValue);
         return customCode;
     }
 
@@ -132,7 +130,4 @@ public class CustomCodeDao {
         CustomCode createdCustomCode =  em.merge(customCode);
         return createdCustomCode;
     }
-
-
-
 }

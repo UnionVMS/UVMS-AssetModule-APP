@@ -27,12 +27,6 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
     @EJB
     CustomCodesService service;
 
-    private Map<String, String> map() {
-
-        Map<String, String> map = new HashMap<>();
-        map.put("KEY" + UUID.randomUUID().toString(), "VALUE" + UUID.randomUUID().toString());
-        return map;
-    }
 
     @Test
     @OperateOnDeployment("normal")
@@ -45,7 +39,7 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
         LocalDateTime toDate = LocalDateTime.now(Clock.systemUTC());
         toDate = toDate.plusDays(duration);
 
-        CustomCode createdCustomCode = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description", map());
+        CustomCode createdCustomCode = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description");
         CustomCode fetchedCustomCode = service.get(CONSTANT, CODE, fromDate, toDate);
         Assert.assertNotNull(fetchedCustomCode);
         service.delete(CONSTANT, CODE, fromDate, toDate);
@@ -63,9 +57,9 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
         LocalDateTime toDate = LocalDateTime.now(Clock.systemUTC());
         toDate = toDate.plusDays(duration);
 
-        CustomCode createdCustomCode1 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description", map());
+        CustomCode createdCustomCode1 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description");
         try {
-            CustomCode createdCustomCode2 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description", map());
+            CustomCode createdCustomCode2 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description");
         }catch(IllegalArgumentException e) {
             Assert.assertTrue(true);
         }finally {
@@ -85,7 +79,7 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
         toDate = toDate.plusDays(duration);
 
 
-        CustomCode createdCustomCode1 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description", map());
+        CustomCode createdCustomCode1 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description");
         CustomCode fetchedCustomCode = service.get(CONSTANT, CODE, fromDate, toDate);
         Assert.assertNotNull(fetchedCustomCode);
         service.delete(CONSTANT, CODE, fromDate, toDate);
@@ -103,7 +97,7 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
         LocalDateTime toDate = LocalDateTime.now(Clock.systemUTC());
         toDate = toDate.plusDays(duration);
 
-        CustomCode createdCustomCode1 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description", map());
+        CustomCode createdCustomCode1 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description");
         Boolean exist = service.exists(CONSTANT, CODE, fromDate, toDate);
         Assert.assertNotNull(exist);
         service.delete(CONSTANT, CODE, fromDate, toDate);
@@ -123,12 +117,12 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
 
         for (int i = 0; i < 10; i++) {
             String iStr = String.valueOf(i);
-            service.create(CONSTANT, CODE + iStr, fromDate, toDate, CODE + "Description", map());
+            service.create(CONSTANT, CODE + iStr, fromDate, toDate, CODE + "Description");
         }
 
         for (int i = 0; i < 10; i++) {
             String iStr = String.valueOf(i);
-            service.create(CONSTANT + "2", CODE + iStr, fromDate, toDate, CODE + "Description", map());
+            service.create(CONSTANT + "2", CODE + iStr, fromDate, toDate, CODE + "Description");
         }
 
         List<CustomCode> rs1 = service.getAllFor(CONSTANT);
@@ -167,11 +161,11 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
         toDate = toDate.plusDays(duration);
 
 
-        CustomCode created_record = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description", map());
+        CustomCode created_record = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description");
         String createdDescription = created_record.getDescription();
 
         created_record.setDescription("CHANGED");
-        service.update(created_record.getPrimaryKey().getConstant(), created_record.getPrimaryKey().getCode(), fromDate, toDate, "CHANGED", null);
+        service.update(created_record.getPrimaryKey().getConstant(), created_record.getPrimaryKey().getCode(), fromDate, toDate, "CHANGED");
         userTransaction.commit();
         userTransaction.begin();
 
@@ -208,26 +202,16 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
 
         customCode.setPrimaryKey(primaryKey);
         customCode.setDescription("TEST_DESCRIPTION_TEST");
-        Map<String,String> nvp = new HashMap<>();
-        nvp.put("FIRST","DATA1");
-        nvp.put("SECOND","DATA2");
-        customCode.setNameValue(nvp);
         CustomCode created_record = service.replace(customCode);
 
 
         CustomCode aSecondCustomCode = new CustomCode();
         aSecondCustomCode.setPrimaryKey(primaryKey);
         aSecondCustomCode.setDescription("TEST_DESCRIPTION_TEST_SECONF");
-        Map<String,String> nvp2 = new HashMap<>();
-        nvp2.put("THIRD","DATA3");
-        aSecondCustomCode.setNameValue(nvp2);
         CustomCode creasted_ASecond = service.replace(aSecondCustomCode);
 
 
         CustomCode fetched_record = service.get(primaryKey);
-        Map<String, String> fetchedProps = fetched_record.getNameValue();
-        Assert.assertNotNull(fetchedProps);
-        Assert.assertTrue(fetchedProps.containsKey("THIRD"));
 
         service.deleteAllFor("TEST_constant_TEST");
     }

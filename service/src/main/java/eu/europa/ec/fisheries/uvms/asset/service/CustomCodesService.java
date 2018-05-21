@@ -29,10 +29,9 @@ public interface CustomCodesService {
      * @param validFromDate @description code is valid from this date inclusive
      * @param validToDate @description code is valid to this date inclusive
      * @param description @description human readable description of the code for dropdowns/prints etc
-     * @param nameValue @description free data complementing info for the code  could be a json . . .
      * @return a CustomCode Object
      */
-    CustomCode create(String constant, String code, LocalDateTime validFromDate, LocalDateTime validToDate, String description, Map<String,String> nameValue);
+    CustomCode create(String constant, String code, LocalDateTime validFromDate, LocalDateTime validToDate, String description);
 
     CustomCode create(CustomCode customCode);
 
@@ -69,10 +68,9 @@ public interface CustomCodesService {
          * @param validFromDate @description code is valid from this date inclusive
          * @param validToDate @description code is valid to this date inclusive
          * @param newValue @description  new description
-         * @param nameValue @description  new extradata
          * @return a the updated CustomCodes Object
          */
-    CustomCode update(String constant, String code,  LocalDateTime validFromDate, LocalDateTime validToDate, String newValue, Map<String,String> nameValue);
+    CustomCode update(String constant, String code,  LocalDateTime validFromDate, LocalDateTime validToDate, String newValue);
 
     /**
      *

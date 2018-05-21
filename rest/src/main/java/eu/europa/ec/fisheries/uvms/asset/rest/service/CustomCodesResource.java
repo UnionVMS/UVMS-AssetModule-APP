@@ -37,7 +37,7 @@ import static org.reflections.util.ConfigurationBuilder.build;
 @Api(value = "CustomCodes Service")
 public class CustomCodesResource {
 
-    ObjectMapper MAPPER;
+   private  ObjectMapper MAPPER;
     public CustomCodesResource() {
         MAPPER = new ObjectMapper();
         MAPPER.registerModule(new JavaTimeModule());
@@ -51,8 +51,8 @@ public class CustomCodesResource {
     @POST
     @ApiOperation(value = "Create a record", notes = "Create a custom constant code", response = CustomCode.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when createing custom code"),
-            @ApiResponse(code = 200, message = "Success when createing custom code")})
+            @ApiResponse(code = 500, message = "Error when create custom code"),
+            @ApiResponse(code = 200, message = "Success when create custom code")})
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response createCustomCode(

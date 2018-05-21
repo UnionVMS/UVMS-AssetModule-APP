@@ -128,7 +128,7 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
         String createdDescription = created_record.getDescription();
 
         created_record.setDescription("CHANGED");
-        customCodesDao.update(created_record.getPrimaryKey(), "CHANGED", null);
+        customCodesDao.update(created_record.getPrimaryKey(), "CHANGED");
         userTransaction.commit();
         userTransaction.begin();
 
@@ -152,21 +152,12 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
         aNewCustomCode.setPrimaryKey(created_record.getPrimaryKey());
         aNewCustomCode.setDescription("STORE_LATEST");
 
-        Map<String,String> props = new HashMap<>();
-
-        props.put("A_STORED_ONE", "DATA_DATA_DATA");
-
-        aNewCustomCode.setNameValue(props);
         customCodesDao.replace(aNewCustomCode);
         userTransaction.commit();
         userTransaction.begin();
 
         CustomCode fetched_record = customCodesDao.get(created_record.getPrimaryKey());
-        Map<String,String> fetchedProps = fetched_record.getNameValue();
-        Assert.assertNotNull(fetchedProps);
-        Assert.assertTrue(fetchedProps.containsKey("A_STORED_ONE"));
-        Assert.assertTrue(!fetchedProps.containsKey("status"));
-
+        Assert.assertNotNull(fetched_record);
         customCodesDao.deleteAllFor(CONSTANT);
     }
 
@@ -182,13 +173,10 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
             CustomCodesPK primaryKey = createPrimaryKey(constant, "1");
             record.setPrimaryKey(primaryKey);
             record.setDescription("Active");
-            record.getNameValue().put("status", "active");
         } else {
             CustomCodesPK primaryKey = createPrimaryKey(constant, "0");
             record.setPrimaryKey(primaryKey);
             record.setDescription("InActive");
-            record.getNameValue().put("status", "inactive");
-
         }
         return record;
     }
@@ -205,11 +193,9 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
         if (active) {
             record.setPrimaryKey(primaryKey);
             record.setDescription("Active");
-            record.getNameValue().put("status", "active");
         } else {
             record.setPrimaryKey(primaryKey);
             record.setDescription("InActive");
-            record.getNameValue().put("status", "inactive");
         }
         return record;
     }
