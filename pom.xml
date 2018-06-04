@@ -19,7 +19,7 @@
     	<docker.dev.version>3.25.0</docker.dev.version>
         <usm4uvms.version>4.0.6</usm4uvms.version>
         <uvms.config.version>4.0.0</uvms.config.version>
-		<uvms.common.version>3.0.20</uvms.common.version>
+		<uvms.common.version>3.0.18</uvms.common.version>
         <audit.model.version>4.0.8</audit.model.version>
         <project.scm.id>github</project.scm.id>
     </properties>
