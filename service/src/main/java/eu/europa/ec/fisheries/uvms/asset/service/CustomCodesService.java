@@ -24,8 +24,8 @@ public interface CustomCodesService {
 
     /**
      *
-     * @param constant @description constant
-     * @param code @description  the code to be valid for this constant
+     * @param constant @description constants
+     * @param code @description  the code to be valid for this constants
      * @param validFromDate @description code is valid from this date inclusive
      * @param validToDate @description code is valid to this date inclusive
      * @param description @description human readable description of the code for dropdowns/prints etc
@@ -38,8 +38,8 @@ public interface CustomCodesService {
 
         /**
          *
-         * @param constant @description constant
-         * @param code @description  the code to be valid for this constant
+         * @param constant @description constants
+         * @param code @description  the code to be valid for this constants
          * @param validFromDate @description code is valid from this date inclusive
          * @param validToDate @description code is valid to this date inclusive
          * @return a CustomCodes object
@@ -52,8 +52,8 @@ public interface CustomCodesService {
 
         /**
          *
-         * @param constant @description constant
-         * @param code @description  the code to be valid for this constant
+         * @param constant @description constants
+         * @param code @description  the code to be valid for this constants
          * @param validFromDate @description code is valid from this date inclusive
          * @param validToDate @description code is valid to this date inclusive
          * @return a boolean indicating exists or not  used for validation on incoming data
@@ -63,8 +63,8 @@ public interface CustomCodesService {
 
         /**
          *
-         * @param constant @description constant
-         * @param code @description  the code to be valid for this constant
+         * @param constant @description constants
+         * @param code @description  the code to be valid for this constants
          * @param validFromDate @description code is valid from this date inclusive
          * @param validToDate @description code is valid to this date inclusive
          * @param newValue @description  new description
@@ -74,8 +74,8 @@ public interface CustomCodesService {
 
     /**
      *
-     * @param constant @description constant
-     * @param code @description  the code to be valid for this constant
+     * @param constant @description constants
+     * @param code @description  the code to be valid for this constants
      * @param validFromDate @description code is valid from this date inclusive
      * @param validToDate @description code is valid to this date inclusive
      */
@@ -84,14 +84,14 @@ public interface CustomCodesService {
 
         /**
          *
-         * @param constant @description constant
-         * @return a list of CustomCode for a given constant
+         * @param constant @description constants
+         * @return a list of CustomCode for a given constants
          */
     List<CustomCode> getAllFor(String constant);
 
     /**
      *
-     * @param constant @description constant delete all codes for this constant
+     * @param constant @description constants delete all codes for this constants
      */
     void deleteAllFor(String constant);
 

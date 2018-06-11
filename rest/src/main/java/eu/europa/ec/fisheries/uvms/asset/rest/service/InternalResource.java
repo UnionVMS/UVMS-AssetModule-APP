@@ -175,7 +175,7 @@ public class InternalResource {
     @Path("verify/{constant}/{code}/{date}")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response verify(@ApiParam(value = "constant", required = true) @PathParam("constant") String constant,
+    public Response verify(@ApiParam(value = "constants", required = true) @PathParam("constant") String constant,
                            @ApiParam(value = "code", required = true) @PathParam("code") String code,
                            @ApiParam(value = "validToDate", required = true) @PathParam(value = "date") String date)
     {

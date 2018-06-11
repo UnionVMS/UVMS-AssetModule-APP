@@ -51,7 +51,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .path("listconstants")
                 .request(MediaType.APPLICATION_JSON)
                 .get(List.class);
-        // resultset must at least contain a constant with our created customcode
+        // resultset must at least contain a constants with our created customcode
 
         Boolean found = false;
         for (String constant : constants) {
@@ -78,7 +78,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .get(List.class);
 
-        // for every constant
+        // for every constants
         Boolean found = false;
         for (String constant : constants) {
             String json = getWebTarget()

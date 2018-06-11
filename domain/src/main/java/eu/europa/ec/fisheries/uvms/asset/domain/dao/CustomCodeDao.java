@@ -17,7 +17,7 @@ public class CustomCodeDao {
 
     public CustomCode create(CustomCode record) {
 
-        // NO DUPLICATES on constant AND code ALLOWED
+        // NO DUPLICATES on constants AND code ALLOWED
         //CustomCode fetched = get(record.getPrimaryKey());
         //if (fetched != null) return record;
         //if(record.getDescription() == null){

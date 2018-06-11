@@ -10,7 +10,7 @@
  copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.europa.ec.fisheries.uvms.mobileterminal.constant;
+package eu.europa.ec.fisheries.uvms.mobileterminal.service.constants;
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalCapability;
 

@@ -49,7 +49,7 @@ public class CustomCodesResource {
     private CustomCodesService customCodesSvc;
 
     @POST
-    @ApiOperation(value = "Create a record", notes = "Create a custom constant code", response = CustomCode.class)
+    @ApiOperation(value = "Create a record", notes = "Create a custom constants code", response = CustomCode.class)
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when create custom code"),
             @ApiResponse(code = 200, message = "Success when create custom code")})
@@ -93,13 +93,13 @@ public class CustomCodesResource {
     @GET
     @ApiOperation(value = "Retrieve a customcode", notes = "Retrieve a customcode", response = CustomCode.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when retrieving code list for given constant list"),
-            @ApiResponse(code = 200, message = "Codes for constant  successfully retrieved")})
+            @ApiResponse(code = 500, message = "Error when retrieving code list for given constants list"),
+            @ApiResponse(code = 200, message = "Codes for constants  successfully retrieved")})
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/{constant}/{code}/{validFromDate}/{validToDate}")
     public Response retrieveCustomCode(
-            @ApiParam(value = "constant", required = true) @PathParam("constant") String constant,
+            @ApiParam(value = "constants", required = true) @PathParam("constant") String constant,
             @ApiParam(value = "code", required = true) @PathParam("code") String code,
             @ApiParam(value = "validFromDate", required = true) @PathParam(value = "validFromDate")  String   validFromDate,
             @ApiParam(value = "validToDate", required = true) @PathParam(value = "validToDate") String validToDate)
@@ -120,12 +120,12 @@ public class CustomCodesResource {
     @GET
     @ApiOperation(value = "Check if customCode exists", notes = "Check if customCode exists", response = Boolean.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when retrieving code list for given constant list"),
-            @ApiResponse(code = 200, message = "Codes for constant  successfully retrieved")})
+            @ApiResponse(code = 500, message = "Error when retrieving code list for given constants list"),
+            @ApiResponse(code = 200, message = "Codes for constants  successfully retrieved")})
     @Path("/exists/{constant}/{code}/{validFromDate}/{validToDate}")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response exists(@ApiParam(value = "constant", required = true) @PathParam("constant") String constant,
+    public Response exists(@ApiParam(value = "constants", required = true) @PathParam("constant") String constant,
                            @ApiParam(value = "code", required = true) @PathParam("code") String code,
                            @ApiParam(value = "validFromDate", required = true) @PathParam(value = "validFromDate") String validFromDate,
                            @ApiParam(value = "validToDate", required = true) @PathParam(value = "validToDate") String validToDate)
@@ -158,7 +158,7 @@ public class CustomCodesResource {
     @Path("/getfordate/{constant}/{code}/{date}")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response getForDate(@ApiParam(value = "constant", required = true) @PathParam("constant") String constant,
+    public Response getForDate(@ApiParam(value = "constants", required = true) @PathParam("constant") String constant,
                            @ApiParam(value = "code", required = true) @PathParam("code") String code,
                            @ApiParam(value = "validToDate", required = true) @PathParam(value = "date") String date)
     {
@@ -185,7 +185,7 @@ public class CustomCodesResource {
     @Path("/verify/{constant}/{code}/{date}")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response verify(@ApiParam(value = "constant", required = true) @PathParam("constant") String constant,
+    public Response verify(@ApiParam(value = "constants", required = true) @PathParam("constant") String constant,
                                @ApiParam(value = "code", required = true) @PathParam("code") String code,
                                @ApiParam(value = "validToDate", required = true) @PathParam(value = "date") String date)
     {
@@ -210,7 +210,7 @@ public class CustomCodesResource {
     @GET
     @ApiOperation(value = "Get a list of constants", notes = "Get a list of constants from Custom Code", response = String.class, responseContainer = "List")
     @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when retrieving constant list"),
+            @ApiResponse(code = 500, message = "Error when retrieving constants list"),
             @ApiResponse(code = 200, message = "Constants successfully retrieved")})
     @Path("/listconstants")
     @Consumes(value = {MediaType.APPLICATION_JSON})
@@ -228,8 +228,8 @@ public class CustomCodesResource {
     @GET
     @ApiOperation(value = "Get a list of codes for given", notes = "Returned as json parse tree in client", response = String.class, responseContainer = "List")
     @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when retrieving code list for given constant list"),
-            @ApiResponse(code = 200, message = "Codes for constant  successfully retrieved")})
+            @ApiResponse(code = 500, message = "Error when retrieving code list for given constants list"),
+            @ApiResponse(code = 200, message = "Codes for constants  successfully retrieved")})
     @Path("/listcodesforconstant/{constant}")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -247,12 +247,12 @@ public class CustomCodesResource {
     @DELETE
     @ApiOperation(value = "Remove a customcode", notes = "Remove a customcode", response = String.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when retrieving code list for given constant list"),
-            @ApiResponse(code = 200, message = "Codes for constant  successfully retrieved")})
+            @ApiResponse(code = 500, message = "Error when retrieving code list for given constants list"),
+            @ApiResponse(code = 200, message = "Codes for constants  successfully retrieved")})
     @Path("/{constant}/{code}/{validFromDate}/{validToDate}")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response deleteCustomCode(@ApiParam(value = "constant", required = true) @PathParam("constant") String constant,
+    public Response deleteCustomCode(@ApiParam(value = "constants", required = true) @PathParam("constant") String constant,
                                      @ApiParam(value = "code", required = true) @PathParam("code") String code,
                                      @ApiParam(value = "validFromDate", required = true) @PathParam(value = "validFromDate") String validFromDate,
                                      @ApiParam(value = "validToDate", required = true) @PathParam(value = "validToDate") String validToDate)
