@@ -9,23 +9,27 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.mobileterminal.service.search;
+package eu.europa.ec.fisheries.uvms.mobileterminal.service.dao;
 
-public class SearchFieldHolder {
 
-	private SearchTable table;
-	private SearchField field;
-	
-	public SearchFieldHolder(SearchTable table, SearchField field) {
-		this.table = table;
-		this.field = field;
-	}
-	
-	public SearchTable getTable() {
-		return table;
-	}
-	
-	public SearchField getSearchField() {
-		return field;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.OceanRegion;
+
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import java.util.List;
+
+@Stateless
+public class OceanRegionDaoBean  {
+
+    @PersistenceContext
+    private EntityManager em;
+
+
+	public List<OceanRegion> getOceanRegionList()  {
+            TypedQuery<OceanRegion> query = em.createNamedQuery(MobileTerminalConstants.OCEAN_REGIONS, OceanRegion.class);
+            return query.getResultList();
 	}
 }

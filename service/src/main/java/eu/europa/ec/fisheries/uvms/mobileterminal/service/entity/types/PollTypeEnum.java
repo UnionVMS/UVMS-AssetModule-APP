@@ -9,23 +9,22 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.mobileterminal.service.search;
+package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types;
 
-public class SearchFieldHolder {
+public enum PollTypeEnum {
 
-	private SearchTable table;
-	private SearchField field;
-	
-	public SearchFieldHolder(SearchTable table, SearchField field) {
-		this.table = table;
-		this.field = field;
-	}
-	
-	public SearchTable getTable() {
-		return table;
-	}
-	
-	public SearchField getSearchField() {
-		return field;
-	}
+    PROGRAM_POLL(1),
+    SAMPLING_POLL(2),
+    MANUAL_POLL(3),
+    CONFIGURATION_POLL(4);
+
+    private Integer id;
+
+    PollTypeEnum(int id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
+    }
 }

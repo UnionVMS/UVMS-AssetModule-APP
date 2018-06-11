@@ -10,11 +10,12 @@
  copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.europa.ec.fisheries.uvms.mobileterminal.dao.bean;
+package eu.europa.ec.fisheries.uvms.mobileterminal.service.dao;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity2.Channel;
-import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.AttributeMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.search.poll.PollSearchMapper;
+
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.AttributeMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.Channel;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.poll.PollSearchMapper;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;

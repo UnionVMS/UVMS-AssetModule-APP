@@ -9,23 +9,17 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.mobileterminal.service.search;
+package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types;
 
-public class SearchFieldHolder {
-
-	private SearchTable table;
-	private SearchField field;
+public enum MobileTerminalTypeEnum {
+	INMARSAT_C, IRIDIUM;
 	
-	public SearchFieldHolder(SearchTable table, SearchField field) {
-		this.table = table;
-		this.field = field;
-	}
-	
-	public SearchTable getTable() {
-		return table;
-	}
-	
-	public SearchField getSearchField() {
-		return field;
+	public static MobileTerminalTypeEnum getType(String name) {
+		for(MobileTerminalTypeEnum type : MobileTerminalTypeEnum.values()) {
+			if(type.name().equalsIgnoreCase(name)) {
+				return type;
+			}
+		}
+		return null;
 	}
 }

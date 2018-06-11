@@ -9,27 +9,13 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.mobileterminal.dao.bean;
-
-import java.util.List;
-
-import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-
-import eu.europa.ec.fisheries.uvms.mobileterminal.constant.MobileTerminalConstants;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity2.OceanRegion;
-
-@Stateless
-public class OceanRegionDaoBean  {
-
-    @PersistenceContext
-    private EntityManager em;
+package eu.europa.ec.fisheries.uvms.mobileterminal.service.exception;
 
 
-	public List<OceanRegion> getOceanRegionList()  {
-            TypedQuery<OceanRegion> query = em.createNamedQuery(MobileTerminalConstants.OCEAN_REGIONS, OceanRegion.class);
-            return query.getResultList();
+public class SearchMapperException extends Exception {
+	private static final long serialVersionUID = 1L;
+
+	public SearchMapperException(String message) {
+		super(message);
 	}
 }

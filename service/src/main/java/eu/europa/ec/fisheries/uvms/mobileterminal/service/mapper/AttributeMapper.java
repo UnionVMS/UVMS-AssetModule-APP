@@ -10,10 +10,8 @@
  copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.europa.ec.fisheries.uvms.mobileterminal.mapper;
+package eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper;
 
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ComChannelAttribute;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalAttribute;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,28 +44,17 @@ public class AttributeMapper {
         return attributes;
     }
 
-    static List<ComChannelAttribute> mapAttributeStringToComChannelAttribute(String attributeString) {
-        List<ComChannelAttribute> attributeList = new ArrayList<>();
-        Map<String, String> attributes = mapAttributeString(attributeString);
-        for (String key : attributes.keySet()) {
-            ComChannelAttribute attribute = new ComChannelAttribute();
-            attribute.setType(key);
-            attribute.setValue(attributes.get(key));
-            attributeList.add(attribute);
-        }
+    // TODO fix
+    static List<Object> mapAttributeStringToComChannelAttribute(String attributeString) {
+        List<Object> attributeList = new ArrayList<>();
+
 
         return attributeList;
     }
 
-    static List<MobileTerminalAttribute> mapAttributeStringToTerminalAttribute(String attributeString) {
-        List<MobileTerminalAttribute> attributeList = new ArrayList<>();
-        Map<String, String> attributes = mapAttributeString(attributeString);
-        for (String key : attributes.keySet()) {
-            MobileTerminalAttribute attribute = new MobileTerminalAttribute();
-            attribute.setType(key);
-            attribute.setValue(attributes.get(key));
-            attributeList.add(attribute);
-        }
+    // TODO fix
+    static List<Object> mapAttributeStringToTerminalAttribute(String attributeString) {
+        List<Object> attributeList = new ArrayList<>();
         return attributeList;
     }
 }
