@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="urn:source.mobileterminal.schema.fisheries.ec.europa.eu:v1"
+            xmlns:source="urn:source.mobileterminal.schema.fisheries.ec.europa.eu:v1"
+            targetNamespace="urn:source.mobileterminal.schema.fisheries.ec.europa.eu:v1"
+            xmlns:mobterm="urn:types.mobileterminal.schema.fisheries.ec.europa.eu:v1"
+            xmlns:poll="urn:polltypes.mobileterminal.schema.fisheries.ec.europa.eu:v1"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified" 
+            version="1.0">
+    
+    <xsd:import namespace="urn:polltypes.mobileterminal.schema.fisheries.ec.europa.eu:v1" schemaLocation="MobileTerminalPoll.xsd"/>        
+    <xsd:import namespace="urn:types.mobileterminal.schema.fisheries.ec.europa.eu:v1" schemaLocation="MobileTerminalElement.xsd"/>
+    
+            
+    <!-- Mobile Terminal CRUD requests -->
+    <xsd:element name="createMobileTerminalRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="mobterm:MobileTerminalBaseRequest">
+                    <xsd:sequence>
+                        <xsd:element name="mobileTerminal" type="mobterm:MobileTerminalType"/>
+                    </xsd:sequence>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+            
+    <xsd:element name="getMobileTerminalRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="mobterm:MobileTerminalBaseRequest">
+                    <xsd:sequence>
+                        <xsd:element name="id" type="mobterm:MobileTerminalId"/>
+                    </xsd:sequence>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="updateMobileTerminalRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="mobterm:MobileTerminalBaseRequest">
+                    <xsd:sequence>
+                        <xsd:element name="mobileTerminal" type="mobterm:MobileTerminalType"/>
+                    </xsd:sequence>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+            
+    <xsd:element name="upsertMobileTerminalRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="mobterm:MobileTerminalBaseRequest">
+                    <xsd:sequence>
+                        <xsd:element name="mobileTerminal" type="mobterm:MobileTerminalType"/>
+                    </xsd:sequence>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="mobileTerminalListRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="mobterm:MobileTerminalBaseRequest">
+                    <xsd:sequence>
+                        <xsd:element name="query" type="mobterm:MobileTerminalListQuery"/>
+                    </xsd:sequence>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+            
+    <!-- Mobile Terminal Assign to carrier requests -->
+    <xsd:element name="mobileTerminalAssignRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="mobterm:MobileTerminalBaseRequest">
+                    <xsd:sequence>
+                        <xsd:element name="query" type="mobterm:MobileTerminalAssignQuery"/>
+                    </xsd:sequence>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+            
+    <xsd:element name="mobileTerminalUnAssignRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="mobterm:MobileTerminalBaseRequest">
+                    <xsd:sequence>
+                        <xsd:element name="query" type="mobterm:MobileTerminalAssignQuery"/>
+                    </xsd:sequence>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+            
+    <!-- Mobile Terminal Status requests -->
+    <xsd:element name="setStatusMobileTerminalRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="mobterm:MobileTerminalBaseRequest">
+                    <xsd:sequence>
+                        <xsd:element name="id" type="mobterm:MobileTerminalId"/>
+                        <xsd:element name="status" type="mobterm:MobileTerminalStatus"/>
+                    </xsd:sequence>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+            
+            
+    <!-- Mobile Terminal History requests  -->
+    <xsd:element name="historyMobileTerminalListRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="mobterm:MobileTerminalBaseRequest">
+                    <xsd:sequence>
+                        <xsd:element name="id" type="mobterm:MobileTerminalId"/>
+                    </xsd:sequence>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+                
+    <!-- Mobile Terminal Responses -->    
+    <xsd:element name="mobileTerminalResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="dnidListUpdated" type="xsd:boolean"/>
+                <xsd:element name="mobilTerminal" type="mobterm:MobileTerminalType"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+            
+    <xsd:element name="mobileTerminalListResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="totalNumberOfPages" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+                <xsd:element name="currentPage" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+                <xsd:element name="mobileTerminal" type="mobterm:MobileTerminalType" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+            
+    <xsd:element name="historyMobileTerminalListResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="history" type="mobterm:MobileTerminalHistory" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+	<!-- Ping -->
+	<xsd:element name="pingRequest">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="mobterm:MobileTerminalBaseRequest"/>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="pingResponse">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="response" type="xsd:string"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+</xsd:schema>

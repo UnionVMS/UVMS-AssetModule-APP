@@ -12,7 +12,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.constants;
 
 
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.MobileTerminalType;
+
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 
 import java.util.Comparator;
 
