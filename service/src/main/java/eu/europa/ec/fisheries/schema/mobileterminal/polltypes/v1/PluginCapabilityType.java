@@ -1,5 +1,5 @@
 
-package eu.europa.ec.fisheries.schema.mobileterminal.types.v1;
+package eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlType;

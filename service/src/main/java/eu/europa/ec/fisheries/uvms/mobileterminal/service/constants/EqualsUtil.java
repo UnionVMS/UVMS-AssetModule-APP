@@ -11,8 +11,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.constants;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity2.InmarsatCHistoryOceanRegion;
-import eu.europa.ec.fisheries.uvms.mobileterminal.util.DateUtils;
+
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.InmarsatCHistoryOceanRegion;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.Date;
@@ -25,9 +25,9 @@ public class EqualsUtil {
 		return Objects.equals(one, two);
 	}
 	
-	public static boolean compare(Date one, Date two) {
-		return DateUtils.equalsDate(one, two);
-	}
+//	public static boolean compare(Date one, Date two) {
+//		return DateUtils.equalsDate(one, two);
+//	}
 
 	public static boolean compare(Boolean one, Boolean two) {
 		return Objects.equals(one, two);

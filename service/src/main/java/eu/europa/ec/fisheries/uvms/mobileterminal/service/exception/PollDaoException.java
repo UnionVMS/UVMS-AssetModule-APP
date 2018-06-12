@@ -9,11 +9,10 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.mobileterminal.dao.exception;
+package eu.europa.ec.fisheries.uvms.mobileterminal.service.exception;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.exception.MobileTerminalModelException;
 
-public class PollDaoException extends MobileTerminalModelException {
+public class PollDaoException extends Exception {
 	private static final long serialVersionUID = 1L;
 
 	public PollDaoException(String message) {

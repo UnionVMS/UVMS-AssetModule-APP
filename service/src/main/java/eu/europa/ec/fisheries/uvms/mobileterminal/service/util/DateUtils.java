@@ -9,14 +9,11 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.mobileterminal.util;
+package eu.europa.ec.fisheries.uvms.mobileterminal.service.util;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -76,16 +73,16 @@ public class DateUtils {
     public static Date parseToUTCDate(String dateString) {
     	return parseToUTC(DATE_FORMAT, dateString);
     }
-    
+
+    // TODO FIX this
     private static Date parseToUTC(String format, String dateString) {
-    	DateTimeFormatter formatter = DateTimeFormat.forPattern(format).withOffsetParsed();
-    	DateTime dateTime = formatter.withZoneUTC().parseDateTime(dateString);
-    	GregorianCalendar cal = dateTime.toGregorianCalendar();
-    	return cal.getTime();
+        throw new NotImplementedException();
     }
-    
-    public static Date getUTCNow() {
-        return new DateTime(DateTimeZone.UTC).toDate();
+
+    // TODO FIX this
+    public static Date getUTCNow()
+    {
+        return new Date(System.currentTimeMillis());
     }
 
     public static String parseUTCDateTimeToString(Date date) {
@@ -104,13 +101,10 @@ public class DateUtils {
         }
         return dateString;
     }
-    
+
+    // TODO FIX this
     public static boolean equalsDate(Date one, Date two) {
-    	if(one == null && two == null) return true;
-		if(one == null || two == null) return false;
-		DateTime dateTimeOne = new DateTime(one);
-		DateTime dateTimeTwo = new DateTime(two);
-		return dateTimeOne.withTimeAtStartOfDay().isEqual(dateTimeTwo.withTimeAtStartOfDay());
+        throw new NotImplementedException();
     }
 
     public static XMLGregorianCalendar getXMLGregorianCalendarInUTC(Date dateTimeInUTC){

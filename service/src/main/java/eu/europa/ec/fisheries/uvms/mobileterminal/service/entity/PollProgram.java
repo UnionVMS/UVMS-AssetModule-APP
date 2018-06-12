@@ -11,8 +11,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.constant.MobileTerminalConstants;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum;
+
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollStateEnum;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

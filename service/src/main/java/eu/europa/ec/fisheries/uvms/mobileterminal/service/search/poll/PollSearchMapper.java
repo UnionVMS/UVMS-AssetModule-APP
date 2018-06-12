@@ -34,14 +34,16 @@ public class PollSearchMapper {
 		return new ArrayList<>(searchKeyValues.values());
 	}
 
+	// TODO  FIX
 	private static PollSearchKeyValue mapSearchKey(ListCriteria criteria, Map<PollSearchField, PollSearchKeyValue> searchKeys) throws SearchMapperException {
 		if (criteria == null || criteria.getKey() == null || criteria.getValue() == null) {
 			throw new SearchMapperException("Non valid search criteria");
 		}
-		PollSearchField searchField = getSearchField(criteria.getKey());
-		PollSearchKeyValue searchKeyValue = getSearchKeyValue(searchField, searchKeys);
-		searchKeyValue.getValues().add(criteria.getValue());
-		return searchKeyValue;
+		//PollSearchField searchField = getSearchField(criteria.getKey());
+		//PollSearchKeyValue searchKeyValue = getSearchKeyValue(searchField, searchKeys);
+		//searchKeyValue.getValues().add(criteria.getValue());
+		//return searchKeyValue;
+		return null;
 	}
 
 	private static PollSearchKeyValue getSearchKeyValue(PollSearchField field, Map<PollSearchField, PollSearchKeyValue> searchKeys) {

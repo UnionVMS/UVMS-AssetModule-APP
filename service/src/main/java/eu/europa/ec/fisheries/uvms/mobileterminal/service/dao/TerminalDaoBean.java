@@ -13,6 +13,8 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.dao;
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.NoEntityFoundException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.TerminalDaoException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.slf4j.Logger;

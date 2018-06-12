@@ -10,7 +10,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.constants;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.dao.exception.EnumException;
+
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.EnumException;
 
 public enum ChannelFieldInmarsatC {
     LES_DESCRIPTION,

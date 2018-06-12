@@ -15,6 +15,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTermin
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.Poll;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollTypeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.PollDaoException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.PollSearchKeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

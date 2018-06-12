@@ -11,8 +11,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.constant.EqualsUtil;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.EventCodeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.EqualsUtil;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -181,19 +181,4 @@ public class MobileTerminalEvent implements Serializable {
 		this.connectId = connectId;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if(obj instanceof MobileTerminalEvent) {
-			MobileTerminalEvent other = (MobileTerminalEvent)obj;
-			if(!EqualsUtil.compare(comment, other.comment)) return false;
-			if(!EqualsUtil.compare(eventCodeType.name(), other.eventCodeType.name())) return false;
-			return EqualsUtil.compare(updatetime, other.updatetime);
-		}
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		return EqualsUtil.getHashCode(comment) + EqualsUtil.getHashCode(eventCodeType) + EqualsUtil.getHashCode(updatetime);
-	}
 }

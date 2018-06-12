@@ -11,8 +11,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.constant.EqualsUtil;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalEvent;
+
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.EqualsUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
