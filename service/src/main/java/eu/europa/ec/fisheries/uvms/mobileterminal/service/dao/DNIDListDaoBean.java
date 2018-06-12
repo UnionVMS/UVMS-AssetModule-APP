@@ -28,7 +28,6 @@ public class DNIDListDaoBean {
 	@PersistenceContext
 	private EntityManager em;
 
-	private final static Logger LOG = LoggerFactory.getLogger(DNIDListDaoBean.class);
 
 	public List<DNIDList> getAllDNIDList()  {
             TypedQuery<DNIDList> query = em.createNamedQuery(MobileTerminalConstants.DNID_LIST, DNIDList.class);

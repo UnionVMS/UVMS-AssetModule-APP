@@ -33,7 +33,6 @@ public class PollProgramDaoBean {
     @PersistenceContext
     private EntityManager em;
 
-    private final static Logger LOG = LoggerFactory.getLogger(PollProgramDaoBean.class);
 
     public void createPollProgram(PollProgram pollProgram) {
         em.persist(pollProgram);
@@ -78,8 +77,7 @@ public class PollProgramDaoBean {
             query.setParameter("guid", guid);
             return query.getSingleResult();
         } catch (NoResultException e) {
-            LOG.error("[ Error when getting poll program by id. ] {}", e.getMessage());
-            throw new PollDaoException("No entity found getting by id");
+            return null;
         }
     }
 }

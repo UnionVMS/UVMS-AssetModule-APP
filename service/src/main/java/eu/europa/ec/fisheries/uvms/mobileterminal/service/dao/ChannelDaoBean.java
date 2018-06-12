@@ -25,9 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by osdjup on 2016-11-16.
- */
+
 @Stateless
 public class ChannelDaoBean  {
 

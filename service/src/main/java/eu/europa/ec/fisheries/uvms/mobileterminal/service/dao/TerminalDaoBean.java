@@ -13,18 +13,9 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.dao;
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.NoEntityFoundException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.TerminalDaoException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.util.List;
 
 @Stateless
@@ -32,8 +23,6 @@ public class TerminalDaoBean  {
 
     @PersistenceContext
     private EntityManager em;
-
-    private final static Logger LOG = LoggerFactory.getLogger(TerminalDaoBean.class);
 
 	public MobileTerminal getMobileTerminalByGuid(String guid)  {
 		try {
@@ -45,44 +34,27 @@ public class TerminalDaoBean  {
         }
 	}
 
-    public MobileTerminal getMobileTerminalBySerialNo(String serialNo) throws NoEntityFoundException {
+    public MobileTerminal getMobileTerminalBySerialNo(String serialNo)  {
         try {
             TypedQuery<MobileTerminal> query = em.createNamedQuery(MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_SERIAL_NO, MobileTerminal.class);
             query.setParameter("serialNo", serialNo);
             return query.getSingleResult();
         } catch (NoResultException e) {
-            LOG.error("[ Error when getting terminal by GUID. ] {}", e.getMessage());
-            throw new NoEntityFoundException("No entity found with serial no " + serialNo);
+            return null;
         }
     }
 
-    public MobileTerminal createMobileTerminal(MobileTerminal terminal) throws TerminalDaoException {
-        try {
+    public MobileTerminal createMobileTerminal(MobileTerminal terminal)  {
             em.persist(terminal);
             return terminal;
-        } catch (Exception e) {
-            LOG.error("[ Error when creating. ] {}", e.getMessage());
-            throw new TerminalDaoException("[ Error when creating. ]" + e.getMessage());
-        }
     }
 
-    public void updateMobileTerminal(MobileTerminal terminal) throws TerminalDaoException {
-        if(terminal == null || terminal.getId() == null) {
-            // It's a defensive decision to prevent clients from using merge excessively instead of persist.
-            throw new TerminalDaoException(" [ There is no such persisted entity to update ] ");
-        }
-        try {
-            em.merge(terminal);
-            em.flush();
-        } catch (Exception e) {
-            LOG.error("[ Error when updating. ] {}", e.getMessage());
-            throw new TerminalDaoException("[ Error when updating. ]");
-        }
+    public MobileTerminal updateMobileTerminal(MobileTerminal terminal) {
+            return em.merge(terminal);
     }
 
     public List<MobileTerminal> getMobileTerminalsByQuery(String sql) {
-        Session session = em.unwrap(Session.class);
-        Query query = session.createQuery(sql);
-        return query.list();
+        Query query = em.createQuery(sql, MobileTerminal.class);
+        return query.getResultList();
     }
 }

@@ -30,8 +30,6 @@ public class MobileTerminalPluginDaoBean  {
 	@PersistenceContext
 	private EntityManager em;
 
-	private final static Logger LOG = LoggerFactory.getLogger(MobileTerminalPluginDaoBean.class);
-
 	public List<MobileTerminalPlugin> getPluginList()  {
             TypedQuery<MobileTerminalPlugin> query = em.createNamedQuery(MobileTerminalConstants.PLUGIN_FIND_ALL, MobileTerminalPlugin.class);
             return query.getResultList();
@@ -42,20 +40,17 @@ public class MobileTerminalPluginDaoBean  {
 			return plugin;
 	}
 
-	public MobileTerminalPlugin getPluginByServiceName(String serviceName) throws NoEntityFoundException {
+	public MobileTerminalPlugin getPluginByServiceName(String serviceName)  {
 		try {
             TypedQuery<MobileTerminalPlugin> query = em.createNamedQuery(MobileTerminalConstants.PLUGIN_FIND_BY_SERVICE_NAME, MobileTerminalPlugin.class);
             query.setParameter("serviceName", serviceName);
             return query.getSingleResult();
         } catch (NoResultException e) {
-            LOG.error("[ Error when getting plugin by service name. ] {}", e.getMessage());
-            throw new NoEntityFoundException("No entities found when retrieving mobile terminal plugin by service name");
+			return null;
         }
 	}
 
 	public MobileTerminalPlugin updateMobileTerminalPlugin(MobileTerminalPlugin entity)  {
-			entity = em.merge(entity);
-			em.flush();
-			return entity;
+			return  em.merge(entity);
 	}
 }

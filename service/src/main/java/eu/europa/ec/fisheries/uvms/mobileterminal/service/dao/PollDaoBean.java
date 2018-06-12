@@ -19,6 +19,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.PollDaoExcep
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.PollSearchKeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateless;
@@ -35,7 +36,6 @@ public class PollDaoBean  {
 	@PersistenceContext
 	private EntityManager em;
 
-    private final static Logger LOG = LoggerFactory.getLogger(PollDaoBean.class);
 
     public void createPoll(Poll poll)  {
             em.persist(poll);
@@ -47,21 +47,18 @@ public class PollDaoBean  {
             query.setParameter("pollId", pollId);
             return query.getSingleResult();
         } catch (NoResultException e) {
-            LOG.error("[ Error when getting poll. ] {}", e.getMessage());
-            throw new PollDaoException("No Poll entity found with TrackId " + pollId);
+        	return null;
         }
     }
 
 	//ToDo: This method is not implemented. Need to evaluate if the functionality is required or not.
-    public List<Poll> getPollListByProgramPoll(Integer pollProgramId) throws PollDaoException {
-        throw new PollDaoException("Not yet implemented");
+    public List<Poll> getPollListByProgramPoll(Integer pollProgramId)  {
+        throw new NotImplementedException();
     }
 
 	public Long getPollListSearchCount(String sql, List<PollSearchKeyValue> searchKeyValues) {
 		TypedQuery<Long> query = em.createQuery(sql, Long.class);
-
 		queryBuilder(searchKeyValues, query);
-
 		return query.getSingleResult();
 	}
 
