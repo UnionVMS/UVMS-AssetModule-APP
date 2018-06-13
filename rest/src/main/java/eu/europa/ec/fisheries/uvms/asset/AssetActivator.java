@@ -16,7 +16,6 @@ import java.util.Set;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 import eu.europa.ec.fisheries.uvms.asset.filter.AssetRestExceptionMapper;
-import eu.europa.ec.fisheries.uvms.asset.rest.service.*;
 import eu.europa.ec.fisheries.uvms.asset.service.*;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeatureFilter;
 
