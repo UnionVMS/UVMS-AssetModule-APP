@@ -22,14 +22,14 @@ public abstract class BuildAssetServiceDeployment {
 
         File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
                 .resolve("eu.europa.ec.fisheries.uvms.asset:asset-dbaccess-domain",
-                         "eu.europa.ec.fisheries.uvms.asset:asset-message",
-                         "eu.europa.ec.fisheries.uvms.asset:asset-message-mock",
+                         "eu.europa.ec.fisheries.uvms.asset:deprecated-asset-message",
+                         "eu.europa.ec.fisheries.uvms.asset:deprecated-asset-message-mock",
                          "eu.europa.ec.fisheries.uvms.audit:audit-model",
                          "eu.europa.ec.fisheries.uvms:uvms-config",
                          "eu.europa.ec.fisheries.uvms.config:config-model:4.0.0")
                 .withoutTransitivity().asFile();
         testWar.addAsLibraries(files);
-        
+
         testWar.addPackages(true, "eu.europa.fisheries.uvms.asset.service");
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset.service");
 
