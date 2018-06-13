@@ -9,24 +9,19 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types;
+package eu.europa.ec.fisheries.uvms.mobileterminal.message.event;
 
-public enum EventCodeEnum {
-	CREATE(1),
-	MODIFY(2),
-	ACTIVATE(3),
-	INACTIVATE(4),
-	ARCHIVE(5),
-	LINK(6),
-	UNLINK(7);
+import javax.inject.Qualifier;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-	private final int id;
-	
-	EventCodeEnum(int id) {
-		this.id = id;
-	}
-	
-	public Integer getId() {
-		return id;
-	}
+/**
+ **/
+@Qualifier
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE})
+public @interface ErrorEvent {
+
 }

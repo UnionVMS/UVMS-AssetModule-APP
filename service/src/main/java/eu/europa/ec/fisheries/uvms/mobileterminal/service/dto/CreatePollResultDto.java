@@ -9,24 +9,41 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types;
+package eu.europa.ec.fisheries.uvms.mobileterminal.service.dto;
 
-public enum EventCodeEnum {
-	CREATE(1),
-	MODIFY(2),
-	ACTIVATE(3),
-	INACTIVATE(4),
-	ARCHIVE(5),
-	LINK(6),
-	UNLINK(7);
+import java.util.ArrayList;
+import java.util.List;
 
-	private final int id;
+public class CreatePollResultDto {
+
+	private boolean unsentPoll;
+	private List<String> sentPolls = new ArrayList<>();
+	private List<String> unsentPolls = new ArrayList<>();
 	
-	EventCodeEnum(int id) {
-		this.id = id;
+	public CreatePollResultDto() {
 	}
-	
-	public Integer getId() {
-		return id;
+
+	public List<String> getSentPolls() {
+		return sentPolls;
 	}
+
+	public void setSentPolls(List<String> sentPolls) {
+		this.sentPolls = sentPolls;
+	}
+
+	public List<String> getUnsentPolls() {
+		return unsentPolls;
+	}
+
+	public void setUnsentPolls(List<String> unsentPolls) {
+		this.unsentPolls = unsentPolls;
+	}
+
+	public boolean isUnsentPoll() {
+		return unsentPoll;
+	}
+
+	public void setUnsentPoll(boolean unsentPoll) {
+		this.unsentPoll = unsentPoll;
+	}	
 }

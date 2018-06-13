@@ -9,24 +9,12 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types;
+package eu.europa.ec.fisheries.uvms.mobileterminal.exception;
 
-public enum EventCodeEnum {
-	CREATE(1),
-	MODIFY(2),
-	ACTIVATE(3),
-	INACTIVATE(4),
-	ARCHIVE(5),
-	LINK(6),
-	UNLINK(7);
+public class MobileTerminalUnmarshallException extends MobileTerminalModelException {
+	private static final long serialVersionUID = 2943675686456573033L;
 
-	private final int id;
-	
-	EventCodeEnum(int id) {
-		this.id = id;
-	}
-	
-	public Integer getId() {
-		return id;
+	public MobileTerminalUnmarshallException(String message) {
+		super(message);
 	}
 }

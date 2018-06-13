@@ -9,18 +9,11 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.mobileterminal.rest.service;
+package eu.europa.ec.fisheries.uvms.mobileterminal.rest.services;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollListQuery;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollableQuery;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.rest.dto.ResponseDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.rest.error.ErrorHandler;
-import eu.europa.ec.fisheries.uvms.mobileterminal.rest.error.ResponseCode;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MappedPollServiceBean;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import org.slf4j.Logger;
@@ -42,17 +35,14 @@ public class PollResource {
 
     private final static Logger LOG = LoggerFactory.getLogger(PollResource.class);
 
+    /*
+
     @EJB
     private MappedPollServiceBean pollService;
 
     @Context
     private HttpServletRequest request;
 
-    /**
-     * @responseMessage 200 Poll successfully created
-     * @responseMessage 500 Error when creating poll
-     * @summary Creates polls of different types
-     */
     @POST
     @Path("/")
     @RequiresFeature(UnionVMSFeature.managePolls)
@@ -67,12 +57,6 @@ public class PollResource {
         }
     }
 
-    /**
-     * @responseMessage 200 Running polls successfully retreived
-     * @responseMessage 500 Error when retrieveing running polls
-     *
-     * @summary Gets all program polls that are currently active
-     */
     @GET
     @Path("/running")
     @RequiresFeature(UnionVMSFeature.viewMobileTerminalPolls)
@@ -87,12 +71,6 @@ public class PollResource {
         }
     }
 
-    /**
-     * @responseMessage 200 Poll program successfully started
-     * @responseMessage 500 Error when starting the program poll
-     *
-     * @summary Starts a polling program
-     */
     @PUT
     @Path("/start/{id}")
     @RequiresFeature(UnionVMSFeature.managePolls)
@@ -107,13 +85,6 @@ public class PollResource {
         }
     }
 
-    /**
-     *
-     * @responseMessage 200 Poll program successfully stopped
-     * @responseMessage 500 Error when stopping the program poll
-     *
-     * @summary Stops a polling program
-     */
     @PUT
     @Path("/stop/{id}")
     @RequiresFeature(UnionVMSFeature.managePolls)
@@ -128,12 +99,6 @@ public class PollResource {
         }
     }
 
-    /**
-     * @responseMessage 200 Poll program successfully inactivated
-     * @responseMessage 500 Error when inactivating the program poll
-     *
-     * @summary Inactivates and Archives a polling program
-     */
     @PUT
     @Path("/inactivate/{id}")
     @RequiresFeature(UnionVMSFeature.managePolls)
@@ -148,13 +113,6 @@ public class PollResource {
         }
     }
 
-    /**
-     *
-     * @responseMessage 200 Polls successfully retreived
-     * @responseMessage 500 Error when getting polls by6 search criteria
-     *
-     * @summary Search for a polling program by query
-     */
     @POST
     @Path("/list")
     @RequiresFeature(UnionVMSFeature.viewMobileTerminalPolls)
@@ -169,12 +127,6 @@ public class PollResource {
         }
     }
 
-    /**
-     * @responseMessage 200 Pollable channels successfully retrieved
-     * @responseMessage 500 Error when retrieving pollable channels
-     *
-     * @summary Search for pollable InmarsatC channels
-     */
     @POST
     @Path("/pollable")
     @RequiresFeature(UnionVMSFeature.viewMobileTerminalPolls)
@@ -188,4 +140,6 @@ public class PollResource {
             return ErrorHandler.getFault(ex);
         }
     }
+
+    */
 }

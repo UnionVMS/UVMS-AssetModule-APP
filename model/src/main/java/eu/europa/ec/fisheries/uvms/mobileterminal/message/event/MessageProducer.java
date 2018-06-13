@@ -9,24 +9,16 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types;
+package eu.europa.ec.fisheries.uvms.mobileterminal.message.event;
 
-public enum EventCodeEnum {
-	CREATE(1),
-	MODIFY(2),
-	ACTIVATE(3),
-	INACTIVATE(4),
-	ARCHIVE(5),
-	LINK(6),
-	UNLINK(7);
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalMessageException;
 
-	private final int id;
-	
-	EventCodeEnum(int id) {
-		this.id = id;
-	}
-	
-	public Integer getId() {
-		return id;
-	}
+import javax.ejb.Local;
+
+@Local
+public interface MessageProducer {
+
+    String sendDataSourceMessage(String text, DataSourceQueue queue) throws MobileTerminalMessageException;
+
+    String sendModuleMessage(String text, ModuleQueue queue) throws MobileTerminalMessageException;
 }

@@ -9,17 +9,12 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.mobileterminal.rest.service;
+package eu.europa.ec.fisheries.uvms.mobileterminal.rest.services;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.ConfigList;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.SearchKey;
-import eu.europa.ec.fisheries.uvms.mobileterminal.rest.dto.MobileTerminalConfig;
-import eu.europa.ec.fisheries.uvms.mobileterminal.rest.dto.MobileTerminalDeviceConfig;
-import eu.europa.ec.fisheries.uvms.mobileterminal.rest.dto.ResponseDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.rest.error.ErrorHandler;
-import eu.europa.ec.fisheries.uvms.mobileterminal.rest.error.ResponseCode;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.ConfigServiceBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.ConfigServiceBean;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import org.slf4j.Logger;
@@ -45,20 +40,15 @@ import java.util.Map;
 @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
 public class ConfigResource {
 
+
+
     private final static Logger LOG = LoggerFactory.getLogger(ConfigResource.class);
+
+    /*
 
     @EJB
     private ConfigServiceBean configService;
     
-    /**
-    *
-    * @responseMessage 200 Config transponders successfully retreived
-    * @responseMessage 500 Error when retrieveing the config values for
-    * transponders
-    *
-    * @summary Get all available config values for Mobile Terminals
-    *
-    */
    @GET
    @Path("/transponders")
 	public ResponseDto<List<MobileTerminalDeviceConfig>> getConfigTransponders() {
@@ -72,15 +62,6 @@ public class ConfigResource {
        }
    }
 
-   /**
-    *
-    * @responseMessage 200 Config search fields successfully retreived
-    * @responseMessage 500 Error when retrieveing the config search fields for
-    * transponders
-    *
-    * @summary Gets all available search fields for Mobile Terminal
-    *
-    */
    @GET
    @Path("/searchfields")
    public ResponseDto<SearchKey[]> getConfigSearchFields() {
@@ -103,4 +84,7 @@ public class ConfigResource {
             return ErrorHandler.getFault(ex);
         }
     }
+
+    */
+
 }

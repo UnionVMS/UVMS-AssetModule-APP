@@ -12,7 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.search.poll;
 
 
-import eu.europa.ec.fisheries.schema.audit.search.v1.ListCriteria;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.ListCriteria;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.SearchMapperException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.PollSearchField;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.PollSearchKeyValue;

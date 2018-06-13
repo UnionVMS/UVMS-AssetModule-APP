@@ -9,16 +9,13 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.mobileterminal.rest.service;
+package eu.europa.ec.fisheries.uvms.mobileterminal.rest.services;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.rest.dto.ResponseDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.rest.error.ErrorHandler;
-import eu.europa.ec.fisheries.uvms.mobileterminal.rest.error.ResponseCode;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
+import net.bull.javamelody.internal.common.LOG;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +32,8 @@ import javax.ws.rs.core.MediaType;
 @Produces(value = { MediaType.APPLICATION_JSON })
 public class MobileTerminalResource {
 
-    private final static Logger LOG = LoggerFactory.getLogger(ResponseCode.class);
+    /*
+    private final static Logger LOG = LoggerFactory.getLogger(MobileTerminalResource.class);
 
     @EJB
     private MobileTerminalServiceBean mobileTerminalService;
@@ -43,14 +41,6 @@ public class MobileTerminalResource {
     @Context
     private HttpServletRequest request;
 
-    /**
-     *
-     * @responseMessage 200 Mobile Terminal successfully created
-     * @responseMessage 500 Error when creating mobile Terminal
-     *
-     * @summary Creates a mobile terminal
-     *
-     */
     @POST
     @Path("/")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
@@ -64,14 +54,6 @@ public class MobileTerminalResource {
         }
     }
 
-    /**
-     *
-     * @responseMessage 200 Mobile Terminal successfully retrieved
-     * @responseMessage 500 Error when retrieveing Mobile Terminal by id
-     *
-     * @summary Gets a mobile terminal by its id
-     *
-     */
     @GET
     @Path("/{id}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
@@ -85,14 +67,6 @@ public class MobileTerminalResource {
         }
     }
 
-    /**
-     *
-     * @responseMessage 200 Mobile Terminal successfully updated
-     * @responseMessage 500 Error when updating Mobile Terminal
-     *
-     * @summary Updates a mobile terminal with new values
-     *
-     */
     @PUT
     @Path("/")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
@@ -107,14 +81,6 @@ public class MobileTerminalResource {
         }
     }
 
-    /**
-     *
-     * @responseMessage 200 Mobile Terminal list successfully retrieved
-     * @responseMessage 500 Error when getting mobile terminal list
-     *
-     * @summary Gets a list fo mobile terminals based on a query
-     *
-     */
     @POST
     @Path("/list")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
@@ -128,16 +94,6 @@ public class MobileTerminalResource {
         }
     }
 
-    /**
-     *
-     * @responseMessage 200 Mobile Terminal list successfully assigned to a
-     *                  carrier
-     * @responseMessage 500 Error when assigning the mobile terminal to a
-     *                  carrier
-     *
-     * @summary Assigns a mobile terminal to a carrier
-     *
-     */
     @POST
     @Path("/assign")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
@@ -151,15 +107,6 @@ public class MobileTerminalResource {
         }
     }
 
-    /**
-     *
-     * @responseMessage 200 Mobile successfully unassigned from the carrier
-     * @responseMessage 500 Error when unassigning the mobile terminal from the
-     *                  carrier
-     *
-     * @summary Unassigns a mobile terminal from a carrier
-     *
-     */
     @POST
     @Path("/unassign")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
@@ -173,14 +120,6 @@ public class MobileTerminalResource {
         }
     }
 
-    /**
-     *
-     * @responseMessage 200 Mobile successfully activated
-     * @responseMessage 500 Error when activating the mobile terminal
-     *
-     * @summary Activates a mobile terminal
-     *
-     */
     @PUT
     @Path("/status/activate")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
@@ -194,14 +133,6 @@ public class MobileTerminalResource {
         }
     }
 
-    /**
-     *
-     * @responseMessage 200 Mobile successfully inactivated
-     * @responseMessage 500 Error when inactivating the mobile terminal
-     *
-     * @summary Inactivates a mobile terminal
-     *
-     */
     @PUT
     @Path("/status/inactivate")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
@@ -215,14 +146,6 @@ public class MobileTerminalResource {
         }
     }
 
-    /**
-     *
-     * @responseMessage 200 Mobile successfully removed
-     * @responseMessage 500 Error when removing the mobile terminal
-     *
-     * @summary Removes a mobile terminal. It is archived but not readable
-     *
-     */
     @PUT
     @Path("/status/remove")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
@@ -236,15 +159,6 @@ public class MobileTerminalResource {
         }
     }
 
-    /**
-     *
-     * @responseMessage 200 Mobile terminal history successfully retrieved
-     * @responseMessage 500 Error when retrieving the mobile terminals history
-     *
-     * @summary Gets all historical events connected to the specified mobiel
-     *          terminal
-     *
-     */
     @GET
     @Path("/history/{id}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
@@ -257,4 +171,6 @@ public class MobileTerminalResource {
             return ErrorHandler.getFault(ex);
         }
     }
+
+    */
 }
