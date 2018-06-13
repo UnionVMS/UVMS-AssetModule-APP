@@ -21,9 +21,9 @@ import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
-import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
-import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.uvms.asset.service.exception.AssetServiceException;
+import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
+import eu.europa.ec.fisheries.uvms.asset.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 
 
 @RunWith(Arquillian.class)

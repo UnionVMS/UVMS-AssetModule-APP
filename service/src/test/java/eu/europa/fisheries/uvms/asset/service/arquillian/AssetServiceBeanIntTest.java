@@ -25,8 +25,8 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
-import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.uvms.asset.service.exception.AssetServiceException;
+import eu.europa.ec.fisheries.uvms.asset.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 
 @RunWith(Arquillian.class)
 public class AssetServiceBeanIntTest extends TransactionalTests {

@@ -33,10 +33,10 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperExcepti
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
-import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
-import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetBO;
-import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetListResponse;
+import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
+import eu.europa.ec.fisheries.uvms.asset.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;

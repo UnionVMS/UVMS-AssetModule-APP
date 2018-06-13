@@ -1,6 +1,6 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
-import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.AssetService;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;

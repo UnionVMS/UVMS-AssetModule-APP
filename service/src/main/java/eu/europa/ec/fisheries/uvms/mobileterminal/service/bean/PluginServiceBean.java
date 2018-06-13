@@ -16,7 +16,7 @@ import eu.europa.ec.fisheries.schema.exchange.common.v1.AcknowledgeType;
 import eu.europa.ec.fisheries.schema.exchange.common.v1.AcknowledgeTypeType;
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PollType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
-import eu.europa.ec.fisheries.uvms.asset.service.mapper.PollToCommandRequestMapper;
+import eu.europa.ec.fisheries.uvms.asset.mapper.PollToCommandRequestMapper;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.exchange.model.exception.ExchangeModelMapperException;

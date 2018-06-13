@@ -2,7 +2,7 @@ package eu.europa.fisheries.uvms.asset.service.arquillian;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
-import eu.europa.ec.fisheries.uvms.asset.service.CustomCodesService;
+import eu.europa.ec.fisheries.uvms.asset.CustomCodesService;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;

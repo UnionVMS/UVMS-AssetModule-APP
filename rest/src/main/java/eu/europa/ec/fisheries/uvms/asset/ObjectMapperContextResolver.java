@@ -8,32 +8,28 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean;
+package eu.europa.ec.fisheries.uvms.asset;
 
-import java.io.IOException;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.jms.JMSException;
-import javax.jms.TextMessage;
+import javax.ws.rs.ext.ContextResolver;
+import javax.ws.rs.ext.Provider;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import eu.europa.ec.fisheries.uvms.asset.AssetService;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
 
-@Stateless
-public class AssetMessageJSONBean {
+@Provider
+public class ObjectMapperContextResolver implements ContextResolver<ObjectMapper> {  
+    private final ObjectMapper mapper;
 
-    @Inject
-    AssetService assetService;
-    
-    public void upsertAsset(TextMessage message) throws IOException, JMSException {
-        ObjectMapper mapper = new ObjectMapper();
+    public ObjectMapperContextResolver() {
+        mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
+        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        
-        AssetBO assetBo = mapper.readValue(message.getText(), AssetBO.class);
-        assetService.upsertAssetBO(assetBo, "UVMS (JMS)");
     }
-    
+
+    @Override
+    public ObjectMapper getContext(Class<?> type) {
+        return mapper;
+    }  
 }
