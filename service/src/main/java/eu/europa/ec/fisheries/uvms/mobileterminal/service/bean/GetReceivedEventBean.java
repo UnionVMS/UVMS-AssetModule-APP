@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.bean;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
+import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ErrorEvent;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.EventMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,7 @@ public class GetReceivedEventBean {
     private MobileTerminalServiceBean service;
 
     @Inject
-    // OBS ---- >>>  @ErrorEvent
+    @ErrorEvent
     Event<EventMessage> errorEvent;
 
     public void get(EventMessage message) {
