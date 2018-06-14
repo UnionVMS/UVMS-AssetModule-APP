@@ -15,9 +15,7 @@ import javax.inject.Inject;
 import javax.transaction.*;
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 @RunWith(Arquillian.class)

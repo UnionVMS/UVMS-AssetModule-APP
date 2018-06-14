@@ -1,16 +1,17 @@
 package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
-import java.util.Date;
-import java.util.UUID;
-import javax.inject.Inject;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+
+import javax.inject.Inject;
+import java.util.Date;
+import java.util.UUID;
 
 
 /**

@@ -10,31 +10,24 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-import javax.ejb.EJBTransactionRolledbackException;
-import javax.inject.Inject;
-import org.jboss.arquillian.container.test.api.OperateOnDeployment;
-import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
+import org.jboss.arquillian.container.test.api.OperateOnDeployment;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import javax.ejb.EJBTransactionRolledbackException;
+import javax.inject.Inject;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.*;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 public class AssetDaoTest extends TransactionalTests {

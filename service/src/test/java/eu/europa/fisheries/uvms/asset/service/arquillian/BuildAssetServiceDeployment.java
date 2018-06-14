@@ -25,8 +25,7 @@ public abstract class BuildAssetServiceDeployment {
 //        testWar.addAsLibraries(files);
 
         File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
-                .resolve("eu.europa.ec.fisheries.uvms.asset:asset-dbaccess-domain",
-                         "eu.europa.ec.fisheries.uvms.asset:deprecated-asset-message",
+                .resolve("eu.europa.ec.fisheries.uvms.asset:deprecated-asset-message",
                          "eu.europa.ec.fisheries.uvms.asset:deprecated-asset-message-mock",
                          "eu.europa.ec.fisheries.uvms.audit:audit-model",
                          "eu.europa.ec.fisheries.uvms:uvms-config",
@@ -39,11 +38,13 @@ public abstract class BuildAssetServiceDeployment {
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset.exception");
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset.dto");
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset.mapper");
+        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset.domain");
+        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset.arquillian");
         testWar.addClass(AssetService.class);
         testWar.addClass(AssetGroupService.class);
         testWar.addClass(CustomCodesService.class);
 
-       // testWar.addAsResource("persistence-integration.xml", "META-INF/persistence.xml");
+        testWar.addAsResource("persistence-integration.xml", "META-INF/persistence.xml");
 
 
         return testWar;

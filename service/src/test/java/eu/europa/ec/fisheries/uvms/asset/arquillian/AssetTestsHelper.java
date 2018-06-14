@@ -1,16 +1,17 @@
 package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
+
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 
 public class AssetTestsHelper {
 

@@ -1,19 +1,20 @@
 package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetGroupDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetGroupFieldDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import javax.inject.Inject;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import javax.inject.Inject;
-import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetGroupDao;
-import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetGroupFieldDao;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
 
 @RunWith(Arquillian.class)
 public class AssetGroupFieldTestsIT extends TransactionalTests {
