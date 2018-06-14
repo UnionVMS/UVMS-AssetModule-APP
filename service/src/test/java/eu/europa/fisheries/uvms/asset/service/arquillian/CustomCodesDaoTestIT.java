@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.asset.arquillian;
+package eu.europa.fisheries.uvms.asset.service.arquillian;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

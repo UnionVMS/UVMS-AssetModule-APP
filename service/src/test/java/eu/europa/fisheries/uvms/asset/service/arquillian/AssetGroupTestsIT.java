@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.asset.arquillian;
+package eu.europa.fisheries.uvms.asset.service.arquillian;
 
 
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetGroupDao;
