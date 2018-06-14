@@ -1,17 +1,29 @@
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.bean;
 
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalSource;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
+import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelMapperException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalUnmarshallException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.message.constants.MessageConstants;
+import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.DataSourceQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ErrorEvent;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.EventMessage;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.ParameterKey;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Resource;
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.jms.*;
 
 @Stateless
 @LocalBean
@@ -19,8 +31,8 @@ public class GetReceivedEventBean {
 
     final static Logger LOG = LoggerFactory.getLogger(GetReceivedEventBean.class);
 
-    //@Resource(lookup = MessageConstants.JAVA_MESSAGE_CONNECTION_FACTORY)
-    //private ConnectionFactory connectionFactory;
+    @Resource(lookup = MessageConstants.JAVA_MESSAGE_CONNECTION_FACTORY)
+    private ConnectionFactory connectionFactory;
 
     // TODO: NOOOOOOOOOO, Config Module is locally deployed in MobileTerminal...
     @EJB
@@ -61,7 +73,6 @@ public class GetReceivedEventBean {
     // TODO: Go through this logic and error handling
     private MobileTerminalType getMobileTerminal(EventMessage message) {
         return null;
-
         /*
         GetMobileTerminalRequest request = null;
         MobileTerminalType mobTerm = null;
@@ -99,12 +110,7 @@ public class GetReceivedEventBean {
         */
     }
 
-//    private DataSourceQueue decideDataflow()  {
-        private Object decideDataflow()  {
-
-        return null;
-
-        /*
+    private DataSourceQueue decideDataflow() throws MobileTerminalServiceException {
         try {
             Boolean national = parameters.getBooleanValue(ParameterKey.USE_NATIONAL.getKey());
             LOG.debug("Settings for dataflow are: NATIONAL: {}", national.toString());
@@ -116,6 +122,5 @@ public class GetReceivedEventBean {
             LOG.error("[ Error when deciding data flow. ] {}", ex.getMessage());
             throw new MobileTerminalServiceException(ex.getMessage());
         }
-        */
     }
 }
