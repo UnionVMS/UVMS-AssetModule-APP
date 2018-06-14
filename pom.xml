@@ -100,7 +100,6 @@
     <modules>
     	<module>model</module>
         <module>LIQUIBASE</module>
-        <module>domain</module>
         <module>rest</module>
         <module>service</module>
         <module>deprecated-message</module>
