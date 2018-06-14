@@ -68,7 +68,7 @@ public class MobileTerminalServiceBean {
 
 
     @EJB
-    private ConfigServiceBean configModel;
+    private ConfigServiceBeanMT configModel;
 
     @EJB
     private PollServiceBean pollModel;
