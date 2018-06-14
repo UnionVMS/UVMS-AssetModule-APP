@@ -1,6 +1,10 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
 import java.io.File;
+
+import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
+import eu.europa.ec.fisheries.uvms.asset.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.CustomCodesService;
 import org.eu.ingwar.tools.arquillian.extension.suite.annotations.ArquillianSuiteDeployment;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -31,7 +35,16 @@ public abstract class BuildAssetServiceDeployment {
         testWar.addAsLibraries(files);
         
         testWar.addPackages(true, "eu.europa.fisheries.uvms.asset.service");
-        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset.service");
+        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset.bean");
+        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset.exception");
+        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset.dto");
+        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset.mapper");
+        testWar.addClass(AssetService.class);
+        testWar.addClass(AssetGroupService.class);
+        testWar.addClass(CustomCodesService.class);
+
+       // testWar.addAsResource("persistence-integration.xml", "META-INF/persistence.xml");
+
 
         return testWar;
     }
