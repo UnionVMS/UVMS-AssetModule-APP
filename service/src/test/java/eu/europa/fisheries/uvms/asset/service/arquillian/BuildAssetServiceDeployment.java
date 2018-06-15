@@ -46,10 +46,20 @@ public abstract class BuildAssetServiceDeployment {
 
 
 /*
+        testWar.addPackages(true,"eu.europa.ec.fisheries.schema.mobileterminal");          // model
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.model.dto");  // model
+
         testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.service");
-        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.exception");  // from MODEL
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.bean");
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.exception");
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.dto");
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.mapper");
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.search");
         testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.message.event");
-        testWar.addClass(PollResponseType.class); // MODEL
+
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.exchange.model");         // exchange
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.exchange.common");        // exchange
+        testWar.addPackages(true,"eu.europa.ec.fisheries.schema.exchange.common.v1");   // exchange
 */
         testWar.addClass(AssetService.class);
         testWar.addClass(AssetGroupService.class);
