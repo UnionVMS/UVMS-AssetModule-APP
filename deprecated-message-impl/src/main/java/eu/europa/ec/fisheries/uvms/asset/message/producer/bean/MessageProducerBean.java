@@ -26,6 +26,7 @@ import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +37,6 @@ import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.JMSUtils;
 import eu.europa.ec.fisheries.uvms.config.constants.ConfigConstants;
@@ -169,7 +169,7 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
             response.setJMSCorrelationID(message.getMessage().getJMSMessageID());
             getProducer(session, message.getMessage().getJMSReplyTo()).send(response);
 
-        } catch (JMSException | AssetModelMarshallException e) {
+        } catch (JMSException | AssetException e) {
             LOG.error("[ Error when returning Error message to recipient. ] {} ", e.getMessage());
         } catch (EJBTransactionRolledbackException e) {
             LOG.error("[ Error when returning Error message to recipient. Usual cause is NoAssetEntityFoundException ] {} ", e.getMessage());

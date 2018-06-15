@@ -24,8 +24,6 @@ import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetGroupDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetGroupFieldDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.InputArgumentException;
 
 @Stateless
 public class AssetGroupServiceBean implements AssetGroupService {
@@ -36,135 +34,85 @@ public class AssetGroupServiceBean implements AssetGroupService {
     @Inject
     private AssetGroupFieldDao assetGroupFieldDao;
 
-    /**
-     * create assetGroup
-     *
-     * @param assetGroup
-     * @param username
-     * @return
-     * @throws AssetException
-     */
     @Override
     public AssetGroup createAssetGroup(AssetGroup assetGroup, String username) {
         if (assetGroup == null) {
-            throw new IllegalArgumentException("Cannot create asset group because the group is null.");
+            throw new NullPointerException("Cannot create asset group because the group is null.");
         }
-        if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Username must be provided for selected operation");
+        if (username == null || username.trim().isEmpty()) {
+            throw new NullPointerException("Username must be provided for selected operation");
         }
-
         assetGroup.setOwner(username);
         assetGroup.setUpdatedBy(username);
         assetGroup.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
         return assetGroupDao.createAssetGroup(assetGroup);
     }
 
-    /**
-     * update assetgroup
-     *
-     * @param assetGroup
-     * @param username
-     * @return
-     * @throws AssetException
-     */
     @Override
     public AssetGroup updateAssetGroup(AssetGroup assetGroup, String username) {
-
         if (assetGroup == null || assetGroup.getId() == null) {
-            throw new IllegalArgumentException("Cannot update asset group because group or ID is null.");
+            throw new NullPointerException("Cannot update asset group because group or ID is null.");
         }
-        if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Username must be provided for selected operation");
+        if (username == null || username.trim().isEmpty()) {
+            throw new NullPointerException("Username must be provided for selected operation");
         }
 
         AssetGroup fetchedAssetGroup = assetGroupDao.getAssetGroupByGuid(assetGroup.getId());
         if (fetchedAssetGroup == null) {
-            throw new IllegalArgumentException("No assetgroup found.");
+            throw new NullPointerException("No assetGroup found.");
         }
         assetGroup.setUpdatedBy(username);
         assetGroup.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
         return assetGroupDao.updateAssetGroup(assetGroup);
     }
 
-    /**
-     * get an assetgroup via its UUID
-     *
-     * @param guid
-     * @return
-     * @throws AssetException
-     */
     @Override
     public AssetGroup getAssetGroupById(UUID guid)  {
-
         if (guid == null) {
-            throw new IllegalArgumentException("Cannot get asset group because ID is null.");
+            throw new NullPointerException("Cannot get asset group because ID is null.");
         }
-
         return assetGroupDao.getAssetGroupByGuid(guid);
     }
 
     /**
-     * delete assetGroup  (set it ti archived NO physical delete)
+     * delete assetGroup  (set it to archived NO physical delete)
      *
      * @param guid
      * @param username
-     * @return
-     * @throws AssetException
+     * @return AssetGroup
      */
     @Override
     public AssetGroup deleteAssetGroupById(UUID guid, String username)  {
-
         if (guid == null) {
-            throw new IllegalArgumentException("Cannot delete asset group because the group ID is null.");
+            throw new NullPointerException("Cannot delete asset group because the group ID is null.");
         }
-        if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Username must be provided for selected operation");
+        if (username == null || username.trim().isEmpty()) {
+            throw new NullPointerException("Username must be provided for selected operation");
         }
-
-            AssetGroup groupEntity = assetGroupDao.getAssetGroupByGuid(guid);
-            if (groupEntity == null) {
-                throw new IllegalArgumentException("No assetgroup found.");
-            }
-            groupEntity.setArchived(true);
-            groupEntity.setUpdatedBy(username);
-            groupEntity.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
-            return groupEntity;
+        AssetGroup groupEntity = assetGroupDao.getAssetGroupByGuid(guid);
+        if (groupEntity == null) {
+            throw new NullPointerException("No assetgroup found.");
+        }
+        groupEntity.setArchived(true);
+        groupEntity.setUpdatedBy(username);
+        groupEntity.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
+        return groupEntity;
     }
 
-    /**
-     * get all assetgroups for an asset with specified User
-     *
-     * @param user
-     * @return
-     * @throws InputArgumentException
-     */
     @Override
     public List<AssetGroup> getAssetGroupList(String user)  {
-
-        if (user == null || user.isEmpty()) {
-            throw new IllegalArgumentException("Invalid user");
+        if (user == null || user.trim().isEmpty()) {
+            throw new NullPointerException("Invalid user");
         }
-
         return assetGroupDao.getAssetGroupByUser(user);
     }
 
-
-    /**
-     * get all assetgroups for an asset with specified Id
-     *
-     * @param assetId
-     * @return
-     * @throws InputArgumentException
-     */
     @Override
     public List<AssetGroup> getAssetGroupListByAssetId(UUID assetId)  {
-
         // TODO maybe this could be done more efficient if search is from the other side and joining . . . .
-
         if (assetId == null) {
-            throw new IllegalArgumentException("Invalid asset");
+            throw new NullPointerException("Invalid asset");
         }
-
         List<AssetGroup> searchResultList = new ArrayList<>();
         List<AssetGroup> filterGroupList = assetGroupDao.getAssetGroupAll();
         for (AssetGroup group : filterGroupList) {
@@ -184,25 +132,22 @@ public class AssetGroupServiceBean implements AssetGroupService {
      * @param parentAssetGroupId
      * @param assetGroupField
      * @param username
-     * @return
-     * @throws InputArgumentException
+     * @return AssetGroupField
      */
     @Override
     public AssetGroupField createAssetGroupField(UUID parentAssetGroupId, AssetGroupField assetGroupField, String username)  {
-
         if (parentAssetGroupId == null) {
-            throw new IllegalArgumentException("Cannot create assetGroupField because the assetGroup is null.");
+            throw new NullPointerException("Cannot create AssetGroupField because the AssetGroup ID is Null");
         }
         if (assetGroupField == null) {
-            throw new IllegalArgumentException("Cannot create assetGroupField because the assetGroupField is null.");
+            throw new NullPointerException("Cannot create AssetGroupField because the AssetGroupField is Null");
         }
-        if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Username must be provided for selected operation");
+        if (username == null || username.trim().isEmpty()) {
+            throw new NullPointerException("Username must be provided for selected operation");
         }
-
         AssetGroup parentAssetGroup = assetGroupDao.getAssetGroupByGuid(parentAssetGroupId);
         if (parentAssetGroup == null) {
-            throw new IllegalArgumentException("Assetgroup with id does not exist " + parentAssetGroupId);
+            throw new NullPointerException("AssetGroup with ID: " + parentAssetGroupId + " does not exist");
         }
 
         assetGroupField.setAssetGroup(parentAssetGroup.getId());
@@ -211,104 +156,68 @@ public class AssetGroupServiceBean implements AssetGroupService {
         return assetGroupFieldDao.create(assetGroupField);
     }
 
-    /**
-     * update assetgroup
-     *
-     * @param assetGroupField
-     * @param username
-     * @return
-     * @throws InputArgumentException
-     */
     @Override
     public AssetGroupField updateAssetGroupField(AssetGroupField assetGroupField, String username)  {
-
         if (assetGroupField == null) {
-            throw new IllegalArgumentException("Cannot update assetGroupField because assetField is invalid.");
+            throw new NullPointerException("Cannot update assetGroupField because assetField is invalid.");
         }
-        if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Username must be provided for selected operation");
+        if (username == null || username.trim().isEmpty()) {
+            throw new NullPointerException("Username must be provided for selected operation");
         }
         AssetGroupField fetchedField = assetGroupFieldDao.get(assetGroupField.getId());
         if (fetchedField == null) {
-            throw new IllegalArgumentException("AssetGroupField does not exist " + assetGroupField.getId().toString());
+            throw new NullPointerException("AssetGroupField does not exist " + assetGroupField.getId().toString());
         }
-
         assetGroupField.setUpdatedBy(username);
         assetGroupField.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
         return assetGroupFieldDao.update(assetGroupField);
     }
 
-    /**
-     * get an assetgroup via its Id
-     *
-     * @param id
-     * @return
-     * @throws InputArgumentException
-     */
     @Override
     public AssetGroupField getAssetGroupField(UUID id) {
-
         if (id == null) {
-            throw new IllegalArgumentException("Cannot get assetGroupField because ID is null.");
+            throw new NullPointerException("Cannot get assetGroupField because ID is null.");
         }
-
         return assetGroupFieldDao.get(id);
     }
 
-    /**
-     * delete assetGroupField
-     *
-     * @param id
-     * @param username
-     * @return
-     * @throws InputArgumentException
-     */
     @Override
     public AssetGroupField deleteAssetGroupField(UUID id, String username)  {
-
         if (id == null) {
-            throw new IllegalArgumentException("Cannot delete assetGroupId because ID is null.");
+            throw new NullPointerException("Cannot delete assetGroupId because ID is null.");
         }
-        if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Username must be provided for selected operation");
+        if (username == null || username.trim().isEmpty()) {
+            throw new NullPointerException("Username must be provided for selected operation");
         }
 
         AssetGroupField fetchedAssetGroupField = assetGroupFieldDao.get(id);
         if (fetchedAssetGroupField == null) {
             return null;
         }
-
         return assetGroupFieldDao.delete(fetchedAssetGroupField);
     }
 
     @Override
     public List<AssetGroupField> retrieveFieldsForGroup(UUID assetGroupId)  {
-
         if (assetGroupId == null) {
-            throw new IllegalArgumentException("Cannot retrieve list for group because assetGroup is null.");
+            throw new NullPointerException("Cannot retrieve list for group because assetGroup is null.");
         }
-
         AssetGroup assetGroup = assetGroupDao.getAssetGroupByGuid(assetGroupId);
         if (assetGroup == null) {
-            throw new IllegalArgumentException("Cannot retrieve list for group because assetGroup does not exist.");
+            throw new NullPointerException("Cannot retrieve list for group because assetGroup does not exist.");
         }
-
         return assetGroupFieldDao.retrieveFieldsForGroup(assetGroup.getId());
     }
 
     @Override
     public void removeFieldsForGroup(UUID assetGroupId)  {
-
         if (assetGroupId == null) {
-            throw new IllegalArgumentException("Cannot retrieve list for group because assetGroup is null.");
+            throw new NullPointerException("Cannot retrieve list for group because assetGroup is null.");
         }
         AssetGroup assetGroup = assetGroupDao.getAssetGroupByGuid(assetGroupId);
         if (assetGroup == null) {
-            throw new IllegalArgumentException("Cannot retrieve list for group because assetGroup does not exist.");
+            throw new NullPointerException("Cannot retrieve list for group because assetGroup does not exist.");
         }
-
         assetGroupFieldDao.removeFieldsForGroup(assetGroup.getId());
     }
-
-
 }

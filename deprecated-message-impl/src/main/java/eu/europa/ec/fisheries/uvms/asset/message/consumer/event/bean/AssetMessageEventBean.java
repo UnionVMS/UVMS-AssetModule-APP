@@ -29,8 +29,6 @@ import eu.europa.ec.fisheries.uvms.asset.message.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
@@ -68,7 +66,7 @@ public class AssetMessageEventBean {
 
     public void getAsset(TextMessage textMessage, AssetId assetId) {
 
-        Asset asset = null;
+        Asset asset;
         boolean messageSent = false;
 
         try {
@@ -85,7 +83,7 @@ public class AssetMessageEventBean {
             try {
                 String response = AssetModuleResponseMapper.mapAssetModuleResponse(assetMapper.toAssetModel(asset));
                 messageProducer.sendModuleResponseMessage(textMessage, response);
-            } catch (AssetModelMapperException e) {
+            } catch (AssetException e) {
                 LOG.error("[ Error when mapping asset ] ");
                 assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when mapping asset" + e.getMessage())));
             }
@@ -160,7 +158,7 @@ public class AssetMessageEventBean {
             PingResponse pingResponse = new PingResponse();
             pingResponse.setResponse("pong");
             messageProducer.sendModuleResponseMessage(message.getMessage(), JAXBMarshaller.marshallJaxBObjectToString(pingResponse));
-        } catch (AssetModelMarshallException e) {
+        } catch (AssetException e) {
             LOG.error("[ Error when marshalling ping response ]");
         }
     }
