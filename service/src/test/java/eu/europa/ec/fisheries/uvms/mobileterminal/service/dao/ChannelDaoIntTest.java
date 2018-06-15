@@ -8,6 +8,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.util.DateUtils;
 import eu.europa.fisheries.uvms.asset.service.arquillian.TransactionalTests;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -21,6 +22,7 @@ import static org.junit.Assert.*;
 /**
  */
 @RunWith(Arquillian.class)
+@Ignore
 public class ChannelDaoIntTest extends TransactionalTests {
 
     @Inject

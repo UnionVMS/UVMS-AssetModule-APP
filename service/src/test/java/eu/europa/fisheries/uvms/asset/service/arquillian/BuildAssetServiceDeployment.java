@@ -45,12 +45,12 @@ public abstract class BuildAssetServiceDeployment {
 
 
 
-
+/*
         testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.service");
         testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.exception");  // from MODEL
         testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.message.event");
         testWar.addClass(PollResponseType.class); // MODEL
-
+*/
         testWar.addClass(AssetService.class);
         testWar.addClass(AssetGroupService.class);
         testWar.addClass(CustomCodesService.class);
