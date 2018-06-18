@@ -3,6 +3,7 @@ package eu.europa.fisheries.uvms.asset.service.arquillian;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 import eu.europa.ec.fisheries.uvms.asset.CustomCodesService;
+import eu.europa.fisheries.uvms.TransactionalTests;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
@@ -16,17 +17,14 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.*;
 
-
 @RunWith(Arquillian.class)
 public class CustomCodesServiceIntTest extends TransactionalTests {
 
-
     private static final String CONSTANT = "testconstant";
     private static final String CODE = "testcode";
-    Random rnd = new Random();
+    private Random rnd = new Random();
     @EJB
     CustomCodesService service;
-
 
     @Test
     @OperateOnDeployment("normal")
@@ -85,11 +83,9 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
         service.delete(CONSTANT, CODE, fromDate, toDate);
     }
 
-
     @Test
     @OperateOnDeployment("normal")
     public void exists() {
-
         Integer n = rnd.nextInt(10);
         Integer duration = rnd.nextInt(90);
         LocalDateTime fromDate = LocalDateTime.now(Clock.systemUTC());
@@ -151,15 +147,12 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void updateDescription() throws HeuristicRollbackException, RollbackException, HeuristicMixedException, SystemException, NotSupportedException {
-
-
         Integer n = rnd.nextInt(10);
         Integer duration = rnd.nextInt(90);
         LocalDateTime fromDate = LocalDateTime.now(Clock.systemUTC());
         fromDate = fromDate.minusDays(n);
         LocalDateTime toDate = LocalDateTime.now(Clock.systemUTC());
         toDate = toDate.plusDays(duration);
-
 
         CustomCode created_record = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description");
         String createdDescription = created_record.getDescription();
@@ -177,9 +170,7 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
         service.deleteAllFor(CONSTANT);
     }
 
-
     private CustomCodesPK createPrimaryKey() {
-
         Integer n = rnd.nextInt(10);
         Integer duration = rnd.nextInt(90);
         LocalDateTime fromDate = LocalDateTime.now(Clock.systemUTC());
@@ -199,22 +190,14 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
     public void storeLatest() throws HeuristicRollbackException, HeuristicMixedException, RollbackException, SystemException, NotSupportedException {
         CustomCode customCode = new CustomCode();
         CustomCodesPK primaryKey = createPrimaryKey();
-
         customCode.setPrimaryKey(primaryKey);
         customCode.setDescription("TEST_DESCRIPTION_TEST");
         CustomCode created_record = service.replace(customCode);
-
-
         CustomCode aSecondCustomCode = new CustomCode();
         aSecondCustomCode.setPrimaryKey(primaryKey);
         aSecondCustomCode.setDescription("TEST_DESCRIPTION_TEST_SECONF");
         CustomCode creasted_ASecond = service.replace(aSecondCustomCode);
-
-
         CustomCode fetched_record = service.get(primaryKey);
-
         service.deleteAllFor("TEST_constant_TEST");
     }
-
-
 }

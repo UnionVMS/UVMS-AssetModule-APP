@@ -3,6 +3,7 @@ package eu.europa.fisheries.uvms.asset.service.arquillian;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.fisheries.uvms.TransactionalTests;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
@@ -12,7 +13,6 @@ import org.junit.runner.RunWith;
 import javax.inject.Inject;
 import java.util.Date;
 import java.util.UUID;
-
 
 /**
  * Main focus for this testclass is to verify that the keyhandling is ok

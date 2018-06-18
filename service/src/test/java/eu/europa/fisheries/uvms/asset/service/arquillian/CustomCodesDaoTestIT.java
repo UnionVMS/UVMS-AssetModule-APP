@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.CustomCodeDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
+import eu.europa.fisheries.uvms.TransactionalTests;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
@@ -23,18 +24,16 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
 
     private static final String CONSTANT = "TESTcarrieractiveTEST";
 
-
     private ObjectMapper MAPPER = new ObjectMapper();
 
+    private Random rnd = new Random();
 
     @Inject
-    CustomCodeDao customCodesDao;
-
+    private CustomCodeDao customCodesDao;
 
     @Test
     @OperateOnDeployment("normal")
     public void create() throws JsonProcessingException {
-
 
         CustomCode record_active = createHelper(CONSTANT, true);
         CustomCode record_inactive = createHelper(CONSTANT, false);
@@ -54,9 +53,7 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
         Assert.assertEquals(rs.size(), 2);
         customCodesDao.delete(record_active.getPrimaryKey());
         customCodesDao.delete(record_inactive.getPrimaryKey());
-
     }
-
 
     @Test
     @OperateOnDeployment("normal")
@@ -68,7 +65,6 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
         Assert.assertNotNull(rec);
         customCodesDao.delete(record.getPrimaryKey());
     }
-
 
     @Test
     @OperateOnDeployment("normal")
@@ -159,12 +155,6 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
         customCodesDao.deleteAllFor(CONSTANT);
     }
 
-
-
-
-
-    Random rnd = new Random();
-
     private CustomCode createHelper(String constant, Boolean active) throws JsonProcessingException {
         CustomCode record = new CustomCode();
         if (active) {
@@ -207,10 +197,7 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
         return record;
     }
 
-
-
     private CustomCodesPK createPrimaryKey(String constant, String code) {
-
         Integer n = rnd.nextInt(10);
         Integer duration = rnd.nextInt(90);
         LocalDateTime fromDate = LocalDateTime.now(Clock.systemUTC());
@@ -220,9 +207,4 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
         CustomCodesPK primaryKey = new CustomCodesPK(constant, code, fromDate, toDate);
         return primaryKey;
     }
-
-
-
 }
-
-

@@ -11,6 +11,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -25,6 +28,7 @@ import java.util.Date;
 @NamedQueries({
 	@NamedQuery(name = "PluginCapability.findAll", query = "SELECT p FROM MobileTerminalPluginCapability p"),
 })
+@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 public class MobileTerminalPluginCapability implements Serializable {
     private static final long serialVersionUID = 1L;
 

@@ -8,12 +8,12 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.util.DateUtils;
+import eu.europa.fisheries.uvms.TransactionalTests;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import  eu.europa.fisheries.uvms.asset.service.arquillian.TransactionalTests;
 
 import javax.ejb.EJB;
 import javax.inject.Inject;
@@ -22,8 +22,6 @@ import java.util.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
-/**
- */
 @RunWith(Arquillian.class)
 @Ignore
 public class ChannelDaoIntTest extends TransactionalTests {
@@ -39,8 +37,7 @@ public class ChannelDaoIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-
-    public void testGetPollableListSearch() throws Exception {
+    public void testGetPollableListSearch() {
         //Given - need a string list of id's.
         String id1 = "test_id1";
         String id2 = "test_id2";
@@ -59,7 +56,7 @@ public class ChannelDaoIntTest extends TransactionalTests {
     }
 
     @Test
-    @OperateOnDeployment("mt")
+    @OperateOnDeployment("normal")
     public void testGetPollableListSearch_emptyList() {
 
         //Given - empty id list
@@ -74,7 +71,7 @@ public class ChannelDaoIntTest extends TransactionalTests {
     }
 
     @Test
-    @OperateOnDeployment("mt")
+    @OperateOnDeployment("normal")
     public void testGetPollableListSearch_NULL() {
 
         //Given - null
@@ -89,7 +86,7 @@ public class ChannelDaoIntTest extends TransactionalTests {
     }
 
     @Test
-    @OperateOnDeployment("mt")
+    @OperateOnDeployment("normal")
     public void testGetActiveDNID() {
 
         //Given
@@ -103,7 +100,7 @@ public class ChannelDaoIntTest extends TransactionalTests {
     }
 
     @Test
-    @OperateOnDeployment("mt")
+    @OperateOnDeployment("normal")
     public void testGetActiveDNID_emptyList() {
 
         //Given

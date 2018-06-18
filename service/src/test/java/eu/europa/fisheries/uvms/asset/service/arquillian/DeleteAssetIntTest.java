@@ -1,6 +1,7 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
 import eu.europa.ec.fisheries.uvms.asset.AssetService;
+import eu.europa.fisheries.uvms.TransactionalTests;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -15,15 +16,12 @@ import javax.ejb.EJB;
 @RunWith(Arquillian.class)
 public class DeleteAssetIntTest extends TransactionalTests {
 
-
     @EJB
-    AssetService assetService;
-
+    private AssetService assetService;
 
     @Test
     @OperateOnDeployment("normal")
     public void deleteAsset() {
-
         /*
 
         // simplest possible test
@@ -51,7 +49,6 @@ public class DeleteAssetIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void deleteAsset_FAIL_NonsenseKey() {
-
         /*
 
         // simplest possible test
@@ -73,8 +70,5 @@ public class DeleteAssetIntTest extends TransactionalTests {
         }
 
         */
-
     }
-
-
 }

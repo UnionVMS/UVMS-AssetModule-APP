@@ -41,6 +41,11 @@ public abstract class BuildAssetServiceDeployment {
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset.arquillian");
 
 
+        testWar.addPackages(true, "eu.europa.fisheries.uvms.mobileterminal.service");
+        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.mobileterminal.service.exception");
+        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.mobileterminal.service.entity");
+
+
 
         testWar.addClass(AssetService.class);
         testWar.addClass(AssetGroupService.class);

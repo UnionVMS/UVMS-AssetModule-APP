@@ -1,6 +1,7 @@
-package eu.europa.fisheries.uvms.asset.service.arquillian;
+package eu.europa.fisheries.uvms;
 
 
+import eu.europa.fisheries.uvms.asset.service.arquillian.BuildAssetServiceDeployment;
 import org.junit.After;
 import org.junit.Before;
 

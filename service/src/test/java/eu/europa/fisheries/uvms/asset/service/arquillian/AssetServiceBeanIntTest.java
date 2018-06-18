@@ -15,6 +15,7 @@ import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 
+import eu.europa.fisheries.uvms.TransactionalTests;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
@@ -32,10 +33,8 @@ import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 @RunWith(Arquillian.class)
 public class AssetServiceBeanIntTest extends TransactionalTests {
 
-    Random rnd = new Random();
-
     @Inject
-    AssetService assetService;
+    private AssetService assetService;
 
     @Test
     @OperateOnDeployment("normal")

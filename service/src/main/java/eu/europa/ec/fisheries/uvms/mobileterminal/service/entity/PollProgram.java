@@ -33,9 +33,9 @@ import java.util.UUID;
 	@NamedQuery(name = "PollProgram.findAll", query = "SELECT p FROM PollProgram p"),
 	@NamedQuery(name = MobileTerminalConstants.POLL_PROGRAM_FIND_BY_ID, query = "SELECT p FROM PollProgram p WHERE p.guid = :guid"),
 	@NamedQuery(name = MobileTerminalConstants.POLL_PROGRAM_FIND_ALIVE, query = "SELECT p FROM PollProgram  p WHERE p.stopDate > :currentDate " +
-	"AND p.pollState <> eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum.ARCHIVED"),
+	"AND p.pollState <> eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollStateEnum.ARCHIVED"),
     @NamedQuery(name = MobileTerminalConstants.POLL_PROGRAM_FIND_RUNNING_AND_STARTED,
-    query = "SELECT p FROM PollProgram  p WHERE p.startDate < :currentDate AND p.pollState = eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum.STARTED") })
+    query = "SELECT p FROM PollProgram  p WHERE p.startDate < :currentDate AND p.pollState = eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollStateEnum.STARTED") })
 public class PollProgram implements Serializable {
     private static final long serialVersionUID = 1L;
 
