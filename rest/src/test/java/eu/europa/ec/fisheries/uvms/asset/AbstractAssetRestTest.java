@@ -49,6 +49,7 @@ public abstract class AbstractAssetRestTest {
         testWar.addAsLibraries(files);
             
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset.rest");
+        testWar.addClass(AuthenticationFilterMock.class);
 
         testWar.delete("/WEB-INF/web.xml");
         testWar.addAsWebInfResource("mock-web.xml", "web.xml");
