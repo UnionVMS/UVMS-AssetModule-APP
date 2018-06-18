@@ -1,4 +1,4 @@
-package eu.europa.fisheries.uvms.asset.service.arquillian;
+package eu.europa.fisheries.uvms.mobileterminal.service.arquillian;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttributeType;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.ChannelDaoBean;
@@ -13,6 +13,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import  eu.europa.fisheries.uvms.asset.service.arquillian.TransactionalTests;
 
 import javax.ejb.EJB;
 import javax.inject.Inject;
