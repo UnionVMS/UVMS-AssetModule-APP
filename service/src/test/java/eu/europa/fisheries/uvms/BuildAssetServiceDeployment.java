@@ -22,9 +22,6 @@ public abstract class BuildAssetServiceDeployment {
 
         WebArchive testWar = ShrinkWrap.create(WebArchive.class, "test.war");
 
-//        File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
-//                .importRuntimeAndTestDependencies().resolve().withTransitivity().asFile();
-//        testWar.addAsLibraries(files);
 
         File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
                 .resolve("eu.europa.ec.fisheries.uvms.asset:deprecated-asset-message",
@@ -45,7 +42,56 @@ public abstract class BuildAssetServiceDeployment {
 
 
 
+        testWar.addClass(AssetService.class);
+        testWar.addClass(AssetGroupService.class);
+        testWar.addClass(CustomCodesService.class);
+
+
+// MobileTerminalDeps
 /*
+        testWar.addPackages(true,"eu.europa.ec.fisheries.schema.mobileterminal");          // model
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.model.dto");  // model
+
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.service");
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.exception");
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.message.event");
+
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.service.bean");
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.service.constant");
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.service.exception");
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.service.dto");
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper");
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.service.search");
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.service.message.event");
+
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.exchange.model");         // exchange
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.exchange.common");        // exchange
+        testWar.addPackages(true,"eu.europa.ec.fisheries.schema.exchange.common.v1");   // exchange
+
+*/
+
+
+        testWar.addAsResource("persistence-integration.xml", "META-INF/persistence.xml");
+
+
+        return testWar;
+    }
+
+    /*
+    @Deployment(name = "mt", order = 2)
+    public static Archive<?> createDeploymentMobileTerminal() {
+
+        WebArchive testWar = ShrinkWrap.create(WebArchive.class, "test2.war");
+
+
+        File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
+                .resolve("eu.europa.ec.fisheries.uvms.audit:audit-model",
+                        "eu.europa.ec.fisheries.uvms:uvms-config",
+                        "eu.europa.ec.fisheries.uvms.config:config-model:4.0.0")
+                .withoutTransitivity().asFile();
+        testWar.addAsLibraries(files);
+
+
         testWar.addPackages(true,"eu.europa.ec.fisheries.schema.mobileterminal");          // model
         testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.mobileterminal.model.dto");  // model
 
@@ -60,14 +106,15 @@ public abstract class BuildAssetServiceDeployment {
         testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.exchange.model");         // exchange
         testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.exchange.common");        // exchange
         testWar.addPackages(true,"eu.europa.ec.fisheries.schema.exchange.common.v1");   // exchange
-*/
-        testWar.addClass(AssetService.class);
-        testWar.addClass(AssetGroupService.class);
-        testWar.addClass(CustomCodesService.class);
 
         testWar.addAsResource("persistence-integration.xml", "META-INF/persistence.xml");
 
 
         return testWar;
     }
+
+    */
+
+
+
 }

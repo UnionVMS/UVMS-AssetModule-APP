@@ -8,7 +8,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.util.DateUtils;
-import eu.europa.fisheries.uvms.asset.service.arquillian.TransactionalTests;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Ignore;
@@ -59,7 +58,7 @@ public class ChannelDaoIntTest extends TransactionalTests {
     }
 
     @Test
-    @OperateOnDeployment("normal")
+    @OperateOnDeployment("mt")
     public void testGetPollableListSearch_emptyList() {
 
         //Given - empty id list
@@ -74,7 +73,7 @@ public class ChannelDaoIntTest extends TransactionalTests {
     }
 
     @Test
-    @OperateOnDeployment("normal")
+    @OperateOnDeployment("mt")
     public void testGetPollableListSearch_NULL() {
 
         //Given - null
@@ -89,7 +88,7 @@ public class ChannelDaoIntTest extends TransactionalTests {
     }
 
     @Test
-    @OperateOnDeployment("normal")
+    @OperateOnDeployment("mt")
     public void testGetActiveDNID() {
 
         //Given
@@ -103,7 +102,7 @@ public class ChannelDaoIntTest extends TransactionalTests {
     }
 
     @Test
-    @OperateOnDeployment("normal")
+    @OperateOnDeployment("mt")
     public void testGetActiveDNID_emptyList() {
 
         //Given
