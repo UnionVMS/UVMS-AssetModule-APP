@@ -24,7 +24,8 @@ import eu.europa.ec.fisheries.uvms.exchange.model.exception.ExchangeModelMapperE
 import eu.europa.ec.fisheries.uvms.exchange.model.mapper.ExchangeModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalMessageException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.MessageProducer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.MTMessageConsumer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.MTMessageProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ModuleQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConfigType;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
@@ -56,7 +57,7 @@ public class ConfigServiceBeanMT {
     private final static Logger LOG = LoggerFactory.getLogger(ConfigServiceBeanMT.class);
 
     @EJB
-    private MessageProducer messageProducer;
+    private MTMessageProducer MTMessageProducer;
 
     @EJB
     private OceanRegionDaoBean oceanRegionDao;
@@ -71,7 +72,7 @@ public class ConfigServiceBeanMT {
     private DNIDListDaoBean dnidListDao;
 
     @EJB
-    private eu.europa.ec.fisheries.uvms.mobileterminal.message.event.MessageConsumer messageConsumer;
+    private MTMessageConsumer MTMessageConsumer;
 
     public List<TerminalSystemType> getTerminalSystems() {
         return getAllTerminalSystems();
@@ -90,8 +91,8 @@ public class ConfigServiceBeanMT {
             List<PluginType> pluginTypes = new ArrayList<>();
             pluginTypes.add(PluginType.SATELLITE_RECEIVER);
             String data = ExchangeModuleRequestMapper.createGetServiceListRequest(pluginTypes);
-            String messageId = messageProducer.sendModuleMessage(data, ModuleQueue.EXCHANGE);
-            TextMessage response = messageConsumer.getMessage(messageId, TextMessage.class);
+            String messageId = MTMessageProducer.sendModuleMessage(data, ModuleQueue.EXCHANGE);
+            TextMessage response = MTMessageConsumer.getMessage(messageId, TextMessage.class);
             return ExchangeModuleResponseMapper.mapServiceListResponse(response, messageId);
         } catch (ExchangeModelMapperException | MobileTerminalMessageException e) {
             LOG.error("Failed to map to exchange get service list request");

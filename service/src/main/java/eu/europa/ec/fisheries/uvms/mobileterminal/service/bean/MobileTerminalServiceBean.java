@@ -21,8 +21,8 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalExcept
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelMapperException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.DataSourceQueue;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.MessageProducer;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.MessageConsumer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.MTMessageProducer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.MTMessageConsumer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ModuleQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.MobileTerminalDataSourceRequestMapper;
@@ -58,10 +58,10 @@ public class MobileTerminalServiceBean {
     private final static Logger LOG = LoggerFactory.getLogger(MobileTerminalServiceBean.class);
 
     @EJB
-    private MessageProducer messageProducer;
+    private MTMessageProducer MTMessageProducer;
 
     @EJB
-    private MessageConsumer messageConsumer;
+    private MTMessageConsumer MTMessageConsumer;
 
     @EJB
     private PluginServiceBean pluginService;
@@ -93,7 +93,7 @@ public class MobileTerminalServiceBean {
         
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalCreated(createdMobileTerminal.getMobileTerminalId().getGuid(), username);
-            messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
+            MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException e) {
             LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was created", createdMobileTerminal.getMobileTerminalId()
                     .getGuid());
@@ -174,8 +174,8 @@ public class MobileTerminalServiceBean {
             return getMobileTerminalById(id.getGuid());
         }
         String data = MobileTerminalDataSourceRequestMapper.mapGetMobileTerminal(id);
-        String messageId = messageProducer.sendDataSourceMessage(data, queue);
-        TextMessage response = messageConsumer.getMessage(messageId, TextMessage.class);
+        String messageId = MTMessageProducer.sendDataSourceMessage(data, queue);
+        TextMessage response = MTMessageConsumer.getMessage(messageId, TextMessage.class);
         return MobileTerminalDataSourceResponseMapper.mapToMobileTerminalFromResponse(response, messageId);
     }
 
@@ -191,7 +191,7 @@ public class MobileTerminalServiceBean {
         MobileTerminalType terminalUpdate = updateMobileTerminal(mobileTerminal, comment, username);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalUpdated(terminalUpdate.getMobileTerminalId().getGuid(), comment, username);
-            messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
+            MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException e) {
             LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was updated", terminalUpdate.getMobileTerminalId()
                     .getGuid());
@@ -209,7 +209,7 @@ public class MobileTerminalServiceBean {
         MobileTerminalType terminalAssign = assignMobileTerminalToCarrier(query, comment, username);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalAssigned(terminalAssign.getMobileTerminalId().getGuid(), comment, username);
-            messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
+            MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException e) {
             LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was assigned", terminalAssign.getMobileTerminalId()
                     .getGuid());
@@ -222,7 +222,7 @@ public class MobileTerminalServiceBean {
         MobileTerminalType terminalUnAssign = unAssignMobileTerminalFromCarrier(query, comment, username);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalUnassigned(terminalUnAssign.getMobileTerminalId().getGuid(), comment, username);
-            messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
+            MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException e) {
             LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was unassigned", terminalUnAssign.getMobileTerminalId()
                     .getGuid());
@@ -250,7 +250,7 @@ public class MobileTerminalServiceBean {
             default:
                 break;
             }
-            messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
+            MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException e) {
             LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was set to status {}", terminalStatus
                     .getMobileTerminalId().getGuid(), status);

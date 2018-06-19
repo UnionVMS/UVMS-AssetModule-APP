@@ -42,7 +42,7 @@ public class ListReceivedEventBean {
                 String response = MobileTerminalModuleRequestMapper.mapGetMobileTerminalList(mobileTerminalTypes);
                 TextMessage responseMessage = session.createTextMessage(response);
                 responseMessage.setJMSCorrelationID(message.getJmsMessage().getJMSMessageID());
-                MessageProducer producer = session.createProducer(message.getJmsMessage().getJMSReplyTo());
+                AssetMessageProducer producer = session.createProducer(message.getJmsMessage().getJMSReplyTo());
                 producer.send(responseMessage);
             }
         } catch (MobileTerminalException | JMSException e) {
