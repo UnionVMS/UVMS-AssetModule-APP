@@ -13,7 +13,7 @@
 
             <!-- ONLY FOR TEST code is in liquibase -->
             <!-- for test with new fields in table -->
-            <property name="hibernate.hbm2ddl.auto" value="create" />
+            <!--property name="hibernate.hbm2ddl.auto" value="update" /-->
         </properties>
     </persistence-unit>
 </persistence>
