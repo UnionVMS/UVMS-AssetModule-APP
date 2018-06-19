@@ -19,7 +19,7 @@ import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 import eu.europa.ec.fisheries.schema.config.types.v1.PullSettingsStatus;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
-import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
+import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleResponseMapper;
 
@@ -30,7 +30,7 @@ import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleResponseMapper;
 public class ConfigServiceMock implements MessageListener {
     
     @Inject
-    MessageProducer messageProducer;
+    AssetMessageProducer assetMessageProducer;
     
     @Override
     public void onMessage(Message message) {
@@ -40,7 +40,7 @@ public class ConfigServiceMock implements MessageListener {
             mockSetting.setValue("Value");
             mockSetting.setDescription("From ConfigServiceMock.java");
             String response = ModuleResponseMapper.toPullSettingsResponse(Arrays.asList(mockSetting), PullSettingsStatus.OK);
-            messageProducer.sendModuleResponseMessage((TextMessage) message, response);
+            assetMessageProducer.sendModuleResponseMessage((TextMessage) message, response);
         } catch (ModelMarshallException e) {
         }
     }

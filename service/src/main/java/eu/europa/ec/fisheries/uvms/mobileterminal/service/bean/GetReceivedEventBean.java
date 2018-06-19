@@ -58,7 +58,7 @@ public class GetReceivedEventBean {
                 String response = MobileTerminalModuleRequestMapper.createMobileTerminalResponse(mobileTerminal);
                 TextMessage responseMessage = session.createTextMessage(response);
                 responseMessage.setJMSCorrelationID(message.getJmsMessage().getJMSMessageID());
-                MessageProducer producer = session.createProducer(message.getJmsMessage().getJMSReplyTo());
+                AssetMessageProducer producer = session.createProducer(message.getJmsMessage().getJMSReplyTo());
                 producer.send(responseMessage);
             }
 

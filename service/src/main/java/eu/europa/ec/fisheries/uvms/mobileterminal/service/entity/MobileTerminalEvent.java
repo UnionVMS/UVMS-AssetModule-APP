@@ -15,6 +15,8 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.EqualsUtil;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -28,6 +30,7 @@ import java.util.Date;
  */
 @Entity
 @NamedQuery(name="MobileTerminalEvent.findAll", query="SELECT m FROM MobileTerminalEvent m")
+@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 public class MobileTerminalEvent implements Serializable {
 	private static final long serialVersionUID = 1L;
 
