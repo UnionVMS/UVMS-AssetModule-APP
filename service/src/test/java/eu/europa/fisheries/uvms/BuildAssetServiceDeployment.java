@@ -25,9 +25,11 @@ public abstract class BuildAssetServiceDeployment {
         File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
                 .resolve("eu.europa.ec.fisheries.uvms.asset:deprecated-asset-message",
                          "eu.europa.ec.fisheries.uvms.asset:deprecated-asset-message-mock",
+                         "eu.europa.ec.fisheries.uvms.asset:asset-model",
                          "eu.europa.ec.fisheries.uvms.audit:audit-model",
                          "eu.europa.ec.fisheries.uvms:uvms-config",
-                         "eu.europa.ec.fisheries.uvms.config:config-model:4.0.0")
+                         "eu.europa.ec.fisheries.uvms.config:config-model:4.0.0",
+                         "eu.europa.ec.fisheries.uvms.exchange:exchange-model:4.0.14")
                 .withoutTransitivity().asFile();
         testWar.addAsLibraries(files);
         
@@ -41,10 +43,9 @@ public abstract class BuildAssetServiceDeployment {
 
 
         testWar.addPackages(true, "eu.europa.fisheries.uvms.mobileterminal.service");
-        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.mobileterminal.service.exception");
-        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.mobileterminal.service.entity");
-        testWar.addPackages(true, TerminalDaoBean.class.getPackage());
-        testWar.addPackages(true, PollSearchKeyValue.class.getPackage());
+        testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.mobileterminal.service");
+//        testWar.addPackages(true, TerminalDaoBean.class.getPackage());
+//        testWar.addPackages(true, PollSearchKeyValue.class.getPackage());
 
         testWar.addClass(AssetService.class);
         testWar.addClass(AssetGroupService.class);
