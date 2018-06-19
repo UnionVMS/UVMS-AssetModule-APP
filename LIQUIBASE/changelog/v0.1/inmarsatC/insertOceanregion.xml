@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet author="johlyn" id="insert oceanregion INMARSAT-C values">
+        <insert tableName="oceanregion">
+            <column name="oceanreg_id" value="1"/>
+            <column name="oceanreg_code" value="581"/>
+            <column name="oceanreg_name" value="EAST_ATLANTIC"/>
+            <column name="oceanreg_desc" value="East Atlantic"/>
+            <column name="oceanreg_updattim" valueDate="${now}"/>
+            <column name="oceanreg_upuser" value="johlyn"/>
+            <column name="oceanreg_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <insert tableName="oceanregion">
+            <column name="oceanreg_id" value="2"/>
+            <column name="oceanreg_code" value="582"/>
+            <column name="oceanreg_name" value="PACIFIC"/>
+            <column name="oceanreg_desc" value="Pacific"/>
+            <column name="oceanreg_updattim" valueDate="${now}"/>
+            <column name="oceanreg_upuser" value="johlyn"/>
+            <column name="oceanreg_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <insert tableName="oceanregion">
+            <column name="oceanreg_id" value="3"/>
+            <column name="oceanreg_code" value="583"/>
+            <column name="oceanreg_name" value="INDIAN"/>
+            <column name="oceanreg_desc" value="Indian"/>
+            <column name="oceanreg_updattim" valueDate="${now}"/>
+            <column name="oceanreg_upuser" value="johlyn"/>
+            <column name="oceanreg_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <insert tableName="oceanregion">
+            <column name="oceanreg_id" value="4"/>
+            <column name="oceanreg_code" value="584"/>
+            <column name="oceanreg_name" value="WEST_ATLANTIC"/>
+            <column name="oceanreg_desc" value="West Atlantic"/>
+            <column name="oceanreg_updattim" valueDate="${now}"/>
+            <column name="oceanreg_upuser" value="johlyn"/>
+            <column name="oceanreg_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <rollback>
+            <delete tableName="oceanregion">
+				<where>
+					oceanreg_id in (1, 2, 3, 4)
+				</where>
+			</delete>
+        </rollback>
+	</changeSet>
+
+</databaseChangeLog>

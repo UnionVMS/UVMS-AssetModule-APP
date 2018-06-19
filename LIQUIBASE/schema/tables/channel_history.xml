@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Developed with the contribution of the European Commission - Directorate General for Maritime Affairs and Fisheries
+  ~ © European Union, 2015-2016.
+  ~
+  ~ This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can
+  ~ redistribute it and/or modify it under the terms of the GNU General Public License as published by the
+  ~ Free Software Foundation, either version 3 of the License, or any later version. The IFDM Suite is distributed in
+  ~ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  ~ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
+  ~ copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet author="johlyn" id="comchannel">
+        <createTable tableName="channel_history">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="channel_hist_pk"/>
+            </column>
+            <column name="comchanname" type="VARCHAR(60)"/>
+            <column name="active" type="BOOLEAN"/>
+
+            <column name="attributes" type="VARCHAR(1000)"/>
+            
+            <column name="updattime" type="TIMESTAMP"/>
+            <column name="updateuser" type="VARCHAR(60)"/>
+            <column name="channel_id" type="BIGINT"/>
+            <column name="eventtype" type="VARCHAR(40)"/>
+            <column name="mobterm_event_id" type="BIGINT"/>
+        </createTable>
+        
+        <addForeignKeyConstraint
+			constraintName="mobterm_fk"
+			baseTableName="channel_history"
+			baseColumnNames="channel_id"
+			referencedTableName="channel"
+			referencedColumnNames="id"
+		/>
+
+        <addForeignKeyConstraint
+                constraintName="mobterm_event_fk"
+                baseTableName="channel_history"
+                baseColumnNames="mobterm_event_id"
+                referencedTableName="mobileterminalevent"
+                referencedColumnNames="id"
+        />
+        
+	</changeSet>
+
+    <changeSet author="osdjup" id="channel spec">
+        <addColumn tableName="channel_history" >
+            <column name="chan_def" type="BOOLEAN" defaultValueBoolean="false"/>
+            <column name="chan_conf" type="BOOLEAN" defaultValueBoolean="false"/>
+            <column name="chan_poll" type="BOOLEAN" defaultValueBoolean="false"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

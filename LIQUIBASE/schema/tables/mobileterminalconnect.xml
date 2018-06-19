@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet author="johlyn" id="connect table mobileterminal">
+        <createTable tableName="mobileterminalconnect">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="mobterminalconnectvalue_pk"/>
+            </column>
+            <column name="value" type="VARCHAR(400)"/>
+            <column name="linked" type="BOOLEAN"/>
+            <column name="active" type="BOOLEAN"/>
+            <column name="startdate" type="TIMESTAMP"/>
+            <column name="enddate" type="TIMESTAMP"/>
+            <column name="updattime" type="TIMESTAMP"/>
+            <column name="upuser" type="VARCHAR(60)"/>
+            <column name="mobileterminal_id" type="BIGINT"/>
+        </createTable>
+        
+        <addForeignKeyConstraint
+            constraintName="term_fk"
+            baseTableName="mobileterminalconnect"
+            baseColumnNames="mobileterminal_id"
+            referencedTableName="mobileterminal"
+            referencedColumnNames="id"
+        />
+        
+        <rollback>
+            <dropTable tableName="mobileterminalconnect" cascadeConstraints="true"/>
+        </rollback>
+    </changeSet>    
+</databaseChangeLog>
