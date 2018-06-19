@@ -1,12 +1,10 @@
-package eu.europa.fisheries.uvms.asset.service.arquillian;
+package eu.europa.fisheries.uvms;
 
 import java.io.File;
 
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.CustomCodesService;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
 import org.eu.ingwar.tools.arquillian.extension.suite.annotations.ArquillianSuiteDeployment;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -21,7 +19,6 @@ public abstract class BuildAssetServiceDeployment {
     public static Archive<?> createDeployment() {
 
         WebArchive testWar = ShrinkWrap.create(WebArchive.class, "test.war");
-
 
         File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
                 .resolve("eu.europa.ec.fisheries.uvms.asset:deprecated-asset-message",
@@ -45,11 +42,10 @@ public abstract class BuildAssetServiceDeployment {
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.mobileterminal.service.exception");
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.mobileterminal.service.entity");
 
-
-
         testWar.addClass(AssetService.class);
         testWar.addClass(AssetGroupService.class);
         testWar.addClass(CustomCodesService.class);
+        testWar.addClass(TransactionalTests.class);
 
 
 // MobileTerminalDeps
@@ -119,7 +115,4 @@ public abstract class BuildAssetServiceDeployment {
     }
 
     */
-
-
-
 }

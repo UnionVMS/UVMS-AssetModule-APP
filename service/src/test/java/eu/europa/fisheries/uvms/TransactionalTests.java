@@ -1,7 +1,5 @@
 package eu.europa.fisheries.uvms;
 
-
-import eu.europa.fisheries.uvms.asset.service.arquillian.BuildAssetServiceDeployment;
 import org.junit.After;
 import org.junit.Before;
 
@@ -27,5 +25,4 @@ public class TransactionalTests extends BuildAssetServiceDeployment {
     public void after() throws SystemException, HeuristicRollbackException, HeuristicMixedException, RollbackException {
         userTransaction.commit();
     }
-
 }
