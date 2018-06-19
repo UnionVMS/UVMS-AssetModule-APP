@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    
+    <changeSet author="johlyn" id="insert plugin landearthstation INMARSAT-C values">
+        <insert tableName="plugin">
+            <column name="id" value="1"/>
+            <column name="name" value="EIK"/>
+            <column name="service_name" value="testdata.liquibase.satellite.eik"/>
+            <column name="inactive" valueBoolean="FALSE"/>
+            <column name="description" value="EIK LES"/>
+            <column name="updattim" valueDate="${now}"/>
+            <column name="upuser" value="johlyn"/>
+        </insert>
+        <insert tableName="plugin">
+            <column name="id" value="2"/>
+            <column name="name" value="BURUM"/>
+            <column name="service_name" value="testdata.liquibase.satellite.burum"/>
+            <column name="inactive" valueBoolean="FALSE"/>
+            <column name="description" value="Burum LES"/>
+            <column name="updattim" valueDate="${now}"/>
+            <column name="upuser" value="johlyn"/>
+        </insert>
+        <insert tableName="plugin">
+            <column name="id" value="3"/>
+            <column name="name" value="IRIDIUM"/>
+            <column name="service_name" value="testdata.liquibase.satellite.iridium"/>
+            <column name="inactive" valueBoolean="FALSE"/>
+            <column name="description" value="Iridium plugin"/>
+            <column name="updattim" valueDate="${now}"/>
+            <column name="upuser" value="johlyn"/>
+        </insert>
+        
+        <insert tableName="plugin_capability">
+            <column name="id" value="1"/>
+            <column name="plugin_id" value="1"/>
+            <column name="capability" value="POLLABLE"/>
+            <column name="value" value="TRUE"/>
+            <column name="updattim" valueDate="${now}"/>
+            <column name="upuser" value="johlyn"/>
+        </insert>
+        
+        <insert tableName="plugin_capability">
+            <column name="id" value="2"/>
+            <column name="plugin_id" value="1"/>
+            <column name="capability" value="CONFIGURABLE"/>
+            <column name="value" value="TRUE"/>
+            <column name="updattim" valueDate="${now}"/>
+            <column name="upuser" value="johlyn"/>
+        </insert>
+        
+        <insert tableName="plugin_capability">
+            <column name="id" value="3"/>
+            <column name="plugin_id" value="2"/>
+            <column name="capability" value="POLLABLE"/>
+            <column name="value" value="TRUE"/>
+            <column name="updattim" valueDate="${now}"/>
+            <column name="upuser" value="johlyn"/>
+        </insert>
+        
+        <insert tableName="plugin_capability">
+            <column name="id" value="4"/>
+            <column name="plugin_id" value="3"/>
+            <column name="capability" value="POLLABLE"/>
+            <column name="value" value="TRUE"/>
+            <column name="updattim" valueDate="${now}"/>
+            <column name="upuser" value="johlyn"/>
+        </insert>
+        
+        <rollback>
+            <delete tableName="plugin">
+				<where>
+					plugin_id in (1, 2)
+				</where>
+			</delete>
+            <delete tableName="plugin_capability">
+				<where>
+					id in (1, 2, 3)
+				</where>
+			</delete>
+        </rollback>
+	</changeSet>
+
+</databaseChangeLog>

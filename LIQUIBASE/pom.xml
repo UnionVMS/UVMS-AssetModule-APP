@@ -108,7 +108,7 @@
 							<images>
 								<image>
 									<alias>postgres</alias>
-									<name>uvms/postgres-base:3.22.0</name>
+									<name>uvms/postgres-base:3.25.0.w12-SNAPSHOT</name>
 									<run>
 										<net>bridge</net>
 										<namingStrategy>none</namingStrategy>

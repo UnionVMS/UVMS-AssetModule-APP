@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet author="johlyn" id="insert pollstate static default values">
+        <insert tableName="pollstate">
+            <column name="pollstate_id" value="1"/>
+            <column name="pollstate_name" value="PROGRAM_POLL"/>
+            <column name="pollstate_desc" value="Poll program is started"/>
+            <column name="pollstate_updattim" valueDate="${now}"/>
+            <column name="pollstate_upuser" value="johlyn"/>
+        </insert>
+        <insert tableName="pollstate">
+            <column name="pollstate_id" value="2"/>
+            <column name="pollstate_name" value="SAMPLING_POLL"/>
+            <column name="pollstate_desc" value="Poll program is stopped"/>
+            <column name="pollstate_updattim" valueDate="${now}"/>
+            <column name="pollstate_upuser" value="johlyn"/>
+        </insert>
+        <insert tableName="pollstate">
+            <column name="pollstate_id" value="3"/>
+            <column name="pollstate_name" value="MANUAL_POLL"/>
+            <column name="pollstate_desc" value="Poll program is archived"/>
+            <column name="pollstate_updattim" valueDate="${now}"/>
+            <column name="pollstate_upuser" value="johlyn"/>
+        </insert>
+        <insert tableName="pollstate">
+            <column name="pollstate_id" value="4"/>
+            <column name="pollstate_name" value="CONFIGURATION_POLL"/>
+            <column name="pollstate_desc" value="Poll program is archived"/>
+            <column name="pollstate_updattim" valueDate="${now}"/>
+            <column name="pollstate_upuser" value="johlyn"/>
+        </insert>
+        <rollback>
+            <delete tableName="pollstate">
+				<where>
+					pollstate_id in (1, 2, 3, 4)
+				</where>
+			</delete>
+        </rollback>
+	</changeSet>
+    
+    <changeSet author="johlyn" id="insert pollstate correct static default values">
+		<delete tableName="pollstate">
+			<where>
+				pollstate_id in (1, 2, 3, 4)
+			</where>
+		</delete>
+        <insert tableName="pollstate">
+            <column name="pollstate_id" value="1"/>
+            <column name="pollstate_name" value="STARTED"/>
+            <column name="pollstate_desc" value="Poll program is started"/>
+            <column name="pollstate_updattim" valueDate="${now}"/>
+            <column name="pollstate_upuser" value="johlyn"/>
+        </insert>
+        <insert tableName="pollstate">
+            <column name="pollstate_id" value="2"/>
+            <column name="pollstate_name" value="STOPPED"/>
+            <column name="pollstate_desc" value="Poll program is stopped"/>
+            <column name="pollstate_updattim" valueDate="${now}"/>
+            <column name="pollstate_upuser" value="johlyn"/>
+        </insert>
+        <insert tableName="pollstate">
+            <column name="pollstate_id" value="3"/>
+            <column name="pollstate_name" value="ARCHIVED"/>
+            <column name="pollstate_desc" value="Poll program is archived"/>
+            <column name="pollstate_updattim" valueDate="${now}"/>
+            <column name="pollstate_upuser" value="johlyn"/>
+        </insert>
+        <rollback>
+            <delete tableName="pollstate">
+				<where>
+					pollstate_id in (1, 2, 3)
+				</where>
+			</delete>
+        </rollback>
+    </changeSet>
+    
+</databaseChangeLog>

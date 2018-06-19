@@ -34,7 +34,6 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.GROUP_A
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.*;
 
-
 @RunWith(MockitoJUnitRunner.class)
 public class AssetGroupDaoBeanTest {
 
