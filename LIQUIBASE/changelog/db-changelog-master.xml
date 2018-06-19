@@ -16,7 +16,7 @@
 
 	<include file="changelog\properties.xml"/>
 	<!--include file="changelog\v0.4\hibernatesequence.xml"/-->
-	<include file="changelog\v0.4\db-changelog-createTables-postgres_0.4.xml"/>
+	<!--include file="changelog\v0.4\db-changelog-createTables-postgres_0.4.xml"/-->
 	<include file="changelog\v0.4\db-changelog-insertStaticValues_0.4.xml"/>
 	<include file="changelog\v0.4\db-changelog-insertTestdata-postgres_0.4.xml"/>
 

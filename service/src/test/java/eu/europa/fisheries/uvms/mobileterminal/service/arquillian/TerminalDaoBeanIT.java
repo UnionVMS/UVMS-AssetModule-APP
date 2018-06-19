@@ -27,7 +27,6 @@ import static org.junit.Assert.*;
 /**
  * Created by thofan on 2017-04-28.
  */
-
 @RunWith(Arquillian.class)
 public class TerminalDaoBeanIT extends TransactionalTests {
 
@@ -46,7 +45,7 @@ public class TerminalDaoBeanIT extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void createMobileTerminal() throws TerminalDaoException {
+    public void createMobileTerminal() {
 
         String serialNo = createSerialNumber();
         MobileTerminal mobileTerminal = createMobileTerminalHelper(serialNo);
@@ -65,7 +64,7 @@ public class TerminalDaoBeanIT extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void createMobileTerminal_WillFailWithUpdateUserConstraintViolation() throws TerminalDaoException {
+    public void createMobileTerminal_WillFailWithUpdateUserConstraintViolation() {
 
         try {
             String serialNo = createSerialNumber();
@@ -85,7 +84,7 @@ public class TerminalDaoBeanIT extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getMobileTerminalBySerialNo() throws TerminalDaoException {
+    public void getMobileTerminalBySerialNo() {
 
         // this is the same as create since they both use getMobileTerminalBySerialNo to verify functionality
         createMobileTerminal();
@@ -93,7 +92,7 @@ public class TerminalDaoBeanIT extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getMobileTerminalBySerialNo_NON_EXISTING_SERIAL_NO() throws NoEntityFoundException {
+    public void getMobileTerminalBySerialNo_NON_EXISTING_SERIAL_NO() {
 
         thrown.expect(NoEntityFoundException.class);
         thrown.expectMessage("No entity found with serial no does_not_exist");
@@ -102,7 +101,7 @@ public class TerminalDaoBeanIT extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void createMobileTerminal_VERIFY_THAT_SETGUID_DOES_NOT_WORK_AT_CREATE() throws TerminalDaoException {
+    public void createMobileTerminal_VERIFY_THAT_SETGUID_DOES_NOT_WORK_AT_CREATE() {
 
         String uuid = UUID.randomUUID().toString();
         String serialNo = createSerialNumber();
@@ -122,7 +121,7 @@ public class TerminalDaoBeanIT extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getMobileTerminalByGuid() throws TerminalDaoException {
+    public void getMobileTerminalByGuid() {
 
         String serialNo = createSerialNumber();
         MobileTerminal mobileTerminal = createMobileTerminalHelper(serialNo);
@@ -159,7 +158,7 @@ public class TerminalDaoBeanIT extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getMobileTerminalsByQuery() throws TerminalDaoException {
+    public void getMobileTerminalsByQuery() {
         String serialNo = createSerialNumber();
         MobileTerminal mobileTerminal = createMobileTerminalHelper(serialNo);
 
@@ -192,7 +191,7 @@ public class TerminalDaoBeanIT extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getMobileTerminalsByQuery_ShouldFailWithInvalidSqlQuery() throws TerminalDaoException {
+    public void getMobileTerminalsByQuery_ShouldFailWithInvalidSqlQuery() {
         String serialNo = createSerialNumber();
         MobileTerminal mobileTerminal = createMobileTerminalHelper(serialNo);
 
@@ -213,7 +212,7 @@ public class TerminalDaoBeanIT extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void updateMobileTerminal() throws TerminalDaoException {
+    public void updateMobileTerminal() {
 
         String serialNo = createSerialNumber();
         MobileTerminal mobileTerminal = createMobileTerminalHelper(serialNo);
@@ -236,7 +235,7 @@ public class TerminalDaoBeanIT extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void updateMobileTerminal_WillFailWithGuidConstraintViolation() throws TerminalDaoException {
+    public void updateMobileTerminal_WillFailWithGuidConstraintViolation() {
 
         thrown.expect(TerminalDaoException.class);
         thrown.expectMessage("[ Error when updating. ]");
@@ -256,7 +255,7 @@ public class TerminalDaoBeanIT extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void updateMobileTerminal_WillFailWithNoPersistedEntity() throws TerminalDaoException {
+    public void updateMobileTerminal_WillFailWithNoPersistedEntity() {
 
         thrown.expect(TerminalDaoException.class);
         thrown.expectMessage(" [ There is no such persisted entity to update ] ");
