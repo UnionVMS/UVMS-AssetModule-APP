@@ -13,11 +13,14 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * The persistent class for the oceanregion database table.
@@ -33,9 +36,10 @@ public class DNIDList implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "DNID_UUID")
+    @GenericGenerator(name = "DNID_UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id")
-    private Integer id;
+    private UUID id;
 
     @Size(max = 100)
     @Column(name = "value")
@@ -56,16 +60,25 @@ public class DNIDList implements Serializable {
     public DNIDList() {
     }
 
-    public Integer getId() {
-        return this.id;
+
+    public UUID getId() {
+        return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
+    public String getDnid() {
+        return dnid;
+    }
+
+    public void setDnid(String dnid) {
+        this.dnid = dnid;
+    }
+
     public String getPluginName() {
-        return this.pluginName;
+        return pluginName;
     }
 
     public void setPluginName(String pluginName) {
@@ -73,7 +86,7 @@ public class DNIDList implements Serializable {
     }
 
     public Date getUpdateTime() {
-        return this.updateTime;
+        return updateTime;
     }
 
     public void setUpdateTime(Date updateTime) {
@@ -81,18 +94,28 @@ public class DNIDList implements Serializable {
     }
 
     public String getUpdatedBy() {
-        return this.updatedBy;
+        return updatedBy;
     }
 
-    public void setUpdateUser(String user) {
-        this.updatedBy = user;
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
     }
 
-    public String getDNID() {
-        return dnid;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DNIDList dnidList = (DNIDList) o;
+        return Objects.equals(id, dnidList.id) &&
+                Objects.equals(dnid, dnidList.dnid) &&
+                Objects.equals(pluginName, dnidList.pluginName) &&
+                Objects.equals(updateTime, dnidList.updateTime) &&
+                Objects.equals(updatedBy, dnidList.updatedBy);
     }
 
-    public void setDNID(String dnid) {
-        this.dnid = dnid;
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, dnid, pluginName, updateTime, updatedBy);
     }
 }

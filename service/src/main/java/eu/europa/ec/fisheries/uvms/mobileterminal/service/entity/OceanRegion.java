@@ -13,11 +13,14 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * The persistent class for the oceanregion database table.
@@ -32,9 +35,10 @@ public class OceanRegion implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "OCEANREGION_UUID")
+    @GenericGenerator(name = "OCEANREGION_UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id")
-    private Long id;
+    private UUID id;
 
     @Column(name = "code", unique=true)
     private Integer code;
@@ -57,44 +61,20 @@ public class OceanRegion implements Serializable {
     public OceanRegion() {
     }
 
-    public Long getId() {
-        return this.id;
+    public UUID getId() {
+        return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
     public Integer getCode() {
-        return this.code;
+        return code;
     }
 
     public void setCode(Integer code) {
         this.code = code;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Date getUpdateTime() {
-        return this.updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public String getUpdatedBy() {
-        return this.updatedBy;
-    }
-
-    public void setUpdateUser(String user) {
-        this.updatedBy = user;
     }
 
     public String getName() {
@@ -103,5 +83,48 @@ public class OceanRegion implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OceanRegion that = (OceanRegion) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(code, that.code) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(updateTime, that.updateTime) &&
+                Objects.equals(updatedBy, that.updatedBy);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, code, name, description, updateTime, updatedBy);
     }
 }

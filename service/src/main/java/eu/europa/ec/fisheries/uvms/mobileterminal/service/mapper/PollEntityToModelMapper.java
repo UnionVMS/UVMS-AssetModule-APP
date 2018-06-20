@@ -21,17 +21,18 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.util.DateUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class PollEntityToModelMapper {
 
     private static PollResponseType mapToPollResponseType(PollBase pollBase, MobileTerminalType mobileTerminalType)  {
         PollResponseType response = new PollResponseType();
         response.setComment(pollBase.getComment());
-        response.setUserName(pollBase.getUser());
+        response.setUserName(pollBase.getUpdatedBy());
         // TODO created time?
         // response.setCreatedTime();
         response.setMobileTerminal(mobileTerminalType);
-        response.getAttributes().add(createPollAttribute(PollAttributeType.USER, pollBase.getUser()));
+        response.getAttributes().add(createPollAttribute(PollAttributeType.USER, pollBase.getUpdatedBy()));
         return response;
     }
 
@@ -39,7 +40,7 @@ public class PollEntityToModelMapper {
         PollResponseType response = mapToPollResponseType(program.getPollBase(), mobileTerminalType);
         response.setPollType(PollType.PROGRAM_POLL);
         PollId pollId = new PollId();
-        pollId.setGuid(program.getGuid());
+        pollId.setGuid(program.getId().toString());
         response.setPollId(pollId);
 
         response.getAttributes().addAll(getProgramPollAttributes(program));
@@ -50,7 +51,7 @@ public class PollEntityToModelMapper {
         PollResponseType response = mapToPollResponseType(poll.getPollBase(), mobileTerminalType);
         response.setPollType(pollType);
         PollId pollId = new PollId();
-        pollId.setGuid(poll.getGuid());
+        pollId.setGuid(poll.getId().toString());
         response.setPollId(pollId);
         
         return response;

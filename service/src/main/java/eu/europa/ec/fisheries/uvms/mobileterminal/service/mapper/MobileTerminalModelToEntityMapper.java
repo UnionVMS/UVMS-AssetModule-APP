@@ -36,8 +36,8 @@ public class MobileTerminalModelToEntityMapper {
 
     public static MobileTerminal mapMobileTerminalEntity(MobileTerminal entity, MobileTerminalType model, String serialNumber, MobileTerminalPlugin plugin, String username, String comment, EventCodeEnum event) throws MobileTerminalModelMapperException {
         if (model == null) throw new MobileTerminalModelMapperException("No mobile terminal to map");
-        if (entity.getGuid() == null) {
-            entity.setGuid(UUID.randomUUID().toString());
+        if (entity.getId() == null) {
+            entity.setId(UUID.randomUUID());
         }
         entity.setArchived(model.isArchived());
         entity.setInactivated(model.isInactive());
@@ -54,8 +54,8 @@ public class MobileTerminalModelToEntityMapper {
         MobileTerminalTypeEnum type = MobileTerminalTypeEnum.getType(model.getType());
         if (type == null) throw new MobileTerminalModelMapperException("Non valid mobile terminal type when mapping");
         entity.setMobileTerminalType(type);
-        entity.setUpdateTime(DateUtils.getNowDateUTC());
-        entity.setUpdatedBy(username);
+        entity.setUpdatetime(DateUtils.getNowDateUTC());
+        entity.setUpdateuser(username);
 
         mapHistoryAttributes(entity, model, username, comment, event);
 
@@ -68,8 +68,8 @@ public class MobileTerminalModelToEntityMapper {
                 throw new MobileTerminalModelMapperException(e.getMessage());
             }
         }
-        entity.setUpdateTime(DateUtils.getNowDateUTC());
-        entity.setUpdatedBy(username);
+        entity.setUpdatetime(DateUtils.getNowDateUTC());
+        entity.setUpdateuser(username);
 
         return entity;
     }
@@ -183,9 +183,9 @@ public class MobileTerminalModelToEntityMapper {
 
         MobileTerminalEvent history = new MobileTerminalEvent();
         history.setActive(true);
-        history.setUpdateTime(DateUtils.getNowDateUTC());
-        history.setUpdatedBy(username);
-        history.setMobileTerminal(entity);
+        history.setUpdatetime(DateUtils.getNowDateUTC());
+        history.setUpdateuser(username);
+        history.setMobileterminal(entity);
         history.setComment(comment);
         history.setEventCodeType(eventCode);
         if (current != null && model.getConnectId() == null && eventCode != EventCodeEnum.UNLINK) {

@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
@@ -18,6 +19,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * The persistent class for the landearthstation database table.
@@ -33,9 +36,10 @@ public class MobileTerminalPluginCapability implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "MOBILETERMINALPLUGINCAPABILITY_UUID")
+    @GenericGenerator(name = "MOBILETERMINALPLUGINCAPABILITY_UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id")
-    private Long id;
+    private UUID id;
 
     @Size(max = 25)
     @Column(name = "value")
@@ -60,16 +64,16 @@ public class MobileTerminalPluginCapability implements Serializable {
     public MobileTerminalPluginCapability() {
     }
 
-    public Long getId() {
-        return this.id;
+    public UUID getId() {
+        return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
     public String getValue() {
-        return this.value;
+        return value;
     }
 
     public void setValue(String value) {
@@ -77,7 +81,7 @@ public class MobileTerminalPluginCapability implements Serializable {
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public void setName(String name) {
@@ -85,7 +89,7 @@ public class MobileTerminalPluginCapability implements Serializable {
     }
 
     public Date getUpdateTime() {
-        return this.updateTime;
+        return updateTime;
     }
 
     public void setUpdateTime(Date updateTime) {
@@ -93,18 +97,37 @@ public class MobileTerminalPluginCapability implements Serializable {
     }
 
     public String getUpdatedBy() {
-        return this.updatedBy;
+        return updatedBy;
     }
 
     public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
     }
 
-	public MobileTerminalPlugin getPlugin() {
-		return plugin;
-	}
+    public MobileTerminalPlugin getPlugin() {
+        return plugin;
+    }
 
-	public void setPlugin(MobileTerminalPlugin plugin) {
-		this.plugin = plugin;
-	}
+    public void setPlugin(MobileTerminalPlugin plugin) {
+        this.plugin = plugin;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MobileTerminalPluginCapability that = (MobileTerminalPluginCapability) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(value, that.value) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(updateTime, that.updateTime) &&
+                Objects.equals(updatedBy, that.updatedBy) &&
+                Objects.equals(plugin, that.plugin);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id);
+    }
 }

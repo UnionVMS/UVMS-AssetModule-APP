@@ -14,6 +14,7 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
@@ -22,6 +23,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * The persistent class for the mobileterminalevent database table.
@@ -34,9 +37,11 @@ public class MobileTerminalEvent implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id")
-	private Long id;
+	@GeneratedValue(generator = "MOBILETERMINALEVENT_UUID")
+	@GenericGenerator(name = "MOBILETERMINALEVENT_UUID", strategy = "org.hibernate.id.UUIDGenerator")
+	@Column(name = "id")
+	private UUID id;
+
 
 	@Size(max=400)
 	@Column(name="comment")
@@ -87,51 +92,75 @@ public class MobileTerminalEvent implements Serializable {
 	public MobileTerminalEvent() {
 	}
 
-	public Long getId() {
-		return this.id;
+	public UUID getId() {
+		return id;
 	}
 
-	public void setId(Long mobtermeventId) {
-		this.id = mobtermeventId;
+	public void setId(UUID id) {
+		this.id = id;
 	}
 
 	public String getComment() {
-		return this.comment;
+		return comment;
 	}
 
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
 
-	public Date getUpdateTime() {
-		return this.updatetime;
+	public Date getUpdatetime() {
+		return updatetime;
 	}
 
-	public void setUpdateTime(Date updatetime) {
+	public void setUpdatetime(Date updatetime) {
 		this.updatetime = updatetime;
 	}
 
-	public String getUpdatedBy() {
-		return this.updateuser;
+	public String getUpdateuser() {
+		return updateuser;
 	}
 
-	public void setUpdatedBy(String updateuser) {
+	public void setUpdateuser(String updateuser) {
 		this.updateuser = updateuser;
 	}
 
+	public String getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(String attributes) {
+		this.attributes = attributes;
+	}
+
+	public String getConnectId() {
+		return connectId;
+	}
+
+	public void setConnectId(String connectId) {
+		this.connectId = connectId;
+	}
+
 	public EventCodeEnum getEventCodeType() {
-		return this.eventCodeType;
+		return eventCodeType;
 	}
 
 	public void setEventCodeType(EventCodeEnum eventCodeType) {
 		this.eventCodeType = eventCodeType;
 	}
 
-	public MobileTerminal getMobileTerminal() {
-		return this.mobileterminal;
+	public boolean isActive() {
+		return active;
 	}
 
-	public void setMobileTerminal(MobileTerminal mobileterminal) {
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public MobileTerminal getMobileterminal() {
+		return mobileterminal;
+	}
+
+	public void setMobileterminal(MobileTerminal mobileterminal) {
 		this.mobileterminal = mobileterminal;
 	}
 
@@ -159,28 +188,28 @@ public class MobileTerminalEvent implements Serializable {
 		this.pollChannel = pollChannel;
 	}
 
-	public boolean isActive() {
-		return active;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		MobileTerminalEvent that = (MobileTerminalEvent) o;
+		return active == that.active &&
+				Objects.equals(id, that.id) &&
+				Objects.equals(comment, that.comment) &&
+				Objects.equals(updatetime, that.updatetime) &&
+				Objects.equals(updateuser, that.updateuser) &&
+				Objects.equals(attributes, that.attributes) &&
+				Objects.equals(connectId, that.connectId) &&
+				eventCodeType == that.eventCodeType &&
+				Objects.equals(mobileterminal, that.mobileterminal) &&
+				Objects.equals(defaultChannel, that.defaultChannel) &&
+				Objects.equals(configChannel, that.configChannel) &&
+				Objects.equals(pollChannel, that.pollChannel);
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
-	}
+	@Override
+	public int hashCode() {
 
-	public String getAttributes() {
-		return attributes;
+		return Objects.hash(id);
 	}
-
-	public void setAttributes(String attributes) {
-		this.attributes = attributes;
-	}
-
-	public String getConnectId() {
-		return connectId;
-	}
-
-	public void setConnectId(String connectId) {
-		this.connectId = connectId;
-	}
-
 }

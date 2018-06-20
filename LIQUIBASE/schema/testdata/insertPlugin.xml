@@ -6,7 +6,7 @@
     
     <changeSet author="johlyn" id="insert plugin landearthstation INMARSAT-C values">
         <insert tableName="plugin">
-            <column name="id" value="1"/>
+            <column name="id" value="00000000-0000-0000-0000-000000000001"/>
             <column name="name" value="EIK"/>
             <column name="service_name" value="testdata.liquibase.satellite.eik"/>
             <column name="inactive" valueBoolean="FALSE"/>
@@ -15,7 +15,7 @@
             <column name="upuser" value="johlyn"/>
         </insert>
         <insert tableName="plugin">
-            <column name="id" value="2"/>
+            <column name="id" value="00000000-0000-0000-0000-000000000002"/>
             <column name="name" value="BURUM"/>
             <column name="service_name" value="testdata.liquibase.satellite.burum"/>
             <column name="inactive" valueBoolean="FALSE"/>
@@ -24,7 +24,7 @@
             <column name="upuser" value="johlyn"/>
         </insert>
         <insert tableName="plugin">
-            <column name="id" value="3"/>
+            <column name="id" value="00000000-0000-0000-0000-000000000003"/>
             <column name="name" value="IRIDIUM"/>
             <column name="service_name" value="testdata.liquibase.satellite.iridium"/>
             <column name="inactive" valueBoolean="FALSE"/>
@@ -34,8 +34,8 @@
         </insert>
         
         <insert tableName="plugin_capability">
-            <column name="id" value="1"/>
-            <column name="plugin_id" value="1"/>
+            <column name="id" value="00000000-0000-0000-0000-000000000001"/>
+            <column name="plugin_id" value="00000000-0000-0000-0000-000000000001"/>
             <column name="capability" value="POLLABLE"/>
             <column name="value" value="TRUE"/>
             <column name="updattim" valueDate="${now}"/>
@@ -43,8 +43,8 @@
         </insert>
         
         <insert tableName="plugin_capability">
-            <column name="id" value="2"/>
-            <column name="plugin_id" value="1"/>
+            <column name="id" value="00000000-0000-0000-0000-000000000002"/>
+            <column name="plugin_id" value="00000000-0000-0000-0000-000000000001"/>
             <column name="capability" value="CONFIGURABLE"/>
             <column name="value" value="TRUE"/>
             <column name="updattim" valueDate="${now}"/>
@@ -52,8 +52,8 @@
         </insert>
         
         <insert tableName="plugin_capability">
-            <column name="id" value="3"/>
-            <column name="plugin_id" value="2"/>
+            <column name="id" value="00000000-0000-0000-0000-000000000003"/>
+            <column name="plugin_id" value="00000000-0000-0000-0000-000000000002"/>
             <column name="capability" value="POLLABLE"/>
             <column name="value" value="TRUE"/>
             <column name="updattim" valueDate="${now}"/>
@@ -61,8 +61,8 @@
         </insert>
         
         <insert tableName="plugin_capability">
-            <column name="id" value="4"/>
-            <column name="plugin_id" value="3"/>
+            <column name="id" value="00000000-0000-0000-0000-000000000004"/>
+            <column name="plugin_id" value="00000000-0000-0000-0000-000000000003"/>
             <column name="capability" value="POLLABLE"/>
             <column name="value" value="TRUE"/>
             <column name="updattim" valueDate="${now}"/>

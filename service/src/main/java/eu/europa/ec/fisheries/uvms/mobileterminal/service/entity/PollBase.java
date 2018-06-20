@@ -11,21 +11,25 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "pollbase")
 public class PollBase implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Basic(optional = false)
+    @GeneratedValue(generator = "POLLBASE_UUID")
+    @GenericGenerator(name = "POLLBASE_UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id")
-    private Long id;
+    private UUID id;
 
     @Size(max = 400)
     @Column(name = "comment")
@@ -38,7 +42,7 @@ public class PollBase implements Serializable {
     @Size(max = 36)
     @Column(name = "channel_guid")
     @NotNull
-    private String channelGuid;
+    private UUID channelId;
     
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updattim")
@@ -61,11 +65,12 @@ public class PollBase implements Serializable {
         super();
     }
 
-    public Long getId() {
+
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -77,12 +82,20 @@ public class PollBase implements Serializable {
         this.comment = comment;
     }
 
-    public String getUser() {
+    public String getCreator() {
         return creator;
     }
 
-    public void setUser(String user) {
-        this.creator = user;
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public UUID getChannelId() {
+        return channelId;
+    }
+
+    public void setChannelId(UUID channelId) {
+        this.channelId = channelId;
     }
 
     public Date getUpdateTime() {
@@ -93,11 +106,11 @@ public class PollBase implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public MobileTerminal getMobileTerminal() {
+    public MobileTerminal getMobileterminal() {
         return mobileterminal;
     }
 
-    public void setMobileTerminal(MobileTerminal mobileterminal) {
+    public void setMobileterminal(MobileTerminal mobileterminal) {
         this.mobileterminal = mobileterminal;
     }
 
@@ -117,11 +130,24 @@ public class PollBase implements Serializable {
         this.terminalConnect = terminalConnect;
     }
 
-	public String getChannelGuid() {
-		return channelGuid;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PollBase pollBase = (PollBase) o;
+        return Objects.equals(id, pollBase.id) &&
+                Objects.equals(comment, pollBase.comment) &&
+                Objects.equals(creator, pollBase.creator) &&
+                Objects.equals(channelId, pollBase.channelId) &&
+                Objects.equals(updateTime, pollBase.updateTime) &&
+                Objects.equals(mobileterminal, pollBase.mobileterminal) &&
+                Objects.equals(updatedBy, pollBase.updatedBy) &&
+                Objects.equals(terminalConnect, pollBase.terminalConnect);
+    }
 
-	public void setChannelGuid(String channelGuid) {
-		this.channelGuid = channelGuid;
-	}
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, comment, creator, channelId, updateTime, mobileterminal, updatedBy, terminalConnect);
+    }
 }

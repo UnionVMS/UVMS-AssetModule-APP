@@ -34,6 +34,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -54,11 +55,6 @@ public class Channel implements Serializable {
 
 	@Column(unique = true, name = "historyid")
 	private UUID historyId;
-
-	@Size(max=36)
-	@NotNull
-	@Column(name="guid")
-	private String guid;
 
 	@Column(name="archived")
 	private Boolean archived;
@@ -102,14 +98,14 @@ public class Channel implements Serializable {
 	@Column(name="chan_poll")
 	private boolean pollChannel;
 
+	public Channel(){
+
+	}
+
 	@PrePersist
 	@PreUpdate
 	private void generateNewHistoryId() {
 		this.historyId = UUID.randomUUID();
-	}
-
-	public static long getSerialVersionUID() {
-		return serialVersionUID;
 	}
 
 	public UUID getId() {
@@ -126,14 +122,6 @@ public class Channel implements Serializable {
 
 	public void setHistoryId(UUID historyId) {
 		this.historyId = historyId;
-	}
-
-	public String getGuid() {
-		return guid;
-	}
-
-	public void setGuid(String guid) {
-		this.guid = guid;
 	}
 
 	public Boolean getArchived() {
@@ -230,5 +218,32 @@ public class Channel implements Serializable {
 
 	public void setPollChannel(boolean pollChannel) {
 		this.pollChannel = pollChannel;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Channel channel = (Channel) o;
+		return active == channel.active &&
+				defaultChannel == channel.defaultChannel &&
+				configChannel == channel.configChannel &&
+				pollChannel == channel.pollChannel &&
+				Objects.equals(id, channel.id) &&
+				Objects.equals(historyId, channel.historyId) &&
+				Objects.equals(archived, channel.archived) &&
+				Objects.equals(updateTime, channel.updateTime) &&
+				Objects.equals(updateUser, channel.updateUser) &&
+				Objects.equals(mobileTerminal, channel.mobileTerminal) &&
+				Objects.equals(name, channel.name) &&
+				Objects.equals(attributes, channel.attributes) &&
+				eventCodeType == channel.eventCodeType &&
+				Objects.equals(mobileTerminalEvent, channel.mobileTerminalEvent);
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(id, historyId, archived, updateTime, updateUser, mobileTerminal, name, active, attributes, eventCodeType, mobileTerminalEvent, defaultChannel, configChannel, pollChannel);
 	}
 }

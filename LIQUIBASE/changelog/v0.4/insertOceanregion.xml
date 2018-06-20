@@ -5,7 +5,7 @@
 
     <changeSet author="johlyn" id="insert oceanregion INMARSAT-C values">
         <insert tableName="oceanregion">
-            <column name="id" value="1"/>
+            <column name="id" value="00000000-0000-0000-0000-000000000001"/>
             <column name="code" value="581"/>
             <column name="name" value="EAST_ATLANTIC"/>
             <column name="desc" value="East Atlantic"/>
@@ -13,7 +13,7 @@
             <column name="upuser" value="johlyn"/>
         </insert>
         <insert tableName="oceanregion">
-            <column name="id" value="2"/>
+            <column name="id" value="00000000-0000-0000-0000-000000000002"/>
             <column name="code" value="582"/>
             <column name="name" value="PACIFIC"/>
             <column name="desc" value="Pacific"/>
@@ -21,7 +21,7 @@
             <column name="upuser" value="johlyn"/>
         </insert>
         <insert tableName="oceanregion">
-            <column name="id" value="3"/>
+            <column name="id" value="00000000-0000-0000-0000-000000000003"/>
             <column name="code" value="583"/>
             <column name="name" value="INDIAN"/>
             <column name="desc" value="Indian"/>
@@ -29,20 +29,13 @@
             <column name="upuser" value="johlyn"/>
         </insert>
         <insert tableName="oceanregion">
-            <column name="id" value="4"/>
+            <column name="id" value="00000000-0000-0000-0000-000000000004"/>
             <column name="code" value="584"/>
             <column name="name" value="WEST_ATLANTIC"/>
             <column name="desc" value="West Atlantic"/>
             <column name="updattim" valueDate="${now}"/>
             <column name="upuser" value="johlyn"/>
         </insert>
-        <rollback>
-            <delete tableName="oceanregion">
-				<where>
-					id in (1, 2, 3, 4)
-				</where>
-			</delete>
-        </rollback>
 	</changeSet>
 
 </databaseChangeLog>

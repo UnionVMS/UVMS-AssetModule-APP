@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 
 
 import javax.ejb.EJB;
+import javax.ejb.EJBTransactionRolledbackException;
 import javax.inject.Inject;
 import java.util.*;
 
@@ -89,7 +90,7 @@ public class ChannelDaoIntTest extends TransactionalTests {
         assertThat(channels.size(), is(0));
     }
 
-    @Test
+    @Test(expected = EJBTransactionRolledbackException.class)
     @OperateOnDeployment("normal")
     @Ignore //rewrite to not use channelHistory
     public void testGetActiveDNID() {
@@ -104,7 +105,7 @@ public class ChannelDaoIntTest extends TransactionalTests {
         assertNotNull(dnidList);
     }
 
-    @Test
+    @Test(expected = EJBTransactionRolledbackException.class)
     @OperateOnDeployment("normal")
     @Ignore //rewrite to not use channelHistory
     public void testGetActiveDNID_emptyList() {
@@ -126,15 +127,14 @@ public class ChannelDaoIntTest extends TransactionalTests {
 
         Channel channel = new Channel();
         channel.setArchived(false);
-        channel.setGuid(serialNo);
 
         List<MobileTerminalPlugin> plugs = mobileTerminalPluginDao.getPluginList();
         MobileTerminalPlugin mtp = plugs.get(0);
 
         MobileTerminal mt = new MobileTerminal();
         mt.setSerialNo(serialNo);
-        mt.setUpdateTime(new Date());
-        mt.setUpdatedBy("TEST");
+        mt.setUpdatetime(new Date());
+        mt.setUpdateuser("TEST");
         mt.setSource(MobileTerminalSourceEnum.INTERNAL);
         mt.setPlugin(mtp);
         mt.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
@@ -157,7 +157,7 @@ public class ChannelDaoIntTest extends TransactionalTests {
         if(connectId != null && !connectId.trim().isEmpty())
             mte.setConnectId(connectId);
         mte.setActive(true);
-        mte.setMobileTerminal(mt);
+        mte.setMobileterminal(mt);
 
         String attributes = PollAttributeType.START_DATE.value() + "=" + DateUtils.getUTCNow().toString();
         attributes = attributes + ";";
@@ -166,7 +166,6 @@ public class ChannelDaoIntTest extends TransactionalTests {
 
         Channel pollChannel = new Channel();
         pollChannel.setArchived(false);
-        pollChannel.setGuid(serialNo2);
         pollChannel.setMobileTerminal(mt);
 
         mte.setPollChannel(pollChannel);

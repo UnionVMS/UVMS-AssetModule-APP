@@ -13,12 +13,15 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.EqualsUtil;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * The persistent class for the inmarsatc_oceanregion database table.
@@ -31,9 +34,10 @@ public class InmarsatCHistoryOceanRegion implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id")
-	private Long id;
+	@GeneratedValue(generator = "INMARSAT_UUID")
+	@GenericGenerator(name = "INMARSAT_UUID", strategy = "org.hibernate.id.UUIDGenerator")
+	@Column(name = "id")
+	private UUID id;
 
 	@Column(name="code")
 	private Integer code;
@@ -58,66 +62,70 @@ public class InmarsatCHistoryOceanRegion implements Serializable {
 	public InmarsatCHistoryOceanRegion() {
 	}
 
-	public Long getId() {
-		return this.id;
+	public UUID getId() {
+		return id;
 	}
 
-	public void setId(Long oceanregId) {
-		this.id = oceanregId;
+	public void setId(UUID id) {
+		this.id = id;
 	}
 
 	public Integer getCode() {
-		return this.code;
+		return code;
 	}
 
-	public void setCode(Integer oceanregCode) {
-		this.code = oceanregCode;
+	public void setCode(Integer code) {
+		this.code = code;
 	}
 
-	public MobileTerminalEvent getHistory() {
-		return this.event;
+	public MobileTerminalEvent getEvent() {
+		return event;
 	}
 
-	public void setHistory(MobileTerminalEvent history) {
-		this.event = history;
+	public void setEvent(MobileTerminalEvent event) {
+		this.event = event;
 	}
 
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	public Date getUpdateTime() {
-		return this.updatetime;
+	public Date getUpdatetime() {
+		return updatetime;
 	}
 
-	public void setUpdateTime(Date updatetime) {
+	public void setUpdatetime(Date updatetime) {
 		this.updatetime = updatetime;
 	}
 
-	public String getUpdatedBy() {
-		return this.updateuser;
+	public String getUpdateuser() {
+		return updateuser;
 	}
 
-	public void setUpdatedBy(String updateuser) {
+	public void setUpdateuser(String updateuser) {
 		this.updateuser = updateuser;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if(obj instanceof InmarsatCHistoryOceanRegion) {
-			InmarsatCHistoryOceanRegion other = (InmarsatCHistoryOceanRegion)obj;
-			if(!EqualsUtil.compare(code, other.code)) return false;
-			return EqualsUtil.compare(name, other.name);
-		}
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		InmarsatCHistoryOceanRegion that = (InmarsatCHistoryOceanRegion) o;
+		return Objects.equals(id, that.id) &&
+				Objects.equals(code, that.code) &&
+				Objects.equals(event, that.event) &&
+				Objects.equals(name, that.name) &&
+				Objects.equals(updatetime, that.updatetime) &&
+				Objects.equals(updateuser, that.updateuser);
 	}
 
 	@Override
 	public int hashCode() {
-		return EqualsUtil.getHashCode(code) + EqualsUtil.getHashCode(name);
+
+		return Objects.hash(id, code, event, name, updatetime, updateuser);
 	}
 }

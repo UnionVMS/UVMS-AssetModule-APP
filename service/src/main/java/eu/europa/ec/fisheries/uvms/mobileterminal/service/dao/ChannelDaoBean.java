@@ -16,6 +16,7 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.dao;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.AttributeMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.poll.PollSearchMapper;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -43,28 +44,29 @@ public class ChannelDaoBean  {
     }
 
     public List<String> getActiveDNID(String pluginName) {
-        String sql = getSQLActiveDNID(pluginName);
-        TypedQuery<String> query = em.createQuery(sql, String.class);
-        List<Map<String, String>> attributes = AttributeMapper.mapAttributeStrings(query.getResultList());
+        throw new NotImplementedException();
+//        String sql = getSQLActiveDNID(pluginName);
+//        TypedQuery<String> query = em.createQuery(sql, String.class);
+//        List<Map<String, String>> attributes = AttributeMapper.mapAttributeStrings(query.getResultList());
 
-        List<String> dnidList = new ArrayList<>();
-        for (Map<String, String> attribute : attributes) {
-            for (String key : attribute.keySet()) {
-                if (key.equalsIgnoreCase("DNID")) {
-                    dnidList.add(attribute.get(key));
-                }
-            }
-        }
-        return dnidList;
+//        List<String> dnidList = new ArrayList<>();
+//        for (Map<String, String> attribute : attributes) {
+//            for (String key : attribute.keySet()) {
+//                if (key.equalsIgnoreCase("DNID")) {
+//                    dnidList.add(attribute.get(key));
+//                }
+//            }
+//        }
+//        return dnidList;
     }
 
-    private String getSQLActiveDNID(String pluginName) {
-        return "SELECT DISTINCT ch_hist.attributes FROM ChannelHistory ch_hist " +
-                "INNER JOIN ch_hist.channel ch " + // channel
-                "INNER JOIN ch.mobileTerminal mobTerm " + //Mobileterminal
-                "INNER JOIN mobTerm.plugin p " +
-                "WHERE ch_hist.active = '1' " +
-                "AND mobTerm.archived = '0' AND p.pluginInactive = '0' " +
-                "AND p.pluginServiceName = '" + pluginName + "'";
-    }
+//    private String getSQLActiveDNID(String pluginName) {
+//        return "SELECT DISTINCT ch_hist.attributes FROM ChannelHistory ch_hist " +
+//                "INNER JOIN ch_hist.channel ch " + // channel
+//                "INNER JOIN ch.mobileTerminal mobTerm " + //Mobileterminal
+//                "INNER JOIN mobTerm.plugin p " +
+//                "WHERE ch_hist.active = '1' " +
+//                "AND mobTerm.archived = '0' AND p.pluginInactive = '0' " +
+//                "AND p.pluginServiceName = '" + pluginName + "'";
+//    }
 }

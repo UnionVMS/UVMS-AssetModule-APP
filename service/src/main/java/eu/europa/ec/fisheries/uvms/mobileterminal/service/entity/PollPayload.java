@@ -11,10 +11,14 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
+import java.util.UUID;
 
 @Table(name = "pollpayload")
 @Entity
@@ -22,10 +26,10 @@ public class PollPayload implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Basic(optional = false)
+    @GeneratedValue(generator = "POLLPAYLOAD_UUID")
+    @GenericGenerator(name = "POLLPAYLOAD_UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id")
-    private Long id;
+    private UUID id;
 
     @Column(name = "reporting_freq")
     private Integer reportingFrequency;
@@ -59,11 +63,11 @@ public class PollPayload implements Serializable {
     public PollPayload() {
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -129,5 +133,27 @@ public class PollPayload implements Serializable {
 
     public void setPoll(Poll poll) {
         this.poll = poll;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PollPayload that = (PollPayload) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(reportingFrequency, that.reportingFrequency) &&
+                Objects.equals(gracePeriod, that.gracePeriod) &&
+                Objects.equals(inPortGrace, that.inPortGrace) &&
+                Objects.equals(newDnid, that.newDnid) &&
+                Objects.equals(newMemberNumber, that.newMemberNumber) &&
+                Objects.equals(startDate, that.startDate) &&
+                Objects.equals(stopDate, that.stopDate) &&
+                Objects.equals(poll, that.poll);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, reportingFrequency, gracePeriod, inPortGrace, newDnid, newMemberNumber, startDate, stopDate, poll);
     }
 }

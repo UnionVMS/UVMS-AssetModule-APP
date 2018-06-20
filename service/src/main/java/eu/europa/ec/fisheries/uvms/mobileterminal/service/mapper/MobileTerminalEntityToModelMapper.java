@@ -45,7 +45,7 @@ public class MobileTerminalEntityToModelMapper {
         }
 
         MobileTerminalType model = new MobileTerminalType();
-        model.setMobileTerminalId(mapToMobileTerminalId(entity.getGuid()));
+        model.setMobileTerminalId(mapToMobileTerminalId(entity.getId().toString()));
 
         Plugin plugin = PluginMapper.mapEntityToModel(entity.getPlugin());
         model.setPlugin(plugin);
@@ -61,7 +61,7 @@ public class MobileTerminalEntityToModelMapper {
         model.setType(entity.getMobileTerminalType().name());
         model.setInactive(entity.getInactivated());
         model.setArchived(entity.getArchived());
-        model.setId(entity.getId().intValue());
+        model.setId(new Long(entity.getCreateTime().getTime()).intValue());
 
         model.getChannels().addAll(mapChannels(entity.getChannels(), currentEvent));
 

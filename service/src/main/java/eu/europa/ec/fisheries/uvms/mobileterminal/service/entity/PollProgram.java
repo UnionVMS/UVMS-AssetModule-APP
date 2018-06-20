@@ -14,12 +14,14 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollStateEnum;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -31,7 +33,7 @@ import java.util.UUID;
 @DiscriminatorValue("true")
 @NamedQueries({
 	@NamedQuery(name = "PollProgram.findAll", query = "SELECT p FROM PollProgram p"),
-	@NamedQuery(name = MobileTerminalConstants.POLL_PROGRAM_FIND_BY_ID, query = "SELECT p FROM PollProgram p WHERE p.guid = :guid"),
+	@NamedQuery(name = MobileTerminalConstants.POLL_PROGRAM_FIND_BY_ID, query = "SELECT p FROM PollProgram p WHERE p.id = :guid"),
 	@NamedQuery(name = MobileTerminalConstants.POLL_PROGRAM_FIND_ALIVE, query = "SELECT p FROM PollProgram  p WHERE p.stopDate > :currentDate " +
 	"AND p.pollState <> eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollStateEnum.ARCHIVED"),
     @NamedQuery(name = MobileTerminalConstants.POLL_PROGRAM_FIND_RUNNING_AND_STARTED,
@@ -40,15 +42,11 @@ public class PollProgram implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Basic(optional = false)
+    @GeneratedValue(generator = "POLLPROGRAM_UUID")
+    @GenericGenerator(name = "POLLPROGRAM_UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id")
-    private Long id;
+    private UUID id;
 
-    @Size(max = 36)
-    @NotNull
-    @Column(name = "guid", unique=true)
-    private String guid;
 
     @Column(name = "frequency")
     private Integer frequency;
@@ -81,21 +79,12 @@ public class PollProgram implements Serializable {
     @Column(name = "pollstate")
     private PollStateEnum pollState;
 
-    public PollProgram() {
-    }
-
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
-    }
-
-    @PrePersist
-    public void atPrePersist() {
-        if(guid == null)
-        setGuid(UUID.randomUUID().toString());
     }
 
     public Integer getFrequency() {
@@ -146,14 +135,6 @@ public class PollProgram implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public PollStateEnum getPollState() {
-        return pollState;
-    }
-
-    public void setPollState(PollStateEnum pollState) {
-        this.pollState = pollState;
-    }
-
     public PollBase getPollBase() {
         return pollBase;
     }
@@ -162,11 +143,33 @@ public class PollProgram implements Serializable {
         this.pollBase = pollBase;
     }
 
-    public String getGuid() {
-        return guid;
+    public PollStateEnum getPollState() {
+        return pollState;
     }
 
-    public void setGuid(String guid) {
-        this.guid = guid;
+    public void setPollState(PollStateEnum pollState) {
+        this.pollState = pollState;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PollProgram that = (PollProgram) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(frequency, that.frequency) &&
+                Objects.equals(startDate, that.startDate) &&
+                Objects.equals(stopDate, that.stopDate) &&
+                Objects.equals(latestRun, that.latestRun) &&
+                Objects.equals(updatedBy, that.updatedBy) &&
+                Objects.equals(updateTime, that.updateTime) &&
+                Objects.equals(pollBase, that.pollBase) &&
+                pollState == that.pollState;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, frequency, startDate, stopDate, latestRun, updatedBy, updateTime, pollBase, pollState);
     }
 }

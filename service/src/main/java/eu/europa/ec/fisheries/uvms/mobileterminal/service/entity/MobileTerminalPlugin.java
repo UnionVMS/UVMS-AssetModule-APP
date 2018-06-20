@@ -13,15 +13,14 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The persistent class for the landearthstation database table.
@@ -38,9 +37,10 @@ public class MobileTerminalPlugin implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "MOBILETERMINALPLUGIN_UUID")
+    @GenericGenerator(name = "MOBILETERMINALPLUGIN_UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id")
-    private Long id;
+    private UUID id;
 
     @Size(max = 80)
     @Column(name = "description")
@@ -78,16 +78,16 @@ public class MobileTerminalPlugin implements Serializable {
     public MobileTerminalPlugin() {
     }
 
-    public Long getId() {
-        return this.id;
+    public UUID getId() {
+        return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
     public String getDescription() {
-        return this.description;
+        return description;
     }
 
     public void setDescription(String description) {
@@ -95,38 +95,22 @@ public class MobileTerminalPlugin implements Serializable {
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public Date getUpdateTime() {
-        return this.updateTime;
+    public String getPluginServiceName() {
+        return pluginServiceName;
     }
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+    public void setPluginServiceName(String pluginServiceName) {
+        this.pluginServiceName = pluginServiceName;
     }
 
-    public String getUpdatedBy() {
-        return this.updatedBy;
-    }
-
-    public void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy;
-    }
-
-	public String getPluginServiceName() {
-		return pluginServiceName;
-	}
-
-	public void setPluginServiceName(String pluginServiceName) {
-		this.pluginServiceName = pluginServiceName;
-	}
-
-	public String getPluginSatelliteType() {
+    public String getPluginSatelliteType() {
         return pluginSatelliteType;
     }
 
@@ -135,26 +119,65 @@ public class MobileTerminalPlugin implements Serializable {
     }
 
     public Boolean getPluginInactive() {
-		return pluginInactive;
-	}
+        return pluginInactive;
+    }
 
-	public void setPluginInactive(Boolean isInactive) {
-		this.pluginInactive = isInactive;
-	}
+    public void setPluginInactive(Boolean pluginInactive) {
+        this.pluginInactive = pluginInactive;
+    }
 
-	public List<MobileTerminal> getMobileTerminals() {
-		return mobileTerminals;
-	}
+    public Date getUpdateTime() {
+        return updateTime;
+    }
 
-	public void setMobileTerminals(List<MobileTerminal> mobileTerminals) {
-		this.mobileTerminals = mobileTerminals;
-	}
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 
-	public Set<MobileTerminalPluginCapability> getCapabilities() {
-		return capabilities;
-	}
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
 
-	public void setCapabilities(Set<MobileTerminalPluginCapability> capabilities) {
-		this.capabilities = capabilities;
-	}
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public List<MobileTerminal> getMobileTerminals() {
+        return mobileTerminals;
+    }
+
+    public void setMobileTerminals(List<MobileTerminal> mobileTerminals) {
+        this.mobileTerminals = mobileTerminals;
+    }
+
+    public Set<MobileTerminalPluginCapability> getCapabilities() {
+        return capabilities;
+    }
+
+    public void setCapabilities(Set<MobileTerminalPluginCapability> capabilities) {
+        this.capabilities = capabilities;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MobileTerminalPlugin that = (MobileTerminalPlugin) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(pluginServiceName, that.pluginServiceName) &&
+                Objects.equals(pluginSatelliteType, that.pluginSatelliteType) &&
+                Objects.equals(pluginInactive, that.pluginInactive) &&
+                Objects.equals(updateTime, that.updateTime) &&
+                Objects.equals(updatedBy, that.updatedBy) &&
+                Objects.equals(mobileTerminals, that.mobileTerminals) &&
+                Objects.equals(capabilities, that.capabilities);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id);
+    }
 }

@@ -264,10 +264,10 @@ public class ConfigServiceBeanMT {
             dnidListDao.removeByPluginName(pluginName);
             for (String terminalDnid : activeDnidList) {
                 DNIDList dnid = new DNIDList();
-                dnid.setDNID(terminalDnid);
+                dnid.setDnid(terminalDnid);
                 dnid.setPluginName(pluginName);
                 dnid.setUpdateTime(DateUtils.getNowDateUTC());
-                dnid.setUpdateUser(MobileTerminalConstants.UPDATE_USER);
+                dnid.setUpdatedBy(MobileTerminalConstants.UPDATE_USER);
                 dnidListDao.create(dnid);
             }
             return true;
@@ -282,7 +282,7 @@ public class ConfigServiceBeanMT {
         Set<String> activeDnidSet = new HashSet<>(activeDnidList);
         Set<String> entityDnidSet = new HashSet<>();
         for (DNIDList entity : existingDNIDList) {
-            entityDnidSet.add(entity.getDNID());
+            entityDnidSet.add(entity.getDnid());
         }
         if (activeDnidSet.size() != entityDnidSet.size()) return true;
 
@@ -304,7 +304,7 @@ public class ConfigServiceBeanMT {
         List<String> dnids = new ArrayList<>();
         List<DNIDList> dnidList = dnidListDao.getDNIDList(pluginName);
         for (DNIDList entity : dnidList) {
-            dnids.add(entity.getDNID());
+            dnids.add(entity.getDnid());
         }
         return dnids;
     }

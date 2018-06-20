@@ -26,10 +26,10 @@ public class HistoryMapper {
     
 	public static MobileTerminalEvent UPDATED_createMobileterminalevent(MobileTerminal entity, EventCodeEnum eventcode, String comment, String username) {
 		MobileTerminalEvent event = new MobileTerminalEvent();
-		event.setMobileTerminal(entity);
+		event.setMobileterminal(entity);
 		event.setComment(comment);
-        event.setUpdateTime(DateUtils.getNowDateUTC());
-		event.setUpdatedBy(username);
+        event.setUpdatetime(DateUtils.getNowDateUTC());
+		event.setUpdateuser(username);
 		event.setEventCodeType(eventcode);
 		return event;
 	}
@@ -42,7 +42,7 @@ public class HistoryMapper {
 		MobileTerminalHistory terminalHistory = new MobileTerminalHistory();
 		for (MobileTerminalEvent event : terminal.getMobileTerminalEvents()) {
 			MobileTerminalEvents eventModel = new MobileTerminalEvents();
-			eventModel.setChangeDate(event.getUpdateTime());
+			eventModel.setChangeDate(event.getUpdatetime());
 			eventModel.setComments(event.getComment());
 			eventModel.setEventCode(EventCode.valueOf(event.getEventCodeType().toString()));
 			eventModel.setConnectId(event.getConnectId());

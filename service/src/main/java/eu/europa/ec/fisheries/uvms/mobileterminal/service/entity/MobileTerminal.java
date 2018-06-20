@@ -17,16 +17,14 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTer
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * The persistent class for the mobileterminal database table.
@@ -36,26 +34,21 @@ import java.util.UUID;
 @Entity
 @NamedQueries({
 	@NamedQuery(name=MobileTerminalConstants.MOBILE_TERMINAL_FIND_ALL, query = "SELECT m FROM MobileTerminal m"),
-	@NamedQuery(name=MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_GUID, query="SELECT m FROM MobileTerminal m WHERE m.guid = :guid"),
+	@NamedQuery(name=MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_GUID, query="SELECT m FROM MobileTerminal m WHERE m.id = :guid"),
 	@NamedQuery(name=MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_SERIAL_NO, query="SELECT m FROM MobileTerminal m WHERE m.serialNo = :serialNo")
 })
 public class MobileTerminal implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id")
-	private Long id;
+	@GeneratedValue(generator = "MOBILETERMINAL_UUID")
+	@GenericGenerator(name = "MOBILETERMINAL_UUID", strategy = "org.hibernate.id.UUIDGenerator")
+	@Column(name = "id")
+	private UUID id;
 
 	@Column(unique = true, name = "historyid")
 	private UUID historyId;
 
-
-	@Size(max=36)
-	@NotNull
-	@Column(name="guid")
-	private String guid;
-	
 	@NotNull
 	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	@JoinColumn(name="plugin_id")
@@ -81,6 +74,10 @@ public class MobileTerminal implements Serializable {
 	@Column(name="updatetime")
 	private Date updatetime;
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="createtime")
+	private Date createTime;
+
 	@Size(max = 60)
 	@Column(name="updateuser")
 	private String updateuser;
@@ -102,10 +99,9 @@ public class MobileTerminal implements Serializable {
 
 	@PrePersist
 	private void atPrePersist() {
-		if(guid == null) {
-			setGuid(UUID.randomUUID().toString());
-		}
+
 		this.historyId = UUID.randomUUID();
+		this.createTime = new Date();
 	}
 
 	@PreUpdate
@@ -113,86 +109,12 @@ public class MobileTerminal implements Serializable {
 		this.historyId = UUID.randomUUID();
 	}
 
-	public Long getId() {
-		return this.id;
+	public UUID getId() {
+		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(UUID id) {
 		this.id = id;
-	}
-
-	public Boolean getArchived() {
-		return this.archived;
-	}
-
-	public void setArchived(Boolean archived) {
-		this.archived = archived;
-	}
-
-	public Boolean getInactivated() {
-		return this.inactivated;
-	}
-
-	public void setInactivated(Boolean inactivated) {
-		this.inactivated = inactivated;
-	}
-
-	public MobileTerminalSourceEnum getSource() {
-		return this.source;
-	}
-
-	public void setSource(MobileTerminalSourceEnum source) {
-		this.source = source;
-	}
-
-	public MobileTerminalTypeEnum getMobileTerminalType() {
-		return this.mobileTerminalType;
-	}
-
-	public void setMobileTerminalType(MobileTerminalTypeEnum mobileTerminalType) {
-		this.mobileTerminalType = mobileTerminalType;
-	}
-
-	public Date getUpdateTime() {
-		return this.updatetime;
-	}
-
-	public void setUpdateTime(Date updatetime) {
-		this.updatetime = updatetime;
-	}
-
-	public String getUpdatedBy() {
-		return this.updateuser;
-	}
-
-	public void setUpdatedBy(String updateuser) {
-		this.updateuser = updateuser;
-	}
-
-	public Set<MobileTerminalEvent> getMobileTerminalEvents() {
-		if (mobileTerminalEvents == null) {
-			mobileTerminalEvents = new HashSet<>();
-		}
-		return this.mobileTerminalEvents;
-	}
-
-	public void setMobileTerminalEvents(Set<MobileTerminalEvent> mobileTerminalEvents) {
-		this.mobileTerminalEvents = mobileTerminalEvents;
-	}
-
-	public String getGuid() {
-		return guid;
-	}
-
-	public void setGuid(String guid) {
-		this.guid = guid;
-	}
-
-	public Set<Channel> getChannels() {
-		if (channels == null) {
-			channels = new HashSet<>();
-		}
-		return channels;
 	}
 
 	public UUID getHistoryId() {
@@ -201,6 +123,46 @@ public class MobileTerminal implements Serializable {
 
 	public void setHistoryId(UUID historyId) {
 		this.historyId = historyId;
+	}
+
+	public MobileTerminalPlugin getPlugin() {
+		return plugin;
+	}
+
+	public void setPlugin(MobileTerminalPlugin plugin) {
+		this.plugin = plugin;
+	}
+
+	public Boolean getArchived() {
+		return archived;
+	}
+
+	public void setArchived(Boolean archived) {
+		this.archived = archived;
+	}
+
+	public Boolean getInactivated() {
+		return inactivated;
+	}
+
+	public void setInactivated(Boolean inactivated) {
+		this.inactivated = inactivated;
+	}
+
+	public MobileTerminalSourceEnum getSource() {
+		return source;
+	}
+
+	public void setSource(MobileTerminalSourceEnum source) {
+		this.source = source;
+	}
+
+	public MobileTerminalTypeEnum getMobileTerminalType() {
+		return mobileTerminalType;
+	}
+
+	public void setMobileTerminalType(MobileTerminalTypeEnum mobileTerminalType) {
+		this.mobileTerminalType = mobileTerminalType;
 	}
 
 	public Date getUpdatetime() {
@@ -219,10 +181,6 @@ public class MobileTerminal implements Serializable {
 		this.updateuser = updateuser;
 	}
 
-	public void setChannels(Set<Channel> channels) {
-		this.channels = channels;
-	}
-
 	public String getSerialNo() {
 		return serialNo;
 	}
@@ -231,27 +189,59 @@ public class MobileTerminal implements Serializable {
 		this.serialNo = serialNo;
 	}
 
+	public Set<MobileTerminalEvent> getMobileTerminalEvents() {
+		if(mobileTerminalEvents == null)
+			mobileTerminalEvents = new HashSet<>();
+		return mobileTerminalEvents;
+	}
+
+	public void setMobileTerminalEvents(Set<MobileTerminalEvent> mobileTerminalEvents) {
+		this.mobileTerminalEvents = mobileTerminalEvents;
+	}
+
+	public Set<Channel> getChannels() {
+		if(channels == null)
+			channels = new HashSet<>();
+		return channels;
+	}
+
+	public void setChannels(Set<Channel> channels) {
+		this.channels = channels;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
 	@Override
-	public boolean equals(Object obj) {
-		if(obj instanceof MobileTerminal) {
-			MobileTerminal other = (MobileTerminal)obj;
-			return EqualsUtil.compare(guid, other.guid);
-		}
-		return false;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		MobileTerminal that = (MobileTerminal) o;
+		return Objects.equals(id, that.id) &&
+				Objects.equals(historyId, that.historyId) &&
+				Objects.equals(plugin, that.plugin) &&
+				Objects.equals(archived, that.archived) &&
+				Objects.equals(inactivated, that.inactivated) &&
+				source == that.source &&
+				mobileTerminalType == that.mobileTerminalType &&
+				Objects.equals(updatetime, that.updatetime) &&
+				Objects.equals(updateuser, that.updateuser) &&
+				Objects.equals(serialNo, that.serialNo) &&
+				Objects.equals(mobileTerminalEvents, that.mobileTerminalEvents) &&
+				Objects.equals(channels, that.channels);
 	}
 
 	@Override
 	public int hashCode() {
-		return EqualsUtil.getHashCode(guid);
+
+		return Objects.hash(id);
 	}
 
-	public MobileTerminalPlugin getPlugin() {
-		return plugin;
-	}
-
-	public void setPlugin(MobileTerminalPlugin plugin) {
-		this.plugin = plugin;
-	}
 
 	public MobileTerminalEvent getCurrentEvent() {
 		for (MobileTerminalEvent event : getMobileTerminalEvents()) {
@@ -261,4 +251,6 @@ public class MobileTerminal implements Serializable {
 		}
 		return null;
 	}
+
+
 }

@@ -17,6 +17,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import javax.ejb.Stateless;
 import javax.persistence.*;
 import java.util.List;
+import java.util.UUID;
 
 @Stateless
 public class TerminalDaoBean  {
@@ -27,7 +28,7 @@ public class TerminalDaoBean  {
 	public MobileTerminal getMobileTerminalByGuid(String guid)  {
 		try {
             TypedQuery<MobileTerminal> query = em.createNamedQuery(MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_GUID, MobileTerminal.class);
-            query.setParameter("guid", guid);
+            query.setParameter("guid", UUID.fromString(guid));
             return query.getSingleResult();
         } catch (NoResultException e) {
 		    return null;
@@ -50,7 +51,9 @@ public class TerminalDaoBean  {
     }
 
     public MobileTerminal updateMobileTerminal(MobileTerminal terminal) {
-            return em.merge(terminal);
+	    if(terminal == null || terminal.getId() == null)
+	        throw new IllegalArgumentException();
+        return em.merge(terminal);
     }
 
     public List<MobileTerminal> getMobileTerminalsByQuery(String sql) {

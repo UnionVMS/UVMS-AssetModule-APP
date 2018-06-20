@@ -147,7 +147,7 @@ public class PollSearchMapper {
 		builder.append(" INNER JOIN FETCH mt.plugin p ");
 		builder.append(" INNER JOIN FETCH p.capabilities cap ");
 		builder.append(" WHERE ");
-		builder.append(" c.guid = pc.guid ");
+		builder.append(" c.id = pc.id ");
 		builder.append(" AND me.active = true ");
 		builder.append(" AND mt.archived = '0' AND mt.inactivated = '0' AND p.pluginInactive = '0' ");
 		builder.append(" AND (cap.name = 'POLLABLE' AND UPPER(cap.value) = 'TRUE' ) ");
@@ -155,7 +155,7 @@ public class PollSearchMapper {
 		if (idList != null && !idList.isEmpty()) {
 			builder.append(" AND me.connectId IN :idList");
 		}
-		builder.append(" ORDER BY c.guid DESC ");
+		builder.append(" ORDER BY c.id DESC ");
 		return builder.toString();
 	}
 }

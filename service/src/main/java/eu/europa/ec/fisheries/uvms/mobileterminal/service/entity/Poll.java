@@ -13,6 +13,7 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollTypeEnum;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -21,6 +22,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -29,24 +31,19 @@ import java.util.UUID;
 @NamedQueries({
         @NamedQuery(name = "Poll.findAll", query = "SELECT p FROM Poll p"),
         @NamedQuery(name = "Poll.findByPollId", query = "SELECT p FROM Poll p WHERE p.id = :pollId"),
-        @NamedQuery(name = "Poll.findByPollGUID", query = "SELECT p FROM Poll p WHERE p.guid = :guid"),
         @NamedQuery(name = "Poll.findByPollComment", query = "SELECT p FROM Poll p WHERE p.pollBase.comment = :pollComment"),
         @NamedQuery(name = "Poll.findByPollCreated", query = "SELECT p FROM Poll p WHERE p.updateTime = :pollCreated"),
         @NamedQuery(name = "Poll.findByPollUserCreator", query = "SELECT p FROM Poll p WHERE p.pollBase.creator = :pollUserCreator"),
-        @NamedQuery(name = "Poll.findByPolltrackId", query = "SELECT p FROM Poll p WHERE p.guid = :polltrackId") })
+        })
 public class Poll implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Basic(optional = false)
+    @GeneratedValue(generator = "POLL_UUID")
+    @GenericGenerator(name = "POLL_UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id")
-    private Long id;
+    private UUID id;
 
-    @Size(max = 36)
-    @NotNull
-    @Column(name = "guid", unique=true)
-    private String guid;
 
     @Size(max = 60)
     @Column(name = "upuser")
@@ -70,42 +67,12 @@ public class Poll implements Serializable {
     public Poll() {
     }
 
-    @PrePersist
-    public void atPrePersist() {
-        if(guid == null)
-        setGuid(UUID.randomUUID().toString());
-    }
-
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
-    }
-
-    public PollTypeEnum getPollType() {
-        return pollType;
-    }
-
-    public void setPollType(PollTypeEnum pollType) {
-        this.pollType = pollType;
-    }
-
-    public List<PollPayload> getPayloads() {
-        return payloads;
-    }
-
-    public void setPayloads(List<PollPayload> payloads) {
-        this.payloads = payloads;
-    }
-
-    public PollBase getPollBase() {
-        return pollBase;
-    }
-
-    public void setPollBase(PollBase pollBase) {
-        this.pollBase = pollBase;
     }
 
     public String getUpdatedBy() {
@@ -124,11 +91,46 @@ public class Poll implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public String getGuid() {
-        return guid;
+    public PollTypeEnum getPollType() {
+        return pollType;
     }
 
-    public void setGuid(String guid) {
-        this.guid = guid;
+    public void setPollType(PollTypeEnum pollType) {
+        this.pollType = pollType;
+    }
+
+    public PollBase getPollBase() {
+        return pollBase;
+    }
+
+    public void setPollBase(PollBase pollBase) {
+        this.pollBase = pollBase;
+    }
+
+    public List<PollPayload> getPayloads() {
+        return payloads;
+    }
+
+    public void setPayloads(List<PollPayload> payloads) {
+        this.payloads = payloads;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Poll poll = (Poll) o;
+        return Objects.equals(id, poll.id) &&
+                Objects.equals(updatedBy, poll.updatedBy) &&
+                Objects.equals(updateTime, poll.updateTime) &&
+                pollType == poll.pollType &&
+                Objects.equals(pollBase, poll.pollBase) &&
+                Objects.equals(payloads, poll.payloads);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, updatedBy, updateTime, pollType, pollBase, payloads);
     }
 }

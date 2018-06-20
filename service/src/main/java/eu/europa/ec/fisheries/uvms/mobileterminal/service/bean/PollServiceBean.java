@@ -197,9 +197,9 @@ public class PollServiceBean {
 
         if (channelGuid != null && !channelGuid.isEmpty()) {
             for (Channel channel : terminal.getChannels()) {
-                if (channel.getGuid().equalsIgnoreCase(channelGuid)) {
-                    if (!channel.getMobileTerminal().getGuid().equalsIgnoreCase(guid)) {
-                        throw new MobileTerminalModelException("Channel " + channel.getGuid() + " can not be polled, because it is not part of terminal " + terminal.getGuid());
+                if (channel.getId().toString().equalsIgnoreCase(channelGuid)) {
+                    if (!channel.getMobileTerminal().getId().toString().equalsIgnoreCase(guid)) {
+                        throw new MobileTerminalModelException("Channel " + channel.getId() + " can not be polled, because it is not part of terminal " + terminal.getId());
                     }
                     return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal, channel);
                 }
@@ -261,7 +261,7 @@ public class PollServiceBean {
             MobileTerminal mobileTerminalEntity = terminalDao.getMobileTerminalByGuid(pollTerminal.getMobileTerminalId());
             String connectId = mobileTerminalEntity.getCurrentEvent().getConnectId();
             if (!pollTerminal.getConnectId().equals(connectId)) {
-                throw new MobileTerminalModelException("Terminal " + mobileTerminalEntity.getGuid() + " can not be polled, because it is not linked to asset " + connectId);
+                throw new MobileTerminalModelException("Terminal " + mobileTerminalEntity.getId() + " can not be polled, because it is not linked to asset " + connectId);
             }
             MobileTerminalType terminalType = getPollableTerminalType(pollTerminal.getMobileTerminalId(), pollTerminal.getComChannelId());
             PollProgram pollProgram = PollModelToEntityMapper.mapToProgramPoll(mobileTerminalEntity, connectId, pollTerminal.getComChannelId(), pollRequest, username);
@@ -277,7 +277,7 @@ public class PollServiceBean {
             MobileTerminal mobileTerminalEntity = terminalDao.getMobileTerminalByGuid(pollTerminal.getMobileTerminalId());
             String connectId = mobileTerminalEntity.getCurrentEvent().getConnectId();
             if (!pollTerminal.getConnectId().equals(connectId)) {
-                throw new MobileTerminalModelException("Terminal " + mobileTerminalEntity.getGuid() + " can not be polled, because it is not linked to asset " + connectId);
+                throw new MobileTerminalModelException("Terminal " + mobileTerminalEntity.getId() + " can not be polled, because it is not linked to asset " + connectId);
             }
 
             if (pollRequest.getPollType() != PollType.MANUAL_POLL) {
@@ -367,12 +367,12 @@ public class PollServiceBean {
 
         for (Poll poll : pollList) {
             try {
-                MobileTerminal mobileTerminalEntity = poll.getPollBase().getMobileTerminal();
-                MobileTerminalType mobileTerminalType = mapPollableTerminalType(mobileTerminalEntity.getMobileTerminalType(), mobileTerminalEntity.getGuid());
+                MobileTerminal mobileTerminalEntity = poll.getPollBase().getMobileterminal();
+                MobileTerminalType mobileTerminalType = mapPollableTerminalType(mobileTerminalEntity.getMobileTerminalType(), mobileTerminalEntity.getId().toString());
                 PollResponseType pollType = PollEntityToModelMapper.mapToPollResponseType(poll, mobileTerminalType, EnumMapper.getPollModelFromType(poll.getPollType()));
                 pollResponseList.add(pollType);
             } catch (EnumException e) {
-                LOG.error("[ Poll " + poll.getGuid() + "  couldn't map type ]");
+                LOG.error("[ Poll " + poll.getId() + "  couldn't map type ]");
             }
         }
 
@@ -408,8 +408,8 @@ public class PollServiceBean {
 
         try {
             PollProgram program = pollProgramDao.getPollProgramByGuid(id.getGuid());
-            MobileTerminal terminal = program.getPollBase().getMobileTerminal();
-            MobileTerminalType terminalType = mapPollableTerminalType(terminal.getMobileTerminalType(), terminal.getGuid());
+            MobileTerminal terminal = program.getPollBase().getMobileterminal();
+            MobileTerminalType terminalType = mapPollableTerminalType(terminal.getMobileTerminalType(), terminal.getId().toString());
 
             switch (program.getPollState()) {
                 case ARCHIVED:
@@ -490,10 +490,10 @@ public class PollServiceBean {
     private List<PollResponseType> getResponseList(List<PollProgram> pollPrograms)  {
         List<PollResponseType> responseList = new ArrayList<>();
         for (PollProgram pollProgram : pollPrograms) {
-                MobileTerminal terminal = pollProgram.getPollBase().getMobileTerminal();
+                MobileTerminal terminal = pollProgram.getPollBase().getMobileterminal();
             MobileTerminalType terminalType = null;
             try {
-                terminalType = mapPollableTerminalType(terminal.getMobileTerminalType(), terminal.getGuid());
+                terminalType = mapPollableTerminalType(terminal.getMobileTerminalType(), terminal.getId().toString());
                 responseList.add(PollEntityToModelMapper.mapToPollResponseType(pollProgram, terminalType));
             } catch (MobileTerminalModelMapperException e) {
                 LOG.warn(e.toString(), e);

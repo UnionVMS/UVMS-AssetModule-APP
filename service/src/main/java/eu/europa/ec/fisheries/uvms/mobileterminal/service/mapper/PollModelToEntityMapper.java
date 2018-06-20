@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static eu.europa.ec.fisheries.uvms.mobileterminal.service.util.DateUtils.*;
 
@@ -30,11 +31,11 @@ public class PollModelToEntityMapper {
 
     private static PollBase createNewPollBase(MobileTerminal terminal, String terminalConnect, String channelGuid, PollRequestType requestType, String username) {
         PollBase pollBase = new PollBase();
-        pollBase.setChannelGuid(channelGuid);
-        pollBase.setMobileTerminal(terminal);
+        pollBase.setChannelId(UUID.fromString(channelGuid));
+        pollBase.setMobileterminal(terminal);
         pollBase.setTerminalConnect(terminalConnect);
         pollBase.setComment(requestType.getComment());
-        pollBase.setUser(requestType.getUserName());
+        pollBase.setUpdatedBy(requestType.getUserName());
         
         pollBase.setUpdatedBy(username);
         pollBase.setUpdateTime(getUTCNow());
