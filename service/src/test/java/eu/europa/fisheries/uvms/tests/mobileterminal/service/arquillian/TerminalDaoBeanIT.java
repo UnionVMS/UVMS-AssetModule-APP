@@ -1,4 +1,4 @@
-package eu.europa.fisheries.uvms.mobileterminal.service.arquillian;
+package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.TerminalDaoBean;
@@ -8,7 +8,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTer
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.NoEntityFoundException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.TerminalDaoException;
-import eu.europa.fisheries.uvms.TransactionalTests;
+import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
