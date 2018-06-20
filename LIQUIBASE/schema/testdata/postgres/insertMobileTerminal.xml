@@ -31,6 +31,17 @@
             <column name="updateuser" value="osdjup"/>
         </insert>
 
+        <insert tableName="channel">
+            <column name="id" value="1"/>
+            <column name="guid" value="testdata_channel_iridium"/>
+            <column name="updattime" valueDate="${now}"/>
+            <column name="updateuser" value="osdjup"/>
+            <column name="mobterm_id" value="1"/>
+        </insert>
+
+
+
+
         <insert tableName="mobileterminalevent">
             <column name="id" value="1"/>
             <column name="comment" value="CREATED"/>
@@ -45,13 +56,6 @@
             <column name="active" valueBoolean="1"/>
         </insert>
 
-        <insert tableName="channel">
-            <column name="id" value="1"/>
-            <column name="guid" value="testdata_channel_iridium"/>
-            <column name="updattime" valueDate="${now}"/>
-            <column name="updateuser" value="osdjup"/>
-            <column name="mobterm_id" value="1"/>
-        </insert>
 
         <insert tableName="channel_history">
             <column name="id" value="1"/>
@@ -80,6 +84,17 @@
             <column name="updateuser" value="osdjup"/>
         </insert>
 
+
+        <insert tableName="channel">
+            <column name="id" value="2"/>
+            <column name="guid" value="testdata_channel_inmarsatc"/>
+            <column name="updattime" valueDate="${now}"/>
+            <column name="updateuser" value="osdjup"/>
+            <column name="mobterm_id" value="2"/>
+        </insert>
+
+
+
         <insert tableName="mobileterminalevent">
             <column name="id" value="2"/>
             <column name="comment" value="CREATED"/>
@@ -95,13 +110,6 @@
         </insert>
 
 
-        <insert tableName="channel">
-            <column name="id" value="2"/>
-            <column name="guid" value="testdata_channel_inmarsatc"/>
-            <column name="updattime" valueDate="${now}"/>
-            <column name="updateuser" value="osdjup"/>
-            <column name="mobterm_id" value="2"/>
-        </insert>
 
         <insert tableName="channel_history">
             <column name="id" value="2"/>

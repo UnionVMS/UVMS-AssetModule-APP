@@ -116,28 +116,6 @@
         </insert>
 
 
-        <rollback>
-            <delete tableName="mobileterminal">
-                <where>
-                    mobterm_id in (1)
-                </where>
-            </delete>
-            <delete tableName="mobileterminal_inmarsatc">
-                <where>
-                    id in (1)
-                </where>
-            </delete>
-            <delete tableName="channel_inmarsatc">
-                <where>
-                    channel_id in (1)
-                </where>
-            </delete>
-            <delete tableName="channel_inmarsatc_history">
-                <where>
-                    channel_hist_id in (1)
-                </where>
-            </delete>
-        </rollback>
     </changeSet>
 
 </databaseChangeLog>

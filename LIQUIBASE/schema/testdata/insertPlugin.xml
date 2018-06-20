@@ -69,18 +69,7 @@
             <column name="upuser" value="johlyn"/>
         </insert>
         
-        <rollback>
-            <delete tableName="plugin">
-				<where>
-					plugin_id in (1, 2)
-				</where>
-			</delete>
-            <delete tableName="plugin_capability">
-				<where>
-					id in (1, 2, 3)
-				</where>
-			</delete>
-        </rollback>
+
 	</changeSet>
 
 </databaseChangeLog>

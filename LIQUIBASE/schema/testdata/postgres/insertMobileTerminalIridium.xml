@@ -96,28 +96,6 @@
         </insert>
 
 
-        <rollback>
-            <delete tableName="mobileterminal">
-                <where>
-                    mobterm_id in (2)
-                </where>
-            </delete>
-            <delete tableName="mobileterminal_iridium">
-                <where>
-                    id in (1)
-                </where>
-            </delete>
-            <delete tableName="channel_iridium">
-                <where>
-                    channel_id in (1)
-                </where>
-            </delete>
-            <delete tableName="channel_iridium_history">
-                <where>
-                    channel_hist_id in (1)
-                </where>
-            </delete>
-        </rollback>
     </changeSet>
 
 </databaseChangeLog>
