@@ -19,7 +19,7 @@ import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallExcep
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalMessageException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelMapperException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.MessageProducer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.MTMessageProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ModuleQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.ChannelDaoBean;
@@ -48,7 +48,7 @@ public class PollServiceBean {
     private final static Logger LOG = LoggerFactory.getLogger(PollServiceBean.class);
 
     @EJB
-    private MessageProducer messageProducer;
+    private MTMessageProducer MTMessageProducer;
 
     @EJB
     private PluginServiceBean sendPollService;
@@ -94,7 +94,7 @@ public class PollServiceBean {
 
                 try {
                     String auditData = AuditModuleRequestMapper.mapAuditLogPollCreated(createdPoll.getPollType(), createdPoll.getPollId().getGuid(), createdPoll.getComment(), username);
-                    messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
+                    MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
                 } catch (AuditModelMarshallException e) {
                     LOG.error("Failed to send audit log message! Poll with guid {} was created", createdPoll.getPollId().getGuid());
                 }
@@ -126,7 +126,7 @@ public class PollServiceBean {
             PollResponseType startedPoll = setStatusPollProgram(pollIdType, PollStatus.STARTED);
             try {
                 String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollStarted(startedPoll.getPollId().getGuid(), username);
-                messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
+                MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
             } catch (AuditModelMarshallException e) {
                 LOG.error("Failed to send audit log message! Poll with guid {} was started", startedPoll.getPollId().getGuid());
             }
@@ -144,7 +144,7 @@ public class PollServiceBean {
             PollResponseType stoppedPoll = setStatusPollProgram(pollIdType, PollStatus.STOPPED);
             try {
                 String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollStopped(stoppedPoll.getPollId().getGuid(), username);
-                messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
+                MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
             } catch (AuditModelMarshallException e) {
                 LOG.error("Failed to send audit log message! Poll with guid {} was stopped", stoppedPoll.getPollId().getGuid());
             }
@@ -162,7 +162,7 @@ public class PollServiceBean {
             PollResponseType inactivatedPoll = setStatusPollProgram(pollIdType, PollStatus.ARCHIVED);
             try {
                 String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollInactivated(inactivatedPoll.getPollId().getGuid(), username);
-                messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
+                MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
             } catch (AuditModelMarshallException e) {
                 LOG.error("Failed to send audit log message! Poll with guid {} was inactivated", inactivatedPoll.getPollId().getGuid());
             }

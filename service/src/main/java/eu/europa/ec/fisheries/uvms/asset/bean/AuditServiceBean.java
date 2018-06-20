@@ -12,11 +12,12 @@ package eu.europa.ec.fisheries.uvms.asset.bean;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+
+import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.message.ModuleQueue;
-import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.mapper.AuditModuleRequestMapper;
 
 @Stateless
@@ -25,13 +26,13 @@ public class AuditServiceBean {
     private static final Logger LOG = LoggerFactory.getLogger(AuditServiceBean.class);
     
     @Inject
-    private MessageProducer messageProducer;
+    private AssetMessageProducer assetMessageProducer;
     
     public void logAssetCreated(Asset asset, String username) {
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetCreated(asset.getId().toString(),
                     username);
-            messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
+            assetMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (Exception e) {
             LOG.warn("Failed to send audit log message! Asset with guid {} was created ", asset.getId());
         }
@@ -41,7 +42,7 @@ public class AuditServiceBean {
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetUpdated(asset.getId().toString(), comment,
                     username);
-            messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
+            assetMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (Exception e) {
             LOG.error("Failed to send audit log message! Asset with guid {} was updated ",
                     asset.getId().toString());
@@ -52,7 +53,7 @@ public class AuditServiceBean {
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetArchived(asset.getId().toString(), comment,
                     username);
-            messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
+            assetMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (Exception e) {
             LOG.error("Failed to send audit log message! Asset with guid {} was archived ",
                     asset.getId().toString());
