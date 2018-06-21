@@ -6,8 +6,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.NoEntityFoundException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.TerminalDaoException;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -20,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
+import javax.ejb.EJBTransactionRolledbackException;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -147,12 +146,9 @@ public class TerminalDaoBeanIT extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void getMobileTerminalByGuid_NON_EXISTING_GUID() {
-
-
         String aNonExistingGuid = UUID.randomUUID().toString();
         MobileTerminal mt =  terminalDaoBean.getMobileTerminalByGuid(aNonExistingGuid);
-        Assert.assertTrue(mt == null);
-
+        assertNull(mt);
     }
 
     @Test
@@ -219,7 +215,6 @@ public class TerminalDaoBeanIT extends TransactionalTests {
         terminalDaoBean.createMobileTerminal(mobileTerminal);
         em.flush();
 
-//        mobileTerminal.setId(UUID.randomUUID());
         mobileTerminal.setUpdateuser("NEW_TEST_USER");
         MobileTerminal updated = terminalDaoBean.updateMobileTerminal(mobileTerminal);
         em.flush();
@@ -256,7 +251,7 @@ public class TerminalDaoBeanIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void updateMobileTerminal_WillFailWithNoPersistedEntity() {
 
-        thrown.expect(IllegalArgumentException.class);
+        thrown.expect(EJBTransactionRolledbackException.class);
 
         String serialNo = createSerialNumber();
         MobileTerminal mobileTerminal = createMobileTerminalHelper(serialNo);
