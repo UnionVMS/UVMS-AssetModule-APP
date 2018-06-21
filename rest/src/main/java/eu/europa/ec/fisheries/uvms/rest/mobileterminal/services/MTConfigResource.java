@@ -43,37 +43,37 @@ public class MTConfigResource {
     
    @GET
    @Path("/transponders")
-	public ResponseDto<List<MobileTerminalDeviceConfig>> getConfigTransponders() {
+	public MTResponseDto<List<MTMobileTerminalDeviceConfig>> getConfigTransponders() {
        try {
            LOG.info("Get config transponders invoked in rest layer.");
            List<TerminalSystemType> list = configService.getTerminalSystems();
-           return new ResponseDto<>(MobileTerminalConfig.mapConfigTransponders(list), ResponseCode.OK);
+           return new MTResponseDto<>(MTMobileTerminalConfig.mapConfigTransponders(list), MTResponseCode.OK);
        } catch (Exception ex) {
            LOG.error("[ Error when getting configTransponders ] {}", ex.getStackTrace());
-           return ErrorHandler.getFault(ex);
+           return MTErrorHandler.getFault(ex);
        }
    }
 
    @GET
    @Path("/searchfields")
-   public ResponseDto<SearchKey[]> getConfigSearchFields() {
+   public MTResponseDto<SearchKey[]> getConfigSearchFields() {
        LOG.info("Get config search fields invoked in rest layer.");
        try {
-           return new ResponseDto<>(SearchKey.values(), ResponseCode.OK);
+           return new MTResponseDto<>(SearchKey.values(), MTResponseCode.OK);
        } catch (Exception ex) {
            LOG.error("[ Error when getting config search fields ] {}", ex.getStackTrace());
-           return ErrorHandler.getFault(ex);
+           return MTErrorHandler.getFault(ex);
        }
    }
     
     @GET
     @Path("/")
-    public ResponseDto<Map<String, List<String>>>getConfiguration() {
+    public MTResponseDto<Map<String, List<String>>>getConfiguration() {
         try {
         	List<ConfigList> config = configService.getConfig();
-            return new ResponseDto<>(MobileTerminalConfig.mapConfigList(config), ResponseCode.OK);
+            return new MTResponseDto<>(MTMobileTerminalConfig.mapConfigList(config), MTResponseCode.OK);
         } catch (Exception ex) {
-            return ErrorHandler.getFault(ex);
+            return MTErrorHandler.getFault(ex);
         }
     }
 

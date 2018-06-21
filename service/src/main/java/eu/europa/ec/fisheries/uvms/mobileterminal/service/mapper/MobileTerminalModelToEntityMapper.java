@@ -37,7 +37,7 @@ public class MobileTerminalModelToEntityMapper {
     public static MobileTerminal mapMobileTerminalEntity(MobileTerminal entity, MobileTerminalType model, String serialNumber, MobileTerminalPlugin plugin, String username, String comment, EventCodeEnum event) throws MobileTerminalModelMapperException {
         if (model == null) throw new MobileTerminalModelMapperException("No mobile terminal to map");
         if (entity.getId() == null) {
-            entity.setId(UUID.randomUUID());
+            //entity.setId(UUID.randomUUID());
         }
         entity.setArchived(model.isArchived());
         entity.setInactivated(model.isInactive());

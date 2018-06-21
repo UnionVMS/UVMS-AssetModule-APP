@@ -79,7 +79,6 @@ public class DateUtils {
         throw new NotImplementedException();
     }
 
-    // TODO FIX this
     public static Date getUTCNow()
     {
         return new Date(System.currentTimeMillis());
@@ -110,16 +109,14 @@ public class DateUtils {
     public static XMLGregorianCalendar getXMLGregorianCalendarInUTC(Date dateTimeInUTC){
         if (dateTimeInUTC != null) {
             GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance(TimeZone.getTimeZone("UTC"));
-            SimpleDateFormat sdf = new SimpleDateFormat(DATE_TIME_PATTERN);
-            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+            //SimpleDateFormat sdf = new SimpleDateFormat(DATE_TIME_PATTERN);
+            //sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
             try {
-                Date theDate = sdf.parse(dateTimeInUTC.toString());
-                calendar.setTime(theDate);
+                //Date theDate = sdf.parse(dateTimeInUTC.toString());
+                calendar.setTime(dateTimeInUTC);
                 return DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
             } catch (DatatypeConfigurationException e) {
                 LOG.error("[ Error when getting XML Gregorian calendar. ] ", e);
-            } catch (ParseException e) {
-                LOG.error("Could not parse dateTimeInUTC: "+dateTimeInUTC.toString()+ " with pattern: " + DATE_TIME_PATTERN);
             }
         }
         return null;

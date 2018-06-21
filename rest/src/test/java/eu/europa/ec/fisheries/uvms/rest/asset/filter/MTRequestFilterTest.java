@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class RequestFilterTest extends AbstractAssetRestTest {
+public class MTRequestFilterTest extends AbstractAssetRestTest {
 
     @Test
     @RunAsClient

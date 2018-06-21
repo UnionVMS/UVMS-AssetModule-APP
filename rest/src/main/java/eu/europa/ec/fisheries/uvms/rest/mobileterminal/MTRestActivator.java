@@ -9,42 +9,36 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.rest.asset;
+package eu.europa.ec.fisheries.uvms.rest.mobileterminal;
 
-import java.util.HashSet;
-import java.util.Set;
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
-import eu.europa.ec.fisheries.uvms.rest.asset.filter.AssetRestExceptionMapper;
-import eu.europa.ec.fisheries.uvms.rest.asset.service.*;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.MTRestConstants;
+
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.filter.MTRequestFilter;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.MTConfigResource;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.MobileTerminalResource;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.PollResource;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeatureFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@ApplicationPath("/rest")
-public class AssetActivator extends Application {
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
+import java.util.HashSet;
+import java.util.Set;
+
+@ApplicationPath(MTRestConstants.REST_URL)
+public class MTRestActivator extends Application {
+
+    private final static Logger LOG = LoggerFactory.getLogger(MTRequestFilter.class);
 
     private final Set<Object> singletons = new HashSet<>();
     private final Set<Class<?>> set = new HashSet<>();
 
-    public AssetActivator() {
-        set.add(AssetRestExceptionMapper.class);
-        set.add(AssetResource.class);
-        set.add(AssetGroupResource.class);
-        set.add(AssetConfigResource.class);
-        set.add(CustomCodesResource.class);
-        set.add(InternalResource.class);
-        set.add(UnionVMSFeatureFilter.class);
-        set.add(ObjectMapperContextResolver.class);
-        set.add(com.github.phillipkruger.apiee.ApieeService.class);
-
+    public MTRestActivator() {
         set.add(MobileTerminalResource.class);
         set.add(PollResource.class);
         set.add(MTConfigResource.class);
         set.add(UnionVMSFeatureFilter.class);
-        //LOG.info(MTRestConstants.MODULE_NAME + " module starting up");
+        LOG.info(MTRestConstants.MODULE_NAME + " module starting up");
     }
 
     @Override
@@ -56,5 +50,4 @@ public class AssetActivator extends Application {
     public Set<Object> getSingletons() {
         return singletons;
     }
-
 }

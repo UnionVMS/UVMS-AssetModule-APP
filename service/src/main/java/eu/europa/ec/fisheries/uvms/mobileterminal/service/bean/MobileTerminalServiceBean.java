@@ -341,6 +341,9 @@ public class MobileTerminalServiceBean {
             for (MobileTerminalAttribute attribute : mobileTerminal.getAttributes()) {
                 if (MobileTerminalConstants.SERIAL_NUMBER.equalsIgnoreCase(attribute.getType())) {
                     MobileTerminal terminal = getMobileTerminalEntityBySerialNo(attribute.getValue());
+                    if(terminal == null){  //aka the serial number does not exist in the db
+                        return;
+                    }
                     if (!terminal.getArchived()) {
                         throw new MobileTerminalModelException("Mobile terminal already exists in database for serial number: " + attribute.getValue());
                     }

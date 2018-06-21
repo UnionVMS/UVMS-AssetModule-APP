@@ -37,98 +37,98 @@ public class PollResource {
     @POST
     @Path("/")
     @RequiresFeature(UnionVMSFeature.managePolls)
-    public ResponseDto<CreatePollResultDto> createPoll(PollRequestType createPoll) {
+    public MTResponseDto<CreatePollResultDto> createPoll(PollRequestType createPoll) {
         LOG.info("Create poll invoked in rest layer:{}",createPoll);
         try {
             CreatePollResultDto createPollResultDto = pollService.createPoll(createPoll, request.getRemoteUser());
-            return new ResponseDto<>(createPollResultDto, ResponseCode.OK);
+            return new MTResponseDto<>(createPollResultDto, MTResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when creating poll {}] {}",createPoll, ex.getStackTrace());
-            return ErrorHandler.getFault(ex);
+            return MTErrorHandler.getFault(ex);
         }
     }
 
     @GET
     @Path("/running")
     @RequiresFeature(UnionVMSFeature.viewMobileTerminalPolls)
-    public ResponseDto<List<PollDto>> getRunningProgramPolls() {
+    public MTResponseDto<List<PollDto>> getRunningProgramPolls() {
         LOG.info("Get running program polls invoked in rest layer");
         try {
             List<PollDto> polls = pollService.getRunningProgramPolls();
-            return new ResponseDto<>(polls, ResponseCode.OK);
+            return new MTResponseDto<>(polls, MTResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when getting running program polls ] {}", (Object) ex.getStackTrace());
-            return ErrorHandler.getFault(ex);
+            return MTErrorHandler.getFault(ex);
         }
     }
 
     @PUT
     @Path("/start/{id}")
     @RequiresFeature(UnionVMSFeature.managePolls)
-    public ResponseDto<PollDto> startProgramPoll(@PathParam("id") String pollId) {
+    public MTResponseDto<PollDto> startProgramPoll(@PathParam("id") String pollId) {
         LOG.info("Start poll invoked in rest layer:{}",pollId);
         try {
             PollDto poll = pollService.startProgramPoll(pollId, request.getRemoteUser());
-            return new ResponseDto<>(poll, ResponseCode.OK);
+            return new MTResponseDto<>(poll, MTResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when starting program poll {}] {}", pollId, ex.getStackTrace());
-            return ErrorHandler.getFault(ex);
+            return MTErrorHandler.getFault(ex);
         }
     }
 
     @PUT
     @Path("/stop/{id}")
     @RequiresFeature(UnionVMSFeature.managePolls)
-    public ResponseDto<PollDto> stopProgramPoll(@PathParam("id") String pollId) {
+    public MTResponseDto<PollDto> stopProgramPoll(@PathParam("id") String pollId) {
         LOG.info("Stop poll invoked in rest layer:{}",pollId);
         try {
             PollDto poll = pollService.stopProgramPoll(pollId, request.getRemoteUser());
-            return new ResponseDto<>(poll, ResponseCode.OK);
+            return new MTResponseDto<>(poll, MTResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when stopping program poll {} ] {}",pollId, ex.getStackTrace());
-            return ErrorHandler.getFault(ex);
+            return MTErrorHandler.getFault(ex);
         }
     }
 
     @PUT
     @Path("/inactivate/{id}")
     @RequiresFeature(UnionVMSFeature.managePolls)
-    public ResponseDto<PollDto> inactivateProgramPoll(@PathParam("id") String pollId) {
+    public MTResponseDto<PollDto> inactivateProgramPoll(@PathParam("id") String pollId) {
         LOG.info("Stop poll invoked in rest layer:{}",pollId);
         try {
             PollDto poll = pollService.inactivateProgramPoll(pollId, request.getRemoteUser());
-            return new ResponseDto<>(poll, ResponseCode.OK);
+            return new MTResponseDto<>(poll, MTResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when inactivating program poll {}] {}",pollId, ex.getStackTrace());
-            return ErrorHandler.getFault(ex);
+            return MTErrorHandler.getFault(ex);
         }
     }
 
     @POST
     @Path("/list")
     @RequiresFeature(UnionVMSFeature.viewMobileTerminalPolls)
-    public ResponseDto<PollChannelListDto> getPollBySearchCriteria(PollListQuery query) {
+    public MTResponseDto<PollChannelListDto> getPollBySearchCriteria(PollListQuery query) {
         LOG.info("Get poll by search criteria invoked in rest layer:{}",query);
         try {
         	PollChannelListDto pollChannelList = pollService.getPollBySearchQuery(query);
-            return new ResponseDto<>(pollChannelList, ResponseCode.OK);
+            return new MTResponseDto<>(pollChannelList, MTResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when getting poll by search criteria {}] {}",query, ex.getStackTrace());
-            return ErrorHandler.getFault(ex);
+            return MTErrorHandler.getFault(ex);
         }
     }
 
     @POST
     @Path("/pollable")
     @RequiresFeature(UnionVMSFeature.viewMobileTerminalPolls)
-    public ResponseDto<PollChannelListDto> getPollableChannels(PollableQuery query) {
+    public MTResponseDto<PollChannelListDto> getPollableChannels(PollableQuery query) {
         LOG.info("Get pollables invoked in rest layer:{}",query);
         try {
             PollChannelListDto pollChannelList = pollService.getPollableChannels(query);
-            return new ResponseDto<>(pollChannelList, ResponseCode.OK);
+            return new MTResponseDto<>(pollChannelList, MTResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when getting poll by search criteria {}] {}", query, ex.getStackTrace());
-            return ErrorHandler.getFault(ex);
+            return MTErrorHandler.getFault(ex);
         }
     }
 

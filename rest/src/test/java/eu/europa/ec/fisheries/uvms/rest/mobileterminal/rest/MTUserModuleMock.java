@@ -8,69 +8,62 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.rest.asset;
+package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest;
+
+import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
+import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
+import eu.europa.ec.fisheries.uvms.user.model.mapper.UserModuleResponseMapper;
+import eu.europa.ec.fisheries.wsdl.user.types.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
-import javax.inject.Inject;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
-import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
-import eu.europa.ec.fisheries.uvms.user.model.mapper.UserModuleResponseMapper;
-import eu.europa.ec.fisheries.wsdl.user.types.Context;
-import eu.europa.ec.fisheries.wsdl.user.types.ContextSet;
-import eu.europa.ec.fisheries.wsdl.user.types.Feature;
-import eu.europa.ec.fisheries.wsdl.user.types.Role;
-import eu.europa.ec.fisheries.wsdl.user.types.UserContext;
-
+/*
 @MessageDriven(mappedName = "jms/queue/UVMSUserEvent", activationConfig = {
-        @ActivationConfigProperty(propertyName = "messagingType", propertyValue = "javax.jms.MessageListener"), 
-        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"), 
+        @ActivationConfigProperty(propertyName = "messagingType", propertyValue = "javax.jms.MessageListener"),
+        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
         @ActivationConfigProperty(propertyName = "destination", propertyValue = "UVMSUserEvent")})
-public class UserModuleMock implements MessageListener {
+        */
+public class MTUserModuleMock /*implements MessageListener*/ {
+/*
+    private final static Logger LOG = LoggerFactory.getLogger(MTUserModuleMock.class);
 
-    final static Logger LOG = LoggerFactory.getLogger(UserModuleMock.class);
-    
-    @Inject
-    AssetMessageProducer assetMessageProducer;
-    
     @Override
     public void onMessage(Message message) {
         try {
-        
-        UserContext userContext = getAssetUserContext();
-        String responseString;
+            UserContext userContext = getMobileTerminalUserContext();
+            String responseString;
             responseString = UserModuleResponseMapper.mapToGetUserContextResponse(userContext);
 
-        assetMessageProducer.sendModuleResponseMessage((TextMessage) message, responseString);
+            new AbstractProducer() {
+                @Override
+                public String getDestinationName() {
+                    return "jms/queue/UVMSMobileTerminal";
+                }
+            }.sendResponseMessageToSender((TextMessage) message, responseString);
 
         } catch (Exception e) {
             LOG.error("MTUserModuleMock Error", e);
         }
     }
-    
-    private UserContext getAssetUserContext() {
+
+    private UserContext getMobileTerminalUserContext() {
         UserContext userContext = new UserContext();
         userContext.setContextSet(new ContextSet());
         Context context = new Context();
         context.setRole(new Role());
 
         Feature manageVesselsFeature = new Feature();
-        manageVesselsFeature.setName(UnionVMSFeature.manageVessels.name());
+        manageVesselsFeature.setName(UnionVMSFeature.manageMobileTerminals.name());
         context.getRole().getFeature().add(manageVesselsFeature);
 
         Feature viewVesselsFeature = new Feature();
         viewVesselsFeature.setName(UnionVMSFeature.viewVesselsAndMobileTerminals.name());
         context.getRole().getFeature().add(viewVesselsFeature);
-
-        Feature manageMobileTerminals = new Feature();
-        manageMobileTerminals.setName(UnionVMSFeature.manageMobileTerminals.name());
-        context.getRole().getFeature().add(manageMobileTerminals);
-
 
         Feature viewMobileTerminalPolls = new Feature();
         viewMobileTerminalPolls.setName(UnionVMSFeature.viewMobileTerminalPolls.name());
@@ -82,5 +75,5 @@ public class UserModuleMock implements MessageListener {
 
         userContext.getContextSet().getContexts().add(context);
         return userContext;
-    }
+    }*/
 }

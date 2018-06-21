@@ -36,8 +36,8 @@ public abstract class AbstractAssetRestTest {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         Client client = ClientBuilder.newClient();
         client.register(new JacksonJaxbJsonProvider(objectMapper, JacksonJaxbJsonProvider.DEFAULT_ANNOTATIONS));
-        return client.target("http://localhost:28080/test/rest");
-        //return client.target("http://localhost:8080/test/rest");
+        //return client.target("http://localhost:28080/test/rest");  //external
+        return client.target("http://localhost:8080/test/rest");    //internal
     }
 
     @Deployment(name = "normal", order = 1)
