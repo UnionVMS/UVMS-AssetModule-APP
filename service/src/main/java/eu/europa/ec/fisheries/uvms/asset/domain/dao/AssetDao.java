@@ -116,7 +116,7 @@ public class AssetDao {
     }
 
     public void deleteAsset(Asset asset) {
-        em.remove(asset);
+        em.remove(em.contains(asset) ? asset : em.merge(asset));
     }
 
     public List<Asset> getAssetListAll() {
