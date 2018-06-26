@@ -30,6 +30,7 @@ import java.util.UUID;
 @XmlRootElement
 @NamedQueries({
         @NamedQuery(name = "Poll.findAll", query = "SELECT p FROM Poll p"),
+        @NamedQuery(name = "Poll.findById", query = "SELECT p FROM Poll p WHERE p.id = :id"),
         @NamedQuery(name = "Poll.findByPollId", query = "SELECT p FROM Poll p WHERE p.id = :pollId"),
         @NamedQuery(name = "Poll.findByPollComment", query = "SELECT p FROM Poll p WHERE p.pollBase.comment = :pollComment"),
         @NamedQuery(name = "Poll.findByPollCreated", query = "SELECT p FROM Poll p WHERE p.updateTime = :pollCreated"),

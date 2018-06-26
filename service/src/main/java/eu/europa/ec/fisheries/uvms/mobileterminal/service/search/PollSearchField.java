@@ -18,7 +18,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollTypeE
 public enum PollSearchField {
 	CONNECT_ID(SearchTable.TERMINALCONNECT, "connectValue", "connectionValue"),
 	TERMINAL_TYPE(SearchTable.TERMINAL, "mobileTerminalType", "mobileTerminalType", MobileTerminalTypeEnum.class),
-	POLL_ID(SearchTable.POLL, "guid", "guid"),
+	POLL_ID(SearchTable.POLL, "id", "id"),
 	POLL_TYPE(SearchTable.POLL, "pollType", "pollType", PollTypeEnum.class),
 	USER(SearchTable.POLLBASE, "creator", "creator");
 	

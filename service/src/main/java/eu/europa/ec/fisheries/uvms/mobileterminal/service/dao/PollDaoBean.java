@@ -15,10 +15,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTermin
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.Poll;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollTypeEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.PollDaoException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.PollSearchKeyValue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.ejb.EJBTransactionRolledbackException;
@@ -29,6 +26,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Stateless
 public class PollDaoBean  {
@@ -36,20 +34,29 @@ public class PollDaoBean  {
 	@PersistenceContext
 	private EntityManager em;
 
-
     public void createPoll(Poll poll)  {
-            em.persist(poll);
+		em.persist(poll);
     }
 
-    public Poll getPollByPoolId(Long pollId) throws PollDaoException {
+    public Poll getPollByPoolId(Long pollId) {
         try {
-            TypedQuery<Poll> query = em.createNamedQuery(MobileTerminalConstants.POLL_FIND_BY_ID, Poll.class);
+            TypedQuery<Poll> query = em.createNamedQuery(MobileTerminalConstants.POLL_FIND_BY_POLL_ID, Poll.class);
             query.setParameter("pollId", pollId);
             return query.getSingleResult();
         } catch (NoResultException e) {
         	return null;
         }
     }
+
+	public Poll getPollById(UUID id) {
+		try {
+			TypedQuery<Poll> query = em.createNamedQuery(MobileTerminalConstants.POLL_FIND_BY_ID, Poll.class);
+			query.setParameter("id", id);
+			return query.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
 
 	//ToDo: This method is not implemented. Need to evaluate if the functionality is required or not.
     public List<Poll> getPollListByProgramPoll(Integer pollProgramId)  {
