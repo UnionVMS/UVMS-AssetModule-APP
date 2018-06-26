@@ -426,8 +426,6 @@ public class PollServiceBean {
         } catch (EnumException e) {
             LOG.error("[ Error when setting poll program status. ] {}", e.getMessage());
             throw new MobileTerminalModelException(e.getMessage());
-        } catch (PollDaoException e) {
-            throw new MobileTerminalModelException(e.getMessage());
         }
     }
 

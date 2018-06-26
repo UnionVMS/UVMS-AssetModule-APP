@@ -11,13 +11,11 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
-
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollStateEnum;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
@@ -33,7 +31,7 @@ import java.util.UUID;
 @DiscriminatorValue("true")
 @NamedQueries({
 	@NamedQuery(name = "PollProgram.findAll", query = "SELECT p FROM PollProgram p"),
-	@NamedQuery(name = MobileTerminalConstants.POLL_PROGRAM_FIND_BY_ID, query = "SELECT p FROM PollProgram p WHERE p.id = :guid"),
+	@NamedQuery(name = MobileTerminalConstants.POLL_PROGRAM_FIND_BY_ID, query = "SELECT p FROM PollProgram p WHERE p.id = :id"),
 	@NamedQuery(name = MobileTerminalConstants.POLL_PROGRAM_FIND_ALIVE, query = "SELECT p FROM PollProgram  p WHERE p.stopDate > :currentDate " +
 	"AND p.pollState <> eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollStateEnum.ARCHIVED"),
     @NamedQuery(name = MobileTerminalConstants.POLL_PROGRAM_FIND_RUNNING_AND_STARTED,
