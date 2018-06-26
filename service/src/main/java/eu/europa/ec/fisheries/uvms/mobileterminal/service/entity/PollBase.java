@@ -39,7 +39,7 @@ public class PollBase implements Serializable {
     @Column(name = "createuser")
     private String creator;
 
-    @Size(max = 36)
+    //@Size(max = 36)
     @Column(name = "channel_guid")
     @NotNull
     private UUID channelId;

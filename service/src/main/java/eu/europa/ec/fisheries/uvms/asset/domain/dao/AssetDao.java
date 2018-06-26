@@ -14,6 +14,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.exception.RevisionDoesNotExistException;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
 import org.hibernate.envers.query.criteria.AuditCriterion;
@@ -115,7 +116,7 @@ public class AssetDao {
     }
 
     public void deleteAsset(Asset asset) {
-        em.remove(asset);
+        em.remove(em.contains(asset) ? asset : em.merge(asset));
     }
 
     public List<Asset> getAssetListAll() {
@@ -180,7 +181,7 @@ public class AssetDao {
     }
 
     private boolean searchRevisions(List<SearchKeyValue> searchFields) {
-        return searchFields.stream().filter(s -> s.getSearchField().equals(SearchFields.HIST_GUID)).count() > 0;
+        return searchFields.stream().anyMatch(s -> s.getSearchField().equals(SearchFields.HIST_GUID));
     }
 
     private boolean useLike(SearchKeyValue entry) {
@@ -255,7 +256,11 @@ public class AssetDao {
     public Asset getAssetAtDate(Asset asset, LocalDateTime localDateTime) {
         Date date = Date.from(localDateTime.toInstant(ZoneOffset.UTC));
         AuditReader auditReader = AuditReaderFactory.get(em);
-        return auditReader.find(Asset.class, asset.getId(), date);
+        try {
+            return auditReader.find(Asset.class, asset.getId(), date);
+        } catch (RevisionDoesNotExistException ex) {
+            return null;
+        }
     }
 
     public Asset getAssetRevisionForHistoryId(UUID historyId) {

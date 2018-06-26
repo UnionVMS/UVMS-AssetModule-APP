@@ -34,10 +34,8 @@ import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 @RunWith(Arquillian.class)
 public class AssetServiceBeanIntTest extends TransactionalTests {
 
-    Random rnd = new Random();
-
     @Inject
-    AssetService assetService;
+    private AssetService assetService;
 
     @Test
     @OperateOnDeployment("normal")
@@ -47,7 +45,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Asset createdAsset = null;
         try {
             // create an Asset
-            Asset asset = AssetHelper.createBiggerAsset();
+            Asset asset = AssetTestsHelper.createBiggerAsset();
             createdAsset = assetService.createAsset(asset, "test");
             commit();
             Assert.assertTrue(createdAsset != null);
@@ -61,7 +59,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     public void updateAsset() throws AssetServiceException {
 
         // create an asset
-        Asset asset = AssetHelper.createBiggerAsset();
+        Asset asset = AssetTestsHelper.createBiggerAsset();
         Asset createdAsset = assetService.createAsset(asset, "test");
         commit();
         // change it and store it
@@ -79,7 +77,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     public void deleteAsset() throws AssetServiceException {
 
         // create an asset
-        Asset asset = AssetHelper.createBiggerAsset();
+        Asset asset = AssetTestsHelper.createBiggerAsset();
         Asset createdAsset = assetService.createAsset(asset, "test");
         commit();
 
@@ -96,14 +94,12 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Assert.assertEquals(fetchedAsset, null);
     }
 
-
-
     @Test
     @OperateOnDeployment("normal")
     public void updateAssetThreeTimesAndCheckRevisionsAndValues() throws AssetServiceException {
 
         // create an asset
-        Asset asset = AssetHelper.createBiggerAsset();
+        Asset asset = AssetTestsHelper.createBiggerAsset();
         Asset createdAsset = assetService.createAsset(asset, "test");
         commit();
         // change it and store it
@@ -128,16 +124,13 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Assert.assertEquals(assetVersions.size(), 4);
         commit();
 
-
         Asset fetchedAssetAtRevision = assetService.getAssetRevisionForRevisionId(historyId2);
-
         Assert.assertEquals(historyId2, fetchedAssetAtRevision.getHistoryId());
-
     }
     
     @Test
     public void getRevisionsForAssetLimitedTest() throws Exception {
-        Asset asset = AssetHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         Asset createdAsset = assetService.createAsset(asset, "test");
         commit();
         
@@ -154,7 +147,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     
     @Test
     public void getRevisionsForAssetLimitedMaxNumberTest() throws Exception {
-        Asset asset = AssetHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         Asset createdAsset = assetService.createAsset(asset, "test");
         commit();
         
@@ -171,7 +164,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     
     @Test
     public void archiveAssetTest() throws Exception {
-        Asset asset = AssetHelper.createBasicAsset();
+        Asset asset = AssetTestsHelper.createBasicAsset();
         Asset createdAsset = assetService.createAsset(asset, "test");
         assetService.archiveAsset(createdAsset, "test", "archived");
         
@@ -182,7 +175,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
     @Test
     public void getAssetListTestIdQuery() throws Exception {
-        Asset asset = AssetHelper.createBiggerAsset();
+        Asset asset = AssetTestsHelper.createBiggerAsset();
         asset = assetService.createAsset(asset, "test");
         commit();
         
@@ -200,7 +193,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     
     @Test
     public void getAssetListTestNameQuery() throws Exception {
-        Asset asset = AssetHelper.createBiggerAsset();
+        Asset asset = AssetTestsHelper.createBiggerAsset();
         asset = assetService.createAsset(asset, "test");
         commit();
         
@@ -216,11 +209,11 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    public void createNotesTest() throws Exception {
-        Asset asset = AssetHelper.createBasicAsset();
+    public void createNotesTest() {
+        Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetService.createAsset(asset, "test");
         
-        Note note = AssetHelper.createBasicNote();
+        Note note = AssetTestsHelper.createBasicNote();
         assetService.createNoteForAsset(asset.getId(), note, "test");
         
         List<Note> notes = assetService.getNotesForAsset(asset.getId());
@@ -228,14 +221,14 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
     
     @Test
-    public void addNoteTest() throws Exception {
-        Asset asset = AssetHelper.createBasicAsset();
+    public void addNoteTest() {
+        Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetService.createAsset(asset, "test");
         
-        Note note = AssetHelper.createBasicNote();
+        Note note = AssetTestsHelper.createBasicNote();
         assetService.createNoteForAsset(asset.getId(), note, "test");
 
-        Note note2 = AssetHelper.createBasicNote();
+        Note note2 = AssetTestsHelper.createBasicNote();
         assetService.createNoteForAsset(asset.getId(), note2, "test");
 
         List<Note> notes = assetService.getNotesForAsset(asset.getId());
@@ -244,12 +237,12 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
     
     @Test
-    public void deleteNoteTest() throws Exception {
-        Asset asset = AssetHelper.createBasicAsset();
+    public void deleteNoteTest() {
+        Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetService.createAsset(asset, "test");
 
-        assetService.createNoteForAsset(asset.getId(), AssetHelper.createBasicNote(), "test");
-        assetService.createNoteForAsset(asset.getId(), AssetHelper.createBasicNote(), "test");
+        assetService.createNoteForAsset(asset.getId(), AssetTestsHelper.createBasicNote(), "test");
+        assetService.createNoteForAsset(asset.getId(), AssetTestsHelper.createBasicNote(), "test");
 
         List<Note> notes = assetService.getNotesForAsset(asset.getId());
         assertEquals(2, notes.size());
@@ -261,11 +254,11 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
     
     @Test
-    public void createContactInfoTest() throws Exception {
-        Asset asset = AssetHelper.createBasicAsset();
+    public void createContactInfoTest() {
+        Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetService.createAsset(asset, "test");
         
-        ContactInfo contactInfo = AssetHelper.createBasicContactInfo();
+        ContactInfo contactInfo = AssetTestsHelper.createBasicContactInfo();
         assetService.createContactInfoForAsset(asset.getId(), contactInfo, "test");
         
         List<ContactInfo> contacts = assetService.getContactInfoForAsset(asset.getId());
@@ -273,14 +266,14 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
     
     @Test
-    public void addContactInfoTest() throws Exception {
-        Asset asset = AssetHelper.createBasicAsset();
+    public void addContactInfoTest() {
+        Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetService.createAsset(asset, "test");
         
-        ContactInfo contactInfo = AssetHelper.createBasicContactInfo();
+        ContactInfo contactInfo = AssetTestsHelper.createBasicContactInfo();
         assetService.createContactInfoForAsset(asset.getId(), contactInfo, "test");
 
-        ContactInfo contactInfo2 = AssetHelper.createBasicContactInfo();
+        ContactInfo contactInfo2 = AssetTestsHelper.createBasicContactInfo();
         assetService.createContactInfoForAsset(asset.getId(), contactInfo2, "test");
 
         List<ContactInfo> contacts = assetService.getContactInfoForAsset(asset.getId());
@@ -289,12 +282,12 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
     
     @Test
-    public void deleteContactInfoTest() throws Exception {
-        Asset asset = AssetHelper.createBasicAsset();
+    public void deleteContactInfoTest() {
+        Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetService.createAsset(asset, "test");
 
-        assetService.createContactInfoForAsset(asset.getId(), AssetHelper.createBasicContactInfo(), "test");
-        assetService.createContactInfoForAsset(asset.getId(), AssetHelper.createBasicContactInfo(), "test");
+        assetService.createContactInfoForAsset(asset.getId(), AssetTestsHelper.createBasicContactInfo(), "test");
+        assetService.createContactInfoForAsset(asset.getId(), AssetTestsHelper.createBasicContactInfo(), "test");
 
         List<ContactInfo> contacts = assetService.getContactInfoForAsset(asset.getId());
         assertEquals(2, contacts.size());
@@ -306,7 +299,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
 
     private void commit() throws AssetServiceException {
-
         try {
             userTransaction.commit();
             userTransaction.begin();
@@ -314,7 +306,4 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
             throw new AssetServiceException(e);
         }
     }
-
-
-
 }

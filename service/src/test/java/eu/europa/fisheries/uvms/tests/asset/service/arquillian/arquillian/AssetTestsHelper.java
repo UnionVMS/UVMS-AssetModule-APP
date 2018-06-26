@@ -106,7 +106,7 @@ public class AssetTestsHelper {
         assetEntity.setTypeOfExport("SM");
         assetEntity.setHasVms(false);
         assetEntity.setAgentIsAlsoOwner(true);
-        assetEntity.setEventCode("EC" + String.valueOf(rnd.nextLong()));
+        assetEntity.setEventCode("EC" + rnd.nextLong());
         assetEntity.setIrcsIndicator(true);
         assetEntity.setSource("INTERNAL");
 
@@ -121,6 +121,23 @@ public class AssetTestsHelper {
 
 
         return assetEntity;
+    }
+
+    public static Note createBasicNote() {
+        Note note = new Note();
+        note.setActivityCode("Activity");
+        note.setNotes("Notes: " + getRandomIntegers(10));
+        note.setUser("Test");
+        return note;
+    }
+
+    public static ContactInfo createBasicContactInfo() {
+        ContactInfo contactInfo = new ContactInfo();
+        contactInfo.setName("Fantomen " + getRandomIntegers(5));
+        contactInfo.setEmail("fantomen@mail.com");
+        contactInfo.setPhoneNumber("" + getRandomIntegers(9));
+        contactInfo.setCountry("SWE");
+        return contactInfo;
     }
 
     public List<Note> createNotesHelper(Asset assetEntity, LocalDateTime date) {

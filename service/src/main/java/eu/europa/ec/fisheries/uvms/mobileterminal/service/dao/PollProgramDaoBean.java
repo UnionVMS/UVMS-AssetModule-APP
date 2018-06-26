@@ -13,10 +13,7 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.dao;
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.PollProgram;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.PollDaoException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.util.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -26,6 +23,7 @@ import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Stateless
 public class PollProgramDaoBean {
@@ -40,7 +38,6 @@ public class PollProgramDaoBean {
 
     public PollProgram updatePollProgram(PollProgram pollProgram) {
         pollProgram = em.merge(pollProgram);
-        em.flush();
         return pollProgram;
     }
 
@@ -71,10 +68,21 @@ public class PollProgramDaoBean {
             return validPollPrograms;
     }
 
-    public PollProgram getPollProgramByGuid(String guid) throws PollDaoException {
+    // TODO: This method needs to be removed. Find usage and map it to the next method.
+    public PollProgram getPollProgramByGuid(String guid) {
         try {
             TypedQuery<PollProgram> query = em.createNamedQuery(MobileTerminalConstants.POLL_PROGRAM_FIND_BY_ID, PollProgram.class);
             query.setParameter("guid", guid);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    public PollProgram getPollProgramById(UUID id) {
+        try {
+            TypedQuery<PollProgram> query = em.createNamedQuery(MobileTerminalConstants.POLL_PROGRAM_FIND_BY_ID, PollProgram.class);
+            query.setParameter("id", id);
             return query.getSingleResult();
         } catch (NoResultException e) {
             return null;
