@@ -80,6 +80,11 @@ public class PluginMapper {
 	}
 
 	public static boolean equals(MobileTerminalPlugin entity, PluginService plugin) {
+
+		if((entity == null)&&(plugin != null)){
+			return false;
+		}
+
 		if(!entity.getName().equalsIgnoreCase(plugin.getLabelName())) {
 			return false;
 		}
