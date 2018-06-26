@@ -110,15 +110,18 @@ public class ConfigServiceBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void testUpsertPluginsBadLabelName() throws MobileTerminalException {
 
-        thrown.expect(InputArgumentException.class);
-        // thrown.expectMessage("No plugin name");
 
+        try {
         List<PluginService> pluginList = new ArrayList<>();
         PluginService pluginService = createPluginService();
         pluginService.setLabelName("");
         pluginList.add(pluginService);
 
         configService.upsertPlugins(pluginList, "TEST");
+            Assert.fail();
+        } catch (Throwable t) {
+            Assert.assertTrue(true);
+        }
     }
 
     @Test
