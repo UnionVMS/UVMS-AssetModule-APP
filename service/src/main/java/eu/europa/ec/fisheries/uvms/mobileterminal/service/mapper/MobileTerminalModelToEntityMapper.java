@@ -80,101 +80,101 @@ public class MobileTerminalModelToEntityMapper {
     }
 
     private static void mapChannels(MobileTerminal entity, MobileTerminalType model, String username) throws EnumException, MobileTerminalModelMapperException {
-//        List<ComChannelType> modelChannels = model.getChannels();
-//        Set<Channel> channels = new HashSet<>();
-//        for (ComChannelType channelType : modelChannels) {
-//            Channel channel = null;
-//            if (entity != null) {
-//                for (Channel c : entity.getChannels()) {
-//                    if (c.getGuid().equals(channelType.getGuid())) {
-//                        channel = c;
-//                        break;
-//                    }
-//                }
-//            }
-//
-//            if (channel == null) {
-//                channel = new Channel();
-//                channel.setGuid(UUID.randomUUID().toString());
-//            }
-//            channel.setMobileTerminal(entity);
-//            channel.setUpdateTime(DateUtils.getNowDateUTC());
-//            channel.setUpdateUser(username);
-//            channel.setArchived(false);
-//
-//
-//            ChannelHistory history = new ChannelHistory();
-//            history.setChannel(channel);
-//            history.setUpdateTime(DateUtils.getNowDateUTC());
-//            history.setName(channelType.getName());
-//            history.setActive(true);
-//            history.setUpdatedBy(username);
-//            history.setMobileTerminalEvent(entity.getCurrentEvent());
-//
-//            String attributes = mapComChannelAttributes(channelType.getAttributes());
-//            history.setAttributes(attributes);
-//            if (channel.getHistories().size() == 0) {
-//                history.setEventCodeType(EventCodeEnum.CREATE);
-//            } else {
-//                history.setEventCodeType(EventCodeEnum.MODIFY);
-//            }
-//
-//            for (ComChannelCapability capability : channelType.getCapabilities()) {
-//                if (MobileTerminalConstants.CAPABILITY_CONFIGURABLE.equalsIgnoreCase(capability.getType()) && capability.isValue()) {
-//                    entity.getCurrentEvent().setConfigChannel(channel);
-//                    history.setConfigChannel(capability.isValue());
-//                }
-//                if (MobileTerminalConstants.CAPABILITY_DEFAULT_REPORTING.equalsIgnoreCase(capability.getType()) && capability.isValue()) {
-//                    entity.getCurrentEvent().setDefaultChannel(channel);
-//                    history.setDefaultChannel(capability.isValue());
-//                }
-//                if (MobileTerminalConstants.CAPABILITY_POLLABLE.equalsIgnoreCase(capability.getType()) && capability.isValue()) {
-//                    entity.getCurrentEvent().setPollChannel(channel);
-//                    history.setPollChannel(capability.isValue());
-//                }
-//            }
-//
-//            // No changes to channel means no new history
-//            ChannelHistory channelHistory = channel.getCurrentHistory();
-//            if (channelHistory != null) {
-//                if (channelHistory.equals(history)) {
-//                    channels.add(channel);
-//                    continue;
-//                } else {
-//                    for (ChannelHistory ch : channel.getHistories()) {
-//                        ch.setActive(false);
-//                        channels.add(channel);
-//                    }
-//                }
-//            }
-//
-//            for (ChannelHistory ch : channel.getHistories()) {
-//                ch.setActive(false);
-//            }
-//            channel.getHistories().add(history);
-//            channels.add(channel);
-//
-//        }
-//
-//        for (Channel channel : entity.getChannels()) {
-//            if (!channels.contains(channel)) {
-//                channel.setArchived(true);
-//                ChannelHistory current = channel.getCurrentHistory();
-//                current.setActive(false);
-//
-//                ChannelHistory archive = new ChannelHistory();
-//                archive.setEventCodeType(EventCodeEnum.ARCHIVE);
-//                archive.setName(current.getName());
-//                archive.setMobileTerminalEvent(entity.getCurrentEvent());
-//                archive.setActive(true);
-//                archive.setAttributes(current.getAttributes());
-//                archive.setChannel(channel);
-//                archive.setUpdatedBy(username);
-//                archive.setUpdateTime(DateUtils.getNowDateUTC());
-//                channel.getHistories().add(archive);
-//            }
-//        }
-//        entity.setChannels(channels);
+        List<ComChannelType> modelChannels = model.getChannels();
+        Set<Channel> channels = new HashSet<>();
+        for (ComChannelType channelType : modelChannels) {
+            Channel channel = null;
+            if (entity != null) {
+                for (Channel c : entity.getChannels()) {
+                    if (c.getId().equals(channelType.getGuid())) {
+                        channel = c;
+                        break;
+                    }
+                }
+            }
+
+            if (channel == null) {
+                channel = new Channel();
+                //channel.setGuid(UUID.randomUUID().toString());
+            }
+            channel.setMobileTerminal(entity);
+            channel.setUpdateTime(DateUtils.getNowDateUTC());
+            channel.setUpdateUser(username);
+            channel.setArchived(false);
+
+
+            /*ChannelHistory history = new ChannelHistory();
+            history.setChannel(channel);
+            history.setUpdateTime(DateUtils.getNowDateUTC());
+            history.setName(channelType.getName());
+            history.setActive(true);
+            history.setUpdatedBy(username);
+            history.setMobileTerminalEvent(entity.getCurrentEvent());*/
+
+            String attributes = mapComChannelAttributes(channelType.getAttributes());
+            //history.setAttributes(attributes);
+            /*if (channel.getHistories().size() == 0) {
+                history.setEventCodeType(EventCodeEnum.CREATE);
+            } else {
+                history.setEventCodeType(EventCodeEnum.MODIFY);
+            }*/
+
+            for (ComChannelCapability capability : channelType.getCapabilities()) {
+                if (MobileTerminalConstants.CAPABILITY_CONFIGURABLE.equalsIgnoreCase(capability.getType()) && capability.isValue()) {
+                    entity.getCurrentEvent().setConfigChannel(channel);
+                    //history.setConfigChannel(capability.isValue());
+                }
+                if (MobileTerminalConstants.CAPABILITY_DEFAULT_REPORTING.equalsIgnoreCase(capability.getType()) && capability.isValue()) {
+                    entity.getCurrentEvent().setDefaultChannel(channel);
+                    //history.setDefaultChannel(capability.isValue());
+                }
+                if (MobileTerminalConstants.CAPABILITY_POLLABLE.equalsIgnoreCase(capability.getType()) && capability.isValue()) {
+                    entity.getCurrentEvent().setPollChannel(channel);
+                    //history.setPollChannel(capability.isValue());
+                }
+            }
+
+            // No changes to channel means no new history
+            /*ChannelHistory channelHistory = channel.getCurrentHistory();
+            if (channelHistory != null) {
+                if (channelHistory.equals(history)) {
+                    channels.add(channel);
+                    continue;
+                } else {
+                    for (ChannelHistory ch : channel.getHistories()) {
+                        ch.setActive(false);
+                        channels.add(channel);
+                    }
+                }
+            }
+
+            for (ChannelHistory ch : channel.getHistories()) {
+                ch.setActive(false);
+            }
+            channel.getHistories().add(history);
+            channels.add(channel);
+            */
+        }
+
+        for (Channel channel : entity.getChannels()) {
+            if (!channels.contains(channel)) {
+                channel.setArchived(true);
+              /*  ChannelHistory current = channel.getCurrentHistory();
+                current.setActive(false);
+
+                ChannelHistory archive = new ChannelHistory();
+                archive.setEventCodeType(EventCodeEnum.ARCHIVE);
+                archive.setName(current.getName());
+                archive.setMobileTerminalEvent(entity.getCurrentEvent());
+                archive.setActive(true);
+                archive.setAttributes(current.getAttributes());
+                archive.setChannel(channel);
+                archive.setUpdatedBy(username);
+                archive.setUpdateTime(DateUtils.getNowDateUTC());
+                channel.getHistories().add(archive);*/
+            }
+        }
+        entity.setChannels(channels);
     }
 
     private static void mapHistoryAttributes(MobileTerminal entity, MobileTerminalType model, String username, String comment, EventCodeEnum eventCode) {

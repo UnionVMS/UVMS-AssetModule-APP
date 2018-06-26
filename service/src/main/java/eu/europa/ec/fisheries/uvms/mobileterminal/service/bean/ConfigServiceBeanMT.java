@@ -27,6 +27,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalMessag
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.MTMessageConsumer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.MTMessageProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ModuleQueue;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.ConfigService;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConfigType;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.ChannelDaoBean;
@@ -52,7 +53,7 @@ import java.util.*;
 
 @Stateless
 @LocalBean
-public class ConfigServiceBeanMT {
+public class ConfigServiceBeanMT implements ConfigService {
 
     private final static Logger LOG = LoggerFactory.getLogger(ConfigServiceBeanMT.class);
 
@@ -242,9 +243,9 @@ public class ConfigServiceBeanMT {
 
 
         MobileTerminalPlugin entity = mobileTerminalPluginDao.getPluginByServiceName(plugin.getServiceName());
-        if(entity == null) return null;
-
-
+        if(entity == null){
+            return null;
+        }
         if (PluginMapper.equals(entity, plugin)) {
             return entity;
         } else {

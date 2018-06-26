@@ -21,10 +21,10 @@ import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 
 @RunWith(Arquillian.class)
+//@RunAsClient
 public class AssetGroupResourceTest extends AbstractAssetRestTest {
 
     @Test
-    @RunAsClient
     public void createAssetGroupCheckResponseCodeTest() throws Exception {
         
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
@@ -39,7 +39,6 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void createAssetTest() throws Exception {
 
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
@@ -55,7 +54,6 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void getAssetGroupListByUserNoUserParamTest() throws Exception {
         Response response = getWebTarget()
                 .path("group")
@@ -67,7 +65,6 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void getAssetGroupListByUserTest() throws Exception {
 
         Response responseBefore = getWebTarget()
@@ -98,7 +95,6 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void getAssetGroupListByUserTwoGroupsTest() throws Exception {
 
         Response responseBefore = getWebTarget()
@@ -134,7 +130,6 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void getAssetGroupByIdTest() throws Exception {
 
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
@@ -156,7 +151,6 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void getAssetGroupListByAssetId() throws Exception {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()

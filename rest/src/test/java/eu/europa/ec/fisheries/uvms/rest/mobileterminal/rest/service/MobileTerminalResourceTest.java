@@ -37,12 +37,12 @@ import java.util.UUID;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
+//@RunAsClient
 public class MobileTerminalResourceTest extends AbstractAssetRestTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(MobileTerminalResourceTest.class);
 
     @Test
-    @RunAsClient
     public void createMobileTerminalTest() {
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
@@ -58,7 +58,6 @@ public class MobileTerminalResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
-    @RunAsClient
     public void getMobileTerminalByIdTest() {
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
@@ -86,7 +85,6 @@ public class MobileTerminalResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
-    @RunAsClient
     public void updateMobileTerminalTest() {
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
@@ -124,7 +122,6 @@ public class MobileTerminalResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
-    @RunAsClient
     public void getMobileTerminalListTest() {
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
@@ -146,13 +143,17 @@ public class MobileTerminalResourceTest extends AbstractAssetRestTest {
                 .post(Entity.json(mobileTerminalListQuery), String.class);
 
         assertNotNull(response);
+        jsonReader = Json.createReader(new StringReader(response));
+        jsonObject = jsonReader.readObject();
+
+        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
+
         assertTrue(response.contains(MobileTerminalTestHelper.getSerialNumber()));
         assertTrue(response.contains("INMARSAT_C"));
         assertTrue(response.contains(MobileTerminalSource.INTERNAL.value()));
     }
 
     @Test
-    //@RunAsClient
     public void assignMobileTerminalTest() {
 
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
@@ -190,7 +191,6 @@ public class MobileTerminalResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void unAssignMobileTerminalTest() {
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 

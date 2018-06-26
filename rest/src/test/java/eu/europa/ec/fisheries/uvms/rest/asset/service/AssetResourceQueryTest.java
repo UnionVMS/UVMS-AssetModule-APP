@@ -29,10 +29,10 @@ import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
 
 @RunWith(Arquillian.class)
+//@RunAsClient
 public class AssetResourceQueryTest extends AbstractAssetRestTest {
 
     @Test
-    @RunAsClient
     public void getAssetListQueryTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()

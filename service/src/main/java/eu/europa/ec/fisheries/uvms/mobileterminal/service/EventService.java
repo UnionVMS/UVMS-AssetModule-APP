@@ -9,22 +9,16 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
+package eu.europa.ec.fisheries.uvms.mobileterminal.service;
 
-import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
-import org.jboss.arquillian.container.test.api.RunAsClient;
-import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ErrorEvent;
+import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.EventMessage;
 
-import static org.junit.Assert.assertTrue;
+import javax.ejb.Local;
+import javax.enterprise.event.Observes;
 
-@RunWith(Arquillian.class)
-//@RunAsClient
-public class RestResourceTest extends AbstractAssetRestTest {
+@Local
+public interface EventService {
 
-    @Test
-    public void worldsBestRestTest(){
-        assertTrue(true);
-    }
+    void returnError(@Observes @ErrorEvent EventMessage message);
 }

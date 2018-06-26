@@ -23,6 +23,7 @@ import java.util.*;
 
 
 @RunWith(Arquillian.class)
+//@RunAsClient
 public class CustomCodeResourceTest extends AbstractAssetRestTest {
     // TODO also implement tests for embedded json when the need appears
 
@@ -38,7 +39,6 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
-    @RunAsClient
     public void getConstants() {
 
         String txt = UUID.randomUUID().toString().toUpperCase();
@@ -60,7 +60,6 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
-    @RunAsClient
     public void getCodesPerConstant() throws IOException {
 
         String txt = UUID.randomUUID().toString().toUpperCase();
@@ -91,7 +90,6 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
-    @RunAsClient
     public void createACustomCode() throws IOException {
 
         String txt = UUID.randomUUID().toString().toUpperCase();
@@ -102,7 +100,6 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
-    @RunAsClient
     public void getACustomCode() throws IOException {
 
         String txt = UUID.randomUUID().toString().toUpperCase();
@@ -136,7 +133,6 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
-    @RunAsClient
     public void deleteCustomCode() throws IOException {
 
         String txt = UUID.randomUUID().toString().toUpperCase();
@@ -243,7 +239,6 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
 
     @Test
-    @RunAsClient
     public void verifyCustomCodeInDateRangePositive() throws IOException {
 
         String txt = UUID.randomUUID().toString().toUpperCase();
@@ -276,7 +271,6 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
 
     @Test
-    @RunAsClient
     public void verifyCustomCodeInDateRangeNegative() throws IOException {
 
         String txt = UUID.randomUUID().toString().toUpperCase();
@@ -311,7 +305,6 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
 
     @Test
-    @RunAsClient
     public void existsCustomCodeInDateRangePositive() throws IOException {
 
         String txt = UUID.randomUUID().toString().toUpperCase();
@@ -340,7 +333,6 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
 
     @Test
-    @RunAsClient
     public void existsCustomCodeInDateRangeNegative() throws IOException {
 
         String txt = UUID.randomUUID().toString().toUpperCase();
@@ -369,7 +361,6 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
-    @RunAsClient
     public void getCodeAtDateWithinRange() throws IOException {
 
         String txt = UUID.randomUUID().toString().toUpperCase();

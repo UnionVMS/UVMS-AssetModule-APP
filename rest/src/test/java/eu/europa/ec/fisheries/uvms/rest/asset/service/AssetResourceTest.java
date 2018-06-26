@@ -26,10 +26,10 @@ import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
 
 @RunWith(Arquillian.class)
+//@RunAsClient
 public class AssetResourceTest extends AbstractAssetRestTest {
        
     @Test
-    @RunAsClient
     public void createAssetCheckResponseCodeTest() throws Exception {
         
         Asset asset = AssetHelper.createBasicAsset();
@@ -44,7 +44,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void createAssetTest() throws Exception {
         
         Asset asset = AssetHelper.createBasicAsset();
@@ -60,7 +59,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void getAssetByIdTest() throws Exception {
         
         Asset asset = AssetHelper.createBasicAsset();
@@ -81,7 +79,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void getAssetByIdRandomValueTest() throws Exception {
         Asset asset = getWebTarget()
                 .path("asset")
@@ -93,7 +90,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void getAssetByIdInvalidIdTest() throws Exception {
         Response response = getWebTarget()
                 .path("asset")
@@ -106,7 +102,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void updateAssetChangedNameTest() throws Exception {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -137,7 +132,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void updateAssetNonExistingAssetTest() throws Exception {
         Asset asset = AssetHelper.createBasicAsset();
         Response response = getWebTarget()
@@ -150,7 +144,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void archiveAssetTest() throws Exception {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -169,7 +162,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void archiveAssetNonExistingAssetTest() throws Exception {
         Asset asset = AssetHelper.createBasicAsset();
         
@@ -184,7 +176,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void getAssetFromAssetIdAndDateCfrTest() throws Exception {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -227,7 +218,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void getAssetFromAssetIdPastDateTest() throws Exception {
         LocalDateTime timeStamp = LocalDateTime.now(ZoneOffset.UTC);
 
@@ -250,7 +240,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void getAssetHistoryByAssetHistGuidTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -269,7 +258,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void getAssetHistoryByAssetHistGuidTwoRevisionsTest() throws Exception {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -308,7 +296,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     
     
     @Test
-    @RunAsClient
     public void createNoteTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -330,7 +317,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void getNotesForAssetTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -363,7 +349,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void deleteNoteTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
