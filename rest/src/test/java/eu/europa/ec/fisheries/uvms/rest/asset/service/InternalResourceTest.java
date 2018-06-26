@@ -19,10 +19,10 @@ import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
 
 @RunWith(Arquillian.class)
+//@RunAsClient
 public class InternalResourceTest extends AbstractAssetRestTest {
 
     @Test
-    @RunAsClient
     public void getAssetByIdNonValidIdentifierTest() {
         
         Response response = getWebTarget()
@@ -35,7 +35,6 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void getAssetByIdGUIDTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -52,7 +51,6 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void getAssetByIdCfrTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -69,7 +67,6 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void getAssetByIdIrcsTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -86,7 +83,6 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void getAssetByIdImoTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -103,7 +99,6 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void getAssetByIdMmsiTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -120,7 +115,6 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void getAssetByIdIccatTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -137,7 +131,6 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void getAssetByIdUviTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -154,7 +147,6 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void getAssetByIdGfcmTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -171,7 +163,6 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    @RunAsClient
     public void upsertAssetTest() {
         Asset asset = AssetHelper.createBasicAsset();
         AssetBO assetBo = new AssetBO();

@@ -11,12 +11,28 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.services;
 
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollListQuery;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollableQuery;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MappedPollServiceBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.CreatePollResultDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelListDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollDto;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTResponseDto;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTErrorHandler;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
+import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
+import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 @Path("/poll")
 @Stateless
@@ -26,7 +42,7 @@ public class PollResource {
 
     private final static Logger LOG = LoggerFactory.getLogger(PollResource.class);
 
-    /*
+
 
     @EJB
     private MappedPollServiceBean pollService;
@@ -132,5 +148,5 @@ public class PollResource {
         }
     }
 
-    */
+
 }

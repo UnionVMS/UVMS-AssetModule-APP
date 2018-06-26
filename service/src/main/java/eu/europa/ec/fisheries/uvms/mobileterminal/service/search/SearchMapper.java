@@ -28,13 +28,13 @@ public class SearchMapper {
                 .append(" FROM MobileTerminal mt")
                 .append(" INNER JOIN FETCH mt.mobileTerminalEvents me")
                 .append(" LEFT JOIN FETCH mt.channels c")
-                .append(" LEFT JOIN FETCH c.histories ch")
+                //.append(" LEFT JOIN FETCH c.histories ch")    //TODO: Add proper look into the audited part of teh db when that is finished
                 .append(" WHERE ( ")
                 .append("me.active = true ")
                 .append("AND ")
                 .append("mt.archived = false ")
-                .append("AND ")
-                .append("ch.active = true ")
+                //.append("AND ")
+                //.append("ch.active = true ")
                 .append("AND ")
                 .append("c.archived = false ")
                 .append(" ) ");

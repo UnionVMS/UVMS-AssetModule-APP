@@ -44,7 +44,8 @@ public class ChannelDaoBean  {
     }
 
     public List<String> getActiveDNID(String pluginName) {
-        throw new NotImplementedException();
+        return new ArrayList<String>();   //TODO: Fix so that this actually returns something sane
+        //throw new NotImplementedException();
 //        String sql = getSQLActiveDNID(pluginName);
 //        TypedQuery<String> query = em.createQuery(sql, String.class);
 //        List<Map<String, String>> attributes = AttributeMapper.mapAttributeStrings(query.getResultList());

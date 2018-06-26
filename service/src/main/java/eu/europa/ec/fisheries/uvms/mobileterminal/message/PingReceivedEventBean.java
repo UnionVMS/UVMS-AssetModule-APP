@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.mobileterminal.service.bean;
+package eu.europa.ec.fisheries.uvms.mobileterminal.message;
 
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelMapperException;

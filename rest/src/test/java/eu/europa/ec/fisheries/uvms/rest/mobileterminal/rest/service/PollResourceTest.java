@@ -18,10 +18,10 @@ import java.io.StringReader;
 import static org.junit.Assert.assertThat;
 
 @RunWith(Arquillian.class)
+//@RunAsClient
 public class PollResourceTest extends AbstractAssetRestTest {
 
     @Test
-    @RunAsClient
     public void getRunningProgramPollsTest() {
 
         String response = getWebTarget()

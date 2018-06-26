@@ -9,22 +9,12 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
+package eu.europa.ec.fisheries.uvms.mobileterminal.service;
 
-import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
-import org.jboss.arquillian.container.test.api.RunAsClient;
-import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import javax.ejb.Local;
 
-import static org.junit.Assert.assertTrue;
+@Local
+public interface PollTimerService {
 
-@RunWith(Arquillian.class)
-//@RunAsClient
-public class RestResourceTest extends AbstractAssetRestTest {
-
-    @Test
-    public void worldsBestRestTest(){
-        assertTrue(true);
-    }
+    void timerTimeout();
 }
