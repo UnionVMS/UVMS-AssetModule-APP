@@ -24,10 +24,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.TerminalC
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class PluginMapper {
 	final static Logger LOG = LoggerFactory.getLogger(PluginMapper.class);
@@ -80,6 +77,7 @@ public class PluginMapper {
 	}
 
 	public static boolean equals(MobileTerminalPlugin entity, PluginService plugin) {
+
 
 		if(!entity.getName().equalsIgnoreCase(plugin.getLabelName())) {
 			return false;

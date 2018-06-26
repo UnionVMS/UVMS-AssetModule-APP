@@ -242,6 +242,9 @@ public class ConfigServiceBeanMT {
 
 
         MobileTerminalPlugin entity = mobileTerminalPluginDao.getPluginByServiceName(plugin.getServiceName());
+        if(entity == null) return null;
+
+
         if (PluginMapper.equals(entity, plugin)) {
             return entity;
         } else {
