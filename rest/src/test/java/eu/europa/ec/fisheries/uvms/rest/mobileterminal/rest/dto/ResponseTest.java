@@ -14,12 +14,11 @@ package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.dto;
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalSource;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mock.MockData;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTResponseDto;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.MobileTerminalResource;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.MobileTerminalRestResource;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,9 +41,9 @@ public class ResponseTest {
     private HttpServletRequest request;
 
     @InjectMocks
-    private MobileTerminalResource mobileTerminalResource;
+    private MobileTerminalRestResource mobileTerminalRestResource;
 
-//    private MobileTerminalResource SERVICE_NULL = new MobileTerminalResource();
+//    private MobileTerminalRestResource SERVICE_NULL = new MobileTerminalRestResource();
 //    private static final Integer LIST_SIZE = 3;
 
     private static final Integer MOBILE_TERMINAL_ID_INT = 1;
@@ -76,7 +75,7 @@ public class ResponseTest {
     @Test
     public void testGetMobileTerminalById() throws Exception {
         doReturn(MOBILE_TERMINAL_DTO).when(mobileTerminalServiceBean).getMobileTerminalById(MOBILE_TERMINAL_ID);
-        MTResponseDto result = mobileTerminalResource.getMobileTerminalById(MOBILE_TERMINAL_ID);
+        MTResponseDto result = mobileTerminalRestResource.getMobileTerminalById(MOBILE_TERMINAL_ID);
         Mockito.verify(mobileTerminalServiceBean).getMobileTerminalById(MOBILE_TERMINAL_ID);
         assertEquals(SUCCESS_RESULT_GET_BY_ID.toString(), result.toString());
     }
@@ -84,7 +83,7 @@ public class ResponseTest {
     @Test
     public void testGetMobileTerminalList() throws Exception {
         doReturn(MOBILE_TERMINAL_LIST_RESPONSE).when(mobileTerminalServiceBean).getMobileTerminalList(null);
-        MTResponseDto result = mobileTerminalResource.getMobileTerminalList(null);
+        MTResponseDto result = mobileTerminalRestResource.getMobileTerminalList(null);
         Mockito.verify(mobileTerminalServiceBean).getMobileTerminalList(null);
         assertEquals(SUCCESS_RESULT_LIST_RESPONSE.toString(), result.toString());
     }
@@ -93,7 +92,7 @@ public class ResponseTest {
     public void testUpdateMobileTeriminal() throws Exception {
         doReturn(MOBILE_TERMINAL_DTO).when(mobileTerminalServiceBean).updateMobileTerminal(MOBILE_TERMINAL_DTO, "", MobileTerminalSource.INTERNAL, "TEST");
         doReturn("TEST").when(request).getRemoteUser();
-        MTResponseDto result = mobileTerminalResource.updateMobileTerminal("", MOBILE_TERMINAL_DTO);
+        MTResponseDto result = mobileTerminalRestResource.updateMobileTerminal("", MOBILE_TERMINAL_DTO);
         Mockito.verify(mobileTerminalServiceBean).updateMobileTerminal(MOBILE_TERMINAL_DTO, "", MobileTerminalSource.INTERNAL, "TEST");
         assertEquals(SUCCESS_RESULT_UPDATE.toString(), result.toString());
     }
@@ -102,7 +101,7 @@ public class ResponseTest {
     public void testCreateMobileTeriminal() throws Exception {
         doReturn(MOBILE_TERMINAL_DTO).when(mobileTerminalServiceBean).createMobileTerminal(MOBILE_TERMINAL_DTO, MobileTerminalSource.INTERNAL, "TEST");
         doReturn("TEST").when(request).getRemoteUser();
-        MTResponseDto result = mobileTerminalResource.createMobileTerminal(MOBILE_TERMINAL_DTO);
+        MTResponseDto result = mobileTerminalRestResource.createMobileTerminal(MOBILE_TERMINAL_DTO);
         Mockito.verify(mobileTerminalServiceBean).createMobileTerminal(MOBILE_TERMINAL_DTO, MobileTerminalSource.INTERNAL, "TEST");
         assertEquals(SUCCESS_RESULT_UPDATE.toString(), result.toString());
     }*/

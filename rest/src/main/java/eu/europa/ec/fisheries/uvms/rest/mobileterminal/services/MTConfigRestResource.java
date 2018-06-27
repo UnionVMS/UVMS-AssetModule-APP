@@ -30,11 +30,11 @@ import javax.ws.rs.core.MediaType;
 @Consumes(value = {MediaType.APPLICATION_JSON})
 @Produces(value = {MediaType.APPLICATION_JSON})
 @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-public class MTConfigResource {
+public class MTConfigRestResource {
 
 
 
-    private final static Logger LOG = LoggerFactory.getLogger(MTConfigResource.class);
+    private final static Logger LOG = LoggerFactory.getLogger(MTConfigRestResource.class);
 
     /*
 

@@ -13,9 +13,9 @@ package eu.europa.ec.fisheries.uvms.rest.mobileterminal;
 
 
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.filter.MTRequestFilter;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.MTConfigResource;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.MobileTerminalResource;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.PollResource;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.MTConfigRestResource;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.MobileTerminalRestResource;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.PollRestResource;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeatureFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +34,9 @@ public class MTRestActivator extends Application {
     private final Set<Class<?>> set = new HashSet<>();
 
     public MTRestActivator() {
-        set.add(MobileTerminalResource.class);
-        set.add(PollResource.class);
-        set.add(MTConfigResource.class);
+        set.add(MobileTerminalRestResource.class);
+        set.add(PollRestResource.class);
+        set.add(MTConfigRestResource.class);
         set.add(UnionVMSFeatureFilter.class);
         LOG.info(MTRestConstants.MODULE_NAME + " module starting up");
     }

@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(Arquillian.class)
 //@RunAsClient
-public class PollResourceTest extends AbstractAssetRestTest {
+public class PollRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     public void getRunningProgramPollsTest() {
