@@ -2,7 +2,6 @@ package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.PollDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.Poll;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.PollDaoException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.PollSearchField;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.PollSearchKeyValue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.poll.PollSearchMapper;
@@ -16,7 +15,6 @@ import org.junit.Test;
 import org.junit.internal.matchers.ThrowableMessageMatcher;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.ejb.EJB;
 import javax.ejb.EJBTransactionRolledbackException;
@@ -139,9 +137,9 @@ public class PollDaoBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void testGetPollListSearchCount_PollSearchField_POLL_ID() {
 
-    	String testValue1 = "testValue1";
-    	String testValue2 = "testValue2";
-    	List<String> listOfPollSearchKeyValues1 = Arrays.asList(testValue1, testValue2);
+        String testValue1 = UUID.randomUUID().toString();
+        String testValue2 = UUID.randomUUID().toString();
+        List<String> listOfPollSearchKeyValues1 = Arrays.asList(testValue1, testValue2);
 
         PollSearchKeyValue pollSearchKeyValue1 = new PollSearchKeyValue();
         pollSearchKeyValue1.setSearchField(PollSearchField.POLL_ID);
@@ -207,8 +205,8 @@ public class PollDaoBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void testGetPollListSearchCount_PollSearchField_POLL_ID_And_TERMINAL_TYPE() {
 
-        String testValue1 = "testValue1";
-        String testValue2 = "testValue2";
+        String testValue1 = UUID.randomUUID().toString();
+        String testValue2 = UUID.randomUUID().toString();
         List<String> listOfPollSearchKeyValues1 = Arrays.asList(testValue1, testValue2);
 
         PollSearchKeyValue pollSearchKeyValue1 = new PollSearchKeyValue();
@@ -260,7 +258,6 @@ public class PollDaoBeanIntTest extends TransactionalTests {
         PollSearchKeyValue pollSearchKeyValue3 = new PollSearchKeyValue();
         pollSearchKeyValue3.setSearchField(PollSearchField.USER);
         pollSearchKeyValue3.setValues(listOfPollSearchKeyValues);
-
 
         List<PollSearchKeyValue> listOfPollSearchKeyValue = Arrays.asList(pollSearchKeyValue1, pollSearchKeyValue2, pollSearchKeyValue3);
 
@@ -399,15 +396,15 @@ public class PollDaoBeanIntTest extends TransactionalTests {
     
     @Test
     @OperateOnDeployment("normal")
-    public void testGetPollListSearchPaginated_PollSearchField_POLL_ID() throws PollDaoException {
+    public void testGetPollListSearchPaginated_PollSearchField_POLL_ID() {
 
     	Poll poll = createPollHelper();
     	pollDao.createPoll(poll);
         em.flush();
-        
-        String testValue1 = "testValue1";
-    	String testValue2 = "testValue2";
-    	List<String> pollSearchKeyValueList = Arrays.asList(testValue1, testValue2);
+
+        String testValue1 = UUID.randomUUID().toString();
+        String testValue2 = UUID.randomUUID().toString();
+        List<String> pollSearchKeyValueList = Arrays.asList(testValue1, testValue2);
         
         PollSearchKeyValue pollSearchKeyValue1 = new PollSearchKeyValue();
         pollSearchKeyValue1.setSearchField(PollSearchField.POLL_ID);
@@ -427,7 +424,7 @@ public class PollDaoBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void testGetPollListSearchPaginated_PollSearchField_POLL_TYPE() throws PollDaoException {
+    public void testGetPollListSearchPaginated_PollSearchField_POLL_TYPE() {
 
         /***
          * Ok PollTypeEnum values:
@@ -448,7 +445,7 @@ public class PollDaoBeanIntTest extends TransactionalTests {
         pollSearchKeyValue1.setSearchField(PollSearchField.POLL_TYPE);
         pollSearchKeyValue1.setValues(listOfPollSearchKeyValues);
 
-        List<PollSearchKeyValue> listOfPollSearchKeyValue = Arrays.asList(pollSearchKeyValue1);
+        List<PollSearchKeyValue> listOfPollSearchKeyValue = Collections.singletonList(pollSearchKeyValue1);
         
         Integer pageNumber = 1;
         Integer pageSize = 2;
@@ -462,7 +459,7 @@ public class PollDaoBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void testGetPollListSearchPaginated_PollSearchField_TERMINAL_TYPE() throws PollDaoException {
+    public void testGetPollListSearchPaginated_PollSearchField_TERMINAL_TYPE() {
 
     	/**
          * Ok MobileTerminalTypeEnum values:

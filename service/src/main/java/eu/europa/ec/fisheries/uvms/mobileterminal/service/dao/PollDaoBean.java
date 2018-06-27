@@ -93,13 +93,20 @@ public class PollDaoBean  {
 				}
 				query.setParameter(sqlReplaceToken, types);
 			} else if(keyValue.getSearchField().getClazz().isAssignableFrom(PollTypeEnum.class)){
-				List<PollTypeEnum> types = new ArrayList<>();
-				for (String value : keyValue.getValues()) {
-					PollTypeEnum type = PollTypeEnum.valueOf(value);
-					types.add(type);
-				}
-				query.setParameter(sqlReplaceToken, types);
-			} else {
+			List<PollTypeEnum> types = new ArrayList<>();
+			for (String value : keyValue.getValues()) {
+				PollTypeEnum type = PollTypeEnum.valueOf(value);
+				types.add(type);
+			}
+			query.setParameter(sqlReplaceToken, types);
+		} else if(keyValue.getSearchField().getClazz().isAssignableFrom(UUID.class)){
+			List<UUID> types = new ArrayList<>();
+			for (String value : keyValue.getValues()) {
+				UUID type = UUID.fromString(value);
+				types.add(type);
+			}
+			query.setParameter(sqlReplaceToken, types);
+		} else {
 				query.setParameter(sqlReplaceToken, keyValue.getValues());
 			}
 		}
