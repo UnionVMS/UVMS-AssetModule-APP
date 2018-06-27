@@ -1,7 +1,6 @@
 package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
 
-import eu.europa.ec.fisheries.schema.mobileterminal.module.v1.MobileTerminalFaultException;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
@@ -13,6 +12,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.TerminalDaoE
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -198,30 +198,34 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void upsertMobileTerminal_WillFail_Null_TerminalId() throws MobileTerminalException, TerminalDaoException, MobileTerminalModelException {
 
-        thrown.expect(IllegalArgumentException.class);
-//        thrown.expectMessage("No Mobile terminalId in request");
-
         MobileTerminalType created = createMobileTerminalType();
         assertNotNull(created);
-
         created.setMobileTerminalId(null);
-
-        upsertMobileTerminalType(created);
+        try {
+            upsertMobileTerminalType(created);
+            Assert.fail();
+        } catch (Throwable t) {
+            Assert.assertTrue(true);
+        }
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void updateMobileTerminal_WillFail_Null_TerminalId() throws MobileTerminalException, MobileTerminalModelException, TerminalDaoException {
 
-        thrown.expect(IllegalArgumentException.class);
-//        thrown.expectMessage("Non valid id of terminal to update");
 
         MobileTerminalType created = createMobileTerminalType();
         assertNotNull(created);
 
         created.setMobileTerminalId(null);
 
-        updateMobileTerminalType(created);
+        try {
+            updateMobileTerminalType(created);
+        } catch (Throwable t) {
+            Assert.assertTrue(true);
+        }
+
+
     }
 
     private MobileTerminalType createMobileTerminalType() throws MobileTerminalException, TerminalDaoException, MobileTerminalModelException {

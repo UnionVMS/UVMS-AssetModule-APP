@@ -119,7 +119,7 @@ public class TestPollHelper {
         Set<Channel> channels = new HashSet<>();
         Channel channel = new Channel();
         channel.setArchived(false);
-        channel.setId(UUID.randomUUID());
+        //channel.setId(UUID.randomUUID());
         channel.setMobileTerminal(mt);
         channels.add(channel);
         mt.setChannels(channels);
