@@ -45,9 +45,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PluginMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
+import javax.ejb.*;
 import javax.jms.TextMessage;
 import java.util.*;
 
@@ -87,6 +85,7 @@ public class ConfigServiceBeanMT implements ConfigService {
         return upsertPlugins(plugins);
     }
 
+    @TransactionAttribute(TransactionAttributeType.NEVER)
     public List<ServiceResponseType> getRegisteredMobileTerminalPlugins() throws MobileTerminalException {
         try {
             List<PluginType> pluginTypes = new ArrayList<>();

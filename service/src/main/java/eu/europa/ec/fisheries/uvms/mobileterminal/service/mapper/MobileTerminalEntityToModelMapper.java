@@ -73,62 +73,62 @@ public class MobileTerminalEntityToModelMapper {
     private static List<ComChannelType> mapChannels(Set<Channel> channels, MobileTerminalEvent currentEvent) {
         //TODO: fix later
 
-//        if (channels == null || channels.isEmpty()) {
-//            return new ArrayList<>();
-//        }
-//        List<ComChannelType> channelList = new ArrayList<>();
-//        for (Channel channel : channels) {
-//            if (channel.getArchived() != null && channel.getArchived()) {
-//                continue;
-//            }
-//            ChannelHistory current = channel.getCurrentHistory();
-//            if (current != null) {
-//                ComChannelType comChannel = new ComChannelType();
-//                comChannel.setName(current.getName());
-//                comChannel.setGuid(channel.getGuid());
-//
-//                comChannel.getAttributes().addAll(AttributeMapper.mapAttributeStringToComChannelAttribute(current.getAttributes()));
-//
-//                ComChannelCapability pollCapability = new ComChannelCapability();
-//                pollCapability.setType(MobileTerminalConstants.CAPABILITY_POLLABLE);
-//
-//                Channel wrkPollChannel = currentEvent.getPollChannel();
-//                if(wrkPollChannel != null) {
-//                    pollCapability.setValue(currentEvent.getPollChannel().equals(channel));
-//                }
-//                else{
-//                    pollCapability.setValue(false);
-//                }
-//                comChannel.getCapabilities().add(pollCapability);
-//
-//                ComChannelCapability configCapability = new ComChannelCapability();
-//                configCapability.setType(MobileTerminalConstants.CAPABILITY_CONFIGURABLE);
-//
-//                Channel wrkConfigChannel = currentEvent.getConfigChannel();
-//                if (wrkConfigChannel != null) {
-//                    configCapability.setValue(currentEvent.getConfigChannel().equals(channel));
-//                } else {
-//                    configCapability.setValue(false);
-//                }
-//
-//                comChannel.getCapabilities().add(configCapability);
-//
-//                ComChannelCapability defaultCapability = new ComChannelCapability();
-//                defaultCapability.setType(MobileTerminalConstants.CAPABILITY_DEFAULT_REPORTING);
-//
-//                Channel wrkDefaultChannel = currentEvent.getDefaultChannel();
-//                if(wrkDefaultChannel != null) {
-//                    defaultCapability.setValue(currentEvent.getDefaultChannel().equals(channel));
-//                }
-//                else{
-//                    defaultCapability.setValue(false);
-//                }
-//                comChannel.getCapabilities().add(defaultCapability);
-//
-//                channelList.add(comChannel);
-//            }
-//        }
-        return new ArrayList<>();
+        if (channels == null || channels.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<ComChannelType> channelList = new ArrayList<>();
+        for (Channel channel : channels) {
+            if (channel.getArchived() != null && channel.getArchived()) {
+                continue;
+            }
+            //ChannelHistory current = channel.getCurrentHistory();
+            //if (current != null) {
+                ComChannelType comChannel = new ComChannelType();
+                //comChannel.setName(current.getName());
+                comChannel.setGuid(channel.getId().toString());
+
+                //comChannel.getAttributes().addAll(AttributeMapper.mapAttributeStringToComChannelAttribute(current.getAttributes()));
+
+                ComChannelCapability pollCapability = new ComChannelCapability();
+                pollCapability.setType(MobileTerminalConstants.CAPABILITY_POLLABLE);
+
+                Channel wrkPollChannel = currentEvent.getPollChannel();
+                if(wrkPollChannel != null) {
+                    pollCapability.setValue(currentEvent.getPollChannel().equals(channel));
+                }
+                else{
+                    pollCapability.setValue(false);
+                }
+                comChannel.getCapabilities().add(pollCapability);
+
+                ComChannelCapability configCapability = new ComChannelCapability();
+                configCapability.setType(MobileTerminalConstants.CAPABILITY_CONFIGURABLE);
+
+                Channel wrkConfigChannel = currentEvent.getConfigChannel();
+                if (wrkConfigChannel != null) {
+                    configCapability.setValue(currentEvent.getConfigChannel().equals(channel));
+                } else {
+                    configCapability.setValue(false);
+                }
+
+                comChannel.getCapabilities().add(configCapability);
+
+                ComChannelCapability defaultCapability = new ComChannelCapability();
+                defaultCapability.setType(MobileTerminalConstants.CAPABILITY_DEFAULT_REPORTING);
+
+                Channel wrkDefaultChannel = currentEvent.getDefaultChannel();
+                if(wrkDefaultChannel != null) {
+                    defaultCapability.setValue(currentEvent.getDefaultChannel().equals(channel));
+                }
+                else{
+                    defaultCapability.setValue(false);
+                }
+                comChannel.getCapabilities().add(defaultCapability);
+
+                channelList.add(comChannel);
+            //}
+        }
+        return channelList;
     }
 
     private static MobileTerminalSource mapToMobileTerminalSource(MobileTerminalSourceEnum mobtermSourceId) throws EnumException {

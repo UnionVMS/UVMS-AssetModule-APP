@@ -14,6 +14,9 @@ import java.io.File;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.eu.ingwar.tools.arquillian.extension.suite.annotations.ArquillianSuiteDeployment;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -58,5 +61,18 @@ public abstract class AbstractAssetRestTest {
         testWar.addAsWebInfResource("mock-web.xml", "web.xml");
 
         return testWar;
+    }
+
+
+    protected int getReturnCode(String responsDto) throws Exception{
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(responsDto, ObjectNode.class).get("code").asInt();
+    }
+
+    protected static <T> T deserializeResponseDto(String responseDto, Class<T> clazz) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode node = objectMapper.readValue(responseDto, ObjectNode.class);
+        JsonNode jsonNode = node.get("data");
+        return objectMapper.readValue(objectMapper.writeValueAsString(jsonNode), clazz);
     }
 }

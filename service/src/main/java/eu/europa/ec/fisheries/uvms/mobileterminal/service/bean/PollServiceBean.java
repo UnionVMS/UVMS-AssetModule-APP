@@ -79,18 +79,15 @@ public class PollServiceBean implements PollService {
             List<String> sentPolls = new ArrayList<>();
             for (PollResponseType createdPoll : createdPolls) {
                 triggerTimer = PollType.PROGRAM_POLL.equals(createdPoll.getPollType());
-                try {
-                    AcknowledgeTypeType ack = sendPollService.sendPoll(createdPoll, username);
-                    switch (ack) {
-                        case NOK:
-                            unsentPolls.add(createdPoll.getPollId().getGuid());
-                            break;
-                        case OK:
-                            sentPolls.add(createdPoll.getPollId().getGuid());
-                            break;
-                    }
-                } catch (MobileTerminalServiceException e) {
-                    LOG.error(e.getMessage());
+
+                AcknowledgeTypeType ack = sendPollService.sendPoll(createdPoll, username);
+                switch (ack) {
+                    case NOK:
+                        unsentPolls.add(createdPoll.getPollId().getGuid());
+                        break;
+                    case OK:
+                        sentPolls.add(createdPoll.getPollId().getGuid());
+                        break;
                 }
 
                 try {
@@ -231,7 +228,7 @@ public class PollServiceBean implements PollService {
             throw new IllegalArgumentException("Cannot create without comment and user");
         }
 
-        if (pollRequest.getMobileTerminals() == null) {
+        if (pollRequest.getMobileTerminals().isEmpty()) {
             throw new IllegalArgumentException("No mobile terminals for " + pollRequest.getPollType());
         }
 
@@ -277,7 +274,7 @@ public class PollServiceBean implements PollService {
         for (PollMobileTerminal pollTerminal : pollRequest.getMobileTerminals()) {
             MobileTerminal mobileTerminalEntity = terminalDao.getMobileTerminalByGuid(pollTerminal.getMobileTerminalId());
             String connectId = mobileTerminalEntity.getCurrentEvent().getConnectId();
-            if (!pollTerminal.getConnectId().equals(connectId)) {
+            if (pollTerminal.getConnectId() == null || !pollTerminal.getConnectId().equals(connectId)) {
                 throw new MobileTerminalModelException("Terminal " + mobileTerminalEntity.getId() + " can not be polled, because it is not linked to asset " + connectId);
             }
 

@@ -151,9 +151,9 @@ public class MobileTerminalModelToEntityMapper {
             for (ChannelHistory ch : channel.getHistories()) {
                 ch.setActive(false);
             }
-            channel.getHistories().add(history);
+            channel.getHistories().add(history);*/
             channels.add(channel);
-            */
+
         }
 
         for (Channel channel : entity.getChannels()) {

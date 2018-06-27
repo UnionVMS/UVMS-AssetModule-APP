@@ -32,9 +32,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.ExchangeModuleR
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
+import javax.ejb.*;
 import javax.jms.TextMessage;
 import java.util.List;
 
@@ -59,7 +57,8 @@ public class PluginServiceBean {
     @EJB
     private ConfigServiceBeanMT configModel;
 
-    public AcknowledgeTypeType sendPoll(PollResponseType poll, String username) throws MobileTerminalServiceException {
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public AcknowledgeTypeType sendPoll(PollResponseType poll, String username) {
         try {
             PollType pollType = PollToCommandRequestMapper.mapToPollType(poll);
             String pluginServiceName = poll.getMobileTerminal().getPlugin().getServiceName();
@@ -70,8 +69,8 @@ public class PluginServiceBean {
             LOG.debug("Poll: " + poll.getPollId().getGuid() + " sent to exchange. Response: " + ack.getType());
             return ack.getType();
         } catch (ExchangeModelMapperException | MobileTerminalMessageException | MobileTerminalModelMapperException e) {
-            LOG.error("Failed to send poll command! Poll with guid {} was created", poll.getPollId().getGuid());
-            throw new MobileTerminalServiceException("Failed to send poll command. Poll with guid " + poll.getPollId().getGuid() + " was not sent");
+            LOG.error("Failed to send poll command! Poll with guid {} was created but not sent", poll.getPollId().getGuid());
+            return AcknowledgeTypeType.NOK;
         }
     }
 
