@@ -70,13 +70,7 @@ public class PollProgramDaoBean {
 
     // TODO: This method needs to be removed. Find usage and map it to the next method.
     public PollProgram getPollProgramByGuid(String guid) {
-        try {
-            TypedQuery<PollProgram> query = em.createNamedQuery(MobileTerminalConstants.POLL_PROGRAM_FIND_BY_ID, PollProgram.class);
-            query.setParameter("guid", guid);
-            return query.getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
+        return getPollProgramById(UUID.fromString(guid));
     }
 
     public PollProgram getPollProgramById(UUID id) {
