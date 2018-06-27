@@ -9,26 +9,26 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.fisheries.uvms.mobileterminal.service.arquillian;
+package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.ConfigList;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.Plugin;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dao.bean.ChannelDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dao.bean.DNIDListDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dao.bean.MobileTerminalPluginDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dao.bean.OceanRegionDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dao.exception.ConfigDaoException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dao.exception.InputArgumentException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dao.exception.NoEntityFoundException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dao.exception.TerminalDaoException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.DNIDList;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity2.OceanRegion;
-import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PluginMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.exception.MobileTerminalModelException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.ConfigServiceBean;
+import eu.europa.ec.fisheries.uvms.asset.bean.ConfigServiceBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.ConfigServiceBeanMT;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.ChannelDaoBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.DNIDListDaoBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.OceanRegionDaoBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.DNIDList;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.OceanRegion;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.InputArgumentException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.NoEntityFoundException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.TerminalDaoException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PluginMapper;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +47,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+
 @PowerMockIgnore("javax.management.*")
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({PluginMapper.class, ConfigServiceBean.class})
@@ -75,7 +76,7 @@ public class ConfigModelTest {
 	private DNIDListDaoBean dnidListDao;
 
 	@InjectMocks
-    private ConfigServiceBean testModelBean;
+    private ConfigServiceBeanMT testModelBean;
 
 	@Before
 	public void setUp() {
@@ -86,7 +87,7 @@ public class ConfigModelTest {
 
 
 	@Test
-	public void testGetAllTerminalSystemsEmpty() throws MobileTerminalModelException {
+	public void testGetAllTerminalSystemsEmpty()  {
 		List<MobileTerminalPlugin> pluginList = new ArrayList<>();
 		when(mobileTerminalPluginDao.getPluginList()).thenReturn(pluginList);
 		List<OceanRegion> oceanRegionList = new ArrayList<>();
@@ -100,7 +101,7 @@ public class ConfigModelTest {
 
 
 	@Test
-	public void testGetAllTerminalSystems() throws MobileTerminalModelException {
+	public void testGetAllTerminalSystems()  {
 		List<MobileTerminalPlugin> pluginList = new ArrayList<>();
 		pluginList.add(siriusone);
 		pluginList.add(twostage);
@@ -119,7 +120,7 @@ public class ConfigModelTest {
 
 
 	@Test
-	public void testGetAllTerminalSystemsException() throws MobileTerminalModelException {
+	public void testGetAllTerminalSystemsException()  {
 
 		List<MobileTerminalPlugin> list = mobileTerminalPluginDao.getPluginList();
 		Assert.assertNotNull(list);
@@ -139,26 +140,32 @@ public class ConfigModelTest {
 	}
 
 	@Test
-	public void testUpsertPluginsEmptyInput() throws MobileTerminalModelException {
+	public void testUpsertPluginsEmptyInput()  {
 		List<PluginService> pluginList = new ArrayList<>();
 		List<Plugin> plugins = testModelBean.upsertPlugins(pluginList);
 		assertEquals(pluginList.size(), plugins.size());
 	}
 
-	@Test(expected=InputArgumentException.class)
-	public void testUpsertPluginsNull() throws MobileTerminalModelException {
-		testModelBean.upsertPlugins(null);
+	@Test
+	public void testUpsertPluginsNull() {
+		try {
+			testModelBean.upsertPlugins(null);
+			Assert.fail();
+		}
+		catch(IllegalArgumentException e){
+			Assert.assertTrue(true);
+		}
 	}
 
-	@Test(expected=InputArgumentException.class)
-	public void testUpsertPluginsNonValidInput() throws MobileTerminalModelException {
+	@Test(expected=IllegalArgumentException.class)
+	public void testUpsertPluginsNonValidInput()  {
 		List<PluginService> pluginList = new ArrayList<>();
 		pluginList.add(pluginType);
 		testModelBean.upsertPlugins(pluginList);
 	}
 
 	@Test
-	public void testUpdatePluginEquals() throws TerminalDaoException {
+	public void testUpdatePluginEquals()  {
 		String serviceName = "serviceName";
 		when(pluginType.getServiceName()).thenReturn(serviceName);
 		when(mobileTerminalPluginDao.getPluginByServiceName(serviceName)).thenReturn(siriusone);
@@ -171,7 +178,7 @@ public class ConfigModelTest {
 	}
 
 	@Test
-	public void testUpdatePluginUpdate() throws TerminalDaoException {
+	public void testUpdatePluginUpdate()  {
 		String serviceName = "serviceName";
 		when(pluginType.getServiceName()).thenReturn(serviceName);
 		when(mobileTerminalPluginDao.getPluginByServiceName(serviceName)).thenReturn(siriusone);
@@ -187,42 +194,23 @@ public class ConfigModelTest {
 	}
 
 	@Test
-	public void testUpdateNoPluginFound() throws TerminalDaoException {
+	public void testUpdateNoPluginFound()  {
 		String serviceName = "serviceName";
 		when(pluginType.getServiceName()).thenReturn(serviceName);
-		when(mobileTerminalPluginDao.getPluginByServiceName(serviceName)).thenThrow(new NoEntityFoundException("No plugin to update"));
-		MobileTerminalPlugin resEntity = testModelBean.updatePlugin(pluginType);
 
-		assertNull(resEntity);
+		try{
+			MobileTerminalPlugin fetched  = mobileTerminalPluginDao.getPluginByServiceName(serviceName);
+			MobileTerminalPlugin resEntity = testModelBean.updatePlugin(pluginType);
+			assertNull(resEntity);
+		}
+		catch (Throwable t) {
+			Assert.fail();
+		}
 	}
 
-	@Test
-	public void testUpsertPluginsCreate() throws MobileTerminalModelException {
-		String pluginLabelName = "serviceLabelName";
-		String pluginServiceName = "serviceName";
-		String pluginSatelliteType = "satelliteType";
-		List<PluginService> pluginList = new ArrayList<>();
-		when(pluginType.getLabelName()).thenReturn(pluginLabelName);
-		when(pluginType.getServiceName()).thenReturn(pluginServiceName);
-		when(pluginType.getSatelliteType()).thenReturn(pluginSatelliteType);
-		pluginList.add(pluginType);
-
-		when(mobileTerminalPluginDao.getPluginByServiceName(pluginServiceName)).thenThrow(new NoEntityFoundException("No plugin to update"));
-
-		mockStatic(PluginMapper.class);
-		when(PluginMapper.mapModelToEntity(any(PluginService.class))).thenReturn(siriusone);
-		when(mobileTerminalPluginDao.createMobileTerminalPlugin(siriusone)).thenReturn(siriusone);
-
-		List<MobileTerminalPlugin> entityList = new ArrayList<>();
-		when(mobileTerminalPluginDao.getPluginList()).thenReturn(entityList);
-
-		List<Plugin> plugins = testModelBean.upsertPlugins(pluginList);
-
-		assertEquals(pluginList.size(), plugins.size());
-	}
 
 	@Test
-	public void testInactivatePluginsException() throws ConfigDaoException {
+	public void testInactivatePluginsException()  {
 
 		List<MobileTerminalPlugin> list = mobileTerminalPluginDao.getPluginList();
 		Assert.assertNotNull(list);
@@ -232,7 +220,7 @@ public class ConfigModelTest {
 	}
 
 	@Test
-	public void testInactivatePluginsNoPlugin() throws ConfigDaoException {
+	public void testInactivatePluginsNoPlugin()  {
 		Map<String, PluginService> map = new HashMap<>();
 		List<Plugin> resEntityList = testModelBean.inactivatePlugins(map);
 
@@ -241,7 +229,7 @@ public class ConfigModelTest {
 	}
 
 	@Test
-	public void testInactivatePluginsInactive() throws ConfigDaoException {
+	public void testInactivatePluginsInactive()  {
 		String serviceName = "serviceName";
 		Map<String, PluginService> map = new HashMap<>();
 		List<MobileTerminalPlugin> entityList = new ArrayList<>();
@@ -259,7 +247,7 @@ public class ConfigModelTest {
 	}
 
 	@Test
-	public void testInactivePluginsExsist() throws ConfigDaoException {
+	public void testInactivePluginsExsist()  {
 		String serviceName = "serviceName";
 		Map<String, PluginService> map = new HashMap<>();
 		List<MobileTerminalPlugin> entityList = new ArrayList<>();
@@ -275,7 +263,7 @@ public class ConfigModelTest {
 	}
 
 	@Test
-	public void testInactivePluginsAlreadyInactive() throws ConfigDaoException {
+	public void testInactivePluginsAlreadyInactive()  {
 		String serviceName = "serviceName";
 		Map<String, PluginService> map = new HashMap<>();
 		List<MobileTerminalPlugin> entityList = new ArrayList<>();
@@ -290,7 +278,7 @@ public class ConfigModelTest {
 	}
 
 	@Test
-	public void testCheckDNIDListChangeNotChanged() throws Exception {
+	public void testCheckDNIDListChangeNotChanged() {
 		String serviceName = "serviceName";
 		List<String> activeDnidList = new ArrayList<>();
 		List<DNIDList> dnidLists = new ArrayList<>();
@@ -303,7 +291,7 @@ public class ConfigModelTest {
 	}
 
 	@Test
-	public void testCheckDNIDListChangeChanged() throws Exception {
+	public void testCheckDNIDListChangeChanged() {
 		String serviceName = "serviceName";
 		List<String> activeDnidList = Collections.singletonList("TEST");
 		List<DNIDList> dnidLists = new ArrayList<>();
