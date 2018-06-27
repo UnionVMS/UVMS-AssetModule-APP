@@ -38,9 +38,9 @@ import java.util.List;
 @Stateless
 @Consumes(value = { MediaType.APPLICATION_JSON })
 @Produces(value = { MediaType.APPLICATION_JSON })
-public class PollResource {
+public class PollRestResource {
 
-    private final static Logger LOG = LoggerFactory.getLogger(PollResource.class);
+    private final static Logger LOG = LoggerFactory.getLogger(PollRestResource.class);
 
 
 

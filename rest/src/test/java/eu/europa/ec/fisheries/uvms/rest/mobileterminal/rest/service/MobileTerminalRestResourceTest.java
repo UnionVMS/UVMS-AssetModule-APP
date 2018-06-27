@@ -15,10 +15,8 @@ package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.AbstractMTRestTest;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
 import org.hamcrest.CoreMatchers;
-import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,9 +36,9 @@ import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 //@RunAsClient
-public class MobileTerminalResourceTest extends AbstractAssetRestTest {
+public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MobileTerminalResourceTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MobileTerminalRestResourceTest.class);
 
     @Test
     public void createMobileTerminalTest() {

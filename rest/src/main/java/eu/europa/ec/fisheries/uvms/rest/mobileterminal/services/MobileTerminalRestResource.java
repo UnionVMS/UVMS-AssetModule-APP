@@ -19,7 +19,6 @@ import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTErrorHandler;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
-import net.bull.javamelody.internal.common.LOG;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,10 +33,10 @@ import javax.ws.rs.core.MediaType;
 @Stateless
 @Consumes(value = { MediaType.APPLICATION_JSON })
 @Produces(value = { MediaType.APPLICATION_JSON })
-public class MobileTerminalResource {
+public class MobileTerminalRestResource {
 
 
-    private final static Logger LOG = LoggerFactory.getLogger(MobileTerminalResource.class);
+    private final static Logger LOG = LoggerFactory.getLogger(MobileTerminalRestResource.class);
 
     @EJB
     private MobileTerminalServiceBean mobileTerminalService;

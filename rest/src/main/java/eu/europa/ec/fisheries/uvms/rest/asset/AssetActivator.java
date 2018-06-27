@@ -17,10 +17,9 @@ import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 import eu.europa.ec.fisheries.uvms.rest.asset.filter.AssetRestExceptionMapper;
 import eu.europa.ec.fisheries.uvms.rest.asset.service.*;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.MTRestConstants;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.MTConfigResource;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.MobileTerminalResource;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.PollResource;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.MTConfigRestResource;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.MobileTerminalRestResource;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.PollRestResource;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeatureFilter;
 
 @ApplicationPath("/rest")
@@ -40,9 +39,9 @@ public class AssetActivator extends Application {
         set.add(ObjectMapperContextResolver.class);
         set.add(com.github.phillipkruger.apiee.ApieeService.class);
 
-        set.add(MobileTerminalResource.class);
-        set.add(PollResource.class);
-        set.add(MTConfigResource.class);
+        set.add(MobileTerminalRestResource.class);
+        set.add(PollRestResource.class);
+        set.add(MTConfigRestResource.class);
         set.add(UnionVMSFeatureFilter.class);
         //LOG.info(MTRestConstants.MODULE_NAME + " module starting up");
     }
