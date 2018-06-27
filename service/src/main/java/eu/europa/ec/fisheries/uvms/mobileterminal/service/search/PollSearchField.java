@@ -11,14 +11,15 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.search;
 
-
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollTypeEnum;
+
+import java.util.UUID;
 
 public enum PollSearchField {
 	CONNECT_ID(SearchTable.TERMINALCONNECT, "connectValue", "connectionValue"),
 	TERMINAL_TYPE(SearchTable.TERMINAL, "mobileTerminalType", "mobileTerminalType", MobileTerminalTypeEnum.class),
-	POLL_ID(SearchTable.POLL, "guid", "guid"),
+	POLL_ID(SearchTable.POLL, "id", "id", UUID.class),
 	POLL_TYPE(SearchTable.POLL, "pollType", "pollType", PollTypeEnum.class),
 	USER(SearchTable.POLLBASE, "creator", "creator");
 	
