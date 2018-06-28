@@ -197,11 +197,10 @@ public class AssetDaoTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    @Ignore
-    public void getAssetListAllTest() {
-        // TODO: Audited with UUID problem should be fixed first.
+    public void getAssetListAllTest() throws Exception {
         List<Asset> assetListBefore = assetDao.getAssetListAll();
         assetDao.createAsset(AssetTestsHelper.createBasicAsset());
+        commit();
         List<Asset> assetListAfter = assetDao.getAssetListAll();
 
         assertThat(assetListAfter.size(), is(assetListBefore.size() + 1));
@@ -209,9 +208,7 @@ public class AssetDaoTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    @Ignore
     public void getRevisionsForAssetSingleRevisionTest() throws Exception {
-        // TODO: Audited with UUID problem should be fixed first.
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
         commit();
@@ -224,7 +221,6 @@ public class AssetDaoTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    @Ignore
     public void getRevisionsForAssetTwoVersionsCheckSizeTest() throws Exception {
         // TODO: Audited with UUID problem should be fixed first.
         Asset asset = AssetTestsHelper.createBasicAsset();
@@ -244,9 +240,7 @@ public class AssetDaoTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    @Ignore
     public void getRevisionsForAssetCompareRevisionsTest() throws Exception {
-        // TODO: Audited with UUID problem should be fixed first.
         Asset asset = AssetTestsHelper.createBasicAsset();
         Asset assetVersion1 = assetDao.createAsset(asset);
         commit();
