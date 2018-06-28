@@ -35,7 +35,7 @@ public class PollModelToEntityMapper {
         pollBase.setMobileterminal(terminal);
         pollBase.setTerminalConnect(terminalConnect);
         pollBase.setComment(requestType.getComment());
-        pollBase.setUpdatedBy(requestType.getUserName());
+        pollBase.setCreator(requestType.getUserName());
         
         pollBase.setUpdatedBy(username);
         pollBase.setUpdateTime(getUTCNow());
@@ -63,10 +63,10 @@ public class PollModelToEntityMapper {
                     poll.setFrequency(Integer.parseInt(attr.getValue()));
                     break;
                 case START_DATE:
-                    poll.setStartDate(parseToUTCDateTime(attr.getValue()));
+                    poll.setStartDate(parseToUTCDate(attr.getValue()));
                     break;
                 case END_DATE:
-                    poll.setStopDate(parseToUTCDateTime(attr.getValue()));
+                    poll.setStopDate(parseToUTCDate(attr.getValue()));
                     break;
                 default:
                     LOG.debug("ProgramPoll with attr [ " + attr.getKey() + " ] is non valid to map");

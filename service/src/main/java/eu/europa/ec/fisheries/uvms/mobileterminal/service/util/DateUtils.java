@@ -75,8 +75,15 @@ public class DateUtils {
     }
 
     // TODO FIX this
-    private static Date parseToUTC(String format, String dateString) {
-        throw new NotImplementedException();
+    private static Date parseToUTC(String format, String dateString)
+    {
+        try{
+            DateFormat dateFormat = new SimpleDateFormat(format);
+            return dateFormat.parse(dateString);
+        }catch(ParseException e){
+            LOG.error("Unable to parse a date from string " + dateString + " according to format " + format + " due to " + e.getMessage());
+            return null;
+        }
     }
 
     public static Date getUTCNow()

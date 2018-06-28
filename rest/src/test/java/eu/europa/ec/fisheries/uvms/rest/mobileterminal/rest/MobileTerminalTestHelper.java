@@ -58,6 +58,7 @@ public class MobileTerminalTestHelper {
         plugin.setSatelliteType("INMARSAT_C");
         plugin.setInactive(false);
 
+
         mobileTerminal.setPlugin(plugin);
 
         return mobileTerminal;

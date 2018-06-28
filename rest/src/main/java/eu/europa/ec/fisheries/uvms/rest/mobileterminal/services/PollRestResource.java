@@ -78,7 +78,7 @@ public class PollRestResource {
         }
     }
 
-    @PUT
+    @GET
     @Path("/start/{id}")
     @RequiresFeature(UnionVMSFeature.managePolls)
     public MTResponseDto<PollDto> startProgramPoll(@PathParam("id") String pollId) {
@@ -92,7 +92,7 @@ public class PollRestResource {
         }
     }
 
-    @PUT
+    @GET
     @Path("/stop/{id}")
     @RequiresFeature(UnionVMSFeature.managePolls)
     public MTResponseDto<PollDto> stopProgramPoll(@PathParam("id") String pollId) {
@@ -106,11 +106,11 @@ public class PollRestResource {
         }
     }
 
-    @PUT
-    @Path("/inactivate/{id}")
+    @GET
+    @Path("/inactivate/{id}")                       //TODO: change this to /archive/{id} when we have a moment to change it in frontend
     @RequiresFeature(UnionVMSFeature.managePolls)
-    public MTResponseDto<PollDto> inactivateProgramPoll(@PathParam("id") String pollId) {
-        LOG.info("Stop poll invoked in rest layer:{}",pollId);
+    public MTResponseDto<PollDto> archiveProgramPoll(@PathParam("id") String pollId) {       //This gives a poll the status "ARCHIVED"
+        LOG.info("Archive poll invoked in rest layer:{}",pollId);
         try {
             PollDto poll = pollService.inactivateProgramPoll(pollId, request.getRemoteUser());
             return new MTResponseDto<>(poll, MTResponseCode.OK);

@@ -47,7 +47,7 @@ public class PollProgram implements Serializable {
 
 
     @Column(name = "frequency")
-    private Integer frequency;
+    private Integer frequency; // this is probably in minutes
 
     @Column(name = "startdate")
     @Temporal(TemporalType.TIMESTAMP)

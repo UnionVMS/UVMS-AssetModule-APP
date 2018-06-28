@@ -34,6 +34,10 @@ public class PollDaoBean  {
 	@PersistenceContext
 	private EntityManager em;
 
+	public void removePollAfterTests(String id){
+		Poll poll = getPollById(UUID.fromString(id));
+		em.remove(em.contains(poll) ? poll : em.merge(poll));
+	}
     public void createPoll(Poll poll)  {
 		em.persist(poll);
     }

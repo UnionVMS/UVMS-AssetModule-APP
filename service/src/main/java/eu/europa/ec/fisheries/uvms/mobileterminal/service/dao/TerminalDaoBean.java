@@ -45,6 +45,11 @@ public class TerminalDaoBean  {
         }
     }
 
+    public void removeMobileTerminalAfterTests (String guid){
+        MobileTerminal mobileTerminal = getMobileTerminalByGuid(guid);
+        em.remove(em.contains(mobileTerminal) ? mobileTerminal : em.merge(mobileTerminal));
+    }
+
     public MobileTerminal createMobileTerminal(MobileTerminal terminal)  {
             em.persist(terminal);
             return terminal;

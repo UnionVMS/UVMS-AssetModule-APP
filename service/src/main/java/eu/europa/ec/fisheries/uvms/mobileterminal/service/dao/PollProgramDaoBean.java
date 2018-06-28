@@ -31,6 +31,10 @@ public class PollProgramDaoBean {
     @PersistenceContext
     private EntityManager em;
 
+    public void removePollProgrameAfterTests(String id){
+        PollProgram pollProgram = getPollProgramById(UUID.fromString(id));
+        em.remove(em.contains(pollProgram) ? pollProgram : em.merge(pollProgram));
+    }
 
     public void createPollProgram(PollProgram pollProgram) {
         em.persist(pollProgram);
