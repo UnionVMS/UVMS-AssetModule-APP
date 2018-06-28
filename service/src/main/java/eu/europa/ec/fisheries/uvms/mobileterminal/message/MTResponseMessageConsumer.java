@@ -37,31 +37,23 @@ public class MTResponseMessageConsumer implements MTMessageConsumer{
         responseMobileTerminalQueue = JMSUtils.lookupQueue(MessageConstants.COMPONENT_RESPONSE_QUEUE);
     }
 
+    /*
+        Let client code take care of a possible "null" response accordingly.
+     */
     @Override
     public <T> T getMessage(String correlationId, Class type) throws MobileTerminalMessageException {
         if (correlationId == null || correlationId.isEmpty()) {
             throw new MobileTerminalMessageException("No CorrelationID provided!");
         }
-
-        Connection connection=null;
-        try {
-
-            connection = connectionFactory.createConnection();
+        LOG.info("Looking for message " + correlationId + " in " + MessageConstants.COMPONENT_RESPONSE_QUEUE + " with " + responseMobileTerminalQueue);
+        try (Connection connection = connectionFactory.createConnection()) {
             final Session session = JMSUtils.connectToQueue(connection);
-
-            System.out.println("looking for message " + correlationId + " in " + MessageConstants.COMPONENT_RESPONSE_QUEUE + " with " + responseMobileTerminalQueue);
-            T response = (T) session.createConsumer(responseMobileTerminalQueue, "JMSCorrelationID='" + correlationId + "'").receive(TIMEOUT);
-
-            if (response == null) {
-                throw new MobileTerminalMessageException("[ Timeout reached or message null in MobileTerminalMessageConsumer. ]" + correlationId);
-            }
-
-            return response;
-        } catch (Exception e) {
+            MessageConsumer consumer = session.createConsumer(responseMobileTerminalQueue, "JMSCorrelationID='" + correlationId + "'");
+            Message response = consumer.receive(TIMEOUT);
+            return (T) response;
+        } catch (JMSException e) {
             LOG.error("[ Error when consuming message. ] {}", e.getMessage());
-            throw new MobileTerminalMessageException("Error when retrieving message: " + e.getMessage());
-        } finally {
-            JMSUtils.disconnectQueue(connection);
+            throw new MobileTerminalMessageException("Error when retrieving message: " + e.getMessage(), e);
         }
     }
 
