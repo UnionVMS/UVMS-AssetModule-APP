@@ -57,11 +57,11 @@ public class MappedPollServiceBeanIntTest extends TransactionalTests {
         // create a poll
         CreatePollResultDto createPollResultDto = mappedPollService.createPoll(pollRequestType, "TEST");
         em.flush();
-        List<String> sendPolls = createPollResultDto.getSentPolls();
-        String pollGuid = sendPolls.get(0);
 
-        assertNotNull(pollGuid);
-    }
+        if(createPollResultDto.getSentPolls().size() == 0){
+            Assert.fail();
+        }
+     }
 
     @Test
     @OperateOnDeployment("normal")
