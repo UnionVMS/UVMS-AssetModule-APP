@@ -19,7 +19,7 @@ import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallExcep
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalMessageException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelMapperException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.MTMessageProducer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ModuleQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.PollService;

@@ -15,7 +15,6 @@ import eu.europa.ec.fisheries.uvms.config.constants.ConfigConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalMessageException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.constants.MessageConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.DataSourceQueue;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.MTMessageProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ModuleQueue;
 
 import org.slf4j.Logger;

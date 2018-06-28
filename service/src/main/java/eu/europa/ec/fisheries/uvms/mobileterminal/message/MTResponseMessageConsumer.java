@@ -13,7 +13,6 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.message;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.JMSUtils;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalMessageException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.constants.MessageConstants;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.MTMessageConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

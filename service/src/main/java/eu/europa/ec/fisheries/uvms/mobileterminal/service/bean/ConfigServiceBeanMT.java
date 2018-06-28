@@ -24,8 +24,8 @@ import eu.europa.ec.fisheries.uvms.exchange.model.exception.ExchangeModelMapperE
 import eu.europa.ec.fisheries.uvms.exchange.model.mapper.ExchangeModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalMessageException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.MTMessageConsumer;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.MTMessageProducer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageConsumer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ModuleQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.ConfigService;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConfigType;

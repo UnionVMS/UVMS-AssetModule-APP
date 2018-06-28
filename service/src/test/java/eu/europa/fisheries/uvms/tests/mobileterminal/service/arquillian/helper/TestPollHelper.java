@@ -1,4 +1,4 @@
-package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
+package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
@@ -9,7 +9,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollStateEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.TerminalDaoException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PluginMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.util.DateUtils;
 
@@ -31,7 +30,7 @@ public class TestPollHelper {
     @EJB
     private MobileTerminalPluginDaoBean mobileTerminalPluginDao;
 
-    public PollRequestType createPollRequestType() throws Exception {
+    public PollRequestType createPollRequestType() {
         PollRequestType prt = new PollRequestType();
         prt.setComment("aComment" + UUID.randomUUID().toString());
         prt.setUserName("TEST");
@@ -48,7 +47,7 @@ public class TestPollHelper {
         return prt;
     }
 
-    private PollMobileTerminal createPollMobileTerminal() throws Exception {
+    private PollMobileTerminal createPollMobileTerminal() {
 
         String connectId = UUID.randomUUID().toString();
 
@@ -63,29 +62,7 @@ public class TestPollHelper {
         return pmt;
     }
 
-
-    private MobileTerminal createMobileTerminal2(String serialNo) {
-
-        MobileTerminal mt = new MobileTerminal();
-        MobileTerminalPlugin mtp;
-        List<MobileTerminalPlugin> plugs;
-
-        plugs = mobileTerminalPluginDao.getPluginList();
-        mtp = plugs.get(0);
-        mt.setSerialNo(serialNo);
-        mt.setUpdatetime(new Date());
-        mt.setUpdateuser("TEST");
-        mt.setSource(MobileTerminalSourceEnum.INTERNAL);
-        mt.setPlugin(mtp);
-        mt.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
-        mt.setArchived(false);
-        mt.setInactivated(false);
-        terminalDao.createMobileTerminal(mt);
-        return mt;
-    }
-
-
-    public MobileTerminal createMobileTerminal(String connectId) throws Exception {
+    public MobileTerminal createMobileTerminal(String connectId) {
 
         String serialNo = UUID.randomUUID().toString();
 
@@ -119,7 +96,6 @@ public class TestPollHelper {
         Set<Channel> channels = new HashSet<>();
         Channel channel = new Channel();
         channel.setArchived(false);
-        //channel.setId(UUID.randomUUID());
         channel.setMobileTerminal(mt);
         channels.add(channel);
         mt.setChannels(channels);
@@ -127,7 +103,7 @@ public class TestPollHelper {
         return mt;
     }
 
-    public MobileTerminalType createBasicMobileTerminal() throws TerminalDaoException {
+    public MobileTerminalType createBasicMobileTerminal() {
         MobileTerminalType mobileTerminal = new MobileTerminalType();
         mobileTerminal.setSource(MobileTerminalSource.INTERNAL);
         mobileTerminal.setType("INMARSAT_C");
@@ -210,8 +186,7 @@ public class TestPollHelper {
         attributes.add(serialNumberMobileTerminalAttribute);
     }
 
-    public PollProgram createPollProgramHelper(String mobileTerminalSerialNo, Date startDate, Date stopDate, Date latestRun)
-            throws Exception {
+    public PollProgram createPollProgramHelper(String mobileTerminalSerialNo, Date startDate, Date stopDate, Date latestRun) {
 
         PollProgram pp = new PollProgram();
         // create a valid mobileTerminal
@@ -220,6 +195,7 @@ public class TestPollHelper {
         PollBase pb = new PollBase();
         String terminalConnect = UUID.randomUUID().toString();
         pb.setMobileterminal(mobileTerminal);
+        pb.setChannelId(UUID.randomUUID());
         pb.setTerminalConnect(terminalConnect);
         pp.setFrequency(1);
         pp.setLatestRun(latestRun);

@@ -24,10 +24,9 @@ import eu.europa.ec.fisheries.uvms.exchange.model.exception.ExchangeModelMarshal
 import eu.europa.ec.fisheries.uvms.exchange.model.mapper.ExchangeModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalMessageException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelMapperException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.MTMessageConsumer;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.MTMessageProducer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageConsumer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ModuleQueue;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.ExchangeModuleResponseMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

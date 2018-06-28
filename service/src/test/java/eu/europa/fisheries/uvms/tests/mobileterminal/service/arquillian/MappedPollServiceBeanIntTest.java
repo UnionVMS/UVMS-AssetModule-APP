@@ -1,6 +1,7 @@
 package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
+import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageProducerBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MappedPollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.PollProgramDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.CreatePollResultDto;
@@ -9,13 +10,11 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollKey;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollValue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.PollProgram;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalSourceEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceMapperException;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
+import eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper.TestPollHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
@@ -31,10 +30,6 @@ import java.util.*;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
-/**
- *
- */
 
 @RunWith(Arquillian.class)
 public class MappedPollServiceBeanIntTest extends TransactionalTests {
@@ -57,8 +52,6 @@ public class MappedPollServiceBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void createPoll() throws Exception {
 
-//        System.setProperty(MTMessageProducerBean.MESSAGE_PRODUCER_METHODS_FAIL, "false");
-
         PollRequestType pollRequestType = helper_createPollRequestType(PollType.MANUAL_POLL);
 
         // create a poll
@@ -80,7 +73,6 @@ public class MappedPollServiceBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void startProgramPoll() throws Exception {
 
-
         // we want to be able to tamper with the dates for proper test coverage
         Date startDate = getStartDate();
         Date latestRun = getLatestRunDate();
@@ -101,8 +93,6 @@ public class MappedPollServiceBeanIntTest extends TransactionalTests {
         boolean found = validatePollKeyValue(values, PollKey.PROGRAM_RUNNING, "true");
         assertTrue(found);
     }
-
-
 
     @Test
     @OperateOnDeployment("normal")
@@ -168,8 +158,6 @@ public class MappedPollServiceBeanIntTest extends TransactionalTests {
         assertTrue(isStopped);
     }
 
-
-
     @Test
     @OperateOnDeployment("normal")
     public void startProgramPoll_ShouldFailWithNullAsPollId() throws MobileTerminalServiceException, MobileTerminalServiceMapperException {
@@ -187,8 +175,8 @@ public class MappedPollServiceBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void stopProgramPoll_ShouldFailWithNullAsPollId() throws MobileTerminalServiceException, MobileTerminalServiceMapperException {
 
-        thrown.expect(MobileTerminalServiceException.class);
-        // thrown.expectMessage("No poll id given");
+        thrown.expect(EJBTransactionRolledbackException.class);
+        thrown.expectMessage("No poll id given");
 
         mappedPollService.stopProgramPoll(null, "TEST");
     }
