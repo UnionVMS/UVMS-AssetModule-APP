@@ -5,6 +5,9 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+
+// Embeddable is required by JPA for composite keys
+@Embeddable
 public class CustomCodesPK  implements Serializable {
 
     private String constant;
