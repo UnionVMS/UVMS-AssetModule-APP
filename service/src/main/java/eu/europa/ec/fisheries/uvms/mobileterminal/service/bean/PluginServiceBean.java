@@ -64,6 +64,8 @@ public class PluginServiceBean {
             String exchangeData = ExchangeModuleRequestMapper.createSetCommandSendPollRequest(pluginServiceName, pollType, username, null);
             String messageId = MTMessageProducer.sendModuleMessage(exchangeData, ModuleQueue.EXCHANGE);
             TextMessage response = MTMessageConsumer.getMessage(messageId, TextMessage.class);
+            if(response == null)
+                return AcknowledgeTypeType.NOK;
             AcknowledgeType ack = ExchangeModuleResponseMapper.mapSetCommandResponse(response, messageId);
             LOG.debug("Poll: " + poll.getPollId().getGuid() + " sent to exchange. Response: " + ack.getType());
             return ack.getType();
@@ -88,14 +90,14 @@ public class PluginServiceBean {
             String settingValue = builder.toString();
 
             try {
-                sendUpdatedDNIDListToConfig(pluginName, settingKey, settingValue);
+                sendUpdatedDNIDListToConfig(settingKey, settingValue);
             } catch (ModelMarshallException | MobileTerminalMessageException e) {
                 LOG.debug("Couldn't send to config module. Sending to exchange module.");
                 sendUpdatedDNIDListToExchange(pluginName, SETTING_KEY_DNID_LIST, settingValue);
             }
     }
 
-    private void sendUpdatedDNIDListToConfig(String pluginName, String settingKey, String settingValue) throws ModelMarshallException, MobileTerminalMessageException {
+    private void sendUpdatedDNIDListToConfig(String settingKey, String settingValue) throws ModelMarshallException, MobileTerminalMessageException {
         SettingType setting = new SettingType();
         setting.setKey(settingKey);
         setting.setModule(EXCHANGE_MODULE_NAME);
