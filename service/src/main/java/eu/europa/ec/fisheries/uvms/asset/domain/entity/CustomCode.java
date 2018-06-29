@@ -26,6 +26,7 @@ public class CustomCode {
         // for json
     }
 
+    @EmbeddedId
     CustomCodesPK primaryKey;
 
     @Column(name = "description")
