@@ -14,11 +14,11 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper;
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.GetMobileTerminalRequest;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalDataSourceMethod;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalId;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelMapperException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 
 public class MobileTerminalDataSourceRequestMapper {
 
-    public static String mapGetMobileTerminal(MobileTerminalId mobileTerminalId) throws MobileTerminalModelMapperException {
+    public static String mapGetMobileTerminal(MobileTerminalId mobileTerminalId) throws MobileTerminalModelException {
         GetMobileTerminalRequest request = new GetMobileTerminalRequest();
         request.setMethod(MobileTerminalDataSourceMethod.GET);
         request.setId(mobileTerminalId);

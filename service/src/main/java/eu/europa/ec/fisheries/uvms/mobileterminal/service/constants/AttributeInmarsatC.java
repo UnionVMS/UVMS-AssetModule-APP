@@ -12,8 +12,9 @@
 
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.constants;
 
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalException;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.EnumException;
+import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.MAPPING_ATTR_TYPE_ERROR;
 
 public enum AttributeInmarsatC {
     MULTIPLE_OCEAN,
@@ -25,12 +26,12 @@ public enum AttributeInmarsatC {
     SERIAL_NUMBER,
     TRANSCEIVER_TYPE;
 
-    public static AttributeInmarsatC getAttribute(String type) throws EnumException {
+    public static AttributeInmarsatC getAttribute(String type) throws MobileTerminalException {
         for(AttributeInmarsatC attr : AttributeInmarsatC.values()) {
             if(attr.name().equalsIgnoreCase(type)) {
                 return attr;
             }
         }
-        throw new EnumException("Couldn't map attribute type " + type);
+        throw new MobileTerminalException(MAPPING_ATTR_TYPE_ERROR.getMessage() + type, MAPPING_ATTR_TYPE_ERROR.getCode());
     }
 }

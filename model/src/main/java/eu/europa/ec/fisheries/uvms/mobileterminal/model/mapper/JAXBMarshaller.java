@@ -11,8 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelMapperException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalUnmarshallException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,15 +33,7 @@ public class JAXBMarshaller {
 
     private static Map<String, JAXBContext> contexts = new HashMap<>();
 
-    /**
-     * Marshalls a JAXB Object to a XML String representation
-     *
-     * @param <T>
-     * @param data
-     * @return
-     * @throws MobileTerminalModelMapperException
-     */
-    public static <T> String marshallJaxBObjectToString(T data) throws MobileTerminalModelMapperException {
+    public static <T> String marshallJaxBObjectToString(T data) throws MobileTerminalModelException {
         try {
             JAXBContext jaxbContext = contexts.get(data.getClass().getName());
             if (jaxbContext == null) {
@@ -62,21 +53,15 @@ public class JAXBMarshaller {
             return marshalled;
         } catch (JAXBException e) {
             LOG.error("[ Error when marshalling data. ] {}", e.getMessage());
-            throw new MobileTerminalModelMapperException("Error when marshalling " + data.getClass().getName() + " to String");
+            throw new MobileTerminalModelException("Error when marshalling " + data.getClass().getName() + " to String");
         }
     }
 
     /**
      * Unmarshalls A textMessage to the desired Object. The object must be the
      * root object of the unmarchalled message!
-     *
-     * @param <R>
-     * @param textMessage
-     * @param clazz pperException
-     * @return
-     * @thrown MobileTerminalUnmarshallException
      */
-    public static <R> R unmarshallTextMessage(TextMessage textMessage, Class clazz) throws MobileTerminalUnmarshallException {
+    public static <R> R unmarshallTextMessage(TextMessage textMessage, Class clazz) throws MobileTerminalModelException {
         try {
             JAXBContext jc = contexts.get(clazz.getName());
             if (jc == null) {
@@ -94,7 +79,7 @@ public class JAXBMarshaller {
             LOG.debug("Unmarshalling time: {}", (System.currentTimeMillis() - before));
             return object;
         } catch (JMSException | JAXBException e) {
-            throw new MobileTerminalUnmarshallException("Error when unmarshalling response in ResponseMapper: " + e.getMessage());
+            throw new MobileTerminalModelException("Error when unmarshalling response in ResponseMapper: " + e.getMessage());
         }
     }
 }

@@ -16,9 +16,7 @@ import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollListRespons
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.SinglePollResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalFault;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelMapperException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalUnmarshallException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalValidationException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,84 +24,73 @@ import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import java.util.List;
 
-/**
- **/
 public class PollDataSourceResponseMapper {
 
     private static Logger LOG = LoggerFactory.getLogger(PollDataSourceResponseMapper.class);
 
-    /**
-     * Validates a response
-     *
-     * @param response
-     * @param correlationId
-     * @throws MobileTerminalModelMapperException
-     * @throws JMSException
-     * @throws MobileTerminalValidationException
-     */
-    private static void validateResponse(TextMessage response, String correlationId) throws JMSException, MobileTerminalValidationException {
+    private static void validateResponse(TextMessage response, String correlationId) throws JMSException, MobileTerminalModelException {
 
         if (response == null) {
-            throw new MobileTerminalValidationException("Error when validating response in ResponseMapper: Response is Null");
+            throw new MobileTerminalModelException("Error when validating response in ResponseMapper: Response is Null");
         }
 
         if (response.getJMSCorrelationID() == null) {
-            throw new MobileTerminalValidationException("No corelationId in response (Null) . Expected was: " + correlationId);
+            throw new MobileTerminalModelException("No corelationId in response (Null) . Expected was: " + correlationId);
         }
 
         if (!correlationId.equalsIgnoreCase(response.getJMSCorrelationID())) {
-            throw new MobileTerminalValidationException("Wrong corelationId in response. Expected was: " + correlationId + "But actual was: "
+            throw new MobileTerminalModelException("Wrong corelationId in response. Expected was: " + correlationId + "But actual was: "
                     + response.getJMSCorrelationID());
         }
 
         try {
             MobileTerminalFault fault = JAXBMarshaller.unmarshallTextMessage(response, MobileTerminalFault.class);
-            throw new MobileTerminalValidationException(fault.getCode() + " : " + fault.getMessage());
-        } catch (MobileTerminalUnmarshallException e) {
+            throw new MobileTerminalModelException(fault.getCode() + " : " + fault.getMessage());
+        } catch (MobileTerminalModelException e) {
             // everything is well
         }
     }
 
-    public static List<PollResponseType> mapCreatePollResponse(TextMessage response, String messageId) throws MobileTerminalModelMapperException {
+    public static List<PollResponseType> mapCreatePollResponse(TextMessage response, String messageId) throws MobileTerminalModelException {
         try {
             validateResponse(response, messageId);
             CreatePollResponse unmarshalledResponse = JAXBMarshaller.unmarshallTextMessage(response, CreatePollResponse.class);
             return unmarshalledResponse.getPollList();
-        } catch (MobileTerminalUnmarshallException | MobileTerminalValidationException | JMSException e) {
+        } catch (MobileTerminalModelException | JMSException e) {
             LOG.error("[ Error when unmarshalling poll create responses. ] {}", e.getMessage());
-            throw new MobileTerminalModelMapperException(e.getMessage());
+            throw new MobileTerminalModelException(e.getMessage());
         }
     }
 
-    public static List<PollResponseType> mapToPollList(TextMessage response, String messageId) throws MobileTerminalModelMapperException {
+    public static List<PollResponseType> mapToPollList(TextMessage response, String messageId) throws MobileTerminalModelException {
         try {
             validateResponse(response, messageId);
             PollListResponse unmarshalledResponse = JAXBMarshaller.unmarshallTextMessage(response, PollListResponse.class);
             return unmarshalledResponse.getPollList();
-        } catch (MobileTerminalUnmarshallException | MobileTerminalValidationException | JMSException e) {
+        } catch (MobileTerminalModelException | JMSException e) {
             LOG.error("[ Error when unmarshalling poll list responses. ] {}", e.getMessage());
-            throw new MobileTerminalModelMapperException(e.getMessage());
+            throw new MobileTerminalModelException(e.getMessage());
         }
     }
 
-    public static PollListResponse mapPollListResponse(TextMessage response, String messageId) throws MobileTerminalModelMapperException {
+    public static PollListResponse mapPollListResponse(TextMessage response, String messageId) throws MobileTerminalModelException {
         try {
             validateResponse(response, messageId);
             return JAXBMarshaller.unmarshallTextMessage(response, PollListResponse.class);
-        } catch (MobileTerminalUnmarshallException | MobileTerminalValidationException | JMSException e) {
+        } catch (MobileTerminalModelException | JMSException e) {
             LOG.error("[ Error when unmarshalling poll list responses. ] {}", e.getMessage());
-            throw new MobileTerminalModelMapperException(e.getMessage());
+            throw new MobileTerminalModelException(e.getMessage());
         }
 	}
     
-    public static PollResponseType mapPollResponse(TextMessage response, String messageId) throws MobileTerminalModelMapperException {
+    public static PollResponseType mapPollResponse(TextMessage response, String messageId) throws MobileTerminalModelException {
         try {
             validateResponse(response, messageId);
             SinglePollResponse unmarshalledResponse = JAXBMarshaller.unmarshallTextMessage(response, SinglePollResponse.class);
             return unmarshalledResponse.getPoll();
-        } catch (MobileTerminalUnmarshallException | MobileTerminalValidationException | JMSException e) {
+        } catch (MobileTerminalModelException | JMSException e) {
             LOG.error("[ Error when unmarshalling single poll responses. ] {}", e.getMessage());
-            throw new MobileTerminalModelMapperException(e.getMessage());
+            throw new MobileTerminalModelException(e.getMessage());
         }
     }
 }

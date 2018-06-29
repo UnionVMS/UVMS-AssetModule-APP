@@ -22,8 +22,7 @@ import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.exchange.model.exception.ExchangeModelMapperException;
 import eu.europa.ec.fisheries.uvms.exchange.model.mapper.ExchangeModuleRequestMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalMessageException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageConsumer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ModuleQueue;
@@ -40,6 +39,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalP
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.OceanRegion;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollTypeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.ExchangeModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PluginMapper;
 import org.slf4j.Logger;
@@ -86,7 +86,7 @@ public class ConfigServiceBeanMT implements ConfigService {
     }
 
     @TransactionAttribute(TransactionAttributeType.NEVER)
-    public List<ServiceResponseType> getRegisteredMobileTerminalPlugins() throws MobileTerminalException {
+    public List<ServiceResponseType> getRegisteredMobileTerminalPlugins() throws MobileTerminalModelException {
         try {
             List<PluginType> pluginTypes = new ArrayList<>();
             pluginTypes.add(PluginType.SATELLITE_RECEIVER);
@@ -94,9 +94,9 @@ public class ConfigServiceBeanMT implements ConfigService {
             String messageId = MTMessageProducer.sendModuleMessage(data, ModuleQueue.EXCHANGE);
             TextMessage response = MTMessageConsumer.getMessage(messageId, TextMessage.class);
             return ExchangeModuleResponseMapper.mapServiceListResponse(response, messageId);
-        } catch (ExchangeModelMapperException | MobileTerminalMessageException e) {
+        } catch (ExchangeModelMapperException | MobileTerminalException e) {
             LOG.error("Failed to map to exchange get service list request");
-            throw new MobileTerminalException("Failed to map to exchange get service list request");
+            throw new MobileTerminalModelException("Failed to map to exchange get service list request");
         }
     }
 

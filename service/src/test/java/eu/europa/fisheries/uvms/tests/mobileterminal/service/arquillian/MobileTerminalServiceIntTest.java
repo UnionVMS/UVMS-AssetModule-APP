@@ -1,13 +1,12 @@
 package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.DataSourceQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.TerminalDaoException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalException;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper.TestPollHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
@@ -92,7 +91,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void createMobileTerminal() throws MobileTerminalException, TerminalDaoException, MobileTerminalModelException {
+    public void createMobileTerminal() throws MobileTerminalModelException, MobileTerminalException {
 
         MobileTerminalType created = createMobileTerminalType();
         assertNotNull(created);
@@ -100,7 +99,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void upsertMobileTerminal() throws MobileTerminalException, TerminalDaoException, MobileTerminalModelException {
+    public void upsertMobileTerminal() throws MobileTerminalModelException, MobileTerminalException {
 
         MobileTerminalType created = createMobileTerminalType();
         assertNotNull(created);
@@ -113,7 +112,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void updateMobileTerminal() throws MobileTerminalException, TerminalDaoException, MobileTerminalModelException {
+    public void updateMobileTerminal() throws MobileTerminalModelException, MobileTerminalException {
 
         MobileTerminalType created = createMobileTerminalType();
         assertNotNull(created);
@@ -127,7 +126,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void assignMobileTerminal() throws MobileTerminalException, MobileTerminalModelException, TerminalDaoException {
+    public void assignMobileTerminal() throws MobileTerminalModelException, MobileTerminalException {
 
         MobileTerminalType created = createMobileTerminalType();
         assertNotNull(created);
@@ -145,7 +144,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void unAssignMobileTerminalFromCarrier() throws MobileTerminalException, MobileTerminalModelException, TerminalDaoException {
+    public void unAssignMobileTerminalFromCarrier() throws MobileTerminalModelException, MobileTerminalException {
 
         MobileTerminalType created = createMobileTerminalType();
         created.setConnectId(UUID.randomUUID().toString());
@@ -163,7 +162,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void createMobileTerminal_WillFail_Null_Plugin() throws MobileTerminalException, MobileTerminalModelException, TerminalDaoException {
+    public void createMobileTerminal_WillFail_Null_Plugin() throws MobileTerminalModelException, MobileTerminalException {
 
         thrown.expect(MobileTerminalModelException.class);
 //        thrown.expectMessage("Cannot create Mobile terminal when plugin is not null");
@@ -175,7 +174,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void createMobileTerminal_WillFail_Null_SerialNumber() throws MobileTerminalException, TerminalDaoException, MobileTerminalModelException {
+    public void createMobileTerminal_WillFail_Null_SerialNumber() throws MobileTerminalModelException, MobileTerminalException {
 
         thrown.expect(MobileTerminalModelException.class);
 //        thrown.expectMessage("Cannot create mobile terminal without serial number");
@@ -194,7 +193,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void upsertMobileTerminal_WillFail_Null_TerminalId() throws MobileTerminalException, TerminalDaoException, MobileTerminalModelException {
+    public void upsertMobileTerminal_WillFail_Null_TerminalId() throws MobileTerminalModelException, MobileTerminalException {
 
         MobileTerminalType created = createMobileTerminalType();
         assertNotNull(created);
@@ -209,7 +208,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void updateMobileTerminal_WillFail_Null_TerminalId() throws MobileTerminalException, MobileTerminalModelException, TerminalDaoException {
+    public void updateMobileTerminal_WillFail_Null_TerminalId() throws MobileTerminalModelException, MobileTerminalException {
 
 
         MobileTerminalType created = createMobileTerminalType();
@@ -222,21 +221,19 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
         } catch (Throwable t) {
             Assert.assertTrue(true);
         }
-
-
     }
 
-    private MobileTerminalType createMobileTerminalType() throws MobileTerminalException, TerminalDaoException, MobileTerminalModelException {
+    private MobileTerminalType createMobileTerminalType() throws MobileTerminalModelException, MobileTerminalException {
         MobileTerminalType mobileTerminalType = testPollHelper.createBasicMobileTerminal();
         return mobileTerminalService.createMobileTerminal(mobileTerminalType, MobileTerminalSource.INTERNAL, USERNAME);
     }
 
-    private MobileTerminalType updateMobileTerminalType(MobileTerminalType created) throws MobileTerminalException, MobileTerminalModelException {
+    private MobileTerminalType updateMobileTerminalType(MobileTerminalType created) throws MobileTerminalModelException, MobileTerminalException {
         created.setType(NEW_MOBILETERMINAL_TYPE);
         return mobileTerminalService.updateMobileTerminal(created, TEST_COMMENT, MobileTerminalSource.INTERNAL, USERNAME);
     }
 
-    private MobileTerminalType upsertMobileTerminalType(MobileTerminalType created) throws MobileTerminalException, MobileTerminalModelException {
+    private MobileTerminalType upsertMobileTerminalType(MobileTerminalType created) throws MobileTerminalModelException {
         created.setType(NEW_MOBILETERMINAL_TYPE);
         return mobileTerminalService.upsertMobileTerminal(created, MobileTerminalSource.INTERNAL, USERNAME);
     }

@@ -10,17 +10,16 @@ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more d
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.message;
-
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalMessageException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.DataSourceQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ModuleQueue;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalException;
 
 import javax.ejb.Local;
 
 @Local
 public interface MTMessageProducer {
 
-    String sendDataSourceMessage(String text, DataSourceQueue queue) throws MobileTerminalMessageException;
+    String sendDataSourceMessage(String text, DataSourceQueue queue) throws MobileTerminalException;
 
-    String sendModuleMessage(String text, ModuleQueue queue) throws MobileTerminalMessageException;
+    String sendModuleMessage(String text, ModuleQueue queue) throws MobileTerminalException;
 }

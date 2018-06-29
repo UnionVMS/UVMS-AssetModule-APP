@@ -1,12 +1,8 @@
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.bean;
 
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalSource;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelMapperException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalUnmarshallException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.constants.MessageConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.DataSourceQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ErrorEvent;
@@ -18,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
-import javax.ejb.EJBException;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
@@ -29,7 +24,7 @@ import javax.jms.*;
 @LocalBean
 public class GetReceivedEventBean {
 
-    final static Logger LOG = LoggerFactory.getLogger(GetReceivedEventBean.class);
+    private final static Logger LOG = LoggerFactory.getLogger(GetReceivedEventBean.class);
 
     @Resource(lookup = MessageConstants.JAVA_MESSAGE_CONNECTION_FACTORY)
     private ConnectionFactory connectionFactory;
@@ -93,7 +88,7 @@ public class GetReceivedEventBean {
             if (!dataSource.equals(DataSourceQueue.INTERNAL)) {
                 service.upsertMobileTerminal(mobTerm, MobileTerminalSource.NATIONAL, dataSource.name());
             }
-        } catch (MobileTerminalException ex) {
+        } catch (MobileTerminalModelException ex) {
             mobTerm = null;
         }
         if (mobTerm == null) {
@@ -101,7 +96,7 @@ public class GetReceivedEventBean {
             try {
                 request = JAXBMarshaller.unmarshallTextMessage(message.getJmsMessage(), GetMobileTerminalRequest.class);
                 mobTerm = service.getMobileTerminalById(request.getId(), DataSourceQueue.INTERNAL);
-            } catch (MobileTerminalException ex) {
+            } catch (MobileTerminalModelException ex) {
                 errorEvent.fire(new EventMessage(message.getJmsMessage(), "Exception when getting vessel from source : " + dataSource.name() + " Error message: " + ex.getMessage()));
             }
         }

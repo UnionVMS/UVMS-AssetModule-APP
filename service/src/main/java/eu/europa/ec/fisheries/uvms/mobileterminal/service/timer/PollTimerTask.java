@@ -13,8 +13,7 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.timer;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttributeType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelMapperException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.MobileTerminalGenericMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.PollDataSourceRequestMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.PollService;
@@ -55,7 +54,7 @@ public class PollTimerTask implements Runnable{
                     LOG.info("Poll created by poll program {}", guid);
                 }
             }
-        } catch (MobileTerminalException | MobileTerminalModelMapperException e) {
+        } catch (MobileTerminalModelException e) {
             LOG.error("[ Poll scheduler failed. ] " + e.getMessage());
         }
     }

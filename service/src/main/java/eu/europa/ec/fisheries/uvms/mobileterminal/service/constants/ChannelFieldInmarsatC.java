@@ -10,8 +10,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.constants;
 
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalException;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.EnumException;
+import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.ENUM_FIELD_TYPE_ERROR;
 
 public enum ChannelFieldInmarsatC {
     LES_DESCRIPTION,
@@ -26,12 +27,12 @@ public enum ChannelFieldInmarsatC {
     INSTALLED_BY,
     DNID;
 
-    public static ChannelFieldInmarsatC getAttribute(String type) throws EnumException {
+    public static ChannelFieldInmarsatC getAttribute(String type) throws MobileTerminalException {
         for(ChannelFieldInmarsatC attr : ChannelFieldInmarsatC.values()) {
             if(attr.name().equalsIgnoreCase(type)) {
                 return attr;
             }
         }
-        throw new EnumException("Couldn't map channel field type " + type);
+        throw new MobileTerminalException(ENUM_FIELD_TYPE_ERROR.getMessage() + type, ENUM_FIELD_TYPE_ERROR.getCode());
     }
 }

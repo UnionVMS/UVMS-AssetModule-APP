@@ -16,7 +16,7 @@ import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.ConfigList;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.Plugin;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
 
 import javax.ejb.Local;
@@ -31,28 +31,28 @@ public interface ConfigService {
      * @return
      * @throws MobileTerminalServiceException
      */
-    List<TerminalSystemType> getTerminalSystems() throws MobileTerminalException;
+    List<TerminalSystemType> getTerminalSystems() throws MobileTerminalModelException;
 	
 	/**
 	 * Get configuration
 	 * 
 	 * @return
-	 * @throws MobileTerminalException
+	 * @throws MobileTerminalModelException
 	 */
-	List<ConfigList> getConfig() throws MobileTerminalException;
+	List<ConfigList> getConfig() throws MobileTerminalModelException;
 	
 	/**
 	 * 
 	 * @param pluginList
 	 * @return
-	 * @throws MobileTerminalException
+	 * @throws MobileTerminalModelException
 	 */
-	List<Plugin> upsertPlugins(List<PluginService> pluginList, String username) throws MobileTerminalException;
+	List<Plugin> upsertPlugins(List<PluginService> pluginList, String username) throws MobileTerminalModelException;
 	
 	/**
 	 * Get plugins (from exchange) matching MobileTerminal plugins
 	 * @return
-	 * @throws MobileTerminalException
+	 * @throws MobileTerminalModelException
 	 */
-	List<ServiceResponseType> getRegisteredMobileTerminalPlugins() throws MobileTerminalException;
+	List<ServiceResponseType> getRegisteredMobileTerminalPlugins() throws MobileTerminalModelException;
 }

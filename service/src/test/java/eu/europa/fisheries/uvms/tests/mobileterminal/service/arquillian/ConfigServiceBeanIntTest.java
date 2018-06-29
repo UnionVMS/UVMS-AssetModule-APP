@@ -4,7 +4,7 @@ import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.ConfigList;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.Plugin;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.ConfigServiceBeanMT;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConfigType;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
@@ -51,11 +51,11 @@ public class ConfigServiceBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     @Ignore
-    public void testGetRegisteredMobileTerminalPlugins_fail() throws MobileTerminalException {
+    public void testGetRegisteredMobileTerminalPlugins_fail() throws MobileTerminalModelException {
 
         // TODO: getRegisteredMobileTerminalPlugins() method has TransactionAttributeType.NEVER defined.
         // Which makes this tests to fail because that method throws exception when client code has a transaction.
-        thrown.expect(MobileTerminalException.class);
+        thrown.expect(MobileTerminalModelException.class);
         // thrown.expectMessage("Failed to map to exchange get service list request");
 
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "true");

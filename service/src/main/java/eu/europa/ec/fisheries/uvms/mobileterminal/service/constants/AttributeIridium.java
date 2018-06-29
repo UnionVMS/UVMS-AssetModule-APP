@@ -12,19 +12,20 @@
 
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.constants;
 
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalException;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.EnumException;
+import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.*;
 
 public enum AttributeIridium {
     //ATTRIBUTE_VALUE,
     SERIAL_NUMBER;
 
-    public static AttributeIridium getAttribute(String type) throws EnumException {
+    public static AttributeIridium getAttribute(String type) throws MobileTerminalException {
         for(AttributeIridium attr : AttributeIridium.values()) {
             if(attr.name().equalsIgnoreCase(type)) {
                 return attr;
             }
         }
-        throw new EnumException("Couldn't map attribute type " + type);
+        throw new MobileTerminalException(MAPPING_ATTR_TYPE_ERROR.getMessage() + type, MAPPING_ATTR_TYPE_ERROR.getCode());
     }
 }

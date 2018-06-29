@@ -13,13 +13,12 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelMapperException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
 
-import java.util.List;
 import java.util.Map;
 
 public class HistoryMapper {
@@ -34,9 +33,9 @@ public class HistoryMapper {
 		return event;
 	}
 
-	public static MobileTerminalHistory getHistory(MobileTerminal terminal) throws MobileTerminalModelMapperException {
+	public static MobileTerminalHistory getHistory(MobileTerminal terminal) throws MobileTerminalModelException {
 		if (terminal == null || terminal.getMobileTerminalEvents() == null) {
-            throw new MobileTerminalModelMapperException("No terminal history available");
+            throw new MobileTerminalModelException("No terminal history available");
         }
 
 		MobileTerminalHistory terminalHistory = new MobileTerminalHistory();

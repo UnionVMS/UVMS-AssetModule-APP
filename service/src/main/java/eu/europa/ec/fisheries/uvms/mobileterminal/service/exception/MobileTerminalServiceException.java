@@ -12,9 +12,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.exception;
 
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 
-public class MobileTerminalServiceException extends MobileTerminalException {
+public class MobileTerminalServiceException extends MobileTerminalModelException {
 	private static final long serialVersionUID = 1L;
 
     public MobileTerminalServiceException(String message) {

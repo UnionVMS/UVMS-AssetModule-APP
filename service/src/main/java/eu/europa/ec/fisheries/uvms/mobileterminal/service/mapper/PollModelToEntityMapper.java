@@ -13,10 +13,8 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttribute;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelMapperException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollStateEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.EnumException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,8 +40,7 @@ public class PollModelToEntityMapper {
         return pollBase;
     }
 
-    public static PollProgram mapToProgramPoll(MobileTerminal terminal, String terminalConnect, String channelGuid, PollRequestType requestType, String username)
-            throws MobileTerminalModelMapperException {
+    public static PollProgram mapToProgramPoll(MobileTerminal terminal, String terminalConnect, String channelGuid, PollRequestType requestType, String username) {
         PollProgram poll = new PollProgram();
         PollBase pollBase = createNewPollBase(terminal, terminalConnect, channelGuid, requestType, username);
         poll.setPollBase(pollBase);
@@ -55,7 +52,7 @@ public class PollModelToEntityMapper {
 
         List<PollAttribute> attributes = requestType.getAttributes();
         if (attributes == null || attributes.isEmpty())
-            throw new MobileTerminalModelMapperException("No attributes to map to program poll");
+            throw new NullPointerException("No attributes to map to program poll");
         for (PollAttribute attr : attributes) {
             try {
                 switch (attr.getKey()) {
@@ -72,13 +69,13 @@ public class PollModelToEntityMapper {
                     LOG.debug("ProgramPoll with attr [ " + attr.getKey() + " ] is non valid to map");
                 }
             } catch (UnsupportedOperationException | IllegalArgumentException e) {
-                throw new MobileTerminalModelMapperException("Poll attribute [ " + attr.getKey() + " ] could not be parsed");
+                throw new RuntimeException("Poll attribute [ " + attr.getKey() + " ] could not be parsed");
             }
         }
         return poll;
     }
 
-    public static Poll mapToPoll(MobileTerminal comchannel, String connectId, String channelGuid, PollRequestType requestType, String username) throws MobileTerminalModelMapperException {
+    public static Poll mapToPoll(MobileTerminal comchannel, String connectId, String channelGuid, PollRequestType requestType, String username) {
     	switch (requestType.getPollType()) {
         case CONFIGURATION_POLL:
         	return mapToConfigurationPoll(comchannel, connectId, channelGuid, requestType, username);
@@ -87,34 +84,30 @@ public class PollModelToEntityMapper {
         case MANUAL_POLL:
         	return createPollBase(comchannel, connectId, channelGuid, requestType, username);
         default:
-        	throw new MobileTerminalModelMapperException("Non valid poll type");
+        	throw new IllegalArgumentException("Non valid poll type");
     	}
     }
     
-    private static Poll createPollBase(MobileTerminal comchannel, String terminalConnect, String channelGuid, PollRequestType requestType, String username) throws MobileTerminalModelMapperException {
+    private static Poll createPollBase(MobileTerminal comchannel, String terminalConnect, String channelGuid, PollRequestType requestType, String username) {
         Poll poll = new Poll();
         PollBase pollBase = createNewPollBase(comchannel, terminalConnect, channelGuid, requestType, username);
         poll.setPollBase(pollBase);
         try {
         	poll.setPollType(EnumMapper.getPollTypeFromModel(requestType.getPollType()));
-        } catch (EnumException e) {
-        	throw new MobileTerminalModelMapperException("Couldn't map type of poll " + e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (RuntimeException e) {
+            LOG.error("Couldn't map type of poll " + e.getMessage());
+        	throw new RuntimeException(e);
         }
-
         poll.setUpdatedBy(username);
         poll.setUpdateTime(getUTCNow());
-
         return poll;
     }
 
-    private static Poll mapToConfigurationPoll(MobileTerminal comchannel, String terminalConnect, String channelGuid, PollRequestType requestType, String usernmae)
-            throws MobileTerminalModelMapperException {
+    private static Poll mapToConfigurationPoll(MobileTerminal comchannel, String terminalConnect, String channelGuid, PollRequestType requestType, String usernmae) {
     	Poll poll = createPollBase(comchannel, terminalConnect, channelGuid, requestType, usernmae);
         List<PollAttribute> attributes = requestType.getAttributes();
         if (attributes == null || attributes.isEmpty())
-        	throw new MobileTerminalModelMapperException("No attributes to map to configuration poll");
+        	throw new NullPointerException("No attributes to map to configuration poll");
         List<PollPayload> payloadList = new ArrayList<>();
         PollPayload payload = new PollPayload();
         for (PollAttribute attr : attributes) {
@@ -137,7 +130,7 @@ public class PollModelToEntityMapper {
                     break;
         		}
         	} catch (UnsupportedOperationException | IllegalArgumentException e) {
-        		throw new MobileTerminalModelMapperException("Poll attribute [ " + attr.getKey() + " ] could not be parsed");
+        		throw new RuntimeException("Poll attribute [ " + attr.getKey() + " ] could not be parsed");
         	}
         }
         payload.setPoll(poll);
@@ -146,12 +139,11 @@ public class PollModelToEntityMapper {
         return poll;
     }
 
-    private static Poll mapToSamplingPoll(MobileTerminal comchannel, String terminalConnect, String channelGuid, PollRequestType requestType, String username)
-            throws MobileTerminalModelMapperException {
+    private static Poll mapToSamplingPoll(MobileTerminal comchannel, String terminalConnect, String channelGuid, PollRequestType requestType, String username) {
     	Poll poll = createPollBase(comchannel, terminalConnect, channelGuid, requestType, username);
         List<PollAttribute> attributes = requestType.getAttributes();
         if (attributes == null || attributes.isEmpty())
-        	throw new MobileTerminalModelMapperException("No attributes to map to sampling poll");
+        	throw new NullPointerException("No attributes to map to sampling poll");
         List<PollPayload> payloadList = new ArrayList<>();
         PollPayload payload = new PollPayload();
         for (PollAttribute attr : attributes) {
@@ -165,7 +157,7 @@ public class PollModelToEntityMapper {
                     break;
         		}
         	} catch (UnsupportedOperationException | IllegalArgumentException e) {
-        		throw new MobileTerminalModelMapperException("Poll attribute [ " + attr.getKey() + " ] could not be parsed");
+        		throw new RuntimeException("Poll attribute [ " + attr.getKey() + " ] could not be parsed");
         	}
         }
         payload.setPoll(poll);

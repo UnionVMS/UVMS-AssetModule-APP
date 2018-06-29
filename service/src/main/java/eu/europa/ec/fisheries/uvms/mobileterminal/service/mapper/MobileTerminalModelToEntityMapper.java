@@ -13,7 +13,6 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelMapperException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
@@ -22,23 +21,24 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalP
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.EnumException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 public class MobileTerminalModelToEntityMapper {
     private static Logger LOG = LoggerFactory.getLogger(MobileTerminalModelToEntityMapper.class);
 
-    public static MobileTerminal mapMobileTerminalEntity(MobileTerminal entity, MobileTerminalType model, String serialNumber, MobileTerminalPlugin plugin, String username, String comment, EventCodeEnum event) throws MobileTerminalModelMapperException {
-        if (model == null) throw new MobileTerminalModelMapperException("No mobile terminal to map");
-        if (entity.getId() == null) {
-            //entity.setId(UUID.randomUUID());
-        }
+    public static MobileTerminal mapMobileTerminalEntity(MobileTerminal entity, MobileTerminalType model,
+                                                         String serialNumber, MobileTerminalPlugin plugin, String username,
+                                                         String comment, EventCodeEnum event) {
+        if (model == null)
+            throw new NullPointerException("No mobile terminal to map");
+//        if (entity.getId() == null) {
+//            entity.setId(UUID.randomUUID());
+//        }
         entity.setArchived(model.isArchived());
         entity.setInactivated(model.isInactive());
         entity.setPlugin(plugin);
@@ -46,13 +46,14 @@ public class MobileTerminalModelToEntityMapper {
 
         try {
             entity.setSource(getSourceTypeFromModel(model.getSource()));
-        } catch (EnumException e) {
-            LOG.error("[ Error when getting terminal source enum from source.] ", e.getMessage());
-            throw new MobileTerminalModelMapperException(e.getMessage());
+        } catch (RuntimeException e) {
+            LOG.error(e.getMessage());
+            throw new RuntimeException(e);
         }
 
         MobileTerminalTypeEnum type = MobileTerminalTypeEnum.getType(model.getType());
-        if (type == null) throw new MobileTerminalModelMapperException("Non valid mobile terminal type when mapping");
+        if (type == null)
+            throw new NullPointerException("Non valid mobile terminal type when mapping");
         entity.setMobileTerminalType(type);
         entity.setUpdatetime(DateUtils.getNowDateUTC());
         entity.setUpdateuser(username);
@@ -61,12 +62,12 @@ public class MobileTerminalModelToEntityMapper {
 
         // Channels can only change for these events
         if (event == EventCodeEnum.MODIFY || event == EventCodeEnum.CREATE) {
-            try {
+//            try {
                 mapChannels(entity, model, username);
-            } catch (EnumException e) {
-                LOG.error("[ Error when mapping channel field types ]");
-                throw new MobileTerminalModelMapperException(e.getMessage());
-            }
+//            } catch (MobileTerminalModelException e) {
+//                LOG.error("[ Error when mapping channel field types ]");
+//                throw new MobileTerminalModelException(MAP_CHANNEL_FIELD_TYPES_ERROR.getMessage(), e, MAP_CHANNEL_FIELD_TYPES_ERROR.getCode());
+//            }
         }
         entity.setUpdatetime(DateUtils.getNowDateUTC());
         entity.setUpdateuser(username);
@@ -74,12 +75,15 @@ public class MobileTerminalModelToEntityMapper {
         return entity;
     }
 
-    public static MobileTerminal mapNewMobileTerminalEntity(MobileTerminalType model, String serialNumber, MobileTerminalPlugin plugin, String username) throws MobileTerminalModelMapperException {
-        if (model == null) throw new MobileTerminalModelMapperException("No mobile terminal to map");
-        return mapMobileTerminalEntity(new MobileTerminal(), model, serialNumber, plugin, username, MobileTerminalConstants.CREATE_COMMENT, EventCodeEnum.CREATE);
+    public static MobileTerminal mapNewMobileTerminalEntity(MobileTerminalType model,
+                                String serialNumber, MobileTerminalPlugin plugin, String username) {
+        if (model == null)
+            throw new NullPointerException("No mobile terminal to map");
+        return mapMobileTerminalEntity(new MobileTerminal(), model, serialNumber, plugin, username,
+                MobileTerminalConstants.CREATE_COMMENT, EventCodeEnum.CREATE);
     }
 
-    private static void mapChannels(MobileTerminal entity, MobileTerminalType model, String username) throws EnumException, MobileTerminalModelMapperException {
+    private static void mapChannels(MobileTerminal entity, MobileTerminalType model, String username) {
         List<ComChannelType> modelChannels = model.getChannels();
         Set<Channel> channels = new HashSet<>();
         for (ComChannelType channelType : modelChannels) {
@@ -219,7 +223,7 @@ public class MobileTerminalModelToEntityMapper {
         return sb.toString();
     }
 
-    private static MobileTerminalSourceEnum getSourceTypeFromModel(MobileTerminalSource model) throws EnumException {
+    private static MobileTerminalSourceEnum getSourceTypeFromModel(MobileTerminalSource model) {
         if (model != null) {
             switch (model) {
                 case INTERNAL:
@@ -228,6 +232,6 @@ public class MobileTerminalModelToEntityMapper {
                     return MobileTerminalSourceEnum.NATIONAL;
             }
         }
-        throw new EnumException("Couldn't map enum (from model) in " + MobileTerminalSourceEnum.class.getName());
+        throw new IllegalArgumentException("Couldn't map enum (from model) in " + MobileTerminalSourceEnum.class.getName());
     }
 }

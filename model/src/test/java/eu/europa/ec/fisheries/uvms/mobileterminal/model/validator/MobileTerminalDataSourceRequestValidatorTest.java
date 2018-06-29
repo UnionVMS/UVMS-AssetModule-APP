@@ -12,7 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.model.validator;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelValidationException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,7 +53,7 @@ public class MobileTerminalDataSourceRequestValidatorTest {
     	try {
     		MobileTerminalDataSourceRequestValidator.validateComChannels(mobTermType);
     		fail("Missing field");
-    	} catch (MobileTerminalModelValidationException e) {
+    	} catch (MobileTerminalModelException e) {
     		assertTrue(true);
     	}
     	
@@ -63,7 +63,7 @@ public class MobileTerminalDataSourceRequestValidatorTest {
 		
 		try {
     		MobileTerminalDataSourceRequestValidator.validateComChannels(mobTermType);
-    	} catch (MobileTerminalModelValidationException e) {
+    	} catch (MobileTerminalModelException e) {
     		fail("Should validate");
     	}
     	
@@ -74,13 +74,13 @@ public class MobileTerminalDataSourceRequestValidatorTest {
 		try {
     		MobileTerminalDataSourceRequestValidator.validateComChannels(mobTermType);
     		fail("Multiple fields");
-    	} catch (MobileTerminalModelValidationException e) {
+    	} catch (MobileTerminalModelException e) {
 			assertTrue(true);
     	}
     }
     
     @Test
-    public void testValidateMobileTerminalAttributeMultipleOceans() throws MobileTerminalModelValidationException {
+    public void testValidateMobileTerminalAttributeMultipleOceans() throws MobileTerminalModelException {
     	List<MobileTerminalAttribute> attrList = new ArrayList<>();
     	MobileTerminalAttribute attr = new MobileTerminalAttribute();
     	attr.setType("MULTIPLE_OCEAN");
@@ -89,8 +89,8 @@ public class MobileTerminalDataSourceRequestValidatorTest {
     	MobileTerminalDataSourceRequestValidator.validateMobileTerminalAttributes(attrList);
     }
     
-    @Test(expected=MobileTerminalModelValidationException.class)
-    public void testValidateMobileTerminalAttributeNonUnique() throws MobileTerminalModelValidationException {
+    @Test(expected=MobileTerminalModelException.class)
+    public void testValidateMobileTerminalAttributeNonUnique() throws MobileTerminalModelException {
     	List<MobileTerminalAttribute> attrList = new ArrayList<>();
     	MobileTerminalAttribute attr = new MobileTerminalAttribute();
     	attr.setType("ANTENNA");
@@ -100,7 +100,7 @@ public class MobileTerminalDataSourceRequestValidatorTest {
     }
     
     @Test
-    public void testValidateMobileTerminalAttributes() throws MobileTerminalModelValidationException {
+    public void testValidateMobileTerminalAttributes() throws MobileTerminalModelException {
     	List<MobileTerminalAttribute> attrList = new ArrayList<>();
     	MobileTerminalAttribute attr = new MobileTerminalAttribute();
     	attr.setType("ANTENNA");
@@ -109,7 +109,7 @@ public class MobileTerminalDataSourceRequestValidatorTest {
     }
     
     @Test
-    public void testValidateMobileTerminalAttributesEmpty() throws MobileTerminalModelValidationException {
+    public void testValidateMobileTerminalAttributesEmpty() throws MobileTerminalModelException {
     	List<MobileTerminalAttribute> attrList = new ArrayList<>();
     	MobileTerminalDataSourceRequestValidator.validateMobileTerminalAttributes(attrList);
     }
@@ -120,7 +120,7 @@ public class MobileTerminalDataSourceRequestValidatorTest {
 		try {
 			MobileTerminalDataSourceRequestValidator.validateMobileTerminalId(null);
 			fail("MobileTerminalId NULL");
-		} catch (MobileTerminalModelValidationException e) {
+		} catch (MobileTerminalModelException e) {
 			assertTrue(true);
 		}
 		
@@ -128,7 +128,7 @@ public class MobileTerminalDataSourceRequestValidatorTest {
 		try {
 			MobileTerminalDataSourceRequestValidator.validateMobileTerminalId(id);
 			fail("MobileTerminalId GUID NULL ");
-		} catch (MobileTerminalModelValidationException e) {
+		} catch (MobileTerminalModelException e) {
 			assertTrue(true);
 		}
 		
@@ -136,14 +136,14 @@ public class MobileTerminalDataSourceRequestValidatorTest {
 		try {
 			MobileTerminalDataSourceRequestValidator.validateMobileTerminalId(id);
 			fail("MobileTerminalId GUID Empty");
-		} catch (MobileTerminalModelValidationException e) {
+		} catch (MobileTerminalModelException e) {
 			assertTrue(true);
 		}
 		id.setGuid("ABCD-EFGH-IJKL-MNOP-1234-5678-0000");
 		
 		try {
 			MobileTerminalDataSourceRequestValidator.validateMobileTerminalId(id);
-		} catch (MobileTerminalModelValidationException e) {
+		} catch (MobileTerminalModelException e) {
 			fail("MobileTerminalId valid");
 		}
     }

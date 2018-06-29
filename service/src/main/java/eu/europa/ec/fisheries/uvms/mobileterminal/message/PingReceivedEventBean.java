@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.mobileterminal.message;
 
-
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelMapperException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.constants.MessageConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ErrorEvent;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.EventMessage;
@@ -21,7 +20,7 @@ import javax.jms.*;
 @LocalBean
 public class PingReceivedEventBean {
 
-    final static Logger LOG = LoggerFactory.getLogger(PingReceivedEventBean.class);
+    private final static Logger LOG = LoggerFactory.getLogger(PingReceivedEventBean.class);
 
     @Resource(lookup = MessageConstants.JAVA_MESSAGE_CONNECTION_FACTORY)
     private ConnectionFactory connectionFactory;
@@ -43,7 +42,7 @@ public class PingReceivedEventBean {
                 javax.jms.MessageProducer producer = session.createProducer(pingResponseMessage.getJMSDestination());
                 producer.send(pingResponseMessage);
             }
-        } catch (MobileTerminalModelMapperException | JMSException e) {
+        } catch (MobileTerminalModelException | JMSException e) {
             LOG.error("Ping message went wrong", e);
             errorEvent.fire(new EventMessage(message.getJmsMessage(), "Exception when trying to ping MobileTerminal: " + e.getMessage()));
             // Propagate error

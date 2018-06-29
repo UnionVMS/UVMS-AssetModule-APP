@@ -12,7 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.model.validator;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelValidationException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,13 +39,13 @@ public class PollDataSourceRequestValidatorTest {
     }
     
     @Test
-    public void testCheckSamplingPollParams() throws MobileTerminalModelValidationException {
+    public void testCheckSamplingPollParams() throws MobileTerminalModelException {
     	List<PollAttribute> attrList = new ArrayList<>();
     	when(requestType.getAttributes()).thenReturn(attrList);
     	try {
     		PollDataSourceRequestValidator.checkSamplingPollParams(requestType);
     		fail("Sampling poll.");
-    	} catch (MobileTerminalModelValidationException e) {
+    	} catch (MobileTerminalModelException e) {
 			assertTrue(true);
     	}
     	
@@ -60,14 +60,14 @@ public class PollDataSourceRequestValidatorTest {
     }
     
     @Test
-    public void testCheckProgramPollParams() throws MobileTerminalModelValidationException {
+    public void testCheckProgramPollParams() throws MobileTerminalModelException {
     	List<PollAttribute> attrList = new ArrayList<>();
     	when(requestType.getAttributes()).thenReturn(attrList);
     	
     	try {
     		PollDataSourceRequestValidator.checkProgramPollParams(requestType);
     		fail("ProgramPoll poll.");
-    	} catch (MobileTerminalModelValidationException e) {
+    	} catch (MobileTerminalModelException e) {
 			assertTrue(true);
     	}
     	
@@ -85,14 +85,14 @@ public class PollDataSourceRequestValidatorTest {
     }
     
     @Test
-    public void testCheckConfigurationPollParams() throws MobileTerminalModelValidationException {
+    public void testCheckConfigurationPollParams() throws MobileTerminalModelException {
     	List<PollAttribute> attrList = new ArrayList<>();
     	when(requestType.getAttributes()).thenReturn(attrList);
     	
     	try {
     		PollDataSourceRequestValidator.checkConfigurationPollParams(requestType);
     		fail("Configuration poll.");
-    	} catch (MobileTerminalModelValidationException e) {
+    	} catch (MobileTerminalModelException e) {
 			assertTrue(true);
     	}
     	
@@ -122,7 +122,7 @@ public class PollDataSourceRequestValidatorTest {
 		try {
 			PollDataSourceRequestValidator.validateMobileTerminals(requestType);
 			fail("No mobterminals to poll");
-		} catch (MobileTerminalModelValidationException e) {
+		} catch (MobileTerminalModelException e) {
 			assertTrue(true);
 		}
 		
@@ -136,7 +136,7 @@ public class PollDataSourceRequestValidatorTest {
 		try {
 			PollDataSourceRequestValidator.validateMobileTerminals(requestType);
 			fail("Sampling poll too many");
-		} catch (MobileTerminalModelValidationException e) {
+		} catch (MobileTerminalModelException e) {
 			assertTrue(true);
 		}
     }
@@ -159,7 +159,7 @@ public class PollDataSourceRequestValidatorTest {
 		
 		try {
 			PollDataSourceRequestValidator.validateMobileTerminals(requestType);
-		} catch (MobileTerminalModelValidationException e) {
+		} catch (MobileTerminalModelException e) {
 			fail("Valid configuration poll without dnid/memberNumber");
 		}
 		
@@ -170,29 +170,29 @@ public class PollDataSourceRequestValidatorTest {
 		try {
 			PollDataSourceRequestValidator.validateMobileTerminals(requestType);
 			fail("Configuration poll too many");
-		} catch (MobileTerminalModelValidationException e) {
+		} catch (MobileTerminalModelException e) {
 			mobTermList.remove(extraPollMobTerm);
 		}
 		
 		try {
 			PollDataSourceRequestValidator.validateMobileTerminals(requestType);
-		} catch (MobileTerminalModelValidationException e) {
+		} catch (MobileTerminalModelException e) {
 			fail("Valid single configuration poll");
 		}
     }
 
 	@Test
-	public void testHasUser() throws MobileTerminalModelValidationException {
+	public void testHasUser() throws MobileTerminalModelException {
 		PollDataSourceRequestValidator.validateHasUser("TEST_USER");
 	}
     
-    @Test(expected = MobileTerminalModelValidationException.class)
-    public void testHasUser_NULL() throws MobileTerminalModelValidationException {
+    @Test(expected = MobileTerminalModelException.class)
+    public void testHasUser_NULL() throws MobileTerminalModelException {
 		PollDataSourceRequestValidator.validateHasUser(null);
     }
 
-	@Test(expected = MobileTerminalModelValidationException.class)
-	public void testHasUser_EMPTY() throws MobileTerminalModelValidationException {
+	@Test(expected = MobileTerminalModelException.class)
+	public void testHasUser_EMPTY() throws MobileTerminalModelException {
 		PollDataSourceRequestValidator.validateHasUser("");
 	}
 }

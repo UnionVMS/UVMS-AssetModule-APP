@@ -18,7 +18,6 @@ import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttribute;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttributeType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelMapperException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +36,7 @@ public class PollToCommandRequestMapper {
         SERIAL_NUMBER;
     }
 
-    private static PollTypeType mapToPollType(eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType pollType) throws MobileTerminalModelMapperException {
+    private static PollTypeType mapToPollType(eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType pollType) {
         switch (pollType) {
             case CONFIGURATION_POLL:
                 return PollTypeType.CONFIG;
@@ -47,15 +46,15 @@ public class PollToCommandRequestMapper {
             case PROGRAM_POLL:
                 return PollTypeType.POLL;
             default:
-                throw new MobileTerminalModelMapperException("Error when mapping PollType to PollTypeType ");
+                throw new IllegalArgumentException("Error when mapping PollType to PollTypeType ");
         }
     }
 
-    public static PollType mapToPollType(PollResponseType pollResponse) throws MobileTerminalModelMapperException {
+    public static PollType mapToPollType(PollResponseType pollResponse) {
         PollType pollType = new PollType();
 
         String pollId = pollResponse.getPollId() == null ? null : pollResponse.getPollId().getGuid();
-        List<PollAttribute> pollAttributes = pollResponse.getAttributes() == null ? new ArrayList<PollAttribute>() : pollResponse.getAttributes();
+        List<PollAttribute> pollAttributes = pollResponse.getAttributes() == null ? new ArrayList<>() : pollResponse.getAttributes();
 
         pollType.setPollTypeType(mapToPollType(pollResponse.getPollType()));
         pollType.setPollId(pollId);

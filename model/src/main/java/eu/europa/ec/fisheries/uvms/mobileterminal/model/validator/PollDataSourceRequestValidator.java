@@ -14,7 +14,7 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.model.validator;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttribute;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttributeType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelValidationException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,22 +28,22 @@ public class PollDataSourceRequestValidator {
     private static final int CONFIGURATION_POLL_MAX_SIZE = 1;
     private static final int SAMPLING_POLL_MAX_SIZE = 1;
 
-    public static void validateMobilePollRequestType(PollRequestType pollRequest) throws MobileTerminalModelValidationException {
+    public static void validateMobilePollRequestType(PollRequestType pollRequest) throws MobileTerminalModelException {
         if (pollRequest == null)
-            throw new MobileTerminalModelValidationException("No poll request to validate");
+            throw new MobileTerminalModelException("No poll request to validate");
         validateHasUser(pollRequest.getUserName());
         validateCorrectRequestType(pollRequest);
         validateMobileTerminals(pollRequest);
     }
 
-    static void validateHasUser(String userName) throws MobileTerminalModelValidationException {
+    static void validateHasUser(String userName) throws MobileTerminalModelException {
         if (userName == null || userName.isEmpty())
-            throw new MobileTerminalModelValidationException("No user of poll request");
+            throw new MobileTerminalModelException("No user of poll request");
     }
 
-    static void validateMobileTerminals(PollRequestType pollRequest) throws MobileTerminalModelValidationException {
+    static void validateMobileTerminals(PollRequestType pollRequest) throws MobileTerminalModelException {
         if (pollRequest.getMobileTerminals().isEmpty()) {
-            throw new MobileTerminalModelValidationException("No mobile terminals to poll");
+            throw new MobileTerminalModelException("No mobile terminals to poll");
         }
         switch (pollRequest.getPollType()) {
         case CONFIGURATION_POLL:
@@ -57,12 +57,12 @@ public class PollDataSourceRequestValidator {
                 }
             }
             if (!canPollMultiple && pollRequest.getMobileTerminals().size() > CONFIGURATION_POLL_MAX_SIZE) {
-                throw new MobileTerminalModelValidationException("Too many mobile terminals to send a configuration of dnid/memberid poll");
+                throw new MobileTerminalModelException("Too many mobile terminals to send a configuration of dnid/memberid poll");
             }
             break;
         case SAMPLING_POLL:
             if (pollRequest.getMobileTerminals().size() > SAMPLING_POLL_MAX_SIZE) {
-                throw new MobileTerminalModelValidationException("Too many mobile terminals to send a configuration poll");
+                throw new MobileTerminalModelException("Too many mobile terminals to send a configuration poll");
             }
             break;
         default:
@@ -70,7 +70,7 @@ public class PollDataSourceRequestValidator {
         }
     }
 
-    private static void validateCorrectRequestType(PollRequestType pollRequest) throws MobileTerminalModelValidationException {
+    private static void validateCorrectRequestType(PollRequestType pollRequest) throws MobileTerminalModelException {
 
         switch (pollRequest.getPollType()) {
         case CONFIGURATION_POLL:
@@ -85,24 +85,24 @@ public class PollDataSourceRequestValidator {
             checkSamplingPollParams(pollRequest);
             break;
         default:
-            throw new MobileTerminalModelValidationException("pollRequest with PollType " + pollRequest.getPollType() + " validation not impemented");
+            throw new MobileTerminalModelException("pollRequest with PollType " + pollRequest.getPollType() + " validation not impemented");
         }
     }
 
-    static void checkConfigurationPollParams(PollRequestType pollRequest) throws MobileTerminalModelValidationException {
+    static void checkConfigurationPollParams(PollRequestType pollRequest) throws MobileTerminalModelException {
         checkOneOfFields(pollRequest, PollAttributeType.REPORT_FREQUENCY, PollAttributeType.GRACE_PERIOD, PollAttributeType.IN_PORT_GRACE,
                 PollAttributeType.DNID, PollAttributeType.MEMBER_NUMBER);
     }
 
-    static void checkProgramPollParams(PollRequestType pollRequest) throws MobileTerminalModelValidationException {
+    static void checkProgramPollParams(PollRequestType pollRequest) throws MobileTerminalModelException {
         checkFields(pollRequest, PollAttributeType.FREQUENCY, PollAttributeType.START_DATE, PollAttributeType.END_DATE);
     }
 
-    static void checkSamplingPollParams(PollRequestType pollRequest) throws MobileTerminalModelValidationException {
+    static void checkSamplingPollParams(PollRequestType pollRequest) throws MobileTerminalModelException {
         checkFields(pollRequest, PollAttributeType.START_DATE, PollAttributeType.END_DATE);
     }
 
-    private static void checkOneOfFields(PollRequestType pollRequest, PollAttributeType... attributes) throws MobileTerminalModelValidationException {
+    private static void checkOneOfFields(PollRequestType pollRequest, PollAttributeType... attributes) throws MobileTerminalModelException {
         Set<PollAttributeType> attributesToCheck = new HashSet<>(Arrays.asList(attributes));
         Set<PollAttributeType> attributesProvided = new HashSet<>();
 
@@ -125,11 +125,11 @@ public class PollDataSourceRequestValidator {
         }
 
         if (nbrOfAttributes == 0) {
-            throw new MobileTerminalModelValidationException(builder.toString());
+            throw new MobileTerminalModelException(builder.toString());
         }
     }
 
-    private static void checkFields(PollRequestType pollRequest, PollAttributeType... attributes) throws MobileTerminalModelValidationException {
+    private static void checkFields(PollRequestType pollRequest, PollAttributeType... attributes) throws MobileTerminalModelException {
 
         Set<PollAttributeType> attributesToCheck = new HashSet<>(Arrays.asList(attributes));
         Set<PollAttributeType> attributesProvided = new HashSet<>();
@@ -146,7 +146,7 @@ public class PollDataSourceRequestValidator {
                 for (PollAttributeType attribFailure : attributesToCheck) {
                     builder.append("[" + attribFailure.name() + "] ");
                 }
-                throw new MobileTerminalModelValidationException(builder.toString());
+                throw new MobileTerminalModelException(builder.toString());
             }
         }
     }

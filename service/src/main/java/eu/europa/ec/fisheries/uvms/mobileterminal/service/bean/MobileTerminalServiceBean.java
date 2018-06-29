@@ -17,9 +17,7 @@ import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalList
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelMapperException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.DataSourceQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageConsumer;
@@ -35,6 +33,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.AuditModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.HistoryMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalEntityToModelMapper;
@@ -48,7 +47,6 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.jms.TextMessage;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Stateless
@@ -79,13 +77,6 @@ public class MobileTerminalServiceBean {
     @EJB
     private MobileTerminalPluginDaoBean pluginDao;
 
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param mobileTerminal
-     * @throws MobileTerminalException
-     */
     public MobileTerminalType createMobileTerminal(MobileTerminalType mobileTerminal, MobileTerminalSource source, String username) throws MobileTerminalException, MobileTerminalModelException {
         mobileTerminal.setSource(source);
         MobileTerminalType createdMobileTerminal = createMobileTerminal(mobileTerminal, username);
@@ -105,12 +96,6 @@ public class MobileTerminalServiceBean {
         return createdMobileTerminal;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return
-     * @throws MobileTerminalModelException
-     */
     public MobileTerminalListResponse getMobileTerminalList(MobileTerminalListQuery query) throws MobileTerminalModelException {
         ListResponseDto listResponse = getTerminalListByQuery(query);
         MobileTerminalListResponse response = new MobileTerminalListResponse();
@@ -120,13 +105,6 @@ public class MobileTerminalServiceBean {
         return response;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param guid
-     * @return
-     * @throws MobileTerminalModelException
-     */
     public MobileTerminalType getMobileTerminalById(String guid) throws MobileTerminalModelException {
         if (guid == null) {
             throw new IllegalArgumentException("No id");
@@ -137,14 +115,6 @@ public class MobileTerminalServiceBean {
         return terminalGet;
     }
 
-    /**
-     *
-     * {@inheritDoc}
-     *
-     * @param data
-     * @return
-     * @throws MobileTerminalModelException
-     */
     public MobileTerminalType upsertMobileTerminal(MobileTerminalType data, MobileTerminalSource source, String username) throws MobileTerminalModelException {
         if (data == null) {
             throw new IllegalArgumentException("No Mobile terminal to update [ NULL ]");
@@ -160,12 +130,6 @@ public class MobileTerminalServiceBean {
         return terminalUpserted;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param id
-     * @throws MobileTerminalModelException
-     */
     public MobileTerminalType getMobileTerminalById(MobileTerminalId id, DataSourceQueue queue) throws MobileTerminalException, MobileTerminalModelException, MobileTerminalFaultException {
         if (id == null) {
             throw new IllegalArgumentException("No id");
@@ -179,12 +143,6 @@ public class MobileTerminalServiceBean {
         return MobileTerminalDataSourceResponseMapper.mapToMobileTerminalFromResponse(response, messageId);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param mobileTerminal
-     * @param source
-     */
     public MobileTerminalType updateMobileTerminal(MobileTerminalType mobileTerminal, String comment, MobileTerminalSource source, String username)
             throws MobileTerminalException, MobileTerminalModelException {
         mobileTerminal.setSource(source);
@@ -231,8 +189,8 @@ public class MobileTerminalServiceBean {
         return terminalUnAssign;
     }
 
-    public MobileTerminalType setStatusMobileTerminal(MobileTerminalId terminalId, String comment, MobileTerminalStatus status, String username)
-            throws MobileTerminalException {
+    // TODO: This method recurses infinitely!!!
+    public MobileTerminalType setStatusMobileTerminal(MobileTerminalId terminalId, String comment, MobileTerminalStatus status, String username) throws MobileTerminalException {
         MobileTerminalType terminalStatus = setStatusMobileTerminal(terminalId, comment, status, username);
         try {
             String auditData = null;
@@ -271,7 +229,7 @@ public class MobileTerminalServiceBean {
         return historyList;
     }
 
-    public MobileTerminalListResponse getPollableMobileTerminal(PollableQuery query) throws MobileTerminalModelException {
+    public MobileTerminalListResponse getPollableMobileTerminal(PollableQuery query) {
         ListResponseDto listResponse = pollModel.getMobileTerminalPollableList(query);
         MobileTerminalListResponse response = new MobileTerminalListResponse();
         response.setCurrentPage(listResponse.getCurrentPage());
@@ -354,7 +312,7 @@ public class MobileTerminalServiceBean {
         }
     }
 
-    public MobileTerminalType getMobileTerminalById(MobileTerminalId id) throws MobileTerminalModelException {
+    public MobileTerminalType getMobileTerminalById(MobileTerminalId id) {
         if (id == null) {
             throw new IllegalArgumentException("No id to fetch");
         }
@@ -498,17 +456,15 @@ public class MobileTerminalServiceBean {
     }
 
 
-    public MobileTerminalHistory getMobileTerminalHistoryList(MobileTerminalId id) throws MobileTerminalModelMapperException {
+    public MobileTerminalHistory getMobileTerminalHistoryList(MobileTerminalId id) throws MobileTerminalModelException {
         if (id == null) {
-            throw new IllegalArgumentException("No Mobile Terminal");
+            throw new NullPointerException("No Mobile Terminal");
         }
-
         MobileTerminal terminal = getMobileTerminalEntityById(id);
-
         return HistoryMapper.getHistory(terminal);
     }
 
-    public ListResponseDto getTerminalListByQuery(MobileTerminalListQuery query) throws MobileTerminalModelException {
+    public ListResponseDto getTerminalListByQuery(MobileTerminalListQuery query) {
         if (query == null) {
             throw new IllegalArgumentException("No list query");
         }
@@ -545,7 +501,7 @@ public class MobileTerminalServiceBean {
             mobileTerminalList.add(terminalType);
         }
 
-        Collections.sort(mobileTerminalList, new MobileTerminalTypeComparator());
+        mobileTerminalList.sort(new MobileTerminalTypeComparator());
         int totalMatches = mobileTerminalList.size();
         LOG.debug("totalMatches: " + totalMatches);
 

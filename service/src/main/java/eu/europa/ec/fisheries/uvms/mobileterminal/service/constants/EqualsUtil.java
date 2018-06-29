@@ -11,11 +11,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.constants;
 
-
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.InmarsatCHistoryOceanRegion;
 import org.apache.commons.collections.CollectionUtils;
 
-import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 

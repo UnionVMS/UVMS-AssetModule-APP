@@ -14,7 +14,7 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollListQuery;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollableQuery;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollDto;
@@ -87,5 +87,5 @@ public interface MappedPollService {
      * @return
      * @throws MobileTerminalServiceException
      */
-    PollChannelListDto getPollableChannels(PollableQuery query) throws MobileTerminalException;
+    PollChannelListDto getPollableChannels(PollableQuery query) throws MobileTerminalModelException;
 }

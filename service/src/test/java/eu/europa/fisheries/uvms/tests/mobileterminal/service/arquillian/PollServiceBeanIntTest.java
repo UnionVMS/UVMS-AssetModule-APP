@@ -4,7 +4,7 @@ import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttribute;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttributeType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.PollProgramDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.CreatePollResultDto;
@@ -165,7 +165,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    public void getPollProgramRunningAndStarted() throws MobileTerminalException {
+    public void getPollProgramRunningAndStarted() throws MobileTerminalModelException {
 
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
 

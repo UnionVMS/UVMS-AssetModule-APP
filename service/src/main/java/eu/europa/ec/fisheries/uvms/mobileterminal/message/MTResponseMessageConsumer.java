@@ -11,14 +11,16 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.message;
 
 import eu.europa.ec.fisheries.uvms.commons.message.impl.JMSUtils;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalMessageException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.constants.MessageConstants;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.jms.*;
+
+import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.RETRIEVING_MESSAGE_ERROR;
 
 @Stateless
 public class MTResponseMessageConsumer implements MTMessageConsumer{
@@ -41,9 +43,9 @@ public class MTResponseMessageConsumer implements MTMessageConsumer{
         Let client code take care of a possible "null" response accordingly.
      */
     @Override
-    public <T> T getMessage(String correlationId, Class type) throws MobileTerminalMessageException {
+    public <T> T getMessage(String correlationId, Class type) throws MobileTerminalException {
         if (correlationId == null || correlationId.isEmpty()) {
-            throw new MobileTerminalMessageException("No CorrelationID provided!");
+            throw new NullPointerException("No CorrelationID provided!");
         }
         LOG.info("Looking for message " + correlationId + " in " + MessageConstants.COMPONENT_RESPONSE_QUEUE + " with " + responseMobileTerminalQueue);
         try (Connection connection = connectionFactory.createConnection()) {
@@ -53,7 +55,7 @@ public class MTResponseMessageConsumer implements MTMessageConsumer{
             return (T) response;
         } catch (JMSException e) {
             LOG.error("[ Error when consuming message. ] {}", e.getMessage());
-            throw new MobileTerminalMessageException("Error when retrieving message: " + e.getMessage(), e);
+            throw new MobileTerminalException(RETRIEVING_MESSAGE_ERROR.getMessage() + e.getMessage(), e, RETRIEVING_MESSAGE_ERROR.getCode());
         }
     }
 

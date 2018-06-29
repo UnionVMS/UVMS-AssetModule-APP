@@ -1,13 +1,11 @@
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelMapperException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalSourceEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.EnumException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,13 +17,13 @@ import java.util.Set;
 public class MobileTerminalEntityToModelMapper {
     private static Logger LOG = LoggerFactory.getLogger(MobileTerminalEntityToModelMapper.class);
 
-    public static MobileTerminalType mapToMobileTerminalType(MobileTerminal entity, Channel channel) throws MobileTerminalModelMapperException {
+    public static MobileTerminalType mapToMobileTerminalType(MobileTerminal entity, Channel channel) {
         Set<Channel> channels = new HashSet<>();
         channels.add(channel);
         return mapToMobileTerminalType(entity, channels);
     }
 
-    private static MobileTerminalType mapToMobileTerminalType(MobileTerminal entity, Set<Channel> channels) throws MobileTerminalModelMapperException {
+    private static MobileTerminalType mapToMobileTerminalType(MobileTerminal entity, Set<Channel> channels) {
         MobileTerminalType type = mapToMobileTerminalType(entity);
 
         type.getChannels().clear();
@@ -34,14 +32,14 @@ public class MobileTerminalEntityToModelMapper {
         return type;
     }
 
-    public static MobileTerminalType mapToMobileTerminalType(MobileTerminal entity) throws MobileTerminalModelMapperException {
+    public static MobileTerminalType mapToMobileTerminalType(MobileTerminal entity) {
         if (entity == null) {
-            throw new MobileTerminalModelMapperException("No mobile terminal entity to map");
+            throw new NullPointerException("No mobile terminal entity to map");
         }
 
         MobileTerminalEvent currentEvent = entity.getCurrentEvent();
         if (currentEvent == null) {
-            throw new MobileTerminalModelMapperException("No mobile terminal event entity to map");
+            throw new NullPointerException("No mobile terminal event entity to map");
         }
 
         MobileTerminalType model = new MobileTerminalType();
@@ -52,8 +50,9 @@ public class MobileTerminalEntityToModelMapper {
 
         try {
             model.setSource(mapToMobileTerminalSource(entity.getSource()));
-        } catch (EnumException e) {
+        } catch (RuntimeException e) {
             LOG.error("[ Error when setting mobile terminal source. ] {}", e.getMessage());
+            throw new RuntimeException(e);
         }
 
         model.setConnectId(currentEvent.getConnectId());
@@ -131,21 +130,23 @@ public class MobileTerminalEntityToModelMapper {
         return channelList;
     }
 
-    private static MobileTerminalSource mapToMobileTerminalSource(MobileTerminalSourceEnum mobtermSourceId) throws EnumException {
+    private static MobileTerminalSource mapToMobileTerminalSource(MobileTerminalSourceEnum mobtermSourceId) {
         if (mobtermSourceId != null) {
             switch (mobtermSourceId) {
                 case INTERNAL:
                     return MobileTerminalSource.INTERNAL;
                 case NATIONAL:
                     return MobileTerminalSource.NATIONAL;
+                default:
+                    throw new IllegalArgumentException("Couldn't map enum");
             }
         }
-        throw new EnumException("Couldn't map enum");
+        throw new NullPointerException("MobileTerminalSourceEnum parameter is null");
     }
 
-    private static MobileTerminalId mapToMobileTerminalId(String mobtermGuid) throws MobileTerminalModelMapperException {
+    private static MobileTerminalId mapToMobileTerminalId(String mobtermGuid) {
         if (mobtermGuid == null || mobtermGuid.isEmpty()) {
-            throw new MobileTerminalModelMapperException("No GUID found");
+            throw new NullPointerException("No GUID found");
         }
         MobileTerminalId terminalId = new MobileTerminalId();
         terminalId.setGuid(mobtermGuid);

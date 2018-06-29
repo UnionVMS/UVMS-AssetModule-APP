@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.error;
 
+import eu.europa.ec.fisheries.schema.mobileterminal.module.v1.MobileTerminalFaultException;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalFault;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.*;
@@ -34,39 +35,39 @@ public class MTErrorHandler {
     	}
     	
     	if(ex instanceof MobileTerminalModelException) {
-    		if(ex instanceof MobileTerminalModelValidationException) {
-    			return new MTResponseDto<>(ex.getMessage(), MTResponseCode.INPUT_ERROR);
-    		}
-    		
-    		if(ex instanceof MobileTerminalModelMapperException) {
-    			//MobileTerminalValidationException
-        		//MobileTerminalUnmarshallException
-    			return new MTResponseDto<>(ex.getMessage(), MTResponseCode.MAPPING_ERROR);
-    		}
-    		
-    		if(ex instanceof MobileTerminalFaultException) {
-        		return extractFault((MobileTerminalFaultException)ex);
-        	}
+//    		if(ex instanceof MobileTerminalModelValidationException) {
+//    			return new MTResponseDto<>(ex.getMessage(), MTResponseCode.INPUT_ERROR);
+//    		}
+//
+//    		if(ex instanceof MobileTerminalModelMapperException) {
+//    			//MobileTerminalValidationException
+//        		//MobileTerminalUnmarshallException
+//    			return new MTResponseDto<>(ex.getMessage(), MTResponseCode.MAPPING_ERROR);
+//    		}
+//
+//    		if(ex instanceof MobileTerminalFaultException) {
+//        		return extractFault((MobileTerminalFaultException)ex);
+//        	}
     		
     		return new MTResponseDto<>(ex.getMessage(), MTResponseCode.MODEL_ERROR);
     	}
 
-    	if(ex instanceof MobileTerminalException) {
+    	if(ex instanceof MobileTerminalModelException) {
     		return new MTResponseDto<>(ex.getMessage(), MTResponseCode.MOBILE_TERMINAL_ERROR);
     	}
         return new MTResponseDto<>(ex.getMessage(), MTResponseCode.UNDEFINED_ERROR);
     }
 
-    private static MTResponseDto extractFault(MobileTerminalFaultException ex) {
-        MobileTerminalFault fault = ex.getMobileTerminalFault();
-        if (fault == null) {
-            return new MTResponseDto<>(ex.getMessage(), MTResponseCode.DOMAIN_ERROR);
-        }
-
-        MobileTerminalType terminal = fault.getTerminal();
-        if (terminal == null) {
-            return new MTResponseDto<>(fault.getMessage(), fault.getCode());
-        }
-        return new MTResponseDto<>(terminal, fault.getCode());
-    }
+//    private static MTResponseDto extractFault(MobileTerminalFaultException ex) {
+//        MobileTerminalFault fault = ex.getMobileTerminalFault();
+//        if (fault == null) {
+//            return new MTResponseDto<>(ex.getMessage(), MTResponseCode.DOMAIN_ERROR);
+//        }
+//
+//        MobileTerminalType terminal = fault.getTerminal();
+//        if (terminal == null) {
+//            return new MTResponseDto<>(fault.getMessage(), fault.getCode());
+//        }
+//        return new MTResponseDto<>(terminal, fault.getCode());
+//    }
 }

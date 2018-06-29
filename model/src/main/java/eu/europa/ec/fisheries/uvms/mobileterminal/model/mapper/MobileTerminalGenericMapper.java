@@ -16,28 +16,28 @@ import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttributeTy
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ComChannelAttribute;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ComChannelType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalAttribute;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelMapperException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 
 import java.util.List;
 
 public class MobileTerminalGenericMapper {
 
-    public static String getComChannelTypeValue(ComChannelType comchannel, String type) throws MobileTerminalModelMapperException {
+    public static String getComChannelTypeValue(ComChannelType comchannel, String type) throws MobileTerminalModelException {
         for (ComChannelAttribute comChannelAttr : comchannel.getAttributes()) {
             if (comChannelAttr.getType().equalsIgnoreCase(type)) {
                 return comChannelAttr.getValue();
             }
         }
-        throw new MobileTerminalModelMapperException("Could not get value for ComChannelIdType " + type);
+        throw new MobileTerminalModelException("Could not get value for ComChannelIdType " + type);
     }
 
-    public static String getPollAttributeTypeValue(List<PollAttribute> attributes, PollAttributeType key) throws MobileTerminalModelMapperException {
+    public static String getPollAttributeTypeValue(List<PollAttribute> attributes, PollAttributeType key) throws MobileTerminalModelException {
         for (PollAttribute attribute : attributes) {
             if (attribute.getKey().equals(key)) {
                 return attribute.getValue();
             }
         }
-        throw new MobileTerminalModelMapperException("Could not map PollAttributeType key to value");
+        throw new MobileTerminalModelException("Could not map PollAttributeType key to value");
     }
 
     public static ComChannelAttribute createComChannelAttribute(String value, String type) {

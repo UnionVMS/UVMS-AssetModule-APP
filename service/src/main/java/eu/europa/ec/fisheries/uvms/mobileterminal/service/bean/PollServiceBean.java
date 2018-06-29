@@ -16,9 +16,7 @@ import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginCapabilityType;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalMessageException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelMapperException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ModuleQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
@@ -93,7 +91,7 @@ public class PollServiceBean implements PollService {
                 try {
                     String auditData = AuditModuleRequestMapper.mapAuditLogPollCreated(createdPoll.getPollType(), createdPoll.getPollId().getGuid(), createdPoll.getComment(), username);
                     MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-                } catch (AuditModelMarshallException e) {
+                } catch (AuditModelMarshallException | MobileTerminalException e) {
                     LOG.error("Failed to send audit log message! Poll with guid {} was created", createdPoll.getPollId().getGuid());
                 }
             }
@@ -107,7 +105,7 @@ public class PollServiceBean implements PollService {
             result.setUnsentPolls(unsentPolls);
             result.setUnsentPoll(!unsentPolls.isEmpty());
             return result;
-        } catch (MobileTerminalModelException | MobileTerminalMessageException e) {
+        } catch (MobileTerminalModelException e) {
             LOG.error("Failed to create poll", e);
             throw new MobileTerminalServiceException(e.getMessage());
         }
@@ -125,12 +123,12 @@ public class PollServiceBean implements PollService {
             try {
                 String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollStarted(startedPoll.getPollId().getGuid(), username);
                 MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-            } catch (AuditModelMarshallException e) {
+            } catch (AuditModelMarshallException | MobileTerminalException e) {
                 LOG.error("Failed to send audit log message! Poll with guid {} was started", startedPoll.getPollId().getGuid());
             }
 
             return startedPoll;
-        } catch (MobileTerminalModelException | MobileTerminalMessageException e) {
+        } catch (MobileTerminalModelException e) {
             throw new MobileTerminalServiceException(e.getMessage());
         }
     }
@@ -143,12 +141,12 @@ public class PollServiceBean implements PollService {
             try {
                 String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollStopped(stoppedPoll.getPollId().getGuid(), username);
                 MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-            } catch (AuditModelMarshallException e) {
+            } catch (AuditModelMarshallException | MobileTerminalException e) {
                 LOG.error("Failed to send audit log message! Poll with guid {} was stopped", stoppedPoll.getPollId().getGuid());
             }
 
             return stoppedPoll;
-        } catch (MobileTerminalModelException | MobileTerminalMessageException e) {
+        } catch (MobileTerminalModelException e) {
             throw new MobileTerminalServiceException(e.getMessage());
         }
     }
@@ -166,16 +164,17 @@ public class PollServiceBean implements PollService {
             }
 
             return inactivatedPoll;
-        } catch (MobileTerminalModelException | MobileTerminalMessageException e) {
+        } catch (MobileTerminalModelException  | MobileTerminalException e) {
             throw new MobileTerminalServiceException(e.getMessage());
         }
     }
 
-    public PollListResponse getPollBySearchCriteria(PollListQuery query) throws MobileTerminalServiceException {
+    public PollListResponse getPollBySearchCriteria(PollListQuery query) {
         try {
             return getPollList(query);
-        } catch (MobileTerminalModelException | SearchMapperException e) {
-            throw new MobileTerminalServiceException(e.getMessage());
+        } catch (RuntimeException | SearchMapperException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -184,7 +183,7 @@ public class PollServiceBean implements PollService {
         return getPollProgramRunningAndStarted();
     }
 
-    private MobileTerminalType mapPollableTerminalType(MobileTerminalTypeEnum type, String guid) throws MobileTerminalModelMapperException {
+    private MobileTerminalType mapPollableTerminalType(MobileTerminalTypeEnum type, String guid) {
         MobileTerminal terminal = terminalDao.getMobileTerminalByGuid(guid);
         return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
     }
@@ -334,20 +333,19 @@ public class PollServiceBean implements PollService {
             responseList.add(PollEntityToModelMapper.mapToPollResponseType(poll, mobileTerminalType, pollType));
         }
         return responseList;
-
     }
 
-    public PollListResponse getPollList(PollListQuery query) throws MobileTerminalModelException, SearchMapperException {
+    public PollListResponse getPollList(PollListQuery query) throws SearchMapperException {
         if (query == null) {
-            throw new IllegalArgumentException("Cannot get poll list because no query.");
+            throw new NullPointerException("Cannot get poll list because no query.");
         }
 
         if (query.getPagination() == null) {
-            throw new IllegalArgumentException("Cannot get poll list because no list pagination.");
+            throw new NullPointerException("Cannot get poll list because no list pagination.");
         }
 
         if (query.getPollSearchCriteria() == null || query.getPollSearchCriteria().getCriterias() == null) {
-            throw new IllegalArgumentException("Cannot get poll list because criteria are null.");
+            throw new NullPointerException("Cannot get poll list because criteria are null.");
         }
         PollListResponse response = new PollListResponse();
         List<PollResponseType> pollResponseList = new ArrayList<>();
@@ -369,8 +367,9 @@ public class PollServiceBean implements PollService {
                 MobileTerminalType mobileTerminalType = mapPollableTerminalType(mobileTerminalEntity.getMobileTerminalType(), mobileTerminalEntity.getId().toString());
                 PollResponseType pollType = PollEntityToModelMapper.mapToPollResponseType(poll, mobileTerminalType, EnumMapper.getPollModelFromType(poll.getPollType()));
                 pollResponseList.add(pollType);
-            } catch (EnumException e) {
+            } catch (RuntimeException e) {
                 LOG.error("[ Poll " + poll.getId() + "  couldn't map type ]");
+                throw new RuntimeException(e);
             }
         }
 
@@ -421,23 +420,23 @@ public class PollServiceBean implements PollService {
             program.setPollState(EnumMapper.getPollStateTypeFromModel(state));
 
             return PollEntityToModelMapper.mapToPollResponseType(program, terminalType);
-        } catch (EnumException e) {
+        } catch (MobileTerminalModelException e) {
             LOG.error("[ Error when setting poll program status. ] {}", e.getMessage());
             throw new MobileTerminalModelException(e.getMessage());
         }
     }
 
-    public ListResponseDto getMobileTerminalPollableList(PollableQuery query) throws MobileTerminalModelException {
+    public ListResponseDto getMobileTerminalPollableList(PollableQuery query) {
         if (query == null) {
-            throw new IllegalArgumentException("No query");
+            throw new NullPointerException("No query");
         }
 
         if (query.getPagination() == null) {
-            throw new IllegalArgumentException("No list pagination");
+            throw new NullPointerException("No list pagination");
         }
 
         ListResponseDto response = new ListResponseDto();
-        List<MobileTerminalType> mobileTerminalList = new ArrayList<MobileTerminalType>();
+        List<MobileTerminalType> mobileTerminalList = new ArrayList<>();
 
         Integer page = query.getPagination().getPage();
         Integer listSize = query.getPagination().getListSize();
@@ -488,13 +487,8 @@ public class PollServiceBean implements PollService {
         for (PollProgram pollProgram : pollPrograms) {
                 MobileTerminal terminal = pollProgram.getPollBase().getMobileterminal();
             MobileTerminalType terminalType = null;
-            try {
-                terminalType = mapPollableTerminalType(terminal.getMobileTerminalType(), terminal.getId().toString());
-                responseList.add(PollEntityToModelMapper.mapToPollResponseType(pollProgram, terminalType));
-            } catch (MobileTerminalModelMapperException e) {
-                LOG.warn(e.toString(), e);
-            }
-
+            terminalType = mapPollableTerminalType(terminal.getMobileTerminalType(), terminal.getId().toString());
+            responseList.add(PollEntityToModelMapper.mapToPollResponseType(pollProgram, terminalType));
         }
         return responseList;
     }

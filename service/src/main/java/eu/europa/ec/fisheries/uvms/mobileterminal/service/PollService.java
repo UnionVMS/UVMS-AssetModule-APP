@@ -15,9 +15,8 @@ import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollListQuery;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.CreatePollResultDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -25,58 +24,17 @@ import java.util.List;
 @Local
 public interface PollService {
 
-    /**
-     *
-     * Creates a Poll
-     *
-     * @param poll
-     * @return
-     * @throws MobileTerminalServiceException
-     */
-    CreatePollResultDto createPoll(PollRequestType poll, String username) throws MobileTerminalServiceException;
+    CreatePollResultDto createPoll(PollRequestType poll, String username) throws MobileTerminalModelException;
 
-    /**
-     *
-     * @return @throws MobileTerminalServiceException
-     */
-    List<PollResponseType> getRunningProgramPolls() throws MobileTerminalServiceException;
+    List<PollResponseType> getRunningProgramPolls() throws MobileTerminalModelException;
 
-    /**
-     *
-     * @param pollId
-     * @return
-     * @throws MobileTerminalServiceException
-     */
-    PollResponseType startProgramPoll(String pollId, String username) throws MobileTerminalServiceException;
+    PollResponseType startProgramPoll(String pollId, String username) throws MobileTerminalModelException;
 
-    /**
-     *
-     * @param pollId
-     * @return
-     * @throws MobileTerminalServiceException
-     */
-    PollResponseType stopProgramPoll(String pollId, String username) throws MobileTerminalServiceException;
+    PollResponseType stopProgramPoll(String pollId, String username) throws MobileTerminalModelException;
 
-    /**
-     *
-     * @param pollId
-     * @return
-     * @throws MobileTerminalServiceException
-     */
-    PollResponseType inactivateProgramPoll(String pollId, String username) throws MobileTerminalServiceException;
+    PollResponseType inactivateProgramPoll(String pollId, String username) throws MobileTerminalModelException;
 
-    /**
-     *
-     * @param query
-     * @return
-     * @throws MobileTerminalServiceException
-     */
-    PollListResponse getPollBySearchCriteria(PollListQuery query) throws MobileTerminalServiceException;
+    PollListResponse getPollBySearchCriteria(PollListQuery query) throws MobileTerminalModelException;
 
-    /**
-     *
-     * @return List of poll programs
-     * @throws MobileTerminalServiceException
-     */
-    List<PollResponseType> timer() throws MobileTerminalException;
+    List<PollResponseType> timer() throws MobileTerminalModelException;
 }

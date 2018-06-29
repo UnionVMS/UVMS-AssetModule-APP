@@ -12,7 +12,6 @@
 
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.constants;
 
-
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.TerminalCapability;
 
 public class CapabilitiesInmarsatC {

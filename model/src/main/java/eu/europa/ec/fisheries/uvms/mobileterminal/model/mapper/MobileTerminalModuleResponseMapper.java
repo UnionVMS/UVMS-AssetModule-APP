@@ -16,9 +16,7 @@ import eu.europa.ec.fisheries.schema.mobileterminal.module.v1.MobileTerminalResp
 import eu.europa.ec.fisheries.schema.mobileterminal.module.v1.PingResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalFault;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelMapperException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalUnmarshallException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalValidationException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,47 +27,47 @@ import java.util.List;
 public class MobileTerminalModuleResponseMapper {
     final static Logger LOG = LoggerFactory.getLogger(MobileTerminalModuleResponseMapper.class);
 
-    private static void validateResponse(TextMessage response, String correlationId) throws MobileTerminalValidationException, JMSException {
+    private static void validateResponse(TextMessage response, String correlationId) throws MobileTerminalModelException, JMSException {
 
         if (response == null) {
-            throw new MobileTerminalValidationException("Error when validating response in ResponseMapper: Response is Null");
+            throw new NullPointerException("Error when validating response in ResponseMapper: Response is Null");
         }
 
         if (response.getJMSCorrelationID() == null) {
-            throw new MobileTerminalValidationException("No correlationId in response (Null) . Expected was: " + correlationId);
+            throw new NullPointerException("No correlationId in response (Null) . Expected was: " + correlationId);
         }
 
         if (!correlationId.equalsIgnoreCase(response.getJMSCorrelationID())) {
-            throw new MobileTerminalValidationException("Wrong correlationId in response. Expected was: " + correlationId + "But actual was: " + response.getJMSCorrelationID());
+            throw new IllegalArgumentException("Wrong correlationId in response. Expected was: " + correlationId + "But actual was: " + response.getJMSCorrelationID());
         }
 
         try {
             MobileTerminalFault fault = JAXBMarshaller.unmarshallTextMessage(response, MobileTerminalFault.class);
-            throw new MobileTerminalValidationException(fault.getCode() + " : " + fault.getMessage());
-        } catch (MobileTerminalUnmarshallException e) {
+            throw new MobileTerminalModelException(fault.getCode() + " : " + fault.getMessage());
+        } catch (MobileTerminalModelException e) {
             e.printStackTrace();
         }
     }
 
-    private static String createMobileTerminalResponse(MobileTerminalType data) throws MobileTerminalModelMapperException {
+    private static String createMobileTerminalResponse(MobileTerminalType data) throws MobileTerminalModelException {
         MobileTerminalResponse response = new MobileTerminalResponse();
         response.setMobilTerminal(data);
         return JAXBMarshaller.marshallJaxBObjectToString(data);
     }
 
-    public static String createPingResponse(String responseMessage) throws MobileTerminalModelMapperException {
+    public static String createPingResponse(String responseMessage) throws MobileTerminalModelException {
 		PingResponse pingResponse = new PingResponse();
 		pingResponse.setResponse(responseMessage);
 		return JAXBMarshaller.marshallJaxBObjectToString(pingResponse);
     }
 
-    public static MobileTerminalType mapToMobileTerminalResponse(TextMessage message) throws MobileTerminalModelMapperException, JMSException, MobileTerminalUnmarshallException {
+    public static MobileTerminalType mapToMobileTerminalResponse(TextMessage message) throws MobileTerminalModelException, JMSException {
         validateResponse(message, message.getJMSCorrelationID());
         MobileTerminalResponse response = JAXBMarshaller.unmarshallTextMessage(message, MobileTerminalResponse.class);
         return response.getMobilTerminal();
     }
 
-    public static List<MobileTerminalType> mapToMobileTerminalListResponse(TextMessage message) throws MobileTerminalModelMapperException, JMSException, MobileTerminalUnmarshallException {
+    public static List<MobileTerminalType> mapToMobileTerminalListResponse(TextMessage message) throws MobileTerminalModelException, JMSException {
         validateResponse(message, message.getJMSCorrelationID());
         MobileTerminalListResponse response = JAXBMarshaller.unmarshallTextMessage(message, MobileTerminalListResponse.class);
         return response.getMobileTerminal();

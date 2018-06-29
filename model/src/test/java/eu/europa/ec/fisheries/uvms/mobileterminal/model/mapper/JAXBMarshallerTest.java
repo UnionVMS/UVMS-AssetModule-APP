@@ -3,7 +3,7 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper;
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.GetMobileTerminalRequest;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalDataSourceMethod;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalId;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelMapperException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import org.apache.activemq.command.ActiveMQTextMessage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +21,7 @@ public class JAXBMarshallerTest {
     private final String TEST_USER = "TEST_USER";
 
     @Test
-    public void testMarshallJaxBObjectToString() throws MobileTerminalModelMapperException {
+    public void testMarshallJaxBObjectToString() throws MobileTerminalModelException {
         GetMobileTerminalRequest mobileTerminalRequest = createMobileTerminalRequest();
         String response = JAXBMarshaller.marshallJaxBObjectToString(mobileTerminalRequest);
 
