@@ -17,7 +17,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.ejb.*;
+import javax.enterprise.concurrent.ManagedExecutorService;
 
 @Startup
 @Singleton
@@ -31,24 +33,26 @@ public class MobileTerminalExecutorServiceBean {
     @EJB
     private PollService pollService;
 
+    @Resource
+    ManagedExecutorService managedExecutorService;
+
     private PluginTimerTask pluginTimerTask;
     private PollTimerTask pollTimerTask;
 
     @PostConstruct
-    @TransactionAttribute(TransactionAttributeType.NEVER)
     public void initPlugins() {
+
         try {
             if(pluginTimerTask == null) {
                 pluginTimerTask = new PluginTimerTask(configService);
             }
-            pluginTimerTask.run();
+            managedExecutorService.execute(pluginTimerTask);
         } catch (Exception e) {
             LOG.error("Error when initializing PluginTimerTask", e);
         }
     }
     
     @Schedule(minute = "*/5", hour = "*", persistent = false)
-    @TransactionAttribute(TransactionAttributeType.NEVER)
     public void initPluginTimer() {
         try {
             if(pluginTimerTask == null) {

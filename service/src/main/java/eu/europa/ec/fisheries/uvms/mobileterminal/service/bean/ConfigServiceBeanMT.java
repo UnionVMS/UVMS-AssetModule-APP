@@ -85,7 +85,6 @@ public class ConfigServiceBeanMT implements ConfigService {
         return upsertPlugins(plugins);
     }
 
-    @TransactionAttribute(TransactionAttributeType.NEVER)
     public List<ServiceResponseType> getRegisteredMobileTerminalPlugins() throws MobileTerminalModelException {
         try {
             List<PluginType> pluginTypes = new ArrayList<>();
