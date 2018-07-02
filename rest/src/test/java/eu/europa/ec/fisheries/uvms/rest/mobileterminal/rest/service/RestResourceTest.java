@@ -24,7 +24,7 @@ import static org.junit.Assert.assertTrue;
 public class RestResourceTest extends AbstractAssetRestTest {
 
     @Test
-    public void worldsBestRestTest(){
+    public void worldsBestAndMostUsefulRestTest(){
         assertTrue(true);
     }
 }

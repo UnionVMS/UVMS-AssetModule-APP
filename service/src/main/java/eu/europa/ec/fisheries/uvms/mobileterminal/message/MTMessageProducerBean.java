@@ -71,6 +71,7 @@ public class MTMessageProducerBean implements MTMessageProducer {
     }
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public String sendModuleMessage(String text, ModuleQueue queue) throws MobileTerminalException {
 
         try (Connection connection = connectionFactory.createConnection()){

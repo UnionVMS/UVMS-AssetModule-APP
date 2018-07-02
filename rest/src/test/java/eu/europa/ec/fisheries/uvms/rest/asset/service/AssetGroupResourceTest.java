@@ -21,7 +21,7 @@ import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 
 @RunWith(Arquillian.class)
-//@RunAsClient
+@RunAsClient
 public class AssetGroupResourceTest extends AbstractAssetRestTest {
 
     @Test
@@ -29,7 +29,7 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
         
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
         
-        Response response = getWebTarget()
+        Response response = getExternalWebTarget()
                 .path("/group")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(assetGroup));
@@ -43,7 +43,7 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
 
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
         
-        AssetGroup createdAssetGroup = getWebTarget()
+        AssetGroup createdAssetGroup = getExternalWebTarget()
                 .path("/group")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(assetGroup), AssetGroup.class);
@@ -55,7 +55,7 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
     
     @Test
     public void getAssetGroupListByUserNoUserParamTest() throws Exception {
-        Response response = getWebTarget()
+        Response response = getExternalWebTarget()
                 .path("group")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)
@@ -67,7 +67,7 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
     @Test
     public void getAssetGroupListByUserTest() throws Exception {
 
-        Response responseBefore = getWebTarget()
+        Response responseBefore = getExternalWebTarget()
                 .path("group")
                 .path("list")
                 .queryParam("user", "MOCK_USER") // From mock filter
@@ -75,13 +75,13 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
                 .get();
         
         List<AssetGroup> groupsBefore = responseBefore.readEntity(new GenericType<List<AssetGroup>>() {});
-        
-        getWebTarget()
+
+        getExternalWebTarget()
                 .path("group")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(AssetHelper.createBasicAssetGroup()), AssetGroup.class);
         
-        Response response = getWebTarget()
+        Response response = getExternalWebTarget()
                 .path("group")
                 .path("list")
                 .queryParam("user", "MOCK_USER") // From mock filter
@@ -97,7 +97,7 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
     @Test
     public void getAssetGroupListByUserTwoGroupsTest() throws Exception {
 
-        Response responseBefore = getWebTarget()
+        Response responseBefore = getExternalWebTarget()
                 .path("group")
                 .path("list")
                 .queryParam("user", "MOCK_USER") // From mock filter
@@ -105,18 +105,18 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
                 .get();
         
         List<AssetGroup> groupsBefore = responseBefore.readEntity(new GenericType<List<AssetGroup>>() {});
-        
-        getWebTarget()
+
+        getExternalWebTarget()
+                .path("group")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(AssetHelper.createBasicAssetGroup()), AssetGroup.class);
+
+        getExternalWebTarget()
                 .path("group")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(AssetHelper.createBasicAssetGroup()), AssetGroup.class);
         
-        getWebTarget()
-                .path("group")
-                .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(AssetHelper.createBasicAssetGroup()), AssetGroup.class);
-        
-        Response response = getWebTarget()
+        Response response = getExternalWebTarget()
                 .path("group")
                 .path("list")
                 .queryParam("user", "MOCK_USER")
@@ -133,12 +133,12 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
     public void getAssetGroupByIdTest() throws Exception {
 
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
-        AssetGroup createdAssetGroup = getWebTarget()
+        AssetGroup createdAssetGroup = getExternalWebTarget()
                 .path("group")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(assetGroup), AssetGroup.class);
         
-        AssetGroup fetchedAssetGroup = getWebTarget()
+        AssetGroup fetchedAssetGroup = getExternalWebTarget()
                 .path("group")
                 .path(createdAssetGroup.getId().toString())
                 .request(MediaType.APPLICATION_JSON)
@@ -153,13 +153,13 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
     @Test
     public void getAssetGroupListByAssetId() throws Exception {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTarget()
+        Asset createdAsset = getExternalWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
         
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
-        AssetGroup createdAssetGroup = getWebTarget()
+        AssetGroup createdAssetGroup = getExternalWebTarget()
                 .path("group")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(assetGroup), AssetGroup.class);
@@ -167,15 +167,15 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
         AssetGroupField field = new AssetGroupField();
         field.setField("GUID");
         field.setValue(createdAsset.getId().toString());
-        
-        getWebTarget()
+
+        getExternalWebTarget()
                 .path("group")
                 .path(createdAssetGroup.getId().toString())
                 .path("field")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(field));
         
-        Response response = getWebTarget()
+        Response response = getExternalWebTarget()
                 .path("group")
                 .path("asset")
                 .path(createdAsset.getId().toString())

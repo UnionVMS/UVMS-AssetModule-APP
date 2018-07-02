@@ -17,10 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.ejb.Schedule;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
+import javax.ejb.*;
 
 @Startup
 @Singleton
@@ -38,6 +35,7 @@ public class MobileTerminalExecutorServiceBean {
     private PollTimerTask pollTimerTask;
 
     @PostConstruct
+    @TransactionAttribute(TransactionAttributeType.NEVER)
     public void initPlugins() {
         try {
             if(pluginTimerTask == null) {
@@ -50,6 +48,7 @@ public class MobileTerminalExecutorServiceBean {
     }
     
     @Schedule(minute = "*/5", hour = "*", persistent = false)
+    @TransactionAttribute(TransactionAttributeType.NEVER)
     public void initPluginTimer() {
         try {
             if(pluginTimerTask == null) {
@@ -62,7 +61,7 @@ public class MobileTerminalExecutorServiceBean {
         }
     }
 
-    @Schedule(minute = "*/5", hour = "*", persistent = false)
+    @Schedule(minute = "*/5", hour = "*", persistent = false) //TODO schedule: Ask andreas about how often we should do this check, change accordingly
     public void initPollTimer() {
         try {
             if(pollTimerTask == null) {

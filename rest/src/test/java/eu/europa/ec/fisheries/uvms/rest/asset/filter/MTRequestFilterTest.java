@@ -13,12 +13,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-//@RunAsClient
+@RunAsClient
 public class MTRequestFilterTest extends AbstractAssetRestTest {
 
     @Test
     public void checkMDCNoHeaderTest() {
-        Response response = getWebTarget()
+        Response response = getExternalWebTarget()
                 .path("internal")
                 .path("ping")
                 .request(MediaType.APPLICATION_JSON)
@@ -31,7 +31,7 @@ public class MTRequestFilterTest extends AbstractAssetRestTest {
     @Test
     public void checkMDCHeaderSetTest() {
         String requestId = UUID.randomUUID().toString();
-        Response response = getWebTarget()
+        Response response = getExternalWebTarget()
                 .path("internal")
                 .path("ping")
                 .request(MediaType.APPLICATION_JSON)

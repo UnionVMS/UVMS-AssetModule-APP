@@ -20,6 +20,8 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.ExchangeModuleR
 
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
@@ -33,6 +35,7 @@ import java.util.List;
 public class ExchangeModuleMock implements MessageListener {
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void onMessage(Message message) {
         try {
             List<ServiceResponseType> serviceResponse = new ArrayList<ServiceResponseType>();

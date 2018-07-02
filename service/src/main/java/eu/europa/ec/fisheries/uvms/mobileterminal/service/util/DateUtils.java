@@ -74,7 +74,7 @@ public class DateUtils {
     	return parseToUTC(DATE_FORMAT, dateString);
     }
 
-    // TODO FIX this
+    // TODO FIX this, check if old code returns the same value as the new code
     private static Date parseToUTC(String format, String dateString)
     {
         try{
@@ -85,6 +85,13 @@ public class DateUtils {
             return null;
         }
     }
+    /* //Old code for the function above
+    private static Date parseToUTC(String format, String dateString) {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern(format).withOffsetParsed();
+        DateTime dateTime = formatter.withZoneUTC().parseDateTime(dateString);
+        GregorianCalendar cal = dateTime.toGregorianCalendar();
+        return cal.getTime();
+    }*/
 
     public static Date getUTCNow()
     {

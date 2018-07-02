@@ -25,10 +25,10 @@ import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
 
-@ApplicationPath(MTRestConstants.REST_URL)
-public class MTRestActivator extends Application {
+//@ApplicationPath(MTRestConstants.REST_URL)
+public class MTRestActivator/* extends Application */{
 
-    private final static Logger LOG = LoggerFactory.getLogger(MTRequestFilter.class);
+  /*  private final static Logger LOG = LoggerFactory.getLogger(MTRequestFilter.class);
 
     private final Set<Object> singletons = new HashSet<>();
     private final Set<Class<?>> set = new HashSet<>();
@@ -49,5 +49,5 @@ public class MTRestActivator extends Application {
     @Override
     public Set<Object> getSingletons() {
         return singletons;
-    }
+    }*/
 }

@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.jms.*;
 
 import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.RETRIEVING_MESSAGE_ERROR;
@@ -43,6 +45,7 @@ public class MTResponseMessageConsumer implements MTMessageConsumer{
         Let client code take care of a possible "null" response accordingly.
      */
     @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public <T> T getMessage(String correlationId, Class type) throws MobileTerminalException {
         if (correlationId == null || correlationId.isEmpty()) {
             throw new NullPointerException("No CorrelationID provided!");

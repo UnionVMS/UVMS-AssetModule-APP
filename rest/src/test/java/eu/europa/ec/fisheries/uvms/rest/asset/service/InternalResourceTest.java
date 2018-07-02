@@ -19,13 +19,13 @@ import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
 
 @RunWith(Arquillian.class)
-//@RunAsClient
+@RunAsClient
 public class InternalResourceTest extends AbstractAssetRestTest {
 
     @Test
     public void getAssetByIdNonValidIdentifierTest() {
         
-        Response response = getWebTarget()
+        Response response = getExternalWebTarget()
                 .path("/internal/asset/apa/" + UUID.randomUUID())
                 .request(MediaType.APPLICATION_JSON)
                 .get();
@@ -37,12 +37,12 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     @Test
     public void getAssetByIdGUIDTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTarget()
+        Asset createdAsset = getExternalWebTarget()
                 .path("/asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
         
-        Asset fetchedAsset = getWebTarget()
+        Asset fetchedAsset = getExternalWebTarget()
                 .path("/internal/asset/guid/" + createdAsset.getId())
                 .request(MediaType.APPLICATION_JSON)
                 .get(Asset.class);
@@ -53,12 +53,12 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     @Test
     public void getAssetByIdCfrTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTarget()
+        Asset createdAsset = getExternalWebTarget()
                 .path("/asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
         
-        Asset fetchedAsset = getWebTarget()
+        Asset fetchedAsset = getExternalWebTarget()
                 .path("/internal/asset/cfr/" + createdAsset.getCfr())
                 .request(MediaType.APPLICATION_JSON)
                 .get(Asset.class);
@@ -69,12 +69,12 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     @Test
     public void getAssetByIdIrcsTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTarget()
+        Asset createdAsset = getExternalWebTarget()
                 .path("/asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
         
-        Asset fetchedAsset = getWebTarget()
+        Asset fetchedAsset = getExternalWebTarget()
                 .path("/internal/asset/ircs/" + createdAsset.getIrcs())
                 .request(MediaType.APPLICATION_JSON)
                 .get(Asset.class);
@@ -85,12 +85,12 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     @Test
     public void getAssetByIdImoTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTarget()
+        Asset createdAsset = getExternalWebTarget()
                 .path("/asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
         
-        Asset fetchedAsset = getWebTarget()
+        Asset fetchedAsset = getExternalWebTarget()
                 .path("/internal/asset/imo/" + createdAsset.getImo())
                 .request(MediaType.APPLICATION_JSON)
                 .get(Asset.class);
@@ -101,12 +101,12 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     @Test
     public void getAssetByIdMmsiTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTarget()
+        Asset createdAsset = getExternalWebTarget()
                 .path("/asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
         
-        Asset fetchedAsset = getWebTarget()
+        Asset fetchedAsset = getExternalWebTarget()
                 .path("/internal/asset/mmsi/" + createdAsset.getMmsi())
                 .request(MediaType.APPLICATION_JSON)
                 .get(Asset.class);
@@ -117,12 +117,12 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     @Test
     public void getAssetByIdIccatTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTarget()
+        Asset createdAsset = getExternalWebTarget()
                 .path("/asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
         
-        Asset fetchedAsset = getWebTarget()
+        Asset fetchedAsset = getExternalWebTarget()
                 .path("/internal/asset/iccat/" + createdAsset.getIccat())
                 .request(MediaType.APPLICATION_JSON)
                 .get(Asset.class);
@@ -133,12 +133,12 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     @Test
     public void getAssetByIdUviTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTarget()
+        Asset createdAsset = getExternalWebTarget()
                 .path("/asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
         
-        Asset fetchedAsset = getWebTarget()
+        Asset fetchedAsset = getExternalWebTarget()
                 .path("/internal/asset/uvi/" + createdAsset.getUvi())
                 .request(MediaType.APPLICATION_JSON)
                 .get(Asset.class);
@@ -149,12 +149,12 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     @Test
     public void getAssetByIdGfcmTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTarget()
+        Asset createdAsset = getExternalWebTarget()
                 .path("/asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
         
-        Asset fetchedAsset = getWebTarget()
+        Asset fetchedAsset = getExternalWebTarget()
                 .path("/internal/asset/gfcm/" + createdAsset.getGfcm())
                 .request(MediaType.APPLICATION_JSON)
                 .get(Asset.class);
@@ -167,7 +167,7 @@ public class InternalResourceTest extends AbstractAssetRestTest {
         Asset asset = AssetHelper.createBasicAsset();
         AssetBO assetBo = new AssetBO();
         assetBo.setAsset(asset);
-        Asset upsertedAsset = getWebTarget()
+        Asset upsertedAsset = getExternalWebTarget()
                 .path("internal")
                 .path("/asset")
                 .request(MediaType.APPLICATION_JSON)

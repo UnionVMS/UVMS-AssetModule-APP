@@ -29,13 +29,13 @@ import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
 
 @RunWith(Arquillian.class)
-//@RunAsClient
+@RunAsClient
 public class AssetResourceQueryTest extends AbstractAssetRestTest {
 
     @Test
     public void getAssetListQueryTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTarget()
+        Asset createdAsset = getExternalWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
@@ -43,7 +43,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         AssetQuery query = new AssetQuery();
         query.setCfr(Arrays.asList(createdAsset.getCfr()));
         
-        AssetListResponse listResponse = getWebTarget()
+        AssetListResponse listResponse = getExternalWebTarget()
                 .path("asset")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)

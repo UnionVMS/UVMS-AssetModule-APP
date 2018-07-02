@@ -26,7 +26,7 @@ import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
 
 @RunWith(Arquillian.class)
-//@RunAsClient
+@RunAsClient
 public class AssetResourceTest extends AbstractAssetRestTest {
        
     @Test
@@ -34,7 +34,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         
         Asset asset = AssetHelper.createBasicAsset();
         
-        Response response = getWebTarget()
+        Response response = getExternalWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset));
@@ -48,7 +48,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         
         Asset asset = AssetHelper.createBasicAsset();
         
-        Asset createdAsset = getWebTarget()
+        Asset createdAsset = getExternalWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
@@ -62,12 +62,12 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     public void getAssetByIdTest() throws Exception {
         
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTarget()
+        Asset createdAsset = getExternalWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
         
-        Asset fetchedAsset = getWebTarget()
+        Asset fetchedAsset = getExternalWebTarget()
                 .path("asset")
                 .path(createdAsset.getId().toString())
                 .request(MediaType.APPLICATION_JSON)
@@ -80,7 +80,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     
     @Test
     public void getAssetByIdRandomValueTest() throws Exception {
-        Asset asset = getWebTarget()
+        Asset asset = getExternalWebTarget()
                 .path("asset")
                 .path(UUID.randomUUID().toString())
                 .request(MediaType.APPLICATION_JSON)
@@ -91,7 +91,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     
     @Test
     public void getAssetByIdInvalidIdTest() throws Exception {
-        Response response = getWebTarget()
+        Response response = getExternalWebTarget()
                 .path("asset")
                 .path("nonExistingAssetId")
                 .request(MediaType.APPLICATION_JSON)
@@ -104,21 +104,21 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     @Test
     public void updateAssetChangedNameTest() throws Exception {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTarget()
+        Asset createdAsset = getExternalWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
         
         String newName = "NewAssetName";
         createdAsset.setName(newName);
-        Asset updatedAsset = getWebTarget()
+        Asset updatedAsset = getExternalWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.json(createdAsset), Asset.class);
         
         assertThat(updatedAsset.getName(), is(newName));
         
-        Response response = getWebTarget()
+        Response response = getExternalWebTarget()
                 .path("asset")
                 .path("history/asset")
                 .path(updatedAsset.getId().toString())
@@ -134,7 +134,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     @Test
     public void updateAssetNonExistingAssetTest() throws Exception {
         Asset asset = AssetHelper.createBasicAsset();
-        Response response = getWebTarget()
+        Response response = getExternalWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.json(asset));
@@ -146,12 +146,12 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     @Test
     public void archiveAssetTest() throws Exception {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTarget()
+        Asset createdAsset = getExternalWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
         
-        Asset archivedAsset = getWebTarget()
+        Asset archivedAsset = getExternalWebTarget()
                 .path("asset")
                 .path("archive")
                 .request(MediaType.APPLICATION_JSON)
@@ -165,7 +165,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     public void archiveAssetNonExistingAssetTest() throws Exception {
         Asset asset = AssetHelper.createBasicAsset();
         
-        Response response = getWebTarget()
+        Response response = getExternalWebTarget()
                 .path("asset")
                 .path("archive")
                 .request(MediaType.APPLICATION_JSON)
@@ -178,7 +178,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     @Test
     public void getAssetFromAssetIdAndDateCfrTest() throws Exception {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTarget()
+        Asset createdAsset = getExternalWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
@@ -187,14 +187,14 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         
         String newName = "NewAssetName";
         createdAsset.setName(newName);
-        getWebTarget()
+        getExternalWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.json(createdAsset), Asset.class);
         
         LocalDateTime secondTimeStamp = LocalDateTime.now(ZoneOffset.UTC);
         
-        Asset assetByCfrAndTimestamp1 = getWebTarget()
+        Asset assetByCfrAndTimestamp1 = getExternalWebTarget()
                 .path("asset")
                 .path("history")
                 .path("cfr")
@@ -205,7 +205,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         
         assertThat(assetByCfrAndTimestamp1.getName(), is(asset.getName()));
         
-        Asset assetByCfrAndTimestamp2 = getWebTarget()
+        Asset assetByCfrAndTimestamp2 = getExternalWebTarget()
                 .path("asset")
                 .path("history")
                 .path("cfr")
@@ -222,12 +222,12 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         LocalDateTime timeStamp = LocalDateTime.now(ZoneOffset.UTC);
 
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTarget()
+        Asset createdAsset = getExternalWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
         
-        Asset assetByCfrAndTimestamp1 = getWebTarget()
+        Asset assetByCfrAndTimestamp1 = getExternalWebTarget()
                 .path("asset")
                 .path("history")
                 .path("cfr")
@@ -242,12 +242,12 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     @Test
     public void getAssetHistoryByAssetHistGuidTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTarget()
+        Asset createdAsset = getExternalWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
         
-        Asset fetchedAsset = getWebTarget()
+        Asset fetchedAsset = getExternalWebTarget()
                 .path("asset")
                 .path("history")
                 .path(createdAsset.getHistoryId().toString())
@@ -260,7 +260,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     @Test
     public void getAssetHistoryByAssetHistGuidTwoRevisionsTest() throws Exception {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTarget()
+        Asset createdAsset = getExternalWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
@@ -268,13 +268,13 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         
         String newName = "NewAssetName";
         createdAsset.setName(newName);
-        Asset updatedAsset = getWebTarget()
+        Asset updatedAsset = getExternalWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.json(createdAsset), Asset.class);
         
         
-        Asset fetchedAsset = getWebTarget()
+        Asset fetchedAsset = getExternalWebTarget()
                 .path("asset")
                 .path("history")
                 .path(createdAsset.getHistoryId().toString())
@@ -284,7 +284,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         assertThat(fetchedAsset.getName(), is(asset.getName()));
         assertThat(fetchedAsset.getId(), is(createdAsset.getId()));
         
-        Asset fetchedUpdatedAsset = getWebTarget()
+        Asset fetchedUpdatedAsset = getExternalWebTarget()
                 .path("asset")
                 .path("history")
                 .path(updatedAsset.getHistoryId().toString())
@@ -298,14 +298,14 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     @Test
     public void createNoteTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTarget()
+        Asset createdAsset = getExternalWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
 
         Note note = AssetHelper.createBasicNote();
         
-        Note createdNote = getWebTarget()
+        Note createdNote = getExternalWebTarget()
                 .path("asset")
                 .path(createdAsset.getId().toString())
                 .path("notes")
@@ -319,21 +319,21 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     @Test
     public void getNotesForAssetTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTarget()
+        Asset createdAsset = getExternalWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
 
         Note note = AssetHelper.createBasicNote();
         
-        Note createdNote = getWebTarget()
+        Note createdNote = getExternalWebTarget()
                 .path("asset")
                 .path(createdAsset.getId().toString())
                 .path("notes")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(note), Note.class);
         
-        Response response = getWebTarget()
+        Response response = getExternalWebTarget()
                 .path("asset")
                 .path(createdAsset.getId().toString())
                 .path("notes")
@@ -351,7 +351,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     @Test
     public void deleteNoteTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTarget()
+        Asset createdAsset = getExternalWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
@@ -359,14 +359,14 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         Note note = AssetHelper.createBasicNote();
         
         // Create note
-        Note createdNote = getWebTarget()
+        Note createdNote = getExternalWebTarget()
                 .path("asset")
                 .path(createdAsset.getId().toString())
                 .path("notes")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(note), Note.class);
         
-        Response response = getWebTarget()
+        Response response = getExternalWebTarget()
                 .path("asset")
                 .path(createdAsset.getId().toString())
                 .path("notes")
@@ -380,7 +380,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         assertThat(fetchedNotes.size(), is(1));
         
         // Delete note
-        response = getWebTarget()
+        response = getExternalWebTarget()
                 .path("asset")
                 .path("notes")
                 .path(createdNote.getId().toString())
@@ -390,7 +390,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         assertTrue(response != null);
         assertEquals(200, response.getStatus());
         
-        response = getWebTarget()
+        response = getExternalWebTarget()
                 .path("asset")
                 .path(createdAsset.getId().toString())
                 .path("notes")

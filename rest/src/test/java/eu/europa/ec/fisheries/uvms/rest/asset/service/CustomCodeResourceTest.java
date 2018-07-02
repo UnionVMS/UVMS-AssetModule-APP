@@ -23,7 +23,7 @@ import java.util.*;
 
 
 @RunWith(Arquillian.class)
-//@RunAsClient
+@RunAsClient
 public class CustomCodeResourceTest extends AbstractAssetRestTest {
     // TODO also implement tests for embedded json when the need appears
 
@@ -43,7 +43,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
         String txt = UUID.randomUUID().toString().toUpperCase();
         String createdJson = createACustomCodeHelper(txt);
-        List<String> constants = getWebTarget()
+        List<String> constants = getExternalWebTarget()
                 .path("customcodes")
                 .path("listconstants")
                 .request(MediaType.APPLICATION_JSON)
@@ -68,7 +68,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         // this is actually not a test yet but it shows how to parse resulting json without a DTO
 
         // get a list of constants;
-        List<String> constants = getWebTarget()
+        List<String> constants = getExternalWebTarget()
                 .path("customcodes")
                 .path("listconstants")
                 .request(MediaType.APPLICATION_JSON)
@@ -77,7 +77,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         // for every constants
         Boolean found = false;
         for (String constant : constants) {
-            String json = getWebTarget()
+            String json = getExternalWebTarget()
                     .path("customcodes")
                     .path("listcodesforconstant")
                     .path(constant)
@@ -116,7 +116,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         String toDate = customCodesPk.getValidToDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
 
-        String json = getWebTarget()
+        String json = getExternalWebTarget()
                 .path("customcodes")
                 .path(customCodesPk.getConstant())
                 .path(customCodesPk.getCode())
@@ -144,7 +144,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         String fromDate = customCodesPk.getValidFromDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         String toDate = customCodesPk.getValidToDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
-        Boolean exists = getWebTarget()
+        Boolean exists = getExternalWebTarget()
                 .path("customcodes")
                 .path("exists")
                 .path(customCodesPk.getConstant())
@@ -156,7 +156,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
         Assert.assertTrue(exists);
 
-        String jsondelete = getWebTarget()
+        String jsondelete = getExternalWebTarget()
                 .path("customcodes")
                 .path(customCodesPk.getConstant())
                 .path(customCodesPk.getCode())
@@ -167,7 +167,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
 
 
-        exists = getWebTarget()
+        exists = getExternalWebTarget()
                 .path("customcodes")
                 .path("exists")
                 .path(customCodesPk.getConstant())
@@ -201,7 +201,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
 
 
-        String created = getWebTarget()
+        String created = getExternalWebTarget()
                 .path("customcodes")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(customCode), String.class);
@@ -227,7 +227,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
             customCode.setPrimaryKey(primaryKey);
             customCode.setDescription(descr);
 
-            String created = getWebTarget()
+            String created = getExternalWebTarget()
                     .path("customcodes")
                     .request(MediaType.APPLICATION_JSON)
                     .post(Entity.json(customCode), String.class);
@@ -253,7 +253,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
         String dateToTest = dateWithinRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
-        String  json = getWebTarget()
+        String  json = getExternalWebTarget()
                 .path("customcodes")
                 .path("getfordate")
                 .path(customCodesPk.getConstant())
@@ -285,7 +285,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
         String dateToTest = dateWithoutRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
-        String json = getWebTarget()
+        String json = getExternalWebTarget()
                 .path("customcodes")
                 .path("getfordate")
                 .path(customCodesPk.getConstant())
@@ -319,7 +319,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
         String dateToTest = dateWithinRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
-        Boolean ret = getWebTarget()
+        Boolean ret = getExternalWebTarget()
                 .path("customcodes")
                 .path("verify")
                 .path(customCodesPk.getConstant())
@@ -347,7 +347,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
         String dateToTest = dateWithoutRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
-        Boolean ret = getWebTarget()
+        Boolean ret = getExternalWebTarget()
                 .path("customcodes")
                 .path("verify")
                 .path(customCodesPk.getConstant())
@@ -373,7 +373,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
         String dateWithin = dateWithinRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
-        String json = getWebTarget()
+        String json = getExternalWebTarget()
                 .path("customcodes")
                 .path("getfordate")
                 .path(customCodesPk.getConstant())
