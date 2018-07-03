@@ -166,9 +166,9 @@ public class PollRestResource {
             objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
             String json = objectMapper.writeValueAsString(pollProgram);
             return new MTResponseDto<>(json, MTResponseCode.OK);
-        } catch (Exception ex) {
+        } catch (Exception e) {
 
-            return null;
+            return MTErrorHandler.getFault(e);
 
         }
     }

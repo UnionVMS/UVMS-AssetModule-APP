@@ -190,19 +190,18 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         assertEquals(pollGuid, output.getValue().get(2).getValue());       //pray to god that theses are fixed in position......
         assertEquals("FALSE", output.getValue().get(8).getValue());
 
-        //PollProgram checkThatThePollIsArchived = pollProgramDaoBean.getPollProgramById(UUID.fromString(pollGuid));
+        //PollProgram checkThatThePollIsArchived = pollProgramDaoBean.getPollProgramById(UUID.fromString(pollGuid));  //b4 run as client
         response = getWebTarget()
                 .path("/poll/program/" + pollGuid)
                 .request(MediaType.APPLICATION_JSON)
                 .get(String.class);
 
         assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        String  letsHopeThisWorks = deserializeResponseDto(response, String.class);
+        String  deserializeResponse = deserializeResponseDto(response, String.class);
+
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        //PollProgram checkThatThePollIsArchived = deserializeResponseDto(response, PollProgram.class);
-        PollProgram checkThatThePollIsArchived = objectMapper.readValue(letsHopeThisWorks, PollProgram.class);
-        //PollProgram checkThatThePollIsArchived = deserializeResponseDto(letsHopeThisWorks, PollProgram.class);
+        PollProgram checkThatThePollIsArchived = objectMapper.readValue(deserializeResponse, PollProgram.class);
+
         assertEquals(PollStateEnum.ARCHIVED, checkThatThePollIsArchived.getPollState());
 
     }
