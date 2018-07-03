@@ -35,7 +35,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
     @Test
     public void getAssetListQueryTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getExternalWebTarget()
+        Asset createdAsset = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
@@ -43,7 +43,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         AssetQuery query = new AssetQuery();
         query.setCfr(Arrays.asList(createdAsset.getCfr()));
         
-        AssetListResponse listResponse = getExternalWebTarget()
+        AssetListResponse listResponse = getWebTarget()
                 .path("asset")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)

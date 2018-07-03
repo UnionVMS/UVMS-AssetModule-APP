@@ -11,13 +11,17 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollListQuery;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollableQuery;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MappedPollServiceBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.PollProgramDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.PollProgram;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTResponseDto;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTErrorHandler;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
@@ -46,6 +50,9 @@ public class PollRestResource {
 
     @EJB
     private MappedPollServiceBean pollService;
+
+    @EJB
+    private PollProgramDaoBean pollProgramDao;
 
     @Context
     private HttpServletRequest request;
@@ -145,6 +152,24 @@ public class PollRestResource {
         } catch (Exception ex) {
             LOG.error("[ Error when getting poll by search criteria {}] {}", query, ex.getStackTrace());
             return MTErrorHandler.getFault(ex);
+        }
+    }
+
+
+    @GET
+    @Path("/program/{id}")
+    @RequiresFeature(UnionVMSFeature.viewMobileTerminalPolls)
+    public MTResponseDto<String> getPollProgram(@PathParam("id") String pollProgramId) {
+        try {
+            PollProgram pollProgram = pollProgramDao.getPollProgramByGuid(pollProgramId);
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+            String json = objectMapper.writeValueAsString(pollProgram);
+            return new MTResponseDto<>(json, MTResponseCode.OK);
+        } catch (Exception ex) {
+
+            return null;
+
         }
     }
 

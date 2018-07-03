@@ -32,7 +32,7 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 @ArquillianSuiteDeployment
 public abstract class AbstractAssetRestTest {
 
-    protected WebTarget getExternalWebTarget() {
+    protected WebTarget getWebTarget() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
@@ -41,17 +41,6 @@ public abstract class AbstractAssetRestTest {
         client.register(new JacksonJaxbJsonProvider(objectMapper, JacksonJaxbJsonProvider.DEFAULT_ANNOTATIONS));
         return client.target("http://localhost:28080/test/rest");  //external
         //return client.target("http://localhost:8080/test/rest");    //internal
-    }
-
-    protected WebTarget getInternalWebTarget() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        Client client = ClientBuilder.newClient();
-        client.register(new JacksonJaxbJsonProvider(objectMapper, JacksonJaxbJsonProvider.DEFAULT_ANNOTATIONS));
-        //return client.target("http://localhost:28080/test/rest");  //external
-        return client.target("http://localhost:8080/test/rest");    //internal
     }
 
     @Deployment(name = "normal", order = 1)

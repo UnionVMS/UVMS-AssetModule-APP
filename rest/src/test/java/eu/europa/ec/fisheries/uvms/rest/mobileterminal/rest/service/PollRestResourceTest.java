@@ -1,11 +1,11 @@
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListPagination;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.PollDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.PollProgramDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollDto;
@@ -16,12 +16,11 @@ import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
 import org.hamcrest.CoreMatchers;
+import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
@@ -29,28 +28,27 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import java.io.StringReader;
 import java.util.Date;
-import java.util.UUID;
 
 
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
-//@RunAsClient
+@RunAsClient
 public class PollRestResourceTest extends AbstractAssetRestTest {
 
-    @Inject
+    /*@Inject
     PollDaoBean pollDaoBean;
 
     @Inject
     PollProgramDaoBean pollProgramDaoBean;
 
     @Inject
-    TerminalDaoBean terminalDaoBean;
+    TerminalDaoBean terminalDaoBean;*/
 
     @Test
     public void getRunningProgramPollsTest() {
 
-        String response = getInternalWebTarget()
+        String response = getWebTarget()
                 .path("/poll/running")
                 .request(MediaType.APPLICATION_JSON)
                 .get()
@@ -78,7 +76,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         input.setComment("Test Comment");
         input.setUserName("Test User");
 
-        String response = getInternalWebTarget()
+        String response = getWebTarget()
                 .path("/poll")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(input), String.class);
@@ -112,7 +110,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         //Create program poll
         PollRequestType input = createProgramPoll(createdMT);
 
-        String response = getInternalWebTarget()
+        String response = getWebTarget()
                 .path("/poll")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(input), String.class);
@@ -127,7 +125,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         }else{
             pollGuid = output.getSentPolls().get(0);
         }
-        response = getInternalWebTarget()
+        response = getWebTarget()
                 .path("/poll/stop/" + pollGuid)
                 .request(MediaType.APPLICATION_JSON)
                 .get(String.class);
@@ -141,7 +139,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
 
         //and starting again
-        response = getInternalWebTarget()
+        response = getWebTarget()
                 .path("/poll/start/" + pollGuid)
                 .request(MediaType.APPLICATION_JSON)
                 .get(String.class);
@@ -165,7 +163,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         //Create program poll
         PollRequestType input = createProgramPoll(createdMT);
 
-        String response = getInternalWebTarget()
+        String response = getWebTarget()
                 .path("/poll")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(input), String.class);
@@ -180,7 +178,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         }else{
             pollGuid = createdPoll.getSentPolls().get(0);
         }
-        response = getInternalWebTarget()
+        response = getWebTarget()
                 .path("/poll/inactivate/" + pollGuid)
                 .request(MediaType.APPLICATION_JSON)
                 .get(String.class);
@@ -192,7 +190,19 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         assertEquals(pollGuid, output.getValue().get(2).getValue());       //pray to god that theses are fixed in position......
         assertEquals("FALSE", output.getValue().get(8).getValue());
 
-        PollProgram checkThatThePollIsArchived = pollProgramDaoBean.getPollProgramById(UUID.fromString(pollGuid));
+        //PollProgram checkThatThePollIsArchived = pollProgramDaoBean.getPollProgramById(UUID.fromString(pollGuid));
+        response = getWebTarget()
+                .path("/poll/program/" + pollGuid)
+                .request(MediaType.APPLICATION_JSON)
+                .get(String.class);
+
+        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
+        String  letsHopeThisWorks = deserializeResponseDto(response, String.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        //PollProgram checkThatThePollIsArchived = deserializeResponseDto(response, PollProgram.class);
+        PollProgram checkThatThePollIsArchived = objectMapper.readValue(letsHopeThisWorks, PollProgram.class);
+        //PollProgram checkThatThePollIsArchived = deserializeResponseDto(letsHopeThisWorks, PollProgram.class);
         assertEquals(PollStateEnum.ARCHIVED, checkThatThePollIsArchived.getPollState());
 
     }
@@ -212,7 +222,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         pollRequestType.setComment("Test Comment");
         pollRequestType.setUserName("Test User");
 
-        String response = getInternalWebTarget()
+        String response = getWebTarget()
                 .path("/poll")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(pollRequestType), String.class);
@@ -241,7 +251,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         pollSearchCriteria.getCriterias().add(listCriteria);
         input.setPollSearchCriteria(pollSearchCriteria);
 
-        response = getInternalWebTarget()
+        response = getWebTarget()
                 .path("/poll/list")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(input), String.class);
@@ -268,7 +278,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         pollRequestType.setComment("Test Comment");
         pollRequestType.setUserName("Test User");
 
-        String response = getInternalWebTarget()
+        String response = getWebTarget()
                 .path("/poll")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(pollRequestType), String.class);
@@ -303,7 +313,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         input.setPollSearchCriteria(pollSearchCriteria);
 
 
-        response = getInternalWebTarget()
+        response = getWebTarget()
                 .path("/poll/list")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(input), String.class);
@@ -331,7 +341,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         pollRequestType.setComment("Test Comment");
         pollRequestType.setUserName("Test User");
 
-        String response = getInternalWebTarget()
+        String response = getWebTarget()
                 .path("/poll")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(pollRequestType), String.class);
@@ -346,8 +356,8 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         input.setPagination(hate);
         input.getConnectIdList().add("Special Test Boat");
 
-        response = getInternalWebTarget()
-                .path("/poll//pollable")
+        response = getWebTarget()
+                .path("/poll/pollable")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(input), String.class);
 
@@ -361,7 +371,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         MobileTerminalType mt = MobileTerminalTestHelper.createBasicMobileTerminal();
         mt.setConnectId(boat);
 
-        String response = getInternalWebTarget()
+        String response = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(mt), String.class);

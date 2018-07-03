@@ -92,6 +92,9 @@ public class ConfigServiceBeanMT implements ConfigService {
             String data = ExchangeModuleRequestMapper.createGetServiceListRequest(pluginTypes);
             String messageId = MTMessageProducer.sendModuleMessage(data, ModuleQueue.EXCHANGE);
             TextMessage response = MTMessageConsumer.getMessage(messageId, TextMessage.class);
+            if(response == null){
+                throw new MobileTerminalModelException("No response from exchange");
+            }
             return ExchangeModuleResponseMapper.mapServiceListResponse(response, messageId);
         } catch (ExchangeModelMapperException | MobileTerminalException e) {
             LOG.error("Failed to map to exchange get service list request");

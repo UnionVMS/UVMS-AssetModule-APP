@@ -41,6 +41,7 @@ public class AssetActivator extends Application {
 
         set.add(MobileTerminalRestResource.class);
         set.add(PollRestResource.class);
+        //PollRestResource.class.getMethods()
         set.add(MTConfigRestResource.class);
         set.add(UnionVMSFeatureFilter.class);
         //LOG.info(MTRestConstants.MODULE_NAME + " module starting up");

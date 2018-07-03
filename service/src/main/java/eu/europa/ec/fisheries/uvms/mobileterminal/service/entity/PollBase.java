@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "pollbase")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PollBase implements Serializable {
 
     @Id

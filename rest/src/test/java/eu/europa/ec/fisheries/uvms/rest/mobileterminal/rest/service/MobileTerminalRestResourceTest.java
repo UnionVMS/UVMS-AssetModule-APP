@@ -36,17 +36,16 @@ import java.util.UUID;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
-//@RunAsClient
+@RunAsClient
 public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(MobileTerminalRestResourceTest.class);
 
     @Test
-    @RunAsClient
     public void createMobileTerminalTest() {
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
-        String response = getExternalWebTarget()
+        String response = getWebTarget()
                                 .path("mobileterminal")
                                 .request(MediaType.APPLICATION_JSON)
                                 .post(Entity.json(mobileTerminal), String.class);
@@ -61,7 +60,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     public void getMobileTerminalByIdTest() {
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
-        String created = getInternalWebTarget()
+        String created = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(mobileTerminal), String.class);
@@ -75,7 +74,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         JsonObject terminalId = data.getJsonObject("mobileTerminalId");
         String guid = terminalId.getString("guid");
 
-        String res = getInternalWebTarget()
+        String res = getWebTarget()
                 .path("mobileterminal/" + guid)
                 .request(MediaType.APPLICATION_JSON)
                 .get()
@@ -88,7 +87,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     public void updateMobileTerminalTest() {
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
-        String created = getInternalWebTarget()
+        String created = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(mobileTerminal), String.class);
@@ -110,7 +109,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         mobileTerminal.setMobileTerminalId(mobileTerminalId);
         mobileTerminal.setType("IRIDIUM");
 
-        String updated = getInternalWebTarget()
+        String updated = getWebTarget()
                 .path("mobileterminal")
                 .queryParam("comment", "NEW_TEST_COMMENT")
                 .request(MediaType.APPLICATION_JSON)
@@ -125,7 +124,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     public void getMobileTerminalListTest() {
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
-        String created = getInternalWebTarget()
+        String created = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(mobileTerminal), String.class);
@@ -137,7 +136,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         MobileTerminalListQuery mobileTerminalListQuery = MobileTerminalTestHelper.createMobileTerminalListQuery();
 
-        String response = getInternalWebTarget()
+        String response = getWebTarget()
                 .path("/mobileterminal/list")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(mobileTerminalListQuery), String.class);
@@ -158,7 +157,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
-        String created = getInternalWebTarget()
+        String created = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(mobileTerminal), String.class);
@@ -180,7 +179,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         mobileTerminalId.setGuid(guid);
         query.setMobileTerminalId(mobileTerminalId);
 
-        String response = getInternalWebTarget()
+        String response = getWebTarget()
                 .path("/mobileterminal/assign")
                 .queryParam("comment", "NEW_TEST_COMMENT")
                 .request(MediaType.APPLICATION_JSON)
@@ -194,7 +193,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     public void unAssignMobileTerminalTest() {
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
-        String created = getInternalWebTarget()
+        String created = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(mobileTerminal), String.class);
@@ -217,7 +216,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         query.setMobileTerminalId(mobileTerminalId);
 
 
-        String responseAssign = getInternalWebTarget()
+        String responseAssign = getWebTarget()
                 .path("/mobileterminal/assign")
                 .queryParam("comment", "NEW_TEST_COMMENT")
                 .request(MediaType.APPLICATION_JSON)
@@ -226,7 +225,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertNotNull(responseAssign);
         assertTrue(responseAssign.contains(guid));
 
-        String responseUnAssign = getInternalWebTarget()
+        String responseUnAssign = getWebTarget()
                 .path("/mobileterminal/unassign")
                 .queryParam("comment", "NEW_TEST_COMMENT")
                 .request(MediaType.APPLICATION_JSON)
