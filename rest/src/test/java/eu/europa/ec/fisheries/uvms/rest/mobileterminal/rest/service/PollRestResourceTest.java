@@ -1,8 +1,6 @@
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListPagination;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
@@ -35,15 +33,6 @@ import static org.junit.Assert.*;
 @RunWith(Arquillian.class)
 @RunAsClient
 public class PollRestResourceTest extends AbstractAssetRestTest {
-
-    /*@Inject
-    PollDaoBean pollDaoBean;
-
-    @Inject
-    PollProgramDaoBean pollProgramDaoBean;
-
-    @Inject
-    TerminalDaoBean terminalDaoBean;*/
 
     @Test
     public void getRunningProgramPollsTest() {
@@ -415,6 +404,5 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         return pollRequestType;
     }
-
 
 }

@@ -2,7 +2,6 @@ package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.TerminalDaoException;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import org.hamcrest.core.StringContains;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
@@ -109,7 +108,7 @@ public class MobileTerminalPluginDaoBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void testCreateMobileTerminalPlugin_descriptionConstraintViolation() throws TerminalDaoException {
+    public void testCreateMobileTerminalPlugin_descriptionConstraintViolation() {
 
         thrown.expect(ConstraintViolationException.class);
 
@@ -128,7 +127,7 @@ public class MobileTerminalPluginDaoBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void testCreateMobileTerminalPlugin_serviceNameConstraintViolation() throws TerminalDaoException {
+    public void testCreateMobileTerminalPlugin_serviceNameConstraintViolation() {
 
         thrown.expect(ConstraintViolationException.class);
 
@@ -147,7 +146,7 @@ public class MobileTerminalPluginDaoBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void testCreateMobileTerminalPlugin_satelliteTypeConstraintViolation() throws TerminalDaoException {
+    public void testCreateMobileTerminalPlugin_satelliteTypeConstraintViolation() {
 
         thrown.expect(ConstraintViolationException.class);
 
@@ -166,7 +165,7 @@ public class MobileTerminalPluginDaoBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void testCreateMobileTerminalPlugin_updateUserConstraintViolation() throws TerminalDaoException {
+    public void testCreateMobileTerminalPlugin_updateUserConstraintViolation() {
 
         thrown.expect(ConstraintViolationException.class);
 
@@ -185,7 +184,7 @@ public class MobileTerminalPluginDaoBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void testGetPluginByServiceName() throws TerminalDaoException {
+    public void testGetPluginByServiceName() {
 
         // Given
         final String serviceName = "test_serviceName";
@@ -203,7 +202,7 @@ public class MobileTerminalPluginDaoBeanIntTest extends TransactionalTests {
 
     @Test()
     @OperateOnDeployment("normal")
-    public void testGetPluginByServiceName_wrongServiceNameThrowsNoEntityFoundException() throws TerminalDaoException {
+    public void testGetPluginByServiceName_wrongServiceNameThrowsNoEntityFoundException() {
 
         try {
             mobileTerminalPluginDao.getPluginByServiceName("thisServiceNameDoesNotExist");
@@ -217,7 +216,7 @@ public class MobileTerminalPluginDaoBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void testUpdatePlugin() throws TerminalDaoException {
+    public void testUpdatePlugin() {
 
         // Given
         final String newServiceName = "change_me";
@@ -237,13 +236,13 @@ public class MobileTerminalPluginDaoBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void testUpdatePlugin_updateInsteadOfPersistFailsWithTerminalDaoException() throws TerminalDaoException {
+    public void testUpdatePlugin_updateInsteadOfPersistFailsWithTerminalDaoException() {
 
 
         MobileTerminalPlugin mobileTerminalPlugin = createMobileTerminalPluginHelper();
 
         MobileTerminalPlugin obj = mobileTerminalPluginDao.updateMobileTerminalPlugin(mobileTerminalPlugin);
-        Assert.assertTrue(obj != null);
+        Assert.assertNotNull(obj);
     }
 
     @Test

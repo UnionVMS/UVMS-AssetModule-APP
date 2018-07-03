@@ -11,11 +11,11 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.message;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
 
 import javax.ejb.Local;
 
 @Local
 public interface MTMessageConsumer {
-    <T> T getMessage(String correlationId, Class type) throws MobileTerminalException;
+    <T> T getMessage(String correlationId, Class type) throws MobileTerminalServiceException;
 }

@@ -20,6 +20,8 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.jms.*;
 
+import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.RETRIEVING_BOOL_ERROR;
+
 @Stateless
 @LocalBean
 public class GetReceivedEventBean {
@@ -115,7 +117,7 @@ public class GetReceivedEventBean {
             return DataSourceQueue.INTERNAL;
         } catch (ConfigServiceException ex) {
             LOG.error("[ Error when deciding data flow. ] {}", ex.getMessage());
-            throw new MobileTerminalServiceException(ex.getMessage());
+            throw new MobileTerminalServiceException(RETRIEVING_BOOL_ERROR.getMessage(), ex, RETRIEVING_BOOL_ERROR.getCode());
         }
     }
 }

@@ -1,7 +1,7 @@
 package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageProducerBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MappedPollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.PollProgramDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.CreatePollResultDto;
@@ -11,8 +11,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollValue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.PollProgram;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceMapperException;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper.TestPollHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
@@ -58,7 +56,7 @@ public class MappedPollServiceBeanIntTest extends TransactionalTests {
         CreatePollResultDto createPollResultDto = mappedPollService.createPoll(pollRequestType, "TEST");
         em.flush();
 
-        if(createPollResultDto.getSentPolls().size() == 0){
+        if(createPollResultDto.getSentPolls().size() == 0 && createPollResultDto.getUnsentPolls().size() == 0) {
             Assert.fail();
         }
      }
@@ -160,7 +158,7 @@ public class MappedPollServiceBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void startProgramPoll_ShouldFailWithNullAsPollId() throws MobileTerminalServiceException, MobileTerminalServiceMapperException {
+    public void startProgramPoll_ShouldFailWithNullAsPollId() throws MobileTerminalModelException {
 
         try {
             mappedPollService.startProgramPoll(null, "TEST");
@@ -173,7 +171,7 @@ public class MappedPollServiceBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void stopProgramPoll_ShouldFailWithNullAsPollId() throws MobileTerminalServiceException, MobileTerminalServiceMapperException {
+    public void stopProgramPoll_ShouldFailWithNullAsPollId() throws MobileTerminalModelException {
 
         thrown.expect(EJBTransactionRolledbackException.class);
         thrown.expectMessage("No poll id given");

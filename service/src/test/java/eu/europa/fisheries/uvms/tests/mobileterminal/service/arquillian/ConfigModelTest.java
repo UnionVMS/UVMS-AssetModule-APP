@@ -16,7 +16,6 @@ import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemType
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.Plugin;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
 import eu.europa.ec.fisheries.uvms.asset.bean.ConfigServiceBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.ConfigServiceBeanMT;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.ChannelDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.DNIDListDaoBean;
@@ -25,9 +24,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.OceanRegionDaoBean
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.DNIDList;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.OceanRegion;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.InputArgumentException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.NoEntityFoundException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.TerminalDaoException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PluginMapper;
 import org.junit.Assert;
 import org.junit.Before;

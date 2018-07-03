@@ -14,11 +14,29 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.exception;
 public class MobileTerminalModelException extends Exception {
 	private static final long serialVersionUID = 1L;
 
-	public MobileTerminalModelException(String message) {
-		super(message);
+	private final int errorCode;
+
+	public MobileTerminalModelException(int errorCode) {
+		super();
+		this.errorCode = errorCode;
 	}
 
-	public MobileTerminalModelException(String message, Throwable cause) {
+	public MobileTerminalModelException(String message, Throwable cause, int errorCode) {
 		super(message, cause);
+		this.errorCode = errorCode;
+	}
+
+	public MobileTerminalModelException(String message, int errorCode) {
+		super(message);
+		this.errorCode = errorCode;
+	}
+
+	public MobileTerminalModelException(Throwable cause, int errorCode) {
+		super(cause);
+		this.errorCode = errorCode;
+	}
+
+	public int getErrorCode() {
+		return this.errorCode;
 	}
 }

@@ -42,7 +42,7 @@ public class ChannelDaoIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
 
-    public void testGetPollableListSearch() throws Exception {
+    public void testGetPollableListSearch() {
         //Given - need a string list of id's.
         String id1 = "test_id1";
         String id2 = "test_id2";

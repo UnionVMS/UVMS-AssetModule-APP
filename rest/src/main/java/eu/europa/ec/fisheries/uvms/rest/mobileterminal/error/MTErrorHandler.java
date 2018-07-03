@@ -11,24 +11,19 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.error;
 
-import eu.europa.ec.fisheries.schema.mobileterminal.module.v1.MobileTerminalFaultException;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalFault;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceMapperException;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTResponseDto;
 
 public class MTErrorHandler {
     
     public static MTResponseDto getFault(Exception ex) {
     	if(ex instanceof MobileTerminalServiceException) {
-    		if(ex instanceof InputArgumentException) {
+    		if(ex instanceof IllegalArgumentException) {
     			return new MTResponseDto<>(ex.getMessage(), MTResponseCode.INPUT_ERROR);
             }
     		
-            if(ex instanceof MobileTerminalServiceMapperException) {
+            if(ex instanceof MobileTerminalServiceException) {
             	return new MTResponseDto<>(ex.getMessage(), MTResponseCode.MAPPING_ERROR);
             }
             return new MTResponseDto<>(ex.getMessage(), MTResponseCode.SERVICE_ERROR);

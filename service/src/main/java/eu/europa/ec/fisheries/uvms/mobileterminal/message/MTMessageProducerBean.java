@@ -16,7 +16,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.message.constants.MessageConst
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.DataSourceQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ModuleQueue;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +50,7 @@ public class MTMessageProducerBean implements MTMessageProducer {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public String sendDataSourceMessage(String text, DataSourceQueue queue) throws MobileTerminalException {
+    public String sendDataSourceMessage(String text, DataSourceQueue queue) throws MobileTerminalServiceException {
 
         try (Connection connection = connectionFactory.createConnection()){
             final Session session = JMSUtils.connectToQueue(connection);
@@ -66,13 +66,13 @@ public class MTMessageProducerBean implements MTMessageProducer {
             return message.getJMSMessageID();
         } catch (JMSException e) {
             LOG.error("[ Error when sending data source message. ] {}", e.getMessage());
-            throw new MobileTerminalException(SENDING_MESSAGE_ERROR.getMessage(), e, SENDING_MESSAGE_ERROR.getCode());
+            throw new MobileTerminalServiceException(SENDING_MESSAGE_ERROR.getMessage(), e, SENDING_MESSAGE_ERROR.getCode());
         }
     }
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public String sendModuleMessage(String text, ModuleQueue queue) throws MobileTerminalException {
+    public String sendModuleMessage(String text, ModuleQueue queue) throws MobileTerminalServiceException {
 
         try (Connection connection = connectionFactory.createConnection()){
             final Session session = JMSUtils.connectToQueue(connection);
@@ -99,8 +99,7 @@ public class MTMessageProducerBean implements MTMessageProducer {
             return message.getJMSMessageID();
         } catch (JMSException e) {
             LOG.error("[ Error when sending data source message. ] {}", e.getMessage());
-            throw new MobileTerminalException(SENDING_MESSAGE_ERROR.getMessage(), e, SENDING_MESSAGE_ERROR.getCode());
+            throw new MobileTerminalServiceException(SENDING_MESSAGE_ERROR.getMessage(), e, SENDING_MESSAGE_ERROR.getCode());
         }
     }
-
 }

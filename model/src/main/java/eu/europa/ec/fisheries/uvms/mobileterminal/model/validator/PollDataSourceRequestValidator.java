@@ -28,22 +28,22 @@ public class PollDataSourceRequestValidator {
     private static final int CONFIGURATION_POLL_MAX_SIZE = 1;
     private static final int SAMPLING_POLL_MAX_SIZE = 1;
 
-    public static void validateMobilePollRequestType(PollRequestType pollRequest) throws MobileTerminalModelException {
+    public static void validateMobilePollRequestType(PollRequestType pollRequest) {
         if (pollRequest == null)
-            throw new MobileTerminalModelException("No poll request to validate");
+            throw new NullPointerException("No poll request to validate");
         validateHasUser(pollRequest.getUserName());
         validateCorrectRequestType(pollRequest);
         validateMobileTerminals(pollRequest);
     }
 
-    static void validateHasUser(String userName) throws MobileTerminalModelException {
+    static void validateHasUser(String userName) {
         if (userName == null || userName.isEmpty())
-            throw new MobileTerminalModelException("No user of poll request");
+            throw new NullPointerException("No user of poll request");
     }
 
-    static void validateMobileTerminals(PollRequestType pollRequest) throws MobileTerminalModelException {
+    static void validateMobileTerminals(PollRequestType pollRequest) {
         if (pollRequest.getMobileTerminals().isEmpty()) {
-            throw new MobileTerminalModelException("No mobile terminals to poll");
+            throw new NullPointerException("No mobile terminals to poll");
         }
         switch (pollRequest.getPollType()) {
         case CONFIGURATION_POLL:
@@ -57,12 +57,12 @@ public class PollDataSourceRequestValidator {
                 }
             }
             if (!canPollMultiple && pollRequest.getMobileTerminals().size() > CONFIGURATION_POLL_MAX_SIZE) {
-                throw new MobileTerminalModelException("Too many mobile terminals to send a configuration of dnid/memberid poll");
+                throw new IllegalArgumentException("Too many mobile terminals to send a configuration of dnid/memberid poll");
             }
             break;
         case SAMPLING_POLL:
             if (pollRequest.getMobileTerminals().size() > SAMPLING_POLL_MAX_SIZE) {
-                throw new MobileTerminalModelException("Too many mobile terminals to send a configuration poll");
+                throw new IllegalArgumentException("Too many mobile terminals to send a configuration poll");
             }
             break;
         default:
@@ -70,7 +70,7 @@ public class PollDataSourceRequestValidator {
         }
     }
 
-    private static void validateCorrectRequestType(PollRequestType pollRequest) throws MobileTerminalModelException {
+    private static void validateCorrectRequestType(PollRequestType pollRequest) {
 
         switch (pollRequest.getPollType()) {
         case CONFIGURATION_POLL:
@@ -85,69 +85,74 @@ public class PollDataSourceRequestValidator {
             checkSamplingPollParams(pollRequest);
             break;
         default:
-            throw new MobileTerminalModelException("pollRequest with PollType " + pollRequest.getPollType() + " validation not impemented");
+            throw new IllegalArgumentException("pollRequest with PollType " + pollRequest.getPollType() + " validation not impemented");
         }
     }
 
-    static void checkConfigurationPollParams(PollRequestType pollRequest) throws MobileTerminalModelException {
+    static void checkConfigurationPollParams(PollRequestType pollRequest) {
         checkOneOfFields(pollRequest, PollAttributeType.REPORT_FREQUENCY, PollAttributeType.GRACE_PERIOD, PollAttributeType.IN_PORT_GRACE,
                 PollAttributeType.DNID, PollAttributeType.MEMBER_NUMBER);
     }
 
-    static void checkProgramPollParams(PollRequestType pollRequest) throws MobileTerminalModelException {
+    static void checkProgramPollParams(PollRequestType pollRequest) {
         checkFields(pollRequest, PollAttributeType.FREQUENCY, PollAttributeType.START_DATE, PollAttributeType.END_DATE);
     }
 
-    static void checkSamplingPollParams(PollRequestType pollRequest) throws MobileTerminalModelException {
+    static void checkSamplingPollParams(PollRequestType pollRequest) {
         checkFields(pollRequest, PollAttributeType.START_DATE, PollAttributeType.END_DATE);
     }
 
-    private static void checkOneOfFields(PollRequestType pollRequest, PollAttributeType... attributes) throws MobileTerminalModelException {
+    private static void checkOneOfFields(PollRequestType pollRequest, PollAttributeType... attributes) {
         Set<PollAttributeType> attributesToCheck = new HashSet<>(Arrays.asList(attributes));
         Set<PollAttributeType> attributesProvided = new HashSet<>();
 
         if (pollRequest != null) {
-            for (PollAttribute attrib : pollRequest.getAttributes()) {
-                attributesProvided.add(attrib.getKey());
+            for (PollAttribute attribute : pollRequest.getAttributes()) {
+                attributesProvided.add(attribute.getKey());
             }
         }
 
-        StringBuilder builder = new StringBuilder("Request must contain at least one of the following attributes ");
+        StringBuilder builder = new StringBuilder("Request must contain at least one of the following attributes: ");
         int nbrOfAttributes = 0;
-        for (PollAttributeType attribToCheck : attributesToCheck) {
-            for (PollAttributeType attribFailure : attributesToCheck) {
-                builder.append("[" + attribFailure.name() + "] ");
-            }
-
-            if (attributesProvided.contains(attribToCheck)) {
+        for (PollAttributeType attrToCheck : attributesToCheck) {
+            if (attributesProvided.contains(attrToCheck)) {
                 nbrOfAttributes++;
+            } else {
+                builder
+                        .append("[")
+                        .append(attrToCheck.name())
+                        .append("] ");
             }
         }
 
         if (nbrOfAttributes == 0) {
-            throw new MobileTerminalModelException(builder.toString());
+            throw new RuntimeException(builder.toString());
         }
     }
 
-    private static void checkFields(PollRequestType pollRequest, PollAttributeType... attributes) throws MobileTerminalModelException {
+    private static void checkFields(PollRequestType pollRequest, PollAttributeType... attributes) {
 
         Set<PollAttributeType> attributesToCheck = new HashSet<>(Arrays.asList(attributes));
         Set<PollAttributeType> attributesProvided = new HashSet<>();
 
         if (pollRequest != null) {
-            for (PollAttribute attrib : pollRequest.getAttributes()) {
-                attributesProvided.add(attrib.getKey());
+            for (PollAttribute attribute : pollRequest.getAttributes()) {
+                attributesProvided.add(attribute.getKey());
             }
         }
 
-        for (PollAttributeType attribToCheck : attributesToCheck) {
-            if (!attributesProvided.contains(attribToCheck)) {
-                StringBuilder builder = new StringBuilder("Request must contain following attributes ");
-                for (PollAttributeType attribFailure : attributesToCheck) {
-                    builder.append("[" + attribFailure.name() + "] ");
-                }
-                throw new MobileTerminalModelException(builder.toString());
+        for (PollAttributeType attrToCheck : attributesToCheck) {
+            int count = 0;
+            StringBuilder builder = new StringBuilder("Request must contain following attributes: ");
+            if (!attributesProvided.contains(attrToCheck)) {
+                builder
+                        .append("[")
+                        .append(attrToCheck.name())
+                        .append("] ");
+                count++;
             }
+            if(count > 0)
+                throw new RuntimeException(builder.toString());
         }
     }
 }

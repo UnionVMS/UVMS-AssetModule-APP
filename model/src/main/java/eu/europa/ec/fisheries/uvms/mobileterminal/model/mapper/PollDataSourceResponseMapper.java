@@ -24,28 +24,29 @@ import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import java.util.List;
 
+import static eu.europa.ec.fisheries.uvms.mobileterminal.exception.ErrorCode.*;
+
 public class PollDataSourceResponseMapper {
 
     private static Logger LOG = LoggerFactory.getLogger(PollDataSourceResponseMapper.class);
 
-    private static void validateResponse(TextMessage response, String correlationId) throws JMSException, MobileTerminalModelException {
+    private static void validateResponse(TextMessage response, String correlationId) throws JMSException {
 
         if (response == null) {
-            throw new MobileTerminalModelException("Error when validating response in ResponseMapper: Response is Null");
+            throw new NullPointerException("Error when validating response in ResponseMapper: Response is Null");
         }
 
         if (response.getJMSCorrelationID() == null) {
-            throw new MobileTerminalModelException("No corelationId in response (Null) . Expected was: " + correlationId);
+            throw new NullPointerException("No corelationId in response (Null) . Expected was: " + correlationId);
         }
 
         if (!correlationId.equalsIgnoreCase(response.getJMSCorrelationID())) {
-            throw new MobileTerminalModelException("Wrong corelationId in response. Expected was: " + correlationId + "But actual was: "
-                    + response.getJMSCorrelationID());
+            throw new IllegalArgumentException("Wrong corelationId in response. Expected was: " + correlationId + "But actual was: " + response.getJMSCorrelationID());
         }
 
         try {
             MobileTerminalFault fault = JAXBMarshaller.unmarshallTextMessage(response, MobileTerminalFault.class);
-            throw new MobileTerminalModelException(fault.getCode() + " : " + fault.getMessage());
+            throw new RuntimeException(fault.getCode() + " : " + fault.getMessage());
         } catch (MobileTerminalModelException e) {
             // everything is well
         }
@@ -58,7 +59,7 @@ public class PollDataSourceResponseMapper {
             return unmarshalledResponse.getPollList();
         } catch (MobileTerminalModelException | JMSException e) {
             LOG.error("[ Error when unmarshalling poll create responses. ] {}", e.getMessage());
-            throw new MobileTerminalModelException(e.getMessage());
+            throw new MobileTerminalModelException(UNMARSHALLING_ERROR.getMessage() + CreatePollResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
         }
     }
 
@@ -69,7 +70,7 @@ public class PollDataSourceResponseMapper {
             return unmarshalledResponse.getPollList();
         } catch (MobileTerminalModelException | JMSException e) {
             LOG.error("[ Error when unmarshalling poll list responses. ] {}", e.getMessage());
-            throw new MobileTerminalModelException(e.getMessage());
+            throw new MobileTerminalModelException(UNMARSHALLING_ERROR.getMessage() + PollListResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
         }
     }
 
@@ -79,7 +80,7 @@ public class PollDataSourceResponseMapper {
             return JAXBMarshaller.unmarshallTextMessage(response, PollListResponse.class);
         } catch (MobileTerminalModelException | JMSException e) {
             LOG.error("[ Error when unmarshalling poll list responses. ] {}", e.getMessage());
-            throw new MobileTerminalModelException(e.getMessage());
+            throw new MobileTerminalModelException(UNMARSHALLING_ERROR.getMessage() + PollListResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
         }
 	}
     
@@ -90,7 +91,7 @@ public class PollDataSourceResponseMapper {
             return unmarshalledResponse.getPoll();
         } catch (MobileTerminalModelException | JMSException e) {
             LOG.error("[ Error when unmarshalling single poll responses. ] {}", e.getMessage());
-            throw new MobileTerminalModelException(e.getMessage());
+            throw new MobileTerminalModelException(UNMARSHALLING_ERROR.getMessage() + SinglePollResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
         }
     }
 }

@@ -28,6 +28,8 @@ import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import java.util.List;
 
+import static eu.europa.ec.fisheries.uvms.mobileterminal.exception.ErrorCode.UNMARSHALLING_ERROR;
+
 public class MobileTerminalDataSourceResponseMapper {
 
     private static Logger LOG = LoggerFactory.getLogger(MobileTerminalDataSourceResponseMapper.class);
@@ -48,7 +50,7 @@ public class MobileTerminalDataSourceResponseMapper {
 
         try {
             MobileTerminalFault fault = JAXBMarshaller.unmarshallTextMessage(response, MobileTerminalFault.class);
-            throw new MobileTerminalModelException("Fault found when validate response: " + fault.toString());
+            throw new RuntimeException("Fault found when validate response: " + fault.toString());
         } catch (MobileTerminalModelException e) {
             //everything is well
         }
@@ -61,7 +63,7 @@ public class MobileTerminalDataSourceResponseMapper {
             return unmarshalledResponse.getMobilTerminal();
         } catch (MobileTerminalModelException | JMSException e) {
             LOG.error("[ Error when mapping response to mobile terminal. ] " + e.getMessage());
-            throw new MobileTerminalModelException(e.getMessage());
+            throw new MobileTerminalModelException(UNMARSHALLING_ERROR.getMessage() + MobileTerminalResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
         }
 
     }
@@ -73,7 +75,7 @@ public class MobileTerminalDataSourceResponseMapper {
             return unmarshalledResponse.isDnidListUpdated();
         } catch (MobileTerminalModelException | JMSException e) {
             LOG.error("[ Error when mapping response to mobile terminal. DNIDList updated] " + e.getMessage());
-            throw new MobileTerminalModelException(e.getMessage());
+            throw new MobileTerminalModelException(UNMARSHALLING_ERROR.getMessage() + MobileTerminalResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
         }
     }
 
@@ -83,7 +85,7 @@ public class MobileTerminalDataSourceResponseMapper {
             return JAXBMarshaller.unmarshallTextMessage(response, MobileTerminalListResponse.class);
         } catch (MobileTerminalModelException | JMSException e) {
             LOG.error("[ Error when mapping response to mobile terminal list. ] {}", e.getMessage());
-            throw new MobileTerminalModelException("Error when returning mobile terminal list from response in ResponseMapper: " + e.getMessage());
+            throw new MobileTerminalModelException(UNMARSHALLING_ERROR.getMessage() + MobileTerminalListResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
         }
     }
 
@@ -94,7 +96,7 @@ public class MobileTerminalDataSourceResponseMapper {
             return mappedResponse.getTerminalSystem();
         } catch (MobileTerminalModelException | JMSException e) {
             LOG.error("[ Error when mapping response to terminal system list. ] {}", e.getMessage());
-            throw new MobileTerminalModelException("Error when returning mobile terminal list from response in ResponseMapper: " + e.getMessage());
+            throw new MobileTerminalModelException(UNMARSHALLING_ERROR.getMessage() + TerminalSystemListResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
         }
     }
 
@@ -105,7 +107,7 @@ public class MobileTerminalDataSourceResponseMapper {
             return mappedResponse.getComchannelName();
         } catch (MobileTerminalModelException | JMSException e) {
             LOG.error("[ Error when mapping response to comchannel list. ] {}", e.getMessage());
-            throw new MobileTerminalModelException("Error when returning comchannel names from response in ResponseMapper: " + e.getMessage());
+            throw new MobileTerminalModelException(UNMARSHALLING_ERROR.getMessage() + ComchannelNameResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
         }
 	}
 
@@ -116,7 +118,7 @@ public class MobileTerminalDataSourceResponseMapper {
             return mappedResponse.getHistory();
         } catch (MobileTerminalModelException | JMSException e) {
             LOG.error("[ Error when mapping response to mobile terminal history. ] {}", e.getMessage());
-            throw new MobileTerminalModelException("Error when returning mobile terminal list from response in ResponseMapper: " + e.getMessage());
+            throw new MobileTerminalModelException(UNMARSHALLING_ERROR.getMessage() + HistoryMobileTerminalListResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
         }
     }
 
@@ -127,7 +129,7 @@ public class MobileTerminalDataSourceResponseMapper {
     		return mappedResponse.getConfig();
     	} catch (MobileTerminalModelException | JMSException e) {
     		LOG.error("[ Error when mapping response to config list. ] {}", e.getMessage());
-    		throw new MobileTerminalModelException("Error when returning mobile terminal list from response in ResponseMapper: " + e.getMessage());
+            throw new MobileTerminalModelException(UNMARSHALLING_ERROR.getMessage() + ConfigResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
     	}
 	}
     
@@ -138,18 +140,17 @@ public class MobileTerminalDataSourceResponseMapper {
             return mappedResponse.getPlugin();
         } catch (MobileTerminalModelException | JMSException e) {
             LOG.error("[ Error when mapping response to plugin list. ] ");
-            throw new MobileTerminalModelException("Error when returning plugin list from response in ResponseMapper: " + e.getMessage());
+            throw new MobileTerminalModelException(UNMARSHALLING_ERROR.getMessage() + UpsertPluginListResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
         }
 	}
     
     public static UpdatedDNIDListResponse mapToUpdatedDNIDList(TextMessage response, String correlationId) throws MobileTerminalModelException {
     	try {
             validateResponse(response, correlationId);
-            UpdatedDNIDListResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, UpdatedDNIDListResponse.class);
-            return mappedResponse;
+            return JAXBMarshaller.unmarshallTextMessage(response, UpdatedDNIDListResponse.class);
         } catch (MobileTerminalModelException | JMSException e) {
             LOG.error("[ Error when mapping response to updated DNID list response. ] ");
-            throw new MobileTerminalModelException("Error when returning updated DNID List from response in ResponseMapper: " + e.getMessage());
+            throw new MobileTerminalModelException(UNMARSHALLING_ERROR.getMessage() + UpdatedDNIDListResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
         }
     }
 

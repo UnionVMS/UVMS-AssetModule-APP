@@ -13,7 +13,6 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.search.poll;
 
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.ListCriteria;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.SearchMapperException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.PollSearchField;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.PollSearchKeyValue;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.SearchKey;
@@ -25,7 +24,7 @@ import java.util.Map;
 
 public class PollSearchMapper {
 
-	public static List<PollSearchKeyValue> createSearchFields(List<ListCriteria> criterias) throws SearchMapperException {
+	public static List<PollSearchKeyValue> createSearchFields(List<ListCriteria> criterias) {
 		Map<PollSearchField, PollSearchKeyValue> searchKeyValues = new HashMap<>();
 		for (ListCriteria criteria : criterias) {
 			PollSearchKeyValue keyValue = mapSearchKey(criteria, searchKeyValues);
@@ -35,15 +34,14 @@ public class PollSearchMapper {
 	}
 
 	// TODO  FIX, done maybe?
-	private static PollSearchKeyValue mapSearchKey(ListCriteria criteria, Map<PollSearchField, PollSearchKeyValue> searchKeys) throws SearchMapperException {
+	private static PollSearchKeyValue mapSearchKey(ListCriteria criteria, Map<PollSearchField, PollSearchKeyValue> searchKeys) {
 		if (criteria == null || criteria.getKey() == null || criteria.getValue() == null) {
-			throw new SearchMapperException("Non valid search criteria");
+			throw new NullPointerException("Non valid search criteria");
 		}
 		PollSearchField searchField = getSearchField(criteria.getKey());
 		PollSearchKeyValue searchKeyValue = getSearchKeyValue(searchField, searchKeys);
 		searchKeyValue.getValues().add(criteria.getValue());
 		return searchKeyValue;
-		//return null;
 	}
 
 	private static PollSearchKeyValue getSearchKeyValue(PollSearchField field, Map<PollSearchField, PollSearchKeyValue> searchKeys) {
@@ -55,7 +53,7 @@ public class PollSearchMapper {
 		return searchKeyValue;
 	}
 
-	private static PollSearchField getSearchField(SearchKey key) throws SearchMapperException {
+	private static PollSearchField getSearchField(SearchKey key) {
 		switch (key) {
 			case CONNECT_ID:
 				return PollSearchField.CONNECT_ID;
@@ -68,7 +66,7 @@ public class PollSearchMapper {
 			case USER:
 				return PollSearchField.USER;
 			default:
-				throw new SearchMapperException("No searchKey " + key.name());
+				throw new IllegalArgumentException("No searchKey " + key.name());
 		}
 	}
 

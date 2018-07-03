@@ -9,15 +9,34 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.mobileterminal.service.exception;
+package eu.europa.ec.fisheries.uvms.mobileterminal.service.exception;;
 
+public class MobileTerminalServiceException extends Exception {
+    private static final long serialVersionUID = 3568431328513195791L;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
+    private final int errorCode;
 
-public class MobileTerminalServiceException extends MobileTerminalModelException {
-	private static final long serialVersionUID = 1L;
+    public MobileTerminalServiceException(int errorCode) {
+        super();
+        this.errorCode = errorCode;
+    }
 
-    public MobileTerminalServiceException(String message) {
+    public MobileTerminalServiceException(String message, Throwable cause, int errorCode) {
+        super(message, cause);
+        this.errorCode = errorCode;
+    }
+
+    public MobileTerminalServiceException(String message, int errorCode) {
         super(message);
+        this.errorCode = errorCode;
+    }
+
+    public MobileTerminalServiceException(Throwable cause, int errorCode) {
+        super(cause);
+        this.errorCode = errorCode;
+    }
+
+    public int getErrorCode() {
+        return this.errorCode;
     }
 }

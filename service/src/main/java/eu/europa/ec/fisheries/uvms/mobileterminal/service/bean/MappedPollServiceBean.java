@@ -20,7 +20,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceMapperException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PollMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,34 +41,34 @@ public class MappedPollServiceBean {
     @EJB
     private MobileTerminalServiceBean mobileTerminalService;
 
-    public CreatePollResultDto createPoll(PollRequestType pollRequest, String username) throws MobileTerminalServiceException {
+    public CreatePollResultDto createPoll(PollRequestType pollRequest, String username) throws MobileTerminalModelException {
         LOG.debug("Create poll");
 
         return pollService.createPoll(pollRequest, username);
     }
 
-    public List<PollDto> getRunningProgramPolls() throws MobileTerminalServiceMapperException {
+    public List<PollDto> getRunningProgramPolls() {
 
         List<PollResponseType> pollResponse = pollService.getRunningProgramPolls();
         return PollMapper.mapPolls(pollResponse);
     }
 
-    public PollDto startProgramPoll(String pollId, String username) throws MobileTerminalServiceMapperException, MobileTerminalServiceException {
+    public PollDto startProgramPoll(String pollId, String username) throws MobileTerminalModelException {
         PollResponseType pollResponse = pollService.startProgramPoll(pollId, username);
         return PollMapper.mapPoll(pollResponse);
     }
 
-    public PollDto stopProgramPoll(String pollId, String username) throws MobileTerminalServiceMapperException, MobileTerminalServiceException {
+    public PollDto stopProgramPoll(String pollId, String username) throws MobileTerminalModelException {
         PollResponseType pollResponse = pollService.stopProgramPoll(pollId, username);
         return PollMapper.mapPoll(pollResponse);
     }
 
-    public PollDto inactivateProgramPoll(String pollId, String username) throws MobileTerminalServiceMapperException, MobileTerminalServiceException {
+    public PollDto inactivateProgramPoll(String pollId, String username) throws MobileTerminalModelException {
         PollResponseType pollResponse = pollService.inactivateProgramPoll(pollId, username);
         return PollMapper.mapPoll(pollResponse);
     }
 
-    public PollChannelListDto getPollBySearchQuery(PollListQuery query) throws MobileTerminalServiceMapperException, MobileTerminalServiceException {
+    public PollChannelListDto getPollBySearchQuery(PollListQuery query) {
     	PollChannelListDto channelListDto = new PollChannelListDto();
     	
     	PollListResponse pollResponse = pollService.getPollBySearchCriteria(query);
@@ -86,7 +85,7 @@ public class MappedPollServiceBean {
         return channelListDto;
     }
 
-    public PollChannelListDto getPollableChannels(PollableQuery query) throws MobileTerminalServiceMapperException, MobileTerminalModelException {
+    public PollChannelListDto getPollableChannels(PollableQuery query) {
         PollChannelListDto channelListDto = new PollChannelListDto();
 
         MobileTerminalListResponse response = mobileTerminalService.getPollableMobileTerminal(query);

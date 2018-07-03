@@ -107,6 +107,11 @@ public class TestPollHelper {
         MobileTerminalType mobileTerminal = new MobileTerminalType();
         mobileTerminal.setSource(MobileTerminalSource.INTERNAL);
         mobileTerminal.setType("INMARSAT_C");
+
+        MobileTerminalId terminalId = new MobileTerminalId();
+        terminalId.setGuid(UUID.randomUUID().toString());
+        mobileTerminal.setMobileTerminalId(terminalId);
+
         List<MobileTerminalAttribute> attributes = mobileTerminal.getAttributes();
         addAttribute(attributes, MobileTerminalConstants.SERIAL_NUMBER, generateARandomStringWithMaxLength(10));
         addAttribute(attributes, "SATELLITE_NUMBER", "S" + generateARandomStringWithMaxLength(4));
@@ -180,10 +185,10 @@ public class TestPollHelper {
     }
 
     private void addAttribute(List<MobileTerminalAttribute> attributes, String type, String value) {
-        MobileTerminalAttribute serialNumberMobileTerminalAttribute = new MobileTerminalAttribute();
-        serialNumberMobileTerminalAttribute.setType(type);
-        serialNumberMobileTerminalAttribute.setValue(value);
-        attributes.add(serialNumberMobileTerminalAttribute);
+        MobileTerminalAttribute attribute = new MobileTerminalAttribute();
+        attribute.setType(type);
+        attribute.setValue(value);
+        attributes.add(attribute);
     }
 
     public PollProgram createPollProgramHelper(String mobileTerminalSerialNo, Date startDate, Date stopDate, Date latestRun) {

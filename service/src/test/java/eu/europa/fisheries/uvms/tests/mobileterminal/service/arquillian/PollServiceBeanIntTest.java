@@ -44,7 +44,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void createPoll() throws MobileTerminalServiceException {
+    public void createPoll() throws MobileTerminalModelException {
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
         PollRequestType pollRequestType = testPollHelper.createPollRequestType();
         CreatePollResultDto createPollResultDto = pollService.createPoll(pollRequestType, "TEST");
@@ -52,7 +52,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    public void createPollWithBrokenJMS_WillFail() throws  MobileTerminalServiceException {
+    public void createPollWithBrokenJMS_WillFail() {
 
         try {
             System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "true");
@@ -82,7 +82,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    public void startProgramPoll() throws MobileTerminalServiceException {
+    public void startProgramPoll() throws MobileTerminalModelException {
 
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
 
@@ -110,7 +110,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    public void stopProgramPoll() throws  MobileTerminalServiceException {
+    public void stopProgramPoll() throws MobileTerminalModelException {
 
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
 
@@ -138,7 +138,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    public void inactivateProgramPoll() throws MobileTerminalServiceException {
+    public void inactivateProgramPoll() throws MobileTerminalModelException {
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
 
         Date startDate = testPollHelper.getStartDate();
@@ -165,7 +165,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    public void getPollProgramRunningAndStarted() throws MobileTerminalModelException {
+    public void getPollProgramRunningAndStarted() {
 
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
 

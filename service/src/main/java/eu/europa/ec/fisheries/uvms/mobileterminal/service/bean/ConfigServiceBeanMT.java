@@ -39,7 +39,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalP
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.OceanRegion;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollTypeEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.ExchangeModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PluginMapper;
 import org.slf4j.Logger;
@@ -48,6 +48,8 @@ import org.slf4j.LoggerFactory;
 import javax.ejb.*;
 import javax.jms.TextMessage;
 import java.util.*;
+
+import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.EXCHANGE_MAPPING_ERROR;
 
 @Stateless
 @LocalBean
@@ -93,12 +95,12 @@ public class ConfigServiceBeanMT implements ConfigService {
             String messageId = MTMessageProducer.sendModuleMessage(data, ModuleQueue.EXCHANGE);
             TextMessage response = MTMessageConsumer.getMessage(messageId, TextMessage.class);
             if(response == null){
-                throw new MobileTerminalModelException("No response from exchange");
+                throw new NullPointerException("No response from exchange");
             }
             return ExchangeModuleResponseMapper.mapServiceListResponse(response, messageId);
-        } catch (ExchangeModelMapperException | MobileTerminalException e) {
+        } catch (ExchangeModelMapperException | MobileTerminalServiceException e) {
             LOG.error("Failed to map to exchange get service list request");
-            throw new MobileTerminalModelException("Failed to map to exchange get service list request");
+            throw new MobileTerminalModelException(EXCHANGE_MAPPING_ERROR.getMessage(), e, EXCHANGE_MAPPING_ERROR.getCode());
         }
     }
 

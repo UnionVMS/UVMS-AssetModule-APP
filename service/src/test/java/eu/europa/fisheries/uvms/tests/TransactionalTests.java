@@ -1,6 +1,5 @@
 package eu.europa.fisheries.uvms.tests;
 
-
 import org.junit.After;
 import org.junit.Before;
 
