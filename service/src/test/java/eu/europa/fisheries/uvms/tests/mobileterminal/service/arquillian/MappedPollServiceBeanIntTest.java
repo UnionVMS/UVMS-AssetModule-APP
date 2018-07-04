@@ -9,8 +9,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollValue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.PollProgram;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceMapperException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PollMapper;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper.TestPollHelper;
@@ -163,7 +161,7 @@ public class MappedPollServiceBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")    //TODO: Move to PollServiceBeanTest
-    public void startProgramPoll_ShouldFailWithNullAsPollId() throws MobileTerminalServiceException, MobileTerminalServiceMapperException {
+    public void startProgramPoll_ShouldFailWithNullAsPollId() throws Exception {
 
         try {
             pollServiceBean.startProgramPoll(null, "TEST");
@@ -176,7 +174,7 @@ public class MappedPollServiceBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void stopProgramPoll_ShouldFailWithNullAsPollId() throws MobileTerminalServiceException, MobileTerminalServiceMapperException {
+    public void stopProgramPoll_ShouldFailWithNullAsPollId() throws Exception {
 
         thrown.expect(EJBTransactionRolledbackException.class);
         thrown.expectMessage("No poll id given");

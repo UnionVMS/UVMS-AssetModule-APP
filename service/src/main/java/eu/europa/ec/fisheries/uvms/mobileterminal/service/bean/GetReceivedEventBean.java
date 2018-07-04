@@ -1,19 +1,26 @@
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.bean;
 
+import eu.europa.ec.fisheries.schema.mobileterminal.module.v1.GetMobileTerminalRequest;
+import eu.europa.ec.fisheries.schema.mobileterminal.module.v1.MobileTerminalFaultException;
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalSource;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
+import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.constants.MessageConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.DataSourceQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ErrorEvent;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.EventMessage;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.JAXBMarshaller;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.MobileTerminalModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.ParameterKey;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
@@ -42,7 +49,7 @@ public class GetReceivedEventBean {
 
     public void get(EventMessage message) {
 
-        /*
+
 
         try {
             MobileTerminalType mobileTerminal = getMobileTerminal(message);
@@ -53,28 +60,27 @@ public class GetReceivedEventBean {
                 String response = MobileTerminalModuleRequestMapper.createMobileTerminalResponse(mobileTerminal);
                 TextMessage responseMessage = session.createTextMessage(response);
                 responseMessage.setJMSCorrelationID(message.getJmsMessage().getJMSMessageID());
-                AssetMessageProducer producer = session.createProducer(message.getJmsMessage().getJMSReplyTo());
+                javax.jms.MessageProducer producer = session.createProducer(message.getJmsMessage().getJMSReplyTo());
                 producer.send(responseMessage);
             }
 
-        } catch (MobileTerminalModelMapperException | JMSException e) {
+        } catch ( JMSException | MobileTerminalModelException e) {
             errorEvent.fire(new EventMessage(message.getJmsMessage(), "Exception when trying to get a MobileTerminal: " + e.getMessage()));
             // Propagate error
             throw new EJBException(e);
         }
-        */
+
     }
 
     // TODO: Go through this logic and error handling
     private MobileTerminalType getMobileTerminal(EventMessage message) {
-        return null;
-        /*
+
         GetMobileTerminalRequest request = null;
         MobileTerminalType mobTerm = null;
         DataSourceQueue dataSource = null;
         try {
             request = JAXBMarshaller.unmarshallTextMessage(message.getJmsMessage(), GetMobileTerminalRequest.class);
-        } catch (MobileTerminalUnmarshallException ex) {
+        } catch (MobileTerminalModelException ex) {
             errorEvent.fire(new EventMessage(message.getJmsMessage(), "Error when mapping message: " + ex.getMessage()));
         }
         try {
@@ -88,7 +94,7 @@ public class GetReceivedEventBean {
             if (!dataSource.equals(DataSourceQueue.INTERNAL)) {
                 service.upsertMobileTerminal(mobTerm, MobileTerminalSource.NATIONAL, dataSource.name());
             }
-        } catch (MobileTerminalModelException ex) {
+        } catch (MobileTerminalModelException | MobileTerminalFaultException | MobileTerminalException ex) {
             mobTerm = null;
         }
         if (mobTerm == null) {
@@ -96,26 +102,23 @@ public class GetReceivedEventBean {
             try {
                 request = JAXBMarshaller.unmarshallTextMessage(message.getJmsMessage(), GetMobileTerminalRequest.class);
                 mobTerm = service.getMobileTerminalById(request.getId(), DataSourceQueue.INTERNAL);
-            } catch (MobileTerminalModelException ex) {
+            } catch (MobileTerminalModelException | MobileTerminalFaultException | MobileTerminalException ex) {
                 errorEvent.fire(new EventMessage(message.getJmsMessage(), "Exception when getting vessel from source : " + dataSource.name() + " Error message: " + ex.getMessage()));
             }
         }
         return mobTerm;
 
-        */
+
     }
 
-    private DataSourceQueue decideDataflow() throws MobileTerminalServiceException {
-        try {
-            Boolean national = parameters.getBooleanValue(ParameterKey.USE_NATIONAL.getKey());
-            LOG.debug("Settings for dataflow are: NATIONAL: {}", national.toString());
-            if (national) {
-                return DataSourceQueue.INTEGRATION;
-            }
-            return DataSourceQueue.INTERNAL;
-        } catch (ConfigServiceException ex) {
-            LOG.error("[ Error when deciding data flow. ] {}", ex.getMessage());
-            throw new MobileTerminalServiceException(ex.getMessage());
+    private DataSourceQueue decideDataflow() throws ConfigServiceException {
+
+        Boolean national = parameters.getBooleanValue(ParameterKey.USE_NATIONAL.getKey());
+        LOG.debug("Settings for dataflow are: NATIONAL: {}", national.toString());
+        if (national) {
+            return DataSourceQueue.INTEGRATION;
         }
+        return DataSourceQueue.INTERNAL;
+
     }
 }

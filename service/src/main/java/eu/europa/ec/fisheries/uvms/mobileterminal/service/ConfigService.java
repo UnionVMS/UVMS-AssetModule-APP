@@ -17,7 +17,6 @@ import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemType
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.Plugin;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
 
 import javax.ejb.Local;
 import java.util.List;

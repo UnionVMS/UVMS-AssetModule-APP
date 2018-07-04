@@ -36,7 +36,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalE
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceMapperException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.SearchMapper;
 import org.slf4j.Logger;

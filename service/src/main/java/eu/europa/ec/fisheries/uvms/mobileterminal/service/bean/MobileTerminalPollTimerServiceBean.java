@@ -13,10 +13,8 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.bean;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttributeType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.MobileTerminalGenericMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.PollDataSourceRequestMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.util.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

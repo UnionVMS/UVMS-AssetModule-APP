@@ -4,13 +4,11 @@ import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttribute;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttributeType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.PollProgramDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.PollProgram;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper.TestPollHelper;
 import org.jboss.arquillian.junit.Arquillian;
@@ -45,7 +43,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void createPoll() throws MobileTerminalServiceException {
+    public void createPoll()  {
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
         PollRequestType pollRequestType = testPollHelper.createPollRequestType();
         CreatePollResultDto createPollResultDto = pollService.createPoll(pollRequestType, "TEST");
@@ -53,7 +51,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    public void createPollWithBrokenJMS_WillFail() throws  MobileTerminalServiceException {
+    public void createPollWithBrokenJMS_WillFail() {
 
         try {
             System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "true");
@@ -85,7 +83,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    public void startProgramPoll() throws MobileTerminalServiceException {
+    public void startProgramPoll() {
 
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
 
@@ -113,7 +111,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    public void stopProgramPoll() throws  MobileTerminalServiceException {
+    public void stopProgramPoll() {
 
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
 
@@ -141,7 +139,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    public void inactivateProgramPoll() throws MobileTerminalServiceException {
+    public void inactivateProgramPoll() {
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
 
         Date startDate = testPollHelper.getStartDate();
@@ -168,7 +166,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    public void getPollProgramRunningAndStarted() throws MobileTerminalModelException {
+    public void getPollProgramRunningAndStarted() {
 
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
 

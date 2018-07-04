@@ -21,7 +21,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.AttributeDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollKey;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceMapperException;
 
 import java.util.ArrayList;
 import java.util.List;
