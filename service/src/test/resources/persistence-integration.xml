@@ -8,12 +8,12 @@
         </class>
         <properties>
             <property name="hibernate.dialect" value="${hibernate.dialect}" />
-            <property name="hibernate.show_sql" value="true" />
+            <property name="hibernate.show_sql" value="false" />
             <property name="hibernate.format_sql" value="true" />
 
             <!-- ONLY FOR TEST code is in liquibase -->
             <!-- for test with new fields in table -->
-            <!--<property name="hibernate.hbm2ddl.auto" value="update" />-->
+            <property name="hibernate.hbm2ddl.auto" value="update" />
         </properties>
     </persistence-unit>
 </persistence>
