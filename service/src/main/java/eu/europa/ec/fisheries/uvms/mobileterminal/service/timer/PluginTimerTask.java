@@ -38,8 +38,8 @@ public class PluginTimerTask implements Runnable{
                 configService.upsertPlugins(ServiceToPluginMapper.mapToPluginList(serviceTypes), "PluginTimerBean");
                 LOG.debug("upserted plugins");
             }
-        } catch (MobileTerminalModelException e) {
-            LOG.info("Couldn't update plugins... ", e.getMessage());
+        } catch (Exception e) {
+            LOG.info("Couldn't update plugins... ", e.getMessage());   //print stack trace as well?
         }
 
     }

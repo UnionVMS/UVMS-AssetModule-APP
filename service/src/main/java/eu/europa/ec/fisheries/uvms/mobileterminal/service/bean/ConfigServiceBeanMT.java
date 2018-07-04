@@ -84,7 +84,7 @@ public class ConfigServiceBeanMT implements ConfigService {
         return upsertPlugins(plugins);
     }
 
-    public List<ServiceResponseType> getRegisteredMobileTerminalPlugins() throws MobileTerminalModelException {
+    public List<ServiceResponseType> getRegisteredMobileTerminalPlugins() {
         try {
             List<PluginType> pluginTypes = new ArrayList<>();
             pluginTypes.add(PluginType.SATELLITE_RECEIVER);
@@ -96,8 +96,8 @@ public class ConfigServiceBeanMT implements ConfigService {
             }
             return ExchangeModuleResponseMapper.mapServiceListResponse(response, messageId);
         } catch (ExchangeModelMapperException | RuntimeException e) {
-            LOG.error("Failed to map to exchange get service list request");
-            throw new MobileTerminalModelException("Failed to map to exchange get service list request");
+            LOG.error("Failed to map to exchange get service list request due tue: " + e.getMessage());
+            throw new RuntimeException("Failed to map to exchange get service list request", e);
         }
     }
 

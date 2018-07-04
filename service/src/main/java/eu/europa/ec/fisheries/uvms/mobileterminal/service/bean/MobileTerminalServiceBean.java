@@ -254,7 +254,7 @@ public class MobileTerminalServiceBean {
 
     public MobileTerminal getMobileTerminalEntityById(MobileTerminalId id) {
         if(id == null || id.getGuid() == null || id.getGuid().isEmpty())
-            throw new IllegalArgumentException("Non valid id");
+            throw new IllegalArgumentException("Non valid id: " + id);
         return terminalDao.getMobileTerminalByGuid(id.getGuid());
     }
 
@@ -300,28 +300,27 @@ public class MobileTerminalServiceBean {
         return serialNumber;
     }
 
-    private void assertTerminalNotExists(MobileTerminalType mobileTerminal) throws MobileTerminalModelException {
-        try {
-            MobileTerminal terminal = getMobileTerminalEntityById(mobileTerminal.getMobileTerminalId());
-            throw new MobileTerminalModelException("Mobile terminal already exists in database for id: " + mobileTerminal.getMobileTerminalId());
-        } catch (IllegalArgumentException e) {
-            //Terminal does not exist, ok to create a new one
+    private void assertTerminalNotExists(MobileTerminalType mobileTerminal) {
+        if(mobileTerminal.getMobileTerminalId() == null || mobileTerminal.getMobileTerminalId().getGuid().isEmpty()){
+            return;
         }
-        try {
-            for (MobileTerminalAttribute attribute : mobileTerminal.getAttributes()) {
-                if (MobileTerminalConstants.SERIAL_NUMBER.equalsIgnoreCase(attribute.getType())) {
-                    MobileTerminal terminal = getMobileTerminalEntityBySerialNo(attribute.getValue());
-                    if(terminal == null){  //aka the serial number does not exist in the db
-                        return;
-                    }
-                    if (!terminal.getArchived()) {
-                        throw new MobileTerminalModelException("Mobile terminal already exists in database for serial number: " + attribute.getValue());
-                    }
+        MobileTerminal terminal = getMobileTerminalEntityById(mobileTerminal.getMobileTerminalId());
+        if(terminal != null){
+            throw new IllegalArgumentException("Mobile terminal already exists in database for id: " + mobileTerminal.getMobileTerminalId());
+        }
+
+        for (MobileTerminalAttribute attribute : mobileTerminal.getAttributes()) {
+            if (MobileTerminalConstants.SERIAL_NUMBER.equalsIgnoreCase(attribute.getType())) {
+                MobileTerminal terminalBySerialNo = getMobileTerminalEntityBySerialNo(attribute.getValue());
+                if(terminalBySerialNo == null){  //aka the serial number does not exist in the db
+                    return;
+                }
+                if (!terminalBySerialNo.getArchived()) {
+                    throw new IllegalArgumentException("Mobile terminal already exists in database for serial number: " + attribute.getValue());
                 }
             }
-        } catch (IllegalArgumentException e) {
-            //Terminal does not exist, ok to create a new one
         }
+
     }
 
     public MobileTerminalType getMobileTerminalById(MobileTerminalId id) {
@@ -364,10 +363,10 @@ public class MobileTerminalServiceBean {
             return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(updatedTerminal);
 
         }
-        throw new MobileTerminalModelException("Update - Not supported mobile terminal type");
+        throw new UnsupportedOperationException("Update - Not supported mobile terminal type");
     }
 
-    public MobileTerminalType assignMobileTerminalToCarrier(MobileTerminalAssignQuery query, String comment, String username) throws MobileTerminalModelException {
+    public MobileTerminalType assignMobileTerminalToCarrier(MobileTerminalAssignQuery query, String comment, String username) {
         if (query == null) {
             throw new IllegalArgumentException("RequestQuery is null");
         }
@@ -404,10 +403,10 @@ public class MobileTerminalServiceBean {
             return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
         }
 
-        throw new MobileTerminalModelException("Terminal " + mobTermId + " is already linked to an asset with guid " + currentConnectId);
+        throw new IllegalArgumentException("Terminal " + mobTermId + " is already linked to an asset with guid " + currentConnectId);
     }
 
-    public MobileTerminalType unAssignMobileTerminalFromCarrier(MobileTerminalAssignQuery query, String comment, String username) throws MobileTerminalModelException {
+    public MobileTerminalType unAssignMobileTerminalFromCarrier(MobileTerminalAssignQuery query, String comment, String username) {
         if (query == null) {
             throw new IllegalArgumentException("RequestQuery is null");
         }
@@ -444,7 +443,7 @@ public class MobileTerminalServiceBean {
             return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
         }
 
-        throw new MobileTerminalModelException("Terminal " + mobTermId + " is not linked to an asset with guid " + connectId);
+        throw new IllegalArgumentException("Terminal " + mobTermId + " is not linked to an asset with guid " + connectId);
     }
 
     public MobileTerminalType upsertMobileTerminal(MobileTerminalType mobileTerminal, String username) throws MobileTerminalModelException {
