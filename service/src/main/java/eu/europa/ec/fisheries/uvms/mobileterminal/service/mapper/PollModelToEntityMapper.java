@@ -60,10 +60,10 @@ public class PollModelToEntityMapper {
                     poll.setFrequency(Integer.parseInt(attr.getValue()));
                     break;
                 case START_DATE:
-                    poll.setStartDate(parseToUTCDate(attr.getValue()));
+                    poll.setStartDate(parseToUTCDateTime(attr.getValue()));
                     break;
                 case END_DATE:
-                    poll.setStopDate(parseToUTCDate(attr.getValue()));
+                    poll.setStopDate(parseToUTCDateTime(attr.getValue()));
                     break;
                 default:
                     LOG.debug("ProgramPoll with attr [ " + attr.getKey() + " ] is non valid to map");

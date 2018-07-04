@@ -7,6 +7,7 @@ import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListPagination;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.CreatePollResultDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.PollProgram;
@@ -363,7 +364,14 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
         PollChannelListDto output = deserializeResponseDto(response, PollChannelListDto.class);
 
-        output.getPollableChannels();
+        boolean contains = false;
+        for (PollChannelDto pollChannelDto: output.getPollableChannels()) {
+            if(pollChannelDto.getMobileTerminalId().equals(createdMT.getMobileTerminalId().getGuid())){
+                contains = true;
+                break;
+            }
+        }
+        assertTrue(contains);
     }
 
     private MobileTerminalType createAndRestMobileTerminal(String boat) throws Exception {
@@ -399,18 +407,18 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         pollRequestType.getAttributes().add(pollAttribute);
 
         pollAttribute = new PollAttribute();
-        pollAttribute.setKey(PollAttributeType.FREQUENCY);          //this is probably in minutes
+        pollAttribute.setKey(PollAttributeType.FREQUENCY);          //this is probably in seconds
         pollAttribute.setValue("20");
         pollRequestType.getAttributes().add(pollAttribute);
 
         pollAttribute = new PollAttribute();
         pollAttribute.setKey(PollAttributeType.START_DATE);
-        pollAttribute.setValue(DateUtils.parseUTCDateToString(new Date(System.currentTimeMillis())));
+        pollAttribute.setValue(DateUtils.parseUTCDateTimeToString(new Date(System.currentTimeMillis())));
         pollRequestType.getAttributes().add(pollAttribute);
 
         pollAttribute = new PollAttribute();
         pollAttribute.setKey(PollAttributeType.END_DATE);
-        pollAttribute.setValue(DateUtils.parseUTCDateToString(new Date(System.currentTimeMillis() + 24*60*60*1000 )));
+        pollAttribute.setValue(DateUtils.parseUTCDateTimeToString(new Date(System.currentTimeMillis() + 24*60*60*1000 )));
         pollRequestType.getAttributes().add(pollAttribute);
 
         return pollRequestType;
