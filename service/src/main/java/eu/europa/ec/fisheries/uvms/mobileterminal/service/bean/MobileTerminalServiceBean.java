@@ -229,7 +229,7 @@ public class MobileTerminalServiceBean {
         return historyList;
     }
 
-    public PollChannelListDto getPollableMobileTerminal(PollableQuery query) throws MobileTerminalServiceMapperException {
+    public PollChannelListDto getPollableMobileTerminal(PollableQuery query) {
 
         PollChannelListDto channelListDto = new PollChannelListDto();
 
@@ -251,12 +251,6 @@ public class MobileTerminalServiceBean {
         return channelListDto;
 
 
-        /*ListResponseDto listResponse = pollModel.getMobileTerminalPollableList(query);
-        MobileTerminalListResponse response = new MobileTerminalListResponse();
-        response.setCurrentPage(listResponse.getCurrentPage());
-        response.setTotalNumberOfPages(listResponse.getTotalNumberOfPages());
-        response.getMobileTerminal().addAll(listResponse.getMobileTerminalList());
-        return response;*/
     }
 
     /***************************************************************************************************************************/

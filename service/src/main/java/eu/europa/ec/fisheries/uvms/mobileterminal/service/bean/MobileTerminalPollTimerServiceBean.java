@@ -36,7 +36,7 @@ public class MobileTerminalPollTimerServiceBean {
     @EJB
     private PollServiceBean pollService;
 
-    public void timerTimeout() throws MobileTerminalServiceException {
+    public void timerTimeout() {
         Date now = DateUtils.getUTCNow();
         LOG.debug("PollProgram collected from DB at " + now.toString());
         try {
@@ -56,7 +56,7 @@ public class MobileTerminalPollTimerServiceBean {
                     LOG.info("Poll created by poll program {}", guid);
                 }
             }
-        } catch (MobileTerminalModelException e) {
+        } catch (Exception e) {
             LOG.error("[ Poll scheduler failed. ] " + e.getMessage());
         }
     }

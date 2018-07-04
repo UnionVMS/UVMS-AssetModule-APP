@@ -71,129 +71,114 @@ public class PollServiceBean implements PollService {
     private ChannelDaoBean channelDao;
 
 
-    public CreatePollResultDto createPoll(PollRequestType poll, String username) throws MobileTerminalServiceException {
-        try {
-            List<PollResponseType> createdPolls = createPolls(poll, username);
+    public CreatePollResultDto createPoll(PollRequestType poll, String username) {
 
-            boolean triggerTimer = false;
-            List<String> unsentPolls = new ArrayList<>();
-            List<String> sentPolls = new ArrayList<>();
-            for (PollResponseType createdPoll : createdPolls) {
-                triggerTimer = PollType.PROGRAM_POLL.equals(createdPoll.getPollType());
+        List<PollResponseType> createdPolls = createPolls(poll, username);
 
-                AcknowledgeTypeType ack = sendPollService.sendPoll(createdPoll, username);
-                switch (ack) {
-                    case NOK:
-                        unsentPolls.add(createdPoll.getPollId().getGuid());
-                        break;
-                    case OK:
-                        sentPolls.add(createdPoll.getPollId().getGuid());
-                        break;
-                }
+        boolean triggerTimer = false;
+        List<String> unsentPolls = new ArrayList<>();
+        List<String> sentPolls = new ArrayList<>();
+        for (PollResponseType createdPoll : createdPolls) {
+            triggerTimer = PollType.PROGRAM_POLL.equals(createdPoll.getPollType());
 
-                try {
-                    String auditData = AuditModuleRequestMapper.mapAuditLogPollCreated(createdPoll.getPollType(), createdPoll.getPollId().getGuid(), createdPoll.getComment(), username);
-                    MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-                } catch (AuditModelMarshallException | MobileTerminalException e) {
-                    LOG.error("Failed to send audit log message! Poll with guid {} was created", createdPoll.getPollId().getGuid());
-                }
+            AcknowledgeTypeType ack = sendPollService.sendPoll(createdPoll, username);
+            switch (ack) {
+                case NOK:
+                    unsentPolls.add(createdPoll.getPollId().getGuid());
+                    break;
+                case OK:
+                    sentPolls.add(createdPoll.getPollId().getGuid());
+                    break;
             }
 
-            if (triggerTimer) {
-                timerService.timerTimeout();
+            try {
+                String auditData = AuditModuleRequestMapper.mapAuditLogPollCreated(createdPoll.getPollType(), createdPoll.getPollId().getGuid(), createdPoll.getComment(), username);
+                MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
+            } catch (AuditModelMarshallException | MobileTerminalException e) {
+                LOG.error("Failed to send audit log message! Poll with guid {} was created", createdPoll.getPollId().getGuid());
             }
-
-            CreatePollResultDto result = new CreatePollResultDto();
-            result.setSentPolls(sentPolls);
-            result.setUnsentPolls(unsentPolls);
-            result.setUnsentPoll(!unsentPolls.isEmpty());
-            return result;
-        } catch (MobileTerminalModelException e) {
-            LOG.error("Failed to create poll", e);
-            throw new MobileTerminalServiceException(e.getMessage());
         }
+
+        if (triggerTimer) {
+            timerService.timerTimeout();
+        }
+
+        CreatePollResultDto result = new CreatePollResultDto();
+        result.setSentPolls(sentPolls);
+        result.setUnsentPolls(unsentPolls);
+        result.setUnsentPoll(!unsentPolls.isEmpty());
+        return result;
     }
 
-    public List<PollDto> getRunningProgramPolls() throws MobileTerminalServiceMapperException {
+    public List<PollDto> getRunningProgramPolls() {
         List<PollResponseType> pollResponse = getPollProgramList();
         return PollMapper.mapPolls(pollResponse);
     }
 
-    public PollResponseType startProgramPoll(String pollId, String username) throws MobileTerminalServiceException {
-        try {
-            PollId pollIdType = new PollId();
-            pollIdType.setGuid(pollId);
-            PollResponseType startedPoll = setStatusPollProgram(pollIdType, PollStatus.STARTED);
-            try {
-                String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollStarted(startedPoll.getPollId().getGuid(), username);
-                MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-            } catch (AuditModelMarshallException | MobileTerminalException e) {
-                LOG.error("Failed to send audit log message! Poll with guid {} was started", startedPoll.getPollId().getGuid());
-            }
+    public PollResponseType startProgramPoll(String pollId, String username) {
 
-            return startedPoll;
-        } catch (MobileTerminalModelException e) {
-            throw new MobileTerminalServiceException(e.getMessage());
+        PollId pollIdType = new PollId();
+        pollIdType.setGuid(pollId);
+        PollResponseType startedPoll = setStatusPollProgram(pollIdType, PollStatus.STARTED);
+        try {
+            String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollStarted(startedPoll.getPollId().getGuid(), username);
+            MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
+        } catch (AuditModelMarshallException | MobileTerminalException e) {
+            LOG.error("Failed to send audit log message due tue: " + e.getMessage() + "! Poll with guid {} was started", startedPoll.getPollId().getGuid());
         }
+
+        return startedPoll;
+
     }
 
-    public PollResponseType stopProgramPoll(String pollId, String username) throws MobileTerminalServiceException {
-        try {
-            PollId pollIdType = new PollId();
-            pollIdType.setGuid(pollId);
-            PollResponseType stoppedPoll = setStatusPollProgram(pollIdType, PollStatus.STOPPED);
-            try {
-                String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollStopped(stoppedPoll.getPollId().getGuid(), username);
-                MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-            } catch (AuditModelMarshallException | MobileTerminalException e) {
-                LOG.error("Failed to send audit log message! Poll with guid {} was stopped", stoppedPoll.getPollId().getGuid());
-            }
+    public PollResponseType stopProgramPoll(String pollId, String username){
 
-            return stoppedPoll;
-        } catch (MobileTerminalModelException e) {
-            throw new MobileTerminalServiceException(e.getMessage());
+        PollId pollIdType = new PollId();
+        pollIdType.setGuid(pollId);
+        PollResponseType stoppedPoll = setStatusPollProgram(pollIdType, PollStatus.STOPPED);
+        try {
+            String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollStopped(stoppedPoll.getPollId().getGuid(), username);
+            MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
+        } catch (AuditModelMarshallException | MobileTerminalException e) {
+            LOG.error("Failed to send audit log message due tue: " + e.getMessage() + "! Poll with guid {} was stopped", stoppedPoll.getPollId().getGuid());
         }
+
+        return stoppedPoll;
     }
 
-    public PollResponseType inactivateProgramPoll(String pollId, String username) throws MobileTerminalServiceException {
-        try {
-            PollId pollIdType = new PollId();
-            pollIdType.setGuid(pollId);
-            PollResponseType inactivatedPoll = setStatusPollProgram(pollIdType, PollStatus.ARCHIVED);
-            try {
-                String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollInactivated(inactivatedPoll.getPollId().getGuid(), username);
-                MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-            } catch (AuditModelMarshallException e) {
-                LOG.error("Failed to send audit log message! Poll with guid {} was inactivated", inactivatedPoll.getPollId().getGuid());
-            }
+    public PollResponseType inactivateProgramPoll(String pollId, String username){
 
-            return inactivatedPoll;
-        } catch (MobileTerminalModelException  | MobileTerminalException e) {
-            throw new MobileTerminalServiceException(e.getMessage());
+        PollId pollIdType = new PollId();
+        pollIdType.setGuid(pollId);
+        PollResponseType inactivatedPoll = setStatusPollProgram(pollIdType, PollStatus.ARCHIVED);
+        try {
+            String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollInactivated(inactivatedPoll.getPollId().getGuid(), username);
+            MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
+        } catch (AuditModelMarshallException | MobileTerminalException e) {
+            LOG.error("Failed to send audit log message due tue: " + e.getMessage() + "! Poll with guid {} was inactivated", inactivatedPoll.getPollId().getGuid());
         }
+
+        return inactivatedPoll;
     }
 
     public PollChannelListDto getPollBySearchCriteria(PollListQuery query) {
-        try {
-            PollChannelListDto channelListDto = new PollChannelListDto();
 
-            PollListResponse pollResponse = getPollList(query);    //this is where the magic happens, rest of the method is just a mapper
-            channelListDto.setCurrentPage(pollResponse.getCurrentPage());
-            channelListDto.setTotalNumberOfPages(pollResponse.getTotalNumberOfPages());
+        PollChannelListDto channelListDto = new PollChannelListDto();
 
-            ArrayList<PollChannelDto> pollChannelList = new ArrayList<>();
-            for(PollResponseType responseType : pollResponse.getPollList()) {
-                PollChannelDto terminal = PollMapper.mapPollChannel(responseType.getMobileTerminal());
-                terminal.setPoll(PollMapper.mapPoll(responseType));
-                pollChannelList.add(terminal);
-            }
-            channelListDto.setPollableChannels(pollChannelList);
-            return channelListDto;
+        PollListResponse pollResponse = getPollList(query);    //this is where the magic happens, rest of the method is just a mapper
+        channelListDto.setCurrentPage(pollResponse.getCurrentPage());
+        channelListDto.setTotalNumberOfPages(pollResponse.getTotalNumberOfPages());
 
-        } catch (RuntimeException | SearchMapperException | MobileTerminalServiceMapperException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+        ArrayList<PollChannelDto> pollChannelList = new ArrayList<>();
+        for(PollResponseType responseType : pollResponse.getPollList()) {
+            PollChannelDto terminal = PollMapper.mapPollChannel(responseType.getMobileTerminal());
+            terminal.setPoll(PollMapper.mapPoll(responseType));
+            pollChannelList.add(terminal);
         }
+        channelListDto.setPollableChannels(pollChannelList);
+        return channelListDto;
+
+
     }
 
     public List<PollResponseType> timer() {
@@ -206,7 +191,7 @@ public class PollServiceBean implements PollService {
         return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
     }
 
-    private MobileTerminalType getPollableTerminalType(String guid, String channelGuid) throws MobileTerminalModelException {
+    private MobileTerminalType getPollableTerminalType(String guid, String channelGuid) {
         MobileTerminal terminal = terminalDao.getMobileTerminalByGuid(guid);
         checkPollable(terminal);
 
@@ -214,29 +199,29 @@ public class PollServiceBean implements PollService {
             for (Channel channel : terminal.getChannels()) {
                 if (channel.getId().toString().equalsIgnoreCase(channelGuid)) {
                     if (!channel.getMobileTerminal().getId().toString().equalsIgnoreCase(guid)) {
-                        throw new MobileTerminalModelException("Channel " + channel.getId() + " can not be polled, because it is not part of terminal " + terminal.getId());
+                        throw new IllegalStateException("Channel " + channel.getId() + " can not be polled, because it is not part of terminal " + terminal.getId());
                     }
                     return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal, channel);
                 }
             }
 
         }
-        throw new MobileTerminalModelException("Could not find channel " + channelGuid + " based on");
+        throw new IllegalArgumentException("Could not find channel " + channelGuid + " based on");
     }
 
-    private void checkPollable(MobileTerminal terminal) throws MobileTerminalModelException {
+    private void checkPollable(MobileTerminal terminal){
         if (terminal.getArchived()) {
-            throw new MobileTerminalModelException("Terminal is archived");
+            throw new IllegalStateException("Terminal is archived");
         }
         if (terminal.getInactivated()) {
-            throw new MobileTerminalModelException("Terminal is inactive");
+            throw new IllegalStateException("Terminal is inactive");
         }
         if (terminal.getPlugin() != null && terminal.getPlugin().getPluginInactive()) {
-            throw new MobileTerminalModelException("Terminal connected to no longer active Plugin (LES)");
+            throw new IllegalStateException("Terminal connected to no longer active Plugin (LES)");
         }
     }
 
-    public List<PollResponseType> createPolls(PollRequestType pollRequest, String username) throws MobileTerminalModelException {
+    public List<PollResponseType> createPolls(PollRequestType pollRequest, String username) {
         if (pollRequest == null || pollRequest.getPollType() == null) {
             throw new IllegalArgumentException("No polls to create");
         }
@@ -269,14 +254,17 @@ public class PollServiceBean implements PollService {
         return responseList;
     }
 
-    private Map<PollProgram, MobileTerminalType> validateAndMapToProgramPolls(PollRequestType pollRequest, String username) throws MobileTerminalModelException {
+    private Map<PollProgram, MobileTerminalType> validateAndMapToProgramPolls(PollRequestType pollRequest, String username) {
         Map<PollProgram, MobileTerminalType> map = new HashMap<>();
 
         for (PollMobileTerminal pollTerminal : pollRequest.getMobileTerminals()) {
             MobileTerminal mobileTerminalEntity = terminalDao.getMobileTerminalByGuid(pollTerminal.getMobileTerminalId());
+            if(mobileTerminalEntity == null){
+                throw new IllegalArgumentException("No mobile terminal connected to this poll request or the mobile terminal can not be found, for mobile terminal id: " + pollTerminal.getMobileTerminalId());
+            }
             String connectId = mobileTerminalEntity.getCurrentEvent().getConnectId();
             if (!pollTerminal.getConnectId().equals(connectId)) {
-                throw new MobileTerminalModelException("Terminal " + mobileTerminalEntity.getId() + " can not be polled, because it is not linked to asset " + connectId);
+                throw new IllegalStateException("Terminal " + mobileTerminalEntity.getId() + " can not be polled, because it is not linked to asset " + connectId);
             }
             MobileTerminalType terminalType = getPollableTerminalType(pollTerminal.getMobileTerminalId(), pollTerminal.getComChannelId());
             PollProgram pollProgram = PollModelToEntityMapper.mapToProgramPoll(mobileTerminalEntity, connectId, pollTerminal.getComChannelId(), pollRequest, username);
@@ -285,14 +273,17 @@ public class PollServiceBean implements PollService {
         return map;
     }
 
-    private Map<Poll, MobileTerminalType> validateAndMapToPolls(PollRequestType pollRequest, String username) throws MobileTerminalModelException {
+    private Map<Poll, MobileTerminalType> validateAndMapToPolls(PollRequestType pollRequest, String username) {
         Map<Poll, MobileTerminalType> map = new HashMap<>();
 
         for (PollMobileTerminal pollTerminal : pollRequest.getMobileTerminals()) {
             MobileTerminal mobileTerminalEntity = terminalDao.getMobileTerminalByGuid(pollTerminal.getMobileTerminalId());
+            if(mobileTerminalEntity == null){
+                throw new IllegalArgumentException("No mobile terminal connected to this poll request or the mobile terminal can not be found, for mobile terminal id: " + pollTerminal.getMobileTerminalId());
+            }
             String connectId = mobileTerminalEntity.getCurrentEvent().getConnectId();
             if (pollTerminal.getConnectId() == null || !pollTerminal.getConnectId().equals(connectId)) {
-                throw new MobileTerminalModelException("Terminal " + mobileTerminalEntity.getId() + " can not be polled, because it is not linked to asset " + connectId);
+                throw new IllegalStateException("Terminal " + mobileTerminalEntity.getId() + " can not be polled, because it is not linked to asset " + connectId);
             }
 
             if (pollRequest.getPollType() != PollType.MANUAL_POLL) {
@@ -305,7 +296,7 @@ public class PollServiceBean implements PollService {
         return map;
     }
 
-    private void validateMobileTerminalPluginCapability(Set<MobileTerminalPluginCapability> capabilities, PollType pollType, String pluginServiceName) throws MobileTerminalModelException {
+    private void validateMobileTerminalPluginCapability(Set<MobileTerminalPluginCapability> capabilities, PollType pollType, String pluginServiceName) {
         PluginCapabilityType pluginCapabilityType;
         switch (pollType) {
             case CONFIGURATION_POLL:
@@ -315,10 +306,10 @@ public class PollServiceBean implements PollService {
                 pluginCapabilityType = PluginCapabilityType.SAMPLING;
                 break;
             default:
-                throw new MobileTerminalModelException("Cannot create " + pollType.name() + "  poll when plugin: " + pluginServiceName);
+                throw new IllegalArgumentException("Cannot create " + pollType.name() + "  poll when plugin: " + pluginServiceName);
         }
         if (!validatePluginHasCapabilityConfigurable(capabilities, pluginCapabilityType)) {
-            throw new MobileTerminalModelException("Cannot create " + pollType.name() + "  poll when plugin: " + pluginServiceName + " has not capability " + pluginCapabilityType.name() + " set");
+            throw new IllegalArgumentException("Cannot create " + pollType.name() + "  poll when plugin: " + pluginServiceName + " has not capability " + pluginCapabilityType.name() + " set");
         }
     }
 
@@ -353,7 +344,7 @@ public class PollServiceBean implements PollService {
         return responseList;
     }
 
-    public PollListResponse getPollList(PollListQuery query) throws SearchMapperException {
+    public PollListResponse getPollList(PollListQuery query) {
         if (query == null) {
             throw new NullPointerException("Cannot get poll list because no query.");
         }
@@ -413,7 +404,7 @@ public class PollServiceBean implements PollService {
         return getResponseList(pollPrograms);
     }
 
-    public PollResponseType setStatusPollProgram(PollId id, PollStatus state) throws MobileTerminalModelException {
+    public PollResponseType setStatusPollProgram(PollId id, PollStatus state) {
         if (id == null || id.getGuid() == null || id.getGuid().isEmpty()) {
             throw new IllegalArgumentException("No poll id given");
         }
@@ -421,27 +412,22 @@ public class PollServiceBean implements PollService {
             throw new IllegalArgumentException("No status to set");
         }
 
-        try {
-            PollProgram program = pollProgramDao.getPollProgramByGuid(id.getGuid());
-            MobileTerminal terminal = program.getPollBase().getMobileterminal();
-            MobileTerminalType terminalType = mapPollableTerminalType(terminal.getMobileTerminalType(), terminal.getId().toString());
+        PollProgram program = pollProgramDao.getPollProgramByGuid(id.getGuid());
+        MobileTerminal terminal = program.getPollBase().getMobileterminal();
+        MobileTerminalType terminalType = mapPollableTerminalType(terminal.getMobileTerminalType(), terminal.getId().toString());
 
-            switch (program.getPollState()) {
-                case ARCHIVED:
-                    throw new MobileTerminalModelException("Can not change status of archived program poll, id: [ " + id.getGuid() + " ]");
-                case STARTED:
-                case STOPPED:
-            }
-
-            // TODO: check terminal/comchannel?
-
-            program.setPollState(EnumMapper.getPollStateTypeFromModel(state));
-
-            return PollEntityToModelMapper.mapToPollResponseType(program, terminalType);
-        } catch (MobileTerminalModelException e) {
-            LOG.error("[ Error when setting poll program status. ] {}", e.getMessage());
-            throw new MobileTerminalModelException(e.getMessage());
+        switch (program.getPollState()) {
+            case ARCHIVED:
+                throw new IllegalArgumentException("Can not change status of archived program poll, id: [ " + id.getGuid() + " ]");
+            case STARTED:
+            case STOPPED:
         }
+
+        // TODO: check terminal/comchannel?
+
+        program.setPollState(EnumMapper.getPollStateTypeFromModel(state));
+
+        return PollEntityToModelMapper.mapToPollResponseType(program, terminalType);
     }
 
     public ListResponseDto getMobileTerminalPollableList(PollableQuery query) {

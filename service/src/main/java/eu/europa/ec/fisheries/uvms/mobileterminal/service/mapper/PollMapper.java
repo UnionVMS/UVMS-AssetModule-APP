@@ -28,7 +28,7 @@ import java.util.List;
 
 public class PollMapper {
 
-    public static List<PollDto> mapPolls(List<PollResponseType> pollResponses) throws MobileTerminalServiceMapperException {
+    public static List<PollDto> mapPolls(List<PollResponseType> pollResponses){
         List<PollDto> dtoList = new ArrayList<>();
         for (PollResponseType response : pollResponses) {
             dtoList.add(mapPoll(response));
@@ -36,14 +36,14 @@ public class PollMapper {
         return dtoList;
     }
     
-    public static PollDto mapPoll(PollResponseType response) throws MobileTerminalServiceMapperException {
+    public static PollDto mapPoll(PollResponseType response){
         checkInputParams(response.getMobileTerminal());
         return createPollDto(response);
     }
 
-    private static void checkInputParams(MobileTerminalType terminal) throws MobileTerminalServiceMapperException {
+    private static void checkInputParams(MobileTerminalType terminal) {
         if (terminal == null) {
-            throw new MobileTerminalServiceMapperException("MobileTerminal is null");
+            throw new IllegalArgumentException("MobileTerminal is null");
         }
     }
 
@@ -91,7 +91,7 @@ public class PollMapper {
         return null;
     }
 
-    public static PollChannelDto mapPollChannel(MobileTerminalType mobileTerminal) throws MobileTerminalServiceMapperException {
+    public static PollChannelDto mapPollChannel(MobileTerminalType mobileTerminal) {
         checkInputParams(mobileTerminal);
 
         PollChannelDto pollChannel = new PollChannelDto();

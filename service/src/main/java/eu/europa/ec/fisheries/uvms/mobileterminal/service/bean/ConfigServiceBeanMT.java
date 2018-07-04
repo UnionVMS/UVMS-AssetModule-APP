@@ -93,7 +93,7 @@ public class ConfigServiceBeanMT implements ConfigService {
             String messageId = MTMessageProducer.sendModuleMessage(data, ModuleQueue.EXCHANGE);
             TextMessage response = MTMessageConsumer.getMessage(messageId, TextMessage.class);
             if(response == null){
-                throw new MobileTerminalModelException("No response from exchange");
+                throw new NullPointerException("No response from exchange");
             }
             return ExchangeModuleResponseMapper.mapServiceListResponse(response, messageId);
         } catch (ExchangeModelMapperException | MobileTerminalException e) {
