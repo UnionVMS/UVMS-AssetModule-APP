@@ -29,15 +29,15 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTermin
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalTypeComparator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.TerminalDaoBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.AuditModuleRequestMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.HistoryMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalEntityToModelMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalModelToEntityMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceMapperException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.SearchMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -229,13 +229,34 @@ public class MobileTerminalServiceBean {
         return historyList;
     }
 
-    public MobileTerminalListResponse getPollableMobileTerminal(PollableQuery query) {
+    public PollChannelListDto getPollableMobileTerminal(PollableQuery query) throws MobileTerminalServiceMapperException {
+
+        PollChannelListDto channelListDto = new PollChannelListDto();
+
         ListResponseDto listResponse = pollModel.getMobileTerminalPollableList(query);
         MobileTerminalListResponse response = new MobileTerminalListResponse();
         response.setCurrentPage(listResponse.getCurrentPage());
         response.setTotalNumberOfPages(listResponse.getTotalNumberOfPages());
         response.getMobileTerminal().addAll(listResponse.getMobileTerminalList());
-        return response;
+
+        channelListDto.setCurrentPage(response.getCurrentPage());
+        channelListDto.setTotalNumberOfPages(response.getTotalNumberOfPages());
+
+        ArrayList<PollChannelDto> pollChannelList = new ArrayList<>();
+        for(MobileTerminalType terminalType : response.getMobileTerminal()) {
+            PollChannelDto terminal = PollMapper.mapPollChannel(terminalType);
+            pollChannelList.add(terminal);
+        }
+        channelListDto.setPollableChannels(pollChannelList);
+        return channelListDto;
+
+
+        /*ListResponseDto listResponse = pollModel.getMobileTerminalPollableList(query);
+        MobileTerminalListResponse response = new MobileTerminalListResponse();
+        response.setCurrentPage(listResponse.getCurrentPage());
+        response.setTotalNumberOfPages(listResponse.getTotalNumberOfPages());
+        response.getMobileTerminal().addAll(listResponse.getMobileTerminalList());
+        return response;*/
     }
 
     /***************************************************************************************************************************/

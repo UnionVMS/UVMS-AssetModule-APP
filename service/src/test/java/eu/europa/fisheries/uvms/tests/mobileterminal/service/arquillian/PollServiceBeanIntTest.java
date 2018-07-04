@@ -8,6 +8,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelE
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.PollProgramDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.CreatePollResultDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.PollProgram;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
@@ -66,19 +67,21 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    public void getRunningProgramPolls()  {
+    public void getRunningProgramPolls() throws Exception {
         Date startDate = testPollHelper.getStartDate();
         Date latestRun = testPollHelper.getLatestRunDate();
         Date stopDate = testPollHelper.getStopDate();
+
+        int numberOfProgramB4 = pollService.getRunningProgramPolls().size();
 
         String mobileTerminalSerialNumber = testPollHelper.createSerialNumber();
         PollProgram pollProgram = testPollHelper.createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
 
         pollProgramDao.createPollProgram(pollProgram);
 
-        List<PollResponseType> runningProgramPolls = pollService.getRunningProgramPolls();
+        List<PollDto> runningProgramPolls = pollService.getRunningProgramPolls();
         assertNotNull(runningProgramPolls);
-        assertEquals(1, runningProgramPolls.size());
+        assertEquals(numberOfProgramB4 + 1, runningProgramPolls.size());
     }
 
     @Test

@@ -15,13 +15,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollListQuery;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollableQuery;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MappedPollServiceBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.PollProgramDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.PollProgram;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PollMapper;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTResponseDto;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTErrorHandler;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
@@ -32,6 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -47,12 +51,14 @@ public class PollRestResource {
     private final static Logger LOG = LoggerFactory.getLogger(PollRestResource.class);
 
 
-
-    @EJB
-    private MappedPollServiceBean pollService;
+    @Inject
+    private PollServiceBean pollServiceBean;
 
     @EJB
     private PollProgramDaoBean pollProgramDao;
+
+    @Inject
+    private MobileTerminalServiceBean mobileTerminalServiceBean;
 
     @Context
     private HttpServletRequest request;
@@ -63,7 +69,7 @@ public class PollRestResource {
     public MTResponseDto<CreatePollResultDto> createPoll(PollRequestType createPoll) {
         LOG.info("Create poll invoked in rest layer:{}",createPoll);
         try {
-            CreatePollResultDto createPollResultDto = pollService.createPoll(createPoll, request.getRemoteUser());
+            CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(createPoll, request.getRemoteUser());
             return new MTResponseDto<>(createPollResultDto, MTResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when creating poll {}] {}",createPoll, ex.getStackTrace());
@@ -77,7 +83,7 @@ public class PollRestResource {
     public MTResponseDto<List<PollDto>> getRunningProgramPolls() {
         LOG.info("Get running program polls invoked in rest layer");
         try {
-            List<PollDto> polls = pollService.getRunningProgramPolls();
+            List<PollDto> polls = pollServiceBean.getRunningProgramPolls();
             return new MTResponseDto<>(polls, MTResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when getting running program polls ] {}", (Object) ex.getStackTrace());
@@ -91,7 +97,8 @@ public class PollRestResource {
     public MTResponseDto<PollDto> startProgramPoll(@PathParam("id") String pollId) {
         LOG.info("Start poll invoked in rest layer:{}",pollId);
         try {
-            PollDto poll = pollService.startProgramPoll(pollId, request.getRemoteUser());
+            PollResponseType pollResponse = pollServiceBean.startProgramPoll(pollId, request.getRemoteUser());
+            PollDto poll = PollMapper.mapPoll(pollResponse);
             return new MTResponseDto<>(poll, MTResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when starting program poll {}] {}", pollId, ex.getStackTrace());
@@ -105,7 +112,9 @@ public class PollRestResource {
     public MTResponseDto<PollDto> stopProgramPoll(@PathParam("id") String pollId) {
         LOG.info("Stop poll invoked in rest layer:{}",pollId);
         try {
-            PollDto poll = pollService.stopProgramPoll(pollId, request.getRemoteUser());
+            //PollDto poll = pollService.stopProgramPoll(pollId, request.getRemoteUser());
+            PollResponseType pollResponse = pollServiceBean.stopProgramPoll(pollId, request.getRemoteUser());
+            PollDto poll = PollMapper.mapPoll(pollResponse);
             return new MTResponseDto<>(poll, MTResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when stopping program poll {} ] {}",pollId, ex.getStackTrace());
@@ -119,7 +128,9 @@ public class PollRestResource {
     public MTResponseDto<PollDto> archiveProgramPoll(@PathParam("id") String pollId) {       //This gives a poll the status "ARCHIVED"
         LOG.info("Archive poll invoked in rest layer:{}",pollId);
         try {
-            PollDto poll = pollService.inactivateProgramPoll(pollId, request.getRemoteUser());
+            //PollDto poll = pollService.inactivateProgramPoll(pollId, request.getRemoteUser());
+            PollResponseType pollResponse = pollServiceBean.inactivateProgramPoll(pollId, request.getRemoteUser());
+            PollDto poll = PollMapper.mapPoll(pollResponse);
             return new MTResponseDto<>(poll, MTResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when inactivating program poll {}] {}",pollId, ex.getStackTrace());
@@ -133,7 +144,7 @@ public class PollRestResource {
     public MTResponseDto<PollChannelListDto> getPollBySearchCriteria(PollListQuery query) {
         LOG.info("Get poll by search criteria invoked in rest layer:{}",query);
         try {
-        	PollChannelListDto pollChannelList = pollService.getPollBySearchQuery(query);
+        	PollChannelListDto pollChannelList = pollServiceBean.getPollBySearchCriteria(query);
             return new MTResponseDto<>(pollChannelList, MTResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when getting poll by search criteria {}] {}",query, ex.getStackTrace());
@@ -147,7 +158,7 @@ public class PollRestResource {
     public MTResponseDto<PollChannelListDto> getPollableChannels(PollableQuery query) {
         LOG.info("Get pollables invoked in rest layer:{}",query);
         try {
-            PollChannelListDto pollChannelList = pollService.getPollableChannels(query);
+            PollChannelListDto pollChannelList = mobileTerminalServiceBean.getPollableMobileTerminal(query);
             return new MTResponseDto<>(pollChannelList, MTResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when getting poll by search criteria {}] {}", query, ex.getStackTrace());

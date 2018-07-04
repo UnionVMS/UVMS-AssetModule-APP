@@ -26,6 +26,9 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.PollDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.PollProgramDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.CreatePollResultDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelListDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.*;
@@ -111,8 +114,9 @@ public class PollServiceBean implements PollService {
         }
     }
 
-    public List<PollResponseType> getRunningProgramPolls()  {
-            return getPollProgramList();
+    public List<PollDto> getRunningProgramPolls() throws MobileTerminalServiceMapperException {
+        List<PollResponseType> pollResponse = getPollProgramList();
+        return PollMapper.mapPolls(pollResponse);
     }
 
     public PollResponseType startProgramPoll(String pollId, String username) throws MobileTerminalServiceException {
@@ -169,10 +173,24 @@ public class PollServiceBean implements PollService {
         }
     }
 
-    public PollListResponse getPollBySearchCriteria(PollListQuery query) {
+    public PollChannelListDto getPollBySearchCriteria(PollListQuery query) {
         try {
-            return getPollList(query);
-        } catch (RuntimeException | SearchMapperException e) {
+            PollChannelListDto channelListDto = new PollChannelListDto();
+
+            PollListResponse pollResponse = getPollList(query);    //this is where the magic happens, rest of the method is just a mapper
+            channelListDto.setCurrentPage(pollResponse.getCurrentPage());
+            channelListDto.setTotalNumberOfPages(pollResponse.getTotalNumberOfPages());
+
+            ArrayList<PollChannelDto> pollChannelList = new ArrayList<>();
+            for(PollResponseType responseType : pollResponse.getPollList()) {
+                PollChannelDto terminal = PollMapper.mapPollChannel(responseType.getMobileTerminal());
+                terminal.setPoll(PollMapper.mapPoll(responseType));
+                pollChannelList.add(terminal);
+            }
+            channelListDto.setPollableChannels(pollChannelList);
+            return channelListDto;
+
+        } catch (RuntimeException | SearchMapperException | MobileTerminalServiceMapperException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
