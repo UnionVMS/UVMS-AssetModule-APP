@@ -12,14 +12,13 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.message;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.DataSourceQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ModuleQueue;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalException;
 
 import javax.ejb.Local;
 
 @Local
 public interface MTMessageProducer {
 
-    String sendDataSourceMessage(String text, DataSourceQueue queue) throws MobileTerminalException;
+    String sendDataSourceMessage(String text, DataSourceQueue queue);
 
-    String sendModuleMessage(String text, ModuleQueue queue) throws MobileTerminalException;
+    String sendModuleMessage(String text, ModuleQueue queue);
 }

@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.bean;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.module.v1.GetMobileTerminalRequest;
-import eu.europa.ec.fisheries.schema.mobileterminal.module.v1.MobileTerminalFaultException;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalSource;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
@@ -14,7 +13,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.EventMessage;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.MobileTerminalModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.ParameterKey;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,7 +92,7 @@ public class GetReceivedEventBean {
             if (!dataSource.equals(DataSourceQueue.INTERNAL)) {
                 service.upsertMobileTerminal(mobTerm, MobileTerminalSource.NATIONAL, dataSource.name());
             }
-        } catch (MobileTerminalModelException | MobileTerminalFaultException | MobileTerminalException ex) {
+        } catch (MobileTerminalModelException ex) {
             mobTerm = null;
         }
         if (mobTerm == null) {
@@ -102,7 +100,7 @@ public class GetReceivedEventBean {
             try {
                 request = JAXBMarshaller.unmarshallTextMessage(message.getJmsMessage(), GetMobileTerminalRequest.class);
                 mobTerm = service.getMobileTerminalById(request.getId(), DataSourceQueue.INTERNAL);
-            } catch (MobileTerminalModelException | MobileTerminalFaultException | MobileTerminalException ex) {
+            } catch (MobileTerminalModelException ex) {
                 errorEvent.fire(new EventMessage(message.getJmsMessage(), "Exception when getting vessel from source : " + dataSource.name() + " Error message: " + ex.getMessage()));
             }
         }

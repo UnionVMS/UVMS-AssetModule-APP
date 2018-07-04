@@ -11,7 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.bean;
 
-import eu.europa.ec.fisheries.schema.mobileterminal.module.v1.MobileTerminalFaultException;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollableQuery;
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
@@ -35,7 +34,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.SearchMapper;
 import org.slf4j.Logger;
@@ -76,7 +74,7 @@ public class MobileTerminalServiceBean {
     @EJB
     private MobileTerminalPluginDaoBean pluginDao;
 
-    public MobileTerminalType createMobileTerminal(MobileTerminalType mobileTerminal, MobileTerminalSource source, String username) throws MobileTerminalException, MobileTerminalModelException {
+    public MobileTerminalType createMobileTerminal(MobileTerminalType mobileTerminal, MobileTerminalSource source, String username) throws MobileTerminalModelException {
         mobileTerminal.setSource(source);
         MobileTerminalType createdMobileTerminal = createMobileTerminal(mobileTerminal, username);
         boolean dnidUpdated = configModel.checkDNIDListChange(createdMobileTerminal.getPlugin().getServiceName());
@@ -95,7 +93,7 @@ public class MobileTerminalServiceBean {
         return createdMobileTerminal;
     }
 
-    public MobileTerminalListResponse getMobileTerminalList(MobileTerminalListQuery query) throws MobileTerminalModelException {
+    public MobileTerminalListResponse getMobileTerminalList(MobileTerminalListQuery query) {
         ListResponseDto listResponse = getTerminalListByQuery(query);
         MobileTerminalListResponse response = new MobileTerminalListResponse();
         response.setCurrentPage(listResponse.getCurrentPage());
@@ -104,7 +102,7 @@ public class MobileTerminalServiceBean {
         return response;
     }
 
-    public MobileTerminalType getMobileTerminalById(String guid) throws MobileTerminalModelException {
+    public MobileTerminalType getMobileTerminalById(String guid) {
         if (guid == null) {
             throw new IllegalArgumentException("No id");
         }
@@ -129,7 +127,7 @@ public class MobileTerminalServiceBean {
         return terminalUpserted;
     }
 
-    public MobileTerminalType getMobileTerminalById(MobileTerminalId id, DataSourceQueue queue) throws MobileTerminalException, MobileTerminalModelException, MobileTerminalFaultException {
+    public MobileTerminalType getMobileTerminalById(MobileTerminalId id, DataSourceQueue queue) throws MobileTerminalModelException {
         if (id == null) {
             throw new IllegalArgumentException("No id");
         }
@@ -143,7 +141,7 @@ public class MobileTerminalServiceBean {
     }
 
     public MobileTerminalType updateMobileTerminal(MobileTerminalType mobileTerminal, String comment, MobileTerminalSource source, String username)
-            throws MobileTerminalException, MobileTerminalModelException {
+            throws MobileTerminalModelException {
         mobileTerminal.setSource(source);
         MobileTerminalType terminalUpdate = updateMobileTerminal(mobileTerminal, comment, username);
         try {
@@ -162,7 +160,7 @@ public class MobileTerminalServiceBean {
         return terminalUpdate;
     }
 
-    public MobileTerminalType assignMobileTerminal(MobileTerminalAssignQuery query, String comment, String username) throws MobileTerminalException, MobileTerminalModelException {
+    public MobileTerminalType assignMobileTerminal(MobileTerminalAssignQuery query, String comment, String username) throws MobileTerminalModelException {
         MobileTerminalType terminalAssign = assignMobileTerminalToCarrier(query, comment, username);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalAssigned(terminalAssign.getMobileTerminalId().getGuid(), comment, username);
@@ -175,7 +173,7 @@ public class MobileTerminalServiceBean {
         return terminalAssign;
     }
 
-    public MobileTerminalType unAssignMobileTerminal(MobileTerminalAssignQuery query, String comment, String username) throws MobileTerminalException, MobileTerminalModelException {
+    public MobileTerminalType unAssignMobileTerminal(MobileTerminalAssignQuery query, String comment, String username) throws MobileTerminalModelException {
         MobileTerminalType terminalUnAssign = unAssignMobileTerminalFromCarrier(query, comment, username);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalUnassigned(terminalUnAssign.getMobileTerminalId().getGuid(), comment, username);
@@ -189,7 +187,7 @@ public class MobileTerminalServiceBean {
     }
 
     // TODO: This method recurses infinitely!!!
-    public MobileTerminalType setStatusMobileTerminal(MobileTerminalId terminalId, String comment, MobileTerminalStatus status, String username) throws MobileTerminalException {
+    public MobileTerminalType setStatusMobileTerminal(MobileTerminalId terminalId, String comment, MobileTerminalStatus status, String username) {
         MobileTerminalType terminalStatus = setStatusMobileTerminal(terminalId, comment, status, username);
         try {
             String auditData = null;

@@ -94,7 +94,7 @@ public class PollServiceBean implements PollService {
             try {
                 String auditData = AuditModuleRequestMapper.mapAuditLogPollCreated(createdPoll.getPollType(), createdPoll.getPollId().getGuid(), createdPoll.getComment(), username);
                 MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-            } catch (AuditModelMarshallException | MobileTerminalException e) {
+            } catch (AuditModelMarshallException | RuntimeException e) {
                 LOG.error("Failed to send audit log message! Poll with guid {} was created", createdPoll.getPollId().getGuid());
             }
         }
@@ -123,7 +123,7 @@ public class PollServiceBean implements PollService {
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollStarted(startedPoll.getPollId().getGuid(), username);
             MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-        } catch (AuditModelMarshallException | MobileTerminalException e) {
+        } catch (AuditModelMarshallException | RuntimeException e) {
             LOG.error("Failed to send audit log message due tue: " + e.getMessage() + "! Poll with guid {} was started", startedPoll.getPollId().getGuid());
         }
 
@@ -139,7 +139,7 @@ public class PollServiceBean implements PollService {
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollStopped(stoppedPoll.getPollId().getGuid(), username);
             MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-        } catch (AuditModelMarshallException | MobileTerminalException e) {
+        } catch (AuditModelMarshallException | RuntimeException e) {
             LOG.error("Failed to send audit log message due tue: " + e.getMessage() + "! Poll with guid {} was stopped", stoppedPoll.getPollId().getGuid());
         }
 
@@ -154,7 +154,7 @@ public class PollServiceBean implements PollService {
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollInactivated(inactivatedPoll.getPollId().getGuid(), username);
             MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-        } catch (AuditModelMarshallException | MobileTerminalException e) {
+        } catch (AuditModelMarshallException | RuntimeException e) {
             LOG.error("Failed to send audit log message due tue: " + e.getMessage() + "! Poll with guid {} was inactivated", inactivatedPoll.getPollId().getGuid());
         }
 

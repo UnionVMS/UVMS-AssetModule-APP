@@ -39,7 +39,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalP
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.OceanRegion;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollTypeEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.ExchangeModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PluginMapper;
 import org.slf4j.Logger;
@@ -96,7 +95,7 @@ public class ConfigServiceBeanMT implements ConfigService {
                 throw new NullPointerException("No response from exchange");
             }
             return ExchangeModuleResponseMapper.mapServiceListResponse(response, messageId);
-        } catch (ExchangeModelMapperException | MobileTerminalException e) {
+        } catch (ExchangeModelMapperException | RuntimeException e) {
             LOG.error("Failed to map to exchange get service list request");
             throw new MobileTerminalModelException("Failed to map to exchange get service list request");
         }

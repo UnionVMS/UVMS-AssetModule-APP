@@ -10,8 +10,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.constants;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalException;
-
 import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.ENUM_FIELD_TYPE_ERROR;
 
 public enum ChannelFieldInmarsatC {
@@ -27,12 +25,12 @@ public enum ChannelFieldInmarsatC {
     INSTALLED_BY,
     DNID;
 
-    public static ChannelFieldInmarsatC getAttribute(String type) throws MobileTerminalException {
+    public static ChannelFieldInmarsatC getAttribute(String type) {
         for(ChannelFieldInmarsatC attr : ChannelFieldInmarsatC.values()) {
             if(attr.name().equalsIgnoreCase(type)) {
                 return attr;
             }
         }
-        throw new MobileTerminalException(ENUM_FIELD_TYPE_ERROR.getMessage() + type, ENUM_FIELD_TYPE_ERROR.getCode());
+        throw new IllegalArgumentException(ENUM_FIELD_TYPE_ERROR.getMessage() + type);
     }
 }
