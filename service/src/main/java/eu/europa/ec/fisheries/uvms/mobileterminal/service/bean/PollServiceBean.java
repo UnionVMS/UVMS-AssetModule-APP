@@ -202,11 +202,11 @@ public class PollServiceBean implements PollService {
                         throw new IllegalStateException("Channel " + channel.getId() + " can not be polled, because it is not part of terminal " + terminal.getId());
                     }
                 }
-
             }
+        } else {
             throw new NullPointerException("Could not find channel " + channelGuid + " based on");
         }
-        throw new IllegalArgumentException("Could not find channel " + channelGuid + " based on");
+        return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
     }
 
     private void checkPollable(MobileTerminal terminal){
