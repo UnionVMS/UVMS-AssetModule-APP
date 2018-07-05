@@ -63,12 +63,7 @@ public class MappedPollServiceBeanIntTest extends TransactionalTests {
         }
      }
 
-    @Test
-    @OperateOnDeployment("normal")
-    public void getRunningProgramPolls() {
-        // This is already tested in PollProgramDaoBeanIT class.
-    }
-
+ 
     @Test
     @OperateOnDeployment("normal")     //TODO: Move to PollServiceBeanTest
     public void startProgramPoll() throws Exception {
