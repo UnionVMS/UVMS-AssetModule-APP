@@ -62,14 +62,17 @@ public class TestPollHelper {
         return pmt;
     }
 
-    public MobileTerminal createMobileTerminal(String connectId) {
+    public MobileTerminal createMobileTerminal(String connectId)  {
 
         String serialNo = UUID.randomUUID().toString();
 
-        MobileTerminal mt = new MobileTerminal();
-        MobileTerminalPlugin mtp;
+        Channel channel = new Channel();
+        channel.setArchived(false);
+
         List<MobileTerminalPlugin> plugs = mobileTerminalPluginDao.getPluginList();
-        mtp = plugs.get(0);
+        MobileTerminalPlugin mtp = plugs.get(0);
+
+        MobileTerminal mt = new MobileTerminal();
         mt.setSerialNo(serialNo);
         mt.setUpdatetime(new Date());
         mt.setUpdateuser("TEST");
@@ -79,26 +82,42 @@ public class TestPollHelper {
         mt.setArchived(false);
         mt.setInactivated(false);
 
-        Set<MobileTerminalEvent> events = new HashSet<>();
-        MobileTerminalEvent event = new MobileTerminalEvent();
-        event.setConnectId(connectId);
-        event.setActive(true);
-        event.setMobileterminal(mt);
+        Set<MobileTerminalPluginCapability> capabilityList = new HashSet<>();
+        MobileTerminalPluginCapability mtpc = new MobileTerminalPluginCapability();
+        mtpc.setPlugin(mtp);
+        mtpc.setName("test");
+        mtpc.setValue("test");
+        mtpc.setUpdatedBy("TEST_USER");
+        mtpc.setUpdateTime(new Date());
+        capabilityList.add(mtpc);
+
+        mtp.getCapabilities().addAll(capabilityList);
+
+        Set<MobileTerminalEvent> mobileTerminalEvents = new HashSet<>();
+        MobileTerminalEvent mte = new MobileTerminalEvent();
+        if(connectId != null && !connectId.trim().isEmpty())
+            mte.setConnectId(connectId);
+        mte.setActive(true);
+        mte.setMobileterminal(mt);
 
         String attributes = PollAttributeType.START_DATE.value() + "=" + DateUtils.getUTCNow().toString();
         attributes = attributes + ";";
         attributes = attributes + PollAttributeType.END_DATE.value() + "=" + DateUtils.getUTCNow().toString();
-        event.setAttributes(attributes);
+        mte.setAttributes(attributes);
 
-        events.add(event);
-        mt.setMobileTerminalEvents(events);
+        Channel pollChannel = new Channel();
+        pollChannel.setArchived(false);
+        pollChannel.setMobileTerminal(mt);
+
+        mte.setPollChannel(pollChannel);
+        mobileTerminalEvents.add(mte);
+        mt.getMobileTerminalEvents().addAll(mobileTerminalEvents);
+
+        channel.setMobileTerminal(mt);
 
         Set<Channel> channels = new HashSet<>();
-        Channel channel = new Channel();
-        channel.setArchived(false);
-        channel.setMobileTerminal(mt);
         channels.add(channel);
-        mt.setChannels(channels);
+        mt.getChannels().addAll(channels);
         terminalDao.createMobileTerminal(mt);
         return mt;
     }
@@ -143,19 +162,9 @@ public class TestPollHelper {
         plugin.setSatelliteType("INMARSAT_C");
         plugin.setInactive(false);
 
-
         mobileTerminal.setPlugin(plugin);
 
         return mobileTerminal;
-    }
-
-    private PluginService createPluginService() {
-        PluginService pluginService = new PluginService();
-        pluginService.setInactive(false);
-        pluginService.setLabelName("Thrane&Thrane");
-        pluginService.setSatelliteType("INMARSAT_C");
-        pluginService.setServiceName("eu.europa.ec.fisheries.uvms.plugins.inmarsat");
-        return pluginService;
     }
 
     private String generateARandomStringWithMaxLength(int len) {

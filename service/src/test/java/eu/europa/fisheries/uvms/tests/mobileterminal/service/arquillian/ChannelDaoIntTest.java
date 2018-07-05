@@ -1,14 +1,9 @@
 package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttributeType;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.ChannelDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalSourceEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.util.DateUtils;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
+import eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper.TestPollHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Ignore;
@@ -24,32 +19,24 @@ import java.util.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
-/**
- */
 @RunWith(Arquillian.class)
-//@Ignore
 public class ChannelDaoIntTest extends TransactionalTests {
 
     @Inject
     private ChannelDaoBean channelDao;
 
     @EJB
-    private MobileTerminalPluginDaoBean mobileTerminalPluginDao;
-
-    @EJB
-    private TerminalDaoBean mobileTerminalDao;
+    private TestPollHelper testPollHelper;
 
     @Test
     @OperateOnDeployment("normal")
-
     public void testGetPollableListSearch() {
         //Given - need a string list of id's.
         String id1 = "test_id1";
         String id2 = "test_id2";
         List<String> idList = Arrays.asList(id1, id2);
 
-        MobileTerminal mobileTerminal = createMobileTerminal(id1);
-        mobileTerminalDao.createMobileTerminal(mobileTerminal);
+        MobileTerminal mobileTerminal = testPollHelper.createMobileTerminal(id1);
         assertNotNull(mobileTerminal.getId());
 
         //When
@@ -118,66 +105,5 @@ public class ChannelDaoIntTest extends TransactionalTests {
 
         //Then
         assertThat(dnidList.size(), is(0));
-    }
-
-    private MobileTerminal createMobileTerminal(String connectId)  {
-
-        String serialNo = UUID.randomUUID().toString();
-        String serialNo2 = UUID.randomUUID().toString();
-
-        Channel channel = new Channel();
-        channel.setArchived(false);
-
-        List<MobileTerminalPlugin> plugs = mobileTerminalPluginDao.getPluginList();
-        MobileTerminalPlugin mtp = plugs.get(0);
-
-        MobileTerminal mt = new MobileTerminal();
-        mt.setSerialNo(serialNo);
-        mt.setUpdatetime(new Date());
-        mt.setUpdateuser("TEST");
-        mt.setSource(MobileTerminalSourceEnum.INTERNAL);
-        mt.setPlugin(mtp);
-        mt.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
-        mt.setArchived(false);
-        mt.setInactivated(false);
-
-        Set<MobileTerminalPluginCapability> capabilityList = new HashSet<>();
-        MobileTerminalPluginCapability mtpc = new MobileTerminalPluginCapability();
-        mtpc.setPlugin(mtp);
-        mtpc.setName("test");
-        mtpc.setValue("test");
-        mtpc.setUpdatedBy("TEST_USER");
-        mtpc.setUpdateTime(new Date());
-        capabilityList.add(mtpc);
-
-        mtp.getCapabilities().addAll(capabilityList);
-
-        Set<MobileTerminalEvent> mobileTerminalEvents = new HashSet<>();
-        MobileTerminalEvent mte = new MobileTerminalEvent();
-        if(connectId != null && !connectId.trim().isEmpty())
-            mte.setConnectId(connectId);
-        mte.setActive(true);
-        mte.setMobileterminal(mt);
-
-        String attributes = PollAttributeType.START_DATE.value() + "=" + DateUtils.getUTCNow().toString();
-        attributes = attributes + ";";
-        attributes = attributes + PollAttributeType.END_DATE.value() + "=" + DateUtils.getUTCNow().toString();
-        mte.setAttributes(attributes);
-
-        Channel pollChannel = new Channel();
-        pollChannel.setArchived(false);
-        pollChannel.setMobileTerminal(mt);
-
-        mte.setPollChannel(pollChannel);
-        mobileTerminalEvents.add(mte);
-        mt.getMobileTerminalEvents().addAll(mobileTerminalEvents);
-
-        channel.setMobileTerminal(mt);
-
-        Set<Channel> channels = new HashSet<>();
-        channels.add(channel);
-        mt.getChannels().addAll(channels);
-
-        return mt;
     }
 }
