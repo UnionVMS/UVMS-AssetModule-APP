@@ -37,6 +37,7 @@ public class MobileTerminalTestHelper {
         List<ComChannelType> channels = mobileTerminal.getChannels();
         ComChannelType comChannelType = new ComChannelType();
         channels.add(comChannelType);
+
         //comChannelType.setGuid(UUID.randomUUID().toString());
         comChannelType.setName("VMS");
 

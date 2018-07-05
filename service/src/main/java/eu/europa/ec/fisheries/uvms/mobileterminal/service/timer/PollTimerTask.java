@@ -54,7 +54,7 @@ public class PollTimerTask implements Runnable{
                     LOG.info("Poll created by poll program {}", guid);
                 }
             }
-        } catch (MobileTerminalModelException e) {
+        } catch (Exception e) {
             LOG.error("[ Poll scheduler failed. ] " + e.getMessage());
         }
     }

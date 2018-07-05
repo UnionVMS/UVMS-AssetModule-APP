@@ -53,7 +53,8 @@ public class ExchangeModuleMock implements MessageListener {
             /*capabilityType = new CapabilityType();
             capabilityType.setType(CapabilityTypeType.CONFIGURABLE);
             capabilityType.setValue("TRUE");
-            capabilityList.getCapability().add(capabilityType); */
+            capabilityList.getCapability().add(capabilityType);*/
+
 
             serviceResponseType.setCapabilityList(capabilityList);
 

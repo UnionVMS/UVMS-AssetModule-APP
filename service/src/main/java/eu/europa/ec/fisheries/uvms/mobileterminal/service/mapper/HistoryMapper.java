@@ -35,7 +35,7 @@ public class HistoryMapper {
 
 	public static MobileTerminalHistory getHistory(MobileTerminal terminal) {
 		if (terminal == null || terminal.getMobileTerminalEvents() == null) {
-            throw new NullPointerException("No terminal history available");
+            throw new IllegalArgumentException("No terminal history available");
         }
 
 		MobileTerminalHistory terminalHistory = new MobileTerminalHistory();

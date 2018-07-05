@@ -12,12 +12,12 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.service;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollListQuery;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.CreatePollResultDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelListDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollDto;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -27,7 +27,7 @@ public interface PollService {
 
     CreatePollResultDto createPoll(PollRequestType poll, String username) throws MobileTerminalModelException;
 
-    List<PollResponseType> getRunningProgramPolls() throws MobileTerminalModelException;
+    List<PollDto> getRunningProgramPolls() throws MobileTerminalModelException;
 
     PollResponseType startProgramPoll(String pollId, String username) throws MobileTerminalModelException;
 
@@ -35,7 +35,7 @@ public interface PollService {
 
     PollResponseType inactivateProgramPoll(String pollId, String username) throws MobileTerminalModelException;
 
-    PollListResponse getPollBySearchCriteria(PollListQuery query) throws MobileTerminalModelException;
+    PollChannelListDto getPollBySearchCriteria(PollListQuery query) throws MobileTerminalModelException;
 
     List<PollResponseType> timer() throws MobileTerminalModelException;
 }

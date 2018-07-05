@@ -39,7 +39,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalP
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.OceanRegion;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollTypeEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.ExchangeModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PluginMapper;
 import org.slf4j.Logger;
@@ -87,7 +86,7 @@ public class ConfigServiceBeanMT implements ConfigService {
         return upsertPlugins(plugins);
     }
 
-    public List<ServiceResponseType> getRegisteredMobileTerminalPlugins() throws MobileTerminalModelException {
+    public List<ServiceResponseType> getRegisteredMobileTerminalPlugins() {
         try {
             List<PluginType> pluginTypes = new ArrayList<>();
             pluginTypes.add(PluginType.SATELLITE_RECEIVER);
@@ -98,9 +97,9 @@ public class ConfigServiceBeanMT implements ConfigService {
                 throw new NullPointerException("No response from exchange");
             }
             return ExchangeModuleResponseMapper.mapServiceListResponse(response, messageId);
-        } catch (ExchangeModelMapperException | MobileTerminalServiceException e) {
-            LOG.error("Failed to map to exchange get service list request");
-            throw new MobileTerminalModelException(EXCHANGE_MAPPING_ERROR.getMessage(), e, EXCHANGE_MAPPING_ERROR.getCode());
+        } catch (ExchangeModelMapperException | RuntimeException e) {
+            LOG.error("Failed to map to exchange get service list request due tue: " + e.getMessage());
+            throw new RuntimeException("Failed to map to exchange get service list request", e);
         }
     }
 

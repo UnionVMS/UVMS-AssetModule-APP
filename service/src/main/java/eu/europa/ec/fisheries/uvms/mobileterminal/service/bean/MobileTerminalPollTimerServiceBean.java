@@ -13,10 +13,8 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.bean;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttributeType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.MobileTerminalGenericMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.PollDataSourceRequestMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.util.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +34,7 @@ public class MobileTerminalPollTimerServiceBean {
     @EJB
     private PollServiceBean pollService;
 
-    public void timerTimeout() throws MobileTerminalServiceException {
+    public void timerTimeout() {
         Date now = DateUtils.getUTCNow();
         LOG.debug("PollProgram collected from DB at " + now.toString());
         try {
@@ -56,7 +54,7 @@ public class MobileTerminalPollTimerServiceBean {
                     LOG.info("Poll created by poll program {}", guid);
                 }
             }
-        } catch (MobileTerminalModelException e) {
+        } catch (Exception e) {
             LOG.error("[ Poll scheduler failed. ] " + e.getMessage());
         }
     }

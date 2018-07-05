@@ -1,8 +1,7 @@
 package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MappedPollServiceBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.PollProgramDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollDto;
@@ -11,6 +10,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollValue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.PollProgram;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PollMapper;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper.TestPollHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
@@ -23,23 +23,25 @@ import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
 import javax.ejb.EJBTransactionRolledbackException;
+import javax.inject.Inject;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(Arquillian.class)
+@RunWith(Arquillian.class)     //TODO: Move relevant methods to PollServiceBeanTest
 public class MappedPollServiceBeanIntTest extends TransactionalTests {
 
-    @EJB
-    private MappedPollServiceBean mappedPollService;
 
     @EJB
     private PollProgramDaoBean pollProgramDao;
 
     @EJB
     private TestPollHelper testPollHelper;
+
+    @Inject
+    private PollServiceBean pollServiceBean;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -53,7 +55,7 @@ public class MappedPollServiceBeanIntTest extends TransactionalTests {
         PollRequestType pollRequestType = helper_createPollRequestType(PollType.MANUAL_POLL);
 
         // create a poll
-        CreatePollResultDto createPollResultDto = mappedPollService.createPoll(pollRequestType, "TEST");
+        CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(pollRequestType, "TEST");
         em.flush();
 
         if(createPollResultDto.getSentPolls().size() == 0 && createPollResultDto.getUnsentPolls().size() == 0) {
@@ -68,7 +70,7 @@ public class MappedPollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    @OperateOnDeployment("normal")
+    @OperateOnDeployment("normal")     //TODO: Move to PollServiceBeanTest
     public void startProgramPoll() throws Exception {
 
         // we want to be able to tamper with the dates for proper test coverage
@@ -84,7 +86,9 @@ public class MappedPollServiceBeanIntTest extends TransactionalTests {
         pollProgramDao.createPollProgram(pollProgram);
         UUID guid = pollProgram.getId();
 
-        PollDto startedProgramPoll = mappedPollService.startProgramPoll(guid.toString(), username);
+        //PollDto startedProgramPoll = mappedPollService.startProgramPoll(guid.toString(), username);
+        PollResponseType pollResponse = pollServiceBean.startProgramPoll(guid.toString(), username);
+        PollDto startedProgramPoll = PollMapper.mapPoll(pollResponse);
         assertNotNull(startedProgramPoll);
 
         List<PollValue> values = startedProgramPoll.getValue();
@@ -93,7 +97,7 @@ public class MappedPollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    @OperateOnDeployment("normal")
+    @OperateOnDeployment("normal")    //TODO: Move to PollServiceBeanTest
     public void stopProgramPoll() throws Exception {
 
 //        System.setProperty(MessageProducerBean.MESSAGE_PRODUCER_METHODS_FAIL, "false");
@@ -111,10 +115,14 @@ public class MappedPollServiceBeanIntTest extends TransactionalTests {
         pollProgramDao.createPollProgram(pollProgram);
         UUID guid = pollProgram.getId();
 
-        PollDto startedProgramPoll = mappedPollService.startProgramPoll(String.valueOf(guid), username);
+        //PollDto startedProgramPoll = mappedPollService.startProgramPoll(String.valueOf(guid), username);
+        PollResponseType pollResponse = pollServiceBean.startProgramPoll(guid.toString(), username);
+        PollDto startedProgramPoll = PollMapper.mapPoll(pollResponse);
         assertNotNull(startedProgramPoll);
 
-        PollDto stoppedProgramPoll = mappedPollService.stopProgramPoll(String.valueOf(guid), username);
+        //PollDto stoppedProgramPoll = mappedPollService.stopProgramPoll(String.valueOf(guid), username);
+        pollResponse = pollServiceBean.stopProgramPoll(String.valueOf(guid), username);
+        PollDto stoppedProgramPoll = PollMapper.mapPoll(pollResponse);
         assertNotNull(stoppedProgramPoll);
 
         List<PollValue> values = stoppedProgramPoll.getValue();
@@ -123,7 +131,7 @@ public class MappedPollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    @OperateOnDeployment("normal")
+    @OperateOnDeployment("normal")   //TODO: Move to PollServiceBeanTest
     public void inactivateProgramPoll() throws Exception {
 
 //        System.setProperty(MessageProducerBean.MESSAGE_PRODUCER_METHODS_FAIL, "false");
@@ -141,14 +149,18 @@ public class MappedPollServiceBeanIntTest extends TransactionalTests {
         pollProgramDao.createPollProgram(pollProgram);
         UUID guid = pollProgram.getId();
 
-        PollDto startedProgramPoll = mappedPollService.startProgramPoll(String.valueOf(guid), username);
+        //PollDto startedProgramPoll = mappedPollService.startProgramPoll(String.valueOf(guid), username);
+        PollResponseType pollResponse = pollServiceBean.startProgramPoll(guid.toString(), username);
+        PollDto startedProgramPoll = PollMapper.mapPoll(pollResponse);
         assertNotNull(startedProgramPoll);
 
         List<PollValue> values = startedProgramPoll.getValue();
         boolean isRunning = validatePollKeyValue(values, PollKey.PROGRAM_RUNNING, "true");
         assertTrue(isRunning);
 
-        PollDto inactivatedProgramPoll = mappedPollService.inactivateProgramPoll(String.valueOf(guid), username);
+        //PollDto inactivatedProgramPoll = mappedPollService.inactivateProgramPoll(String.valueOf(guid), username);
+        pollResponse = pollServiceBean.inactivateProgramPoll(String.valueOf(guid), username);
+        PollDto inactivatedProgramPoll = PollMapper.mapPoll(pollResponse);
         assertNotNull(inactivatedProgramPoll);
 
         List<PollValue> values1 = inactivatedProgramPoll.getValue();
@@ -157,11 +169,11 @@ public class MappedPollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    @OperateOnDeployment("normal")
-    public void startProgramPoll_ShouldFailWithNullAsPollId() throws MobileTerminalModelException {
+    @OperateOnDeployment("normal")    //TODO: Move to PollServiceBeanTest
+    public void startProgramPoll_ShouldFailWithNullAsPollId() throws Exception {
 
         try {
-            mappedPollService.startProgramPoll(null, "TEST");
+            pollServiceBean.startProgramPoll(null, "TEST");
             Assert.fail();
         }
         catch(EJBTransactionRolledbackException e){
@@ -171,12 +183,12 @@ public class MappedPollServiceBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void stopProgramPoll_ShouldFailWithNullAsPollId() throws MobileTerminalModelException {
+    public void stopProgramPoll_ShouldFailWithNullAsPollId() throws Exception {
 
         thrown.expect(EJBTransactionRolledbackException.class);
         thrown.expectMessage("No poll id given");
 
-        mappedPollService.stopProgramPoll(null, "TEST");
+        pollServiceBean.stopProgramPoll(null, "TEST");
     }
 
     private PollRequestType helper_createPollRequestType(PollType pollType) throws Exception {

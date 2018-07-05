@@ -12,7 +12,6 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.message;
 
 import eu.europa.ec.fisheries.uvms.commons.message.impl.JMSUtils;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.constants.MessageConstants;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,8 +20,6 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.jms.*;
-
-import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.RETRIEVING_MESSAGE_ERROR;
 
 @Stateless
 public class MTResponseMessageConsumer implements MTMessageConsumer{
@@ -46,8 +43,7 @@ public class MTResponseMessageConsumer implements MTMessageConsumer{
      */
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public <T> T getMessage(String correlationId, Class type) throws MobileTerminalServiceException {
-
+    public <T> T getMessage(String correlationId, Class type) {
         if (correlationId == null || correlationId.isEmpty()) {
             throw new NullPointerException("No CorrelationID provided!");
         }
@@ -58,8 +54,8 @@ public class MTResponseMessageConsumer implements MTMessageConsumer{
             Message response = consumer.receive(TIMEOUT);
             return (T) response;
         } catch (JMSException e) {
-            LOG.error("[ Error when consuming message. ] {}", e.getMessage());
-            throw new MobileTerminalServiceException(RETRIEVING_MESSAGE_ERROR.getMessage() + e.getMessage(), e, RETRIEVING_MESSAGE_ERROR.getCode());
+            LOG.error("[ Error when consuming message with correlationId: " + correlationId + ". Returning null. ] {}", e.getMessage());
+            return null;
         }
     }
 

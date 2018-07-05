@@ -4,12 +4,11 @@ import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttribute;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttributeType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.PollProgramDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.CreatePollResultDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.PollProgram;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper.TestPollHelper;
 import org.jboss.arquillian.junit.Arquillian;
@@ -44,7 +43,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void createPoll() throws MobileTerminalModelException {
+    public void createPoll()  {
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
         PollRequestType pollRequestType = testPollHelper.createPollRequestType();
         CreatePollResultDto createPollResultDto = pollService.createPoll(pollRequestType, "TEST");
@@ -66,23 +65,25 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    public void getRunningProgramPolls()  {
+    public void getRunningProgramPolls() throws Exception {
         Date startDate = testPollHelper.getStartDate();
         Date latestRun = testPollHelper.getLatestRunDate();
         Date stopDate = testPollHelper.getStopDate();
+
+        int numberOfProgramB4 = pollService.getRunningProgramPolls().size();
 
         String mobileTerminalSerialNumber = testPollHelper.createSerialNumber();
         PollProgram pollProgram = testPollHelper.createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
 
         pollProgramDao.createPollProgram(pollProgram);
 
-        List<PollResponseType> runningProgramPolls = pollService.getRunningProgramPolls();
+        List<PollDto> runningProgramPolls = pollService.getRunningProgramPolls();
         assertNotNull(runningProgramPolls);
-        assertEquals(1, runningProgramPolls.size());
+        assertEquals(numberOfProgramB4 + 1, runningProgramPolls.size());
     }
 
     @Test
-    public void startProgramPoll() throws MobileTerminalModelException {
+    public void startProgramPoll() {
 
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
 
@@ -110,7 +111,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    public void stopProgramPoll() throws MobileTerminalModelException {
+    public void stopProgramPoll() {
 
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
 
@@ -138,7 +139,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    public void inactivateProgramPoll() throws MobileTerminalModelException {
+    public void inactivateProgramPoll() {
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
 
         Date startDate = testPollHelper.getStartDate();

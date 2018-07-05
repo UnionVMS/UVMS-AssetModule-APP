@@ -12,8 +12,6 @@
 
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.constants;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
-
 import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.MAPPING_ATTR_TYPE_ERROR;
 
 public enum AttributeInmarsatC {
@@ -26,12 +24,12 @@ public enum AttributeInmarsatC {
     SERIAL_NUMBER,
     TRANSCEIVER_TYPE;
 
-    public static AttributeInmarsatC getAttribute(String type) throws MobileTerminalServiceException {
+    public static AttributeInmarsatC getAttribute(String type) {
         for(AttributeInmarsatC attr : AttributeInmarsatC.values()) {
             if(attr.name().equalsIgnoreCase(type)) {
                 return attr;
             }
         }
-        throw new MobileTerminalServiceException(MAPPING_ATTR_TYPE_ERROR.getMessage() + type, MAPPING_ATTR_TYPE_ERROR.getCode());
+        throw new IllegalArgumentException(MAPPING_ATTR_TYPE_ERROR.getMessage() + type);
     }
 }

@@ -18,7 +18,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelE
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -31,53 +30,53 @@ public interface MappedPollService {
      * 
      * @param pollRequest
      * @return
-     * @throws MobileTerminalServiceException
+     * @throws
      */
-    CreatePollResultDto createPoll(PollRequestType pollRequest, String username) throws MobileTerminalServiceException;
+    CreatePollResultDto createPoll(PollRequestType pollRequest, String username);
 
     /**
      * Get running program polls
      * 
      * @return
-     * @throws MobileTerminalServiceException
+     * @throws
      */
-    List<PollDto> getRunningProgramPolls() throws MobileTerminalServiceException;
+    List<PollDto> getRunningProgramPolls();
 
     /**
      * Start program poll
      * 
      * @param pollId
      * @return
-     * @throws MobileTerminalServiceException
+     * @throws
      */
-    PollDto startProgramPoll(String pollId, String username) throws MobileTerminalServiceException;
+    PollDto startProgramPoll(String pollId, String username);
 
     /**
      * Stop program poll
      * 
      * @param pollId
      * @return
-     * @throws MobileTerminalServiceException
+     * @throws
      */
-    PollDto stopProgramPoll(String pollId, String username) throws MobileTerminalServiceException;
+    PollDto stopProgramPoll(String pollId, String username);
 
     /**
      * Inactivate program poll
      * 
      * @param pollId
      * @return
-     * @throws MobileTerminalServiceException
+     * @throws
      */
-    PollDto inactivateProgramPoll(String pollId, String username) throws MobileTerminalServiceException;
+    PollDto inactivateProgramPoll(String pollId, String username);
 
     /**
      * Get poll by search criteria
      * 
      * @param query
      * @return
-     * @throws MobileTerminalServiceException
+     * @throws
      */
-    PollChannelListDto getPollBySearchQuery(PollListQuery query) throws MobileTerminalServiceException;
+    PollChannelListDto getPollBySearchQuery(PollListQuery query);
 
     /**
      * Get pollable channels
@@ -85,7 +84,7 @@ public interface MappedPollService {
      * @param query
      * 
      * @return
-     * @throws MobileTerminalServiceException
+     * @throws
      */
     PollChannelListDto getPollableChannels(PollableQuery query) throws MobileTerminalModelException;
 }

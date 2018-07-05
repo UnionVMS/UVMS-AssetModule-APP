@@ -36,7 +36,7 @@ public class PollSearchMapper {
 	// TODO  FIX, done maybe?
 	private static PollSearchKeyValue mapSearchKey(ListCriteria criteria, Map<PollSearchField, PollSearchKeyValue> searchKeys) {
 		if (criteria == null || criteria.getKey() == null || criteria.getValue() == null) {
-			throw new NullPointerException("Non valid search criteria");
+			throw new IllegalArgumentException("Non valid search criteria");
 		}
 		PollSearchField searchField = getSearchField(criteria.getKey());
 		PollSearchKeyValue searchKeyValue = getSearchKeyValue(searchField, searchKeys);

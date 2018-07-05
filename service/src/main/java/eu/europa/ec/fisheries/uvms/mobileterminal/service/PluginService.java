@@ -13,14 +13,13 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service;
 
 import eu.europa.ec.fisheries.schema.exchange.common.v1.AcknowledgeTypeType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.MobileTerminalServiceException;
 
 import javax.ejb.Local;
 
 @Local
 public interface PluginService {
 
-	AcknowledgeTypeType sendPoll(PollResponseType poll, String username) throws MobileTerminalServiceException;
+	AcknowledgeTypeType sendPoll(PollResponseType poll, String username);
 	
 	void processUpdatedDNIDList(String pluginName);
 }

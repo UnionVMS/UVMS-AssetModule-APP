@@ -57,6 +57,35 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    public void createTwoMobileTerminalsUsingTheSameSerialNumberTest() {
+        MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        String serialNr = mobileTerminal.getAttributes().get(0).getValue();
+
+        String response = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminal), String.class);
+
+        JsonReader jsonReader = Json.createReader(new StringReader(response));
+        JsonObject jsonObject = jsonReader.readObject();
+
+        assertThat(jsonObject.getInt("code"), CoreMatchers.is(MTResponseCode.OK.getCode()));
+
+        mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminal.getAttributes().get(0).setValue(serialNr);
+
+        response = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminal), String.class);
+
+        jsonReader = Json.createReader(new StringReader(response));
+        jsonObject = jsonReader.readObject();
+
+        assertThat(jsonObject.getInt("code"), CoreMatchers.is(MTResponseCode.UNDEFINED_ERROR.getCode()));
+    }
+
+    @Test
     public void getMobileTerminalByIdTest() {
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
