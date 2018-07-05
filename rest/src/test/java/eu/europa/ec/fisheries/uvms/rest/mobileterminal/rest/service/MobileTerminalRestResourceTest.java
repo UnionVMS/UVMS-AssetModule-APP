@@ -57,7 +57,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
-    public void createMobileTerminalUsingTheSameSerialNumberTest() {
+    public void createTwoMobileTerminalsUsingTheSameSerialNumberTest() {
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
         String serialNr = mobileTerminal.getAttributes().get(0).getValue();
 
