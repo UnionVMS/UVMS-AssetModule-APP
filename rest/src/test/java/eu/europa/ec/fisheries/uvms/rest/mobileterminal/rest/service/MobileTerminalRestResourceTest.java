@@ -82,7 +82,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         jsonReader = Json.createReader(new StringReader(response));
         jsonObject = jsonReader.readObject();
 
-        assertThat(jsonObject.getInt("code"), CoreMatchers.is(MTResponseCode.UNDEFINED_ERROR.getCode()));
+        assertThat(jsonObject.getInt("code"), CoreMatchers.is(MTResponseCode.MODEL_ERROR.getCode()));
     }
 
     @Test
