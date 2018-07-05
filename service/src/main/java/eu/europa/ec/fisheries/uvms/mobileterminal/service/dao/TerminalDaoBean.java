@@ -25,15 +25,25 @@ public class TerminalDaoBean  {
     @PersistenceContext
     private EntityManager em;
 
-	public MobileTerminal getMobileTerminalByGuid(String guid)  {
-		try {
-            TypedQuery<MobileTerminal> query = em.createNamedQuery(MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_GUID, MobileTerminal.class);
-            query.setParameter("guid", UUID.fromString(guid));
+    public MobileTerminal getMobileTerminalById(UUID id)  {
+        try {
+            TypedQuery<MobileTerminal> query = em.createNamedQuery(MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_ID, MobileTerminal.class);
+            query.setParameter("id", id);
             return query.getSingleResult();
         } catch (NoResultException e) {
-		    return null;
+            return null;
         }
-	}
+    }
+
+//	public MobileTerminal getMobileTerminalByGuid(String guid)  {
+//		try {
+//            TypedQuery<MobileTerminal> query = em.createNamedQuery(MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_ID, MobileTerminal.class);
+//            query.setParameter("guid", UUID.fromString(guid));
+//            return query.getSingleResult();
+//        } catch (NoResultException e) {
+//		    return null;
+//        }
+//	}
 
     public MobileTerminal getMobileTerminalBySerialNo(String serialNo)  {
         try {
@@ -46,7 +56,7 @@ public class TerminalDaoBean  {
     }
 
     public void removeMobileTerminalAfterTests (String guid){
-        MobileTerminal mobileTerminal = getMobileTerminalByGuid(guid);
+        MobileTerminal mobileTerminal = getMobileTerminalById(UUID.fromString(guid));
         em.remove(em.contains(mobileTerminal) ? mobileTerminal : em.merge(mobileTerminal));
     }
 

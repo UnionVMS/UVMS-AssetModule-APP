@@ -12,7 +12,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.model.validator;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,9 +24,9 @@ public class MobileTerminalDataSourceRequestValidator {
     private static Logger LOG = LoggerFactory.getLogger(MobileTerminalDataSourceRequestValidator.class);
     private static String IRIDIUM = "IRIDIUM";
 
-    public static void validateCreateMobileTerminalType(MobileTerminalType mobTermType) throws MobileTerminalModelException {
+    public static void validateCreateMobileTerminalType(MobileTerminalType mobTermType) {
         if(mobTermType.isInactive()){
-            throw new MobileTerminalModelException("Cannot create a Mobile Terminal with status set to inactive");
+            throw new RuntimeException("Cannot create a Mobile Terminal with status set to inactive");
         }
         validateMobileTerminalAttributes(mobTermType.getAttributes());
         if(!IRIDIUM.equalsIgnoreCase(mobTermType.getType())) {
@@ -35,7 +34,7 @@ public class MobileTerminalDataSourceRequestValidator {
         }
     }
 	
-    public static void validateMobileTerminalType(MobileTerminalType mobTermType) throws MobileTerminalModelException {
+    public static void validateMobileTerminalType(MobileTerminalType mobTermType) {
         validateMobileTerminalId(mobTermType.getMobileTerminalId());
         validateMobileTerminalAttributes(mobTermType.getAttributes());
         if(!IRIDIUM.equalsIgnoreCase(mobTermType.getType())) {
@@ -43,24 +42,24 @@ public class MobileTerminalDataSourceRequestValidator {
         }
     }
 
-    public static void validateMobileTerminalId(MobileTerminalId id) throws MobileTerminalModelException {
+    public static void validateMobileTerminalId(MobileTerminalId id) {
     	if(id == null || id.getGuid() == null || id.getGuid().isEmpty()) {
-    		throw new MobileTerminalModelException("Non valid mobile terminal id");
+    		throw new NullPointerException("Non valid mobile terminal id");
     	}
     }
 
-    public static void validateMobileTerminalAttributes(List<MobileTerminalAttribute> attributes) throws MobileTerminalModelException {
-        Set<String> uniqueFields = new HashSet<String>();
+    public static void validateMobileTerminalAttributes(List<MobileTerminalAttribute> attributes) {
+        Set<String> uniqueFields = new HashSet<>();
         for (MobileTerminalAttribute attr : attributes) {
         	if(!"MULTIPLE_OCEAN".equalsIgnoreCase(attr.getType())) {
         		if (!uniqueFields.add(attr.getType())) {
-                    throw new MobileTerminalModelException("Non unique attribute field " + attr.getType());
+                    throw new IllegalArgumentException("Non unique attribute field " + attr.getType());
                 }
         	}
         }
     }
 
-    public static void validateComChannels(MobileTerminalType type) throws MobileTerminalModelException {
+    public static void validateComChannels(MobileTerminalType type) {
     	//TODO terminaltype -> comchannelvaluetype instead of channeltype when validate
         for (ComChannelType channel : type.getChannels()) {
         	if("VMS".equalsIgnoreCase(channel.getName())) {
@@ -69,11 +68,11 @@ public class MobileTerminalDataSourceRequestValidator {
         	else {
         	    LOG.debug("Channel name is not VMS. Will not validate further, and will probably fail validation in the future.");
         	}
-        	//	throw new MobileTerminalModelValidationException("ComChannel with SystemType " + type.getType() + " validation not impemented");
+        	//	throw new MobileTerminalModelValidationException("ComChannel with SystemType " + type.getType() + " validation not implemented");
         }
     }
 
-    private static void validateVMS(ComChannelType channel) throws MobileTerminalModelException {
+    private static void validateVMS(ComChannelType channel) {
         Set<String> fields = new HashSet<>();
 
         for (ComChannelAttribute attribute : channel.getAttributes()) {
@@ -84,11 +83,11 @@ public class MobileTerminalDataSourceRequestValidator {
         boolean memberId = fields.contains("MEMBER_NUMBER");
 
         if (!dnid || !memberId) {
-            throw new MobileTerminalModelException("A Com channel with channelType " + channel.getName() + " must contain DNID and Member Number");
+            throw new IllegalArgumentException("A Com channel with channelType " + channel.getName() + " must contain DNID and Member Number");
         }
 
         if (fields.size() != channel.getAttributes().size()) {
-            throw new MobileTerminalModelException("ChannelType ids can only occur once!");
+            throw new IllegalArgumentException("ChannelType ids can only occur once!");
         }
     }
 }

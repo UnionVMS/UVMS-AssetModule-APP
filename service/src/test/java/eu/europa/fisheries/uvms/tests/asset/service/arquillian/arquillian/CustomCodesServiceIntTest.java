@@ -126,8 +126,8 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
 
         List<CustomCode> rs1 = service.getAllFor(CONSTANT);
         List<CustomCode> rs2 = service.getAllFor(CONSTANT + "2");
-        Assert.assertEquals(rs1.size(), 10);
-        Assert.assertEquals(rs2.size(), 10);
+        Assert.assertEquals(10, rs1.size());
+        Assert.assertEquals(10, rs2.size());
 
         userTransaction.commit();
         userTransaction.begin();
@@ -136,15 +136,15 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
 
         rs1 = service.getAllFor(CONSTANT);
         rs2 = service.getAllFor(CONSTANT + "2");
-        Assert.assertEquals(rs1.size(), 10);
-        Assert.assertEquals(rs2.size(), 0);
+        Assert.assertEquals(10, rs1.size());
+        Assert.assertEquals(0, rs2.size());
 
         service.deleteAllFor(CONSTANT);
 
         rs1 = service.getAllFor(CONSTANT);
         rs2 = service.getAllFor(CONSTANT + "2");
-        Assert.assertEquals(rs1.size(), 0);
-        Assert.assertEquals(rs2.size(), 0);
+        Assert.assertEquals(0, rs1.size());
+        Assert.assertEquals(0, rs2.size());
     }
 
     @Test

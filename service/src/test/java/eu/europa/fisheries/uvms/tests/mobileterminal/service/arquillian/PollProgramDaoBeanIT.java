@@ -10,7 +10,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.PollProgram;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollStateEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.PollDaoException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.util.DateUtils;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;

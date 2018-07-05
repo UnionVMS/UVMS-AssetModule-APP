@@ -37,16 +37,10 @@ public abstract class BuildAssetServiceDeployment {
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset");
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.mobileterminal");
 
-
         testWar.addClass(AssetConfigHelper.class);
-
-
 
         testWar.addAsResource("persistence-integration.xml", "META-INF/persistence.xml");
 
-
         return testWar;
     }
-
-
 }

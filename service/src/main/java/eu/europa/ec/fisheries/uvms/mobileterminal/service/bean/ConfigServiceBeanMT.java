@@ -48,6 +48,8 @@ import javax.ejb.*;
 import javax.jms.TextMessage;
 import java.util.*;
 
+import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.EXCHANGE_MAPPING_ERROR;
+
 @Stateless
 @LocalBean
 public class ConfigServiceBeanMT implements ConfigService {

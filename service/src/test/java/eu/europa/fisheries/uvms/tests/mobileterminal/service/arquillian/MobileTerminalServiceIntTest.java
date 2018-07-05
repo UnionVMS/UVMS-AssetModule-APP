@@ -17,6 +17,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
+import javax.transaction.*;
 import java.util.List;
 import java.util.UUID;
 
@@ -69,7 +70,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getMobileTerminalById() throws Exception {
+    public void getMobileTerminalById() {
 
         UUID createdMobileTerminalId;
         UUID fetchedMobileTerminalGuid;

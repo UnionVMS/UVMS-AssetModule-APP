@@ -13,9 +13,6 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.dao;
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.NoEntityFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;

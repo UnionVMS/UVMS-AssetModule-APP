@@ -27,6 +27,8 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import static eu.europa.ec.fisheries.uvms.mobileterminal.exception.ErrorCode.*;
+
 public class JAXBMarshaller {
 
     private static Logger LOG = LoggerFactory.getLogger(JAXBMarshaller.class);
@@ -53,7 +55,7 @@ public class JAXBMarshaller {
             return marshalled;
         } catch (JAXBException e) {
             LOG.error("[ Error when marshalling data. ] {}", e.getMessage());
-            throw new MobileTerminalModelException("Error when marshalling " + data.getClass().getName() + " to String");
+            throw new MobileTerminalModelException(MARSHALLING_ERROR.getMessage() + data.getClass().getName(), e, MARSHALLING_ERROR.getCode());
         }
     }
 
@@ -79,7 +81,7 @@ public class JAXBMarshaller {
             LOG.debug("Unmarshalling time: {}", (System.currentTimeMillis() - before));
             return object;
         } catch (JMSException | JAXBException e) {
-            throw new MobileTerminalModelException("Error when unmarshalling response in ResponseMapper: " + e.getMessage());
+            throw new MobileTerminalModelException(UNMARSHALLING_ERROR.getMessage() + clazz.getClass().getName(), e, UNMARSHALLING_ERROR.getCode());
         }
     }
 }

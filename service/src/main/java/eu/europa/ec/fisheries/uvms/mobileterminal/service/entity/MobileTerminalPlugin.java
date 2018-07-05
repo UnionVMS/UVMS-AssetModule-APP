@@ -54,7 +54,7 @@ public class MobileTerminalPlugin implements Serializable {
     private String name;
 
     @Size(max = 500)
-    @Column(name = "service_name")
+    @Column(name = "service_name", unique=true)
     private String pluginServiceName;
 
     @Size(max = 50)

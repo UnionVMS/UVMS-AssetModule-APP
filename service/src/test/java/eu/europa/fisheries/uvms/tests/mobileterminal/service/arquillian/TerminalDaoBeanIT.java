@@ -129,7 +129,7 @@ public class TerminalDaoBeanIT extends TransactionalTests {
         MobileTerminal fetchedBySerialNo = terminalDaoBean.getMobileTerminalBySerialNo(serialNo);
         UUID id = fetchedBySerialNo.getId();
         assertNotNull(id);
-        MobileTerminal fetchedByGUID = terminalDaoBean.getMobileTerminalByGuid(id.toString());
+        MobileTerminal fetchedByGUID = terminalDaoBean.getMobileTerminalById(id);
 // @formatter:off
         boolean ok = (
             (fetchedBySerialNo.getSerialNo() != null) &&
@@ -146,8 +146,8 @@ public class TerminalDaoBeanIT extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void getMobileTerminalByGuid_NON_EXISTING_GUID() {
-        String aNonExistingGuid = UUID.randomUUID().toString();
-        MobileTerminal mt =  terminalDaoBean.getMobileTerminalByGuid(aNonExistingGuid);
+//        String aNonExistingGuid = UUID.randomUUID().toString();
+        MobileTerminal mt =  terminalDaoBean.getMobileTerminalById(UUID.randomUUID());
         assertNull(mt);
     }
 

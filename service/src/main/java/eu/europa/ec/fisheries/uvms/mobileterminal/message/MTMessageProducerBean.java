@@ -99,5 +99,4 @@ public class MTMessageProducerBean implements MTMessageProducer {
             throw new RuntimeException(e);
         }
     }
-
 }

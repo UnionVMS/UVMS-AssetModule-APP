@@ -13,7 +13,6 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.search.poll;
 
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.ListCriteria;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.SearchMapperException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.PollSearchField;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.PollSearchKeyValue;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.SearchKey;
@@ -43,7 +42,6 @@ public class PollSearchMapper {
 		PollSearchKeyValue searchKeyValue = getSearchKeyValue(searchField, searchKeys);
 		searchKeyValue.getValues().add(criteria.getValue());
 		return searchKeyValue;
-		//return null;
 	}
 
 	private static PollSearchKeyValue getSearchKeyValue(PollSearchField field, Map<PollSearchField, PollSearchKeyValue> searchKeys) {

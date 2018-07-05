@@ -3,6 +3,7 @@ package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.PollProgramDaoBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollKey;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollValue;
@@ -51,15 +52,18 @@ public class MappedPollServiceBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void createPoll() throws Exception {
 
-        // This is already tested in PollServiceBeanIntTest class.
+        PollRequestType pollRequestType = helper_createPollRequestType(PollType.MANUAL_POLL);
+
+        // create a poll
+        CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(pollRequestType, "TEST");
+        em.flush();
+
+        if(createPollResultDto.getSentPolls().size() == 0 && createPollResultDto.getUnsentPolls().size() == 0) {
+            Assert.fail();
+        }
      }
 
-    @Test
-    @OperateOnDeployment("normal")
-    public void getRunningProgramPolls() {
-        // This is already tested in PollProgramDaoBeanIT class.
-    }
-
+ 
     @Test
     @OperateOnDeployment("normal")     //TODO: Move to PollServiceBeanTest
     public void startProgramPoll() throws Exception {

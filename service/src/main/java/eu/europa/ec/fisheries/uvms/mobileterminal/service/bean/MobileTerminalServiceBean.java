@@ -45,6 +45,11 @@ import javax.ejb.Stateless;
 import javax.jms.TextMessage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
+import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.MT_PARSING_ERROR;
+import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.TERMINAL_ALREADY_LINKED_ERROR;
+import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.TERMINAL_NOT_LINKED_ERROR;
 
 @Stateless
 @LocalBean
@@ -114,7 +119,7 @@ public class MobileTerminalServiceBean {
 
     public MobileTerminalType upsertMobileTerminal(MobileTerminalType data, MobileTerminalSource source, String username) throws MobileTerminalModelException {
         if (data == null) {
-            throw new IllegalArgumentException("No Mobile terminal to update [ NULL ]");
+            throw new NullPointerException("No Mobile terminal to update [ NULL ]");
         }
         data.setSource(source);
         MobileTerminalType terminalUpserted = upsertMobileTerminal(data, username);
@@ -129,7 +134,7 @@ public class MobileTerminalServiceBean {
 
     public MobileTerminalType getMobileTerminalById(MobileTerminalId id, DataSourceQueue queue) throws MobileTerminalModelException {
         if (id == null) {
-            throw new IllegalArgumentException("No id");
+            throw new NullPointerException("No id");
         }
         if (queue != null && queue.equals(DataSourceQueue.INTERNAL)) {
             return getMobileTerminalById(id.getGuid());
@@ -219,7 +224,7 @@ public class MobileTerminalServiceBean {
         return terminalStatus;
     }
 
-    public MobileTerminalHistory getMobileTerminalHistoryList(String guid) throws MobileTerminalModelException {
+    public MobileTerminalHistory getMobileTerminalHistoryList(String guid) {
         MobileTerminalId terminalId = new MobileTerminalId();
         terminalId.setGuid(guid);
         MobileTerminalHistory historyList = getMobileTerminalHistoryList(terminalId);
@@ -252,15 +257,19 @@ public class MobileTerminalServiceBean {
 
     /***************************************************************************************************************************/
 
+    public MobileTerminal getMobileTerminalEntityById(UUID id) {
+        return terminalDao.getMobileTerminalById(id);
+    }
+
     public MobileTerminal getMobileTerminalEntityById(MobileTerminalId id) {
         if(id == null || id.getGuid() == null || id.getGuid().isEmpty())
             throw new IllegalArgumentException("Non valid id: " + id);
-        return terminalDao.getMobileTerminalByGuid(id.getGuid());
+        return terminalDao.getMobileTerminalById(UUID.fromString(id.getGuid()));
     }
 
     public MobileTerminal getMobileTerminalEntityBySerialNo(String serialNo) {
         if(serialNo == null || serialNo.isEmpty())
-            throw new IllegalArgumentException("Non valid serial no");
+            throw new NullPointerException("Non valid serial no");
         return terminalDao.getMobileTerminalBySerialNo(serialNo);
     }
 
@@ -274,13 +283,13 @@ public class MobileTerminalServiceBean {
             MobileTerminal terminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminal, serialNumber, plugin, username);
             terminalDao.createMobileTerminal(terminal);
             return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
-        } catch (MobileTerminalModelException e) {
+        } catch (Exception e) {
             LOG.error("Error in model when creating mobile terminal: {}", e.getMessage());
-            throw new MobileTerminalModelException("Error when persisting terminal " + mobileTerminal.getMobileTerminalId());
+            throw new MobileTerminalModelException(MT_PARSING_ERROR.getMessage() + mobileTerminal.getMobileTerminalId(), e, MT_PARSING_ERROR.getCode());
         }
     }
 
-    private String assertTerminalHasNeededData(MobileTerminalType mobileTerminal) throws MobileTerminalModelException {
+    private String assertTerminalHasNeededData(MobileTerminalType mobileTerminal) {
         String serialNumber = null;
         for (MobileTerminalAttribute attribute : mobileTerminal.getAttributes()) {
             if (MobileTerminalConstants.SERIAL_NUMBER.equalsIgnoreCase(attribute.getType()) &&
@@ -289,14 +298,12 @@ public class MobileTerminalServiceBean {
                 break;
             }
         }
-
         if (serialNumber == null) {
-            throw new MobileTerminalModelException("Cannot create mobile terminal without serial number");
+            throw new NullPointerException("Cannot create mobile terminal without serial number");
         }
         if(mobileTerminal.getPlugin() == null){
-            throw new MobileTerminalModelException("Cannot create Mobile terminal when plugin is not null");
+            throw new NullPointerException("Cannot create Mobile terminal when plugin is not null");
         }
-
         return serialNumber;
     }
 
@@ -328,19 +335,19 @@ public class MobileTerminalServiceBean {
 
     public MobileTerminalType getMobileTerminalById(MobileTerminalId id) {
         if (id == null) {
-            throw new IllegalArgumentException("No id to fetch");
+            throw new NullPointerException("No id to fetch");
         }
 
         MobileTerminal terminal = getMobileTerminalEntityById(id);
         return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
     }
 
-    public MobileTerminalType updateMobileTerminal(MobileTerminalType model, String comment, String username) throws MobileTerminalModelException {
+    public MobileTerminalType updateMobileTerminal(MobileTerminalType model, String comment, String username) {
         if (model == null) {
-            throw new IllegalArgumentException("No terminal to update");
+            throw new NullPointerException("No terminal to update");
         }
         if (model.getMobileTerminalId() == null || model.getMobileTerminalId().getGuid() == null || model.getMobileTerminalId().getGuid().isEmpty()) {
-            throw new IllegalArgumentException("Non valid id of terminal to update");
+            throw new NullPointerException("Non valid id of terminal to update");
         }
 
         MobileTerminal terminal = getMobileTerminalEntityById(model.getMobileTerminalId());
@@ -371,13 +378,13 @@ public class MobileTerminalServiceBean {
 
     public MobileTerminalType assignMobileTerminalToCarrier(MobileTerminalAssignQuery query, String comment, String username) {
         if (query == null) {
-            throw new IllegalArgumentException("RequestQuery is null");
+            throw new NullPointerException("RequestQuery is null");
         }
         if (query.getMobileTerminalId() == null) {
-            throw new IllegalArgumentException("No Mobile terminalId in request");
+            throw new NullPointerException("No Mobile terminalId in request");
         }
         if (query.getConnectId() == null || query.getConnectId().isEmpty()) {
-            throw new IllegalArgumentException("No connect id in request");
+            throw new NullPointerException("No connect id in request");
         }
 
         MobileTerminalId mobTermId = query.getMobileTerminalId();
@@ -452,25 +459,22 @@ public class MobileTerminalServiceBean {
     public MobileTerminalType upsertMobileTerminal(MobileTerminalType mobileTerminal, String username) throws MobileTerminalModelException {
 
         if (mobileTerminal == null) {
-            throw new IllegalArgumentException("RequestQuery is null");
+            throw new NullPointerException("RequestQuery is null");
         }
         if (mobileTerminal.getMobileTerminalId() == null) {
-            throw new IllegalArgumentException("No Mobile terminalId in request");
+            throw new NullPointerException("No Mobile terminalId in request");
         }
 
         try {
             return updateMobileTerminal(mobileTerminal, "Upserted by external module", username);
-        } catch (NumberFormatException | MobileTerminalModelException e) {
+        } catch (RuntimeException e) {
             LOG.error("[ Error when upserting mobile terminal: Mobile terminal update failed trying to insert. ] {} {}", e.getMessage(), e.getStackTrace());
-            if (e instanceof MobileTerminalModelException) {
-                throw e;
-            }
         }
         return createMobileTerminal(mobileTerminal, username);
     }
 
 
-    public MobileTerminalHistory getMobileTerminalHistoryList(MobileTerminalId id) throws MobileTerminalModelException {
+    public MobileTerminalHistory getMobileTerminalHistoryList(MobileTerminalId id) {
         if (id == null) {
             throw new NullPointerException("No Mobile Terminal");
         }

@@ -25,6 +25,8 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.jms.*;
 
+import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.RETRIEVING_BOOL_ERROR;
+
 @Stateless
 @LocalBean
 public class GetReceivedEventBean {

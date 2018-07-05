@@ -19,7 +19,7 @@ public class MobileTerminalConstants {
     public static final String POLL_PROGRAM_FIND_RUNNING_AND_STARTED = "PollProgram.findRunningAndStarted";
 
 	public static final String MOBILE_TERMINAL_FIND_ALL = "Mobileterminal.findAll";
-	public static final String MOBILE_TERMINAL_FIND_BY_GUID = "Mobileterminal.findByGuid";
+	public static final String MOBILE_TERMINAL_FIND_BY_ID = "Mobileterminal.findById";
 	public static final String MOBILE_TERMINAL_FIND_BY_SERIAL_NO = "Mobileterminal.findBySerialNo";
 
 	public static final String PLUGIN_FIND_ALL = "Plugin.findAll";

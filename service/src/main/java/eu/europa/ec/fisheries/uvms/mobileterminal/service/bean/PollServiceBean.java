@@ -38,10 +38,12 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.poll.PollSearch
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
+import javax.ejb.*;
 import java.util.*;
+
+import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.CREATE_POLL_FAILED;
+import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.POLL_STATE_MODIFICATION_ERROR;
+import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.PP_SEND_STATUS_ERROR;
 
 @Stateless
 @LocalBean
@@ -99,16 +101,13 @@ public class PollServiceBean implements PollService {
             }
         }
 
-        if (triggerTimer) {
-            timerService.timerTimeout();
-        }
-
-        CreatePollResultDto result = new CreatePollResultDto();
-        result.setSentPolls(sentPolls);
-        result.setUnsentPolls(unsentPolls);
-        result.setUnsentPoll(!unsentPolls.isEmpty());
-        return result;
+            CreatePollResultDto result = new CreatePollResultDto();
+            result.setSentPolls(sentPolls);
+            result.setUnsentPolls(unsentPolls);
+            result.setUnsentPoll(!unsentPolls.isEmpty());
+            return result;
     }
+
 
     public List<PollDto> getRunningProgramPolls() {
         List<PollResponseType> pollResponse = getPollProgramList();
@@ -142,7 +141,6 @@ public class PollServiceBean implements PollService {
         } catch (AuditModelMarshallException | RuntimeException e) {
             LOG.error("Failed to send audit log message due tue: " + e.getMessage() + "! Poll with guid {} was stopped", stoppedPoll.getPollId().getGuid());
         }
-
         return stoppedPoll;
     }
 
@@ -187,13 +185,15 @@ public class PollServiceBean implements PollService {
     }
 
     private MobileTerminalType mapPollableTerminalType(MobileTerminalTypeEnum type, String guid) {
-        MobileTerminal terminal = terminalDao.getMobileTerminalByGuid(guid);
+        MobileTerminal terminal = terminalDao.getMobileTerminalById(UUID.fromString(guid));
         return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
     }
 
     private MobileTerminalType getPollableTerminalType(String guid, String channelGuid) {
-        MobileTerminal terminal = terminalDao.getMobileTerminalByGuid(guid);
-        checkPollable(terminal);
+        MobileTerminal terminal = terminalDao.getMobileTerminalById(UUID.fromString(guid));
+        if(terminal != null) {
+            checkPollable(terminal);
+        }
 
         if (channelGuid != null && !channelGuid.isEmpty()) {
             for (Channel channel : terminal.getChannels()) {
@@ -201,10 +201,10 @@ public class PollServiceBean implements PollService {
                     if (!channel.getMobileTerminal().getId().toString().equalsIgnoreCase(guid)) {
                         throw new IllegalStateException("Channel " + channel.getId() + " can not be polled, because it is not part of terminal " + terminal.getId());
                     }
-                    return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal, channel);
                 }
-            }
 
+            }
+            throw new NullPointerException("Could not find channel " + channelGuid + " based on");
         }
         throw new IllegalArgumentException("Could not find channel " + channelGuid + " based on");
     }
@@ -223,11 +223,11 @@ public class PollServiceBean implements PollService {
 
     public List<PollResponseType> createPolls(PollRequestType pollRequest, String username) {
         if (pollRequest == null || pollRequest.getPollType() == null) {
-            throw new IllegalArgumentException("No polls to create");
+            throw new NullPointerException("No polls to create");
         }
 
         if (pollRequest.getComment() == null || pollRequest.getUserName() == null) {
-            throw new IllegalArgumentException("Cannot create without comment and user");
+            throw new NullPointerException("Cannot create without comment and user");
         }
 
         if (pollRequest.getMobileTerminals().isEmpty()) {
@@ -258,7 +258,7 @@ public class PollServiceBean implements PollService {
         Map<PollProgram, MobileTerminalType> map = new HashMap<>();
 
         for (PollMobileTerminal pollTerminal : pollRequest.getMobileTerminals()) {
-            MobileTerminal mobileTerminalEntity = terminalDao.getMobileTerminalByGuid(pollTerminal.getMobileTerminalId());
+            MobileTerminal mobileTerminalEntity = terminalDao.getMobileTerminalById(UUID.fromString(pollTerminal.getMobileTerminalId()));
             if(mobileTerminalEntity == null){
                 throw new IllegalArgumentException("No mobile terminal connected to this poll request or the mobile terminal can not be found, for mobile terminal id: " + pollTerminal.getMobileTerminalId());
             }
@@ -277,7 +277,7 @@ public class PollServiceBean implements PollService {
         Map<Poll, MobileTerminalType> map = new HashMap<>();
 
         for (PollMobileTerminal pollTerminal : pollRequest.getMobileTerminals()) {
-            MobileTerminal mobileTerminalEntity = terminalDao.getMobileTerminalByGuid(pollTerminal.getMobileTerminalId());
+            MobileTerminal mobileTerminalEntity = terminalDao.getMobileTerminalById(UUID.fromString(pollTerminal.getMobileTerminalId()));
             if(mobileTerminalEntity == null){
                 throw new IllegalArgumentException("No mobile terminal connected to this poll request or the mobile terminal can not be found, for mobile terminal id: " + pollTerminal.getMobileTerminalId());
             }
@@ -296,7 +296,7 @@ public class PollServiceBean implements PollService {
         return map;
     }
 
-    private void validateMobileTerminalPluginCapability(Set<MobileTerminalPluginCapability> capabilities, PollType pollType, String pluginServiceName) {
+    private void validateMobileTerminalPluginCapability (Set<MobileTerminalPluginCapability> capabilities, PollType pollType, String pluginServiceName) {
         PluginCapabilityType pluginCapabilityType;
         switch (pollType) {
             case CONFIGURATION_POLL:
@@ -313,7 +313,7 @@ public class PollServiceBean implements PollService {
         }
     }
 
-    private boolean validatePluginHasCapabilityConfigurable(Set<MobileTerminalPluginCapability> capabilities, PluginCapabilityType pluginCapability) {
+    private boolean validatePluginHasCapabilityConfigurable (Set<MobileTerminalPluginCapability> capabilities, PluginCapabilityType pluginCapability) {
         for (MobileTerminalPluginCapability pluginCap : capabilities) {
             if (pluginCapability.name().equalsIgnoreCase(pluginCap.getName())) {
                 return true;
@@ -322,7 +322,7 @@ public class PollServiceBean implements PollService {
         return false;
     }
 
-    private List<PollResponseType> createPollPrograms(Map<PollProgram, MobileTerminalType> map, String username) {
+    private List<PollResponseType> createPollPrograms (Map<PollProgram, MobileTerminalType> map, String username) {
         List<PollResponseType> responseList = new ArrayList<>();
         for (Map.Entry<PollProgram, MobileTerminalType> next : map.entrySet()) {
             PollProgram pollProgram = next.getKey();
@@ -406,10 +406,10 @@ public class PollServiceBean implements PollService {
 
     public PollResponseType setStatusPollProgram(PollId id, PollStatus state) {
         if (id == null || id.getGuid() == null || id.getGuid().isEmpty()) {
-            throw new IllegalArgumentException("No poll id given");
+            throw new NullPointerException("No poll id given");
         }
         if (state == null) {
-            throw new IllegalArgumentException("No status to set");
+            throw new NullPointerException("No status to set");
         }
 
         PollProgram program = pollProgramDao.getPollProgramByGuid(id.getGuid());

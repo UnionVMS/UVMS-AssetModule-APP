@@ -46,14 +46,14 @@ public class MobileTerminalDataSourceRequestValidatorTest {
 		dnid.setType("DNID");
 		channel.getAttributes().add(dnid);
 		
-		List<ComChannelType> comchannelList = new ArrayList<ComChannelType>();
-		comchannelList.add(channel);
-		when(mobTermType.getChannels()).thenReturn(comchannelList);
+		List<ComChannelType> comChannelTypes = new ArrayList<>();
+		comChannelTypes.add(channel);
+		when(mobTermType.getChannels()).thenReturn(comChannelTypes);
 		
     	try {
     		MobileTerminalDataSourceRequestValidator.validateComChannels(mobTermType);
     		fail("Missing field");
-    	} catch (MobileTerminalModelException e) {
+    	} catch (IllegalArgumentException e) {
     		assertTrue(true);
     	}
     	
@@ -63,7 +63,7 @@ public class MobileTerminalDataSourceRequestValidatorTest {
 		
 		try {
     		MobileTerminalDataSourceRequestValidator.validateComChannels(mobTermType);
-    	} catch (MobileTerminalModelException e) {
+    	} catch (IllegalArgumentException e) {
     		fail("Should validate");
     	}
     	
@@ -74,13 +74,13 @@ public class MobileTerminalDataSourceRequestValidatorTest {
 		try {
     		MobileTerminalDataSourceRequestValidator.validateComChannels(mobTermType);
     		fail("Multiple fields");
-    	} catch (MobileTerminalModelException e) {
+    	} catch (IllegalArgumentException e) {
 			assertTrue(true);
     	}
     }
     
     @Test
-    public void testValidateMobileTerminalAttributeMultipleOceans() throws MobileTerminalModelException {
+    public void testValidateMobileTerminalAttributeMultipleOceans() {
     	List<MobileTerminalAttribute> attrList = new ArrayList<>();
     	MobileTerminalAttribute attr = new MobileTerminalAttribute();
     	attr.setType("MULTIPLE_OCEAN");
@@ -89,8 +89,8 @@ public class MobileTerminalDataSourceRequestValidatorTest {
     	MobileTerminalDataSourceRequestValidator.validateMobileTerminalAttributes(attrList);
     }
     
-    @Test(expected=MobileTerminalModelException.class)
-    public void testValidateMobileTerminalAttributeNonUnique() throws MobileTerminalModelException {
+    @Test(expected=IllegalArgumentException.class)
+    public void testValidateMobileTerminalAttributeNonUnique() {
     	List<MobileTerminalAttribute> attrList = new ArrayList<>();
     	MobileTerminalAttribute attr = new MobileTerminalAttribute();
     	attr.setType("ANTENNA");
@@ -100,7 +100,7 @@ public class MobileTerminalDataSourceRequestValidatorTest {
     }
     
     @Test
-    public void testValidateMobileTerminalAttributes() throws MobileTerminalModelException {
+    public void testValidateMobileTerminalAttributes() {
     	List<MobileTerminalAttribute> attrList = new ArrayList<>();
     	MobileTerminalAttribute attr = new MobileTerminalAttribute();
     	attr.setType("ANTENNA");
@@ -109,7 +109,7 @@ public class MobileTerminalDataSourceRequestValidatorTest {
     }
     
     @Test
-    public void testValidateMobileTerminalAttributesEmpty() throws MobileTerminalModelException {
+    public void testValidateMobileTerminalAttributesEmpty() {
     	List<MobileTerminalAttribute> attrList = new ArrayList<>();
     	MobileTerminalDataSourceRequestValidator.validateMobileTerminalAttributes(attrList);
     }
@@ -120,7 +120,7 @@ public class MobileTerminalDataSourceRequestValidatorTest {
 		try {
 			MobileTerminalDataSourceRequestValidator.validateMobileTerminalId(null);
 			fail("MobileTerminalId NULL");
-		} catch (MobileTerminalModelException e) {
+		} catch (NullPointerException e) {
 			assertTrue(true);
 		}
 		
@@ -128,7 +128,7 @@ public class MobileTerminalDataSourceRequestValidatorTest {
 		try {
 			MobileTerminalDataSourceRequestValidator.validateMobileTerminalId(id);
 			fail("MobileTerminalId GUID NULL ");
-		} catch (MobileTerminalModelException e) {
+		} catch (NullPointerException e) {
 			assertTrue(true);
 		}
 		
@@ -136,14 +136,14 @@ public class MobileTerminalDataSourceRequestValidatorTest {
 		try {
 			MobileTerminalDataSourceRequestValidator.validateMobileTerminalId(id);
 			fail("MobileTerminalId GUID Empty");
-		} catch (MobileTerminalModelException e) {
+		} catch (NullPointerException e) {
 			assertTrue(true);
 		}
 		id.setGuid("ABCD-EFGH-IJKL-MNOP-1234-5678-0000");
 		
 		try {
 			MobileTerminalDataSourceRequestValidator.validateMobileTerminalId(id);
-		} catch (MobileTerminalModelException e) {
+		} catch (NullPointerException e) {
 			fail("MobileTerminalId valid");
 		}
     }

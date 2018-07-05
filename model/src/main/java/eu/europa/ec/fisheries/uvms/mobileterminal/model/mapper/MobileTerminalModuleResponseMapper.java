@@ -27,7 +27,7 @@ import java.util.List;
 public class MobileTerminalModuleResponseMapper {
     final static Logger LOG = LoggerFactory.getLogger(MobileTerminalModuleResponseMapper.class);
 
-    private static void validateResponse(TextMessage response, String correlationId) throws MobileTerminalModelException, JMSException {
+    private static void validateResponse(TextMessage response, String correlationId) throws JMSException {
 
         if (response == null) {
             throw new NullPointerException("Error when validating response in ResponseMapper: Response is Null");
@@ -43,7 +43,7 @@ public class MobileTerminalModuleResponseMapper {
 
         try {
             MobileTerminalFault fault = JAXBMarshaller.unmarshallTextMessage(response, MobileTerminalFault.class);
-            throw new MobileTerminalModelException(fault.getCode() + " : " + fault.getMessage());
+            throw new RuntimeException(fault.getCode() + " : " + fault.getMessage());
         } catch (MobileTerminalModelException e) {
             e.printStackTrace();
         }

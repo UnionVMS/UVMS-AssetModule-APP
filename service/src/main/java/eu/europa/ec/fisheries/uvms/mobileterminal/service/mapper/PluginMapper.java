@@ -51,7 +51,7 @@ public class PluginMapper {
 		entity.setUpdatedBy(MobileTerminalConstants.UPDATE_USER);
 		entity.setUpdateTime(new Date());
 		if(entity.getCapabilities() == null) {
-			entity.setCapabilities(new HashSet<MobileTerminalPluginCapability>());
+			entity.setCapabilities(new HashSet<>());
 		}
 		entity.getCapabilities().addAll(mapCapabilityModelToEntity(entity, model.getCapability()));
 		return entity;
