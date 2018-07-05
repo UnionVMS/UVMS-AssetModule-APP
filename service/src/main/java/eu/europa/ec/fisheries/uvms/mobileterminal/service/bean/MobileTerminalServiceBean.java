@@ -301,10 +301,13 @@ public class MobileTerminalServiceBean {
     }
 
     private void assertTerminalNotExists(MobileTerminalType mobileTerminal) {
+        MobileTerminal terminal = null;
         if(mobileTerminal.getMobileTerminalId() == null || mobileTerminal.getMobileTerminalId().getGuid().isEmpty()){
-            return;
+            //do nothing
+        }else{
+            terminal = getMobileTerminalEntityById(mobileTerminal.getMobileTerminalId());
         }
-        MobileTerminal terminal = getMobileTerminalEntityById(mobileTerminal.getMobileTerminalId());
+
         if(terminal != null){
             throw new IllegalArgumentException("Mobile terminal already exists in database for id: " + mobileTerminal.getMobileTerminalId());
         }
