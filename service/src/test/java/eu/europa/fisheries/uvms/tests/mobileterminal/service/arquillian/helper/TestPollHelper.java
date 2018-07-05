@@ -143,8 +143,6 @@ public class TestPollHelper {
         plugin.setSatelliteType("INMARSAT_C");
         plugin.setInactive(false);
 
-        MobileTerminalPlugin mobileTerminalPlugin = PluginMapper.mapModelToEntity((createPluginService()));
-        mobileTerminalPluginDao.createMobileTerminalPlugin(mobileTerminalPlugin);
 
         mobileTerminal.setPlugin(plugin);
 
