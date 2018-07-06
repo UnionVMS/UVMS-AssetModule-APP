@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet author="johlyn" id="insert landearthstation INMARSAT-C values">
+        <insert tableName="landearthstation">
+            <column name="les_id" value="1"/>
+            <column name="les_name" value="EIK"/>
+            <column name="les_desc" value="EIK LES"/>
+            <column name="les_updattim" valueDate="${now}"/>
+            <column name="les_upuser" value="johlyn"/>
+            <column name="les_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <insert tableName="landearthstation">
+            <column name="les_id" value="2"/>
+            <column name="les_name" value="BURUM"/>
+            <column name="les_desc" value="Burum LES"/>
+            <column name="les_updattim" valueDate="${now}"/>
+            <column name="les_upuser" value="johlyn"/>
+            <column name="les_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <rollback>
+            <delete tableName="landearthstation">
+				<where>
+					les_id in (1, 2)
+				</where>
+			</delete>
+        </rollback>
+	</changeSet>
+
+</databaseChangeLog>

@@ -10,7 +10,7 @@
 	
     <filter>
         <filter-name>AuthenticationFilterMock</filter-name>
-        <filter-class>eu.europa.ec.fisheries.uvms.asset.rest.AuthenticationFilterMock</filter-class>
+        <filter-class>eu.europa.ec.fisheries.uvms.rest.asset.AuthenticationFilterMock</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>AuthenticationFilterMock</filter-name>

@@ -11,28 +11,25 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.model;
 
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 
 import java.util.List;
 import java.util.Map;
 
-/**
- **/
 public interface AssetModel {
 
-    public Long createAsset(Asset assetDto) throws AssetModelException;
+    Long createAsset(Asset assetDto) throws AssetException;
 
-    public List<Asset> getAssetList(Map<String, String> criteria) throws AssetModelException;
+    List<Asset> getAssetList(Map<String, String> criteria) throws AssetException;
 
-    public Asset getAssetById(Long id) throws AssetModelException;
+    Asset getAssetById(Long id) throws AssetException;
 
-    public Asset getAssetByCfr(String cfr) throws AssetModelException;
+    Asset getAssetByCfr(String cfr) throws AssetException;
 
-    public Asset getAssetByIrcs(String ircs) throws AssetModelException;
+    Asset getAssetByIrcs(String ircs) throws AssetException;
 
-    public Long updateAsset(Asset assetDto) throws AssetModelException;
+    Long updateAsset(Asset assetDto) throws AssetException;
 
-    public void deleteAsset(Long id) throws AssetModelException;
-
+    void deleteAsset(Long id) throws AssetException;
 }

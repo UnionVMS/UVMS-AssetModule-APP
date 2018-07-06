@@ -1,0 +1,519 @@
+<definitions name="MobileTerminalDataSource"
+             targetNamespace="urn:msg.mobileterminal.schema.fisheries.ec.europa.eu:v1"
+             xmlns:msg="urn:msg.mobileterminal.schema.fisheries.ec.europa.eu:v1"
+             xmlns:source="urn:source.mobileterminal.schema.fisheries.ec.europa.eu:v1"
+             xmlns:mobterm="urn:types.mobileterminal.schema.fisheries.ec.europa.eu:v1"
+             xmlns:poll="urn:polltypes.mobileterminal.schema.fisheries.ec.europa.eu:v1"
+             xmlns:config="urn:config.mobileterminal.schema.fisheries.ec.europa.eu:v1"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+    <types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:msg.mobileterminal.schema.fisheries.ec.europa.eu:v1">
+            
+            <xsd:import namespace="urn:source.mobileterminal.schema.fisheries.ec.europa.eu:v1" schemaLocation="MobileTerminalDataSource.xsd"/>
+            <xsd:import namespace="urn:types.mobileterminal.schema.fisheries.ec.europa.eu:v1" schemaLocation="MobileTerminalElement.xsd"/>
+            <xsd:import namespace="urn:polltypes.mobileterminal.schema.fisheries.ec.europa.eu:v1" schemaLocation="MobileTerminalPoll.xsd"/>
+            <xsd:import namespace="urn:config.mobileterminal.schema.fisheries.ec.europa.eu:v1" schemaLocation="MobileTerminalConfig.xsd"/>
+                        
+        </xsd:schema>
+        
+    </types>
+    
+    <message name="MobileTerminalFault">
+        <part name="body" element="mobterm:mobileTerminalFault"/>
+    </message>
+
+    <message name="GetMobileTerminalRequest">
+        <part name="body" element="source:getMobileTerminalRequest"/>
+    </message>
+    
+    <message name="GetMobileTerminalResponse">
+        <part name="body" element="source:mobileTerminalResponse"/>
+    </message>
+    
+    <message name="CreateMobileTerminalRequest">
+        <part name="body" element="source:createMobileTerminalRequest"/>
+    </message>
+
+    <message name="CreateMobileTerminalResponse">
+        <part name="body" element="source:mobileTerminalResponse"/>
+    </message>
+
+    <message name="UpdateMobileTerminalRequest">
+        <part name="body" element="source:updateMobileTerminalRequest"/>
+    </message>
+    
+    <message name="UpdateMobileTerminalResponse">
+        <part name="body" element="source:mobileTerminalResponse"/>
+    </message>
+        
+    <message name="UpsertMobileTerminalRequest">
+        <part name="body" element="source:upsertMobileTerminalRequest"/>
+    </message>
+    
+    <message name="UpsertMobileTerminalResponse">
+        <part name="body" element="source:upsertMobileTerminalRequest"/>
+    </message>
+        
+    <message name="AssignMobileTerminalRequest">
+        <part name="body" element="source:mobileTerminalAssignRequest"/>
+    </message>
+    
+    <message name="AssignMobileTerminalResponse">
+        <part name="body" element="source:mobileTerminalResponse"/>
+    </message>
+    
+    <message name="UnAssignMobileTerminalRequest">
+        <part name="body" element="source:mobileTerminalUnAssignRequest"/>
+    </message>
+    
+    <message name="UnAssignMobileTerminalResponse">
+        <part name="body" element="source:mobileTerminalResponse"/>
+    </message>
+
+    <message name="MobileTerminalListRequest">
+        <part name="body" element="source:mobileTerminalListRequest"/>
+    </message>
+
+    <message name="MobileTerminalListResponse">
+        <part name="body" element="source:mobileTerminalListResponse"/>
+    </message>
+
+    <message name="SetStatusMobileTerminalRequest">
+        <part name="body" element="source:setStatusMobileTerminalRequest"/>
+    </message>
+
+    <message name="SetStatusMobileTerminalResponse">
+        <part name="body" element="source:mobileTerminalResponse"/>
+    </message>
+    
+    <message name="HistoryMobileTerminalListRequest">
+        <part name="body" element="source:historyMobileTerminalListRequest"/>
+    </message>
+    
+    <message name="HistoryMobileTerminalListResponse">
+        <part name="body" element="source:historyMobileTerminalListResponse"/>
+    </message>
+
+    <!-- config -->
+    <message name="UpdatedDNIDListRequest">
+        <part name="body" element="config:updatedDNIDListRequest"/>
+    </message>
+    
+    <message name="UpdatedDNIDListResponse">
+        <part name="body" element="config:updatedDNIDListResponse"/>
+    </message>
+    
+    <message name="TerminalSystemListRequest">
+        <part name="body" element="config:terminalSystemListRequest"/>
+    </message>
+
+    <message name="TerminalSystemListResponse">
+        <part name="body" element="config:terminalSystemListResponse"/>
+    </message>
+    
+    <message name="ChannelNameRequest">
+        <part name="body" element="config:comchannelNameRequest"/>
+    </message>
+    
+    <message name="ChannelNameResponse">
+        <part name="body" element="config:comchannelNameResponse"/>
+    </message>
+    
+    <message name="ConfigRequest">
+        <part name="body" element="config:configRequest"/>
+    </message>
+    
+    <message name="ConfigResponse">
+        <part name="body" element="config:configResponse"/>
+    </message>
+    
+    <message name="UpsertPluginListRequest">
+        <part name="body" element="config:upsertPluginListRequest"/>
+    </message>
+    
+    <message name="UpsertPluginListResponse">
+        <part name="body" element="config:upsertPluginListResponse"/>
+    </message>
+    
+    <!-- poll -->
+    <message name="CreatePollRequest">
+        <part name="body" element="poll:createPollRequest"/>
+    </message>
+    
+    <message name="CreatePollResponse">
+        <part name="body" element="poll:createPollResponse"/>
+    </message>
+
+    <message name="SetStatusPollProgramRequest">
+        <part name="body" element="poll:setStatusPollProgramRequest"/>
+    </message>
+
+    <message name="SetStatusPollProgramResponse">
+        <part name="body" element="poll:singlePollResponse"/>
+    </message>
+
+    <message name="PollProgramListRequest">
+        <part name="body" element="poll:getPollProgramListRequest"/>
+    </message>
+
+    <message name="PollProgramListResponse">
+        <part name="body" element="poll:pollListResponse"/>
+    </message>
+
+    <message name="PollListRequest">
+        <part name="body" element="poll:getPollListRequest"/>
+    </message>
+
+    <message name="PollListResponse">
+        <part name="body" element="poll:pollListResponse"/>
+    </message>
+    
+    <message name="PollableRequest">
+        <part name="body" element="poll:getPollableRequest"/>
+    </message>
+    
+    <message name="PollableResponse">
+        <part name="body" element="source:mobileTerminalListResponse"/>
+    </message>
+
+	<message name="PingRequest">
+		<part name="body" element="source:pingRequest"/>
+	</message>
+
+	<message name="PingResponse">
+		<part name="body" element="source:pingResponse"/>
+	</message>
+
+    <portType name="MobileTerminalDataSourcePortType">
+        <operation name="GetMobileTerminal">
+            <input message="msg:GetMobileTerminalRequest"/>
+            <output message="msg:GetMobileTerminalResponse"/>
+            <fault name="MobileTerminalFault" message="msg:MobileTerminalFault"/>
+        </operation>
+        <operation name="CreateMobileTerminal">
+            <input message="msg:CreateMobileTerminalRequest"/>
+            <output message="msg:CreateMobileTerminalResponse"/>
+            <fault name="MobileTerminalFault" message="msg:MobileTerminalFault"/>
+        </operation>
+        <operation name="UpdateMobileTerminal">
+            <input message="msg:UpdateMobileTerminalRequest"/>
+            <output message="msg:UpdateMobileTerminalResponse"/>
+            <fault name="MobileTerminalFault" message="msg:MobileTerminalFault"/>
+        </operation>
+        <operation name="UpsertMobileTerminal">
+            <input message="msg:UpsertMobileTerminalRequest"/>
+            <output message="msg:UpsertMobileTerminalResponse"/>
+            <fault name="MobileTerminalFault" message="msg:MobileTerminalFault"/>
+        </operation>
+        <operation name="MobileTerminalList">
+            <input message="msg:MobileTerminalListRequest"/>
+            <output message="msg:MobileTerminalListResponse"/>
+            <fault name="MobileTerminalFault" message="msg:MobileTerminalFault"/>
+        </operation>
+        <operation name="AssignMobileTerminal">
+            <input message="msg:AssignMobileTerminalRequest"/>
+            <output message="msg:AssignMobileTerminalResponse"/>
+            <fault name="MobileTerminalFault" message="msg:MobileTerminalFault"/>
+        </operation>
+        <operation name="UnAssignMobileTerminal">
+            <input message="msg:UnAssignMobileTerminalRequest"/>
+            <output message="msg:UnAssignMobileTerminalResponse"/>
+            <fault name="MobileTerminalFault" message="msg:MobileTerminalFault"/>
+        </operation>
+        <operation name="SetStatusMobileTerminal">
+            <input message="msg:SetStatusMobileTerminalRequest"/>
+            <output message="msg:SetStatusMobileTerminalResponse"/>
+            <fault name="MobileTerminalFault" message="msg:MobileTerminalFault"/>
+        </operation>
+        <operation name="HistoryMobileTerminalList">
+            <input message="msg:HistoryMobileTerminalListRequest"/>
+            <output message="msg:HistoryMobileTerminalListResponse"/>
+            <fault name="MobileTerminalFault" message="msg:MobileTerminalFault"/>
+        </operation>
+        <operation name="UpdatedDNIDList">
+            <input message="msg:UpdatedDNIDListRequest"/>
+            <output message="msg:UpdatedDNIDListResponse"/>
+            <fault name="MobileTerminalFault" message="msg:MobileTerminalFault"/>
+        </operation>
+        <operation name="TerminalSystemList">
+            <input message="msg:TerminalSystemListRequest"/>
+            <output message="msg:TerminalSystemListResponse"/>
+            <fault name="MobileTerminalFault" message="msg:MobileTerminalFault"/>
+        </operation>
+        <operation name="ConfigChannelName">
+            <input message="msg:ChannelNameRequest"/>
+            <output message="msg:ChannelNameResponse"/>
+            <fault name="MobileTerminalFault" message="msg:MobileTerminalFault"/>
+        </operation>
+        <operation name="Config">
+            <input message="msg:ConfigRequest"/>
+            <output message="msg:ConfigResponse"/>
+            <fault name="MobileTerminalFault" message="msg:MobileTerminalFault"/>
+        </operation>
+        <operation name="UpsertPluginList">
+            <input message="msg:UpsertPluginListRequest"/>
+            <output message="msg:UpsertPluginListResponse"/>
+            <fault name="MobileTerminalFault" message="msg:MobileTerminalFault"/>
+        </operation>
+        <operation name="CreatePoll">
+            <input message="msg:CreatePollRequest"/>
+            <output message="msg:CreatePollResponse"/>
+            <fault name="MobileTerminalFault" message="msg:MobileTerminalFault"/>
+        </operation>
+        <operation name="SetStatusPollProgram">
+            <input message="msg:SetStatusPollProgramRequest"/>
+            <output message="msg:SetStatusPollProgramResponse"/>
+            <fault name="MobileTerminalFault" message="msg:MobileTerminalFault"/>
+        </operation>
+        <operation name="PollProgramList">
+            <input message="msg:PollProgramListRequest"/>
+            <output message="msg:PollProgramListResponse"/>
+            <fault name="MobileTerminalFault" message="msg:MobileTerminalFault"/>
+        </operation>
+        <operation name="PollList">
+            <input message="msg:PollListRequest"/>
+            <output message="msg:PollListResponse"/>
+            <fault name="MobileTerminalFault" message="msg:MobileTerminalFault"/>
+        </operation>
+        <operation name="PollableList">
+            <input message="msg:PollableRequest"/>
+            <output message="msg:PollableResponse"/>
+            <fault name="MobileTerminalFault" message="msg:MobileTerminalFault"/>
+        </operation>
+		<operation name="Ping">
+			<input message="msg:PingRequest"/>
+			<output message="msg:PingResponse"/>
+		</operation>
+	</portType>
+
+    <binding name="MobileTerminalDataSourceSoapBinding" type="msg:MobileTerminalDataSourcePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="GetMobileTerminal">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MobileTerminalFault">
+                <soap:fault name="MobileTerminalFault" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="CreateMobileTerminal">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MobileTerminalFault">
+                <soap:fault name="MobileTerminalFault" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="UpdateMobileTerminal">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MobileTerminalFault">
+                <soap:fault name="MobileTerminalFault" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="UpsertMobileTerminal">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MobileTerminalFault">
+                <soap:fault name="MobileTerminalFault" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="MobileTerminalList">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MobileTerminalFault">
+                <soap:fault name="MobileTerminalFault" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="AssignMobileTerminal">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MobileTerminalFault">
+                <soap:fault name="MobileTerminalFault" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="UnAssignMobileTerminal">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MobileTerminalFault">
+                <soap:fault name="MobileTerminalFault" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="SetStatusMobileTerminal">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MobileTerminalFault">
+                <soap:fault name="MobileTerminalFault" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="HistoryMobileTerminalList">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MobileTerminalFault">
+                <soap:fault name="MobileTerminalFault" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="UpdatedDNIDList">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MobileTerminalFault">
+                <soap:fault name="MobileTerminalFault" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="TerminalSystemList">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MobileTerminalFault">
+                <soap:fault name="MobileTerminalFault" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="ConfigChannelName">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MobileTerminalFault">
+                <soap:fault name="MobileTerminalFault" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="Config">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MobileTerminalFault">
+                <soap:fault name="MobileTerminalFault" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="UpsertPluginList">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MobileTerminalFault">
+                <soap:fault name="MobileTerminalFault" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="CreatePoll">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MobileTerminalFault">
+                <soap:fault name="MobileTerminalFault" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="SetStatusPollProgram">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MobileTerminalFault">
+                <soap:fault name="MobileTerminalFault" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="PollProgramList">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MobileTerminalFault">
+                <soap:fault name="MobileTerminalFault" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="PollList">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MobileTerminalFault">
+                <soap:fault name="MobileTerminalFault" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="PollableList">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MobileTerminalFault">
+                <soap:fault name="MobileTerminalFault" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="Ping">
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>  
+    </binding>
+
+    <service name="MobileTerminalDataSourceService">
+        <port name="MobileTerminalDataSourcePortType" binding="msg:MobileTerminalDataSourceSoapBinding">
+            <soap:address location="http://REPLACE_ME"/>
+        </port>
+    </service>
+
+</definitions>

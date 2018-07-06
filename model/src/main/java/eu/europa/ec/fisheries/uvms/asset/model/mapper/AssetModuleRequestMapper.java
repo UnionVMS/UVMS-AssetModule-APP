@@ -11,42 +11,35 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.model.mapper;
 
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.*;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import eu.europa.ec.fisheries.wsdl.asset.module.*;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-
-/**
- **/
 public class AssetModuleRequestMapper {
 
-    final static Logger LOG = LoggerFactory.getLogger(AssetModuleRequestMapper.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AssetModuleRequestMapper.class);
 
-    public static String createGetAssetModuleRequest(String value, AssetIdType type) throws AssetModelMapperException {
+    public static String createGetAssetModuleRequest(String value, AssetIdType type) throws AssetException {
         GetAssetModuleRequest request = new GetAssetModuleRequest();
         request.setMethod(AssetModuleMethod.GET_ASSET);
         request.setId(createAssetId(value, type));
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
 
-    private static AssetId createAssetId(String value, AssetIdType type) throws AssetModelValidationException {
+    private static AssetId createAssetId(String value, AssetIdType type) throws AssetException {
     	if(value == null) {
-    		throw new AssetModelValidationException("No id value set");
+    		throw new NullPointerException("Id value is null");
     	}
     	if(type == null) {
-    		throw new AssetModelValidationException("No id type set");
+            throw new NullPointerException("AssetIdType is null");
     	}
         AssetId vesseId = new AssetId();
         vesseId.setType(type);
@@ -54,7 +47,7 @@ public class AssetModuleRequestMapper {
         return vesseId;
     }
 
-    public static String createAssetListModuleRequest(AssetListQuery query) throws AssetModelMapperException {
+    public static String createAssetListModuleRequest(AssetListQuery query) throws AssetException {
         AssetListModuleRequest request = new AssetListModuleRequest();
         request.setMethod(AssetModuleMethod.ASSET_LIST);
         request.setQuery(query);
@@ -68,9 +61,9 @@ public class AssetModuleRequestMapper {
      *
      * @param assetGroups
      * @return
-     * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException
+     * @throws AssetException
      */
-    public static String createAssetListModuleRequest(List<AssetGroup> assetGroups) throws AssetModelMapperException {
+    public static String createAssetListModuleRequest(List<AssetGroup> assetGroups) throws AssetException {
         GetAssetListByAssetGroupsRequest request = new GetAssetListByAssetGroupsRequest();
         request.setMethod(AssetModuleMethod.ASSET_LIST_BY_GROUP);
         request.getGroups().addAll(assetGroups);
@@ -81,16 +74,16 @@ public class AssetModuleRequestMapper {
      *
      * @param userName
      * @return
-     * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException
+     * @throws AssetException
      */
-    public static String createAssetGroupListByUserModuleRequest(String userName) throws AssetModelMapperException {
+    public static String createAssetGroupListByUserModuleRequest(String userName) throws AssetException {
         AssetGroupListByUserRequest request = new AssetGroupListByUserRequest();
         request.setMethod(AssetModuleMethod.ASSET_GROUP);
         request.setUser(userName);
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
 
-    public static String createAssetGroupListByAssetGuidRequest(String assetGuid) throws AssetModelMapperException {
+    public static String createAssetGroupListByAssetGuidRequest(String assetGuid) throws AssetException {
         GetAssetGroupListByAssetGuidRequest request = new GetAssetGroupListByAssetGuidRequest();
         request.setMethod(AssetModuleMethod.ASSET_GROUP_LIST_BY_ASSET_GUID);
         request.setAssetGuid(assetGuid);
@@ -104,7 +97,7 @@ public class AssetModuleRequestMapper {
         return criteria;
     }
 
-    public static String createUpsertAssetModuleRequest(Asset asset, String username) throws AssetModelMarshallException {
+    public static String createUpsertAssetModuleRequest(Asset asset, String username) throws AssetException {
         UpsertAssetModuleRequest upsertAssetModuleRequest = new UpsertAssetModuleRequest();
         upsertAssetModuleRequest.setMethod(AssetModuleMethod.UPSERT_ASSET);
         upsertAssetModuleRequest.setAsset(asset);
@@ -112,7 +105,7 @@ public class AssetModuleRequestMapper {
         return JAXBMarshaller.marshallJaxBObjectToString(upsertAssetModuleRequest);
     }
 
-    public static String createUpsertFishingGearModuleRequest(FishingGear fishingGear, String username) throws AssetModelMarshallException {
+    public static String createUpsertFishingGearModuleRequest(FishingGear fishingGear, String username) throws AssetException {
         UpsertFishingGearModuleRequest request = new UpsertFishingGearModuleRequest();
         request.setMethod(AssetModuleMethod.FISHING_GEAR_UPSERT);
         request.setUsername(username);
@@ -120,18 +113,15 @@ public class AssetModuleRequestMapper {
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
 
-    public static String createFlagStateRequest(String guid, Date date) throws AssetModelMarshallException {
-
-
+    public static String createFlagStateRequest(String guid, Date date) throws AssetException {
         //DateUtils
-        String dateStr = "";
+        String dateStr;
      //   try {
             //dateStr = URLEncoder.encode(parseUTCDateToString(date), "UTF-8");
             dateStr = parseUTCDateToString(date);
       //  } catch (UnsupportedEncodingException e) {
       //      throw new AssetModelMarshallException(e.toString());
       //  }
-
 
         GetFlagStateByGuidAndDateRequest request = new GetFlagStateByGuidAndDateRequest();
         request.setAssetGuid(guid);
@@ -153,6 +143,4 @@ public class AssetModuleRequestMapper {
     private static String parseUTCDateToString(Date date) {
         return dateToString(date);
     }
-
-
 }

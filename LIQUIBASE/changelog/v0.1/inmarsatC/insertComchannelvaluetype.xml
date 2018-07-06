@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet author="johlyn" id="insert INRMARSAT-C values">
+        <insert tableName="comchannelvaluetype">
+            <column name="comchanvaltyp_name" value="DNID"/>
+            <column name="comchanvaltyp_desc" value="DNID number of channel"/>
+            <column name="comchanvaltyp_updattim" valueDate="${now}"/>
+            <column name="comchanvaltyp_upuser" value="johlyn"/>
+            <column name="comchanvaltyp_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <insert tableName="comchannelvaluetype">
+            <column name="comchanvaltyp_name" value="MEMBER_NUMBER"/>
+            <column name="comchanvaltyp_desc" value="Member number of channel"/>
+            <column name="comchanvaltyp_updattim" valueDate="${now}"/>
+            <column name="comchanvaltyp_upuser" value="johlyn"/>
+            <column name="comchanvaltyp_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <insert tableName="comchannelvaluetype">
+            <column name="comchanvaltyp_name" value="START_DATE"/>
+            <column name="comchanvaltyp_desc" value="Start date of usage of channel"/>
+            <column name="comchanvaltyp_updattim" valueDate="${now}"/>
+            <column name="comchanvaltyp_upuser" value="johlyn"/>
+            <column name="comchanvaltyp_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <insert tableName="comchannelvaluetype">
+            <column name="comchanvaltyp_name" value="END_DATE"/>
+            <column name="comchanvaltyp_desc" value="End date of usage of channel"/>
+            <column name="comchanvaltyp_updattim" valueDate="${now}"/>
+            <column name="comchanvaltyp_upuser" value="johlyn"/>
+            <column name="comchanvaltyp_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <rollback>
+            <delete tableName="comchannelvaluetype">
+				<where>
+					comchanvaltyp_name in ('DNID', 'MEMBER_NUMBER', 'START_DATE', 'END_DATE')
+				</where>
+			</delete>
+        </rollback>
+	</changeSet>
+    
+    <changeSet author="johlyn" id="insert INMARSAT-C Capability values">
+        <insert tableName="comchannelvaluetype">
+            <column name="comchanvaltyp_name" value="POLLING"/>
+            <column name="comchanvaltyp_desc" value="If comchannel is used for polling"/>
+            <column name="comchanvaltyp_is_capability" value="true"/> <!-- capability -->
+            <column name="comchanvaltyp_updattim" valueDate="${now}"/>
+            <column name="comchanvaltyp_upuser" value="johlyn"/>
+            <column name="comchanvaltyp_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <insert tableName="comchannelvaluetype">
+            <column name="comchanvaltyp_name" value="CONFIG"/>
+            <column name="comchanvaltyp_desc" value="If comchannel is used for configuration"/>
+            <column name="comchanvaltyp_is_capability" value="true"/> <!-- capability -->
+            <column name="comchanvaltyp_updattim" valueDate="${now}"/>
+            <column name="comchanvaltyp_upuser" value="johlyn"/>
+            <column name="comchanvaltyp_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <insert tableName="comchannelvaluetype">
+            <column name="comchanvaltyp_name" value="DEFAULT_REPORTING"/>
+            <column name="comchanvaltyp_desc" value="If comchannel is default reporting channel"/>
+            <column name="comchanvaltyp_is_capability" value="true"/> <!-- capability -->
+            <column name="comchanvaltyp_updattim" valueDate="${now}"/>
+            <column name="comchanvaltyp_upuser" value="johlyn"/>
+            <column name="comchanvaltyp_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <rollback>
+            <delete tableName="comchannelvaluetype">
+                <where>comchanvaltyp_name = 'POLLING'</where>
+            </delete>
+            <delete tableName="comchannelvaluetype">
+                <where>comchanvaltyp_name = 'CONFIG'</where>
+            </delete>
+            <delete tableName="comchannelvaluetype">
+                <where>comchanvaltyp_name = 'DEFAULT_REPORTING'</where>
+            </delete>
+        </rollback>
+    </changeSet>
+    
+    <changeSet author="johlyn" id="insert INMARSAT-C LES values">
+        <insert tableName="comchannelvaluetype">
+            <column name="comchanvaltyp_name" value="LES_DESCRIPTION"/>
+            <column name="comchanvaltyp_desc" value="Description of LES functionality"/>
+            <column name="comchanvaltyp_updattim" valueDate="${now}"/>
+            <column name="comchanvaltyp_upuser" value="johlyn"/>
+            <column name="comchanvaltyp_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <rollback>
+            <delete tableName="comchannelvaluetype">
+                <where>comchanvaltyp_name = 'LES_DESCRIPTION'</where>
+            </delete>
+        </rollback>
+    </changeSet>
+    
+    <changeSet author="johlyn" id="update INMARSAT-C capability values">
+        <update tableName="comchannelvaluetype">
+            <column name="comchanvaltyp_name" value="POLLABLE"/>
+            <where>
+                comchanvaltyp_name='POLLING'
+            </where>
+        </update>
+        <update tableName="comchannelvaluetype">
+            <column name="comchanvaltyp_name" value="CONFIGURABLE"/>
+            <where>
+                comchanvaltyp_name='CONFIG'
+            </where>
+        </update>
+        <rollback>
+            <update tableName="comchannelvaluetype">
+                <column name="comchanvaltyp_name" value="POLLING"/>
+                <where>
+                    comchanvaltyp_name='POLLABLE'
+                </where>
+            </update>
+            <update tableName="comchannelvaluetype">
+                <column name="comchanvaltyp_name" value="CONFIG"/>
+                <where>
+                    comchanvaltyp_name='CONFIGURABLE'
+                </where>
+            </update>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

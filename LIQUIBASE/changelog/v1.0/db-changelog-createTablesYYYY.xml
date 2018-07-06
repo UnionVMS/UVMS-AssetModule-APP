@@ -1,0 +1,692 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="thofan (generated)" id="1530781979294-1">
+        <createSequence sequenceName="assetpo_id_seq"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-2">
+        <createSequence sequenceName="hibernate_sequence"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-3">
+        <createTable tableName="asset">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="BOOLEAN"/>
+            <column name="administrativedecisiondate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="agentisalsoowner" type="BOOLEAN"/>
+            <column name="aisindicator" type="BOOLEAN"/>
+            <column name="assetagentaddress" type="VARCHAR(100)"/>
+            <column name="cfr" type="VARCHAR(12)"/>
+            <column name="commissiondate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="constructionplace" type="VARCHAR(100)"/>
+            <column name="constructionyear" type="VARCHAR(4)"/>
+            <column name="countryofimportorexport" type="VARCHAR(3)"/>
+            <column name="ersindicator" type="BOOLEAN"/>
+            <column name="eventcode" type="VARCHAR(255)"/>
+            <column name="externalmarking" type="VARCHAR(14)"/>
+            <column name="flagstatecode" type="VARCHAR(3)"/>
+            <column name="gearfishingtype" type="INT"/>
+            <column name="gfcm" type="VARCHAR(50)"/>
+            <column name="grosstonnage" type="FLOAT8"/>
+            <column name="grosstonnageunit" type="VARCHAR(255)"/>
+            <column name="haslicense" type="BOOLEAN"/>
+            <column name="hasvms" type="BOOLEAN"/>
+            <column name="historyid" type="UUID"/>
+            <column name="hullmaterial" type="VARCHAR(255)"/>
+            <column name="iccat" type="VARCHAR(50)"/>
+            <column name="imo" type="VARCHAR(7)"/>
+            <column name="ircs" type="VARCHAR(8)"/>
+            <column name="ircsindicator" type="BOOLEAN"/>
+            <column name="lengthbetweenperpendiculars" type="FLOAT8"/>
+            <column name="lengthoverall" type="FLOAT8"/>
+            <column name="licensetype" type="VARCHAR(25)"/>
+            <column name="mainfishinggearcode" type="VARCHAR(255)"/>
+            <column name="mmsi" type="VARCHAR(9)"/>
+            <column name="name" type="VARCHAR(40)"/>
+            <column name="othertonnage" type="FLOAT8"/>
+            <column name="owneraddress" type="VARCHAR(100)"/>
+            <column name="ownername" type="VARCHAR(100)"/>
+            <column name="portofregistration" type="VARCHAR(30)"/>
+            <column name="powerofauxengine" type="FLOAT8"/>
+            <column name="powerofmainengine" type="FLOAT8"/>
+            <column name="prodorgcode" type="VARCHAR(255)"/>
+            <column name="prodorgname" type="VARCHAR(255)"/>
+            <column name="publicaid" type="VARCHAR(255)"/>
+            <column name="registrationnumber" type="VARCHAR(14)"/>
+            <column name="safetygrosstonnage" type="FLOAT8"/>
+            <column name="segment" type="VARCHAR(255)"/>
+            <column name="segmentofadministrativedecision" type="VARCHAR(255)"/>
+            <column name="source" type="VARCHAR(255)"/>
+            <column name="subfishinggearcode" type="VARCHAR(255)"/>
+            <column name="typeofexport" type="VARCHAR(255)"/>
+            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updatedby" type="VARCHAR(60)"/>
+            <column name="uvi" type="VARCHAR(50)"/>
+            <column name="vesseldateofentry" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="vesseltype" type="VARCHAR(100)"/>
+            <column name="vmsindicator" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-4">
+        <createTable tableName="asset_aud">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="active" type="BOOLEAN"/>
+            <column name="administrativedecisiondate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="agentisalsoowner" type="BOOLEAN"/>
+            <column name="aisindicator" type="BOOLEAN"/>
+            <column name="assetagentaddress" type="VARCHAR(255)"/>
+            <column name="cfr" type="VARCHAR(255)"/>
+            <column name="commissiondate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="constructionplace" type="VARCHAR(255)"/>
+            <column name="constructionyear" type="VARCHAR(255)"/>
+            <column name="countryofimportorexport" type="VARCHAR(255)"/>
+            <column name="ersindicator" type="BOOLEAN"/>
+            <column name="eventcode" type="VARCHAR(255)"/>
+            <column name="externalmarking" type="VARCHAR(255)"/>
+            <column name="flagstatecode" type="VARCHAR(255)"/>
+            <column name="gearfishingtype" type="INT"/>
+            <column name="gfcm" type="VARCHAR(255)"/>
+            <column name="grosstonnage" type="FLOAT8"/>
+            <column name="grosstonnageunit" type="VARCHAR(255)"/>
+            <column name="haslicense" type="BOOLEAN"/>
+            <column name="hasvms" type="BOOLEAN"/>
+            <column name="historyid" type="UUID"/>
+            <column name="hullmaterial" type="VARCHAR(255)"/>
+            <column name="iccat" type="VARCHAR(255)"/>
+            <column name="imo" type="VARCHAR(255)"/>
+            <column name="ircs" type="VARCHAR(255)"/>
+            <column name="ircsindicator" type="BOOLEAN"/>
+            <column name="lengthbetweenperpendiculars" type="FLOAT8"/>
+            <column name="lengthoverall" type="FLOAT8"/>
+            <column name="licensetype" type="VARCHAR(255)"/>
+            <column name="mainfishinggearcode" type="VARCHAR(255)"/>
+            <column name="mmsi" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="othertonnage" type="FLOAT8"/>
+            <column name="owneraddress" type="VARCHAR(255)"/>
+            <column name="ownername" type="VARCHAR(255)"/>
+            <column name="portofregistration" type="VARCHAR(255)"/>
+            <column name="powerofauxengine" type="FLOAT8"/>
+            <column name="powerofmainengine" type="FLOAT8"/>
+            <column name="prodorgcode" type="VARCHAR(255)"/>
+            <column name="prodorgname" type="VARCHAR(255)"/>
+            <column name="publicaid" type="VARCHAR(255)"/>
+            <column name="registrationnumber" type="VARCHAR(255)"/>
+            <column name="safetygrosstonnage" type="FLOAT8"/>
+            <column name="segment" type="VARCHAR(255)"/>
+            <column name="segmentofadministrativedecision" type="VARCHAR(255)"/>
+            <column name="source" type="VARCHAR(255)"/>
+            <column name="subfishinggearcode" type="VARCHAR(255)"/>
+            <column name="typeofexport" type="VARCHAR(255)"/>
+            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updatedby" type="VARCHAR(255)"/>
+            <column name="uvi" type="VARCHAR(255)"/>
+            <column name="vesseldateofentry" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="vesseltype" type="VARCHAR(255)"/>
+            <column name="vmsindicator" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-5">
+        <createTable tableName="assetgroup">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="BOOLEAN"/>
+            <column name="dynamic" type="BOOLEAN"/>
+            <column name="global" type="BOOLEAN"/>
+            <column name="name" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="upuser" type="VARCHAR(60)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-6">
+        <createTable tableName="assetgroupfield">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="assetgroup" type="UUID"/>
+            <column name="field" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updateuser" type="VARCHAR(60)"/>
+            <column name="value" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-7">
+        <createTable tableName="channel">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="BOOLEAN"/>
+            <column name="archived" type="BOOLEAN"/>
+            <column name="attributes" type="VARCHAR(255)"/>
+            <column name="chan_conf" type="BOOLEAN"/>
+            <column name="chan_def" type="BOOLEAN"/>
+            <column name="eventtype" type="VARCHAR(255)"/>
+            <column name="historyid" type="UUID"/>
+            <column name="comchanname" type="VARCHAR(255)"/>
+            <column name="chan_poll" type="BOOLEAN"/>
+            <column name="updattime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updateuser" type="VARCHAR(255)"/>
+            <column name="mobterm_id" type="UUID"/>
+            <column name="mobterm_event_id" type="UUID"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-8">
+        <createTable tableName="channel_aud">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="active" type="BOOLEAN"/>
+            <column name="archived" type="BOOLEAN"/>
+            <column name="attributes" type="VARCHAR(255)"/>
+            <column name="chan_conf" type="BOOLEAN"/>
+            <column name="chan_def" type="BOOLEAN"/>
+            <column name="eventtype" type="VARCHAR(255)"/>
+            <column name="historyid" type="UUID"/>
+            <column name="comchanname" type="VARCHAR(255)"/>
+            <column name="chan_poll" type="BOOLEAN"/>
+            <column name="updattime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updateuser" type="VARCHAR(255)"/>
+            <column name="mobterm_id" type="UUID"/>
+            <column name="mobterm_event_id" type="UUID"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-9">
+        <createTable tableName="contactinfo">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="assetid" type="UUID"/>
+            <column name="cityname" type="VARCHAR(100)"/>
+            <column name="country" type="VARCHAR(3)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="nationality" type="VARCHAR(100)"/>
+            <column name="owner" type="BOOLEAN"/>
+            <column name="phone" type="VARCHAR(255)"/>
+            <column name="postofficebox" type="VARCHAR(100)"/>
+            <column name="postalarea" type="VARCHAR(100)"/>
+            <column name="source" type="VARCHAR(255)"/>
+            <column name="streetname" type="VARCHAR(100)"/>
+            <column name="type" type="VARCHAR(100)"/>
+            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updatedby" type="VARCHAR(60)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-10">
+        <createTable tableName="customcodes">
+            <column name="code" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="constant" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="validfromdate" type="TIMESTAMP(6) WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="validtodate" type="TIMESTAMP(6) WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-11">
+        <createTable tableName="dnid_list">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="VARCHAR(100)"/>
+            <column name="plugin_service_name" type="VARCHAR(500)"/>
+            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="upuser" type="VARCHAR(60)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-12">
+        <createTable tableName="inmarsatc_oceanregion">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code" type="INT"/>
+            <column name="name" type="VARCHAR(200)"/>
+            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="upuser" type="VARCHAR(60)"/>
+            <column name="inmarsatc_history_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-13">
+        <createTable tableName="mobileterminal">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="BOOLEAN"/>
+            <column name="createtime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="historyid" type="UUID"/>
+            <column name="inactivated" type="BOOLEAN"/>
+            <column name="type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="serial_no" type="VARCHAR(255)"/>
+            <column name="source" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updateuser" type="VARCHAR(60)"/>
+            <column name="plugin_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-14">
+        <createTable tableName="mobileterminal_aud">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="archived" type="BOOLEAN"/>
+            <column name="createtime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="historyid" type="UUID"/>
+            <column name="inactivated" type="BOOLEAN"/>
+            <column name="type" type="VARCHAR(255)"/>
+            <column name="serial_no" type="VARCHAR(255)"/>
+            <column name="source" type="VARCHAR(255)"/>
+            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updateuser" type="VARCHAR(255)"/>
+            <column name="plugin_id" type="UUID"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-15">
+        <createTable tableName="mobileterminalevent">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="BOOLEAN"/>
+            <column name="attributes" type="VARCHAR(1000)"/>
+            <column name="comment" type="VARCHAR(400)"/>
+            <column name="connect_id" type="VARCHAR(400)"/>
+            <column name="eventtype" type="VARCHAR(255)"/>
+            <column name="updattime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="upuser" type="VARCHAR(60)"/>
+            <column name="chan_conf" type="UUID"/>
+            <column name="chan_def" type="UUID"/>
+            <column name="mobileterminal_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="chan_poll" type="UUID"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-16">
+        <createTable tableName="mobileterminalevent_aud">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="active" type="BOOLEAN"/>
+            <column name="attributes" type="VARCHAR(255)"/>
+            <column name="comment" type="VARCHAR(255)"/>
+            <column name="connect_id" type="VARCHAR(255)"/>
+            <column name="eventtype" type="VARCHAR(255)"/>
+            <column name="updattime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="upuser" type="VARCHAR(255)"/>
+            <column name="chan_conf" type="UUID"/>
+            <column name="chan_def" type="UUID"/>
+            <column name="mobileterminal_id" type="UUID"/>
+            <column name="chan_poll" type="UUID"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-17">
+        <createTable tableName="note">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="activitycode" type="VARCHAR(255)"/>
+            <column name="assetid" type="UUID"/>
+            <column name="contact" type="VARCHAR(255)"/>
+            <column name="date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="document" type="VARCHAR(255)"/>
+            <column name="licenseholder" type="VARCHAR(255)"/>
+            <column name="notes" type="VARCHAR(255)"/>
+            <column name="readydate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="sheetnumber" type="VARCHAR(255)"/>
+            <column name="source" type="VARCHAR(255)"/>
+            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updatedby" type="VARCHAR(60)"/>
+            <column name="noteuser" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-18">
+        <createTable tableName="plugin">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(80)"/>
+            <column name="name" type="VARCHAR(40)"/>
+            <column name="inactive" type="BOOLEAN"/>
+            <column name="satellite_type" type="VARCHAR(50)"/>
+            <column name="service_name" type="VARCHAR(500)"/>
+            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="upuser" type="VARCHAR(60)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-19">
+        <createTable tableName="plugin_aud">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="inactive" type="BOOLEAN"/>
+            <column name="satellite_type" type="VARCHAR(255)"/>
+            <column name="service_name" type="VARCHAR(255)"/>
+            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="upuser" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-20">
+        <createTable tableName="plugin_capability">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="capability" type="VARCHAR(25)"/>
+            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="upuser" type="VARCHAR(60)"/>
+            <column name="value" type="VARCHAR(25)"/>
+            <column name="plugin_id" type="UUID"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-21">
+        <createTable tableName="plugin_capability_aud">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="capability" type="VARCHAR(255)"/>
+            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="upuser" type="VARCHAR(255)"/>
+            <column name="value" type="VARCHAR(255)"/>
+            <column name="plugin_id" type="UUID"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-22">
+        <createTable tableName="poll">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="polltype" type="VARCHAR(255)"/>
+            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="upuser" type="VARCHAR(60)"/>
+            <column name="pollbase_id" type="UUID"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-23">
+        <createTable tableName="pollbase">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="channel_guid" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comment" type="VARCHAR(400)"/>
+            <column name="createuser" type="VARCHAR(60)"/>
+            <column name="connect_id" type="VARCHAR(255)"/>
+            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="upuser" type="VARCHAR(255)"/>
+            <column name="mobileterminal_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-24">
+        <createTable tableName="pollpayload">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="grace_period" type="INT"/>
+            <column name="in_port_grace" type="INT"/>
+            <column name="newdnid" type="VARCHAR(60)"/>
+            <column name="newmemberno" type="VARCHAR(60)"/>
+            <column name="reporting_freq" type="INT"/>
+            <column name="startdate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="stopdate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="poll_id" type="UUID"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-25">
+        <createTable tableName="pollprogram">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="frequency" type="INT"/>
+            <column name="latestruntime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="pollstate" type="VARCHAR(255)"/>
+            <column name="startdate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="stopdate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="upuser" type="VARCHAR(60)"/>
+            <column name="pollbase_id" type="UUID"/>
+        </createTable>
+    </changeSet>
+	    <changeSet author="thofan (generated)" id="1530775362228-20">
+        <createTable remarks="OceanRegion codes valid for InmarsatC" tableName="oceanregion">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code" type="INT"/>
+            <column name="name" type="VARCHAR(200)"/>
+            <column name="desc" type="VARCHAR(80)"/>
+            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="upuser" type="VARCHAR(60)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-26">
+        <createTable tableName="revinfo">
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtstmp" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-27">
+        <addPrimaryKey columnNames="id, rev" constraintName="asset_aud_pkey" tableName="asset_aud"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-28">
+        <addPrimaryKey columnNames="id" constraintName="asset_pkey" tableName="asset"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-29">
+        <addPrimaryKey columnNames="id" constraintName="assetgroup_pkey" tableName="assetgroup"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-30">
+        <addPrimaryKey columnNames="id" constraintName="assetgroupfield_pkey" tableName="assetgroupfield"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-31">
+        <addPrimaryKey columnNames="id, rev" constraintName="channel_aud_pkey" tableName="channel_aud"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-32">
+        <addPrimaryKey columnNames="id" constraintName="channel_pkey" tableName="channel"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-33">
+        <addPrimaryKey columnNames="id" constraintName="contactinfo_pkey" tableName="contactinfo"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-34">
+        <addPrimaryKey columnNames="code, constant, validfromdate, validtodate" constraintName="customcodes_pkey" tableName="customcodes"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-35">
+        <addPrimaryKey columnNames="id" constraintName="dnid_list_pkey" tableName="dnid_list"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-36">
+        <addPrimaryKey columnNames="id" constraintName="inmarsatc_oceanregion_pkey" tableName="inmarsatc_oceanregion"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-37">
+        <addPrimaryKey columnNames="id, rev" constraintName="mobileterminal_aud_pkey" tableName="mobileterminal_aud"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-38">
+        <addPrimaryKey columnNames="id" constraintName="mobileterminal_pkey" tableName="mobileterminal"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-39">
+        <addPrimaryKey columnNames="id, rev" constraintName="mobileterminalevent_aud_pkey" tableName="mobileterminalevent_aud"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-40">
+        <addPrimaryKey columnNames="id" constraintName="mobileterminalevent_pkey" tableName="mobileterminalevent"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-41">
+        <addPrimaryKey columnNames="id" constraintName="note_pkey" tableName="note"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-42">
+        <addPrimaryKey columnNames="id, rev" constraintName="plugin_aud_pkey" tableName="plugin_aud"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-43">
+        <addPrimaryKey columnNames="id, rev" constraintName="plugin_capability_aud_pkey" tableName="plugin_capability_aud"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-44">
+        <addPrimaryKey columnNames="id" constraintName="plugin_capability_pkey" tableName="plugin_capability"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-45">
+        <addPrimaryKey columnNames="id" constraintName="plugin_pkey" tableName="plugin"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-46">
+        <addPrimaryKey columnNames="id" constraintName="poll_pkey" tableName="poll"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-47">
+        <addPrimaryKey columnNames="id" constraintName="pollbase_pkey" tableName="pollbase"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-48">
+        <addPrimaryKey columnNames="id" constraintName="pollpayload_pkey" tableName="pollpayload"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-49">
+        <addPrimaryKey columnNames="id" constraintName="pollprogram_pkey" tableName="pollprogram"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-50">
+        <addPrimaryKey columnNames="rev" constraintName="revinfo_pkey" tableName="revinfo"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-51">
+        <addUniqueConstraint columnNames="gfcm" constraintName="uk_1f0suawwxe5rj9b3q2pj040n6" tableName="asset"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-52">
+        <addUniqueConstraint columnNames="historyid" constraintName="uk_1qwcas9eaf3nmmyi4gxrgoyko" tableName="mobileterminal"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-53">
+        <addUniqueConstraint columnNames="historyid" constraintName="uk_4wkxllv5eyh8ua4yv38sg1gvo" tableName="asset"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-54">
+        <addUniqueConstraint columnNames="mmsi" constraintName="uk_7uul14686owisft1q8o2juayu" tableName="asset"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-55">
+        <addUniqueConstraint columnNames="iccat" constraintName="uk_8qkodfqt1w3vtwg43p4x7masv" tableName="asset"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-56">
+        <addUniqueConstraint columnNames="cfr" constraintName="uk_95qo69i86qtbymqtd88jv7jmg" tableName="asset"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-57">
+        <addUniqueConstraint columnNames="service_name" constraintName="uk_lwm7csrtyie5i4ye8duwb0dla" tableName="plugin"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-58">
+        <addUniqueConstraint columnNames="ircs" constraintName="uk_ppdhrvpsem0w88sipaxfss9ak" tableName="asset"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-59">
+        <addUniqueConstraint columnNames="imo" constraintName="uk_rumq17sk76wc9bt59rso0ka05" tableName="asset"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-60">
+        <addUniqueConstraint columnNames="historyid" constraintName="uk_rwjfogqrsy0xy51wwrrm6pkg9" tableName="channel"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-61">
+        <addUniqueConstraint columnNames="uvi" constraintName="uk_tl73p92isumeko0qnpic22xjm" tableName="asset"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-62">
+        <addForeignKeyConstraint baseColumnNames="chan_poll" baseTableName="mobileterminalevent" constraintName="fk187t6d1en05ul2jpsx2h59rhu" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="channel"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-63">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="mobileterminalevent_aud" constraintName="fk4de7qa72g5kbs1g4jwj6uvk9y" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-64">
+        <addForeignKeyConstraint baseColumnNames="mobileterminal_id" baseTableName="pollbase" constraintName="fk4l7tsyduepq29n1q6utdp7tit" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="mobileterminal"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-65">
+        <addForeignKeyConstraint baseColumnNames="plugin_id" baseTableName="mobileterminal" constraintName="fk5vot9ijl5udyl58mwh2u9l2xo" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="plugin"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-66">
+        <addForeignKeyConstraint baseColumnNames="mobterm_id" baseTableName="channel" constraintName="fk7ryuri21t88l4iqrm5w7g1hpx" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="mobileterminal"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-67">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="plugin_capability_aud" constraintName="fk9b169h47tagjwvdph50jp98s7" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-68">
+        <addForeignKeyConstraint baseColumnNames="chan_conf" baseTableName="mobileterminalevent" constraintName="fk9bpecvwqdeawo5f76o0odg02y" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="channel"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-69">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="plugin_aud" constraintName="fkd143bksa8cu5ornqnwyx0f14e" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-70">
+        <addForeignKeyConstraint baseColumnNames="inmarsatc_history_id" baseTableName="inmarsatc_oceanregion" constraintName="fkhfte4thh54w905otya07cdqyh" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="mobileterminalevent"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-71">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="channel_aud" constraintName="fkjcnf5hokby2hgv1gaeed8d0o8" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-72">
+        <addForeignKeyConstraint baseColumnNames="poll_id" baseTableName="pollpayload" constraintName="fkjgaffmmvahqy1wk7mc68sp2xh" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="poll"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-73">
+        <addForeignKeyConstraint baseColumnNames="mobileterminal_id" baseTableName="mobileterminalevent" constraintName="fkjxawc5n3hsf7ktb6p384rhkh3" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="mobileterminal"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-74">
+        <addForeignKeyConstraint baseColumnNames="pollbase_id" baseTableName="pollprogram" constraintName="fkkv3i8qbu2r6hx4ypuna8yh5hd" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="pollbase"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-75">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="asset_aud" constraintName="fklq7kauhigk0mdew67qs2l39ci" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-76">
+        <addForeignKeyConstraint baseColumnNames="mobterm_event_id" baseTableName="channel" constraintName="fkm42dykorcp07xh4nmwh294lkq" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="mobileterminalevent"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-77">
+        <addForeignKeyConstraint baseColumnNames="chan_def" baseTableName="mobileterminalevent" constraintName="fkr1pwiiyu25afryb4vh3xw98bj" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="channel"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-78">
+        <addForeignKeyConstraint baseColumnNames="plugin_id" baseTableName="plugin_capability" constraintName="fkr1sc7lmh3rlcebq4xdtqenve3" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="plugin"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-79">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="mobileterminal_aud" constraintName="fkr73louasnddkayffws25cjqhq" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1530781979294-80">
+        <addForeignKeyConstraint baseColumnNames="pollbase_id" baseTableName="poll" constraintName="fktpwkxtqu4qys8dqvrku8bn301" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="pollbase"/>
+    </changeSet>
+	<changeSet author="thofan (generated)" id="1530775362228-47">
+        <addPrimaryKey columnNames="id" constraintName="oceanregion_pk" tableName="oceanregion"/>
+    </changeSet>
+	<changeSet author="thofan (generated)" id="1530775362228-68">
+        <createIndex indexName="oceanreg_inx" tableName="oceanregion" unique="true">
+            <column name="code"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

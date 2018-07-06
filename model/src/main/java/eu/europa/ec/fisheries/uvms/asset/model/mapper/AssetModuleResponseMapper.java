@@ -12,9 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.model.mapper;
 
 import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.*;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import eu.europa.ec.fisheries.wsdl.asset.group.ListAssetGroupResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.*;
@@ -26,92 +24,91 @@ import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import java.util.List;
 
-/**
- **/
 public class AssetModuleResponseMapper {
 
-    final static Logger LOG = LoggerFactory.getLogger(AssetModuleResponseMapper.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AssetModuleResponseMapper.class);
 
-    private static void validateResponse(TextMessage response, String correlationId) throws AssetModelValidationException, JMSException {
+    private static void validateResponse(TextMessage response, String correlationId) throws JMSException {
 
         if (response == null) {
-            throw new AssetModelValidationException("Error when validating response in ResponseMapper: Reesponse is Null");
+            throw new NullPointerException("Error when validating response in ResponseMapper: Response is null");
         }
 
         if (response.getJMSCorrelationID() == null) {
-            throw new AssetModelValidationException("No corelationId in response (Null) . Expected was: " + correlationId);
+            throw new NullPointerException("CorrelationId in response is Null. Expected was: " + correlationId);
         }
 
         if (!correlationId.equalsIgnoreCase(response.getJMSCorrelationID())) {
-            throw new AssetModelValidationException("Wrong corelationId in response. Expected was: " + correlationId + "But actual was: " + response.getJMSCorrelationID());
+            throw new IllegalArgumentException("Wrong correlationId in response. Expected was: "
+                    + correlationId + " and Actual is: " + response.getJMSCorrelationID());
         }
 
         try {
             AssetFault fault = JAXBMarshaller.unmarshallTextMessage(response, AssetFault.class);
-            throw new AssetModelValidationException(fault.getCode() + " : " + fault.getFault());
-        } catch (AssetModelMarshallException e) {
+            throw new AssetException(fault.getFault() + " : ", fault.getCode());
+        } catch (AssetException e) {
             //everything is well
         }
     }
 
-    public static Asset mapToAssetFromResponse(TextMessage response, String correlationId) throws AssetModelMapperException {
+    public static Asset mapToAssetFromResponse(TextMessage response, String correlationId) throws AssetException {
         try {
             validateResponse(response, correlationId);
             GetAssetModuleResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, GetAssetModuleResponse.class);
             return mappedResponse.getAsset();
-        } catch (AssetModelMarshallException | JMSException e) {
-            LOG.error("[ Error when mapping response to single asset response. ] {}", e.getMessage());
-            throw new AssetModelMapperException("Error when returning asset from response in ResponseMapper: " + e.getMessage());
+        } catch (AssetException | JMSException ex) {
+            LOG.error("[ Error when mapping response to single asset response. ] {}", ex.getMessage());
+            throw new AssetException(ErrorCode.ASSET_MAPPING_ERROR.getMessage(), ex, ErrorCode.ASSET_MAPPING_ERROR.getCode());
         }
     }
 
-    public static List<Asset> mapToAssetListFromResponse(TextMessage response, String correlationId) throws AssetModelMapperException {
+    public static List<Asset> mapToAssetListFromResponse(TextMessage response, String correlationId) throws AssetException {
         try {
             validateResponse(response, correlationId);
             ListAssetResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, ListAssetResponse.class);
             return mappedResponse.getAsset();
-        } catch (AssetModelMarshallException | JMSException e) {
-            LOG.error("[ Error when mapping response to list asset response. ] {}", e.getMessage());
-            throw new AssetModelMapperException("Error when returning assetList from response in ResponseMapper: " + e.getMessage());
+        } catch (AssetException | JMSException ex) {
+            LOG.error("[ Error when mapping response to list asset response. ] {}", ex.getMessage());
+            throw new AssetException(ErrorCode.ASSET_LIST_MAPPING_ERROR.getMessage(), ex, ErrorCode.ASSET_LIST_MAPPING_ERROR.getCode());
         }
     }
 
-    public static List<AssetGroup> mapToAssetGroupListFromResponse(TextMessage response, String correlationId) throws AssetModelMapperException {
+    public static List<AssetGroup> mapToAssetGroupListFromResponse(TextMessage response, String correlationId) throws AssetException {
         try {
             validateResponse(response, correlationId);
             ListAssetGroupResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, ListAssetGroupResponse.class);
             return mappedResponse.getAssetGroup();
-        } catch (AssetModelMarshallException | JMSException e) {
-            LOG.error("[ Error when mapping response to list asset response. ] {}", e.getMessage());
-            throw new AssetModelMapperException("Error when returning assetList from response in ResponseMapper: " + e.getMessage());
+        } catch (AssetException | JMSException ex) {
+            LOG.error("[ Error when mapping response to list asset response. ] {}", ex.getMessage());
+            throw new AssetException(ErrorCode.ASSET_GROUP_LIST_MAPPING_ERROR.getMessage(), ex, ErrorCode.ASSET_GROUP_LIST_MAPPING_ERROR.getCode());
         }
     }
 
-    public static String mapToAssetListByAssetGroupResponse(List<Asset> assets) throws AssetModelMarshallException {
+    public static String mapToAssetListByAssetGroupResponse(List<Asset> assets) throws AssetException {
         ListAssetResponse response = new ListAssetResponse();
         response.getAsset().addAll(assets);
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 
-    public static String mapToAssetGroupListResponse(List<AssetGroup> assetGrup) throws AssetModelMarshallException {
+    public static String mapToAssetGroupListResponse(List<AssetGroup> assetGrup) throws AssetException {
         ListAssetGroupResponse response = new ListAssetGroupResponse();
         response.getAssetGroup().addAll(assetGrup);
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 
-    public static String mapAssetModuleResponse(Asset asset) throws AssetModelMapperException {
+    public static String mapAssetModuleResponse(Asset asset) throws AssetException {
         GetAssetModuleResponse response = createGetAssetModuleResponse(asset);
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 
-    public static String mapFlagStateModuleResponse(FlagStateType flagState) throws AssetModelMapperException {
+    public static String mapFlagStateModuleResponse(FlagStateType flagState) throws AssetException {
 
         FlagStateResponse response = new FlagStateResponse();
         response.setFlagState(flagState);
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 
-    public static String mapAssetModuleResponse(ListAssetResponse response) throws AssetModelMapperException {
+    public static String mapAssetModuleResponse(ListAssetResponse response) throws AssetException {
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 
@@ -140,12 +137,9 @@ public class AssetModuleResponseMapper {
         return response;
     }
 
-    public static String createUpsertFishingGearModuleResponse(FishingGear fishingGear) throws AssetModelMapperException {
+    public static String createUpsertFishingGearModuleResponse(FishingGear fishingGear) throws AssetException {
             UpsertFishingGearModuleResponse upsertResponse = new UpsertFishingGearModuleResponse();
             upsertResponse.setFishingGear(fishingGear);
             return JAXBMarshaller.marshallJaxBObjectToString(upsertResponse);
     }
-
-
-
 }
