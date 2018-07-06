@@ -30,10 +30,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -61,7 +59,7 @@ public class Channel implements Serializable {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="updattime")
-	private Date updateTime;
+	private LocalDateTime updateTime;
 
 	@Column(name="updateuser")
 	private String updateUser;
@@ -132,11 +130,11 @@ public class Channel implements Serializable {
 		this.archived = archived;
 	}
 
-	public Date getUpdateTime() {
+	public LocalDateTime getUpdateTime() {
 		return updateTime;
 	}
 
-	public void setUpdateTime(Date updateTime) {
+	public void setUpdateTime(LocalDateTime updateTime) {
 		this.updateTime = updateTime;
 	}
 

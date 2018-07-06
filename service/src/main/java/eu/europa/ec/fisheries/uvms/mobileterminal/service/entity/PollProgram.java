@@ -18,7 +18,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -51,15 +51,15 @@ public class PollProgram implements Serializable {
 
     @Column(name = "startdate")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date startDate;
+    private LocalDateTime startDate;
 
     @Column(name = "stopdate")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date stopDate;
+    private LocalDateTime stopDate;
 
     @Column(name = "latestruntime")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date latestRun;
+    private LocalDateTime latestRun;
 
     @Size(max = 60)
     @Column(name = "upuser")
@@ -67,7 +67,7 @@ public class PollProgram implements Serializable {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updattim")
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     @JoinColumn(name = "pollbase_id")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -93,27 +93,27 @@ public class PollProgram implements Serializable {
         this.frequency = frequency;
     }
 
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public Date getStopDate() {
+    public LocalDateTime getStopDate() {
         return stopDate;
     }
 
-    public void setStopDate(Date stopDate) {
+    public void setStopDate(LocalDateTime stopDate) {
         this.stopDate = stopDate;
     }
 
-    public Date getLatestRun() {
+    public LocalDateTime getLatestRun() {
         return latestRun;
     }
 
-    public void setLatestRun(Date latestRun) {
+    public void setLatestRun(LocalDateTime latestRun) {
         this.latestRun = latestRun;
     }
 
@@ -125,11 +125,11 @@ public class PollProgram implements Serializable {
         this.updatedBy = updatedBy;
     }
 
-    public Date getUpdateTime() {
+    public LocalDateTime getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
     }
 

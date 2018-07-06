@@ -24,7 +24,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -52,7 +52,7 @@ public class MobileTerminalEvent implements Serializable {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="updattime")
-	private Date updatetime;
+	private LocalDateTime updatetime;
 
 	@Size(max=60)
 	@Column(name="upuser")
@@ -111,11 +111,12 @@ public class MobileTerminalEvent implements Serializable {
 		this.comment = comment;
 	}
 
-	public Date getUpdatetime() {
+
+	public LocalDateTime getUpdatetime() {
 		return updatetime;
 	}
 
-	public void setUpdatetime(Date updatetime) {
+	public void setUpdatetime(LocalDateTime updatetime) {
 		this.updatetime = updatetime;
 	}
 

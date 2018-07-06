@@ -27,6 +27,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -77,11 +78,11 @@ public class MobileTerminal implements Serializable {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="updatetime")
-	private Date updatetime;
+	private LocalDateTime updatetime;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="createtime")
-	private Date createTime;
+	private LocalDateTime createTime;
 
 	@Size(max = 60)
 	@Column(name="updateuser")
@@ -104,9 +105,8 @@ public class MobileTerminal implements Serializable {
 
 	@PrePersist
 	private void atPrePersist() {
-
 		this.historyId = UUID.randomUUID();
-		this.createTime = new Date();
+		this.createTime = LocalDateTime.now();
 	}
 
 	@PreUpdate
@@ -170,11 +170,11 @@ public class MobileTerminal implements Serializable {
 		this.mobileTerminalType = mobileTerminalType;
 	}
 
-	public Date getUpdatetime() {
+	public LocalDateTime getUpdatetime() {
 		return updatetime;
 	}
 
-	public void setUpdatetime(Date updatetime) {
+	public void setUpdatetime(LocalDateTime updatetime) {
 		this.updatetime = updatetime;
 	}
 
@@ -214,11 +214,11 @@ public class MobileTerminal implements Serializable {
 		this.channels = channels;
 	}
 
-	public Date getCreateTime() {
+	public LocalDateTime getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(Date createTime) {
+	public void setCreateTime(LocalDateTime createTime) {
 		this.createTime = createTime;
 	}
 

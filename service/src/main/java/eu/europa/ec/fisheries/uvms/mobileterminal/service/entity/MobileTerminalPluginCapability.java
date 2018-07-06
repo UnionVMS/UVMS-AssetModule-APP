@@ -20,7 +20,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -54,7 +54,7 @@ public class MobileTerminalPluginCapability implements Serializable {
     
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updattim")
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     @Size(max = 60)
     @Column(name = "upuser")
@@ -91,11 +91,11 @@ public class MobileTerminalPluginCapability implements Serializable {
         this.name = name;
     }
 
-    public Date getUpdateTime() {
+    public LocalDateTime getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
     }
 
