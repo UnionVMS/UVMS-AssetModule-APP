@@ -10,41 +10,52 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.client;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ContextResolver;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import eu.europa.ec.fisheries.uvms.asset.client.model.*;
+import eu.europa.ec.fisheries.uvms.asset.client.constants.ParameterKey;
+import eu.europa.ec.fisheries.uvms.asset.client.model.Asset;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetBO;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetGroup;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetIdentifier;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetListResponse;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetQuery;
+import eu.europa.ec.fisheries.uvms.asset.client.model.CustomCode;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
+import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
+import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
 
 @Stateless
 public class AssetClient {
 
-    // TODO read from config?
-    private static final String REST_END_POINT = "http://localhost:8080/asset/rest/internal";
+    @EJB
+    private ParameterService parameterService;
+            
+    private WebTarget webTarget;
     
-    private Client client;
-    
-    public AssetClient() {
-        client = ClientBuilder.newClient();
+    @PostConstruct
+    public void postConstruct() throws ConfigServiceException {
+        Client client = ClientBuilder.newClient();
         client.register(new ContextResolver<ObjectMapper>() {
             @Override
             public ObjectMapper getContext(Class<?> type) {
@@ -54,10 +65,12 @@ public class AssetClient {
                 return mapper;
             }
         });
+        String assetEndpoint = parameterService.getStringValue(ParameterKey.ASSET_ENDPOINT.getKey());
+        webTarget = client.target(assetEndpoint);
     }
     
     public Asset getAssetById(AssetIdentifier type, String value) {
-        return client.target(REST_END_POINT)
+        return webTarget
                 .path("asset")
                 .path(type.toString().toLowerCase())
                 .path(value)
@@ -66,7 +79,7 @@ public class AssetClient {
     }
     
     public List<Asset> getAssetList(AssetQuery query) {
-        AssetListResponse assetResponse = client.target(REST_END_POINT)
+        AssetListResponse assetResponse = webTarget
                 .path("query")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(query), AssetListResponse.class);
@@ -75,7 +88,7 @@ public class AssetClient {
     }
     
     public List<Asset> getAssetList(AssetQuery query, boolean dynamic) {
-        AssetListResponse assetResponse = client.target(REST_END_POINT)
+        AssetListResponse assetResponse = webTarget
                 .path("query")
                 .queryParam("dynamic", dynamic)
                 .request(MediaType.APPLICATION_JSON)
@@ -85,7 +98,7 @@ public class AssetClient {
     }
     
     public List<Asset> getAssetList(AssetQuery query, int page, int size, boolean dynamic) {
-        AssetListResponse assetResponse = client.target(REST_END_POINT)
+        AssetListResponse assetResponse = webTarget
                     .path("query")
                     .queryParam("page", page)
                     .queryParam("size", size)
@@ -97,7 +110,7 @@ public class AssetClient {
     }
     
     public List<AssetGroup> getAssetGroupsByUser(String user) {
-        Response response = client.target(REST_END_POINT)
+        Response response = webTarget
                     .path("group")
                     .path("user")
                     .path(user)
@@ -109,7 +122,7 @@ public class AssetClient {
     }
     
     public List<AssetGroup> getAssetGroupByAssetId(UUID assetId) {
-        Response response = client.target(REST_END_POINT)
+        Response response = webTarget
                 .path("group")
                 .path("asset")
                 .path(assetId.toString())
@@ -133,7 +146,7 @@ public class AssetClient {
     }
      */
     public List<Asset> getAssetsByGroupIds(List<UUID> groupIds) {
-        Response response = client.target(REST_END_POINT)
+        Response response = webTarget
                 .path("group")
                 .path("asset")
 //                .path(groupIds)
@@ -145,7 +158,7 @@ public class AssetClient {
     }
     
     public Asset upsertAsset(AssetBO asset) {
-        return client.target(REST_END_POINT)
+        return webTarget
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
@@ -166,100 +179,75 @@ public class AssetClient {
     }
 
     public String ping() {
-        return client.target(REST_END_POINT)
+        return webTarget
                 .path("ping")
                 .request(MediaType.APPLICATION_JSON)
                 .get(String.class);
     }
 
 
-    public CustomCode createCustomCode(CustomCode customCode) throws IOException {
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-
-        String str = client.target(REST_END_POINT)
+    public CustomCode createCustomCode(CustomCode customCode) {
+        return webTarget
                 .path("customcode")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(customCode), String.class);
-        CustomCode cc =  mapper.readValue(str,CustomCode.class);
-        return cc;
+                .post(Entity.json(customCode), CustomCode.class);
     }
 
 
     public List<String> getConstants() {
-
-        List<String> constants = client.target(REST_END_POINT)
+        Response response = webTarget
                 .path("listconstants")
                 .request(MediaType.APPLICATION_JSON)
-                .get(List.class);
+                .get();
+        
+        List<String> constants = response.readEntity(new GenericType<List<String>>() {});
+        response.close();
         return constants;
     }
 
 
-    public List<CustomCode> getCodesForConstant(String constant) throws IOException {
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-
-        String json = client.target(REST_END_POINT)
+    public List<CustomCode> getCodesForConstant(String constant) {
+        Response response = webTarget
                 .path("listcodesforconstant")
                 .path(constant)
                 .request(MediaType.APPLICATION_JSON)
-                .get(String.class);
-        TypeReference typeref = new TypeReference<List<CustomCode>>() {};
-        List<CustomCode> codes = mapper.readValue(json, typeref);
+                .get();
+        
+        List<CustomCode> codes = response.readEntity(new GenericType<List<CustomCode>>() {});
+        response.close();
         return codes;
-
     }
 
     public Boolean isCodeValid(String constant, String code, LocalDateTime date){
-
         String theDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        Boolean ret = client.target(REST_END_POINT)
+        return webTarget
                 .path("verify")
                 .path(constant)
                 .path(code)
                 .path(theDate)
                 .request(MediaType.APPLICATION_JSON)
                 .get(Boolean.class);
-        return ret;
     }
 
-    public List<CustomCode> getCodeForDate(String constant, String code, LocalDateTime date) throws IOException {
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-
-
+    public List<CustomCode> getCodeForDate(String constant, String code, LocalDateTime date) {
         String theDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        String json = client.target(REST_END_POINT)
+        Response response = webTarget
                 .path("getfordate")
                 .path(constant)
                 .path(code)
                 .path(theDate)
                 .request(MediaType.APPLICATION_JSON)
-                .get(String.class);
+                .get();
 
-        TypeReference typeref = new TypeReference<List<CustomCode>>() {};
-        List<CustomCode> codes = mapper.readValue(json, typeref);
+        List<CustomCode> codes = response.readEntity(new GenericType<List<CustomCode>>() {});
+        response.close();
         return codes;
-
     }
 
-    public CustomCode replace(CustomCode customCode) throws IOException {
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-
-        String str = client.target(REST_END_POINT)
+    public CustomCode replace(CustomCode customCode) {
+        return webTarget
                 .path("replace")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(customCode), String.class);
-        CustomCode cc =  mapper.readValue(str,CustomCode.class);
-        return cc;
+                .post(Entity.json(customCode), CustomCode.class);
     }
-
-
-
 }

@@ -24,6 +24,11 @@
             <artifactId>uvms-commons-message</artifactId>
             <version>${uvms.common.version}</version>
         </dependency>
+		<dependency>
+            <groupId>eu.europa.ec.fisheries.uvms</groupId>
+            <artifactId>uvms-config</artifactId>
+            <version>${uvms.config.version}</version>
+        </dependency>
         <dependency>
             <groupId>fish.focus.uvms.maven</groupId>
             <artifactId>uvms-pom-arquillian-deps</artifactId>
