@@ -1,25 +1,29 @@
 package eu.europa.ec.fisheries.uvms.asset.client;
 
-import eu.europa.ec.fisheries.uvms.asset.client.model.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import javax.inject.Inject;
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import javax.inject.Inject;
-import java.time.LocalDateTime;
-import java.util.*;
-
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import eu.europa.ec.fisheries.uvms.asset.client.model.Asset;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetBO;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetIdentifier;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetQuery;
+import eu.europa.ec.fisheries.uvms.asset.client.model.CustomCode;
 
 @RunWith(Arquillian.class)
 public class AssetClientTest extends AbstractClientTest {
 
     @Inject
     AssetClient assetClient;
-
+    
     @Test
     public void pingTest() {
         String response = assetClient.ping();

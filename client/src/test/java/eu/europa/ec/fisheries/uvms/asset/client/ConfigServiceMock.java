@@ -18,6 +18,7 @@ import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 import eu.europa.ec.fisheries.schema.config.types.v1.PullSettingsStatus;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
+import eu.europa.ec.fisheries.uvms.asset.client.constants.ParameterKey;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
@@ -33,11 +34,11 @@ public class ConfigServiceMock implements MessageListener {
     @Override
     public void onMessage(Message message) {
         try {
-            SettingType mockSetting = new SettingType();
-            mockSetting.setKey("Key");
-            mockSetting.setValue("Value");
-            mockSetting.setDescription("From ConfigServiceMock.java");
-            String response = ModuleResponseMapper.toPullSettingsResponse(Arrays.asList(mockSetting), PullSettingsStatus.OK);
+            SettingType endpointSetting = new SettingType();
+            endpointSetting.setKey(ParameterKey.ASSET_ENDPOINT.getKey());
+            endpointSetting.setValue("http://localhost:8080/asset/rest/internal");
+            endpointSetting.setDescription("From ConfigServiceMock.java");
+            String response = ModuleResponseMapper.toPullSettingsResponse(Arrays.asList(endpointSetting), PullSettingsStatus.OK);
             new AbstractProducer() {
                 @Override
                 public String getDestinationName() {
