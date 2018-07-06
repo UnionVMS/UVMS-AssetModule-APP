@@ -11,6 +11,11 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mapper;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.constant.SearchTables;
@@ -22,11 +27,6 @@ import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteriaPair;
 import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  **/
@@ -208,13 +208,7 @@ public class SearchFieldMapper {
                 } else {
                     builder.append(OPERATOR);
                 }
-                if(entry.getSearchField().getFieldType()== SearchFieldType.LIST){
-                    builder.append(" UPPER(REPLACE(");
                     builder.append(entry.getSearchField().getSearchTable().getTableAlias()).append(".").append(entry.getSearchField().getFieldName());
-                    builder.append(",'-','')) ");
-                }else{
-                    builder.append(entry.getSearchField().getSearchTable().getTableAlias()).append(".").append(entry.getSearchField().getFieldName());
-                }
 
                 if (useLike(entry)) {
                     int containsCount = 0;
@@ -225,9 +219,7 @@ public class SearchFieldMapper {
                             containsFirst = false;
                         } else {
                             builder.append(" OR ");
-                            builder.append(" UPPER(REPLACE(");
                             builder.append(entry.getSearchField().getSearchTable().getTableAlias()).append(".").append(entry.getSearchField().getFieldName());
-                            builder.append(",'-','')) ");
                         }
                         builder.append(" LIKE :").append(entry.getSearchField().getValueName()).append(containsCount);
                     }
