@@ -12,7 +12,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
-import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
@@ -24,6 +23,8 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTer
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -55,7 +56,7 @@ public class MobileTerminalModelToEntityMapper {
         if (type == null)
             throw new NullPointerException("Non valid mobile terminal type when mapping");
         entity.setMobileTerminalType(type);
-        entity.setUpdatetime(DateUtils.getNowDateUTC());
+        entity.setUpdatetime(LocalDateTime.now(ZoneOffset.UTC));
         entity.setUpdateuser(username);
 
         mapHistoryAttributes(entity, model, username, comment, event);
@@ -69,7 +70,7 @@ public class MobileTerminalModelToEntityMapper {
 //                throw new MobileTerminalModelException(MAP_CHANNEL_FIELD_TYPES_ERROR.getMessage(), e, MAP_CHANNEL_FIELD_TYPES_ERROR.getCode());
 //            }
         }
-        entity.setUpdatetime(DateUtils.getNowDateUTC());
+        entity.setUpdatetime(LocalDateTime.now(ZoneOffset.UTC));
         entity.setUpdateuser(username);
 
         return entity;
@@ -102,7 +103,7 @@ public class MobileTerminalModelToEntityMapper {
                 //channel.setGuid(UUID.randomUUID().toString());
             }
             channel.setMobileTerminal(entity);
-            channel.setUpdateTime(DateUtils.getNowDateUTC());
+            channel.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
             channel.setUpdateUser(username);
             channel.setArchived(false);
 
@@ -187,7 +188,7 @@ public class MobileTerminalModelToEntityMapper {
 
         MobileTerminalEvent history = new MobileTerminalEvent();
         history.setActive(true);
-        history.setUpdatetime(DateUtils.getNowDateUTC());
+        history.setUpdatetime(LocalDateTime.now(ZoneOffset.UTC));
         history.setUpdateuser(username);
         history.setMobileterminal(entity);
         history.setComment(comment);

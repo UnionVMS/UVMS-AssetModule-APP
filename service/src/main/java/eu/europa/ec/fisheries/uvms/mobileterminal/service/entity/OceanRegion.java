@@ -50,7 +50,6 @@ public class OceanRegion implements Serializable {
     @Column(name = "desc")
     private String description;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updattim")
     private LocalDateTime updateTime;
 

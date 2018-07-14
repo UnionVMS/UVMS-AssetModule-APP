@@ -63,8 +63,7 @@ public class MobileTerminalPlugin implements Serializable {
 
     @Column(name = "inactive")
     private Boolean pluginInactive;
-    
-    @Temporal(TemporalType.TIMESTAMP)
+
     @Column(name = "updattim")
     private LocalDateTime updateTime;
 

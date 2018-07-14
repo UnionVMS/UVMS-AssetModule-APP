@@ -25,6 +25,8 @@ import javax.ejb.EJB;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -88,9 +90,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
 
     @Test
     public void getRunningProgramPolls() throws Exception {
-        Date startDate = testPollHelper.getStartDate();
-        Date latestRun = testPollHelper.getLatestRunDate();
-        Date stopDate = testPollHelper.getStopDate();
+        LocalDateTime startDate = testPollHelper.getStartDate();
+        LocalDateTime latestRun = testPollHelper.getLatestRunDate();
+        LocalDateTime stopDate = testPollHelper.getStopDate();
 
         int numberOfProgramB4 = pollServiceBean.getRunningProgramPolls().size();
 
@@ -109,9 +111,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
 
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
 
-        Date startDate = testPollHelper.getStartDate();
-        Date latestRun = testPollHelper.getLatestRunDate();
-        Date stopDate = testPollHelper.getStopDate();
+        LocalDateTime startDate = testPollHelper.getStartDate();
+        LocalDateTime latestRun = testPollHelper.getLatestRunDate();
+        LocalDateTime stopDate = testPollHelper.getStopDate();
 
         String mobileTerminalSerialNumber = testPollHelper.createSerialNumber();
         PollProgram pollProgram = testPollHelper.createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
@@ -138,9 +140,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     public void startProgramPoll_FromMPSBIT() throws Exception {
 
         // we want to be able to tamper with the dates for proper test coverage
-        Date startDate = getStartDate();
-        Date latestRun = getLatestRunDate();
-        Date stopDate = getStopDate();
+        LocalDateTime startDate = getStartDate();
+        LocalDateTime latestRun = getLatestRunDate();
+        LocalDateTime stopDate = getStopDate();
 
         String username = "TEST";
 
@@ -165,9 +167,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
 
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
 
-        Date startDate = testPollHelper.getStartDate();
-        Date latestRun = testPollHelper.getLatestRunDate();
-        Date stopDate = testPollHelper.getStopDate();
+        LocalDateTime startDate = testPollHelper.getStartDate();
+        LocalDateTime latestRun = testPollHelper.getLatestRunDate();
+        LocalDateTime stopDate = testPollHelper.getStopDate();
 
         String mobileTerminalSerialNumber = testPollHelper.createSerialNumber();
         PollProgram pollProgram = testPollHelper.createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
@@ -195,9 +197,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
 //        System.setProperty(MessageProducerBean.MESSAGE_PRODUCER_METHODS_FAIL, "false");
 
         // we want to be able to tamper with the dates for proper test coverage
-        Date startDate = getStartDate();
-        Date latestRun = getLatestRunDate();
-        Date stopDate = getStopDate();
+        LocalDateTime startDate = getStartDate();
+        LocalDateTime latestRun = getLatestRunDate();
+        LocalDateTime stopDate = getStopDate();
 
         String username = "TEST";
 
@@ -226,9 +228,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     public void inactivateProgramPoll() {
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
 
-        Date startDate = testPollHelper.getStartDate();
-        Date latestRun = testPollHelper.getLatestRunDate();
-        Date stopDate = testPollHelper.getStopDate();
+        LocalDateTime startDate = testPollHelper.getStartDate();
+        LocalDateTime latestRun = testPollHelper.getLatestRunDate();
+        LocalDateTime stopDate = testPollHelper.getStopDate();
 
         String mobileTerminalSerialNumber = testPollHelper.createSerialNumber();
         PollProgram pollProgram = testPollHelper.createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
@@ -256,9 +258,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
 //        System.setProperty(MessageProducerBean.MESSAGE_PRODUCER_METHODS_FAIL, "false");
 
         // we want to be able to tamper with the dates for proper test coverage
-        Date startDate = getStartDate();
-        Date latestRun = getLatestRunDate();
-        Date stopDate = getStopDate();
+        LocalDateTime startDate = getStartDate();
+        LocalDateTime latestRun = getLatestRunDate();
+        LocalDateTime stopDate = getStopDate();
 
         String username = "TEST";
 
@@ -292,9 +294,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
 
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
 
-        Date startDate = testPollHelper.getStartDate();
-        Date latestRun = testPollHelper.getLatestRunDate();
-        Date stopDate = testPollHelper.getStopDate();
+        LocalDateTime startDate = testPollHelper.getStartDate();
+        LocalDateTime latestRun = testPollHelper.getLatestRunDate();
+        LocalDateTime stopDate = testPollHelper.getStopDate();
 
         String mobileTerminalSerialNumber = testPollHelper.createSerialNumber();
         PollProgram pollProgram = testPollHelper.createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
@@ -405,23 +407,23 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         return false;
     }
 
-    private Date getStartDate() {
+    private LocalDateTime getStartDate() {
         cal.set(Calendar.DAY_OF_MONTH, 1);
         int startYear = 1999;
         cal.set(Calendar.YEAR, startYear);
-        return cal.getTime();
+        return LocalDateTime.ofInstant(cal.toInstant(), ZoneOffset.UTC);
     }
 
-    private Date getLatestRunDate() {
+    private LocalDateTime getLatestRunDate() {
         cal.set(Calendar.DAY_OF_MONTH, 20);
         int latestRunYear = 2017;
         cal.set(Calendar.YEAR, latestRunYear);
-        return cal.getTime();
+        return LocalDateTime.ofInstant(cal.toInstant(), ZoneOffset.UTC);
     }
 
-    private Date getStopDate() {
+    private LocalDateTime getStopDate() {
         cal.set(Calendar.DAY_OF_MONTH, 28);
         cal.set(Calendar.YEAR, 2019);
-        return cal.getTime();
+        return LocalDateTime.ofInstant(cal.toInstant(), ZoneOffset.UTC);
     }
 }

@@ -12,13 +12,13 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
-import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Map;
 
 public class HistoryMapper {
@@ -27,7 +27,7 @@ public class HistoryMapper {
 		MobileTerminalEvent event = new MobileTerminalEvent();
 		event.setMobileterminal(entity);
 		event.setComment(comment);
-        event.setUpdatetime(DateUtils.getNowDateUTC());
+        event.setUpdatetime(LocalDateTime.now(ZoneOffset.UTC));
 		event.setUpdateuser(username);
 		event.setEventCodeType(eventcode);
 		return event;

@@ -50,7 +50,6 @@ public class MobileTerminalEvent implements Serializable {
 	@Column(name="comment")
 	private String comment;
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="updattime")
 	private LocalDateTime updatetime;
 

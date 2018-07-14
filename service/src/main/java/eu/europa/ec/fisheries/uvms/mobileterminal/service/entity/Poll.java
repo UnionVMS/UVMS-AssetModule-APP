@@ -48,7 +48,6 @@ public class Poll implements Serializable {
     @Column(name = "upuser")
     private String updatedBy;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updattim")
     private LocalDateTime updateTime;
 

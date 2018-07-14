@@ -51,8 +51,7 @@ public class MobileTerminalPluginCapability implements Serializable {
     @Size(max = 25)
     @Column(name = "capability")
     private String name;
-    
-    @Temporal(TemporalType.TIMESTAMP)
+
     @Column(name = "updattim")
     private LocalDateTime updateTime;
 

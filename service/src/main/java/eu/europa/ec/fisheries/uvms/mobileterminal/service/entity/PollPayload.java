@@ -49,11 +49,9 @@ public class PollPayload implements Serializable {
     private String newMemberNumber;
 
     @Column(name = "startdate")
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime startDate;
 
     @Column(name = "stopdate")
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime stopDate;
 
     @JoinColumn(name = "poll_id", referencedColumnName = "id")

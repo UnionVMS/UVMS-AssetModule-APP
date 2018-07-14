@@ -57,7 +57,6 @@ public class Channel implements Serializable {
 	@Column(name="archived")
 	private Boolean archived;
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="updattime")
 	private LocalDateTime updateTime;
 

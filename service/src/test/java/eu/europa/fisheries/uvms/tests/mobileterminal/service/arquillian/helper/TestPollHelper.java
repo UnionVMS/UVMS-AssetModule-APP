@@ -9,12 +9,14 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollStateEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PluginMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.util.DateUtils;
 
 import javax.ejb.EJB;
+import javax.ejb.Local;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 @Stateless
@@ -40,7 +42,7 @@ public class TestPollHelper {
 
         PollAttribute pollAttribute = new PollAttribute();
         pollAttribute.setKey(PollAttributeType.START_DATE);
-        String startDate = DateUtils.getUTCNow().toString();
+        String startDate = LocalDateTime.now(ZoneOffset.UTC).toString();
         pollAttribute.setValue(startDate);
 
         prt.getAttributes().add(pollAttribute);
@@ -74,7 +76,7 @@ public class TestPollHelper {
 
         MobileTerminal mt = new MobileTerminal();
         mt.setSerialNo(serialNo);
-        mt.setUpdatetime(new Date());
+        mt.setUpdatetime(LocalDateTime.now());
         mt.setUpdateuser("TEST");
         mt.setSource(MobileTerminalSourceEnum.INTERNAL);
         mt.setPlugin(mtp);
@@ -88,7 +90,7 @@ public class TestPollHelper {
         mtpc.setName("test");
         mtpc.setValue("test");
         mtpc.setUpdatedBy("TEST_USER");
-        mtpc.setUpdateTime(new Date());
+        mtpc.setUpdateTime(LocalDateTime.now());
         capabilityList.add(mtpc);
 
         mtp.getCapabilities().addAll(capabilityList);
@@ -100,9 +102,9 @@ public class TestPollHelper {
         mte.setActive(true);
         mte.setMobileterminal(mt);
 
-        String attributes = PollAttributeType.START_DATE.value() + "=" + DateUtils.getUTCNow().toString();
+        String attributes = PollAttributeType.START_DATE.value() + "=" + LocalDateTime.now(ZoneOffset.UTC).toString();
         attributes = attributes + ";";
-        attributes = attributes + PollAttributeType.END_DATE.value() + "=" + DateUtils.getUTCNow().toString();
+        attributes = attributes + PollAttributeType.END_DATE.value() + "=" + LocalDateTime.now(ZoneOffset.UTC).toString();
         mte.setAttributes(attributes);
 
         Channel pollChannel = new Channel();
@@ -198,7 +200,7 @@ public class TestPollHelper {
         attributes.add(attribute);
     }
 
-    public PollProgram createPollProgramHelper(String mobileTerminalSerialNo, Date startDate, Date stopDate, Date latestRun) {
+    public PollProgram createPollProgramHelper(String mobileTerminalSerialNo, LocalDateTime startDate, LocalDateTime stopDate, LocalDateTime latestRun) {
 
         PollProgram pp = new PollProgram();
         // create a valid mobileTerminal
@@ -221,24 +223,24 @@ public class TestPollHelper {
         return pp;
     }
 
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         cal.set(Calendar.DAY_OF_MONTH, 1);
         int startYear = 1999;
         cal.set(Calendar.YEAR, startYear);
-        return cal.getTime();
+        return LocalDateTime.ofInstant(cal.toInstant(), ZoneOffset.UTC);
     }
 
-    public Date getLatestRunDate() {
+    public LocalDateTime getLatestRunDate() {
         cal.set(Calendar.DAY_OF_MONTH, 20);
         int latestRunYear = 2017;
         cal.set(Calendar.YEAR, latestRunYear);
-        return cal.getTime();
+        return LocalDateTime.ofInstant(cal.toInstant(), ZoneOffset.UTC);
     }
 
-    public Date getStopDate() {
+    public LocalDateTime getStopDate() {
         cal.set(Calendar.DAY_OF_MONTH, 28);
         cal.set(Calendar.YEAR, 2019);
-        return cal.getTime();
+        return LocalDateTime.ofInstant(cal.toInstant(), ZoneOffset.UTC);
     }
 
     public String createSerialNumber() {

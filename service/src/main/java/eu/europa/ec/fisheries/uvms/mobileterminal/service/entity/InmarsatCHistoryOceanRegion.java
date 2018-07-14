@@ -49,7 +49,6 @@ public class InmarsatCHistoryOceanRegion implements Serializable {
 	@Column(name="name")
 	private String name;
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="updattim")
 	private LocalDateTime updatetime;
 

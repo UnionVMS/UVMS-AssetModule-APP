@@ -18,11 +18,11 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollState
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import static eu.europa.ec.fisheries.uvms.mobileterminal.service.util.DateUtils.*;
 
 public class PollModelToEntityMapper {
     private static Logger LOG = LoggerFactory.getLogger(PollModelToEntityMapper.class);
@@ -36,7 +36,7 @@ public class PollModelToEntityMapper {
         pollBase.setCreator(requestType.getUserName());
         
         pollBase.setUpdatedBy(username);
-        pollBase.setUpdateTime(getUTCNow());
+        pollBase.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
         return pollBase;
     }
 
@@ -48,7 +48,7 @@ public class PollModelToEntityMapper {
 
         poll.setLatestRun(null);
         poll.setUpdatedBy(username);
-        poll.setUpdateTime(getUTCNow());
+        poll.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
 
         List<PollAttribute> attributes = requestType.getAttributes();
         if (attributes == null || attributes.isEmpty())
@@ -60,10 +60,12 @@ public class PollModelToEntityMapper {
                     poll.setFrequency(Integer.parseInt(attr.getValue()));
                     break;
                 case START_DATE:
-                    poll.setStartDate(parseToUTCDateTime(attr.getValue()));
+                    poll.setStartDate(LocalDateTime.parse(attr.getValue())); // Not sure if it will work without a format pattern
+//                    poll.setStartDate(parseToUTCDateTime(attr.getValue()));
                     break;
                 case END_DATE:
-                    poll.setStopDate(parseToUTCDateTime(attr.getValue()));
+                    poll.setStopDate(LocalDateTime.parse(attr.getValue())); // Not sure if it will work without a format pattern
+//                    poll.setStopDate(parseToUTCDateTime(attr.getValue()));
                     break;
                 default:
                     LOG.debug("ProgramPoll with attr [ " + attr.getKey() + " ] is non valid to map");
@@ -99,7 +101,7 @@ public class PollModelToEntityMapper {
         	throw new RuntimeException(e);
         }
         poll.setUpdatedBy(username);
-        poll.setUpdateTime(getUTCNow());
+        poll.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
         return poll;
     }
 
@@ -150,10 +152,12 @@ public class PollModelToEntityMapper {
         	try {
         		switch (attr.getKey()) {
         		case START_DATE:
-        			payload.setStartDate(parseToUTCDateTime(attr.getValue()));
+//        			payload.setStartDate(parseToUTCDateTime(attr.getValue()));
+                    payload.setStartDate(LocalDateTime.parse(attr.getValue())); // Not sure if it will work without a format pattern
                 	break;
         		case END_DATE:
-        			payload.setStopDate(parseToUTCDateTime(attr.getValue()));
+//        			payload.setStopDate(parseToUTCDateTime(attr.getValue()));
+                    payload.setStartDate(LocalDateTime.parse(attr.getValue())); // Not sure if it will work without a format pattern
                     break;
         		}
         	} catch (UnsupportedOperationException | IllegalArgumentException e) {

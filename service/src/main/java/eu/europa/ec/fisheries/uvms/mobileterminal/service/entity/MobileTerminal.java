@@ -76,11 +76,9 @@ public class MobileTerminal implements Serializable {
 	@Column(name="type")
 	private MobileTerminalTypeEnum mobileTerminalType;
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="updatetime")
 	private LocalDateTime updatetime;
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="createtime")
 	private LocalDateTime createTime;
 

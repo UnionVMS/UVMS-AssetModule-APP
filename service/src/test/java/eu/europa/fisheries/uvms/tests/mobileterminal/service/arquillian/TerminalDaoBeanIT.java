@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.EJBTransactionRolledbackException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -268,7 +269,7 @@ public class TerminalDaoBeanIT extends TransactionalTests {
             plugs = testDaoBean.getPluginList();
             mtp = plugs.get(0);
             mt.setSerialNo(serialNo);
-            mt.setUpdatetime(new Date());
+            mt.setUpdatetime(LocalDateTime.now());
             mt.setUpdateuser("TEST");
             mt.setSource(MobileTerminalSourceEnum.INTERNAL);
             mt.setPlugin(mtp);

@@ -50,22 +50,18 @@ public class PollProgram implements Serializable {
     private Integer frequency; // this is probably in seconds
 
     @Column(name = "startdate")
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime startDate;
 
     @Column(name = "stopdate")
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime stopDate;
 
     @Column(name = "latestruntime")
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime latestRun;
 
     @Size(max = 60)
     @Column(name = "upuser")
     private String updatedBy;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updattim")
     private LocalDateTime updateTime;
 

@@ -11,9 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.message.mapper;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +66,7 @@ public class AssetModelMapper {
         }
         if (assetModel.getEventHistory() != null) {
             asset.setHistoryId(UUID.fromString(assetModel.getEventHistory().getEventId()));
-            asset.setUpdateTime(LocalDateTime.ofInstant(assetModel.getEventHistory().getEventDate().toInstant(),ZoneOffset.UTC));
+            asset.setUpdateTime(assetModel.getEventHistory().getEventDate());
             asset.setEventCode(assetModel.getEventHistory().getEventCode().toString());
         }
         asset.setName(assetModel.getName());
@@ -143,7 +141,7 @@ public class AssetModelMapper {
         AssetHistoryId assetHistory = new AssetHistoryId();
         assetHistory.setEventId(assetEntity.getHistoryId().toString());
         if (assetEntity.getUpdateTime() != null) {
-            assetHistory.setEventDate(Date.from(assetEntity.getUpdateTime().toInstant(ZoneOffset.UTC)));
+            assetHistory.setEventDate(assetEntity.getUpdateTime());
         }
         if (assetEntity.getEventCode() != null && !assetEntity.getEventCode().isEmpty()) {
             assetHistory.setEventCode(getEventCode(assetEntity));

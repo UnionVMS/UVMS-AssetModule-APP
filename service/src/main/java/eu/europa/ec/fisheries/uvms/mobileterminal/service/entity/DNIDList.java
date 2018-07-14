@@ -48,7 +48,6 @@ public class DNIDList implements Serializable {
     @Column(name = "plugin_service_name")
     private String pluginName;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updattim")
     private LocalDateTime updateTime;
 

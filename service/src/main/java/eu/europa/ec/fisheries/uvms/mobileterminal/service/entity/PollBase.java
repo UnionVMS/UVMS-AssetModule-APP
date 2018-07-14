@@ -45,8 +45,7 @@ public class PollBase implements Serializable {
     @Column(name = "channel_guid")
     @NotNull
     private UUID channelId;
-    
-    @Temporal(TemporalType.TIMESTAMP)
+
     @Column(name = "updattim")
     private LocalDateTime updateTime;
 

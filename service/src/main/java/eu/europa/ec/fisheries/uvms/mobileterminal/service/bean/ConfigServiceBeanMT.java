@@ -19,10 +19,8 @@ import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemConf
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.Plugin;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
-import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.exchange.model.exception.ExchangeModelMapperException;
 import eu.europa.ec.fisheries.uvms.exchange.model.mapper.ExchangeModuleRequestMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageConsumer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ModuleQueue;
@@ -46,9 +44,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.ejb.*;
 import javax.jms.TextMessage;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
-
-import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.EXCHANGE_MAPPING_ERROR;
 
 @Stateless
 @LocalBean
@@ -272,7 +270,7 @@ public class ConfigServiceBeanMT implements ConfigService {
                 DNIDList dnid = new DNIDList();
                 dnid.setDnid(terminalDnid);
                 dnid.setPluginName(pluginName);
-                dnid.setUpdateTime(DateUtils.getNowDateUTC());
+                dnid.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
                 dnid.setUpdatedBy(MobileTerminalConstants.UPDATE_USER);
                 dnidListDao.create(dnid);
             }
