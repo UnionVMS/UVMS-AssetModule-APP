@@ -11,6 +11,17 @@
  */
 package eu.europa.ec.fisheries.uvms.asset.message.consumer.bean;
 
+import javax.ejb.ActivationConfigProperty;
+import javax.ejb.EJB;
+import javax.ejb.MessageDriven;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
+import javax.jms.Message;
+import javax.jms.MessageListener;
+import javax.jms.TextMessage;
+
 import eu.europa.ec.fisheries.uvms.asset.message.AssetConstants;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
@@ -18,17 +29,29 @@ import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.*;
-import eu.europa.ec.fisheries.wsdl.asset.module.*;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.ActivityRulesServiceBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.FindAssetByCfrBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetGroupEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetGroupListByAssetGuidEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetListByAssetGroupEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetListEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.PingEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.UpsertAssetMessageEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.UpsertFishingGearsMessageEventBean;
+import eu.europa.ec.fisheries.wsdl.asset.module.ActivityRulesAssetModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetListModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetModuleMethod;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistoriesByCfrModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetGroupListByAssetGuidRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.UpsertAssetModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.UpsertFishingGearModuleRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.ejb.*;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.TextMessage;
 
 @MessageDriven(mappedName = AssetConstants.QUEUE_ASSET_EVENT, activationConfig = {
     @ActivationConfigProperty(propertyName = "messagingType", propertyValue = AssetConstants.CONNECTION_TYPE),
@@ -64,6 +87,9 @@ public class MessageConsumerBean implements MessageListener {
 
     @EJB
     private FindAssetByCfrBean findAssetByCfrBean;
+
+    @EJB
+    private ActivityRulesServiceBean activityRulesServiceBean;
 
 
     @EJB
@@ -126,6 +152,10 @@ public class MessageConsumerBean implements MessageListener {
                 case FIND_ASSET_HISTORIES_BY_CFR:
                     FindAssetHistoriesByCfrModuleRequest findAssetByCfrModuleRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, FindAssetHistoriesByCfrModuleRequest.class);
                     findAssetByCfrBean.findAssetByCfr(findAssetByCfrModuleRequest, textMessage);
+                    break;
+                case FIND_ASSET_ACTIVITY_RULES:
+                    ActivityRulesAssetModuleRequest activityRulesAssetModuleRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, ActivityRulesAssetModuleRequest.class);
+                    activityRulesServiceBean.findAssetByCriteria(activityRulesAssetModuleRequest, textMessage);
                     break;
                 default:
                     LOG.error("[ Not implemented method consumed: {} ]", method);
