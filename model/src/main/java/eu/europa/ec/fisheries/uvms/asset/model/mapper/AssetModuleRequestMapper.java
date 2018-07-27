@@ -11,20 +11,35 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.model.mapper;
 
+import java.util.Collection;
+import java.util.List;
+
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
-import eu.europa.ec.fisheries.wsdl.asset.module.*;
-import eu.europa.ec.fisheries.wsdl.asset.types.*;
+import eu.europa.ec.fisheries.wsdl.asset.module.ActivityRulesAssetModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.ActivityRulesAssetModuleResponse;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetListModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetModuleMethod;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistoriesByCfrModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistoriesByCfrModuleResponse;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetGroupListByAssetGuidRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.UpsertAssetModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.UpsertFishingGearModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteria;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteriaPair;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
+import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
+import eu.europa.ec.fisheries.wsdl.asset.types.FishingGear;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -132,39 +147,17 @@ public class AssetModuleRequestMapper {
         return JAXBMarshaller.marshallJaxBObjectToString(findAssetByCfrModuleResponse);
     }
 
-    public static String createFlagStateRequest(String guid, Date date) throws AssetModelMarshallException {
-
-
-        //DateUtils
-        String dateStr = "";
-     //   try {
-            //dateStr = URLEncoder.encode(parseUTCDateToString(date), "UTF-8");
-            dateStr = parseUTCDateToString(date);
-      //  } catch (UnsupportedEncodingException e) {
-      //      throw new AssetModelMarshallException(e.toString());
-      //  }
-
-
-        GetFlagStateByGuidAndDateRequest request = new GetFlagStateByGuidAndDateRequest();
-        request.setAssetGuid(guid);
-        request.setDate(dateStr);
-        request.setMethod(AssetModuleMethod.GET_FLAGSTATE_BY_ID_AND_DATE);
+    public static String createActivityRulesAssetModuleRequest(AssetListCriteria criteria) throws AssetModelMarshallException {
+        ActivityRulesAssetModuleRequest request = new ActivityRulesAssetModuleRequest();
+        request.setMethod(AssetModuleMethod.FIND_ASSET_ACTIVITY_RULES);
+        request.getCriteria().addAll(criteria.getCriterias());
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
 
-    private static String dateToString(Date date) {
-        String dateString = null;
-        if (date != null) {
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
-            dateString = df.format(date);
-        }
-
-        return dateString;
+    public static String createActivityRulesAssetModuleResponse(Collection<Asset> assets) throws AssetModelMarshallException {
+        ActivityRulesAssetModuleResponse response = new ActivityRulesAssetModuleResponse();
+        response.getAssetHistories().addAll(assets);
+        return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
-
-    private static String parseUTCDateToString(Date date) {
-        return dateToString(date);
-    }
-
 
 }

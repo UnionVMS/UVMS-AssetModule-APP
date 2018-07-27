@@ -31,6 +31,7 @@
                     <xsd:enumeration value="GET_FLAGSTATE_BY_ID_AND_DATE"/>
                     <xsd:enumeration value="GET_ASSET_FROMASSETID_AND_DATE"/>
                     <xsd:enumeration value="FIND_ASSET_HISTORIES_BY_CFR"/>
+                    <xsd:enumeration value="FIND_ASSET_ACTIVITY_RULES"/>
                 </xsd:restriction>
             </xsd:simpleType>
             
@@ -239,6 +240,30 @@
             </xsd:element>
 
             <xsd:element name="FindAssetHistoriesByCfrModuleResponse">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest">
+                            <xsd:sequence>
+                                <xsd:element name="assetHistories" type="tv:Asset" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="ActivityRulesAssetModuleRequest">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest">
+                            <xsd:sequence>
+                                <xsd:element name="criteria" type="tv:AssetListCriteriaPair"  minOccurs="0" maxOccurs="unbounded" />
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="ActivityRulesAssetModuleResponse">
                 <xsd:complexType>
                     <xsd:complexContent>
                         <xsd:extension base="v:AssetModuleRequest">

@@ -11,19 +11,33 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.entity.model;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
-import javax.persistence.*;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
@@ -32,6 +46,8 @@ import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.PublicAidEnum;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.SegmentFUP;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.TypeOfExportEnum;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  * The persistent class for the assethistory database table.
@@ -41,7 +57,18 @@ import eu.europa.ec.fisheries.uvms.entity.asset.types.TypeOfExportEnum;
 @Table(name = "Assethistory")
 @NamedQueries({
     @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_GUID, query = "SELECT v FROM AssetHistory v WHERE v.guid = :guid"),
-    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_GUIDS, query = " SELECT DISTINCT vh FROM AssetHistory vh  INNER JOIN FETCH vh.asset v INNER JOIN FETCH v.carrier c WHERE c.active = '1' AND vh.active = '1' AND v.guid  IN :guids")
+    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_GUIDS, query = " SELECT DISTINCT vh FROM AssetHistory vh  INNER JOIN FETCH vh.asset v INNER JOIN FETCH v.carrier c WHERE c.active = '1' AND vh.active = '1' AND v.guid  IN :guids"),
+        @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_CRITERIA, query = "SELECT vh FROM AssetHistory vh WHERE " +
+                "((:EXTERNAL_MARKING is NULL) OR vh.externalMarking = :EXTERNAL_MARKING) AND " +
+                "((:CFR is NULL) OR vh.cfr = :CFR) AND" +
+                "((:IRCS is NULL) OR vh.ircs = :IRCS) AND" +
+                "((:GFCM is NULL) OR vh.gfcm = :GFCM) AND" +
+                "((:ICCAT is NULL) OR vh.iccat = :ICCAT) AND" +
+                "((:IMO is NULL) OR vh.imo = :IMO) AND" +
+                "((:UVI is NULL) OR vh.uvi = :UVI) AND " +
+                "((:FLAG_STATE is NULL) OR vh.countryOfRegistration = :FLAG_STATE) AND " +
+                "((:DATE is NULL) OR vh.dateOfEvent <= cast(:DATE as timestamp))" +
+                "ORDER BY dateOfEvent")
 })
 
 public class AssetHistory implements Serializable {

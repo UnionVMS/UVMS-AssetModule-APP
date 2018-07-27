@@ -11,35 +11,34 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.dao.bean;
 
+import javax.ejb.Stateless;
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.ejb.Stateless;
-import javax.persistence.*;
-
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
+import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
+import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.Dao;
 import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
 import eu.europa.ec.fisheries.uvms.entity.model.NotesActivityCode;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
-import eu.europa.ec.fisheries.uvms.dao.AssetDao;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.uvms.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.mapper.SearchFieldType;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
-
-import static eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType.INTERNAL_ID;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteriaPair;
+import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  **/
@@ -101,7 +100,6 @@ public class AssetDaoBean extends Dao implements AssetDao {
             throw new AssetDaoException("[ get all asset ] " + e.getMessage());
         }
     }
-
     @Override
     public AssetEntity getAssetByCfr(String cfr) throws NoAssetEntityFoundException, AssetDaoException {
         try {
@@ -172,6 +170,28 @@ public class AssetDaoBean extends Dao implements AssetDao {
         } catch (NoResultException e) {
             throw new NoAssetEntityFoundException("No asset history found for " + guid);
         }
+    }
+
+    @Override
+    public List<AssetHistory> getAssetHistoryByCriteria(List<AssetListCriteriaPair> criteriaPairs, Integer maxResult) throws AssetDaoException {
+        List<AssetHistory> resultList = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(criteriaPairs)){
+            TypedQuery<AssetHistory> query = em.createNamedQuery(UvmsConstants.ASSETHISTORY_FIND_BY_CRITERIA, AssetHistory.class);
+            query.setParameter("EXTERNAL_MARKING",null);
+            query.setParameter("CFR", null);
+            query.setParameter("IRCS", null);
+            query.setParameter("GFCM", null);
+            query.setParameter("ICCAT", null);
+            query.setParameter("IMO", null);
+            query.setParameter("UVI", null);
+            query.setParameter("FLAG_STATE", null);
+            query.setParameter("DATE", null);
+            for (AssetListCriteriaPair criteriaPair : criteriaPairs) {
+                query.setParameter(criteriaPair.getKey().value(), criteriaPair.getValue());
+            }
+            resultList = query.getResultList();
+        }
+        return resultList;
     }
 
     @Override

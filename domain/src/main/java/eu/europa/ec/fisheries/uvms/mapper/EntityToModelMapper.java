@@ -11,17 +11,40 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mapper;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import eu.europa.ec.fisheries.uvms.entity.asset.types.EventCodeEnum;
-import eu.europa.ec.fisheries.uvms.entity.model.*;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
+import eu.europa.ec.fisheries.uvms.entity.model.ContactInfo;
+import eu.europa.ec.fisheries.uvms.entity.model.Notes;
+import eu.europa.ec.fisheries.uvms.entity.model.NotesActivityCode;
 import eu.europa.ec.fisheries.uvms.util.DateUtil;
-import eu.europa.ec.fisheries.wsdl.asset.types.*;
+import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetContact;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetHistoryId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetNotes;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetProdOrgModel;
+import eu.europa.ec.fisheries.wsdl.asset.types.CarrierSource;
+import eu.europa.ec.fisheries.wsdl.asset.types.ContactSource;
+import eu.europa.ec.fisheries.wsdl.asset.types.EventCode;
 import eu.europa.ec.fisheries.wsdl.asset.types.FishingGear;
 import eu.europa.ec.fisheries.wsdl.asset.types.FishingGearType;
+import eu.europa.ec.fisheries.wsdl.asset.types.NoteActivityCode;
+import eu.europa.ec.fisheries.wsdl.asset.types.NoteSource;
+import eu.europa.ec.fisheries.wsdl.asset.types.NumberOfAssetsGroupByFlagState;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.math.BigInteger;
-import java.util.*;
 
 public class EntityToModelMapper {
 
@@ -232,6 +255,15 @@ public class EntityToModelMapper {
         return asset;
     }
 
+    public static List<Asset> toAssetFromAssetHistory(List<AssetHistory> assetHistory) {
+        List<Asset> assets = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(assetHistory)){
+            for (AssetHistory history : assetHistory) {
+                assets.add(toAssetFromAssetHistory(history));
+            }
+        }
+        return assets;
+    }
 
     public static List<NumberOfAssetsGroupByFlagState> mapEntityToNumberOfAssetsGroupByFlagState(List<AssetHistory> assetHistories) {
         Map<String, Integer> mapNumberOfAsset = new HashMap<>();

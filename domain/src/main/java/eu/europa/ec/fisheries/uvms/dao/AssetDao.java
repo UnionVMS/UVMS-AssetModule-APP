@@ -11,10 +11,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.dao;
 
+import javax.ejb.Local;
 import java.util.Date;
 import java.util.List;
-
-import javax.ejb.Local;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
@@ -23,7 +22,7 @@ import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
 import eu.europa.ec.fisheries.uvms.entity.model.NotesActivityCode;
 import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteriaPair;
 
 @Local
 public interface AssetDao {
@@ -115,6 +114,8 @@ public interface AssetDao {
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
      */
     public List<AssetEntity> getAssetListAll() throws AssetDaoException;
+
+    List<AssetHistory> getAssetHistoryByCriteria(List<AssetListCriteriaPair> criteriaPairs, Integer maxResult) throws AssetDaoException;
 
     /**
      * Get assetHistory by vesselHistoryId - guid
