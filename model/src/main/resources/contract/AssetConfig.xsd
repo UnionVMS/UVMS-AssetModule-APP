@@ -3,7 +3,7 @@
             xmlns="config.asset.wsdl.fisheries.ec.europa.eu"
             xmlns:config="config.asset.wsdl.fisheries.ec.europa.eu"
             xmlns:t="types.asset.wsdl.fisheries.ec.europa.eu"
-            targetNamespace="config.transportMeans.wsdl.fisheries.ec.europa.eu"
+            targetNamespace="config.asset.wsdl.fisheries.ec.europa.eu"
             elementFormDefault="qualified"
             attributeFormDefault="unqualified" 
             version="1.0">

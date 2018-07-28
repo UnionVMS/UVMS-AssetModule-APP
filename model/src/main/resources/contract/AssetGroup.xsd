@@ -2,7 +2,7 @@
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             xmlns="group.asset.wsdl.fisheries.ec.europa.eu"
             xmlns:t="types.asset.wsdl.fisheries.ec.europa.eu"
-            targetNamespace="group.transportMeans.wsdl.fisheries.ec.europa.eu"
+            targetNamespace="group.asset.wsdl.fisheries.ec.europa.eu"
             version="1.0">
     
     <xsd:import namespace="types.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetElement.xsd"/>

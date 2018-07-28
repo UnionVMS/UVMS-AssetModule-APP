@@ -3,7 +3,7 @@
             xmlns="source.asset.wsdl.fisheries.ec.europa.eu"
             xmlns:t="types.asset.wsdl.fisheries.ec.europa.eu"
             xmlns:g="group.asset.wsdl.fisheries.ec.europa.eu"
-            targetNamespace="source.transportMeans.wsdl.fisheries.ec.europa.eu"
+            targetNamespace="source.asset.wsdl.fisheries.ec.europa.eu"
             version="1.0">
     
     <xsd:import namespace="types.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetElement.xsd"/>

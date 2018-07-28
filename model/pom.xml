@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>asset-model</artifactId>
-	<name>transportMeans-model</name>
+	<name>asset-model</name>
 	<packaging>ejb</packaging>
 
 	<scm>
@@ -64,7 +64,7 @@
 				<version>3.1.13</version>
 				<executions>
 					<execution>
-						<id>generate-transportMeans-module</id>
+						<id>generate-asset-module</id>
 						<phase>generate-sources</phase>
 						<configuration>
 							<wsdlOptions>
@@ -85,7 +85,7 @@
 						</goals>
 					</execution>
 					<execution>
-						<id>generate-transportMeans-datasource</id>
+						<id>generate-asset-datasource</id>
 						<phase>generate-sources</phase>
 						<configuration>
 							<wsdlOptions>
@@ -121,7 +121,7 @@
 					<oldVersion>
 						<dependency>
 							<groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-							<artifactId>transportMeans-model</artifactId>
+							<artifactId>asset-model</artifactId>
 							<version>${asset.api.check.against.version}</version>
 							<type>jar</type>
 						</dependency>
