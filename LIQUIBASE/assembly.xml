@@ -11,7 +11,7 @@
   -->
 
 <assembly>
-    <id>asset</id>
+    <id>transportMeans</id>
     <formats>
         <format>zip</format>
     </formats>

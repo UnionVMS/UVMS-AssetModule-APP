@@ -24,7 +24,7 @@ import eu.europa.ec.fisheries.uvms.config.constants.ConfigHelper;
 @Stateless
 public class AssetConfigHelper implements ConfigHelper {
 
-    private final static String ASSET_PU = "asset";
+    private final static String ASSET_PU = "transportMeans";
 
     @PersistenceContext
     protected EntityManager em;

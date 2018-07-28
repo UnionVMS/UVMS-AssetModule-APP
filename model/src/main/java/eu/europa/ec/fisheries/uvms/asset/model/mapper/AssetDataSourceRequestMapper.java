@@ -31,7 +31,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-//import eu.europa.ec.fisheries.wsdl.asset.module.AssetListGroupByFlagStateRequest;
+//import eu.europa.ec.fisheries.wsdl.transportMeans.module.AssetListGroupByFlagStateRequest;
 
 /**
  **/
@@ -124,7 +124,7 @@ public class AssetDataSourceRequestMapper {
             histId.setEventId(guid);
             return histId;
         } catch (NullPointerException e) {
-            LOG.error("[ Error when creating history asset ID. ] {}", e.getMessage());
+            LOG.error("[ Error when creating history transportMeans ID. ] {}", e.getMessage());
             throw new AssetModelMapperException(e.getMessage());
         }
     }
@@ -145,7 +145,7 @@ public class AssetDataSourceRequestMapper {
             request.setId(createHistoryAssetId(assetHistoryGuid));
             return JAXBMarshaller.marshallJaxBObjectToString(request);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset history by ID. ] {}", e.getMessage());
+            LOG.error("[ Error when getting transportMeans history by ID. ] {}", e.getMessage());
             throw new AssetModelMapperException(e.getMessage());
         }
     }
@@ -189,7 +189,7 @@ public class AssetDataSourceRequestMapper {
     
     private static AssetListPagination validatePagination(AssetListPagination pagination) throws AssetModelValidationException {
         if(pagination == null){
-            throw new AssetModelValidationException("Cannot get asset list because pagination is null");
+            throw new AssetModelValidationException("Cannot get transportMeans list because pagination is null");
         }
     	if(pagination.getListSize() < 1) throw new AssetModelValidationException("Page list size must be > 1");
     	if(pagination.getPage() < 1) throw new AssetModelValidationException("Page must be > 1");
@@ -201,7 +201,7 @@ public class AssetDataSourceRequestMapper {
         for (AssetListCriteriaPair pair : criterias) {
             if (pair.getKey() == ConfigSearchField.ASSET_TYPE) {
                 if(!"ASSET".equalsIgnoreCase(pair.getValue())) {
-                    throw new AssetModelValidationException("Can only search for asset type ASSET");
+                    throw new AssetModelValidationException("Can only search for transportMeans type ASSET");
                 }
             }
             else {
@@ -213,8 +213,8 @@ public class AssetDataSourceRequestMapper {
     }
 
     /**
-     * Marshalls a asset to a String representing the WSDL request This method
-     * only applies when creating a asset
+     * Marshalls a transportMeans to a String representing the WSDL request This method
+     * only applies when creating a transportMeans
      *
      * @param asset
      * @return
@@ -230,7 +230,7 @@ public class AssetDataSourceRequestMapper {
 
     /**
      * Marshalls a Asset to a String representing the WSDL request This method
-     * only applies when updating an existing a asset
+     * only applies when updating an existing a transportMeans
      *
      * @param asset
      * @return
@@ -245,8 +245,8 @@ public class AssetDataSourceRequestMapper {
     }
 
     /**
-     * Marshalls a asset to a String representing the WSDL request This method
-     * only applies when getting a asset by id
+     * Marshalls a transportMeans to a String representing the WSDL request This method
+     * only applies when getting a transportMeans by id
      *
      * @param id
      * @param idType

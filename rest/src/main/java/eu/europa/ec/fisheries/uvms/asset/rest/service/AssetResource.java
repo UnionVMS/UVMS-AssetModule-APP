@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Path("/asset")
+@Path("/transportMeans")
 @Stateless
 public class AssetResource {
 
@@ -53,7 +53,7 @@ public class AssetResource {
     /**
      *
      * @responseMessage 200 Asset list successfully retrieved
-     * @responseMessage 500 Error when retrieving asset list
+     * @responseMessage 500 Error when retrieving transportMeans list
      *
      * @summary Gets a list of assets filtered by a query
      *
@@ -65,11 +65,11 @@ public class AssetResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public ResponseDto getAssetList(final AssetListQuery assetQuery) {
         try {
-            LOG.info("Getting asset list:{}",assetQuery);
+            LOG.info("Getting transportMeans list:{}",assetQuery);
             ListAssetResponse assetList = assetService.getAssetList(assetQuery);
             return new ResponseDto(assetList, ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset list. ] ");
+            LOG.error("[ Error when getting transportMeans list. ] ");
             return ErrorHandler.getFault(e);
         }
     }
@@ -77,7 +77,7 @@ public class AssetResource {
     /**
      *
      * @responseMessage 200 Asset list successfully retrieved
-     * @responseMessage 500 Error when retrieving asset list
+     * @responseMessage 500 Error when retrieving transportMeans list
      *
      * @summary Gets a list of assets filtered by a query
      *
@@ -93,7 +93,7 @@ public class AssetResource {
             Long assetListCount = assetService.getAssetListCount(assetQuery);
             return new ResponseDto(assetListCount, ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset list: {} ] {}",assetQuery,e);
+            LOG.error("[ Error when getting transportMeans list: {} ] {}",assetQuery,e);
             return ErrorHandler.getFault(e);
         }
     }
@@ -101,9 +101,9 @@ public class AssetResource {
     /**
      *
      * @responseMessage 200 Asset list successfully retrieved
-     * @responseMessage 500 Error when retrieving asset list
+     * @responseMessage 500 Error when retrieving transportMeans list
      *
-     * @summary Gets a list of asset note activity codes
+     * @summary Gets a list of transportMeans note activity codes
      *
      */
     @GET
@@ -124,9 +124,9 @@ public class AssetResource {
     /**
      *
      * @responseMessage 200 Asset successfully retrieved
-     * @responseMessage 500 Error when retrieving asset
+     * @responseMessage 500 Error when retrieving transportMeans
      *
-     * @summary Gets a asset by ID
+     * @summary Gets a transportMeans by ID
      *
      */
     @GET
@@ -136,19 +136,19 @@ public class AssetResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public ResponseDto getAssetById(@PathParam(value = "id") final String id) {
         try {
-            LOG.info("Getting asset by ID: {}",id);
+            LOG.info("Getting transportMeans by ID: {}",id);
             return new ResponseDto(assetService.getAssetByGuid(id), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset by ID. {}] {} ",id,e);
+            LOG.error("[ Error when getting transportMeans by ID. {}] {} ",id,e);
             return ErrorHandler.getFault(e);
         }
     }
 
     /**
-     * Creates a new asset
+     * Creates a new transportMeans
      *
      * @param asset
-     *            the new asset to be created
+     *            the new transportMeans to be created
      *
      * @return Response with status OK (200) in case of success otherwise status
      *         NOT_MODIFIED or a BAD_REQUEST error code in case the provided
@@ -157,7 +157,7 @@ public class AssetResource {
      *         UnauthorisedException with an FORBIDDEN error code in case the
      *         end user is not authorized to perform the operation
      *
-     * @summary Create a asset
+     * @summary Create a transportMeans
      *
      */
     @POST
@@ -166,11 +166,11 @@ public class AssetResource {
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public ResponseDto createAsset(final Asset asset) {
         try {
-            LOG.info("Creating asset: {}",asset);
+            LOG.info("Creating transportMeans: {}",asset);
             String remoteUser = servletRequest.getRemoteUser();
             return new ResponseDto(assetService.createAsset(asset, remoteUser), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when creating asset. {}] {}",asset, e.getMessage());
+            LOG.error("[ Error when creating transportMeans. {}] {}",asset, e.getMessage());
             return ErrorHandler.getFault(e);
         }
     }
@@ -178,9 +178,9 @@ public class AssetResource {
     /**
      *
      * @responseMessage 200 Asset successfully updated
-     * @responseMessage 500 Error when updating asset
+     * @responseMessage 500 Error when updating transportMeans
      *
-     * @summary Update a asset
+     * @summary Update a transportMeans
      *
      */
     @PUT
@@ -189,11 +189,11 @@ public class AssetResource {
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public ResponseDto updateAsset(final Asset asset, @QueryParam("comment") String comment) {
         try {
-            LOG.info("Updating asset:{}",asset);
+            LOG.info("Updating transportMeans:{}",asset);
             String remoteUser = servletRequest.getRemoteUser();
             return new ResponseDto(assetService.updateAsset(asset, remoteUser, comment), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when updating asset. {}] {}",asset, e.getMessage());
+            LOG.error("[ Error when updating transportMeans. {}] {}",asset, e.getMessage());
             return ErrorHandler.getFault(e);
         }
     }
@@ -209,7 +209,7 @@ public class AssetResource {
             Asset archivedAsset = assetService.archiveAsset(asset, remoteUser, comment);
             return new ResponseDto(archivedAsset, ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when archiving asset. {}] {}",asset, e.getMessage());
+            LOG.error("[ Error when archiving transportMeans. {}] {}",asset, e.getMessage());
             return ErrorHandler.getFault(e);
         }
     }
@@ -221,11 +221,11 @@ public class AssetResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public ResponseDto assetListGroupByFlagState(final List<String> assetIds) {
         try {
-            LOG.info("Getting asset list group by flag state:{}",assetIds);
+            LOG.info("Getting transportMeans list group by flag state:{}",assetIds);
             AssetListGroupByFlagStateResponse assetListGroupByFlagState = assetService.getAssetListGroupByFlagState(assetIds);
             return new ResponseDto(assetListGroupByFlagState, ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset list:{} ] {}",assetIds,e);
+            LOG.error("[ Error when getting transportMeans list:{} ] {}",assetIds,e);
             return ErrorHandler.getFault(e);
         }
     }

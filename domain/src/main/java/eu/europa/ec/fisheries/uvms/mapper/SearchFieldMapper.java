@@ -191,7 +191,7 @@ public class SearchFieldMapper {
         }
 
         StringBuilder builder = new StringBuilder();
-        builder.append(getJoin(fetch, JoinType.INNER)).append(SearchTables.ASSET_HIST.getTableAlias()).append(".asset ").append(SearchTables.ASSET.getTableAlias());
+        builder.append(getJoin(fetch, JoinType.INNER)).append(SearchTables.ASSET_HIST.getTableAlias()).append(".transportMeans ").append(SearchTables.ASSET.getTableAlias());
         builder.append(getJoin(fetch, JoinType.INNER)).append(SearchTables.ASSET.getTableAlias()).append(".carrier ").append(SearchTables.CARRIER.getTableAlias());
 
         builder.append(" WHERE ").append(SearchTables.ASSET_HIST.getTableAlias()).append(".active IN (").append(getHistoryCriterias(criterias)).append(") ");

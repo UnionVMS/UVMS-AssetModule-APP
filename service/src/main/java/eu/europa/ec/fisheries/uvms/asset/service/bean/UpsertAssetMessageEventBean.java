@@ -33,7 +33,7 @@ public class UpsertAssetMessageEventBean {
         try {
             service.upsertAsset(message.getAsset(), AssetDataSourceQueue.INTERNAL.name());
         } catch (AssetException e) {
-            LOG.error("Could not update asset in the local database");
+            LOG.error("Could not update transportMeans in the local database");
         }
     }
 

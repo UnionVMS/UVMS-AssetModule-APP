@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             xmlns="types.asset.wsdl.fisheries.ec.europa.eu"
-            targetNamespace="types.asset.wsdl.fisheries.ec.europa.eu"
+            targetNamespace="types.transportMeans.wsdl.fisheries.ec.europa.eu"
             version="1.0">
     
     <xsd:complexType name="Asset">
@@ -177,7 +177,7 @@
             <xsd:enumeration value="UVI" />
             <xsd:enumeration value="GFCM" />
             <xsd:enumeration value="HOMEPORT"/>
-            <xsd:enumeration value="ASSET_TYPE"/> <!-- carrier type, eg. asset -->
+            <xsd:enumeration value="ASSET_TYPE"/> <!-- carrier type, eg. transportMeans -->
             <xsd:enumeration value="LICENSE_TYPE"/>
             <xsd:enumeration value="PRODUCER_NAME"/>
             <xsd:enumeration value="IMO"/>

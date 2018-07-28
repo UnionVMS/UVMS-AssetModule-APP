@@ -28,28 +28,28 @@
                     <modules>
                         <ejbModule>
                             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-                            <artifactId>asset-message</artifactId>
+                            <artifactId>transportMeans-message</artifactId>
                         </ejbModule>
                         <ejbModule>
                             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-                            <artifactId>asset-message-impl</artifactId>
+                            <artifactId>transportMeans-message-impl</artifactId>
                         </ejbModule>
                         <ejbModule>
                             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-                            <artifactId>asset-dbaccess-domain</artifactId>
+                            <artifactId>transportMeans-dbaccess-domain</artifactId>
                         </ejbModule>
                         <ejbModule>
                             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-                            <artifactId>asset-service</artifactId>
+                            <artifactId>transportMeans-service</artifactId>
                         </ejbModule>
                         <jarModule>
                             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-                            <artifactId>asset-model</artifactId>
+                            <artifactId>transportMeans-model</artifactId>
                         </jarModule>
                         <webModule>
                             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
                             <context-root>${context.root}${project.parent.artifactId}</context-root>
-                            <artifactId>asset-rest</artifactId>
+                            <artifactId>transportMeans-rest</artifactId>
                         </webModule>
                     </modules>
                     <skinnyWars>true</skinnyWars>

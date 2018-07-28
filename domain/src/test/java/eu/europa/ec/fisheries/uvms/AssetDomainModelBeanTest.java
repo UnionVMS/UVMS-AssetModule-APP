@@ -55,11 +55,11 @@ public class AssetDomainModelBeanTest {
         AssetEntity assetEntity = new AssetEntity();
         assetEntity.setId(id);
 /*
-        when(ModelToEntityMapper.mapToNewAssetEntity(asset, new ArrayList<String>())).thenReturn(vesselEntity);
+        when(ModelToEntityMapper.mapToNewAssetEntity(transportMeans, new ArrayList<String>())).thenReturn(vesselEntity);
         when(vesselDao.createAsset(any(VesselEntity.class))).thenReturn(vesselEntity);
-        when(EntityToModelMapper.toVesselFromEntity(any(VesselEntity.class))).thenReturn(asset);
+        when(EntityToModelMapper.toVesselFromEntity(any(VesselEntity.class))).thenReturn(transportMeans);
 
-        Vessel result = model.createAsset(asset);
+        Vessel result = model.createAsset(transportMeans);
         assertEquals(id.toString(), result.getVesselId().getValue());*/
     }
 
@@ -121,7 +121,7 @@ public class AssetDomainModelBeanTest {
         Asset asset = new Asset();
         asset.setAssetId(assetId);
 /*
-        when(mapper.toVessel(any(VesselEntity.class))).thenReturn(asset);
+        when(mapper.toVessel(any(VesselEntity.class))).thenReturn(transportMeans);
         when(vesselDao.getAssetById(id.toString())).thenReturn(entity);
 
         Vessel result = model.getAssetById(assetId);
@@ -143,7 +143,7 @@ public class AssetDomainModelBeanTest {
         Asset asset = new Asset();
         asset.setAssetId(assetId);
 /*
-        when(mapper.toVessel(any(VesselEntity.class))).thenReturn(asset);
+        when(mapper.toVessel(any(VesselEntity.class))).thenReturn(transportMeans);
         when(vesselDao.getAssetByCfr(cfr)).thenReturn(entity);
 
         Vessel result = model.getAssetById(assetId);

@@ -1,5 +1,5 @@
 <definitions name="AssetDataSource"
-             targetNamespace="asset.wsdl.fisheries.ec.europa.eu"
+             targetNamespace="transportMeans.wsdl.fisheries.ec.europa.eu"
              xmlns:v="asset.wsdl.fisheries.ec.europa.eu"
              xmlns:s="source.asset.wsdl.fisheries.ec.europa.eu"
              xmlns:t="types.asset.wsdl.fisheries.ec.europa.eu"
@@ -14,7 +14,7 @@
 
     <types>
         <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-                    targetNamespace="asset.wsdl.fisheries.ec.europa.eu">
+                    targetNamespace="transportMeans.wsdl.fisheries.ec.europa.eu">
             <xsd:import namespace="types.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetElement.xsd"/>
             <xsd:import namespace="source.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="Asset.xsd"/>
             <xsd:import namespace="history.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetHistory.xsd"/>

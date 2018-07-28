@@ -29,7 +29,7 @@
 		</init-param>
 		<init-param>
 			<param-name>storage-directory</param-name>
-			<param-value>javamelody-asset</param-value>
+			<param-value>javamelody-transportMeans</param-value>
 		</init-param>
 		<init-param>
 			<param-name>datasources</param-name>

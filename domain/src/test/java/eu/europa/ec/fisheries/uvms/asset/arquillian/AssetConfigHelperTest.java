@@ -12,7 +12,7 @@ import java.util.List;
 @Stateless
 public class AssetConfigHelperTest implements ConfigHelper {
 
-    private final static String ASSET_PU = "asset";
+    private final static String ASSET_PU = "transportMeans";
 
     @PersistenceContext
     protected EntityManager em;

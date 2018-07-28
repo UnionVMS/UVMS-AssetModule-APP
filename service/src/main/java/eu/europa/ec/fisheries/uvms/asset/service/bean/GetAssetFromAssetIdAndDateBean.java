@@ -55,7 +55,7 @@ public class GetAssetFromAssetIdAndDateBean {
             return;
         }
         if (getAssetFromAssetIdAndDate.getAssetId().getType() == null) {
-            LOG.error("AssetMessageEvent assetId does not contain a valid asset id type");
+            LOG.error("AssetMessageEvent assetId does not contain a valid transportMeans id type");
             return;
         }
         if (getAssetFromAssetIdAndDate.getAssetId().getValue() == null) {

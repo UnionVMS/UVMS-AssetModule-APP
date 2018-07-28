@@ -1,5 +1,5 @@
 <definitions name="AssetModule"
-             targetNamespace="module.asset.wsdl.fisheries.ec.europa.eu"
+             targetNamespace="module.transportMeans.wsdl.fisheries.ec.europa.eu"
              xmlns:v="module.asset.wsdl.fisheries.ec.europa.eu"
              xmlns:tv="types.asset.wsdl.fisheries.ec.europa.eu"
              xmlns:group="group.asset.wsdl.fisheries.ec.europa.eu"
@@ -8,7 +8,7 @@
              xmlns="http://schemas.xmlsoap.org/wsdl/">
 
     <types>
-        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="module.asset.wsdl.fisheries.ec.europa.eu">
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="module.transportMeans.wsdl.fisheries.ec.europa.eu">
             
             <xsd:import namespace="types.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetElement.xsd"/>
             <xsd:import namespace="group.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetGroup.xsd"/>

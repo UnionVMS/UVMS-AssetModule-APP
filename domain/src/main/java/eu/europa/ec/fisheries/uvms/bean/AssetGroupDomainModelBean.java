@@ -40,14 +40,14 @@ public class AssetGroupDomainModelBean  {
 
     public eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup getAssetGroup(String guid) throws AssetModelException {
         if (guid == null) {
-            throw new InputArgumentException("Cannot get asset group because ID is null.");
+            throw new InputArgumentException("Cannot get transportMeans group because ID is null.");
         }
 
         try {
             AssetGroup groupEntity = getAssetGroupById(guid);
             return AssetGroupMapper.toAssetGroup(groupEntity);
         } catch (AssetGroupDaoException e) {
-            LOG.error("[ Error when getting asset group. ] guid {} exception {}",guid, e.getMessage());
+            LOG.error("[ Error when getting transportMeans group. ] guid {} exception {}",guid, e.getMessage());
             throw new AssetModelException(e.getMessage());
         }
     }
@@ -63,7 +63,7 @@ public class AssetGroupDomainModelBean  {
 
     public eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup createAssetGroup(eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup assetGroup, String username) throws AssetModelException {
         if (assetGroup == null) {
-            throw new InputArgumentException("Cannot create asset group because the group is null.");
+            throw new InputArgumentException("Cannot create transportMeans group because the group is null.");
         }
 
         try {
@@ -71,14 +71,14 @@ public class AssetGroupDomainModelBean  {
             assetGroupDao.createAssetGroup(groupEntity);
             return AssetGroupMapper.toAssetGroup(groupEntity);
         } catch (AssetGroupDaoException | AssetDaoMappingException e) {
-        	LOG.error("[ Error when creating asset group. ] assetGroup: {} username: {} exception: {}", assetGroup, username, e.getMessage());
+        	LOG.error("[ Error when creating transportMeans group. ] assetGroup: {} username: {} exception: {}", assetGroup, username, e.getMessage());
             throw new AssetModelException(e.getMessage());
         }
     }
 
     public eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup updateAssetGroup(eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup assetGroup, String username) throws AssetModelException {
         if (assetGroup == null || assetGroup.getGuid() == null) {
-            throw new InputArgumentException("Cannot update asset group because group or ID is null.");
+            throw new InputArgumentException("Cannot update transportMeans group because group or ID is null.");
         }
 
         try {
@@ -86,14 +86,14 @@ public class AssetGroupDomainModelBean  {
             groupEntity = AssetGroupMapper.toGroupEntity(groupEntity, assetGroup, username);
             return AssetGroupMapper.toAssetGroup(groupEntity);
         } catch (AssetGroupDaoException | AssetDaoMappingException e) {
-            LOG.error("[ Error when updating asset group. ] assetGroup: {} username: {} exception: {}", assetGroup, username, e.getMessage());
+            LOG.error("[ Error when updating transportMeans group. ] assetGroup: {} username: {} exception: {}", assetGroup, username, e.getMessage());
             throw new AssetModelException(e.getMessage());
         }
     }
 
     public List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup> getAssetGroupsByAssetGuid(String assetGuid) throws AssetModelException {
         if (assetGuid == null) {
-            throw new InputArgumentException("Cannot get asset group list because the vesselGuid is null.");
+            throw new InputArgumentException("Cannot get transportMeans group list because the vesselGuid is null.");
         }
 
         try {
@@ -110,14 +110,14 @@ public class AssetGroupDomainModelBean  {
             }
             return vesselGroupList;
         } catch (AssetGroupDaoException e) {
-            LOG.error("[ Error when getting asset group list by assetGuid. ] assetGuid: {} exception: {}",assetGuid, e.getMessage());
+            LOG.error("[ Error when getting transportMeans group list by assetGuid. ] assetGuid: {} exception: {}",assetGuid, e.getMessage());
             throw new AssetModelException(e.getMessage());
         }
     }
 
     public List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup> getAssetGroupListByUser(String user) throws AssetModelException {
         if (user == null) {
-            throw new InputArgumentException("Cannot get asset group list because the user is null.");
+            throw new InputArgumentException("Cannot get transportMeans group list because the user is null.");
         }
 
         try {
@@ -129,14 +129,14 @@ public class AssetGroupDomainModelBean  {
 
             return assetGroupList;
         } catch (AssetGroupDaoException e) {
-            LOG.error("[ Error when getting asset group list by user. ] user: {} exception: {}",user, e.getMessage());
+            LOG.error("[ Error when getting transportMeans group list by user. ] user: {} exception: {}",user, e.getMessage());
             throw new AssetModelException(e.getMessage());
         }
     }
 
     public eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup deleteAssetGroup(String guid, String username) throws AssetModelException {
         if (guid == null) {
-            throw new InputArgumentException("Cannot delete asset group because the group ID is null.");
+            throw new InputArgumentException("Cannot delete transportMeans group because the group ID is null.");
         }
 
         try {
@@ -146,14 +146,14 @@ public class AssetGroupDomainModelBean  {
             groupEntity.setUpdateTime(DateUtils.getNowDateUTC());
             return AssetGroupMapper.toAssetGroup(groupEntity);
         } catch (AssetGroupDaoException e) {
-            LOG.error("[ Error when deleting asset group. ] guid: {} username: {} exception: {}",guid,username, e.getMessage());
+            LOG.error("[ Error when deleting transportMeans group. ] guid: {} username: {} exception: {}",guid,username, e.getMessage());
             throw new AssetModelException(e.getMessage());
         }
     }
 
 	public List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup> getAssetGroupsByGroupList(List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup> groups) throws AssetModelException {
 		if (groups == null) {
-            throw new InputArgumentException("Cannot get asset group list because the input is null.");
+            throw new InputArgumentException("Cannot get transportMeans group list because the input is null.");
         }
 
 		List<String> guidList = new ArrayList<>();
@@ -162,7 +162,7 @@ public class AssetGroupDomainModelBean  {
 		}
 		
 		if(guidList.isEmpty()) {
-			throw new InputArgumentException("Cannot get asset group list because the input missing guid.");
+			throw new InputArgumentException("Cannot get transportMeans group list because the input missing guid.");
 		}
 		
         try {
@@ -174,7 +174,7 @@ public class AssetGroupDomainModelBean  {
 
             return vesselGroupList;
         } catch (AssetGroupDaoException e) {
-            LOG.error("[ Error when getting asset group list by List. ] groups {} exception: {}",groups, e.getMessage());
+            LOG.error("[ Error when getting transportMeans group list by List. ] groups {} exception: {}",groups, e.getMessage());
             throw new AssetModelException(e.getMessage());
         }
 	}

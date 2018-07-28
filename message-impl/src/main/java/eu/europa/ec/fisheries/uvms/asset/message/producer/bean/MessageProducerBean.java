@@ -149,7 +149,7 @@ public class MessageProducerBean implements MessageProducer, ConfigMessageProduc
             response.setJMSCorrelationID(message.getJMSMessageID());
             getProducer(session, message.getJMSReplyTo()).send(response);
         } catch (JMSException e) {
-            LOG.error("[ Error when returning module asset request. ] {} {}", e.getMessage(), e.getStackTrace());
+            LOG.error("[ Error when returning module transportMeans request. ] {} {}", e.getMessage(), e.getStackTrace());
         } finally {
         	JMSUtils.disconnectQueue(connection);
         }
