@@ -36,7 +36,7 @@ public class GetAssetGroupListByAssetGuidEventBean {
     private AssetGroupService assetGroup;
 
     public void getAssetGroupListByAssetEvent(AssetMessageEvent message) {
-        LOG.info("Get asset group by asset guid");
+        LOG.info("Get transportMeans group by transportMeans guid");
         try {
             List<AssetGroup> response = assetGroup.getAssetGroupListByAssetGuid(message.getAssetGuid());
             LOG.debug("Send back assetGroupList response.");

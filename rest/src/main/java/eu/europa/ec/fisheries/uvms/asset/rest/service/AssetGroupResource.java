@@ -45,7 +45,7 @@ public class AssetGroupResource {
      * @responseMessage 200 Success
      * @responseMessage 500 Error
      *
-     * @summary Get asset group list by user
+     * @summary Get transportMeans group list by user
      *
      */
     @GET
@@ -55,10 +55,10 @@ public class AssetGroupResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public ResponseDto getAssetGroupListByUser(@QueryParam(value = "user") String user) {
         try {
-            LOG.info("Getting asset group list by user {}",user);
+            LOG.info("Getting transportMeans group list by user {}",user);
             return new ResponseDto(assetGroupService.getAssetGroupList(user), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset group list by user. ] {}", e.getMessage(), e.getStackTrace());
+            LOG.error("[ Error when getting transportMeans group list by user. ] {}", e.getMessage(), e.getStackTrace());
             return ErrorHandler.getFault(e);
         }
     }
@@ -68,7 +68,7 @@ public class AssetGroupResource {
      * @responseMessage 200 Success
      * @responseMessage 500 Error
      *
-     * @summary Get asset group by ID
+     * @summary Get transportMeans group by ID
      *
      */
     @GET
@@ -78,10 +78,10 @@ public class AssetGroupResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public ResponseDto getAssetById(@PathParam(value = "id") final String id) {
         try {
-            LOG.info("Getting asset group by ID {}",id);
+            LOG.info("Getting transportMeans group by ID {}",id);
             return new ResponseDto(assetGroupService.getAssetGroupById(id), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset by ID. ] {}", e.getMessage(), e.getStackTrace());
+            LOG.error("[ Error when getting transportMeans by ID. ] {}", e.getMessage(), e.getStackTrace());
             return ErrorHandler.getFault(e);
         }
     }
@@ -91,7 +91,7 @@ public class AssetGroupResource {
      * @responseMessage 200 Success
      * @responseMessage 500 Error
      *
-     * @summary Create a asset group
+     * @summary Create a transportMeans group
      *
      */
     @POST
@@ -100,10 +100,10 @@ public class AssetGroupResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public ResponseDto createAssetGroup(final AssetGroup assetGroup) {
         try {
-            LOG.info("Creating asset group: {}",assetGroup);
+            LOG.info("Creating transportMeans group: {}",assetGroup);
             return new ResponseDto(assetGroupService.createAssetGroup(assetGroup, servletRequest.getRemoteUser()), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when creating asset group: {} ] {}",assetGroup, e.getMessage());
+            LOG.error("[ Error when creating transportMeans group: {} ] {}",assetGroup, e.getMessage());
             return ErrorHandler.getFault(e);
         }
     }
@@ -113,7 +113,7 @@ public class AssetGroupResource {
      * @responseMessage 200 Success
      * @responseMessage 500 Error
      *
-     * @summary Update a asset group
+     * @summary Update a transportMeans group
      *
      */
     @PUT
@@ -122,10 +122,10 @@ public class AssetGroupResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public ResponseDto updateAssetGroup(final AssetGroup assetGroup) {
         try {
-            LOG.info("Updating asset group:{}",assetGroup);
+            LOG.info("Updating transportMeans group:{}",assetGroup);
             return new ResponseDto(assetGroupService.updateAssetGroup(assetGroup, servletRequest.getRemoteUser()), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when updating asset group. ] {}", e.getMessage(), e.getStackTrace());
+            LOG.error("[ Error when updating transportMeans group. ] {}", e.getMessage(), e.getStackTrace());
             return ErrorHandler.getFault(e);
         }
     }
@@ -135,7 +135,7 @@ public class AssetGroupResource {
      * @responseMessage 200 Success
      * @responseMessage 500 Error
      *
-     * @summary Delete a asset group
+     * @summary Delete a transportMeans group
      *
      */
     @DELETE
@@ -144,10 +144,10 @@ public class AssetGroupResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public ResponseDto deleteAssetGroup(@PathParam(value = "id") final String id) {
         try {
-            LOG.info("Deleting asset group: {}",id);
+            LOG.info("Deleting transportMeans group: {}",id);
             return new ResponseDto(assetGroupService.deleteAssetGroupById(id, servletRequest.getRemoteUser()), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when deleting asset group. ] {}", e.getMessage(), e.getStackTrace());
+            LOG.error("[ Error when deleting transportMeans group. ] {}", e.getMessage(), e.getStackTrace());
             return ErrorHandler.getFault(e);
         }
     }

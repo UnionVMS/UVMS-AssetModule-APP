@@ -63,7 +63,7 @@ public class ConfigServiceBean {
 
 			return parameters;
 		} catch (RuntimeException | ConfigServiceException e) {
-			LOG.error("[ Error when getting asset parameters from local database. ] {}", e);
+			LOG.error("[ Error when getting transportMeans parameters from local database. ] {}", e);
 			throw new AssetException("Couldn't get parameters");
 		}
 	}

@@ -46,18 +46,18 @@ public class GetAssetEventBean {
     Event<AssetMessageEvent> assetErrorEvent;
 
     public void getAsset(TextMessage textMessage, AssetId assetId) {
-        LOG.info("Getting asset.");
+        LOG.info("Getting transportMeans.");
         AssetDataSourceQueue dataSource = null;
         Asset asset = null;
         boolean messageSent = false;
 
         try {
             dataSource = decideDataflow(assetId);
-            LOG.debug("Got message to AssetModule, Executing Get asset from datasource {}", dataSource.name());
+            LOG.debug("Got message to AssetModule, Executing Get transportMeans from datasource {}", dataSource.name());
             asset = service.getAssetById(assetId, dataSource);
         } catch (AssetException e) {
-            LOG.error("[ Error when getting asset from source {}. ] ", dataSource.name());
-            assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting asset from source : " + dataSource.name() + " Error message: " + e.getMessage())));
+            LOG.error("[ Error when getting transportMeans from source {}. ] ", dataSource.name());
+            assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting transportMeans from source : " + dataSource.name() + " Error message: " + e.getMessage())));
             messageSent = true;
             asset = null;
         }
@@ -67,7 +67,7 @@ public class GetAssetEventBean {
                 Asset upsertedAsset = service.upsertAsset(asset, dataSource.name());
                 asset.getAssetId().setGuid(upsertedAsset.getAssetId().getGuid());
             } catch (AssetException e) {
-                LOG.error("[ Couldn't upsert asset in internal ]");
+                LOG.error("[ Couldn't upsert transportMeans in internal ]");
                 assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, e.getMessage())));
                 messageSent = true;
             }
@@ -77,8 +77,8 @@ public class GetAssetEventBean {
             try {
                 messageProducer.sendModuleResponseMessage(textMessage, AssetModuleResponseMapper.mapAssetModuleResponse(asset));
             } catch (AssetModelMapperException e) {
-                LOG.error("[ Error when mapping asset ] ");
-                assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when mapping asset" + e.getMessage())));
+                LOG.error("[ Error when mapping transportMeans ] ");
+                assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when mapping transportMeans" + e.getMessage())));
             }
         }
     }

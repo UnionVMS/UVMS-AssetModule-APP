@@ -112,7 +112,7 @@
 		</addColumn>
 	</changeSet>
 
-	<changeSet author="thofan" id="Add iccat, uvi, gfcm to asset">
+	<changeSet author="thofan" id="Add iccat, uvi, gfcm to transportMeans">
 		<addColumn tableName="assethistory">
 			<column name="assethist_iccat" type="VARCHAR(50)" />
 			<column name="assethist_uvi" type="VARCHAR(50)" />

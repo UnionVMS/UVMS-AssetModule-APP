@@ -8,7 +8,7 @@
 			<column name="setting_id" valueNumeric="1" />
 			<column name="setting_field" value="ASSET_TYPE" />
             <column name="setting_label" value="VESSEL"/>
-			<column name="setting_desc" value="Vessel type of asset" />
+			<column name="setting_desc" value="Vessel type of transportMeans" />
 			<column name="setting_updattim" valueDate="${now}" />
 			<column name="setting_upuser" value="UVMS" />
 		</insert>

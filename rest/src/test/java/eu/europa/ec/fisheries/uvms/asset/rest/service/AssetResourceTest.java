@@ -86,7 +86,7 @@ public class AssetResourceTest {
     }
 
     /**
-     * Test get asset list with a happy outcome
+     * Test get transportMeans list with a happy outcome
      *
      * @throws eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException
      */
@@ -100,7 +100,7 @@ public class AssetResourceTest {
     }
 
     /**
-     * Test get asset list when the injected EJB is null
+     * Test get transportMeans list when the injected EJB is null
      *
      * @throws eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException
      */
@@ -113,7 +113,7 @@ public class AssetResourceTest {
     }
 
     /**
-     * Test get asset by id with a happy outcome
+     * Test get transportMeans by id with a happy outcome
      *
      * @throws eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException
      */
@@ -128,7 +128,7 @@ public class AssetResourceTest {
     }
 
     /**
-     * Test get asset by id when the injected EJB is null
+     * Test get transportMeans by id when the injected EJB is null
      *
      * @throws eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException
      */
@@ -155,7 +155,7 @@ public class AssetResourceTest {
     }
     //
     // /**
-    // * Test create asset when the injected EJB is null
+    // * Test create transportMeans when the injected EJB is null
     // */
 
     @Test
@@ -165,7 +165,7 @@ public class AssetResourceTest {
     }
 
     /**
-     * Test update asset with a
+     * Test update transportMeans with a
      *
      * @throws eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException
      */
@@ -179,7 +179,7 @@ public class AssetResourceTest {
     }
 
     /**
-     * Test update asset when the injected EJB is null
+     * Test update transportMeans when the injected EJB is null
      */
     @Test
     public void testUpdateAssetNull() {

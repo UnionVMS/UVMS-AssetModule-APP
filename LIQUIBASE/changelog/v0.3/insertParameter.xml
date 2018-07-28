@@ -6,13 +6,13 @@
     <changeSet author="davijo" id="Insert static parameter values">
         
         <insert tableName="parameter">
-            <column name="param_id" value="asset.national.use" />
+            <column name="param_id" value="transportMeans.national.use" />
             <column name="param_value" value="FALSE" />
             <column name="param_description" value="Use national register of assets." />
         </insert>
         
         <insert tableName="parameter">
-            <column name="param_id" value="asset.eu.use" />
+            <column name="param_id" value="transportMeans.eu.use" />
             <column name="param_value" value="FALSE" />
             <column name="param_description" value="Use EU register of assets." />
         </insert>
@@ -24,7 +24,7 @@
         </insert>
         
         <insert tableName="parameter">
-            <column name="param_id" value="asset.default.flagstate"/>
+            <column name="param_id" value="transportMeans.default.flagstate"/>
             <column name="param_value" value="SWE"/>
             <column name="param_description" value="Default flagstate for assets"/>
         </insert>
@@ -32,7 +32,7 @@
         <rollback>
             <delete tableName="parameter">
                 <where> 
-                    param_id in ('asset.national.use','asset.eu.use','NATIONAL_SERVICE_ENDPOINT','asset.default.flagstate')
+                    param_id in ('transportMeans.national.use','transportMeans.eu.use','NATIONAL_SERVICE_ENDPOINT','transportMeans.default.flagstate')
                 </where>
             </delete>
         </rollback>

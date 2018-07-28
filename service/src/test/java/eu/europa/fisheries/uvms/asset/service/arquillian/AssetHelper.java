@@ -31,7 +31,7 @@ public abstract class AssetHelper {
         asset.setActive(true);
 
         asset.setSource(CarrierSource.INTERNAL);
-        //asset.setEventHistory();
+        //transportMeans.setEventHistory();
         asset.setName("TEST_NAME");
         asset.setCountryCode("SWE");
         asset.setGearType(GearFishingTypeEnum.UNKNOWN.name());

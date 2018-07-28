@@ -68,7 +68,7 @@ public class AssetServiceBean implements AssetService {
      */
     @Override
     public Asset createAsset(Asset asset, String username) throws AssetException {
-        LOG.debug("Creating asset.");
+        LOG.debug("Creating transportMeans.");
         Asset createdAsset = assetDomainModel.createAsset(asset, username);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetCreated(createdAsset.getAssetId().getGuid(), username);
@@ -157,11 +157,11 @@ public class AssetServiceBean implements AssetService {
         Asset updatedAsset;
 
         if (asset == null) {
-            throw new InputArgumentException("No asset to update");
+            throw new InputArgumentException("No transportMeans to update");
         }
 
         if (asset.getAssetId().getValue() == null) {
-            throw new InputArgumentException("No id on asset to update");
+            throw new InputArgumentException("No id on transportMeans to update");
         }
 
         Asset storedAsset = assetDomainModel.getAssetById(asset.getAssetId());
@@ -179,7 +179,7 @@ public class AssetServiceBean implements AssetService {
     public Asset upsertAsset(Asset asset, String username) throws AssetException {
 
         if (asset == null) {
-            throw new InputArgumentException("No asset to upsert");
+            throw new InputArgumentException("No transportMeans to upsert");
         }
         return assetDomainModel.upsertAsset(asset, username);
 
@@ -233,7 +233,7 @@ public class AssetServiceBean implements AssetService {
      */
     @Override
     public Asset getAssetByGuid(String guid) throws AssetException {
-        LOG.debug("Getting asset by ID.");
+        LOG.debug("Getting transportMeans by ID.");
         if (guid == null || guid.isEmpty()) {
             throw new InputArgumentException("AssetId is null");
         }
@@ -252,7 +252,7 @@ public class AssetServiceBean implements AssetService {
      */
     @Override
     public List<Asset> getAssetListByAssetGroups(List<AssetGroup> groups) throws AssetException {
-        LOG.debug("Getting asset by ID.");
+        LOG.debug("Getting transportMeans by ID.");
         if (groups == null || groups.isEmpty()) {
             throw new InputArgumentException("No groups in query");
         }
@@ -262,7 +262,7 @@ public class AssetServiceBean implements AssetService {
 
     @Override
     public AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetException {
-        LOG.debug("Getting asset list by asset ids group by flags State.");
+        LOG.debug("Getting transportMeans list by transportMeans ids group by flags State.");
         List assetListGroupByFlagState = assetDomainModel.getAssetListGroupByFlagState(assetIds);
         AssetListGroupByFlagStateResponse assetListGroupByFlagStateResponse = new AssetListGroupByFlagStateResponse();
         assetListGroupByFlagStateResponse.getNumberOfAssetsGroupByFlagState().addAll(assetListGroupByFlagState);

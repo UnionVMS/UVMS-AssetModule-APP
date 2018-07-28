@@ -274,7 +274,10 @@
                     </xsd:complexContent>
                 </xsd:complexType>
             </xsd:element>
+
         </xsd:schema>
+
+
     </types>
     
     <message name="AssetModuleFaultException">

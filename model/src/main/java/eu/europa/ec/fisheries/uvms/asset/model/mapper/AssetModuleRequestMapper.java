@@ -78,7 +78,7 @@ public class AssetModuleRequestMapper {
     /**
      *
      * Creates a request to the module with a list of assetgroups that is used
-     * to query for a asset list based on the search criterias
+     * to query for a transportMeans list based on the search criterias
      *
      * @param assetGroups
      * @return

@@ -43,11 +43,11 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
             em.persist(group);
             return group;
         } catch (EntityExistsException | IllegalArgumentException | TransactionRequiredException e) {
-            LOG.error("[ Error when creating asset group. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ create asset group ] " + e.getMessage());
+            LOG.error("[ Error when creating transportMeans group. ] {}", e.getMessage());
+            throw new AssetGroupDaoException("[ create transportMeans group ] " + e.getMessage());
         } catch (Exception e) {
-            LOG.error("[ Error when creating asset group. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ create asset ] " + e.getMessage());
+            LOG.error("[ Error when creating transportMeans group. ] {}", e.getMessage());
+            throw new AssetGroupDaoException("[ create transportMeans ] " + e.getMessage());
         }
     }
 
@@ -58,8 +58,8 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
             query.setParameter("guid", groupId);
             return query.getSingleResult();
         } catch (NoResultException e) {
-            LOG.error("[ Error when getting asset group by guid. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ get asset group, guid: " + groupId + " ] " + e.getMessage());
+            LOG.error("[ Error when getting transportMeans group by guid. ] {}", e.getMessage());
+            throw new AssetGroupDaoException("[ get transportMeans group, guid: " + groupId + " ] " + e.getMessage());
         }
     }
 
@@ -69,11 +69,11 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
             em.merge(group);
             return group;
         } catch (IllegalArgumentException | TransactionRequiredException e) {
-            LOG.error("[ Error when updating asset group. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ update asset group, id: " + group.getGuid() + " ] " + e.getMessage());
+            LOG.error("[ Error when updating transportMeans group. ] {}", e.getMessage());
+            throw new AssetGroupDaoException("[ update transportMeans group, id: " + group.getGuid() + " ] " + e.getMessage());
         } catch (Exception e) {
-            LOG.error("[ Error when updating asset group. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ create asset ] " + e.getMessage());
+            LOG.error("[ Error when updating transportMeans group. ] {}", e.getMessage());
+            throw new AssetGroupDaoException("[ create transportMeans ] " + e.getMessage());
         }
     }
 
@@ -83,11 +83,11 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
             em.remove(group);
             return group;
         } catch (IllegalArgumentException | TransactionRequiredException e) {
-            LOG.error("[ Error when deleting asset group. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ delete asset group, id: " + group.getGuid() + " ] " + e.getMessage());
+            LOG.error("[ Error when deleting transportMeans group. ] {}", e.getMessage());
+            throw new AssetGroupDaoException("[ delete transportMeans group, id: " + group.getGuid() + " ] " + e.getMessage());
         } catch (Exception e) {
-            LOG.error("[ Error when deleting asset group. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ create asset ] " + e.getMessage());
+            LOG.error("[ Error when deleting transportMeans group. ] {}", e.getMessage());
+            throw new AssetGroupDaoException("[ create transportMeans ] " + e.getMessage());
         }
 
     }
@@ -98,8 +98,8 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
             TypedQuery<AssetGroup> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_FIND_ALL, AssetGroup.class);
             return query.getResultList();
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset groups. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ get all asset groups ] " + e.getMessage());
+            LOG.error("[ Error when getting transportMeans groups. ] {}", e.getMessage());
+            throw new AssetGroupDaoException("[ get all transportMeans groups ] " + e.getMessage());
         } 
     }
 
@@ -110,8 +110,8 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
             query.setParameter("owner", user);
             return query.getResultList();
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset groups by user. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ get asset groups, by user: " + user + " ] " + e.getMessage());
+            LOG.error("[ Error when getting transportMeans groups by user. ] {}", e.getMessage());
+            throw new AssetGroupDaoException("[ get transportMeans groups, by user: " + user + " ] " + e.getMessage());
         }
     }
 
@@ -122,8 +122,8 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
             query.setParameter("guidList", guidList);
             return query.getResultList();
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset groups by idlist. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ get asset groups by idlist ] " + e.getMessage());
+            LOG.error("[ Error when getting transportMeans groups by idlist. ] {}", e.getMessage());
+            throw new AssetGroupDaoException("[ get transportMeans groups by idlist ] " + e.getMessage());
         }
 	}
 

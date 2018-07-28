@@ -60,8 +60,8 @@ public class AssetModuleResponseMapper {
             GetAssetModuleResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, GetAssetModuleResponse.class);
             return mappedResponse.getAsset();
         } catch (AssetModelMarshallException | JMSException e) {
-            LOG.error("[ Error when mapping response to single asset response. ] {}", e.getMessage());
-            throw new AssetModelMapperException("Error when returning asset from response in ResponseMapper: " + e.getMessage());
+            LOG.error("[ Error when mapping response to single transportMeans response. ] {}", e.getMessage());
+            throw new AssetModelMapperException("Error when returning transportMeans from response in ResponseMapper: " + e.getMessage());
         }
     }
 
@@ -71,7 +71,7 @@ public class AssetModuleResponseMapper {
             ListAssetResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, ListAssetResponse.class);
             return mappedResponse.getAsset();
         } catch (AssetModelMarshallException | JMSException e) {
-            LOG.error("[ Error when mapping response to list asset response. ] {}", e.getMessage());
+            LOG.error("[ Error when mapping response to list transportMeans response. ] {}", e.getMessage());
             throw new AssetModelMapperException("Error when returning assetList from response in ResponseMapper: " + e.getMessage());
         }
     }
@@ -82,7 +82,7 @@ public class AssetModuleResponseMapper {
             ListAssetGroupResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, ListAssetGroupResponse.class);
             return mappedResponse.getAssetGroup();
         } catch (AssetModelMarshallException | JMSException e) {
-            LOG.error("[ Error when mapping response to list asset response. ] {}", e.getMessage());
+            LOG.error("[ Error when mapping response to list transportMeans response. ] {}", e.getMessage());
             throw new AssetModelMapperException("Error when returning assetList from response in ResponseMapper: " + e.getMessage());
         }
     }

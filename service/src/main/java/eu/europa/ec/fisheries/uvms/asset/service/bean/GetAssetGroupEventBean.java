@@ -36,7 +36,7 @@ public class GetAssetGroupEventBean {
     Event<AssetMessageEvent> assetErrorEvent;
 
     public void getAssetGroupByUserName(AssetMessageEvent message) {
-        LOG.info("Get asset group");
+        LOG.info("Get transportMeans group");
         try {
             AssetGroupListByUserRequest request = message.getRequest();
             List<AssetGroup> response = assetGroup.getAssetGroupList(request.getUser());

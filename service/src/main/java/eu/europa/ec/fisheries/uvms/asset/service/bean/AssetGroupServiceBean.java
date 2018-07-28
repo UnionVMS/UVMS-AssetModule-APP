@@ -46,7 +46,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
     @Override
     public List<AssetGroup> getAssetGroupList(String user) throws AssetException {
-        LOG.info("Getting asset group list by user: {}.", user);
+        LOG.info("Getting transportMeans group list by user: {}.", user);
         if (user == null || user.isEmpty()) {
             throw new InputArgumentException("Invalid user");
         }
@@ -57,9 +57,9 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
     @Override
     public List<AssetGroup> getAssetGroupListByAssetGuid(String assetGuid) throws AssetException {
-        LOG.info("Getting asset group list by asset guid: {}.", assetGuid);
+        LOG.info("Getting transportMeans group list by transportMeans guid: {}.", assetGuid);
         if (assetGuid == null || assetGuid.isEmpty()) {
-            throw new InputArgumentException("Invalid asset");
+            throw new InputArgumentException("Invalid transportMeans");
         }
 
         List<AssetGroup> assetGroups = assetGroupDomainModel.getAssetGroupsByAssetGuid(assetGuid);
@@ -68,9 +68,9 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
     @Override
     public AssetGroup getAssetGroupById(String guid) throws AssetException {
-        LOG.info("Getting asset group by id: {}.", guid);
+        LOG.info("Getting transportMeans group by id: {}.", guid);
         if (guid == null) {
-            throw new InputArgumentException("No asset group to get");
+            throw new InputArgumentException("No transportMeans group to get");
         }
 
         AssetGroup assetGroup = assetGroupDomainModel.getAssetGroup(guid);
@@ -80,7 +80,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
     @Override
     public AssetGroup createAssetGroup(AssetGroup assetGroup, String username) throws AssetException {
         if (assetGroup == null) {
-            throw new InputArgumentException("No asset group to create");
+            throw new InputArgumentException("No transportMeans group to create");
         }
         AssetGroup createdAssetGroup = assetGroupDomainModel.createAssetGroup(assetGroup, username);
         try {
@@ -95,10 +95,10 @@ public class AssetGroupServiceBean implements AssetGroupService {
     @Override
     public AssetGroup updateAssetGroup(AssetGroup assetGroup, String username) throws AssetException {
         if (assetGroup == null) {
-            throw new InputArgumentException("No asset group to update");
+            throw new InputArgumentException("No transportMeans group to update");
         }
         if (assetGroup.getGuid() == null) {
-            throw new InputArgumentException("No id on asset group to update");
+            throw new InputArgumentException("No id on transportMeans group to update");
         }
         AssetGroup updatedAssetGroup = assetGroupDomainModel.updateAssetGroup(assetGroup, username);
         try {
@@ -113,9 +113,9 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
     @Override
     public AssetGroup deleteAssetGroupById(String guid, String username) throws AssetException {
-        LOG.info("Deleting asset group by id: {}.", guid);
+        LOG.info("Deleting transportMeans group by id: {}.", guid);
         if (guid == null) {
-            throw new InputArgumentException("No asset group to remove");
+            throw new InputArgumentException("No transportMeans group to remove");
         }
 
         AssetGroup deletedAssetGroup = assetGroupDomainModel.deleteAssetGroup(guid, username);

@@ -15,11 +15,11 @@ public class ServiceConstants {
 
 	public static final String FIND_BY_NAME = "Parameter.findByName";
 	
-	public static final String ASSET_CONFIG_NAME = "asset";
+	public static final String ASSET_CONFIG_NAME = "transportMeans";
 
-	public static final String DB_ACCESS_ASSET_DOMAIN_MODEL = "java:global/asset-dbaccess-module/asset-dbaccess-domain/AssetDomainModelBean!eu.europa.ec.fisheries.uvms.asset.remote.AssetDomainModel";
-	public static final String DB_ACCESS_CONFIG_DOMAIN_MODEL = "java:global/asset-dbaccess-module/asset-dbaccess-domain/ConfigDomainModelBean!eu.europa.ec.fisheries.uvms.asset.remote.ConfigDomainModel";
-	public static final String DB_ACCESS_ASSET_GROUP_DOMAIN_MODEL = "java:global/asset-dbaccess-module/asset-dbaccess-domain/AssetGroupDomainModelBean!eu.europa.ec.fisheries.uvms.asset.remote.AssetGroupDomainModel";
-	public static final String DB_ACCESS_FISHING_GEAR_DOMAIN_MODEL = "java:global/asset-dbaccess-module/asset-dbaccess-domain/FishingGearDomainModelBean!eu.europa.ec.fisheries.uvms.asset.remote.FishingGearDomainModel";
+	public static final String DB_ACCESS_ASSET_DOMAIN_MODEL = "java:global/transportMeans-dbaccess-module/transportMeans-dbaccess-domain/AssetDomainModelBean!eu.europa.ec.fisheries.uvms.transportMeans.remote.AssetDomainModel";
+	public static final String DB_ACCESS_CONFIG_DOMAIN_MODEL = "java:global/transportMeans-dbaccess-module/transportMeans-dbaccess-domain/ConfigDomainModelBean!eu.europa.ec.fisheries.uvms.transportMeans.remote.ConfigDomainModel";
+	public static final String DB_ACCESS_ASSET_GROUP_DOMAIN_MODEL = "java:global/transportMeans-dbaccess-module/transportMeans-dbaccess-domain/AssetGroupDomainModelBean!eu.europa.ec.fisheries.uvms.transportMeans.remote.AssetGroupDomainModel";
+	public static final String DB_ACCESS_FISHING_GEAR_DOMAIN_MODEL = "java:global/transportMeans-dbaccess-module/transportMeans-dbaccess-domain/FishingGearDomainModelBean!eu.europa.ec.fisheries.uvms.transportMeans.remote.FishingGearDomainModel";
 
 }

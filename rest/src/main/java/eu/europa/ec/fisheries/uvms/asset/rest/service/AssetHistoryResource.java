@@ -53,19 +53,19 @@ public class AssetHistoryResource {
      * @responseMessage 200 Success
      * @responseMessage 500 Error
      *
-     * @summary Gets a list of all history recordings for a specific asset
+     * @summary Gets a list of all history recordings for a specific transportMeans
      *
      */
     @GET
-    @Path("/asset")
+    @Path("/transportMeans")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     public ResponseDto getAssetHistoryListByAssetId(@QueryParam("assetId") String assetId, @QueryParam("maxNbr") Integer maxNbr) {
         try {
-            LOG.info("Getting asset history list by asset ID: {}",assetId);
+            LOG.info("Getting transportMeans history list by transportMeans ID: {}",assetId);
             return new ResponseDto(assetHistoryService.getAssetHistoryListByAssetId(assetId, maxNbr), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset history list by asset ID. {}]",assetId);
+            LOG.error("[ Error when getting transportMeans history list by transportMeans ID. {}]",assetId);
             return ErrorHandler.getFault(e);
         }
     }
@@ -76,10 +76,10 @@ public class AssetHistoryResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public ResponseDto getFlagStateByIdAndDate(@QueryParam("assetGuid") String assetGuid, @QueryParam("date") String dateStr ) {
         try {
-            LOG.info("Getting asset history list by asset GUID: {} Date: {}",assetGuid, dateStr);
+            LOG.info("Getting transportMeans history list by transportMeans GUID: {} Date: {}",assetGuid, dateStr);
             return new ResponseDto(assetHistoryService.getFlagStateByIdAndDate(assetGuid, DateUtils.parseToUTCDate( dateStr, DateUtils.FORMAT) ), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset history list by asset ID. {}]",assetGuid);
+            LOG.error("[ Error when getting transportMeans history list by transportMeans ID. {}]",assetGuid);
             return ErrorHandler.getFault(e);
         }
     }
@@ -94,7 +94,7 @@ public class AssetHistoryResource {
         try {
             return new ResponseDto(assetHistoryService.getAssetByIdAndDate(type, value , DateUtils.parseToUTCDate(dateStr,DateUtils.FORMAT)), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset {}{}{} ]from cfr and date", type, value, dateStr );
+            LOG.error("[ Error when getting transportMeans {}{}{} ]from cfr and date", type, value, dateStr );
             return ErrorHandler.getFault(e);
         }
     }
@@ -115,10 +115,10 @@ public class AssetHistoryResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
    public ResponseDto getAssetHistoryByAssetHistGuid(@PathParam("guid") String guid) {
         try {
-            LOG.info("Getting asset history by asset history guid: {}",guid);
+            LOG.info("Getting transportMeans history by transportMeans history guid: {}",guid);
             return new ResponseDto(assetHistoryService.getAssetHistoryByAssetHistGuid(guid), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset history by asset history guid. {}] ",guid);
+            LOG.error("[ Error when getting transportMeans history by transportMeans history guid. {}] ",guid);
             return ErrorHandler.getFault(e);
         }
     }

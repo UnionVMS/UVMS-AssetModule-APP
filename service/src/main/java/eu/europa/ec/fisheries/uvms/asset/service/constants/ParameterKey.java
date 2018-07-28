@@ -24,28 +24,28 @@ package eu.europa.ec.fisheries.uvms.asset.service.constants;
 
 public enum ParameterKey {
 
-	NATIONAL_USE("asset.national.use"),
+	NATIONAL_USE("transportMeans.national.use"),
 
-	EU_USE("asset.eu.use"),
+	EU_USE("transportMeans.eu.use"),
 
 	// THIRDCOUNTRY_USE("vessel.thirdcountry.use"),
 	// THIRDCOUNTRY_JMS_JNDI("vessel.thirdcountry.jms.jndi"),
 
 	NATIONAL_SERVICE_ENDPOINT("NATIONAL_SERVICE_ENDPOINT"),
 
-	DEFAULT_FLAG_STATE("asset.default.flagstate"),
+	DEFAULT_FLAG_STATE("transportMeans.default.flagstate"),
 
 	// XEU PARAMS
 
-	XEU_SERVICE_ENDPOINT("asset.eu.service.endpoint"),
+	XEU_SERVICE_ENDPOINT("transportMeans.eu.service.endpoint"),
 
-	CERT_HEADER("asset.eu.service.client.cert.header"),
+	CERT_HEADER("transportMeans.eu.service.client.cert.header"),
 
-	CERT_VALUE("asset.eu.service.client.cert.value"),
+	CERT_VALUE("transportMeans.eu.service.client.cert.value"),
 
-	FLUX_DATAFLOW("asset.eu.service.dataflow"),
+	FLUX_DATAFLOW("transportMeans.eu.service.dataflow"),
 
-	FLUX_AD("asset.eu.service.flux.ad"),
+	FLUX_AD("transportMeans.eu.service.flux.ad"),
 
 	NATIONAL_VESSEL_COMP_SERVICE_ENDPOINT("NATIONAL_VESSEL_COMP_SERVICE_ENDPOINT"),
 

@@ -36,7 +36,7 @@ public class GetAssetListByAssetGroupEventBean {
     private AssetService service;
 
     public void getAssetListByAssetGroups(AssetMessageEvent message) {
-        LOG.info("Get asset list by asset groups");
+        LOG.info("Get transportMeans list by transportMeans groups");
         try {
             GetAssetListByAssetGroupsRequest request = message.getAssetListByGroup();
 
