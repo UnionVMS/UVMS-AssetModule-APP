@@ -57,7 +57,7 @@ import org.hibernate.annotations.FetchMode;
 @Table(name = "Assethistory")
 @NamedQueries({
     @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_GUID, query = "SELECT v FROM AssetHistory v WHERE v.guid = :guid"),
-    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_GUIDS, query = " SELECT DISTINCT vh FROM AssetHistory vh  INNER JOIN FETCH vh.transportMeans v INNER JOIN FETCH v.carrier c WHERE c.active = '1' AND vh.active = '1' AND v.guid  IN :guids"),
+    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_GUIDS, query = " SELECT DISTINCT vh FROM AssetHistory vh  INNER JOIN FETCH vh.asset v INNER JOIN FETCH v.carrier c WHERE c.active = '1' AND vh.active = '1' AND v.guid  IN :guids"),
         @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_CRITERIA, query = "SELECT vh FROM AssetHistory vh WHERE " +
                 "((:EXTERNAL_MARKING is NULL) OR vh.externalMarking = :EXTERNAL_MARKING) AND " +
                 "((:CFR is NULL) OR vh.cfr = :CFR) AND" +
