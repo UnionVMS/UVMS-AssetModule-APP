@@ -11,20 +11,27 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.model.mapper;
 
+import javax.jms.JMSException;
+import javax.jms.TextMessage;
+import java.util.List;
+
 import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import eu.europa.ec.fisheries.wsdl.asset.group.ListAssetGroupResponse;
-import eu.europa.ec.fisheries.wsdl.asset.module.*;
-import eu.europa.ec.fisheries.wsdl.asset.types.*;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleResponse;
+import eu.europa.ec.fisheries.wsdl.asset.module.UpsertAssetModuleResponse;
+import eu.europa.ec.fisheries.wsdl.asset.module.UpsertFishingGearModuleResponse;
+import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetFault;
+import eu.europa.ec.fisheries.wsdl.asset.types.FishingGear;
+import eu.europa.ec.fisheries.wsdl.asset.types.FlagStateResponse;
+import eu.europa.ec.fisheries.wsdl.asset.types.FlagStateType;
+import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.jms.JMSException;
-import javax.jms.TextMessage;
-import java.util.List;
 
 /**
  **/
@@ -60,7 +67,7 @@ public class AssetModuleResponseMapper {
             GetAssetModuleResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, GetAssetModuleResponse.class);
             return mappedResponse.getAsset();
         } catch (AssetModelMarshallException | JMSException e) {
-            LOG.error("[ Error when mapping response to single transportMeans response. ] {}", e.getMessage());
+            LOG.error("[ Error when mapping response to single asset response. ] {}", e.getMessage());
             throw new AssetModelMapperException("Error when returning transportMeans from response in ResponseMapper: " + e.getMessage());
         }
     }
@@ -71,7 +78,7 @@ public class AssetModuleResponseMapper {
             ListAssetResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, ListAssetResponse.class);
             return mappedResponse.getAsset();
         } catch (AssetModelMarshallException | JMSException e) {
-            LOG.error("[ Error when mapping response to list transportMeans response. ] {}", e.getMessage());
+            LOG.error("[ Error when mapping response to list asset response. ] {}", e.getMessage());
             throw new AssetModelMapperException("Error when returning assetList from response in ResponseMapper: " + e.getMessage());
         }
     }
@@ -82,7 +89,7 @@ public class AssetModuleResponseMapper {
             ListAssetGroupResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, ListAssetGroupResponse.class);
             return mappedResponse.getAssetGroup();
         } catch (AssetModelMarshallException | JMSException e) {
-            LOG.error("[ Error when mapping response to list transportMeans response. ] {}", e.getMessage());
+            LOG.error("[ Error when mapping response to list asset response. ] {}", e.getMessage());
             throw new AssetModelMapperException("Error when returning assetList from response in ResponseMapper: " + e.getMessage());
         }
     }

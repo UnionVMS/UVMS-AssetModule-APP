@@ -38,7 +38,7 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
             return group;
         } catch (EntityExistsException | IllegalArgumentException | TransactionRequiredException e) {
             LOG.error("[ Error when creating asset group. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ create transportMeans group ] " + e.getMessage());
+            throw new AssetGroupDaoException("[ create asset group ] " + e.getMessage());
         } catch (Exception e) {
             LOG.error("[ Error when creating asset group. ] {}", e.getMessage());
             throw new AssetGroupDaoException("[ create asset ] " + e.getMessage());

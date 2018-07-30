@@ -11,6 +11,10 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.model.mapper;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
@@ -19,17 +23,36 @@ import eu.europa.ec.fisheries.wsdl.asset.config.ConfigRequest;
 import eu.europa.ec.fisheries.wsdl.asset.fishinggear.FishingGearByIdRequest;
 import eu.europa.ec.fisheries.wsdl.asset.fishinggear.FishingGearListRequest;
 import eu.europa.ec.fisheries.wsdl.asset.fishinggear.UpsertFishingGearRequest;
-import eu.europa.ec.fisheries.wsdl.asset.group.*;
+import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
+import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupListByUserRequest;
+import eu.europa.ec.fisheries.wsdl.asset.group.CreateAssetGroupRequest;
+import eu.europa.ec.fisheries.wsdl.asset.group.DeleteAssetGroupRequest;
+import eu.europa.ec.fisheries.wsdl.asset.group.GetAssetGroupListByAssetGuidRequest;
+import eu.europa.ec.fisheries.wsdl.asset.group.GetAssetGroupRequest;
+import eu.europa.ec.fisheries.wsdl.asset.group.UpdateAssetGroupRequest;
 import eu.europa.ec.fisheries.wsdl.asset.history.AssetHistoryListByAssetIdRequest;
 import eu.europa.ec.fisheries.wsdl.asset.history.GetAssetHistoryRequest;
-import eu.europa.ec.fisheries.wsdl.asset.source.*;
-import eu.europa.ec.fisheries.wsdl.asset.types.*;
+import eu.europa.ec.fisheries.wsdl.asset.source.AssetListByAssetGroupRequest;
+import eu.europa.ec.fisheries.wsdl.asset.source.AssetListGroupByFlagStateRequest;
+import eu.europa.ec.fisheries.wsdl.asset.source.AssetListRequest;
+import eu.europa.ec.fisheries.wsdl.asset.source.CreateAssetRequest;
+import eu.europa.ec.fisheries.wsdl.asset.source.GetAssetRequest;
+import eu.europa.ec.fisheries.wsdl.asset.source.UpdateAssetRequest;
+import eu.europa.ec.fisheries.wsdl.asset.source.UpsertAssetRequest;
+import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetDataSourceMethod;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetHistoryId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteria;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteriaPair;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListPagination;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
+import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
+import eu.europa.ec.fisheries.wsdl.asset.types.FishingGear;
+import eu.europa.ec.fisheries.wsdl.asset.types.SingleAssetResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 
 //import eu.europa.ec.fisheries.wsdl.transportMeans.module.AssetListGroupByFlagStateRequest;
 
@@ -105,7 +128,7 @@ public class AssetDataSourceRequestMapper {
         return request;
     }
     
-    private static SingleAssetResponse createSingleAssetResponse(Asset asset) {
+    private static SingleassetcreateSingleAssetResponse(Asset asset) {
         SingleAssetResponse response = new SingleAssetResponse();
         response.setAsset(asset);
         return response;
@@ -124,7 +147,7 @@ public class AssetDataSourceRequestMapper {
             histId.setEventId(guid);
             return histId;
         } catch (NullPointerException e) {
-            LOG.error("[ Error when creating history transportMeans ID. ] {}", e.getMessage());
+            LOG.error("[ Error when creating history asset ID. ] {}", e.getMessage());
             throw new AssetModelMapperException(e.getMessage());
         }
     }
@@ -145,7 +168,7 @@ public class AssetDataSourceRequestMapper {
             request.setId(createHistoryAssetId(assetHistoryGuid));
             return JAXBMarshaller.marshallJaxBObjectToString(request);
         } catch (Exception e) {
-            LOG.error("[ Error when getting transportMeans history by ID. ] {}", e.getMessage());
+            LOG.error("[ Error when getting asset history by ID. ] {}", e.getMessage());
             throw new AssetModelMapperException(e.getMessage());
         }
     }
@@ -189,7 +212,7 @@ public class AssetDataSourceRequestMapper {
     
     private static AssetListPagination validatePagination(AssetListPagination pagination) throws AssetModelValidationException {
         if(pagination == null){
-            throw new AssetModelValidationException("Cannot get transportMeans list because pagination is null");
+            throw new AssetModelValidationException("Cannot get asset list because pagination is null");
         }
     	if(pagination.getListSize() < 1) throw new AssetModelValidationException("Page list size must be > 1");
     	if(pagination.getPage() < 1) throw new AssetModelValidationException("Page must be > 1");
@@ -201,7 +224,7 @@ public class AssetDataSourceRequestMapper {
         for (AssetListCriteriaPair pair : criterias) {
             if (pair.getKey() == ConfigSearchField.ASSET_TYPE) {
                 if(!"ASSET".equalsIgnoreCase(pair.getValue())) {
-                    throw new AssetModelValidationException("Can only search for transportMeans type ASSET");
+                    throw new AssetModelValidationException("Can only search for asset type ASSET");
                 }
             }
             else {
@@ -213,8 +236,8 @@ public class AssetDataSourceRequestMapper {
     }
 
     /**
-     * Marshalls a transportMeans to a String representing the WSDL request This method
-     * only applies when creating a transportMeans
+     * Marshalls a asset to a String representing the WSDL request This method
+     * only applies when creating a asset
      *
      * @param asset
      * @return
@@ -230,7 +253,7 @@ public class AssetDataSourceRequestMapper {
 
     /**
      * Marshalls a Asset to a String representing the WSDL request This method
-     * only applies when updating an existing a transportMeans
+     * only applies when updating an existing a asset
      *
      * @param asset
      * @return
@@ -245,8 +268,8 @@ public class AssetDataSourceRequestMapper {
     }
 
     /**
-     * Marshalls a transportMeans to a String representing the WSDL request This method
-     * only applies when getting a transportMeans by id
+     * Marshalls a asset to a String representing the WSDL request This method
+     * only applies when getting a asset by id
      *
      * @param id
      * @param idType

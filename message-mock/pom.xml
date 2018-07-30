@@ -30,8 +30,8 @@
             <version>4.0.13-SNAPSHOT</version>
         </dependency>
         <!--dependency>
-            <groupId>eu.europa.ec.fisheries.uvms.transportMeans</groupId>
-            <artifactId>transportMeans-service</artifactId>
+            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+            <artifactId>asset-service</artifactId>
             <version>3.0.6-SNAPSHOT</version>
         </dependency-->
         <dependency>

@@ -1,13 +1,17 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
-import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
-import eu.europa.ec.fisheries.wsdl.asset.types.*;
-
 import java.math.BigDecimal;
 import java.util.Random;
 import java.util.UUID;
+
+import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
+import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
+import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetProdOrgModel;
+import eu.europa.ec.fisheries.wsdl.asset.types.CarrierSource;
 
 public abstract class AssetHelper {
 
@@ -31,7 +35,7 @@ public abstract class AssetHelper {
         asset.setActive(true);
 
         asset.setSource(CarrierSource.INTERNAL);
-        //transportMeans.setEventHistory();
+        //asset.setEventHistory();
         asset.setName("TEST_NAME");
         asset.setCountryCode("SWE");
         asset.setGearType(GearFishingTypeEnum.UNKNOWN.name());

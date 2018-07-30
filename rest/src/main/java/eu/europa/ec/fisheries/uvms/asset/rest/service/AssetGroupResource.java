@@ -63,7 +63,7 @@ public class AssetGroupResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public ResponseDto getAssetGroupListByUser(@QueryParam(value = "user") String user) {
         try {
-            LOG.info("Getting transportMeans group list by user {}",user);
+            LOG.info("Getting asset group list by user {}",user);
             return new ResponseDto(assetGroupService.getAssetGroupList(user), ResponseCodeConstant.OK);
         } catch (Exception e) {
             LOG.error("[ Error when getting asset group list by user. ] {}", e.getMessage(), e.getStackTrace());

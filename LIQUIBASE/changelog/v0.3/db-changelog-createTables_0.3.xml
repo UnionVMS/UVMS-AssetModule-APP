@@ -28,7 +28,7 @@
         <include file="\schema\tables\flagstate.xml"/>
         <include file="\schema\tables\settings.xml"/>
         
-        <include file="\schema\tables\transportMeans.xml"/>
+        <include file="\schema\tables\asset.xml"/>
         <include file="\schema\tables\assetpo.xml"/>
         <include file="\schema\tables\assethistory.xml"/>
 

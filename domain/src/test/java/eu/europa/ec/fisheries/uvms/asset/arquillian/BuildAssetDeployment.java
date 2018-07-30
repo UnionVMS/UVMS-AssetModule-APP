@@ -1,6 +1,8 @@
 package eu.europa.ec.fisheries.uvms.asset.arquillian;
 
 
+import java.io.File;
+
 import eu.europa.ec.fisheries.uvms.bean.ConfigDomainModelBean;
 import eu.europa.ec.fisheries.uvms.config.service.entity.Parameter;
 import org.eu.ingwar.tools.arquillian.extension.suite.annotations.ArquillianSuiteDeployment;
@@ -10,8 +12,6 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
-
-import java.io.File;
 
 /**
  * Created by andreasw on 2017-02-13.
@@ -42,7 +42,7 @@ public abstract class BuildAssetDeployment {
 
         testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.model");
 
-        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.transportMeans.arquillian");
+        testWar.addPackages(true,"eu.europa.ec.fisheries.uvms.asset.arquillian");
 
         testWar.addPackages(true, "eu.europa.ec.fisheries.schema");
         testWar.addClass(TransactionalTests.class);
