@@ -128,7 +128,7 @@ public class AssetDataSourceRequestMapper {
         return request;
     }
     
-    private static SingleassetcreateSingleAssetResponse(Asset asset) {
+    private static SingleAssetResponse createSingleAssetResponse(Asset asset) {
         SingleAssetResponse response = new SingleAssetResponse();
         response.setAsset(asset);
         return response;
