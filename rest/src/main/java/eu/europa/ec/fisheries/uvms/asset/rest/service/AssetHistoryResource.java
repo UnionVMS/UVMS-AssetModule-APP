@@ -26,15 +26,10 @@ import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.asset.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
-
-import java.net.URLDecoder;
-import java.util.Date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  **/
@@ -53,19 +48,19 @@ public class AssetHistoryResource {
      * @responseMessage 200 Success
      * @responseMessage 500 Error
      *
-     * @summary Gets a list of all history recordings for a specific transportMeans
+     * @summary Gets a list of all history recordings for a specific asset
      *
      */
     @GET
-    @Path("/transportMeans")
+    @Path("/asset")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     public ResponseDto getAssetHistoryListByAssetId(@QueryParam("assetId") String assetId, @QueryParam("maxNbr") Integer maxNbr) {
         try {
-            LOG.info("Getting transportMeans history list by transportMeans ID: {}",assetId);
+            LOG.info("Getting asset history list by asset ID: {}",assetId);
             return new ResponseDto(assetHistoryService.getAssetHistoryListByAssetId(assetId, maxNbr), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting transportMeans history list by transportMeans ID. {}]",assetId);
+            LOG.error("[ Error when getting asset history list by asset ID. {}]",assetId);
             return ErrorHandler.getFault(e);
         }
     }
@@ -76,10 +71,10 @@ public class AssetHistoryResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public ResponseDto getFlagStateByIdAndDate(@QueryParam("assetGuid") String assetGuid, @QueryParam("date") String dateStr ) {
         try {
-            LOG.info("Getting transportMeans history list by transportMeans GUID: {} Date: {}",assetGuid, dateStr);
+            LOG.info("Getting asset history list by asset GUID: {} Date: {}",assetGuid, dateStr);
             return new ResponseDto(assetHistoryService.getFlagStateByIdAndDate(assetGuid, DateUtils.parseToUTCDate( dateStr, DateUtils.FORMAT) ), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting transportMeans history list by transportMeans ID. {}]",assetGuid);
+            LOG.error("[ Error when getting asset history list by asset ID. {}]",assetGuid);
             return ErrorHandler.getFault(e);
         }
     }
@@ -94,7 +89,7 @@ public class AssetHistoryResource {
         try {
             return new ResponseDto(assetHistoryService.getAssetByIdAndDate(type, value , DateUtils.parseToUTCDate(dateStr,DateUtils.FORMAT)), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting transportMeans {}{}{} ]from cfr and date", type, value, dateStr );
+            LOG.error("[ Error when getting asset {}{}{} ]from cfr and date", type, value, dateStr );
             return ErrorHandler.getFault(e);
         }
     }
@@ -115,10 +110,10 @@ public class AssetHistoryResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
    public ResponseDto getAssetHistoryByAssetHistGuid(@PathParam("guid") String guid) {
         try {
-            LOG.info("Getting transportMeans history by transportMeans history guid: {}",guid);
+            LOG.info("Getting asset history by asset history guid: {}",guid);
             return new ResponseDto(assetHistoryService.getAssetHistoryByAssetHistGuid(guid), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting transportMeans history by transportMeans history guid. {}] ",guid);
+            LOG.error("[ Error when getting asset history by asset history guid. {}] ",guid);
             return ErrorHandler.getFault(e);
         }
     }

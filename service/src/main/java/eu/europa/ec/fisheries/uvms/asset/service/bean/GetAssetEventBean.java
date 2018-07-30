@@ -1,5 +1,12 @@
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
+import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
+import javax.jms.TextMessage;
+
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
@@ -18,13 +25,6 @@ import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-import javax.jms.TextMessage;
 
 @Stateless
 @LocalBean
@@ -46,18 +46,18 @@ public class GetAssetEventBean {
     Event<AssetMessageEvent> assetErrorEvent;
 
     public void getAsset(TextMessage textMessage, AssetId assetId) {
-        LOG.info("Getting transportMeans.");
+        LOG.info("Getting asset.");
         AssetDataSourceQueue dataSource = null;
         Asset asset = null;
         boolean messageSent = false;
 
         try {
             dataSource = decideDataflow(assetId);
-            LOG.debug("Got message to AssetModule, Executing Get transportMeans from datasource {}", dataSource.name());
+            LOG.debug("Got message to AssetModule, Executing Get asset from datasource {}", dataSource.name());
             asset = service.getAssetById(assetId, dataSource);
         } catch (AssetException e) {
-            LOG.error("[ Error when getting transportMeans from source {}. ] ", dataSource.name());
-            assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting transportMeans from source : " + dataSource.name() + " Error message: " + e.getMessage())));
+            LOG.error("[ Error when getting asset from source {}. ] ", dataSource.name());
+            assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting asset from source : " + dataSource.name() + " Error message: " + e.getMessage())));
             messageSent = true;
             asset = null;
         }
@@ -67,7 +67,7 @@ public class GetAssetEventBean {
                 Asset upsertedAsset = service.upsertAsset(asset, dataSource.name());
                 asset.getAssetId().setGuid(upsertedAsset.getAssetId().getGuid());
             } catch (AssetException e) {
-                LOG.error("[ Couldn't upsert transportMeans in internal ]");
+                LOG.error("[ Couldn't upsert asset in internal ]");
                 assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, e.getMessage())));
                 messageSent = true;
             }
@@ -77,8 +77,8 @@ public class GetAssetEventBean {
             try {
                 messageProducer.sendModuleResponseMessage(textMessage, AssetModuleResponseMapper.mapAssetModuleResponse(asset));
             } catch (AssetModelMapperException e) {
-                LOG.error("[ Error when mapping transportMeans ] ");
-                assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when mapping transportMeans" + e.getMessage())));
+                LOG.error("[ Error when mapping asset ] ");
+                assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when mapping asset" + e.getMessage())));
             }
         }
     }

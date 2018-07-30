@@ -24,9 +24,9 @@ import eu.europa.ec.fisheries.wsdl.asset.types.FlagStateType;
 @Local
 public interface AssetHistoryService {
 
-    public List<Asset> getAssetHistoryListByAssetId(String assetId, Integer maxNbr) throws AssetException;
+    List<Asset> getAssetHistoryListByAssetId(String assetId, Integer maxNbr) throws AssetException;
 
-    public Asset getAssetHistoryByAssetHistGuid(String assetHistId) throws AssetException;
+    Asset getAssetHistoryByAssetHistGuid(String assetHistId) throws AssetException;
 
     FlagStateType getFlagStateByIdAndDate(String assetGuid, Date date) throws AssetException;
 

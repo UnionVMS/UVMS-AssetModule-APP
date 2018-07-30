@@ -28,7 +28,7 @@ import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteriaPair;
 public interface AssetDao {
 
     /**
-     * Create transportMeans in database
+     * Create asset in database
      *
      * @param asset
      * @return
@@ -46,7 +46,7 @@ public interface AssetDao {
     public AssetEntity getAssetById(Long id) throws AssetDaoException;
 
     /**
-     * Get transportMeans by cfr
+     * Get asset by cfr
      *
      * @param cfr
      * @return
@@ -55,7 +55,7 @@ public interface AssetDao {
     public AssetEntity getAssetByCfr(String cfr) throws AssetDaoException;
 
     /**
-     * Get transportMeans by ircs
+     * Get asset by ircs
      *
      * @param ircs
      * @return
@@ -64,7 +64,7 @@ public interface AssetDao {
     public AssetEntity getAssetByIrcs(String ircs) throws AssetDaoException;
 
     /**
-     * Get transportMeans by guid
+     * Get asset by guid
      *
      * @param guid
      * @return
@@ -73,7 +73,7 @@ public interface AssetDao {
     public AssetEntity getAssetByGuid(String guid) throws AssetDaoException;
 
     /**
-     * Get transportMeans by IMO
+     * Get asset by IMO
      *
      * @param value
      * @return
@@ -82,7 +82,7 @@ public interface AssetDao {
     public AssetEntity getAssetByImo(String value) throws AssetDaoException;
 
     /**
-     * Get transportMeans by MMSI
+     * Get asset by MMSI
      *
      * @param value
      * @return
@@ -91,7 +91,7 @@ public interface AssetDao {
     public AssetEntity getAssetByMmsi(String value) throws AssetDaoException;
 
     /**
-     * Update transportMeans in database
+     * Update asset in database
      *
      * @param asset
      * @return
@@ -100,7 +100,7 @@ public interface AssetDao {
     public AssetEntity updateAsset(AssetEntity asset) throws AssetDaoException;
 
     /**
-     * Delete transportMeans from database
+     * Delete asset from database
      *
      * @param assetEntity
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException

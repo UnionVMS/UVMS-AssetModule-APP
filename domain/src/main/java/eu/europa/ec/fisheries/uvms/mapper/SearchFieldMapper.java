@@ -11,6 +11,11 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mapper;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.constant.SearchTables;
@@ -22,11 +27,6 @@ import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteriaPair;
 import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  **/
@@ -191,7 +191,7 @@ public class SearchFieldMapper {
         }
 
         StringBuilder builder = new StringBuilder();
-        builder.append(getJoin(fetch, JoinType.INNER)).append(SearchTables.ASSET_HIST.getTableAlias()).append(".transportMeans ").append(SearchTables.ASSET.getTableAlias());
+        builder.append(getJoin(fetch, JoinType.INNER)).append(SearchTables.ASSET_HIST.getTableAlias()).append(".asset ").append(SearchTables.ASSET.getTableAlias());
         builder.append(getJoin(fetch, JoinType.INNER)).append(SearchTables.ASSET.getTableAlias()).append(".carrier ").append(SearchTables.CARRIER.getTableAlias());
 
         builder.append(" WHERE ").append(SearchTables.ASSET_HIST.getTableAlias()).append(".active IN (").append(getHistoryCriterias(criterias)).append(") ");

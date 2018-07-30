@@ -1,6 +1,13 @@
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
 
+import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
+import java.util.List;
+
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
@@ -11,13 +18,6 @@ import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-import java.util.List;
 
 @Stateless
 @LocalBean
@@ -36,7 +36,7 @@ public class GetAssetGroupListByAssetGuidEventBean {
     private AssetGroupService assetGroup;
 
     public void getAssetGroupListByAssetEvent(AssetMessageEvent message) {
-        LOG.info("Get transportMeans group by transportMeans guid");
+        LOG.info("Get asset group by asset guid");
         try {
             List<AssetGroup> response = assetGroup.getAssetGroupListByAssetGuid(message.getAssetGuid());
             LOG.debug("Send back assetGroupList response.");

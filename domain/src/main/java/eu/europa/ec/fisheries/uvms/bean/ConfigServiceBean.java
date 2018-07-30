@@ -11,16 +11,14 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.bean;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceUnit;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
@@ -63,7 +61,7 @@ public class ConfigServiceBean {
 
 			return parameters;
 		} catch (RuntimeException | ConfigServiceException e) {
-			LOG.error("[ Error when getting transportMeans parameters from local database. ] {}", e);
+			LOG.error("[ Error when getting asset parameters from local database. ] {}", e);
 			throw new AssetException("Couldn't get parameters");
 		}
 	}
