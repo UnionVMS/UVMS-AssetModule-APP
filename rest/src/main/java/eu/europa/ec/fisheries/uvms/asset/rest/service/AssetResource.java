@@ -41,7 +41,7 @@ import eu.europa.ec.fisheries.wsdl.asset.types.NoteActivityCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Path("/transportMeans")
+@Path("/asset")
 @Stateless
 public class AssetResource {
 
