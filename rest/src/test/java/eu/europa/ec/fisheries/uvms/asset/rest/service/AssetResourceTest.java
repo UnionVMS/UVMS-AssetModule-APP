@@ -16,13 +16,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import javax.servlet.http.HttpServletRequest;
 
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.asset.exception.InputArgumentException;
@@ -36,8 +30,13 @@ import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
-
-import javax.servlet.http.HttpServletRequest;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 /***/
 public class AssetResourceTest {
@@ -86,7 +85,7 @@ public class AssetResourceTest {
     }
 
     /**
-     * Test get transportMeans list with a happy outcome
+     * Test get asset list with a happy outcome
      *
      * @throws eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException
      */
@@ -100,7 +99,7 @@ public class AssetResourceTest {
     }
 
     /**
-     * Test get transportMeans list when the injected EJB is null
+     * Test get tassetlist when the injected EJB is null
      *
      * @throws eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException
      */
@@ -113,7 +112,7 @@ public class AssetResourceTest {
     }
 
     /**
-     * Test get transportMeans by id with a happy outcome
+     * Test get asset by id with a happy outcome
      *
      * @throws eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException
      */
@@ -128,7 +127,7 @@ public class AssetResourceTest {
     }
 
     /**
-     * Test get transportMeans by id when the injected EJB is null
+     * Test get asset by id when the injected EJB is null
      *
      * @throws eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException
      */
@@ -155,7 +154,7 @@ public class AssetResourceTest {
     }
     //
     // /**
-    // * Test create transportMeans when the injected EJB is null
+    // * Test create asset when the injected EJB is null
     // */
 
     @Test
@@ -165,7 +164,7 @@ public class AssetResourceTest {
     }
 
     /**
-     * Test update transportMeans with a
+     * Test update asset with a
      *
      * @throws eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException
      */
@@ -179,7 +178,7 @@ public class AssetResourceTest {
     }
 
     /**
-     * Test update transportMeans when the injected EJB is null
+     * Test update asset when the injected EJB is null
      */
     @Test
     public void testUpdateAssetNull() {

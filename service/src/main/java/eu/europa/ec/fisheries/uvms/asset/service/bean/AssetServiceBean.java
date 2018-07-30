@@ -68,7 +68,7 @@ public class AssetServiceBean implements AssetService {
      */
     @Override
     public Asset createAsset(Asset asset, String username) throws AssetException {
-        LOG.debug("Creating transportMeans.");
+        LOG.debug("Creating asset.");
         Asset createdAsset = assetDomainModel.createAsset(asset, username);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetCreated(createdAsset.getAssetId().getGuid(), username);

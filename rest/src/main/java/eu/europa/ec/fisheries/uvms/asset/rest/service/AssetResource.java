@@ -71,7 +71,7 @@ public class AssetResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public ResponseDto getAssetList(final AssetListQuery assetQuery) {
         try {
-            LOG.info("Getting transportMeans list:{}",assetQuery);
+            LOG.info("Getting asset list:{}",assetQuery);
             ListAssetResponse assetList = assetService.getAssetList(assetQuery);
             return new ResponseDto(assetList, ResponseCodeConstant.OK);
         } catch (Exception e) {

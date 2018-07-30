@@ -6,31 +6,31 @@
     <changeSet author="jojoha" id="Insert static parameter values_v_04">
         
         <insert tableName="parameter">
-            <column name="param_id" value="transportMeans.eu.service.endpoint" />
+            <column name="param_id" value="asset.eu.service.endpoint" />
             <column name="param_value" value="http://livm58t:8080/BridgeWebApp/connector" />
             <column name="param_description" value="The endpoint where the vesselquery is sent" />
         </insert>
         
         <insert tableName="parameter">
-            <column name="param_id" value="transportMeans.eu.service.client.cert.header" />
+            <column name="param_id" value="asset.eu.service.client.cert.header" />
             <column name="param_value" value="Client-Cert" />
             <column name="param_description" value="The certification header key to use when querying the vessel" />
         </insert>
         
         <insert tableName="parameter">
-            <column name="param_id" value="transportMeans.eu.service.client.cert.value" />
+            <column name="param_id" value="asset.eu.service.client.cert.value" />
             <column name="param_value" value="jojoha" />
             <column name="param_description" value="The certification header value to use when querying the vessel" />
         </insert>
         
         <insert tableName="parameter">
-            <column name="param_id" value="transportMeans.eu.service.dataflow" />
+            <column name="param_id" value="asset.eu.service.dataflow" />
             <column name="param_value" value="urn:xeu:ec:fisheries:flux-bl:fr-vesseldeclaration:1" />
             <column name="param_description" value="The flux dataflow to use when querying for a vessel" />
         </insert>
         
         <insert tableName="parameter">
-            <column name="param_id" value="transportMeans.eu.service.flux.ad" />
+            <column name="param_id" value="asset.eu.service.flux.ad" />
             <column name="param_value" value="XEU" />
             <column name="param_description" value="The AD value" />
         </insert>
@@ -38,7 +38,7 @@
         <rollback>
             <delete tableName="parameter">
                 <where> 
-                    param_id in ('transportMeans.eu.service.endpoint','transportMeans.eu.service.client.cert.header','transportMeans.eu.service.client.cert.value','transportMeans.eu.service.dataflow', 'transportMeans.eu.service.flux.ad')
+                    param_id in ('asset.eu.service.endpoint','asset.eu.service.client.cert.header','asset.eu.service.client.cert.value','asset.eu.service.dataflow', 'asset.eu.service.flux.ad')
                 </where>
             </delete>
         </rollback>
