@@ -56,7 +56,7 @@ public interface AssetService {
     Long getAssetListCount(AssetListQuery requestQuery) throws AssetException;
 
     /**
-     * Get a Asset by its transportMeans id from the source queue
+     * Get a Asset by its asset id from the source queue
      *
      * @param assetId
      * @param source
@@ -86,17 +86,17 @@ public interface AssetService {
     Asset updateAsset(Asset asset,String username, String comment) throws AssetException;
 
     /**
-     * Archives an transportMeans.
+     * Archives an asset.
      * 
-     * @param asset an transportMeans
+     * @param asset an asset
      * @param comment a comment to the archiving
-     * @return the archived transportMeans
+     * @return the archived asset
      * @throws AssetException if unsuccessful
      */
     Asset archiveAsset(Asset asset, String username, String comment) throws AssetException;
 
     /**
-     * Create transportMeans if not exists, otherwise update transportMeans
+     * Create asset if not exists, otherwise update asset
      *
      * @param asset
      * @return

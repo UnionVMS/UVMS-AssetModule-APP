@@ -11,12 +11,11 @@
  */
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
+import java.util.List;
 
 import eu.europa.ec.fisheries.uvms.asset.service.constants.ParameterKey;
 import eu.europa.ec.fisheries.uvms.config.constants.ConfigHelper;
@@ -24,7 +23,7 @@ import eu.europa.ec.fisheries.uvms.config.constants.ConfigHelper;
 @Stateless
 public class AssetConfigHelper implements ConfigHelper {
 
-    private final static String ASSET_PU = "transportMeans";
+    private final static String ASSET_PU = "asset";
 
     @PersistenceContext
     protected EntityManager em;

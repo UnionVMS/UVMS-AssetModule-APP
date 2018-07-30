@@ -1,5 +1,12 @@
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
+import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
+import java.util.Date;
+
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
@@ -12,14 +19,6 @@ import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-import javax.jms.TextMessage;
-import java.util.Date;
 
 @Stateless
 @LocalBean
@@ -55,7 +54,7 @@ public class GetAssetFromAssetIdAndDateBean {
             return;
         }
         if (getAssetFromAssetIdAndDate.getAssetId().getType() == null) {
-            LOG.error("AssetMessageEvent assetId does not contain a valid transportMeans id type");
+            LOG.error("AssetMessageEvent assetId does not contain a valid asset id type");
             return;
         }
         if (getAssetFromAssetIdAndDate.getAssetId().getValue() == null) {

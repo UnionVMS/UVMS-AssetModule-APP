@@ -11,6 +11,15 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.bean;
 
+import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.InputArgumentException;
@@ -20,17 +29,21 @@ import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
-import eu.europa.ec.fisheries.uvms.mapper.*;
+import eu.europa.ec.fisheries.uvms.mapper.EntityToModelMapper;
+import eu.europa.ec.fisheries.uvms.mapper.MapperUtil;
+import eu.europa.ec.fisheries.uvms.mapper.ModelToEntityMapper;
+import eu.europa.ec.fisheries.uvms.mapper.SearchFieldMapper;
+import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
-import eu.europa.ec.fisheries.wsdl.asset.types.*;
+import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetHistoryId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
+import eu.europa.ec.fisheries.wsdl.asset.types.NoteActivityCode;
+import eu.europa.ec.fisheries.wsdl.asset.types.NumberOfAssetsGroupByFlagState;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import java.util.*;
 
 @Stateless
 @LocalBean
@@ -64,7 +77,7 @@ public class AssetDomainModelBean {
 
     private AssetEntity getAssetEntityById(AssetId id) throws AssetDaoException, InputArgumentException {
         if (id == null) {
-            throw new NoAssetEntityFoundException("No transportMeans id");
+            throw new NoAssetEntityFoundException("No asset id");
         }
         switch (id.getType()) {
             case CFR:
@@ -89,7 +102,7 @@ public class AssetDomainModelBean {
             case GFCM:
                 return assetDao.getAssetByGfcm(id.getValue());
             default:
-                throw new NoAssetEntityFoundException("Non valid transportMeans id type");
+                throw new NoAssetEntityFoundException("Non valid asset id type");
         }
     }
 
@@ -103,11 +116,11 @@ public class AssetDomainModelBean {
 
     public Asset updateAsset(Asset asset, String username) throws AssetModelException {
         if (asset == null) {
-            throw new InputArgumentException("Cannot update transportMeans because the transportMeans is null.");
+            throw new InputArgumentException("Cannot update asset because the asset is null.");
         }
 
         if (asset.getAssetId() == null) {
-            throw new InputArgumentException("Cannot update transportMeans because the transportMeans ID is null.");
+            throw new InputArgumentException("Cannot update asset because the asset ID is null.");
         }
 
         if (asset.getCfr() == null || asset.getCfr().isEmpty()) asset.setCfr(null);
@@ -130,14 +143,14 @@ public class AssetDomainModelBean {
             Asset retVal = EntityToModelMapper.toAssetFromEntity(updated);
             return retVal;
         } catch (AssetDaoException e) {
-            LOG.error("[ Error when updating transportMeans. ] {}", e.getMessage());
+            LOG.error("[ Error when updating asset. ] {}", e.getMessage());
             throw new AssetModelException(e.getMessage());
         }
     }
 
     public List<Asset> getAssetListByAssetGroup(List<AssetGroup> groups) throws AssetModelException {
         if (groups == null || groups.isEmpty()) {
-            throw new InputArgumentException("Cannot get transportMeans list because criteria are null.");
+            throw new InputArgumentException("Cannot get asset list because criteria are null.");
         }
 
         List<AssetGroup> dbAssetGroups = assetGroupModel.getAssetGroupsByGroupList(groups);
@@ -162,19 +175,19 @@ public class AssetDomainModelBean {
     public GetAssetListResponseDto getAssetList(AssetListQuery query)
             throws AssetModelException {
         if (query == null) {
-            throw new InputArgumentException("Cannot get transportMeans list because query is null.");
+            throw new InputArgumentException("Cannot get asset list because query is null.");
         }
 
         if (query.getAssetSearchCriteria() == null
                 || query.getAssetSearchCriteria().isIsDynamic() == null
                 || query.getAssetSearchCriteria().getCriterias() == null) {
             throw new InputArgumentException(
-                    "Cannot get transportMeans list because criteria are null.");
+                    "Cannot get asset list because criteria are null.");
         }
 
         if (query.getPagination() == null) {
             throw new InputArgumentException(
-                    "Cannot get transportMeans list because criteria pagination is null.");
+                    "Cannot get asset list because criteria pagination is null.");
         }
 
         GetAssetListResponseDto response = new GetAssetListResponseDto();
@@ -216,17 +229,17 @@ public class AssetDomainModelBean {
     public Long getAssetListCount(AssetListQuery query)
             throws AssetModelException {
         if (query == null) {
-            throw new InputArgumentException("Cannot get transportMeans list count because query is null.");
+            throw new InputArgumentException("Cannot get asset list count because query is null.");
         }
 
         if (query.getAssetSearchCriteria() == null
                 || query.getAssetSearchCriteria().isIsDynamic() == null
                 || query.getAssetSearchCriteria().getCriterias() == null) {
-            throw new InputArgumentException("Cannot get transportMeans list count because criteria are null.");
+            throw new InputArgumentException("Cannot get asset list count because criteria are null.");
         }
 
         if (query.getPagination() == null) {
-            throw new InputArgumentException("Cannot get transportMeans list count because criteria pagination is null.");
+            throw new InputArgumentException("Cannot get asset list count because criteria pagination is null.");
         }
 
         GetAssetListResponseDto response = new GetAssetListResponseDto();
@@ -260,7 +273,7 @@ public class AssetDomainModelBean {
             throws AssetModelException {
         if (historyId == null || historyId.getEventId() == null) {
             throw new InputArgumentException(
-                    "Cannot get transportMeans history because transportMeans history ID is null.");
+                    "Cannot get asset history because asset history ID is null.");
         }
 
         AssetHistory assetHistory = assetDao.getAssetHistoryByGuid(historyId
@@ -275,16 +288,16 @@ public class AssetDomainModelBean {
     }
 
     /**
-     * An transportMeans is considered to exist if an transportMeans can be found with the same
+     * An asset is considered to exist if an asset can be found with the same
      * CFR, IMO, IRCS or MMSI value.
      *
-     * @throws AssetDaoException if an transportMeans with the same CFR, IMO, IRCS or MMSI already exists
+     * @throws AssetDaoException if an asset with the same CFR, IMO, IRCS or MMSI already exists
      */
     private void assertAssetDoesNotExist(Asset asset) throws AssetModelException {
         List<String> messages = new ArrayList<>();
         try {
             if (asset.getCfr() != null && assetDao.getAssetByCfrExcludeArchived(asset.getCfr()) != null) {
-                messages.add("An transportMeans with this CFR value already exists.");
+                messages.add("An asset with this CFR value already exists.");
             }
         } catch (NoAssetEntityFoundException e) {
             // OK
@@ -292,7 +305,7 @@ public class AssetDomainModelBean {
 
         try {
             if (asset.getImo() != null && assetDao.getAssetByImoExcludeArchived(asset.getImo()) != null) {
-                messages.add("An transportMeans with this IMO value already exists.");
+                messages.add("An asset with this IMO value already exists.");
             }
         } catch (NoAssetEntityFoundException e) {
             // OK
@@ -300,14 +313,14 @@ public class AssetDomainModelBean {
 
         try {
             if (asset.getMmsiNo() != null && assetDao.getAssetByMmsiExcludeArchived(asset.getMmsiNo()) != null) {
-                messages.add("An transportMeans with this MMSI value already exists.");
+                messages.add("An asset with this MMSI value already exists.");
             }
         } catch (NoAssetEntityFoundException e) {
             // OK
         }
         try {
             if (asset.getIrcs() != null && assetDao.getAssetByIrcsExcludeArchived(asset.getIrcs()) != null) {
-                messages.add("An transportMeans with this IRCS value already exists.");
+                messages.add("An asset with this IRCS value already exists.");
             }
         } catch (NoAssetEntityFoundException e) {
             // OK
@@ -346,11 +359,11 @@ public class AssetDomainModelBean {
 
         if (assetGuid == null ) {
             throw new InputArgumentException(
-                    "Cannot get transportMeans  because transportMeans  ID is null.");
+                    "Cannot get asset  because asset  ID is null.");
         }
         if (date == null ) {
             throw new InputArgumentException(
-                    "Cannot get transportMeans  because date   is null.");
+                    "Cannot get asset  because date   is null.");
         }
 
         try {

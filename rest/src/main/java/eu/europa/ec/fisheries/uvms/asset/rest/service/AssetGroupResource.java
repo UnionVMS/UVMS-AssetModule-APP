@@ -11,6 +11,21 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.rest.service;
 
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseCodeConstant;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.asset.rest.error.ErrorHandler;
@@ -20,13 +35,6 @@ import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 
 @Path("/group")
 @Stateless
@@ -45,7 +53,7 @@ public class AssetGroupResource {
      * @responseMessage 200 Success
      * @responseMessage 500 Error
      *
-     * @summary Get transportMeans group list by user
+     * @summary Get asset group list by user
      *
      */
     @GET
@@ -58,7 +66,7 @@ public class AssetGroupResource {
             LOG.info("Getting transportMeans group list by user {}",user);
             return new ResponseDto(assetGroupService.getAssetGroupList(user), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting transportMeans group list by user. ] {}", e.getMessage(), e.getStackTrace());
+            LOG.error("[ Error when getting asset group list by user. ] {}", e.getMessage(), e.getStackTrace());
             return ErrorHandler.getFault(e);
         }
     }
@@ -68,7 +76,7 @@ public class AssetGroupResource {
      * @responseMessage 200 Success
      * @responseMessage 500 Error
      *
-     * @summary Get transportMeans group by ID
+     * @summary Get asset group by ID
      *
      */
     @GET
@@ -78,10 +86,10 @@ public class AssetGroupResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public ResponseDto getAssetById(@PathParam(value = "id") final String id) {
         try {
-            LOG.info("Getting transportMeans group by ID {}",id);
+            LOG.info("Getting asset group by ID {}",id);
             return new ResponseDto(assetGroupService.getAssetGroupById(id), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting transportMeans by ID. ] {}", e.getMessage(), e.getStackTrace());
+            LOG.error("[ Error when getting asset by ID. ] {}", e.getMessage(), e.getStackTrace());
             return ErrorHandler.getFault(e);
         }
     }
@@ -91,7 +99,7 @@ public class AssetGroupResource {
      * @responseMessage 200 Success
      * @responseMessage 500 Error
      *
-     * @summary Create a transportMeans group
+     * @summary Create a asset group
      *
      */
     @POST
@@ -100,10 +108,10 @@ public class AssetGroupResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public ResponseDto createAssetGroup(final AssetGroup assetGroup) {
         try {
-            LOG.info("Creating transportMeans group: {}",assetGroup);
+            LOG.info("Creating asset group: {}",assetGroup);
             return new ResponseDto(assetGroupService.createAssetGroup(assetGroup, servletRequest.getRemoteUser()), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when creating transportMeans group: {} ] {}",assetGroup, e.getMessage());
+            LOG.error("[ Error when creating asset group: {} ] {}",assetGroup, e.getMessage());
             return ErrorHandler.getFault(e);
         }
     }
@@ -113,7 +121,7 @@ public class AssetGroupResource {
      * @responseMessage 200 Success
      * @responseMessage 500 Error
      *
-     * @summary Update a transportMeans group
+     * @summary Update a asset group
      *
      */
     @PUT
@@ -122,10 +130,10 @@ public class AssetGroupResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public ResponseDto updateAssetGroup(final AssetGroup assetGroup) {
         try {
-            LOG.info("Updating transportMeans group:{}",assetGroup);
+            LOG.info("Updating asset group:{}",assetGroup);
             return new ResponseDto(assetGroupService.updateAssetGroup(assetGroup, servletRequest.getRemoteUser()), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when updating transportMeans group. ] {}", e.getMessage(), e.getStackTrace());
+            LOG.error("[ Error when updating asset group. ] {}", e.getMessage(), e.getStackTrace());
             return ErrorHandler.getFault(e);
         }
     }
@@ -135,7 +143,7 @@ public class AssetGroupResource {
      * @responseMessage 200 Success
      * @responseMessage 500 Error
      *
-     * @summary Delete a transportMeans group
+     * @summary Delete a asset group
      *
      */
     @DELETE
@@ -144,10 +152,10 @@ public class AssetGroupResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public ResponseDto deleteAssetGroup(@PathParam(value = "id") final String id) {
         try {
-            LOG.info("Deleting transportMeans group: {}",id);
+            LOG.info("Deleting asset group: {}",id);
             return new ResponseDto(assetGroupService.deleteAssetGroupById(id, servletRequest.getRemoteUser()), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when deleting transportMeans group. ] {}", e.getMessage(), e.getStackTrace());
+            LOG.error("[ Error when deleting asset group. ] {}", e.getMessage(), e.getStackTrace());
             return ErrorHandler.getFault(e);
         }
     }

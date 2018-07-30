@@ -53,8 +53,8 @@ public class AssetDaoBean extends Dao implements AssetDao {
             em.persist(asset);
             return asset;
         } catch (Exception e) {
-            LOG.error("[ Error when creating transportMeans. ] ");
-            throw new AssetDaoException("[ Error when creating transportMeans ] " + e.getMessage());
+            LOG.error("[ Error when creating asset. ] ");
+            throw new AssetDaoException("[ Error when creating asset ] " + e.getMessage());
         }
     }
 
@@ -63,7 +63,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
         try {
             return em.find(AssetEntity.class, id);
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No transportMeans found for " + id);
+            throw new NoAssetEntityFoundException("No asset found for " + id);
         }
     }
 
@@ -74,8 +74,8 @@ public class AssetDaoBean extends Dao implements AssetDao {
             em.flush();
             return asset;
         } catch (Exception e) {
-            LOG.error("[ Error when updating transportMeans. ] ");
-            throw new AssetDaoException("[ update transportMeans, id: " + asset.getId() + " ] " + e.getMessage());
+            LOG.error("[ Error when updating asset. ] ");
+            throw new AssetDaoException("[ update asset, id: " + asset.getId() + " ] " + e.getMessage());
         }
     }
 
@@ -96,8 +96,8 @@ public class AssetDaoBean extends Dao implements AssetDao {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_ALL, AssetEntity.class);
             return query.getResultList();
         } catch (IllegalArgumentException e) {
-            LOG.error("[ Error when getting transportMeans list. ] ");
-            throw new AssetDaoException("[ get all transportMeans ] " + e.getMessage());
+            LOG.error("[ Error when getting asset list. ] ");
+            throw new AssetDaoException("[ get all asset ] " + e.getMessage());
         }
     }
     @Override
@@ -108,7 +108,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No transportMeans found for " + cfr);
+            throw new NoAssetEntityFoundException("No asset found for " + cfr);
         }
     }
 
@@ -120,7 +120,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No transportMeans found for " + ircs);
+            throw new NoAssetEntityFoundException("No asset found for " + ircs);
         }
     }
 
@@ -132,7 +132,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No transportMeans found for " + guid);
+            throw new NoAssetEntityFoundException("No asset found for " + guid);
         }
     }
 
@@ -144,7 +144,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No transportMeans found for " + imo);
+            throw new NoAssetEntityFoundException("No asset found for " + imo);
         }
     }
 
@@ -156,7 +156,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No transportMeans found for " + mmsi);
+            throw new NoAssetEntityFoundException("No asset found for " + mmsi);
         }
     }
 
@@ -168,7 +168,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             AssetHistory singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No transportMeans history found for " + guid);
+            throw new NoAssetEntityFoundException("No asset history found for " + guid);
         }
     }
 
@@ -276,7 +276,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             query.setParameter("guids", assetGuids);
             return query.getResultList();
         } catch (IllegalArgumentException e) {
-            throw new AssetDaoException("[ get all transportMeans ] " + e.getMessage());
+            throw new AssetDaoException("[ get all asset ] " + e.getMessage());
         }
     }
 
@@ -288,7 +288,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No transportMeans found for " + cfr);
+            throw new NoAssetEntityFoundException("No asset found for " + cfr);
         }
     }
 
@@ -300,7 +300,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No transportMeans found for " + ircs);
+            throw new NoAssetEntityFoundException("No asset found for " + ircs);
         }
     }
 
@@ -312,7 +312,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No transportMeans found for " + imo);
+            throw new NoAssetEntityFoundException("No asset found for " + imo);
         }
     }
 
@@ -324,7 +324,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No transportMeans found for " + mmsi);
+            throw new NoAssetEntityFoundException("No asset found for " + mmsi);
         }
     }
 
@@ -341,7 +341,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             query.setParameter("iccat", iccat);
             return query.getSingleResult();
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No transportMeans found for " + iccat);
+            throw new NoAssetEntityFoundException("No asset found for " + iccat);
         }
     }
 
@@ -352,7 +352,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             query.setParameter("uvi", uvi);
             return query.getSingleResult();
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No transportMeans found for " + uvi);
+            throw new NoAssetEntityFoundException("No asset found for " + uvi);
         }
     }
 
@@ -363,7 +363,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             query.setParameter("gfcm", gfcm);
             return query.getSingleResult();
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No transportMeans found for " + gfcm);
+            throw new NoAssetEntityFoundException("No asset found for " + gfcm);
         }
     }
 
@@ -380,7 +380,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
 
         Date d = lowerResolution(date);
 
-        String hql = "select ah.countryOfRegistration from AssetHistory ah where ah.transportMeans.guid = :guid and ah.dateOfEvent <= :dateofevent order by ah.dateOfEvent DESC";
+        String hql = "select ah.countryOfRegistration from AssetHistory ah where ah.asset.guid = :guid and ah.dateOfEvent <= :dateofevent order by ah.dateOfEvent DESC";
         Query q = em.createQuery(hql);
         q.setParameter("guid", assetGuid);
         q.setParameter("dateofevent", d);
@@ -405,7 +405,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
         AssetIdType assetIdType = assetId.getType();
         String keyval = assetId.getValue();
 
-        String hql = "select ah.transportMeans from AssetHistory ah where %s = :keyval and ah.dateOfEvent <= :date order by ah.dateOfEvent DESC";
+        String hql = "select ah.asset from AssetHistory ah where %s = :keyval and ah.dateOfEvent <= :date order by ah.dateOfEvent DESC";
         switch (assetIdType) {
             case INTERNAL_ID:
                 break;
