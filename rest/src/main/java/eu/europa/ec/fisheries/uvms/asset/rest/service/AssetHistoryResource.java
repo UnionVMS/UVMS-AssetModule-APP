@@ -52,7 +52,7 @@ public class AssetHistoryResource {
      *
      */
     @GET
-    @Path("/transportMeans")
+    @Path("/asset")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     public ResponseDto getAssetHistoryListByAssetId(@QueryParam("assetId") String assetId, @QueryParam("maxNbr") Integer maxNbr) {
