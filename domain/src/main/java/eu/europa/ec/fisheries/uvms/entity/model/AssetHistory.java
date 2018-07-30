@@ -70,7 +70,6 @@ import org.hibernate.annotations.FetchMode;
                 "((:DATE is NULL) OR vh.dateOfEvent <= cast(:DATE as timestamp))" +
                 "ORDER BY dateOfEvent")
 })
-
 public class AssetHistory implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -1,5 +1,11 @@
 package eu.europa.fisheries.uvms.asset.service.arquillian;
 
+import static eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType.GUID;
+
+import javax.ejb.EJB;
+import javax.inject.Inject;
+import javax.jms.TextMessage;
+
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetEventBean;
@@ -12,13 +18,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import javax.ejb.EJB;
-import javax.inject.Inject;
-import javax.jms.TextMessage;
-
-
-import static eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType.GUID;
 
 @RunWith(Arquillian.class)
 public class GetAssetEventBeanIntTest extends TransactionalTests {
@@ -55,7 +54,7 @@ public class GetAssetEventBeanIntTest extends TransactionalTests {
         getAssetEventBean.getAsset(textMessage, assetId);
 
         Assert.assertTrue(interceptorForTest.isFailed());
-        Assert.assertTrue(interceptorForTest.getAssetFault().getFault().contains("Exception when getting transportMeans from source : INTERNAL Error message: No transportMeans found for <BAD UUID>"));
+        Assert.assertTrue(interceptorForTest.getAssetFault().getFault().contains("Exception when getting asset from source : INTERNAL Error message: No asset found for <BAD UUID>"));
 
     }
 
