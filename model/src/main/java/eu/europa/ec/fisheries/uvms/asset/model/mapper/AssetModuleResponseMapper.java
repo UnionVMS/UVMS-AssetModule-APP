@@ -68,7 +68,7 @@ public class AssetModuleResponseMapper {
             return mappedResponse.getAsset();
         } catch (AssetModelMarshallException | JMSException e) {
             LOG.error("[ Error when mapping response to single asset response. ] {}", e.getMessage());
-            throw new AssetModelMapperException("Error when returning transportMeans from response in ResponseMapper: " + e.getMessage());
+            throw new AssetModelMapperException("Error when returning asset from response in ResponseMapper: " + e.getMessage());
         }
     }
 
