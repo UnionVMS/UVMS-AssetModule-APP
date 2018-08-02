@@ -53,11 +53,11 @@ public class GetAssetEventBean {
 
         try {
             dataSource = decideDataflow(assetId);
-            LOG.debug("Got message to AssetModule, Executing Get asset from datasource {}", dataSource.name());
+            LOG.debug("Got message to AssetModule, Executing Get asset from datasource {}", dataSource);
             asset = service.getAssetById(assetId, dataSource);
         } catch (AssetException e) {
-            LOG.error("[ Error when getting asset from source {}. ] ", dataSource.name());
-            assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting asset from source : " + dataSource.name() + " Error message: " + e.getMessage())));
+            LOG.error("[ Error when getting asset from source {}. ] ", dataSource);
+            assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting asset from source : " + dataSource + " Error message: " + e.getMessage())));
             messageSent = true;
             asset = null;
         }
