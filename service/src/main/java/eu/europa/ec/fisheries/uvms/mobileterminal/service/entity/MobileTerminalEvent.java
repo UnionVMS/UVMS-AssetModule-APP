@@ -13,6 +13,11 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -50,6 +55,8 @@ public class MobileTerminalEvent implements Serializable {
 	@Column(name="comment")
 	private String comment;
 
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	@Column(name="updattime")
 	private LocalDateTime updatetime;
 

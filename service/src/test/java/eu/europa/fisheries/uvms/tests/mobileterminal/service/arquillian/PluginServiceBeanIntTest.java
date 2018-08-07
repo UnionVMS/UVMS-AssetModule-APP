@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -98,7 +99,7 @@ public class PluginServiceBeanIntTest extends TransactionalTests {
         DNIDList dnidList = new DNIDList();
         dnidList.setDnid("TEST_DN_ID");
         dnidList.setPluginName("TEST_PLUGIN_NAME");
-        dnidList.setUpdateTime(LocalDateTime.now());
+        dnidList.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
         dnidList.setUpdatedBy(USERNAME);
         return dnidList;
     }

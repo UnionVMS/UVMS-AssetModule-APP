@@ -56,7 +56,7 @@ public class PollProgramDaoBean {
 
     public List<PollProgram> getPollProgramRunningAndStarted()  {
             TypedQuery<PollProgram> query = em.createNamedQuery(MobileTerminalConstants.POLL_PROGRAM_FIND_RUNNING_AND_STARTED, PollProgram.class);
-            query.setParameter("currentDate", LocalDateTime.now(ZoneOffset.UTC).toString());
+            query.setParameter("currentDate", LocalDateTime.now(ZoneOffset.UTC)/*.toString()*/);
             List<PollProgram> pollPrograms = query.getResultList();
             List<PollProgram> validPollPrograms = new ArrayList<>();
 

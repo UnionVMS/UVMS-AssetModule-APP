@@ -76,7 +76,7 @@ public class TestPollHelper {
 
         MobileTerminal mt = new MobileTerminal();
         mt.setSerialNo(serialNo);
-        mt.setUpdatetime(LocalDateTime.now());
+        mt.setUpdatetime(LocalDateTime.now(ZoneOffset.UTC));
         mt.setUpdateuser("TEST");
         mt.setSource(MobileTerminalSourceEnum.INTERNAL);
         mt.setPlugin(mtp);
@@ -90,7 +90,7 @@ public class TestPollHelper {
         mtpc.setName("test");
         mtpc.setValue("test");
         mtpc.setUpdatedBy("TEST_USER");
-        mtpc.setUpdateTime(LocalDateTime.now());
+        mtpc.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
         capabilityList.add(mtpc);
 
         mtp.getCapabilities().addAll(capabilityList);

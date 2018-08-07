@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -60,11 +61,11 @@ public class PollModelToEntityMapper {
                     poll.setFrequency(Integer.parseInt(attr.getValue()));
                     break;
                 case START_DATE:
-                    poll.setStartDate(LocalDateTime.parse(attr.getValue())); // Not sure if it will work without a format pattern
+                    poll.setStartDate(LocalDateTime.parse(attr.getValue(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss Z"))); // Not sure if it will work without a format pattern
 //                    poll.setStartDate(parseToUTCDateTime(attr.getValue()));
                     break;
                 case END_DATE:
-                    poll.setStopDate(LocalDateTime.parse(attr.getValue())); // Not sure if it will work without a format pattern
+                    poll.setStopDate(LocalDateTime.parse(attr.getValue(),  DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss Z"))); // Not sure if it will work without a format pattern
 //                    poll.setStopDate(parseToUTCDateTime(attr.getValue()));
                     break;
                 default:

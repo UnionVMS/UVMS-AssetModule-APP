@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import javax.ejb.EJB;
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -140,7 +141,7 @@ public class DNIDListDaoBeanTestIntTest extends TransactionalTests {
         DNIDList dnidList = new DNIDList();
         dnidList.setDnid(DN_ID);
         dnidList.setPluginName(PLUGIN_NAME);
-        dnidList.setUpdateTime(LocalDateTime.now());
+        dnidList.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
         dnidList.setUpdatedBy(USERNAME);
         return dnidList;
     }

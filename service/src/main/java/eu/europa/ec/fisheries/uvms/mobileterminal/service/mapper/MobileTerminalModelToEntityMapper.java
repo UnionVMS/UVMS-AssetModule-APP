@@ -56,8 +56,8 @@ public class MobileTerminalModelToEntityMapper {
         if (type == null)
             throw new NullPointerException("Non valid mobile terminal type when mapping");
         entity.setMobileTerminalType(type);
-        entity.setUpdatetime(LocalDateTime.now(ZoneOffset.UTC));
-        entity.setUpdateuser(username);
+        /*entity.setUpdatetime(LocalDateTime.now(ZoneOffset.UTC));
+        entity.setUpdateuser(username);*/
 
         mapHistoryAttributes(entity, model, username, comment, event);
 
