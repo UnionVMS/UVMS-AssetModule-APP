@@ -24,6 +24,8 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.TerminalC
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 public class PluginMapper {
@@ -49,7 +51,7 @@ public class PluginMapper {
 		entity.setName(model.getLabelName());
 		entity.setPluginInactive(model.isInactive());
 		entity.setUpdatedBy(MobileTerminalConstants.UPDATE_USER);
-		entity.setUpdateTime(new Date());
+		entity.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
 		if(entity.getCapabilities() == null) {
 			entity.setCapabilities(new HashSet<>());
 		}
@@ -65,7 +67,7 @@ public class PluginMapper {
 			entity.setName(capability.getName().name());
 			entity.setValue(capability.getValue());
 			entity.setUpdatedBy(MobileTerminalConstants.UPDATE_USER);
-			entity.setUpdateTime(new Date());
+			entity.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
 			capabilityList.add(entity);
 		}
 		return capabilityList;

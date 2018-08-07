@@ -23,6 +23,11 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -30,10 +35,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -59,9 +62,10 @@ public class Channel implements Serializable {
 	@Column(name="archived")
 	private Boolean archived;
 
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	@Column(name="updattime")
-	private Date updateTime;
+	private LocalDateTime updateTime;
 
 	@Column(name="updateuser")
 	private String updateUser;
@@ -132,11 +136,11 @@ public class Channel implements Serializable {
 		this.archived = archived;
 	}
 
-	public Date getUpdateTime() {
+	public LocalDateTime getUpdateTime() {
 		return updateTime;
 	}
 
-	public void setUpdateTime(Date updateTime) {
+	public void setUpdateTime(LocalDateTime updateTime) {
 		this.updateTime = updateTime;
 	}
 

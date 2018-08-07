@@ -13,6 +13,11 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
@@ -20,7 +25,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -51,10 +56,11 @@ public class MobileTerminalPluginCapability implements Serializable {
     @Size(max = 25)
     @Column(name = "capability")
     private String name;
-    
-    @Temporal(TemporalType.TIMESTAMP)
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @Column(name = "updattim")
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     @Size(max = 60)
     @Column(name = "upuser")
@@ -91,11 +97,11 @@ public class MobileTerminalPluginCapability implements Serializable {
         this.name = name;
     }
 
-    public Date getUpdateTime() {
+    public LocalDateTime getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
     }
 

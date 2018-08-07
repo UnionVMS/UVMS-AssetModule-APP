@@ -15,6 +15,11 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
@@ -27,6 +32,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 /**
@@ -75,13 +82,16 @@ public class MobileTerminal implements Serializable {
 	@Column(name="type")
 	private MobileTerminalTypeEnum mobileTerminalType;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="updatetime")
-	private Date updatetime;
 
-	@Temporal(TemporalType.TIMESTAMP)
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@Column(name="updatetime")
+	private LocalDateTime updatetime;
+
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	@Column(name="createtime")
-	private Date createTime;
+	private LocalDateTime createTime;
 
 	@Size(max = 60)
 	@Column(name="updateuser")
@@ -104,9 +114,8 @@ public class MobileTerminal implements Serializable {
 
 	@PrePersist
 	private void atPrePersist() {
-
 		this.historyId = UUID.randomUUID();
-		this.createTime = new Date();
+		this.createTime = LocalDateTime.now(ZoneOffset.UTC);
 	}
 
 	@PreUpdate
@@ -170,11 +179,11 @@ public class MobileTerminal implements Serializable {
 		this.mobileTerminalType = mobileTerminalType;
 	}
 
-	public Date getUpdatetime() {
+	public LocalDateTime getUpdatetime() {
 		return updatetime;
 	}
 
-	public void setUpdatetime(Date updatetime) {
+	public void setUpdatetime(LocalDateTime updatetime) {
 		this.updatetime = updatetime;
 	}
 
@@ -214,11 +223,11 @@ public class MobileTerminal implements Serializable {
 		this.channels = channels;
 	}
 
-	public Date getCreateTime() {
+	public LocalDateTime getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(Date createTime) {
+	public void setCreateTime(LocalDateTime createTime) {
 		this.createTime = createTime;
 	}
 

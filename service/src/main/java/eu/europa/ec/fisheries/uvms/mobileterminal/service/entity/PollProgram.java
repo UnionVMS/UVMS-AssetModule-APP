@@ -11,6 +11,12 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollStateEnum;
 import org.hibernate.annotations.GenericGenerator;
@@ -18,7 +24,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -49,25 +55,29 @@ public class PollProgram implements Serializable {
     @Column(name = "frequency")
     private Integer frequency; // this is probably in seconds
 
-    @Column(name = "startdate")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date startDate;
 
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @Column(name = "startdate")
+    private LocalDateTime startDate;
+
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @Column(name = "stopdate")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date stopDate;
+    private LocalDateTime stopDate;
 
     @Column(name = "latestruntime")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date latestRun;
+    private LocalDateTime latestRun;
 
     @Size(max = 60)
     @Column(name = "upuser")
     private String updatedBy;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @Column(name = "updattim")
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     @JoinColumn(name = "pollbase_id")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -93,27 +103,27 @@ public class PollProgram implements Serializable {
         this.frequency = frequency;
     }
 
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public Date getStopDate() {
+    public LocalDateTime getStopDate() {
         return stopDate;
     }
 
-    public void setStopDate(Date stopDate) {
+    public void setStopDate(LocalDateTime stopDate) {
         this.stopDate = stopDate;
     }
 
-    public Date getLatestRun() {
+    public LocalDateTime getLatestRun() {
         return latestRun;
     }
 
-    public void setLatestRun(Date latestRun) {
+    public void setLatestRun(LocalDateTime latestRun) {
         this.latestRun = latestRun;
     }
 
@@ -125,11 +135,11 @@ public class PollProgram implements Serializable {
         this.updatedBy = updatedBy;
     }
 
-    public Date getUpdateTime() {
+    public LocalDateTime getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
     }
 

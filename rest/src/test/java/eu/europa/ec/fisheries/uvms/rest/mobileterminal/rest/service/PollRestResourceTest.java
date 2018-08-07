@@ -1,6 +1,10 @@
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListPagination;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
@@ -186,8 +190,10 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .get(String.class);
 
+        //System.out.println(response);
         assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
         String  deserializeResponse = deserializeResponseDto(response, String.class);
+        //System.out.println(deserializeResponse);
 
         ObjectMapper objectMapper = new ObjectMapper();
         PollProgram checkThatThePollIsArchived = objectMapper.readValue(deserializeResponse, PollProgram.class);

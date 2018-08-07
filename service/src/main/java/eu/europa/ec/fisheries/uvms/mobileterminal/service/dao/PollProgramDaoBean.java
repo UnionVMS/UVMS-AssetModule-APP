@@ -20,6 +20,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,22 +50,25 @@ public class PollProgramDaoBean {
 
     public List<PollProgram> getProgramPollsAlive()  {
         TypedQuery<PollProgram> query = em.createNamedQuery(MobileTerminalConstants.POLL_PROGRAM_FIND_ALIVE, PollProgram.class);
-        query.setParameter("currentDate", DateUtils.getUTCNow());
+        query.setParameter("currentDate", LocalDateTime.now(ZoneOffset.UTC));
         return query.getResultList();
     }
 
     public List<PollProgram> getPollProgramRunningAndStarted()  {
             TypedQuery<PollProgram> query = em.createNamedQuery(MobileTerminalConstants.POLL_PROGRAM_FIND_RUNNING_AND_STARTED, PollProgram.class);
-            query.setParameter("currentDate", DateUtils.getUTCNow());
+            query.setParameter("currentDate", LocalDateTime.now(ZoneOffset.UTC)/*.toString()*/);
             List<PollProgram> pollPrograms = query.getResultList();
             List<PollProgram> validPollPrograms = new ArrayList<>();
 
             for (PollProgram pollProgram : pollPrograms) {
-                Date lastRun = pollProgram.getLatestRun();
+                LocalDateTime lastRun = pollProgram.getLatestRun();
                 Integer frequency = pollProgram.getFrequency();
-                Date now = DateUtils.getUTCNow();
+                LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 
-                boolean createPoll = lastRun == null || now.getTime() >= lastRun.getTime() + frequency * 1000;
+                long lastRunEpoch = lastRun == null ? 0 : lastRun.toEpochSecond(ZoneOffset.UTC);
+                long nowEpoch = now.toEpochSecond(ZoneOffset.UTC);
+
+                boolean createPoll = lastRun == null || nowEpoch >= lastRunEpoch + frequency * 1000;
 
                 if (createPoll) {
                     pollProgram.setLatestRun(now);

@@ -17,6 +17,7 @@ import javax.ws.rs.client.WebTarget;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.eu.ingwar.tools.arquillian.extension.suite.annotations.ArquillianSuiteDeployment;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -70,7 +71,9 @@ public abstract class AbstractAssetRestTest {
     }
 
     protected static <T> T deserializeResponseDto(String responseDto, Class<T> clazz) throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper()
+                .registerModule(new Jdk8Module())
+                .registerModule(new JavaTimeModule());
         ObjectNode node = objectMapper.readValue(responseDto, ObjectNode.class);
         JsonNode jsonNode = node.get("data");
         return objectMapper.readValue(objectMapper.writeValueAsString(jsonNode), clazz);

@@ -19,11 +19,16 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.PollBase;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.PollProgram;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.util.DateUtils;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class PollEntityToModelMapper {
+
+    private final static String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss Z";
+    private final static String DATE_TIME_FORMAT_WO_TIMEZONE = "yyyy-MM-dd HH:mm:ss";
 
     private static PollResponseType mapToPollResponseType(PollBase pollBase, MobileTerminalType mobileTerminalType)  {
         PollResponseType response = new PollResponseType();
@@ -60,8 +65,10 @@ public class PollEntityToModelMapper {
     private static List<PollAttribute> getProgramPollAttributes(PollProgram program) {
         List<PollAttribute> attributes = new ArrayList<>();
         attributes.add(createPollAttribute(PollAttributeType.FREQUENCY, program.getFrequency().toString()));
-        attributes.add(createPollAttribute(PollAttributeType.START_DATE, DateUtils.parseUTCDateTimeToString(program.getStartDate())));
-        attributes.add(createPollAttribute(PollAttributeType.END_DATE, DateUtils.parseUTCDateTimeToString(program.getStopDate())));
+//        attributes.add(createPollAttribute(PollAttributeType.START_DATE, DateUtils.parseUTCDateTimeToString(program.getStartDate())));
+//        attributes.add(createPollAttribute(PollAttributeType.START_DATE, DateUtils.parseUTCDateTimeToString(program.getStopDate())));
+        attributes.add(createPollAttribute(PollAttributeType.START_DATE, program.getStartDate().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_WO_TIMEZONE))));
+        attributes.add(createPollAttribute(PollAttributeType.END_DATE, program.getStopDate().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_WO_TIMEZONE))));
 
         switch (program.getPollState()) {
         case STARTED:

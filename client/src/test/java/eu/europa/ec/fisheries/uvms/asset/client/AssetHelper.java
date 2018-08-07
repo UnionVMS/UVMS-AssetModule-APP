@@ -148,7 +148,7 @@ public abstract class AssetHelper {
     public static CustomCode createCustomCode(String constant) {
 
         CustomCode cc = new CustomCode();
-        LocalDateTime validFrom = LocalDateTime.now();
+        LocalDateTime validFrom = LocalDateTime.now(ZoneOffset.UTC);
         LocalDateTime validTo = validFrom.plusDays(30);
         CustomCodesPK pk = new CustomCodesPK(constant, "TEST_Code_" + UUID.randomUUID().toString(),validFrom, validTo);
         cc.setPrimaryKey(pk);

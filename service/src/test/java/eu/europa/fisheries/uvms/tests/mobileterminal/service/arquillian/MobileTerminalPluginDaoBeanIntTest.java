@@ -16,8 +16,9 @@ import org.junit.runner.RunWith;
 import javax.ejb.EJB;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.validation.ConstraintViolationException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -268,7 +269,7 @@ public class MobileTerminalPluginDaoBeanIntTest extends TransactionalTests {
         mobileTerminalPlugin.setPluginServiceName("test_serviceName");
         mobileTerminalPlugin.setPluginSatelliteType("test_satelliteType");
         mobileTerminalPlugin.setPluginInactive(false);
-        mobileTerminalPlugin.setUpdateTime(new Date());
+        mobileTerminalPlugin.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
         mobileTerminalPlugin.setUpdatedBy("test_user");
 
         return mobileTerminalPlugin;
