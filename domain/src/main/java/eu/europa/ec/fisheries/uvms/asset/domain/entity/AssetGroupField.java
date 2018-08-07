@@ -68,7 +68,7 @@ public class AssetGroupField implements Serializable {
     private String value;
 
     @Column(name = "assetgroup")
-    private UUID assetgroup;
+    private UUID assetGroup;
 
     public UUID getId() {
         return this.id;
@@ -111,11 +111,11 @@ public class AssetGroupField implements Serializable {
     }
 
     public UUID getAssetGroup() {
-        return this.assetgroup;
+        return this.assetGroup;
     }
 
-    public void setAssetGroup(UUID assetgroup) {
-        this.assetgroup = assetgroup;
+    public void setAssetGroup(UUID assetGroup) {
+        this.assetGroup = assetGroup;
     }
 
 }

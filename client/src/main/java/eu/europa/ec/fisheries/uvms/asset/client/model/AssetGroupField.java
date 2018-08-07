@@ -20,7 +20,7 @@ public class AssetGroupField {
     private LocalDateTime updateTime;
     private String updatedBy;
     private String value;
-    private UUID assetgroup;
+    private UUID assetGroup;
     
     public UUID getId() {
         return id;
@@ -52,10 +52,10 @@ public class AssetGroupField {
     public void setValue(String value) {
         this.value = value;
     }
-    public UUID getAssetgroup() {
-        return assetgroup;
+    public UUID getAssetGroup() {
+        return assetGroup;
     }
-    public void setAssetgroup(UUID assetgroup) {
-        this.assetgroup = assetgroup;
+    public void setAssetGroup(UUID assetGroup) {
+        this.assetGroup = assetGroup;
     }
 }
