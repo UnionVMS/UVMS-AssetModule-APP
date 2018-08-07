@@ -14,6 +14,11 @@
     <name>asset-client</name>
     <packaging>jar</packaging>
 
+	<properties>
+		<docker.dev.stop.phase>verify</docker.dev.stop.phase>
+		<docker.dev.prestop.phase>install</docker.dev.prestop.phase>
+	</properties>
+
     <scm>
         <url>https://github.com/unionvns/minimaven</url>
         <connection>scm:git:git://github.com/unionvms/minimaven.git</connection>
