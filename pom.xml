@@ -16,7 +16,7 @@
 
     <properties>
     	<asset.api.check.against.version>4.0.0</asset.api.check.against.version>
-    	<docker.dev.version>3.25.0.w12</docker.dev.version>
+    	<docker.dev.version>3.25.1.w12-SNAPSHOT</docker.dev.version>
         <usm4uvms.version>4.0.10</usm4uvms.version>
         <uvms.config.version>4.0.0</uvms.config.version>
 		<uvms.common.version>3.0.18</uvms.common.version>
