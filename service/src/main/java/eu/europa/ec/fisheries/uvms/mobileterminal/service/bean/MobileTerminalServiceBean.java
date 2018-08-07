@@ -14,8 +14,8 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.bean;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollableQuery;
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.DataSourceQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageConsumer;
@@ -49,8 +49,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.MT_PARSING_ERROR;
-import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.TERMINAL_ALREADY_LINKED_ERROR;
-import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.TERMINAL_NOT_LINKED_ERROR;
 
 @Stateless
 @LocalBean
@@ -80,7 +78,7 @@ public class MobileTerminalServiceBean {
     @EJB
     private MobileTerminalPluginDaoBean pluginDao;
 
-    public MobileTerminalType createMobileTerminal(MobileTerminalType mobileTerminal, MobileTerminalSource source, String username) throws MobileTerminalModelException {
+    public MobileTerminalType createMobileTerminal(MobileTerminalType mobileTerminal, MobileTerminalSource source, String username) {
         mobileTerminal.setSource(source);
         MobileTerminalType createdMobileTerminal = createMobileTerminal(mobileTerminal, username);
         boolean dnidUpdated = configModel.checkDNIDListChange(createdMobileTerminal.getPlugin().getServiceName());
@@ -118,7 +116,7 @@ public class MobileTerminalServiceBean {
         return terminalGet;
     }
 
-    public MobileTerminalType upsertMobileTerminal(MobileTerminalType data, MobileTerminalSource source, String username) throws MobileTerminalModelException {
+    public MobileTerminalType upsertMobileTerminal(MobileTerminalType data, MobileTerminalSource source, String username) {
         if (data == null) {
             throw new NullPointerException("No Mobile terminal to update [ NULL ]");
         }
@@ -133,7 +131,7 @@ public class MobileTerminalServiceBean {
         return terminalUpserted;
     }
 
-    public MobileTerminalType getMobileTerminalById(MobileTerminalId id, DataSourceQueue queue) throws MobileTerminalModelException {
+    public MobileTerminalType getMobileTerminalById(MobileTerminalId id, DataSourceQueue queue) throws AssetException {
         if (id == null) {
             throw new NullPointerException("No id");
         }
@@ -146,8 +144,7 @@ public class MobileTerminalServiceBean {
         return MobileTerminalDataSourceResponseMapper.mapToMobileTerminalFromResponse(response, messageId);
     }
 
-    public MobileTerminalType updateMobileTerminal(MobileTerminalType mobileTerminal, String comment, MobileTerminalSource source, String username)
-            throws MobileTerminalModelException {
+    public MobileTerminalType updateMobileTerminal(MobileTerminalType mobileTerminal, String comment, MobileTerminalSource source, String username) {
         mobileTerminal.setSource(source);
         MobileTerminalType terminalUpdate = updateMobileTerminal(mobileTerminal, comment, username);
         try {
@@ -166,7 +163,7 @@ public class MobileTerminalServiceBean {
         return terminalUpdate;
     }
 
-    public MobileTerminalType assignMobileTerminal(MobileTerminalAssignQuery query, String comment, String username) throws MobileTerminalModelException {
+    public MobileTerminalType assignMobileTerminal(MobileTerminalAssignQuery query, String comment, String username) {
         MobileTerminalType terminalAssign = assignMobileTerminalToCarrier(query, comment, username);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalAssigned(terminalAssign.getMobileTerminalId().getGuid(), comment, username);
@@ -179,7 +176,7 @@ public class MobileTerminalServiceBean {
         return terminalAssign;
     }
 
-    public MobileTerminalType unAssignMobileTerminal(MobileTerminalAssignQuery query, String comment, String username) throws MobileTerminalModelException {
+    public MobileTerminalType unAssignMobileTerminal(MobileTerminalAssignQuery query, String comment, String username) {
         MobileTerminalType terminalUnAssign = unAssignMobileTerminalFromCarrier(query, comment, username);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalUnassigned(terminalUnAssign.getMobileTerminalId().getGuid(), comment, username);
@@ -274,7 +271,7 @@ public class MobileTerminalServiceBean {
         return terminalDao.getMobileTerminalBySerialNo(serialNo);
     }
 
-    public MobileTerminalType createMobileTerminal(MobileTerminalType mobileTerminal, String username) throws MobileTerminalModelException {
+    public MobileTerminalType createMobileTerminal(MobileTerminalType mobileTerminal, String username) {
         try {
             assertTerminalNotExists(mobileTerminal);
             String serialNumber = assertTerminalHasNeededData(mobileTerminal);
@@ -286,7 +283,8 @@ public class MobileTerminalServiceBean {
             return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
         } catch (Exception e) {
             LOG.error("Error in model when creating mobile terminal: {}", e.getMessage());
-            throw new MobileTerminalModelException(MT_PARSING_ERROR.getMessage() + mobileTerminal.getMobileTerminalId(), e, MT_PARSING_ERROR.getCode());
+            throw new RuntimeException(MT_PARSING_ERROR.getMessage() + mobileTerminal.getMobileTerminalId(), e);
+            //throw new MobileTerminalModelException(MT_PARSING_ERROR.getMessage() + mobileTerminal.getMobileTerminalId(), e, MT_PARSING_ERROR.getCode());
         }
     }
 
@@ -457,7 +455,7 @@ public class MobileTerminalServiceBean {
         throw new IllegalArgumentException("Terminal " + mobTermId + " is not linked to an asset with guid " + connectId);
     }
 
-    public MobileTerminalType upsertMobileTerminal(MobileTerminalType mobileTerminal, String username) throws MobileTerminalModelException {
+    public MobileTerminalType upsertMobileTerminal(MobileTerminalType mobileTerminal, String username) {
 
         if (mobileTerminal == null) {
             throw new NullPointerException("RequestQuery is null");

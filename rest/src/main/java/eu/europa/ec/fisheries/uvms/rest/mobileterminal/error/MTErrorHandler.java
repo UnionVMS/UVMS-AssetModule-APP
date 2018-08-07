@@ -18,7 +18,7 @@ public class MTErrorHandler {
     
     public static MTResponseDto getFault(Exception ex) {
 
-    	if(ex instanceof MobileTerminalModelException) {
+    	/*if(ex instanceof MobileTerminalModelException) {
 //    		if(ex instanceof MobileTerminalModelValidationException) {
 //    			return new MTResponseDto<>(ex.getMessage(), MTResponseCode.INPUT_ERROR);
 //    		}
@@ -34,11 +34,11 @@ public class MTErrorHandler {
 //        	}
     		
     		return new MTResponseDto<>(ex.getMessage(), MTResponseCode.MODEL_ERROR);
-    	}
+    	}*/
 
-    	if(ex instanceof MobileTerminalModelException) {
+    	/*if(ex instanceof MobileTerminalModelException) {
     		return new MTResponseDto<>(ex.getMessage(), MTResponseCode.MOBILE_TERMINAL_ERROR);
-    	}
+    	}*/
         return new MTResponseDto<>(ex.getMessage(), MTResponseCode.UNDEFINED_ERROR);
     }
 

@@ -16,7 +16,6 @@ import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginCapabilityType;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ModuleQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
@@ -31,7 +30,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelListDto
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.PollSearchKeyValue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.poll.PollSearchMapper;
@@ -40,10 +38,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.ejb.*;
 import java.util.*;
-
-import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.CREATE_POLL_FAILED;
-import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.POLL_STATE_MODIFICATION_ERROR;
-import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.PP_SEND_STATUS_ERROR;
 
 @Stateless
 @LocalBean

@@ -14,7 +14,6 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.model.validator;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttribute;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttributeType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

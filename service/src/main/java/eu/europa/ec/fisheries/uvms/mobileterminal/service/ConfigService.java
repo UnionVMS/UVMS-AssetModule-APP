@@ -16,7 +16,6 @@ import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.ConfigList;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.Plugin;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -28,30 +27,26 @@ public interface ConfigService {
      * Get all defined terminal system transponders
      *
      * @return
-     * @throws MobileTerminalServiceException
      */
-    List<TerminalSystemType> getTerminalSystems() throws MobileTerminalModelException;
+    List<TerminalSystemType> getTerminalSystems();
 	
 	/**
 	 * Get configuration
 	 * 
 	 * @return
-	 * @throws MobileTerminalModelException
 	 */
-	List<ConfigList> getConfig() throws MobileTerminalModelException;
+	List<ConfigList> getConfig();
 	
 	/**
 	 * 
 	 * @param pluginList
 	 * @return
-	 * @throws MobileTerminalModelException
 	 */
-	List<Plugin> upsertPlugins(List<PluginService> pluginList, String username) throws MobileTerminalModelException;
+	List<Plugin> upsertPlugins(List<PluginService> pluginList, String username);
 	
 	/**
 	 * Get plugins (from exchange) matching MobileTerminal plugins
 	 * @return
-	 * @throws MobileTerminalModelException
 	 */
-	List<ServiceResponseType> getRegisteredMobileTerminalPlugins() throws MobileTerminalModelException;
+	List<ServiceResponseType> getRegisteredMobileTerminalPlugins();
 }

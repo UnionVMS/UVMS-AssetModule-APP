@@ -16,7 +16,8 @@ import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollListRespons
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.SinglePollResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalFault;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
+import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,51 +48,51 @@ public class PollDataSourceResponseMapper {
         try {
             MobileTerminalFault fault = JAXBMarshaller.unmarshallTextMessage(response, MobileTerminalFault.class);
             throw new RuntimeException(fault.getCode() + " : " + fault.getMessage());
-        } catch (MobileTerminalModelException e) {
+        } catch (AssetException e) {
             // everything is well
         }
     }
 
-    public static List<PollResponseType> mapCreatePollResponse(TextMessage response, String messageId) throws MobileTerminalModelException {
+    public static List<PollResponseType> mapCreatePollResponse(TextMessage response, String messageId) throws AssetException {
         try {
             validateResponse(response, messageId);
             CreatePollResponse unmarshalledResponse = JAXBMarshaller.unmarshallTextMessage(response, CreatePollResponse.class);
             return unmarshalledResponse.getPollList();
-        } catch (MobileTerminalModelException | JMSException e) {
+        } catch (AssetException | JMSException e) {
             LOG.error("[ Error when unmarshalling poll create responses. ] {}", e.getMessage());
-            throw new MobileTerminalModelException(UNMARSHALLING_ERROR.getMessage() + CreatePollResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
+            throw new AssetException(UNMARSHALLING_ERROR.getMessage() + CreatePollResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
         }
     }
 
-    public static List<PollResponseType> mapToPollList(TextMessage response, String messageId) throws MobileTerminalModelException {
+    public static List<PollResponseType> mapToPollList(TextMessage response, String messageId) throws AssetException {
         try {
             validateResponse(response, messageId);
             PollListResponse unmarshalledResponse = JAXBMarshaller.unmarshallTextMessage(response, PollListResponse.class);
             return unmarshalledResponse.getPollList();
-        } catch (MobileTerminalModelException | JMSException e) {
+        } catch (AssetException | JMSException e) {
             LOG.error("[ Error when unmarshalling poll list responses. ] {}", e.getMessage());
-            throw new MobileTerminalModelException(UNMARSHALLING_ERROR.getMessage() + PollListResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
+            throw new AssetException(UNMARSHALLING_ERROR.getMessage() + PollListResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
         }
     }
 
-    public static PollListResponse mapPollListResponse(TextMessage response, String messageId) throws MobileTerminalModelException {
+    public static PollListResponse mapPollListResponse(TextMessage response, String messageId) throws AssetException {
         try {
             validateResponse(response, messageId);
             return JAXBMarshaller.unmarshallTextMessage(response, PollListResponse.class);
-        } catch (MobileTerminalModelException | JMSException e) {
+        } catch (AssetException | JMSException e) {
             LOG.error("[ Error when unmarshalling poll list responses. ] {}", e.getMessage());
-            throw new MobileTerminalModelException(UNMARSHALLING_ERROR.getMessage() + PollListResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
+            throw new AssetException(UNMARSHALLING_ERROR.getMessage() + PollListResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
         }
 	}
     
-    public static PollResponseType mapPollResponse(TextMessage response, String messageId) throws MobileTerminalModelException {
+    public static PollResponseType mapPollResponse(TextMessage response, String messageId) throws AssetException {
         try {
             validateResponse(response, messageId);
             SinglePollResponse unmarshalledResponse = JAXBMarshaller.unmarshallTextMessage(response, SinglePollResponse.class);
             return unmarshalledResponse.getPoll();
-        } catch (MobileTerminalModelException | JMSException e) {
+        } catch (AssetException | JMSException e) {
             LOG.error("[ Error when unmarshalling single poll responses. ] {}", e.getMessage());
-            throw new MobileTerminalModelException(UNMARSHALLING_ERROR.getMessage() + SinglePollResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
+            throw new AssetException(UNMARSHALLING_ERROR.getMessage() + SinglePollResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
         }
     }
 }

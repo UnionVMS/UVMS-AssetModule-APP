@@ -1,7 +1,6 @@
 package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.DataSourceQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
@@ -17,7 +16,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
-import javax.transaction.*;
+import javax.ejb.EJBTransactionRolledbackException;
 import java.util.List;
 import java.util.UUID;
 
@@ -164,7 +163,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void createMobileTerminal_WillFail_Null_Plugin() throws Exception{
 
-        thrown.expect(MobileTerminalModelException.class);
+        thrown.expect(EJBTransactionRolledbackException.class);
 //        thrown.expectMessage("Cannot create Mobile terminal when plugin is not null");
 
         MobileTerminalType mobileTerminalType = testPollHelper.createBasicMobileTerminal();
@@ -176,7 +175,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void createMobileTerminal_WillFail_Null_SerialNumber() throws Exception {
 
-        thrown.expect(MobileTerminalModelException.class);
+        thrown.expect(EJBTransactionRolledbackException.class);
 //        thrown.expectMessage("Cannot create mobile terminal without serial number");
 
         MobileTerminalType mobileTerminalType = testPollHelper.createBasicMobileTerminal();

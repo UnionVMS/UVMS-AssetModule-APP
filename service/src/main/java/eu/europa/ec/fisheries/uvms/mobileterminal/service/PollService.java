@@ -14,7 +14,6 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollListQuery;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollDto;
@@ -25,17 +24,17 @@ import java.util.List;
 @Local
 public interface PollService {
 
-    CreatePollResultDto createPoll(PollRequestType poll, String username) throws MobileTerminalModelException;
+    CreatePollResultDto createPoll(PollRequestType poll, String username);
 
-    List<PollDto> getRunningProgramPolls() throws MobileTerminalModelException;
+    List<PollDto> getRunningProgramPolls();
 
-    PollResponseType startProgramPoll(String pollId, String username) throws MobileTerminalModelException;
+    PollResponseType startProgramPoll(String pollId, String username);
 
-    PollResponseType stopProgramPoll(String pollId, String username) throws MobileTerminalModelException;
+    PollResponseType stopProgramPoll(String pollId, String username);
 
-    PollResponseType inactivateProgramPoll(String pollId, String username) throws MobileTerminalModelException;
+    PollResponseType inactivateProgramPoll(String pollId, String username);
 
-    PollChannelListDto getPollBySearchCriteria(PollListQuery query) throws MobileTerminalModelException;
+    PollChannelListDto getPollBySearchCriteria(PollListQuery query);
 
-    List<PollResponseType> timer() throws MobileTerminalModelException;
+    List<PollResponseType> timer();
 }
