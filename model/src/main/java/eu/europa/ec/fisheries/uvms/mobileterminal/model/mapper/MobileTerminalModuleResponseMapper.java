@@ -16,6 +16,8 @@ import eu.europa.ec.fisheries.schema.mobileterminal.module.v1.MobileTerminalResp
 import eu.europa.ec.fisheries.schema.mobileterminal.module.v1.PingResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalFault;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
+import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,30 +46,30 @@ public class MobileTerminalModuleResponseMapper {
         try {
             MobileTerminalFault fault = JAXBMarshaller.unmarshallTextMessage(response, MobileTerminalFault.class);
             throw new RuntimeException(fault.getCode() + " : " + fault.getMessage());
-        } catch (MobileTerminalModelException e) {
+        } catch (AssetException e) {
             e.printStackTrace();
         }
     }
 
-    private static String createMobileTerminalResponse(MobileTerminalType data) throws MobileTerminalModelException {
+    private static String createMobileTerminalResponse(MobileTerminalType data) throws  AssetException {
         MobileTerminalResponse response = new MobileTerminalResponse();
         response.setMobilTerminal(data);
         return JAXBMarshaller.marshallJaxBObjectToString(data);
     }
 
-    public static String createPingResponse(String responseMessage) throws MobileTerminalModelException {
+    public static String createPingResponse(String responseMessage) throws  AssetException {
 		PingResponse pingResponse = new PingResponse();
 		pingResponse.setResponse(responseMessage);
 		return JAXBMarshaller.marshallJaxBObjectToString(pingResponse);
     }
 
-    public static MobileTerminalType mapToMobileTerminalResponse(TextMessage message) throws MobileTerminalModelException, JMSException {
+    public static MobileTerminalType mapToMobileTerminalResponse(TextMessage message) throws JMSException, AssetException {
         validateResponse(message, message.getJMSCorrelationID());
         MobileTerminalResponse response = JAXBMarshaller.unmarshallTextMessage(message, MobileTerminalResponse.class);
         return response.getMobilTerminal();
     }
 
-    public static List<MobileTerminalType> mapToMobileTerminalListResponse(TextMessage message) throws MobileTerminalModelException, JMSException {
+    public static List<MobileTerminalType> mapToMobileTerminalListResponse(TextMessage message) throws JMSException, AssetException {
         validateResponse(message, message.getJMSCorrelationID());
         MobileTerminalListResponse response = JAXBMarshaller.unmarshallTextMessage(message, MobileTerminalListResponse.class);
         return response.getMobileTerminal();

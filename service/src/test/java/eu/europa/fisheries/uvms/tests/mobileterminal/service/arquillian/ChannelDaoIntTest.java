@@ -59,7 +59,7 @@ public class ChannelDaoIntTest extends TransactionalTests {
 
         //Then
         assertNotNull(channels);
-        assertThat(channels.size(), is(0));
+        assertEquals(0, channels.size());
     }
 
     @Test
@@ -74,7 +74,7 @@ public class ChannelDaoIntTest extends TransactionalTests {
 
         //Then
         assertNotNull(channels);
-        assertThat(channels.size(), is(0));
+        assertEquals(0, channels.size());
     }
 
     @Test(expected = EJBTransactionRolledbackException.class)

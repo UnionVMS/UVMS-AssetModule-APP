@@ -15,32 +15,34 @@ import eu.europa.ec.fisheries.schema.mobileterminal.module.v1.*;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalId;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalListQuery;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
+import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 
 import java.util.List;
 
 public class MobileTerminalModuleRequestMapper {
 
-    public static String createMobileTerminalResponse(MobileTerminalType mobTerm) throws MobileTerminalModelException {
+    public static String createMobileTerminalResponse(MobileTerminalType mobTerm) throws AssetException {
         MobileTerminalResponse response = new MobileTerminalResponse();
         response.setMobilTerminal(mobTerm);
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 
-    public static String createGetMobileTerminalRequest(MobileTerminalId mobileTerminalId) throws MobileTerminalModelException {
+    public static String createGetMobileTerminalRequest(MobileTerminalId mobileTerminalId) throws AssetException {
         GetMobileTerminalRequest request = new GetMobileTerminalRequest();
         request.setMethod(MobileTerminalModuleMethod.GET_MOBILE_TERMINAL);
         request.setId(mobileTerminalId);
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
 
-    public static String mapGetMobileTerminalList(List<MobileTerminalType> mobileTerminalTypes) throws MobileTerminalModelException {
+    public static String mapGetMobileTerminalList(List<MobileTerminalType> mobileTerminalTypes) throws AssetException {
         MobileTerminalListResponse response = new MobileTerminalListResponse();
         response.getMobileTerminal().addAll(mobileTerminalTypes);
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 
-    public static String createMobileTerminalListRequest(MobileTerminalListQuery query) throws MobileTerminalModelException {
+    public static String createMobileTerminalListRequest(MobileTerminalListQuery query) throws AssetException {
         MobileTerminalListRequest request = new MobileTerminalListRequest();
         request.setMethod(MobileTerminalModuleMethod.LIST_MOBILE_TERMINALS);
         request.setQuery(query);

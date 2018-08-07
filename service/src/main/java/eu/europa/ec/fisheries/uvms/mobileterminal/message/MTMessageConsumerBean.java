@@ -12,11 +12,12 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.message;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.module.v1.MobileTerminalModuleBaseRequest;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
+import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.constants.MessageConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ErrorEvent;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.EventMessage;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.GetReceivedEventBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.ListReceivedEventBean;
 import org.slf4j.Logger;
@@ -78,7 +79,7 @@ public class MTMessageConsumerBean implements MessageListener {
                     LOG.error("[ Unsupported request: {} ]", request.getMethod());
                     break;
             }
-        } catch (NullPointerException | MobileTerminalModelException e) {
+        } catch (NullPointerException | AssetException e) {
             LOG.error("[ Error when receiving message in mobileterminal. ] {}", e.getMessage());
             errorEvent.fire(new EventMessage(textMessage, "Error when receivning message in mobileterminal: " + e.getMessage()));
         }
