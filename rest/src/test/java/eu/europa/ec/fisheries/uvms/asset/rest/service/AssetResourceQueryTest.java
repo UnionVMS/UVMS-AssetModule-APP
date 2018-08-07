@@ -14,6 +14,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
+import java.util.UUID;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -52,4 +53,30 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         assertThat(listResponse.getAssetList().size(), is(1));
         assertThat(listResponse.getAssetList().get(0), is(AssetMatcher.assetEquals(createdAsset)));
     }
+
+
+    @Test
+    @RunAsClient
+    public void getAssetListQueryTestEmptyResult() {
+
+
+
+        AssetQuery query = new AssetQuery();
+        query.setCfr(Arrays.asList("APA"));
+
+        AssetListResponse listResponse = getWebTarget()
+                .path("asset")
+                .path("list")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query), AssetListResponse.class);
+
+        assertTrue(listResponse != null);
+        assertThat(listResponse.getAssetList().size(), is(0));
+    }
+
+
+
+
+
+
 }
