@@ -284,4 +284,18 @@
     <changeSet author="thofan (generated)" id="1523875639713-29">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="asset_aud" constraintName="fklq7kauhigk0mdew67qs2l39ci" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
     </changeSet>
+    <changeSet author="peerik" id="parameter table">
+        <createTable remarks="Table as a placeholder of parameters and its values" tableName="parameter">
+            <column name="param_id" remarks="Id and code for parameter." type="VARCHAR(500)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="param_pk"/>
+            </column>
+            <column name="param_description" remarks="Description of parameter or value." type="VARCHAR(500)">
+                <constraints nullable="false" />
+            </column>
+            <column name="param_value" remarks="Parameter value." type="VARCHAR(4000)" />
+        </createTable>
+        <rollback>
+            <dropTable tableName="parameter" cascadeConstraints="true"/>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>
