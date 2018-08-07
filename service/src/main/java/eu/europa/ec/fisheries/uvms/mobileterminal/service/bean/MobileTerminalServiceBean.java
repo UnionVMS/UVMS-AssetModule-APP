@@ -16,7 +16,6 @@ import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalList
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.DataSourceQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageConsumer;
@@ -50,8 +49,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.MT_PARSING_ERROR;
-import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.TERMINAL_ALREADY_LINKED_ERROR;
-import static eu.europa.ec.fisheries.uvms.mobileterminal.service.exception.ErrorCode.TERMINAL_NOT_LINKED_ERROR;
 
 @Stateless
 @LocalBean
@@ -81,7 +78,7 @@ public class MobileTerminalServiceBean {
     @EJB
     private MobileTerminalPluginDaoBean pluginDao;
 
-    public MobileTerminalType createMobileTerminal(MobileTerminalType mobileTerminal, MobileTerminalSource source, String username) throws MobileTerminalModelException {
+    public MobileTerminalType createMobileTerminal(MobileTerminalType mobileTerminal, MobileTerminalSource source, String username) {
         mobileTerminal.setSource(source);
         MobileTerminalType createdMobileTerminal = createMobileTerminal(mobileTerminal, username);
         boolean dnidUpdated = configModel.checkDNIDListChange(createdMobileTerminal.getPlugin().getServiceName());

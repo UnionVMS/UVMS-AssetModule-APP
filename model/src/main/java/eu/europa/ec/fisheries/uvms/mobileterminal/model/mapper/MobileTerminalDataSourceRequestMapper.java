@@ -16,7 +16,6 @@ import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalDataS
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalId;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 
 public class MobileTerminalDataSourceRequestMapper {
 

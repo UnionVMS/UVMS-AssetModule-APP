@@ -14,7 +14,6 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollableQuery;
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.DataSourceQueue;
 
 import javax.ejb.Local;
@@ -29,27 +28,24 @@ public interface MobileTerminalService {
      * @param source
      * @param username
      * @return
-     * @throws MobileTerminalServiceException
      */
-    MobileTerminalType createMobileTerminal(MobileTerminalType mobileTerminal, MobileTerminalSource source, String username) throws MobileTerminalModelException;
+    MobileTerminalType createMobileTerminal(MobileTerminalType mobileTerminal, MobileTerminalSource source, String username);
 
     /**
      * Get a list of mobile terminals defined by query
      *
      * @param query
      * @return
-     * @throws MobileTerminalServiceException
      */
-    MobileTerminalListResponse getMobileTerminalList(MobileTerminalListQuery query) throws MobileTerminalModelException;
+    MobileTerminalListResponse getMobileTerminalList(MobileTerminalListQuery query);
 
     /**
      * Get a mobile terminal by guid
      *
      * @param guid
      * @return
-     * @throws MobileTerminalServiceException
      */
-    MobileTerminalType getMobileTerminalById(String guid) throws MobileTerminalModelException;
+    MobileTerminalType getMobileTerminalById(String guid);
 
     /**
      * Get a mobile terminal by mobile terminal id type
@@ -57,9 +53,8 @@ public interface MobileTerminalService {
      * @param id
      * @param queue
      * @return
-     * @throws MobileTerminalServiceException
      */
-    MobileTerminalType getMobileTerminalById(MobileTerminalId id, DataSourceQueue queue) throws MobileTerminalModelException;
+    MobileTerminalType getMobileTerminalById(MobileTerminalId id, DataSourceQueue queue);
 
     /**
      *
@@ -69,9 +64,8 @@ public interface MobileTerminalService {
      * @param data
      * @param source
      * @return
-     * @throws MobileTerminalServiceException
      */
-    MobileTerminalType upsertMobileTerminal(MobileTerminalType data, MobileTerminalSource source, String username) throws MobileTerminalModelException;
+    MobileTerminalType upsertMobileTerminal(MobileTerminalType data, MobileTerminalSource source, String username);
 
     /**
      * Update mobile terminal
@@ -80,10 +74,8 @@ public interface MobileTerminalService {
      * @param comment
      * @param source
      * @return
-     * @throws MobileTerminalServiceException
      */
-    MobileTerminalType updateMobileTerminal(MobileTerminalType data, String comment, MobileTerminalSource source, String username)
-            throws MobileTerminalModelException;
+    MobileTerminalType updateMobileTerminal(MobileTerminalType data, String comment, MobileTerminalSource source, String username);
 
     /**
      * Assigns the selected mobile terminal from the selected carrier
@@ -91,9 +83,8 @@ public interface MobileTerminalService {
      * @param query
      * @param comment
      * @return
-     * @throws MobileTerminalServiceException
      */
-    MobileTerminalType assignMobileTerminal(MobileTerminalAssignQuery query, String comment, String username) throws MobileTerminalModelException;
+    MobileTerminalType assignMobileTerminal(MobileTerminalAssignQuery query, String comment, String username);
 
     /**
      * Unassigns the selected mobile terminal from the selected carrier
@@ -101,9 +92,8 @@ public interface MobileTerminalService {
      * @param query
      * @param comment
      * @return
-     * @throws MobileTerminalServiceException
      */
-    MobileTerminalType unAssignMobileTerminal(MobileTerminalAssignQuery query, String comment, String username) throws MobileTerminalModelException;
+    MobileTerminalType unAssignMobileTerminal(MobileTerminalAssignQuery query, String comment, String username);
 
     /**
      * Set status of a mobile terminal
@@ -112,10 +102,8 @@ public interface MobileTerminalService {
      * @param comment
      * @param status
      * @return
-     * @throws MobileTerminalServiceException
      */
-    MobileTerminalType setStatusMobileTerminal(MobileTerminalId terminalId, String comment, MobileTerminalStatus status, String username)
-            throws MobileTerminalModelException;
+    MobileTerminalType setStatusMobileTerminal(MobileTerminalId terminalId, String comment, MobileTerminalStatus status, String username);
 
     /**
      * Get mobile terminal history list for one mobile terminal
@@ -123,14 +111,13 @@ public interface MobileTerminalService {
      * @param guid
      * @return
      */
-    MobileTerminalHistory getMobileTerminalHistoryList(String guid) throws MobileTerminalModelException;
+    MobileTerminalHistory getMobileTerminalHistoryList(String guid);
 
     /**
      * Get pollable mobile terminals matching query
      *
      * @param query
      * @return
-     * @throws MobileTerminalServiceException
      */
-    MobileTerminalListResponse getPollableMobileTerminal(PollableQuery query) throws MobileTerminalModelException;
+    MobileTerminalListResponse getPollableMobileTerminal(PollableQuery query);
 }

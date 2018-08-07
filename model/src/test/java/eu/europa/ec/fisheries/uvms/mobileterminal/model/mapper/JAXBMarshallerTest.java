@@ -4,7 +4,6 @@ import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.GetMobileTerminalR
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalDataSourceMethod;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalId;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.MobileTerminalModelException;
 import org.apache.activemq.command.ActiveMQTextMessage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
