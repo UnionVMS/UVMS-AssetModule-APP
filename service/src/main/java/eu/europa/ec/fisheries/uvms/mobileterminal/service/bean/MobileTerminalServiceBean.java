@@ -78,20 +78,22 @@ public class MobileTerminalServiceBean {
     @EJB
     private MobileTerminalPluginDaoBean pluginDao;
 
-    public MobileTerminalType createMobileTerminal(MobileTerminalType mobileTerminal, MobileTerminalSource source, String username) {
-        mobileTerminal.setSource(source);
-        MobileTerminalType createdMobileTerminal = createMobileTerminal(mobileTerminal, username);
-        boolean dnidUpdated = configModel.checkDNIDListChange(createdMobileTerminal.getPlugin().getServiceName());
-        
+    public MobileTerminal createMobileTerminal(MobileTerminal mobileTerminal, String username) {
+
+        MobileTerminal createdMobileTerminal = terminalDao.createMobileTerminal(mobileTerminal);
+
+        boolean dnidUpdated = configModel.checkDNIDListChange(createdMobileTerminal.getPlugin().getPluginServiceName());
+
+
+        //send stuff to audit
         try {
-            String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalCreated(createdMobileTerminal.getMobileTerminalId().getGuid(), username);
+            String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalCreated(createdMobileTerminal.getId().toString(), username);
             MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException e) {
-            LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was created", createdMobileTerminal.getMobileTerminalId()
-                    .getGuid());
+            LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was created", createdMobileTerminal.getId().toString());
         }
         if(dnidUpdated) {
-        	pluginService.processUpdatedDNIDList(createdMobileTerminal.getPlugin().getServiceName());
+        	pluginService.processUpdatedDNIDList(createdMobileTerminal.getPlugin().getPluginServiceName());
         }
         
         return createdMobileTerminal;
@@ -271,24 +273,8 @@ public class MobileTerminalServiceBean {
         return terminalDao.getMobileTerminalBySerialNo(serialNo);
     }
 
-    public MobileTerminalType createMobileTerminal(MobileTerminalType mobileTerminal, String username) {
-        try {
-            assertTerminalNotExists(mobileTerminal);
-            String serialNumber = assertTerminalHasNeededData(mobileTerminal);
 
-            MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(mobileTerminal.getPlugin().getServiceName());
-
-            MobileTerminal terminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminal, serialNumber, plugin, username);
-            terminalDao.createMobileTerminal(terminal);
-            return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
-        } catch (Exception e) {
-            LOG.error("Error in model when creating mobile terminal: {}", e.getMessage());
-            throw new RuntimeException(MT_PARSING_ERROR.getMessage() + mobileTerminal.getMobileTerminalId(), e);
-            //throw new MobileTerminalModelException(MT_PARSING_ERROR.getMessage() + mobileTerminal.getMobileTerminalId(), e, MT_PARSING_ERROR.getCode());
-        }
-    }
-
-    private String assertTerminalHasNeededData(MobileTerminalType mobileTerminal) {
+    public String assertTerminalHasSerialNumber(MobileTerminalType mobileTerminal) {
         String serialNumber = null;
         for (MobileTerminalAttribute attribute : mobileTerminal.getAttributes()) {
             if (MobileTerminalConstants.SERIAL_NUMBER.equalsIgnoreCase(attribute.getType()) &&
@@ -301,34 +287,33 @@ public class MobileTerminalServiceBean {
             throw new NullPointerException("Cannot create mobile terminal without serial number");
         }
         if(mobileTerminal.getPlugin() == null){
-            throw new NullPointerException("Cannot create Mobile terminal when plugin is not null");
+            throw new NullPointerException("Cannot create Mobile terminal when plugin is null");
         }
         return serialNumber;
     }
 
-    private void assertTerminalNotExists(MobileTerminalType mobileTerminal) {
+    public void assertTerminalNotExists(UUID mobileTerminalGUID, String serialNr) {
         MobileTerminal terminal = null;
-        if(mobileTerminal.getMobileTerminalId() == null || mobileTerminal.getMobileTerminalId().getGuid().isEmpty()){
+
+        if(mobileTerminalGUID == null || mobileTerminalGUID.toString().isEmpty()){
             //do nothing
         }else{
-            terminal = getMobileTerminalEntityById(mobileTerminal.getMobileTerminalId());
+            terminal = getMobileTerminalEntityById(mobileTerminalGUID);
         }
 
         if(terminal != null){
-            throw new IllegalArgumentException("Mobile terminal already exists in database for id: " + mobileTerminal.getMobileTerminalId());
+            throw new IllegalArgumentException("Mobile terminal already exists in database for id: " + mobileTerminalGUID.toString());
         }
 
-        for (MobileTerminalAttribute attribute : mobileTerminal.getAttributes()) {
-            if (MobileTerminalConstants.SERIAL_NUMBER.equalsIgnoreCase(attribute.getType())) {
-                MobileTerminal terminalBySerialNo = getMobileTerminalEntityBySerialNo(attribute.getValue());
-                if(terminalBySerialNo == null){  //aka the serial number does not exist in the db
-                    return;
-                }
-                if (!terminalBySerialNo.getArchived()) {
-                    throw new IllegalArgumentException("Mobile terminal already exists in database for serial number: " + attribute.getValue());
-                }
-            }
+        MobileTerminal terminalBySerialNo = getMobileTerminalEntityBySerialNo(serialNr);
+        if(terminalBySerialNo == null){  //aka the serial number does not exist in the db
+            return;
         }
+        if (!terminalBySerialNo.getArchived()) {
+            throw new IllegalArgumentException("Mobile terminal already exists in database for serial number: " + serialNr);
+        }
+
+
 
     }
 
@@ -363,7 +348,7 @@ public class MobileTerminalServiceBean {
             updatedPlugin = terminal.getPlugin();
         }
 
-        String serialNumber = assertTerminalHasNeededData(model);
+        String serialNumber = assertTerminalHasSerialNumber(model);
 
         //TODO check type
         if(terminal.getMobileTerminalType() != null) {
@@ -469,7 +454,9 @@ public class MobileTerminalServiceBean {
         } catch (RuntimeException e) {
             LOG.error("[ Error when upserting mobile terminal: Mobile terminal update failed trying to insert. ] {} {}", e.getMessage(), e.getStackTrace());
         }
-        return createMobileTerminal(mobileTerminal, username);
+        MobileTerminal mobileTerminal1Entity = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminal, assertTerminalHasSerialNumber(mobileTerminal), pluginDao.getPluginByServiceName(mobileTerminal.getPlugin().getServiceName()), username);
+        mobileTerminal1Entity = createMobileTerminal(mobileTerminal1Entity, username);
+        return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminal1Entity);
     }
 
 

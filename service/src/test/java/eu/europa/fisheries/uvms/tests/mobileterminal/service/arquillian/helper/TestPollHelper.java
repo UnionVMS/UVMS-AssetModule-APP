@@ -2,17 +2,17 @@ package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.PluginService;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollStateEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.util.DateUtils;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalModelToEntityMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PluginMapper;
 
 import javax.ejb.EJB;
-import javax.ejb.Local;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import java.time.LocalDateTime;
@@ -78,7 +78,7 @@ public class TestPollHelper {
         mt.setSerialNo(serialNo);
         mt.setUpdatetime(LocalDateTime.now(ZoneOffset.UTC));
         mt.setUpdateuser("TEST");
-        mt.setSource(MobileTerminalSourceEnum.INTERNAL);
+        mt.setSource(MobileTerminalSource.INTERNAL);
         mt.setPlugin(mtp);
         mt.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
         mt.setArchived(false);
@@ -124,7 +124,7 @@ public class TestPollHelper {
         return mt;
     }
 
-    public MobileTerminalType createBasicMobileTerminal() {
+    public MobileTerminalType createBasicMobileTerminalType() {
         MobileTerminalType mobileTerminal = new MobileTerminalType();
         mobileTerminal.setSource(MobileTerminalSource.INTERNAL);
         mobileTerminal.setType("INMARSAT_C");
@@ -166,6 +166,17 @@ public class TestPollHelper {
 
         mobileTerminal.setPlugin(plugin);
 
+        return mobileTerminal;
+    }
+
+    public MobileTerminal createBasicMobileTerminal(){
+        MobileTerminalType mobileTerminalType = createBasicMobileTerminalType();
+        MobileTerminalPlugin mtp = new MobileTerminalPlugin();
+        mtp.setPluginServiceName("eu.europa.ec.fisheries.uvms.plugins.inmarsat");
+        mtp.setName("Thrane&Thrane");
+        mtp.setPluginSatelliteType("INMARSAT_C");
+        mtp.setPluginInactive(false);
+        MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType,mobileTerminalType.getAttributes().get(0).getValue(), mtp, "TEST_USERNAME");
         return mobileTerminal;
     }
 

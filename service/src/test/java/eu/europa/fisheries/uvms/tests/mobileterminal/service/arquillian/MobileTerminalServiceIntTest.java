@@ -5,6 +5,8 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.DataSourceQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalEntityToModelMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalModelToEntityMapper;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper.TestPollHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
@@ -166,9 +168,10 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
         thrown.expect(EJBTransactionRolledbackException.class);
 //        thrown.expectMessage("Cannot create Mobile terminal when plugin is not null");
 
-        MobileTerminalType mobileTerminalType = testPollHelper.createBasicMobileTerminal();
+        MobileTerminalType mobileTerminalType = testPollHelper.createBasicMobileTerminalType();
         mobileTerminalType.setPlugin(null);
-        mobileTerminalService.createMobileTerminal(mobileTerminalType, MobileTerminalSource.INTERNAL, USERNAME);
+        MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType, "123456789", null, USERNAME);   //this really should be such that that testPollHelper creates a mobile terminal, but until such a time
+        mobileTerminalService.createMobileTerminal(mobileTerminal, USERNAME);
     }
 
     @Test
@@ -178,7 +181,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
         thrown.expect(EJBTransactionRolledbackException.class);
 //        thrown.expectMessage("Cannot create mobile terminal without serial number");
 
-        MobileTerminalType mobileTerminalType = testPollHelper.createBasicMobileTerminal();
+        MobileTerminalType mobileTerminalType = testPollHelper.createBasicMobileTerminalType();
         List<MobileTerminalAttribute> attributes = mobileTerminalType.getAttributes();
         for (MobileTerminalAttribute attribute : attributes) {
             if (MobileTerminalConstants.SERIAL_NUMBER.equalsIgnoreCase(attribute.getType())) {
@@ -187,7 +190,8 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
                 break;
             }
         }
-        mobileTerminalService.createMobileTerminal(mobileTerminalType, MobileTerminalSource.INTERNAL, USERNAME);
+        MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType,null, null, USERNAME);
+        mobileTerminalService.createMobileTerminal(mobileTerminal, USERNAME);
     }
 
     @Test
@@ -223,8 +227,10 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     }
 
     private MobileTerminalType createMobileTerminalType() throws Exception {
-        MobileTerminalType mobileTerminalType = testPollHelper.createBasicMobileTerminal();
-        return mobileTerminalService.createMobileTerminal(mobileTerminalType, MobileTerminalSource.INTERNAL, USERNAME);
+
+        MobileTerminal mobileTerminal = testPollHelper.createBasicMobileTerminal();
+        mobileTerminal = mobileTerminalService.createMobileTerminal(mobileTerminal, USERNAME);
+        return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminal);
     }
 
     private MobileTerminalType updateMobileTerminalType(MobileTerminalType created) throws Exception {

@@ -1,5 +1,6 @@
 package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalSource;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.PollProgramDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.TerminalDaoBean;
@@ -7,7 +8,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.PollBase;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.PollProgram;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollStateEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.util.DateUtils;
@@ -21,7 +21,6 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
-import javax.ejb.Local;
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -443,7 +442,7 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
         mt.setSerialNo(serialNo);
         mt.setUpdatetime(LocalDateTime.now(ZoneOffset.UTC));
         mt.setUpdateuser("TEST");
-        mt.setSource(MobileTerminalSourceEnum.INTERNAL);
+        mt.setSource(MobileTerminalSource.INTERNAL);
         mt.setPlugin(mtp);
         mt.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
         mt.setArchived(false);

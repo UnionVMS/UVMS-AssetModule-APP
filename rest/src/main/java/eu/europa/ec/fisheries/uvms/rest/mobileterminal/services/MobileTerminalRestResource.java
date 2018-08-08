@@ -14,6 +14,11 @@ package eu.europa.ec.fisheries.uvms.rest.mobileterminal.services;
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalEntityToModelMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalModelToEntityMapper;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTResponseDto;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTErrorHandler;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
@@ -24,10 +29,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import java.util.UUID;
 
 @Path("/mobileterminal")
 @Stateless
@@ -41,18 +48,35 @@ public class MobileTerminalRestResource {
     @EJB
     private MobileTerminalServiceBean mobileTerminalService;
 
+    @Inject
+    private MobileTerminalPluginDaoBean pluginDao;
+
     @Context
     private HttpServletRequest request;
 
     @POST
     @Path("/")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
-    public MTResponseDto<MobileTerminalType> createMobileTerminal(MobileTerminalType mobileterminal) {
+    public MTResponseDto<MobileTerminalType> createMobileTerminal(MobileTerminalType mobileTerminalType) {
         LOG.info("Create mobile terminal invoked in rest layer.");
         try {
-            return new MTResponseDto<>(mobileTerminalService.createMobileTerminal(mobileterminal, MobileTerminalSource.INTERNAL, request.getRemoteUser()), MTResponseCode.OK);
+            mobileTerminalType.setSource(MobileTerminalSource.INTERNAL);
+            String serialNumber = mobileTerminalService.assertTerminalHasSerialNumber(mobileTerminalType);
+            UUID id = null;
+            if(mobileTerminalType.getMobileTerminalId() != null){
+                id = UUID.fromString(mobileTerminalType.getMobileTerminalId().getGuid());
+            }
+            mobileTerminalService.assertTerminalNotExists(id, serialNumber);
+            MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(mobileTerminalType.getPlugin().getServiceName());
+
+            MobileTerminal mobileTerminalEntity = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType, serialNumber, plugin, request.getRemoteUser());
+            mobileTerminalEntity = mobileTerminalService.createMobileTerminal(mobileTerminalEntity, request.getRemoteUser());
+
+            return new MTResponseDto<>(MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminalEntity), MTResponseCode.OK);
         } catch (Exception ex) {
-            LOG.error("[ Error when creating mobile terminal ] {}", ex.getStackTrace());
+            //LOG.error("[ Error when creating mobile terminal ] {}", ex.getMessage(), ex.getStackTrace());
+            LOG.error("[ Error when creating mobile terminal ] {}", ex);
+
             return MTErrorHandler.getFault(ex);
         }
     }
