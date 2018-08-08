@@ -72,13 +72,13 @@ public class ResponseTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test
+    /*@Test
     public void testGetMobileTerminalById() throws Exception {
-        doReturn(MOBILE_TERMINAL_DTO).when(mobileTerminalServiceBean).getMobileTerminalById(MOBILE_TERMINAL_ID);
-        MTResponseDto result = mobileTerminalRestResource.getMobileTerminalById(MOBILE_TERMINAL_ID);
-        Mockito.verify(mobileTerminalServiceBean).getMobileTerminalById(MOBILE_TERMINAL_ID);
+        doReturn(MOBILE_TERMINAL_DTO).when(mobileTerminalServiceBean).getMobileTerminalByIdFromInternalOrExternalSource(MOBILE_TERMINAL_ID);
+        MTResponseDto result = mobileTerminalRestResource.getMobileTerminalByIdFromInternalOrExternalSource(MOBILE_TERMINAL_ID);
+        Mockito.verify(mobileTerminalServiceBean).getMobileTerminalByIdFromInternalOrExternalSource(MOBILE_TERMINAL_ID);
         assertEquals(SUCCESS_RESULT_GET_BY_ID.toString(), result.toString());
-    }
+    }*/
 
     @Test
     public void testGetMobileTerminalList() throws Exception {
@@ -99,10 +99,10 @@ public class ResponseTest {
 
     /*@Test
     public void testCreateMobileTeriminal() throws Exception {
-        doReturn(MOBILE_TERMINAL_DTO).when(mobileTerminalServiceBean).createMobileTerminal(MOBILE_TERMINAL_DTO, MobileTerminalSource.INTERNAL, "TEST");
+        doReturn(MOBILE_TERMINAL_DTO).when(mobileTerminalServiceBean).createAndPersistMobileTerminal(MOBILE_TERMINAL_DTO, MobileTerminalSource.INTERNAL, "TEST");
         doReturn("TEST").when(request).getRemoteUser();
-        MTResponseDto result = mobileTerminalRestResource.createMobileTerminal(MOBILE_TERMINAL_DTO);
-        Mockito.verify(mobileTerminalServiceBean).createMobileTerminal(MOBILE_TERMINAL_DTO, MobileTerminalSource.INTERNAL, "TEST");
+        MTResponseDto result = mobileTerminalRestResource.createAndPersistMobileTerminal(MOBILE_TERMINAL_DTO);
+        Mockito.verify(mobileTerminalServiceBean).createAndPersistMobileTerminal(MOBILE_TERMINAL_DTO, MobileTerminalSource.INTERNAL, "TEST");
         assertEquals(SUCCESS_RESULT_UPDATE.toString(), result.toString());
     }*/
 

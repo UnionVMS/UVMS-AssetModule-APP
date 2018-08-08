@@ -108,15 +108,6 @@ public class MobileTerminalServiceBean {
         return response;
     }
 
-    public MobileTerminalType getMobileTerminalById(String guid) {
-        if (guid == null) {
-            throw new IllegalArgumentException("No id");
-        }
-        MobileTerminalId id = new MobileTerminalId();
-        id.setGuid(guid);
-        MobileTerminalType terminalGet = getMobileTerminalById(id);
-        return terminalGet;
-    }
 
     public MobileTerminalType upsertMobileTerminal(MobileTerminalType data, MobileTerminalSource source, String username) {
         if (data == null) {
@@ -133,12 +124,13 @@ public class MobileTerminalServiceBean {
         return terminalUpserted;
     }
 
-    public MobileTerminalType getMobileTerminalById(MobileTerminalId id, DataSourceQueue queue) throws AssetException {
+    public MobileTerminalType getMobileTerminalByIdFromInternalOrExternalSource(MobileTerminalId id, DataSourceQueue queue) throws AssetException {
         if (id == null) {
             throw new NullPointerException("No id");
         }
         if (queue != null && queue.equals(DataSourceQueue.INTERNAL)) {
-            return getMobileTerminalById(id.getGuid());
+            //return getMobileTerminalByIdFromInternalOrExternalSource(id.getGuid());
+            return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminalDao.getMobileTerminalById(UUID.fromString(id.getGuid())));
         }
         String data = MobileTerminalDataSourceRequestMapper.mapGetMobileTerminal(id);
         String messageId = MTMessageProducer.sendDataSourceMessage(data, queue);
@@ -257,7 +249,10 @@ public class MobileTerminalServiceBean {
 
     /***************************************************************************************************************************/
 
-    public MobileTerminal getMobileTerminalEntityById(UUID id) {
+    public MobileTerminal getMobileTerminalEntityById(UUID id)
+    {
+        if(id == null)
+            throw new IllegalArgumentException("Non valid id: " + id);
         return terminalDao.getMobileTerminalById(id);
     }
 
@@ -315,15 +310,6 @@ public class MobileTerminalServiceBean {
 
 
 
-    }
-
-    public MobileTerminalType getMobileTerminalById(MobileTerminalId id) {
-        if (id == null) {
-            throw new NullPointerException("No id to fetch");
-        }
-
-        MobileTerminal terminal = getMobileTerminalEntityById(id);
-        return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
     }
 
     public MobileTerminalType updateMobileTerminal(MobileTerminalType model, String comment, String username) {
@@ -454,8 +440,10 @@ public class MobileTerminalServiceBean {
         } catch (RuntimeException e) {
             LOG.error("[ Error when upserting mobile terminal: Mobile terminal update failed trying to insert. ] {} {}", e.getMessage(), e.getStackTrace());
         }
+
         MobileTerminal mobileTerminal1Entity = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminal, assertTerminalHasSerialNumber(mobileTerminal), pluginDao.getPluginByServiceName(mobileTerminal.getPlugin().getServiceName()), username);
         mobileTerminal1Entity = createMobileTerminal(mobileTerminal1Entity, username);
+
         return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminal1Entity);
     }
 

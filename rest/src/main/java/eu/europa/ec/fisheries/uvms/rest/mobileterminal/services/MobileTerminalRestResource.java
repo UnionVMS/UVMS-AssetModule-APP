@@ -87,7 +87,9 @@ public class MobileTerminalRestResource {
     public MTResponseDto<MobileTerminalType> getMobileTerminalById(@PathParam("id") String mobileterminalId) {
         LOG.info("Get mobile terminal by id invoked in rest layer.");
         try {
-            return new MTResponseDto<>(mobileTerminalService.getMobileTerminalById(mobileterminalId), MTResponseCode.OK);
+            //return new MTResponseDto<>(mobileTerminalService.getMobileTerminalByIdFromInternalOrExternalSource(mobileterminalId), MTResponseCode.OK);
+            MobileTerminalType mobileTerminalType = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminalService.getMobileTerminalEntityById(UUID.fromString(mobileterminalId)));
+            return new MTResponseDto<>(mobileTerminalType, MTResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when creating mobile terminal ] {}", ex.getStackTrace());
             return MTErrorHandler.getFault(ex);

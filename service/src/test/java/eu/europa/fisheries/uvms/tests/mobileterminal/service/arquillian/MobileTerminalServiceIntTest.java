@@ -57,12 +57,12 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
         String connectId = UUID.randomUUID().toString();
-        MobileTerminal createdMobileTerminal = testPollHelper.createMobileTerminal(connectId);
+        MobileTerminal createdMobileTerminal = testPollHelper.createAndPersistMobileTerminal(connectId);
         createdMobileTerminalId = createdMobileTerminal.getId();
         MobileTerminalId mobileTerminalId = new MobileTerminalId();
         mobileTerminalId.setGuid(createdMobileTerminalId.toString());
 
-        MobileTerminalType fetchedMobileTerminalType = mobileTerminalService.getMobileTerminalById(mobileTerminalId, DataSourceQueue.INTERNAL);
+        MobileTerminalType fetchedMobileTerminalType = mobileTerminalService.getMobileTerminalByIdFromInternalOrExternalSource(mobileTerminalId, DataSourceQueue.INTERNAL);
         assertNotNull(fetchedMobileTerminalType);
 
         fetchedMobileTerminalGuid = UUID.fromString(fetchedMobileTerminalType.getMobileTerminalId().getGuid());
@@ -78,15 +78,15 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
         String connectId = UUID.randomUUID().toString();
-        MobileTerminal createdMobileTerminal = testPollHelper.createMobileTerminal(connectId);
+        MobileTerminal createdMobileTerminal = testPollHelper.createAndPersistMobileTerminal(connectId);
         createdMobileTerminalId = createdMobileTerminal.getId();
         MobileTerminalId mobileTerminalId = new MobileTerminalId();
         mobileTerminalId.setGuid(createdMobileTerminalId.toString());
 
-        MobileTerminalType fetchedMobileTerminalType = mobileTerminalService.getMobileTerminalById(createdMobileTerminalId.toString());
-        assertNotNull(fetchedMobileTerminalType);
+        MobileTerminal fetchedMobileTerminal = mobileTerminalService.getMobileTerminalEntityById(createdMobileTerminalId);
+        assertNotNull(fetchedMobileTerminal);
 
-        fetchedMobileTerminalGuid = UUID.fromString(fetchedMobileTerminalType.getMobileTerminalId().getGuid());
+        fetchedMobileTerminalGuid = fetchedMobileTerminal.getId();
         assertEquals(fetchedMobileTerminalGuid, createdMobileTerminalId);
     }
 

@@ -385,7 +385,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
 
         UUID connectId = UUID.randomUUID();
 
-        MobileTerminal mobileTerminal = testPollHelper.createMobileTerminal(connectId.toString());
+        MobileTerminal mobileTerminal = testPollHelper.createAndPersistMobileTerminal(connectId.toString());
         PollMobileTerminal pmt = new PollMobileTerminal();
         pmt.setConnectId(connectId.toString());
         pmt.setMobileTerminalId(mobileTerminal.getId().toString());

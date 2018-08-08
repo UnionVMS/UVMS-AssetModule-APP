@@ -51,7 +51,7 @@ public class TestPollHelper {
 
         String connectId = UUID.randomUUID().toString();
 
-        MobileTerminal mobileTerminal = createMobileTerminal(connectId);
+        MobileTerminal mobileTerminal = createAndPersistMobileTerminal(connectId);
         PollMobileTerminal pmt = new PollMobileTerminal();
         pmt.setConnectId(connectId);
         pmt.setMobileTerminalId(mobileTerminal.getId().toString());
@@ -62,7 +62,7 @@ public class TestPollHelper {
         return pmt;
     }
 
-    public MobileTerminal createMobileTerminal(String connectId)  {
+    public MobileTerminal createAndPersistMobileTerminal(String connectId)  {
 
         String serialNo = UUID.randomUUID().toString();
 
@@ -213,7 +213,7 @@ public class TestPollHelper {
 
         PollProgram pp = new PollProgram();
         // create a valid mobileTerminal
-        MobileTerminal mobileTerminal = createMobileTerminal(mobileTerminalSerialNo);
+        MobileTerminal mobileTerminal = createAndPersistMobileTerminal(mobileTerminalSerialNo);
 
         PollBase pb = new PollBase();
         String terminalConnect = UUID.randomUUID().toString();
