@@ -31,6 +31,7 @@ import java.util.Set;
 public class MobileTerminalModelToEntityMapper {
     private static Logger LOG = LoggerFactory.getLogger(MobileTerminalModelToEntityMapper.class);
 
+    //DO NOT USE WITH AN EMPTY ENTITY UNLESS YOU REALLY KNOW WHAT YOU ARE DOING
     public static MobileTerminal mapMobileTerminalEntity(MobileTerminal entity, MobileTerminalType model,
                                                          String serialNumber, MobileTerminalPlugin plugin, String username,
                                                          String comment, EventCodeEnum event) {

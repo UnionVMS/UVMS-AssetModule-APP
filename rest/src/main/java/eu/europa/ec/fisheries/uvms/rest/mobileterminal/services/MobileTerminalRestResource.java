@@ -17,6 +17,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalSer
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalEntityToModelMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalModelToEntityMapper;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTResponseDto;
@@ -74,7 +75,6 @@ public class MobileTerminalRestResource {
 
             return new MTResponseDto<>(MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminalEntity), MTResponseCode.OK);
         } catch (Exception ex) {
-            //LOG.error("[ Error when creating mobile terminal ] {}", ex.getMessage(), ex.getStackTrace());
             LOG.error("[ Error when creating mobile terminal ] {}", ex);
 
             return MTErrorHandler.getFault(ex);
@@ -87,11 +87,10 @@ public class MobileTerminalRestResource {
     public MTResponseDto<MobileTerminalType> getMobileTerminalById(@PathParam("id") String mobileterminalId) {
         LOG.info("Get mobile terminal by id invoked in rest layer.");
         try {
-            //return new MTResponseDto<>(mobileTerminalService.getMobileTerminalByIdFromInternalOrExternalSource(mobileterminalId), MTResponseCode.OK);
             MobileTerminalType mobileTerminalType = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminalService.getMobileTerminalEntityById(UUID.fromString(mobileterminalId)));
             return new MTResponseDto<>(mobileTerminalType, MTResponseCode.OK);
         } catch (Exception ex) {
-            LOG.error("[ Error when creating mobile terminal ] {}", ex.getStackTrace());
+            LOG.error("[ Error when creating mobile terminal ] {}", ex);
             return MTErrorHandler.getFault(ex);
         }
     }
@@ -99,13 +98,20 @@ public class MobileTerminalRestResource {
     @PUT
     @Path("/")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
-    public MTResponseDto<MobileTerminalType> updateMobileTerminal(@QueryParam("comment") String comment, MobileTerminalType mobileterminal) {
+    public MTResponseDto<MobileTerminalType> updateMobileTerminal(@QueryParam("comment") String comment, MobileTerminalType mobileTerminalType) {
         LOG.info("Update mobile terminal by id invoked in rest layer.");
         try {
-            return new MTResponseDto<>(mobileTerminalService.updateMobileTerminal(mobileterminal, comment, MobileTerminalSource.INTERNAL, request.getRemoteUser()),
-                    MTResponseCode.OK);
+            mobileTerminalType.setSource(MobileTerminalSource.INTERNAL);
+            String serialNumber = mobileTerminalService.assertTerminalHasSerialNumber(mobileTerminalType);
+            MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(mobileTerminalType.getPlugin().getServiceName());
+            MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapMobileTerminalEntity(mobileTerminalService.getMobileTerminalEntityById(mobileTerminalType.getMobileTerminalId()), mobileTerminalType, serialNumber, plugin, request.getRemoteUser(), comment, EventCodeEnum.MODIFY);
+
+            mobileTerminal = mobileTerminalService.updateMobileTerminal(mobileTerminal, comment, request.getRemoteUser());
+
+            MobileTerminalType updatedMobileTerminalType = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminal);
+            return new MTResponseDto<>(updatedMobileTerminalType , MTResponseCode.OK);
         } catch (Exception ex) {
-            LOG.error("[ Error when updating mobile terminal ] {}", ex.getStackTrace());
+            LOG.error("[ Error when updating mobile terminal ] {}", ex);
             return MTErrorHandler.getFault(ex);
         }
     }
