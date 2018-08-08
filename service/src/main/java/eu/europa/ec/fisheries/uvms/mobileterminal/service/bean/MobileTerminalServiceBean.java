@@ -193,27 +193,26 @@ public class MobileTerminalServiceBean {
         return updatedTerminal;
     }
 
-    public MobileTerminalType assignMobileTerminal(MobileTerminalAssignQuery query, String comment, String username) {
-        MobileTerminalType terminalAssign = assignMobileTerminalToCarrier(query, comment, username);
+    public MobileTerminal assignMobileTerminal(MobileTerminalAssignQuery query, String comment, String username) {
+        MobileTerminal terminalAssign = assignMobileTerminalToCarrier(query, comment, username);
         try {
-            String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalAssigned(terminalAssign.getMobileTerminalId().getGuid(), comment, username);
+            String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalAssigned(terminalAssign.getId().toString(), comment, username);
             MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException e) {
-            LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was assigned", terminalAssign.getMobileTerminalId()
-                    .getGuid());
+            LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was assigned", terminalAssign.getId()
+                    .toString());
         }
 
         return terminalAssign;
     }
 
-    public MobileTerminalType unAssignMobileTerminal(MobileTerminalAssignQuery query, String comment, String username) {
-        MobileTerminalType terminalUnAssign = unAssignMobileTerminalFromCarrier(query, comment, username);
+    public MobileTerminal unAssignMobileTerminal(MobileTerminalAssignQuery query, String comment, String username) {
+        MobileTerminal terminalUnAssign = unAssignMobileTerminalFromCarrier(query, comment, username);
         try {
-            String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalUnassigned(terminalUnAssign.getMobileTerminalId().getGuid(), comment, username);
+            String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalUnassigned(terminalUnAssign.getId().toString(), comment, username);
             MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException e) {
-            LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was unassigned", terminalUnAssign.getMobileTerminalId()
-                    .getGuid());
+            LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was unassigned", terminalUnAssign.getId().toString());
         }
 
         return terminalUnAssign;
@@ -349,7 +348,7 @@ public class MobileTerminalServiceBean {
     }
 
 
-    public MobileTerminalType assignMobileTerminalToCarrier(MobileTerminalAssignQuery query, String comment, String username) {
+    public MobileTerminal assignMobileTerminalToCarrier(MobileTerminalAssignQuery query, String comment, String username) {
         if (query == null) {
             throw new NullPointerException("RequestQuery is null");
         }
@@ -383,13 +382,13 @@ public class MobileTerminalServiceBean {
             terminal.getMobileTerminalEvents().add(event);
             terminalDao.updateMobileTerminal(terminal);
 
-            return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
+            return terminal;
         }
 
         throw new IllegalArgumentException("Terminal " + mobTermId + " is already linked to an asset with guid " + currentConnectId);
     }
 
-    public MobileTerminalType unAssignMobileTerminalFromCarrier(MobileTerminalAssignQuery query, String comment, String username) {
+    public MobileTerminal unAssignMobileTerminalFromCarrier(MobileTerminalAssignQuery query, String comment, String username) {
         if (query == null) {
             throw new IllegalArgumentException("RequestQuery is null");
         }
@@ -423,7 +422,7 @@ public class MobileTerminalServiceBean {
             terminal.getMobileTerminalEvents().add(event);
             terminalDao.updateMobileTerminal(terminal);
 
-            return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
+            return terminal;
         }
 
         throw new IllegalArgumentException("Terminal " + mobTermId + " is not linked to an asset with guid " + connectId);
@@ -477,7 +476,7 @@ public class MobileTerminalServiceBean {
         if (query.getMobileTerminalSearchCriteria() == null) {
             throw new IllegalArgumentException("No list criteria");
         }
-        if (query.getMobileTerminalSearchCriteria().getCriterias() == null) {
+        if (query.getMobileTerminalSearchCriteria().getCriterias().isEmpty()) {
             throw new IllegalArgumentException("No list criteria");
         }
 

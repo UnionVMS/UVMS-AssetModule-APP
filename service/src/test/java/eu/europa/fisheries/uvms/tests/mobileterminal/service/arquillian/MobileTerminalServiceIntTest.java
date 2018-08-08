@@ -145,8 +145,8 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
         String guid = UUID.randomUUID().toString();
         query.setConnectId(guid);
 
-        MobileTerminalType mobileTerminalType = mobileTerminalService.assignMobileTerminal(query, TEST_COMMENT, USERNAME);
-        assertNotNull(mobileTerminalType);
+        MobileTerminal mobileTerminal = mobileTerminalService.assignMobileTerminal(query, TEST_COMMENT, USERNAME);
+        assertNotNull(mobileTerminal);
     }
 
     @Test
@@ -163,8 +163,8 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
         query.setMobileTerminalId(mobileTerminalId);
         query.setConnectId(created.getConnectId());
 
-        MobileTerminalType mobileTerminalType = mobileTerminalService.assignMobileTerminal(query, TEST_COMMENT, USERNAME);
-        assertNotNull(mobileTerminalType);
+        MobileTerminal mobileTerminal = mobileTerminalService.assignMobileTerminal(query, TEST_COMMENT, USERNAME);
+        assertNotNull(mobileTerminal);
     }
 
     @Test

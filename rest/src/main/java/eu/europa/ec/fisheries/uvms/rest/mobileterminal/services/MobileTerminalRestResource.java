@@ -124,7 +124,7 @@ public class MobileTerminalRestResource {
         try {
             return new MTResponseDto<>(mobileTerminalService.getMobileTerminalList(query), MTResponseCode.OK);
         } catch (Exception ex) {
-            LOG.error("[ Error when getting mobile terminal list ] {}", ex.getStackTrace());
+            LOG.error("[ Error when getting mobile terminal list ] {}", ex);
             return MTErrorHandler.getFault(ex);
         }
     }
@@ -135,9 +135,10 @@ public class MobileTerminalRestResource {
     public MTResponseDto<MobileTerminalType> assignMobileTerminal(@QueryParam("comment") String comment, MobileTerminalAssignQuery query) {
         LOG.info("Assign mobile terminal invoked in rest layer.");
         try {
-            return new MTResponseDto<>(mobileTerminalService.assignMobileTerminal(query, comment, request.getRemoteUser()), MTResponseCode.OK);
+            MobileTerminalType mobileTerminalType = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminalService.assignMobileTerminal(query, comment, request.getRemoteUser()));
+            return new MTResponseDto<>(mobileTerminalType, MTResponseCode.OK);
         } catch (Exception ex) {
-            LOG.error("[ Error when assigning mobile terminal ] {}", ex.getStackTrace());
+            LOG.error("[ Error when assigning mobile terminal ] {}", ex);
             return MTErrorHandler.getFault(ex);
         }
     }
@@ -148,9 +149,10 @@ public class MobileTerminalRestResource {
     public MTResponseDto<MobileTerminalType> unAssignMobileTerminal(@QueryParam("comment") String comment, MobileTerminalAssignQuery query) {
         LOG.info("Unassign mobile terminal invoked in rest layer.");
         try {
-            return new MTResponseDto<>(mobileTerminalService.unAssignMobileTerminal(query, comment, request.getRemoteUser()), MTResponseCode.OK);
+            MobileTerminalType mobileTerminalType = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminalService.unAssignMobileTerminal(query, comment, request.getRemoteUser()));
+            return new MTResponseDto<>(mobileTerminalType, MTResponseCode.OK);
         } catch (Exception ex) {
-            LOG.error("[ Error when unassigning mobile terminal ] {}", ex.getStackTrace());
+            LOG.error("[ Error when unassigning mobile terminal ] {}", ex);
             return MTErrorHandler.getFault(ex);
         }
     }
@@ -163,7 +165,7 @@ public class MobileTerminalRestResource {
         try {
             return new MTResponseDto<>(mobileTerminalService.setStatusMobileTerminal(terminalId, comment, MobileTerminalStatus.ACTIVE, request.getRemoteUser()), MTResponseCode.OK);
         } catch (Exception ex) {
-            LOG.error("[ Error when activating mobile terminal ] {}", ex.getStackTrace());
+            LOG.error("[ Error when activating mobile terminal ] {}", ex);
             return MTErrorHandler.getFault(ex);
         }
     }
@@ -176,7 +178,7 @@ public class MobileTerminalRestResource {
         try {
             return new MTResponseDto<>(mobileTerminalService.setStatusMobileTerminal(terminalId, comment, MobileTerminalStatus.INACTIVE, request.getRemoteUser()), MTResponseCode.OK);
         } catch (Exception ex) {
-            LOG.error("[ Error when inactivating mobile terminal ] {}", ex.getStackTrace());
+            LOG.error("[ Error when inactivating mobile terminal ] {}", ex);
             return MTErrorHandler.getFault(ex);
         }
     }
@@ -189,7 +191,7 @@ public class MobileTerminalRestResource {
         try {
             return new MTResponseDto<>(mobileTerminalService.setStatusMobileTerminal(terminalId, comment, MobileTerminalStatus.ARCHIVE, request.getRemoteUser()), MTResponseCode.OK);
         } catch (Exception ex) {
-            LOG.error("[ Error when removing mobile terminal ] {}", ex.getStackTrace());
+            LOG.error("[ Error when removing mobile terminal ] {}", ex);
             return MTErrorHandler.getFault(ex);
         }
     }
@@ -202,7 +204,7 @@ public class MobileTerminalRestResource {
         try {
             return new MTResponseDto<>(mobileTerminalService.getMobileTerminalHistoryList(guid), MTResponseCode.OK);
         } catch (Exception ex) {
-            LOG.error("[ Error when getting mobile terminal history by terminalId ] {}", ex.getStackTrace());
+            LOG.error("[ Error when getting mobile terminal history by terminalId ] {}", ex);
             return MTErrorHandler.getFault(ex);
         }
     }
