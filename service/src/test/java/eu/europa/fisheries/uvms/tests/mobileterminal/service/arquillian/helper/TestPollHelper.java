@@ -2,7 +2,6 @@ package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.PluginService;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.TerminalDaoBean;
@@ -10,7 +9,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollStateEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalModelToEntityMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PluginMapper;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
