@@ -11,10 +11,10 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.rest.service;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
-import java.util.UUID;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -54,13 +54,9 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         assertThat(listResponse.getAssetList().get(0), is(AssetMatcher.assetEquals(createdAsset)));
     }
 
-
     @Test
     @RunAsClient
     public void getAssetListQueryTestEmptyResult() {
-
-
-
         AssetQuery query = new AssetQuery();
         query.setCfr(Arrays.asList("APA"));
 
@@ -73,10 +69,60 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         assertTrue(listResponse != null);
         assertThat(listResponse.getAssetList().size(), is(0));
     }
+    
+    @Test
+    @RunAsClient
+    public void getAssetListEmptyCriteriasShouldReturnAllAssets() {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+        
+        AssetQuery query = new AssetQuery();
 
+        AssetListResponse listResponse = getWebTarget()
+                .path("asset")
+                .path("list")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query), AssetListResponse.class);
+        
+        assertTrue(listResponse != null);
+        assertTrue(listResponse.getAssetList().stream()
+                .anyMatch(fetchedAsset -> fetchedAsset.getId().equals(createdAsset.getId())));
+    }
+    
+    @Test
+    @RunAsClient
+    public void getAssetListEmptyCriteriasShouldNotReturnInactivatedAssets() {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+        
+        AssetQuery query = new AssetQuery();
 
-
-
-
-
+        AssetListResponse listResponse = getWebTarget()
+                .path("asset")
+                .path("list")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query), AssetListResponse.class);
+        
+        int sizeBefore = listResponse.getAssetList().size();
+        
+        getWebTarget()
+                .path("asset")
+                .path("archive")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(createdAsset), Asset.class);
+        
+        AssetListResponse listResponseAfter = getWebTarget()
+                .path("asset")
+                .path("list")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query), AssetListResponse.class);
+        
+        assertEquals(sizeBefore - 1, listResponseAfter.getAssetList().size());
+    }
 }
