@@ -5,7 +5,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTermin
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalSourceEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +49,7 @@ public class MobileTerminalEntityToModelMapper {
         model.setPlugin(plugin);
 
         try {
-            model.setSource(mapToMobileTerminalSource(entity.getSource()));
+            model.setSource(entity.getSource());
         } catch (RuntimeException e) {
             LOG.error("[ Error when setting mobile terminal source. ] {}", e.getMessage());
             throw new RuntimeException(e);
@@ -129,20 +128,6 @@ public class MobileTerminalEntityToModelMapper {
             //}
         }
         return channelList;
-    }
-
-    private static MobileTerminalSource mapToMobileTerminalSource(MobileTerminalSourceEnum mobtermSourceId) {
-        if (mobtermSourceId != null) {
-            switch (mobtermSourceId) {
-                case INTERNAL:
-                    return MobileTerminalSource.INTERNAL;
-                case NATIONAL:
-                    return MobileTerminalSource.NATIONAL;
-                default:
-                    throw new IllegalArgumentException("Couldn't map enum");
-            }
-        }
-        throw new NullPointerException("MobileTerminalSourceEnum parameter is null");
     }
 
     private static MobileTerminalId mapToMobileTerminalId(String mobtermGuid) {

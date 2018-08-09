@@ -88,7 +88,7 @@ public class GetReceivedEventBean {
         }
         try {
             LOG.debug("Got message to MobileTerminalModule, Executing Get MobileTerminal from datasource {}", dataSource.name());
-            mobTerm = service.getMobileTerminalById(request.getId(), dataSource);
+            mobTerm = service.getMobileTerminalByIdFromInternalOrExternalSource(request.getId(), dataSource);
             if (!dataSource.equals(DataSourceQueue.INTERNAL)) {
                 service.upsertMobileTerminal(mobTerm, MobileTerminalSource.NATIONAL, dataSource.name());
             }
@@ -99,7 +99,7 @@ public class GetReceivedEventBean {
             LOG.debug("Trying to retrieve MobileTerminal from datasource: {0} as second option", DataSourceQueue.INTERNAL.name());
             try {
                 request = JAXBMarshaller.unmarshallTextMessage(message.getJmsMessage(), GetMobileTerminalRequest.class);
-                mobTerm = service.getMobileTerminalById(request.getId(), DataSourceQueue.INTERNAL);
+                mobTerm = service.getMobileTerminalByIdFromInternalOrExternalSource(request.getId(), DataSourceQueue.INTERNAL);
             } catch (AssetException ex) {
                 errorEvent.fire(new EventMessage(message.getJmsMessage(), "Exception when getting vessel from source : " + dataSource.name() + " Error message: " + ex.getMessage()));
             }

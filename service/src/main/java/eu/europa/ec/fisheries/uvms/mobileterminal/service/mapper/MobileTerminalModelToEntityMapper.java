@@ -18,7 +18,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +31,7 @@ import java.util.Set;
 public class MobileTerminalModelToEntityMapper {
     private static Logger LOG = LoggerFactory.getLogger(MobileTerminalModelToEntityMapper.class);
 
+    //DO NOT USE WITH AN EMPTY ENTITY UNLESS YOU REALLY KNOW WHAT YOU ARE DOING
     public static MobileTerminal mapMobileTerminalEntity(MobileTerminal entity, MobileTerminalType model,
                                                          String serialNumber, MobileTerminalPlugin plugin, String username,
                                                          String comment, EventCodeEnum event) {
@@ -46,7 +46,7 @@ public class MobileTerminalModelToEntityMapper {
         entity.setSerialNo(serialNumber);
 
         try {
-            entity.setSource(getSourceTypeFromModel(model.getSource()));
+            entity.setSource(model.getSource());
         } catch (RuntimeException e) {
             LOG.error(e.getMessage());
             throw new RuntimeException(e);
@@ -224,15 +224,4 @@ public class MobileTerminalModelToEntityMapper {
         return sb.toString();
     }
 
-    private static MobileTerminalSourceEnum getSourceTypeFromModel(MobileTerminalSource model) {
-        if (model != null) {
-            switch (model) {
-                case INTERNAL:
-                    return MobileTerminalSourceEnum.INTERNAL;
-                case NATIONAL:
-                    return MobileTerminalSourceEnum.NATIONAL;
-            }
-        }
-        throw new IllegalArgumentException("Couldn't map enum (from model) in " + MobileTerminalSourceEnum.class.getName());
-    }
 }

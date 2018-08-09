@@ -69,7 +69,7 @@ public class PluginServiceBeanIntTest extends TransactionalTests {
         pollId.setGuid(UUID.randomUUID().toString());
 
         // MobileTerminalType
-        MobileTerminalType terminalType = testPollHelper.createBasicMobileTerminal();
+        MobileTerminalType terminalType = testPollHelper.createBasicMobileTerminalType();
 
         // PollType
         PollType pollType = PollType.PROGRAM_POLL;

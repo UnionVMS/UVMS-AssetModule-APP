@@ -17,11 +17,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalSource;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -75,7 +74,7 @@ public class MobileTerminal implements Serializable {
 	@Enumerated(EnumType.STRING)
 	@NotNull
 	@Column(name="source")
-	private MobileTerminalSourceEnum source;
+	private MobileTerminalSource source;
 
 	@Enumerated(EnumType.STRING)
 	@NotNull
@@ -163,11 +162,11 @@ public class MobileTerminal implements Serializable {
 		this.inactivated = inactivated;
 	}
 
-	public MobileTerminalSourceEnum getSource() {
+	public MobileTerminalSource getSource() {
 		return source;
 	}
 
-	public void setSource(MobileTerminalSourceEnum source) {
+	public void setSource(MobileTerminalSource source) {
 		this.source = source;
 	}
 

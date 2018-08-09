@@ -36,7 +36,7 @@ public class ChannelDaoIntTest extends TransactionalTests {
         String id2 = "test_id2";
         List<String> idList = Arrays.asList(id1, id2);
 
-        MobileTerminal mobileTerminal = testPollHelper.createMobileTerminal(id1);
+        MobileTerminal mobileTerminal = testPollHelper.createAndPersistMobileTerminal(id1);
         assertNotNull(mobileTerminal.getId());
 
         //When

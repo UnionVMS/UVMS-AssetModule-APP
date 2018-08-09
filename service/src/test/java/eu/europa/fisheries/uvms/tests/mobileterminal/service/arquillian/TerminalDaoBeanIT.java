@@ -1,10 +1,10 @@
 package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalSource;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
@@ -272,7 +272,7 @@ public class TerminalDaoBeanIT extends TransactionalTests {
             mt.setSerialNo(serialNo);
             mt.setUpdatetime(LocalDateTime.now(ZoneOffset.UTC));
             mt.setUpdateuser("TEST");
-            mt.setSource(MobileTerminalSourceEnum.INTERNAL);
+            mt.setSource(MobileTerminalSource.INTERNAL);
             mt.setPlugin(mtp);
             mt.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
             mt.setArchived(false);
