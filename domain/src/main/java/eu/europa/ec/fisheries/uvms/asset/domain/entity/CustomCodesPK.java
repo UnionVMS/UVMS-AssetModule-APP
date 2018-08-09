@@ -11,8 +11,8 @@ public class CustomCodesPK  implements Serializable {
     private String constant;
     private String code;
 
-    private LocalDateTime validFromDate;
-    private LocalDateTime validToDate;
+    private LocalDateTime validFromDate = LocalDateTime.of(1970,01,01,1,1,1,1);
+    private LocalDateTime validToDate = LocalDateTime.of(3070,01,01,01,1,1,1);
 
 
     public CustomCodesPK(){
@@ -25,6 +25,14 @@ public class CustomCodesPK  implements Serializable {
         this.validFromDate = validFromDate;
         this.validToDate = validToDate;
     }
+
+    public CustomCodesPK(String constant, String code){
+        this.constant = constant;
+        this.code = code;
+        this.validFromDate = LocalDateTime.of(1970,01,01,1,1,1,1);
+        this.validToDate = LocalDateTime.of(3070,01,01,01,1,1,1);
+    }
+
 
 
     public String getConstant() {

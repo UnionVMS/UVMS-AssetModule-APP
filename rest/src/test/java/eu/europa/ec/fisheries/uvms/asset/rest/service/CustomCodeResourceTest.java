@@ -106,6 +106,19 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
     @Test
     @RunAsClient
+    public void createACustomCodeNoDateLimit() throws IOException {
+
+        String txt = UUID.randomUUID().toString().toUpperCase();
+        String createdJson = createACustomCodeHelperNoDateLimit(txt);
+        CustomCode customCodes = MAPPER.readValue(createdJson, CustomCode.class);
+
+        Assert.assertTrue(customCodes.getPrimaryKey().getConstant().endsWith(txt));
+    }
+
+
+
+    @Test
+    @RunAsClient
     public void getACustomCode() throws IOException {
 
         String txt = UUID.randomUUID().toString().toUpperCase();
@@ -214,6 +227,31 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .post(Entity.json(customCode), String.class);
         return created;
     }
+
+    private String createACustomCodeHelperNoDateLimit(String txt) {
+
+
+
+        String constant = "CST_" + txt;
+        String code = "CODE_" + txt;
+        String descr = "DESCR_" + txt;
+
+        CustomCodesPK primaryKey = new CustomCodesPK(constant, code);
+        CustomCode customCode = new CustomCode();
+        customCode.setPrimaryKey(primaryKey);
+        customCode.setDescription(descr);
+
+
+
+        String created = getWebTarget()
+                .path("customcodes")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(customCode), String.class);
+        return created;
+    }
+
+
+
 
     private void createACustomCodeHelperMultipleCodesPerConstant(String txt) {
 
