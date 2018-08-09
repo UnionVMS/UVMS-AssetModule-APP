@@ -43,6 +43,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.jms.TextMessage;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
@@ -218,21 +219,28 @@ public class MobileTerminalServiceBean {
         return terminalUnAssign;
     }
 
-    // TODO: This method recurses infinitely!!!
-    public MobileTerminalType setStatusMobileTerminal(MobileTerminalId terminalId, String comment, MobileTerminalStatus status, String username) {
-        MobileTerminalType terminalStatus = setStatusMobileTerminal(terminalId, comment, status, username);
+    public MobileTerminal setStatusMobileTerminal(MobileTerminalId terminalId, String comment, MobileTerminalStatus status, String username) {
+        //MobileTerminal terminalStatus = setStatusMobileTerminal(terminalId, comment, status, username);
+        MobileTerminal terminalStatus = getMobileTerminalEntityById(terminalId);
+
+
+        //create event and update MT for this happening
+        terminalStatus = createMTEventForStatusChange(terminalStatus, comment, status, username);
+
+
+        //audit stuff
         try {
             String auditData = null;
             switch (status) {
             case ACTIVE:
-                auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalActivated(terminalStatus.getMobileTerminalId().getGuid(),comment, username);
+                auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalActivated(terminalStatus.getId().toString(),comment, username);
                 break;
             case INACTIVE:
                 auditData = AuditModuleRequestMapper
-                .mapAuditLogMobileTerminalInactivated(terminalStatus.getMobileTerminalId().getGuid(), comment, username);
+                .mapAuditLogMobileTerminalInactivated(terminalStatus.getId().toString(), comment, username);
                 break;
             case ARCHIVE:
-                auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalArchived(terminalStatus.getMobileTerminalId().getGuid(), comment,username);
+                auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalArchived(terminalStatus.getId().toString(), comment,username);
                 break;
             default:
                 break;
@@ -240,15 +248,63 @@ public class MobileTerminalServiceBean {
             MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException e) {
             LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was set to status {}", terminalStatus
-                    .getMobileTerminalId().getGuid(), status);
+                    .getId().toString(), status);
         }
 
-        boolean dnidUpdated = configModel.checkDNIDListChange(terminalStatus.getPlugin().getServiceName());
+        boolean dnidUpdated = configModel.checkDNIDListChange(terminalStatus.getPlugin().getName());
         if(dnidUpdated) {
-        	pluginService.processUpdatedDNIDList(terminalStatus.getPlugin().getServiceName());
+        	pluginService.processUpdatedDNIDList(terminalStatus.getPlugin().getName());
         }
         
         return terminalStatus;
+    }
+
+    private MobileTerminal createMTEventForStatusChange(MobileTerminal mobileTerminal, String comment, MobileTerminalStatus status, String username) {
+        if (mobileTerminal == null) {
+            throw new IllegalArgumentException("No Mobile Terminal");
+        }
+        if (status == null) {
+            throw new IllegalArgumentException("No terminal status to set");
+        }
+
+
+        MobileTerminalEvent current = mobileTerminal.getCurrentEvent();
+        current.setActive(false);
+
+        MobileTerminalEvent event = new MobileTerminalEvent();
+        event.setActive(true);
+        event.setPollChannel(current.getPollChannel());
+        event.setDefaultChannel(current.getDefaultChannel());
+        event.setUpdatetime(LocalDateTime.now(ZoneId.of("UTC")));
+        event.setConfigChannel(current.getConfigChannel());
+        event.setAttributes(current.getAttributes());
+        event.setComment(comment);
+        event.setConnectId(current.getConnectId());
+        event.setMobileterminal(mobileTerminal);
+        event.setUpdateuser(username);
+        switch (status) {
+            case ACTIVE:
+                event.setEventCodeType(EventCodeEnum.ACTIVATE);
+                mobileTerminal.setInactivated(false);
+                break;
+            case INACTIVE:
+                event.setEventCodeType(EventCodeEnum.INACTIVATE);
+                mobileTerminal.setInactivated(true);
+                break;
+            case ARCHIVE:
+                event.setEventCodeType(EventCodeEnum.ARCHIVE);
+                mobileTerminal.setArchived(true);
+                mobileTerminal.setInactivated(true);
+                break;
+            default:
+                LOG.error("[ Non valid status to set ] {}", status);
+                throw new IllegalArgumentException("Non valid status to set");
+        }
+
+        mobileTerminal.getMobileTerminalEvents().add(event);
+        terminalDao.updateMobileTerminal(mobileTerminal);
+
+        return mobileTerminal;
     }
 
     public MobileTerminalHistory getMobileTerminalHistoryList(String guid) {

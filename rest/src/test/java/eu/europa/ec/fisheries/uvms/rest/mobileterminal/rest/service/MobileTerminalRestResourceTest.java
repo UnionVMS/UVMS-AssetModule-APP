@@ -263,4 +263,62 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertNotNull(responseUnAssign);
         assertTrue(responseUnAssign.contains(guid));
     }
+
+    @Test
+    public void inactivateActivateAndArchiveMobileTerminal() throws Exception{
+        MobileTerminalType mobileTerminalType = createAndRestMobileTerminal("Special Test Boat");
+        assertFalse(mobileTerminalType.isInactive());
+        assertFalse(mobileTerminalType.isArchived());
+
+        String response = getWebTarget()
+                .path("mobileterminal/status/inactivate")
+                .queryParam("comment", "New Test Comment Inactivate")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(mobileTerminalType.getMobileTerminalId()), String.class);
+
+
+        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
+        MobileTerminalType changedMT = deserializeResponseDto(response, MobileTerminalType.class);
+
+        assertTrue(changedMT.isInactive());
+
+        response = getWebTarget()
+                .path("mobileterminal/status/activate")
+                .queryParam("comment", "New Test Comment Activate")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(mobileTerminalType.getMobileTerminalId()), String.class);
+
+        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
+        changedMT = deserializeResponseDto(response, MobileTerminalType.class);
+
+        assertFalse(changedMT.isInactive());
+
+        response = getWebTarget()
+                .path("mobileterminal/status/remove")
+                .queryParam("comment", "New Test Comment Remove")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(mobileTerminalType.getMobileTerminalId()), String.class);
+
+        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
+        changedMT = deserializeResponseDto(response, MobileTerminalType.class);
+
+        assertTrue(changedMT.isInactive());
+        assertTrue(changedMT.isArchived());
+
+    }
+
+    private MobileTerminalType createAndRestMobileTerminal(String boat) throws Exception {
+        MobileTerminalType mt = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mt.setConnectId(boat);
+
+        String response = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mt), String.class);
+
+
+        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
+        MobileTerminalType createdMT = deserializeResponseDto(response, MobileTerminalType.class);
+        return createdMT;
+    }
 }

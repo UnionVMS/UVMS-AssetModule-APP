@@ -163,7 +163,8 @@ public class MobileTerminalRestResource {
     public MTResponseDto<MobileTerminalType> setStatusActive(@QueryParam("comment") String comment, MobileTerminalId terminalId) {
         LOG.info("Set mobile terminal status active invoked in rest layer.");
         try {
-            return new MTResponseDto<>(mobileTerminalService.setStatusMobileTerminal(terminalId, comment, MobileTerminalStatus.ACTIVE, request.getRemoteUser()), MTResponseCode.OK);
+            MobileTerminalType mobileTerminalType = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminalService.setStatusMobileTerminal(terminalId, comment, MobileTerminalStatus.ACTIVE, request.getRemoteUser()));
+            return new MTResponseDto<>(mobileTerminalType, MTResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when activating mobile terminal ] {}", ex);
             return MTErrorHandler.getFault(ex);
@@ -176,7 +177,8 @@ public class MobileTerminalRestResource {
     public MTResponseDto<MobileTerminalType> setStatusInactive(@QueryParam("comment") String comment, MobileTerminalId terminalId) {
         LOG.info("Set mobile terminal status inactive invoked in rest layer.");
         try {
-            return new MTResponseDto<>(mobileTerminalService.setStatusMobileTerminal(terminalId, comment, MobileTerminalStatus.INACTIVE, request.getRemoteUser()), MTResponseCode.OK);
+            MobileTerminalType mobileTerminalType = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminalService.setStatusMobileTerminal(terminalId, comment, MobileTerminalStatus.INACTIVE, request.getRemoteUser()));
+            return new MTResponseDto<>(mobileTerminalType, MTResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when inactivating mobile terminal ] {}", ex);
             return MTErrorHandler.getFault(ex);
@@ -189,7 +191,8 @@ public class MobileTerminalRestResource {
     public MTResponseDto<MobileTerminalType> setStatusRemoved(@QueryParam("comment") String comment, MobileTerminalId terminalId) {
         LOG.info("Set mobile terminal status removed invoked in rest layer.");
         try {
-            return new MTResponseDto<>(mobileTerminalService.setStatusMobileTerminal(terminalId, comment, MobileTerminalStatus.ARCHIVE, request.getRemoteUser()), MTResponseCode.OK);
+            MobileTerminalType mobileTerminalType = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminalService.setStatusMobileTerminal(terminalId, comment, MobileTerminalStatus.ARCHIVE, request.getRemoteUser()));
+            return new MTResponseDto<>(mobileTerminalType, MTResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when removing mobile terminal ] {}", ex);
             return MTErrorHandler.getFault(ex);
