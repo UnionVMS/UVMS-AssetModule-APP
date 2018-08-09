@@ -108,11 +108,133 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
     @RunAsClient
     public void createACustomCodeNoDateLimit() throws IOException {
 
-        String txt = UUID.randomUUID().toString().toUpperCase();
-        String createdJson = createACustomCodeHelperNoDateLimit(txt);
-        CustomCode customCodes = MAPPER.readValue(createdJson, CustomCode.class);
+        String createdJson = "";
 
-        Assert.assertTrue(customCodes.getPrimaryKey().getConstant().endsWith(txt));
+        createdJson = createACustomCodeHelperNoDateLimit("UNIT_TONNAGE", "LONDON", "London");
+        createdJson = createACustomCodeHelperNoDateLimit("UNIT_TONNAGE", "OSLO", "Oslo");
+        createdJson = createACustomCodeHelperNoDateLimit("UNIT_LENGTH", "LOA", "Loa");
+        createdJson = createACustomCodeHelperNoDateLimit("UNIT_LENGTH", "LBP", "Lbp");
+        createdJson = createACustomCodeHelperNoDateLimit("ASSET_TYPE", "VESSEL", "Vessel");
+        createdJson = createACustomCodeHelperNoDateLimit("LICENSE_TYPE", "MOCK-license-DB", "MOCK-license-DB");
+        createdJson = createACustomCodeHelperNoDateLimit("GEAR_TYPE", "PELAGIC", "Pelagic");
+        createdJson = createACustomCodeHelperNoDateLimit("GEAR_TYPE", "DERMERSAL", "Demersal");
+        createdJson = createACustomCodeHelperNoDateLimit("GEAR_TYPE", "DEMERSAL_AND_PELAGIC", "Demersal and pelagic");
+        createdJson = createACustomCodeHelperNoDateLimit("GEAR_TYPE", "UNKNOWN", "Unknown");
+        createdJson = createACustomCodeHelperNoDateLimit("FLAG_STATE", "SWE", "Sverige");
+        createdJson = createACustomCodeHelperNoDateLimit("FLAG_STATE", "DNK", "Danmark");
+        createdJson = createACustomCodeHelperNoDateLimit("FLAG_STATE", "NOR", "Norge");
+        createdJson = createACustomCodeHelperNoDateLimit("SPAN_LENGTH_LOA", "0-11,99", "0-11,99");
+        createdJson = createACustomCodeHelperNoDateLimit("SPAN_LENGTH_LOA", "12-14,99", "12-14,99");
+        createdJson = createACustomCodeHelperNoDateLimit("SPAN_LENGTH_LOA", "15-17,99", "15-17,99");
+        createdJson = createACustomCodeHelperNoDateLimit("SPAN_LENGTH_LOA", "18-23,99", "18-23,99");
+        createdJson = createACustomCodeHelperNoDateLimit("SPAN_LENGTH_LOA", "24+", "24+");
+        createdJson = createACustomCodeHelperNoDateLimit("SPAN_POWER_MAIN", "0-99", "0-99");
+        createdJson = createACustomCodeHelperNoDateLimit("SPAN_POWER_MAIN", "100-199", "100-199");
+        createdJson = createACustomCodeHelperNoDateLimit("SPAN_POWER_MAIN", "200-299", "200-299");
+        createdJson = createACustomCodeHelperNoDateLimit("SPAN_POWER_MAIN", "300+", "300+");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "0", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "1", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "10", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "12", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "14", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "2", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "3", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "39", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "4", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "5", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "6", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "7", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "71", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "8", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "80", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "81", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "82", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "9", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "90", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "98", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "99", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "999", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "EL1", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "EL2", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "EL3", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "EL4", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "K01", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "K02", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "K03", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "K04", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "K06", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "K07", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "K08", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "K09", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "SAN", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "SAT", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "T1", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "T2", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "U1", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "U2", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "U3", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V00", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V01", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V02", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V03", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V04", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V05", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V06", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V07", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V08", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V09", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V10", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V11", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V12", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V13", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V14", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V15", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V16", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V17", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V18", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V19", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V20", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V21", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V22", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V23", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V24", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V25", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V26", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V28", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V29", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V30", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V31", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V32", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V33", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V35", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V40", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V41", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V42", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V43", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V45", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V49", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V50", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V51", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V52", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V53", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V54", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V60", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V61", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V62", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V63", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V65", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V75", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V80", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V85", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V86", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V90", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V92", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V93", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V95", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V96", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V98", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V99", "");
+        createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "X1", "");
     }
 
 
@@ -228,18 +350,20 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         return created;
     }
 
-    private String createACustomCodeHelperNoDateLimit(String txt) {
+    private String createACustomCodeHelperNoDateLimit(String constant,String code, String descr) {
 
 
 
-        String constant = "CST_" + txt;
-        String code = "CODE_" + txt;
-        String descr = "DESCR_" + txt;
 
         CustomCodesPK primaryKey = new CustomCodesPK(constant, code);
         CustomCode customCode = new CustomCode();
         customCode.setPrimaryKey(primaryKey);
-        customCode.setDescription(descr);
+
+        if(descr.length() < 1){
+            customCode.setDescription(code);
+        }else {
+            customCode.setDescription(descr);
+        }
 
 
 
