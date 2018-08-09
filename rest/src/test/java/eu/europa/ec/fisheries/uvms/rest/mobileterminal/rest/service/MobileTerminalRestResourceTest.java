@@ -272,7 +272,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         String response = getWebTarget()
                 .path("mobileterminal/status/inactivate")
-                .queryParam("comment", "New Test Comment Inactivate")
+                .queryParam("comment", "Test Comment Inactivate")
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.json(mobileTerminalType.getMobileTerminalId()), String.class);
 
@@ -284,7 +284,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         response = getWebTarget()
                 .path("mobileterminal/status/activate")
-                .queryParam("comment", "New Test Comment Activate")
+                .queryParam("comment", "Test Comment Activate")
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.json(mobileTerminalType.getMobileTerminalId()), String.class);
 
@@ -295,7 +295,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         response = getWebTarget()
                 .path("mobileterminal/status/remove")
-                .queryParam("comment", "New Test Comment Remove")
+                .queryParam("comment", "Test Comment Remove")
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.json(mobileTerminalType.getMobileTerminalId()), String.class);
 
@@ -304,6 +304,39 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         assertTrue(changedMT.isInactive());
         assertTrue(changedMT.isArchived());
+
+        //checking the events as well
+        response = getWebTarget()
+                .path("mobileterminal/history/" + mobileTerminalType.getMobileTerminalId().getGuid())
+                .request(MediaType.APPLICATION_JSON)
+                .get(String.class);
+
+        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
+        MobileTerminalHistory mobileTerminalHistory = deserializeResponseDto(response, MobileTerminalHistory.class);
+
+        assertEquals(4, mobileTerminalHistory.getEvents().size()); //one for each of the operations above and one for the creation of the MT
+        boolean created = false, activated = false, inactivate = false, archived = false;
+        boolean nothingElse = true;
+        for (MobileTerminalEvents mte: mobileTerminalHistory.getEvents()) {
+            switch (mte.getEventCode()) {
+                case CREATE:
+                    created = true;
+                    break;
+                case ACTIVATE:
+                    activated = true;
+                    break;
+                case INACTIVATE:
+                    inactivate = true;
+                    break;
+                case ARCHIVE:
+                    archived = true;
+                    break;
+                default:
+                    nothingElse = false;
+            }
+        }
+        assertTrue(created && activated && inactivate && archived && nothingElse);
+
 
     }
 
