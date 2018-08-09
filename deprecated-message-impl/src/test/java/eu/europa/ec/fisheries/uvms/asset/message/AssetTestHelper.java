@@ -11,7 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.message;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
@@ -81,7 +81,7 @@ public class AssetTestHelper {
     
     public static AssetNotes createBasicNote() {
         AssetNotes note = new AssetNotes();
-        note.setDate(LocalDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        note.setDate(OffsetDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
         note.setActivity("Activity");
         note.setContact("Contact: " + getRandomIntegers(5));
         note.setNotes("Notes: " + getRandomIntegers(10));

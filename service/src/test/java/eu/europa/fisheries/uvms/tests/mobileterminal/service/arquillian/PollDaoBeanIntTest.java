@@ -19,7 +19,7 @@ import org.junit.runner.RunWith;
 import javax.ejb.EJB;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.validation.ConstraintViolationException;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 
@@ -515,7 +515,7 @@ public class PollDaoBeanIntTest extends TransactionalTests {
 
     private Poll createPollHelper() {
         Poll poll = new Poll();
-        poll.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
+        poll.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         poll.setUpdatedBy("testUser");
         return poll;
     }

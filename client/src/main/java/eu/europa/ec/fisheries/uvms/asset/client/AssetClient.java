@@ -10,7 +10,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.client;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -218,8 +218,8 @@ public class AssetClient {
         return codes;
     }
 
-    public Boolean isCodeValid(String constant, String code, LocalDateTime date){
-        String theDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+    public Boolean isCodeValid(String constant, String code, OffsetDateTime date){
+        String theDate = date.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         return webTarget
                 .path("verify")
                 .path(constant)
@@ -229,8 +229,8 @@ public class AssetClient {
                 .get(Boolean.class);
     }
 
-    public List<CustomCode> getCodeForDate(String constant, String code, LocalDateTime date) {
-        String theDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+    public List<CustomCode> getCodeForDate(String constant, String code, OffsetDateTime date) {
+        String theDate = date.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         Response response = webTarget
                 .path("getfordate")
                 .path(constant)

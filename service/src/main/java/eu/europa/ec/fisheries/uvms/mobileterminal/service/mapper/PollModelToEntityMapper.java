@@ -18,7 +18,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollState
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class PollModelToEntityMapper {
         pollBase.setCreator(requestType.getUserName());
         
         pollBase.setUpdatedBy(username);
-        pollBase.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
+        pollBase.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         return pollBase;
     }
 
@@ -49,7 +49,7 @@ public class PollModelToEntityMapper {
 
         poll.setLatestRun(null);
         poll.setUpdatedBy(username);
-        poll.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
+        poll.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
 
         List<PollAttribute> attributes = requestType.getAttributes();
         if (attributes == null || attributes.isEmpty())
@@ -61,11 +61,11 @@ public class PollModelToEntityMapper {
                     poll.setFrequency(Integer.parseInt(attr.getValue()));
                     break;
                 case START_DATE:
-                    poll.setStartDate(LocalDateTime.parse(attr.getValue(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss Z"))); // Not sure if it will work without a format pattern
+                    poll.setStartDate(OffsetDateTime.parse(attr.getValue(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss Z"))); // Not sure if it will work without a format pattern
 //                    poll.setStartDate(parseToUTCDateTime(attr.getValue()));
                     break;
                 case END_DATE:
-                    poll.setStopDate(LocalDateTime.parse(attr.getValue(),  DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss Z"))); // Not sure if it will work without a format pattern
+                    poll.setStopDate(OffsetDateTime.parse(attr.getValue(),  DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss Z"))); // Not sure if it will work without a format pattern
 //                    poll.setStopDate(parseToUTCDateTime(attr.getValue()));
                     break;
                 default:
@@ -102,7 +102,7 @@ public class PollModelToEntityMapper {
         	throw new RuntimeException(e);
         }
         poll.setUpdatedBy(username);
-        poll.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
+        poll.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         return poll;
     }
 
@@ -154,11 +154,11 @@ public class PollModelToEntityMapper {
         		switch (attr.getKey()) {
         		case START_DATE:
 //        			payload.setStartDate(parseToUTCDateTime(attr.getValue()));
-                    payload.setStartDate(LocalDateTime.parse(attr.getValue())); // Not sure if it will work without a format pattern
+                    payload.setStartDate(OffsetDateTime.parse(attr.getValue())); // Not sure if it will work without a format pattern
                 	break;
         		case END_DATE:
 //        			payload.setStopDate(parseToUTCDateTime(attr.getValue()));
-                    payload.setStartDate(LocalDateTime.parse(attr.getValue())); // Not sure if it will work without a format pattern
+                    payload.setStartDate(OffsetDateTime.parse(attr.getValue())); // Not sure if it will work without a format pattern
                     break;
         		}
         	} catch (UnsupportedOperationException | IllegalArgumentException e) {

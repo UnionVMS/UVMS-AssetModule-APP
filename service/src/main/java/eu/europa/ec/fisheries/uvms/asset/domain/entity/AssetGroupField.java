@@ -15,7 +15,7 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField.AS
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField.ASSETGROUP_FIELD_GETBYID;
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField.ASSETGROUP_RETRIEVE_FIELDS_FOR_GROUP;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -56,7 +56,7 @@ public class AssetGroupField implements Serializable {
     private String field;
 
     @Column(name = "updatetime")
-    private LocalDateTime updateTime;
+    private OffsetDateTime updateTime;
 
     @Size(max = 60)
     @Column(name = "updateuser")
@@ -86,11 +86,11 @@ public class AssetGroupField implements Serializable {
         this.field = filterField;
     }
 
-    public LocalDateTime getUpdateTime() {
+    public OffsetDateTime getUpdateTime() {
         return this.updateTime;
     }
 
-    public void setUpdateTime(LocalDateTime updateTime) {
+    public void setUpdateTime(OffsetDateTime updateTime) {
         this.updateTime = updateTime;
     }
 

@@ -17,7 +17,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -50,7 +50,7 @@ public class InmarsatCHistoryOceanRegion implements Serializable {
 	private String name;
 
 	@Column(name="updattim")
-	private LocalDateTime updatetime;
+	private OffsetDateTime updatetime;
 
 	@Size(max=60)
 	@Column(name="upuser")
@@ -91,11 +91,11 @@ public class InmarsatCHistoryOceanRegion implements Serializable {
 		this.name = name;
 	}
 
-	public LocalDateTime getUpdatetime() {
+	public OffsetDateTime getUpdatetime() {
 		return updatetime;
 	}
 
-	public void setUpdatetime(LocalDateTime updatetime) {
+	public void setUpdatetime(OffsetDateTime updatetime) {
 		this.updatetime = updatetime;
 	}
 

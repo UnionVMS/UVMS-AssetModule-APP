@@ -11,7 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
@@ -138,7 +138,7 @@ public interface AssetService {
      * @param date @description date to look up
      * @return asset @description an asset
      */
-    Asset getAssetFromAssetIdAtDate(AssetIdentifier idType, String idValue, LocalDateTime date) ;
+    Asset getAssetFromAssetIdAtDate(AssetIdentifier idType, String idValue, OffsetDateTime date) ;
 
     /**
      * Returns asset revisions for given asset id. Result size limited by maxNbr

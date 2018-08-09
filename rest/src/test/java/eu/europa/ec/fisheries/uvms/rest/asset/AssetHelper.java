@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.rest.asset;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public abstract class AssetHelper {
         assetEntity.setExternalMarking("EXT123");
         assetEntity.setFlagStateCode("SWE");
 
-        assetEntity.setCommissionDate(LocalDateTime.now(ZoneOffset.UTC));
+        assetEntity.setCommissionDate(OffsetDateTime.now(ZoneOffset.UTC));
         assetEntity.setCfr("CRF" + getRandomIntegers(9));
         assetEntity.setIrcs("F" + getRandomIntegers(7));
         assetEntity.setImo(getRandomIntegers(7));
@@ -55,7 +55,7 @@ public abstract class AssetHelper {
     public static Asset createBiggerAsset() {
 
         Asset assetEntity = new Asset();
-        LocalDateTime  now =  LocalDateTime.now(ZoneOffset.UTC);
+        OffsetDateTime  now =  OffsetDateTime.now(ZoneOffset.UTC);
 
 
         assetEntity.setName("Test asset");
@@ -63,7 +63,7 @@ public abstract class AssetHelper {
         assetEntity.setExternalMarking("EXT123");
         assetEntity.setFlagStateCode("SWE");
 
-        assetEntity.setCommissionDate(LocalDateTime.now(ZoneOffset.UTC));
+        assetEntity.setCommissionDate(OffsetDateTime.now(ZoneOffset.UTC));
         assetEntity.setCfr("CRF" + getRandomIntegers(9));
         assetEntity.setIrcs("F" + getRandomIntegers(7));
         assetEntity.setImo(getRandomIntegers(7));

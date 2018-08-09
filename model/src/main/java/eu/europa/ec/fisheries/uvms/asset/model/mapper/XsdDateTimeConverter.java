@@ -14,7 +14,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -25,15 +26,15 @@ public class XsdDateTimeConverter {
         return LocalDate.parse(v);
     }
 
-    public static LocalDateTime unmarshalDateTime(String v) {
-        return LocalDateTime.parse(v);
+    public static OffsetDateTime unmarshalDateTime(String v) {
+        return OffsetDateTime.parse(v);
     }
 
     public static String marshalDate(LocalDate v) {
         return v.toString();
     }
 
-    public static String marshalDateTime(LocalDateTime v) {
+    public static String marshalDateTime(OffsetDateTime v) {
         return v.toString();
     }
 

@@ -6,7 +6,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,7 +25,7 @@ public class AssetTestsHelper {
         assetEntity.setExternalMarking("EXT123");
         assetEntity.setFlagStateCode("SWE");
         
-        assetEntity.setCommissionDate(LocalDateTime.now(ZoneOffset.UTC));
+        assetEntity.setCommissionDate(OffsetDateTime.now(ZoneOffset.UTC));
         assetEntity.setCfr("CRF" + getRandomIntegers(9));
         assetEntity.setIrcs("F" + getRandomIntegers(7));
         assetEntity.setImo(getRandomIntegers(7));
@@ -49,7 +49,7 @@ public class AssetTestsHelper {
     public static Asset createBiggerAsset() {
 
         Asset assetEntity = new Asset();
-        LocalDateTime  now =  LocalDateTime.now(ZoneOffset.UTC);
+        OffsetDateTime  now =  OffsetDateTime.now(ZoneOffset.UTC);
 
 
         assetEntity.setName("Test asset");
@@ -57,7 +57,7 @@ public class AssetTestsHelper {
         assetEntity.setExternalMarking("EXT123");
         assetEntity.setFlagStateCode("SWE");
 
-        assetEntity.setCommissionDate(LocalDateTime.now(ZoneOffset.UTC));
+        assetEntity.setCommissionDate(OffsetDateTime.now(ZoneOffset.UTC));
         assetEntity.setCfr("CRF" + getRandomIntegers(9));
         assetEntity.setIrcs("F" + getRandomIntegers(7));
         assetEntity.setImo(getRandomIntegers(7));
@@ -140,7 +140,7 @@ public class AssetTestsHelper {
         return contactInfo;
     }
 
-    public List<Note> createNotesHelper(Asset assetEntity, LocalDateTime date) {
+    public List<Note> createNotesHelper(Asset assetEntity, OffsetDateTime date) {
 
         List<Note> notes = new ArrayList<>();
         Note note = new Note();

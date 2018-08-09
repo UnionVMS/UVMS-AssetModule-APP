@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
@@ -244,7 +244,7 @@ public class AssetDao {
         return asset;
     }
 
-    public Asset getAssetFromAssetIdAtDate(AssetIdentifier assetId, String value, LocalDateTime date) {
+    public Asset getAssetFromAssetIdAtDate(AssetIdentifier assetId, String value, OffsetDateTime date) {
         Asset asset = getAssetFromAssetId(assetId, value);
         if (asset != null) {
             return getAssetAtDate(asset, date);
@@ -253,8 +253,8 @@ public class AssetDao {
         }
     }
     
-    public Asset getAssetAtDate(Asset asset, LocalDateTime localDateTime) {
-        Date date = Date.from(localDateTime.toInstant(ZoneOffset.UTC));
+    public Asset getAssetAtDate(Asset asset, OffsetDateTime OffsetDateTime) {
+        Date date = Date.from(OffsetDateTime.toInstant());
         AuditReader auditReader = AuditReaderFactory.get(em);
         try {
             return auditReader.find(Asset.class, asset.getId(), date);

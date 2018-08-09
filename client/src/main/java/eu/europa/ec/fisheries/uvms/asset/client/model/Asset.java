@@ -10,7 +10,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.client.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 public class Asset {
@@ -22,13 +22,13 @@ public class Asset {
     private Boolean aisIndicator;
     private Boolean vmsIndicator;
     private String hullMaterial;
-    private LocalDateTime commissionDate;
+    private OffsetDateTime commissionDate;
     private String constructionYear;
     private String constructionPlace;
-    private LocalDateTime updateTime;
+    private OffsetDateTime updateTime;
     private String source;
     private String vesselType;
-    private LocalDateTime vesselDateOfEntry;
+    private OffsetDateTime vesselDateOfEntry;
     private String cfr;
     private String imo;
     private String ircs;
@@ -62,7 +62,7 @@ public class Asset {
     private String assetAgentAddress;
     private String countryOfImportOrExport;
     private String typeOfExport;
-    private LocalDateTime administrativeDecisionDate;
+    private OffsetDateTime administrativeDecisionDate;
     private String segment;
     private String segmentOfAdministrativeDecision;
     private String publicAid;
@@ -113,10 +113,10 @@ public class Asset {
     public void setHullMaterial(String hullMaterial) {
         this.hullMaterial = hullMaterial;
     }
-    public LocalDateTime getCommissionDate() {
+    public OffsetDateTime getCommissionDate() {
         return commissionDate;
     }
-    public void setCommissionDate(LocalDateTime commissionDate) {
+    public void setCommissionDate(OffsetDateTime commissionDate) {
         this.commissionDate = commissionDate;
     }
     public String getConstructionYear() {
@@ -131,10 +131,10 @@ public class Asset {
     public void setConstructionPlace(String constructionPlace) {
         this.constructionPlace = constructionPlace;
     }
-    public LocalDateTime getUpdateTime() {
+    public OffsetDateTime getUpdateTime() {
         return updateTime;
     }
-    public void setUpdateTime(LocalDateTime updateTime) {
+    public void setUpdateTime(OffsetDateTime updateTime) {
         this.updateTime = updateTime;
     }
     public String getSource() {
@@ -149,10 +149,10 @@ public class Asset {
     public void setVesselType(String vesselType) {
         this.vesselType = vesselType;
     }
-    public LocalDateTime getVesselDateOfEntry() {
+    public OffsetDateTime getVesselDateOfEntry() {
         return vesselDateOfEntry;
     }
-    public void setVesselDateOfEntry(LocalDateTime vesselDateOfEntry) {
+    public void setVesselDateOfEntry(OffsetDateTime vesselDateOfEntry) {
         this.vesselDateOfEntry = vesselDateOfEntry;
     }
     public String getCfr() {
@@ -353,10 +353,10 @@ public class Asset {
     public void setTypeOfExport(String typeOfExport) {
         this.typeOfExport = typeOfExport;
     }
-    public LocalDateTime getAdministrativeDecisionDate() {
+    public OffsetDateTime getAdministrativeDecisionDate() {
         return administrativeDecisionDate;
     }
-    public void setAdministrativeDecisionDate(LocalDateTime administrativeDecisionDate) {
+    public void setAdministrativeDecisionDate(OffsetDateTime administrativeDecisionDate) {
         this.administrativeDecisionDate = administrativeDecisionDate;
     }
     public String getSegment() {

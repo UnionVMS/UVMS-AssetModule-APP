@@ -17,9 +17,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.JSR310StringParsableDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalSource;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.OffsetDateTimeDeserializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import org.hibernate.annotations.Fetch;
@@ -31,7 +33,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 
@@ -82,15 +84,15 @@ public class MobileTerminal implements Serializable {
 	private MobileTerminalTypeEnum mobileTerminalType;
 
 
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@JsonSerialize(using = OffsetDateTimeSerializer.class)
+	@JsonDeserialize(using = OffsetDateTimeDeserializer.class)
 	@Column(name="updatetime")
-	private LocalDateTime updatetime;
+	private OffsetDateTime updatetime;
 
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@JsonSerialize(using = OffsetDateTimeSerializer.class)
+	@JsonDeserialize(using = OffsetDateTimeDeserializer.class)
 	@Column(name="createtime")
-	private LocalDateTime createTime;
+	private OffsetDateTime createTime;
 
 	@Size(max = 60)
 	@Column(name="updateuser")
@@ -114,7 +116,7 @@ public class MobileTerminal implements Serializable {
 	@PrePersist
 	private void atPrePersist() {
 		this.historyId = UUID.randomUUID();
-		this.createTime = LocalDateTime.now(ZoneOffset.UTC);
+		this.createTime = OffsetDateTime.now(ZoneOffset.UTC);
 	}
 
 	@PreUpdate
@@ -178,11 +180,11 @@ public class MobileTerminal implements Serializable {
 		this.mobileTerminalType = mobileTerminalType;
 	}
 
-	public LocalDateTime getUpdatetime() {
+	public OffsetDateTime getUpdatetime() {
 		return updatetime;
 	}
 
-	public void setUpdatetime(LocalDateTime updatetime) {
+	public void setUpdatetime(OffsetDateTime updatetime) {
 		this.updatetime = updatetime;
 	}
 
@@ -222,11 +224,11 @@ public class MobileTerminal implements Serializable {
 		this.channels = channels;
 	}
 
-	public LocalDateTime getCreateTime() {
+	public OffsetDateTime getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(LocalDateTime createTime) {
+	public void setCreateTime(OffsetDateTime createTime) {
 		this.createTime = createTime;
 	}
 

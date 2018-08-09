@@ -11,7 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.bean;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         }
         assetGroup.setOwner(username);
         assetGroup.setUpdatedBy(username);
-        assetGroup.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
+        assetGroup.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         return assetGroupDao.createAssetGroup(assetGroup);
     }
 
@@ -62,7 +62,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
             throw new NullPointerException("No assetGroup found.");
         }
         assetGroup.setUpdatedBy(username);
-        assetGroup.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
+        assetGroup.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         return assetGroupDao.updateAssetGroup(assetGroup);
     }
 
@@ -95,7 +95,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         }
         groupEntity.setArchived(true);
         groupEntity.setUpdatedBy(username);
-        groupEntity.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
+        groupEntity.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         return groupEntity;
     }
 
@@ -152,7 +152,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
         assetGroupField.setAssetGroup(parentAssetGroup.getId());
         assetGroupField.setUpdatedBy(username);
-        assetGroupField.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
+        assetGroupField.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         return assetGroupFieldDao.create(assetGroupField);
     }
 
@@ -169,7 +169,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
             throw new NullPointerException("AssetGroupField does not exist " + assetGroupField.getId().toString());
         }
         assetGroupField.setUpdatedBy(username);
-        assetGroupField.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
+        assetGroupField.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         return assetGroupFieldDao.update(assetGroupField);
     }
 

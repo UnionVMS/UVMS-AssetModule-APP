@@ -10,7 +10,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
@@ -180,7 +180,7 @@ public class InternalResource {
             ObjectMapper MAPPER = new ObjectMapper();
             MAPPER.registerModule(new JavaTimeModule());
 
-            LocalDateTime aDate = LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            OffsetDateTime aDate = OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             Boolean exists = customCodesService.verify(constant, code, aDate);
             String json = MAPPER.writeValueAsString(exists);
             return Response.status(200).entity(json).type(MediaType.APPLICATION_JSON)
@@ -205,7 +205,7 @@ public class InternalResource {
             MAPPER.registerModule(new JavaTimeModule());
 
 
-            LocalDateTime aDate = LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            OffsetDateTime aDate = OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             List<CustomCode> customCodes = customCodesService.getForDate(constant, code,aDate);
 
             String json = MAPPER.writeValueAsString(customCodes);

@@ -14,7 +14,7 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 import java.time.Clock;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -192,7 +192,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
     private AssetGroup createAssetGroupEntity(String user, int numberOfGroupFields) {
         AssetGroup ag = new AssetGroup();
 
-        LocalDateTime dt = LocalDateTime.now(Clock.systemUTC());
+        OffsetDateTime dt = OffsetDateTime.now(Clock.systemUTC());
 
         ag.setUpdatedBy("test");
         ag.setUpdateTime(dt);
@@ -207,7 +207,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
     }
 
 
-    private  List<AssetGroupField> createAssetGroupFields(AssetGroup assetGroupEntity, LocalDateTime dt, String user, int n) {
+    private  List<AssetGroupField> createAssetGroupFields(AssetGroup assetGroupEntity, OffsetDateTime dt, String user, int n) {
 
         List<AssetGroupField> groupFields = new ArrayList<>();
         for (int i = 0; i < n; i++) {
@@ -219,7 +219,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
     }
 
 
-    private AssetGroupField createAssetGroupField(AssetGroup assetGroupEntity, String key, String keyFieldValue, LocalDateTime dt, String user) {
+    private AssetGroupField createAssetGroupField(AssetGroup assetGroupEntity, String key, String keyFieldValue, OffsetDateTime dt, String user) {
 
         AssetGroupField ag = new AssetGroupField();
         ag.setAssetGroup(assetGroupEntity.getId());

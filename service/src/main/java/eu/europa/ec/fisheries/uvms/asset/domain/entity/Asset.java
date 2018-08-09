@@ -10,7 +10,8 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_B
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_BY_MMSI;
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_BY_UVI;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -82,7 +83,7 @@ public class Asset implements Serializable {
     private String hullMaterial;
 
     @Column(name = "commissiondate")
-    private LocalDateTime commissionDate;
+    private OffsetDateTime commissionDate;
 
     @Size(min = 4, max = 4)
     @Column(name = "constructionyear")
@@ -93,7 +94,7 @@ public class Asset implements Serializable {
     private String constructionPlace;
 
     @Column(name = "updatetime")
-    private LocalDateTime updateTime;
+    private OffsetDateTime updateTime;
 
     @Column(name = "source")
     private String source;
@@ -103,7 +104,7 @@ public class Asset implements Serializable {
     private String vesselType;
 
     @Column(name = "vesselDateOfEntry")
-    private LocalDateTime vesselDateOfEntry;
+    private OffsetDateTime vesselDateOfEntry;
 
     @Size(max = 12)
     @Column(unique = true, name = "cfr")
@@ -229,7 +230,7 @@ public class Asset implements Serializable {
     private String typeOfExport;
 
     @Column(name = "administrativedecisiondate")
-    private LocalDateTime administrativeDecisionDate;
+    private OffsetDateTime administrativeDecisionDate;
 
     @Column(name = "segment")
     private String segment;
@@ -316,11 +317,11 @@ public class Asset implements Serializable {
         this.hullMaterial = hullMaterial;
     }
 
-    public LocalDateTime getCommissionDate() {
+    public OffsetDateTime getCommissionDate() {
         return commissionDate;
     }
 
-    public void setCommissionDate(LocalDateTime commissionDate) {
+    public void setCommissionDate(OffsetDateTime commissionDate) {
         this.commissionDate = commissionDate;
     }
 
@@ -340,11 +341,11 @@ public class Asset implements Serializable {
         this.constructionPlace = constructionPlace;
     }
 
-    public LocalDateTime getUpdateTime() {
+    public OffsetDateTime getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(LocalDateTime updateTime) {
+    public void setUpdateTime(OffsetDateTime updateTime) {
         this.updateTime = updateTime;
     }
 
@@ -364,11 +365,11 @@ public class Asset implements Serializable {
         this.vesselType = vesselType;
     }
 
-    public LocalDateTime getVesselDateOfEntry() {
+    public OffsetDateTime getVesselDateOfEntry() {
         return vesselDateOfEntry;
     }
 
-    public void setVesselDateOfEntry(LocalDateTime vesselDateOfEntry) {
+    public void setVesselDateOfEntry(OffsetDateTime vesselDateOfEntry) {
         this.vesselDateOfEntry = vesselDateOfEntry;
     }
 
@@ -636,11 +637,11 @@ public class Asset implements Serializable {
         this.typeOfExport = typeOfExport;
     }
 
-    public LocalDateTime getAdministrativeDecisionDate() {
+    public OffsetDateTime getAdministrativeDecisionDate() {
         return administrativeDecisionDate;
     }
 
-    public void setAdministrativeDecisionDate(LocalDateTime administrativeDecisionDate) {
+    public void setAdministrativeDecisionDate(OffsetDateTime administrativeDecisionDate) {
         this.administrativeDecisionDate = administrativeDecisionDate;
     }
 

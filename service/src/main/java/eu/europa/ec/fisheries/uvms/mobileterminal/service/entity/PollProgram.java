@@ -13,10 +13,10 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.JSR310StringParsableDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.OffsetDateTimeDeserializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollStateEnum;
 import org.hibernate.annotations.GenericGenerator;
@@ -24,7 +24,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -56,28 +56,28 @@ public class PollProgram implements Serializable {
     private Integer frequency; // this is probably in seconds
 
 
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name = "startdate")
-    private LocalDateTime startDate;
+    private OffsetDateTime startDate;
 
 
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name = "stopdate")
-    private LocalDateTime stopDate;
+    private OffsetDateTime stopDate;
 
     @Column(name = "latestruntime")
-    private LocalDateTime latestRun;
+    private OffsetDateTime latestRun;
 
     @Size(max = 60)
     @Column(name = "upuser")
     private String updatedBy;
 
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name = "updattim")
-    private LocalDateTime updateTime;
+    private OffsetDateTime updateTime;
 
     @JoinColumn(name = "pollbase_id")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -103,27 +103,27 @@ public class PollProgram implements Serializable {
         this.frequency = frequency;
     }
 
-    public LocalDateTime getStartDate() {
+    public OffsetDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(OffsetDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getStopDate() {
+    public OffsetDateTime getStopDate() {
         return stopDate;
     }
 
-    public void setStopDate(LocalDateTime stopDate) {
+    public void setStopDate(OffsetDateTime stopDate) {
         this.stopDate = stopDate;
     }
 
-    public LocalDateTime getLatestRun() {
+    public OffsetDateTime getLatestRun() {
         return latestRun;
     }
 
-    public void setLatestRun(LocalDateTime latestRun) {
+    public void setLatestRun(OffsetDateTime latestRun) {
         this.latestRun = latestRun;
     }
 
@@ -135,11 +135,11 @@ public class PollProgram implements Serializable {
         this.updatedBy = updatedBy;
     }
 
-    public LocalDateTime getUpdateTime() {
+    public OffsetDateTime getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(LocalDateTime updateTime) {
+    public void setUpdateTime(OffsetDateTime updateTime) {
         this.updateTime = updateTime;
     }
 

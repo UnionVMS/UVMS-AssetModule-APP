@@ -16,7 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -49,10 +49,10 @@ public class PollPayload implements Serializable {
     private String newMemberNumber;
 
     @Column(name = "startdate")
-    private LocalDateTime startDate;
+    private OffsetDateTime startDate;
 
     @Column(name = "stopdate")
-    private LocalDateTime stopDate;
+    private OffsetDateTime stopDate;
 
     @JoinColumn(name = "poll_id", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -109,19 +109,19 @@ public class PollPayload implements Serializable {
         this.newMemberNumber = newMemberNumber;
     }
 
-    public LocalDateTime getStartDate() {
+    public OffsetDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(OffsetDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getStopDate() {
+    public OffsetDateTime getStopDate() {
         return stopDate;
     }
 
-    public void setStopDate(LocalDateTime stopDate) {
+    public void setStopDate(OffsetDateTime stopDate) {
         this.stopDate = stopDate;
     }
 

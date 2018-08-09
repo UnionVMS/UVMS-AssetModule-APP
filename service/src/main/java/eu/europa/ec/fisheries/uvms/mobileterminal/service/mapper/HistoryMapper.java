@@ -17,7 +17,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Map;
 
@@ -27,7 +27,7 @@ public class HistoryMapper {
 		MobileTerminalEvent event = new MobileTerminalEvent();
 		event.setMobileterminal(entity);
 		event.setComment(comment);
-        event.setUpdatetime(LocalDateTime.now(ZoneOffset.UTC));
+        event.setUpdatetime(OffsetDateTime.now(ZoneOffset.UTC));
 		event.setUpdateuser(username);
 		event.setEventCodeType(eventcode);
 		return event;

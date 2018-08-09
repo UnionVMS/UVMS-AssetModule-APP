@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -183,7 +183,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
         
-        LocalDateTime firstTimeStamp = LocalDateTime.now(ZoneOffset.UTC);
+        OffsetDateTime firstTimeStamp = OffsetDateTime.now(ZoneOffset.UTC);
         
         String newName = "NewAssetName";
         createdAsset.setName(newName);
@@ -192,14 +192,14 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.json(createdAsset), Asset.class);
         
-        LocalDateTime secondTimeStamp = LocalDateTime.now(ZoneOffset.UTC);
+        OffsetDateTime secondTimeStamp = OffsetDateTime.now(ZoneOffset.UTC);
         
         Asset assetByCfrAndTimestamp1 = getWebTarget()
                 .path("asset")
                 .path("history")
                 .path("cfr")
                 .path(createdAsset.getCfr())
-                .path(firstTimeStamp.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                .path(firstTimeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
                 .request(MediaType.APPLICATION_JSON)
                 .get(Asset.class);
         
@@ -210,7 +210,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .path("history")
                 .path("cfr")
                 .path(createdAsset.getCfr())
-                .path(secondTimeStamp.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                .path(secondTimeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
                 .request(MediaType.APPLICATION_JSON)
                 .get(Asset.class);
         
@@ -219,7 +219,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     
     @Test
     public void getAssetFromAssetIdPastDateTest() throws Exception {
-        LocalDateTime timeStamp = LocalDateTime.now(ZoneOffset.UTC);
+        OffsetDateTime timeStamp = OffsetDateTime.now(ZoneOffset.UTC);
 
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -232,7 +232,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .path("history")
                 .path("cfr")
                 .path(createdAsset.getCfr())
-                .path(timeStamp.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                .path(timeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
                 .request(MediaType.APPLICATION_JSON)
                 .get(Asset.class);
         

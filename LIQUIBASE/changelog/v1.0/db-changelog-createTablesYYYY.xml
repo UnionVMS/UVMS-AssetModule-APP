@@ -12,12 +12,12 @@
                 <constraints nullable="false"/>
             </column>
             <column name="active" type="BOOLEAN"/>
-            <column name="administrativedecisiondate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="administrativedecisiondate" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="agentisalsoowner" type="BOOLEAN"/>
             <column name="aisindicator" type="BOOLEAN"/>
             <column name="assetagentaddress" type="VARCHAR(100)"/>
             <column name="cfr" type="VARCHAR(12)"/>
-            <column name="commissiondate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="commissiondate" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="constructionplace" type="VARCHAR(100)"/>
             <column name="constructionyear" type="VARCHAR(4)"/>
             <column name="countryofimportorexport" type="VARCHAR(3)"/>
@@ -59,10 +59,10 @@
             <column name="source" type="VARCHAR(255)"/>
             <column name="subfishinggearcode" type="VARCHAR(255)"/>
             <column name="typeofexport" type="VARCHAR(255)"/>
-            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updatetime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="updatedby" type="VARCHAR(60)"/>
             <column name="uvi" type="VARCHAR(50)"/>
-            <column name="vesseldateofentry" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="vesseldateofentry" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="vesseltype" type="VARCHAR(100)"/>
             <column name="vmsindicator" type="BOOLEAN"/>
         </createTable>
@@ -77,12 +77,12 @@
             </column>
             <column name="revtype" type="SMALLINT"/>
             <column name="active" type="BOOLEAN"/>
-            <column name="administrativedecisiondate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="administrativedecisiondate" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="agentisalsoowner" type="BOOLEAN"/>
             <column name="aisindicator" type="BOOLEAN"/>
             <column name="assetagentaddress" type="VARCHAR(255)"/>
             <column name="cfr" type="VARCHAR(255)"/>
-            <column name="commissiondate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="commissiondate" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="constructionplace" type="VARCHAR(255)"/>
             <column name="constructionyear" type="VARCHAR(255)"/>
             <column name="countryofimportorexport" type="VARCHAR(255)"/>
@@ -124,10 +124,10 @@
             <column name="source" type="VARCHAR(255)"/>
             <column name="subfishinggearcode" type="VARCHAR(255)"/>
             <column name="typeofexport" type="VARCHAR(255)"/>
-            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updatetime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="updatedby" type="VARCHAR(255)"/>
             <column name="uvi" type="VARCHAR(255)"/>
-            <column name="vesseldateofentry" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="vesseldateofentry" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="vesseltype" type="VARCHAR(255)"/>
             <column name="vmsindicator" type="BOOLEAN"/>
         </createTable>
@@ -146,7 +146,7 @@
             <column name="user_id" type="VARCHAR(80)">
                 <constraints nullable="false"/>
             </column>
-            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updattim" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="upuser" type="VARCHAR(60)"/>
         </createTable>
     </changeSet>
@@ -159,7 +159,7 @@
             <column name="field" type="VARCHAR(80)">
                 <constraints nullable="false"/>
             </column>
-            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updatetime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="updateuser" type="VARCHAR(60)"/>
             <column name="value" type="VARCHAR(100)">
                 <constraints nullable="false"/>
@@ -180,7 +180,7 @@
             <column name="historyid" type="UUID"/>
             <column name="comchanname" type="VARCHAR(255)"/>
             <column name="chan_poll" type="BOOLEAN"/>
-            <column name="updattime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updattime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="updateuser" type="VARCHAR(255)"/>
             <column name="mobterm_id" type="UUID"/>
             <column name="mobterm_event_id" type="UUID"/>
@@ -204,7 +204,7 @@
             <column name="historyid" type="UUID"/>
             <column name="comchanname" type="VARCHAR(255)"/>
             <column name="chan_poll" type="BOOLEAN"/>
-            <column name="updattime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updattime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="updateuser" type="VARCHAR(255)"/>
             <column name="mobterm_id" type="UUID"/>
             <column name="mobterm_event_id" type="UUID"/>
@@ -228,7 +228,7 @@
             <column name="source" type="VARCHAR(255)"/>
             <column name="streetname" type="VARCHAR(100)"/>
             <column name="type" type="VARCHAR(100)"/>
-            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updatetime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="updatedby" type="VARCHAR(60)"/>
         </createTable>
     </changeSet>
@@ -240,10 +240,10 @@
             <column name="constant" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="validfromdate" type="TIMESTAMP(6) WITHOUT TIME ZONE">
+            <column name="validfromdate" type="TIMESTAMP(6) WITH TIME ZONE">
                 <constraints nullable="false"/>
             </column>
-            <column name="validtodate" type="TIMESTAMP(6) WITHOUT TIME ZONE">
+            <column name="validtodate" type="TIMESTAMP(6) WITH TIME ZONE">
                 <constraints nullable="false"/>
             </column>
             <column name="description" type="VARCHAR(255)"/>
@@ -256,7 +256,7 @@
             </column>
             <column name="value" type="VARCHAR(100)"/>
             <column name="plugin_service_name" type="VARCHAR(500)"/>
-            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updattim" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="upuser" type="VARCHAR(60)"/>
         </createTable>
     </changeSet>
@@ -267,7 +267,7 @@
             </column>
             <column name="code" type="INT"/>
             <column name="name" type="VARCHAR(200)"/>
-            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updattim" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="upuser" type="VARCHAR(60)"/>
             <column name="inmarsatc_history_id" type="UUID">
                 <constraints nullable="false"/>
@@ -280,7 +280,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="archived" type="BOOLEAN"/>
-            <column name="createtime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="createtime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="historyid" type="UUID"/>
             <column name="inactivated" type="BOOLEAN"/>
             <column name="type" type="VARCHAR(255)">
@@ -290,7 +290,7 @@
             <column name="source" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updatetime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="updateuser" type="VARCHAR(60)"/>
             <column name="plugin_id" type="UUID">
                 <constraints nullable="false"/>
@@ -307,13 +307,13 @@
             </column>
             <column name="revtype" type="SMALLINT"/>
             <column name="archived" type="BOOLEAN"/>
-            <column name="createtime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="createtime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="historyid" type="UUID"/>
             <column name="inactivated" type="BOOLEAN"/>
             <column name="type" type="VARCHAR(255)"/>
             <column name="serial_no" type="VARCHAR(255)"/>
             <column name="source" type="VARCHAR(255)"/>
-            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updatetime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="updateuser" type="VARCHAR(255)"/>
             <column name="plugin_id" type="UUID"/>
         </createTable>
@@ -328,7 +328,7 @@
             <column name="comment" type="VARCHAR(400)"/>
             <column name="connect_id" type="VARCHAR(400)"/>
             <column name="eventtype" type="VARCHAR(255)"/>
-            <column name="updattime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updattime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="upuser" type="VARCHAR(60)"/>
             <column name="chan_conf" type="UUID"/>
             <column name="chan_def" type="UUID"/>
@@ -352,7 +352,7 @@
             <column name="comment" type="VARCHAR(255)"/>
             <column name="connect_id" type="VARCHAR(255)"/>
             <column name="eventtype" type="VARCHAR(255)"/>
-            <column name="updattime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updattime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="upuser" type="VARCHAR(255)"/>
             <column name="chan_conf" type="UUID"/>
             <column name="chan_def" type="UUID"/>
@@ -368,14 +368,14 @@
             <column name="activitycode" type="VARCHAR(255)"/>
             <column name="assetid" type="UUID"/>
             <column name="contact" type="VARCHAR(255)"/>
-            <column name="date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="date" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="document" type="VARCHAR(255)"/>
             <column name="licenseholder" type="VARCHAR(255)"/>
             <column name="notes" type="VARCHAR(255)"/>
-            <column name="readydate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="readydate" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="sheetnumber" type="VARCHAR(255)"/>
             <column name="source" type="VARCHAR(255)"/>
-            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updatetime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="updatedby" type="VARCHAR(60)"/>
             <column name="noteuser" type="VARCHAR(255)"/>
         </createTable>
@@ -390,7 +390,7 @@
             <column name="inactive" type="BOOLEAN"/>
             <column name="satellite_type" type="VARCHAR(50)"/>
             <column name="service_name" type="VARCHAR(500)"/>
-            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updattim" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="upuser" type="VARCHAR(60)"/>
         </createTable>
     </changeSet>
@@ -408,7 +408,7 @@
             <column name="inactive" type="BOOLEAN"/>
             <column name="satellite_type" type="VARCHAR(255)"/>
             <column name="service_name" type="VARCHAR(255)"/>
-            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updattim" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="upuser" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
@@ -418,7 +418,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="capability" type="VARCHAR(25)"/>
-            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updattim" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="upuser" type="VARCHAR(60)"/>
             <column name="value" type="VARCHAR(25)"/>
             <column name="plugin_id" type="UUID"/>
@@ -434,7 +434,7 @@
             </column>
             <column name="revtype" type="SMALLINT"/>
             <column name="capability" type="VARCHAR(255)"/>
-            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updattim" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="upuser" type="VARCHAR(255)"/>
             <column name="value" type="VARCHAR(255)"/>
             <column name="plugin_id" type="UUID"/>
@@ -446,7 +446,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="polltype" type="VARCHAR(255)"/>
-            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updattim" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="upuser" type="VARCHAR(60)"/>
             <column name="pollbase_id" type="UUID"/>
         </createTable>
@@ -462,7 +462,7 @@
             <column name="comment" type="VARCHAR(400)"/>
             <column name="createuser" type="VARCHAR(60)"/>
             <column name="connect_id" type="VARCHAR(255)"/>
-            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updattim" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="upuser" type="VARCHAR(255)"/>
             <column name="mobileterminal_id" type="UUID">
                 <constraints nullable="false"/>
@@ -479,8 +479,8 @@
             <column name="newdnid" type="VARCHAR(60)"/>
             <column name="newmemberno" type="VARCHAR(60)"/>
             <column name="reporting_freq" type="INT"/>
-            <column name="startdate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
-            <column name="stopdate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="startdate" type="TIMESTAMP(6) WITH TIME ZONE"/>
+            <column name="stopdate" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="poll_id" type="UUID"/>
         </createTable>
     </changeSet>
@@ -490,11 +490,11 @@
                 <constraints nullable="false"/>
             </column>
             <column name="frequency" type="INT"/>
-            <column name="latestruntime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="latestruntime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="pollstate" type="VARCHAR(255)"/>
-            <column name="startdate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
-            <column name="stopdate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
-            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="startdate" type="TIMESTAMP(6) WITH TIME ZONE"/>
+            <column name="stopdate" type="TIMESTAMP(6) WITH TIME ZONE"/>
+            <column name="updattim" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="upuser" type="VARCHAR(60)"/>
             <column name="pollbase_id" type="UUID"/>
         </createTable>
@@ -507,7 +507,7 @@
             <column name="code" type="INT"/>
             <column name="name" type="VARCHAR(200)"/>
             <column name="desc" type="VARCHAR(80)"/>
-            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updattim" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="upuser" type="VARCHAR(60)"/>
         </createTable>
     </changeSet>

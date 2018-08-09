@@ -24,7 +24,7 @@ import org.junit.runner.RunWith;
 
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.inject.Inject;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 
@@ -277,7 +277,7 @@ public class AssetDaoTest extends TransactionalTests {
         asset = assetDao.createAsset(asset);
         commit();
 
-        Asset assetAtDate = assetDao.getAssetAtDate(asset, LocalDateTime.now(ZoneOffset.UTC));
+        Asset assetAtDate = assetDao.getAssetAtDate(asset, OffsetDateTime.now(ZoneOffset.UTC));
 
         assertThat(assetAtDate.getId(), is(notNullValue()));
 
@@ -295,13 +295,13 @@ public class AssetDaoTest extends TransactionalTests {
         asset1 = assetDao.createAsset(asset1);
         String firstName = asset1.getName();
         commit();
-        LocalDateTime firstDate = LocalDateTime.now(ZoneOffset.UTC);
+        OffsetDateTime firstDate = OffsetDateTime.now(ZoneOffset.UTC);
 
         String newName = "NewName";
         asset1.setName(newName);
         Asset asset2 = assetDao.updateAsset(asset1);
         commit();
-        LocalDateTime secondDate = LocalDateTime.now(ZoneOffset.UTC);
+        OffsetDateTime secondDate = OffsetDateTime.now(ZoneOffset.UTC);
 
         Asset assetAtFirstDate = assetDao.getAssetAtDate(asset2, firstDate);
         assertThat(assetAtFirstDate.getName(), is(firstName));

@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.ejb.*;
 import javax.jms.TextMessage;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 
@@ -270,7 +270,7 @@ public class ConfigServiceBeanMT implements ConfigService {
                 DNIDList dnid = new DNIDList();
                 dnid.setDnid(terminalDnid);
                 dnid.setPluginName(pluginName);
-                dnid.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
+                dnid.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
                 dnid.setUpdatedBy(MobileTerminalConstants.UPDATE_USER);
                 dnidListDao.create(dnid);
             }

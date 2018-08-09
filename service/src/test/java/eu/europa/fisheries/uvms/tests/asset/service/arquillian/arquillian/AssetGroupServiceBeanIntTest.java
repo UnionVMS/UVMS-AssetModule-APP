@@ -1,7 +1,7 @@
 package eu.europa.fisheries.uvms.tests.asset.service.arquillian.arquillian;
 
 import java.time.Clock;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -112,7 +112,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
         assetGroupField.setAssetGroup(anAssetGroup.getId());
         assetGroupField.setField("GUID");
         assetGroupField.setValue(assetGuid.toString());
-        assetGroupField.setUpdateTime(LocalDateTime.now(Clock.systemUTC()));
+        assetGroupField.setUpdateTime(OffsetDateTime.now(Clock.systemUTC()));
 
         assetGroupService.createAssetGroupField(anAssetGroup.getId(), assetGroupField, "TEST");
         //       commit();
@@ -204,7 +204,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
         assetGroupField.setAssetGroup(anAssetGroup.getId());
         assetGroupField.setField("GUID");
         assetGroupField.setValue(UUID.randomUUID().toString());
-        assetGroupField.setUpdateTime(LocalDateTime.now(Clock.systemUTC()));
+        assetGroupField.setUpdateTime(OffsetDateTime.now(Clock.systemUTC()));
         return assetGroupService.createAssetGroupField(anAssetGroup.getId(), assetGroupField, "TEST");
     }
 
@@ -220,7 +220,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     private AssetGroup createAssetGroupEntity(String user) {
         AssetGroup ag = new AssetGroup();
         ag.setUpdatedBy("test");
-        ag.setUpdateTime(LocalDateTime.now(Clock.systemUTC()));
+        ag.setUpdateTime(OffsetDateTime.now(Clock.systemUTC()));
         ag.setArchived(false);
         ag.setName("The Name");
         ag.setOwner(user);

@@ -11,7 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.bean;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -69,7 +69,7 @@ public class AssetServiceBean implements AssetService {
     public Asset createAsset(Asset asset, String username) {
 
         asset.setUpdatedBy(username);
-        asset.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
+        asset.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         asset.setActive(true);
         Asset createdAssetEntity = assetDao.createAsset(asset);
 
@@ -168,7 +168,7 @@ public class AssetServiceBean implements AssetService {
         checkIdentifierNullValues(asset);
 
         asset.setUpdatedBy(username);
-        asset.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
+        asset.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         return assetDao.updateAsset(asset);
     }
     
@@ -265,7 +265,7 @@ public class AssetServiceBean implements AssetService {
      * @return
      */
     @Override
-    public Asset getAssetFromAssetIdAtDate(AssetIdentifier idType, String idValue, LocalDateTime date)  {
+    public Asset getAssetFromAssetIdAtDate(AssetIdentifier idType, String idValue, OffsetDateTime date)  {
 
         if (idType == null) {
             throw new IllegalArgumentException("Type is null");
@@ -375,14 +375,14 @@ public class AssetServiceBean implements AssetService {
         }
         note.setAssetId(asset.getId());
         note.setUpdatedBy(username);
-        note.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
+        note.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         return noteDao.createNote(note);
     }
 
     @Override
     public Note updateNote(Note note, String username) {
         note.setUpdatedBy(username);
-        note.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
+        note.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         return noteDao.updateNote(note);
     }
     
@@ -412,14 +412,14 @@ public class AssetServiceBean implements AssetService {
         }
         contactInfo.setAssetId(asset.getId());
         contactInfo.setUpdatedBy(username);
-        contactInfo.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
+        contactInfo.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         return contactDao.createContactInfo(contactInfo);
     }
 
     @Override
     public ContactInfo updateContactInfo(ContactInfo contactInfo, String username) {
         contactInfo.setUpdatedBy(username);
-        contactInfo.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
+        contactInfo.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         return contactDao.updateContactInfo(contactInfo);
     }
 
