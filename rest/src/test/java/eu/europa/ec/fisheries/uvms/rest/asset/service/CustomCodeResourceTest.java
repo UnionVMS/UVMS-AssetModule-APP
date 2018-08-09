@@ -17,7 +17,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.time.Clock;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -112,8 +112,8 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
 
-        String fromDate = customCodesPk.getValidFromDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        String toDate = customCodesPk.getValidToDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String fromDate = customCodesPk.getValidFromDate().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        String toDate = customCodesPk.getValidToDate().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
 
         String json = getWebTarget()
@@ -141,8 +141,8 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
         CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
-        String fromDate = customCodesPk.getValidFromDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        String toDate = customCodesPk.getValidToDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String fromDate = customCodesPk.getValidFromDate().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        String toDate = customCodesPk.getValidToDate().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         Boolean exists = getWebTarget()
                 .path("customcodes")
@@ -184,9 +184,9 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
     private String createACustomCodeHelper(String txt) {
 
-        LocalDateTime from = LocalDateTime.now(Clock.systemUTC());
+        OffsetDateTime from = OffsetDateTime.now(Clock.systemUTC());
         from = from.minusDays(5);
-        LocalDateTime to = LocalDateTime.now(Clock.systemUTC());
+        OffsetDateTime to = OffsetDateTime.now(Clock.systemUTC());
         to = from.plusDays(5);
 
 
@@ -210,9 +210,9 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
     private void createACustomCodeHelperMultipleCodesPerConstant(String txt) {
 
-        LocalDateTime from = LocalDateTime.now(Clock.systemUTC());
+        OffsetDateTime from = OffsetDateTime.now(Clock.systemUTC());
         from = from.minusDays(5);
-        LocalDateTime to = LocalDateTime.now(Clock.systemUTC());
+        OffsetDateTime to = OffsetDateTime.now(Clock.systemUTC());
         to = from.plusDays(5);
 
 
@@ -247,11 +247,11 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
 
-        LocalDateTime  date  = customCodesPk.getValidFromDate();
+        OffsetDateTime  date  = customCodesPk.getValidFromDate();
 
-        LocalDateTime  dateWithinRange = date.plusDays(1);
+        OffsetDateTime  dateWithinRange = date.plusDays(1);
 
-        String dateToTest = dateWithinRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String dateToTest = dateWithinRange.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         String  json = getWebTarget()
                 .path("customcodes")
@@ -279,11 +279,11 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
 
-        LocalDateTime  date  = customCodesPk.getValidFromDate();
+        OffsetDateTime  date  = customCodesPk.getValidFromDate();
 
-        LocalDateTime  dateWithoutRange = date.minusDays(2);
+        OffsetDateTime  dateWithoutRange = date.minusDays(2);
 
-        String dateToTest = dateWithoutRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String dateToTest = dateWithoutRange.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         String json = getWebTarget()
                 .path("customcodes")
@@ -313,11 +313,11 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
 
-        LocalDateTime  date  = customCodesPk.getValidFromDate();
+        OffsetDateTime  date  = customCodesPk.getValidFromDate();
 
-        LocalDateTime  dateWithinRange = date.plusDays(1);
+        OffsetDateTime  dateWithinRange = date.plusDays(1);
 
-        String dateToTest = dateWithinRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String dateToTest = dateWithinRange.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         Boolean ret = getWebTarget()
                 .path("customcodes")
@@ -341,11 +341,11 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
 
-        LocalDateTime  date  = customCodesPk.getValidFromDate();
+        OffsetDateTime  date  = customCodesPk.getValidFromDate();
 
-        LocalDateTime  dateWithoutRange = date.minusDays(2);
+        OffsetDateTime  dateWithoutRange = date.minusDays(2);
 
-        String dateToTest = dateWithoutRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String dateToTest = dateWithoutRange.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         Boolean ret = getWebTarget()
                 .path("customcodes")
@@ -367,11 +367,11 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         String createdJson = createACustomCodeHelper(txt);
         CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
-        LocalDateTime  date  = customCodesPk.getValidFromDate();
+        OffsetDateTime  date  = customCodesPk.getValidFromDate();
 
-        LocalDateTime  dateWithinRange = date.plusDays(2);
+        OffsetDateTime  dateWithinRange = date.plusDays(2);
 
-        String dateWithin = dateWithinRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String dateWithin = dateWithinRange.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         String json = getWebTarget()
                 .path("customcodes")

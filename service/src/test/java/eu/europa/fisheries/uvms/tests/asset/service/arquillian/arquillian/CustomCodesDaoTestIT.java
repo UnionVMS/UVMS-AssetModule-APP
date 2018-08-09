@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 import java.time.Clock;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Random;
 
@@ -158,9 +158,9 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
     private CustomCode createHelper(String constant, Boolean active, CustomCodesPK primaryKey) {
         Integer n = rnd.nextInt(10);
         Integer duration = rnd.nextInt(90);
-        LocalDateTime fromDate = LocalDateTime.now(Clock.systemUTC());
+        OffsetDateTime fromDate = OffsetDateTime.now(Clock.systemUTC());
         fromDate = fromDate.minusDays(n);
-        LocalDateTime toDate = LocalDateTime.now(Clock.systemUTC());
+        OffsetDateTime toDate = OffsetDateTime.now(Clock.systemUTC());
         toDate = toDate.plusDays(duration);
 
         CustomCode record = new CustomCode();
@@ -185,9 +185,9 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
     private CustomCodesPK createPrimaryKey(String constant, String code) {
         Integer n = rnd.nextInt(10);
         Integer duration = rnd.nextInt(90);
-        LocalDateTime fromDate = LocalDateTime.now(Clock.systemUTC());
+        OffsetDateTime fromDate = OffsetDateTime.now(Clock.systemUTC());
         fromDate = fromDate.minusDays(n);
-        LocalDateTime toDate = LocalDateTime.now(Clock.systemUTC());
+        OffsetDateTime toDate = OffsetDateTime.now(Clock.systemUTC());
         toDate = toDate.plusDays(duration);
         return new CustomCodesPK(constant, code, fromDate, toDate);
     }

@@ -18,7 +18,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -49,7 +49,7 @@ public class Poll implements Serializable {
     private String updatedBy;
 
     @Column(name = "updattim")
-    private LocalDateTime updateTime;
+    private OffsetDateTime updateTime;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "polltype")
@@ -81,11 +81,11 @@ public class Poll implements Serializable {
         this.updatedBy = updatedBy;
     }
 
-    public LocalDateTime getUpdateTime() {
+    public OffsetDateTime getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(LocalDateTime updateTime) {
+    public void setUpdateTime(OffsetDateTime updateTime) {
         this.updateTime = updateTime;
     }
 

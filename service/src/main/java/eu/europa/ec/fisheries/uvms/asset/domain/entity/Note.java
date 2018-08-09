@@ -36,7 +36,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -69,7 +69,7 @@ public class Note implements Serializable {
     private UUID assetId;
 
     @Column(name = "date")
-    private LocalDateTime date;
+    private OffsetDateTime date;
 
     @Column(name = "activitycode")
     private String activityCode;
@@ -78,7 +78,7 @@ public class Note implements Serializable {
     private String user;
 
     @Column(name = "readydate")
-    private LocalDateTime readyDate;
+    private OffsetDateTime readyDate;
 
     @Column(name = "licenseholder")
     private String licenseHolder;
@@ -99,7 +99,7 @@ public class Note implements Serializable {
     private String source;
 
     @Column(name = "updatetime")
-    private LocalDateTime updateTime;
+    private OffsetDateTime updateTime;
 
     @Size(max = 60)
     @Column(name = "updatedby")
@@ -123,11 +123,11 @@ public class Note implements Serializable {
         this.assetId = assetId;
     }
 
-    public LocalDateTime getDate() {
+    public OffsetDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(OffsetDateTime date) {
         this.date = date;
     }
 
@@ -147,11 +147,11 @@ public class Note implements Serializable {
         this.user = user;
     }
 
-    public LocalDateTime getReadyDate() {
+    public OffsetDateTime getReadyDate() {
         return readyDate;
     }
 
-    public void setReadyDate(LocalDateTime readyDate) {
+    public void setReadyDate(OffsetDateTime readyDate) {
         this.readyDate = readyDate;
     }
 
@@ -203,11 +203,11 @@ public class Note implements Serializable {
         this.source = source;
     }
 
-    public LocalDateTime getUpdateTime() {
+    public OffsetDateTime getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(LocalDateTime updateTime) {
+    public void setUpdateTime(OffsetDateTime updateTime) {
         this.updateTime = updateTime;
     }
 

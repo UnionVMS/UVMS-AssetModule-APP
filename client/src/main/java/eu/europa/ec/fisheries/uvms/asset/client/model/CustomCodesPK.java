@@ -2,7 +2,7 @@ package eu.europa.ec.fisheries.uvms.asset.client.model;
 
 import javax.persistence.Embeddable;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
 
@@ -13,15 +13,15 @@ public class CustomCodesPK  implements Serializable {
     private String constant;
     private String code;
 
-    private LocalDateTime validFromDate;
-    private LocalDateTime validToDate;
+    private OffsetDateTime validFromDate;
+    private OffsetDateTime validToDate;
 
 
     public CustomCodesPK(){
         // intentionally required by JPA
     }
 
-    public CustomCodesPK(String constant, String code, LocalDateTime validFromDate, LocalDateTime validToDate){
+    public CustomCodesPK(String constant, String code, OffsetDateTime validFromDate, OffsetDateTime validToDate){
         this.constant = constant;
         this.code = code;
         this.validFromDate = validFromDate;
@@ -46,19 +46,19 @@ public class CustomCodesPK  implements Serializable {
     }
 
 
-    public LocalDateTime getValidFromDate() {
+    public OffsetDateTime getValidFromDate() {
         return validFromDate;
     }
 
-    public void setValidFromDate(LocalDateTime validFromDate) {
+    public void setValidFromDate(OffsetDateTime validFromDate) {
         this.validFromDate = validFromDate;
     }
 
-    public LocalDateTime getValidToDate() {
+    public OffsetDateTime getValidToDate() {
         return validToDate;
     }
 
-    public void setValidToDate(LocalDateTime validToDate) {
+    public void setValidToDate(OffsetDateTime validToDate) {
         this.validToDate = validToDate;
     }
 

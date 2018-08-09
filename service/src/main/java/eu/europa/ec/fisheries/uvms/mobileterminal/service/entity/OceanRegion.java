@@ -17,7 +17,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -51,7 +51,7 @@ public class OceanRegion implements Serializable {
     private String description;
 
     @Column(name = "updattim")
-    private LocalDateTime updateTime;
+    private OffsetDateTime updateTime;
 
     @Column(name = "upuser")
     private String updatedBy;
@@ -91,11 +91,11 @@ public class OceanRegion implements Serializable {
         this.description = description;
     }
 
-    public LocalDateTime getUpdateTime() {
+    public OffsetDateTime getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(LocalDateTime updateTime) {
+    public void setUpdateTime(OffsetDateTime updateTime) {
         this.updateTime = updateTime;
     }
 

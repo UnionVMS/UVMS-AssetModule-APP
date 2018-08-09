@@ -14,7 +14,7 @@ import org.junit.runner.RunWith;
 import javax.ejb.EJB;
 import javax.transaction.*;
 import java.time.Clock;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.*;
 
 
@@ -35,9 +35,9 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
 
         Integer n = rnd.nextInt(10);
         Integer duration = rnd.nextInt(90);
-        LocalDateTime fromDate = LocalDateTime.now(Clock.systemUTC());
+        OffsetDateTime fromDate = OffsetDateTime.now(Clock.systemUTC());
         fromDate = fromDate.minusDays(n);
-        LocalDateTime toDate = LocalDateTime.now(Clock.systemUTC());
+        OffsetDateTime toDate = OffsetDateTime.now(Clock.systemUTC());
         toDate = toDate.plusDays(duration);
 
         CustomCode createdCustomCode = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description");
@@ -52,9 +52,9 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
 
         Integer n = rnd.nextInt(10);
         Integer duration = rnd.nextInt(90);
-        LocalDateTime fromDate = LocalDateTime.now(Clock.systemUTC());
+        OffsetDateTime fromDate = OffsetDateTime.now(Clock.systemUTC());
         fromDate = fromDate.minusDays(n);
-        LocalDateTime toDate = LocalDateTime.now(Clock.systemUTC());
+        OffsetDateTime toDate = OffsetDateTime.now(Clock.systemUTC());
         toDate = toDate.plusDays(duration);
 
         CustomCode createdCustomCode1 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description");
@@ -72,9 +72,9 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
 
         Integer n = rnd.nextInt(10);
         Integer duration = rnd.nextInt(90);
-        LocalDateTime fromDate = LocalDateTime.now(Clock.systemUTC());
+        OffsetDateTime fromDate = OffsetDateTime.now(Clock.systemUTC());
         fromDate = fromDate.minusDays(n);
-        LocalDateTime toDate = LocalDateTime.now(Clock.systemUTC());
+        OffsetDateTime toDate = OffsetDateTime.now(Clock.systemUTC());
         toDate = toDate.plusDays(duration);
 
 
@@ -91,9 +91,9 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
 
         Integer n = rnd.nextInt(10);
         Integer duration = rnd.nextInt(90);
-        LocalDateTime fromDate = LocalDateTime.now(Clock.systemUTC());
+        OffsetDateTime fromDate = OffsetDateTime.now(Clock.systemUTC());
         fromDate = fromDate.minusDays(n);
-        LocalDateTime toDate = LocalDateTime.now(Clock.systemUTC());
+        OffsetDateTime toDate = OffsetDateTime.now(Clock.systemUTC());
         toDate = toDate.plusDays(duration);
 
         CustomCode createdCustomCode1 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description");
@@ -108,9 +108,9 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
 
         Integer n = rnd.nextInt(10);
         Integer duration = rnd.nextInt(90);
-        LocalDateTime fromDate = LocalDateTime.now(Clock.systemUTC());
+        OffsetDateTime fromDate = OffsetDateTime.now(Clock.systemUTC());
         fromDate = fromDate.minusDays(n);
-        LocalDateTime toDate = LocalDateTime.now(Clock.systemUTC());
+        OffsetDateTime toDate = OffsetDateTime.now(Clock.systemUTC());
         toDate = toDate.plusDays(duration);
 
 
@@ -154,9 +154,9 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
 
         Integer n = rnd.nextInt(10);
         Integer duration = rnd.nextInt(90);
-        LocalDateTime fromDate = LocalDateTime.now(Clock.systemUTC());
+        OffsetDateTime fromDate = OffsetDateTime.now(Clock.systemUTC());
         fromDate = fromDate.minusDays(n);
-        LocalDateTime toDate = LocalDateTime.now(Clock.systemUTC());
+        OffsetDateTime toDate = OffsetDateTime.now(Clock.systemUTC());
         toDate = toDate.plusDays(duration);
 
 
@@ -181,9 +181,9 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
 
         Integer n = rnd.nextInt(10);
         Integer duration = rnd.nextInt(90);
-        LocalDateTime fromDate = LocalDateTime.now(Clock.systemUTC());
+        OffsetDateTime fromDate = OffsetDateTime.now(Clock.systemUTC());
         fromDate = fromDate.minusDays(n);
-        LocalDateTime toDate = LocalDateTime.now(Clock.systemUTC());
+        OffsetDateTime toDate = OffsetDateTime.now(Clock.systemUTC());
         toDate = toDate.plusDays(duration);
         CustomCodesPK primaryKey = new CustomCodesPK();
         primaryKey.setConstant("TEST_constant_TEST");

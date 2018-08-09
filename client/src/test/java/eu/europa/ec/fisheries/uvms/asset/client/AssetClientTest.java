@@ -2,7 +2,7 @@ package eu.europa.ec.fisheries.uvms.asset.client;
 
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -106,7 +106,7 @@ public class AssetClientTest extends AbstractClientTest {
 
         String cst = createdCustomCode.getPrimaryKey().getConstant();
         String code = createdCustomCode.getPrimaryKey().getCode();
-        LocalDateTime validFromDate = createdCustomCode.getPrimaryKey().getValidFromDate();
+        OffsetDateTime validFromDate = createdCustomCode.getPrimaryKey().getValidFromDate();
 
         Boolean ok =  assetClient.isCodeValid(cst,code,validFromDate.plusDays(5));
         Assert.assertTrue(ok);
@@ -122,7 +122,7 @@ public class AssetClientTest extends AbstractClientTest {
 
         String cst = createdCustomCode.getPrimaryKey().getConstant();
         String code = createdCustomCode.getPrimaryKey().getCode();
-        LocalDateTime validToDate = createdCustomCode.getPrimaryKey().getValidToDate();
+        OffsetDateTime validToDate = createdCustomCode.getPrimaryKey().getValidToDate();
 
         Boolean ok =  assetClient.isCodeValid(cst,code,validToDate.plusDays(5));
         Assert.assertFalse(ok);
@@ -139,8 +139,8 @@ public class AssetClientTest extends AbstractClientTest {
 
         String cst = createdCustomCode.getPrimaryKey().getConstant();
         String code = createdCustomCode.getPrimaryKey().getCode();
-        LocalDateTime validFromDate = createdCustomCode.getPrimaryKey().getValidFromDate();
-        LocalDateTime validToDate = createdCustomCode.getPrimaryKey().getValidToDate();
+        OffsetDateTime validFromDate = createdCustomCode.getPrimaryKey().getValidFromDate();
+        OffsetDateTime validToDate = createdCustomCode.getPrimaryKey().getValidToDate();
 
         List<CustomCode> retrievedCustomCode = assetClient.getCodeForDate(cst, code, validToDate);
         Assert.assertTrue(retrievedCustomCode != null );
@@ -157,8 +157,8 @@ public class AssetClientTest extends AbstractClientTest {
 
         String cst = createdCustomCode.getPrimaryKey().getConstant();
         String code = createdCustomCode.getPrimaryKey().getCode();
-        LocalDateTime validFromDate = createdCustomCode.getPrimaryKey().getValidFromDate();
-        LocalDateTime validToDate = createdCustomCode.getPrimaryKey().getValidToDate();
+        OffsetDateTime validFromDate = createdCustomCode.getPrimaryKey().getValidFromDate();
+        OffsetDateTime validToDate = createdCustomCode.getPrimaryKey().getValidToDate();
 
         List<CustomCode> retrievedCustomCode = assetClient.getCodeForDate(cst, code, validToDate.plusDays(5));
         Assert.assertTrue(retrievedCustomCode != null );

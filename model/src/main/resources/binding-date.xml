@@ -15,7 +15,7 @@
     <jaxb:globalBindings>
         <xjc:serializable uid="1"/>
         <jaxb:javaType
-            name="java.time.LocalDateTime"
+            name="java.time.OffsetDateTime"
             xmlType="xsd:dateTime"
             parseMethod="eu.europa.ec.fisheries.uvms.asset.model.mapper.XsdDateTimeConverter.unmarshalDateTime"
             printMethod="eu.europa.ec.fisheries.uvms.asset.model.mapper.XsdDateTimeConverter.marshalDateTime"

@@ -60,7 +60,7 @@ public class MobileTerminalEntityToModelMapper {
         model.setType(entity.getMobileTerminalType().name());
         model.setInactive(entity.getInactivated());
         model.setArchived(entity.getArchived());
-        model.setId(new Long(entity.getCreateTime().toEpochSecond(ZoneOffset.UTC)).intValue());
+        model.setId(new Long(entity.getCreateTime().toEpochSecond()).intValue());
 
         model.getChannels().addAll(mapChannels(entity.getChannels(), currentEvent));
 

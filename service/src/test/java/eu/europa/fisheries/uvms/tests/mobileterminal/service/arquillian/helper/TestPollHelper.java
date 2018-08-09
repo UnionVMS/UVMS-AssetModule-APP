@@ -13,7 +13,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalM
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 
@@ -40,7 +40,7 @@ public class TestPollHelper {
 
         PollAttribute pollAttribute = new PollAttribute();
         pollAttribute.setKey(PollAttributeType.START_DATE);
-        String startDate = LocalDateTime.now(ZoneOffset.UTC).toString();
+        String startDate = OffsetDateTime.now(ZoneOffset.UTC).toString();
         pollAttribute.setValue(startDate);
 
         prt.getAttributes().add(pollAttribute);
@@ -74,7 +74,7 @@ public class TestPollHelper {
 
         MobileTerminal mt = new MobileTerminal();
         mt.setSerialNo(serialNo);
-        mt.setUpdatetime(LocalDateTime.now(ZoneOffset.UTC));
+        mt.setUpdatetime(OffsetDateTime.now(ZoneOffset.UTC));
         mt.setUpdateuser("TEST");
         mt.setSource(MobileTerminalSource.INTERNAL);
         mt.setPlugin(mtp);
@@ -88,7 +88,7 @@ public class TestPollHelper {
         mtpc.setName("test");
         mtpc.setValue("test");
         mtpc.setUpdatedBy("TEST_USER");
-        mtpc.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
+        mtpc.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         capabilityList.add(mtpc);
 
         mtp.getCapabilities().addAll(capabilityList);
@@ -100,9 +100,9 @@ public class TestPollHelper {
         mte.setActive(true);
         mte.setMobileterminal(mt);
 
-        String attributes = PollAttributeType.START_DATE.value() + "=" + LocalDateTime.now(ZoneOffset.UTC).toString();
+        String attributes = PollAttributeType.START_DATE.value() + "=" + OffsetDateTime.now(ZoneOffset.UTC).toString();
         attributes = attributes + ";";
-        attributes = attributes + PollAttributeType.END_DATE.value() + "=" + LocalDateTime.now(ZoneOffset.UTC).toString();
+        attributes = attributes + PollAttributeType.END_DATE.value() + "=" + OffsetDateTime.now(ZoneOffset.UTC).toString();
         mte.setAttributes(attributes);
 
         Channel pollChannel = new Channel();
@@ -209,7 +209,7 @@ public class TestPollHelper {
         attributes.add(attribute);
     }
 
-    public PollProgram createPollProgramHelper(String mobileTerminalSerialNo, LocalDateTime startDate, LocalDateTime stopDate, LocalDateTime latestRun) {
+    public PollProgram createPollProgramHelper(String mobileTerminalSerialNo, OffsetDateTime startDate, OffsetDateTime stopDate, OffsetDateTime latestRun) {
 
         PollProgram pp = new PollProgram();
         // create a valid mobileTerminal
@@ -232,24 +232,24 @@ public class TestPollHelper {
         return pp;
     }
 
-    public LocalDateTime getStartDate() {
+    public OffsetDateTime getStartDate() {
         cal.set(Calendar.DAY_OF_MONTH, 1);
         int startYear = 1999;
         cal.set(Calendar.YEAR, startYear);
-        return LocalDateTime.ofInstant(cal.toInstant(), ZoneOffset.UTC);
+        return OffsetDateTime.ofInstant(cal.toInstant(), ZoneOffset.UTC);
     }
 
-    public LocalDateTime getLatestRunDate() {
+    public OffsetDateTime getLatestRunDate() {
         cal.set(Calendar.DAY_OF_MONTH, 20);
         int latestRunYear = 2017;
         cal.set(Calendar.YEAR, latestRunYear);
-        return LocalDateTime.ofInstant(cal.toInstant(), ZoneOffset.UTC);
+        return OffsetDateTime.ofInstant(cal.toInstant(), ZoneOffset.UTC);
     }
 
-    public LocalDateTime getStopDate() {
+    public OffsetDateTime getStopDate() {
         cal.set(Calendar.DAY_OF_MONTH, 28);
         cal.set(Calendar.YEAR, 2019);
-        return LocalDateTime.ofInstant(cal.toInstant(), ZoneOffset.UTC);
+        return OffsetDateTime.ofInstant(cal.toInstant(), ZoneOffset.UTC);
     }
 
     public String createSerialNumber() {

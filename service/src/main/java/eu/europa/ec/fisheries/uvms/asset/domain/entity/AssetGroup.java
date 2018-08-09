@@ -16,7 +16,7 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.GROUP_A
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.GROUP_ASSET_BY_USER;
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.GROUP_ASSET_FIND_ALL;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -67,7 +67,7 @@ public class AssetGroup implements Serializable {
     private String name;
 
     @Column(name = "updattim")
-    private LocalDateTime updateTime;
+    private OffsetDateTime updateTime;
 
     @Size(max = 60)
     @Column(name = "upuser")
@@ -120,11 +120,11 @@ public class AssetGroup implements Serializable {
         this.name = name;
     }
 
-    public LocalDateTime getUpdateTime() {
+    public OffsetDateTime getUpdateTime() {
         return this.updateTime;
     }
 
-    public void setUpdateTime(LocalDateTime updateTime) {
+    public void setUpdateTime(OffsetDateTime updateTime) {
         this.updateTime = updateTime;
     }
 

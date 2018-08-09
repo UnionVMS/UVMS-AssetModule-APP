@@ -22,7 +22,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTer
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.HashSet;
 import java.util.List;
@@ -56,7 +56,7 @@ public class MobileTerminalModelToEntityMapper {
         if (type == null)
             throw new NullPointerException("Non valid mobile terminal type when mapping");
         entity.setMobileTerminalType(type);
-        /*entity.setUpdatetime(LocalDateTime.now(ZoneOffset.UTC));
+        /*entity.setUpdatetime(OffsetDateTime.now(ZoneOffset.UTC));
         entity.setUpdateuser(username);*/
 
         mapHistoryAttributes(entity, model, username, comment, event);
@@ -70,7 +70,7 @@ public class MobileTerminalModelToEntityMapper {
 //                throw new MobileTerminalModelException(MAP_CHANNEL_FIELD_TYPES_ERROR.getMessage(), e, MAP_CHANNEL_FIELD_TYPES_ERROR.getCode());
 //            }
         }
-        entity.setUpdatetime(LocalDateTime.now(ZoneOffset.UTC));
+        entity.setUpdatetime(OffsetDateTime.now(ZoneOffset.UTC));
         entity.setUpdateuser(username);
 
         return entity;
@@ -103,7 +103,7 @@ public class MobileTerminalModelToEntityMapper {
                 //channel.setGuid(UUID.randomUUID().toString());
             }
             channel.setMobileTerminal(entity);
-            channel.setUpdateTime(LocalDateTime.now(ZoneOffset.UTC));
+            channel.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
             channel.setUpdateUser(username);
             channel.setArchived(false);
 
@@ -188,7 +188,7 @@ public class MobileTerminalModelToEntityMapper {
 
         MobileTerminalEvent history = new MobileTerminalEvent();
         history.setActive(true);
-        history.setUpdatetime(LocalDateTime.now(ZoneOffset.UTC));
+        history.setUpdatetime(OffsetDateTime.now(ZoneOffset.UTC));
         history.setUpdateuser(username);
         history.setMobileterminal(entity);
         history.setComment(comment);

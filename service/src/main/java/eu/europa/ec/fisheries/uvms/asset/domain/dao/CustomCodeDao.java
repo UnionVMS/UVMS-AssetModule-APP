@@ -6,7 +6,7 @@ import javax.ws.rs.NotFoundException;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Stateless
@@ -102,7 +102,7 @@ public class CustomCodeDao {
     }
 
 
-    public List<CustomCode> getForDate(String constant, String code, LocalDateTime aDate) {
+    public List<CustomCode> getForDate(String constant, String code, OffsetDateTime aDate) {
 
             TypedQuery<CustomCode> query = em.createNamedQuery(CustomCode.CUSTOMCODES_GETCUSTOMCODE_FOR_SPECIFIC_DATE, CustomCode.class);
             query.setParameter("constant", constant);
@@ -112,7 +112,7 @@ public class CustomCodeDao {
             return customCodes;
     }
 
-    public Boolean verify(String constant, String code, LocalDateTime aDate) {
+    public Boolean verify(String constant, String code, OffsetDateTime aDate) {
             TypedQuery<CustomCode> query = em.createNamedQuery(CustomCode.CUSTOMCODES_GETCUSTOMCODE_FOR_SPECIFIC_DATE, CustomCode.class);
             query.setParameter("constant", constant);
             query.setParameter("code", code);

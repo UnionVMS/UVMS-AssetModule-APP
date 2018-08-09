@@ -42,7 +42,7 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.jms.TextMessage;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -275,7 +275,7 @@ public class MobileTerminalServiceBean {
         event.setActive(true);
         event.setPollChannel(current.getPollChannel());
         event.setDefaultChannel(current.getDefaultChannel());
-        event.setUpdatetime(LocalDateTime.now(ZoneId.of("UTC")));
+        event.setUpdatetime(OffsetDateTime.now(ZoneOffset.UTC));
         event.setConfigChannel(current.getConfigChannel());
         event.setAttributes(current.getAttributes());
         event.setComment(comment);
@@ -427,7 +427,7 @@ public class MobileTerminalServiceBean {
             event.setActive(true);
             event.setPollChannel(current.getPollChannel());
             event.setDefaultChannel(current.getDefaultChannel());
-            event.setUpdatetime(LocalDateTime.now(ZoneOffset.UTC));
+            event.setUpdatetime(OffsetDateTime.now(ZoneOffset.UTC));
             event.setConfigChannel(current.getConfigChannel());
             event.setAttributes(current.getAttributes());
             event.setComment(comment);
@@ -467,7 +467,7 @@ public class MobileTerminalServiceBean {
             event.setActive(true);
             event.setPollChannel(current.getPollChannel());
             event.setDefaultChannel(current.getDefaultChannel());
-            event.setUpdatetime(LocalDateTime.now(ZoneOffset.UTC));
+            event.setUpdatetime(OffsetDateTime.now(ZoneOffset.UTC));
             event.setConfigChannel(current.getConfigChannel());
             event.setAttributes(current.getAttributes());
             event.setComment(comment);

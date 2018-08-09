@@ -96,8 +96,8 @@ public class CustomCodesResource {
             @ApiParam(value = "validToDate", required = true) @PathParam(value = "validToDate") String validToDate)
     {
         try {
-            LocalDateTime fromDate = LocalDateTime.parse(validFromDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-            LocalDateTime toDate = LocalDateTime.parse(validToDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            OffsetDateTime fromDate = OffsetDateTime.parse(validFromDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            OffsetDateTime toDate = OffsetDateTime.parse(validToDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             CustomCode customCode = customCodesSvc.get(constant,code,fromDate,toDate);
             String json = MAPPER.writeValueAsString(customCode);
             return Response.status(200).entity(json).type(MediaType.APPLICATION_JSON)
@@ -123,8 +123,8 @@ public class CustomCodesResource {
     {
         try {
 
-            LocalDateTime fromDate = LocalDateTime.parse(validFromDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-            LocalDateTime toDate = LocalDateTime.parse(validToDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            OffsetDateTime fromDate = OffsetDateTime.parse(validFromDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            OffsetDateTime toDate = OffsetDateTime.parse(validToDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             CustomCodesPK pk = new CustomCodesPK();
             pk.setConstant(constant);
             pk.setCode(code);
@@ -155,7 +155,7 @@ public class CustomCodesResource {
     {
         try {
 
-            LocalDateTime aDate = LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            OffsetDateTime aDate = OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             List<CustomCode> customCodes = customCodesSvc.getForDate(constant, code,aDate);
 
             String json = MAPPER.writeValueAsString(customCodes);
@@ -182,7 +182,7 @@ public class CustomCodesResource {
     {
         try {
 
-            LocalDateTime aDate = LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            OffsetDateTime aDate = OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             Boolean exists = customCodesSvc.verify(constant, code, aDate);
 
             String json = MAPPER.writeValueAsString(exists);
@@ -250,8 +250,8 @@ public class CustomCodesResource {
     {
         try {
 
-            LocalDateTime fromDate = LocalDateTime.parse(validFromDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-            LocalDateTime toDate = LocalDateTime.parse(validToDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            OffsetDateTime fromDate = OffsetDateTime.parse(validFromDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            OffsetDateTime toDate = OffsetDateTime.parse(validToDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             customCodesSvc.delete(constant, code,fromDate,toDate);
             return Response.ok().header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {

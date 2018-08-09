@@ -11,7 +11,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
@@ -268,15 +269,15 @@ public class AssetResource {
 
     /**
      * @summary Get a specific asset by identifier (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)
-     *          at given date (DateTimeFormatter.ISO_LOCAL_DATE_TIME format, eg 2018-03-23T18:25:43).
+     *          at given date (DateTimeFormatter.ISO_OFFSET_DATE_TIME format, eg 2018-03-23T18:25:43).
      * 
      * @param type
      * @param id
-     * @param date DateTimeFormatter.ISO_LOCAL_DATE_TIME format
+     * @param date DateTimeFormatter.ISO_OFFSET_DATE_TIME format
      * @return
      */
     @GET
-    @ApiOperation(value = "Get a specific asset by identifier (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)  at given date", notes = "DateTimeFormatter.ISO_LOCAL_DATE_TIME format, eg 2018-03-23T18:25:43", response = Asset.class, responseContainer = "List")
+    @ApiOperation(value = "Get a specific asset by identifier (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)  at given date", notes = "DateTimeFormatter.ISO_OFFSET_DATE_TIME, eg 2018-03-23T18:25:43+01:00", response = Asset.class, responseContainer = "List")
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when querying the system"),
             @ApiResponse(code = 200, message = "Successful retrieval of resultset") })
@@ -288,8 +289,8 @@ public class AssetResource {
                                                @ApiParam(value="Point in time", required=true) @PathParam("date") String date) {
         try {
             AssetIdentifier assetId = AssetIdentifier.valueOf(type.toUpperCase());
-            LocalDateTime localDateTime = LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-            Asset assetRevision = assetService.getAssetFromAssetIdAtDate(assetId, id, localDateTime);
+            OffsetDateTime offsetDateTime = OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            Asset assetRevision = assetService.getAssetFromAssetIdAtDate(assetId, id, offsetDateTime);
             return Response.ok(assetRevision).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset. Type: {}, Value: {}, Date: {}", type, id, date, e);

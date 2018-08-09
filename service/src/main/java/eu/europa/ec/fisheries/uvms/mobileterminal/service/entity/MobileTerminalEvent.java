@@ -15,9 +15,10 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.JSR310StringParsableDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.OffsetDateTimeDeserializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -29,7 +30,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -55,10 +56,10 @@ public class MobileTerminalEvent implements Serializable {
 	@Column(name="comment")
 	private String comment;
 
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@JsonSerialize(using = OffsetDateTimeSerializer.class)
+	@JsonDeserialize(using = OffsetDateTimeDeserializer.class)
 	@Column(name="updattime")
-	private LocalDateTime updatetime;
+	private OffsetDateTime updatetime;
 
 	@Size(max=60)
 	@Column(name="upuser")
@@ -118,11 +119,11 @@ public class MobileTerminalEvent implements Serializable {
 	}
 
 
-	public LocalDateTime getUpdatetime() {
+	public OffsetDateTime getUpdatetime() {
 		return updatetime;
 	}
 
-	public void setUpdatetime(LocalDateTime updatetime) {
+	public void setUpdatetime(OffsetDateTime updatetime) {
 		this.updatetime = updatetime;
 	}
 

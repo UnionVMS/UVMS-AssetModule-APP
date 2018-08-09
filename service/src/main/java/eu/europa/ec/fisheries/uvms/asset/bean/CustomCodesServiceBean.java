@@ -18,7 +18,8 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 
@@ -30,7 +31,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 
 
 	@Override
-	public CustomCode create(String constant, String code, LocalDateTime validFromDate, LocalDateTime validToDate, String description){
+	public CustomCode create(String constant, String code, OffsetDateTime validFromDate, OffsetDateTime validToDate, String description){
 
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
@@ -85,7 +86,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 
 
 	@Override
-	public CustomCode get(String constant, String code , LocalDateTime validFromDate, LocalDateTime validToDate){
+	public CustomCode get(String constant, String code , OffsetDateTime validFromDate, OffsetDateTime validToDate){
 
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
@@ -121,7 +122,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 
 
 	@Override
-	public Boolean exists(String constant, String code, LocalDateTime validFromDate, LocalDateTime validToDate ){
+	public Boolean exists(String constant, String code, OffsetDateTime validFromDate, OffsetDateTime validToDate ){
 
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
@@ -148,7 +149,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 	}
 
 	@Override
-	public CustomCode update(String constant, String code,  LocalDateTime validFromDate, LocalDateTime validToDate, String newValue){
+	public CustomCode update(String constant, String code,  OffsetDateTime validFromDate, OffsetDateTime validToDate, String newValue){
 
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
@@ -177,7 +178,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 	}
 
 	@Override
-	public void delete(String constant, String code,  LocalDateTime validFromDate, LocalDateTime validToDate){
+	public void delete(String constant, String code,  OffsetDateTime validFromDate, OffsetDateTime validToDate){
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
 		}
@@ -234,7 +235,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 	}
 
 	@Override
-	public List<CustomCode> getForDate(String constant, String code, LocalDateTime aDate) {
+	public List<CustomCode> getForDate(String constant, String code, OffsetDateTime aDate) {
 
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
@@ -256,7 +257,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 	}
 
 	@Override
-	public Boolean verify(String constant, String code, LocalDateTime aDate) {
+	public Boolean verify(String constant, String code, OffsetDateTime aDate) {
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
 		}
@@ -289,8 +290,8 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		CustomCodesPK pk = customCode.getPrimaryKey();
 		String constant = pk.getConstant();
 		String code = pk.getCode();
-		LocalDateTime validFromDate = pk.getValidFromDate();
-		LocalDateTime validToDate = pk.getValidToDate();
+		OffsetDateTime validFromDate = pk.getValidFromDate();
+		OffsetDateTime validToDate = pk.getValidToDate();
 		if(constant == null){
 			throw new IllegalArgumentException("Constant cannot be null");
 		}

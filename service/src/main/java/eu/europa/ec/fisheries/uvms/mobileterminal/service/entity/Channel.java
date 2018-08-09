@@ -25,9 +25,10 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.JSR310StringParsableDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.OffsetDateTimeDeserializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -36,7 +37,7 @@ import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -62,10 +63,10 @@ public class Channel implements Serializable {
 	@Column(name="archived")
 	private Boolean archived;
 
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@JsonSerialize(using = OffsetDateTimeSerializer.class)
+	@JsonDeserialize(using = OffsetDateTimeDeserializer.class)
 	@Column(name="updattime")
-	private LocalDateTime updateTime;
+	private OffsetDateTime updateTime;
 
 	@Column(name="updateuser")
 	private String updateUser;
@@ -136,11 +137,11 @@ public class Channel implements Serializable {
 		this.archived = archived;
 	}
 
-	public LocalDateTime getUpdateTime() {
+	public OffsetDateTime getUpdateTime() {
 		return updateTime;
 	}
 
-	public void setUpdateTime(LocalDateTime updateTime) {
+	public void setUpdateTime(OffsetDateTime updateTime) {
 		this.updateTime = updateTime;
 	}
 

@@ -24,7 +24,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -100,7 +100,7 @@ public class ContactInfo implements Serializable {
     private String country;
 
     @Column(name = "updatetime")
-    private LocalDateTime updateTime;
+    private OffsetDateTime updateTime;
 
     @Size(max = 60)
     @Column(name = "updatedby")
@@ -218,11 +218,11 @@ public class ContactInfo implements Serializable {
         this.country = country;
     }
 
-    public LocalDateTime getUpdateTime() {
+    public OffsetDateTime getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(LocalDateTime updateTime) {
+    public void setUpdateTime(OffsetDateTime updateTime) {
         this.updateTime = updateTime;
     }
 
