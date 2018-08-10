@@ -78,7 +78,6 @@ public class PollProgramDaoBean {
             return validPollPrograms;
     }
 
-    // TODO: This method needs to be removed. Find usage and map it to the next method.
     public PollProgram getPollProgramByGuid(String guid) {
         return getPollProgramById(UUID.fromString(guid));
     }

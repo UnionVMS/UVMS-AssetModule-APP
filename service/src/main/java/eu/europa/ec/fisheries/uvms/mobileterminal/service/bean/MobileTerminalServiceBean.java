@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.bean;
 
+import eu.europa.ec.fisheries.schema.exchange.service.v1.ServiceResponseType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollableQuery;
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
@@ -41,6 +42,7 @@ import org.slf4j.LoggerFactory;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.jms.TextMessage;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -78,7 +80,6 @@ public class MobileTerminalServiceBean {
     private MobileTerminalPluginDaoBean pluginDao;
 
     public MobileTerminal createMobileTerminal(MobileTerminal mobileTerminal, String username) {
-
         MobileTerminal createdMobileTerminal = terminalDao.createMobileTerminal(mobileTerminal);
 
         boolean dnidUpdated = configModel.checkDNIDListChange(createdMobileTerminal.getPlugin().getPluginServiceName());
@@ -174,9 +175,6 @@ public class MobileTerminalServiceBean {
         }else {
             throw new UnsupportedOperationException("Update - Not supported mobile terminal type");
         }
-
-
-        //MobileTerminal terminalUpdate = updateMobileTerminal(mobileTerminal, comment,serialNumber, username);
 
         //send to audit
         try {
@@ -495,8 +493,12 @@ public class MobileTerminalServiceBean {
 
         try {
 
+            MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(mobileTerminalType.getPlugin().getServiceName());
+            if(plugin == null){
+                plugin = pluginDao.initAndGetPlugin(mobileTerminalType.getPlugin().getServiceName());
+            }
             MobileTerminal mobileTerminalEntity = MobileTerminalModelToEntityMapper.mapMobileTerminalEntity(getMobileTerminalEntityById(mobileTerminalType.getMobileTerminalId()),
-                    mobileTerminalType, assertTerminalHasSerialNumber(mobileTerminalType), pluginDao.getPluginByServiceName(mobileTerminalType.getPlugin().getServiceName()),
+                    mobileTerminalType, assertTerminalHasSerialNumber(mobileTerminalType), plugin,
                     username, "Upserted by external module", EventCodeEnum.MODIFY);
             mobileTerminalEntity = updateMobileTerminal(mobileTerminalEntity, "Upserted by external module", username);
 
@@ -506,8 +508,11 @@ public class MobileTerminalServiceBean {
             LOG.error("[ Error when upserting mobile terminal: Mobile terminal update failed trying to insert. ] {} {}", e.getMessage(), e.getStackTrace());
             //TODO: Should this swallow an error and just continue on?
         }
-
-        MobileTerminal mobileTerminal1Entity = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType, assertTerminalHasSerialNumber(mobileTerminalType), pluginDao.getPluginByServiceName(mobileTerminalType.getPlugin().getServiceName()), username);
+        MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(mobileTerminalType.getPlugin().getServiceName());
+        if(plugin == null){
+            pluginDao.initAndGetPlugin(mobileTerminalType.getPlugin().getServiceName());
+        }
+        MobileTerminal mobileTerminal1Entity = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType, assertTerminalHasSerialNumber(mobileTerminalType), plugin, username);
         mobileTerminal1Entity = createMobileTerminal(mobileTerminal1Entity, username);
 
         return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminal1Entity);

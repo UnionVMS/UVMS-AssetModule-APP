@@ -112,7 +112,6 @@ public class PollRestResource {
     public MTResponseDto<PollDto> stopProgramPoll(@PathParam("id") String pollId) {
         LOG.info("Stop poll invoked in rest layer:{}",pollId);
         try {
-            //PollDto poll = pollService.stopProgramPoll(pollId, request.getRemoteUser());
             PollResponseType pollResponse = pollServiceBean.stopProgramPoll(pollId, request.getRemoteUser());
             PollDto poll = PollMapper.mapPoll(pollResponse);
             return new MTResponseDto<>(poll, MTResponseCode.OK);
@@ -128,7 +127,6 @@ public class PollRestResource {
     public MTResponseDto<PollDto> archiveProgramPoll(@PathParam("id") String pollId) {       //This gives a poll the status "ARCHIVED"
         LOG.info("Archive poll invoked in rest layer:{}",pollId);
         try {
-            //PollDto poll = pollService.inactivateProgramPoll(pollId, request.getRemoteUser());
             PollResponseType pollResponse = pollServiceBean.inactivateProgramPoll(pollId, request.getRemoteUser());
             PollDto poll = PollMapper.mapPoll(pollResponse);
             return new MTResponseDto<>(poll, MTResponseCode.OK);
