@@ -6,9 +6,12 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalSer
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalEntityToModelMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalModelToEntityMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PluginMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PollMapper;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper.TestPollHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
@@ -240,7 +243,11 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     private MobileTerminal createAndPersistMobileTerminal() throws Exception {
 
         MobileTerminal mobileTerminal = testPollHelper.createBasicMobileTerminal();
-        mobileTerminal.setPlugin(pluginDao.getPluginByServiceName(mobileTerminal.getPlugin().getPluginServiceName()));
+        MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(mobileTerminal.getPlugin().getPluginServiceName());
+        if(plugin == null){
+            plugin = PluginMapper.mapModelToEntity(testPollHelper.createPluginService());
+        }
+        mobileTerminal.setPlugin(plugin);
         mobileTerminal = mobileTerminalService.createMobileTerminal(mobileTerminal, USERNAME);
         return mobileTerminal;
     }

@@ -104,7 +104,9 @@ public class PollServiceBean implements PollService {
 
 
     public List<PollDto> getRunningProgramPolls() {
-        List<PollResponseType> pollResponse = getPollProgramList();
+        List<PollProgram> pollPrograms = pollProgramDao.getProgramPollsAlive();
+        List<PollResponseType> pollResponse = getResponseList(pollPrograms);
+
         return PollMapper.mapPolls(pollResponse);
     }
 
@@ -388,10 +390,7 @@ public class PollServiceBean implements PollService {
         return response;
     }
 
-    public List<PollResponseType> getPollProgramList()  {
-        List<PollProgram> pollPrograms = pollProgramDao.getProgramPollsAlive();
-        return getResponseList(pollPrograms);
-    }
+
 
 
     public List<PollResponseType> getPollProgramRunningAndStarted() {

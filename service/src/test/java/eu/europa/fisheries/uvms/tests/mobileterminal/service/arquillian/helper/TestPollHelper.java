@@ -178,6 +178,15 @@ public class TestPollHelper {
         return mobileTerminal;
     }
 
+    public PluginService createPluginService() {
+        PluginService pluginService = new PluginService();
+        pluginService.setInactive(false);
+        pluginService.setLabelName("Thrane&Thrane");
+        pluginService.setSatelliteType("INMARSAT_C");
+        pluginService.setServiceName("eu.europa.ec.fisheries.uvms.plugins.inmarsat");
+        return pluginService;
+    }
+
     private String generateARandomStringWithMaxLength(int len) {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < len; i++) {

@@ -69,6 +69,9 @@ public class MobileTerminalRestResource {
             }
             mobileTerminalService.assertTerminalNotExists(id, serialNumber);
             MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(mobileTerminalType.getPlugin().getServiceName());
+            if(plugin == null){
+                plugin = pluginDao.initAndGetPlugin(mobileTerminalType.getPlugin().getServiceName());
+            }
 
             MobileTerminal mobileTerminalEntity = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType, serialNumber, plugin, request.getRemoteUser());
             mobileTerminalEntity = mobileTerminalService.createMobileTerminal(mobileTerminalEntity, request.getRemoteUser());
@@ -104,6 +107,9 @@ public class MobileTerminalRestResource {
             mobileTerminalType.setSource(MobileTerminalSource.INTERNAL);
             String serialNumber = mobileTerminalService.assertTerminalHasSerialNumber(mobileTerminalType);
             MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(mobileTerminalType.getPlugin().getServiceName());
+            if(plugin == null){
+                plugin = pluginDao.initAndGetPlugin(mobileTerminalType.getPlugin().getServiceName());
+            }
             MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapMobileTerminalEntity(mobileTerminalService.getMobileTerminalEntityById(mobileTerminalType.getMobileTerminalId()), mobileTerminalType, serialNumber, plugin, request.getRemoteUser(), comment, EventCodeEnum.MODIFY);
 
             mobileTerminal = mobileTerminalService.updateMobileTerminal(mobileTerminal, comment, request.getRemoteUser());

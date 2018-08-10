@@ -11,10 +11,15 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.dao;
 
+import eu.europa.ec.fisheries.schema.exchange.service.v1.ServiceResponseType;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.ConfigServiceBeanMT;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.ServiceToPluginMapper;
+import net.bull.javamelody.internal.common.LOG;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -26,6 +31,9 @@ public class MobileTerminalPluginDaoBean  {
 
 	@PersistenceContext
 	private EntityManager em;
+
+	@Inject
+	ConfigServiceBeanMT configServiceMT;
 
 	public List<MobileTerminalPlugin> getPluginList()  {
             TypedQuery<MobileTerminalPlugin> query = em.createNamedQuery(MobileTerminalConstants.PLUGIN_FIND_ALL, MobileTerminalPlugin.class);
@@ -45,6 +53,17 @@ public class MobileTerminalPluginDaoBean  {
         } catch (NoResultException e) {
 			return null;
         }
+	}
+	public MobileTerminalPlugin initAndGetPlugin(String serviceName) {
+		MobileTerminalPlugin plugin = null;
+
+		List<ServiceResponseType> serviceTypes = configServiceMT.getRegisteredMobileTerminalPlugins();
+		if(serviceTypes != null) {
+			configServiceMT.upsertPlugins(ServiceToPluginMapper.mapToPluginList(serviceTypes), "PluginTimerBean");
+		}
+		plugin = getPluginByServiceName(serviceName);
+
+		return plugin;
 	}
 
 	public MobileTerminalPlugin updateMobileTerminalPlugin(MobileTerminalPlugin entity)  {
