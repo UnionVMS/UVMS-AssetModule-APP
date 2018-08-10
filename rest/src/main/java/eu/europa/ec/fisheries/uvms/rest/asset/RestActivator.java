@@ -19,16 +19,17 @@ import eu.europa.ec.fisheries.uvms.rest.asset.filter.AssetRestExceptionMapper;
 import eu.europa.ec.fisheries.uvms.rest.asset.service.*;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.MTConfigRestResource;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.MobileTerminalRestResource;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.PluginRestResource;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.PollRestResource;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeatureFilter;
 
 @ApplicationPath("/rest")
-public class AssetActivator extends Application {
+public class RestActivator extends Application {
 
     private final Set<Object> singletons = new HashSet<>();
     private final Set<Class<?>> set = new HashSet<>();
 
-    public AssetActivator() {
+    public RestActivator() {
         set.add(AssetRestExceptionMapper.class);
         set.add(AssetResource.class);
         set.add(AssetGroupResource.class);
@@ -44,6 +45,7 @@ public class AssetActivator extends Application {
         //PollRestResource.class.getMethods()
         set.add(MTConfigRestResource.class);
         set.add(UnionVMSFeatureFilter.class);
+        set.add(PluginRestResource.class);
         //LOG.info(MTRestConstants.MODULE_NAME + " module starting up");
     }
 

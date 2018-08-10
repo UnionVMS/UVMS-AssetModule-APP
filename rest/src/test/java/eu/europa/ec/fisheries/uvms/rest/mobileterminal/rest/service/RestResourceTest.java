@@ -20,7 +20,7 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
-//@RunAsClient
+@RunAsClient
 public class RestResourceTest extends AbstractAssetRestTest {
 
     @Test
