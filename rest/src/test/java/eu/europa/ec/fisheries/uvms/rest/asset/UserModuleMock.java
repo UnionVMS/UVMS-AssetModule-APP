@@ -80,6 +80,10 @@ public class UserModuleMock implements MessageListener {
         managePolls.setName(UnionVMSFeature.managePolls.name());
         context.getRole().getFeature().add(managePolls);
 
+        Feature managePlugins = new Feature();
+        managePlugins.setName(UnionVMSFeature.mobileTerminalPlugins.name());
+        context.getRole().getFeature().add(managePlugins);
+
         userContext.getContextSet().getContexts().add(context);
         return userContext;
     }
