@@ -50,7 +50,7 @@ public class PluginRestResource {
     @Path("/")
     @RequiresFeature(UnionVMSFeature.mobileTerminalPlugins)
     public MTResponseDto<List<Plugin>> upsertPlugins(List<PluginService> pluginServiceList){
-        List<Plugin> pluginList = configServiceMT.upsertPlugins(pluginServiceList, "Dummy Name");   //TODO: Chose a better name. And maybe make it mean something.
+        List<Plugin> pluginList = configServiceMT.upsertPlugins(pluginServiceList, "Dummy Name");   //TODO: Chose a better name then "dummy name". And maybe make it mean something.
         return new MTResponseDto<>(pluginList, MTResponseCode.OK);
     }
 
