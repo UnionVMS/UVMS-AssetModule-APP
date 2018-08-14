@@ -21,7 +21,7 @@ public class SearchMapper {
 
     private final static Logger LOG = LoggerFactory.getLogger(SearchMapper.class);
 
-    public static String createSelectSearchSql(List<ListCriteria> criteriaList, boolean isDynamic) {
+    /*public static String createSelectSearchSql(List<ListCriteria> criteriaList, boolean isDynamic) {
         StringBuilder builder = new StringBuilder();
 
         builder.append("SELECT DISTINCT mt")
@@ -54,23 +54,94 @@ public class SearchMapper {
                 if ("CONNECT_ID".equals(key)) {
                     builder.append(" ( me.connectId = ")
                           .append("'").append(criteria.getValue()).append("' ) ");
-                } else {
+                } else if("SERIAL_NUMBER".equals(key)){    //this where previsouly searchable through MTEvents attributes field   //possible qND solution: select SUBSTRING (attributes from position('serialNumber=' in attributes)+13 for 10) FROM mobterm.mobileterminalevent
+                    builder.append(" ( mt.serialNo = ")
+                            .append("'").append(criteria.getValue().replace('*', '%')).append("' ) ");
+                /*} else if("SATELLITE_NUMBER".equals(key)){*/ //this does not have the information anywhere else
+
+       /*         } else {
                     if (MobileTerminalSearchAttributes.isAttribute(key)) {
                         builder.append(" ( me.attributes LIKE ")
                                 .append("'%").append(key).append("=")
                                 .append(criteria.getValue().replace('*', '%')).append(";%' ) ");
                     } else if (ChannelSearchAttributes.isAttribute(key)) {
-                        builder.append(" ( ch.attributes LIKE ")
+                        /*builder.append(" ( ch.attributes LIKE ")        //this does not work as channel history does not exist
                                 .append("'%").append(key).append("=")
-                                .append(criteria.getValue().replace('*', '%')).append(";%' ) ");
-                    } else {
-                        builder.append(" ( ch.attributes LIKE ")
+                                .append(criteria.getValue().replace('*', '%')).append(";%' ) ");*/
+         /*           } else {
+                        /*builder.append(" ( ch.attributes LIKE ")        //this does not work as channel history does not exist
                                 .append("'%").append(key).append("=")
                                 .append(criteria.getValue().replace('*', '%')).append(";%' ");
-                        builder.append(" OR ");
-                        builder.append(" me.attributes LIKE ")
+                        builder.append(" OR ");*/
+          /*              builder.append(" me.attributes LIKE ")
                                 .append("'%").append(key).append("=")
                                 .append(criteria.getValue().replace('*', '%')).append(";%' ) ");
+                    }
+                }
+            }
+            builder.append(")");
+        }
+        LOG.debug("SELECT SQL {}", builder.toString());
+        return builder.toString();
+    }*/
+
+    public static String createSelectSearchSql(List<ListCriteria> criteriaList, boolean isDynamic) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("SELECT DISTINCT mt")
+                .append(" FROM MobileTerminal mt")
+                .append(" INNER JOIN FETCH mt.mobileTerminalEvents me")
+                .append(" LEFT JOIN FETCH mt.channels c")
+                .append(" LEFT JOIN FETCH me.mobileTerminalAttributes mta")
+                //.append(" LEFT JOIN FETCH c.histories ch")    //TODO: Add proper look into the audited part of teh db when that is finished
+                .append(" WHERE ( ")
+                .append("me.active = true ")
+                .append("AND ")
+                .append("mt.archived = false ")
+                //.append("AND ")
+                //.append("ch.active = true ")
+                .append("AND ")
+                .append("c.archived = false ")
+                .append(" ) ");
+
+        String operator = isDynamic ? "OR" : "AND";
+
+        if (criteriaList != null && !criteriaList.isEmpty()) {
+            builder.append(" AND (");
+            boolean first = true;
+            for (ListCriteria criteria : criteriaList) {
+                String key = criteria.getKey().value();
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append(operator);
+                }
+                if ("CONNECT_ID".equals(key)) {
+                    builder.append(" ( me.connectId = ")
+                            .append("'").append(criteria.getValue()).append("' ) ");
+                } else {
+                    if (MobileTerminalSearchAttributes.isAttribute(key)) {
+                        builder.append(" ( mta.attribute LIKE ")
+                                .append("'%").append(key).append("%'")
+                                .append(" AND ")
+                                .append(" mta.value LIKE ")
+                                .append("'%")
+                                .append(criteria.getValue().replace('*', '%')).append("%' ) ");
+                    } else if (ChannelSearchAttributes.isAttribute(key)) {
+                        /*builder.append(" ( ch.attributes LIKE ")        //this does not work as channel history does not exist
+                                .append("'%").append(key).append("=")
+                                .append(criteria.getValue().replace('*', '%')).append(";%' ) ");*/
+                    } else {
+                        /*builder.append(" ( ch.attributes LIKE ")        //this does not work as channel history does not exist
+                                .append("'%").append(key).append("=")
+                                .append(criteria.getValue().replace('*', '%')).append(";%' ");
+                        builder.append(" OR ");*/
+                        builder.append(" ( mta.attribute LIKE ")
+                                .append("'%").append(key).append("%'")
+                                .append(" AND ")
+                                .append(" mta.value LIKE ")
+                                .append("'%")
+                                .append(criteria.getValue().replace('*', '%')).append("%' ) ");
                     }
                 }
             }

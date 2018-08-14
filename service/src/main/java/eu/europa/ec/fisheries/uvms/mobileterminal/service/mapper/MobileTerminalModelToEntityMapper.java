@@ -13,10 +13,7 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.Channel;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import org.slf4j.Logger;
@@ -199,18 +196,24 @@ public class MobileTerminalModelToEntityMapper {
             history.setConnectId(model.getConnectId());
         }
 
-        history.setAttributes(mapHistoryAttributes(modelAttributes));
+        history.setAttributes(mapHistoryAttributes(modelAttributes, history));
         for (MobileTerminalEvent event : entity.getMobileTerminalEvents()) {
             event.setActive(false);
         }
         entity.getMobileTerminalEvents().add(history);
     }
 
-    private static String mapHistoryAttributes(List<MobileTerminalAttribute> modelAttributes) {
+    private static String mapHistoryAttributes(List<MobileTerminalAttribute> modelAttributes, MobileTerminalEvent mobileTerminalEvent) {
         StringBuilder sb = new StringBuilder();
         for (MobileTerminalAttribute attr : modelAttributes) {
             sb.append(attr.getType()).append("=");
             sb.append(attr.getValue()).append(";");
+
+            MobileTerminalAttributes mta = new MobileTerminalAttributes();
+            mta.setAttribute(attr.getType());
+            mta.setValue(attr.getValue());
+            mta.setMobileTerminalEvent(mobileTerminalEvent);
+            mobileTerminalEvent.getMobileTerminalAttributes().add(mta);
         }
         return sb.toString();
     }
