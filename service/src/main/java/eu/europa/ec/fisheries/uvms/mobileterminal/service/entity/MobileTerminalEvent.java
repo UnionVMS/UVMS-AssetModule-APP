@@ -31,7 +31,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -98,6 +100,12 @@ public class MobileTerminalEvent implements Serializable {
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name="chan_poll")
 	private Channel pollChannel;
+
+
+	@OneToMany(mappedBy="mobileTerminalEvent", cascade = CascadeType.ALL)
+	@Fetch(FetchMode.SELECT)
+	private Set<MobileTerminalAttributes> mobileTerminalAttributes;
+
 
 	public MobileTerminalEvent() {
 	}
@@ -197,6 +205,17 @@ public class MobileTerminalEvent implements Serializable {
 
 	public void setPollChannel(Channel pollChannel) {
 		this.pollChannel = pollChannel;
+	}
+
+	public Set<MobileTerminalAttributes> getMobileTerminalAttributes() {
+		if(mobileTerminalAttributes == null){
+			mobileTerminalAttributes = new HashSet<>();
+		}
+		return mobileTerminalAttributes;
+	}
+
+	public void setMobileTerminalAttributes(Set<MobileTerminalAttributes> mobileTerminalAttributes) {
+		this.mobileTerminalAttributes = mobileTerminalAttributes;
 	}
 
 	@Override
