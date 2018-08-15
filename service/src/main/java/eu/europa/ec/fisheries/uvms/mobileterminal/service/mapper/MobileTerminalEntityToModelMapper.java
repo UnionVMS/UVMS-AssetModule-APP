@@ -71,6 +71,7 @@ public class MobileTerminalEntityToModelMapper {
 
     private static List<ComChannelType> mapChannels(Set<Channel> channels, MobileTerminalEvent currentEvent) {
         //TODO: fix later
+        // (fix what? the channel history removal is done from this part, is there anything else?)
 
         if (channels == null || channels.isEmpty()) {
             return new ArrayList<>();
@@ -83,10 +84,10 @@ public class MobileTerminalEntityToModelMapper {
             //ChannelHistory current = channel.getCurrentHistory();
             //if (current != null) {
                 ComChannelType comChannel = new ComChannelType();
-                //comChannel.setName(current.getName());
+                comChannel.setName(channel.getName());
                 comChannel.setGuid(channel.getId().toString());
 
-                //comChannel.getAttributes().addAll(AttributeMapper.mapAttributeStringToComChannelAttribute(current.getAttributes()));
+                comChannel.getAttributes().addAll(AttributeMapper.mapAttributeStringToComChannelAttribute(channel));
 
                 ComChannelCapability pollCapability = new ComChannelCapability();
                 pollCapability.setType(MobileTerminalConstants.CAPABILITY_POLLABLE);

@@ -20,6 +20,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.util.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -34,18 +35,17 @@ public class PollTimerTask implements Runnable{
 
     @Override
     public void run() {
-        Date now = new Date();
-        LOG.debug("PollProgram collected from DB at " + now.toString());
+        LOG.debug("PollProgram collected from DB at " + DateUtils.parseOffsetDateTimeToString(OffsetDateTime.now()));
         try {
             List<PollResponseType> pollPrograms = pollService.timer();
 
             for (PollResponseType pollProgram : pollPrograms) {
                 String guid = pollProgram.getPollId().getGuid();
-                Date endDate = DateUtils.parseToUTCDateTime(MobileTerminalGenericMapper.getPollAttributeTypeValue(
+                OffsetDateTime endDate = DateUtils.parseStringToOffsetDateTime(MobileTerminalGenericMapper.getPollAttributeTypeValue(
                         pollProgram.getAttributes(), PollAttributeType.END_DATE));
 
                 // If the program has expired, archive it
-                if (now.getTime() > endDate.getTime()) {
+                if (OffsetDateTime.now().isAfter(endDate)) {
                     pollService.inactivateProgramPoll(guid, "MobileTerminalPollTimer");
                     LOG.info("Poll program {} has expired. Status set to ARCHIVED.", guid);
                 } else {

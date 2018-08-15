@@ -25,8 +25,10 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.DurationDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.JSR310StringParsableDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.DurationSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.OffsetDateTimeDeserializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
@@ -36,7 +38,9 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -75,14 +79,12 @@ public class Channel implements Serializable {
 	@JoinColumn(name="mobterm_id")
 	private MobileTerminal mobileTerminal;
 
-	@Column(name="comchanname")
+	@Column(name="com_channel_name")
 	private String name;
 
 	@Column(name="active")
 	private boolean active;
 
-	@Column(name="attributes")
-	private String attributes;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name="eventtype")
@@ -102,6 +104,60 @@ public class Channel implements Serializable {
 
 	@Column(name="chan_poll")
 	private boolean pollChannel;
+
+	@NotNull
+	@Column(name="dnid")
+	private String DNID;
+
+	@JsonSerialize(using = DurationSerializer.class)
+	@JsonDeserialize(using = DurationDeserializer.class)
+	@NotNull
+	@Column(name="expected_frequency")
+	private Duration expectedFrequency;
+
+	@JsonSerialize(using = DurationSerializer.class)
+	@JsonDeserialize(using = DurationDeserializer.class)
+	@NotNull
+	@Column(name="expected_frequency_in_port")
+	private Duration expectedFrequencyInPort;
+
+	@JsonSerialize(using = DurationSerializer.class)
+	@JsonDeserialize(using = DurationDeserializer.class)
+	@NotNull
+	@Column(name="frequency_grace_period")
+	private Duration frequencyGracePeriod;
+
+	@NotNull
+	@Column(name="les_description")
+	private String lesDescription;
+
+	@NotNull
+	@Column(name="member_number")
+	private String memberNumber;
+
+	@NotNull
+	@Column(name="installed_by")
+	private String installedBy;
+
+	@JsonSerialize(using = OffsetDateTimeSerializer.class)
+	@JsonDeserialize(using = OffsetDateTimeDeserializer.class)
+	@Column(name="install_date")
+	private OffsetDateTime installDate;
+
+	@JsonSerialize(using = OffsetDateTimeSerializer.class)
+	@JsonDeserialize(using = OffsetDateTimeDeserializer.class)
+	@Column(name="uninstall_date")
+	private OffsetDateTime uninstallDate;
+
+	@JsonSerialize(using = OffsetDateTimeSerializer.class)
+	@JsonDeserialize(using = OffsetDateTimeDeserializer.class)
+	@Column(name="start_date")
+	private OffsetDateTime startDate;
+
+	@JsonSerialize(using = OffsetDateTimeSerializer.class)
+	@JsonDeserialize(using = OffsetDateTimeDeserializer.class)
+	@Column(name="end_date")
+	private OffsetDateTime endDate;
 
 	public Channel(){
 
@@ -177,13 +233,6 @@ public class Channel implements Serializable {
 		this.active = active;
 	}
 
-	public String getAttributes() {
-		return attributes;
-	}
-
-	public void setAttributes(String attributes) {
-		this.attributes = attributes;
-	}
 
 	public EventCodeEnum getEventCodeType() {
 		return eventCodeType;
@@ -225,6 +274,94 @@ public class Channel implements Serializable {
 		this.pollChannel = pollChannel;
 	}
 
+	public String getDNID() {
+		return DNID;
+	}
+
+	public void setDNID(String DNID) {
+		this.DNID = DNID;
+	}
+
+	public Duration getExpectedFrequency() {
+		return expectedFrequency;
+	}
+
+	public void setExpectedFrequency(Duration expectedFrequency) {
+		this.expectedFrequency = expectedFrequency;
+	}
+
+	public Duration getExpectedFrequencyInPort() {
+		return expectedFrequencyInPort;
+	}
+
+	public void setExpectedFrequencyInPort(Duration expectedFrequencyInPort) {
+		this.expectedFrequencyInPort = expectedFrequencyInPort;
+	}
+
+	public Duration getFrequencyGracePeriod() {
+		return frequencyGracePeriod;
+	}
+
+	public void setFrequencyGracePeriod(Duration frequencyGracePeriod) {
+		this.frequencyGracePeriod = frequencyGracePeriod;
+	}
+
+	public String getLesDescription() {
+		return lesDescription;
+	}
+
+	public void setLesDescription(String lesDescription) {
+		this.lesDescription = lesDescription;
+	}
+
+	public String getMemberNumber() {
+		return memberNumber;
+	}
+
+	public void setMemberNumber(String memberNumber) {
+		this.memberNumber = memberNumber;
+	}
+
+	public String getInstalledBy() {
+		return installedBy;
+	}
+
+	public void setInstalledBy(String installedBy) {
+		this.installedBy = installedBy;
+	}
+
+	public OffsetDateTime getInstallDate() {
+		return installDate;
+	}
+
+	public void setInstallDate(OffsetDateTime installDate) {
+		this.installDate = installDate;
+	}
+
+	public OffsetDateTime getUninstallDate() {
+		return uninstallDate;
+	}
+
+	public void setUninstallDate(OffsetDateTime uninstallDate) {
+		this.uninstallDate = uninstallDate;
+	}
+
+	public OffsetDateTime getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(OffsetDateTime startDate) {
+		this.startDate = startDate;
+	}
+
+	public OffsetDateTime getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(OffsetDateTime endDate) {
+		this.endDate = endDate;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -241,14 +378,24 @@ public class Channel implements Serializable {
 				Objects.equals(updateUser, channel.updateUser) &&
 				Objects.equals(mobileTerminal, channel.mobileTerminal) &&
 				Objects.equals(name, channel.name) &&
-				Objects.equals(attributes, channel.attributes) &&
 				eventCodeType == channel.eventCodeType &&
-				Objects.equals(mobileTerminalEvent, channel.mobileTerminalEvent);
+				Objects.equals(mobileTerminalEvent, channel.mobileTerminalEvent) &&
+				Objects.equals(DNID, channel.DNID) &&
+				Objects.equals(expectedFrequency, channel.expectedFrequency) &&
+				Objects.equals(expectedFrequencyInPort, channel.expectedFrequencyInPort) &&
+				Objects.equals(frequencyGracePeriod, channel.frequencyGracePeriod) &&
+				Objects.equals(lesDescription, channel.lesDescription) &&
+				Objects.equals(memberNumber, channel.memberNumber) &&
+				Objects.equals(installedBy, channel.installedBy) &&
+				Objects.equals(installDate, channel.installDate) &&
+				Objects.equals(uninstallDate, channel.uninstallDate) &&
+				Objects.equals(startDate, channel.startDate) &&
+				Objects.equals(endDate, channel.endDate);
 	}
 
 	@Override
 	public int hashCode() {
 
-		return Objects.hash(id, historyId, archived, updateTime, updateUser, mobileTerminal, name, active, attributes, eventCodeType, mobileTerminalEvent, defaultChannel, configChannel, pollChannel);
+		return Objects.hash(id, historyId, archived, updateTime, updateUser, mobileTerminal, name, active, eventCodeType, mobileTerminalEvent, defaultChannel, configChannel, pollChannel, DNID, expectedFrequency, expectedFrequencyInPort, frequencyGracePeriod, lesDescription, memberNumber, installedBy, installDate, uninstallDate, startDate, endDate);
 	}
 }

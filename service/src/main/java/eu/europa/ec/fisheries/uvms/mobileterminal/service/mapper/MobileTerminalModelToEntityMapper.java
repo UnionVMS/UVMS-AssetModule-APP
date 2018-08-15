@@ -53,8 +53,6 @@ public class MobileTerminalModelToEntityMapper {
         if (type == null)
             throw new NullPointerException("Non valid mobile terminal type when mapping");
         entity.setMobileTerminalType(type);
-        /*entity.setUpdatetime(OffsetDateTime.now(ZoneOffset.UTC));
-        entity.setUpdateuser(username);*/
 
         mapHistoryAttributes(entity, model, username, comment, event);
 
@@ -105,16 +103,9 @@ public class MobileTerminalModelToEntityMapper {
             channel.setArchived(false);
 
 
-            /*ChannelHistory history = new ChannelHistory();
-            history.setChannel(channel);
-            history.setUpdateTime(DateUtils.getNowDateUTC());
-            history.setName(channelType.getName());
-            history.setActive(true);
-            history.setUpdatedBy(username);
-            history.setMobileTerminalEvent(entity.getCurrentEvent());*/
+            channel.setMobileTerminalEvent(entity.getCurrentEvent());
+            AttributeMapper.mapComChannelAttributes(channel, channelType.getAttributes());
 
-            String attributes = mapComChannelAttributes(channelType.getAttributes());
-            //history.setAttributes(attributes);
             /*if (channel.getHistories().size() == 0) {
                 history.setEventCodeType(EventCodeEnum.CREATE);
             } else {
@@ -124,15 +115,15 @@ public class MobileTerminalModelToEntityMapper {
             for (ComChannelCapability capability : channelType.getCapabilities()) {
                 if (MobileTerminalConstants.CAPABILITY_CONFIGURABLE.equalsIgnoreCase(capability.getType()) && capability.isValue()) {
                     entity.getCurrentEvent().setConfigChannel(channel);
-                    //history.setConfigChannel(capability.isValue());
+                    channel.setConfigChannel(capability.isValue());
                 }
                 if (MobileTerminalConstants.CAPABILITY_DEFAULT_REPORTING.equalsIgnoreCase(capability.getType()) && capability.isValue()) {
                     entity.getCurrentEvent().setDefaultChannel(channel);
-                    //history.setDefaultChannel(capability.isValue());
+                    channel.setDefaultChannel(capability.isValue());
                 }
                 if (MobileTerminalConstants.CAPABILITY_POLLABLE.equalsIgnoreCase(capability.getType()) && capability.isValue()) {
                     entity.getCurrentEvent().setPollChannel(channel);
-                    //history.setPollChannel(capability.isValue());
+                    channel.setPollChannel(capability.isValue());
                 }
             }
 
@@ -218,13 +209,5 @@ public class MobileTerminalModelToEntityMapper {
         return sb.toString();
     }
 
-    private static String mapComChannelAttributes(List<ComChannelAttribute> modelAttributes) {
-        StringBuilder sb = new StringBuilder();
-        for (ComChannelAttribute attr : modelAttributes) {
-            sb.append(attr.getType()).append("=");
-            sb.append(attr.getValue()).append(";");
-        }
-        return sb.toString();
-    }
 
 }
