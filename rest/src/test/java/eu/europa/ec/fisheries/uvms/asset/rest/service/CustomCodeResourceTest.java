@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.asset.rest.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -87,10 +88,11 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                     .path(constant)
                     .request(MediaType.APPLICATION_JSON)
                     .get(String.class);
-            TypeReference typeref = new TypeReference<List<CustomCode>>() {};
+            TypeReference typeref = new TypeReference<List<CustomCode>>() {
+            };
             List<CustomCode> codes = MAPPER.readValue(json, typeref);
         }
-       // Assert.assertTrue(found);
+        // Assert.assertTrue(found);
     }
 
     @Test
@@ -105,65 +107,6 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
     }
 
     // TODO DO NOT DELETE THIS !!!!!
-
-    @Test
-    @RunAsClient
-    public void createACustomCodeNoDateLimitXXX() throws IOException {
-        String createdJson = "";
-
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_TYPE", "1", "Pelagic");
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_TYPE", "2", "Demersal");
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_TYPE", "3", "Demersal and pelagic");
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_TYPE", "4", "Unknown");
-
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_TYPE", "1", "Trawl");
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_TYPE", "2", "Scrapingtool");
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_TYPE", "3", "Lift nets");
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_TYPE", "4", "Gillnets and similar nets");
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_TYPE", "5", "Fishing trap");
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_TYPE", "6", "Hooks and lines");
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_TYPE", "7", "Unknown fishing tool");
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_TYPE", "8", "No fishing tool");
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_TYPE", "9", "Surrounding nets");
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_TYPE", "10", "Seines");
-
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_MOBILITY", "1", "Stationary");
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_MOBILITY", "2", "Towed");
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_MOBILITY", "3", "Mobil");
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_MOBILITY", "4", "Unknown");
-
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "PS", "Purse seines", Arrays.asList("FISHING_GEAR_TYPE","9","FISHING_GEAR_MOBILITY","3","FISHING_TYPE","1"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "LA", "Lampara nets", Arrays.asList("FISHING_GEAR_TYPE","9","FISHING_GEAR_MOBILITY","3","FISHING_TYPE","1"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "SB", "Beach seines", Arrays.asList("FISHING_GEAR_TYPE","10","FISHING_GEAR_MOBILITY","2","FISHING_TYPE","3"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "SDN", "Danish seines", Arrays.asList("FISHING_GEAR_TYPE","10","FISHING_GEAR_MOBILITY","2","FISHING_TYPE","3"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "SSC", "Scottish seines", Arrays.asList("FISHING_GEAR_TYPE","10","FISHING_GEAR_MOBILITY","2","FISHING_TYPE","3"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "SPR", "Pair seines", Arrays.asList("FISHING_GEAR_TYPE","10","FISHING_GEAR_MOBILITY","2","FISHING_TYPE","3"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "TBB", "Beam trawls", Arrays.asList("FISHING_GEAR_TYPE","1","FISHING_GEAR_MOBILITY","2","FISHING_TYPE","2"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "OTB", "Bottom otter trawls", Arrays.asList("FISHING_GEAR_TYPE","1","FISHING_GEAR_MOBILITY","2","FISHING_TYPE","2"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "PTB", "Bottom pair trawls", Arrays.asList("FISHING_GEAR_TYPE","1","FISHING_GEAR_MOBILITY","2","FISHING_TYPE","3"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "OTM", "Midwater otter trawls", Arrays.asList("FISHING_GEAR_TYPE","1","FISHING_GEAR_MOBILITY","2","FISHING_TYPE","3"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "PTM", "Pelagic pair trawls", Arrays.asList("FISHING_GEAR_TYPE","1","FISHING_GEAR_MOBILITY","2","FISHING_TYPE","3"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "OTT", "Otter twin trawls", Arrays.asList("FISHING_GEAR_TYPE","1","FISHING_GEAR_MOBILITY","2","FISHING_TYPE","3"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "DRB", "Boat dredges", Arrays.asList("FISHING_GEAR_TYPE","2","FISHING_GEAR_MOBILITY","2","FISHING_TYPE","2"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "DRH", "Hand dredges used on board a vessel", Arrays.asList("FISHING_GEAR_TYPE","2","FISHING_GEAR_MOBILITY","2","FISHING_TYPE","2"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "HMD", "Mechanised dredges including suction dredges", Arrays.asList("FISHING_GEAR_TYPE","2","FISHING_GEAR_MOBILITY","2","FISHING_TYPE","2"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "LNB", "Boat operated lift nets", Arrays.asList("FISHING_GEAR_TYPE","3","FISHING_GEAR_MOBILITY","3","FISHING_TYPE","1"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "LNS", "Shore-operated stationary lift nets", Arrays.asList("FISHING_GEAR_TYPE","3","FISHING_GEAR_MOBILITY","3","FISHING_TYPE","1"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "GNS", "Set (anchored) gillnets", Arrays.asList("FISHING_GEAR_TYPE","4","FISHING_GEAR_MOBILITY","1","FISHING_TYPE","2"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "GND", "Driftnets", Arrays.asList("FISHING_GEAR_TYPE","4","FISHING_GEAR_MOBILITY","1","FISHING_TYPE","3"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "GNC", "Encircling gillnets", Arrays.asList("FISHING_GEAR_TYPE","4","FISHING_GEAR_MOBILITY","1","FISHING_TYPE","3"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "GTR", "Trammel nets", Arrays.asList("FISHING_GEAR_TYPE","4","FISHING_GEAR_MOBILITY","1","FISHING_TYPE","3"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "GTN", "Combined trammel and gillnets", Arrays.asList("FISHING_GEAR_TYPE","4","FISHING_GEAR_MOBILITY","1","FISHING_TYPE","3"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "FPO", "Pots (traps)", Arrays.asList("FISHING_GEAR_TYPE","5","FISHING_GEAR_MOBILITY","1","FISHING_TYPE","2"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "LHP", "Hand lines and pole lines (hand operated)", Arrays.asList("FISHING_GEAR_TYPE","6","FISHING_GEAR_MOBILITY","1","FISHING_TYPE","3"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "LHM", "Hand lines and pole lines (mechanised)", Arrays.asList("FISHING_GEAR_TYPE","6","FISHING_GEAR_MOBILITY","1","FISHING_TYPE","3"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "LLS", "Set longlines", Arrays.asList("FISHING_GEAR_TYPE","6","FISHING_GEAR_MOBILITY","1","FISHING_TYPE","2"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "LLD", "Longlines (drifting)", Arrays.asList("FISHING_GEAR_TYPE","6","FISHING_GEAR_MOBILITY","1","FISHING_TYPE","1"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "LTL", "Troll lines", Arrays.asList("FISHING_GEAR_TYPE","6","FISHING_GEAR_MOBILITY","3","FISHING_TYPE","1"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "NK", "Unknown", Arrays.asList("FISHING_GEAR_TYPE","7","FISHING_GEAR_MOBILITY","4","FISHING_TYPE","4"));
-        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "NO", "No gear", Arrays.asList("FISHING_GEAR_TYPE","8","FISHING_GEAR_MOBILITY","4","FISHING_TYPE","4"));
-
-    }
 
 
 
@@ -294,36 +237,113 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V98", "");
         createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "V99", "");
         createdJson = createACustomCodeHelperNoDateLimit("ACTIVITY_CODE", "X1", "");
+
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_TYPE", "P", "Pelagic");
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_TYPE", "D", "Demersal");
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_TYPE", "DP", "Demersal and pelagic");
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_TYPE", "U", "Unknown");
+
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_TYPE", "Trawl", "Trawl");
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_TYPE", "Scrapingtool", "Scrapingtool");
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_TYPE", "Lift nets", "Lift nets");
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_TYPE", "Gillnets and similar nets", "Gillnets and similar nets");
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_TYPE", "Trap", "Fishing trap");
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_TYPE", "Hooks and lines", "Hooks and lines");
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_TYPE", "Unknown", "Unknown fishing tool");
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_TYPE", "None", "No fishing tool");
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_TYPE", "Surrounding nets", "Surrounding nets");
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_TYPE", "Seines", "Seines");
+
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_MOBILITY", "S", "Stationary");
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_MOBILITY", "T", "Towed");
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_MOBILITY", "M", "Mobil");
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR_MOBILITY", "U", "Unknown");
+
+
+        // @formatter:off
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "PS", "Purse seines",                                  Arrays.asList("FISHING_GEAR_TYPE","Surrounding nets"         ,"FISHING_GEAR_MOBILITY","M","FISHING_TYPE","P"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "LA", "Lampara nets",                                  Arrays.asList("FISHING_GEAR_TYPE","Surrounding nets"         ,"FISHING_GEAR_MOBILITY","M","FISHING_TYPE","P"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "SB", "Beach seines",                                  Arrays.asList("FISHING_GEAR_TYPE","Seines"                   ,"FISHING_GEAR_MOBILITY","T","FISHING_TYPE","DP"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "SDN", "Danish seines",                                Arrays.asList("FISHING_GEAR_TYPE","Seines"                   ,"FISHING_GEAR_MOBILITY","T","FISHING_TYPE","DP"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "SSC", "Scottish seines",                              Arrays.asList("FISHING_GEAR_TYPE","Seines"                   ,"FISHING_GEAR_MOBILITY","T","FISHING_TYPE","DP"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "SPR", "Pair seines",                                  Arrays.asList("FISHING_GEAR_TYPE","Seines"                   ,"FISHING_GEAR_MOBILITY","T","FISHING_TYPE","DP"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "TBB", "Beam trawls",                                  Arrays.asList("FISHING_GEAR_TYPE","Trawl"                    ,"FISHING_GEAR_MOBILITY","T","FISHING_TYPE","D"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "OTB", "Bottom otter trawls",                          Arrays.asList("FISHING_GEAR_TYPE","Trawl"                    ,"FISHING_GEAR_MOBILITY","T","FISHING_TYPE","D"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "PTB", "Bottom pair trawls",                           Arrays.asList("FISHING_GEAR_TYPE","Trawl"                    ,"FISHING_GEAR_MOBILITY","T","FISHING_TYPE","DP"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "OTM", "Midwater otter trawls",                        Arrays.asList("FISHING_GEAR_TYPE","Trawl"                    ,"FISHING_GEAR_MOBILITY","T","FISHING_TYPE","DP"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "PTM", "Pelagic pair trawls",                          Arrays.asList("FISHING_GEAR_TYPE","Trawl"                    ,"FISHING_GEAR_MOBILITY","T","FISHING_TYPE","DP"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "OTT", "Otter twin trawls",                            Arrays.asList("FISHING_GEAR_TYPE","Trawl"                    ,"FISHING_GEAR_MOBILITY","T","FISHING_TYPE","DP"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "DRB", "Boat dredges",                                 Arrays.asList("FISHING_GEAR_TYPE","Scrapingtool"             ,"FISHING_GEAR_MOBILITY","T","FISHING_TYPE","D"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "DRH", "Hand dredges used on board a vessel",          Arrays.asList("FISHING_GEAR_TYPE","Scrapingtool"             ,"FISHING_GEAR_MOBILITY","T","FISHING_TYPE","D"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "HMD", "Mechanised dredges including suction dredges", Arrays.asList("FISHING_GEAR_TYPE","Scrapingtool"             ,"FISHING_GEAR_MOBILITY","T","FISHING_TYPE","D"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "LNB", "Boat operated lift nets",                      Arrays.asList("FISHING_GEAR_TYPE","Lift nets"                ,"FISHING_GEAR_MOBILITY","M","FISHING_TYPE","P"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "LNS", "Shore-operated stationary lift nets",          Arrays.asList("FISHING_GEAR_TYPE","Lift nets"                ,"FISHING_GEAR_MOBILITY","M","FISHING_TYPE","P"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "GNS", "Set (anchored) gillnets",                      Arrays.asList("FISHING_GEAR_TYPE","Gillnets and similar nets","FISHING_GEAR_MOBILITY","S","FISHING_TYPE","D"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "GND", "Driftnets",                                    Arrays.asList("FISHING_GEAR_TYPE","Gillnets and similar nets","FISHING_GEAR_MOBILITY","S","FISHING_TYPE","DP"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "GNC", "Encircling gillnets",                          Arrays.asList("FISHING_GEAR_TYPE","Gillnets and similar nets","FISHING_GEAR_MOBILITY","S","FISHING_TYPE","DP"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "GTR", "Trammel nets",                                 Arrays.asList("FISHING_GEAR_TYPE","Gillnets and similar nets","FISHING_GEAR_MOBILITY","S","FISHING_TYPE","DP"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "GTN", "Combined trammel and gillnets",                Arrays.asList("FISHING_GEAR_TYPE","Gillnets and similar nets","FISHING_GEAR_MOBILITY","S","FISHING_TYPE","DP"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "FPO", "Pots (traps)",                                 Arrays.asList("FISHING_GEAR_TYPE","Trap"                     ,"FISHING_GEAR_MOBILITY","S","FISHING_TYPE","D"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "LHP", "Hand lines and pole lines (hand operated)",    Arrays.asList("FISHING_GEAR_TYPE","Hooks and lines"          ,"FISHING_GEAR_MOBILITY","S","FISHING_TYPE","DP"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "LHM", "Hand lines and pole lines (mechanised)",       Arrays.asList("FISHING_GEAR_TYPE","Hooks and lines"          ,"FISHING_GEAR_MOBILITY","S","FISHING_TYPE","DP"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "LLS", "Set longlines",                                Arrays.asList("FISHING_GEAR_TYPE","Hooks and lines"          ,"FISHING_GEAR_MOBILITY","S","FISHING_TYPE","D"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "LLD", "Longlines (drifting)",                         Arrays.asList("FISHING_GEAR_TYPE","Hooks and lines"          ,"FISHING_GEAR_MOBILITY","S","FISHING_TYPE","P"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "LTL", "Troll lines",                                  Arrays.asList("FISHING_GEAR_TYPE","Hooks and lines"          ,"FISHING_GEAR_MOBILITY","M","FISHING_TYPE","P"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "NK", "Unknown",                                       Arrays.asList("FISHING_GEAR_TYPE","Unknown"                  ,"FISHING_GEAR_MOBILITY","U","FISHING_TYPE","U"));
+        createdJson = createACustomCodeHelperNoDateLimit("FISHING_GEAR", "NO", "No gear",                                       Arrays.asList("FISHING_GEAR_TYPE","None"                     ,"FISHING_GEAR_MOBILITY","U","FISHING_TYPE","U"));
+// @formatter:on
+
+
+
+
     }
 
-    private  String createACustomCodeHelperNoDateLimit(String constant, String code, String descr, List<String> references) {
+    private String createACustomCodeHelperNoDateLimit(String constant, String code, String descr, List<String> references) throws JsonProcessingException {
 
         CustomCodesPK primaryKey = new CustomCodesPK(constant, code);
         CustomCode customCode = new CustomCode();
         customCode.setPrimaryKey(primaryKey);
-        if(descr.length() < 1){
+        if (descr.length() < 1) {
             customCode.setDescription(code);
-        }else {
+        } else {
             customCode.setDescription(descr);
         }
+
+        Map<String,String> nvp = new HashMap<>();
+
+        //  0 2 4 6 n = keys   1 3 5 7 m = values
+        int n = references.size();
+        int i = 0;
+        while(i < n){
+            nvp.put(references.get(i),references.get(i + 1));
+            i = i + 2;
+        }
+
+        customCode.setNameValue(nvp);
+
 
         // TODO add code for Map<String,String >   property in CustomCode
         // AND a rest endpoint
 
-        // not implemented yet  only if we need it
+        String json = MAPPER.writeValueAsString(customCode);
+        System.out.println(json);
+
+        String created = getWebTarget()
+                .path("customcodes")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(json), String.class);
 
         return "";
     }
 
 
-
-    private String createACustomCodeHelperNoDateLimit(String constant,String code, String descr) {
+    private String createACustomCodeHelperNoDateLimit(String constant, String code, String descr) {
         CustomCodesPK primaryKey = new CustomCodesPK(constant, code);
         CustomCode customCode = new CustomCode();
         customCode.setPrimaryKey(primaryKey);
-        if(descr.length() < 1){
+        if (descr.length() < 1) {
             customCode.setDescription(code);
-        }else {
+        } else {
             customCode.setDescription(descr);
         }
         String created = getWebTarget()
@@ -332,8 +352,6 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .post(Entity.json(customCode), String.class);
         return created;
     }
-
-
 
 
     @Test
@@ -405,7 +423,6 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .delete(String.class);
 
 
-
         exists = getWebTarget()
                 .path("customcodes")
                 .path("exists")
@@ -439,7 +456,6 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         customCode.setDescription(descr);
 
 
-
         String created = getWebTarget()
                 .path("customcodes")
                 .request(MediaType.APPLICATION_JSON)
@@ -456,10 +472,10 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         to = from.plusDays(5);
 
 
-        for(int i = 0 ; i < 5 ; i++) {
+        for (int i = 0; i < 5; i++) {
 
             String constant = "CST____" + txt;
-            String code = "CODE___" + String.valueOf(i) + "_"+txt;
+            String code = "CODE___" + String.valueOf(i) + "_" + txt;
             String descr = "DESCR__" + txt;
 
             CustomCodesPK primaryKey = new CustomCodesPK(constant, code, from, to);
@@ -476,8 +492,6 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
     }
 
 
-
-
     @Test
     @RunAsClient
     public void verifyCustomCodeInDateRangePositive() throws IOException {
@@ -488,13 +502,13 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
 
-        LocalDateTime  date  = customCodesPk.getValidFromDate();
+        LocalDateTime date = customCodesPk.getValidFromDate();
 
-        LocalDateTime  dateWithinRange = date.plusDays(1);
+        LocalDateTime dateWithinRange = date.plusDays(1);
 
         String dateToTest = dateWithinRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
-        String  json = getWebTarget()
+        String json = getWebTarget()
                 .path("customcodes")
                 .path("getfordate")
                 .path(customCodesPk.getConstant())
@@ -503,7 +517,8 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .get(String.class);
         // record existed alles ok
-        TypeReference typeref = new TypeReference<List<CustomCode>>() {};
+        TypeReference typeref = new TypeReference<List<CustomCode>>() {
+        };
         List<CustomCode> codes = MAPPER.readValue(json, typeref);
 
         Assert.assertTrue(codes != null);
@@ -521,9 +536,9 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
 
-        LocalDateTime  date  = customCodesPk.getValidFromDate();
+        LocalDateTime date = customCodesPk.getValidFromDate();
 
-        LocalDateTime  dateWithoutRange = date.minusDays(2);
+        LocalDateTime dateWithoutRange = date.minusDays(2);
 
         String dateToTest = dateWithoutRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
@@ -537,7 +552,8 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .get(String.class);
 
         // record existed NOT as expected alles ok
-        TypeReference typeref = new TypeReference<List<CustomCode>>() {};
+        TypeReference typeref = new TypeReference<List<CustomCode>>() {
+        };
         List<CustomCode> codes = MAPPER.readValue(json, typeref);
         Assert.assertTrue(codes != null);
         Assert.assertTrue(codes.size() == 0);
@@ -556,9 +572,9 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
 
-        LocalDateTime  date  = customCodesPk.getValidFromDate();
+        LocalDateTime date = customCodesPk.getValidFromDate();
 
-        LocalDateTime  dateWithinRange = date.plusDays(1);
+        LocalDateTime dateWithinRange = date.plusDays(1);
 
         String dateToTest = dateWithinRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
@@ -585,9 +601,9 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
 
-        LocalDateTime  date  = customCodesPk.getValidFromDate();
+        LocalDateTime date = customCodesPk.getValidFromDate();
 
-        LocalDateTime  dateWithoutRange = date.minusDays(2);
+        LocalDateTime dateWithoutRange = date.minusDays(2);
 
         String dateToTest = dateWithoutRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
@@ -612,9 +628,9 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         String createdJson = createACustomCodeHelper(txt);
         CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
-        LocalDateTime  date  = customCodesPk.getValidFromDate();
+        LocalDateTime date = customCodesPk.getValidFromDate();
 
-        LocalDateTime  dateWithinRange = date.plusDays(2);
+        LocalDateTime dateWithinRange = date.plusDays(2);
 
         String dateWithin = dateWithinRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
@@ -627,18 +643,14 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .get(String.class);
 
-        TypeReference typeref = new TypeReference<List<CustomCode>>() {};
+        TypeReference typeref = new TypeReference<List<CustomCode>>() {
+        };
         List<CustomCode> codes = MAPPER.readValue(json, typeref);
         Assert.assertTrue(codes != null);
         Assert.assertTrue(codes.size() > 0);
 
 
     }
-
-
-
-
-
 
 
 }
