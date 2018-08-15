@@ -85,6 +85,18 @@ public class SearchMapper {
         return builder.toString();
     }*/
 
+
+          /*possible way to solve the Attribute problem using sql instead of creating a new table:
+          select
+                CASE
+                        WHEN length(attributes) - length(regexp_replace(attributes,';','','g')) / length(';') = 1 THEN REPLACE(SUBSTRING(attributes from position('serialNumber=' in attributes)+13 for 60),';','')
+                        WHEN length(attributes) - length(regexp_replace(attributes,';','','g')) / length(';') > 1 THEN REPLACE(SUBSTRING(split_part(attributes, ';',length(LEFT(attributes,position('serialNumber=' in attributes))) - (length(regexp_replace(LEFT(attributes,position('serialNumber=' in attributes)),';','','g'))-1) / length(';')) from position('serialNumber=' in split_part(attributes, ';',length(LEFT(attributes,position('serialNumber=' in attributes))) - (length(regexp_replace(LEFT(attributes,position('serialNumber=' in attributes)),';','','g'))-1) / length(';')))+13 for 60),';','')
+
+
+                END
+
+          FROM mobterm.mobileterminalevent
+           */
     public static String createSelectSearchSql(List<ListCriteria> criteriaList, boolean isDynamic) {
         StringBuilder builder = new StringBuilder();
 
