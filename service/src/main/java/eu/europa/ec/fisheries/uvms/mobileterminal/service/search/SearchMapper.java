@@ -105,13 +105,10 @@ public class SearchMapper {
                 .append(" INNER JOIN FETCH mt.mobileTerminalEvents me")
                 .append(" LEFT JOIN FETCH mt.channels c")
                 .append(" LEFT JOIN FETCH me.mobileTerminalAttributes mta")
-                //.append(" LEFT JOIN FETCH c.histories ch")    //TODO: Add proper look into the audited part of teh db when that is finished
                 .append(" WHERE ( ")
                 .append("me.active = true ")
                 .append("AND ")
                 .append("mt.archived = false ")
-                //.append("AND ")
-                //.append("ch.active = true ")
                 .append("AND ")
                 .append("c.archived = false ")
                 .append(" ) ");
@@ -134,17 +131,23 @@ public class SearchMapper {
                 } else {
                     if (MobileTerminalSearchAttributes.isAttribute(key)) {
                         builder.append(" ( mta.attribute LIKE ")
-                                .append("'%").append(key).append("%'")
+                                .append("'").append(key).append("'")
                                 .append(" AND ")
                                 .append(" mta.value LIKE ")
                                 .append("'%")
                                 .append(criteria.getValue().replace('*', '%')).append("%' ) ");
                     } else if (ChannelSearchAttributes.isAttribute(key)) {
-                        /*builder.append(" ( ch.attributes LIKE ")        //this does not work as channel history does not exist
-                                .append("'%").append(key).append("=")
-                                .append(criteria.getValue().replace('*', '%')).append(";%' ) ");*/
+                        if(ChannelSearchAttributes.DNID.name().equals(key)) {
+                            builder.append(" ( c.DNID LIKE ")
+                                    .append("'%")
+                                    .append(criteria.getValue().replace('*', '%')).append("%' ) ");
+                        }else if(ChannelSearchAttributes.MEMBER_NUMBER.name().equals(key)){
+                            builder.append(" ( c.memberNumber LIKE ")
+                                    .append("'%")
+                                    .append(criteria.getValue().replace('*', '%')).append("%' ) ");
+                        }
                     } else {
-                        /*builder.append(" ( ch.attributes LIKE ")        //this does not work as channel history does not exist
+                        /*builder.append(" ( ch.attributes LIKE ")
                                 .append("'%").append(key).append("=")
                                 .append(criteria.getValue().replace('*', '%')).append(";%' ");
                         builder.append(" OR ");*/

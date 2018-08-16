@@ -13,6 +13,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalM
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -66,8 +67,6 @@ public class TestPollHelper {
 
         String serialNo = UUID.randomUUID().toString();
 
-        Channel channel = new Channel();
-        channel.setArchived(false);
 
         List<MobileTerminalPlugin> plugs = mobileTerminalPluginDao.getPluginList();
         MobileTerminalPlugin mtp = plugs.get(0);
@@ -108,12 +107,30 @@ public class TestPollHelper {
         Channel pollChannel = new Channel();
         pollChannel.setArchived(false);
         pollChannel.setMobileTerminal(mt);
+        pollChannel.setInstalledBy("Mike the not so Great");
+        pollChannel.setDNID("5555");
+        pollChannel.setMemberNumber("666");
+        pollChannel.setLesDescription("Thrane&Thrane");
+        pollChannel.setExpectedFrequency(Duration.ofSeconds(60));
+        pollChannel.setFrequencyGracePeriod(Duration.ofSeconds(60));
+        pollChannel.setExpectedFrequencyInPort(Duration.ofSeconds(60));
 
         mte.setPollChannel(pollChannel);
         mobileTerminalEvents.add(mte);
         mt.getMobileTerminalEvents().addAll(mobileTerminalEvents);
 
+
+        Channel channel = new Channel();
+        channel.setArchived(false);
         channel.setMobileTerminal(mt);
+        channel.setInstalledBy("Mike the not so Great");
+        channel.setDNID("555");
+        channel.setMemberNumber("666");
+        channel.setLesDescription("Thrane&Thrane");
+        channel.setExpectedFrequency(Duration.ofSeconds(60));
+        channel.setFrequencyGracePeriod(Duration.ofSeconds(60));
+        channel.setExpectedFrequencyInPort(Duration.ofSeconds(60));
+
 
         Set<Channel> channels = new HashSet<>();
         channels.add(channel);

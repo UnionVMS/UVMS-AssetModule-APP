@@ -22,6 +22,8 @@ import org.slf4j.LoggerFactory;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -35,18 +37,17 @@ public class MobileTerminalPollTimerServiceBean {
     private PollServiceBean pollService;
 
     public void timerTimeout() {
-        Date now = DateUtils.getUTCNow();
-        LOG.debug("PollProgram collected from DB at " + now.toString());
+        LOG.debug("PollProgram collected from DB at " + OffsetDateTime.now().format(DateTimeFormatter.ofPattern(DateUtils.DATE_TIME_FORMAT)));
         try {
             List<PollResponseType> pollPrograms = pollService.timer();
 
             for (PollResponseType pollProgram : pollPrograms) {
                 String guid = pollProgram.getPollId().getGuid();
-                Date endDate = DateUtils.parseToUTCDateTime(MobileTerminalGenericMapper.getPollAttributeTypeValue(
+                OffsetDateTime endDate = DateUtils.parseStringToOffsetDateTime(MobileTerminalGenericMapper.getPollAttributeTypeValue(
                         pollProgram.getAttributes(), PollAttributeType.END_DATE));
 
                 // If the program has expired, archive it
-                if (now.getTime() > endDate.getTime()) {
+                if (OffsetDateTime.now().isAfter(endDate)) {
                     pollService.inactivateProgramPoll(guid, "MobileTerminalPollTimer");
                     LOG.info("Poll program {} has expired. Status set to ARCHIVED.", guid);
                 } else {

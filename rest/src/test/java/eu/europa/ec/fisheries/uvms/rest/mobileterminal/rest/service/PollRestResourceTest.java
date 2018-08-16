@@ -30,6 +30,8 @@ import javax.json.JsonReader;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import java.io.StringReader;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 
@@ -408,12 +410,12 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         pollAttribute = new PollAttribute();
         pollAttribute.setKey(PollAttributeType.START_DATE);
-        pollAttribute.setValue(DateUtils.parseUTCDateTimeToString(new Date(System.currentTimeMillis())));
+        pollAttribute.setValue(DateUtils.parseOffsetDateTimeToString(OffsetDateTime.now(ZoneId.of("UTC"))));
         pollRequestType.getAttributes().add(pollAttribute);
 
         pollAttribute = new PollAttribute();
         pollAttribute.setKey(PollAttributeType.END_DATE);
-        pollAttribute.setValue(DateUtils.parseUTCDateTimeToString(new Date(System.currentTimeMillis() + 24*60*60*1000 )));
+        pollAttribute.setValue(DateUtils.parseOffsetDateTimeToString(OffsetDateTime.now(ZoneId.of("UTC")).plusDays(1))); //one day later
         pollRequestType.getAttributes().add(pollAttribute);
 
         return pollRequestType;

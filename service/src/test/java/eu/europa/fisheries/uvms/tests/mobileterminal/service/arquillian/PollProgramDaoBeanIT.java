@@ -280,7 +280,7 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void getPollProgramRunningAndStarted_ShouldFailWhenLatestRunBiggerThenNow() {
 
-        Date now = DateUtils.getUTCNow();
+        Date now = new Date();
         cal.setTime(now);
 
         // we want to be able to tamper with the dates for proper test coverage
