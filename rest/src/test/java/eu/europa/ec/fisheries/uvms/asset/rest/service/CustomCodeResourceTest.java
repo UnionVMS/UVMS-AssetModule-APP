@@ -327,7 +327,6 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         // AND a rest endpoint
 
         String json = MAPPER.writeValueAsString(customCode);
-        System.out.println(json);
 
         String created = getWebTarget()
                 .path("customcodes")
