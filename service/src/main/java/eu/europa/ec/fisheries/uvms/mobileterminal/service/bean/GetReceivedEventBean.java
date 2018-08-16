@@ -46,7 +46,11 @@ public class GetReceivedEventBean {
     Event<EventMessage> errorEvent;
 
     public void get(EventMessage message) {
-
+        try {
+            LOG.info("Received message to MobileTerminal in Asset_SE. Message id: " + message.getJmsMessage().getJMSMessageID());
+        } catch (JMSException e) {
+            LOG.warn("Error while getting JMS message ID: " + e.getMessage());
+        }
 
 
         try {
@@ -63,6 +67,7 @@ public class GetReceivedEventBean {
             }
 
         } catch ( JMSException | AssetException e) {
+            LOG.error("Exception when trying to get a MobileTerminal: " + e.getMessage());
             errorEvent.fire(new EventMessage(message.getJmsMessage(), "Exception when trying to get a MobileTerminal: " + e.getMessage()));
             // Propagate error
             throw new EJBException(e);
@@ -79,11 +84,13 @@ public class GetReceivedEventBean {
         try {
             request = JAXBMarshaller.unmarshallTextMessage(message.getJmsMessage(), GetMobileTerminalRequest.class);
         } catch (AssetException ex) {
+            LOG.error("Error when mapping message: " + ex.getMessage());
             errorEvent.fire(new EventMessage(message.getJmsMessage(), "Error when mapping message: " + ex.getMessage()));
         }
         try {
             dataSource = decideDataflow();
         } catch (Exception ex) {
+            LOG.error("Exception when deciding Dataflow for : " + dataSource.name() + " Error message: " + ex.getMessage());
             errorEvent.fire(new EventMessage(message.getJmsMessage(), "Exception when deciding Dataflow for : " + dataSource.name() + " Error message: " + ex.getMessage()));
         }
         try {
@@ -101,6 +108,7 @@ public class GetReceivedEventBean {
                 request = JAXBMarshaller.unmarshallTextMessage(message.getJmsMessage(), GetMobileTerminalRequest.class);
                 mobTerm = service.getMobileTerminalByIdFromInternalOrExternalSource(request.getId(), DataSourceQueue.INTERNAL);
             } catch (AssetException ex) {
+                LOG.error("Exception when getting vessel from source : " + dataSource.name() + " Error message: " + ex.getMessage());
                 errorEvent.fire(new EventMessage(message.getJmsMessage(), "Exception when getting vessel from source : " + dataSource.name() + " Error message: " + ex.getMessage()));
             }
         }
