@@ -137,11 +137,11 @@ public class SearchMapper {
                                 .append("'%")
                                 .append(criteria.getValue().replace('*', '%')).append("%' ) ");
                     } else if (ChannelSearchAttributes.isAttribute(key)) {
-                        if(ChannelSearchAttributes.DNID.equals(key)) {
-                            builder.append(" ( c.dnid LIKE ")
+                        if(ChannelSearchAttributes.DNID.name().equals(key)) {
+                            builder.append(" ( c.DNID LIKE ")
                                     .append("'%")
                                     .append(criteria.getValue().replace('*', '%')).append("%' ) ");
-                        }else if(ChannelSearchAttributes.MEMBER_NUMBER.equals(key)){
+                        }else if(ChannelSearchAttributes.MEMBER_NUMBER.name().equals(key)){
                             builder.append(" ( c.memberNumber LIKE ")
                                     .append("'%")
                                     .append(criteria.getValue().replace('*', '%')).append("%' ) ");

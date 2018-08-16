@@ -51,6 +51,9 @@ public class DateUtils {
         }
     }
     public static String parseOffsetDateTimeToString(OffsetDateTime dateTime){
+        if(dateTime == null){
+            return null;
+        }
         return dateTime.format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT));
     }
 

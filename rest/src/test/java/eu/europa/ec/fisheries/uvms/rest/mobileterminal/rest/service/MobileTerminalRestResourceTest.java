@@ -298,6 +298,113 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    public void getMobileTerminalListWithDNIDTest() {
+        MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        String created = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminal), String.class);
+
+        JsonReader jsonReader = Json.createReader(new StringReader(created));
+        JsonObject jsonObject = jsonReader.readObject();
+
+        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
+
+        MobileTerminalListQuery mobileTerminalListQuery = MobileTerminalTestHelper.createMobileTerminalListQuery();
+        mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setKey(SearchKey.DNID);
+        mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setValue(mobileTerminal.getChannels().get(0).getAttributes().get(5).getValue());
+
+        String response = getWebTarget()
+                .path("/mobileterminal/list")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminalListQuery), String.class);
+
+        assertNotNull(response);
+        jsonReader = Json.createReader(new StringReader(response));
+        jsonObject = jsonReader.readObject();
+
+        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
+
+        assertTrue(response.contains(MobileTerminalTestHelper.getSerialNumber()));
+        assertTrue(response.contains("INMARSAT_C"));
+        assertTrue(response.contains(MobileTerminalSource.INTERNAL.value()));
+    }
+
+    @Test
+    public void getMobileTerminalListWithMemberNumberTest() {
+        MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        String created = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminal), String.class);
+
+        JsonReader jsonReader = Json.createReader(new StringReader(created));
+        JsonObject jsonObject = jsonReader.readObject();
+
+        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
+
+        MobileTerminalListQuery mobileTerminalListQuery = MobileTerminalTestHelper.createMobileTerminalListQuery();
+        mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setKey(SearchKey.MEMBER_NUMBER);
+        mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setValue(mobileTerminal.getChannels().get(0).getAttributes().get(1).getValue());
+
+        String response = getWebTarget()
+                .path("/mobileterminal/list")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminalListQuery), String.class);
+
+        assertNotNull(response);
+        jsonReader = Json.createReader(new StringReader(response));
+        jsonObject = jsonReader.readObject();
+
+        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
+
+        assertTrue(response.contains(MobileTerminalTestHelper.getSerialNumber()));
+        assertTrue(response.contains("INMARSAT_C"));
+        assertTrue(response.contains(MobileTerminalSource.INTERNAL.value()));
+    }
+
+    @Test
+    public void getMobileTerminalListWithSatelliteAndDNIDTest() {
+        MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        String created = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminal), String.class);
+
+        JsonReader jsonReader = Json.createReader(new StringReader(created));
+        JsonObject jsonObject = jsonReader.readObject();
+
+        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
+
+        //one thing from channel and one from MobileTerminalEvents
+        MobileTerminalListQuery mobileTerminalListQuery = MobileTerminalTestHelper.createMobileTerminalListQuery();
+        mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setKey(SearchKey.DNID);
+        mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setValue(mobileTerminal.getChannels().get(0).getAttributes().get(5).getValue());
+        ListCriteria criteria = new ListCriteria();
+        criteria.setKey(SearchKey.SATELLITE_NUMBER);
+        criteria.setValue(mobileTerminal.getAttributes().get(1).getValue());
+        mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().add(criteria);
+
+        String response = getWebTarget()
+                .path("/mobileterminal/list")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminalListQuery), String.class);
+
+        assertNotNull(response);
+        jsonReader = Json.createReader(new StringReader(response));
+        jsonObject = jsonReader.readObject();
+
+        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
+
+        assertTrue(response.contains(MobileTerminalTestHelper.getSerialNumber()));
+        assertTrue(response.contains("INMARSAT_C"));
+        assertTrue(response.contains(MobileTerminalSource.INTERNAL.value()));
+    }
+
+    @Test
     public void assignMobileTerminalTest() {
 
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();

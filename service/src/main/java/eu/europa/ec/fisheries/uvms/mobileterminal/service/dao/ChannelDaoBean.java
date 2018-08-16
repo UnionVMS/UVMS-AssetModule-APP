@@ -53,7 +53,7 @@ public class ChannelDaoBean  {
     }
 
     private String getSQLActiveDNID(String pluginName) {
-        return "SELECT DISTINCT c.dnid FROM Channel c " +
+        return "SELECT DISTINCT c.DNID FROM Channel c " +
                 "INNER JOIN c.mobileTerminal mobTerm " + //Mobileterminal
                 "INNER JOIN mobTerm.plugin p " +
                 "WHERE c.active = '1' " +

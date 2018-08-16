@@ -6,9 +6,6 @@
     <changeSet author="thofan (generated)" id="1534342705230-2">
         <createSequence sequenceName="hibernate_sequence"/>
     </changeSet>
-	<changeSet author="thofan (generated)" id="1534254082788-2">
-        <createSequence sequenceName="hibernate_sequence"/>
-    </changeSet>
 	   <changeSet author="thofan (generated)" id="1530775362228-20">
         <createTable remarks="OceanRegion codes valid for InmarsatC" tableName="oceanregion">
             <column name="id" type="UUID">

@@ -92,7 +92,7 @@ public class Channel implements Serializable {
 
 	// ???????? kanske
 	@Fetch(FetchMode.JOIN)
-	@ManyToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "mobterm_event_id")
 	private MobileTerminalEvent mobileTerminalEvent;
 

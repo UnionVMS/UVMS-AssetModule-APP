@@ -89,8 +89,6 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
         String connectId = UUID.randomUUID().toString();
         MobileTerminal createdMobileTerminal = testPollHelper.createAndPersistMobileTerminal(connectId);
         createdMobileTerminalId = createdMobileTerminal.getId();
-        MobileTerminalId mobileTerminalId = new MobileTerminalId();
-        mobileTerminalId.setGuid(createdMobileTerminalId.toString());
 
         MobileTerminal fetchedMobileTerminal = mobileTerminalService.getMobileTerminalEntityById(createdMobileTerminalId);
         assertNotNull(fetchedMobileTerminal);
