@@ -13,6 +13,11 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ErrorEvent;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.EventMessage;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.MobileTerminalModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.ParameterKey;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalModelToEntityMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +50,9 @@ public class GetReceivedEventBean {
     @ErrorEvent
     Event<EventMessage> errorEvent;
 
+    @Inject
+    MobileTerminalPluginDaoBean pluginDao;
+
     public void get(EventMessage message) {
         try {
             LOG.info("Received message to MobileTerminal in Asset_SE. Message id: " + message.getJmsMessage().getJMSMessageID());
@@ -76,29 +84,39 @@ public class GetReceivedEventBean {
     }
 
     // TODO: Go through this logic and error handling
-    private MobileTerminalType getMobileTerminal(EventMessage message) {
+    public MobileTerminalType getMobileTerminal(EventMessage message) {
 
         GetMobileTerminalRequest request = null;
         MobileTerminalType mobTerm = null;
-        DataSourceQueue dataSource = null;
+        //DataSourceQueue dataSource = null;
+        DataSourceQueue dataSource = DataSourceQueue.INTERNAL;
         try {
             request = JAXBMarshaller.unmarshallTextMessage(message.getJmsMessage(), GetMobileTerminalRequest.class);
         } catch (AssetException ex) {
             LOG.error("Error when mapping message: " + ex.getMessage());
             errorEvent.fire(new EventMessage(message.getJmsMessage(), "Error when mapping message: " + ex.getMessage()));
         }
-        try {
+        /*try {
             dataSource = decideDataflow();
         } catch (Exception ex) {
             LOG.error("Exception when deciding Dataflow for : " + dataSource.name() + " Error message: " + ex.getMessage());
             errorEvent.fire(new EventMessage(message.getJmsMessage(), "Exception when deciding Dataflow for : " + dataSource.name() + " Error message: " + ex.getMessage()));
-        }
+        }*/
         try {
             LOG.debug("Got message to MobileTerminalModule, Executing Get MobileTerminal from datasource {}", dataSource.name());
             mobTerm = service.getMobileTerminalByIdFromInternalOrExternalSource(request.getId(), dataSource);
-            if (!dataSource.equals(DataSourceQueue.INTERNAL)) {
-                service.upsertMobileTerminal(mobTerm, MobileTerminalSource.NATIONAL, dataSource.name());
-            }
+            /*if (!dataSource.equals(DataSourceQueue.INTERNAL)) {
+
+                MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(mobTerm.getPlugin().getServiceName());
+                if(plugin == null){
+                    plugin = pluginDao.initAndGetPlugin(mobTerm.getPlugin().getServiceName());
+                }
+                MobileTerminal mobileTerminalEntity = MobileTerminalModelToEntityMapper.mapMobileTerminalEntity(service.getMobileTerminalEntityById(mobTerm.getMobileTerminalId()),
+                        mobTerm, service.assertTerminalHasSerialNumber(mobTerm), plugin,
+                        dataSource.name(), "Upserted by external module", EventCodeEnum.MODIFY);
+
+                service.upsertMobileTerminal(mobileTerminalEntity, MobileTerminalSource.NATIONAL, dataSource.name());
+            }*/
         } catch (AssetException ex) {
             mobTerm = null;
         }

@@ -109,16 +109,16 @@ public class MobileTerminalServiceBean {
     }
 
 
-    public MobileTerminalType upsertMobileTerminal(MobileTerminalType data, MobileTerminalSource source, String username) {
+    public MobileTerminal upsertMobileTerminal(MobileTerminal data, MobileTerminalSource source, String username) {
         if (data == null) {
             throw new NullPointerException("No Mobile terminal to update [ NULL ]");
         }
         data.setSource(source);
-        MobileTerminalType terminalUpserted = upsertMobileTerminal(data, username);
+        MobileTerminal terminalUpserted = upsertMobileTerminal(data, username);
         
-        boolean dnidUpdated = configModel.checkDNIDListChange(terminalUpserted.getPlugin().getServiceName());
+        boolean dnidUpdated = configModel.checkDNIDListChange(terminalUpserted.getPlugin().getPluginServiceName());
         if(dnidUpdated) {
-        	pluginService.processUpdatedDNIDList(data.getPlugin().getServiceName());
+        	pluginService.processUpdatedDNIDList(data.getPlugin().getPluginServiceName());
         }
         
         return terminalUpserted;
@@ -482,40 +482,30 @@ public class MobileTerminalServiceBean {
         throw new IllegalArgumentException("Terminal " + mobTermId + " is not linked to an asset with guid " + connectId);
     }
 
-    public MobileTerminalType upsertMobileTerminal(MobileTerminalType mobileTerminalType, String username) {
+    public MobileTerminal upsertMobileTerminal(MobileTerminal mobileTerminal, String username) {
 
-        if (mobileTerminalType == null) {
+        if (mobileTerminal == null) {
             throw new NullPointerException("RequestQuery is null");
         }
-        if (mobileTerminalType.getMobileTerminalId() == null) {
+        /*if (mobileTerminalType.getMobileTerminalId() == null) {
             throw new NullPointerException("No Mobile terminalId in request");
-        }
+        }*/
 
         try {
 
-            MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(mobileTerminalType.getPlugin().getServiceName());
-            if(plugin == null){
-                plugin = pluginDao.initAndGetPlugin(mobileTerminalType.getPlugin().getServiceName());
-            }
-            MobileTerminal mobileTerminalEntity = MobileTerminalModelToEntityMapper.mapMobileTerminalEntity(getMobileTerminalEntityById(mobileTerminalType.getMobileTerminalId()),
-                    mobileTerminalType, assertTerminalHasSerialNumber(mobileTerminalType), plugin,
-                    username, "Upserted by external module", EventCodeEnum.MODIFY);
-            mobileTerminalEntity = updateMobileTerminal(mobileTerminalEntity, "Upserted by external module", username);
+            MobileTerminal updatedMobileTerminal = updateMobileTerminal(mobileTerminal, "Upserted by external module", username);
 
-            return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminalEntity);
+            return updatedMobileTerminal;
 
         } catch (RuntimeException e) {
             LOG.error("[ Error when upserting mobile terminal: Mobile terminal update failed trying to insert. ] {} {}", e.getMessage(), e.getStackTrace());
             //TODO: Should this swallow an error and just continue on?
         }
-        MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(mobileTerminalType.getPlugin().getServiceName());
-        if(plugin == null){
-            pluginDao.initAndGetPlugin(mobileTerminalType.getPlugin().getServiceName());
-        }
-        MobileTerminal mobileTerminal1Entity = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType, assertTerminalHasSerialNumber(mobileTerminalType), plugin, username);
-        mobileTerminal1Entity = createMobileTerminal(mobileTerminal1Entity, username);
 
-        return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminal1Entity);
+        //MobileTerminal mobileTerminal1Entity = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType, assertTerminalHasSerialNumber(mobileTerminalType), plugin, username);
+        MobileTerminal createdmobileTerminal = createMobileTerminal(mobileTerminal, username);
+
+        return createdmobileTerminal;
     }
 
 
