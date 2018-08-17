@@ -11,7 +11,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTer
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalEntityToModelMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalModelToEntityMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PluginMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PollMapper;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper.TestPollHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
@@ -109,13 +108,33 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void upsertMobileTerminal() throws Exception {
 
-        MobileTerminalType created = createAndPersistMobileTerminalType();
+        MobileTerminal created = createAndPersistMobileTerminal();
         assertNotNull(created);
 
-        MobileTerminalType updated = upsertMobileTerminalType(created);
+        MobileTerminal updated = upsertMobileTerminalEntity(created);
 
         assertNotNull(updated);
-        assertEquals(NEW_MOBILETERMINAL_TYPE, updated.getType());
+        assertEquals(NEW_MOBILETERMINAL_TYPE, updated.getMobileTerminalType().name());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createMobileTerminalByUpsert() throws Exception {
+
+        MobileTerminal created = testPollHelper.createBasicMobileTerminal();
+        MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(created.getPlugin().getPluginServiceName());
+        if(plugin == null){
+            plugin = PluginMapper.mapModelToEntity(testPollHelper.createPluginService());
+        }
+        created.setPlugin(plugin);
+        assertNotNull(created);
+
+        created.setId(null);
+        MobileTerminal updated = upsertMobileTerminalEntity(created);
+
+        assertNotNull(updated);
+        assertNotNull(updated.getId());
+        assertEquals(NEW_MOBILETERMINAL_TYPE, updated.getMobileTerminalType().name());
     }
 
     @Test
@@ -205,11 +224,11 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void upsertMobileTerminal_WillFail_Null_TerminalId() throws Exception {
 
-        MobileTerminalType created = createAndPersistMobileTerminalType();
+        MobileTerminal created = createAndPersistMobileTerminal();
         assertNotNull(created);
-        created.setMobileTerminalId(null);
+        created.setId(null);
         try {
-            upsertMobileTerminalType(created);
+            upsertMobileTerminalEntity(created);
             Assert.fail();
         } catch (Throwable t) {
             Assert.assertTrue(true);
@@ -256,8 +275,14 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
         return mobileTerminalService.updateMobileTerminal(created, TEST_COMMENT, USERNAME);
     }
 
-    private MobileTerminalType upsertMobileTerminalType(MobileTerminalType created) throws Exception{
-        created.setType(NEW_MOBILETERMINAL_TYPE);
+
+    private MobileTerminal upsertMobileTerminalEntity(MobileTerminal created) throws Exception{
+        MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(created.getPlugin().getPluginServiceName());
+        if(plugin == null){
+            plugin = PluginMapper.mapModelToEntity(testPollHelper.createPluginService());
+        }
+        created.setPlugin(plugin);
+        created.setMobileTerminalType(MobileTerminalTypeEnum.getType(NEW_MOBILETERMINAL_TYPE));
         return mobileTerminalService.upsertMobileTerminal(created, MobileTerminalSource.INTERNAL, USERNAME);
     }
 }
