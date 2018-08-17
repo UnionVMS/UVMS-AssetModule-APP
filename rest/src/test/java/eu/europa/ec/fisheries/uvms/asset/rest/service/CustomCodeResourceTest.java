@@ -99,8 +99,9 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
     @RunAsClient
     public void createACustomCode() throws IOException {
 
-        String txt = UUID.randomUUID().toString().toUpperCase();
+        String txt = UUID.randomUUID().toString();
         String createdJson = createACustomCodeHelper(txt);
+        System.out.println(createdJson);
         CustomCode customCodes = MAPPER.readValue(createdJson, CustomCode.class);
 
         Assert.assertTrue(customCodes.getPrimaryKey().getConstant().endsWith(txt));
@@ -454,6 +455,11 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         CustomCode customCode = new CustomCode();
         customCode.setPrimaryKey(primaryKey);
         customCode.setDescription(descr);
+
+        Map<String,String> nvp = new HashMap<>();
+        nvp.put("fishmobil", "testtesttest");
+        nvp.put("fishskr", "zzzzzzzzz");
+        customCode.setNameValue(nvp);
 
 
         String created = getWebTarget()
