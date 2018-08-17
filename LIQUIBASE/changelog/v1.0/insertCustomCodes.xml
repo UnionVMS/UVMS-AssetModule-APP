@@ -1,6 +1,6 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
-    <changeSet author="thofan (generated)" id="1533806070564-1">
+    <changeSet author="thofan (generated)" id="1534337702832-1">
         <insert tableName="customcodes">
             <column name="code" value="LONDON"/>
             <column name="constant" value="UNIT_TONNAGE"/>
@@ -42,34 +42,6 @@
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
             <column name="description" value="MOCK-license-DB"/>
-        </insert>
-        <insert tableName="customcodes">
-            <column name="code" value="PELAGIC"/>
-            <column name="constant" value="GEAR_TYPE"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
-            <column name="description" value="Pelagic"/>
-        </insert>
-        <insert tableName="customcodes">
-            <column name="code" value="DERMERSAL"/>
-            <column name="constant" value="GEAR_TYPE"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
-            <column name="description" value="Demersal"/>
-        </insert>
-        <insert tableName="customcodes">
-            <column name="code" value="DEMERSAL_AND_PELAGIC"/>
-            <column name="constant" value="GEAR_TYPE"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
-            <column name="description" value="Demersal and pelagic"/>
-        </insert>
-        <insert tableName="customcodes">
-            <column name="code" value="UNKNOWN"/>
-            <column name="constant" value="GEAR_TYPE"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
-            <column name="description" value="Unknown"/>
         </insert>
         <insert tableName="customcodes">
             <column name="code" value="SWE"/>
@@ -875,6 +847,1064 @@
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
             <column name="description" value="X1"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="P"/>
+            <column name="constant" value="FISHING_TYPE"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Pelagic"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="D"/>
+            <column name="constant" value="FISHING_TYPE"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Demersal"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="DP"/>
+            <column name="constant" value="FISHING_TYPE"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Demersal and pelagic"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="U"/>
+            <column name="constant" value="FISHING_TYPE"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Unknown"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="Trawl"/>
+            <column name="constant" value="FISHING_GEAR_TYPE"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Trawl"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="Scrapingtool"/>
+            <column name="constant" value="FISHING_GEAR_TYPE"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Scrapingtool"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="Lift nets"/>
+            <column name="constant" value="FISHING_GEAR_TYPE"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Lift nets"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="Gillnets and similar nets"/>
+            <column name="constant" value="FISHING_GEAR_TYPE"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Gillnets and similar nets"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="Trap"/>
+            <column name="constant" value="FISHING_GEAR_TYPE"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Fishing trap"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="Hooks and lines"/>
+            <column name="constant" value="FISHING_GEAR_TYPE"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Hooks and lines"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="Unknown"/>
+            <column name="constant" value="FISHING_GEAR_TYPE"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Unknown fishing tool"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="None"/>
+            <column name="constant" value="FISHING_GEAR_TYPE"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="No fishing tool"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="Surrounding nets"/>
+            <column name="constant" value="FISHING_GEAR_TYPE"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Surrounding nets"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="Seines"/>
+            <column name="constant" value="FISHING_GEAR_TYPE"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Seines"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="S"/>
+            <column name="constant" value="FISHING_GEAR_MOBILITY"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Stationary"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="T"/>
+            <column name="constant" value="FISHING_GEAR_MOBILITY"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Towed"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="M"/>
+            <column name="constant" value="FISHING_GEAR_MOBILITY"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Mobil"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="U"/>
+            <column name="constant" value="FISHING_GEAR_MOBILITY"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Unknown"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="PS"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Purse seines"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="LA"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Lampara nets"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="SB"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Beach seines"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="SDN"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Danish seines"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="SSC"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Scottish seines"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="SPR"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Pair seines"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="TBB"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Beam trawls"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="OTB"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Bottom otter trawls"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="PTB"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Bottom pair trawls"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="OTM"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Midwater otter trawls"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="PTM"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Pelagic pair trawls"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="OTT"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Otter twin trawls"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="DRB"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Boat dredges"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="DRH"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Hand dredges used on board a vessel"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="HMD"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Mechanised dredges including suction dredges"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="LNB"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Boat operated lift nets"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="LNS"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Shore-operated stationary lift nets"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="GNS"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Set (anchored) gillnets"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="GND"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Driftnets"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="GNC"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Encircling gillnets"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="GTR"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Trammel nets"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="GTN"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Combined trammel and gillnets"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="FPO"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Pots (traps)"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="LHP"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Hand lines and pole lines (hand operated)"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="LHM"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Hand lines and pole lines (mechanised)"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="LLS"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Set longlines"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="LLD"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Longlines (drifting)"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="LTL"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Troll lines"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="NK"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="Unknown"/>
+        </insert>
+        <insert tableName="customcodes">
+            <column name="code" value="NO"/>
+            <column name="constant" value="FISHING_GEAR"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="description" value="No gear"/>
+        </insert>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1534337702832-2">
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="PS"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="P"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="PS"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="M"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="PS"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Surrounding nets"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LA"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="P"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LA"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="M"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LA"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Surrounding nets"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="SB"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="DP"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="SB"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="T"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="SB"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Seines"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="SDN"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="DP"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="SDN"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="T"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="SDN"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Seines"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="SSC"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="DP"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="SSC"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="T"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="SSC"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Seines"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="SPR"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="DP"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="SPR"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="T"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="SPR"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Seines"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="TBB"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="D"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="TBB"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="T"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="TBB"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Trawl"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="OTB"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="D"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="OTB"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="T"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="OTB"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Trawl"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="PTB"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="DP"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="PTB"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="T"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="PTB"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Trawl"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="OTM"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="DP"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="OTM"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="T"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="OTM"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Trawl"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="PTM"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="DP"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="PTM"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="T"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="PTM"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Trawl"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="OTT"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="DP"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="OTT"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="T"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="OTT"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Trawl"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="DRB"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="D"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="DRB"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="T"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="DRB"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Scrapingtool"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="DRH"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="D"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="DRH"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="T"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="DRH"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Scrapingtool"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="HMD"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="D"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="HMD"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="T"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="HMD"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Scrapingtool"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LNB"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="P"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LNB"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="M"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LNB"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Lift nets"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LNS"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="P"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LNS"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="M"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LNS"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Lift nets"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="GNS"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="D"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="GNS"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="S"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="GNS"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Gillnets and similar nets"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="GND"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="DP"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="GND"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="S"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="GND"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Gillnets and similar nets"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="GNC"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="DP"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="GNC"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="S"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="GNC"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Gillnets and similar nets"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="GTR"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="DP"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="GTR"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="S"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="GTR"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Gillnets and similar nets"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="GTN"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="DP"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="GTN"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="S"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="GTN"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Gillnets and similar nets"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="FPO"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="D"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="FPO"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="S"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="FPO"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Trap"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LHP"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="DP"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LHP"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="S"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LHP"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Hooks and lines"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LHM"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="DP"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LHM"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="S"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LHM"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Hooks and lines"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LLS"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="D"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LLS"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="S"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LLS"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Hooks and lines"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LLD"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="P"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LLD"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="S"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LLD"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Hooks and lines"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LTL"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="P"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LTL"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="M"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="LTL"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Hooks and lines"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="NK"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="U"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="NK"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="U"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="NK"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="Unknown"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="NO"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="U"/>
+            <column name="key" value="FISHING_TYPE"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="NO"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="U"/>
+            <column name="key" value="FISHING_GEAR_MOBILITY"/>
+        </insert>
+        <insert tableName="customcode_namevalue">
+            <column name="customcode_code" value="NO"/>
+            <column name="customcode_constant" value="FISHING_GEAR"/>
+            <column name="customcode_validfromdate" valueDate="1970-01-01 01:01:01.0"/>
+            <column name="customcode_validtodate" valueDate="3070-01-01 01:01:01.0"/>
+            <column name="value" value="None"/>
+            <column name="key" value="FISHING_GEAR_TYPE"/>
         </insert>
     </changeSet>
 </databaseChangeLog>

@@ -73,13 +73,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		if(customCode == null){
 			throw new IllegalArgumentException("CustomCode cannot be null");
 		}
-
-		return create(
-				customCode.getPrimaryKey().getConstant(),
-				customCode.getPrimaryKey().getCode(),
-				customCode.getPrimaryKey().getValidFromDate(),
-				customCode.getPrimaryKey().getValidToDate(),
-				customCode.getDescription());
+		return dao.create(customCode);
 	}
 
 
