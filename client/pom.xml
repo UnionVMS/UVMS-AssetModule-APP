@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -14,10 +13,16 @@
     <name>asset-client</name>
     <packaging>jar</packaging>
 
+	<properties>
+		<docker.dev.stop.phase>verify</docker.dev.stop.phase>
+		<docker.dev.prestop.phase>install</docker.dev.prestop.phase>
+	</properties>
+
     <scm>
         <url>https://github.com/unionvns/minimaven</url>
         <connection>scm:git:git://github.com/unionvms/minimaven.git</connection>
-    </scm>
+      <tag>HEAD</tag>
+  </scm>
     <dependencies>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
@@ -28,6 +33,7 @@
             <groupId>eu.europa.ec.fisheries.uvms</groupId>
             <artifactId>uvms-config</artifactId>
             <version>${uvms.config.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>fish.focus.uvms.maven</groupId>

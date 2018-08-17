@@ -286,7 +286,27 @@
             <column name="updatedby" type="VARCHAR(60)"/>
         </createTable>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1534342705230-10">
+    <changeSet author="thofan (generated)" id="1534337077483-8">
+        <createTable tableName="customcode_namevalue">
+            <column name="customcode_code" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customcode_constant" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customcode_validfromdate" type="TIMESTAMP(6) WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customcode_validtodate" type="TIMESTAMP(6) WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="VARCHAR(255)"/>
+            <column name="key" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1534337077483-9">
         <createTable tableName="customcodes">
             <column name="code" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -619,7 +639,10 @@
     <changeSet author="thofan (generated)" id="1534342705230-36">
         <addPrimaryKey columnNames="id" constraintName="contactinfo_pkey" tableName="contactinfo"/>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1534342705230-37">
+    <changeSet author="thofan (generated)" id="1534337077483-18">
+        <addPrimaryKey columnNames="customcode_code, customcode_constant, customcode_validfromdate, customcode_validtodate, key" constraintName="customcode_namevalue_pkey" tableName="customcode_namevalue"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1534337077483-19">
         <addPrimaryKey columnNames="code, constant, validfromdate, validtodate" constraintName="customcodes_pkey" tableName="customcodes"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1534342705230-38">
@@ -756,6 +779,9 @@
     </changeSet>
     <changeSet author="thofan (generated)" id="1534342705230-82">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="asset_aud" constraintName="fklq7kauhigk0mdew67qs2l39ci" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="thofan (generated)" id="1534337077483-32">
+        <addForeignKeyConstraint baseColumnNames="customcode_code,customcode_constant,customcode_validfromdate,customcode_validtodate" baseTableName="customcode_namevalue" constraintName="fkuo2aknb32aq3ctvt8ns9mtv7" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="code,constant,validfromdate,validtodate" referencedTableName="customcodes"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1534342705230-83">
         <addForeignKeyConstraint baseColumnNames="mobterm_event_id" baseTableName="channel" constraintName="fkm42dykorcp07xh4nmwh294lkq" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="mobileterminalevent"/>

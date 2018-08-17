@@ -36,7 +36,7 @@ public class ConfigServiceMock implements MessageListener {
         try {
             SettingType endpointSetting = new SettingType();
             endpointSetting.setKey(ParameterKey.ASSET_ENDPOINT.getKey());
-            endpointSetting.setValue("http://localhost:8080/asset/rest/internal");
+            endpointSetting.setValue("http://localhost:8080/asset/rest/");
             endpointSetting.setDescription("From ConfigServiceMock.java");
             String response = ModuleResponseMapper.toPullSettingsResponse(Arrays.asList(endpointSetting), PullSettingsStatus.OK);
             new AbstractProducer() {

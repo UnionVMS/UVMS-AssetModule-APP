@@ -59,5 +59,9 @@
 		<filter-name>AuthenticationFilter</filter-name>
 		<url-pattern>/rest/group/*</url-pattern>
 	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AuthenticationFilter</filter-name>
+		<url-pattern>/rest/customcodes/*</url-pattern>
+	</filter-mapping>
 
 </web-app>

@@ -47,9 +47,9 @@ public class CustomCodesResource {
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response createCustomCode(
-            @ApiParam(value = "customCode", required = true) CustomCode customCode) {
+            @ApiParam(value = "customCode", required = true) String json) {
         try {
-
+            CustomCode customCode = MAPPER.readValue(json , CustomCode.class);
             CustomCode customCodes = customCodesSvc.create(customCode);
             return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {

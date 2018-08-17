@@ -42,7 +42,7 @@ public class CustomCodeDao {
 
         CustomCode customCode = get(primaryKey);
         if (customCode != null) {
-            if(newDescription != null) {
+            if (newDescription != null) {
                 customCode.setDescription(newDescription);
             }
         }
@@ -64,28 +64,22 @@ public class CustomCodeDao {
         try {
             CustomCode customCode = get(primaryKey);
             return customCode != null;
-        }
-        catch(NotFoundException e){
+        } catch (NotFoundException e) {
             return false;
         }
     }
 
     public List<CustomCode> getAllFor(String constant) {
-        try {
-            TypedQuery<CustomCode> query = em.createNamedQuery(CustomCode.CUSTOMCODES_GETALLFOR, CustomCode.class);
-            query.setParameter("constant", constant);
-            return query.getResultList();
-        } catch (NoResultException e) {
-            return null;
-        }
+        TypedQuery<CustomCode> query = em.createNamedQuery(CustomCode.CUSTOMCODES_GETALLFOR, CustomCode.class);
+        query.setParameter("constant", constant);
+        return query.getResultList();
     }
-
 
 
     public void deleteAllFor(String constant) {
 
         List<CustomCode> rs = getAllFor(constant);
-        if(rs != null) {
+        if (rs != null) {
             for (CustomCode customCode : rs) {
                 em.remove(customCode);
             }
@@ -104,30 +98,30 @@ public class CustomCodeDao {
 
     public List<CustomCode> getForDate(String constant, String code, OffsetDateTime aDate) {
 
-            TypedQuery<CustomCode> query = em.createNamedQuery(CustomCode.CUSTOMCODES_GETCUSTOMCODE_FOR_SPECIFIC_DATE, CustomCode.class);
-            query.setParameter("constant", constant);
-            query.setParameter("code", code);
-            query.setParameter("aDate", aDate);
-            List<CustomCode>  customCodes = query.getResultList();
-            return customCodes;
+        TypedQuery<CustomCode> query = em.createNamedQuery(CustomCode.CUSTOMCODES_GETCUSTOMCODE_FOR_SPECIFIC_DATE, CustomCode.class);
+        query.setParameter("constant", constant);
+        query.setParameter("code", code);
+        query.setParameter("aDate", aDate);
+        List<CustomCode> customCodes = query.getResultList();
+        return customCodes;
     }
 
     public Boolean verify(String constant, String code, OffsetDateTime aDate) {
-            TypedQuery<CustomCode> query = em.createNamedQuery(CustomCode.CUSTOMCODES_GETCUSTOMCODE_FOR_SPECIFIC_DATE, CustomCode.class);
-            query.setParameter("constant", constant);
-            query.setParameter("code", code);
-            query.setParameter("aDate", aDate);
-            List<CustomCode>  customCodes = query.getResultList();
-            return customCodes.size() > 0;
+        TypedQuery<CustomCode> query = em.createNamedQuery(CustomCode.CUSTOMCODES_GETCUSTOMCODE_FOR_SPECIFIC_DATE, CustomCode.class);
+        query.setParameter("constant", constant);
+        query.setParameter("code", code);
+        query.setParameter("aDate", aDate);
+        List<CustomCode> customCodes = query.getResultList();
+        return customCodes.size() > 0;
     }
 
     // delets old and adds new
     public CustomCode replace(CustomCode customCode) {
         CustomCodesPK primaryKey = customCode.getPrimaryKey();
-        if(exists(primaryKey)){
+        if (exists(primaryKey)) {
             delete(primaryKey);
         }
-        CustomCode createdCustomCode =  em.merge(customCode);
+        CustomCode createdCustomCode = em.merge(customCode);
         return createdCustomCode;
     }
 }

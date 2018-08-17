@@ -88,7 +88,7 @@ public class AssetServiceBean implements AssetService {
      */
     @Override
     public AssetListResponse getAssetList(List<SearchKeyValue> searchFields, int page, int listSize, boolean dynamic) {
-        if (searchFields == null || searchFields.isEmpty()) {
+        if (searchFields == null) {
             throw new IllegalArgumentException("Cannot get asset list because search values is null.");
         }
         

@@ -146,6 +146,8 @@ public class AssetDao {
             query.add(AuditEntity.revisionNumber().maximize().computeAggregationInInstanceContext());
         }
 
+        query.add(AuditEntity.property("active").eq(true));
+        
         ExtendableCriterion operator;
         if (isDynamic) {
             operator = AuditEntity.conjunction();

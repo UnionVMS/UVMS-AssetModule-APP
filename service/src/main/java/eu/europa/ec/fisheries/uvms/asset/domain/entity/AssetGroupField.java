@@ -33,8 +33,8 @@ import org.hibernate.annotations.GenericGenerator;
 @NamedQueries({
 		@NamedQuery(name="Assetgroupfield.findAll", query="SELECT a FROM AssetGroupField a"),
 		@NamedQuery(name=ASSETGROUP_FIELD_GETBYID, query="SELECT a FROM AssetGroupField a where a.id=:id"),
-		@NamedQuery(name=ASSETGROUP_FIELD_CLEAR, query="DELETE  FROM AssetGroupField a where a.assetgroup=:assetgroup"),
-		@NamedQuery(name=ASSETGROUP_RETRIEVE_FIELDS_FOR_GROUP, query="SELECT a  FROM AssetGroupField a where a.assetgroup=:assetgroup"),
+		@NamedQuery(name=ASSETGROUP_FIELD_CLEAR, query="DELETE  FROM AssetGroupField a where a.assetGroup=:assetgroup"),
+		@NamedQuery(name=ASSETGROUP_RETRIEVE_FIELDS_FOR_GROUP, query="SELECT a  FROM AssetGroupField a where a.assetGroup=:assetgroup"),
 })
 public class AssetGroupField implements Serializable {
 
@@ -68,7 +68,7 @@ public class AssetGroupField implements Serializable {
     private String value;
 
     @Column(name = "assetgroup")
-    private UUID assetgroup;
+    private UUID assetGroup;
 
     public UUID getId() {
         return this.id;
@@ -111,11 +111,11 @@ public class AssetGroupField implements Serializable {
     }
 
     public UUID getAssetGroup() {
-        return this.assetgroup;
+        return this.assetGroup;
     }
 
-    public void setAssetGroup(UUID assetgroup) {
-        this.assetgroup = assetgroup;
+    public void setAssetGroup(UUID assetGroup) {
+        this.assetGroup = assetGroup;
     }
 
 }

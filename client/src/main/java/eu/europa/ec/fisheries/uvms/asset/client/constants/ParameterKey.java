@@ -24,7 +24,7 @@ package eu.europa.ec.fisheries.uvms.asset.client.constants;
 
 public enum ParameterKey {
     
-    ASSET_ENDPOINT("ENDPOINT_ASSET");
+    ASSET_ENDPOINT("endpoint_asset");
 
 	private final String key;
 
