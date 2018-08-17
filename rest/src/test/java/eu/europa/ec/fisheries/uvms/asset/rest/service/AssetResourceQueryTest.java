@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.rest.service;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -124,5 +125,54 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .post(Entity.json(query), AssetListResponse.class);
         
         assertEquals(sizeBefore - 1, listResponseAfter.getAssetList().size());
+    }
+    
+    @Test
+    @RunAsClient
+    public void getAssetListPaginationTest() {
+        String customFlagState = AssetHelper.getRandomIntegers(3);
+        
+        Asset asset1 = AssetHelper.createBasicAsset();
+        asset1.setFlagStateCode(customFlagState);
+        Asset createdAsset1 = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset1), Asset.class);
+        
+        Asset asset2 = AssetHelper.createBasicAsset();
+        asset2.setFlagStateCode(customFlagState);
+        Asset createdAsset2 = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset2), Asset.class);
+        
+        AssetQuery query = new AssetQuery();
+        query.setFlagState(Arrays.asList(customFlagState));
+        
+        AssetListResponse listResponse = getWebTarget()
+                .path("asset")
+                .path("list")
+                .queryParam("page", 1)
+                .queryParam("size", 1)
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query), AssetListResponse.class);
+        
+        assertThat(listResponse.getCurrentPage(), is(1));
+        assertThat(listResponse.getTotalNumberOfPages(), is(2));
+        assertThat(listResponse.getAssetList().size(), is(1));
+        
+        AssetListResponse listResponse2 = getWebTarget()
+                .path("asset")
+                .path("list")
+                .queryParam("page", 2)
+                .queryParam("size", 1)
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query), AssetListResponse.class);
+        
+        assertThat(listResponse2.getCurrentPage(), is(2));
+        assertThat(listResponse2.getTotalNumberOfPages(), is(2));
+        assertThat(listResponse2.getAssetList().size(), is(1));
+        
+        assertThat(listResponse.getAssetList().get(0).getId(), is(not(listResponse2.getAssetList().get(0).getId())));
     }
 }

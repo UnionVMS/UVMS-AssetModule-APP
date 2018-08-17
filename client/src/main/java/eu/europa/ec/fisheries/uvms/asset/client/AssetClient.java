@@ -66,7 +66,7 @@ public class AssetClient {
             }
         });
         String assetEndpoint = parameterService.getStringValue(ParameterKey.ASSET_ENDPOINT.getKey());
-        webTarget = client.target(assetEndpoint);
+        webTarget = client.target(assetEndpoint + "internal/");
     }
     
     public Asset getAssetById(AssetIdentifier type, String value) {
