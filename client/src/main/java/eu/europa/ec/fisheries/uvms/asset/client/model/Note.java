@@ -10,24 +10,24 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.client.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 public class Note {
 
     private UUID id;
     private UUID assetId;
-    private LocalDateTime date;
+    private OffsetDateTime date;
     private String activityCode;
     private String user;
-    private LocalDateTime readyDate;
+    private OffsetDateTime readyDate;
     private String licenseHolder;
     private String contact;
     private String sheetNumber;
     private String notes;
     private String document;
     private String source;
-    private LocalDateTime updateTime;
+    private OffsetDateTime updateTime;
     private String updatedBy;
     public UUID getId() {
         return id;
@@ -41,10 +41,10 @@ public class Note {
     public void setAssetId(UUID assetId) {
         this.assetId = assetId;
     }
-    public LocalDateTime getDate() {
+    public OffsetDateTime getDate() {
         return date;
     }
-    public void setDate(LocalDateTime date) {
+    public void setDate(OffsetDateTime date) {
         this.date = date;
     }
     public String getActivityCode() {
@@ -59,10 +59,10 @@ public class Note {
     public void setUser(String user) {
         this.user = user;
     }
-    public LocalDateTime getReadyDate() {
+    public OffsetDateTime getReadyDate() {
         return readyDate;
     }
-    public void setReadyDate(LocalDateTime readyDate) {
+    public void setReadyDate(OffsetDateTime readyDate) {
         this.readyDate = readyDate;
     }
     public String getLicenseHolder() {
@@ -101,10 +101,10 @@ public class Note {
     public void setSource(String source) {
         this.source = source;
     }
-    public LocalDateTime getUpdateTime() {
+    public OffsetDateTime getUpdateTime() {
         return updateTime;
     }
-    public void setUpdateTime(LocalDateTime updateTime) {
+    public void setUpdateTime(OffsetDateTime updateTime) {
         this.updateTime = updateTime;
     }
     public String getUpdatedBy() {

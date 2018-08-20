@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
 		<artifactId>asset</artifactId>
-		<version>5.0.1-SNAPSHOT</version>
+		<version>6.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -22,6 +22,7 @@
 		<wsdl.source.name>AssetDataSourceService</wsdl.source.name>
 		<binding.xml>binding-date.xml</binding.xml>
 		<jaxb2-basics.version>0.9.5</jaxb2-basics.version>
+		<exchange.model.version>4.0.14</exchange.model.version>
 	</properties>
 
 	<dependencies>
@@ -45,7 +46,13 @@
 		    <groupId>org.apache.commons</groupId>
 		    <artifactId>commons-lang3</artifactId>
 		    <version>3.6</version>
-		</dependency>		
+		</dependency>
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-client</artifactId>
+			<version>5.14.5</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -104,6 +111,53 @@
 							<goal>wsdl2java</goal>
 						</goals>
 					</execution>
+
+
+					<execution>
+						<id>generate-asset-module2</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<wsdlOptions>
+								<wsdlOption>
+									<wsdl>${basedir}/src/main/resources/contract/MobileTerminalModuleService.wsdl</wsdl>
+									<bindingFiles>
+										<bindingFile>${basedir}/src/main/resources/${binding.xml}</bindingFile>
+									</bindingFiles>
+									<extraargs>
+										<extraarg>-xjc-Xcommons-lang</extraarg>
+										<extraarg>-xjc-Xcommons-lang:ToStringStyle=SHORT_PREFIX_STYLE</extraarg>
+									</extraargs>
+								</wsdlOption>
+							</wsdlOptions>
+						</configuration>
+						<goals>
+							<goal>wsdl2java</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>generate-asset-datasource2</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<wsdlOptions>
+								<wsdlOption>
+									<wsdl>${basedir}/src/main/resources/contract/MobileTerminalDataSourceService.wsdl</wsdl>
+									<bindingFiles>
+										<bindingFile>${basedir}/src/main/resources/${binding.xml}</bindingFile>
+									</bindingFiles>
+									<extraargs>
+										<extraarg>-xjc-Xcommons-lang</extraarg>
+										<extraarg>-xjc-Xcommons-lang:ToStringStyle=SHORT_PREFIX_STYLE</extraarg>
+									</extraargs>
+								</wsdlOption>
+							</wsdlOptions>
+						</configuration>
+						<goals>
+							<goal>wsdl2java</goal>
+						</goals>
+					</execution>
+
+
+
 				</executions>
 				<dependencies>
 					<dependency>
@@ -113,36 +167,36 @@
 					</dependency>
 				</dependencies>
 			</plugin>
-			<plugin>
-				<groupId>com.github.siom79.japicmp</groupId>
-				<artifactId>japicmp-maven-plugin</artifactId>
-				<configuration>
-					<oldVersion>
-						<dependency>
-							<groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-							<artifactId>asset-model</artifactId>
-							<version>${asset.api.check.against.version}</version>
-							<type>jar</type>
-						</dependency>
-					</oldVersion>
-					<newVersion>
-						<file>
-							<path>${project.build.directory}/${project.artifactId}-${project.version}.jar</path>
-						</file>
-					</newVersion>
-					<parameter>
-						<breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
-					</parameter>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>verify</phase>
-						<goals>
-							<goal>cmp</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+			<!--<plugin>-->
+				<!--<groupId>com.github.siom79.japicmp</groupId>-->
+				<!--<artifactId>japicmp-maven-plugin</artifactId>-->
+				<!--<configuration>-->
+					<!--<oldVersion>-->
+						<!--<dependency>-->
+							<!--<groupId>eu.europa.ec.fisheries.uvms.asset</groupId>-->
+							<!--<artifactId>asset-model</artifactId>-->
+							<!--<version>${asset.api.check.against.version}</version>-->
+							<!--<type>jar</type>-->
+						<!--</dependency>-->
+					<!--</oldVersion>-->
+					<!--<newVersion>-->
+						<!--<file>-->
+							<!--<path>${project.build.directory}/${project.artifactId}-${project.version}.jar</path>-->
+						<!--</file>-->
+					<!--</newVersion>-->
+					<!--<parameter>-->
+						<!--<breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>-->
+					<!--</parameter>-->
+				<!--</configuration>-->
+				<!--<executions>-->
+					<!--<execution>-->
+						<!--<phase>verify</phase>-->
+						<!--<goals>-->
+							<!--<goal>cmp</goal>-->
+						<!--</goals>-->
+					<!--</execution>-->
+				<!--</executions>-->
+			<!--</plugin>-->
 		</plugins>
 	</build>
 </project>

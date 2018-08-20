@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:mobterm="urn:types.mobileterminal.schema.fisheries.ec.europa.eu:v1"
+            xmlns:poll="urn:polltypes.mobileterminal.schema.fisheries.ec.europa.eu:v1"
+            targetNamespace="urn:polltypes.mobileterminal.schema.fisheries.ec.europa.eu:v1"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified" 
+            version="1.0">
+            
+    <xsd:import namespace="urn:types.mobileterminal.schema.fisheries.ec.europa.eu:v1" schemaLocation="MobileTerminalElement.xsd"/>
+
+    <xsd:simpleType name="PollType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="PROGRAM_POLL"/>
+            <xsd:enumeration value="SAMPLING_POLL"/>
+            <xsd:enumeration value="MANUAL_POLL"/>
+            <xsd:enumeration value="CONFIGURATION_POLL"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="PollAttributeType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="FREQUENCY"/>
+            <xsd:enumeration value="START_DATE"/>
+            <xsd:enumeration value="END_DATE"/>            
+            <xsd:enumeration value="REPORT_FREQUENCY"/>
+            <xsd:enumeration value="GRACE_PERIOD"/>
+            <xsd:enumeration value="IN_PORT_GRACE"/>
+            <xsd:enumeration value="DNID"/>
+            <xsd:enumeration value="MEMBER_NUMBER"/>
+            <xsd:enumeration value="USER"/> <!-- used? -->
+            <xsd:enumeration value="PROGRAM_RUNNING"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:complexType name="PollAttribute">
+        <xsd:sequence>
+            <xsd:element name="key" type="poll:PollAttributeType" />
+            <xsd:element name="value" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="PollBaseType" abstract="true">
+        <xsd:sequence>
+            <xsd:element name="pollType" type="poll:PollType"/>
+            <xsd:element name="userName" type="xsd:string"/> <!-- creator of poll -->
+            <xsd:element name="comment" type="xsd:string"/>
+            <xsd:element name="attributes" type="poll:PollAttribute"  minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="PollRequestType">
+        <xsd:complexContent>
+            <xsd:extension base="poll:PollBaseType">
+                <xsd:sequence>
+                    <xsd:element name="mobileTerminals" type="poll:PollMobileTerminal"  minOccurs="1" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="PollMobileTerminal">
+        <xsd:sequence>
+            <xsd:element name="connectId" type="xsd:string"/>
+            <xsd:element name="mobileTerminalId" type="xsd:string"/>
+            <xsd:element name="comChannelId" type="xsd:string"/> 
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="PollId">
+        <xsd:sequence>
+            <xsd:element name="guid" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="PollResponseType">
+        <xsd:complexContent>
+            <xsd:extension base="poll:PollBaseType">
+                <xsd:sequence>
+                    <xsd:element name="pollId" type="poll:PollId"/> 
+                    <xsd:element name="mobileTerminal" type="mobterm:MobileTerminalType"/>         
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:simpleType name="PollStatus">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="STARTED"/>
+            <xsd:enumeration value="STOPPED"/>
+            <xsd:enumeration value="ARCHIVED"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="PollableQuery">
+        <xsd:sequence>
+            <xsd:element name="pagination" type="mobterm:ListPagination" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="connectIdList" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="PollListQuery">
+        <xsd:sequence>
+            <xsd:element name="pagination" type="mobterm:ListPagination" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="pollSearchCriteria" type="poll:PollSearchCriteria" minOccurs="1" maxOccurs="1"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="PollSearchCriteria">
+        <xsd:sequence>
+            <xsd:element name="criterias" type="poll:ListCriteria" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="isDynamic" type="xsd:boolean" minOccurs="0" maxOccurs="1"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="ListCriteria">
+        <xsd:sequence>
+            <xsd:element name="key" type="poll:SearchKey" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="value" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+        </xsd:sequence>
+    </xsd:complexType>
+	
+    <xsd:simpleType name="SearchKey">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="POLL_ID"/>
+        
+            <xsd:enumeration value="CONNECT_ID"/>
+            <xsd:enumeration value="POLL_TYPE"/>
+            <xsd:enumeration value="TERMINAL_TYPE"/>
+            <xsd:enumeration value="USER"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <!-- request and responses -->
+    <!-- Mobile Terminal Polling requests  -->
+    <xsd:element name="createPollRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="mobterm:MobileTerminalBaseRequest">
+                    <xsd:sequence>
+                        <xsd:element name="pollRequest" type="poll:PollRequestType"/>
+                    </xsd:sequence> 
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+            
+    <xsd:element name="getPollProgramListRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="mobterm:MobileTerminalBaseRequest">
+                    <xsd:sequence>
+                        <xsd:element name="onlyAlivePrograms" type="xsd:boolean" default="true"/>
+                    </xsd:sequence>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+            
+    <xsd:element name="setStatusPollProgramRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="mobterm:MobileTerminalBaseRequest">
+                    <xsd:sequence>
+                        <xsd:element name="pollId" type="poll:PollId"/>
+                        <xsd:element name="status" type="poll:PollStatus"/>
+                    </xsd:sequence>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+            
+    <xsd:element name="getPollListRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="mobterm:MobileTerminalBaseRequest">
+                    <xsd:sequence>
+                        <xsd:element name="query" type="poll:PollListQuery"/>
+                    </xsd:sequence>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+            
+    <xsd:element name="getPollableRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="mobterm:MobileTerminalBaseRequest">
+                    <xsd:sequence>
+                        <xsd:element name="query" type="poll:PollableQuery"/>
+                    </xsd:sequence>
+                </xsd:extension>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <xsd:element name="createPollResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="type" type="poll:PollType"/>
+                <xsd:element name="pollList" type="poll:PollResponseType" minOccurs="0" maxOccurs="unbounded"/>                                
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <xsd:element name="pollListResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="totalNumberOfPages" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+                <xsd:element name="currentPage" type="xsd:int" minOccurs="0" maxOccurs="1"/>
+                <xsd:element name="pollList" type="poll:PollResponseType" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="singlePollResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="poll" type="poll:PollResponseType"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+</xsd:schema>

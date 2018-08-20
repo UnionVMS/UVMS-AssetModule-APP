@@ -11,9 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.message.mapper;
 
 import java.math.BigDecimal;
-import java.sql.Date;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +26,10 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
-import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
-import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetBO;
-import eu.europa.ec.fisheries.uvms.asset.service.dto.AssetListResponse;
+import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
+import eu.europa.ec.fisheries.uvms.asset.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetContact;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetHistoryId;
@@ -68,7 +66,7 @@ public class AssetModelMapper {
         }
         if (assetModel.getEventHistory() != null) {
             asset.setHistoryId(UUID.fromString(assetModel.getEventHistory().getEventId()));
-            asset.setUpdateTime(LocalDateTime.ofInstant(assetModel.getEventHistory().getEventDate().toInstant(),ZoneOffset.UTC));
+            asset.setUpdateTime(assetModel.getEventHistory().getEventDate());
             asset.setEventCode(assetModel.getEventHistory().getEventCode().toString());
         }
         asset.setName(assetModel.getName());
@@ -143,7 +141,7 @@ public class AssetModelMapper {
         AssetHistoryId assetHistory = new AssetHistoryId();
         assetHistory.setEventId(assetEntity.getHistoryId().toString());
         if (assetEntity.getUpdateTime() != null) {
-            assetHistory.setEventDate(Date.from(assetEntity.getUpdateTime().toInstant(ZoneOffset.UTC)));
+            assetHistory.setEventDate(assetEntity.getUpdateTime());
         }
         if (assetEntity.getEventCode() != null && !assetEntity.getEventCode().isEmpty()) {
             assetHistory.setEventCode(getEventCode(assetEntity));
@@ -196,12 +194,12 @@ public class AssetModelMapper {
             AssetNotes assetNote = new AssetNotes();
             // TODO id?
             if (note.getDate() != null) {
-                assetNote.setDate(note.getDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                assetNote.setDate(note.getDate().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
             }
             assetNote.setActivity(note.getActivityCode());
             assetNote.setUser(note.getUser());
             if (note.getReadyDate() != null) {
-                assetNote.setReadyDate(note.getReadyDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                assetNote.setReadyDate(note.getReadyDate().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
             }
             assetNote.setLicenseHolder(note.getLicenseHolder());
             assetNote.setContact(note.getContact());
@@ -311,12 +309,12 @@ public class AssetModelMapper {
         for (AssetNotes assetNote : assetNotes) {
             Note note = new Note();
             if (assetNote.getDate() != null) {
-                note.setDate(LocalDateTime.parse(assetNote.getDate(), DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                note.setDate(OffsetDateTime.parse(assetNote.getDate(), DateTimeFormatter.ISO_OFFSET_DATE_TIME));
             }
             note.setActivityCode(assetNote.getActivity());
             note.setUser(assetNote.getUser());
             if (assetNote.getReadyDate() != null) {
-                note.setReadyDate(LocalDateTime.parse(assetNote.getReadyDate(), DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                note.setReadyDate(OffsetDateTime.parse(assetNote.getReadyDate(), DateTimeFormatter.ISO_OFFSET_DATE_TIME));
             }
             note.setLicenseHolder(assetNote.getLicenseHolder());
             note.setContact(assetNote.getContact());

@@ -12,12 +12,12 @@
                 <constraints nullable="false"/>
             </column>
             <column name="active" type="BOOLEAN"/>
-            <column name="administrativedecisiondate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="administrativedecisiondate" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="agentisalsoowner" type="BOOLEAN"/>
             <column name="aisindicator" type="BOOLEAN"/>
             <column name="assetagentaddress" type="VARCHAR(100)"/>
             <column name="cfr" type="VARCHAR(12)"/>
-            <column name="commissiondate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="commissiondate" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="constructionplace" type="VARCHAR(100)"/>
             <column name="constructionyear" type="VARCHAR(4)"/>
             <column name="countryofimportorexport" type="VARCHAR(3)"/>
@@ -59,10 +59,10 @@
             <column name="source" type="VARCHAR(255)"/>
             <column name="subfishinggearcode" type="VARCHAR(255)"/>
             <column name="typeofexport" type="VARCHAR(255)"/>
-            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updatetime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="updatedby" type="VARCHAR(60)"/>
             <column name="uvi" type="VARCHAR(50)"/>
-            <column name="vesseldateofentry" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="vesseldateofentry" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="vesseltype" type="VARCHAR(100)"/>
             <column name="vmsindicator" type="BOOLEAN"/>
         </createTable>
@@ -77,12 +77,12 @@
             </column>
             <column name="revtype" type="SMALLINT"/>
             <column name="active" type="BOOLEAN"/>
-            <column name="administrativedecisiondate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="administrativedecisiondate" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="agentisalsoowner" type="BOOLEAN"/>
             <column name="aisindicator" type="BOOLEAN"/>
             <column name="assetagentaddress" type="VARCHAR(255)"/>
             <column name="cfr" type="VARCHAR(255)"/>
-            <column name="commissiondate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="commissiondate" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="constructionplace" type="VARCHAR(255)"/>
             <column name="constructionyear" type="VARCHAR(255)"/>
             <column name="countryofimportorexport" type="VARCHAR(255)"/>
@@ -124,10 +124,10 @@
             <column name="source" type="VARCHAR(255)"/>
             <column name="subfishinggearcode" type="VARCHAR(255)"/>
             <column name="typeofexport" type="VARCHAR(255)"/>
-            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updatetime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="updatedby" type="VARCHAR(255)"/>
             <column name="uvi" type="VARCHAR(255)"/>
-            <column name="vesseldateofentry" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="vesseldateofentry" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="vesseltype" type="VARCHAR(255)"/>
             <column name="vmsindicator" type="BOOLEAN"/>
         </createTable>
@@ -146,7 +146,7 @@
             <column name="user_id" type="VARCHAR(80)">
                 <constraints nullable="false"/>
             </column>
-            <column name="updattim" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updattim" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="upuser" type="VARCHAR(60)"/>
         </createTable>
     </changeSet>
@@ -159,7 +159,7 @@
             <column name="field" type="VARCHAR(80)">
                 <constraints nullable="false"/>
             </column>
-            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updatetime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="updateuser" type="VARCHAR(60)"/>
             <column name="value" type="VARCHAR(100)">
                 <constraints nullable="false"/>
@@ -184,7 +184,7 @@
             <column name="source" type="VARCHAR(255)"/>
             <column name="streetname" type="VARCHAR(100)"/>
             <column name="type" type="VARCHAR(100)"/>
-            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updatetime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="updatedby" type="VARCHAR(60)"/>
         </createTable>
     </changeSet>
@@ -196,10 +196,10 @@
             <column name="customcode_constant" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="customcode_validfromdate" type="TIMESTAMP(6) WITHOUT TIME ZONE">
+            <column name="customcode_validfromdate" type="TIMESTAMP(6) WITH TIME ZONE">
                 <constraints nullable="false"/>
             </column>
-            <column name="customcode_validtodate" type="TIMESTAMP(6) WITHOUT TIME ZONE">
+            <column name="customcode_validtodate" type="TIMESTAMP(6) WITH TIME ZONE">
                 <constraints nullable="false"/>
             </column>
             <column name="value" type="VARCHAR(255)"/>
@@ -216,10 +216,10 @@
             <column name="constant" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="validfromdate" type="TIMESTAMP(6) WITHOUT TIME ZONE">
+            <column name="validfromdate" type="TIMESTAMP(6) WITH TIME ZONE">
                 <constraints nullable="false"/>
             </column>
-            <column name="validtodate" type="TIMESTAMP(6) WITHOUT TIME ZONE">
+            <column name="validtodate" type="TIMESTAMP(6) WITH TIME ZONE">
                 <constraints nullable="false"/>
             </column>
             <column name="description" type="VARCHAR(255)"/>
@@ -233,14 +233,14 @@
             <column name="activitycode" type="VARCHAR(255)"/>
             <column name="assetid" type="UUID"/>
             <column name="contact" type="VARCHAR(255)"/>
-            <column name="date" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="date" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="document" type="VARCHAR(255)"/>
             <column name="licenseholder" type="VARCHAR(255)"/>
             <column name="notes" type="VARCHAR(255)"/>
-            <column name="readydate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="readydate" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="sheetnumber" type="VARCHAR(255)"/>
             <column name="source" type="VARCHAR(255)"/>
-            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updatetime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="updatedby" type="VARCHAR(60)"/>
             <column name="noteuser" type="VARCHAR(255)"/>
         </createTable>

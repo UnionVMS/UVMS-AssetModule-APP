@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Developed with the contribution of the European Commission - Directorate General for Maritime Affairs and Fisheries
+  ~ © European Union, 2015-2016.
+  ~
+  ~ This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can
+  ~ redistribute it and/or modify it under the terms of the GNU General Public License as published by the
+  ~ Free Software Foundation, either version 3 of the License, or any later version. The IFDM Suite is distributed in
+  ~ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  ~ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
+  ~ copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<!--
+  ~ Developed with the contribution of the European Commission - Directorate General for Maritime Affairs and Fisheries
+  ~ © European Union, 2015-2016.
+  ~
+  ~ This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can
+  ~ redistribute it and/or modify it under the terms of the GNU General Public License as published by the
+  ~ Free Software Foundation, either version 3 of the License, or any later version. The IFDM Suite is distributed in
+  ~ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  ~ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
+  ~ copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+
+    <changeSet author="johlyn" id="insert InmarsatC test mobile terminal">
+        <insert tableName="mobileterminal">
+            <column name="mobterm_id" value="1"/>
+            <column name="mobterm_archived" valueBoolean="0"/>
+            <column name="mobterm_inactivated" valueBoolean="0"/>
+            <column name="mobterm_plugin_id" value="1"/> <!-- eik -->
+            <column name="mobterm_guid" value="testdata_mobterm_inmarsatc"/>
+            <column name="mobterm_type" value="INMARSAT_C"/>
+            <column name="mobterm_source" value="INTERNAL"/>
+            <column name="mobterm_updatetime" valueDate="${now}"/>
+            <column name="mobterm_updateuser" value="johlyn"/>
+        </insert>
+
+
+        <insert tableName="mobileterminal_inmarsatc">
+            <column name="id" value="1"/>
+            <column name="serial_number" value="1234567890"/>
+            <column name="channel_default" value="testdata_channel_inmarsatc"/>
+            <column name="channel_configuration" value="testdata_channel_inmarsatc"/>
+            <column name="channel_polling" value="testdata_channel_inmarsatc"/>
+            <column name="updatetime" valueDate="${now}"/>
+            <column name="updateuser" value="johlyn"/>
+            <column name="mobileterminal_id" value="1"/>
+        </insert>
+
+
+        <insert tableName="mobileterminal_inmarsatc_hist">
+            <column name="hist_id" value="1"/>
+            <column name="hist_transceiver_type" value="testdata_inmarsatc_transceiver_type"/>
+            <column name="hist_antenna" value="testdata_inmarsatc_antenna"/>
+            <column name="hist_antenna_serial_number" value="testdata_inmarsatc_antenna_serial_number"/>
+            <column name="hist_software_version" value="testdata_inmarsatc_software_version"/>
+            <column name="hist_satellite_number" value="testdata_inmarsatc_satellilte_number"/>
+            <column name="hist_answer_back" value="testdata_inmarsatc_answer_back"/>
+            <!--
+            <column name="hist_installed_by" value="testdata_inmarsatc_installed_by"/>
+            <column name="hist_started_on" valueDate="${now}"/>
+            <column name="hist_installed_on" valueDate="${now}"/>
+            <column name="hist_uninstalled_on" value="NULL"/>
+            <column name="hist_frequency_expected" value="10"/>
+            <column name="hist_frequency_grace_period" value="10"/>
+            <column name="hist_frequency_in_port" value="10"/>
+            <column name="hist_start_date" valueDate="${now}"/>
+            <column name="hist_end_date" value="NULL"/>
+            -->
+            <column name="hist_active" valueBoolean="1"/>
+            <column name="hist_updatetime" valueDate="${now}"/>
+            <column name="hist_updateuser" value="johlyn"/>
+            <column name="hist_mobileterminal_id" value="1"/>
+        </insert>
+
+
+        <insert tableName="channel_inmarsatc">
+            <column name="channel_id" value="1"/>
+            <column name="channel_guid" value="testdata_channel_inmarsatc"/>
+            <column name="channel_active" valueBoolean="1"/>
+            <column name="channel_startdate" valueDate="${now}"/>
+            <column name="channel_enddate" value="NULL"/>
+            <column name="channel_updattime" valueDate="${now}"/>
+            <column name="channel_updateuser" value="johlyn"/>
+            <column name="channel_inmarsatc_id" value="1"/>
+        </insert>
+
+
+
+        <insert tableName="channel_inmarsatc_history">
+            <column name="channel_hist_id" value="1"/>
+            <column name="channel_hist_comchanname" value="VMS"/>
+            <column name="channel_hist_dnid" value="1234567890"/>
+            <column name="channel_hist_member_number" value="1234567890"/>
+            <column name="channel_hist_started" valueDate="${now}"/>
+            <column name="channel_hist_stopped" value="NULL"/>
+            <column name="channel_hist_les_description" value="testdata_inmarsatc_les"/>
+            <column name="channel_hist_active" valueBoolean="1"/>
+            <column name="channel_hist_startdate" valueDate="${now}"/>
+            <column name="channel_hist_enddate" value="NULL"/>
+            <column name="channel_hist_updattime" valueDate="${now}"/>
+            <column name="channel_hist_updateuser" value="johlyn"/>
+            <column name="channel_hist_channel_id" value="1"/>
+            <column name="channel_hist_installed_by" value="testdata_inmarsatc_installed_by"/>
+            <column name="channel_hist_installed_on" valueDate="${now}"/>
+            <column name="channel_hist_uninstalled_on" value="NULL"/>
+            <column name="channel_hist_freq_expected" value="10"/>
+            <column name="channel_hist_freq_grace_per" value="10"/>
+            <column name="channel_hist_freq_in_port" value="10"/>
+        </insert>
+
+
+    </changeSet>
+
+</databaseChangeLog>

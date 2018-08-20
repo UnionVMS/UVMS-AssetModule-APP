@@ -12,21 +12,31 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.model.exception;
 
 public class AssetException extends Exception {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 6218831122133192835L;
 
-	public AssetException(String message) {
-		super(message);
-	}
-	
-	public AssetException(String message, Throwable cause) {
+    private final int errorCode;
+
+    public AssetException(int errorCode) {
+        super();
+        this.errorCode = errorCode;
+    }
+
+    public AssetException(String message, Throwable cause, int errorCode) {
         super(message, cause);
+        this.errorCode = errorCode;
     }
 
-    public AssetException(Throwable cause) {
+    public AssetException(String message, int errorCode) {
+        super(message);
+        this.errorCode = errorCode;
+    }
+
+    public AssetException(Throwable cause, int errorCode) {
         super(cause);
+        this.errorCode = errorCode;
     }
 
-    protected AssetException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public int getErrorCode() {
+        return this.errorCode;
     }
 }

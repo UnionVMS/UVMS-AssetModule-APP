@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+	<changeSet author="johlyn" id="pollprogram create">
+        <createTable tableName="POLLPROGRAM">
+			<column name="id" type="BIGINT" autoIncrement="true">
+				<constraints primaryKey="true" primaryKeyName="pollprogram_pk" />
+			</column>
+			<column name="frequency" type="INTEGER" />
+			<column name="startdate" type="TIMESTAMP" />
+			<column name="stopdate" type="TIMESTAMP" />
+            <column name="latestruntime" type="TIMESTAMP"/>
+			<column name="pollstate" type="VARCHAR(10)" />
+            <column name="pollbase_id" type="BIGINT"/>
+            <column name="updattim" type="TIMESTAMP"/>
+            <column name="upuser" type="VARCHAR(60)"/>
+            <column name="guid" type="VARCHAR(36)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="pollprogram_guid_unique"/>
+            </column>
+		</createTable>
+			
+        <addForeignKeyConstraint 
+            constraintName="pollbase_fk"
+            baseTableName="POLLPROGRAM"
+		    baseColumnNames="pollbase_id"
+            referencedTableName="POLLBASE"
+            referencedColumnNames="id"
+		/>
+        
+        <rollback>
+            <dropTable tableName="POLLPROGRAM" cascadeConstraints="true"/>
+        </rollback>
+	</changeSet>
+    
+</databaseChangeLog>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet author="johlyn" id="insert INMARSAT-C capabilityvalue">
+        <insert tableName="capabilityvalue">
+            <column name="capval_id" value="1"/>
+            <column name="capval_value" value="true"/>
+            <column name="capval_updattim" valueDate="${now}"/>
+            <column name="capval_upuser" value="johlyn"/>
+            <column name="capval_termtype_id" value="1"/> <!-- INMARSAT-C -->
+            <column name="capval_capvaltype_id" value="1"/> <!-- IS_POLLABLE -->
+        </insert>
+        <insert tableName="capabilityvalue">
+            <column name="capval_id" value="2"/>
+            <column name="capval_value" value="true"/>
+            <column name="capval_updattim" valueDate="${now}"/>
+            <column name="capval_upuser" value="johlyn"/>
+            <column name="capval_termtype_id" value="1"/> <!-- INMARSAT-C -->
+            <column name="capval_capvaltype_id" value="2"/> <!-- IS_CONFIGURABLE -->
+        </insert>
+        <insert tableName="capabilityvalue">
+            <column name="capval_id" value="3"/>
+            <column name="capval_value" value="true"/>
+            <column name="capval_updattim" valueDate="${now}"/>
+            <column name="capval_upuser" value="johlyn"/>
+            <column name="capval_termtype_id" value="1"/> <!-- INMARSAT-C -->
+            <column name="capval_capvaltype_id" value="3"/> <!-- SUPPORT_SINGLE_OCEAN -->
+        </insert>
+        <insert tableName="capabilityvalue">
+            <column name="capval_id" value="4"/>
+            <column name="capval_value" value="true"/>
+            <column name="capval_updattim" valueDate="${now}"/>
+            <column name="capval_upuser" value="johlyn"/>
+            <column name="capval_termtype_id" value="1"/> <!-- INMARSAT-C -->
+            <column name="capval_capvaltype_id" value="4"/> <!-- SUPPORT_MULTIPLE_OCEAN -->
+        </insert>
+        <insert tableName="capabilityvalue">
+            <column name="capval_id" value="5"/>
+            <column name="capval_value" value="true"/>
+            <column name="capval_updattim" valueDate="${now}"/>
+            <column name="capval_upuser" value="johlyn"/>
+            <column name="capval_termtype_id" value="1"/> <!-- INMARSAT-C -->
+            <column name="capval_capvaltype_id" value="5"/> <!-- SUPPORT_SAMPLING -->
+        </insert>
+        <rollback>
+            <delete tableName="capabilityvalue">
+				<where>
+					capval_id in (1, 2, 3, 4, 5)
+				</where>
+			</delete>
+        </rollback>
+	</changeSet>
+    
+    <changeSet author="johlyn" id="edit INMARSAT-C capabilityvalue single ocean">
+        <update tableName="capabilityvalue">
+            <column name="capval_value" value="false"/>
+            <where>
+                capval_id=3
+            </where>
+        </update>
+        <rollback>
+            <update tableName="capabilityvalue">
+                <column name="capval_value" value="true"/>
+                <where>
+                    capval_id=3
+                </where>
+            </update>
+        </rollback>
+	</changeSet>
+
+    <changeSet author="johlyn" id="insert INMARSAT-C capabilityvalue has_les">
+        <insert tableName="capabilityvalue">
+            <column name="capval_id" value="6"/>
+            <column name="capval_value" value="true"/>
+            <column name="capval_updattim" valueDate="${now}"/>
+            <column name="capval_upuser" value="johlyn"/>
+            <column name="capval_termtype_id" value="1"/> <!-- INMARSAT-C -->
+            <column name="capval_capvaltype_id" value="6"/> <!-- HAS_LES -->
+        </insert>
+        <rollback>
+            <delete tableName="capabilityvalue">
+                <where>
+                    capval_id in (6)
+                </where>
+            </delete>
+        </rollback>
+	</changeSet>
+    
+</databaseChangeLog>
