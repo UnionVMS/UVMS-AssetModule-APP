@@ -23,6 +23,7 @@
         <application.error.logfile>/app/logs/${project.parent.artifactId}/${project.parent.artifactId}-error.log</application.error.logfile>
 
         <maven.compiler.plugin.version>3.1</maven.compiler.plugin.version>
+        <exchange.model.version>4.0.14</exchange.model.version>
         <maven.ejb.plugin.version>2.3</maven.ejb.plugin.version>
         <maven.ejb.plugin.ejb.version>3.1</maven.ejb.plugin.ejb.version>
         <properties.maven.plugin.version>1.0-alpha-2</properties.maven.plugin.version>
@@ -106,6 +107,14 @@
             <type>pom</type>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.exchange</groupId>
+            <artifactId>exchange-model</artifactId>
+            <version>${exchange.model.version}</version>
+            <type>jar</type>
+        </dependency>
+
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>deprecated-asset-message-mock</artifactId>

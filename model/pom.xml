@@ -48,12 +48,6 @@
 		    <version>3.6</version>
 		</dependency>
 		<dependency>
-			<groupId>eu.europa.ec.fisheries.uvms.exchange</groupId>
-			<artifactId>exchange-model</artifactId>
-			<version>${exchange.model.version}</version>
-			<type>jar</type>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.activemq</groupId>
 			<artifactId>activemq-client</artifactId>
 			<version>5.14.5</version>
