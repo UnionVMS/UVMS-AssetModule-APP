@@ -50,7 +50,10 @@ import java.util.UUID;
  * 
  */
 @Entity
-@Table(name="channel")
+@Table(name = "channel", indexes = { @Index(columnList = "id", name = "channel00", unique = true),
+		@Index(columnList = "mobterm_id", name = "channel10", unique = false),
+		@Index(columnList = "mobterm_event_id", name = "channel20", unique = false),
+		@Index(columnList = "dnid", name = "channel30", unique = false),})
 @Audited
 public class Channel implements Serializable {
 	private static final long serialVersionUID = 1L;

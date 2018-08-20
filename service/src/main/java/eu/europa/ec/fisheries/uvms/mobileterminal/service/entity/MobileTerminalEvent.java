@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.JSR310StringParsableDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.OffsetDateTimeDeserializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
 import org.hibernate.annotations.Fetch;
@@ -42,7 +43,13 @@ import java.util.UUID;
  */
 @Entity
 @NamedQuery(name="MobileTerminalEvent.findAll", query="SELECT m FROM MobileTerminalEvent m")
-@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+@Audited
+@Table(name = "mobileterminalevent", indexes = { @Index(columnList = "id", name = "mobileterminalevent00", unique = true),
+												 @Index(columnList = "mobileterminal_id", name = "mobileterminalevent10", unique = false),
+												 @Index(columnList = "chan_def", name = "mobileterminalevent20", unique = false),
+												 @Index(columnList = "chan_conf", name = "mobileterminalevent30", unique = false),
+												 @Index(columnList = "chan_poll", name = "mobileterminalevent40", unique = false),
+												 @Index(columnList = "asset_id", name = "mobileterminalevent50", unique = false),})
 @JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class, property="id")
 public class MobileTerminalEvent implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -71,9 +78,10 @@ public class MobileTerminalEvent implements Serializable {
 	@Column(name="attributes")
 	private String attributes;
 
-	@Size(max=400)
-	@Column(name="connect_id")
-	private String connectId;
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name="asset_id")
+	@Fetch(FetchMode.SELECT)
+	private Asset assetId;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name="eventtype")
@@ -151,12 +159,12 @@ public class MobileTerminalEvent implements Serializable {
 		this.attributes = attributes;
 	}
 
-	public String getConnectId() {
-		return connectId;
+	public Asset getAssetId() {
+		return assetId;
 	}
 
-	public void setConnectId(String connectId) {
-		this.connectId = connectId;
+	public void setConnectId(Asset assetId) {
+		this.assetId = assetId;
 	}
 
 	public EventCodeEnum getEventCodeType() {
@@ -229,7 +237,7 @@ public class MobileTerminalEvent implements Serializable {
 				Objects.equals(updatetime, that.updatetime) &&
 				Objects.equals(updateuser, that.updateuser) &&
 				Objects.equals(attributes, that.attributes) &&
-				Objects.equals(connectId, that.connectId) &&
+				Objects.equals(assetId, that.assetId) &&
 				eventCodeType == that.eventCodeType &&
 				Objects.equals(mobileterminal, that.mobileterminal) &&
 				Objects.equals(defaultChannel, that.defaultChannel) &&

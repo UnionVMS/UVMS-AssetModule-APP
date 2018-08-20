@@ -12,6 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
@@ -19,11 +20,14 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTer
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ejb.EJB;
+import javax.inject.Inject;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public class MobileTerminalModelToEntityMapper {
     private static Logger LOG = LoggerFactory.getLogger(MobileTerminalModelToEntityMapper.class);
@@ -170,6 +174,8 @@ public class MobileTerminalModelToEntityMapper {
         entity.setChannels(channels);
     }
 
+    @EJB
+    static AssetDao assetDao;
     private static void mapHistoryAttributes(MobileTerminal entity, MobileTerminalType model, String username, String comment, EventCodeEnum eventCode) {
         List<MobileTerminalAttribute> modelAttributes = model.getAttributes();
         MobileTerminalEvent current = entity.getCurrentEvent();
@@ -182,9 +188,13 @@ public class MobileTerminalModelToEntityMapper {
         history.setComment(comment);
         history.setEventCodeType(eventCode);
         if (current != null && model.getConnectId() == null && eventCode != EventCodeEnum.UNLINK) {
-            history.setConnectId(current.getConnectId());
+            history.setConnectId(current.getAssetId());
         } else {
-            history.setConnectId(model.getConnectId());
+            if(model.getConnectId() == null){
+                history.setConnectId(null);
+            }else {
+                history.setConnectId(assetDao.getAssetById(UUID.fromString(model.getConnectId())));
+            }
         }
 
         history.setAttributes(mapHistoryAttributes(modelAttributes, history));

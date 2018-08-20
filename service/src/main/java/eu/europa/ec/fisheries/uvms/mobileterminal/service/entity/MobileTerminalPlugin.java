@@ -33,7 +33,8 @@ import java.util.*;
  *
  */
 @Entity
-@Table(name = "plugin")
+@Table(name = "plugin", indexes = { @Index(columnList = "id", name = "plugin00", unique = true),
+        @Index(columnList = "service_name", name = "plugin10", unique = false),})
 @NamedQueries({
 	@NamedQuery(name = MobileTerminalConstants.PLUGIN_FIND_ALL, query = "SELECT p FROM MobileTerminalPlugin p WHERE p.pluginInactive = false"),
 	@NamedQuery(name = MobileTerminalConstants.PLUGIN_FIND_BY_SERVICE_NAME, query = "SELECT p FROM MobileTerminalPlugin p WHERE p.pluginServiceName = :serviceName")

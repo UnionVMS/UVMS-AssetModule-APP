@@ -18,19 +18,13 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.GROUP_A
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.UUID;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name="Assetgroup")
+@Table(name = "Assetgroup", indexes = { @Index(columnList = "id", name = "assetgroup00", unique = true),})
 @NamedQueries({
 	@NamedQuery(name=GROUP_ASSET_FIND_ALL, query="SELECT a FROM AssetGroup a WHERE a.archived = false"),
 	@NamedQuery(name=GROUP_ASSET_BY_USER, query="SELECT a FROM AssetGroup a WHERE a.archived = false AND a.owner = :owner"),

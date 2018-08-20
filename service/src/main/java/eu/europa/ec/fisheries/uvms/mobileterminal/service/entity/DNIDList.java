@@ -26,7 +26,8 @@ import java.util.UUID;
  *
  */
 @Entity
-@Table(name = "dnid_list")
+@Table(name = "dnid_list", indexes = { @Index(columnList = "id", name = "dnid_list00", unique = true),
+        @Index(columnList = "dnid", name = "dnid_list10", unique = false),})
 @NamedQueries({
 	@NamedQuery(name = MobileTerminalConstants.DNID_LIST, query = "SELECT dnid FROM DNIDList dnid"),
 	@NamedQuery(name = MobileTerminalConstants.DNID_LIST_BY_PLUGIN, query = "SELECT dnid FROM DNIDList dnid where dnid.pluginName = :pluginName")
@@ -41,7 +42,7 @@ public class DNIDList implements Serializable {
     private UUID id;
 
     @Size(max = 100)
-    @Column(name = "value")
+    @Column(name = "dnid")
     private String dnid;
 
     @Size(max = 500)

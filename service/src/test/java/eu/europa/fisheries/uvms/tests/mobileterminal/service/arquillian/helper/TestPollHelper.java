@@ -2,6 +2,7 @@ package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.TerminalDaoBean;
@@ -13,6 +14,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalM
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -63,6 +65,9 @@ public class TestPollHelper {
         return pmt;
     }
 
+    @Inject
+    AssetDao assetDao;
+
     public MobileTerminal createAndPersistMobileTerminal(String connectId)  {
 
         String serialNo = UUID.randomUUID().toString();
@@ -95,7 +100,7 @@ public class TestPollHelper {
         Set<MobileTerminalEvent> mobileTerminalEvents = new HashSet<>();
         MobileTerminalEvent mte = new MobileTerminalEvent();
         if(connectId != null && !connectId.trim().isEmpty())
-            mte.setConnectId(connectId);
+            mte.setConnectId(assetDao.getAssetById(UUID.fromString(connectId)));
         mte.setActive(true);
         mte.setMobileterminal(mt);
 

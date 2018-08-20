@@ -26,7 +26,7 @@ import java.util.UUID;
  *
  */
 @Entity
-@Table(name = "oceanregion")
+@Table(name = "oceanregion", indexes = { @Index(columnList = "id", name = "oceanregion00", unique = true),})
 @NamedQueries({
 	@NamedQuery(name = MobileTerminalConstants.OCEAN_REGIONS, query = "SELECT o FROM OceanRegion o")
 })

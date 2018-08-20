@@ -11,10 +11,10 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.bean;
 
-import eu.europa.ec.fisheries.schema.exchange.service.v1.ServiceResponseType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollableQuery;
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.DataSourceQueue;
@@ -45,7 +45,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jms.TextMessage;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
@@ -277,7 +276,7 @@ public class MobileTerminalServiceBean {
         event.setConfigChannel(current.getConfigChannel());
         event.setAttributes(current.getAttributes());
         event.setComment(comment);
-        event.setConnectId(current.getConnectId());
+        event.setConnectId(current.getAssetId());
         event.setMobileterminal(mobileTerminal);
         event.setUpdateuser(username);
         switch (status) {
@@ -401,6 +400,8 @@ public class MobileTerminalServiceBean {
 
     }
 
+    @Inject
+    AssetDao assetDao;
 
     public MobileTerminal assignMobileTerminalToCarrier(MobileTerminalAssignQuery query, String comment, String username) {
         if (query == null) {
@@ -417,7 +418,7 @@ public class MobileTerminalServiceBean {
         String connectId = query.getConnectId();
 
         MobileTerminal terminal = getMobileTerminalEntityById(mobTermId);
-        String currentConnectId = terminal.getCurrentEvent().getConnectId();
+        String currentConnectId = terminal.getCurrentEvent().getAssetId().toString();
         if (currentConnectId == null || currentConnectId.isEmpty()) {
             MobileTerminalEvent current = terminal.getCurrentEvent();
             current.setActive(false);
@@ -429,7 +430,7 @@ public class MobileTerminalServiceBean {
             event.setConfigChannel(current.getConfigChannel());
             event.setAttributes(current.getAttributes());
             event.setComment(comment);
-            event.setConnectId(connectId);
+            event.setConnectId(assetDao.getAssetById(UUID.fromString(connectId)));
             event.setMobileterminal(terminal);
             event.setUpdateuser(username);
             event.setEventCodeType(EventCodeEnum.LINK);
@@ -457,7 +458,7 @@ public class MobileTerminalServiceBean {
         String connectId = query.getConnectId();
 
         MobileTerminal terminal = getMobileTerminalEntityById(mobTermId);
-        String currentConnectId = terminal.getCurrentEvent().getConnectId();
+        String currentConnectId = terminal.getCurrentEvent().getAssetId().toString();
         if (currentConnectId != null && currentConnectId.equals(connectId)) {
             MobileTerminalEvent current = terminal.getCurrentEvent();
             current.setActive(false);

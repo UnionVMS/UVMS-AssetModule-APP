@@ -35,7 +35,8 @@ import java.util.UUID;
  *
  */
 @Entity
-@Table(name = "plugin_capability")
+@Table(name = "plugin_capability", indexes = { @Index(columnList = "id", name = "plugin_capability00", unique = true),
+        @Index(columnList = "plugin_id", name = "plugin_capability10", unique = false),})
 @NamedQueries({
 	@NamedQuery(name = "PluginCapability.findAll", query = "SELECT p FROM MobileTerminalPluginCapability p"),
 })

@@ -12,27 +12,33 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_B
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.time.OffsetDateTime;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
 
 @Audited
 @Entity
-@Table(name = "Asset")
+@Table(name = "Asset", indexes = { @Index(columnList = "id", name = "asset00", unique = true),
+        @Index(columnList = "cfr", name = "asset10", unique = true),
+        @Index(columnList = "imo", name = "asset20", unique = true),
+        @Index(columnList = "ircs", name = "asset30", unique = true),
+        @Index(columnList = "mmsi", name = "asset40", unique = true),
+        @Index(columnList = "iccat", name = "asset50", unique = true),
+        @Index(columnList = "uvi", name = "asset60", unique = true),
+        @Index(columnList = "gfcm", name = "asset70", unique = true),})
+
 @NamedQueries({
           @NamedQuery(name = ASSET_FIND_ALL, query = "SELECT v FROM Asset v WHERE v.active = true"),
           @NamedQuery(name = ASSET_FIND_BY_CFR, query = "SELECT v FROM Asset v WHERE v.cfr = :cfr AND v.active = true"),
@@ -44,6 +50,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
           @NamedQuery(name = ASSET_FIND_BY_GFCM, query = "SELECT v FROM Asset v WHERE v.gfcm = :gfcm AND v.active = true"),
           @NamedQuery(name = ASSET_FIND_BY_IDS, query = "SELECT v FROM Asset v WHERE v.id in :idList AND v.active = true"),
 })
+@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class, property="id")
 public class Asset implements Serializable {
 
     public static final String ASSET_FIND_BY_CFR = "Asset.findByCfr";
@@ -254,6 +261,11 @@ public class Asset implements Serializable {
 
     @Column(name = "prodorgname")
     private String prodOrgName;
+
+
+    @OneToMany(mappedBy = "assetId", cascade = CascadeType.ALL)
+    @Fetch(FetchMode.SELECT)
+    private List<MobileTerminalEvent> mobileTerminalEvent;
 
     @PrePersist
     @PreUpdate
@@ -699,5 +711,21 @@ public class Asset implements Serializable {
 
     public void setProdOrgName(String prodOrgName) {
         this.prodOrgName = prodOrgName;
+    }
+
+    public List<MobileTerminalEvent> getMobileTerminalEvent() {
+        if(mobileTerminalEvent == null){
+            mobileTerminalEvent = new LinkedList<>();
+        }
+        return mobileTerminalEvent;
+    }
+
+    public void setMobileTerminalEvent(List<MobileTerminalEvent> mobileTerminalEvent) {
+        this.mobileTerminalEvent = mobileTerminalEvent;
+    }
+
+    @Override
+    public String toString(){
+        return id.toString();
     }
 }

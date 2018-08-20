@@ -20,7 +20,8 @@ import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-@Table(name = "pollpayload")
+@Table(name = "pollpayload", indexes = { @Index(columnList = "id", name = "pollpayload00", unique = true),
+        @Index(columnList = "poll_id", name = "pollpayload10", unique = false),})
 @Entity
 public class PollPayload implements Serializable {
     private static final long serialVersionUID = 1L;
