@@ -26,8 +26,7 @@ import java.util.UUID;
  *
  */
 @Entity
-@Table(name = "dnid_list", indexes = { @Index(columnList = "id", name = "dnid_list00", unique = true),
-        @Index(columnList = "dnid", name = "dnid_list10", unique = false),})
+@Table(name = "dnid_list", indexes = { @Index(columnList = "dnid", name = "dnid_list_INX_01", unique = false),})
 @NamedQueries({
 	@NamedQuery(name = MobileTerminalConstants.DNID_LIST, query = "SELECT dnid FROM DNIDList dnid"),
 	@NamedQuery(name = MobileTerminalConstants.DNID_LIST_BY_PLUGIN, query = "SELECT dnid FROM DNIDList dnid where dnid.pluginName = :pluginName")

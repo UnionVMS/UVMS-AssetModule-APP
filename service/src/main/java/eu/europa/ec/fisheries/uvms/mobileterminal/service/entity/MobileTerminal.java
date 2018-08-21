@@ -44,9 +44,9 @@ import java.util.*;
  */
 @Audited
 @Entity
-@Table(name = "mobileterminal", indexes = { @Index(columnList = "id", name = "mobileterminal00", unique = true),
-		@Index(columnList = "plugin_id", name = "mobileterminal10", unique = false),
-		@Index(columnList = "serial_no", name = "mobileterminal20", unique = false),})
+@Table(name = "mobileterminal", indexes = { @Index(columnList = "plugin_id", name = "mobileterminal_plugin_FK_INX01", unique = false),
+		@Index(columnList = "serial_no", name = "mobileterminal_INX01", unique = false),},
+		uniqueConstraints = @UniqueConstraint(name = "mobileterminal_uc_historyid" , columnNames = "historyid"))
 @NamedQueries({
 	@NamedQuery(name=MobileTerminalConstants.MOBILE_TERMINAL_FIND_ALL, query = "SELECT m FROM MobileTerminal m"),
 	@NamedQuery(name=MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_ID, query="SELECT m FROM MobileTerminal m WHERE m.id = :id"),
@@ -63,7 +63,7 @@ public class MobileTerminal implements Serializable {
 	@Column(name = "id")
 	private UUID id;
 
-	@Column(unique = true, name = "historyid")
+	@Column(name = "historyid")
 	private UUID historyId;
 
 	@NotNull

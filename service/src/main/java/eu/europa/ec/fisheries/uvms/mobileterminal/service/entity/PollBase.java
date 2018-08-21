@@ -29,9 +29,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "pollbase", indexes = { @Index(columnList = "id", name = "pollbase00", unique = true),
-        @Index(columnList = "channel_guid", name = "pollbase10", unique = false),
-        @Index(columnList = "mobileterminal_id", name = "pollbase10", unique = false),})
+@Table(name = "pollbase", indexes = { @Index(columnList = "channel_guid", name = "pollbase_channel_FK_INX10", unique = false),
+        @Index(columnList = "mobileterminal_id", name = "pollbase_mobterm_FK_INX10", unique = false),})
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PollBase implements Serializable {
 

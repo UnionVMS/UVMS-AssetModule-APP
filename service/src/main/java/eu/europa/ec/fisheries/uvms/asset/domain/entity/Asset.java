@@ -30,14 +30,16 @@ import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
 
 @Audited
 @Entity
-@Table(name = "Asset", indexes = { @Index(columnList = "id", name = "asset00", unique = true),
-        @Index(columnList = "cfr", name = "asset10", unique = true),
-        @Index(columnList = "imo", name = "asset20", unique = true),
-        @Index(columnList = "ircs", name = "asset30", unique = true),
-        @Index(columnList = "mmsi", name = "asset40", unique = true),
-        @Index(columnList = "iccat", name = "asset50", unique = true),
-        @Index(columnList = "uvi", name = "asset60", unique = true),
-        @Index(columnList = "gfcm", name = "asset70", unique = true),})
+@Table(name = "Asset",
+        uniqueConstraints = {@UniqueConstraint(name = "Asset_UC_ cfr", columnNames = "cfr"),
+            @UniqueConstraint(name = "asset_uc_imo", columnNames = "imo"),
+            @UniqueConstraint(name = "asset_uc_ircs" , columnNames = "ircs"),
+            @UniqueConstraint(name = "asset_uc_mmsi" , columnNames = "mmsi"),
+            @UniqueConstraint(name = "asset_uc_iccat" , columnNames = "iccat"),
+            @UniqueConstraint(name = "asset_uc_uvi" , columnNames = "uvi"),
+            @UniqueConstraint(name = "asset_uc_gfcm" , columnNames = "gfcm"),
+            @UniqueConstraint(name = "asset_uc_historyid" , columnNames = "historyid"),
+        })
 
 @NamedQueries({
           @NamedQuery(name = ASSET_FIND_ALL, query = "SELECT v FROM Asset v WHERE v.active = true"),
@@ -71,7 +73,7 @@ public class Asset implements Serializable {
     @Column(name = "id")
     private UUID id;
 
-    @Column(unique = true, name = "historyid")
+    @Column(name = "historyid")
     private UUID historyId;
 
     @Column(name = "ircsindicator")
@@ -114,31 +116,31 @@ public class Asset implements Serializable {
     private OffsetDateTime vesselDateOfEntry;
 
     @Size(max = 12)
-    @Column(unique = true, name = "cfr")
+    @Column(name = "cfr")
     private String cfr;
 
     @Size(max = 7)
-    @Column(unique = true, name = "imo")
+    @Column(name = "imo")
     private String imo;
 
     @Size(max = 8)
-    @Column(unique = true, name = "ircs")
+    @Column(name = "ircs")
     private String ircs;
 
     @Size(max = 9)
-    @Column(unique = true, name = "mmsi")
+    @Column(name = "mmsi")
     private String mmsi;
 
     @Size(max = 50)
-    @Column(unique = true, name = "iccat")
+    @Column(name = "iccat")
     private String iccat;
 
     @Size(max = 50)
-    @Column(unique = true, name = "uvi")
+    @Column(name = "uvi")
     private String uvi;
 
     @Size(max = 50)
-    @Column(unique = true, name = "gfcm")
+    @Column(name = "gfcm")
     private String gfcm;
 
     @Column(name = "active")

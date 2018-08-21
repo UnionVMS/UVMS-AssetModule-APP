@@ -33,8 +33,8 @@ import java.util.*;
  *
  */
 @Entity
-@Table(name = "plugin", indexes = { @Index(columnList = "id", name = "plugin00", unique = true),
-        @Index(columnList = "service_name", name = "plugin10", unique = false),})
+@Table(name = "plugin", indexes = { @Index(columnList = "service_name", name = "plugin_INX10", unique = false),},
+        uniqueConstraints = @UniqueConstraint(name = "plugin_uc_service_name" , columnNames = "service_name"))
 @NamedQueries({
 	@NamedQuery(name = MobileTerminalConstants.PLUGIN_FIND_ALL, query = "SELECT p FROM MobileTerminalPlugin p WHERE p.pluginInactive = false"),
 	@NamedQuery(name = MobileTerminalConstants.PLUGIN_FIND_BY_SERVICE_NAME, query = "SELECT p FROM MobileTerminalPlugin p WHERE p.pluginServiceName = :serviceName")
@@ -59,7 +59,7 @@ public class MobileTerminalPlugin implements Serializable {
     private String name;
 
     @Size(max = 500)
-    @Column(name = "service_name", unique=true)
+    @Column(name = "service_name")
     private String pluginServiceName;
 
     @Size(max = 50)
