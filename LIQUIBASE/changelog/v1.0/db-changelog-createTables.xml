@@ -156,7 +156,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="assetgroup" type="UUID"/>
-            <column name="field" type="VARCHAR(80)">
+            <column name="key" type="VARCHAR(80)">
                 <constraints nullable="false"/>
             </column>
             <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
