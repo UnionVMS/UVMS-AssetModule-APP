@@ -1,1183 +1,1183 @@
-<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
     <changeSet author="thofan (generated)" id="1534337702832-1">
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="LONDON"/>
             <column name="constant" value="UNIT_TONNAGE"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z z"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z z"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="London"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="OSLO"/>
             <column name="constant" value="UNIT_TONNAGE"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z z"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z z"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Oslo"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="LOA"/>
             <column name="constant" value="UNIT_LENGTH"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z z"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z z"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Loa"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="LBP"/>
             <column name="constant" value="UNIT_LENGTH"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z z"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z z"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Lbp"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="VESSEL"/>
             <column name="constant" value="ASSET_TYPE"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z z"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z z"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Vessel"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="MOCK-license-DB"/>
             <column name="constant" value="LICENSE_TYPE"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z z"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z z"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="MOCK-license-DB"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="SWE"/>
             <column name="constant" value="FLAG_STATE"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z z"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z z"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Sverige"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="DNK"/>
             <column name="constant" value="FLAG_STATE"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z z"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z z"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Danmark"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="NOR"/>
             <column name="constant" value="FLAG_STATE"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z z"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z z"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Norge"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="0-11,99"/>
             <column name="constant" value="SPAN_LENGTH_LOA"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z z"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z z"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="0-11,99"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="12-14,99"/>
             <column name="constant" value="SPAN_LENGTH_LOA"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z z"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z z"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="12-14,99"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="15-17,99"/>
             <column name="constant" value="SPAN_LENGTH_LOA"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z z"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z z"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="15-17,99"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="18-23,99"/>
             <column name="constant" value="SPAN_LENGTH_LOA"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z z"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z z"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="18-23,99"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="24+"/>
             <column name="constant" value="SPAN_LENGTH_LOA"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z z"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z z"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="24+"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="0-99"/>
             <column name="constant" value="SPAN_POWER_MAIN"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z z"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z z"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="0-99"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="100-199"/>
             <column name="constant" value="SPAN_POWER_MAIN"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z z"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z z"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="100-199"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="200-299"/>
             <column name="constant" value="SPAN_POWER_MAIN"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z z"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z z"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="200-299"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="300+"/>
             <column name="constant" value="SPAN_POWER_MAIN"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z z"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z z"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="300+"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="0"/>
             <column name="constant" value="ACTIVITY_CODE"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z z"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z z"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="0"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="1"/>
             <column name="constant" value="ACTIVITY_CODE"/>
-            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z z"/>
-            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z z"/>
+            <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
+            <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="1"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="10"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z z"/>
             <column name="description" value="10"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="12"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="12"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="14"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="14"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="2"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="2"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="3"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="3"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="39"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="39"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="4"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="4"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="5"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="5"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="6"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="6"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="7"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="7"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="71"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="71"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="8"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="8"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="80"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="80"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="81"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="81"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="82"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="82"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="9"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="9"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="90"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="90"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="98"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="98"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="99"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="99"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="999"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="999"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="EL1"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="EL1"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="EL2"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="EL2"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="EL3"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="EL3"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="EL4"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="EL4"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="K01"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="K01"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="K02"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="K02"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="K03"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="K03"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="K04"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="K04"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="K06"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="K06"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="K07"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="K07"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="K08"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="K08"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="K09"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="K09"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="SAN"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="SAN"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="SAT"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="SAT"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="T1"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="T1"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="T2"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="T2"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="U1"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="U1"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="U2"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="U2"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="U3"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="U3"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V00"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V00"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V01"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V01"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V02"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V02"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V03"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V03"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V04"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V04"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V05"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V05"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V06"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V06"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V07"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V07"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V08"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V08"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V09"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V09"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V10"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V10"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V11"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V11"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V12"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V12"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V13"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V13"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V14"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V14"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V15"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V15"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V16"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V16"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V17"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V17"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V18"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V18"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V19"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V19"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V20"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V20"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V21"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V21"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V22"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V22"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V23"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V23"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V24"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V24"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V25"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V25"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V26"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V26"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V28"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V28"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V29"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V29"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V30"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V30"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V31"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V31"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V32"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V32"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V33"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V33"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V35"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V35"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V40"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V40"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V41"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V41"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V42"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V42"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V43"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V43"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V45"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V45"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V49"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V49"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V50"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V50"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V51"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V51"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V52"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V52"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V53"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V53"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V54"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V54"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V60"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V60"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V61"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V61"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V62"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V62"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V63"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V63"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V65"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V65"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V75"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V75"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V80"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V80"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V85"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V85"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V86"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V86"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V90"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V90"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V92"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V92"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V93"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V93"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V95"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V95"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V96"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V96"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V98"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V98"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="V99"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="V99"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="X1"/>
             <column name="constant" value="ACTIVITY_CODE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="X1"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="P"/>
             <column name="constant" value="FISHING_TYPE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Pelagic"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="D"/>
             <column name="constant" value="FISHING_TYPE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Demersal"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="DP"/>
             <column name="constant" value="FISHING_TYPE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Demersal and pelagic"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="U"/>
             <column name="constant" value="FISHING_TYPE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Unknown"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="Trawl"/>
             <column name="constant" value="FISHING_GEAR_TYPE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Trawl"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="Scrapingtool"/>
             <column name="constant" value="FISHING_GEAR_TYPE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Scrapingtool"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="Lift nets"/>
             <column name="constant" value="FISHING_GEAR_TYPE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Lift nets"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="Gillnets and similar nets"/>
             <column name="constant" value="FISHING_GEAR_TYPE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Gillnets and similar nets"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="Trap"/>
             <column name="constant" value="FISHING_GEAR_TYPE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Fishing trap"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="Hooks and lines"/>
             <column name="constant" value="FISHING_GEAR_TYPE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Hooks and lines"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="Unknown"/>
             <column name="constant" value="FISHING_GEAR_TYPE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Unknown fishing tool"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="None"/>
             <column name="constant" value="FISHING_GEAR_TYPE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="No fishing tool"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="Surrounding nets"/>
             <column name="constant" value="FISHING_GEAR_TYPE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Surrounding nets"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="Seines"/>
             <column name="constant" value="FISHING_GEAR_TYPE"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Seines"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="S"/>
             <column name="constant" value="FISHING_GEAR_MOBILITY"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Stationary"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="T"/>
             <column name="constant" value="FISHING_GEAR_MOBILITY"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Towed"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="M"/>
             <column name="constant" value="FISHING_GEAR_MOBILITY"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Mobil"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="U"/>
             <column name="constant" value="FISHING_GEAR_MOBILITY"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Unknown"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="PS"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Purse seines"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="LA"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Lampara nets"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="SB"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Beach seines"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="SDN"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Danish seines"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="SSC"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Scottish seines"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="SPR"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Pair seines"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="TBB"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Beam trawls"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="OTB"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Bottom otter trawls"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="PTB"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Bottom pair trawls"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="OTM"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Midwater otter trawls"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="PTM"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Pelagic pair trawls"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="OTT"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Otter twin trawls"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="DRB"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Boat dredges"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="DRH"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Hand dredges used on board a vessel"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="HMD"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Mechanised dredges including suction dredges"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="LNB"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Boat operated lift nets"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="LNS"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Shore-operated stationary lift nets"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="GNS"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Set (anchored) gillnets"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="GND"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Driftnets"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="GNC"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Encircling gillnets"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="GTR"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Trammel nets"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="GTN"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Combined trammel and gillnets"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="FPO"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Pots (traps)"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="LHP"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Hand lines and pole lines (hand operated)"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="LHM"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Hand lines and pole lines (mechanised)"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="LLS"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Set longlines"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="LLD"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Longlines (drifting)"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="LTL"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Troll lines"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="NK"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
             <column name="validtodate" valueDate="3070-01-01 01:01:01.0 z"/>
             <column name="description" value="Unknown"/>
         </insert>
-        <insert tableName="customcodes">
+        <insert tableName="customcode">
             <column name="code" value="NO"/>
             <column name="constant" value="FISHING_GEAR"/>
             <column name="validfromdate" valueDate="1970-01-01 01:01:01.0 z"/>
