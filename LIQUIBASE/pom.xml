@@ -4,13 +4,13 @@
 	<parent>
 	    <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
 	    <artifactId>asset</artifactId>
-	    <version>5.0.2-SNAPSHOT</version>
+	    <version>5.0.2</version>
 	    <relativePath>../pom.xml</relativePath>
     </parent>
 	
 	<groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
 	<artifactId>liquibase</artifactId>
-	<version>5.0.2-SNAPSHOT</version>
+	<version>5.0.2</version>
 	<name>liquibase</name>
 
 	<properties>
