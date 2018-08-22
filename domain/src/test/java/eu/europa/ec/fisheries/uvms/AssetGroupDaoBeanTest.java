@@ -99,7 +99,7 @@ public class AssetGroupDaoBeanTest {
 		List<AssetGroupField> filters = new ArrayList<AssetGroupField>();
 		AssetGroupField filter = new AssetGroupField();
 		filter.setAssetGroup(group.getId());
-		filter.setField("FIELD NAME");
+		filter.setKey("FIELD NAME");
 		filter.setValue("ASSET-NAME");
 
 		filter.setUpdatedBy("DAOTEST");

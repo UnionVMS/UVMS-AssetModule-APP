@@ -632,12 +632,8 @@ public class AssetDaoTest extends TransactionalTests {
         List<SearchKeyValue> searchKeyValues = new ArrayList<>();
         SearchKeyValue searchKey = new SearchKeyValue();
         searchKey.setSearchField(SearchFields.NAME);
-        searchKey.setSearchValues(Arrays.asList("*LikeSearch*", "*Name*"));
+        searchKey.setSearchValues(Arrays.asList("*LikeSearch*"));
         searchKeyValues.add(searchKey);
-        SearchKeyValue searchKey2 = new SearchKeyValue();
-        searchKey2.setSearchField(SearchFields.NAME);
-        searchKey2.setSearchValues(Arrays.asList("*Name*"));
-        searchKeyValues.add(searchKey2);
         List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
         
         assertEquals(1, assets.size());

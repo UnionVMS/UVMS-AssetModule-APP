@@ -52,8 +52,8 @@ public class AssetGroupField implements Serializable {
 
     @Size(max = 80)
     @NotNull
-    @Column(name = "field")
-    private String field;
+    @Column(name = "key")
+    private String key;
 
     @Column(name = "updatetime")
     private LocalDateTime updateTime;
@@ -78,12 +78,12 @@ public class AssetGroupField implements Serializable {
         this.id = id;
     }
 
-    public String getField() {
-        return this.field;
+    public String getKey() {
+        return this.key;
     }
 
-    public void setField(String filterField) {
-        this.field = filterField;
+    public void setKey(String filterKey) {
+        this.key = filterKey;
     }
 
     public LocalDateTime getUpdateTime() {

@@ -319,7 +319,7 @@ public class AssetServiceBean implements AssetService {
 
         Set<Asset> assets = new HashSet<>();
         for (AssetGroupField groupField : groupFields) {
-            if ("GUID".equals(groupField.getField())) {
+            if ("GUID".equals(groupField.getKey())) {
                 assets.add(getAssetById(UUID.fromString(groupField.getValue())));
             }
         }

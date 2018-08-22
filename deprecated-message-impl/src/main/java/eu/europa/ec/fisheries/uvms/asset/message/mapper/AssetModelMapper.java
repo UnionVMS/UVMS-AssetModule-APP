@@ -265,7 +265,7 @@ public class AssetModelMapper {
         List<AssetGroupField> fields = assetGroupService.retrieveFieldsForGroup(assetGroupEntity.getId());
         for (AssetGroupField assetGroupField : fields) {
             AssetGroupSearchField field = new AssetGroupSearchField();
-            field.setKey(ConfigSearchField.fromValue(assetGroupField.getField()));
+            field.setKey(ConfigSearchField.fromValue(assetGroupField.getKey()));
             field.setValue(assetGroupField.getValue());
             assetGroupModel.getSearchFields().add(field);
         }
