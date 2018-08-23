@@ -121,12 +121,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
 
         assertTrue(listResponse != null);
 
-        List<Asset> al =  listResponse.getAssetList();
-        for(Asset a : al){
-            System.out.println(a.getId().toString());
-        }
-
-
+        
         assertTrue(listResponse.getAssetList().stream()
                 .anyMatch(fetchedAsset -> fetchedAsset.getId().equals(createdAsset.getId())));
     }
