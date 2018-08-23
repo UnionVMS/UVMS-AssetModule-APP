@@ -12,6 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -78,6 +79,7 @@ public class MobileTerminalPlugin implements Serializable {
     @Column(name = "upuser")
     private String updatedBy;
 
+    @JsonIgnore  //added to stop jackson from serializing the entire DB on a get query for a mt with a popular plugin
     @OneToMany(mappedBy="plugin", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     private List<MobileTerminal> mobileTerminals;
     

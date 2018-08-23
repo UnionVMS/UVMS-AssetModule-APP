@@ -117,6 +117,36 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    public void getMobileTerminalEntityByIdTest() {
+        MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        Asset asset = createAndRestBasicAsset();
+        mobileTerminal.setConnectId(asset.getId().toString());
+
+        String created = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminal), String.class);
+
+        JsonReader jsonReader = Json.createReader(new StringReader(created));
+        JsonObject jsonObject = jsonReader.readObject();
+
+        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
+
+        JsonObject data = jsonObject.getJsonObject("data");
+        JsonObject terminalId = data.getJsonObject("mobileTerminalId");
+        String guid = terminalId.getString("guid");
+
+        String res = getWebTarget()
+                .path("mobileterminal/entity/" + guid)
+                .request(MediaType.APPLICATION_JSON)
+                .get()
+                .readEntity(String.class);
+
+        assertTrue(res.contains(guid));
+        assertTrue(res.contains(asset.getId().toString()));
+    }
+
+    @Test
     public void updateMobileTerminalTest() {
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
@@ -584,7 +614,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         return createdMT;
     }
 
-    private Asset createAndRestBasicAsset() throws Exception {
+    private Asset createAndRestBasicAsset() {
         Asset asset = AssetHelper.createBasicAsset();
 
         Asset createdAsset = getWebTarget()
