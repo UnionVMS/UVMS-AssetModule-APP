@@ -145,8 +145,8 @@ public class AssetDao {
             query.add(AuditEntity.revisionNumber().maximize().computeAggregationInInstanceContext());
         }
 
-        query.add(AuditEntity.property("active").eq(true));
-        
+        //query.add(AuditEntity.property("active").eq(true));
+
         ExtendableCriterion operator;
         if (isDynamic) {
             operator = AuditEntity.conjunction();
@@ -154,30 +154,41 @@ public class AssetDao {
             operator = AuditEntity.disjunction();
         }
 
+
+        boolean operatorUsed = false;
         for (SearchKeyValue searchKeyValue : searchFields) {
             if (useLike(searchKeyValue)) {
                 AuditDisjunction op = AuditEntity.disjunction();
                 for (String value : searchKeyValue.getSearchValues()) {
                     op.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).like("%" + value.replace("*", "") + "%"));
                 }
+                operatorUsed = true;
                 operator.add(op);
             } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.MIN_DECIMAL)) {
+                operatorUsed = true;
                 operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).ge(Double.valueOf(searchKeyValue.getSearchValues().get(0))));
             } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.MAX_DECIMAL)) {
+                operatorUsed = true;
                 operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).le(Double.valueOf(searchKeyValue.getSearchValues().get(0))));
             } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.LIST)) {
+                operatorUsed = true;
                 operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).in(searchKeyValue.getSearchValues()));
             } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.NUMBER)) {
                 List<Integer> intValues = searchKeyValue.getSearchValues().stream().map(Integer::parseInt).collect(Collectors.toList());
+                operatorUsed = true;
                 operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).in(intValues));
             } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.ID)) {
                 List<UUID> ids = searchKeyValue.getSearchValues().stream().map(UUID::fromString).collect(Collectors.toList());
+                operatorUsed = true;
                 operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).in(ids));
             } else { // Boolean
+                operatorUsed = true;
                 operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).eq(searchKeyValue.getSearchValues().get(0)));
             }
         }
-        query.add((AuditCriterion) operator);
+        if(operatorUsed) {
+            query.add((AuditCriterion) operator);
+        }
         return query;
     }
 

@@ -16,6 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
+import java.util.List;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -92,7 +93,47 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         assertTrue(listResponse.getAssetList().stream()
                 .anyMatch(fetchedAsset -> fetchedAsset.getId().equals(createdAsset.getId())));
     }
-    
+
+    @Test
+    @RunAsClient
+    public void getAssetListEmptyCriteriasShouldReturnAllAssetsOR() {
+
+        // create an asset
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+
+        System.out.println( createdAsset.getId().toString() + "    created should be found in resultset");
+
+
+        // aempty query
+        AssetQuery query = new AssetQuery();
+
+        // ask for everything since query is empty
+        AssetListResponse listResponse = getWebTarget()
+                .path("asset")
+                .path("list")
+               .queryParam("dynamic","false")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query), AssetListResponse.class);
+
+        assertTrue(listResponse != null);
+
+        List<Asset> al =  listResponse.getAssetList();
+        for(Asset a : al){
+            System.out.println(a.getId().toString());
+        }
+
+
+        assertTrue(listResponse.getAssetList().stream()
+                .anyMatch(fetchedAsset -> fetchedAsset.getId().equals(createdAsset.getId())));
+    }
+
+
+
+
     @Test
     @RunAsClient
     public void getAssetListEmptyCriteriasShouldNotReturnInactivatedAssets() {
@@ -104,6 +145,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         
         AssetQuery query = new AssetQuery();
 
+        // create an Asset
         AssetListResponse listResponse = getWebTarget()
                 .path("asset")
                 .path("list")
@@ -111,19 +153,23 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .post(Entity.json(query), AssetListResponse.class);
         
         int sizeBefore = listResponse.getAssetList().size();
-        
+
+
+        // Archive the asset
         getWebTarget()
                 .path("asset")
                 .path("archive")
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.json(createdAsset), Asset.class);
-        
+
+        // ask for it
         AssetListResponse listResponseAfter = getWebTarget()
                 .path("asset")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(query), AssetListResponse.class);
-        
+
+
         assertEquals(sizeBefore - 1, listResponseAfter.getAssetList().size());
     }
     
