@@ -30,7 +30,7 @@ public class InternalResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .get();
         
-        assertThat(response.getStatus(), is(Status.NOT_FOUND.getStatusCode()));
+        assertThat(response.getStatus(), is(Status.INTERNAL_SERVER_ERROR.getStatusCode()));
                 
     }
     

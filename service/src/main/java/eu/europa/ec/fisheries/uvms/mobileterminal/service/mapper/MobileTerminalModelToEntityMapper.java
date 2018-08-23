@@ -13,6 +13,7 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
@@ -21,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
-import javax.inject.Inject;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.HashSet;
@@ -33,7 +33,7 @@ public class MobileTerminalModelToEntityMapper {
     private static Logger LOG = LoggerFactory.getLogger(MobileTerminalModelToEntityMapper.class);
 
     //DO NOT USE WITH AN EMPTY ENTITY UNLESS YOU REALLY KNOW WHAT YOU ARE DOING
-    public static MobileTerminal mapMobileTerminalEntity(MobileTerminal entity, MobileTerminalType model,
+    public static MobileTerminal mapMobileTerminalEntity(MobileTerminal entity, MobileTerminalType model, Asset asset,
                                                          String serialNumber, MobileTerminalPlugin plugin, String username,
                                                          String comment, EventCodeEnum event) {
         if (model == null)
@@ -58,7 +58,7 @@ public class MobileTerminalModelToEntityMapper {
             throw new NullPointerException("Non valid mobile terminal type when mapping");
         entity.setMobileTerminalType(type);
 
-        mapHistoryAttributes(entity, model, username, comment, event);
+        mapHistoryAttributes(entity, model, asset, username, comment, event);
 
         // Channels can only change for these events
         if (event == EventCodeEnum.MODIFY || event == EventCodeEnum.CREATE) {
@@ -75,11 +75,11 @@ public class MobileTerminalModelToEntityMapper {
         return entity;
     }
 
-    public static MobileTerminal mapNewMobileTerminalEntity(MobileTerminalType model,
+    public static MobileTerminal mapNewMobileTerminalEntity(MobileTerminalType model, Asset asset,
                                 String serialNumber, MobileTerminalPlugin plugin, String username) {
         if (model == null)
             throw new NullPointerException("No mobile terminal to map");
-        return mapMobileTerminalEntity(new MobileTerminal(), model, serialNumber, plugin, username,
+        return mapMobileTerminalEntity(new MobileTerminal(), model, asset, serialNumber, plugin, username,
                 MobileTerminalConstants.CREATE_COMMENT, EventCodeEnum.CREATE);
     }
 
@@ -174,9 +174,8 @@ public class MobileTerminalModelToEntityMapper {
         entity.setChannels(channels);
     }
 
-    @EJB
-    static AssetDao assetDao;
-    private static void mapHistoryAttributes(MobileTerminal entity, MobileTerminalType model, String username, String comment, EventCodeEnum eventCode) {
+
+    private static void mapHistoryAttributes(MobileTerminal entity, MobileTerminalType model, Asset asset, String username, String comment, EventCodeEnum eventCode) {
         List<MobileTerminalAttribute> modelAttributes = model.getAttributes();
         MobileTerminalEvent current = entity.getCurrentEvent();
 
@@ -188,12 +187,12 @@ public class MobileTerminalModelToEntityMapper {
         history.setComment(comment);
         history.setEventCodeType(eventCode);
         if (current != null && model.getConnectId() == null && eventCode != EventCodeEnum.UNLINK) {
-            history.setConnectId(current.getAssetId());
+            history.setAsset(current.getAsset());
         } else {
             if(model.getConnectId() == null){
-                history.setConnectId(null);
+                history.setAsset(null);
             }else {
-                history.setConnectId(assetDao.getAssetById(UUID.fromString(model.getConnectId())));
+                history.setAsset(asset);
             }
         }
 

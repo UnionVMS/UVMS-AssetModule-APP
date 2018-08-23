@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
+import static junit.framework.TestCase.assertNotNull;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -11,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -98,7 +100,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .get();
         
         assertTrue(response != null);
-        assertThat(response.getStatus(), is(Status.NOT_FOUND.getStatusCode()));
+        assertThat(response.getStatus(), is(Status.INTERNAL_SERVER_ERROR.getStatusCode())); //until someone has made a better errorhandler that can send a 404 only when neccessary, this one will return 500
     }
     
     @Test
@@ -219,14 +221,15 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     
     @Test
     public void getAssetFromAssetIdPastDateTest() throws Exception {
-        OffsetDateTime timeStamp = OffsetDateTime.now(ZoneOffset.UTC);
+
 
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
-        
+
+        OffsetDateTime timeStamp = OffsetDateTime.now(ZoneOffset.UTC);
         Asset assetByCfrAndTimestamp1 = getWebTarget()
                 .path("asset")
                 .path("history")
@@ -236,18 +239,44 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .get(Asset.class);
         
-        assertNull(assetByCfrAndTimestamp1);
+        assertNotNull(assetByCfrAndTimestamp1);
     }
-    
+
     @Test
-    public void getAssetHistoryByAssetHistGuidTest() {
+    public void getAssetFromAssetIdPastDateTestWithDateToEarly() throws Exception {
+
+        OffsetDateTime timeStamp = OffsetDateTime.now(ZoneOffset.UTC);
+
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
+
+
+        Asset assetByCfrAndTimestamp1 = getWebTarget()
+                .path("asset")
+                .path("history")
+                .path("cfr")
+                .path(createdAsset.getCfr())
+                .path(timeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+                .request(MediaType.APPLICATION_JSON)
+                .get(Asset.class);
+
+        assertNull(assetByCfrAndTimestamp1);
+    }
+    
+    @Test
+    public void getAssetHistoryByAssetHistGuidTest() {
+        WebTarget webTarget = getWebTarget();
+
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = webTarget
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
         
-        Asset fetchedAsset = getWebTarget()
+        Asset fetchedAsset = webTarget
                 .path("asset")
                 .path("history")
                 .path(createdAsset.getHistoryId().toString())

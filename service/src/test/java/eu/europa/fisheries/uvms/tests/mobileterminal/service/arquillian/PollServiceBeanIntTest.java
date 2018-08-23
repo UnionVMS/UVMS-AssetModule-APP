@@ -1,6 +1,7 @@
 package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.PollProgramDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.CreatePollResultDto;
@@ -12,6 +13,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.PollProgram;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PollMapper;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
+import eu.europa.fisheries.uvms.tests.asset.service.arquillian.arquillian.AssetTestsHelper;
 import eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper.TestPollHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -45,6 +47,10 @@ public class PollServiceBeanIntTest extends TransactionalTests {
 
     @EJB
     private PollProgramDaoBean pollProgramDao;
+
+
+    @Inject
+    AssetDao assetDao;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -96,8 +102,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
 
         int numberOfProgramB4 = pollServiceBean.getRunningProgramPolls().size();
 
-        String mobileTerminalSerialNumber = testPollHelper.createSerialNumber();
-        PollProgram pollProgram = testPollHelper.createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
+        PollProgram pollProgram = testPollHelper.createPollProgramHelper(null, startDate, stopDate, latestRun);
 
         pollProgramDao.createPollProgram(pollProgram);
 
@@ -115,8 +120,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         OffsetDateTime latestRun = testPollHelper.getLatestRunDate();
         OffsetDateTime stopDate = testPollHelper.getStopDate();
 
-        String mobileTerminalSerialNumber = testPollHelper.createSerialNumber();
-        PollProgram pollProgram = testPollHelper.createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
+        PollProgram pollProgram = testPollHelper.createPollProgramHelper(null, startDate, stopDate, latestRun);
 
         pollProgramDao.createPollProgram(pollProgram);
 
@@ -171,8 +175,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         OffsetDateTime latestRun = testPollHelper.getLatestRunDate();
         OffsetDateTime stopDate = testPollHelper.getStopDate();
 
-        String mobileTerminalSerialNumber = testPollHelper.createSerialNumber();
-        PollProgram pollProgram = testPollHelper.createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
+        PollProgram pollProgram = testPollHelper.createPollProgramHelper(null, startDate, stopDate, latestRun);
 
         pollProgramDao.createPollProgram(pollProgram);
 
@@ -232,8 +235,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         OffsetDateTime latestRun = testPollHelper.getLatestRunDate();
         OffsetDateTime stopDate = testPollHelper.getStopDate();
 
-        String mobileTerminalSerialNumber = testPollHelper.createSerialNumber();
-        PollProgram pollProgram = testPollHelper.createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
+        PollProgram pollProgram = testPollHelper.createPollProgramHelper(null, startDate, stopDate, latestRun);
 
         pollProgramDao.createPollProgram(pollProgram);
 
@@ -298,8 +300,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         OffsetDateTime latestRun = testPollHelper.getLatestRunDate();
         OffsetDateTime stopDate = testPollHelper.getStopDate();
 
-        String mobileTerminalSerialNumber = testPollHelper.createSerialNumber();
-        PollProgram pollProgram = testPollHelper.createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
+        PollProgram pollProgram = testPollHelper.createPollProgramHelper(null, startDate, stopDate, latestRun);
 
         pollProgramDao.createPollProgram(pollProgram);
 
@@ -383,7 +384,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
 
     private PollMobileTerminal helper_createPollMobileTerminal() throws Exception {
 
-        UUID connectId = UUID.randomUUID();
+        UUID connectId = assetDao.createAsset(AssetTestsHelper.createBasicAsset()).getId();
 
         MobileTerminal mobileTerminal = testPollHelper.createAndPersistMobileTerminal(connectId.toString());
         PollMobileTerminal pmt = new PollMobileTerminal();

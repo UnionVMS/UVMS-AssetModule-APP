@@ -44,7 +44,7 @@ public class HistoryMapper {
 			eventModel.setChangeDate(event.getUpdatetime());
 			eventModel.setComments(event.getComment());
 			eventModel.setEventCode(EventCode.valueOf(event.getEventCodeType().toString()));
-			eventModel.setConnectId(event.getAssetId().toString());
+			eventModel.setConnectId((event.getAsset() == null) ? null : event.getAsset().getId().toString());   //if there is no asset then null otherwise assets id
 			Map<String, String> attributes = AttributeMapper.mapAttributeString(event.getAttributes());
 			for (String key : attributes.keySet()) {
 				if (MobileTerminalConstants.SERIAL_NUMBER.equalsIgnoreCase(key)) {

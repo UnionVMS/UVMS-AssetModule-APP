@@ -14,7 +14,9 @@ package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
+import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
 import org.hamcrest.CoreMatchers;
@@ -31,6 +33,7 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.StringReader;
 import java.util.UUID;
 
@@ -405,7 +408,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
-    public void assignMobileTerminalTest() {
+    public void assignMobileTerminalTest() throws Exception {
 
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
@@ -424,7 +427,8 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         String guid = terminalId.getString("guid");
 
         MobileTerminalAssignQuery query = new MobileTerminalAssignQuery();
-        String connectId = UUID.randomUUID().toString();
+        Asset asset = createAndRestBasicAsset();
+        String connectId = asset.getId().toString();
         query.setConnectId(connectId);
 
         MobileTerminalId mobileTerminalId = new MobileTerminalId();
@@ -442,7 +446,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
-    public void unAssignMobileTerminalTest() {
+    public void unAssignMobileTerminalTest() throws Exception {
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
         String created = getWebTarget()
@@ -460,7 +464,8 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         String guid = terminalId.getString("guid");
 
         MobileTerminalAssignQuery query = new MobileTerminalAssignQuery();
-        String connectId = UUID.randomUUID().toString();
+        Asset asset = createAndRestBasicAsset();
+        String connectId = asset.getId().toString();
         query.setConnectId(connectId);
 
         MobileTerminalId mobileTerminalId = new MobileTerminalId();
@@ -487,9 +492,10 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertTrue(responseUnAssign.contains(guid));
     }
 
+
     @Test
     public void inactivateActivateAndArchiveMobileTerminal() throws Exception{
-        MobileTerminalType mobileTerminalType = createAndRestMobileTerminal("Special Test Boat");
+        MobileTerminalType mobileTerminalType = createAndRestMobileTerminal(null);
         assertFalse(mobileTerminalType.isInactive());
         assertFalse(mobileTerminalType.isArchived());
 
@@ -576,5 +582,18 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
         MobileTerminalType createdMT = deserializeResponseDto(response, MobileTerminalType.class);
         return createdMT;
+    }
+
+    private Asset createAndRestBasicAsset() throws Exception {
+        Asset asset = AssetHelper.createBasicAsset();
+
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+
+        assertNotNull(createdAsset);
+
+        return createdAsset;
     }
 }

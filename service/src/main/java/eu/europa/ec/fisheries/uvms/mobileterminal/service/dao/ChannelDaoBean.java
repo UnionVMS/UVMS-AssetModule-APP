@@ -25,6 +25,7 @@ import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 
 @Stateless
@@ -35,10 +36,17 @@ public class ChannelDaoBean  {
 
 
     public List<Channel> getPollableListSearch(List<String> idList) {
+        if(idList == null){
+            return new ArrayList<Channel>();
+        }
         String sql = PollSearchMapper.createPollableSearchSql(idList);
+        List<UUID> uuidList = new ArrayList<>();
+        for (String s: idList) {
+            uuidList.add(UUID.fromString(s));
+        }
         TypedQuery<Channel> query = em.createQuery(sql, Channel.class);
         if(idList != null && !idList.isEmpty()) {
-            query.setParameter("idList", idList);
+            query.setParameter("idList", uuidList);
         }
         return query.getResultList();
     }

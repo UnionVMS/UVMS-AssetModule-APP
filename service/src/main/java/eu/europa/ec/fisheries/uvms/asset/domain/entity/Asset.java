@@ -12,6 +12,7 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_B
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +21,12 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.OffsetDateTimeDeserializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -52,7 +58,8 @@ import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
           @NamedQuery(name = ASSET_FIND_BY_GFCM, query = "SELECT v FROM Asset v WHERE v.gfcm = :gfcm AND v.active = true"),
           @NamedQuery(name = ASSET_FIND_BY_IDS, query = "SELECT v FROM Asset v WHERE v.id in :idList AND v.active = true"),
 })
-@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class, property="id")
+@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class/*, property="@id"*/)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Asset implements Serializable {
 
     public static final String ASSET_FIND_BY_CFR = "Asset.findByCfr";
@@ -91,6 +98,8 @@ public class Asset implements Serializable {
     @Column(name = "hullmaterial")
     private String hullMaterial;
 
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name = "commissiondate")
     private OffsetDateTime commissionDate;
 
@@ -102,6 +111,8 @@ public class Asset implements Serializable {
     @Column(name = "constructionplace")
     private String constructionPlace;
 
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name = "updatetime")
     private OffsetDateTime updateTime;
 
@@ -112,6 +123,8 @@ public class Asset implements Serializable {
     @Column(name = "vesseltype")
     private String vesselType;
 
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name = "vesselDateOfEntry")
     private OffsetDateTime vesselDateOfEntry;
 
@@ -238,6 +251,8 @@ public class Asset implements Serializable {
     @Column(name = "typeofexport")
     private String typeOfExport;
 
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name = "administrativedecisiondate")
     private OffsetDateTime administrativeDecisionDate;
 
@@ -265,7 +280,7 @@ public class Asset implements Serializable {
     private String prodOrgName;
 
 
-    @OneToMany(mappedBy = "assetId", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "asset", cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
     private List<MobileTerminalEvent> mobileTerminalEvent;
 
@@ -717,17 +732,12 @@ public class Asset implements Serializable {
 
     public List<MobileTerminalEvent> getMobileTerminalEvent() {
         if(mobileTerminalEvent == null){
-            mobileTerminalEvent = new LinkedList<>();
+            mobileTerminalEvent = new ArrayList<>();
         }
         return mobileTerminalEvent;
     }
 
     public void setMobileTerminalEvent(List<MobileTerminalEvent> mobileTerminalEvent) {
         this.mobileTerminalEvent = mobileTerminalEvent;
-    }
-
-    @Override
-    public String toString(){
-        return id.toString();
     }
 }

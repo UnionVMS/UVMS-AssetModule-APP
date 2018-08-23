@@ -54,7 +54,12 @@ public class MobileTerminalEntityToModelMapper {
             throw new RuntimeException(e);
         }
 
-        model.setConnectId(currentEvent.getAssetId().toString());
+        if(currentEvent.getAsset() != null){
+            model.setConnectId(currentEvent.getAsset().getId().toString());
+        }
+
+
+
 
         model.setType(entity.getMobileTerminalType().name());
         model.setInactive(entity.getInactivated());

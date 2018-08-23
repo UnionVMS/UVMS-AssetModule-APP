@@ -15,8 +15,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.JSR310StringParsableDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.OffsetDateTimeDeserializer;
@@ -25,7 +23,6 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
-import org.hibernate.envers.RelationTargetAuditMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -80,7 +77,7 @@ public class MobileTerminalEvent implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name="asset_id")
 	@Fetch(FetchMode.SELECT)
-	private Asset assetId;
+	private Asset asset;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name="eventtype")
@@ -158,12 +155,12 @@ public class MobileTerminalEvent implements Serializable {
 		this.attributes = attributes;
 	}
 
-	public Asset getAssetId() {
-		return assetId;
+	public Asset getAsset() {
+		return asset;
 	}
 
-	public void setConnectId(Asset assetId) {
-		this.assetId = assetId;
+	public void setAsset(Asset assetId) {
+		this.asset = assetId;
 	}
 
 	public EventCodeEnum getEventCodeType() {
@@ -236,7 +233,7 @@ public class MobileTerminalEvent implements Serializable {
 				Objects.equals(updatetime, that.updatetime) &&
 				Objects.equals(updateuser, that.updateuser) &&
 				Objects.equals(attributes, that.attributes) &&
-				Objects.equals(assetId, that.assetId) &&
+				Objects.equals(asset, that.asset) &&
 				eventCodeType == that.eventCodeType &&
 				Objects.equals(mobileterminal, that.mobileterminal) &&
 				Objects.equals(defaultChannel, that.defaultChannel) &&

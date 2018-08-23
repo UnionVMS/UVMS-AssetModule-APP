@@ -259,7 +259,7 @@ public class PollServiceBean implements PollService {
             if(mobileTerminalEntity == null){
                 throw new IllegalArgumentException("No mobile terminal connected to this poll request or the mobile terminal can not be found, for mobile terminal id: " + pollTerminal.getMobileTerminalId());
             }
-            String connectId = mobileTerminalEntity.getCurrentEvent().getAssetId().toString();
+            String connectId = mobileTerminalEntity.getCurrentEvent().getAsset().getId().toString();
             if (!pollTerminal.getConnectId().equals(connectId)) {
                 throw new IllegalStateException("Terminal " + mobileTerminalEntity.getId() + " can not be polled, because it is not linked to asset " + connectId);
             }
@@ -278,7 +278,7 @@ public class PollServiceBean implements PollService {
             if(mobileTerminalEntity == null){
                 throw new IllegalArgumentException("No mobile terminal connected to this poll request or the mobile terminal can not be found, for mobile terminal id: " + pollTerminal.getMobileTerminalId());
             }
-            String connectId = mobileTerminalEntity.getCurrentEvent().getAssetId().toString();
+            String connectId = mobileTerminalEntity.getCurrentEvent().getAsset().getId().toString();
             if (pollTerminal.getConnectId() == null || !pollTerminal.getConnectId().equals(connectId)) {
                 throw new IllegalStateException("Terminal " + mobileTerminalEntity.getId() + " can not be polled, because it is not linked to asset " + connectId);
             }
