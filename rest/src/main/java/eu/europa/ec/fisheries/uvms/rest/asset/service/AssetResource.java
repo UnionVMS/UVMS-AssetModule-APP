@@ -34,6 +34,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,6 +92,10 @@ public class AssetResource {
         try {
             List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
             AssetListResponse assetList = assetService.getAssetList(searchFields, page, size, dynamic);
+            //This is needed to force Hibernate to fetch everything related to the assets, reason it does not is that AuditQuery, used to find stuff, does not support eager fetching
+            for (Asset a: assetList.getAssetList()) {
+                a.getMobileTerminalEvent().size();
+            }
             return Response.ok(assetList).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset list.", e);
@@ -184,7 +189,6 @@ public class AssetResource {
         try {
             String remoteUser = servletRequest.getRemoteUser();
             Asset createdAssetSE = assetService.createAsset(asset, remoteUser);
-
             return Response.status(200).entity(createdAssetSE).type(MediaType.APPLICATION_JSON )
                     .header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
@@ -260,6 +264,10 @@ public class AssetResource {
                                                  @ApiParam(value="Max size of resultset") @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
         try {
             List<Asset> assetRevisions = assetService.getRevisionsForAssetLimited(id, maxNbr);
+            //This is needed to force Hibernate to fetch everything related to the assets, reason it does not is that AuditQuery, used to find stuff, does not support eager fetching
+            for (Asset a: assetRevisions) {
+                a.getMobileTerminalEvent().size();
+            }
             return Response.ok(assetRevisions).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset history list by asset ID. {}]", id, e);
@@ -291,6 +299,10 @@ public class AssetResource {
             AssetIdentifier assetId = AssetIdentifier.valueOf(type.toUpperCase());
             OffsetDateTime offsetDateTime = OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             Asset assetRevision = assetService.getAssetFromAssetIdAtDate(assetId, id, offsetDateTime);
+            //This is needed to force Hibernate to fetch everything related to the assets, reason it does not is that AuditQuery, used to find stuff, does not support eager fetching
+            if(assetRevision != null) {
+                assetRevision.getMobileTerminalEvent().size();
+            }
             return Response.ok(assetRevision).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset. Type: {}, Value: {}, Date: {}", type, id, date, e);
@@ -317,6 +329,9 @@ public class AssetResource {
     public Response getAssetHistoryByAssetHistGuid(@ApiParam(value="Id", required=true) @PathParam("guid") UUID guid) {
         try {
             Asset asset = assetService.getAssetRevisionForRevisionId(guid);
+            if(asset != null) {
+                asset.getMobileTerminalEvent().size();
+            }
             return Response.ok(asset).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset by asset history guid. {}] ", guid, e);

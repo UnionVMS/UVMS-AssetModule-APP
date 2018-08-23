@@ -32,7 +32,7 @@ import java.util.UUID;
  * WHERE p.startDate < :currentDate AND p.stopDate > :currentDate AND p.state <>
  * 'ARCHIVED'
  **/
-@Table(name = "pollprogram")
+@Table(name = "pollprogram", indexes = { @Index(columnList = "pollbase_id", name = "pollprogram_pollbase_FK_INX10", unique = false),})
 @Entity
 @DiscriminatorValue("true")
 @NamedQueries({

@@ -149,9 +149,9 @@ public class PollSearchMapper {
 		builder.append(" AND me.active = true ");
 		builder.append(" AND mt.archived = '0' AND mt.inactivated = '0' AND p.pluginInactive = '0' ");
 		builder.append(" AND (cap.name = 'POLLABLE' AND UPPER(cap.value) = 'TRUE' ) ");
-		builder.append(" AND (me.connectId is not null) ");
+		builder.append(" AND (me.asset is not null) ");
 		if (idList != null && !idList.isEmpty()) {
-			builder.append(" AND me.connectId IN :idList");
+			builder.append(" AND me.asset.id IN :idList");
 		}
 		builder.append(" ORDER BY c.id DESC ");
 		return builder.toString();

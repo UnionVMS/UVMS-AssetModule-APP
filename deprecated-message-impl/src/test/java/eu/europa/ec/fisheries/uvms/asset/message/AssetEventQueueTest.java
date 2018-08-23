@@ -144,12 +144,12 @@ public class AssetEventQueueTest extends AbstractMessageTest {
 //        // Add assets to group
 //        AssetGroupSearchField assetGroupSearchField1 = new AssetGroupSearchField();
 //        assetGroupSearchField1.setKey(ConfigSearchField.GUID);
-//        assetGroupSearchField1.setValue(asset1.getAssetId().getGuid());
+//        assetGroupSearchField1.setValue(asset1.getAsset().getGuid());
 //        assetGroup.getSearchFields().add(assetGroupSearchField1);
 //    
 //        AssetGroupSearchField assetGroupSearchField2 = new AssetGroupSearchField();
 //        assetGroupSearchField2.setKey(ConfigSearchField.GUID);
-//        assetGroupSearchField2.setValue(asset2.getAssetId().getGuid());
+//        assetGroupSearchField2.setValue(asset2.getAsset().getGuid());
 //        assetGroup.getSearchFields().add(assetGroupSearchField2);
 //    
 //        // Create Group
@@ -170,13 +170,13 @@ public class AssetEventQueueTest extends AbstractMessageTest {
 //        // Add asset to group
 //        AssetGroupSearchField assetGroupSearchField1 = new AssetGroupSearchField();
 //        assetGroupSearchField1.setKey(ConfigSearchField.GUID);
-//        assetGroupSearchField1.setValue(asset1.getAssetId().getGuid());
+//        assetGroupSearchField1.setValue(asset1.getAsset().getGuid());
 //        assetGroup.getSearchFields().add(assetGroupSearchField1);
 //    
 //        // Create Group
 //        assetGroup = AssetTestHelper.createAssetGroup(assetGroup);
 //
-//        List<AssetGroup> assetGroups = AssetJMSHelper.getAssetGroupListByAssetGuid(asset1.getAssetId().getGuid());
+//        List<AssetGroup> assetGroups = AssetJMSHelper.getAssetGroupListByAssetGuid(asset1.getAsset().getGuid());
 //        
 //        assertTrue(assetGroups.contains(assetGroup));
 //    }
@@ -192,12 +192,12 @@ public class AssetEventQueueTest extends AbstractMessageTest {
 //        // Add assets to group
 //        AssetGroupSearchField assetGroupSearchField1 = new AssetGroupSearchField();
 //        assetGroupSearchField1.setKey(ConfigSearchField.GUID);
-//        assetGroupSearchField1.setValue(asset1.getAssetId().getGuid());
+//        assetGroupSearchField1.setValue(asset1.getAsset().getGuid());
 //        assetGroup.getSearchFields().add(assetGroupSearchField1);
 //    
 //        AssetGroupSearchField assetGroupSearchField2 = new AssetGroupSearchField();
 //        assetGroupSearchField2.setKey(ConfigSearchField.GUID);
-//        assetGroupSearchField2.setValue(asset2.getAssetId().getGuid());
+//        assetGroupSearchField2.setValue(asset2.getAsset().getGuid());
 //        assetGroup.getSearchFields().add(assetGroupSearchField2);
 //    
 //        // Create Group

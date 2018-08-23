@@ -12,27 +12,41 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_B
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.OffsetDateTimeDeserializer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
 
 @Audited
 @Entity
-@Table(name = "Asset")
+@Table(name = "Asset",
+        uniqueConstraints = {@UniqueConstraint(name = "Asset_UC_ cfr", columnNames = "cfr"),
+            @UniqueConstraint(name = "asset_uc_imo", columnNames = "imo"),
+            @UniqueConstraint(name = "asset_uc_ircs" , columnNames = "ircs"),
+            @UniqueConstraint(name = "asset_uc_mmsi" , columnNames = "mmsi"),
+            @UniqueConstraint(name = "asset_uc_iccat" , columnNames = "iccat"),
+            @UniqueConstraint(name = "asset_uc_uvi" , columnNames = "uvi"),
+            @UniqueConstraint(name = "asset_uc_gfcm" , columnNames = "gfcm"),
+            @UniqueConstraint(name = "asset_uc_historyid" , columnNames = "historyid"),
+        })
+
 @NamedQueries({
           @NamedQuery(name = ASSET_FIND_ALL, query = "SELECT v FROM Asset v WHERE v.active = true"),
           @NamedQuery(name = ASSET_FIND_BY_CFR, query = "SELECT v FROM Asset v WHERE v.cfr = :cfr AND v.active = true"),
@@ -44,6 +58,8 @@ import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
           @NamedQuery(name = ASSET_FIND_BY_GFCM, query = "SELECT v FROM Asset v WHERE v.gfcm = :gfcm AND v.active = true"),
           @NamedQuery(name = ASSET_FIND_BY_IDS, query = "SELECT v FROM Asset v WHERE v.id in :idList AND v.active = true"),
 })
+@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class/*, property="@id"*/)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Asset implements Serializable {
 
     public static final String ASSET_FIND_BY_CFR = "Asset.findByCfr";
@@ -64,7 +80,7 @@ public class Asset implements Serializable {
     @Column(name = "id")
     private UUID id;
 
-    @Column(unique = true, name = "historyid")
+    @Column(name = "historyid")
     private UUID historyId;
 
     @Column(name = "ircsindicator")
@@ -82,6 +98,8 @@ public class Asset implements Serializable {
     @Column(name = "hullmaterial")
     private String hullMaterial;
 
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name = "commissiondate")
     private OffsetDateTime commissionDate;
 
@@ -93,6 +111,8 @@ public class Asset implements Serializable {
     @Column(name = "constructionplace")
     private String constructionPlace;
 
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name = "updatetime")
     private OffsetDateTime updateTime;
 
@@ -103,35 +123,37 @@ public class Asset implements Serializable {
     @Column(name = "vesseltype")
     private String vesselType;
 
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name = "vesselDateOfEntry")
     private OffsetDateTime vesselDateOfEntry;
 
     @Size(max = 12)
-    @Column(unique = true, name = "cfr")
+    @Column(name = "cfr")
     private String cfr;
 
     @Size(max = 7)
-    @Column(unique = true, name = "imo")
+    @Column(name = "imo")
     private String imo;
 
     @Size(max = 8)
-    @Column(unique = true, name = "ircs")
+    @Column(name = "ircs")
     private String ircs;
 
     @Size(max = 9)
-    @Column(unique = true, name = "mmsi")
+    @Column(name = "mmsi")
     private String mmsi;
 
     @Size(max = 50)
-    @Column(unique = true, name = "iccat")
+    @Column(name = "iccat")
     private String iccat;
 
     @Size(max = 50)
-    @Column(unique = true, name = "uvi")
+    @Column(name = "uvi")
     private String uvi;
 
     @Size(max = 50)
-    @Column(unique = true, name = "gfcm")
+    @Column(name = "gfcm")
     private String gfcm;
 
     @Column(name = "active")
@@ -229,6 +251,8 @@ public class Asset implements Serializable {
     @Column(name = "typeofexport")
     private String typeOfExport;
 
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name = "administrativedecisiondate")
     private OffsetDateTime administrativeDecisionDate;
 
@@ -254,6 +278,11 @@ public class Asset implements Serializable {
 
     @Column(name = "prodorgname")
     private String prodOrgName;
+
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "asset", cascade = CascadeType.ALL)
+    @Fetch(FetchMode.SELECT)
+    private List<MobileTerminalEvent> mobileTerminalEvent;
 
     @PrePersist
     @PreUpdate
@@ -699,5 +728,16 @@ public class Asset implements Serializable {
 
     public void setProdOrgName(String prodOrgName) {
         this.prodOrgName = prodOrgName;
+    }
+
+    public List<MobileTerminalEvent> getMobileTerminalEvent() {
+        if(mobileTerminalEvent == null){
+            mobileTerminalEvent = new ArrayList<>();
+        }
+        return mobileTerminalEvent;
+    }
+
+    public void setMobileTerminalEvent(List<MobileTerminalEvent> mobileTerminalEvent) {
+        this.mobileTerminalEvent = mobileTerminalEvent;
     }
 }

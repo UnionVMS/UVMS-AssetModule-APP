@@ -12,6 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -33,7 +34,8 @@ import java.util.*;
  *
  */
 @Entity
-@Table(name = "plugin")
+@Table(name = "plugin", indexes = { @Index(columnList = "service_name", name = "plugin_INX10", unique = false),},
+        uniqueConstraints = @UniqueConstraint(name = "plugin_uc_service_name" , columnNames = "service_name"))
 @NamedQueries({
 	@NamedQuery(name = MobileTerminalConstants.PLUGIN_FIND_ALL, query = "SELECT p FROM MobileTerminalPlugin p WHERE p.pluginInactive = false"),
 	@NamedQuery(name = MobileTerminalConstants.PLUGIN_FIND_BY_SERVICE_NAME, query = "SELECT p FROM MobileTerminalPlugin p WHERE p.pluginServiceName = :serviceName")
@@ -58,7 +60,7 @@ public class MobileTerminalPlugin implements Serializable {
     private String name;
 
     @Size(max = 500)
-    @Column(name = "service_name", unique=true)
+    @Column(name = "service_name")
     private String pluginServiceName;
 
     @Size(max = 50)
@@ -77,6 +79,7 @@ public class MobileTerminalPlugin implements Serializable {
     @Column(name = "upuser")
     private String updatedBy;
 
+    @JsonIgnore  //added to stop jackson from serializing the entire DB on a get query for a mt with a popular plugin
     @OneToMany(mappedBy="plugin", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     private List<MobileTerminal> mobileTerminals;
     

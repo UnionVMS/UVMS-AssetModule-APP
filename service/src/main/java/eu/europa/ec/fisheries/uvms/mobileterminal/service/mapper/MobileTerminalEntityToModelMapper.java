@@ -8,7 +8,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalE
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -55,7 +54,12 @@ public class MobileTerminalEntityToModelMapper {
             throw new RuntimeException(e);
         }
 
-        model.setConnectId(currentEvent.getConnectId());
+        if(currentEvent.getAsset() != null){
+            model.setConnectId(currentEvent.getAsset().getId().toString());
+        }
+
+
+
 
         model.setType(entity.getMobileTerminalType().name());
         model.setInactive(entity.getInactivated());

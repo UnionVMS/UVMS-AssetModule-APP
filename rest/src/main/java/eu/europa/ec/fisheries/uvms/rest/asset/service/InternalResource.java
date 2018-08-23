@@ -75,9 +75,13 @@ public class InternalResource {
     public Response getAssetList(@DefaultValue("1") @QueryParam("page") int page,
                                  @DefaultValue("100") @QueryParam("size") int size,
                                  @DefaultValue("true") @QueryParam("dynamic") boolean dynamic,
-                                 AssetQuery query) {
+                                 AssetQuery query) throws Exception {
         List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
         AssetListResponse assetList = assetService.getAssetList(searchFields, page, size, dynamic);
+        //This is needed to force Hibernate to fetch everything related to the assets, unknown why this is needed here since eager fetch works everywhere else.....
+        for (Asset a: assetList.getAssetList()) {
+            a.getMobileTerminalEvent().size();
+        }
         return Response.ok(assetList).build();
     }
     

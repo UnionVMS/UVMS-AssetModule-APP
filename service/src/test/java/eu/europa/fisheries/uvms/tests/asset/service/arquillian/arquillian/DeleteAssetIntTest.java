@@ -36,7 +36,7 @@ public class DeleteAssetIntTest extends TransactionalTests {
             createdAsset = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID), "test");
             em.flush();
 
-            AssetId assetId = createdAsset.getAssetId();
+            AssetId assetId = createdAsset.getAsset();
 
             assetService.deleteAsset(assetId);
             Assert.assertTrue(createdAsset != null);
@@ -64,7 +64,7 @@ public class DeleteAssetIntTest extends TransactionalTests {
             createdAsset = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID), "test");
             em.flush();
 
-            AssetId assetId = createdAsset.getAssetId();
+            AssetId assetId = createdAsset.getAsset();
             assetId.setValue("NONSENS");
 
             assetService.deleteAsset(assetId);

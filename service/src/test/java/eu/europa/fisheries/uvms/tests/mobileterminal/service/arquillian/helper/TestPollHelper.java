@@ -2,6 +2,8 @@ package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.TerminalDaoBean;
@@ -9,10 +11,12 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollStateEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalModelToEntityMapper;
+import eu.europa.fisheries.uvms.tests.asset.service.arquillian.arquillian.AssetTestsHelper;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -30,6 +34,10 @@ public class TestPollHelper {
 
     @EJB
     private MobileTerminalPluginDaoBean mobileTerminalPluginDao;
+
+    @Inject
+    AssetDao assetDao;
+
 
     public PollRequestType createPollRequestType() {
         PollRequestType prt = new PollRequestType();
@@ -50,8 +58,9 @@ public class TestPollHelper {
 
     private PollMobileTerminal createPollMobileTerminal() {
 
-        String connectId = UUID.randomUUID().toString();
 
+        Asset asset = assetDao.createAsset(AssetTestsHelper.createBasicAsset());
+        String connectId = asset.getId().toString();
         MobileTerminal mobileTerminal = createAndPersistMobileTerminal(connectId);
         PollMobileTerminal pmt = new PollMobileTerminal();
         pmt.setConnectId(connectId);
@@ -63,9 +72,12 @@ public class TestPollHelper {
         return pmt;
     }
 
+
+
     public MobileTerminal createAndPersistMobileTerminal(String connectId)  {
 
         String serialNo = UUID.randomUUID().toString();
+
 
 
         List<MobileTerminalPlugin> plugs = mobileTerminalPluginDao.getPluginList();
@@ -95,7 +107,7 @@ public class TestPollHelper {
         Set<MobileTerminalEvent> mobileTerminalEvents = new HashSet<>();
         MobileTerminalEvent mte = new MobileTerminalEvent();
         if(connectId != null && !connectId.trim().isEmpty())
-            mte.setConnectId(connectId);
+            mte.setAsset(assetDao.getAssetById(UUID.fromString(connectId)));
         mte.setActive(true);
         mte.setMobileterminal(mt);
 
@@ -191,7 +203,7 @@ public class TestPollHelper {
         mtp.setName("Thrane&Thrane&Thrane");
         mtp.setPluginSatelliteType("INMARSAT_C");
         mtp.setPluginInactive(false);
-        MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType,mobileTerminalType.getAttributes().get(0).getValue(), mtp, "TEST_USERNAME");
+        MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType,null ,mobileTerminalType.getAttributes().get(0).getValue(), mtp, "TEST_USERNAME");
         return mobileTerminal;
     }
 

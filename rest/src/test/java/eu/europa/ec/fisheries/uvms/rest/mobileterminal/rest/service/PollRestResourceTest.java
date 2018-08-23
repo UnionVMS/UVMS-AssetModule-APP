@@ -8,6 +8,7 @@ import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListPagination;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelListDto;
@@ -16,6 +17,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.PollProgram;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollStateEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.util.DateUtils;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
+import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
 import org.hamcrest.CoreMatchers;
@@ -60,7 +62,8 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     @Test
     public void createPollTest() throws Exception {
         PollRequestType input = new PollRequestType();
-        MobileTerminalType createdMT = createAndRestMobileTerminal("Test Boat");
+        Asset asset = createAndRestBasicAsset();
+        MobileTerminalType createdMT = createAndRestMobileTerminal(asset.getId().toString());
 
         PollMobileTerminal pmt = new PollMobileTerminal();
         pmt.setComChannelId(createdMT.getChannels().get(0).getGuid());
@@ -101,7 +104,8 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     public void stopAndStartProgramPollTest() throws Exception{
-        MobileTerminalType createdMT = createAndRestMobileTerminal("Test Boat");
+        Asset asset = createAndRestBasicAsset();
+        MobileTerminalType createdMT = createAndRestMobileTerminal(asset.getId().toString());
 
         //Create program poll
         PollRequestType input = createProgramPoll(createdMT);
@@ -154,7 +158,8 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     public void archiveProgramPollTest() throws Exception{
-        MobileTerminalType createdMT = createAndRestMobileTerminal("Test Boat");
+        Asset asset = createAndRestBasicAsset();
+        MobileTerminalType createdMT = createAndRestMobileTerminal(asset.getId().toString());
 
         //Create program poll
         PollRequestType input = createProgramPoll(createdMT);
@@ -207,7 +212,8 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     @Test
     public void getPollBySearchCriteria() throws Exception {
         PollRequestType pollRequestType = new PollRequestType();
-        MobileTerminalType createdMT = createAndRestMobileTerminal("Test Boat");
+        Asset asset = createAndRestBasicAsset();
+        MobileTerminalType createdMT = createAndRestMobileTerminal(asset.getId().toString());
 
         PollMobileTerminal pmt = new PollMobileTerminal();
         pmt.setComChannelId(createdMT.getChannels().get(0).getGuid());
@@ -263,7 +269,8 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     @Test
     public void getPollByTwoSearchCriteria() throws Exception {
         PollRequestType pollRequestType = new PollRequestType();
-        MobileTerminalType createdMT = createAndRestMobileTerminal("Test Boat");
+        Asset asset = createAndRestBasicAsset();
+        MobileTerminalType createdMT = createAndRestMobileTerminal(asset.getId().toString());
 
         PollMobileTerminal pmt = new PollMobileTerminal();
         pmt.setComChannelId(createdMT.getChannels().get(0).getGuid());
@@ -325,7 +332,8 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     @Test
     //@Ignore             //throws a 404 for some reason
     public void getPollableChannelsTest() throws Exception {
-        MobileTerminalType createdMT = createAndRestMobileTerminal("Special Test Boat");
+        Asset asset = createAndRestBasicAsset();
+        MobileTerminalType createdMT = createAndRestMobileTerminal(asset.getId().toString());
         PollRequestType pollRequestType = new PollRequestType();
 
         PollMobileTerminal pmt = new PollMobileTerminal();
@@ -351,7 +359,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         hate.setPage(1);
         hate.setListSize(100);
         input.setPagination(hate);
-        input.getConnectIdList().add("Special Test Boat");
+        input.getConnectIdList().add(asset.getId().toString());
 
         response = getWebTarget()
                 .path("/poll/pollable")
@@ -384,6 +392,19 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
         MobileTerminalType createdMT = deserializeResponseDto(response, MobileTerminalType.class);
         return createdMT;
+    }
+
+    private Asset createAndRestBasicAsset(){
+        Asset asset = AssetHelper.createBasicAsset();
+
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+
+        assertNotNull(createdAsset);
+
+        return createdAsset;
     }
 
     private PollRequestType createProgramPoll(MobileTerminalType mobileTerminal){

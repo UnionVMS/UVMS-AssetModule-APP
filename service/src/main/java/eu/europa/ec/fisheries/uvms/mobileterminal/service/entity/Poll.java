@@ -24,7 +24,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "poll")
+@Table(name = "poll", indexes = { @Index(columnList = "pollbase_id", name = "poll1_pollbase_FK_INX10", unique = false),})
 @XmlRootElement
 @NamedQueries({
         @NamedQuery(name = "Poll.findAll", query = "SELECT p FROM Poll p"),

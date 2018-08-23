@@ -26,7 +26,8 @@ import java.util.UUID;
  * 
  */
 @Entity
-@Table(name="inmarsatc_oceanregion")
+@Table(name = "inmarsatc_oceanregion", indexes = {@Index(columnList = "inmarsatc_history_id", name = "inmarsatc_oceanregion_mobterm_event_FK_INX01", unique = false),})
+
 @NamedQuery(name="InmarsatCHistoryOceanRegion.findAll", query="SELECT i FROM InmarsatCHistoryOceanRegion i")
 public class InmarsatCHistoryOceanRegion implements Serializable {
 	private static final long serialVersionUID = 1L;

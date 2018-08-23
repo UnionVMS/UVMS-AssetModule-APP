@@ -38,18 +38,12 @@ package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.UUID;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name = "Note")
+@Table(name = "Note", indexes = { @Index(columnList = "assetId", name = "Note_asset_FK_INX10", unique = false),})
 @NamedQueries({
     @NamedQuery(name = Note.FIND_BY_ASSET, query = "SELECT n FROM Note n WHERE n.assetId = :assetId"),
 })

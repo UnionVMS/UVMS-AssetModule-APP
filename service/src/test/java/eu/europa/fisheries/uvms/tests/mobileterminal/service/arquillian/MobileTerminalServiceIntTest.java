@@ -1,6 +1,8 @@
 package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.DataSourceQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
@@ -12,6 +14,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalE
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalModelToEntityMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PluginMapper;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
+import eu.europa.fisheries.uvms.tests.asset.service.arquillian.arquillian.AssetTestsHelper;
 import eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper.TestPollHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -48,6 +51,9 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     @Inject
     private MobileTerminalPluginDaoBean pluginDao;
+
+    @Inject
+    private AssetDao assetDao;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -156,13 +162,14 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     public void assignMobileTerminal() throws Exception {
 
         MobileTerminalType created = createAndPersistMobileTerminalType();
+        Asset asset = createAndPersistAsset();
         assertNotNull(created);
 
         MobileTerminalAssignQuery query = new MobileTerminalAssignQuery();
         MobileTerminalId mobileTerminalId = new MobileTerminalId();
         mobileTerminalId.setGuid(created.getMobileTerminalId().getGuid());
         query.setMobileTerminalId(mobileTerminalId);
-        String guid = UUID.randomUUID().toString();
+        String guid = asset.getId().toString();
         query.setConnectId(guid);
 
         MobileTerminal mobileTerminal = mobileTerminalService.assignMobileTerminal(query, TEST_COMMENT, USERNAME);
@@ -174,7 +181,8 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     public void unAssignMobileTerminalFromCarrier() throws Exception{
 
         MobileTerminalType created = createAndPersistMobileTerminalType();
-        created.setConnectId(UUID.randomUUID().toString());
+        Asset asset = createAndPersistAsset();
+        created.setConnectId(asset.getId().toString());
         assertNotNull(created);
 
         MobileTerminalAssignQuery query = new MobileTerminalAssignQuery();
@@ -196,7 +204,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
         MobileTerminalType mobileTerminalType = testPollHelper.createBasicMobileTerminalType();
         mobileTerminalType.setPlugin(null);
-        MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType, "123456789", null, USERNAME);   //this really should be such that that testPollHelper creates a mobile terminal, but until such a time
+        MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType,null , "123456789", null, USERNAME);   //this really should be such that that testPollHelper creates a mobile terminal, but until such a time
         mobileTerminalService.createMobileTerminal(mobileTerminal, USERNAME);
     }
 
@@ -216,7 +224,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
                 break;
             }
         }
-        MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType,null, null, USERNAME);
+        MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType, null, null, null, USERNAME);
         mobileTerminalService.createMobileTerminal(mobileTerminal, USERNAME);
     }
 
@@ -269,6 +277,10 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
         return mobileTerminal;
     }
 
+    private Asset createAndPersistAsset(){
+        Asset asset = AssetTestsHelper.createBasicAsset();
+        return assetDao.createAsset(asset);
+    }
     private MobileTerminal updateMobileTerminalType(MobileTerminal created) throws Exception {
         created.setMobileTerminalType(MobileTerminalTypeEnum.IRIDIUM);
         created.setSource(MobileTerminalSource.INTERNAL);

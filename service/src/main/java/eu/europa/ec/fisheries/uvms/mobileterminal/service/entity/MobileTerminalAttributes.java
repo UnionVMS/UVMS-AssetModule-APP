@@ -28,6 +28,7 @@ import java.util.UUID;
 
 @Audited
 @Entity
+@Table(name = "mobileterminalattributes", indexes = { @Index(columnList = "mobileterminalevent_id", name = "mobileterminalattributes_Mobterm_event_FK_INX10", unique = false),})
 @JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class, property="id")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MobileTerminalAttributes implements Serializable {

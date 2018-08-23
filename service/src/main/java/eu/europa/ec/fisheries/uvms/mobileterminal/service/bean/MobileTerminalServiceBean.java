@@ -11,10 +11,11 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.bean;
 
-import eu.europa.ec.fisheries.schema.exchange.service.v1.ServiceResponseType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollableQuery;
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.DataSourceQueue;
@@ -44,8 +45,8 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jms.TextMessage;
+import javax.ws.rs.NotFoundException;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
@@ -277,7 +278,7 @@ public class MobileTerminalServiceBean {
         event.setConfigChannel(current.getConfigChannel());
         event.setAttributes(current.getAttributes());
         event.setComment(comment);
-        event.setConnectId(current.getConnectId());
+        event.setAsset(current.getAsset());
         event.setMobileterminal(mobileTerminal);
         event.setUpdateuser(username);
         switch (status) {
@@ -401,6 +402,8 @@ public class MobileTerminalServiceBean {
 
     }
 
+    @Inject
+    AssetDao assetDao;
 
     public MobileTerminal assignMobileTerminalToCarrier(MobileTerminalAssignQuery query, String comment, String username) {
         if (query == null) {
@@ -416,8 +419,16 @@ public class MobileTerminalServiceBean {
         MobileTerminalId mobTermId = query.getMobileTerminalId();
         String connectId = query.getConnectId();
 
+        Asset asset = assetDao.getAssetById(UUID.fromString(connectId));
+        if(asset == null){
+            throw new NotFoundException("No Asset with ID " + connectId + " found. Can not link Mobile Terminal.");
+        }
+
         MobileTerminal terminal = getMobileTerminalEntityById(mobTermId);
-        String currentConnectId = terminal.getCurrentEvent().getConnectId();
+        String currentConnectId = null;
+        if (terminal.getCurrentEvent().getAsset() != null){
+            currentConnectId = terminal.getCurrentEvent().getAsset().getId().toString();
+        }
         if (currentConnectId == null || currentConnectId.isEmpty()) {
             MobileTerminalEvent current = terminal.getCurrentEvent();
             current.setActive(false);
@@ -429,11 +440,13 @@ public class MobileTerminalServiceBean {
             event.setConfigChannel(current.getConfigChannel());
             event.setAttributes(current.getAttributes());
             event.setComment(comment);
-            event.setConnectId(connectId);
+            event.setAsset(asset);
+
             event.setMobileterminal(terminal);
             event.setUpdateuser(username);
             event.setEventCodeType(EventCodeEnum.LINK);
             terminal.getMobileTerminalEvents().add(event);
+            asset.getMobileTerminalEvent().add(event);
             terminalDao.updateMobileTerminal(terminal);
 
             return terminal;
@@ -457,7 +470,7 @@ public class MobileTerminalServiceBean {
         String connectId = query.getConnectId();
 
         MobileTerminal terminal = getMobileTerminalEntityById(mobTermId);
-        String currentConnectId = terminal.getCurrentEvent().getConnectId();
+        String currentConnectId = terminal.getCurrentEvent().getAsset().getId().toString();
         if (currentConnectId != null && currentConnectId.equals(connectId)) {
             MobileTerminalEvent current = terminal.getCurrentEvent();
             current.setActive(false);
@@ -469,7 +482,7 @@ public class MobileTerminalServiceBean {
             event.setConfigChannel(current.getConfigChannel());
             event.setAttributes(current.getAttributes());
             event.setComment(comment);
-            event.setConnectId(null);
+            event.setAsset(null);
             event.setMobileterminal(terminal);
             event.setUpdateuser(username);
             event.setEventCodeType(EventCodeEnum.UNLINK);

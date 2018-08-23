@@ -1,8 +1,11 @@
 package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.ChannelDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.*;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
+import eu.europa.fisheries.uvms.tests.asset.service.arquillian.arquillian.AssetTestsHelper;
 import eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper.TestPollHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -25,6 +28,9 @@ public class ChannelDaoIntTest extends TransactionalTests {
     @Inject
     private ChannelDaoBean channelDao;
 
+    @Inject
+    private AssetDao assetDao;
+
     @EJB
     private TestPollHelper testPollHelper;
 
@@ -32,9 +38,10 @@ public class ChannelDaoIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void testGetPollableListSearch() {
         //Given - need a string list of id's.
-        String id1 = "test_id1";
-        String id2 = "test_id2";
+        String id1 = assetDao.createAsset(AssetTestsHelper.createBasicAsset()).getId().toString();;//"test_id1";
+        String id2 = UUID.randomUUID().toString();//"test_id2";
         List<String> idList = Arrays.asList(id1, id2);
+
 
         MobileTerminal mobileTerminal = testPollHelper.createAndPersistMobileTerminal(id1);
         assertNotNull(mobileTerminal.getId());
@@ -77,9 +84,8 @@ public class ChannelDaoIntTest extends TransactionalTests {
         assertEquals(0, channels.size());
     }
 
-    @Test(expected = EJBTransactionRolledbackException.class)
+    @Test
     @OperateOnDeployment("normal")
-    @Ignore //rewrite to not use channelHistory
     public void testGetActiveDNID() {
 
         //Given
@@ -92,9 +98,8 @@ public class ChannelDaoIntTest extends TransactionalTests {
         assertNotNull(dnidList);
     }
 
-    @Test(expected = EJBTransactionRolledbackException.class)
+    @Test
     @OperateOnDeployment("normal")
-    @Ignore //rewrite to not use channelHistory
     public void testGetActiveDNID_emptyList() {
 
         //Given

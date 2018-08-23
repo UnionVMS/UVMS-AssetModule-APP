@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Entity
-@Table(name = "customcodes")
+@Table(name = "customcode"/*, indexes = { @Index(columnList = "id", name = "customcodes00", unique = true),}*/)
 @NamedQueries({
         @NamedQuery(name = CUSTOMCODES_GETALLFOR, query = "SELECT m FROM CustomCode m where  m.primaryKey.constant=:constant"),
         @NamedQuery(name = CUSTOMCODES_GETALLCONSTANTS, query = "SELECT distinct m.primaryKey.constant FROM CustomCode m "),

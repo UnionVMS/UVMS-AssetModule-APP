@@ -11,8 +11,12 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
@@ -27,6 +31,7 @@ import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -35,6 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.UUID;
 
 @Path("/mobileterminal")
@@ -72,13 +78,16 @@ public class MobileTerminalRestResource {
             if(plugin == null){
                 plugin = pluginDao.initAndGetPlugin(mobileTerminalType.getPlugin().getServiceName());
             }
-
-            MobileTerminal mobileTerminalEntity = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType, serialNumber, plugin, request.getRemoteUser());
+            Asset asset = null;
+            if(mobileTerminalType.getConnectId() != null){
+                asset = assetDao.getAssetById(UUID.fromString(mobileTerminalType.getConnectId()));
+            }
+            MobileTerminal mobileTerminalEntity = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType, asset, serialNumber, plugin, request.getRemoteUser());
             mobileTerminalEntity = mobileTerminalService.createMobileTerminal(mobileTerminalEntity, request.getRemoteUser());
 
             return new MTResponseDto<>(MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminalEntity), MTResponseCode.OK);
         } catch (Exception ex) {
-            LOG.error("[ Error when creating mobile terminal ] {}", ex);
+            LOG.error("[ Error when creating mobile terminal ] {}", ex, ex.getStackTrace());
 
             return MTErrorHandler.getFault(ex);
         }
@@ -98,6 +107,28 @@ public class MobileTerminalRestResource {
         }
     }
 
+    @GET
+    @Path("/entity/{id}")
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public Response getMobileTerminalEntityById(@PathParam("id") String mobileterminalId) {
+        LOG.info("Get mobile terminal by id invoked in rest layer.");
+        try {
+            MobileTerminal mobileTerminal = mobileTerminalService.getMobileTerminalEntityById(UUID.fromString(mobileterminalId));
+            ObjectMapper om = new ObjectMapper();
+            om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+            String s = om.writeValueAsString(mobileTerminal);
+            //return Response.ok(s).build();
+            return Response.status(200).entity(mobileTerminal).type(MediaType.APPLICATION_JSON )
+                    .header("MDC", MDC.get("requestId")).build();
+        } catch (Exception e) {
+            LOG.error("[ Error when creating mobile terminal ] {}", e);
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
+
+    @Inject
+    AssetDao assetDao;
+
     @PUT
     @Path("/")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
@@ -110,7 +141,11 @@ public class MobileTerminalRestResource {
             if(plugin == null){
                 plugin = pluginDao.initAndGetPlugin(mobileTerminalType.getPlugin().getServiceName());
             }
-            MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapMobileTerminalEntity(mobileTerminalService.getMobileTerminalEntityById(mobileTerminalType.getMobileTerminalId()), mobileTerminalType, serialNumber, plugin, request.getRemoteUser(), comment, EventCodeEnum.MODIFY);
+            Asset asset = null;
+            if(mobileTerminalType.getConnectId() != null){
+                asset = assetDao.getAssetById(UUID.fromString(mobileTerminalType.getConnectId()));
+            }
+            MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapMobileTerminalEntity(mobileTerminalService.getMobileTerminalEntityById(mobileTerminalType.getMobileTerminalId()), mobileTerminalType, asset,  serialNumber, plugin, request.getRemoteUser(), comment, EventCodeEnum.MODIFY);
 
             mobileTerminal = mobileTerminalService.updateMobileTerminal(mobileTerminal, comment, request.getRemoteUser());
 

@@ -50,7 +50,10 @@ import java.util.UUID;
  * 
  */
 @Entity
-@Table(name="channel")
+@Table(name = "channel", indexes = {@Index(columnList = "mobterm_id", name = "channel_mobterm_FK_INX01", unique = false),
+		@Index(columnList = "mobterm_event_id", name = "channel_mobterm_event_FK_INX02", unique = false),
+		@Index(columnList = "dnid", name = "channel_INX01", unique = false),},
+		uniqueConstraints = @UniqueConstraint(name = "channel_uc_historyid" , columnNames = "historyid"))
 @Audited
 public class Channel implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -61,7 +64,7 @@ public class Channel implements Serializable {
 	@Column(name = "id")
 	private UUID id;
 
-	@Column(unique = true, name = "historyid")
+	@Column(name = "historyid")
 	private UUID historyId;
 
 	@Column(name="archived")
