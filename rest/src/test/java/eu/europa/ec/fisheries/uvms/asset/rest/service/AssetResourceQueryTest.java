@@ -17,6 +17,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -71,7 +72,176 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         assertTrue(listResponse != null);
         assertThat(listResponse.getAssetList().size(), is(0));
     }
-    
+
+
+
+
+
+    @Test
+    @RunAsClient
+    public void testCaseSensitiveiness() {
+
+        String cfrValue = UUID.randomUUID().toString().substring(0,11).toUpperCase();
+        Asset asset = AssetHelper.createBasicAsset();
+        asset.setCfr(cfrValue);
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+
+        AssetQuery query = new AssetQuery();
+        query.setCfr(Arrays.asList(cfrValue));
+        AssetQuery query2 = new AssetQuery();
+        query2.setCfr(Arrays.asList(cfrValue.toLowerCase()));
+
+        AssetListResponse listResponse1 = getWebTarget()
+                .path("asset")
+                .path("list")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query), AssetListResponse.class);
+
+        AssetListResponse listResponse2 = getWebTarget()
+                .path("asset")
+                .path("list")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query2), AssetListResponse.class);
+
+        assertTrue(listResponse1 != null);
+        assertTrue(listResponse2 != null);
+        assertTrue(listResponse1.getAssetList().size() > 0);
+        assertTrue(listResponse2.getAssetList().size() > 0);
+
+
+        Asset asset1 = listResponse1.getAssetList().get(0);
+        Asset asset2 = listResponse2.getAssetList().get(0);
+
+        assertTrue(asset1.getCfr().equals(asset2.getCfr()));
+
+    }
+
+    @Test
+    @RunAsClient
+    public void testCaseSensitiveinessTwoEntities() {
+
+        String cfrValue = UUID.randomUUID().toString().substring(0,11).toUpperCase();
+
+        String cfrValue2 = UUID.randomUUID().toString().substring(0,11).toUpperCase();
+
+        Asset asset1 = AssetHelper.createBasicAsset();
+        asset1.setCfr(cfrValue);
+        Asset createdAsset1 = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset1), Asset.class);
+        Asset asset2 = AssetHelper.createBasicAsset();
+        asset2.setCfr(cfrValue2);
+        Asset createdAsset2 = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset2), Asset.class);
+
+
+        AssetQuery query = new AssetQuery();
+        query.setCfr(Arrays.asList(cfrValue));
+        AssetQuery query2 = new AssetQuery();
+        query2.setCfr(Arrays.asList(cfrValue.toLowerCase(), cfrValue2.toLowerCase()));
+
+        AssetListResponse listResponse1 = getWebTarget()
+                .path("asset")
+                .path("list")
+                .queryParam("dynamic","false")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query), AssetListResponse.class);
+
+        AssetListResponse listResponse2 = getWebTarget()
+                .path("asset")
+                .path("list")
+                .queryParam("dynamic","false")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query2), AssetListResponse.class);
+
+        assertTrue(listResponse1 != null);
+        assertTrue(listResponse2 != null);
+        assertTrue(listResponse1.getAssetList().size() == 1);
+        assertTrue(listResponse2.getAssetList().size() == 2);
+
+
+        Asset fetched_asset1 = listResponse1.getAssetList().get(0);
+        Asset fetched_asset2 = listResponse2.getAssetList().get(0);
+
+        assertTrue(fetched_asset1.getCfr().equals(fetched_asset2.getCfr()));
+        assertTrue(listResponse2.getAssetList().get(1).getCfr().equals(cfrValue2));
+
+    }
+
+    @Test
+    @RunAsClient
+    public void testCaseIncompleteCFR() {
+
+        String cfrValue = UUID.randomUUID().toString().substring(0,11).toUpperCase();
+
+        String cfrValue2 = UUID.randomUUID().toString().substring(0,11).toUpperCase();
+
+        Asset asset1 = AssetHelper.createBasicAsset();
+        asset1.setCfr(cfrValue);
+        Asset createdAsset1 = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset1), Asset.class);
+        Asset asset2 = AssetHelper.createBasicAsset();
+        asset2.setCfr(cfrValue2);
+        Asset createdAsset2 = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset2), Asset.class);
+
+
+        AssetQuery query = new AssetQuery();
+        query.setCfr(Arrays.asList(cfrValue));
+        AssetQuery query2 = new AssetQuery();
+        query2.setCfr(Arrays.asList(cfrValue.toLowerCase().substring(5), cfrValue2.toLowerCase().substring(3,8)));
+
+        AssetListResponse listResponse1 = getWebTarget()
+                .path("asset")
+                .path("list")
+                .queryParam("dynamic","false")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query), AssetListResponse.class);
+
+        AssetListResponse listResponse2 = getWebTarget()
+                .path("asset")
+                .path("list")
+                .queryParam("dynamic","false")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query2), AssetListResponse.class);
+
+        assertTrue(listResponse1 != null);
+        assertTrue(listResponse2 != null);
+        assertTrue(listResponse1.getAssetList().size() >= 1);
+        assertTrue(listResponse2.getAssetList().size() >= 2);
+
+        boolean found = false;
+        for(Asset asset  :listResponse2.getAssetList() ){
+            if(asset.getCfr().equals(cfrValue)){
+                found = true;
+            }
+        }
+
+        assertTrue(found);
+
+        found = false;
+        for(Asset asset  :listResponse2.getAssetList() ){
+            if(asset.getCfr().equals(cfrValue2)){
+                found = true;
+            }
+        }
+        assertTrue(found);
+
+    }
+
+
+
+
     @Test
     @RunAsClient
     public void getAssetListEmptyCriteriasShouldReturnAllAssets() {
@@ -115,7 +285,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         AssetListResponse listResponse = getWebTarget()
                 .path("asset")
                 .path("list")
-               .queryParam("dynamic","false")
+                .queryParam("dynamic","false")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(query), AssetListResponse.class);
 
