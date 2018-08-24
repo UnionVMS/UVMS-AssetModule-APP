@@ -145,7 +145,7 @@ public class AssetDao {
             query.add(AuditEntity.revisionNumber().maximize().computeAggregationInInstanceContext());
         }
 
-        //query.add(AuditEntity.property("active").eq(true));
+        query.add(AuditEntity.property("active").eq(true));
 
         ExtendableCriterion operator;
         if (isDynamic) {
@@ -160,7 +160,7 @@ public class AssetDao {
             if (useLike(searchKeyValue)) {
                 AuditDisjunction op = AuditEntity.disjunction();
                 for (String value : searchKeyValue.getSearchValues()) {
-                    op.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).like("%" + value.replace("*", "") + "%"));
+                    op.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).ilike("%" + value.replace("*", "") + "%"));
                 }
                 operatorUsed = true;
                 operator.add(op);

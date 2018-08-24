@@ -133,6 +133,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
     @RunAsClient
     public void getAssetListEmptyCriteriasShouldNotReturnInactivatedAssets() {
         Asset asset = AssetHelper.createBasicAsset();
+        // create an Asset
         Asset createdAsset = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
@@ -140,10 +141,10 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         
         AssetQuery query = new AssetQuery();
 
-        // create an Asset
         AssetListResponse listResponse = getWebTarget()
                 .path("asset")
                 .path("list")
+                .queryParam("size","1000")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(query), AssetListResponse.class);
         
@@ -161,11 +162,12 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         AssetListResponse listResponseAfter = getWebTarget()
                 .path("asset")
                 .path("list")
+                .queryParam("size","1000")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(query), AssetListResponse.class);
 
 
-        assertEquals(sizeBefore , listResponseAfter.getAssetList().size());
+        assertEquals(sizeBefore  - 1, listResponseAfter.getAssetList().size());
     }
     
     @Test
