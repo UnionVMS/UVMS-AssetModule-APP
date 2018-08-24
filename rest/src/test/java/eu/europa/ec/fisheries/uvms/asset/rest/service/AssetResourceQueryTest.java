@@ -165,7 +165,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .post(Entity.json(query), AssetListResponse.class);
 
 
-        assertEquals(sizeBefore - 1, listResponseAfter.getAssetList().size());
+        assertEquals(sizeBefore , listResponseAfter.getAssetList().size());
     }
     
     @Test
