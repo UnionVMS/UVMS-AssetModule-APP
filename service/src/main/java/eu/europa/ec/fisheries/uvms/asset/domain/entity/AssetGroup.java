@@ -17,10 +17,16 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.GROUP_A
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.GROUP_ASSET_FIND_ALL;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
@@ -31,6 +37,7 @@ import org.hibernate.annotations.GenericGenerator;
 	@NamedQuery(name=GROUP_ASSET_BY_GUID, query="SELECT a FROM AssetGroup a WHERE a.id = :guid"),
 	@NamedQuery(name=GROUP_ASSET_BY_GUID_LIST, query="SELECT a FROM AssetGroup a WHERE a.archived = false AND a.id IN :guidList")
 })
+@JsonIdentityInfo(generator= ObjectIdGenerators.UUIDGenerator.class)
 public class AssetGroup implements Serializable {
 
     public static final String GROUP_ASSET_FIND_ALL = "AssetGroup.findAll";
@@ -71,6 +78,11 @@ public class AssetGroup implements Serializable {
     @NotNull
     @Column(name = "user_id")
     private String owner;
+
+    @OneToMany(mappedBy="assetGroup", cascade = CascadeType.ALL)
+    @Fetch(FetchMode.SELECT)
+    private List<AssetGroupField> assetGroupFields;
+
 
     public AssetGroup() {}
 
@@ -136,6 +148,15 @@ public class AssetGroup implements Serializable {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+
+    public List<AssetGroupField> getAssetGroupFields() {
+        return assetGroupFields;
+    }
+
+    public void setAssetGroupFields(List<AssetGroupField> assetGroupFields) {
+        this.assetGroupFields = assetGroupFields;
     }
 
 }

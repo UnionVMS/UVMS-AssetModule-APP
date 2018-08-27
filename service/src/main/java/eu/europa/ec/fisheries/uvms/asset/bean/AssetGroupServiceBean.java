@@ -150,7 +150,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
             throw new NullPointerException("AssetGroup with ID: " + parentAssetGroupId + " does not exist");
         }
 
-        assetGroupField.setAssetGroup(parentAssetGroup.getId());
+        assetGroupField.setAssetGroup(parentAssetGroup);
         assetGroupField.setUpdatedBy(username);
         assetGroupField.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         return assetGroupFieldDao.create(assetGroupField);
