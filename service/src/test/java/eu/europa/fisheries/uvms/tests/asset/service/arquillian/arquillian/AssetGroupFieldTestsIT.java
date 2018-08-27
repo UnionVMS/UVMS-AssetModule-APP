@@ -7,6 +7,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -88,10 +89,10 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
         List<AssetGroupField> createdAssetGroupFields2 = createAndStoreAssetGroupFieldEntityList(assetGroup2, 25 );
 
 
-        assetGroupFieldDaoBean.removeFieldsForGroup(assetGroup1.getId());
+        assetGroupFieldDaoBean.removeFieldsForGroup(assetGroup1);
 
-        List<AssetGroupField> retrievedAssetGroupFields1 =  assetGroupFieldDaoBean.retrieveFieldsForGroup(assetGroup1.getId());
-        List<AssetGroupField> retrievedAssetGroupFields2 =  assetGroupFieldDaoBean.retrieveFieldsForGroup(assetGroup2.getId());
+        List<AssetGroupField> retrievedAssetGroupFields1 =  assetGroupFieldDaoBean.retrieveFieldsForGroup(assetGroup1);
+        List<AssetGroupField> retrievedAssetGroupFields2 =  assetGroupFieldDaoBean.retrieveFieldsForGroup(assetGroup2);
 
         Assert.assertEquals(retrievedAssetGroupFields1.size(), 0);
         Assert.assertEquals(retrievedAssetGroupFields2.size(), 25);
