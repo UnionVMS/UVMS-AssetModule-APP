@@ -23,6 +23,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.DurationDeserializer;
@@ -55,6 +57,7 @@ import java.util.UUID;
 		@Index(columnList = "dnid", name = "channel_INX01", unique = false),},
 		uniqueConstraints = @UniqueConstraint(name = "channel_uc_historyid" , columnNames = "historyid"))
 @Audited
+@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class)
 public class Channel implements Serializable {
 	private static final long serialVersionUID = 1L;
 

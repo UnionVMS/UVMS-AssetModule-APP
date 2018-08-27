@@ -112,7 +112,9 @@ public class AssetDao {
     }
 
     public Asset updateAsset(Asset asset) {
-        return em.merge(asset);
+        Asset updated = em.merge(asset);
+        em.flush();
+        return updated;
     }
 
     public void deleteAsset(Asset asset) {

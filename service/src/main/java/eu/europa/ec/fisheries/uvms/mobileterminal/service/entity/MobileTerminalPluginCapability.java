@@ -40,7 +40,7 @@ import java.util.UUID;
 	@NamedQuery(name = "PluginCapability.findAll", query = "SELECT p FROM MobileTerminalPluginCapability p"),
 })
 @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class, property="id")
+@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class/*, property="id"*/)
 public class MobileTerminalPluginCapability implements Serializable {
     private static final long serialVersionUID = 1L;
 

@@ -46,7 +46,7 @@ import java.util.UUID;
 												 @Index(columnList = "chan_conf", name = "mobileterminalevent_channel_FK_INX20", unique = false),
 												 @Index(columnList = "chan_poll", name = "mobileterminalevent_channel_FK_INX30", unique = false),
 												 @Index(columnList = "asset_id", name = "mobileterminalevent_asset_FK_INX10", unique = false),})
-@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class, property="id")
+@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class /*, property="id"*/)
 public class MobileTerminalEvent implements Serializable {
 	private static final long serialVersionUID = 1L;
 
