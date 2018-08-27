@@ -11,12 +11,15 @@
         <groupId>fish.focus.uvms.maven</groupId>
         <artifactId>uvms-pom</artifactId>
         <relativePath />
-        <version>1.20</version>
+        <version>1.21-SNAPSHOT</version>
     </parent>
 
     <properties>
     	<asset.api.check.against.version>4.0.0</asset.api.check.against.version>
-    	<docker.dev.version>3.25.1.w12-SNAPSHOT</docker.dev.version>
+    	<docker.dev.version>3.25.3.w12</docker.dev.version>
+    	<docker.liquibase.changeLogFile>LIQUIBASE/changelog/db-changelog-master.xml</docker.liquibase.changeLogFile>
+        <docker.liquibase.db.user>asset</docker.liquibase.db.user>
+        <docker.liquibase.db.passwd>asset</docker.liquibase.db.passwd>
         <usm4uvms.version>4.0.10</usm4uvms.version>
         <uvms.config.version>4.0.0</uvms.config.version>
 		<!--uvms.common.version>3.0.25</uvms.common.version--> <!-- Using this causes an error in asset-client -->
