@@ -20,16 +20,20 @@ import java.util.UUID;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name = "Assetgroupfield", indexes = {@Index(columnList = "assetGroup", name = "assetgroupfield_assetgroup_FK_INX01", unique = false),})
+@Table(name = "Assetgroupfield", indexes = { @Index(columnList = "assetgroup", name="assetgroupfield_assetgroup_FK_INX10")})
 @NamedQueries({
 		@NamedQuery(name="Assetgroupfield.findAll", query="SELECT a FROM AssetGroupField a"),
 		@NamedQuery(name=ASSETGROUP_FIELD_GETBYID, query="SELECT a FROM AssetGroupField a where a.id=:id"),
 		@NamedQuery(name=ASSETGROUP_FIELD_CLEAR, query="DELETE  FROM AssetGroupField a where a.assetGroup=:assetgroup"),
 		@NamedQuery(name=ASSETGROUP_RETRIEVE_FIELDS_FOR_GROUP, query="SELECT a  FROM AssetGroupField a where a.assetGroup=:assetgroup"),
 })
+@JsonIdentityInfo(generator= ObjectIdGenerators.UUIDGenerator.class)
 public class AssetGroupField implements Serializable {
 
     public static final String ASSETGROUP_FIELD_CLEAR = "Assetgroupfield.clear";
@@ -61,8 +65,9 @@ public class AssetGroupField implements Serializable {
     @Column(name = "value")
     private String value;
 
-    @Column(name = "assetgroup")
-    private UUID assetGroup;
+    @ManyToOne
+    @JoinColumn(name = "assetgroup")
+    private AssetGroup assetGroup;
 
     public UUID getId() {
         return this.id;
@@ -104,11 +109,11 @@ public class AssetGroupField implements Serializable {
         this.value = value;
     }
 
-    public UUID getAssetGroup() {
+    public AssetGroup getAssetGroup() {
         return this.assetGroup;
     }
 
-    public void setAssetGroup(UUID assetGroup) {
+    public void setAssetGroup(AssetGroup assetGroup) {
         this.assetGroup = assetGroup;
     }
 
