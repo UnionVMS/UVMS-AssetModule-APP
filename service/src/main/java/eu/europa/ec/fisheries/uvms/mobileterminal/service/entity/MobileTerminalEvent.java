@@ -94,7 +94,7 @@ public class MobileTerminalEvent implements Serializable {
 	private MobileTerminal mobileterminal;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name="chan_def", foreignKey = @ForeignKey(name = "MobileTerminalEvent_Channel_FK20"))
+	@JoinColumn(name="chan_def", foreignKey = @ForeignKey(name = "MobileTerminalEvent_Channel_FK10"))
 	private Channel defaultChannel;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
