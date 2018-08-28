@@ -24,7 +24,6 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 
 @Stateless

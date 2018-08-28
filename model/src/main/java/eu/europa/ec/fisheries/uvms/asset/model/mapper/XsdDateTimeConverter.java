@@ -11,13 +11,8 @@ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more d
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import javax.xml.bind.DatatypeConverter;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.time.OffsetDateTime;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class XsdDateTimeConverter {
 
@@ -38,21 +33,4 @@ public class XsdDateTimeConverter {
         return v.toString();
     }
 
-
-
-//    public static Date unmarshal(String dateTime) {
-//        return DatatypeConverter.parseDate(dateTime).getTime();
-//    }
-//
-//    public static String marshalDate(Date date) {
-//        final GregorianCalendar calendar = new GregorianCalendar();
-//        calendar.setTime(date);
-//        return DatatypeConverter.printDate(calendar);
-//    }
-//
-//    public static String marshalDateTime(Date dateTime) {
-//        final GregorianCalendar calendar = new GregorianCalendar();
-//        calendar.setTime(dateTime);
-//        return DatatypeConverter.printDateTime(calendar);
-//    }
 }

@@ -34,7 +34,6 @@ import javax.ws.rs.core.MediaType;
 import java.io.StringReader;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
-import java.util.Date;
 
 
 import static org.junit.Assert.*;

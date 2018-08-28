@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

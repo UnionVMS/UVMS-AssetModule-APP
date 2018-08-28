@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
-import java.util.Date;
 import java.util.UUID;
 
 
@@ -32,53 +31,46 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void create_Asset_IRCS() {
-        Date date = new Date();
-        create(AssetIdentifier.IRCS, "IRCSVAL", date);
+        create(AssetIdentifier.IRCS, "IRCSVAL");
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void create_Asset_MMSI() {
-        Date date = new Date();
-        create(AssetIdentifier.MMSI, "123456789", date); // MUST be 9 in length
+        create(AssetIdentifier.MMSI, "123456789"); // MUST be 9 in length
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void create_Asset_CFR() {
-        Date date = new Date();
-        create(AssetIdentifier.CFR, "CFR_VAL" + UUID.randomUUID().toString(), date);
+        create(AssetIdentifier.CFR, "CFR_VAL" + UUID.randomUUID().toString());
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void create_Asset_IMO() {
-        Date date = new Date();
-        create(AssetIdentifier.IMO, "IMO_VAL", date);
+        create(AssetIdentifier.IMO, "IMO_VAL");
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void create_Asset_UVI() {
-        Date date = new Date();
         String val = UUID.randomUUID().toString();
-        create(AssetIdentifier.UVI, val, date);
+        create(AssetIdentifier.UVI, val);
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void create_Asset_ICCAT() {
-        Date date = new Date();
         String val = UUID.randomUUID().toString();
-        create(AssetIdentifier.ICCAT, val, date);
+        create(AssetIdentifier.ICCAT, val);
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void create_Asset_GFCM() {
-        Date date = new Date();
         String val = UUID.randomUUID().toString();
-        create(AssetIdentifier.GFCM, val, date);
+        create(AssetIdentifier.GFCM, val);
     }
 
 
@@ -86,11 +78,10 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void get_Asset_IRCS() {
 
-        Date date = new Date();
         AssetIdentifier keyType = AssetIdentifier.IRCS;
         String val = UUID.randomUUID().toString();
         if (val.length() > 8) val = val.substring(0, 8);
-        Asset theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val);
         String createdIRCS = theCreatedAsset.getIrcs();
         try {
             Asset fetchedEntity = get(keyType, createdIRCS);
@@ -105,11 +96,10 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void get_Asset_MMSI() {
 
-        Date date = new Date();
         AssetIdentifier keyType = AssetIdentifier.MMSI;
         String val = UUID.randomUUID().toString();
         if (val.length() > 9) val = val.substring(0, 9);
-        Asset theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val);
         String createdMMSI = theCreatedAsset.getMmsi();
         try {
             Asset fetchedEntity = get(keyType, createdMMSI);
@@ -124,11 +114,10 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void get_Asset_CFR() {
 
-        Date date = new Date();
         AssetIdentifier keyType = AssetIdentifier.CFR;
         String val = UUID.randomUUID().toString();
         if (val.length() > 12) val = val.substring(0, 12);
-        Asset theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val);
         String createdCFR = theCreatedAsset.getCfr();
         try {
             Asset fetchedEntity = get(keyType, createdCFR);
@@ -143,11 +132,10 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void get_Asset_IMO() {
 
-        Date date = new Date();
         AssetIdentifier keyType = AssetIdentifier.IMO;
         String val = UUID.randomUUID().toString();
         if (val.length() > 7) val = val.substring(0, 7);
-        Asset theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val);
         String createdIMO = theCreatedAsset.getImo();
         try {
             Asset fetchedEntity = get(keyType, createdIMO);
@@ -163,10 +151,9 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void get_Asset_ICCAT() {
 
-        Date date = new Date();
         AssetIdentifier keyType = AssetIdentifier.ICCAT;
         String val = UUID.randomUUID().toString();
-        Asset theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val);
         String createdICCAT = theCreatedAsset.getIccat();
         try {
             Asset fetchedEntity = get(keyType, createdICCAT);
@@ -181,10 +168,9 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void get_Asset_UVI() {
 
-        Date date = new Date();
         AssetIdentifier keyType = AssetIdentifier.UVI;
         String val = UUID.randomUUID().toString();
-        Asset theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val);
         String createdUvi = theCreatedAsset.getUvi();
         try {
             Asset fetchedEntity = get(keyType, createdUvi);
@@ -199,10 +185,9 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void get_Asset_GFCM() {
 
-        Date date = new Date();
         AssetIdentifier keyType = AssetIdentifier.GFCM;
         String val = UUID.randomUUID().toString();
-        Asset theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val);
         String createdGfcm = theCreatedAsset.getGfcm();
         try {
             Asset fetchedEntity = get(keyType, createdGfcm);
@@ -218,11 +203,10 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void delete_Asset_IRCS() {
 
-        Date date = new Date();
         AssetIdentifier keyType = AssetIdentifier.IRCS;
         String val = UUID.randomUUID().toString();
         if (val.length() > 8) val = val.substring(0, 8);
-        Asset theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val);
         String createdIRCS = theCreatedAsset.getIrcs();
         try {
             assetDao.deleteAsset(theCreatedAsset);
@@ -239,11 +223,10 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void delete_Asset_MMSI() {
 
-        Date date = new Date();
         AssetIdentifier keyType = AssetIdentifier.MMSI;
         String val = UUID.randomUUID().toString();
         if (val.length() > 9) val = val.substring(0, 9);
-        Asset theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val);
         String createdMMSI = theCreatedAsset.getMmsi();
         try {
             assetDao.deleteAsset(theCreatedAsset);
@@ -260,11 +243,10 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void delete_Asset_CFR() {
 
-        Date date = new Date();
         AssetIdentifier keyType = AssetIdentifier.CFR;
         String val = UUID.randomUUID().toString();
         if (val.length() > 12) val = val.substring(0, 12);
-        Asset theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val);
         String createdCFR = theCreatedAsset.getCfr();
         try {
             assetDao.deleteAsset(theCreatedAsset);
@@ -281,11 +263,10 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void delete_Asset_IMO() {
 
-        Date date = new Date();
         AssetIdentifier keyType = AssetIdentifier.IMO;
         String val = UUID.randomUUID().toString();
         if (val.length() > 7) val = val.substring(0, 7);
-        Asset theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val);
         String createdIMO = theCreatedAsset.getImo();
         try {
             assetDao.deleteAsset(theCreatedAsset);
@@ -303,10 +284,9 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void delete_Asset_ICCAT() {
 
-        Date date = new Date();
         AssetIdentifier keyType = AssetIdentifier.ICCAT;
         String val = UUID.randomUUID().toString();
-        Asset theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val);
         String createdIccat = theCreatedAsset.getIccat();
         try {
             assetDao.deleteAsset(theCreatedAsset);
@@ -324,10 +304,9 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void delete_Asset_UVI() {
 
-        Date date = new Date();
         AssetIdentifier keyType = AssetIdentifier.UVI;
         String val = UUID.randomUUID().toString();
-        Asset theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val);
         String createdUvi = theCreatedAsset.getUvi();
         try {
             assetDao.deleteAsset(theCreatedAsset);
@@ -345,10 +324,9 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void delete_Asset_GFCM() {
 
-        Date date = new Date();
         AssetIdentifier keyType = AssetIdentifier.GFCM;
         String val = UUID.randomUUID().toString();
-        Asset theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val);
         String createdGFCM = theCreatedAsset.getGfcm();
         try {
             assetDao.deleteAsset(theCreatedAsset);
@@ -366,11 +344,10 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void update_Asset_IRCS() {
 
-        Date date = new Date();
         AssetIdentifier keyType = AssetIdentifier.IRCS;
         String val = UUID.randomUUID().toString();
         if (val.length() > 8) val = val.substring(0, 8);
-        Asset theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val);
         String createdIRCS = theCreatedAsset.getIrcs();
         try {
             theCreatedAsset.setUpdatedBy("CHANGED");
@@ -387,11 +364,10 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void update_Asset_MMSI() {
 
-        Date date = new Date();
         AssetIdentifier keyType = AssetIdentifier.MMSI;
         String val = UUID.randomUUID().toString();
         if (val.length() > 9) val = val.substring(0, 9);
-        Asset theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val);
         String createdMMSI = theCreatedAsset.getMmsi();
         try {
             theCreatedAsset.setUpdatedBy("CHANGED");
@@ -408,11 +384,10 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void update_Asset_CFR() {
 
-        Date date = new Date();
         AssetIdentifier keyType = AssetIdentifier.CFR;
         String val = UUID.randomUUID().toString();
         if (val.length() > 12) val = val.substring(0, 12);
-        Asset theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val);
         String createdCFR = theCreatedAsset.getCfr();
         try {
             theCreatedAsset.setUpdatedBy("CHANGED");
@@ -429,11 +404,10 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void update_Asset_IMO() {
 
-        Date date = new Date();
         AssetIdentifier keyType = AssetIdentifier.IMO;
         String val = UUID.randomUUID().toString();
         if (val.length() > 7) val = val.substring(0, 7);
-        Asset theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val);
         String createdIMO = theCreatedAsset.getImo();
         try {
             theCreatedAsset.setUpdatedBy("CHANGED");
@@ -451,10 +425,9 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void update_Asset_ICCAT() {
 
-        Date date = new Date();
         AssetIdentifier keyType = AssetIdentifier.ICCAT;
         String val = UUID.randomUUID().toString();
-        Asset theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val);
         String createdICCAT = theCreatedAsset.getIccat();
         try {
             theCreatedAsset.setUpdatedBy("CHANGED");
@@ -472,10 +445,9 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void update_Asset_UVI() {
 
-        Date date = new Date();
         AssetIdentifier keyType = AssetIdentifier.UVI;
         String val = UUID.randomUUID().toString();
-        Asset theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val);
         String createdUVI = theCreatedAsset.getUvi();
         try {
             theCreatedAsset.setUpdatedBy("CHANGED");
@@ -493,10 +465,9 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void update_Asset_GFCM() {
 
-        Date date = new Date();
         AssetIdentifier keyType = AssetIdentifier.GFCM;
         String val = UUID.randomUUID().toString();
-        Asset theCreatedAsset = create(keyType, val, date);
+        Asset theCreatedAsset = create(keyType, val);
         String createdGFCM = theCreatedAsset.getGfcm();
         try {
             theCreatedAsset.setUpdatedBy("CHANGED");
@@ -546,9 +517,9 @@ public class AssetKeyTestsIT extends TransactionalTests {
     }
 
 
-    private Asset create(AssetIdentifier key, String value, Date date) {
+    private Asset create(AssetIdentifier key, String value) {
 
-        Asset assetEntity = assetTestsHelper.createAssetHelper(key, value, date);
+        Asset assetEntity = assetTestsHelper.createAssetHelper(key, value);
         Asset createdAsset = assetDao.createAsset(assetEntity);
         em.flush();
         UUID guid = createdAsset.getId();
