@@ -55,7 +55,7 @@ public class Poll implements Serializable {
     @Column(name = "polltype")
     private PollTypeEnum pollType;
 
-    @JoinColumn(name = "pollbase_id")
+    @JoinColumn(name = "pollbase_id", foreignKey = @ForeignKey(name = "Poll_PollBase_FK"))
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private PollBase pollBase;
 

@@ -75,7 +75,7 @@ public class MobileTerminalEvent implements Serializable {
 	private String attributes;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name="asset_id")
+	@JoinColumn(name="asset_id", foreignKey = @ForeignKey(name = "MobileTerminalEvent_Asset_FK"))
 	@Fetch(FetchMode.SELECT)
 	private Asset asset;
 
@@ -89,20 +89,20 @@ public class MobileTerminalEvent implements Serializable {
 	//bi-directional many-to-one association to Mobileterminal
 	@NotNull
 	@ManyToOne
-	@JoinColumn(name="mobileterminal_id")
+	@JoinColumn(name="mobileterminal_id", foreignKey = @ForeignKey(name = "MobileTerminalEvent_MobileTerminal_FK"))
 	@Fetch(FetchMode.SELECT)
 	private MobileTerminal mobileterminal;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name="chan_def")
+	@JoinColumn(name="chan_def", foreignKey = @ForeignKey(name = "MobileTerminalEvent_Channel_FK20"))
 	private Channel defaultChannel;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name="chan_conf")
+	@JoinColumn(name="chan_conf", foreignKey = @ForeignKey(name = "MobileTerminalEvent_Channel_FK20"))
 	private Channel configChannel;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name="chan_poll")
+	@JoinColumn(name="chan_poll", foreignKey = @ForeignKey(name = "MobileTerminalEvent_Channel_FK30"))
 	private Channel pollChannel;
 
 

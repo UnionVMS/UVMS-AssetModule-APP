@@ -82,7 +82,7 @@ public class Channel implements Serializable {
 	private String updateUser;
 
 	@ManyToOne
-	@JoinColumn(name="mobterm_id")
+	@JoinColumn(name="mobterm_id", foreignKey = @ForeignKey(name = "Channel_MobileTerminal_FK"))
 	private MobileTerminal mobileTerminal;
 
 	@Column(name="com_channel_name")
@@ -99,7 +99,7 @@ public class Channel implements Serializable {
 	// ???????? kanske
 	@Fetch(FetchMode.JOIN)
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "mobterm_event_id")
+	@JoinColumn(name = "mobterm_event_id", foreignKey = @ForeignKey(name = "Channel_MobileTerminalEvent_FK"))
 	private MobileTerminalEvent mobileTerminalEvent;
 
 	@Column(name="chan_def")

@@ -41,7 +41,7 @@ public class MobileTerminalAttributes implements Serializable {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name="mobileterminalevent_id")
+    @JoinColumn(name="mobileterminalevent_id", foreignKey = @ForeignKey(name = "MobileTerminalAttributes_MobileTerminalEvent_FK"))
     @Fetch(FetchMode.SELECT)
     private MobileTerminalEvent mobileTerminalEvent;
 

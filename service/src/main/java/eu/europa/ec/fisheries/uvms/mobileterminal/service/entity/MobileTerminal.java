@@ -68,7 +68,7 @@ public class MobileTerminal implements Serializable {
 
 	@NotNull
 	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-	@JoinColumn(name="plugin_id")
+	@JoinColumn(name="plugin_id", foreignKey = @ForeignKey(name = "MobileTerminal_Plugin_FK"))
 	private MobileTerminalPlugin plugin;
 	
 	@Column(name="archived")

@@ -68,7 +68,7 @@ public class MobileTerminalPluginCapability implements Serializable {
     private String updatedBy;
 
     @ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-    @JoinColumn(name="plugin_id")
+    @JoinColumn(name="plugin_id", foreignKey = @ForeignKey(name = "Plugin_Capability_Plugin_FK"))
     private MobileTerminalPlugin plugin;
     
     public MobileTerminalPluginCapability() {

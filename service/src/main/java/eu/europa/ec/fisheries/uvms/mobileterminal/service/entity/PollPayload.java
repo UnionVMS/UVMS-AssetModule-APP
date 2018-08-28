@@ -54,7 +54,7 @@ public class PollPayload implements Serializable {
     @Column(name = "stopdate")
     private OffsetDateTime stopDate;
 
-    @JoinColumn(name = "poll_id", referencedColumnName = "id")
+    @JoinColumn(name = "poll_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "PollPayload_Poll_FK"))
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Poll poll;
 

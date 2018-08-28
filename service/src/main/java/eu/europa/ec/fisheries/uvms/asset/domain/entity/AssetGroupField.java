@@ -66,7 +66,7 @@ public class AssetGroupField implements Serializable {
     private String value;
 
     @ManyToOne
-    @JoinColumn(name = "assetgroup")
+    @JoinColumn(name = "assetgroup", foreignKey = @ForeignKey(name = "AssetGroupField_AssetGroup_FK"))
     private AssetGroup assetGroup;
 
     public UUID getId() {

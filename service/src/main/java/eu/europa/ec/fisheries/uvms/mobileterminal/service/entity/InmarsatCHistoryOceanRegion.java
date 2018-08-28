@@ -43,7 +43,7 @@ public class InmarsatCHistoryOceanRegion implements Serializable {
 
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name="inmarsatc_history_id")
+	@JoinColumn(name="inmarsatc_history_id", foreignKey = @ForeignKey(name = "InmarsatCHistoryOceanRegion_MobileTerminalEvent_FK"))
 	private MobileTerminalEvent event;
 
 	@Size(max=200)
