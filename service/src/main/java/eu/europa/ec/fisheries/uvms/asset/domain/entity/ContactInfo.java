@@ -31,7 +31,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name = "ContactInfo")
+@Table(name = "ContactInfo", indexes = { @Index(columnList = "assetId", name = "ContactInfo_asset_FK_INX10")})
 @NamedQueries({
     @NamedQuery(name = ContactInfo.FIND_BY_ASSET, query = "SELECT n FROM ContactInfo n WHERE n.assetId = :assetId"),
 })

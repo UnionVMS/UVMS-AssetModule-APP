@@ -827,6 +827,11 @@
             <column name="assetid"/>
         </createIndex>
     </changeSet>
+    <changeSet author="thofan (generated)" id="1535445328879-116">
+        <createIndex indexName="contactinfo_asset_fk_inx10" tableName="contactinfo">
+            <column name="assetid"/>
+        </createIndex>
+    </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-86">
         <createIndex indexName="plugin_capability_plugin_fk_inx10" tableName="plugin_capability">
             <column name="plugin_id"/>
