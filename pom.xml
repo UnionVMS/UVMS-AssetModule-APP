@@ -26,7 +26,7 @@
         <uvms.common.version>3.0.18</uvms.common.version>
         <audit.model.version>4.0.4</audit.model.version>
         <project.scm.id>github</project.scm.id>
-        <installAtEnd>false</installAtEnd>
+        <installAtEnd>true</installAtEnd>
     </properties>
 
 	<dependencies>
