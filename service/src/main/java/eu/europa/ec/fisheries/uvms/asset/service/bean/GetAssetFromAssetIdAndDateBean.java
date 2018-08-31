@@ -9,7 +9,7 @@ import java.util.Date;
 
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
-import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
+import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
@@ -25,11 +25,14 @@ import org.slf4j.LoggerFactory;
 public class GetAssetFromAssetIdAndDateBean {
 
     private final static Logger LOG = LoggerFactory.getLogger(GetAssetFromAssetIdAndDateBean.class);
+
     @Inject
     @AssetMessageErrorEvent
-    Event<AssetMessageEvent> assetErrorEvent;
+    private Event<AssetMessageEvent> assetErrorEvent;
+
     @EJB
-    private MessageProducer messageProducer;
+    private AssetMessageProducer messageProducer;
+
     @EJB
     private AssetHistoryService service;
 
@@ -69,7 +72,7 @@ public class GetAssetFromAssetIdAndDateBean {
         Date date = getAssetFromAssetIdAndDate.getDate();
         try {
             Asset response = service.getAssetByIdAndDate(typ, val, date);
-            messageProducer.sendModuleResponseMessage(event.getMessage(), AssetModuleResponseMapper.mapAssetModuleResponse(response));
+            messageProducer.sendModuleResponseMessageOv(event.getMessage(), AssetModuleResponseMapper.mapAssetModuleResponse(response));
 
         } catch (AssetException e) {
             LOG.error("[ Error when getting assetGroupList from source. ] ");

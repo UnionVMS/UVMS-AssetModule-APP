@@ -46,7 +46,7 @@ public class AssetQueueConsumerBean implements AssetQueueConsumer, ConfigMessage
     }
 
     @Override
-    public <T> T getMessage(String correlationId, Class type) throws AssetMessageException {
+    public <T> T getMessageOv(String correlationId, Class type) throws AssetMessageException {
     	if (correlationId == null || correlationId.isEmpty()) {
     		throw new AssetMessageException("No CorrelationID provided!");
     	}
@@ -74,7 +74,7 @@ public class AssetQueueConsumerBean implements AssetQueueConsumer, ConfigMessage
     @Override
     public <T> T getConfigMessage(String correlationId, Class type) throws ConfigMessageException {
         try {
-            return getMessage(correlationId, type);
+            return getMessageOv(correlationId, type);
         }
         catch (AssetMessageException e) {
             LOG.error("[ Error when getting config message. ] {}", e.getMessage());

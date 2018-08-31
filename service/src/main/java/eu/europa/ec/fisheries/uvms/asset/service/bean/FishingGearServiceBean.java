@@ -14,34 +14,32 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
-import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
+import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceRequestMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.FishingGearService;
-import eu.europa.ec.fisheries.wsdl.asset.fishinggear.FishingGearListResponse;
 import eu.europa.ec.fisheries.wsdl.asset.fishinggear.FishingGearResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.FishingGear;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.jms.TextMessage;
-import java.util.List;
 
 @Stateless
 public class FishingGearServiceBean implements FishingGearService {
 
     @EJB
-    MessageProducer messageProducer;
+    private AssetMessageProducer messageProducer;
 
     @EJB
-    AssetQueueConsumer reciever;
+    private AssetQueueConsumer reciever;
 
     @Override
     public FishingGearResponse upsertFishingGears(FishingGear fishingGear, String username) throws AssetMessageException, AssetModelMapperException {
         String request = AssetDataSourceRequestMapper.mapUpsertFishingGearRequest(fishingGear, username);
         String messageId = messageProducer.sendDataSourceMessage(request, AssetDataSourceQueue.INTERNAL);
-        TextMessage response = reciever.getMessage(messageId, TextMessage.class);
+        TextMessage response = reciever.getMessageOv(messageId, TextMessage.class);
         FishingGearResponse fishingGearResponse = AssetDataSourceResponseMapper.mapToUpsertFishingGearResponse(response, messageId);
         //FishingGearListResponse fishingGearListResponse = AssetDataSourceResponseMapper.mapToFishingGearResponse(response, messageId);
         return fishingGearResponse;

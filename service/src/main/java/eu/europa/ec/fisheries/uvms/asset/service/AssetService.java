@@ -18,12 +18,7 @@ import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListGroupByFlagStateResponse;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
-import eu.europa.ec.fisheries.wsdl.asset.types.NoteActivityCode;
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
 
 @Local
 public interface AssetService {
@@ -45,6 +40,15 @@ public interface AssetService {
      * @throws AssetException
      */
     ListAssetResponse getAssetList(AssetListQuery requestQuery) throws AssetException;
+
+    /**
+     * Get all Assets Batch
+     *
+     * @param requestQuery
+     * @return
+     * @throws AssetException
+     */
+    List<BatchAssetListResponseElement> getAssetListBatch(List<AssetListQuery> requestQuery) throws AssetException;
 
     /**
      * Get all Assets

@@ -5,13 +5,14 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.jms.JMSException;
 import javax.jms.TextMessage;
 
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
-import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
+import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
@@ -30,7 +31,7 @@ import org.slf4j.LoggerFactory;
 @LocalBean
 public class GetAssetEventBean {
 
-    final static Logger LOG = LoggerFactory.getLogger(GetAssetEventBean.class);
+    private final static Logger LOG = LoggerFactory.getLogger(GetAssetEventBean.class);
 
     @EJB
     private AssetService service;
@@ -39,18 +40,17 @@ public class GetAssetEventBean {
     private ParameterService parameters;
 
     @EJB
-    private MessageProducer messageProducer;
+    private AssetMessageProducer messageProducer;
 
     @Inject
     @AssetMessageErrorEvent
-    Event<AssetMessageEvent> assetErrorEvent;
+    private Event<AssetMessageEvent> assetErrorEvent;
 
     public void getAsset(TextMessage textMessage, AssetId assetId) {
         LOG.info("Getting asset.");
         AssetDataSourceQueue dataSource = null;
-        Asset asset = null;
+        Asset asset;
         boolean messageSent = false;
-
         try {
             dataSource = decideDataflow(assetId);
             LOG.debug("Got message to AssetModule, Executing Get asset from datasource {}", dataSource.name());
@@ -75,8 +75,9 @@ public class GetAssetEventBean {
 
         if (!messageSent) {
             try {
-                messageProducer.sendModuleResponseMessage(textMessage, AssetModuleResponseMapper.mapAssetModuleResponse(asset));
-            } catch (AssetModelMapperException e) {
+                messageProducer.sendModuleResponseMessageOv(textMessage, AssetModuleResponseMapper.mapAssetModuleResponse(asset));
+                LOG.info("Response sent back to requestor on queue [ {} ]", textMessage.getJMSReplyTo());
+            } catch (AssetModelMapperException | JMSException e) {
                 LOG.error("[ Error when mapping asset ] ");
                 assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when mapping asset" + e.getMessage())));
             }
