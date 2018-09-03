@@ -20,6 +20,6 @@ import javax.ejb.Local;
 @Local
 public interface AssetQueueConsumer {
 
-    public <T> T getMessage(String correlationId, Class type) throws AssetMessageException;
+    public <T> T getMessageOv(String correlationId, Class type) throws AssetMessageException;
 
 }

@@ -11,11 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.jms.TextMessage;
-import java.util.List;
-
 import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.asset.exception.InputArgumentException;
@@ -24,7 +19,7 @@ import eu.europa.ec.fisheries.uvms.asset.message.ModuleQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
 import eu.europa.ec.fisheries.uvms.asset.message.mapper.AuditModuleRequestMapper;
-import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
+import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceRequestMapper;
@@ -35,29 +30,29 @@ import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallExcep
 import eu.europa.ec.fisheries.uvms.bean.AssetDomainModelBean;
 import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListGroupByFlagStateResponse;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
-import eu.europa.ec.fisheries.wsdl.asset.types.NoteActivityCode;
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.jms.TextMessage;
+import java.util.ArrayList;
+import java.util.List;
 
 @Stateless
 public class AssetServiceBean implements AssetService {
 
-    final static Logger LOG = LoggerFactory.getLogger(AssetServiceBean.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AssetServiceBean.class);
 
     @EJB
-    MessageProducer messageProducer;
+    private AssetMessageProducer messageProducer;
 
     @EJB
-    AssetQueueConsumer reciever;
+    private AssetQueueConsumer reciever;
 
     @EJB
-    AssetDomainModelBean assetDomainModel;
+    private AssetDomainModelBean assetDomainModel;
 
     /**
      * {@inheritDoc}
@@ -98,6 +93,30 @@ public class AssetServiceBean implements AssetService {
         listAssetResponse.setTotalNumberOfPages(assetList.getTotalNumberOfPages());
         listAssetResponse.getAsset().addAll(assetList.getAssetList());
         return listAssetResponse;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * TODO : This is just a first iteration of a batch service! For loop should be avoided somehow!
+     *
+     * @param requestQuery
+     * @return
+     * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
+     */
+    @Override
+    public List<BatchAssetListResponseElement> getAssetListBatch(List<AssetListQuery> requestQuery) throws AssetException {
+        LOG.debug("Getting AssetList Batch.");
+        List<BatchAssetListResponseElement> batchListList = new ArrayList<>();
+        for (AssetListQuery assetListQuery : requestQuery) {
+            GetAssetListResponseDto assetList = assetDomainModel.getAssetList(assetListQuery);
+            BatchAssetListResponseElement batchElement = new BatchAssetListResponseElement();
+            batchElement.setCurrentPage(assetList.getCurrentPage());
+            batchElement.setTotalNumberOfPages(assetList.getTotalNumberOfPages());
+            batchElement.getAsset().addAll(assetList.getAssetList());
+            batchListList.add(batchElement);
+        }
+        return batchListList;
     }
 
     /**
@@ -177,7 +196,6 @@ public class AssetServiceBean implements AssetService {
 
     @Override
     public Asset upsertAsset(Asset asset, String username) throws AssetException {
-
         if (asset == null) {
             throw new InputArgumentException("No asset to upsert");
         }
@@ -217,7 +235,7 @@ public class AssetServiceBean implements AssetService {
             default:
                 String data = AssetDataSourceRequestMapper.mapGetAssetById(assetId.getValue(), assetId.getType());
                 String messageId = messageProducer.sendDataSourceMessage(data, source);
-                TextMessage response = reciever.getMessage(messageId, TextMessage.class);
+                TextMessage response = reciever.getMessageOv(messageId, TextMessage.class);
                 assetById = AssetDataSourceResponseMapper.mapToAssetFromResponse(response, messageId);
                 break;
         }

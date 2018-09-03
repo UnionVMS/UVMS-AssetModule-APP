@@ -18,18 +18,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperExcepti
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
-import eu.europa.ec.fisheries.wsdl.asset.module.ActivityRulesAssetModuleRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.ActivityRulesAssetModuleResponse;
-import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.AssetListModuleRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.AssetModuleMethod;
-import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistoriesByCfrModuleRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistoriesByCfrModuleResponse;
-import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetGroupListByAssetGuidRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.UpsertAssetModuleRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.UpsertFishingGearModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.*;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
@@ -72,6 +61,13 @@ public class AssetModuleRequestMapper {
         AssetListModuleRequest request = new AssetListModuleRequest();
         request.setMethod(AssetModuleMethod.ASSET_LIST);
         request.setQuery(query);
+        return JAXBMarshaller.marshallJaxBObjectToString(request);
+    }
+
+    public static String createBatchAssetListModuleRequest(List<AssetListQuery> query) throws AssetModelMapperException {
+        BatchAssetListModuleRequest request = new BatchAssetListModuleRequest();
+        request.setMethod(AssetModuleMethod.BATCH_ASSET_LIST);
+        request.getQueryList().addAll(query);
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
 

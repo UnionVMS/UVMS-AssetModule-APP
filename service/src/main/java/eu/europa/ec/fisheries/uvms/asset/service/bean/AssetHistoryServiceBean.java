@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
-import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
+import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
 import eu.europa.ec.fisheries.uvms.bean.AssetDomainModelBean;
@@ -35,11 +35,14 @@ import org.slf4j.LoggerFactory;
 @Stateless
 public class AssetHistoryServiceBean implements AssetHistoryService {
 
-    final static Logger LOG = LoggerFactory.getLogger(AssetHistoryServiceBean.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AssetHistoryServiceBean.class);
+
     @EJB
-    MessageProducer messageProducer;
+    private AssetMessageProducer messageProducer;
+
     @EJB
-    AssetQueueConsumer reciever;
+    private AssetQueueConsumer reciever;
+
     @EJB
     private AssetDomainModelBean assetDomainModel;
 
@@ -65,8 +68,6 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
 
     @Override
     public FlagStateType getFlagStateByIdAndDate(String assetGuid, Date date) throws AssetException {
-
-
         FlagState flagState = assetDomainModel.getFlagStateByIdAndDate(assetGuid, date);
         FlagStateType flagStateType = new FlagStateType();
         if (flagState != null) {
