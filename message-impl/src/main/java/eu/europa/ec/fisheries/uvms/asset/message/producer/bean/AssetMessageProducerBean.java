@@ -42,7 +42,7 @@ import javax.jms.TextMessage;
 @Stateless
 public class AssetMessageProducerBean extends AbstractProducer implements AssetMessageProducer, ConfigMessageProducer {
 
-    final static Logger LOG = LoggerFactory.getLogger(AssetMessageProducerBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AssetMessageProducerBean.class);
 
     private Queue nationalSourceQueue;
     private Queue xeuSourceQueue;

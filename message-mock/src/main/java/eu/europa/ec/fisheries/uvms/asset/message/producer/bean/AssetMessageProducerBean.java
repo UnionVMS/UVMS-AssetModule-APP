@@ -26,15 +26,17 @@ import eu.europa.ec.fisheries.uvms.asset.message.event.AssetSuccessfulTestEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.SuccessfulTestEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
+import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigMessageException;
 import eu.europa.ec.fisheries.uvms.config.message.ConfigMessageProducer;
 
 @Stateless
-public class AssetMessageProducerBean implements AssetMessageProducer, ConfigMessageProducer {
+public class AssetMessageProducerBean extends AbstractProducer implements AssetMessageProducer, ConfigMessageProducer {
 
     @Inject
     @AssetSuccessfulTestEvent
-    private Event<SuccessfulTestEvent> successfulTestEvent;
+    Event<SuccessfulTestEvent> successfulTestEvent;
 
     @PostConstruct
     public void init() {
@@ -46,7 +48,7 @@ public class AssetMessageProducerBean implements AssetMessageProducer, ConfigMes
     }
 
     @Override
-    public String sendModuleMessage(String text, ModuleQueue queue) throws AssetMessageException {
+    public String sendModuleMessage(String text, ModuleQueue queue) {
         return text;
     }
 
@@ -65,4 +67,8 @@ public class AssetMessageProducerBean implements AssetMessageProducer, ConfigMes
     }
 
 
+    @Override
+    public String getDestinationName() {
+        return MessageConstants.QUEUE_ASSET;
+    }
 }
