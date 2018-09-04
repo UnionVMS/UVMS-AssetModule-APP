@@ -87,7 +87,7 @@ public class AssetsMessageConsumerBean implements MessageListener {
 
     @Inject
     @AssetMessageErrorEvent
-    Event<AssetMessageEvent> assetErrorEvent;
+    private Event<AssetMessageEvent> assetErrorEvent;
 
 
     @Override
