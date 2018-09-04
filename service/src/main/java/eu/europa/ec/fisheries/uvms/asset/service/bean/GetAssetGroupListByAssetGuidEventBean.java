@@ -28,11 +28,11 @@ public class GetAssetGroupListByAssetGuidEventBean {
     private final static Logger LOG = LoggerFactory.getLogger(GetAssetGroupListByAssetGuidEventBean.class);
 
     @EJB
-    private AssetMessageProducer messageProducer;
+    AssetMessageProducer messageProducer;
 
     @Inject
     @AssetMessageErrorEvent
-    private Event<AssetMessageEvent> assetErrorEvent;
+    Event<AssetMessageEvent> assetErrorEvent;
 
     @EJB
     private AssetGroupService assetGroup;
