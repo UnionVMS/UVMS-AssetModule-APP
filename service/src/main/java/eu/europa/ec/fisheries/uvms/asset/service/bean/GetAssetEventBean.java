@@ -85,13 +85,10 @@ public class GetAssetEventBean {
     }
 
     private AssetDataSourceQueue decideDataflow(AssetId assetId) throws AssetServiceException {
-
-        try {
-            // If search is made by guid, no other source is relevant
+        try { // If search is made by guid, no other source is relevant
             if (AssetIdType.GUID.equals(assetId.getType())) {
                 return AssetDataSourceQueue.INTERNAL;
             }
-
             Boolean xeu = parameters.getBooleanValue(ParameterKey.EU_USE.getKey());
             Boolean national = parameters.getBooleanValue(ParameterKey.NATIONAL_USE.getKey());
             LOG.debug("Settings for dataflow are: XEU: {0} NATIONAL: {1}", new Object[]{xeu, national});
