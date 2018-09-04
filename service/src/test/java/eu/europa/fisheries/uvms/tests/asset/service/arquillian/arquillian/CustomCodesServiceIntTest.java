@@ -134,12 +134,18 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
 
         service.deleteAllFor(CONSTANT + "2");
 
+        userTransaction.commit();
+        userTransaction.begin();
+
+
         rs1 = service.getAllFor(CONSTANT);
         rs2 = service.getAllFor(CONSTANT + "2");
         Assert.assertEquals(10, rs1.size());
         Assert.assertEquals(0, rs2.size());
 
         service.deleteAllFor(CONSTANT);
+        userTransaction.commit();
+        userTransaction.begin();
 
         rs1 = service.getAllFor(CONSTANT);
         rs2 = service.getAllFor(CONSTANT + "2");
