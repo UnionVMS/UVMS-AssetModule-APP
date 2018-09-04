@@ -35,6 +35,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +69,13 @@ public class AssetResource {
     @Inject
     private AssetService assetService;
 
+
+    //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
+    private ObjectMapper objectMapper(){
+        ObjectMapperContextResolver omcr = new ObjectMapperContextResolver();
+        return omcr.getContext(Asset.class);
+    }
+
     /**
      *
      * @responseMessage 200 Asset list successfully retrieved
@@ -93,10 +101,8 @@ public class AssetResource {
             List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
             AssetListResponse assetList = assetService.getAssetList(searchFields, page, size, dynamic);
             //This is needed to force Hibernate to fetch everything related to the assets, reason it does not is that AuditQuery, used to find stuff, does not support eager fetching
-            for (Asset a: assetList.getAssetList()) {
-                a.getMobileTerminalEvent().size();
-            }
-            return Response.ok(assetList).build();
+            String returnString = objectMapper().writeValueAsString(assetList);
+            return Response.ok(returnString).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset list.", e);
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -153,7 +159,9 @@ public class AssetResource {
     public Response getAssetById(@ApiParam(value="UUID of the asset to retrieve", required=true) @PathParam("id") UUID id) {
         try {
             Asset asset = assetService.getAssetById(id);
-            return Response.status(200).entity(asset).type(MediaType.APPLICATION_JSON)
+            //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
+            String returnString = objectMapper().writeValueAsString(asset);
+            return Response.status(200).entity(returnString).type(MediaType.APPLICATION_JSON)
                     .header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset by ID. {}",id,e);
@@ -189,7 +197,9 @@ public class AssetResource {
         try {
             String remoteUser = servletRequest.getRemoteUser();
             Asset createdAssetSE = assetService.createAsset(asset, remoteUser);
-            return Response.status(200).entity(createdAssetSE).type(MediaType.APPLICATION_JSON )
+            //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
+            String returnString = objectMapper().writeValueAsString(createdAssetSE);
+            return Response.status(200).entity(returnString).type(MediaType.APPLICATION_JSON )
                     .header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when creating asset. {}", asset, e);
@@ -217,7 +227,9 @@ public class AssetResource {
         try {
             String remoteUser = servletRequest.getRemoteUser();
             Asset updatedAsset = assetService.updateAsset(asset, remoteUser, comment);
-            return Response.status(200).entity(updatedAsset).type(MediaType.APPLICATION_JSON )
+            //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
+            String returnString = objectMapper().writeValueAsString(updatedAsset);
+            return Response.status(200).entity(returnString).type(MediaType.APPLICATION_JSON )
                     .header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when updating asset: {}",asset, e);
@@ -238,7 +250,9 @@ public class AssetResource {
         try {
             String remoteUser = servletRequest.getRemoteUser();
             Asset archivedAsset = assetService.archiveAsset(asset, remoteUser, comment);
-            return Response.ok(archivedAsset).build();
+            //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
+            String returnString = objectMapper().writeValueAsString(archivedAsset);
+            return Response.ok(returnString).build();
         } catch (Exception e) {
             LOG.error("Error when archiving asset. {}",asset, e);
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -264,11 +278,9 @@ public class AssetResource {
                                                  @ApiParam(value="Max size of resultset") @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
         try {
             List<Asset> assetRevisions = assetService.getRevisionsForAssetLimited(id, maxNbr);
-            //This is needed to force Hibernate to fetch everything related to the assets, reason it does not is that AuditQuery, used to find stuff, does not support eager fetching
-            for (Asset a: assetRevisions) {
-                a.getMobileTerminalEvent().size();
-            }
-            return Response.ok(assetRevisions).build();
+            //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
+            String returnString = objectMapper().writeValueAsString(assetRevisions);
+            return Response.ok(returnString).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset history list by asset ID. {}]", id, e);
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -299,11 +311,9 @@ public class AssetResource {
             AssetIdentifier assetId = AssetIdentifier.valueOf(type.toUpperCase());
             OffsetDateTime offsetDateTime = OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             Asset assetRevision = assetService.getAssetFromAssetIdAtDate(assetId, id, offsetDateTime);
-            //This is needed to force Hibernate to fetch everything related to the assets, reason it does not is that AuditQuery, used to find stuff, does not support eager fetching
-            if(assetRevision != null) {
-                assetRevision.getMobileTerminalEvent().size();
-            }
-            return Response.ok(assetRevision).build();
+            //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
+            String returnString = objectMapper().writeValueAsString(assetRevision);
+            return Response.ok(returnString).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset. Type: {}, Value: {}, Date: {}", type, id, date, e);
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -329,10 +339,9 @@ public class AssetResource {
     public Response getAssetHistoryByAssetHistGuid(@ApiParam(value="Id", required=true) @PathParam("guid") UUID guid) {
         try {
             Asset asset = assetService.getAssetRevisionForRevisionId(guid);
-            if(asset != null) {
-                asset.getMobileTerminalEvent().size();
-            }
-            return Response.ok(asset).build();
+            //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
+            String returnString = objectMapper().writeValueAsString(asset);
+            return Response.ok(returnString).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset by asset history guid. {}] ", guid, e);
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();

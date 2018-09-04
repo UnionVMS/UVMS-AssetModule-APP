@@ -9,7 +9,6 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -169,7 +168,7 @@ public class AssetTestsHelper {
                 .toString();
     }
 
-    public Asset createAssetHelper(AssetIdentifier key, String value, Date date) {
+    public Asset createAssetHelper(AssetIdentifier key, String value) {
         Asset assetEntity = createBiggerAsset();
         assetEntity.setCfr(null);
         assetEntity.setIrcs(null);

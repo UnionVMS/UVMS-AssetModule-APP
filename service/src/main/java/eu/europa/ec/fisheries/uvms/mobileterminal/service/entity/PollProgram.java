@@ -79,7 +79,7 @@ public class PollProgram implements Serializable {
     @Column(name = "updattim")
     private OffsetDateTime updateTime;
 
-    @JoinColumn(name = "pollbase_id")
+    @JoinColumn(name = "pollbase_id", foreignKey = @ForeignKey(name = "PollPrograme_Pollbase_FK"))
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private PollBase pollBase;
 

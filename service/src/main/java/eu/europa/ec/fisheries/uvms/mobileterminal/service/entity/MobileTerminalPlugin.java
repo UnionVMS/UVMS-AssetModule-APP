@@ -41,7 +41,7 @@ import java.util.*;
 	@NamedQuery(name = MobileTerminalConstants.PLUGIN_FIND_BY_SERVICE_NAME, query = "SELECT p FROM MobileTerminalPlugin p WHERE p.pluginServiceName = :serviceName")
 })
 @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class, property="id")
+@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class/*, property="id"*/)
 public class MobileTerminalPlugin implements Serializable {
     private static final long serialVersionUID = 1L;
 

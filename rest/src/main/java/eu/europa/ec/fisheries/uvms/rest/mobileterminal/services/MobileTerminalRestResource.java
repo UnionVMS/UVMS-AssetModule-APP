@@ -24,6 +24,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalP
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalEntityToModelMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalModelToEntityMapper;
+import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTResponseDto;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTErrorHandler;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
@@ -107,6 +108,12 @@ public class MobileTerminalRestResource {
         }
     }
 
+    //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
+    private ObjectMapper objectMapper(){
+        ObjectMapperContextResolver omcr = new ObjectMapperContextResolver();
+        return omcr.getContext(Asset.class);
+    }
+
     @GET
     @Path("/entity/{id}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
@@ -114,11 +121,8 @@ public class MobileTerminalRestResource {
         LOG.info("Get mobile terminal by id invoked in rest layer.");
         try {
             MobileTerminal mobileTerminal = mobileTerminalService.getMobileTerminalEntityById(UUID.fromString(mobileterminalId));
-            ObjectMapper om = new ObjectMapper();
-            om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-            String s = om.writeValueAsString(mobileTerminal);
-            //return Response.ok(s).build();
-            return Response.status(200).entity(mobileTerminal).type(MediaType.APPLICATION_JSON )
+            String returnString = objectMapper().writeValueAsString(mobileTerminal);
+            return Response.status(200).entity(returnString).type(MediaType.APPLICATION_JSON )
                     .header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("[ Error when creating mobile terminal ] {}", e);

@@ -116,7 +116,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         List<AssetGroup> searchResultList = new ArrayList<>();
         List<AssetGroup> filterGroupList = assetGroupDao.getAssetGroupAll();
         for (AssetGroup group : filterGroupList) {
-            List<AssetGroupField> fields = assetGroupFieldDao.retrieveFieldsForGroup(group.getId());
+            List<AssetGroupField> fields = assetGroupFieldDao.retrieveFieldsForGroup(group);
             for (AssetGroupField field : fields) {
                 if ("GUID".equals(field.getField()) && assetId.toString().equals(field.getValue())) {
                     searchResultList.add(group);
@@ -150,7 +150,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
             throw new NullPointerException("AssetGroup with ID: " + parentAssetGroupId + " does not exist");
         }
 
-        assetGroupField.setAssetGroup(parentAssetGroup.getId());
+        assetGroupField.setAssetGroup(parentAssetGroup);
         assetGroupField.setUpdatedBy(username);
         assetGroupField.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         return assetGroupFieldDao.create(assetGroupField);
@@ -206,7 +206,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         if (assetGroup == null) {
             throw new NullPointerException("Cannot retrieve list for group because assetGroup does not exist.");
         }
-        return assetGroupFieldDao.retrieveFieldsForGroup(assetGroup.getId());
+        return assetGroupFieldDao.retrieveFieldsForGroup(assetGroup);
     }
 
     @Override
@@ -218,6 +218,6 @@ public class AssetGroupServiceBean implements AssetGroupService {
         if (assetGroup == null) {
             throw new NullPointerException("Cannot retrieve list for group because assetGroup does not exist.");
         }
-        assetGroupFieldDao.removeFieldsForGroup(assetGroup.getId());
+        assetGroupFieldDao.removeFieldsForGroup(assetGroup);
     }
 }

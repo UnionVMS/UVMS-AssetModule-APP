@@ -17,6 +17,9 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -240,6 +243,121 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .get(Asset.class);
         
         assertNotNull(assetByCfrAndTimestamp1);
+    }
+
+    @Test
+    public void getPastAssetFromAssetIdPastDateTest() throws Exception {
+
+
+        Asset asset = AssetHelper.createBasicAsset();
+        String originalName = "Original Name";
+        asset.setName(originalName);
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+
+        OffsetDateTime timeStamp = OffsetDateTime.now(ZoneOffset.UTC);
+        createdAsset.setName("New Name");
+        Asset updatedAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(createdAsset), Asset.class);
+        assertNotNull(updatedAsset);
+
+        Asset assetByCfrAndTimestamp1 = getWebTarget()
+                .path("asset")
+                .path("history")
+                .path("cfr")
+                .path(createdAsset.getCfr())
+                .path(timeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+                .request(MediaType.APPLICATION_JSON)
+                .get(Asset.class);
+
+        assertNotNull(assetByCfrAndTimestamp1);
+        assertEquals(originalName, assetByCfrAndTimestamp1.getName());
+    }
+
+    @Test
+    public void checkPastNumberOfMTTest() throws Exception {
+
+
+        Asset asset = AssetHelper.createBasicAsset();
+
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+
+        MobileTerminalType mobileTerminal1 = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminal1.setConnectId(createdAsset.getId().toString());
+        String response = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminal1), String.class);
+
+
+        OffsetDateTime timeStamp = OffsetDateTime.now(ZoneOffset.UTC);
+
+        MobileTerminalType mobileTerminal2 = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminal2.setConnectId(createdAsset.getId().toString());
+        String response2 = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminal2), String.class);
+
+        Asset presentAsset = getWebTarget()
+                .path("asset")
+                .path(createdAsset.getId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .get(Asset.class);
+
+        assertEquals(2, presentAsset.getMobileTerminalEvent().size());
+
+        Asset pastAsset = getWebTarget()
+                .path("asset")
+                .path("history")
+                .path("cfr")
+                .path(createdAsset.getCfr())
+                .path(timeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+                .request(MediaType.APPLICATION_JSON)
+                .get(Asset.class);
+
+        assertNotNull(pastAsset);
+        assertEquals(1, pastAsset.getMobileTerminalEvent().size());
+
+    }
+
+    @Test
+    public void getAssetAndConnectedMobileTerminalTest() throws Exception {
+
+
+        Asset asset = AssetHelper.createBasicAsset();
+
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+
+        MobileTerminalType mobileTerminalType = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminalType.setConnectId(createdAsset.getId().toString());
+        String response = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminalType), String.class);
+        assertNotNull(response);
+        MobileTerminalType mobileTerminal = deserializeResponseDto(response, MobileTerminalType.class);
+
+        Asset fetchedAsset = getWebTarget()
+                .path("asset")
+                .path(createdAsset.getId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .get(Asset.class);
+
+        assertNotNull(fetchedAsset);
+        assertEquals(1, fetchedAsset.getMobileTerminalEvent().size());
+        assertEquals(mobileTerminal.getMobileTerminalId().getGuid(), fetchedAsset.getMobileTerminalEvent().get(0).getMobileterminal().getId().toString());
+
     }
 
     @Test

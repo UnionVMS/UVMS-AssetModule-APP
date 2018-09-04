@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -112,7 +111,9 @@ public class AssetDao {
     }
 
     public Asset updateAsset(Asset asset) {
-        return em.merge(asset);
+        Asset updated = em.merge(asset);
+        em.flush();
+        return updated;
     }
 
     public void deleteAsset(Asset asset) {

@@ -29,7 +29,7 @@ import java.util.UUID;
 @Audited
 @Entity
 @Table(name = "mobileterminalattributes", indexes = { @Index(columnList = "mobileterminalevent_id", name = "mobileterminalattributes_Mobterm_event_FK_INX10", unique = false),})
-@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class, property="id")
+@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class/*, property="id"*/)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MobileTerminalAttributes implements Serializable {
 
@@ -41,7 +41,7 @@ public class MobileTerminalAttributes implements Serializable {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name="mobileterminalevent_id")
+    @JoinColumn(name="mobileterminalevent_id", foreignKey = @ForeignKey(name = "MobileTerminalAttributes_MobileTerminalEvent_FK"))
     @Fetch(FetchMode.SELECT)
     private MobileTerminalEvent mobileTerminalEvent;
 

@@ -59,7 +59,7 @@ public class PollBase implements Serializable {
     private OffsetDateTime updateTime;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "mobileterminal_id")
+    @JoinColumn(name = "mobileterminal_id", foreignKey = @ForeignKey(name = "PollBase_MobileTerminal_FK"))
     @NotNull
     private MobileTerminal mobileterminal;
 

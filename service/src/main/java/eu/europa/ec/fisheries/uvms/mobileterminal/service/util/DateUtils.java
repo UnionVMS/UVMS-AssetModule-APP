@@ -13,43 +13,16 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
+
 
 public class DateUtils {
     private static Logger LOG = LoggerFactory.getLogger(DateUtils.class);
     public final static String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss Z";
     public final static String DATE_FORMAT = "yyyy-MM-dd";
     public static final String DATE_TIME_PATTERN= "yyyy-MM-dd HH:mm:ss.SSS";
-    
 
-    public static Date parseToUTCDateTime(String dateString) {
-        return parseToUTC(DATE_TIME_FORMAT, dateString);
-    }
-
-
-    // TODO FIX this, check if old code returns the same value as the new code
-    private static Date parseToUTC(String format, String dateString)
-    {
-        try{
-            DateFormat dateFormat = new SimpleDateFormat(format);
-            return dateFormat.parse(dateString);
-        }catch(ParseException e){
-            LOG.error("Unable to parse a date from string " + dateString + " according to format " + format + " due to " + e.getMessage());
-            return null;
-        }
-    }
     public static String parseOffsetDateTimeToString(OffsetDateTime dateTime){
         if(dateTime == null){
             return null;

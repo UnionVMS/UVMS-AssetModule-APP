@@ -58,7 +58,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
           @NamedQuery(name = ASSET_FIND_BY_GFCM, query = "SELECT v FROM Asset v WHERE v.gfcm = :gfcm AND v.active = true"),
           @NamedQuery(name = ASSET_FIND_BY_IDS, query = "SELECT v FROM Asset v WHERE v.id in :idList AND v.active = true"),
 })
-@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class/*, property="@id"*/)
+@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Asset implements Serializable {
 

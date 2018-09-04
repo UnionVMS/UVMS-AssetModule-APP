@@ -46,7 +46,7 @@ import java.util.UUID;
 												 @Index(columnList = "chan_conf", name = "mobileterminalevent_channel_FK_INX20", unique = false),
 												 @Index(columnList = "chan_poll", name = "mobileterminalevent_channel_FK_INX30", unique = false),
 												 @Index(columnList = "asset_id", name = "mobileterminalevent_asset_FK_INX10", unique = false),})
-@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class, property="id")
+@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class /*, property="id"*/)
 public class MobileTerminalEvent implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -75,7 +75,7 @@ public class MobileTerminalEvent implements Serializable {
 	private String attributes;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name="asset_id")
+	@JoinColumn(name="asset_id", foreignKey = @ForeignKey(name = "MobileTerminalEvent_Asset_FK"))
 	@Fetch(FetchMode.SELECT)
 	private Asset asset;
 
@@ -89,20 +89,20 @@ public class MobileTerminalEvent implements Serializable {
 	//bi-directional many-to-one association to Mobileterminal
 	@NotNull
 	@ManyToOne
-	@JoinColumn(name="mobileterminal_id")
+	@JoinColumn(name="mobileterminal_id", foreignKey = @ForeignKey(name = "MobileTerminalEvent_MobileTerminal_FK"))
 	@Fetch(FetchMode.SELECT)
 	private MobileTerminal mobileterminal;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name="chan_def")
+	@JoinColumn(name="chan_def", foreignKey = @ForeignKey(name = "MobileTerminalEvent_Channel_FK10"))
 	private Channel defaultChannel;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name="chan_conf")
+	@JoinColumn(name="chan_conf", foreignKey = @ForeignKey(name = "MobileTerminalEvent_Channel_FK20"))
 	private Channel configChannel;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name="chan_poll")
+	@JoinColumn(name="chan_poll", foreignKey = @ForeignKey(name = "MobileTerminalEvent_Channel_FK30"))
 	private Channel pollChannel;
 
 
