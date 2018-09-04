@@ -36,7 +36,7 @@ public class AssetMessageProducerBean extends AbstractProducer implements AssetM
 
     @Inject
     @AssetSuccessfulTestEvent
-    Event<SuccessfulTestEvent> successfulTestEvent;
+    private Event<SuccessfulTestEvent> successfulTestEvent;
 
     @PostConstruct
     public void init() {

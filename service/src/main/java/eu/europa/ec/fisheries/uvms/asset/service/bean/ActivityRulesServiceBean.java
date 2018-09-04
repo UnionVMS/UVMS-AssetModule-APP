@@ -54,7 +54,7 @@ public class ActivityRulesServiceBean {
             List<Asset> assets = EntityToModelMapper.toAssetFromAssetHistory(assetHistories);
             String findAssetByCfrResponse = AssetModuleRequestMapper.createActivityRulesAssetModuleResponse(assets);
             messageProducer.sendModuleResponseMessageOv(jmsMessage, findAssetByCfrResponse);
-            log.info("Response sent back to requestor on queue [ {} ]", jmsMessage.getJMSReplyTo());
+            log.info("Response sent back to requestor on queue [ {} ]", jmsMessage!= null ? jmsMessage.getJMSReplyTo() : "Null!!!");
         } catch (AssetModelException  | JMSException e) {
             log.error("Error when creating createFindAssetByCfrResponse", e);
         }

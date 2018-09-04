@@ -25,10 +25,9 @@ import javax.ejb.Stateless;
 @Stateless
 public class AssetOutQueueConsumerBean extends AbstractConsumer implements AssetQueueConsumer, ConfigMessageConsumer {
 
-    final static Logger LOG = LoggerFactory.getLogger(AssetOutQueueConsumerBean.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AssetOutQueueConsumerBean.class);
 
     private final static long TIMEOUT = 30000;
-
 
     @Override
     public <T> T getMessageOv(String correlationId, Class type) throws AssetMessageException {

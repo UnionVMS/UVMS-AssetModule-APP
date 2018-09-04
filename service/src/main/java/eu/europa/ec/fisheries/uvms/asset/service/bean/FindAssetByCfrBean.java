@@ -44,7 +44,7 @@ public class FindAssetByCfrBean {
             List<Asset> assetHistories = service.getAssetHistoryListByAssetId(assetId, Integer.MAX_VALUE);
             String findAssetByCfrResponse = AssetModuleRequestMapper.createFindAssetByCfrResponse(assetHistories);
             messageProducer.sendModuleResponseMessageOv(jmsMessage, findAssetByCfrResponse);
-            log.info("Response sent back to requestor on queue [ {} ]", jmsMessage.getJMSReplyTo());
+            log.info("Response sent back to requestor on queue [ {} ]", jmsMessage!= null ? jmsMessage.getJMSReplyTo() : "Null!!!");
         } catch (AssetModelException  | JMSException e) {
             log.error("Error when creating createFindAssetByCfrResponse", e);
         }

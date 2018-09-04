@@ -47,7 +47,7 @@ public class GetAssetListByAssetGroupEventBean {
             }
             List<Asset> response = service.getAssetListByAssetGroups(request.getGroups());
             messageProducer.sendModuleResponseMessageOv(message.getMessage(), AssetModuleResponseMapper.mapToAssetListByAssetGroupResponse(response));
-            LOG.info("Response sent back to requestor on queue [ {} ]", jmsMessage.getJMSReplyTo());
+            LOG.info("Response sent back to requestor on queue [ {} ]", jmsMessage!= null ? jmsMessage.getJMSReplyTo() : "Null!!!");
         } catch (AssetException  | JMSException e) {
             LOG.error("[ Error when getting assetGroupList from source. ] ");
             assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting AssetListByVesselGroups [ " + e.getMessage())));

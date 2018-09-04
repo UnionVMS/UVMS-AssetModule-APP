@@ -76,7 +76,7 @@ public class GetAssetEventBean {
         if (!messageSent) {
             try {
                 messageProducer.sendModuleResponseMessageOv(textMessage, AssetModuleResponseMapper.mapAssetModuleResponse(asset));
-                LOG.info("Response sent back to requestor on queue [ {} ]", textMessage.getJMSReplyTo());
+                LOG.info("Response sent back to requestor on queue [ {} ]", textMessage!= null ? textMessage.getJMSReplyTo() : "Null!!!");
             } catch (AssetModelMapperException | JMSException e) {
                 LOG.error("[ Error when mapping asset ] ");
                 assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when mapping asset" + e.getMessage())));

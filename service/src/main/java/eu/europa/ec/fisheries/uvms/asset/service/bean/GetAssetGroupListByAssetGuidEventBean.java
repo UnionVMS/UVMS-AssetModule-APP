@@ -42,7 +42,7 @@ public class GetAssetGroupListByAssetGuidEventBean {
         try {
             List<AssetGroup> response = assetGroup.getAssetGroupListByAssetGuid(message.getAssetGuid());
             messageProducer.sendModuleResponseMessageOv(jmsMessage, AssetModuleResponseMapper.mapToAssetGroupListResponse(response));
-            LOG.info("Response sent back to requestor on queue [ {} ]", jmsMessage.getJMSReplyTo());
+            LOG.info("Response sent back to requestor on queue [ {} ]", jmsMessage!= null ? jmsMessage.getJMSReplyTo() : "Null!!!");
         } catch (AssetException | JMSException e) {
             LOG.error("[ Error when getting assetGroupList from source. ] ");
             assetErrorEvent.fire(new AssetMessageEvent(jmsMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting AssetGroupByUserName [ " + e.getMessage())));
