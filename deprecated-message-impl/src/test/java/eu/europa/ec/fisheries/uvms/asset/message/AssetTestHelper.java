@@ -15,17 +15,9 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetContact;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteria;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListPagination;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetNotes;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetProdOrgModel;
-import eu.europa.ec.fisheries.wsdl.asset.types.CarrierSource;
-import eu.europa.ec.fisheries.wsdl.asset.types.ContactSource;
+import java.util.UUID;
+
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
 
 public class AssetTestHelper {
 
@@ -75,7 +67,6 @@ public class AssetTestHelper {
 
         asset.getContact().add(createBasicContact());
         asset.getContact().add(createBasicContact());
-        
         return asset;
     }
     
