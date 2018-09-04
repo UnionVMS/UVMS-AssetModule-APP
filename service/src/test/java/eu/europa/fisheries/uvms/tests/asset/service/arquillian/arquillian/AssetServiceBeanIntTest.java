@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 import javax.inject.Inject;
 import javax.transaction.HeuristicMixedException;
@@ -42,13 +41,14 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     public void createAssert() {
 
         // this test is to ensure that create actually works
-        Asset createdAsset = null;
         try {
             // create an Asset
             Asset asset = AssetTestsHelper.createBiggerAsset();
-            createdAsset = assetService.createAsset(asset, "test");
+            Asset createdAsset = assetService.createAsset(asset, "test");
             commit();
             Assert.assertTrue(createdAsset != null);
+            assetService.deleteAsset(AssetIdentifier.GUID, createdAsset.getId().toString());
+            commit();
         } catch (AssetServiceException e) {
             Assert.fail();
         }
@@ -70,6 +70,8 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         // fetch it and check name
         Asset fetchedAsset = assetService.getAssetById(createdAsset.getId());
         Assert.assertEquals(createdAsset.getName(), fetchedAsset.getName());
+        assetService.deleteAsset(AssetIdentifier.GUID, createdAsset.getId().toString());
+        commit();
     }
 
     @Test
@@ -126,6 +128,12 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         Asset fetchedAssetAtRevision = assetService.getAssetRevisionForRevisionId(historyId2);
         Assert.assertEquals(historyId2, fetchedAssetAtRevision.getHistoryId());
+
+        assetService.deleteAsset(AssetIdentifier.GUID, createdAsset.getId().toString());
+        commit();
+
+
+
     }
     
     @Test
@@ -143,6 +151,10 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         
         List<Asset> revisions2 = assetService.getRevisionsForAssetLimited(createdAsset.getId(), 10);
         assertEquals(2, revisions2.size());
+
+        assetService.deleteAsset(AssetIdentifier.GUID, createdAsset.getId().toString());
+        commit();
+
     }
     
     @Test
@@ -160,6 +172,10 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         
         List<Asset> revisions2 = assetService.getRevisionsForAssetLimited(createdAsset.getId(), 1);
         assertEquals(1, revisions2.size());
+
+        assetService.deleteAsset(AssetIdentifier.GUID, createdAsset.getId().toString());
+        commit();
+
     }
     
     @Test
@@ -189,6 +205,8 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         
         assertEquals(1, assets.size());
         assertEquals(asset.getCfr(), assets.get(0).getCfr());
+        assetService.deleteAsset(AssetIdentifier.GUID, asset.getId().toString());
+        commit();
     }
     
     @Test
@@ -206,6 +224,10 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         List<Asset> assets = assetService.getAssetList(searchValues, 1, 100, true).getAssetList();
         
         assertTrue(!assets.isEmpty());
+        assertEquals(asset.getCfr(), assets.get(0).getCfr());
+        assetService.deleteAsset(AssetIdentifier.GUID, asset.getId().toString());
+        commit();
+
     }
 
     @Test
