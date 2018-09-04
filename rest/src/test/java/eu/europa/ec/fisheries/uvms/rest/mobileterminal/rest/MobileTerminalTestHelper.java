@@ -101,7 +101,7 @@ public class MobileTerminalTestHelper {
 
         // ListPagination
         ListPagination pagination = new ListPagination();
-        pagination.setListSize(1);
+        pagination.setListSize(100);
         pagination.setPage(1);
 
         // MobileTerminalSearchCriteria

@@ -11,9 +11,12 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
+import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import io.swagger.annotations.*;
@@ -44,6 +47,12 @@ public class AssetGroupResource {
     @Inject
     AssetGroupService assetGroupService;
 
+    //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
+    private ObjectMapper objectMapper(){
+        ObjectMapperContextResolver omcr = new ObjectMapperContextResolver();
+        return omcr.getContext(Asset.class);
+    }
+
     /**
      * @responseMessage 200 Success
      * @responseMessage 500 Error
@@ -60,7 +69,8 @@ public class AssetGroupResource {
     public Response getAssetGroupListByUser(@ApiParam(value = "user", required = true) @QueryParam(value = "user") String user) {
         try {
             List<AssetGroup> assetGroups = assetGroupService.getAssetGroupList(user);
-            return Response.ok(assetGroups).build();
+            String response = objectMapper().writeValueAsString(assetGroups);
+            return Response.ok(response).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset group list by user. {}", user, e);
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -83,7 +93,8 @@ public class AssetGroupResource {
     public Response getAssetGroupById(@ApiParam(value = "AssetGroup Id", required = true) @PathParam(value = "id") final UUID id) {
         try {
             AssetGroup assetGroup = assetGroupService.getAssetGroupById(id);
-            return Response.ok(assetGroup).build();
+            String response = objectMapper().writeValueAsString(assetGroup);
+            return Response.ok(response).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset by ID. ", id, e);
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -131,7 +142,8 @@ public class AssetGroupResource {
         try {
             String user = servletRequest.getRemoteUser();
             AssetGroup updatedAssetGroup = assetGroupService.updateAssetGroup(assetGroup, user);
-            return Response.ok(updatedAssetGroup).build();
+            String response = objectMapper().writeValueAsString(updatedAssetGroup);
+            return Response.ok(response).build();
         } catch (Exception e) {
             LOG.error("Error when updating asset group. {}", assetGroup, e);
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -174,7 +186,8 @@ public class AssetGroupResource {
     public Response getAssetGroupListByAssetId(@ApiParam(value = "Asset id", required = true) @PathParam(value = "id") UUID assetId) {
         try {
             List<AssetGroup> assetGroups = assetGroupService.getAssetGroupListByAssetId(assetId);
-            return Response.ok(assetGroups).build();
+            String response = objectMapper().writeValueAsString(assetGroups);
+            return Response.ok(response).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset group list by user. {}", assetId, toString(), e);
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
