@@ -71,6 +71,8 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
         Assert.assertTrue(fetchedAssetGroupEntity.getId().equals(guid));
         Assert.assertTrue(fetchedAssetGroupEntity.getArchived().equals(true));
         em.createQuery("delete from AssetGroup ag where ag.id = :id").setParameter("id",guid).executeUpdate();
+        userTransaction.commit();
+        userTransaction.begin();
     }
 
     @Test
