@@ -18,6 +18,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalP
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.ServiceToPluginMapper;
 import net.bull.javamelody.internal.common.LOG;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -32,7 +33,7 @@ public class MobileTerminalPluginDaoBean  {
 	@PersistenceContext
 	private EntityManager em;
 
-	@Inject
+	@EJB
 	ConfigServiceBeanMT configServiceMT;
 
 	public List<MobileTerminalPlugin> getPluginList()  {

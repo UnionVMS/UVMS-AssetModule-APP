@@ -12,8 +12,10 @@ package eu.europa.ec.fisheries.uvms.asset.message.mapper;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -66,7 +68,8 @@ public class AssetModelMapper {
         }
         if (assetModel.getEventHistory() != null) {
             asset.setHistoryId(UUID.fromString(assetModel.getEventHistory().getEventId()));
-            asset.setUpdateTime(assetModel.getEventHistory().getEventDate());
+            OffsetDateTime offsetDateTime = assetModel.getEventHistory().getEventDate().toInstant().atOffset(ZoneOffset.UTC);
+            asset.setUpdateTime(offsetDateTime);
             asset.setEventCode(assetModel.getEventHistory().getEventCode().toString());
         }
         asset.setName(assetModel.getName());
@@ -141,7 +144,8 @@ public class AssetModelMapper {
         AssetHistoryId assetHistory = new AssetHistoryId();
         assetHistory.setEventId(assetEntity.getHistoryId().toString());
         if (assetEntity.getUpdateTime() != null) {
-            assetHistory.setEventDate(assetEntity.getUpdateTime());
+            Date d = Date.from(assetEntity.getUpdateTime().toInstant());
+            assetHistory.setEventDate(d);
         }
         if (assetEntity.getEventCode() != null && !assetEntity.getEventCode().isEmpty()) {
             assetHistory.setEventCode(getEventCode(assetEntity));
