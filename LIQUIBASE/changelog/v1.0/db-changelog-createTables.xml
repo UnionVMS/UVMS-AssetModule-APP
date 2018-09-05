@@ -25,7 +25,7 @@
             <column name="eventcode" type="VARCHAR(255)"/>
             <column name="externalmarking" type="VARCHAR(14)"/>
             <column name="flagstatecode" type="VARCHAR(3)"/>
-            <column name="gearfishingtype" type="INT"/>
+            <column name="gearfishingtype" type="VARCHAR(255)"/>
             <column name="gfcm" type="VARCHAR(50)"/>
             <column name="grosstonnage" type="FLOAT8"/>
             <column name="grosstonnageunit" type="VARCHAR(255)"/>
@@ -90,7 +90,7 @@
             <column name="eventcode" type="VARCHAR(255)"/>
             <column name="externalmarking" type="VARCHAR(255)"/>
             <column name="flagstatecode" type="VARCHAR(255)"/>
-            <column name="gearfishingtype" type="INT"/>
+            <column name="gearfishingtype" type="VARCHAR(255)"/>
             <column name="gfcm" type="VARCHAR(255)"/>
             <column name="grosstonnage" type="FLOAT8"/>
             <column name="grosstonnageunit" type="VARCHAR(255)"/>
