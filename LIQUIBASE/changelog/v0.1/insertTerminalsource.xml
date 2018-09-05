@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet author="johlyn" id="insert terminalsource static default values">
+        <insert tableName="terminalsource">
+            <column name="termsource_id" value="1"/>
+            <column name="termsource_name" value="INTERNAL"/>
+            <column name="termsource_desc" value="Master database source is internal"/>
+            <column name="termsource_updattim" valueDate="${now}"/>
+            <column name="termsource_upuser" value="johlyn"/>
+        </insert>
+        <insert tableName="terminalsource">
+            <column name="termsource_id" value="2"/>
+            <column name="termsource_name" value="NATIONAL"/>
+            <column name="termsource_desc" value="Master database source is national register"/>
+            <column name="termsource_updattim" valueDate="${now}"/>
+            <column name="termsource_upuser" value="johlyn"/>
+        </insert>
+        <rollback>
+            <delete tableName="terminalsource">
+				<where>
+					termsource_id in (1, 2)
+				</where>
+			</delete>
+        </rollback>
+	</changeSet>
+    
+</databaseChangeLog>

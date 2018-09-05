@@ -1,0 +1,173 @@
+<definitions name="MobileTerminalModule"
+             targetNamespace="urn:module.mobileterminal.schema.fisheries.ec.europa.eu:v1"
+             xmlns:module="urn:module.mobileterminal.schema.fisheries.ec.europa.eu:v1"
+             xmlns:mobterm="urn:types.mobileterminal.schema.fisheries.ec.europa.eu:v1"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+    <types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                    targetNamespace="urn:module.mobileterminal.schema.fisheries.ec.europa.eu:v1">
+            <xsd:import namespace="urn:types.mobileterminal.schema.fisheries.ec.europa.eu:v1" schemaLocation="MobileTerminalElement.xsd"/>
+
+            <xsd:simpleType name="MobileTerminalModuleMethod">
+                <xsd:restriction base="xsd:string">
+                	<xsd:enumeration value="GET_MOBILE_TERMINAL"/>
+                    <xsd:enumeration value="PING"/>
+                    <xsd:enumeration value="LIST_MOBILE_TERMINALS"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+
+            <xsd:complexType name="MobileTerminalModuleBaseRequest" abstract="true">
+                <xsd:sequence>
+                    <xsd:element name="method" type="module:MobileTerminalModuleMethod" minOccurs="1"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
+            <xsd:element name="getMobileTerminalRequest">
+                <xsd:complexType>
+                	<xsd:complexContent>
+	                	<xsd:extension base="module:MobileTerminalModuleBaseRequest">
+		                    <xsd:sequence>
+		                        <xsd:element name="id" type="mobterm:MobileTerminalId"/>
+		                    </xsd:sequence>
+	                	</xsd:extension>
+                	</xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="mobileTerminalResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="mobilTerminal" type="mobterm:MobileTerminalType"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="MobileTerminalListRequest">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="module:MobileTerminalModuleBaseRequest">
+                            <xsd:sequence>
+                                <xsd:element name="query" type="mobterm:MobileTerminalListQuery"/>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="MobileTerminalListResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="totalNumberOfPages" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+                        <xsd:element name="currentPage" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+                        <xsd:element name="mobileTerminal" type="mobterm:MobileTerminalType" minOccurs="0" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="pingRequest">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="module:MobileTerminalModuleBaseRequest"/>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="pingResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="response" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+        </xsd:schema>
+
+    </types>
+    
+    <message name="MobileTerminalFaultException">
+        <part name="body" element="mobterm:mobileTerminalFault"/>
+    </message>
+    
+    <message name="GetMobileTerminalRequest">
+        <part name="body" element="module:getMobileTerminalRequest"/>
+    </message>
+    <message name="GetMobileTerminalResponse">
+        <part name="body" element="module:mobileTerminalResponse"/>
+    </message>
+
+    <message name="MobileTerminalListRequest">
+        <part name="body" element="module:MobileTerminalListRequest"/>
+    </message>
+    <message name="MobileTerminalListResponse">
+        <part name="body" element="module:MobileTerminalListResponse"/>
+    </message>
+
+    <message name="PingRequest">
+        <part name="body" element="module:pingRequest"/>
+    </message>
+    <message name="PingResponse">
+        <part name="body" element="module:pingResponse"/>
+    </message>
+
+    <portType name="MobileTerminalPortType">
+        <operation name="GetMobileTerminal">
+            <input message="module:GetMobileTerminalRequest"/>
+            <output message="module:GetMobileTerminalResponse"/>
+            <fault name="GetMobileTerminalFaultException" message="module:MobileTerminalFaultException"/>
+        </operation>
+
+        <operation name="MobileTerminalList">
+            <input message="module:MobileTerminalListRequest"/>
+            <output message="module:MobileTerminalListResponse"/>
+        </operation>
+
+        <operation name="Ping">
+            <input message="module:PingRequest"/>
+            <output message="module:PingResponse"/>
+        </operation>
+
+    </portType>
+
+    <binding name="MobileTerminalSoapBinding" type="module:MobileTerminalPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="GetMobileTerminal">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="GetMobileTerminalFaultException">
+                <soap:fault name="GetMobileTerminalFaultException" use="literal"/>
+            </fault>
+        </operation>
+
+        <operation name="MobileTerminalList">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+
+        <operation name="Ping">
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+
+    </binding>
+
+    <service name="MobileTerminalService">
+        <port name="MobileTerminalPortType" binding="module:MobileTerminalSoapBinding">
+            <soap:address location="http://REPLACE_ME"/>
+        </port>
+    </service>
+
+</definitions>

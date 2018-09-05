@@ -44,12 +44,12 @@ public class AssetMessageEventBeanTest extends AbstractMessageTest {
         TextMessage textMessage = null;
         AssetId assetId = new AssetId();
         assetId.setType(GUID);
-        assetId.setValue(createdAsset.getAssetId().getValue());
+        assetId.setValue(createdAsset.getAsset().getValue());
 
         getAssetEventBean.getAsset(textMessage, assetId);
 
         Assert.assertFalse(interceptorForTest.isFailed());
-        Assert.assertTrue(interceptorForTest.getSuccessfulTestEvent().getMessage().contains(createdAsset.getAssetId().getValue()));
+        Assert.assertTrue(interceptorForTest.getSuccessfulTestEvent().getMessage().contains(createdAsset.getAsset().getValue()));
 
         */
 
@@ -68,7 +68,7 @@ public class AssetMessageEventBeanTest extends AbstractMessageTest {
         // create an Asset
         createdAsset = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID), "test");
         em.flush();
-        String createdAssetGuid = createdAsset.getAssetId().getGuid();
+        String createdAssetGuid = createdAsset.getAsset().getGuid();
 
         // then update it
         TextMessage message = null;
@@ -81,7 +81,7 @@ public class AssetMessageEventBeanTest extends AbstractMessageTest {
 
         // then get it and compare changed values
         AssetDTO  fetchedAsset = assetService.getAssetByGuid(createdAssetGuid);
-        String fetchedAssetGuid = fetchedAsset.getAssetId().getGuid();
+        String fetchedAssetGuid = fetchedAsset.getAsset().getGuid();
 
         Assert.assertTrue(!interceptorForTests.isFailed() && createdAssetGuid.equals(fetchedAssetGuid));
 
@@ -166,7 +166,7 @@ public class AssetMessageEventBeanTest extends AbstractMessageTest {
         List<AssetGroupSearchField> searchFields =  ag.getSearchFields();
         AssetGroupSearchField assetGroupSearchField = new AssetGroupSearchField();
         assetGroupSearchField.setKey(ConfigSearchField.GUID);
-        assetGroupSearchField.setValue(a1.getAssetId().getGuid());
+        assetGroupSearchField.setValue(a1.getAsset().getGuid());
         searchFields.add(assetGroupSearchField);
         AssetGroupWSDL  assetGroup = assetGroupService.createAssetGroup(ag, "TEST");
         String assetGroupGUID = assetGroup.getGuid();
@@ -175,7 +175,7 @@ public class AssetMessageEventBeanTest extends AbstractMessageTest {
         TextMessage textMessage = null;
         AssetMessageEvent assetMessageEvent = new AssetMessageEvent(textMessage);
 
-        assetMessageEvent.setAssetGuid(a1.getAssetId().getGuid());
+        assetMessageEvent.setAssetGuid(a1.getAsset().getGuid());
         getAssetGroupListByAssetGuidEventBean.getAssetGroupListByAssetEvent(assetMessageEvent);
 
         SuccessfulTestEvent successfulTestEvent = interceptorForTest.getSuccessfulTestEvent();
@@ -227,9 +227,9 @@ public class AssetMessageEventBeanTest extends AbstractMessageTest {
         String message = interceptorForTests.getSuccessfulTestEvent().getMessage();
 
         // ALL 3 ID:s MUST exist
-        Boolean ok = message.contains(asset1.getAssetId().getValue()) &&
-                message.contains(asset2.getAssetId().getValue()) &&
-                message.contains(asset3.getAssetId().getValue()) ;
+        Boolean ok = message.contains(asset1.getAsset().getValue()) &&
+                message.contains(asset2.getAsset().getValue()) &&
+                message.contains(asset3.getAsset().getValue()) ;
 
         Assert.assertTrue(ok);
         */
@@ -273,9 +273,9 @@ public class AssetMessageEventBeanTest extends AbstractMessageTest {
         String message = interceptorForTests.getSuccessfulTestEvent().getMessage();
 
         // ALL 3 ID:s MUST exist
-        Boolean ok = message.contains(asset1.getAssetId().getValue()) &&
-                message.contains(asset2.getAssetId().getValue()) &&
-                message.contains(asset3.getAssetId().getValue()) ;
+        Boolean ok = message.contains(asset1.getAsset().getValue()) &&
+                message.contains(asset2.getAsset().getValue()) &&
+                message.contains(asset3.getAsset().getValue()) ;
 
         Assert.assertTrue(ok);
 
@@ -320,9 +320,9 @@ public class AssetMessageEventBeanTest extends AbstractMessageTest {
         String message = interceptorForTests.getSuccessfulTestEvent().getMessage();
 
         // ALL 3 ID:s MUST exist
-        Boolean ok = message.contains(asset1.getAssetId().getValue()) &&
-                message.contains(asset2.getAssetId().getValue()) &&
-                message.contains(asset3.getAssetId().getValue()) ;
+        Boolean ok = message.contains(asset1.getAsset().getValue()) &&
+                message.contains(asset2.getAsset().getValue()) &&
+                message.contains(asset3.getAsset().getValue()) ;
 
         Assert.assertTrue(!ok);
 

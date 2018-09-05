@@ -11,21 +11,13 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.message;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetContact;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteria;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListPagination;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetNotes;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetProdOrgModel;
-import eu.europa.ec.fisheries.wsdl.asset.types.CarrierSource;
-import eu.europa.ec.fisheries.wsdl.asset.types.ContactSource;
+import java.util.UUID;
+
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
 
 public class AssetTestHelper {
 
@@ -75,13 +67,12 @@ public class AssetTestHelper {
 
         asset.getContact().add(createBasicContact());
         asset.getContact().add(createBasicContact());
-        
         return asset;
     }
     
     public static AssetNotes createBasicNote() {
         AssetNotes note = new AssetNotes();
-        note.setDate(LocalDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        note.setDate(OffsetDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
         note.setActivity("Activity");
         note.setContact("Contact: " + getRandomIntegers(5));
         note.setNotes("Notes: " + getRandomIntegers(10));

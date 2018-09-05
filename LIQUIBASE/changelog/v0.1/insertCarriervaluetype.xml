@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet author="johlyn" id="insert carriervaluetype static default values">
+        <insert tableName="carriervaluetype">
+            <column name="carrvaltype_id" value="1"/>
+            <column name="carrvaltype_name" value="IRCS"/>
+            <column name="carrvaltype_description" value="IRCS for carrier"/>
+            <column name="carrvaltype_updatetime" valueDate="${now}"/>
+            <column name="carrvaltype_updateuser" value="johlyn"/>
+        </insert>
+        <insert tableName="carriervaluetype">
+            <column name="carrvaltype_id" value="2"/>
+            <column name="carrvaltype_name" value="IMO"/>
+            <column name="carrvaltype_description" value="IMO for carrier"/>
+            <column name="carrvaltype_updatetime" valueDate="${now}"/>
+            <column name="carrvaltype_updateuser" value="johlyn"/>
+        </insert>
+        <insert tableName="carriervaluetype">
+            <column name="carrvaltype_id" value="3"/>
+            <column name="carrvaltype_name" value="MMSI"/>
+            <column name="carrvaltype_description" value="MMSI for carrier"/>
+            <column name="carrvaltype_updatetime" valueDate="${now}"/>
+            <column name="carrvaltype_updateuser" value="johlyn"/>
+        </insert>
+        <insert tableName="carriervaluetype">
+            <column name="carrvaltype_id" value="4"/>
+            <column name="carrvaltype_name" value="INTERNAL_ID"/>
+            <column name="carrvaltype_description" value="Database internal key for carrier"/>
+            <column name="carrvaltype_updatetime" valueDate="${now}"/>
+            <column name="carrvaltype_updateuser" value="johlyn"/>
+        </insert>
+        <insert tableName="carriervaluetype">
+            <column name="carrvaltype_id" value="5"/>
+            <column name="carrvaltype_name" value="CFR"/>
+            <column name="carrvaltype_description" value="CFR for carrier"/>
+            <column name="carrvaltype_updatetime" valueDate="${now}"/>
+            <column name="carrvaltype_updateuser" value="johlyn"/>
+        </insert>
+        <insert tableName="carriervaluetype">
+            <column name="carrvaltype_id" value="6"/>
+            <column name="carrvaltype_name" value="GUID"/>
+            <column name="carrvaltype_description" value="GUID for carrier"/>
+            <column name="carrvaltype_updatetime" valueDate="${now}"/>
+            <column name="carrvaltype_updateuser" value="johlyn"/>
+        </insert>
+        <rollback>
+            <delete tableName="carriervaluetype">
+                <where>
+                    carrvaltype_id in (1, 2, 3, 4, 5, 6)
+                </where>
+            </delete>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

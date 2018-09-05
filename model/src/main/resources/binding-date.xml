@@ -15,10 +15,10 @@
     <jaxb:globalBindings>
         <xjc:serializable uid="1"/>
         <jaxb:javaType
-            name="java.util.Date"
-            xmlType="xsd:dateTime"
-            parseMethod="eu.europa.ec.fisheries.uvms.asset.model.mapper.XsdDateTimeConverter.unmarshal"
-            printMethod="eu.europa.ec.fisheries.uvms.asset.model.mapper.XsdDateTimeConverter.marshalDateTime"
+                name="java.util.Date"
+                xmlType="xsd:dateTime"
+                parseMethod="eu.europa.ec.fisheries.uvms.asset.model.mapper.XsdDateTimeConverter.unmarshal"
+                printMethod="eu.europa.ec.fisheries.uvms.asset.model.mapper.XsdDateTimeConverter.marshalDateTime"
         />
         <jaxb:javaType
                 name="java.util.Date"

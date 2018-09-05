@@ -10,7 +10,7 @@
     <parent>
         <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
         <artifactId>asset</artifactId>
-        <version>5.0.5-SNAPSHOT</version>
+        <version>6.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -24,12 +24,6 @@
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>asset-service</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-            <artifactId>asset-dbaccess-domain</artifactId>
             <version>${project.parent.version}</version>
             <scope>provided</scope>
         </dependency>
@@ -65,6 +59,8 @@
             <version>${project.parent.version}</version>
             <scope>test</scope>
         </dependency>
+
+
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-client</artifactId>
@@ -72,6 +68,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.json</artifactId>
+            <version>1.0.4</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>com.github.phillip-kruger</groupId>
@@ -83,13 +85,21 @@
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
             <version>2.9.4</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.9.4</version>
-            <scope>provided</scope>
+            <version>2.9.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+            <version>2.9.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-parameter-names</artifactId>
+            <version>2.9.6</version>
         </dependency>
     </dependencies>
 
@@ -103,7 +113,7 @@
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
-            <plugin>
+            <!--plugin>
                 <groupId>com.sebastian-daschner</groupId>
                 <artifactId>jaxrs-analyzer-maven-plugin</artifactId>
                 <version>0.16</version>
@@ -117,7 +127,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin-->
         </plugins>
     </build>
 

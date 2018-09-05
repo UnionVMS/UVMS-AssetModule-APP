@@ -4,3 +4,4 @@ logging.properties
 .idea/
 /rest/src/main/webapp/apidocs
 
+model/pom.xml.rej

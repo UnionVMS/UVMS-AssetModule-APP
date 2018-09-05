@@ -1,0 +1,1604 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Developed with the contribution of the European Commission - Directorate General for Maritime Affairs and Fisheries
+  ~ © European Union, 2015-2016.
+  ~
+  ~ This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can
+  ~ redistribute it and/or modify it under the terms of the GNU General Public License as published by the
+  ~ Free Software Foundation, either version 3 of the License, or any later version. The IFDM Suite is distributed in
+  ~ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  ~ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
+  ~ copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    
+    <changeSet author="andtho" id="insert testdata to match asset testdata" context="test">
+        <insert tableName="mobileterminal">
+            <column name="mobterm_id" value="1001"/>
+            <column name="mobterm_archived" valueBoolean="0"/>
+            <column name="mobterm_inactivated" valueBoolean="0"/>
+            <column name="mobterm_plugin_id" value="1"/> <!-- eik -->
+            <column name="mobterm_guid" value="MOBILE_TERMINAL_GUID_1"/>
+            <column name="mobterm_type" value="INMARSAT_C"/>
+            <column name="mobterm_source" value="INTERNAL"/>
+            <column name="mobterm_updatetime" valueDate="${now}"/>
+            <column name="mobterm_updateuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminal">
+            <column name="mobterm_id" value="1002"/>
+            <column name="mobterm_archived" valueBoolean="0"/>
+            <column name="mobterm_inactivated" valueBoolean="0"/>
+            <column name="mobterm_plugin_id" value="1"/> <!-- eik -->
+            <column name="mobterm_guid" value="MOBILE_TERMINAL_GUID_2"/>
+            <column name="mobterm_type" value="INMARSAT_C"/>
+            <column name="mobterm_source" value="INTERNAL"/>
+            <column name="mobterm_updatetime" valueDate="${now}"/>
+            <column name="mobterm_updateuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminal">
+            <column name="mobterm_id" value="1003"/>
+            <column name="mobterm_archived" valueBoolean="0"/>
+            <column name="mobterm_inactivated" valueBoolean="0"/>
+            <column name="mobterm_plugin_id" value="1"/> <!-- eik -->
+            <column name="mobterm_guid" value="MOBILE_TERMINAL_GUID_3"/>
+            <column name="mobterm_type" value="INMARSAT_C"/>
+            <column name="mobterm_source" value="INTERNAL"/>
+            <column name="mobterm_updatetime" valueDate="${now}"/>
+            <column name="mobterm_updateuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminal">
+            <column name="mobterm_id" value="1004"/>
+            <column name="mobterm_archived" valueBoolean="0"/>
+            <column name="mobterm_inactivated" valueBoolean="0"/>
+            <column name="mobterm_plugin_id" value="1"/> <!-- eik -->
+            <column name="mobterm_guid" value="MOBILE_TERMINAL_GUID_4"/>
+            <column name="mobterm_type" value="INMARSAT_C"/>
+            <column name="mobterm_source" value="INTERNAL"/>
+            <column name="mobterm_updatetime" valueDate="${now}"/>
+            <column name="mobterm_updateuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminal">
+            <column name="mobterm_id" value="1005"/>
+            <column name="mobterm_archived" valueBoolean="0"/>
+            <column name="mobterm_inactivated" valueBoolean="0"/>
+            <column name="mobterm_plugin_id" value="1"/> <!-- eik -->
+            <column name="mobterm_guid" value="MOBILE_TERMINAL_GUID_5"/>
+            <column name="mobterm_type" value="INMARSAT_C"/>
+            <column name="mobterm_source" value="INTERNAL"/>
+            <column name="mobterm_updatetime" valueDate="${now}"/>
+            <column name="mobterm_updateuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminal">
+            <column name="mobterm_id" value="1006"/>
+            <column name="mobterm_archived" valueBoolean="0"/>
+            <column name="mobterm_inactivated" valueBoolean="0"/>
+            <column name="mobterm_plugin_id" value="1"/> <!-- eik -->
+            <column name="mobterm_guid" value="MOBILE_TERMINAL_GUID_6"/>
+            <column name="mobterm_type" value="INMARSAT_C"/>
+            <column name="mobterm_source" value="INTERNAL"/>
+            <column name="mobterm_updatetime" valueDate="${now}"/>
+            <column name="mobterm_updateuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminal">
+            <column name="mobterm_id" value="1007"/>
+            <column name="mobterm_archived" valueBoolean="0"/>
+            <column name="mobterm_inactivated" valueBoolean="0"/>
+            <column name="mobterm_plugin_id" value="1"/> <!-- eik -->
+            <column name="mobterm_guid" value="MOBILE_TERMINAL_GUID_7"/>
+            <column name="mobterm_type" value="INMARSAT_C"/>
+            <column name="mobterm_source" value="INTERNAL"/>
+            <column name="mobterm_updatetime" valueDate="${now}"/>
+            <column name="mobterm_updateuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminal">
+            <column name="mobterm_id" value="1008"/>
+            <column name="mobterm_archived" valueBoolean="0"/>
+            <column name="mobterm_inactivated" valueBoolean="0"/>
+            <column name="mobterm_plugin_id" value="1"/> <!-- eik -->
+            <column name="mobterm_guid" value="MOBILE_TERMINAL_GUID_8"/>
+            <column name="mobterm_type" value="INMARSAT_C"/>
+            <column name="mobterm_source" value="INTERNAL"/>
+            <column name="mobterm_updatetime" valueDate="${now}"/>
+            <column name="mobterm_updateuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminal">
+            <column name="mobterm_id" value="1009"/>
+            <column name="mobterm_archived" valueBoolean="0"/>
+            <column name="mobterm_inactivated" valueBoolean="0"/>
+            <column name="mobterm_plugin_id" value="1"/> <!-- eik -->
+            <column name="mobterm_guid" value="MOBILE_TERMINAL_GUID_9"/>
+            <column name="mobterm_type" value="INMARSAT_C"/>
+            <column name="mobterm_source" value="INTERNAL"/>
+            <column name="mobterm_updatetime" valueDate="${now}"/>
+            <column name="mobterm_updateuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminal">
+            <column name="mobterm_id" value="1010"/>
+            <column name="mobterm_archived" valueBoolean="0"/>
+            <column name="mobterm_inactivated" valueBoolean="0"/>
+            <column name="mobterm_plugin_id" value="1"/> <!-- eik -->
+            <column name="mobterm_guid" value="MOBILE_TERMINAL_GUID_10"/>
+            <column name="mobterm_type" value="INMARSAT_C"/>
+            <column name="mobterm_source" value="INTERNAL"/>
+            <column name="mobterm_updatetime" valueDate="${now}"/>
+            <column name="mobterm_updateuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminal">
+            <column name="mobterm_id" value="1011"/>
+            <column name="mobterm_archived" valueBoolean="0"/>
+            <column name="mobterm_inactivated" valueBoolean="0"/>
+            <column name="mobterm_plugin_id" value="1"/> <!-- eik -->
+            <column name="mobterm_guid" value="MOBILE_TERMINAL_GUID_11"/>
+            <column name="mobterm_type" value="INMARSAT_C"/>
+            <column name="mobterm_source" value="INTERNAL"/>
+            <column name="mobterm_updatetime" valueDate="${now}"/>
+            <column name="mobterm_updateuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminal">
+            <column name="mobterm_id" value="1012"/>
+            <column name="mobterm_archived" valueBoolean="0"/>
+            <column name="mobterm_inactivated" valueBoolean="0"/>
+            <column name="mobterm_plugin_id" value="1"/> <!-- eik -->
+            <column name="mobterm_guid" value="MOBILE_TERMINAL_GUID_12"/>
+            <column name="mobterm_type" value="INMARSAT_C"/>
+            <column name="mobterm_source" value="INTERNAL"/>
+            <column name="mobterm_updatetime" valueDate="${now}"/>
+            <column name="mobterm_updateuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminal">
+            <column name="mobterm_id" value="1013"/>
+            <column name="mobterm_archived" valueBoolean="0"/>
+            <column name="mobterm_inactivated" valueBoolean="0"/>
+            <column name="mobterm_plugin_id" value="1"/> <!-- eik -->
+            <column name="mobterm_guid" value="MOBILE_TERMINAL_GUID_13"/>
+            <column name="mobterm_type" value="INMARSAT_C"/>
+            <column name="mobterm_source" value="INTERNAL"/>
+            <column name="mobterm_updatetime" valueDate="${now}"/>
+            <column name="mobterm_updateuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminal">
+            <column name="mobterm_id" value="1014"/>
+            <column name="mobterm_archived" valueBoolean="0"/>
+            <column name="mobterm_inactivated" valueBoolean="0"/>
+            <column name="mobterm_plugin_id" value="1"/> <!-- eik -->
+            <column name="mobterm_guid" value="MOBILE_TERMINAL_GUID_14"/>
+            <column name="mobterm_type" value="INMARSAT_C"/>
+            <column name="mobterm_source" value="INTERNAL"/>
+            <column name="mobterm_updatetime" valueDate="${now}"/>
+            <column name="mobterm_updateuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminal">
+            <column name="mobterm_id" value="1015"/>
+            <column name="mobterm_archived" valueBoolean="0"/>
+            <column name="mobterm_inactivated" valueBoolean="0"/>
+            <column name="mobterm_plugin_id" value="1"/> <!-- eik -->
+            <column name="mobterm_guid" value="MOBILE_TERMINAL_GUID_15"/>
+            <column name="mobterm_type" value="INMARSAT_C"/>
+            <column name="mobterm_source" value="INTERNAL"/>
+            <column name="mobterm_updatetime" valueDate="${now}"/>
+            <column name="mobterm_updateuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminal">
+            <column name="mobterm_id" value="1016"/>
+            <column name="mobterm_archived" valueBoolean="0"/>
+            <column name="mobterm_inactivated" valueBoolean="0"/>
+            <column name="mobterm_plugin_id" value="1"/> <!-- eik -->
+            <column name="mobterm_guid" value="MOBILE_TERMINAL_GUID_16"/>
+            <column name="mobterm_type" value="INMARSAT_C"/>
+            <column name="mobterm_source" value="INTERNAL"/>
+            <column name="mobterm_updatetime" valueDate="${now}"/>
+            <column name="mobterm_updateuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminal">
+            <column name="mobterm_id" value="1017"/>
+            <column name="mobterm_archived" valueBoolean="0"/>
+            <column name="mobterm_inactivated" valueBoolean="0"/>
+            <column name="mobterm_plugin_id" value="1"/> <!-- eik -->
+            <column name="mobterm_guid" value="MOBILE_TERMINAL_GUID_17"/>
+            <column name="mobterm_type" value="INMARSAT_C"/>
+            <column name="mobterm_source" value="INTERNAL"/>
+            <column name="mobterm_updatetime" valueDate="${now}"/>
+            <column name="mobterm_updateuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminal">
+            <column name="mobterm_id" value="1018"/>
+            <column name="mobterm_archived" valueBoolean="0"/>
+            <column name="mobterm_inactivated" valueBoolean="0"/>
+            <column name="mobterm_plugin_id" value="1"/> <!-- eik -->
+            <column name="mobterm_guid" value="MOBILE_TERMINAL_GUID_18"/>
+            <column name="mobterm_type" value="INMARSAT_C"/>
+            <column name="mobterm_source" value="INTERNAL"/>
+            <column name="mobterm_updatetime" valueDate="${now}"/>
+            <column name="mobterm_updateuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminal">
+            <column name="mobterm_id" value="1019"/>
+            <column name="mobterm_archived" valueBoolean="0"/>
+            <column name="mobterm_inactivated" valueBoolean="0"/>
+            <column name="mobterm_plugin_id" value="1"/> <!-- eik -->
+            <column name="mobterm_guid" value="MOBILE_TERMINAL_GUID_19"/>
+            <column name="mobterm_type" value="INMARSAT_C"/>
+            <column name="mobterm_source" value="INTERNAL"/>
+            <column name="mobterm_updatetime" valueDate="${now}"/>
+            <column name="mobterm_updateuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminal">
+            <column name="mobterm_id" value="1020"/>
+            <column name="mobterm_archived" valueBoolean="0"/>
+            <column name="mobterm_inactivated" valueBoolean="0"/>
+            <column name="mobterm_plugin_id" value="1"/> <!-- eik -->
+            <column name="mobterm_guid" value="MOBILE_TERMINAL_GUID_20"/>
+            <column name="mobterm_type" value="INMARSAT_C"/>
+            <column name="mobterm_source" value="INTERNAL"/>
+            <column name="mobterm_updatetime" valueDate="${now}"/>
+            <column name="mobterm_updateuser" value="andtho"/>
+        </insert>
+        
+        <insert tableName="mobileterminal_inmarsatc">
+            <column name="id" value="1001"/>
+            <column name="serial_number" value="SERIAL_NUMBER_1"/>
+            <column name="channel_default" value="CHANNEL_GUID_1"/>
+            <column name="channel_configuration" value="CHANNEL_CONF_GUID"/>
+            <column name="channel_polling" value="CHANNEL_POLL_GUID"/>
+            <column name="updatetime" valueDate="${now}"/>
+            <column name="updateuser" value="1001"/>
+            <column name="mobileterminal_id" value="1001"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc">
+            <column name="id" value="1002"/>
+            <column name="serial_number" value="SERIAL_NUMBER_2"/>
+            <column name="channel_default" value="CHANNEL_GUID_2"/>
+            <column name="channel_configuration" value="CHANNEL_CONF_GUID"/>
+            <column name="channel_polling" value="CHANNEL_POLL_GUID"/>
+            <column name="updatetime" valueDate="${now}"/>
+            <column name="updateuser" value="1002"/>
+            <column name="mobileterminal_id" value="1002"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc">
+            <column name="id" value="1003"/>
+            <column name="serial_number" value="SERIAL_NUMBER_3"/>
+            <column name="channel_default" value="CHANNEL_GUID_3"/>
+            <column name="channel_configuration" value="CHANNEL_CONF_GUID"/>
+            <column name="channel_polling" value="CHANNEL_POLL_GUID"/>
+            <column name="updatetime" valueDate="${now}"/>
+            <column name="updateuser" value="1003"/>
+            <column name="mobileterminal_id" value="1003"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc">
+            <column name="id" value="1004"/>
+            <column name="serial_number" value="SERIAL_NUMBER_4"/>
+            <column name="channel_default" value="CHANNEL_GUID_4"/>
+            <column name="channel_configuration" value="CHANNEL_CONF_GUID"/>
+            <column name="channel_polling" value="CHANNEL_POLL_GUID"/>
+            <column name="updatetime" valueDate="${now}"/>
+            <column name="updateuser" value="1004"/>
+            <column name="mobileterminal_id" value="1004"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc">
+            <column name="id" value="1005"/>
+            <column name="serial_number" value="SERIAL_NUMBER_5"/>
+            <column name="channel_default" value="CHANNEL_GUID_5"/>
+            <column name="channel_configuration" value="CHANNEL_CONF_GUID"/>
+            <column name="channel_polling" value="CHANNEL_POLL_GUID"/>
+            <column name="updatetime" valueDate="${now}"/>
+            <column name="updateuser" value="1005"/>
+            <column name="mobileterminal_id" value="1005"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc">
+            <column name="id" value="1006"/>
+            <column name="serial_number" value="SERIAL_NUMBER_6"/>
+            <column name="channel_default" value="CHANNEL_GUID_6"/>
+            <column name="channel_configuration" value="CHANNEL_CONF_GUID"/>
+            <column name="channel_polling" value="CHANNEL_POLL_GUID"/>
+            <column name="updatetime" valueDate="${now}"/>
+            <column name="updateuser" value="1006"/>
+            <column name="mobileterminal_id" value="1006"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc">
+            <column name="id" value="1007"/>
+            <column name="serial_number" value="SERIAL_NUMBER_7"/>
+            <column name="channel_default" value="CHANNEL_GUID_7"/>
+            <column name="channel_configuration" value="CHANNEL_CONF_GUID"/>
+            <column name="channel_polling" value="CHANNEL_POLL_GUID"/>
+            <column name="updatetime" valueDate="${now}"/>
+            <column name="updateuser" value="1007"/>
+            <column name="mobileterminal_id" value="1007"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc">
+            <column name="id" value="1008"/>
+            <column name="serial_number" value="SERIAL_NUMBER_8"/>
+            <column name="channel_default" value="CHANNEL_GUID_8"/>
+            <column name="channel_configuration" value="CHANNEL_CONF_GUID"/>
+            <column name="channel_polling" value="CHANNEL_POLL_GUID"/>
+            <column name="updatetime" valueDate="${now}"/>
+            <column name="updateuser" value="1008"/>
+            <column name="mobileterminal_id" value="1008"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc">
+            <column name="id" value="1009"/>
+            <column name="serial_number" value="SERIAL_NUMBER_9"/>
+            <column name="channel_default" value="CHANNEL_GUID_9"/>
+            <column name="channel_configuration" value="CHANNEL_CONF_GUID"/>
+            <column name="channel_polling" value="CHANNEL_POLL_GUID"/>
+            <column name="updatetime" valueDate="${now}"/>
+            <column name="updateuser" value="1009"/>
+            <column name="mobileterminal_id" value="1009"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc">
+            <column name="id" value="1010"/>
+            <column name="serial_number" value="SERIAL_NUMBER_10"/>
+            <column name="channel_default" value="CHANNEL_GUID_10"/>
+            <column name="channel_configuration" value="CHANNEL_CONF_GUID"/>
+            <column name="channel_polling" value="CHANNEL_POLL_GUID"/>
+            <column name="updatetime" valueDate="${now}"/>
+            <column name="updateuser" value="1010"/>
+            <column name="mobileterminal_id" value="1010"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc">
+            <column name="id" value="1011"/>
+            <column name="serial_number" value="SERIAL_NUMBER_11"/>
+            <column name="channel_default" value="CHANNEL_GUID_11"/>
+            <column name="channel_configuration" value="CHANNEL_CONF_GUID"/>
+            <column name="channel_polling" value="CHANNEL_POLL_GUID"/>
+            <column name="updatetime" valueDate="${now}"/>
+            <column name="updateuser" value="1011"/>
+            <column name="mobileterminal_id" value="1011"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc">
+            <column name="id" value="1012"/>
+            <column name="serial_number" value="SERIAL_NUMBER_12"/>
+            <column name="channel_default" value="CHANNEL_GUID_12"/>
+            <column name="channel_configuration" value="CHANNEL_CONF_GUID"/>
+            <column name="channel_polling" value="CHANNEL_POLL_GUID"/>
+            <column name="updatetime" valueDate="${now}"/>
+            <column name="updateuser" value="1012"/>
+            <column name="mobileterminal_id" value="1012"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc">
+            <column name="id" value="1013"/>
+            <column name="serial_number" value="SERIAL_NUMBER_13"/>
+            <column name="channel_default" value="CHANNEL_GUID_13"/>
+            <column name="channel_configuration" value="CHANNEL_CONF_GUID"/>
+            <column name="channel_polling" value="CHANNEL_POLL_GUID"/>
+            <column name="updatetime" valueDate="${now}"/>
+            <column name="updateuser" value="1013"/>
+            <column name="mobileterminal_id" value="1013"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc">
+            <column name="id" value="1014"/>
+            <column name="serial_number" value="SERIAL_NUMBER_14"/>
+            <column name="channel_default" value="CHANNEL_GUID_14"/>
+            <column name="channel_configuration" value="CHANNEL_CONF_GUID"/>
+            <column name="channel_polling" value="CHANNEL_POLL_GUID"/>
+            <column name="updatetime" valueDate="${now}"/>
+            <column name="updateuser" value="1014"/>
+            <column name="mobileterminal_id" value="1014"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc">
+            <column name="id" value="1015"/>
+            <column name="serial_number" value="SERIAL_NUMBER_15"/>
+            <column name="channel_default" value="CHANNEL_GUID_15"/>
+            <column name="channel_configuration" value="CHANNEL_CONF_GUID"/>
+            <column name="channel_polling" value="CHANNEL_POLL_GUID"/>
+            <column name="updatetime" valueDate="${now}"/>
+            <column name="updateuser" value="1015"/>
+            <column name="mobileterminal_id" value="1015"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc">
+            <column name="id" value="1016"/>
+            <column name="serial_number" value="SERIAL_NUMBER_16"/>
+            <column name="channel_default" value="CHANNEL_GUID_16"/>
+            <column name="channel_configuration" value="CHANNEL_CONF_GUID"/>
+            <column name="channel_polling" value="CHANNEL_POLL_GUID"/>
+            <column name="updatetime" valueDate="${now}"/>
+            <column name="updateuser" value="1016"/>
+            <column name="mobileterminal_id" value="1016"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc">
+            <column name="id" value="1017"/>
+            <column name="serial_number" value="SERIAL_NUMBER_17"/>
+            <column name="channel_default" value="CHANNEL_GUID_17"/>
+            <column name="channel_configuration" value="CHANNEL_CONF_GUID"/>
+            <column name="channel_polling" value="CHANNEL_POLL_GUID"/>
+            <column name="updatetime" valueDate="${now}"/>
+            <column name="updateuser" value="1017"/>
+            <column name="mobileterminal_id" value="1017"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc">
+            <column name="id" value="1018"/>
+            <column name="serial_number" value="SERIAL_NUMBER_18"/>
+            <column name="channel_default" value="CHANNEL_GUID_18"/>
+            <column name="channel_configuration" value="CHANNEL_CONF_GUID"/>
+            <column name="channel_polling" value="CHANNEL_POLL_GUID"/>
+            <column name="updatetime" valueDate="${now}"/>
+            <column name="updateuser" value="1018"/>
+            <column name="mobileterminal_id" value="1018"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc">
+            <column name="id" value="1019"/>
+            <column name="serial_number" value="SERIAL_NUMBER_19"/>
+            <column name="channel_default" value="CHANNEL_GUID_19"/>
+            <column name="channel_configuration" value="CHANNEL_CONF_GUID"/>
+            <column name="channel_polling" value="CHANNEL_POLL_GUID"/>
+            <column name="updatetime" valueDate="${now}"/>
+            <column name="updateuser" value="1019"/>
+            <column name="mobileterminal_id" value="1019"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc">
+            <column name="id" value="1020"/>
+            <column name="serial_number" value="SERIAL_NUMBER_20"/>
+            <column name="channel_default" value="CHANNEL_GUID_20"/>
+            <column name="channel_configuration" value="CHANNEL_CONF_GUID"/>
+            <column name="channel_polling" value="CHANNEL_POLL_GUID"/>
+            <column name="updatetime" valueDate="${now}"/>
+            <column name="updateuser" value="1020"/>
+            <column name="mobileterminal_id" value="1020"/>
+        </insert>
+        
+        <insert tableName="channel_inmarsatc">
+            <column name="channel_id" value="1001"/>
+            <column name="channel_guid" value="CHANNEL_GUID_1"/>
+            <column name="channel_active" valueBoolean="1"/>
+            <column name="channel_startdate" valueDate="${now}"/>
+            <column name="channel_enddate" value="NULL"/>
+            <column name="channel_updattime" valueDate="${now}"/>
+            <column name="channel_updateuser" value="andtho"/>
+            <column name="channel_inmarsatc_id" value="1001"/>
+        </insert>
+        <insert tableName="channel_inmarsatc">
+            <column name="channel_id" value="1002"/>
+            <column name="channel_guid" value="CHANNEL_GUID_2"/>
+            <column name="channel_active" valueBoolean="1"/>
+            <column name="channel_startdate" valueDate="${now}"/>
+            <column name="channel_enddate" value="NULL"/>
+            <column name="channel_updattime" valueDate="${now}"/>
+            <column name="channel_updateuser" value="andtho"/>
+            <column name="channel_inmarsatc_id" value="1002"/>
+        </insert>
+        <insert tableName="channel_inmarsatc">
+            <column name="channel_id" value="1003"/>
+            <column name="channel_guid" value="CHANNEL_GUID_3"/>
+            <column name="channel_active" valueBoolean="1"/>
+            <column name="channel_startdate" valueDate="${now}"/>
+            <column name="channel_enddate" value="NULL"/>
+            <column name="channel_updattime" valueDate="${now}"/>
+            <column name="channel_updateuser" value="andtho"/>
+            <column name="channel_inmarsatc_id" value="1003"/>
+        </insert>
+        <insert tableName="channel_inmarsatc">
+            <column name="channel_id" value="1004"/>
+            <column name="channel_guid" value="CHANNEL_GUID_4"/>
+            <column name="channel_active" valueBoolean="1"/>
+            <column name="channel_startdate" valueDate="${now}"/>
+            <column name="channel_enddate" value="NULL"/>
+            <column name="channel_updattime" valueDate="${now}"/>
+            <column name="channel_updateuser" value="andtho"/>
+            <column name="channel_inmarsatc_id" value="1004"/>
+        </insert>
+        <insert tableName="channel_inmarsatc">
+            <column name="channel_id" value="1005"/>
+            <column name="channel_guid" value="CHANNEL_GUID_5"/>
+            <column name="channel_active" valueBoolean="1"/>
+            <column name="channel_startdate" valueDate="${now}"/>
+            <column name="channel_enddate" value="NULL"/>
+            <column name="channel_updattime" valueDate="${now}"/>
+            <column name="channel_updateuser" value="andtho"/>
+            <column name="channel_inmarsatc_id" value="1005"/>
+        </insert>
+        <insert tableName="channel_inmarsatc">
+            <column name="channel_id" value="1006"/>
+            <column name="channel_guid" value="CHANNEL_GUID_6"/>
+            <column name="channel_active" valueBoolean="1"/>
+            <column name="channel_startdate" valueDate="${now}"/>
+            <column name="channel_enddate" value="NULL"/>
+            <column name="channel_updattime" valueDate="${now}"/>
+            <column name="channel_updateuser" value="andtho"/>
+            <column name="channel_inmarsatc_id" value="1006"/>
+        </insert>
+        <insert tableName="channel_inmarsatc">
+            <column name="channel_id" value="1007"/>
+            <column name="channel_guid" value="CHANNEL_GUID_7"/>
+            <column name="channel_active" valueBoolean="1"/>
+            <column name="channel_startdate" valueDate="${now}"/>
+            <column name="channel_enddate" value="NULL"/>
+            <column name="channel_updattime" valueDate="${now}"/>
+            <column name="channel_updateuser" value="andtho"/>
+            <column name="channel_inmarsatc_id" value="1007"/>
+        </insert>
+        <insert tableName="channel_inmarsatc">
+            <column name="channel_id" value="1008"/>
+            <column name="channel_guid" value="CHANNEL_GUID_8"/>
+            <column name="channel_active" valueBoolean="1"/>
+            <column name="channel_startdate" valueDate="${now}"/>
+            <column name="channel_enddate" value="NULL"/>
+            <column name="channel_updattime" valueDate="${now}"/>
+            <column name="channel_updateuser" value="andtho"/>
+            <column name="channel_inmarsatc_id" value="1008"/>
+        </insert>
+        <insert tableName="channel_inmarsatc">
+            <column name="channel_id" value="1009"/>
+            <column name="channel_guid" value="CHANNEL_GUID_9"/>
+            <column name="channel_active" valueBoolean="1"/>
+            <column name="channel_startdate" valueDate="${now}"/>
+            <column name="channel_enddate" value="NULL"/>
+            <column name="channel_updattime" valueDate="${now}"/>
+            <column name="channel_updateuser" value="andtho"/>
+            <column name="channel_inmarsatc_id" value="1009"/>
+        </insert>
+        <insert tableName="channel_inmarsatc">
+            <column name="channel_id" value="1010"/>
+            <column name="channel_guid" value="CHANNEL_GUID_10"/>
+            <column name="channel_active" valueBoolean="1"/>
+            <column name="channel_startdate" valueDate="${now}"/>
+            <column name="channel_enddate" value="NULL"/>
+            <column name="channel_updattime" valueDate="${now}"/>
+            <column name="channel_updateuser" value="andtho"/>
+            <column name="channel_inmarsatc_id" value="1010"/>
+        </insert>
+        <insert tableName="channel_inmarsatc">
+            <column name="channel_id" value="1011"/>
+            <column name="channel_guid" value="CHANNEL_GUID_11"/>
+            <column name="channel_active" valueBoolean="1"/>
+            <column name="channel_startdate" valueDate="${now}"/>
+            <column name="channel_enddate" value="NULL"/>
+            <column name="channel_updattime" valueDate="${now}"/>
+            <column name="channel_updateuser" value="andtho"/>
+            <column name="channel_inmarsatc_id" value="1011"/>
+        </insert>
+        <insert tableName="channel_inmarsatc">
+            <column name="channel_id" value="1012"/>
+            <column name="channel_guid" value="CHANNEL_GUID_12"/>
+            <column name="channel_active" valueBoolean="1"/>
+            <column name="channel_startdate" valueDate="${now}"/>
+            <column name="channel_enddate" value="NULL"/>
+            <column name="channel_updattime" valueDate="${now}"/>
+            <column name="channel_updateuser" value="andtho"/>
+            <column name="channel_inmarsatc_id" value="1012"/>
+        </insert>
+        <insert tableName="channel_inmarsatc">
+            <column name="channel_id" value="1013"/>
+            <column name="channel_guid" value="CHANNEL_GUID_13"/>
+            <column name="channel_active" valueBoolean="1"/>
+            <column name="channel_startdate" valueDate="${now}"/>
+            <column name="channel_enddate" value="NULL"/>
+            <column name="channel_updattime" valueDate="${now}"/>
+            <column name="channel_updateuser" value="andtho"/>
+            <column name="channel_inmarsatc_id" value="1013"/>
+        </insert>
+        <insert tableName="channel_inmarsatc">
+            <column name="channel_id" value="1014"/>
+            <column name="channel_guid" value="CHANNEL_GUID_14"/>
+            <column name="channel_active" valueBoolean="1"/>
+            <column name="channel_startdate" valueDate="${now}"/>
+            <column name="channel_enddate" value="NULL"/>
+            <column name="channel_updattime" valueDate="${now}"/>
+            <column name="channel_updateuser" value="andtho"/>
+            <column name="channel_inmarsatc_id" value="1014"/>
+        </insert>
+        <insert tableName="channel_inmarsatc">
+            <column name="channel_id" value="1015"/>
+            <column name="channel_guid" value="CHANNEL_GUID_15"/>
+            <column name="channel_active" valueBoolean="1"/>
+            <column name="channel_startdate" valueDate="${now}"/>
+            <column name="channel_enddate" value="NULL"/>
+            <column name="channel_updattime" valueDate="${now}"/>
+            <column name="channel_updateuser" value="andtho"/>
+            <column name="channel_inmarsatc_id" value="1015"/>
+        </insert>
+        <insert tableName="channel_inmarsatc">
+            <column name="channel_id" value="1016"/>
+            <column name="channel_guid" value="CHANNEL_GUID_16"/>
+            <column name="channel_active" valueBoolean="1"/>
+            <column name="channel_startdate" valueDate="${now}"/>
+            <column name="channel_enddate" value="NULL"/>
+            <column name="channel_updattime" valueDate="${now}"/>
+            <column name="channel_updateuser" value="andtho"/>
+            <column name="channel_inmarsatc_id" value="1016"/>
+        </insert>
+        <insert tableName="channel_inmarsatc">
+            <column name="channel_id" value="1017"/>
+            <column name="channel_guid" value="CHANNEL_GUID_17"/>
+            <column name="channel_active" valueBoolean="1"/>
+            <column name="channel_startdate" valueDate="${now}"/>
+            <column name="channel_enddate" value="NULL"/>
+            <column name="channel_updattime" valueDate="${now}"/>
+            <column name="channel_updateuser" value="andtho"/>
+            <column name="channel_inmarsatc_id" value="1017"/>
+        </insert>
+        <insert tableName="channel_inmarsatc">
+            <column name="channel_id" value="1018"/>
+            <column name="channel_guid" value="CHANNEL_GUID_18"/>
+            <column name="channel_active" valueBoolean="1"/>
+            <column name="channel_startdate" valueDate="${now}"/>
+            <column name="channel_enddate" value="NULL"/>
+            <column name="channel_updattime" valueDate="${now}"/>
+            <column name="channel_updateuser" value="andtho"/>
+            <column name="channel_inmarsatc_id" value="1018"/>
+        </insert>
+        <insert tableName="channel_inmarsatc">
+            <column name="channel_id" value="1019"/>
+            <column name="channel_guid" value="CHANNEL_GUID_19"/>
+            <column name="channel_active" valueBoolean="1"/>
+            <column name="channel_startdate" valueDate="${now}"/>
+            <column name="channel_enddate" value="NULL"/>
+            <column name="channel_updattime" valueDate="${now}"/>
+            <column name="channel_updateuser" value="andtho"/>
+            <column name="channel_inmarsatc_id" value="1019"/>
+        </insert>
+        <insert tableName="channel_inmarsatc">
+            <column name="channel_id" value="1020"/>
+            <column name="channel_guid" value="CHANNEL_GUID_20"/>
+            <column name="channel_active" valueBoolean="1"/>
+            <column name="channel_startdate" valueDate="${now}"/>
+            <column name="channel_enddate" value="NULL"/>
+            <column name="channel_updattime" valueDate="${now}"/>
+            <column name="channel_updateuser" value="andtho"/>
+            <column name="channel_inmarsatc_id" value="1020"/>
+        </insert>
+
+        
+        
+        <insert tableName="channel_inmarsatc_history">
+            <column name="channel_hist_id" value="1001"/>
+            <column name="channel_hist_comchanname" value="VMS"/>
+            <column name="channel_hist_dnid" value="DNID_NO_1"/>
+            <column name="channel_hist_member_number" value="MEMBER_NUMBER_NO_1"/>
+            <column name="channel_hist_started" valueDate="${now}"/>
+            <column name="channel_hist_stopped" value="NULL"/>
+            <column name="channel_hist_les_description" value="testdata_inmarsatc_les"/>
+            <column name="channel_hist_active" valueBoolean="1"/>
+            <column name="channel_hist_startdate" valueDate="${now}"/>
+            <column name="channel_hist_enddate" value="NULL"/>
+            <column name="channel_hist_updattime" valueDate="${now}"/>
+            <column name="channel_hist_updateuser" value="andtho"/>
+            <column name="channel_hist_channel_id" value="1001"/>
+            <column name="channel_hist_installed_by" value="testdata_inmarsatc_installed_by"/>
+            
+            <column name="channel_hist_installed_on" valueDate="${now}"/>
+            <column name="channel_hist_uninstalled_on" value="NULL"/>
+            <column name="channel_hist_freq_expected" value="10"/>
+            <column name="channel_hist_freq_grace_per" value="10"/>
+            <column name="channel_hist_freq_in_port" value="10"/>
+        </insert>
+        <insert tableName="channel_inmarsatc_history">
+            <column name="channel_hist_id" value="1002"/>
+            <column name="channel_hist_comchanname" value="VMS"/>
+            <column name="channel_hist_dnid" value="DNID_NO_2"/>
+            <column name="channel_hist_member_number" value="MEMBER_NUMBER_NO_2"/>
+            <column name="channel_hist_started" valueDate="${now}"/>
+            <column name="channel_hist_stopped" value="NULL"/>
+            <column name="channel_hist_les_description" value="testdata_inmarsatc_les"/>
+            <column name="channel_hist_active" valueBoolean="1"/>
+            <column name="channel_hist_startdate" valueDate="${now}"/>
+            <column name="channel_hist_enddate" value="NULL"/>
+            <column name="channel_hist_updattime" valueDate="${now}"/>
+            <column name="channel_hist_updateuser" value="andtho"/>
+            <column name="channel_hist_channel_id" value="1002"/>
+            <column name="channel_hist_installed_by" value="testdata_inmarsatc_installed_by"/>
+            
+            <column name="channel_hist_installed_on" valueDate="${now}"/>
+            <column name="channel_hist_uninstalled_on" value="NULL"/>
+            <column name="channel_hist_freq_expected" value="10"/>
+            <column name="channel_hist_freq_grace_per" value="10"/>
+            <column name="channel_hist_freq_in_port" value="10"/>
+        </insert>
+        <insert tableName="channel_inmarsatc_history">
+            <column name="channel_hist_id" value="1003"/>
+            <column name="channel_hist_comchanname" value="VMS"/>
+            <column name="channel_hist_dnid" value="DNID_NO_3"/>
+            <column name="channel_hist_member_number" value="MEMBER_NUMBER_NO_3"/>
+            <column name="channel_hist_started" valueDate="${now}"/>
+            <column name="channel_hist_stopped" value="NULL"/>
+            <column name="channel_hist_les_description" value="testdata_inmarsatc_les"/>
+            <column name="channel_hist_active" valueBoolean="1"/>
+            <column name="channel_hist_startdate" valueDate="${now}"/>
+            <column name="channel_hist_enddate" value="NULL"/>
+            <column name="channel_hist_updattime" valueDate="${now}"/>
+            <column name="channel_hist_updateuser" value="andtho"/>
+            <column name="channel_hist_channel_id" value="1003"/>
+            <column name="channel_hist_installed_by" value="testdata_inmarsatc_installed_by"/>
+            
+            <column name="channel_hist_installed_on" valueDate="${now}"/>
+            <column name="channel_hist_uninstalled_on" value="NULL"/>
+            <column name="channel_hist_freq_expected" value="10"/>
+            <column name="channel_hist_freq_grace_per" value="10"/>
+            <column name="channel_hist_freq_in_port" value="10"/>
+        </insert>
+        <insert tableName="channel_inmarsatc_history">
+            <column name="channel_hist_id" value="1004"/>
+            <column name="channel_hist_comchanname" value="VMS"/>
+            <column name="channel_hist_dnid" value="DNID_NO_4"/>
+            <column name="channel_hist_member_number" value="MEMBER_NUMBER_NO_4"/>
+            <column name="channel_hist_started" valueDate="${now}"/>
+            <column name="channel_hist_stopped" value="NULL"/>
+            <column name="channel_hist_les_description" value="testdata_inmarsatc_les"/>
+            <column name="channel_hist_active" valueBoolean="1"/>
+            <column name="channel_hist_startdate" valueDate="${now}"/>
+            <column name="channel_hist_enddate" value="NULL"/>
+            <column name="channel_hist_updattime" valueDate="${now}"/>
+            <column name="channel_hist_updateuser" value="andtho"/>
+            <column name="channel_hist_channel_id" value="1004"/>
+            <column name="channel_hist_installed_by" value="testdata_inmarsatc_installed_by"/>
+            
+            <column name="channel_hist_installed_on" valueDate="${now}"/>
+            <column name="channel_hist_uninstalled_on" value="NULL"/>
+            <column name="channel_hist_freq_expected" value="10"/>
+            <column name="channel_hist_freq_grace_per" value="10"/>
+            <column name="channel_hist_freq_in_port" value="10"/>
+        </insert>
+        <insert tableName="channel_inmarsatc_history">
+            <column name="channel_hist_id" value="1005"/>
+            <column name="channel_hist_comchanname" value="VMS"/>
+            <column name="channel_hist_dnid" value="DNID_NO_5"/>
+            <column name="channel_hist_member_number" value="MEMBER_NUMBER_NO_5"/>
+            <column name="channel_hist_started" valueDate="${now}"/>
+            <column name="channel_hist_stopped" value="NULL"/>
+            <column name="channel_hist_les_description" value="testdata_inmarsatc_les"/>
+            <column name="channel_hist_active" valueBoolean="1"/>
+            <column name="channel_hist_startdate" valueDate="${now}"/>
+            <column name="channel_hist_enddate" value="NULL"/>
+            <column name="channel_hist_updattime" valueDate="${now}"/>
+            <column name="channel_hist_updateuser" value="andtho"/>
+            <column name="channel_hist_channel_id" value="1005"/>
+            <column name="channel_hist_installed_by" value="testdata_inmarsatc_installed_by"/>
+            
+            <column name="channel_hist_installed_on" valueDate="${now}"/>
+            <column name="channel_hist_uninstalled_on" value="NULL"/>
+            <column name="channel_hist_freq_expected" value="10"/>
+            <column name="channel_hist_freq_grace_per" value="10"/>
+            <column name="channel_hist_freq_in_port" value="10"/>
+        </insert>
+        <insert tableName="channel_inmarsatc_history">
+            <column name="channel_hist_id" value="1006"/>
+            <column name="channel_hist_comchanname" value="VMS"/>
+            <column name="channel_hist_dnid" value="DNID_NO_6"/>
+            <column name="channel_hist_member_number" value="MEMBER_NUMBER_NO_6"/>
+            <column name="channel_hist_started" valueDate="${now}"/>
+            <column name="channel_hist_stopped" value="NULL"/>
+            <column name="channel_hist_les_description" value="testdata_inmarsatc_les"/>
+            <column name="channel_hist_active" valueBoolean="1"/>
+            <column name="channel_hist_startdate" valueDate="${now}"/>
+            <column name="channel_hist_enddate" value="NULL"/>
+            <column name="channel_hist_updattime" valueDate="${now}"/>
+            <column name="channel_hist_updateuser" value="andtho"/>
+            <column name="channel_hist_channel_id" value="1006"/>
+            <column name="channel_hist_installed_by" value="testdata_inmarsatc_installed_by"/>
+            
+            <column name="channel_hist_installed_on" valueDate="${now}"/>
+            <column name="channel_hist_uninstalled_on" value="NULL"/>
+            <column name="channel_hist_freq_expected" value="10"/>
+            <column name="channel_hist_freq_grace_per" value="10"/>
+            <column name="channel_hist_freq_in_port" value="10"/>
+        </insert>
+        <insert tableName="channel_inmarsatc_history">
+            <column name="channel_hist_id" value="1007"/>
+            <column name="channel_hist_comchanname" value="VMS"/>
+            <column name="channel_hist_dnid" value="DNID_NO_7"/>
+            <column name="channel_hist_member_number" value="MEMBER_NUMBER_NO_7"/>
+            <column name="channel_hist_started" valueDate="${now}"/>
+            <column name="channel_hist_stopped" value="NULL"/>
+            <column name="channel_hist_les_description" value="testdata_inmarsatc_les"/>
+            <column name="channel_hist_active" valueBoolean="1"/>
+            <column name="channel_hist_startdate" valueDate="${now}"/>
+            <column name="channel_hist_enddate" value="NULL"/>
+            <column name="channel_hist_updattime" valueDate="${now}"/>
+            <column name="channel_hist_updateuser" value="andtho"/>
+            <column name="channel_hist_channel_id" value="1007"/>
+            <column name="channel_hist_installed_by" value="testdata_inmarsatc_installed_by"/>
+            
+            <column name="channel_hist_installed_on" valueDate="${now}"/>
+            <column name="channel_hist_uninstalled_on" value="NULL"/>
+            <column name="channel_hist_freq_expected" value="10"/>
+            <column name="channel_hist_freq_grace_per" value="10"/>
+            <column name="channel_hist_freq_in_port" value="10"/>
+        </insert>
+        <insert tableName="channel_inmarsatc_history">
+            <column name="channel_hist_id" value="1008"/>
+            <column name="channel_hist_comchanname" value="VMS"/>
+            <column name="channel_hist_dnid" value="DNID_NO_8"/>
+            <column name="channel_hist_member_number" value="MEMBER_NUMBER_NO_8"/>
+            <column name="channel_hist_started" valueDate="${now}"/>
+            <column name="channel_hist_stopped" value="NULL"/>
+            <column name="channel_hist_les_description" value="testdata_inmarsatc_les"/>
+            <column name="channel_hist_active" valueBoolean="1"/>
+            <column name="channel_hist_startdate" valueDate="${now}"/>
+            <column name="channel_hist_enddate" value="NULL"/>
+            <column name="channel_hist_updattime" valueDate="${now}"/>
+            <column name="channel_hist_updateuser" value="andtho"/>
+            <column name="channel_hist_channel_id" value="1008"/>
+            <column name="channel_hist_installed_by" value="testdata_inmarsatc_installed_by"/>
+            
+            <column name="channel_hist_installed_on" valueDate="${now}"/>
+            <column name="channel_hist_uninstalled_on" value="NULL"/>
+            <column name="channel_hist_freq_expected" value="10"/>
+            <column name="channel_hist_freq_grace_per" value="10"/>
+            <column name="channel_hist_freq_in_port" value="10"/>
+        </insert>
+        <insert tableName="channel_inmarsatc_history">
+            <column name="channel_hist_id" value="1009"/>
+            <column name="channel_hist_comchanname" value="VMS"/>
+            <column name="channel_hist_dnid" value="DNID_NO_9"/>
+            <column name="channel_hist_member_number" value="MEMBER_NUMBER_NO_9"/>
+            <column name="channel_hist_started" valueDate="${now}"/>
+            <column name="channel_hist_stopped" value="NULL"/>
+            <column name="channel_hist_les_description" value="testdata_inmarsatc_les"/>
+            <column name="channel_hist_active" valueBoolean="1"/>
+            <column name="channel_hist_startdate" valueDate="${now}"/>
+            <column name="channel_hist_enddate" value="NULL"/>
+            <column name="channel_hist_updattime" valueDate="${now}"/>
+            <column name="channel_hist_updateuser" value="andtho"/>
+            <column name="channel_hist_channel_id" value="1009"/>
+            <column name="channel_hist_installed_by" value="testdata_inmarsatc_installed_by"/>
+            
+            <column name="channel_hist_installed_on" valueDate="${now}"/>
+            <column name="channel_hist_uninstalled_on" value="NULL"/>
+            <column name="channel_hist_freq_expected" value="10"/>
+            <column name="channel_hist_freq_grace_per" value="10"/>
+            <column name="channel_hist_freq_in_port" value="10"/>
+        </insert>
+        <insert tableName="channel_inmarsatc_history">
+            <column name="channel_hist_id" value="1010"/>
+            <column name="channel_hist_comchanname" value="VMS"/>
+            <column name="channel_hist_dnid" value="DNID_NO_10"/>
+            <column name="channel_hist_member_number" value="MEMBER_NUMBER_NO_10"/>
+            <column name="channel_hist_started" valueDate="${now}"/>
+            <column name="channel_hist_stopped" value="NULL"/>
+            <column name="channel_hist_les_description" value="testdata_inmarsatc_les"/>
+            <column name="channel_hist_active" valueBoolean="1"/>
+            <column name="channel_hist_startdate" valueDate="${now}"/>
+            <column name="channel_hist_enddate" value="NULL"/>
+            <column name="channel_hist_updattime" valueDate="${now}"/>
+            <column name="channel_hist_updateuser" value="andtho"/>
+            <column name="channel_hist_channel_id" value="1010"/>
+            <column name="channel_hist_installed_by" value="testdata_inmarsatc_installed_by"/>
+            
+            <column name="channel_hist_installed_on" valueDate="${now}"/>
+            <column name="channel_hist_uninstalled_on" value="NULL"/>
+            <column name="channel_hist_freq_expected" value="10"/>
+            <column name="channel_hist_freq_grace_per" value="10"/>
+            <column name="channel_hist_freq_in_port" value="10"/>
+        </insert>
+        <insert tableName="channel_inmarsatc_history">
+            <column name="channel_hist_id" value="1011"/>
+            <column name="channel_hist_comchanname" value="VMS"/>
+            <column name="channel_hist_dnid" value="DNID_NO_11"/>
+            <column name="channel_hist_member_number" value="MEMBER_NUMBER_NO_11"/>
+            <column name="channel_hist_started" valueDate="${now}"/>
+            <column name="channel_hist_stopped" value="NULL"/>
+            <column name="channel_hist_les_description" value="testdata_inmarsatc_les"/>
+            <column name="channel_hist_active" valueBoolean="1"/>
+            <column name="channel_hist_startdate" valueDate="${now}"/>
+            <column name="channel_hist_enddate" value="NULL"/>
+            <column name="channel_hist_updattime" valueDate="${now}"/>
+            <column name="channel_hist_updateuser" value="andtho"/>
+            <column name="channel_hist_channel_id" value="1011"/>
+            <column name="channel_hist_installed_by" value="testdata_inmarsatc_installed_by"/>
+            
+            <column name="channel_hist_installed_on" valueDate="${now}"/>
+            <column name="channel_hist_uninstalled_on" value="NULL"/>
+            <column name="channel_hist_freq_expected" value="10"/>
+            <column name="channel_hist_freq_grace_per" value="10"/>
+            <column name="channel_hist_freq_in_port" value="10"/>
+        </insert>
+        <insert tableName="channel_inmarsatc_history">
+            <column name="channel_hist_id" value="1012"/>
+            <column name="channel_hist_comchanname" value="VMS"/>
+            <column name="channel_hist_dnid" value="DNID_NO_12"/>
+            <column name="channel_hist_member_number" value="MEMBER_NUMBER_NO_12"/>
+            <column name="channel_hist_started" valueDate="${now}"/>
+            <column name="channel_hist_stopped" value="NULL"/>
+            <column name="channel_hist_les_description" value="testdata_inmarsatc_les"/>
+            <column name="channel_hist_active" valueBoolean="1"/>
+            <column name="channel_hist_startdate" valueDate="${now}"/>
+            <column name="channel_hist_enddate" value="NULL"/>
+            <column name="channel_hist_updattime" valueDate="${now}"/>
+            <column name="channel_hist_updateuser" value="andtho"/>
+            <column name="channel_hist_channel_id" value="1012"/>
+            <column name="channel_hist_installed_by" value="testdata_inmarsatc_installed_by"/>
+            
+            <column name="channel_hist_installed_on" valueDate="${now}"/>
+            <column name="channel_hist_uninstalled_on" value="NULL"/>
+            <column name="channel_hist_freq_expected" value="10"/>
+            <column name="channel_hist_freq_grace_per" value="10"/>
+            <column name="channel_hist_freq_in_port" value="10"/>
+        </insert>
+        <insert tableName="channel_inmarsatc_history">
+            <column name="channel_hist_id" value="1013"/>
+            <column name="channel_hist_comchanname" value="VMS"/>
+            <column name="channel_hist_dnid" value="DNID_NO_13"/>
+            <column name="channel_hist_member_number" value="MEMBER_NUMBER_NO_13"/>
+            <column name="channel_hist_started" valueDate="${now}"/>
+            <column name="channel_hist_stopped" value="NULL"/>
+            <column name="channel_hist_les_description" value="testdata_inmarsatc_les"/>
+            <column name="channel_hist_active" valueBoolean="1"/>
+            <column name="channel_hist_startdate" valueDate="${now}"/>
+            <column name="channel_hist_enddate" value="NULL"/>
+            <column name="channel_hist_updattime" valueDate="${now}"/>
+            <column name="channel_hist_updateuser" value="andtho"/>
+            <column name="channel_hist_channel_id" value="1013"/>
+            <column name="channel_hist_installed_by" value="testdata_inmarsatc_installed_by"/>
+            
+            <column name="channel_hist_installed_on" valueDate="${now}"/>
+            <column name="channel_hist_uninstalled_on" value="NULL"/>
+            <column name="channel_hist_freq_expected" value="10"/>
+            <column name="channel_hist_freq_grace_per" value="10"/>
+            <column name="channel_hist_freq_in_port" value="10"/>
+        </insert>
+        <insert tableName="channel_inmarsatc_history">
+            <column name="channel_hist_id" value="1014"/>
+            <column name="channel_hist_comchanname" value="VMS"/>
+            <column name="channel_hist_dnid" value="DNID_NO_14"/>
+            <column name="channel_hist_member_number" value="MEMBER_NUMBER_NO_14"/>
+            <column name="channel_hist_started" valueDate="${now}"/>
+            <column name="channel_hist_stopped" value="NULL"/>
+            <column name="channel_hist_les_description" value="testdata_inmarsatc_les"/>
+            <column name="channel_hist_active" valueBoolean="1"/>
+            <column name="channel_hist_startdate" valueDate="${now}"/>
+            <column name="channel_hist_enddate" value="NULL"/>
+            <column name="channel_hist_updattime" valueDate="${now}"/>
+            <column name="channel_hist_updateuser" value="andtho"/>
+            <column name="channel_hist_channel_id" value="1014"/>
+            <column name="channel_hist_installed_by" value="testdata_inmarsatc_installed_by"/>
+            
+            <column name="channel_hist_installed_on" valueDate="${now}"/>
+            <column name="channel_hist_uninstalled_on" value="NULL"/>
+            <column name="channel_hist_freq_expected" value="10"/>
+            <column name="channel_hist_freq_grace_per" value="10"/>
+            <column name="channel_hist_freq_in_port" value="10"/>
+        </insert>
+        <insert tableName="channel_inmarsatc_history">
+            <column name="channel_hist_id" value="1015"/>
+            <column name="channel_hist_comchanname" value="VMS"/>
+            <column name="channel_hist_dnid" value="DNID_NO_15"/>
+            <column name="channel_hist_member_number" value="MEMBER_NUMBER_NO_15"/>
+            <column name="channel_hist_started" valueDate="${now}"/>
+            <column name="channel_hist_stopped" value="NULL"/>
+            <column name="channel_hist_les_description" value="testdata_inmarsatc_les"/>
+            <column name="channel_hist_active" valueBoolean="1"/>
+            <column name="channel_hist_startdate" valueDate="${now}"/>
+            <column name="channel_hist_enddate" value="NULL"/>
+            <column name="channel_hist_updattime" valueDate="${now}"/>
+            <column name="channel_hist_updateuser" value="andtho"/>
+            <column name="channel_hist_channel_id" value="1015"/>
+            <column name="channel_hist_installed_by" value="testdata_inmarsatc_installed_by"/>
+            
+            <column name="channel_hist_installed_on" valueDate="${now}"/>
+            <column name="channel_hist_uninstalled_on" value="NULL"/>
+            <column name="channel_hist_freq_expected" value="10"/>
+            <column name="channel_hist_freq_grace_per" value="10"/>
+            <column name="channel_hist_freq_in_port" value="10"/>
+        </insert>
+        <insert tableName="channel_inmarsatc_history">
+            <column name="channel_hist_id" value="1016"/>
+            <column name="channel_hist_comchanname" value="VMS"/>
+            <column name="channel_hist_dnid" value="DNID_NO_16"/>
+            <column name="channel_hist_member_number" value="MEMBER_NUMBER_NO_16"/>
+            <column name="channel_hist_started" valueDate="${now}"/>
+            <column name="channel_hist_stopped" value="NULL"/>
+            <column name="channel_hist_les_description" value="testdata_inmarsatc_les"/>
+            <column name="channel_hist_active" valueBoolean="1"/>
+            <column name="channel_hist_startdate" valueDate="${now}"/>
+            <column name="channel_hist_enddate" value="NULL"/>
+            <column name="channel_hist_updattime" valueDate="${now}"/>
+            <column name="channel_hist_updateuser" value="andtho"/>
+            <column name="channel_hist_channel_id" value="1016"/>
+            <column name="channel_hist_installed_by" value="testdata_inmarsatc_installed_by"/>
+            
+            <column name="channel_hist_installed_on" valueDate="${now}"/>
+            <column name="channel_hist_uninstalled_on" value="NULL"/>
+            <column name="channel_hist_freq_expected" value="10"/>
+            <column name="channel_hist_freq_grace_per" value="10"/>
+            <column name="channel_hist_freq_in_port" value="10"/>
+        </insert>
+        <insert tableName="channel_inmarsatc_history">
+            <column name="channel_hist_id" value="1017"/>
+            <column name="channel_hist_comchanname" value="VMS"/>
+            <column name="channel_hist_dnid" value="DNID_NO_17"/>
+            <column name="channel_hist_member_number" value="MEMBER_NUMBER_NO_17"/>
+            <column name="channel_hist_started" valueDate="${now}"/>
+            <column name="channel_hist_stopped" value="NULL"/>
+            <column name="channel_hist_les_description" value="testdata_inmarsatc_les"/>
+            <column name="channel_hist_active" valueBoolean="1"/>
+            <column name="channel_hist_startdate" valueDate="${now}"/>
+            <column name="channel_hist_enddate" value="NULL"/>
+            <column name="channel_hist_updattime" valueDate="${now}"/>
+            <column name="channel_hist_updateuser" value="andtho"/>
+            <column name="channel_hist_channel_id" value="1017"/>
+            <column name="channel_hist_installed_by" value="testdata_inmarsatc_installed_by"/>
+            
+            <column name="channel_hist_installed_on" valueDate="${now}"/>
+            <column name="channel_hist_uninstalled_on" value="NULL"/>
+            <column name="channel_hist_freq_expected" value="10"/>
+            <column name="channel_hist_freq_grace_per" value="10"/>
+            <column name="channel_hist_freq_in_port" value="10"/>
+        </insert>
+        <insert tableName="channel_inmarsatc_history">
+            <column name="channel_hist_id" value="1018"/>
+            <column name="channel_hist_comchanname" value="VMS"/>
+            <column name="channel_hist_dnid" value="DNID_NO_18"/>
+            <column name="channel_hist_member_number" value="MEMBER_NUMBER_NO_18"/>
+            <column name="channel_hist_started" valueDate="${now}"/>
+            <column name="channel_hist_stopped" value="NULL"/>
+            <column name="channel_hist_les_description" value="testdata_inmarsatc_les"/>
+            <column name="channel_hist_active" valueBoolean="1"/>
+            <column name="channel_hist_startdate" valueDate="${now}"/>
+            <column name="channel_hist_enddate" value="NULL"/>
+            <column name="channel_hist_updattime" valueDate="${now}"/>
+            <column name="channel_hist_updateuser" value="andtho"/>
+            <column name="channel_hist_channel_id" value="1018"/>
+            <column name="channel_hist_installed_by" value="testdata_inmarsatc_installed_by"/>
+            
+            <column name="channel_hist_installed_on" valueDate="${now}"/>
+            <column name="channel_hist_uninstalled_on" value="NULL"/>
+            <column name="channel_hist_freq_expected" value="10"/>
+            <column name="channel_hist_freq_grace_per" value="10"/>
+            <column name="channel_hist_freq_in_port" value="10"/>
+        </insert>
+        <insert tableName="channel_inmarsatc_history">
+            <column name="channel_hist_id" value="1019"/>
+            <column name="channel_hist_comchanname" value="VMS"/>
+            <column name="channel_hist_dnid" value="DNID_NO_19"/>
+            <column name="channel_hist_member_number" value="MEMBER_NUMBER_NO_19"/>
+            <column name="channel_hist_started" valueDate="${now}"/>
+            <column name="channel_hist_stopped" value="NULL"/>
+            <column name="channel_hist_les_description" value="testdata_inmarsatc_les"/>
+            <column name="channel_hist_active" valueBoolean="1"/>
+            <column name="channel_hist_startdate" valueDate="${now}"/>
+            <column name="channel_hist_enddate" value="NULL"/>
+            <column name="channel_hist_updattime" valueDate="${now}"/>
+            <column name="channel_hist_updateuser" value="andtho"/>
+            <column name="channel_hist_channel_id" value="1019"/>
+            <column name="channel_hist_installed_by" value="testdata_inmarsatc_installed_by"/>
+            
+            <column name="channel_hist_installed_on" valueDate="${now}"/>
+            <column name="channel_hist_uninstalled_on" value="NULL"/>
+            <column name="channel_hist_freq_expected" value="10"/>
+            <column name="channel_hist_freq_grace_per" value="10"/>
+            <column name="channel_hist_freq_in_port" value="10"/>
+        </insert>
+        <insert tableName="channel_inmarsatc_history">
+            <column name="channel_hist_id" value="1020"/>
+            <column name="channel_hist_comchanname" value="VMS"/>
+            <column name="channel_hist_dnid" value="DNID_NO_20"/>
+            <column name="channel_hist_member_number" value="MEMBER_NUMBER_NO_20"/>
+            <column name="channel_hist_started" valueDate="${now}"/>
+            <column name="channel_hist_stopped" value="NULL"/>
+            <column name="channel_hist_les_description" value="testdata_inmarsatc_les"/>
+            <column name="channel_hist_active" valueBoolean="1"/>
+            <column name="channel_hist_startdate" valueDate="${now}"/>
+            <column name="channel_hist_enddate" value="NULL"/>
+            <column name="channel_hist_updattime" valueDate="${now}"/>
+            <column name="channel_hist_updateuser" value="andtho"/>
+            <column name="channel_hist_channel_id" value="1020"/>
+            <column name="channel_hist_installed_by" value="testdata_inmarsatc_installed_by"/>
+            
+            <column name="channel_hist_installed_on" valueDate="${now}"/>
+            <column name="channel_hist_uninstalled_on" value="NULL"/>
+            <column name="channel_hist_freq_expected" value="10"/>
+            <column name="channel_hist_freq_grace_per" value="10"/>
+            <column name="channel_hist_freq_in_port" value="10"/>
+        </insert>
+       
+        
+        <insert tableName="mobileterminal_inmarsatc_hist">
+            <column name="hist_id" value="1001"/>
+            <column name="hist_transceiver_type" value="testdata_inmarsatc_transceiver_type"/>
+            <column name="hist_antenna" value="testdata_inmarsatc_antenna"/>
+            <column name="hist_antenna_serial_number" value="testdata_inmarsatc_antenna_serial_number"/>
+            <column name="hist_software_version" value="testdata_inmarsatc_software_version"/>
+            <column name="hist_satellite_number" value="testdata_inmarsatc_satellilte_number"/>
+            <column name="hist_answer_back" value="testdata_inmarsatc_answer_back"/>
+            <column name="hist_active" valueBoolean="1"/>
+            <column name="hist_updatetime" valueDate="${now}"/>
+            <column name="hist_updateuser" value="andtho"/>
+            <column name="hist_mobileterminal_id" value="1001"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc_hist">
+            <column name="hist_id" value="1002"/>
+            <column name="hist_transceiver_type" value="testdata_inmarsatc_transceiver_type"/>
+            <column name="hist_antenna" value="testdata_inmarsatc_antenna"/>
+            <column name="hist_antenna_serial_number" value="testdata_inmarsatc_antenna_serial_number"/>
+            <column name="hist_software_version" value="testdata_inmarsatc_software_version"/>
+            <column name="hist_satellite_number" value="testdata_inmarsatc_satellilte_number"/>
+            <column name="hist_active" valueBoolean="1"/>
+            <column name="hist_updatetime" valueDate="${now}"/>
+            <column name="hist_updateuser" value="andtho"/>
+            <column name="hist_mobileterminal_id" value="1002"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc_hist">
+            <column name="hist_id" value="1003"/>
+            <column name="hist_transceiver_type" value="testdata_inmarsatc_transceiver_type"/>
+            <column name="hist_antenna" value="testdata_inmarsatc_antenna"/>
+            <column name="hist_antenna_serial_number" value="testdata_inmarsatc_antenna_serial_number"/>
+            <column name="hist_software_version" value="testdata_inmarsatc_software_version"/>
+            <column name="hist_satellite_number" value="testdata_inmarsatc_satellilte_number"/>
+            <column name="hist_answer_back" value="testdata_inmarsatc_answer_back"/>
+            <column name="hist_active" valueBoolean="1"/>
+            <column name="hist_updatetime" valueDate="${now}"/>
+            <column name="hist_updateuser" value="andtho"/>
+            <column name="hist_mobileterminal_id" value="1003"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc_hist">
+            <column name="hist_id" value="1004"/>
+            <column name="hist_transceiver_type" value="testdata_inmarsatc_transceiver_type"/>
+            <column name="hist_antenna" value="testdata_inmarsatc_antenna"/>
+            <column name="hist_antenna_serial_number" value="testdata_inmarsatc_antenna_serial_number"/>
+            <column name="hist_software_version" value="testdata_inmarsatc_software_version"/>
+            <column name="hist_satellite_number" value="testdata_inmarsatc_satellilte_number"/>
+            <column name="hist_answer_back" value="testdata_inmarsatc_answer_back"/>
+            <column name="hist_active" valueBoolean="1"/>
+            <column name="hist_updatetime" valueDate="${now}"/>
+            <column name="hist_updateuser" value="andtho"/>
+            <column name="hist_mobileterminal_id" value="1004"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc_hist">
+            <column name="hist_id" value="1005"/>
+            <column name="hist_transceiver_type" value="testdata_inmarsatc_transceiver_type"/>
+            <column name="hist_antenna" value="testdata_inmarsatc_antenna"/>
+            <column name="hist_antenna_serial_number" value="testdata_inmarsatc_antenna_serial_number"/>
+            <column name="hist_software_version" value="testdata_inmarsatc_software_version"/>
+            <column name="hist_satellite_number" value="testdata_inmarsatc_satellilte_number"/>
+            <column name="hist_answer_back" value="testdata_inmarsatc_answer_back"/>
+            <column name="hist_active" valueBoolean="1"/>
+            <column name="hist_updatetime" valueDate="${now}"/>
+            <column name="hist_updateuser" value="andtho"/>
+            <column name="hist_mobileterminal_id" value="1005"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc_hist">
+            <column name="hist_id" value="1006"/>
+            <column name="hist_transceiver_type" value="testdata_inmarsatc_transceiver_type"/>
+            <column name="hist_antenna" value="testdata_inmarsatc_antenna"/>
+            <column name="hist_antenna_serial_number" value="testdata_inmarsatc_antenna_serial_number"/>
+            <column name="hist_software_version" value="testdata_inmarsatc_software_version"/>
+            <column name="hist_satellite_number" value="testdata_inmarsatc_satellilte_number"/>
+            <column name="hist_answer_back" value="testdata_inmarsatc_answer_back"/>
+            <column name="hist_active" valueBoolean="1"/>
+            <column name="hist_updatetime" valueDate="${now}"/>
+            <column name="hist_updateuser" value="andtho"/>
+            <column name="hist_mobileterminal_id" value="1006"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc_hist">
+            <column name="hist_id" value="1007"/>
+            <column name="hist_transceiver_type" value="testdata_inmarsatc_transceiver_type"/>
+            <column name="hist_antenna" value="testdata_inmarsatc_antenna"/>
+            <column name="hist_antenna_serial_number" value="testdata_inmarsatc_antenna_serial_number"/>
+            <column name="hist_software_version" value="testdata_inmarsatc_software_version"/>
+            <column name="hist_satellite_number" value="testdata_inmarsatc_satellilte_number"/>
+            <column name="hist_answer_back" value="testdata_inmarsatc_answer_back"/>
+            <column name="hist_active" valueBoolean="1"/>
+            <column name="hist_updatetime" valueDate="${now}"/>
+            <column name="hist_updateuser" value="andtho"/>
+            <column name="hist_mobileterminal_id" value="1007"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc_hist">
+            <column name="hist_id" value="1008"/>
+            <column name="hist_transceiver_type" value="testdata_inmarsatc_transceiver_type"/>
+            <column name="hist_antenna" value="testdata_inmarsatc_antenna"/>
+            <column name="hist_antenna_serial_number" value="testdata_inmarsatc_antenna_serial_number"/>
+            <column name="hist_software_version" value="testdata_inmarsatc_software_version"/>
+            <column name="hist_satellite_number" value="testdata_inmarsatc_satellilte_number"/>
+            <column name="hist_answer_back" value="testdata_inmarsatc_answer_back"/>
+            <column name="hist_active" valueBoolean="1"/>
+            <column name="hist_updatetime" valueDate="${now}"/>
+            <column name="hist_updateuser" value="andtho"/>
+            <column name="hist_mobileterminal_id" value="1008"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc_hist">
+            <column name="hist_id" value="1009"/>
+            <column name="hist_transceiver_type" value="testdata_inmarsatc_transceiver_type"/>
+            <column name="hist_antenna" value="testdata_inmarsatc_antenna"/>
+            <column name="hist_antenna_serial_number" value="testdata_inmarsatc_antenna_serial_number"/>
+            <column name="hist_software_version" value="testdata_inmarsatc_software_version"/>
+            <column name="hist_satellite_number" value="testdata_inmarsatc_satellilte_number"/>
+            <column name="hist_answer_back" value="testdata_inmarsatc_answer_back"/>
+            <column name="hist_active" valueBoolean="1"/>
+            <column name="hist_updatetime" valueDate="${now}"/>
+            <column name="hist_updateuser" value="andtho"/>
+            <column name="hist_mobileterminal_id" value="1009"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc_hist">
+            <column name="hist_id" value="1010"/>
+            <column name="hist_transceiver_type" value="testdata_inmarsatc_transceiver_type"/>
+            <column name="hist_antenna" value="testdata_inmarsatc_antenna"/>
+            <column name="hist_antenna_serial_number" value="testdata_inmarsatc_antenna_serial_number"/>
+            <column name="hist_software_version" value="testdata_inmarsatc_software_version"/>
+            <column name="hist_satellite_number" value="testdata_inmarsatc_satellilte_number"/>
+            <column name="hist_answer_back" value="testdata_inmarsatc_answer_back"/>
+            <column name="hist_active" valueBoolean="1"/>
+            <column name="hist_updatetime" valueDate="${now}"/>
+            <column name="hist_updateuser" value="andtho"/>
+            <column name="hist_mobileterminal_id" value="1010"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc_hist">
+            <column name="hist_id" value="1011"/>
+            <column name="hist_transceiver_type" value="testdata_inmarsatc_transceiver_type"/>
+            <column name="hist_antenna" value="testdata_inmarsatc_antenna"/>
+            <column name="hist_antenna_serial_number" value="testdata_inmarsatc_antenna_serial_number"/>
+            <column name="hist_software_version" value="testdata_inmarsatc_software_version"/>
+            <column name="hist_satellite_number" value="testdata_inmarsatc_satellilte_number"/>
+            <column name="hist_answer_back" value="testdata_inmarsatc_answer_back"/>
+            <column name="hist_active" valueBoolean="1"/>
+            <column name="hist_updatetime" valueDate="${now}"/>
+            <column name="hist_updateuser" value="andtho"/>
+            <column name="hist_mobileterminal_id" value="1011"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc_hist">
+            <column name="hist_id" value="1012"/>
+            <column name="hist_transceiver_type" value="testdata_inmarsatc_transceiver_type"/>
+            <column name="hist_antenna" value="testdata_inmarsatc_antenna"/>
+            <column name="hist_antenna_serial_number" value="testdata_inmarsatc_antenna_serial_number"/>
+            <column name="hist_software_version" value="testdata_inmarsatc_software_version"/>
+            <column name="hist_satellite_number" value="testdata_inmarsatc_satellilte_number"/>
+            <column name="hist_answer_back" value="testdata_inmarsatc_answer_back"/>
+            <column name="hist_active" valueBoolean="1"/>
+            <column name="hist_updatetime" valueDate="${now}"/>
+            <column name="hist_updateuser" value="andtho"/>
+            <column name="hist_mobileterminal_id" value="1012"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc_hist">
+            <column name="hist_id" value="1013"/>
+            <column name="hist_transceiver_type" value="testdata_inmarsatc_transceiver_type"/>
+            <column name="hist_antenna" value="testdata_inmarsatc_antenna"/>
+            <column name="hist_antenna_serial_number" value="testdata_inmarsatc_antenna_serial_number"/>
+            <column name="hist_software_version" value="testdata_inmarsatc_software_version"/>
+            <column name="hist_satellite_number" value="testdata_inmarsatc_satellilte_number"/>
+            <column name="hist_answer_back" value="testdata_inmarsatc_answer_back"/>
+            <column name="hist_active" valueBoolean="1"/>
+            <column name="hist_updatetime" valueDate="${now}"/>
+            <column name="hist_updateuser" value="andtho"/>
+            <column name="hist_mobileterminal_id" value="1013"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc_hist">
+            <column name="hist_id" value="1014"/>
+            <column name="hist_transceiver_type" value="testdata_inmarsatc_transceiver_type"/>
+            <column name="hist_antenna" value="testdata_inmarsatc_antenna"/>
+            <column name="hist_antenna_serial_number" value="testdata_inmarsatc_antenna_serial_number"/>
+            <column name="hist_software_version" value="testdata_inmarsatc_software_version"/>
+            <column name="hist_satellite_number" value="testdata_inmarsatc_satellilte_number"/>
+            <column name="hist_answer_back" value="testdata_inmarsatc_answer_back"/>
+            <column name="hist_active" valueBoolean="1"/>
+            <column name="hist_updatetime" valueDate="${now}"/>
+            <column name="hist_updateuser" value="andtho"/>
+            <column name="hist_mobileterminal_id" value="1014"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc_hist">
+            <column name="hist_id" value="1015"/>
+            <column name="hist_transceiver_type" value="testdata_inmarsatc_transceiver_type"/>
+            <column name="hist_antenna" value="testdata_inmarsatc_antenna"/>
+            <column name="hist_antenna_serial_number" value="testdata_inmarsatc_antenna_serial_number"/>
+            <column name="hist_software_version" value="testdata_inmarsatc_software_version"/>
+            <column name="hist_satellite_number" value="testdata_inmarsatc_satellilte_number"/>
+            <column name="hist_answer_back" value="testdata_inmarsatc_answer_back"/>
+            <column name="hist_active" valueBoolean="1"/>
+            <column name="hist_updatetime" valueDate="${now}"/>
+            <column name="hist_updateuser" value="andtho"/>
+            <column name="hist_mobileterminal_id" value="1015"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc_hist">
+            <column name="hist_id" value="1016"/>
+            <column name="hist_transceiver_type" value="testdata_inmarsatc_transceiver_type"/>
+            <column name="hist_antenna" value="testdata_inmarsatc_antenna"/>
+            <column name="hist_antenna_serial_number" value="testdata_inmarsatc_antenna_serial_number"/>
+            <column name="hist_software_version" value="testdata_inmarsatc_software_version"/>
+            <column name="hist_satellite_number" value="testdata_inmarsatc_satellilte_number"/>
+            <column name="hist_answer_back" value="testdata_inmarsatc_answer_back"/>
+            <column name="hist_active" valueBoolean="1"/>
+            <column name="hist_updatetime" valueDate="${now}"/>
+            <column name="hist_updateuser" value="andtho"/>
+            <column name="hist_mobileterminal_id" value="1016"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc_hist">
+            <column name="hist_id" value="1017"/>
+            <column name="hist_transceiver_type" value="testdata_inmarsatc_transceiver_type"/>
+            <column name="hist_antenna" value="testdata_inmarsatc_antenna"/>
+            <column name="hist_antenna_serial_number" value="testdata_inmarsatc_antenna_serial_number"/>
+            <column name="hist_software_version" value="testdata_inmarsatc_software_version"/>
+            <column name="hist_satellite_number" value="testdata_inmarsatc_satellilte_number"/>
+            <column name="hist_answer_back" value="testdata_inmarsatc_answer_back"/>
+            <column name="hist_active" valueBoolean="1"/>
+            <column name="hist_updatetime" valueDate="${now}"/>
+            <column name="hist_updateuser" value="andtho"/>
+            <column name="hist_mobileterminal_id" value="1017"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc_hist">
+            <column name="hist_id" value="1018"/>
+            <column name="hist_transceiver_type" value="testdata_inmarsatc_transceiver_type"/>
+            <column name="hist_antenna" value="testdata_inmarsatc_antenna"/>
+            <column name="hist_antenna_serial_number" value="testdata_inmarsatc_antenna_serial_number"/>
+            <column name="hist_software_version" value="testdata_inmarsatc_software_version"/>
+            <column name="hist_satellite_number" value="testdata_inmarsatc_satellilte_number"/>
+            <column name="hist_answer_back" value="testdata_inmarsatc_answer_back"/>
+            <column name="hist_active" valueBoolean="1"/>
+            <column name="hist_updatetime" valueDate="${now}"/>
+            <column name="hist_updateuser" value="andtho"/>
+            <column name="hist_mobileterminal_id" value="1018"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc_hist">
+            <column name="hist_id" value="1019"/>
+            <column name="hist_transceiver_type" value="testdata_inmarsatc_transceiver_type"/>
+            <column name="hist_antenna" value="testdata_inmarsatc_antenna"/>
+            <column name="hist_antenna_serial_number" value="testdata_inmarsatc_antenna_serial_number"/>
+            <column name="hist_software_version" value="testdata_inmarsatc_software_version"/>
+            <column name="hist_satellite_number" value="testdata_inmarsatc_satellilte_number"/>
+            <column name="hist_answer_back" value="testdata_inmarsatc_answer_back"/>
+            <column name="hist_active" valueBoolean="1"/>
+            <column name="hist_updatetime" valueDate="${now}"/>
+            <column name="hist_updateuser" value="andtho"/>
+            <column name="hist_mobileterminal_id" value="1019"/>
+        </insert>
+        <insert tableName="mobileterminal_inmarsatc_hist">
+            <column name="hist_id" value="1020"/>
+            <column name="hist_transceiver_type" value="testdata_inmarsatc_transceiver_type"/>
+            <column name="hist_antenna" value="testdata_inmarsatc_antenna"/>
+            <column name="hist_antenna_serial_number" value="testdata_inmarsatc_antenna_serial_number"/>
+            <column name="hist_software_version" value="testdata_inmarsatc_software_version"/>
+            <column name="hist_satellite_number" value="testdata_inmarsatc_satellilte_number"/>
+            <column name="hist_answer_back" value="testdata_inmarsatc_answer_back"/>
+            <column name="hist_active" valueBoolean="1"/>
+            <column name="hist_updatetime" valueDate="${now}"/>
+            <column name="hist_updateuser" value="andtho"/>
+            <column name="hist_mobileterminal_id" value="1020"/>
+        </insert>
+       
+        
+        <insert tableName="mobileterminalconnect">
+            <column name="mobtermconn_id" value="1001"/>
+            <column name="mobtermconn_mobileterminal_id" value="1001"/>
+            <column name="mobtermconn_value" value="ae9a03a4-62c6-462e-a5ab-27c22439b7e6"/>
+            <column name="mobtermconn_linked" valueBoolean="1"/>
+            <column name="mobtermconn_active" valueBoolean="1"/>
+            <column name="mobtermconn_startdate" valueDate="${now}"/>
+            <column name="mobtermconn_enddate" value="NULL"/>
+            <column name="mobtermconn_updattime" valueDate="${now}"/>
+            <column name="mobtermconn_upuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminalconnect">
+            <column name="mobtermconn_id" value="1002"/>
+            <column name="mobtermconn_mobileterminal_id" value="1002"/>
+            <column name="mobtermconn_value" value="01c8eefe-daee-4cc7-b662-85a040879c0f"/>
+            <column name="mobtermconn_linked" valueBoolean="1"/>
+            <column name="mobtermconn_active" valueBoolean="1"/>
+            <column name="mobtermconn_startdate" valueDate="${now}"/>
+            <column name="mobtermconn_enddate" value="NULL"/>
+            <column name="mobtermconn_updattime" valueDate="${now}"/>
+            <column name="mobtermconn_upuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminalconnect">
+            <column name="mobtermconn_id" value="1003"/>
+            <column name="mobtermconn_mobileterminal_id" value="1003"/>
+            <column name="mobtermconn_value" value="6b1ca58e-5fcd-4f38-8d31-f7f70bfe13b0"/>
+            <column name="mobtermconn_linked" valueBoolean="1"/>
+            <column name="mobtermconn_active" valueBoolean="1"/>
+            <column name="mobtermconn_startdate" valueDate="${now}"/>
+            <column name="mobtermconn_enddate" value="NULL"/>
+            <column name="mobtermconn_updattime" valueDate="${now}"/>
+            <column name="mobtermconn_upuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminalconnect">
+            <column name="mobtermconn_id" value="1004"/>
+            <column name="mobtermconn_mobileterminal_id" value="1004"/>
+            <column name="mobtermconn_value" value="33b03980-33d2-4cdf-a497-21147311df18"/>
+            <column name="mobtermconn_linked" valueBoolean="1"/>
+            <column name="mobtermconn_active" valueBoolean="1"/>
+            <column name="mobtermconn_startdate" valueDate="${now}"/>
+            <column name="mobtermconn_enddate" value="NULL"/>
+            <column name="mobtermconn_updattime" valueDate="${now}"/>
+            <column name="mobtermconn_upuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminalconnect">
+            <column name="mobtermconn_id" value="1005"/>
+            <column name="mobtermconn_mobileterminal_id" value="1005"/>
+            <column name="mobtermconn_value" value="e286239a-819c-4234-a4e9-3e69f9dd7b00"/>
+            <column name="mobtermconn_linked" valueBoolean="1"/>
+            <column name="mobtermconn_active" valueBoolean="1"/>
+            <column name="mobtermconn_startdate" valueDate="${now}"/>
+            <column name="mobtermconn_enddate" value="NULL"/>
+            <column name="mobtermconn_updattime" valueDate="${now}"/>
+            <column name="mobtermconn_upuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminalconnect">
+            <column name="mobtermconn_id" value="1006"/>
+            <column name="mobtermconn_mobileterminal_id" value="1006"/>
+            <column name="mobtermconn_value" value="3ccd3a8e-79bb-4450-bee7-7110f4fb8b1a"/>
+            <column name="mobtermconn_linked" valueBoolean="1"/>
+            <column name="mobtermconn_active" valueBoolean="1"/>
+            <column name="mobtermconn_startdate" valueDate="${now}"/>
+            <column name="mobtermconn_enddate" value="NULL"/>
+            <column name="mobtermconn_updattime" valueDate="${now}"/>
+            <column name="mobtermconn_upuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminalconnect">
+            <column name="mobtermconn_id" value="1007"/>
+            <column name="mobtermconn_mobileterminal_id" value="1007"/>
+            <column name="mobtermconn_value" value="66cc1362-3540-4732-90df-127cb88414d9"/>
+            <column name="mobtermconn_linked" valueBoolean="1"/>
+            <column name="mobtermconn_active" valueBoolean="1"/>
+            <column name="mobtermconn_startdate" valueDate="${now}"/>
+            <column name="mobtermconn_enddate" value="NULL"/>
+            <column name="mobtermconn_updattime" valueDate="${now}"/>
+            <column name="mobtermconn_upuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminalconnect">
+            <column name="mobtermconn_id" value="1008"/>
+            <column name="mobtermconn_mobileterminal_id" value="1008"/>
+            <column name="mobtermconn_value" value="fcb634a7-3862-4337-b1e6-6ba791cf4027"/>
+            <column name="mobtermconn_linked" valueBoolean="1"/>
+            <column name="mobtermconn_active" valueBoolean="1"/>
+            <column name="mobtermconn_startdate" valueDate="${now}"/>
+            <column name="mobtermconn_enddate" value="NULL"/>
+            <column name="mobtermconn_updattime" valueDate="${now}"/>
+            <column name="mobtermconn_upuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminalconnect">
+            <column name="mobtermconn_id" value="1009"/>
+            <column name="mobtermconn_mobileterminal_id" value="1009"/>
+            <column name="mobtermconn_value" value="dd47eb99-244c-44f3-9cb5-d9d1046b4ef0"/>
+            <column name="mobtermconn_linked" valueBoolean="1"/>
+            <column name="mobtermconn_active" valueBoolean="1"/>
+            <column name="mobtermconn_startdate" valueDate="${now}"/>
+            <column name="mobtermconn_enddate" value="NULL"/>
+            <column name="mobtermconn_updattime" valueDate="${now}"/>
+            <column name="mobtermconn_upuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminalconnect">
+            <column name="mobtermconn_id" value="1010"/>
+            <column name="mobtermconn_mobileterminal_id" value="1010"/>
+            <column name="mobtermconn_value" value="a6485bdc-6bbd-47ce-a320-931ec3ce95fe"/>
+            <column name="mobtermconn_linked" valueBoolean="1"/>
+            <column name="mobtermconn_active" valueBoolean="1"/>
+            <column name="mobtermconn_startdate" valueDate="${now}"/>
+            <column name="mobtermconn_enddate" value="NULL"/>
+            <column name="mobtermconn_updattime" valueDate="${now}"/>
+            <column name="mobtermconn_upuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminalconnect">
+            <column name="mobtermconn_id" value="1011"/>
+            <column name="mobtermconn_mobileterminal_id" value="1011"/>
+            <column name="mobtermconn_value" value="2076a54c-5448-4064-bdd7-1c619eab7ab3"/>
+            <column name="mobtermconn_linked" valueBoolean="1"/>
+            <column name="mobtermconn_active" valueBoolean="1"/>
+            <column name="mobtermconn_startdate" valueDate="${now}"/>
+            <column name="mobtermconn_enddate" value="NULL"/>
+            <column name="mobtermconn_updattime" valueDate="${now}"/>
+            <column name="mobtermconn_upuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminalconnect">
+            <column name="mobtermconn_id" value="1012"/>
+            <column name="mobtermconn_mobileterminal_id" value="1012"/>
+            <column name="mobtermconn_value" value="86a93dbc-45a2-4ce1-ac42-d756a02f9c9d"/>
+            <column name="mobtermconn_linked" valueBoolean="1"/>
+            <column name="mobtermconn_active" valueBoolean="1"/>
+            <column name="mobtermconn_startdate" valueDate="${now}"/>
+            <column name="mobtermconn_enddate" value="NULL"/>
+            <column name="mobtermconn_updattime" valueDate="${now}"/>
+            <column name="mobtermconn_upuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminalconnect">
+            <column name="mobtermconn_id" value="1013"/>
+            <column name="mobtermconn_mobileterminal_id" value="1013"/>
+            <column name="mobtermconn_value" value="4d4b2621-3967-4b45-a730-d24181d87cdd"/>
+            <column name="mobtermconn_linked" valueBoolean="1"/>
+            <column name="mobtermconn_active" valueBoolean="1"/>
+            <column name="mobtermconn_startdate" valueDate="${now}"/>
+            <column name="mobtermconn_enddate" value="NULL"/>
+            <column name="mobtermconn_updattime" valueDate="${now}"/>
+            <column name="mobtermconn_upuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminalconnect">
+            <column name="mobtermconn_id" value="1014"/>
+            <column name="mobtermconn_mobileterminal_id" value="1014"/>
+            <column name="mobtermconn_value" value="52b616a0-4b7b-4402-92c5-8ad8283497c1"/>
+            <column name="mobtermconn_linked" valueBoolean="1"/>
+            <column name="mobtermconn_active" valueBoolean="1"/>
+            <column name="mobtermconn_startdate" valueDate="${now}"/>
+            <column name="mobtermconn_enddate" value="NULL"/>
+            <column name="mobtermconn_updattime" valueDate="${now}"/>
+            <column name="mobtermconn_upuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminalconnect">
+            <column name="mobtermconn_id" value="1015"/>
+            <column name="mobtermconn_mobileterminal_id" value="1015"/>
+            <column name="mobtermconn_value" value="e9e3256c-e230-40e2-9fa4-eeeae2032015"/>
+            <column name="mobtermconn_linked" valueBoolean="1"/>
+            <column name="mobtermconn_active" valueBoolean="1"/>
+            <column name="mobtermconn_startdate" valueDate="${now}"/>
+            <column name="mobtermconn_enddate" value="NULL"/>
+            <column name="mobtermconn_updattime" valueDate="${now}"/>
+            <column name="mobtermconn_upuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminalconnect">
+            <column name="mobtermconn_id" value="1016"/>
+            <column name="mobtermconn_mobileterminal_id" value="1016"/>
+            <column name="mobtermconn_value" value="4e916afd-bba5-4802-bdda-0428445d6dcb"/>
+            <column name="mobtermconn_linked" valueBoolean="1"/>
+            <column name="mobtermconn_active" valueBoolean="1"/>
+            <column name="mobtermconn_startdate" valueDate="${now}"/>
+            <column name="mobtermconn_enddate" value="NULL"/>
+            <column name="mobtermconn_updattime" valueDate="${now}"/>
+            <column name="mobtermconn_upuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminalconnect">
+            <column name="mobtermconn_id" value="1017"/>
+            <column name="mobtermconn_mobileterminal_id" value="1017"/>
+            <column name="mobtermconn_value" value="f1a31b83-bf3e-49ab-b747-2fb1637e0f69"/>
+            <column name="mobtermconn_linked" valueBoolean="1"/>
+            <column name="mobtermconn_active" valueBoolean="1"/>
+            <column name="mobtermconn_startdate" valueDate="${now}"/>
+            <column name="mobtermconn_enddate" value="NULL"/>
+            <column name="mobtermconn_updattime" valueDate="${now}"/>
+            <column name="mobtermconn_upuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminalconnect">
+            <column name="mobtermconn_id" value="1018"/>
+            <column name="mobtermconn_mobileterminal_id" value="1018"/>
+            <column name="mobtermconn_value" value="9905e4ee-81d9-48b2-aa72-210ab710a8ef"/>
+            <column name="mobtermconn_linked" valueBoolean="1"/>
+            <column name="mobtermconn_active" valueBoolean="1"/>
+            <column name="mobtermconn_startdate" valueDate="${now}"/>
+            <column name="mobtermconn_enddate" value="NULL"/>
+            <column name="mobtermconn_updattime" valueDate="${now}"/>
+            <column name="mobtermconn_upuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminalconnect">
+            <column name="mobtermconn_id" value="1019"/>
+            <column name="mobtermconn_mobileterminal_id" value="1019"/>
+            <column name="mobtermconn_value" value="6cec2b9d-b69f-42b8-848c-ddc3b5ac6653"/>
+            <column name="mobtermconn_linked" valueBoolean="1"/>
+            <column name="mobtermconn_active" valueBoolean="1"/>
+            <column name="mobtermconn_startdate" valueDate="${now}"/>
+            <column name="mobtermconn_enddate" value="NULL"/>
+            <column name="mobtermconn_updattime" valueDate="${now}"/>
+            <column name="mobtermconn_upuser" value="andtho"/>
+        </insert>
+        <insert tableName="mobileterminalconnect">
+            <column name="mobtermconn_id" value="1020"/>
+            <column name="mobtermconn_mobileterminal_id" value="1020"/>
+            <column name="mobtermconn_value" value="8e8da861-7e39-41b0-9a4e-ba8d93fdcca8"/>
+            <column name="mobtermconn_linked" valueBoolean="1"/>
+            <column name="mobtermconn_active" valueBoolean="1"/>
+            <column name="mobtermconn_startdate" valueDate="${now}"/>
+            <column name="mobtermconn_enddate" value="NULL"/>
+            <column name="mobtermconn_updattime" valueDate="${now}"/>
+            <column name="mobtermconn_upuser" value="andtho"/>
+        </insert>        
+        
+        
+        <rollback>
+            <delete tableName="mobileterminalconnect">
+                <where>
+                    mobtermconn_id in (1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1011,1012,1013,1014,1015,1016,1017,1018,1019,1020)
+                </where>
+            </delete>
+            <delete tableName="channel_inmarsatc_history">
+                <where>
+                    channel_hist_id in (1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1011,1012,1013,1014,1015,1016,1017,1018,1019,1020)
+                </where>
+            </delete>
+            <delete tableName="mobileterminal_inmarsatc_hist">
+                <where>
+                    hist_id in (1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1011,1012,1013,1014,1015,1016,1017,1018,1019,1020)
+                </where>
+            </delete>
+            <delete tableName="channel_inmarsatc">
+                <where>
+                    channel_id in (1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1011,1012,1013,1014,1015,1016,1017,1018,1019,1020)
+                </where>
+            </delete>
+            <delete tableName="mobileterminal_inmarsatc">
+				<where>
+					id in (1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1011,1012,1013,1014,1015,1016,1017,1018,1019,1020)
+				</where>
+			</delete>
+            <delete tableName="mobileterminal">
+				<where>
+					mobterm_id in (1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1011,1012,1013,1014,1015,1016,1017,1018,1019,1020)
+				</where>
+			</delete>
+        </rollback>
+	</changeSet>
+
+</databaseChangeLog>

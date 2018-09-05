@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet author="johlyn" id="insert oceanregion INMARSAT-C values">
+        <insert tableName="oceanregion">
+            <column name="id" value="00000000-0000-0000-0000-000000000001"/>
+            <column name="code" value="581"/>
+            <column name="name" value="EAST_ATLANTIC"/>
+            <column name="desc" value="East Atlantic"/>
+            <column name="updattim" valueDate="${now}"/>
+            <column name="upuser" value="johlyn"/>
+        </insert>
+        <insert tableName="oceanregion">
+            <column name="id" value="00000000-0000-0000-0000-000000000002"/>
+            <column name="code" value="582"/>
+            <column name="name" value="PACIFIC"/>
+            <column name="desc" value="Pacific"/>
+            <column name="updattim" valueDate="${now}"/>
+            <column name="upuser" value="johlyn"/>
+        </insert>
+        <insert tableName="oceanregion">
+            <column name="id" value="00000000-0000-0000-0000-000000000003"/>
+            <column name="code" value="583"/>
+            <column name="name" value="INDIAN"/>
+            <column name="desc" value="Indian"/>
+            <column name="updattim" valueDate="${now}"/>
+            <column name="upuser" value="johlyn"/>
+        </insert>
+        <insert tableName="oceanregion">
+            <column name="id" value="00000000-0000-0000-0000-000000000004"/>
+            <column name="code" value="584"/>
+            <column name="name" value="WEST_ATLANTIC"/>
+            <column name="desc" value="West Atlantic"/>
+            <column name="updattim" valueDate="${now}"/>
+            <column name="upuser" value="johlyn"/>
+        </insert>
+	</changeSet>
+
+</databaseChangeLog>

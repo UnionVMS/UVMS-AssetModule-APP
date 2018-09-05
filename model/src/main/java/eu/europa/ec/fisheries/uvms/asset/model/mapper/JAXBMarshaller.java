@@ -24,12 +24,11 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.ErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- **/
 public class JAXBMarshaller {
 
     private static Logger LOG = LoggerFactory.getLogger(JAXBMarshaller.class);
@@ -42,10 +41,9 @@ public class JAXBMarshaller {
      * @param <T>
      * @param data
      * @return
-     * @throws
-     * eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException
+     * @throws AssetException
      */
-    public static <T> String marshallJaxBObjectToString(T data) throws AssetModelMarshallException {
+    public static <T> String marshallJaxBObjectToString(T data) throws AssetException {
         try {
             JAXBContext jaxbContext = contexts.get(data.getClass().getName());
             if (jaxbContext == null) {
@@ -63,8 +61,8 @@ public class JAXBMarshaller {
             String marshalled = sw.toString();
             LOG.debug("StringWriter time: {}", (System.currentTimeMillis() - before));
             return marshalled;
-        } catch (JAXBException e) {
-            throw new AssetModelMarshallException("Error when marshalling " + data.getClass().getName() + " to String");
+        } catch (JAXBException ex) {
+            throw new AssetException(ErrorCode.MARSHALLING_ERROR.getMessage() + data.getClass().getName(), ex, ErrorCode.MARSHALLING_ERROR.getCode());
         }
     }
 
@@ -76,10 +74,9 @@ public class JAXBMarshaller {
      * @param textMessage
      * @param clazz pperException
      * @return
-     * @throws
-     * eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException
+     * @throws AssetException
      */
-    public static <R> R unmarshallTextMessage(TextMessage textMessage, Class clazz) throws AssetModelMarshallException {
+    public static <R> R unmarshallTextMessage(TextMessage textMessage, Class clazz) throws AssetException {
         try {
             JAXBContext jc = contexts.get(clazz.getName());
             if (jc == null) {
@@ -96,9 +93,8 @@ public class JAXBMarshaller {
             R object = (R) unmarshaller.unmarshal(source);
             LOG.debug("Unmarshalling time: {}", (System.currentTimeMillis() - before));
             return object;
-        } catch (JMSException | JAXBException e) {
-            throw new AssetModelMarshallException("Error when unmarshalling response in ResponseMapper: " + e.getMessage());
+        } catch (JMSException | JAXBException ex) {
+            throw new AssetException(ErrorCode.UNMARSHALLING_ERROR.getMessage(), ex,  ErrorCode.UNMARSHALLING_ERROR.getCode());
         }
     }
-
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet author="johlyn" id="oceanregion - inmarsatc config table">
+        <createTable tableName="inmarsatc_oceanregion">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="inmarsatc_oceanregion_pk"/>
+            </column>
+            <column name="code" type="INTEGER"/>
+            <column name="name" type="VARCHAR(200)"/>
+            
+            <column name="updattim" type="TIMESTAMP"/>
+            <column name="upuser" type="VARCHAR(60)"/>
+            
+            <column name="inmarsatc_history_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+            constraintName="inmarsatc_oceanregion_hist_fk"
+            baseTableName="inmarsatc_oceanregion"
+            baseColumnNames="inmarsatc_history_id"
+            referencedTableName="mobileterminalevent"
+            referencedColumnNames="id"
+        />
+        
+        <rollback>
+            <dropTable tableName="inmarsatc_oceanregion" cascadeConstraints="true"/>
+        </rollback>
+	</changeSet>
+    
+</databaseChangeLog>
