@@ -15,24 +15,11 @@ import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
-
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.Map;
 
 public class HistoryMapper {
     
-	public static MobileTerminalEvent UPDATED_createMobileterminalevent(MobileTerminal entity, EventCodeEnum eventcode, String comment, String username) {
-		MobileTerminalEvent event = new MobileTerminalEvent();
-		event.setMobileterminal(entity);
-		event.setComment(comment);
-        event.setUpdatetime(OffsetDateTime.now(ZoneOffset.UTC));
-		event.setUpdateuser(username);
-		event.setEventCodeType(eventcode);
-		return event;
-	}
-
 	public static MobileTerminalHistory getHistory(MobileTerminal terminal) {
 		if (terminal == null || terminal.getMobileTerminalEvents() == null) {
             throw new IllegalArgumentException("No terminal history available");
@@ -41,7 +28,8 @@ public class HistoryMapper {
 		MobileTerminalHistory terminalHistory = new MobileTerminalHistory();
 		for (MobileTerminalEvent event : terminal.getMobileTerminalEvents()) {
 			MobileTerminalEvents eventModel = new MobileTerminalEvents();
-			eventModel.setChangeDate(event.getUpdatetime());
+			Date d = Date.from(event.getUpdatetime().toInstant());
+			eventModel.setChangeDate(d);
 			eventModel.setComments(event.getComment());
 			eventModel.setEventCode(EventCode.valueOf(event.getEventCodeType().toString()));
 			eventModel.setConnectId((event.getAsset() == null) ? null : event.getAsset().getId().toString());   //if there is no asset then null otherwise assets id
@@ -58,19 +46,6 @@ public class HistoryMapper {
 			terminalHistory.getEvents().add(eventModel);
 		}
 
-//		for (Channel channel : terminal.getChannels()) {
-//			ComChannelHistory channelModel = new ComChannelHistory();
-//			for (ChannelHistory history : channel.getHistories()) {
-//				ComChannelHistoryAttributes historyModel = new ComChannelHistoryAttributes();
-//				historyModel.setName(history.getName());
-//				List<ComChannelAttribute> attributeList = AttributeMapper.mapAttributeStringToComChannelAttribute(history.getAttributes());
-//				historyModel.getAttributes().addAll(attributeList);
-//				historyModel.setChangeDate(history.getUpdateTime());
-//				historyModel.setEventCode(EventCode.valueOf(history.getEventCodeType().toString()));
-//				channelModel.getChannel().add(historyModel);
-//			}
-//			terminalHistory.getComChannels().add(channelModel);
-//		}
         return terminalHistory;
 	}
 }

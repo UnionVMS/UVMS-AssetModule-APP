@@ -38,7 +38,7 @@ public class PluginTimerTask implements Runnable{
                 LOG.debug("upserted plugins");
             }
         } catch (Exception e) {
-            LOG.info("Couldn't update plugins... ", e.getMessage());   //print stack trace as well?
+            LOG.error("Couldn't update plugins... ", e);
         }
 
     }

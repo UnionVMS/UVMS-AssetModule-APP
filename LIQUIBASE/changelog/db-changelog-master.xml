@@ -8,17 +8,17 @@
     	<tagDatabase tag="asset-version-1.0"/>
 	</changeSet>
 
-    <include file="changelog\properties.xml"/>
-    <include file="changelog\v1.0\db-changelog-createTables.xml" />
-	<include file="changelog\v1.0\insertCustomCodes.xml" />
-	<include file="changelog\v1.0\insertParameter.xml" />
+    <include file="properties.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0\db-changelog-createTables.xml" relativeToChangelogFile="true"/>
+	<include file="v1.0\insertCustomCodes.xml" relativeToChangelogFile="true"/>
+	<include file="v1.0\insertParameter.xml" relativeToChangelogFile="true"/>
 
 
-	<include file="changelog\properties.xml"/>
+	<include file="properties.xml" relativeToChangelogFile="true"/>
 	<!--include file="changelog\v0.4\hibernatesequence.xml"/-->
 	<!--include file="changelog\v0.4\db-changelog-createTables-postgres_0.4.xml"/-->
-	<include file="changelog\v0.4\db-changelog-insertStaticValues_0.4.xml"/>
-	<include file="changelog\v0.4\db-changelog-insertTestdata-postgres_0.4.xml"/>
+	<include file="v0.4\db-changelog-insertStaticValues_0.4.xml" relativeToChangelogFile="true"/>
+	<include file="v0.4\db-changelog-insertTestdata-postgres_0.4.xml" relativeToChangelogFile="true"/>
 
 
 </databaseChangeLog>

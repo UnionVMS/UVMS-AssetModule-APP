@@ -11,26 +11,24 @@ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more d
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.time.LocalDate;
-import java.time.OffsetDateTime;
+import javax.xml.bind.DatatypeConverter;
+import java.util.Calendar;
+import java.util.Date;
 
 public class XsdDateTimeConverter {
-
-
-    public static LocalDate unmarshalDate(String v) {
-        return LocalDate.parse(v);
+    public static Date unmarshal(String dateTime) {
+        return DatatypeConverter.parseDate(dateTime).getTime();
     }
 
-    public static OffsetDateTime unmarshalDateTime(String v) {
-        return OffsetDateTime.parse(v);
+    public static String marshalDate(Date date) {
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return DatatypeConverter.printDate(calendar);
     }
 
-    public static String marshalDate(LocalDate v) {
-        return v.toString();
+    public static String marshalDateTime(Date dateTime) {
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTime(dateTime);
+        return DatatypeConverter.printDateTime(calendar);
     }
-
-    public static String marshalDateTime(OffsetDateTime v) {
-        return v.toString();
-    }
-
 }

@@ -32,6 +32,7 @@
         <jta.data-source>java:jboss/datasources/uvms_asset</jta.data-source>
         <jta.platform>org.hibernate.service.jta.platform.internal.JBossStandAloneJtaPlatform</jta.platform>
         <docker.dev.start.phase>test-compile</docker.dev.start.phase>
+        <docker.liquibase.phase>test-compile</docker.liquibase.phase>
         <docker.dev.prestop.phase>validate</docker.dev.prestop.phase>
 
     </properties>
