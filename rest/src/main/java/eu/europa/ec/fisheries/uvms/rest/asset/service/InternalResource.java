@@ -35,6 +35,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
@@ -59,6 +60,13 @@ public class InternalResource {
     private CustomCodesService customCodesService;
 
 
+    //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
+    private ObjectMapper objectMapper(){
+        ObjectMapperContextResolver omcr = new ObjectMapperContextResolver();
+        return omcr.getContext(Asset.class);
+    }
+
+
     @GET
     @Path("asset/{idType : (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)}/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -78,11 +86,8 @@ public class InternalResource {
                                  AssetQuery query) throws Exception {
         List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
         AssetListResponse assetList = assetService.getAssetList(searchFields, page, size, dynamic);
-        //This is needed to force Hibernate to fetch everything related to the assets, unknown why this is needed here since eager fetch works everywhere else.....
-        for (Asset a: assetList.getAssetList()) {
-            a.getMobileTerminalEvent().size();
-        }
-        return Response.ok(assetList).build();
+        String s = objectMapper().writeValueAsString(assetList);
+        return Response.ok(s).build();
     }
     
     @GET
