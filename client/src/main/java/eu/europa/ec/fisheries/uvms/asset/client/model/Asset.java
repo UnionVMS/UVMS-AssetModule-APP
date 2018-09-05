@@ -55,7 +55,7 @@ public class Asset {
     private String licenceType;
     private String mainFishingGearCode;
     private String subFishingGearCode;
-    private Integer gearFishingType;
+    private String gearFishingType;
     private String ownerName;
     private Boolean hasVms;
     private String ownerAddress;
@@ -311,10 +311,10 @@ public class Asset {
     public void setSubFishingGearCode(String subFishingGearCode) {
         this.subFishingGearCode = subFishingGearCode;
     }
-    public Integer getGearFishingType() {
+    public String getGearFishingType() {
         return gearFishingType;
     }
-    public void setGearFishingType(Integer gearFishingType) {
+    public void setGearFishingType(String gearFishingType) {
         this.gearFishingType = gearFishingType;
     }
     public String getOwnerName() {
