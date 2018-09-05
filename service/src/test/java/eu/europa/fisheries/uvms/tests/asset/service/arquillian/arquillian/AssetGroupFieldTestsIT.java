@@ -173,7 +173,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
         ag.setAssetGroup(assetGroupEntity);
         ag.setUpdatedBy(user);
         ag.setUpdateTime(dt);
-        ag.setField(key);
+        ag.setKey(key);
         ag.setValue(keyFieldValue);
 
 

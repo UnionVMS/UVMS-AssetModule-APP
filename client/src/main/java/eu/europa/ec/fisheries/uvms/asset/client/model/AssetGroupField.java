@@ -16,7 +16,7 @@ import java.util.UUID;
 public class AssetGroupField {
 
     private UUID id;
-    private String field;
+    private String key;
     private OffsetDateTime updateTime;
     private String updatedBy;
     private String value;
@@ -28,11 +28,11 @@ public class AssetGroupField {
     public void setId(UUID id) {
         this.id = id;
     }
-    public String getField() {
-        return field;
+    public String getKey() {
+        return key;
     }
-    public void setField(String field) {
-        this.field = field;
+    public void setField(String key) {
+        this.key = key;
     }
     public OffsetDateTime getUpdateTime() {
         return updateTime;

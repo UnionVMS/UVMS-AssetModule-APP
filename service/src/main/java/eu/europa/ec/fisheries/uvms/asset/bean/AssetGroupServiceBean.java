@@ -118,7 +118,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         for (AssetGroup group : filterGroupList) {
             List<AssetGroupField> fields = assetGroupFieldDao.retrieveFieldsForGroup(group);
             for (AssetGroupField field : fields) {
-                if ("GUID".equals(field.getField()) && assetId.toString().equals(field.getValue())) {
+                if ("GUID".equals(field.getKey()) && assetId.toString().equals(field.getValue())) {
                     searchResultList.add(group);
                 }
             }

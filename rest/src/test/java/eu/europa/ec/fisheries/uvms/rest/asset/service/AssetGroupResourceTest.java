@@ -165,7 +165,7 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
                 .post(Entity.json(assetGroup), AssetGroup.class);
         
         AssetGroupField field = new AssetGroupField();
-        field.setField("GUID");
+        field.setKey("GUID");
         field.setValue(createdAsset.getId().toString());
 
         getWebTarget()

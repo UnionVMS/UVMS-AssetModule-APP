@@ -113,7 +113,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
 
         AssetGroupField assetGroupField = new AssetGroupField();
         assetGroupField.setAssetGroup(anAssetGroup);
-        assetGroupField.setField("GUID");
+        assetGroupField.setKey("GUID");
         assetGroupField.setValue(assetGuid.toString());
         assetGroupField.setUpdateTime(OffsetDateTime.now(Clock.systemUTC()));
 
@@ -205,7 +205,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
         AssetGroup anAssetGroup = createAndStoreAssetGroupEntity("TEST");
         AssetGroupField assetGroupField = new AssetGroupField();
         assetGroupField.setAssetGroup(anAssetGroup);
-        assetGroupField.setField("GUID");
+        assetGroupField.setKey("GUID");
         assetGroupField.setValue(UUID.randomUUID().toString());
         assetGroupField.setUpdateTime(OffsetDateTime.now(Clock.systemUTC()));
         return assetGroupService.createAssetGroupField(anAssetGroup.getId(), assetGroupField, "TEST");

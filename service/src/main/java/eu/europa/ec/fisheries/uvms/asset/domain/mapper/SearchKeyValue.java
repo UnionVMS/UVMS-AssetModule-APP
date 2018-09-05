@@ -36,12 +36,22 @@ public class SearchKeyValue {
 	public void setSearchField(SearchFields searchField) {
 		this.searchField = searchField;
 	}
-	
+
 	public List<String> getSearchValues() {
 		if(searchValues == null) searchValues = new ArrayList<>();
 		return searchValues;
 	}
-	
+
+	public List<String> getSearchValuesAsLowerCase() {
+		if(searchValues == null) searchValues = new ArrayList<>();
+		List<String> returnList = new ArrayList<>();
+		for (String s : searchValues) {
+			returnList.add(s.toLowerCase());
+		}
+		//searchValues.replaceAll(String::toLowerCase);   //this stopped working for some reason
+		return returnList;
+	}
+
 	public void setSearchValues(List<String> searchValues) {
 		this.searchValues = searchValues;
 	}

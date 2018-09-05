@@ -35,7 +35,7 @@ public abstract class AssetHelper {
         assetEntity.setGrossTonnage(10d);
         assetEntity.setPowerOfMainEngine(10d);
         
-        assetEntity.setGearFishingType(1);
+        assetEntity.setGearFishingType("Demersal");
 
         assetEntity.setOwnerName("Foo Bar");
         assetEntity.setOwnerAddress("Hacker st. 1337");

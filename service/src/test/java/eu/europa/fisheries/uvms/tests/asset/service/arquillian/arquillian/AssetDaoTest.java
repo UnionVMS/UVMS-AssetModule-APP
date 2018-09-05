@@ -455,7 +455,7 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey.setSearchField(SearchFields.CFR);
         searchKey.setSearchValues(Collections.singletonList(asset.getCfr()));
         searchKeyValues.add(searchKey);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(0, 10, searchKeyValues, true);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
         
         assertThat(assets.size(), is(1));
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -479,7 +479,7 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey.setSearchField(SearchFields.CFR);
         searchKey.setSearchValues(Arrays.asList(asset.getCfr(), asset2.getCfr()));
         searchKeyValues.add(searchKey);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, false);
         
         assertEquals(2, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -664,7 +664,7 @@ public class AssetDaoTest extends TransactionalTests {
         List<SearchKeyValue> searchKeyValues = new ArrayList<>();
         SearchKeyValue searchKey = new SearchKeyValue();
         searchKey.setSearchField(SearchFields.GEAR_TYPE);
-        searchKey.setSearchValues(Collections.singletonList((String.valueOf(asset.getGearFishingType()))));
+        searchKey.setSearchValues(Arrays.asList(asset.getGearFishingType()));
         searchKeyValues.add(searchKey);
         SearchKeyValue searchKey2 = new SearchKeyValue();
         searchKey2.setSearchField(SearchFields.CFR);
@@ -689,12 +689,8 @@ public class AssetDaoTest extends TransactionalTests {
         List<SearchKeyValue> searchKeyValues = new ArrayList<>();
         SearchKeyValue searchKey = new SearchKeyValue();
         searchKey.setSearchField(SearchFields.NAME);
-        searchKey.setSearchValues(Arrays.asList("*LikeSearch*", "*Name*"));
+        searchKey.setSearchValues(Arrays.asList("*LikeSearch*"));
         searchKeyValues.add(searchKey);
-        SearchKeyValue searchKey2 = new SearchKeyValue();
-        searchKey2.setSearchField(SearchFields.NAME);
-        searchKey2.setSearchValues(Collections.singletonList("*Name*"));
-        searchKeyValues.add(searchKey2);
         List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
         
         assertEquals(1, assets.size());

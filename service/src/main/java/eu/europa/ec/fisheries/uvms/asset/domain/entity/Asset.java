@@ -227,7 +227,7 @@ public class Asset implements Serializable {
     private String subFishingGearCode;
 
     @Column(name = "gearfishingtype")
-    private Integer gearFishingType;
+    private String gearFishingType;
 
     @Size(max = 100)
     @Column(name = "ownername")
@@ -610,11 +610,11 @@ public class Asset implements Serializable {
         this.subFishingGearCode = subFishingGearCode;
     }
 
-    public Integer getGearFishingType() {
+    public String getGearFishingType() {
         return gearFishingType;
     }
 
-    public void setGearFishingType(Integer gearFishingType) {
+    public void setGearFishingType(String gearFishingType) {
         this.gearFishingType = gearFishingType;
     }
 
