@@ -73,10 +73,6 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         assertThat(listResponse.getAssetList().size(), is(0));
     }
 
-
-
-
-
     @Test
     @RunAsClient
     public void testCaseSensitiveiness() {
@@ -239,9 +235,6 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
 
     }
 
-
-
-
     @Test
     @RunAsClient
     public void getAssetListEmptyCriteriasShouldReturnAllAssets() {
@@ -256,6 +249,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         AssetListResponse listResponse = getWebTarget()
                 .path("asset")
                 .path("list")
+                .queryParam("size", "1000")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(query), AssetListResponse.class);
         
@@ -275,9 +269,6 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
 
-        System.out.println( createdAsset.getId().toString() + "    created should be found in resultset");
-
-
         // aempty query
         AssetQuery query = new AssetQuery();
 
@@ -286,6 +277,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .path("asset")
                 .path("list")
                 .queryParam("dynamic","false")
+                .queryParam("size", "1000")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(query), AssetListResponse.class);
 
@@ -295,9 +287,6 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         assertTrue(listResponse.getAssetList().stream()
                 .anyMatch(fetchedAsset -> fetchedAsset.getId().equals(createdAsset.getId())));
     }
-
-
-
 
     @Test
     @RunAsClient
@@ -387,5 +376,31 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         assertThat(listResponse2.getAssetList().size(), is(1));
         
         assertThat(listResponse.getAssetList().get(0).getId(), is(not(listResponse2.getAssetList().get(0).getId())));
+    }
+    
+    @Test
+    @RunAsClient
+    public void getAssetListWildcardSearchCaseInsensitive() {
+        Asset asset = AssetHelper.createBasicAsset();
+        String randomNumbers = AssetHelper.getRandomIntegers(10);
+        asset.setName("ShipName" + randomNumbers);
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+        
+        AssetQuery query = new AssetQuery();
+        query.setName(Arrays.asList("shipn*me" + randomNumbers));
+        
+        AssetListResponse listResponse = getWebTarget()
+                .path("asset")
+                .path("list")
+                .queryParam("size","1000")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query), AssetListResponse.class);
+        
+        List<Asset> assetList = listResponse.getAssetList();
+        assertThat(assetList.size(), is(1));
+        assertThat(assetList.get(0).getId(), is(createdAsset.getId()));
     }
 }
