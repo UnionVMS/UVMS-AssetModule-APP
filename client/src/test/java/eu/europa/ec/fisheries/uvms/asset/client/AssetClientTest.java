@@ -58,7 +58,7 @@ public class AssetClientTest extends AbstractClientTest {
         Asset upsertAsset = assetClient.upsertAsset(assetBo);
         AssetQuery assetQuery = new AssetQuery();
         assetQuery.setFlagState(Arrays.asList(asset.getFlagStateCode()));
-        List<Asset> assets = assetClient.getAssetList(assetQuery);
+        List<Asset> assets = assetClient.getAssetList(assetQuery, 1, 1000, true);
         assertTrue(assets.stream()
                 .filter(a -> a.getId().equals(upsertAsset.getId()))
                 .count() == 1);
