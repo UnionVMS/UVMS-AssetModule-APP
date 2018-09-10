@@ -194,6 +194,7 @@ public class AssetGroupResource {
         }
     }
 
+    //TODO: This lacks a proper test
     @POST
     @ApiOperation(value = "CreateAssetGroupField", notes = "CreateAssetGroupField", response = AssetGroupField.class)
     @ApiResponses(value = {
@@ -207,7 +208,8 @@ public class AssetGroupResource {
         try {
             String user = servletRequest.getRemoteUser();
             AssetGroupField createdAssetGroupField = assetGroupService.createAssetGroupField(parentAssetgroupId, assetGroupField, user);
-            return Response.ok(createdAssetGroupField).build();
+            String response = objectMapper().writeValueAsString(createdAssetGroupField);
+            return Response.ok(response).build();
         } catch (Exception e) {
             LOG.error("Error when creating AssetGroupField. ", e);
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -215,6 +217,7 @@ public class AssetGroupResource {
     }
 
 
+    //TODO: This lacks a propper test!!!!!
     @PUT
     @ApiOperation(value = "UpdateAssetGroupField", notes = "UpdateAssetGroupField", response = AssetGroupField.class)
     @ApiResponses(value = {
@@ -229,13 +232,15 @@ public class AssetGroupResource {
         try {
             String user = servletRequest.getRemoteUser();
             AssetGroupField updatedAssetGroupField = assetGroupService.updateAssetGroupField(assetGroupField, user);
-            return Response.ok(updatedAssetGroupField).build();
+            String response = objectMapper().writeValueAsString(updatedAssetGroupField);
+            return Response.ok(response).build();
         } catch (Exception e) {
             LOG.error("Error when creating AssetGroupField. ", e);
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
 
+    //TODO: this lacks a propper test
     @GET
     @ApiOperation(value = "GetAssetGroupField by id", notes = "GetAssetGroupField by id", response = AssetGroupField.class)
     @ApiResponses(value = {
@@ -249,13 +254,15 @@ public class AssetGroupResource {
 
         try {
             AssetGroupField fetchedAssetGroupField = assetGroupService.getAssetGroupField(id);
-            return Response.ok(fetchedAssetGroupField).build();
+            String response = objectMapper().writeValueAsString(fetchedAssetGroupField);
+            return Response.ok(response).build();
         } catch (Exception e) {
             LOG.error("Error when creating AssetGroupField. ", e);
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
 
+    //TODO: This lacks a propper test
     @DELETE
     @ApiOperation(value = "DeleteAssetGroupField by id", notes = "DeleteAssetGroupField by id", response = AssetGroupField.class)
     @ApiResponses(value = {
@@ -270,7 +277,8 @@ public class AssetGroupResource {
         try {
             String user = servletRequest.getRemoteUser();
             AssetGroupField fetchedAssetGroupField = assetGroupService.deleteAssetGroupField(assetGroupFieldId, user);
-            return Response.ok(fetchedAssetGroupField).build();
+            String response = objectMapper().writeValueAsString(fetchedAssetGroupField);
+            return Response.ok(response).build();
         } catch (Exception e) {
             LOG.error("Error when delete AssetGroupField. ", e);
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -278,6 +286,7 @@ public class AssetGroupResource {
 
     }
 
+    //TODO: This lacks a proper test
     @GET
     @ApiOperation(value = "Retrieve Assetgroupfields  by AssetGroupId",  response = AssetGroupField.class, responseContainer = "List")
     @ApiResponses(value = {
@@ -291,7 +300,8 @@ public class AssetGroupResource {
 
         try {
             List<AssetGroupField> fetchedAssetGroupFields = assetGroupService.retrieveFieldsForGroup(assetGroupId);
-            return Response.ok(fetchedAssetGroupFields).build();
+            String response = objectMapper().writeValueAsString(fetchedAssetGroupFields);
+            return Response.ok(response).build();
         } catch (Exception e) {
             LOG.error("Error when fetching AssetGroupFields. ", e);
             return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();

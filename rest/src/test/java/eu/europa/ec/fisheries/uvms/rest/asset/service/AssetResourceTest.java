@@ -33,6 +33,7 @@ import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
 @RunWith(Arquillian.class)
 @RunAsClient
 public class AssetResourceTest extends AbstractAssetRestTest {
+
        
     @Test
     public void createAssetCheckResponseCodeTest() throws Exception {

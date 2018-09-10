@@ -5,13 +5,14 @@ import java.time.ZoneOffset;
 import java.util.*;
 
 import eu.europa.ec.fisheries.uvms.asset.client.model.*;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetDTO;
 
 public abstract class AssetHelper {
 
     private static Random rnd = new Random();
 
-    public static Asset createBasicAsset() {
-        Asset assetEntity = new Asset();
+    public static AssetDTO createBasicAsset() {
+        AssetDTO assetEntity = new AssetDTO();
 
         assetEntity.setName("Test asset");
         assetEntity.setActive(true);
@@ -44,9 +45,9 @@ public abstract class AssetHelper {
 
 
 
-    public static Asset createBiggerAsset() {
+    public static AssetDTO createBiggerAsset() {
 
-        Asset assetEntity = new Asset();
+        AssetDTO assetEntity = new AssetDTO();
         OffsetDateTime  now =  OffsetDateTime.now(ZoneOffset.UTC);
 
 

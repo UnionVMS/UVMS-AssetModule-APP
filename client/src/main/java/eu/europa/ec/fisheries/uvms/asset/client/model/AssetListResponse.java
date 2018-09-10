@@ -15,15 +15,15 @@ import java.util.List;
 
 public class AssetListResponse {
 
-    List<Asset> assetList = new ArrayList<>();
+    List<AssetDTO> assetList = new ArrayList<>();
     Integer totalNumberOfPages = 0;
     Integer currentPage = 0;
 
-    public List<Asset> getAssetList() {
+    public List<AssetDTO> getAssetList() {
         return assetList;
     }
 
-    public void setAssetList(List<Asset> assetList) {
+    public void setAssetList(List<AssetDTO> assetList) {
         this.assetList = assetList;
     }
 
