@@ -41,6 +41,8 @@ public abstract class AbstractClientTest {
         testWar.addPackages(true, "org.jdom2");
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset.client");
 
+        testWar.addAsWebInfResource("jboss-deployment-structure.xml");
+
         return testWar;
     }
 }
