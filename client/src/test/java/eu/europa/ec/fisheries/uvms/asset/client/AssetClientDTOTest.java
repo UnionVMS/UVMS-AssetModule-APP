@@ -46,6 +46,7 @@ public class AssetClientDTOTest extends AbstractClientTest {
     private ParameterService parameterService;
 
     @Test
+    @Ignore
     public void test() throws Exception{
         Client client = ClientBuilder.newClient();
         client.register(new ContextResolver<ObjectMapper>() {
