@@ -23,7 +23,16 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.ConfigList;
+import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemType;
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.SearchKey;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.ConfigServiceBeanMT;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.ConfigMapper;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTMobileTerminalConfig;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTMobileTerminalDeviceConfig;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTResponseDto;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTErrorHandler;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.asset.bean.ConfigServiceBean;
@@ -79,6 +88,46 @@ public class AssetConfigResource {
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
+        }
+    }
+    //Stuff copied from MT
+
+    @Inject
+    ConfigServiceBeanMT configServiceMT;
+
+    @GET
+    @Path("/MT/transponders")
+    public MTResponseDto<List<MTMobileTerminalDeviceConfig>> getConfigTransponders() {
+        try {
+            LOG.info("Get config transponders invoked in rest layer.");
+            List<TerminalSystemType> list = configServiceMT.getTerminalSystems();
+            return new MTResponseDto<>(MTMobileTerminalConfig.mapConfigTransponders(list), MTResponseCode.OK);
+        } catch (Exception ex) {
+            LOG.error("[ Error when getting configTransponders ] {}", ex.getStackTrace());
+            return MTErrorHandler.getFault(ex);
+        }
+    }
+
+    @GET
+    @Path("/MT/searchfields")
+    public MTResponseDto<SearchKey[]> getMTConfigSearchFields() {
+        LOG.info("Get config search fields invoked in rest layer.");
+        try {
+            return new MTResponseDto<>(SearchKey.values(), MTResponseCode.OK);
+        } catch (Exception ex) {
+            LOG.error("[ Error when getting config search fields ] {}", ex.getStackTrace());
+            return MTErrorHandler.getFault(ex);
+        }
+    }
+
+    @GET
+    @Path("/MT/")
+    public MTResponseDto<Map<String, List<String>>>getMTConfiguration() {
+        try {
+            List<ConfigList> config = configServiceMT.getConfig();
+            return new MTResponseDto<>(MTMobileTerminalConfig.mapConfigList(config), MTResponseCode.OK);
+        } catch (Exception ex) {
+            return MTErrorHandler.getFault(ex);
         }
     }
 }
