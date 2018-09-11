@@ -105,7 +105,7 @@ public class AssetResource {
             return Response.ok(returnString).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset list.", e);
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
         }
     }
 
@@ -134,7 +134,7 @@ public class AssetResource {
             return Response.ok(assetListCount).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset list: {}", query, e);
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
         }
     }
 
@@ -165,7 +165,7 @@ public class AssetResource {
                     .header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset by ID. {}",id,e);
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
         }
     }
 
@@ -203,7 +203,7 @@ public class AssetResource {
                     .header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when creating asset. {}", asset, e);
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
         }
     }
 
@@ -233,7 +233,7 @@ public class AssetResource {
                     .header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when updating asset: {}",asset, e);
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
         }
     }
 
@@ -255,7 +255,7 @@ public class AssetResource {
             return Response.ok(returnString).build();
         } catch (Exception e) {
             LOG.error("Error when archiving asset. {}",asset, e);
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
         }
     }
     
@@ -283,7 +283,7 @@ public class AssetResource {
             return Response.ok(returnString).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset history list by asset ID. {}]", id, e);
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
         }
     }
 
@@ -316,7 +316,7 @@ public class AssetResource {
             return Response.ok(returnString).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset. Type: {}, Value: {}, Date: {}", type, id, date, e);
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
         }
     }
 
@@ -344,7 +344,7 @@ public class AssetResource {
             return Response.ok(returnString).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset by asset history guid. {}] ", guid, e);
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(/*"Here I am: " +  */e /*+ e.getStackTrace()*/).build();
         }
     }
     
