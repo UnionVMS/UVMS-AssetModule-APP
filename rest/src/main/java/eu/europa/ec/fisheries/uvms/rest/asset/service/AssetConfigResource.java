@@ -42,6 +42,8 @@ import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
 
 @Path("/config")
 @Stateless
+@Consumes(value = {MediaType.APPLICATION_JSON})
+@Produces(value = {MediaType.APPLICATION_JSON})
 @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
 public class AssetConfigResource {
 
@@ -52,8 +54,6 @@ public class AssetConfigResource {
 
     @GET
     @Path("/searchfields")
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getConfigSearchFields() {
         try {
             return Response.ok(ConfigSearchField.values()).build();
@@ -64,8 +64,6 @@ public class AssetConfigResource {
     }
 
     @GET
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Produces(value = {MediaType.APPLICATION_JSON})
     @Path(value = "/")
     public Response getConfiguration() {
         try {
@@ -78,8 +76,6 @@ public class AssetConfigResource {
     }
     
     @GET
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Produces(value = {MediaType.APPLICATION_JSON})
     @Path(value = "/parameters")
     public Response getParameters() {
         try {
