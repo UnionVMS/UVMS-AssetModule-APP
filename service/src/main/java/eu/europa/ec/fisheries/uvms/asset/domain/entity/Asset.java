@@ -285,10 +285,10 @@ public class Asset implements Serializable {
     private List<MobileTerminalEvent> mobileTerminalEvent;
 
     @PrePersist
-    @PreUpdate
     private void generateNewHistoryId() {
         this.historyId = UUID.randomUUID();
     }
+
 
     public UUID getId() {
         return id;

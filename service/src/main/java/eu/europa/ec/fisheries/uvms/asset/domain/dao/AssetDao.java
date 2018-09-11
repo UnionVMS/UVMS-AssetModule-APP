@@ -113,6 +113,7 @@ public class AssetDao {
     }
 
     public Asset updateAsset(Asset asset) {
+        asset.setHistoryId(UUID.randomUUID());  //this is here bc @preupdate runs even when it should not
         Asset updated = em.merge(asset);
         em.flush();
         return updated;

@@ -50,7 +50,7 @@ public class AssetConfigResource {
             return Response.ok(ConfigSearchField.values()).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
         }
     }
 
@@ -64,7 +64,7 @@ public class AssetConfigResource {
         	return Response.ok(ConfigMapper.mapConfiguration(configuration)).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
         }
     }
     
@@ -78,7 +78,7 @@ public class AssetConfigResource {
         	return Response.ok(parameters).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
         }
     }
 }
