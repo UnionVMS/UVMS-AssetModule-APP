@@ -7,6 +7,7 @@ import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.constants.MessageConstants;
+import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ErrorEvent;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.EventMessage;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.MobileTerminalModuleRequestMapper;
 import org.slf4j.Logger;
@@ -35,7 +36,7 @@ public class ListReceivedEventBean {
     private ConnectionFactory connectionFactory;
 
     @Inject
-    // @ErrorEvent
+    @ErrorEvent
     Event<EventMessage> errorEvent;
 
     public void list(EventMessage message) {
