@@ -42,6 +42,8 @@ public abstract class AbstractClientTest {
         
         testWar.addAsWebInfResource("jboss-deployment-structure.xml");
 
+        testWar.addAsWebInfResource("jboss-deployment-structure.xml");
+
         return testWar;
     }
 }

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet author="johlyn" id="insert terminaleventtype static default values">
+        <insert tableName="terminaleventtype">
+            <column name="termeventtype_id" value="1"/>
+            <column name="termeventtype_name" value="CREATE"/>
+            <column name="termeventtype_desc" value="Mobile terminal created"/>
+            <column name="termeventtype_updattim" valueDate="${now}"/>
+            <column name="termeventtype_upuser" value="johlyn"/>
+        </insert>
+        <insert tableName="terminaleventtype">
+            <column name="termeventtype_id" value="2"/>
+            <column name="termeventtype_name" value="MODIFY"/>
+            <column name="termeventtype_desc" value="Mobile terminal modified"/>
+            <column name="termeventtype_updattim" valueDate="${now}"/>
+            <column name="termeventtype_upuser" value="johlyn"/>
+        </insert>
+        <insert tableName="terminaleventtype">
+            <column name="termeventtype_id" value="3"/>
+            <column name="termeventtype_name" value="ACTIVATE"/>
+            <column name="termeventtype_desc" value="Mobile terminal activated"/>
+            <column name="termeventtype_updattim" valueDate="${now}"/>
+            <column name="termeventtype_upuser" value="johlyn"/>
+        </insert>
+        <insert tableName="terminaleventtype">
+            <column name="termeventtype_id" value="4"/>
+            <column name="termeventtype_name" value="INACTIVATE"/>
+            <column name="termeventtype_desc" value="Mobile terminal inactivated"/>
+            <column name="termeventtype_updattim" valueDate="${now}"/>
+            <column name="termeventtype_upuser" value="johlyn"/>
+        </insert>
+        <insert tableName="terminaleventtype">
+            <column name="termeventtype_id" value="5"/>
+            <column name="termeventtype_name" value="ARCHIVE"/>
+            <column name="termeventtype_desc" value="Mobile terminal archived"/>
+            <column name="termeventtype_updattim" valueDate="${now}"/>
+            <column name="termeventtype_upuser" value="johlyn"/>
+        </insert>
+        <insert tableName="terminaleventtype">
+            <column name="termeventtype_id" value="6"/>
+            <column name="termeventtype_name" value="LINK"/>
+            <column name="termeventtype_desc" value="Carrier linked to mobile terminal"/>
+            <column name="termeventtype_updattim" valueDate="${now}"/>
+            <column name="termeventtype_upuser" value="johlyn"/>
+        </insert>
+        <insert tableName="terminaleventtype">
+            <column name="termeventtype_id" value="7"/>
+            <column name="termeventtype_name" value="UNLINK"/>
+            <column name="termeventtype_desc" value="Carrier unlinked from mobile terminal"/>
+            <column name="termeventtype_updattim" valueDate="${now}"/>
+            <column name="termeventtype_upuser" value="johlyn"/>
+        </insert>
+        <rollback>
+			<delete tableName="terminaleventtype">
+				<where>
+					termeventtype_id in (1, 2, 3, 4, 5, 6, 7)
+				</where>
+			</delete>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

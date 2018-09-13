@@ -12,8 +12,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 
 import javax.xml.bind.DatatypeConverter;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class XsdDateTimeConverter {
     public static Date unmarshal(String dateTime) {
@@ -21,13 +21,13 @@ public class XsdDateTimeConverter {
     }
 
     public static String marshalDate(Date date) {
-        final GregorianCalendar calendar = new GregorianCalendar();
+        final Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return DatatypeConverter.printDate(calendar);
     }
 
     public static String marshalDateTime(Date dateTime) {
-        final GregorianCalendar calendar = new GregorianCalendar();
+        final Calendar calendar = Calendar.getInstance();
         calendar.setTime(dateTime);
         return DatatypeConverter.printDateTime(calendar);
     }

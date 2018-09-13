@@ -10,7 +10,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.client.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 public class ContactInfo {
@@ -29,7 +29,7 @@ public class ContactInfo {
     private String postalArea;
     private String cityName;
     private String country;
-    private LocalDateTime updateTime;
+    private OffsetDateTime updateTime;
     private String updatedBy;
     
     public UUID getId() {
@@ -116,10 +116,10 @@ public class ContactInfo {
     public void setCountry(String country) {
         this.country = country;
     }
-    public LocalDateTime getUpdateTime() {
+    public OffsetDateTime getUpdateTime() {
         return updateTime;
     }
-    public void setUpdateTime(LocalDateTime updateTime) {
+    public void setUpdateTime(OffsetDateTime updateTime) {
         this.updateTime = updateTime;
     }
     public String getUpdatedBy() {

@@ -10,7 +10,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.client;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -32,13 +32,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import eu.europa.ec.fisheries.uvms.asset.client.constants.ParameterKey;
-import eu.europa.ec.fisheries.uvms.asset.client.model.Asset;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetBO;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetGroup;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetListResponse;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetQuery;
-import eu.europa.ec.fisheries.uvms.asset.client.model.CustomCode;
+import eu.europa.ec.fisheries.uvms.asset.client.model.*;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
@@ -69,16 +63,16 @@ public class AssetClient {
         webTarget = client.target(assetEndpoint + "internal/");
     }
     
-    public Asset getAssetById(AssetIdentifier type, String value) {
+    public AssetDTO getAssetById(AssetIdentifier type, String value) {
         return webTarget
                 .path("asset")
                 .path(type.toString().toLowerCase())
                 .path(value)
                 .request(MediaType.APPLICATION_JSON)
-                .get(Asset.class);
+                .get(AssetDTO.class);
     }
     
-    public List<Asset> getAssetList(AssetQuery query) {
+    public List<AssetDTO> getAssetList(AssetQuery query) {
         AssetListResponse assetResponse = webTarget
                 .path("query")
                 .request(MediaType.APPLICATION_JSON)
@@ -87,7 +81,7 @@ public class AssetClient {
         return assetResponse.getAssetList();
     }
     
-    public List<Asset> getAssetList(AssetQuery query, boolean dynamic) {
+    public List<AssetDTO> getAssetList(AssetQuery query, boolean dynamic) {
         AssetListResponse assetResponse = webTarget
                 .path("query")
                 .queryParam("dynamic", dynamic)
@@ -97,7 +91,7 @@ public class AssetClient {
         return assetResponse.getAssetList();
     }
     
-    public List<Asset> getAssetList(AssetQuery query, int page, int size, boolean dynamic) {
+    public List<AssetDTO> getAssetList(AssetQuery query, int page, int size, boolean dynamic) {
         AssetListResponse assetResponse = webTarget
                     .path("query")
                     .queryParam("page", page)
@@ -141,27 +135,27 @@ public class AssetClient {
         List<AssetGroup> assetGroups = groupIds.stream()
                                             .map(assetGroupService::getAssetGroupById)
                                             .collect(Collectors.toList());
-        List<Asset> assets = assetService.getAssetListByAssetGroups(assetGroups);
+        List<AssetDTO> assets = assetService.getAssetListByAssetGroups(assetGroups);
         return Response.ok(assets).build();
     }
      */
-    public List<Asset> getAssetsByGroupIds(List<UUID> groupIds) {
+    public List<AssetDTO> getAssetsByGroupIds(List<UUID> groupIds) {
         Response response = webTarget
                 .path("group")
                 .path("asset")
 //                .path(groupIds)
                 .request(MediaType.APPLICATION_JSON)
                 .get();
-        List<Asset> assets = response.readEntity(new GenericType<List<Asset>>() {});
+        List<AssetDTO> assets = response.readEntity(new GenericType<List<AssetDTO>>() {});
         response.close();
         return assets;
     }
     
-    public Asset upsertAsset(AssetBO asset) {
+    public AssetDTO upsertAsset(AssetBO asset) {
         return webTarget
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(asset), Asset.class);
+                .post(Entity.json(asset), AssetDTO.class);
     }
     
     public void upsertAssetAsync(AssetBO asset) throws MessageException, JsonProcessingException {
@@ -218,8 +212,8 @@ public class AssetClient {
         return codes;
     }
 
-    public Boolean isCodeValid(String constant, String code, LocalDateTime date){
-        String theDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+    public Boolean isCodeValid(String constant, String code, OffsetDateTime date){
+        String theDate = date.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         return webTarget
                 .path("verify")
                 .path(constant)
@@ -229,8 +223,8 @@ public class AssetClient {
                 .get(Boolean.class);
     }
 
-    public List<CustomCode> getCodeForDate(String constant, String code, LocalDateTime date) {
-        String theDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+    public List<CustomCode> getCodeForDate(String constant, String code, OffsetDateTime date) {
+        String theDate = date.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         Response response = webTarget
                 .path("getfordate")
                 .path(constant)

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet author="johlyn" id="insert capabilityvaluetype static default values">
+        <insert tableName="capabilityvaluetype">
+            <column name="capvaltype_id" value="1"/>
+            <column name="capvaltype_name" value="IS_POLLABLE"/>
+            <column name="capvaltype_desc" value="If terminal system is pollable"/>
+            <column name="capvaltype_updattim" valueDate="${now}"/>
+            <column name="capvaltype_upuser" value="johlyn"/>
+        </insert>
+        <insert tableName="capabilityvaluetype">
+            <column name="capvaltype_id" value="2"/>
+            <column name="capvaltype_name" value="IS_CONFIGURABLE"/>
+            <column name="capvaltype_desc" value="If terminal system is configurable"/>
+            <column name="capvaltype_updattim" valueDate="${now}"/>
+            <column name="capvaltype_upuser" value="johlyn"/>
+        </insert>
+        <insert tableName="capabilityvaluetype">
+            <column name="capvaltype_id" value="3"/>
+            <column name="capvaltype_name" value="SUPPORT_SINGLE_OCEAN"/>
+            <column name="capvaltype_desc" value="If terminal system can have single ocean region"/>
+            <column name="capvaltype_updattim" valueDate="${now}"/>
+            <column name="capvaltype_upuser" value="johlyn"/>
+        </insert>
+        <insert tableName="capabilityvaluetype">
+            <column name="capvaltype_id" value="4"/>
+            <column name="capvaltype_name" value="SUPPORT_MULTIPLE_OCEAN"/>
+            <column name="capvaltype_desc" value="If terminal system can have multiple ocean regions"/>
+            <column name="capvaltype_updattim" valueDate="${now}"/>
+            <column name="capvaltype_upuser" value="johlyn"/>
+        </insert>
+        <insert tableName="capabilityvaluetype">
+            <column name="capvaltype_id" value="5"/>
+            <column name="capvaltype_name" value="SUPPORT_SAMPLING"/>
+            <column name="capvaltype_desc" value="If terminal system can sample position data"/>
+            <column name="capvaltype_updattim" valueDate="${now}"/>
+            <column name="capvaltype_upuser" value="johlyn"/>
+        </insert>
+        <rollback>
+            <delete tableName="capabilityvaluetype">
+				<where>
+					capvaltype_id in (1, 2, 3, 4, 5)
+				</where>
+			</delete>
+        </rollback>
+	</changeSet>
+    
+    <changeSet author="johlyn" id="insert inmarsat-c capabilityvaluetype static default values">
+        <insert tableName="capabilityvaluetype">
+            <column name="capvaltype_id" value="6"/>
+            <column name="capvaltype_name" value="HAS_LES"/>
+            <column name="capvaltype_desc" value="If terminal system uses landearthstation"/>
+            <column name="capvaltype_updattim" valueDate="${now}"/>
+            <column name="capvaltype_upuser" value="johlyn"/>
+        </insert>
+        <rollback>
+            <delete tableName="capabilityvaluetype">
+                <where>capvaltype_id in (6)</where>
+            </delete>
+        </rollback>
+	</changeSet>
+</databaseChangeLog>

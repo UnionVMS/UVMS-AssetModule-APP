@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet author="johlyn" id="insert INRMARSAT-C values">
+        <insert tableName="terminalvaluetype">
+            <column name="termvaltype_id" value="1"/>
+            <column name="termvaltype_name" value="TRANSCEIVER_TYPE"/>
+            <column name="termvaltype_desc" value="Type of transceiver"/>
+            <column name="termvaltype_updattim" valueDate="${now}"/>
+            <column name="termvaltype_upuser" value="johlyn"/>
+            <column name="termvaltype_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <insert tableName="terminalvaluetype">
+            <column name="termvaltype_id" value="2"/>
+            <column name="termvaltype_name" value="SERIAL_NUMBER"/>
+            <column name="termvaltype_desc" value="Serial number of mobile terminal"/>
+            <column name="termvaltype_updattim" valueDate="${now}"/>
+            <column name="termvaltype_upuser" value="johlyn"/>
+            <column name="termvaltype_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <insert tableName="terminalvaluetype">
+            <column name="termvaltype_id" value="3"/>
+            <column name="termvaltype_name" value="SOFTWARE_VERSION"/>
+            <column name="termvaltype_desc" value="Software version on mobile terminal"/>
+            <column name="termvaltype_updattim" valueDate="${now}"/>
+            <column name="termvaltype_upuser" value="johlyn"/>
+            <column name="termvaltype_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <insert tableName="terminalvaluetype">
+            <column name="termvaltype_id" value="4"/>
+            <column name="termvaltype_name" value="ANTENNA"/>
+            <column name="termvaltype_desc" value="Antenna type"/>
+            <column name="termvaltype_updattim" valueDate="${now}"/>
+            <column name="termvaltype_upuser" value="johlyn"/>
+            <column name="termvaltype_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <insert tableName="terminalvaluetype">
+            <column name="termvaltype_id" value="5"/>
+            <column name="termvaltype_name" value="ANTENNA_SERIAL_NUMBER"/>
+            <column name="termvaltype_desc" value="Serial number of antenna"/>
+            <column name="termvaltype_updattim" valueDate="${now}"/>
+            <column name="termvaltype_upuser" value="johlyn"/>
+            <column name="termvaltype_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <insert tableName="terminalvaluetype">
+            <column name="termvaltype_id" value="6"/>
+            <column name="termvaltype_name" value="SATELLITE_NUMBER"/>
+            <column name="termvaltype_desc" value="Satellite number to mobile terminal"/>
+            <column name="termvaltype_updattim" valueDate="${now}"/>
+            <column name="termvaltype_upuser" value="johlyn"/>
+            <column name="termvaltype_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <rollback>
+            <delete tableName="terminalvaluetype">
+				<where>
+					termvaltype_id in (1, 2, 3, 4, 5, 6)
+				</where>
+			</delete>
+        </rollback>
+	</changeSet>
+    
+    <changeSet author="johlyn" id="insert INMARSAT-C values">
+        <insert tableName="terminalvaluetype">
+            <column name="termvaltype_id" value="7"/>
+            <column name="termvaltype_name" value="ANSWER_BACK"/>
+            <column name="termvaltype_desc" value="Satellite GRPS number to answer back?"/>
+            <column name="termvaltype_updattim" valueDate="${now}"/>
+            <column name="termvaltype_upuser" value="johlyn"/>
+            <column name="termvaltype_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <insert tableName="terminalvaluetype">
+            <column name="termvaltype_id" value="8"/>
+            <column name="termvaltype_name" value="INSTALLED_BY"/>
+            <column name="termvaltype_desc" value="Mobile terminal installed by"/>
+            <column name="termvaltype_updattim" valueDate="${now}"/>
+            <column name="termvaltype_upuser" value="johlyn"/>
+            <column name="termvaltype_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <insert tableName="terminalvaluetype">
+            <column name="termvaltype_id" value="9"/>
+            <column name="termvaltype_name" value="INSTALLED_ON"/>
+            <column name="termvaltype_desc" value="Mobile terminal installed on value"/>
+            <column name="termvaltype_updattim" valueDate="${now}"/>
+            <column name="termvaltype_upuser" value="johlyn"/>
+            <column name="termvaltype_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <insert tableName="terminalvaluetype">
+            <column name="termvaltype_id" value="10"/>
+            <column name="termvaltype_name" value="STARTED_ON"/>
+            <column name="termvaltype_desc" value="Mobile terminal started on value"/>
+            <column name="termvaltype_updattim" valueDate="${now}"/>
+            <column name="termvaltype_upuser" value="johlyn"/>
+            <column name="termvaltype_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <insert tableName="terminalvaluetype">
+            <column name="termvaltype_id" value="11"/>
+            <column name="termvaltype_name" value="UNINSTALLED_ON"/>
+            <column name="termvaltype_desc" value="Mobile terminal uninstalled on value"/>
+            <column name="termvaltype_updattim" valueDate="${now}"/>
+            <column name="termvaltype_upuser" value="johlyn"/>
+            <column name="termvaltype_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <rollback>
+            <delete tableName="terminalvaluetype">
+				<where>
+					termvaltype_id in (7, 8, 9, 10, 11)
+				</where>
+			</delete>
+        </rollback>
+    </changeSet>
+
+    <changeSet author="johlyn" id="insert INMARSAT-C values, frequency">
+        <insert tableName="terminalvaluetype">
+            <column name="termvaltype_id" value="12"/>
+            <column name="termvaltype_name" value="FREQUENCY_EXPECTED"/>
+            <column name="termvaltype_desc" value="Mobile terminal reporting frequency. In seconds."/>
+            <column name="termvaltype_updattim" valueDate="${now}"/>
+            <column name="termvaltype_upuser" value="johlyn"/>
+            <column name="termvaltype_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <insert tableName="terminalvaluetype">
+            <column name="termvaltype_id" value="13"/>
+            <column name="termvaltype_name" value="FREQUENCY_GRACE_PERIOD"/>
+            <column name="termvaltype_desc" value="Mobile terminal grace period frequency. In seconds."/>
+            <column name="termvaltype_updattim" valueDate="${now}"/>
+            <column name="termvaltype_upuser" value="johlyn"/>
+            <column name="termvaltype_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <insert tableName="terminalvaluetype">
+            <column name="termvaltype_id" value="14"/>
+            <column name="termvaltype_name" value="FREQUENCY_IN_PORT"/>
+            <column name="termvaltype_desc" value="Mobile terminal in port frequency. In seconds."/>
+            <column name="termvaltype_updattim" valueDate="${now}"/>
+            <column name="termvaltype_upuser" value="johlyn"/>
+            <column name="termvaltype_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <rollback>
+            <delete tableName="terminalvaluetype">
+				<where>
+					termvaltype_id in (12, 13, 14)
+				</where>
+			</delete>
+        </rollback>
+    </changeSet>
+    
+    <changeSet author="johlyn" id="insert INMARSAT-C values, ocean regions">
+        <insert tableName="terminalvaluetype">
+            <column name="termvaltype_id" value="15"/>
+            <column name="termvaltype_name" value="OCEAN_REGIONS"/>
+            <column name="termvaltype_desc" value="Mobile terminal ocean regions."/>
+            <column name="termvaltype_updattim" valueDate="${now}"/>
+            <column name="termvaltype_upuser" value="johlyn"/>
+            <column name="termvaltype_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <rollback>
+            <delete tableName="terminalvaluetype">
+				<where>
+					termvaltype_id in (15)
+				</where>
+			</delete>
+        </rollback>
+    </changeSet>
+    
+    <changeSet author="johlyn" id="insert INMARSAT-C values, les">
+        <insert tableName="terminalvaluetype">
+            <column name="termvaltype_id" value="16"/>
+            <column name="termvaltype_name" value="LES"/>
+            <column name="termvaltype_desc" value="Mobile terminal land earth station."/>
+            <column name="termvaltype_updattim" valueDate="${now}"/>
+            <column name="termvaltype_upuser" value="johlyn"/>
+            <column name="termvaltype_termtype_id" value="1"/> <!-- INMARSAT-C -->
+        </insert>
+        <rollback>
+            <delete tableName="terminalvaluetype">
+				<where>
+					termvaltype_id in (16)
+				</where>
+			</delete>
+        </rollback>
+    </changeSet>
+    
+    <changeSet author="johlyn" id="edit INMARSAT-C values, rename to multiple ocean">
+        <update tableName="terminalvaluetype">
+            <column name="termvaltype_name" value="MULTIPLE_OCEAN"/>
+            <where>
+                termvaltype_id = 15
+            </where>
+        </update>
+        <rollback>
+        <update tableName="terminalvaluetype">
+            <column name="termvaltype_name" value="OCEAN_REGIONS"/>
+            <where>
+                termvaltype_id = 15
+            </where>
+        </update>
+        </rollback>
+    </changeSet>
+    
+</databaseChangeLog>

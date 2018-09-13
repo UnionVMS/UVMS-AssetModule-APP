@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:mobterm="urn:types.mobileterminal.schema.fisheries.ec.europa.eu:v1" 
+            targetNamespace="urn:types.mobileterminal.schema.fisheries.ec.europa.eu:v1"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified" 
+            version="1.0">
+    
+    <xsd:complexType name="MobileTerminalId">
+        <xsd:sequence>
+            <xsd:element name="guid" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="BaseMobileTerminalType">
+        <xsd:sequence>
+            <xsd:element name="mobileTerminalId" type="mobterm:MobileTerminalId" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="connectId" type="xsd:string"/>
+            <xsd:element name="type" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="plugin" type="mobterm:Plugin" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="source" type="mobterm:MobileTerminalSource"/>
+            <xsd:element name="inactive" type="xsd:boolean"/>
+            <xsd:element name="archived" type="xsd:boolean"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Plugin">
+        <xsd:sequence>
+            <xsd:element name="labelName" type="xsd:string"/>
+            <xsd:element name="serviceName" type="xsd:string"/>
+            <xsd:element name="inactive" type="xsd:boolean"/>
+            <xsd:element name="satelliteType" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="PluginService">
+        <xsd:complexContent>
+            <xsd:extension base="mobterm:Plugin">
+                <xsd:sequence>
+                    <xsd:element name="capability" type="mobterm:PluginCapability" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="PluginCapability">
+        <xsd:sequence>
+            <xsd:element name="name" type="mobterm:PluginCapabilityType" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="value" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:simpleType name="PluginCapabilityType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="POLLABLE"/>
+            <xsd:enumeration value="CONFIGURABLE"/>
+            <xsd:enumeration value="ONLY_SINGLE_OCEAN"/>
+            <xsd:enumeration value="MULTIPLE_OCEAN"/>
+            <xsd:enumeration value="SAMPLING"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="MobileTerminalSource">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="INTERNAL"/>
+            <xsd:enumeration value="NATIONAL"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+
+    <xsd:complexType name="MobileTerminalType">
+        <xsd:complexContent>
+            <xsd:extension base="mobterm:BaseMobileTerminalType">
+                <xsd:sequence>
+                    <xsd:element name="attributes" type="mobterm:MobileTerminalAttribute" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element name="channels" type="mobterm:ComChannelType" minOccurs="0" maxOccurs="unbounded" />
+                    <xsd:element name="id" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="MobileTerminalAttribute">
+        <xsd:sequence>
+            <xsd:element name="type" type="xsd:string"/>
+            <xsd:element name="value" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:simpleType name="SearchKey">
+       
+        <xsd:restriction base="xsd:string">
+            <!-- vessel/carrier -->
+            <xsd:enumeration value="CONNECT_ID"/>
+            
+            <!-- mobile terminal/channel -->
+            <xsd:enumeration value="SERIAL_NUMBER"/>
+            <xsd:enumeration value="MEMBER_NUMBER"/>
+            <xsd:enumeration value="DNID"/>
+            
+            <!-- fields -->
+            <xsd:enumeration value="SATELLITE_NUMBER"/>
+
+            <xsd:enumeration value="TRANSPONDER_TYPE"/>
+
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:complexType name="ComChannelAttribute">
+        <xsd:sequence>
+            <xsd:element name="type" type="xsd:string" />
+            <xsd:element name="value" type="xsd:string" />
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ComChannelType">
+        <xsd:sequence>
+            <xsd:element name="guid" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="attributes" type="mobterm:ComChannelAttribute" minOccurs="1" maxOccurs="unbounded"/>
+            <xsd:element name="capabilities" type="mobterm:ComChannelCapability" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ComChannelCapability">
+        <xsd:sequence>
+            <xsd:element name="type" type="xsd:string"/>
+            <xsd:element name="value" type="xsd:boolean"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:simpleType name="EventCode">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="CREATE"/>
+            <xsd:enumeration value="MODIFY"/>
+            <xsd:enumeration value="ACTIVATE"/>
+            <xsd:enumeration value="INACTIVATE"/>
+            <xsd:enumeration value="ARCHIVE"/>
+            <xsd:enumeration value="LINK"/>
+            <xsd:enumeration value="UNLINK"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:complexType name="MobileTerminalHistory">
+        <xsd:sequence>
+            <xsd:element name="events" type="mobterm:MobileTerminalEvents" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="comChannels" type="mobterm:ComChannelHistory" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="MobileTerminalEvents">
+        <xsd:sequence>
+            <xsd:element name="eventCode" type="mobterm:EventCode"/>
+            <xsd:element name="connectId" type="xsd:string"/>
+            <xsd:element name="serialNumber" type="xsd:string"/>
+            <xsd:element name="attributes" type="mobterm:MobileTerminalAttribute" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="changeDate" type="xsd:dateTime"/>
+            <xsd:element name="comments" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="ComChannelHistory">
+        <xsd:sequence>
+            <xsd:element name="channel" type="mobterm:ComChannelHistoryAttributes" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="ComChannelHistoryAttributes">
+        <xsd:sequence>
+            <xsd:element name="eventCode" type="mobterm:EventCode"/>
+            <xsd:element name="changeDate" type="xsd:dateTime"/>
+            <xsd:element name="name" type="xsd:string"/>
+            <xsd:element name="attributes" type="mobterm:ComChannelAttribute" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <!-- common elemnts -->
+    <xsd:element name="mobileTerminalFault">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="code" type="xsd:int"/>
+                <xsd:element name="message" type="xsd:string"/>
+                <xsd:element name="terminal" type="mobterm:MobileTerminalType"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <!-- query types -->
+        <!-- Mobile Terminal Source types -->
+    <xsd:simpleType name="MobileTerminalStatus">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="ACTIVE"/>
+            <xsd:enumeration value="INACTIVE"/>
+            <xsd:enumeration value="ARCHIVE"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+            
+    <xsd:complexType name="MobileTerminalAssignQuery">
+        <xsd:sequence>
+            <xsd:element name="connectId" type="xsd:string"/>
+            <xsd:element name="mobileTerminalId" type="mobterm:MobileTerminalId"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="MobileTerminalListQuery">
+        <xsd:sequence>
+            <xsd:element name="pagination" type="mobterm:ListPagination" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="mobileTerminalSearchCriteria" type="mobterm:MobileTerminalSearchCriteria" minOccurs="1" maxOccurs="1"/>
+            </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="ListPagination">
+        <xsd:sequence>
+            <xsd:element name="page" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="listSize" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="MobileTerminalSearchCriteria">
+        <xsd:sequence>
+            <xsd:element name="criterias" type="mobterm:ListCriteria" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="isDynamic" type="xsd:boolean" minOccurs="0" maxOccurs="1"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="ListCriteria">
+        <xsd:sequence>
+            <xsd:element name="key" type="mobterm:SearchKey" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="value" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <!-- Mobile Terminal Base Request -->
+    <xsd:simpleType name="MobileTerminalDataSourceMethod">
+        <xsd:restriction base="xsd:string">
+            <!-- Mobile Terminal -->
+            <xsd:enumeration value="CREATE"/>
+            <xsd:enumeration value="UPDATE"/>
+            <xsd:enumeration value="GET"/>
+            <xsd:enumeration value="LIST"/>
+            <xsd:enumeration value="DELETE"/>
+            <xsd:enumeration value="ASSIGN"/>
+            <xsd:enumeration value="UNASSIGN"/>
+            <xsd:enumeration value="UPSERT"/>
+            <xsd:enumeration value="STATUS"/>
+            <xsd:enumeration value="HISTORY_LIST"/>
+            <xsd:enumeration value="TIMER"/>
+            
+            <!-- Poll -->
+            <xsd:enumeration value="CREATE_POLL"/>
+            <xsd:enumeration value="POLL_PROGRAM_LIST"/>
+            <xsd:enumeration value="POLL_PROGRAM_STATUS"/>
+            <xsd:enumeration value="POLL_LIST"/>
+            <xsd:enumeration value="POLLABLE_LIST"/>
+            
+            <!-- Config -->
+            <xsd:enumeration value="UPDATED_DNID_LIST"/>
+            <xsd:enumeration value="TERMINAL_SYSTEM_LIST"/>
+            <!-- <xsd:enumeration value="OCEAN_REGION"/> -->
+            <xsd:enumeration value="COMCHANNELNAME"/>
+            <xsd:enumeration value="CONFIG"/>
+            <xsd:enumeration value="UPSERT_PLUGIN_LIST"/>
+
+			<!-- Ping -->
+			<xsd:enumeration value="PING"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+            
+    <xsd:complexType name="MobileTerminalBaseRequest" abstract="true">
+        <xsd:sequence>
+            <xsd:element name="method" type="mobterm:MobileTerminalDataSourceMethod"/>
+            <xsd:element name="comment" type="xsd:string"/>
+            <xsd:element name="username" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

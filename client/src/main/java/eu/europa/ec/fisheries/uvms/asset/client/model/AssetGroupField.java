@@ -10,17 +10,21 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.client.model;
 
-import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
+@JsonIdentityInfo(generator= ObjectIdGenerators.UUIDGenerator.class)
 public class AssetGroupField {
 
     private UUID id;
     private String key;
-    private LocalDateTime updateTime;
+    private OffsetDateTime updateTime;
     private String updatedBy;
     private String value;
-    private UUID assetGroup;
+    private AssetGroup assetGroup;
     
     public UUID getId() {
         return id;
@@ -34,10 +38,10 @@ public class AssetGroupField {
     public void setField(String key) {
         this.key = key;
     }
-    public LocalDateTime getUpdateTime() {
+    public OffsetDateTime getUpdateTime() {
         return updateTime;
     }
-    public void setUpdateTime(LocalDateTime updateTime) {
+    public void setUpdateTime(OffsetDateTime updateTime) {
         this.updateTime = updateTime;
     }
     public String getUpdatedBy() {
@@ -52,10 +56,10 @@ public class AssetGroupField {
     public void setValue(String value) {
         this.value = value;
     }
-    public UUID getAssetGroup() {
+    public AssetGroup getAssetGroup() {
         return assetGroup;
     }
-    public void setAssetGroup(UUID assetGroup) {
+    public void setAssetGroup(AssetGroup assetGroup) {
         this.assetGroup = assetGroup;
     }
 }

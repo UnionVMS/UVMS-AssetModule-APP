@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.asset.client.model;
 
 
+import javax.persistence.EmbeddedId;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ public class CustomCode {
         // for json
     }
 
+    @EmbeddedId
     CustomCodesPK primaryKey;
 
     private String description;

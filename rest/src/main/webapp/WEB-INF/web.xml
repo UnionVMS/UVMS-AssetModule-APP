@@ -47,6 +47,7 @@
         <filter-name>AuthenticationFilter</filter-name>
         <filter-class>eu.europa.ec.fisheries.uvms.rest.security.AuthenticationFilter</filter-class>
     </filter>
+
 	<filter-mapping>
 		<filter-name>AuthenticationFilter</filter-name>
 		<url-pattern>/rest/config/*</url-pattern>
@@ -63,5 +64,24 @@
 		<filter-name>AuthenticationFilter</filter-name>
 		<url-pattern>/rest/customcodes/*</url-pattern>
 	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AuthenticationFilter</filter-name>
+		<url-pattern>/rest/mobileterminal/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AuthenticationFilter</filter-name>
+		<url-pattern>/rest/poll/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AuthenticationFilter</filter-name>
+		<url-pattern>/rest/plugin/*</url-pattern>
+	</filter-mapping>
+
+
+	<!--filter-mapping>
+    <filter-name>AuthenticationFilter</filter-name>
+    <url-pattern>/rest/*</url-pattern>
+    </filter-mapping-->
+
 
 </web-app>
