@@ -58,6 +58,7 @@ public class ListReceivedEventBean {
                 producer.send(responseMessage);
             }
         } catch (JMSException | AssetException e) {
+            LOG.error("Exception when trying to get list in MobileTerminal: ", e);
             errorEvent.fire(new EventMessage(message.getJmsMessage(), "Exception when trying to get list in MobileTerminal: " + e.getMessage()));
             // Propagate error
             throw new EJBException(e);
