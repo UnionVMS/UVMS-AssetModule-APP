@@ -54,10 +54,8 @@ public class MobileTerminalEventServiceBean {
             response.setJMSCorrelationID(message.getJmsMessage().getJMSCorrelationID());
             MessageProducer producer = session.createProducer(message.getJmsMessage().getJMSReplyTo());
             producer.send(response);
-        } catch (JMSException ex) {
-            LOG.error("Error when returning Error message to recipient", ex.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            LOG.error("Error when returning Error message to recipient", ex);
         }
     }
 }
