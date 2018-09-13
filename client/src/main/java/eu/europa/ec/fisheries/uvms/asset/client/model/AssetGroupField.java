@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-@JsonIdentityInfo(generator= ObjectIdGenerators.UUIDGenerator.class/*, resolver = EntityIdResolver.class*/)
+@JsonIdentityInfo(generator= ObjectIdGenerators.UUIDGenerator.class)
 public class AssetGroupField {
 
     private UUID id;
