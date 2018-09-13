@@ -347,11 +347,12 @@ public class AssetDaoTest extends TransactionalTests {
         asset.setConstructionYear("1924");
         asset.setConstructionPlace("BEJ");
 
+        UUID prevHistoryID = asset.getHistoryId();  //this is here since we no longer update HistId in closing the DB connection but rather update manually in the middle. Reason for this is to stop it from first creating and then updating on create.
         Asset updatedAsset = assetDao.updateAsset(asset);
         commit();
 
         assertThat(updatedAsset.getHistoryId(), is(notNullValue()));
-        assertThat(asset.getHistoryId(), is(not(updatedAsset.getHistoryId())));
+        assertThat(prevHistoryID, is(not(updatedAsset.getHistoryId())));
         assertThat(newOrgCode, is(updatedAsset.getProdOrgCode()));
         assertThat(newOrgName, is(updatedAsset.getProdOrgName()));
 

@@ -21,6 +21,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.GenericGenerator;
@@ -65,6 +66,7 @@ public class AssetGroupField implements Serializable {
     @Column(name = "value")
     private String value;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "assetgroup", foreignKey = @ForeignKey(name = "AssetGroupField_AssetGroup_FK"))
     private AssetGroup assetGroup;
