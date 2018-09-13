@@ -46,7 +46,7 @@ public class MobileTerminalModuleResponseMapper {
             MobileTerminalFault fault = JAXBMarshaller.unmarshallTextMessage(response, MobileTerminalFault.class);
             throw new RuntimeException(fault.getCode() + " : " + fault.getMessage());
         } catch (AssetException e) {
-            e.printStackTrace();
+            LOG.error("WAT", e);
         }
     }
 

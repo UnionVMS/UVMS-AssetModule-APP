@@ -75,7 +75,7 @@ public class ExchangeModuleMock implements MessageListener {
                 }
             }.sendResponseMessageToSender((TextMessage) message, response);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Mock error", e);
         }
     }
 

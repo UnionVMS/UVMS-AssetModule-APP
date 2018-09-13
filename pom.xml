@@ -11,7 +11,7 @@
         <groupId>fish.focus.uvms.maven</groupId>
         <artifactId>uvms-pom</artifactId>
         <relativePath />
-        <version>1.21-SNAPSHOT</version>
+        <version>1.21</version>
     </parent>
 
     <properties>
@@ -37,12 +37,6 @@
 	</dependencies>
     <dependencyManagement>
         <dependencies>
-        	<!--dependency>
-				<groupId>fish.focus.uvms.maven</groupId>
-				<artifactId>uvms-pom-gis-deps</artifactId>
-				<version>1.16</version>
-				<type>pom</type>
-			</dependency-->
             <dependency>
                 <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
                 <artifactId>deprecated-asset-message-impl</artifactId>
