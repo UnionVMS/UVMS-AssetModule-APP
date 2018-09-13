@@ -126,7 +126,7 @@ public class MobileTerminalRestResource {
                     .header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("[ Error when creating mobile terminal ] {}", e);
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e).build();
         }
     }
 

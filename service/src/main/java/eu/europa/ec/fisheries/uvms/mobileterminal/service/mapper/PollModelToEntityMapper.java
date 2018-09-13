@@ -98,7 +98,7 @@ public class PollModelToEntityMapper {
         try {
         	poll.setPollType(EnumMapper.getPollTypeFromModel(requestType.getPollType()));
         } catch (RuntimeException e) {
-            LOG.error("Couldn't map type of poll " + e.getMessage());
+            LOG.error("Couldn't map type of poll " + e);
         	throw new RuntimeException(e);
         }
         poll.setUpdatedBy(username);

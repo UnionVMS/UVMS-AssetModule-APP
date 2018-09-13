@@ -20,24 +20,24 @@ public class MTErrorHandler {
 
     	/*if(ex instanceof MobileTerminalModelException) {
 //    		if(ex instanceof MobileTerminalModelValidationException) {
-//    			return new MTResponseDto<>(ex.getMessage(), MTResponseCode.INPUT_ERROR);
+//    			return new MTResponseDto<>(ex, MTResponseCode.INPUT_ERROR);
 //    		}
 //
 //    		if(ex instanceof MobileTerminalModelMapperException) {
 //    			//MobileTerminalValidationException
 //        		//MobileTerminalUnmarshallException
-//    			return new MTResponseDto<>(ex.getMessage(), MTResponseCode.MAPPING_ERROR);
+//    			return new MTResponseDto<>(ex, MTResponseCode.MAPPING_ERROR);
 //    		}
 //
 //    		if(ex instanceof MobileTerminalFaultException) {
 //        		return extractFault((MobileTerminalFaultException)ex);
 //        	}
     		
-    		return new MTResponseDto<>(ex.getMessage(), MTResponseCode.MODEL_ERROR);
+    		return new MTResponseDto<>(ex, MTResponseCode.MODEL_ERROR);
     	}*/
 
     	/*if(ex instanceof MobileTerminalModelException) {
-    		return new MTResponseDto<>(ex.getMessage(), MTResponseCode.MOBILE_TERMINAL_ERROR);
+    		return new MTResponseDto<>(ex, MTResponseCode.MOBILE_TERMINAL_ERROR);
     	}*/
         return new MTResponseDto<>(ex, MTResponseCode.UNDEFINED_ERROR);
     }
@@ -45,7 +45,7 @@ public class MTErrorHandler {
 //    private static MTResponseDto extractFault(MobileTerminalFaultException ex) {
 //        MobileTerminalFault fault = ex.getMobileTerminalFault();
 //        if (fault == null) {
-//            return new MTResponseDto<>(ex.getMessage(), MTResponseCode.DOMAIN_ERROR);
+//            return new MTResponseDto<>(ex, MTResponseCode.DOMAIN_ERROR);
 //        }
 //
 //        MobileTerminalType terminal = fault.getTerminal();

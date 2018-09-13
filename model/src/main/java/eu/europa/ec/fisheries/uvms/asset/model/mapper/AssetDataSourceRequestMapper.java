@@ -120,8 +120,8 @@
 //            histId.setEventId(guid);
 //            return histId;
 //        } catch (NullPointerException e) {
-//            LOG.error("[ Error when creating history asset ID. ] {}", e.getMessage());
-//            throw new AssetModelMapperException(e.getMessage());
+//            LOG.error("[ Error when creating history asset ID. ] {}", e);
+//            throw new AssetModelMapperException(e);
 //        }
 //    }
 //
@@ -141,8 +141,8 @@
 //            request.setId(createHistoryAssetId(assetHistoryGuid));
 //            return JAXBMarshaller.marshallJaxBObjectToString(request);
 //        } catch (Exception e) {
-//            LOG.error("[ Error when getting asset history by ID. ] {}", e.getMessage());
-//            throw new AssetModelMapperException(e.getMessage());
+//            LOG.error("[ Error when getting asset history by ID. ] {}", e);
+//            throw new AssetModelMapperException(e);
 //        }
 //    }
 //

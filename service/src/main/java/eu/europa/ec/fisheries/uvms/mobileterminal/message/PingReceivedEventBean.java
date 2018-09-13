@@ -44,7 +44,7 @@ public class PingReceivedEventBean {
             }
         } catch (AssetException | JMSException e) {
             LOG.error("Ping message went wrong", e);
-            errorEvent.fire(new EventMessage(message.getJmsMessage(), "Exception when trying to ping MobileTerminal: " + e.getMessage()));
+            errorEvent.fire(new EventMessage(message.getJmsMessage(), "Exception when trying to ping MobileTerminal: " + e));
             // Propagate error
             throw new EJBException(e);
         }

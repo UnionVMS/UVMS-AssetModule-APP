@@ -143,7 +143,7 @@ public class InternalResource {
             CustomCode customCodes = customCodesService.create(customCode);
             return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -157,7 +157,7 @@ public class InternalResource {
             List<String> constants = customCodesService.getAllConstants();
             return Response.ok(constants).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -173,7 +173,7 @@ public class InternalResource {
             String json = MAPPER.writeValueAsString(customCodes);
             return Response.ok(json).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -196,7 +196,7 @@ public class InternalResource {
                     .header("MDC", MDC.get("requestId")).build();
 
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -222,7 +222,7 @@ public class InternalResource {
                     .header("MDC", MDC.get("requestId")).build();
 
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -240,7 +240,7 @@ public class InternalResource {
             return Response.status(200).entity(json).type(MediaType.APPLICATION_JSON)
                     .header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
         }
     }
 

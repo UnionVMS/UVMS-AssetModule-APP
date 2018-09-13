@@ -35,7 +35,7 @@ public class ConfigServiceBean {
 
 
 
-//	public List<Config> getConfiguration() throws AssetException {
+
 		public List<Object> getConfiguration() throws AssetServiceException {
 		//ConfigurationDto configuration = getConfiguration(ConfigFieldEnum.ALL);
 		//return configuration.getConfigList();
@@ -73,7 +73,7 @@ public class ConfigServiceBean {
 			}
 			return settings;
 		} catch (AssetDaoException e) {
-			throw new ConfigModelException("Couldn't fetch settings " + e.getMessage());
+			throw new ConfigModelException("Couldn't fetch settings " + e);
 		}
 		*/
 		return settings;

@@ -46,7 +46,7 @@ public class PingReceivedEventBeanTest extends TransactionalTests {
             });
             return message;
         } catch (JMSException e) {
-            fail("FAILED: " + e.getMessage());
+            fail("FAILED: " + e);
         }
         return null;
     }

@@ -60,7 +60,7 @@
 //            LOG.debug("mapToAssetFromResponse: ------ TIME ------ " + diff + "ms");
 //            return mappedResponse.getAsset();
 //        } catch (AssetException | JMSException ex) {
-//            LOG.error("[ Error when mapping response to asset. ] {}", ex.getMessage());
+//            LOG.error("[ Error when mapping response to asset. ] {}", ex);
 //            throw new AssetException(ErrorCode.ASSET_MAPPING_ERROR.getMessage(), ex, ErrorCode.ASSET_MAPPING_ERROR.getCode());
 //        }
 //    }
@@ -71,7 +71,7 @@
 //            ListAssetResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, ListAssetResponse.class);
 //            return mappedResponse.getAsset();
 //        } catch (AssetException | JMSException ex) {
-//            LOG.error("[ Error when mapping response to asset list. ] {}", ex.getMessage());
+//            LOG.error("[ Error when mapping response to asset list. ] {}", ex);
 //            throw new AssetException(ErrorCode.ASSET_LIST_MAPPING_ERROR.getMessage(), ex, ErrorCode.ASSET_LIST_MAPPING_ERROR.getCode());
 //        }
 //    }
@@ -81,7 +81,7 @@
 //            validateResponse(response, correlationId);
 //            return JAXBMarshaller.unmarshallTextMessage(response, ListAssetResponse.class);
 //        } catch (AssetException | JMSException ex) {
-//            LOG.error("[ Error when mapping response to asset list response. ] {}", ex.getMessage());
+//            LOG.error("[ Error when mapping response to asset list response. ] {}", ex);
 //            throw new AssetException(ErrorCode.ASSET_LIST_MAPPING_ERROR.getMessage(), ex, ErrorCode.ASSET_LIST_MAPPING_ERROR.getCode());
 //        }
 //    }
@@ -92,7 +92,7 @@
 //            SingleAssetGroupResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, SingleAssetGroupResponse.class);
 //            return mappedResponse.getAssetGroup();
 //        } catch (AssetException | JMSException ex) {
-//            LOG.error("[ Error when mapping response to single asset group response. ] {}", ex.getMessage());
+//            LOG.error("[ Error when mapping response to single asset group response. ] {}", ex);
 //            throw new AssetException(ErrorCode.ASSET_GROUP_MAPPING_ERROR.getMessage(), ex, ErrorCode.ASSET_GROUP_MAPPING_ERROR.getCode());
 //        }
 //    }
@@ -103,7 +103,7 @@
 //            ListAssetGroupResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, ListAssetGroupResponse.class);
 //            return mappedResponse.getAssetGroup();
 //        } catch (AssetException | JMSException ex) {
-//            LOG.error("[ Error when mapping response to list asset group response. ] {}", ex.getMessage());
+//            LOG.error("[ Error when mapping response to list asset group response. ] {}", ex);
 //            throw new AssetException(ErrorCode.ASSET_GROUP_LIST_MAPPING_ERROR.getMessage(), ex,
 //                    ErrorCode.ASSET_GROUP_LIST_MAPPING_ERROR.getCode());
 //        }
@@ -115,7 +115,7 @@
 //            ConfigResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, ConfigResponse.class);
 //            return mappedResponse.getConfig();
 //        } catch (AssetException | JMSException ex) {
-//            LOG.error("[ Error when mapping response to list asset group response. ] {}", ex.getMessage());
+//            LOG.error("[ Error when mapping response to list asset group response. ] {}", ex);
 //            throw new AssetException(ErrorCode.CONFIG_LIST_MAPPING_ERROR.getMessage(), ex,
 //                    ErrorCode.CONFIG_LIST_MAPPING_ERROR.getCode());
 //        }
@@ -125,7 +125,7 @@
 //            validateResponse(response, correlationId);
 //            return JAXBMarshaller.unmarshallTextMessage(response, AssetListGroupByFlagStateResponse.class);
 //        } catch (AssetException | JMSException ex) {
-//            LOG.error("[ Error when mapping response to asset list response. ] {}", ex.getMessage());
+//            LOG.error("[ Error when mapping response to asset list response. ] {}", ex);
 //            throw new AssetException(ErrorCode.ASSET_GROUP_LIST_MAPPING_ERROR.getMessage(), ex,
 //                    ErrorCode.ASSET_GROUP_LIST_MAPPING_ERROR.getCode());
 //        }
@@ -136,7 +136,7 @@
 //            validateResponse(response, correlationId);
 //            return JAXBMarshaller.unmarshallTextMessage(response, FishingGearResponse.class);
 //        } catch (JMSException | AssetException ex) {
-//            LOG.error("FishingGearListResponse text message is not valid", ex.getMessage());
+//            LOG.error("FishingGearListResponse text message is not valid", ex);
 //            throw new AssetException(ErrorCode.FISHING_GEAR_RESPONSE_UNMARSHALLER_ERROR.getMessage(), ex,
 //                    ErrorCode.FISHING_GEAR_RESPONSE_UNMARSHALLER_ERROR.getCode());
 //        }
@@ -147,7 +147,7 @@
 //            validateResponse(textMessage, correlationId);
 //            return JAXBMarshaller.unmarshallTextMessage(textMessage, FishingGearListResponse.class);
 //        } catch (JMSException | AssetException ex) {
-//            LOG.error("FishingGearListResponse text message is not valid", ex.getMessage());
+//            LOG.error("FishingGearListResponse text message is not valid", ex);
 //            throw new AssetException(ErrorCode.FISHING_GEAR_LIST_RESPONSE_UNMARSHALLER_ERROR.getMessage(), ex,
 //                    ErrorCode.FISHING_GEAR_LIST_RESPONSE_UNMARSHALLER_ERROR.getCode());
 //        }

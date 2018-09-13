@@ -46,12 +46,9 @@ public class MobileTerminalModelToEntityMapper {
         entity.setPlugin(plugin);
         entity.setSerialNo(serialNumber);
 
-        try {
-            entity.setSource(model.getSource());
-        } catch (RuntimeException e) {
-            LOG.error(e.getMessage());
-            throw new RuntimeException(e);
-        }
+
+        entity.setSource(model.getSource());
+
 
         MobileTerminalTypeEnum type = MobileTerminalTypeEnum.getType(model.getType());
         if (type == null)

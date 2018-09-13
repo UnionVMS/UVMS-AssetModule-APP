@@ -511,7 +511,7 @@ public class MobileTerminalServiceBean {
             return updatedMobileTerminal;
 
         } catch (RuntimeException e) {
-            LOG.error("[ Error when upserting mobile terminal: Mobile terminal update failed trying to insert. ] {} {}", e.getMessage(), e.getStackTrace());
+            LOG.error("[ Error when upserting mobile terminal: Mobile terminal update failed trying to insert. ] {} {}", e, e.getStackTrace());
             //TODO: Should this swallow an error and just continue on?
         }
 

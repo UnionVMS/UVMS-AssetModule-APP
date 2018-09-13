@@ -47,7 +47,7 @@ public class JAXBMarshallerTest {
             assertEquals(TEST_USER, request.getUsername());
             assertEquals(TEST_COMMENT, request.getComment());
         } catch (Exception e) {
-            fail("FAILED: " + e.getMessage());
+            fail("FAILED: " + e);
         }
     }
 

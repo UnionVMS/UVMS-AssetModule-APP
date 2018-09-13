@@ -62,7 +62,7 @@ public class MTMessageProducerBean implements MTMessageProducer {
             }
             return message.getJMSMessageID();
         } catch (JMSException e) {
-            LOG.error("[ Error when sending data source message. ] {}", e.getMessage());
+            LOG.error("[ Error when sending data source message. ] {}", e);
             return null;
         }
     }
@@ -95,7 +95,7 @@ public class MTMessageProducerBean implements MTMessageProducer {
             }
             return message.getJMSMessageID();
         } catch (JMSException e) {
-            LOG.error("[ Error when sending data source message. ] {}", e.getMessage());
+            LOG.error("[ Error when sending data source message. ] {}", e);
             throw new RuntimeException(e);
         }
     }

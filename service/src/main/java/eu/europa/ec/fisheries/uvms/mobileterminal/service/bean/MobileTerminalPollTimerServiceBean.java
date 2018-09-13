@@ -55,7 +55,7 @@ public class MobileTerminalPollTimerServiceBean {
                 }
             }
         } catch (Exception e) {
-            LOG.error("[ Poll scheduler failed. ] " + e.getMessage());
+            LOG.error("[ Poll scheduler failed. ] " + e);
         }
     }
 }

@@ -67,8 +67,8 @@ public class AssetQueueConsumerBean implements AssetQueueConsumer, ConfigMessage
 
             return response;
         } catch (Exception e) {
-            LOG.error("[ Error when retrieving message. ] {}", e.getMessage());
-            throw new AssetMessageException("Error when retrieving message: " + e.getMessage());
+            LOG.error("[ Error when retrieving message. ] {}", e);
+            throw new AssetMessageException("Error when retrieving message: " + e);
         } finally {
         	JMSUtils.disconnectQueue(connection);
         }
@@ -81,7 +81,7 @@ public class AssetQueueConsumerBean implements AssetQueueConsumer, ConfigMessage
             return getMessage(correlationId, type);
         }
         catch (AssetMessageException e) {
-            LOG.error("[ Error when getting config message. ] {}", e.getMessage());
+            LOG.error("[ Error when getting config message. ] {}", e);
             throw new ConfigMessageException(e.getMessage());
         }
     }

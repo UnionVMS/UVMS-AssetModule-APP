@@ -54,7 +54,7 @@ public class MTResponseMessageConsumer implements MTMessageConsumer{
             Message response = consumer.receive(TIMEOUT);
             return (T) response;
         } catch (JMSException e) {
-            LOG.error("[ Error when consuming message with correlationId: " + correlationId + ". Returning null. ] {}", e.getMessage());
+            LOG.error("[ Error when consuming message with correlationId: " + correlationId + ". Returning null. ] {}", e);
             return null;
         }
     }

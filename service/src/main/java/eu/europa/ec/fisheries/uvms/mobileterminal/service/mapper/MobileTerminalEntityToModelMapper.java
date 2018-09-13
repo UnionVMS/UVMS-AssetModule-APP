@@ -50,7 +50,7 @@ public class MobileTerminalEntityToModelMapper {
         try {
             model.setSource(entity.getSource());
         } catch (RuntimeException e) {
-            LOG.error("[ Error when setting mobile terminal source. ] {}", e.getMessage());
+            LOG.error("[ Error when setting mobile terminal source. ] {}", e);
             throw new RuntimeException(e);
         }
 

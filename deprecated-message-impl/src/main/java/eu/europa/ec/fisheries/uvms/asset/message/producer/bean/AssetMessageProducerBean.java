@@ -95,7 +95,7 @@ public class AssetMessageProducerBean implements AssetMessageProducer, ConfigMes
 
             return message.getJMSMessageID();
         } catch (Exception e) {
-            LOG.error("[ Error when sending message {} ] {}",text, e.getMessage());
+            LOG.error("[ Error when sending message {} ] {}",text, e);
             return null;
         } finally {
         	JMSUtils.disconnectQueue(connection);
@@ -128,7 +128,7 @@ public class AssetMessageProducerBean implements AssetMessageProducer, ConfigMes
 
             return message.getJMSMessageID();
         } catch (Exception e) {
-            LOG.error("[ Error when sending data source message. ] {}", e.getMessage());
+            LOG.error("[ Error when sending data source message. ] {}", e);
             throw new AssetMessageException(e.getMessage());
         } finally {
         	JMSUtils.disconnectQueue(connection);
@@ -148,7 +148,7 @@ public class AssetMessageProducerBean implements AssetMessageProducer, ConfigMes
             response.setJMSCorrelationID(message.getJMSMessageID());
             getProducer(session, message.getJMSReplyTo()).send(response);
         } catch (JMSException e) {
-            LOG.error("[ Error when returning module asset request. ] {} {}", e.getMessage(), e.getStackTrace());
+            LOG.error("[ Error when returning module asset request. ] {} {}", e, e.getStackTrace());
         } finally {
         	JMSUtils.disconnectQueue(connection);
         }
@@ -170,9 +170,9 @@ public class AssetMessageProducerBean implements AssetMessageProducer, ConfigMes
             getProducer(session, message.getMessage().getJMSReplyTo()).send(response);
 
         } catch (JMSException | AssetException e) {
-            LOG.error("[ Error when returning Error message to recipient. ] {} ", e.getMessage());
+            LOG.error("[ Error when returning Error message to recipient. ] {} ", e);
         } catch (EJBTransactionRolledbackException e) {
-            LOG.error("[ Error when returning Error message to recipient. Usual cause is NoAssetEntityFoundException ] {} ", e.getMessage());
+            LOG.error("[ Error when returning Error message to recipient. Usual cause is NoAssetEntityFoundException ] {} ", e);
         } finally {
         	JMSUtils.disconnectQueue(connection);
         }
@@ -184,7 +184,7 @@ public class AssetMessageProducerBean implements AssetMessageProducer, ConfigMes
         try {
             return sendModuleMessage(text, ModuleQueue.CONFIG);
         } catch (AssetMessageException e) {
-            LOG.error("[ Error when sending config message. ] {}", e.getMessage());
+            LOG.error("[ Error when sending config message. ] {}", e);
             throw new ConfigMessageException(e.getMessage());
         }
     }

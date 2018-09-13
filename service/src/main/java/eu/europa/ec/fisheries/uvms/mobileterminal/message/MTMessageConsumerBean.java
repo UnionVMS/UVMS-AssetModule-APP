@@ -79,8 +79,8 @@ public class MTMessageConsumerBean implements MessageListener {
                     break;
             }
         } catch (NullPointerException | AssetException e) {
-            LOG.error("[ Error when receiving message in mobileterminal. ] {}", e.getMessage());
-            errorEvent.fire(new EventMessage(textMessage, "Error when receivning message in mobileterminal: " + e.getMessage()));
+            LOG.error("[ Error when receiving message in mobileterminal. ] {}", e);
+            errorEvent.fire(new EventMessage(textMessage, "Error when receivning message in mobileterminal: " + e));
         }
     }
 }

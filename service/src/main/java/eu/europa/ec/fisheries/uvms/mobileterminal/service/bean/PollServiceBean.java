@@ -119,7 +119,7 @@ public class PollServiceBean implements PollService {
             String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollStarted(startedPoll.getPollId().getGuid(), username);
             MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException | RuntimeException e) {
-            LOG.error("Failed to send audit log message due tue: " + e.getMessage() + "! Poll with guid {} was started", startedPoll.getPollId().getGuid());
+            LOG.error("Failed to send audit log message due tue: " + e + "! Poll with guid {} was started", startedPoll.getPollId().getGuid());
         }
 
         return startedPoll;
@@ -135,7 +135,7 @@ public class PollServiceBean implements PollService {
             String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollStopped(stoppedPoll.getPollId().getGuid(), username);
             MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException | RuntimeException e) {
-            LOG.error("Failed to send audit log message due tue: " + e.getMessage() + "! Poll with guid {} was stopped", stoppedPoll.getPollId().getGuid());
+            LOG.error("Failed to send audit log message due tue: " + e + "! Poll with guid {} was stopped", stoppedPoll.getPollId().getGuid());
         }
         return stoppedPoll;
     }
@@ -149,7 +149,7 @@ public class PollServiceBean implements PollService {
             String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollInactivated(inactivatedPoll.getPollId().getGuid(), username);
             MTMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException | RuntimeException e) {
-            LOG.error("Failed to send audit log message due tue: " + e.getMessage() + "! Poll with guid {} was inactivated", inactivatedPoll.getPollId().getGuid());
+            LOG.error("Failed to send audit log message due tue: " + e + "! Poll with guid {} was inactivated", inactivatedPoll.getPollId().getGuid());
         }
 
         return inactivatedPoll;

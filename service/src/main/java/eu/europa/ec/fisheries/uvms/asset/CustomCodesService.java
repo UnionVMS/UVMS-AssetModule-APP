@@ -15,9 +15,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 
 import java.time.OffsetDateTime;
-import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Map;
 
 
 public interface CustomCodesService {

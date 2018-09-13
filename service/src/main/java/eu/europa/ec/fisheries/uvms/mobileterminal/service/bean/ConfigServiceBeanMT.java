@@ -96,7 +96,7 @@ public class ConfigServiceBeanMT implements ConfigService {
             }
             return ExchangeModuleResponseMapper.mapServiceListResponse(response, messageId);
         } catch (ExchangeModelMapperException | RuntimeException e) {
-            LOG.error("Failed to map to exchange get service list request due tue: " + e.getMessage());
+            LOG.error("Failed to map to exchange get service list request due tue: " + e);
             throw new RuntimeException("Failed to map to exchange get service list request", e);
         }
     }

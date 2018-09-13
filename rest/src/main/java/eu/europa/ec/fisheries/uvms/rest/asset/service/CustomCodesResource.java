@@ -54,7 +54,7 @@ public class CustomCodesResource {
             return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -77,7 +77,7 @@ public class CustomCodesResource {
             return Response.status(200).entity(json).type(MediaType.APPLICATION_JSON)
                     .header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -104,7 +104,7 @@ public class CustomCodesResource {
                     .header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when fetching CustomCode. " + validFromDate + " " +  validToDate);
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -137,7 +137,7 @@ public class CustomCodesResource {
 
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -164,7 +164,7 @@ public class CustomCodesResource {
 
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -191,7 +191,7 @@ public class CustomCodesResource {
 
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -212,7 +212,7 @@ public class CustomCodesResource {
             return Response.ok(constants).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -231,7 +231,7 @@ public class CustomCodesResource {
             return Response.ok(json).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -256,7 +256,7 @@ public class CustomCodesResource {
             return Response.ok().header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
         }
     }
 

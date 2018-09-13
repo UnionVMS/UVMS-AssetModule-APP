@@ -84,7 +84,7 @@ public class ExchangeModuleResponseMapper {
 			return unmarshalledResponse.getService();
 		} catch(JMSException | ExchangeValidationException e) {
 			LOG.error("[ Error when mapping response to service types ]");
-			throw new ExchangeModelMapperException("[ Error when mapping response to service types ] " + e.getMessage());
+			throw new ExchangeModelMapperException("[ Error when mapping response to service types ] " + e);
 		}
 	}
 
@@ -96,7 +96,7 @@ public class ExchangeModuleResponseMapper {
 			//TODO handle ExchangeValidationException - extract fault...
 		} catch(JMSException | ExchangeModelMarshallException e) {
 			LOG.error("[ Error when mapping response to service types ]");
-			throw new ExchangeModelMapperException("[ Error when mapping response to service types ] " + e.getMessage());
+			throw new ExchangeModelMapperException("[ Error when mapping response to service types ] " + e);
 		}
 	}
 
