@@ -61,7 +61,7 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .get();
 
-        assertThat(response.getStatus(), is(Status.BAD_REQUEST.getStatusCode()));
+        assertThat(response.getStatus(), is(Status.INTERNAL_SERVER_ERROR.getStatusCode()));   //You really could argue that this should be a bad request but the server was returning 400 for everything, if there is only one thing returned for every error it is better if it is a 500
     }
     
     @Test

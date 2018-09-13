@@ -21,6 +21,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -280,15 +281,16 @@ public class Asset implements Serializable {
     private String prodOrgName;
 
 
+    @JsonIgnore         //to stop json from serializing the entire MT tree
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "asset", cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
     private List<MobileTerminalEvent> mobileTerminalEvent;
 
     @PrePersist
-    @PreUpdate
     private void generateNewHistoryId() {
         this.historyId = UUID.randomUUID();
     }
+
 
     public UUID getId() {
         return id;

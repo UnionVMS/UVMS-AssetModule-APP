@@ -39,7 +39,7 @@ public class MTErrorHandler {
     	/*if(ex instanceof MobileTerminalModelException) {
     		return new MTResponseDto<>(ex.getMessage(), MTResponseCode.MOBILE_TERMINAL_ERROR);
     	}*/
-        return new MTResponseDto<>(ex.getMessage(), MTResponseCode.UNDEFINED_ERROR);
+        return new MTResponseDto<>(ex, MTResponseCode.UNDEFINED_ERROR);
     }
 
 //    private static MTResponseDto extractFault(MobileTerminalFaultException ex) {

@@ -14,14 +14,14 @@ import java.util.List;
 
 public class AssetBO {
 
-    private Asset asset;
+    private AssetDTO asset;
     private List<ContactInfo> contacts;
     private List<Note> notes;
     
-    public Asset getAsset() {
+    public AssetDTO getAsset() {
         return asset;
     }
-    public void setAsset(Asset asset) {
+    public void setAsset(AssetDTO asset) {
         this.asset = asset;
     }
     public List<ContactInfo> getContacts() {

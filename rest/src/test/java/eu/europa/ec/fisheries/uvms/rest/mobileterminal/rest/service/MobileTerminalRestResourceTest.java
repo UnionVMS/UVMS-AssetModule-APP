@@ -92,7 +92,6 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     @Test
     public void getMobileTerminalByIdTest() {
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
-
         String created = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)

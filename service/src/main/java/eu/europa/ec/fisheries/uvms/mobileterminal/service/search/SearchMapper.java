@@ -126,7 +126,7 @@ public class SearchMapper {
                     builder.append(operator);
                 }
                 if ("CONNECT_ID".equals(key)) {
-                    builder.append(" ( me.connectId = ")
+                    builder.append(" ( me.asset.id = ")
                             .append("'").append(criteria.getValue()).append("' ) ");
                 } else {
                     if (MobileTerminalSearchAttributes.isAttribute(key)) {
