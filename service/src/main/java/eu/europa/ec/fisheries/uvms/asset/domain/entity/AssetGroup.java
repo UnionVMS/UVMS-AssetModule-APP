@@ -24,6 +24,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -79,6 +80,7 @@ public class AssetGroup implements Serializable {
     @Column(name = "user_id")
     private String owner;
 
+    @JsonManagedReference
     @OneToMany(mappedBy="assetGroup", cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
     private List<AssetGroupField> assetGroupFields;

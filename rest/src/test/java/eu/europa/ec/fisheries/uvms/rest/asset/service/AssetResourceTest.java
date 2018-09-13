@@ -22,6 +22,7 @@ import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
@@ -146,7 +147,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .put(Entity.json(asset));
         
         assertTrue(response != null);
-        assertThat(response.getStatus(), is(Status.BAD_REQUEST.getStatusCode()));
+        assertThat(response.getStatus(), is(Status.INTERNAL_SERVER_ERROR.getStatusCode()));             //You really could argue that this should be a bad request but the server was returning 400 for everything, if there is only one thing returned for every error it is better if it is a 500
     }
     
     @Test
@@ -178,7 +179,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .put(Entity.json(asset));
         
         assertTrue(response != null);
-        assertThat(response.getStatus() , is(Status.BAD_REQUEST.getStatusCode()));
+        assertThat(response.getStatus() , is(Status.INTERNAL_SERVER_ERROR.getStatusCode()));            //You really could argue that this should be a bad request but the server was returning 400 for everything, if there is only one thing returned for every error it is better if it is a 500
     }
     
     @Test
@@ -279,6 +280,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         assertEquals(originalName, assetByCfrAndTimestamp1.getName());
     }
 
+    @Ignore     //since we no longer serialize the connection between asset and MT this will not work
     @Test
     public void checkPastNumberOfMTTest() throws Exception {
 
@@ -329,6 +331,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
 
     }
 
+    @Ignore   //since we no longer serialize the connection between asset and MT this will not work
     @Test
     public void getAssetAndConnectedMobileTerminalTest() throws Exception {
 
