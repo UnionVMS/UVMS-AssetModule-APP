@@ -31,7 +31,7 @@ import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.asset.client.model.AssetDTO;
 
 @RunWith(Arquillian.class)
-public class AssetClientDTOTest extends AbstractClientTest {
+public class AssetClientTest extends AbstractClientTest {
 
     @Inject
     eu.europa.ec.fisheries.uvms.asset.client.AssetClient assetClient;
@@ -100,6 +100,7 @@ public class AssetClientDTOTest extends AbstractClientTest {
         assertThat(upsertAsset, CoreMatchers.is(CoreMatchers.notNullValue()));
     }
 
+
     @Test
     public void queryAssetsTest() {
         AssetDTO asset = AssetHelper.createBasicAsset();
@@ -108,12 +109,11 @@ public class AssetClientDTOTest extends AbstractClientTest {
         AssetDTO upsertAsset = assetClient.upsertAsset(assetBo);
         AssetQuery assetQuery = new AssetQuery();
         assetQuery.setFlagState(Arrays.asList(asset.getFlagStateCode()));
-        List<AssetDTO> assets = assetClient.getAssetList(assetQuery);
+        List<AssetDTO> assets = assetClient.getAssetList(assetQuery, 1, 1000, true);
         assertTrue(assets.stream()
                 .filter(a -> a.getId().equals(upsertAsset.getId()))
                 .count() == 1);
     }
-
     @Test
     public void upsertAssetJMSTest() throws Exception {
         AssetDTO asset = AssetHelper.createBasicAsset();

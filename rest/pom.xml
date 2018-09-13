@@ -59,8 +59,6 @@
             <version>${project.parent.version}</version>
             <scope>test</scope>
         </dependency>
-
-
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-client</artifactId>
@@ -113,21 +111,6 @@
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
-            <!--plugin>
-                <groupId>com.sebastian-daschner</groupId>
-                <artifactId>jaxrs-analyzer-maven-plugin</artifactId>
-                <version>0.16</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>analyze-jaxrs</goal>
-                        </goals>
-                        <configuration>
-                            <backend>swagger</backend>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin-->
         </plugins>
     </build>
 

@@ -11,8 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-
-import org.hibernate.criterion.MatchMode;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.exception.RevisionDoesNotExistException;
@@ -21,6 +19,7 @@ import org.hibernate.envers.query.AuditQuery;
 import org.hibernate.envers.query.criteria.AuditCriterion;
 import org.hibernate.envers.query.criteria.AuditDisjunction;
 import org.hibernate.envers.query.criteria.ExtendableCriterion;
+import org.hibernate.envers.query.criteria.MatchMode;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
@@ -167,7 +166,7 @@ public class AssetDao {
             if (useLike(searchKeyValue)) {
                 AuditDisjunction op = AuditEntity.disjunction();
                 for (String value : searchKeyValue.getSearchValues()) {
-                    op.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).like("%" + value.replace("*", "") + "%"));
+                    op.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).ilike(value.replace("*", "%").toLowerCase(), MatchMode.ANYWHERE));
                 }
                 operatorUsed = true;
                 operator.add(op);

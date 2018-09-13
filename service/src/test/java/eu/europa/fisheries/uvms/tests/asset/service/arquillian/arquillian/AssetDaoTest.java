@@ -682,7 +682,8 @@ public class AssetDaoTest extends TransactionalTests {
     @Test
     public void getAssetListSearchPaginatedTestWildcardSearch() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
-        String searchName = "TestLikeSearchName";
+        String randomNumbers = AssetTestsHelper.getRandomIntegers(10);
+        String searchName = "TestLikeSearchName" + randomNumbers;
         asset.setName(searchName);
         assetDao.createAsset(asset);
         commit();
@@ -690,7 +691,27 @@ public class AssetDaoTest extends TransactionalTests {
         List<SearchKeyValue> searchKeyValues = new ArrayList<>();
         SearchKeyValue searchKey = new SearchKeyValue();
         searchKey.setSearchField(SearchFields.NAME);
-        searchKey.setSearchValues(Arrays.asList("*LikeSearch*"));
+        searchKey.setSearchValues(Arrays.asList("*LikeSearch*" + randomNumbers));
+        searchKeyValues.add(searchKey);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
+        
+        assertEquals(1, assets.size());
+        assertThat(assets.get(0).getName(), is(searchName));
+    }
+    
+    @Test
+    public void getAssetListSearchPaginatedTestWildcardSearchCaseInsensitive() throws Exception {
+        Asset asset = AssetTestsHelper.createBasicAsset();
+        String randomNumbers = AssetTestsHelper.getRandomIntegers(10);
+        String searchName = "TestLikeSearchName" + randomNumbers;
+        asset.setName(searchName);
+        assetDao.createAsset(asset);
+        commit();
+        
+        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
+        SearchKeyValue searchKey = new SearchKeyValue();
+        searchKey.setSearchField(SearchFields.NAME);
+        searchKey.setSearchValues(Arrays.asList("*likeSearch*" + randomNumbers));
         searchKeyValues.add(searchKey);
         List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
         
