@@ -4,7 +4,7 @@
 
     <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
     <artifactId>asset</artifactId>
-    <version>4.0.17</version>
+    <version>4.0.19-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <parent>
@@ -88,11 +88,12 @@
 
     <scm>
         <connection>scm:git:https://github.com/UnionVMS/UVMS-AssetModule-APP.git</connection>
-        <tag>asset-4.0.17</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <modules>
-    	<module>model</module>
+        <module>ejb-client</module>
+        <module>model</module>
         <module>LIQUIBASE</module>
         <module>domain</module>
         <module>rest</module>
@@ -101,7 +102,6 @@
         <module>message-impl</module>
         <module>module</module>
         <module>message-mock</module>
-        <module>ejb-client</module>
     </modules>
 
 </project>

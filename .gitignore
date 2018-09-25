@@ -3,4 +3,8 @@ logging.properties
 *.iml
 .idea/
 /rest/src/main/webapp/apidocs
-
+target/*
+scripts
+scripts/*
+.DS_Store
+module/C:/

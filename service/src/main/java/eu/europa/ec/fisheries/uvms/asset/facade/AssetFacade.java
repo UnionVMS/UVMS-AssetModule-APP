@@ -1,26 +1,19 @@
 package eu.europa.ec.fisheries.uvms.asset.facade;
 
 
-import eu.europa.ec.fisheries.uvms.asset.ejb.client.IAssetFacade;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
-import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleRequestMapper;
-import eu.europa.ec.fisheries.uvms.dao.AssetDao;
-import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
-import eu.europa.ec.fisheries.uvms.mapper.EntityToModelMapper;
-import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistoriesByCfrModuleRequest;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
-import lombok.extern.slf4j.Slf4j;
-
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.jms.TextMessage;
 import java.util.ArrayList;
 import java.util.List;
+import eu.europa.ec.fisheries.uvms.asset.ejb.client.IAssetFacade;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
+import eu.europa.ec.fisheries.uvms.dao.AssetDao;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
+import eu.europa.ec.fisheries.uvms.mapper.EntityToModelMapper;
+import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Stateless
@@ -28,7 +21,6 @@ public class AssetFacade implements IAssetFacade {
 
     @EJB
     private AssetDao assetDao;
-
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)

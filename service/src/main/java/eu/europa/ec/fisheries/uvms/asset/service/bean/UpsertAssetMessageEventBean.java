@@ -22,7 +22,7 @@ public class UpsertAssetMessageEventBean {
 
     @Inject
     @AssetMessageErrorEvent
-    Event<AssetMessageEvent> assetErrorEvent;
+    private  Event<AssetMessageEvent> assetErrorEvent;
 
     @EJB
     private AssetService service;
