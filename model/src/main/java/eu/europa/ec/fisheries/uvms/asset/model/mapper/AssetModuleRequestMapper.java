@@ -147,12 +147,6 @@ public class AssetModuleRequestMapper {
         return JAXBMarshaller.marshallJaxBObjectToString(findAssetByCfrModuleResponse);
     }
 
-    public static String createActivityRulesAssetModuleRequest(AssetListCriteria criteria) throws AssetModelMarshallException {
-        ActivityRulesAssetModuleRequest request = new ActivityRulesAssetModuleRequest();
-        request.setMethod(AssetModuleMethod.FIND_ASSET_ACTIVITY_RULES);
-        request.getCriteria().addAll(criteria.getCriterias());
-        return JAXBMarshaller.marshallJaxBObjectToString(request);
-    }
 
     public static String createActivityRulesAssetModuleResponse(Collection<Asset> assets) throws AssetModelMarshallException {
         ActivityRulesAssetModuleResponse response = new ActivityRulesAssetModuleResponse();

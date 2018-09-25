@@ -22,9 +22,11 @@
         <plugins>
             <!-- This configuration specifies what ends up in application.xml -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-ear-plugin</artifactId>
+                <version>3.0.0</version>
                 <configuration>
+                    <applicationName>asset-module</applicationName>
+                    <outputFileNameMapping>@{artifactId}@-@{version}@@{dashClassifier?}@.@{extension}@</outputFileNameMapping>
                     <modules>
                         <ejbModule>
                             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
@@ -46,6 +48,10 @@
                             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
                             <artifactId>asset-model</artifactId>
                         </jarModule>
+                        <jarModule>
+                            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+                            <artifactId>asset-ejb-client</artifactId>
+                        </jarModule>
                         <webModule>
                             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
                             <context-root>${context.root}${project.parent.artifactId}</context-root>
@@ -54,34 +60,10 @@
                     </modules>
                     <skinnyWars>true</skinnyWars>
                     <defaultLibBundleDir>APP-INF/lib</defaultLibBundleDir>
+                    <libraryDirectoryMode>none</libraryDirectoryMode>
+
                 </configuration>
             </plugin>
-            <!-- COPY TO FOLDER -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-installed</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>${project.groupId}</groupId>
-                                    <artifactId>${project.artifactId}</artifactId>
-                                    <version>${project.version}</version>
-                                    <type>${project.packaging}</type>
-                                </artifactItem>
-                            </artifactItems>
-                            <outputDirectory>C:\dev\WebLogic\domain1213\servers\AdminServer\upload</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
         </plugins>
     </build>
 
@@ -118,6 +100,12 @@
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+            <artifactId>asset-ejb-client</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>asset-rest</artifactId>
             <version>${project.parent.version}</version>
             <type>war</type>
@@ -147,38 +135,7 @@
             </build>
         </profile>
 
-        <profile>
-            <id>copy-ear</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <version>2.10</version>
-                        <executions>
-                            <execution>
-                                <id>copy-installed</id>
-                                <phase>install</phase>
-                                <goals>
-                                    <goal>copy</goal>
-                                </goals>
-                                <configuration>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>${project.groupId}</groupId>
-                                            <artifactId>${project.artifactId}</artifactId>
-                                            <version>${project.version}</version>
-                                            <type>${project.packaging}</type>
-                                        </artifactItem>
-                                    </artifactItems>
-                                    <outputDirectory>C:\dev\WebLogic\domain1213\servers\AdminServer\upload</outputDirectory>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
+
     </profiles>
 
 </project>

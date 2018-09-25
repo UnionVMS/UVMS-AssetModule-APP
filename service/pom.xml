@@ -89,7 +89,42 @@
             <type>pom</type>
             <scope>test</scope>
         </dependency>
-        
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+            <artifactId>asset-model</artifactId>
+            <version>4.0.17</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+            <artifactId>asset-dbaccess-domain</artifactId>
+            <version>4.0.17</version>
+            <scope>compile</scope>
+        </dependency>
+        <!--- used to bridge asset and rules -->
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+            <artifactId>asset-ejb-client</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+            <artifactId>asset-dbaccess-domain</artifactId>
+            <version>4.0.17</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+            <artifactId>asset-dbaccess-domain</artifactId>
+            <version>4.0.17</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+            <artifactId>asset-dbaccess-domain</artifactId>
+            <version>4.0.17</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

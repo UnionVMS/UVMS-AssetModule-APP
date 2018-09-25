@@ -31,7 +31,6 @@
                     <xsd:enumeration value="GET_FLAGSTATE_BY_ID_AND_DATE"/>
                     <xsd:enumeration value="GET_ASSET_FROMASSETID_AND_DATE"/>
                     <xsd:enumeration value="FIND_ASSET_HISTORIES_BY_CFR"/>
-                    <xsd:enumeration value="FIND_ASSET_ACTIVITY_RULES"/>
                 </xsd:restriction>
             </xsd:simpleType>
             
