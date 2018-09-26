@@ -24,12 +24,7 @@ import eu.europa.ec.fisheries.wsdl.asset.group.ListAssetGroupResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.UpsertAssetModuleResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.UpsertFishingGearModuleResponse;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetFault;
-import eu.europa.ec.fisheries.wsdl.asset.types.FishingGear;
-import eu.europa.ec.fisheries.wsdl.asset.types.FlagStateResponse;
-import eu.europa.ec.fisheries.wsdl.asset.types.FlagStateType;
-import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,6 +78,17 @@ public class AssetModuleResponseMapper {
         }
     }
 
+    public static List<BatchAssetListResponseElement> mapToBatchAssetListFromResponse(TextMessage response, String correlationId) throws AssetModelMapperException {
+        try {
+            validateResponse(response, correlationId);
+            BatchAssetListResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, BatchAssetListResponse.class);
+            return mappedResponse.getBatchList();
+        } catch (AssetModelMarshallException | JMSException e) {
+            LOG.error("[ Error when mapping response to list asset response. ] {}", e.getMessage());
+            throw new AssetModelMapperException("Error when returning assetList from response in ResponseMapper: " + e.getMessage());
+        }
+    }
+
     public static List<AssetGroup> mapToAssetGroupListFromResponse(TextMessage response, String correlationId) throws AssetModelMapperException {
         try {
             validateResponse(response, correlationId);
@@ -112,7 +118,6 @@ public class AssetModuleResponseMapper {
     }
 
     public static String mapFlagStateModuleResponse(FlagStateType flagState) throws AssetModelMapperException {
-
         FlagStateResponse response = new FlagStateResponse();
         response.setFlagState(flagState);
         return JAXBMarshaller.marshallJaxBObjectToString(response);
@@ -126,6 +131,12 @@ public class AssetModuleResponseMapper {
         GetAssetModuleResponse response = new GetAssetModuleResponse();
         response.setAsset(asset);
         return response;
+    }
+
+    public static String mapToBatchListAssetModuleResponse(List<BatchAssetListResponseElement> batchList) throws AssetModelMarshallException {
+        BatchAssetListResponse response = new BatchAssetListResponse();
+        response.getBatchList().addAll(batchList);
+        return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 
     public static AssetFault createFaultMessage(FaultCode code, String message) {

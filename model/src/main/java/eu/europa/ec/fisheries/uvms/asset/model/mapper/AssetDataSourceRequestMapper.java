@@ -11,10 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.model.mapper;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
@@ -23,41 +19,18 @@ import eu.europa.ec.fisheries.wsdl.asset.config.ConfigRequest;
 import eu.europa.ec.fisheries.wsdl.asset.fishinggear.FishingGearByIdRequest;
 import eu.europa.ec.fisheries.wsdl.asset.fishinggear.FishingGearListRequest;
 import eu.europa.ec.fisheries.wsdl.asset.fishinggear.UpsertFishingGearRequest;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupListByUserRequest;
-import eu.europa.ec.fisheries.wsdl.asset.group.CreateAssetGroupRequest;
-import eu.europa.ec.fisheries.wsdl.asset.group.DeleteAssetGroupRequest;
-import eu.europa.ec.fisheries.wsdl.asset.group.GetAssetGroupListByAssetGuidRequest;
-import eu.europa.ec.fisheries.wsdl.asset.group.GetAssetGroupRequest;
-import eu.europa.ec.fisheries.wsdl.asset.group.UpdateAssetGroupRequest;
+import eu.europa.ec.fisheries.wsdl.asset.group.*;
 import eu.europa.ec.fisheries.wsdl.asset.history.AssetHistoryListByAssetIdRequest;
 import eu.europa.ec.fisheries.wsdl.asset.history.GetAssetHistoryRequest;
-import eu.europa.ec.fisheries.wsdl.asset.source.AssetListByAssetGroupRequest;
-import eu.europa.ec.fisheries.wsdl.asset.source.AssetListGroupByFlagStateRequest;
-import eu.europa.ec.fisheries.wsdl.asset.source.AssetListRequest;
-import eu.europa.ec.fisheries.wsdl.asset.source.CreateAssetRequest;
-import eu.europa.ec.fisheries.wsdl.asset.source.GetAssetRequest;
-import eu.europa.ec.fisheries.wsdl.asset.source.UpdateAssetRequest;
-import eu.europa.ec.fisheries.wsdl.asset.source.UpsertAssetRequest;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetDataSourceMethod;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetHistoryId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteria;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteriaPair;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListPagination;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
-import eu.europa.ec.fisheries.wsdl.asset.types.FishingGear;
-import eu.europa.ec.fisheries.wsdl.asset.types.SingleAssetResponse;
+import eu.europa.ec.fisheries.wsdl.asset.source.*;
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//import eu.europa.ec.fisheries.wsdl.transportMeans.module.AssetListGroupByFlagStateRequest;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- **/
 public class AssetDataSourceRequestMapper {
     
     final static Logger LOG = LoggerFactory.getLogger(AssetDataSourceRequestMapper.class);

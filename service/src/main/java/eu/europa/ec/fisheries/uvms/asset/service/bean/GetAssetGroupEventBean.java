@@ -5,11 +5,13 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.jms.JMSException;
+import javax.jms.TextMessage;
 import java.util.List;
 
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
-import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
+import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
@@ -26,26 +28,25 @@ public class GetAssetGroupEventBean {
     private final static Logger LOG = LoggerFactory.getLogger(GetAssetGroupEventBean.class);
 
     @EJB
-    private MessageProducer messageProducer;
+    private AssetMessageProducer messageProducer;
 
     @EJB
     private AssetGroupService assetGroup;
 
     @Inject
     @AssetMessageErrorEvent
-    Event<AssetMessageEvent> assetErrorEvent;
+    private Event<AssetMessageEvent> assetErrorEvent;
 
     public void getAssetGroupByUserName(AssetMessageEvent message) {
-        LOG.info("Get asset group");
+        TextMessage jmsMessage = message.getMessage();
         try {
             AssetGroupListByUserRequest request = message.getRequest();
             List<AssetGroup> response = assetGroup.getAssetGroupList(request.getUser());
-
-            LOG.debug("Send back assetGroupList response.");
-            messageProducer.sendModuleResponseMessage(message.getMessage(), AssetModuleResponseMapper.mapToAssetGroupListResponse(response));
-        } catch (AssetException e) {
+            messageProducer.sendModuleResponseMessageOv(jmsMessage, AssetModuleResponseMapper.mapToAssetGroupListResponse(response));
+            LOG.info("Response sent back to requestor on queue [ {} ]", jmsMessage!= null ? jmsMessage.getJMSReplyTo() : "Null!!!");
+        } catch (AssetException  | JMSException e) {
             LOG.error("[ Error when getting assetGroupList from source. ] ");
-            assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting AssetGroupByUserName [ " + e.getMessage())));
+            assetErrorEvent.fire(new AssetMessageEvent(jmsMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting AssetGroupByUserName [ " + e.getMessage())));
         }
     }
 
