@@ -22,12 +22,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.jms.TextMessage;
+import java.util.List;
 
 public class AssetMessageEvent {
 
     private TextMessage message;
     private AssetId assetId;
     private AssetListQuery query;
+    private List<AssetListQuery> batchQuery;
     private AssetGroupListByUserRequest request;
     private GetAssetListByAssetGroupsRequest assetListByGroup;
     private AssetFault fault;
@@ -46,6 +48,11 @@ public class AssetMessageEvent {
     public AssetMessageEvent(TextMessage message, GetAssetListByAssetGroupsRequest assetId) {
         this.message = message;
         this.assetListByGroup = assetId;
+    }
+
+    public AssetMessageEvent(TextMessage message, List<AssetListQuery> batchQuery) {
+        this.message = message;
+        this.batchQuery = batchQuery;
     }
 
     public AssetMessageEvent(TextMessage message, AssetId assetId) {
@@ -197,5 +204,9 @@ public class AssetMessageEvent {
 
     public void setGetAssetFromAssetIdAndDateRequest(GetAssetFromAssetIdAndDateRequest getAssetFromAssetIdAndDateRequest) {
         this.getAssetFromAssetIdAndDateRequest = getAssetFromAssetIdAndDateRequest;
+    }
+
+    public List<AssetListQuery> getBatchQuery() {
+        return batchQuery;
     }
 }

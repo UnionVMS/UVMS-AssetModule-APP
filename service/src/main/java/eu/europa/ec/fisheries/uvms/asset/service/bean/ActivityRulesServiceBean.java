@@ -10,17 +10,9 @@
 
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-import javax.jms.TextMessage;
-import java.util.List;
-
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
-import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
+import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.dao.AssetDao;
@@ -31,28 +23,39 @@ import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteriaPair;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
+import javax.jms.JMSException;
+import javax.jms.TextMessage;
+import java.util.List;
+
 @Stateless
 @LocalBean
 @Slf4j
 public class ActivityRulesServiceBean {
 
     @EJB
-    private MessageProducer messageProducer;
+    private AssetMessageProducer messageProducer;
 
-    @EJB AssetDao assetDao;
+    @EJB
+    private AssetDao assetDao;
 
     @Inject
     @AssetMessageErrorEvent
     private Event<AssetMessageEvent> assetErrorEvent;
 
-    public void findAssetByCriteria(ActivityRulesAssetModuleRequest request, TextMessage textMessage) {
+    public void findAssetByCriteria(ActivityRulesAssetModuleRequest request, TextMessage jmsMessage) {
         try {
             List<AssetListCriteriaPair> criteria = request.getCriteria();
             List<AssetHistory> assetHistories = assetDao.getAssetHistoryByCriteria(criteria, 1);
             List<Asset> assets = EntityToModelMapper.toAssetFromAssetHistory(assetHistories);
             String findAssetByCfrResponse = AssetModuleRequestMapper.createActivityRulesAssetModuleResponse(assets);
-            messageProducer.sendModuleResponseMessage(textMessage, findAssetByCfrResponse);
-        } catch (AssetModelException e) {
+            messageProducer.sendModuleResponseMessageOv(jmsMessage, findAssetByCfrResponse);
+            log.info("Response sent back to requestor on queue [ {} ]", jmsMessage!= null ? jmsMessage.getJMSReplyTo() : "Null!!!");
+        } catch (AssetModelException  | JMSException e) {
             log.error("Error when creating createFindAssetByCfrResponse", e);
         }
     }

@@ -18,7 +18,7 @@ import java.util.List;
 import eu.europa.ec.fisheries.uvms.asset.message.ModuleQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.mapper.AuditModuleRequestMapper;
-import eu.europa.ec.fisheries.uvms.asset.message.producer.MessageProducer;
+import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
@@ -34,10 +34,10 @@ public class AssetGroupServiceBean implements AssetGroupService {
     private static  final String GROUP_QUALIFIER_PREFIX = "Group: ";
 
     @EJB
-    MessageProducer messageProducer;
+    private AssetMessageProducer messageProducer;
 
     @EJB
-    AssetQueueConsumer receiver;
+    private AssetQueueConsumer receiver;
 
     @EJB
     private AssetGroupDomainModelBean assetGroupDomainModel;

@@ -11,66 +11,37 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.message.consumer.bean;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.Queue;
-import javax.jms.Session;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import eu.europa.ec.fisheries.uvms.asset.message.AssetConstants;
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
-import eu.europa.ec.fisheries.uvms.commons.message.impl.JMSUtils;
+import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractConsumer;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigMessageException;
 import eu.europa.ec.fisheries.uvms.config.message.ConfigMessageConsumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 
 @Stateless
-public class AssetQueueConsumerBean implements AssetQueueConsumer, ConfigMessageConsumer {
+public class AssetQueueConsumerBean extends AbstractConsumer implements AssetQueueConsumer, ConfigMessageConsumer {
 
-    final static Logger LOG = LoggerFactory.getLogger(AssetQueueConsumerBean.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AssetQueueConsumerBean.class);
 
     private final static long TIMEOUT = 30000;
 
-    private Queue responseAssetQueue;
-
-    private ConnectionFactory connectionFactory;
-
-    @PostConstruct
-    private void init() {
-        connectionFactory = JMSUtils.lookupConnectionFactory();
-        responseAssetQueue = JMSUtils.lookupQueue(AssetConstants.QUEUE_ASSET);
-    }
-
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     @Override
-    public <T> T getMessage(String correlationId, Class type) throws AssetMessageException {
-    	if (correlationId == null || correlationId.isEmpty()) {
-    		throw new AssetMessageException("No CorrelationID provided!");
-    	}
-    	Connection connection=null;
-
+    public <T> T getMessageOv(String correlationId, Class type) throws AssetMessageException {
+        if (correlationId == null || correlationId.isEmpty()) {
+            throw new AssetMessageException("No CorrelationID provided!");
+        }
         try {
-            
-            connection = connectionFactory.createConnection();
-            final Session session = JMSUtils.connectToQueue(connection);
-
-            T response = (T) session.createConsumer(responseAssetQueue, "JMSCorrelationID='" + correlationId + "'").receive(TIMEOUT);
-            if (response == null) {
-                throw new AssetMessageException("[ Timeout reached or message null in AssetQueueConsumerBean. ]");
-            }
-
-            return response;
+            return getMessage(correlationId, type, TIMEOUT);
         } catch (Exception e) {
             LOG.error("[ Error when retrieving message. ] {}", e.getMessage());
             throw new AssetMessageException("Error when retrieving message: " + e.getMessage());
-        } finally {
-        	JMSUtils.disconnectQueue(connection);
         }
     }
 
@@ -78,12 +49,16 @@ public class AssetQueueConsumerBean implements AssetQueueConsumer, ConfigMessage
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public <T> T getConfigMessage(String correlationId, Class type) throws ConfigMessageException {
         try {
-            return getMessage(correlationId, type);
-        }
-        catch (AssetMessageException e) {
+            return getMessageOv(correlationId, type);
+        } catch (AssetMessageException e) {
             LOG.error("[ Error when getting config message. ] {}", e.getMessage());
             throw new ConfigMessageException(e.getMessage());
         }
+    }
+
+    @Override
+    public String getDestinationName() {
+        return AssetConstants.QUEUE_ASSET;
     }
 
 }
