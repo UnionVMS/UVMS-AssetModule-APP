@@ -67,11 +67,14 @@ public class MobileTerminalRestResource {
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
     public MTResponseDto<MobileTerminalType> createMobileTerminal(MobileTerminalType mobileTerminalType) {
         LOG.info("Create mobile terminal invoked in rest layer.");
+        LOG.info("MobileTerminalType: SHORT_PREFIX_STYLE", mobileTerminalType.toString());
         try {
             mobileTerminalType.setSource(MobileTerminalSource.INTERNAL);
             String serialNumber = mobileTerminalService.assertTerminalHasSerialNumber(mobileTerminalType);
             UUID id = null;
-            if(mobileTerminalType.getMobileTerminalId() != null){
+            if(mobileTerminalType.getMobileTerminalId() != null
+                    && mobileTerminalType.getMobileTerminalId().getGuid() != null
+                    && !mobileTerminalType.getMobileTerminalId().getGuid().isEmpty()){
                 id = UUID.fromString(mobileTerminalType.getMobileTerminalId().getGuid());
             }
             mobileTerminalService.assertTerminalNotExists(id, serialNumber);
