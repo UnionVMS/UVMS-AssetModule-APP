@@ -11,6 +11,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.exception.RevisionDoesNotExistException;
@@ -289,5 +291,12 @@ public class AssetDao {
         return (Asset) auditReader.createQuery().forRevisionsOfEntity(Asset.class, true, true)
                 .add(AuditEntity.property("historyId").eq(historyId))
                 .getSingleResult();
+    }
+
+    public Asset getAssetByConnectId(UUID uuid) {
+        // ConnectId exists in MobileTerminalEvent so we must look there
+        List<Asset> ret  = em.createNamedQuery(MobileTerminalEvent.GET_ASSET_USING_CONNECTID, Asset.class).setParameter("connectId", uuid).getResultList();
+        //if(ret.size() > 0 ) return ret.get(0);
+        return null;
     }
 }

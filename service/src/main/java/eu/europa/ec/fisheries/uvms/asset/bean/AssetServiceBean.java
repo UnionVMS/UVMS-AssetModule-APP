@@ -431,4 +431,9 @@ public class AssetServiceBean implements AssetService {
         }
         contactDao.deleteContactInfo(contactInfo);
     }
+
+    @Override
+    public Asset getAssetByConnectId(UUID uuid) {
+        return assetDao.getAssetByConnectId(uuid);
+    }
 }

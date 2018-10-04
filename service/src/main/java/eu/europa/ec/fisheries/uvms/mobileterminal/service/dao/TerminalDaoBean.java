@@ -13,6 +13,7 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.dao;
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
 
 import javax.ejb.Stateless;
 import javax.persistence.*;
@@ -74,5 +75,13 @@ public class TerminalDaoBean  {
     public List<MobileTerminal> getMobileTerminalsByQuery(String sql) {
         Query query = em.createQuery(sql, MobileTerminal.class);
         return query.getResultList();
+    }
+
+    public MobileTerminal findMobileTerminalByAsset(UUID assetid) {
+
+        // ConnectId exists in MobileTerminalEvent so we must look there
+        //List<MobileTerminal> ret  = em.createNamedQuery(MobileTerminalEvent.GET_MOBILETERMINAL_USING_CONNECTID, MobileTerminal.class).setParameter("connectId", assetid).getResultList();
+        //if(ret.size() > 0 ) return ret.get(0);
+        return null;
     }
 }
