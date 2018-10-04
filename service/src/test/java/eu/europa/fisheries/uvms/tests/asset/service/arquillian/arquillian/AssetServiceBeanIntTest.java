@@ -385,13 +385,4 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         MobileTerminal created = mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
         return created;
     }
-
-    private MobileTerminal createMobileterminal(Asset asset) {
-
-        MobileTerminal mobileTerminal = testPollHelper.createBasicMobileTerminal(asset);
-        MobileTerminal created = mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
-        return created;
-    }
-
-
 }
