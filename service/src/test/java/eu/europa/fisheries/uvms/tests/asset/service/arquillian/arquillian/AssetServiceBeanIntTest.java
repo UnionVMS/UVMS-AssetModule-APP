@@ -353,7 +353,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
 
     @Test
-    public void testGetAssetByConnectId() throws AssetServiceException {
+    public void testGetMobileTerminalByConnectId()  {
         Asset asset = createAsset();
         MobileTerminal mobileTerminal = createMobileterminal();
         mobileTerminal.getCurrentEvent().setActive(false);
@@ -372,6 +372,13 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         UUID fetchedUUID = UUID.fromString(fetchedTerminal.getMobileTerminalId().getGuid());
         Assert.assertEquals(mobileTerminal.getId(), fetchedUUID);
     }
+
+    @Test
+    public void testGetAssetByConnectId()  {
+    }
+
+
+
 
     private Asset createAsset() {
         Asset asset = AssetTestsHelper.createBasicAsset();
