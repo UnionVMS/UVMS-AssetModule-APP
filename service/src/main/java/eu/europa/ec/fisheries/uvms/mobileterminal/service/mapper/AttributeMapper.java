@@ -121,6 +121,7 @@ public class AttributeMapper {
 
     static List<MobileTerminalAttribute> mapAttributeStringToTerminalAttribute(String attributeString) {
         List<MobileTerminalAttribute> attributeList = new ArrayList<>();
+        if(attributeString == null) return attributeList;
         Map<String, String> attributes = mapAttributeString(attributeString);
         for (String key : attributes.keySet()) {
             MobileTerminalAttribute attribute = new MobileTerminalAttribute();

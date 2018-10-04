@@ -42,7 +42,7 @@ import java.util.UUID;
 @NamedQueries({
 		@NamedQuery(name = "MobileTerminalEvent.findAll", query = "SELECT m FROM MobileTerminalEvent m"),
 		@NamedQuery(name = MobileTerminalEvent.GET_ASSET_USING_CONNECTID, query = "SELECT m.asset  FROM MobileTerminalEvent m  where m.asset.id = :connectId"),
-		@NamedQuery(name = MobileTerminalEvent.GET_MOBILETERMINAL_USING_CONNECTID, query = "SELECT m.mobileterminal FROM MobileTerminalEvent  m where m.mobileterminal.id = :connectId"),
+		@NamedQuery(name = MobileTerminalEvent.GET_MOBILETERMINAL_USING_CONNECTID, query = "SELECT m.mobileterminal FROM MobileTerminalEvent  m where m.asset.id = :connectId"),
 })
 @Audited
 @Table(name = "mobileterminalevent", indexes = { @Index(columnList = "mobileterminal_id", name = "mobileterminalevent_mobterm_FK_INX10", unique = false),

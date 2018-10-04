@@ -3,11 +3,12 @@ package eu.europa.fisheries.uvms.tests.asset.service.arquillian.arquillian;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+
+import java.util.*;
+import javax.ejb.EJB;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
@@ -15,7 +16,16 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 
 
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PluginMapper;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
+import eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper.TestPollHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
@@ -35,6 +45,19 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
     @Inject
     private AssetService assetService;
+
+    @Inject
+    private TestPollHelper testPollHelper;
+
+    @Inject
+    private MobileTerminalServiceBean mobileTerminalService;
+
+    @Inject
+    private MobileTerminalPluginDaoBean pluginDao;
+
+    @PersistenceContext
+    private EntityManager em;
+
 
     @Test
     @OperateOnDeployment("normal")
@@ -133,22 +156,21 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         commit();
 
 
-
     }
-    
+
     @Test
     public void getRevisionsForAssetLimitedTest() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
         Asset createdAsset = assetService.createAsset(asset, "test");
         commit();
-        
+
         createdAsset.setName("NewName");
         assetService.updateAsset(asset, "test", "comment");
         commit();
-        
+
         List<Asset> revisions = assetService.getRevisionsForAsset(createdAsset.getId());
         assertEquals(2, revisions.size());
-        
+
         List<Asset> revisions2 = assetService.getRevisionsForAssetLimited(createdAsset.getId(), 10);
         assertEquals(2, revisions2.size());
 
@@ -156,20 +178,20 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         commit();
 
     }
-    
+
     @Test
     public void getRevisionsForAssetLimitedMaxNumberTest() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
         Asset createdAsset = assetService.createAsset(asset, "test");
         commit();
-        
+
         createdAsset.setName("NewName");
         assetService.updateAsset(asset, "test", "comment");
         commit();
-        
+
         List<Asset> revisions = assetService.getRevisionsForAsset(createdAsset.getId());
         assertEquals(2, revisions.size());
-        
+
         List<Asset> revisions2 = assetService.getRevisionsForAssetLimited(createdAsset.getId(), 1);
         assertEquals(1, revisions2.size());
 
@@ -177,15 +199,15 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         commit();
 
     }
-    
+
     @Test
     public void archiveAssetTest() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
         Asset createdAsset = assetService.createAsset(asset, "test");
         assetService.archiveAsset(createdAsset, "test", "archived");
-        
+
         Asset assetByCfr = assetService.getAssetById(AssetIdentifier.CFR, createdAsset.getCfr());
-        
+
         assertNull(assetByCfr);
     }
 
@@ -194,35 +216,35 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Asset asset = AssetTestsHelper.createBiggerAsset();
         asset = assetService.createAsset(asset, "test");
         commit();
-        
+
         List<SearchKeyValue> searchValues = new ArrayList<>();
         SearchKeyValue searchValue = new SearchKeyValue();
         searchValue.setSearchField(SearchFields.GUID);
         searchValue.setSearchValues(Arrays.asList(asset.getId().toString()));
         searchValues.add(searchValue);
-        
+
         List<Asset> assets = assetService.getAssetList(searchValues, 1, 100, true).getAssetList();
-        
+
         assertEquals(1, assets.size());
         assertEquals(asset.getCfr(), assets.get(0).getCfr());
         assetService.deleteAsset(AssetIdentifier.GUID, asset.getId().toString());
         commit();
     }
-    
+
     @Test
     public void getAssetListTestNameQuery() throws Exception {
         Asset asset = AssetTestsHelper.createBiggerAsset();
         asset = assetService.createAsset(asset, "test");
         commit();
-        
+
         List<SearchKeyValue> searchValues = new ArrayList<>();
         SearchKeyValue searchValue = new SearchKeyValue();
         searchValue.setSearchField(SearchFields.NAME);
         searchValue.setSearchValues(Arrays.asList(asset.getName()));
         searchValues.add(searchValue);
-        
+
         List<Asset> assets = assetService.getAssetList(searchValues, 1, 100, true).getAssetList();
-        
+
         assertTrue(!assets.isEmpty());
         assertEquals(asset.getCfr(), assets.get(0).getCfr());
         assetService.deleteAsset(AssetIdentifier.GUID, asset.getId().toString());
@@ -234,19 +256,19 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     public void createNotesTest() {
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetService.createAsset(asset, "test");
-        
+
         Note note = AssetTestsHelper.createBasicNote();
         assetService.createNoteForAsset(asset.getId(), note, "test");
-        
+
         List<Note> notes = assetService.getNotesForAsset(asset.getId());
         assertEquals(1, notes.size());
     }
-    
+
     @Test
     public void addNoteTest() {
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetService.createAsset(asset, "test");
-        
+
         Note note = AssetTestsHelper.createBasicNote();
         assetService.createNoteForAsset(asset.getId(), note, "test");
 
@@ -254,10 +276,10 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         assetService.createNoteForAsset(asset.getId(), note2, "test");
 
         List<Note> notes = assetService.getNotesForAsset(asset.getId());
-        
+
         assertEquals(2, notes.size());
     }
-    
+
     @Test
     public void deleteNoteTest() {
         Asset asset = AssetTestsHelper.createBasicAsset();
@@ -268,30 +290,30 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         List<Note> notes = assetService.getNotesForAsset(asset.getId());
         assertEquals(2, notes.size());
-        
+
         assetService.deleteNote(notes.get(0).getId());
 
         notes = assetService.getNotesForAsset(asset.getId());
         assertEquals(1, notes.size());
     }
-    
+
     @Test
     public void createContactInfoTest() {
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetService.createAsset(asset, "test");
-        
+
         ContactInfo contactInfo = AssetTestsHelper.createBasicContactInfo();
         assetService.createContactInfoForAsset(asset.getId(), contactInfo, "test");
-        
+
         List<ContactInfo> contacts = assetService.getContactInfoForAsset(asset.getId());
         assertEquals(1, contacts.size());
     }
-    
+
     @Test
     public void addContactInfoTest() {
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetService.createAsset(asset, "test");
-        
+
         ContactInfo contactInfo = AssetTestsHelper.createBasicContactInfo();
         assetService.createContactInfoForAsset(asset.getId(), contactInfo, "test");
 
@@ -299,10 +321,10 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         assetService.createContactInfoForAsset(asset.getId(), contactInfo2, "test");
 
         List<ContactInfo> contacts = assetService.getContactInfoForAsset(asset.getId());
-        
+
         assertEquals(2, contacts.size());
     }
-    
+
     @Test
     public void deleteContactInfoTest() {
         Asset asset = AssetTestsHelper.createBasicAsset();
@@ -313,7 +335,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         List<ContactInfo> contacts = assetService.getContactInfoForAsset(asset.getId());
         assertEquals(2, contacts.size());
-        
+
         assetService.deleteContactInfo(contacts.get(0).getId());
 
         contacts = assetService.getContactInfoForAsset(asset.getId());
@@ -324,8 +346,52 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         try {
             userTransaction.commit();
             userTransaction.begin();
-        } catch (RollbackException |HeuristicMixedException | HeuristicRollbackException |SystemException |  NotSupportedException e) {
+        } catch (RollbackException | HeuristicMixedException | HeuristicRollbackException | SystemException | NotSupportedException e) {
             throw new AssetServiceException(e);
         }
     }
+
+
+    @Test
+    public void testGetAssetByConnectId() throws AssetServiceException {
+        Asset asset = createAsset();
+        MobileTerminal mobileTerminal = createMobileterminal();
+        mobileTerminal.getCurrentEvent().setActive(false);
+        MobileTerminalEvent event = new MobileTerminalEvent();
+        event.setActive(true);
+        event.setAsset(asset);
+        event.setEventCodeType(EventCodeEnum.CREATE);
+        event.setMobileterminal(mobileTerminal);
+        mobileTerminal.getMobileTerminalEvents().add(event);
+        mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
+
+        MobileTerminalType fetchedTerminal = mobileTerminalService.findMobileTerminalByAsset(asset.getId());
+        Assert.assertNotNull(fetchedTerminal);
+        Assert.assertNotNull(fetchedTerminal.getMobileTerminalId());
+        Assert.assertNotNull(fetchedTerminal.getMobileTerminalId().getGuid());
+        UUID fetchedUUID = UUID.fromString(fetchedTerminal.getMobileTerminalId().getGuid());
+        Assert.assertEquals(mobileTerminal.getId(), fetchedUUID);
+    }
+
+    private Asset createAsset() {
+        Asset asset = AssetTestsHelper.createBasicAsset();
+        Asset createdAsset = assetService.createAsset(asset, "TEST");
+        return createdAsset;
+    }
+
+    private MobileTerminal createMobileterminal() {
+
+        MobileTerminal mobileTerminal = testPollHelper.createBasicMobileTerminal2();
+        MobileTerminal created = mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
+        return created;
+    }
+
+    private MobileTerminal createMobileterminal(Asset asset) {
+
+        MobileTerminal mobileTerminal = testPollHelper.createBasicMobileTerminal(asset);
+        MobileTerminal created = mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
+        return created;
+    }
+
+
 }

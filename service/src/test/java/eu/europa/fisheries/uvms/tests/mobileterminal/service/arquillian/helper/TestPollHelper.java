@@ -8,6 +8,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTermin
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.*;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollStateEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalModelToEntityMapper;
@@ -206,6 +207,40 @@ public class TestPollHelper {
         MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType,null ,mobileTerminalType.getAttributes().get(0).getValue(), mtp, "TEST_USERNAME");
         return mobileTerminal;
     }
+
+    public MobileTerminal createBasicMobileTerminal2(){
+        MobileTerminalType mobileTerminalType = createBasicMobileTerminalType();
+        MobileTerminalPlugin mtp = new MobileTerminalPlugin();
+        mtp.setPluginServiceName(UUID.randomUUID().toString());
+        mtp.setName("Thrane&Thrane&Thrane");
+        mtp.setPluginSatelliteType("INMARSAT_C");
+        mtp.setPluginInactive(false);
+        MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType,null ,mobileTerminalType.getAttributes().get(0).getValue(), mtp, "TEST_USERNAME");
+        return mobileTerminal;
+    }
+
+
+    public MobileTerminal createBasicMobileTerminal(Asset asset){
+
+        MobileTerminalType mobileTerminalType = createBasicMobileTerminalType();
+        MobileTerminalPlugin mtp = new MobileTerminalPlugin();
+//        mtp.setPluginServiceName("eu.europa.ec.fisheries.uvms.plugins.inmarsat");
+        mtp.setPluginServiceName(UUID.randomUUID().toString());
+        mtp.setName("Thrane&Thrane&Thrane");
+        mtp.setPluginSatelliteType("INMARSAT_C");
+        mtp.setPluginInactive(false);
+        MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType,null ,mobileTerminalType.getAttributes().get(0).getValue(), mtp, "TEST_USERNAME");
+
+        MobileTerminalEvent event  = new MobileTerminalEvent();
+        event.setActive(true);
+        event.setAsset(asset);
+        event.setEventCodeType(EventCodeEnum.CREATE);
+        event.setMobileterminal(mobileTerminal);
+        Set<MobileTerminalEvent> events = mobileTerminal.getMobileTerminalEvents();
+        events.add(event);
+        return mobileTerminal;
+    }
+
 
     public PluginService createPluginService() {
         PluginService pluginService = new PluginService();
