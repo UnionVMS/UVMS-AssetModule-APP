@@ -63,7 +63,7 @@ public class AssetModelMapper {
         }
         
         asset.setActive(assetModel.isActive());
-        if (asset.getSource() != null) {
+        if (assetModel.getSource() != null) {
             asset.setSource(assetModel.getSource().toString());
         }
         if (assetModel.getEventHistory() != null) {

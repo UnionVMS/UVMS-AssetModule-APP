@@ -31,6 +31,7 @@ import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteriaPair;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
+import eu.europa.ec.fisheries.wsdl.asset.types.CarrierSource;
 import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
 
 @RunWith(Arquillian.class)
@@ -131,6 +132,18 @@ public class AssetEventQueueTest extends AbstractMessageTest {
         assertThat(assetById.getName(), is(newName));
         assertThat(assetById.getExternalMarking(), is(asset.getExternalMarking()));
         assertThat(assetById.getIrcs(), is(asset.getIrcs()));
+    }
+    
+    @Test
+    @RunAsClient
+    public void assetSourceTest() throws Exception {
+        Asset asset = AssetTestHelper.createBasicAsset();
+        asset.setSource(CarrierSource.INTERNAL);
+        jmsHelper.upsertAsset(asset);
+        Thread.sleep(5000);
+        
+        Asset fetchedAsset = jmsHelper.getAssetById(asset.getCfr(), AssetIdType.CFR);
+        assertThat(fetchedAsset.getSource(), is(asset.getSource()));
     }
     
 //    @Test
