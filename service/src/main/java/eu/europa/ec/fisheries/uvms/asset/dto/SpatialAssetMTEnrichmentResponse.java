@@ -1,69 +1,45 @@
 package eu.europa.ec.fisheries.uvms.asset.dto;
 
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.UUID;
 
 public class SpatialAssetMTEnrichmentResponse implements Serializable {
 
-    // from mobileTerminal
-    private  UUID connectIdMT;
-    private  String typeMT;
+    private MobileTerminalType mobileTerminalType;
+    private Asset asset;
 
+    public SpatialAssetMTEnrichmentResponse(){}
 
-    // from Asset
-    private UUID guidAsset;
-    private String mameAsset;
-
-    public SpatialAssetMTEnrichmentResponse() {
+    public MobileTerminalType getMobileTerminalType() {
+        return mobileTerminalType;
     }
 
-    public UUID getConnectIdMT() {
-        return connectIdMT;
+    public void setMobileTerminalType(MobileTerminalType mobileTerminalType) {
+        this.mobileTerminalType = mobileTerminalType;
     }
 
-    public void setConnectIdMT(UUID connectIdMT) {
-        this.connectIdMT = connectIdMT;
+    public Asset getAsset() {
+        return asset;
     }
 
-    public String getTypeMT() {
-        return typeMT;
+    public void setAsset(Asset asset) {
+        this.asset = asset;
     }
-
-    public void setTypeMT(String typeMT) {
-        this.typeMT = typeMT;
-    }
-
-    public UUID getGuidAsset() {
-        return guidAsset;
-    }
-
-    public void setGuidAsset(UUID guidAsset) {
-        this.guidAsset = guidAsset;
-    }
-
-    public String getMameAsset() {
-        return mameAsset;
-    }
-
-    public void setMameAsset(String mameAsset) {
-        this.mameAsset = mameAsset;
-    }
-
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SpatialAssetMTEnrichmentResponse that = (SpatialAssetMTEnrichmentResponse) o;
-        return Objects.equals(connectIdMT, that.connectIdMT) &&
-                Objects.equals(typeMT, that.typeMT) &&
-                Objects.equals(guidAsset, that.guidAsset) &&
-                Objects.equals(mameAsset, that.mameAsset);
+        return Objects.equals(mobileTerminalType, that.mobileTerminalType) &&
+                Objects.equals(asset, that.asset);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(connectIdMT, typeMT, guidAsset, mameAsset);
+        return Objects.hash(mobileTerminalType, asset);
     }
 }

@@ -36,7 +36,6 @@ public class SpatialEnrichmentResource {
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response spatialenrichment(
-
             @DefaultValue("") @QueryParam("movementsourcename") String movementSourceName,
             @DefaultValue("") @QueryParam("plugintype") String rawMovementPluginType,
 
@@ -52,24 +51,17 @@ public class SpatialEnrichmentResource {
 
     ) {
         try {
-
-
             SpatialAssetMTEnrichmentResponse response  = spatialenrichment.getRequiredEnrichment(
-
                     movementSourceName,
                     rawMovementPluginType,
-
                     assetidtype_cfr,
                     assetidtype_ircs,
                     assetidtype_imo,
                     assetidtype_mmsi,
-
                     mobtermidtype_serialnumber,
                     mobtermidtype_les,
                     mobtermidtype_dnid,
                     mobtermidtype_membernumber);
-
-
             return Response.ok(response).build();
         } catch (Exception e) {
             LOG.error(e.toString(), e);

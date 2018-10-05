@@ -28,7 +28,6 @@ public class SpatialEnrichmentBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpatialEnrichmentBean.class);
 
-
     @Inject
     private AssetService assetService;
 
@@ -55,45 +54,21 @@ public class SpatialEnrichmentBean {
         Asset asset = null;
 
 
-        UUID mobileTerminalConnectId = null;
-        String mtType = "";
-        UUID  assetGuid = null;
-        String assetName = "";
-
         // try to find a mobileterminal
         MobileTerminalType mobileTerminal = getMobileTerminalByIdList(createIdList(mobtermidtype_serialnumber, mobtermidtype_les, mobtermidtype_dnid, mobtermidtype_membernumber), movementSourceName);
         if (mobileTerminal != null) {
-            mobileTerminalConnectId = UUID.fromString(mobileTerminal.getConnectId());
-            mtType = mobileTerminal.getType();
+            UUID mobileTerminalConnectId = UUID.fromString(mobileTerminal.getConnectId());
             if (mobileTerminalConnectId != null) {
                 asset = assetService.getAssetByConnectId(mobileTerminalConnectId);
-                if(asset != null){
-                    assetGuid = asset.getId();
-                    assetName = asset.getName();
-                }
             }
         } else {
             asset = getAsset(cfrValue, ircsValue, imoValue, mmsiValue);
             if (isPluginTypeWithoutMobileTerminal(rawMovementPluginType) && asset != null) {
-                assetGuid = asset.getId();
-                assetName = asset.getName();
                 mobileTerminal = mobileTerminalService.findMobileTerminalByAsset(asset.getId());
-                if(mobileTerminal != null){
-                    mobileTerminalConnectId = UUID.fromString(mobileTerminal.getConnectId());
-                    mtType = mobileTerminal.getType();
-                }
             }
         }
-
-
-        response.setConnectIdMT(mobileTerminalConnectId);
-        response.setTypeMT(mtType);
-
-        response.setGuidAsset(assetGuid);
-        response.setMameAsset(assetName);
-
-
-
+        response.setMobileTerminalType(mobileTerminal);
+        response.setAsset(asset);
         return response;
     }
     //@ formatter:on
