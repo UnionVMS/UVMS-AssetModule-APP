@@ -30,13 +30,13 @@ import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import eu.europa.ec.fisheries.schema.movementrules.movement.v1.RawMovementType;
 import eu.europa.ec.fisheries.uvms.asset.bean.AssetMTBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
-import eu.europa.ec.fisheries.uvms.asset.dto.SpatialAssetMTEnrichmentResponse;
 import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
@@ -46,7 +46,6 @@ import eu.europa.ec.fisheries.uvms.asset.CustomCodesService;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
 import io.swagger.annotations.ApiParam;
-import net.bull.javamelody.internal.common.LOG;
 import org.slf4j.MDC;
 
 @Path("internal")
@@ -259,41 +258,15 @@ public class InternalResource {
      * @responseMessage 500 Error
      * @summary Gets a specific asset revision by history id
      */
-    @GET
+    @POST
     @Path("enrich")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response enrich(
-            @DefaultValue("") @QueryParam("movementsourcename") String movementSourceName,
-            @DefaultValue("") @QueryParam("plugintype") String rawMovementPluginType,
+    public Response enrich(RawMovementType rawMovement) {
 
-            @DefaultValue("") @QueryParam("cfr") String assetidtype_cfr,
-            @DefaultValue("") @QueryParam("ircs") String assetidtype_ircs,
-            @DefaultValue("") @QueryParam("imo") String assetidtype_imo,
-            @DefaultValue("") @QueryParam("mmsi") String assetidtype_mmsi,
+        return Response.status(Response.Status.BAD_REQUEST).header("MDC", MDC.get("requestId")).build();
 
-            @DefaultValue("") @QueryParam("serialnumber") String mobtermidtype_serialnumber,
-            @DefaultValue("") @QueryParam("les") String mobtermidtype_les,
-            @DefaultValue("") @QueryParam("dnid") String mobtermidtype_dnid,
-            @DefaultValue("") @QueryParam("membernumber") String mobtermidtype_membernumber
 
-    ) {
-        try {
-            SpatialAssetMTEnrichmentResponse response  = assetMTBean.getRequiredEnrichment(
-                    movementSourceName,
-                    rawMovementPluginType,
-                    assetidtype_cfr,
-                    assetidtype_ircs,
-                    assetidtype_imo,
-                    assetidtype_mmsi,
-                    mobtermidtype_serialnumber,
-                    mobtermidtype_les,
-                    mobtermidtype_dnid,
-                    mobtermidtype_membernumber);
-            return Response.ok(response).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(/*"Here I am: " +  */e /*+ e.getStackTrace()*/).build();
-        }
     }
     //@ formatter:on
 

@@ -8,7 +8,7 @@ import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
 import eu.europa.ec.fisheries.uvms.asset.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.asset.dto.SpatialAssetMTEnrichmentResponse;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class AssetMTBean {
 
 
     //@ formatter:off
-    public SpatialAssetMTEnrichmentResponse getRequiredEnrichment(
+    public AssetMTEnrichmentResponse getRequiredEnrichment(
             String movementSourceName,
             String rawMovementPluginType,
 
@@ -48,7 +48,7 @@ public class AssetMTBean {
             String mobtermidtype_dnid,
             String mobtermidtype_membernumber) {
         /**/
-        SpatialAssetMTEnrichmentResponse response = new SpatialAssetMTEnrichmentResponse();
+        AssetMTEnrichmentResponse response = new AssetMTEnrichmentResponse();
         Asset asset = null;
 
 

@@ -18,6 +18,7 @@
         <maven.javadoc.plugin.version>2.9.1</maven.javadoc.plugin.version>
         <swagger.doclet.version>1.0.4.2</swagger.doclet.version>
         <replacer.version>1.5.3</replacer.version>
+        <movementrules.version>0.9.3</movementrules.version>
     </properties>
 
     <dependencies>
@@ -99,6 +100,13 @@
             <artifactId>jackson-module-parameter-names</artifactId>
             <version>2.9.6</version>
         </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.movement-rules</groupId>
+            <artifactId>movement-rules-model</artifactId>
+            <version>${movementrules.version}</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>

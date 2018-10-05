@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.*;
-import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -17,13 +16,13 @@ import javax.transaction.SystemException;
 
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
+import eu.europa.ec.fisheries.uvms.asset.bean.AssetMTBean;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PluginMapper;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper.TestPollHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
@@ -54,6 +53,9 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
     @Inject
     private MobileTerminalPluginDaoBean pluginDao;
+
+    @Inject
+    private AssetMTBean assetMtBean;
 
     @PersistenceContext
     private EntityManager em;
@@ -353,7 +355,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
 
     @Test
-    public void testGetMobileTerminalByConnectId()  {
+    public void testGetMobileTerminalByConnectId() {
         Asset asset = createAsset();
         MobileTerminal mobileTerminal = createMobileterminal();
         mobileTerminal.getCurrentEvent().setActive(false);
@@ -374,7 +376,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    public void testGetAssetByConnectId()  {
+    public void testGetAssetByConnectId() {
         Asset asset = createAsset();
         MobileTerminal mobileTerminal = createMobileterminal();
         mobileTerminal.getCurrentEvent().setActive(false);
@@ -386,12 +388,42 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         mobileTerminal.getMobileTerminalEvents().add(event);
         mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
         UUID mobileTerminalId = mobileTerminal.getId();
-        Asset fetchedAsset   = assetService.getAssetByConnectId(mobileTerminalId);
+        Asset fetchedAsset = assetService.getAssetByConnectId(mobileTerminalId);
         Assert.assertNotNull(fetchedAsset);
         Assert.assertEquals(asset.getId(), fetchedAsset.getId());
     }
 
+    @Test
+    public void testGetRequiredEnrichment() {
 
+        String movementSourceName = "";
+        String rawMovementPluginType = "";
+
+        String cfrValue = "";
+        String ircsValue = "";
+        String imoValue = "";
+        String mmsiValue = "";
+
+        String mobtermidtype_serialnumber = "";
+        String mobtermidtype_les = "";
+        String mobtermidtype_dnid = "";
+        String mobtermidtype_membernumber = "";
+
+
+        AssetMTEnrichmentResponse data = assetMtBean.getRequiredEnrichment(
+                movementSourceName,
+                rawMovementPluginType,
+                cfrValue,
+                ircsValue,
+                imoValue,
+                mmsiValue,
+                mobtermidtype_serialnumber,
+                mobtermidtype_les,
+                mobtermidtype_dnid,
+                mobtermidtype_membernumber);
+
+
+    }
 
 
     private Asset createAsset() {

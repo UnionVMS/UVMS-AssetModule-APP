@@ -6,12 +6,12 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class SpatialAssetMTEnrichmentResponse implements Serializable {
+public class AssetMTEnrichmentResponse implements Serializable {
 
     private MobileTerminalType mobileTerminalType;
     private Asset asset;
 
-    public SpatialAssetMTEnrichmentResponse(){}
+    public AssetMTEnrichmentResponse(){}
 
     public MobileTerminalType getMobileTerminalType() {
         return mobileTerminalType;
@@ -33,7 +33,7 @@ public class SpatialAssetMTEnrichmentResponse implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SpatialAssetMTEnrichmentResponse that = (SpatialAssetMTEnrichmentResponse) o;
+        AssetMTEnrichmentResponse that = (AssetMTEnrichmentResponse) o;
         return Objects.equals(mobileTerminalType, that.mobileTerminalType) &&
                 Objects.equals(asset, that.asset);
     }
