@@ -10,8 +10,6 @@ import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.dto.SpatialAssetMTEnrichmentResponse;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,9 +22,9 @@ import java.util.UUID;
 
 @Stateless
 @LocalBean
-public class SpatialEnrichmentBean {
+public class AssetMTBean {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SpatialEnrichmentBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AssetMTBean.class);
 
     @Inject
     private AssetService assetService;

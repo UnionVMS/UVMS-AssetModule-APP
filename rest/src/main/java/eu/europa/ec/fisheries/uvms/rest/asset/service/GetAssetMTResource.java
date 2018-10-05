@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.europa.ec.fisheries.uvms.asset.bean.SpatialEnrichmentBean;
+import eu.europa.ec.fisheries.uvms.asset.bean.AssetMTBean;
 import eu.europa.ec.fisheries.uvms.asset.dto.SpatialAssetMTEnrichmentResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,16 +12,16 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/spatialenrichment")
+@Path("/assetMTBean")
 @Stateless
-public class SpatialEnrichmentResource {
+public class GetAssetMTResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(AssetResource.class);
 
     private ObjectMapper MAPPER = new ObjectMapper();
 
     @Inject
-    SpatialEnrichmentBean spatialenrichment;
+    AssetMTBean assetMTBean;
 
 
     //@ formatter:off
@@ -35,7 +35,7 @@ public class SpatialEnrichmentResource {
     @Path("enrich")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response spatialenrichment(
+    public Response enrich(
             @DefaultValue("") @QueryParam("movementsourcename") String movementSourceName,
             @DefaultValue("") @QueryParam("plugintype") String rawMovementPluginType,
 
@@ -51,7 +51,7 @@ public class SpatialEnrichmentResource {
 
     ) {
         try {
-            SpatialAssetMTEnrichmentResponse response  = spatialenrichment.getRequiredEnrichment(
+            SpatialAssetMTEnrichmentResponse response  = assetMTBean.getRequiredEnrichment(
                     movementSourceName,
                     rawMovementPluginType,
                     assetidtype_cfr,
