@@ -375,6 +375,20 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
     @Test
     public void testGetAssetByConnectId()  {
+        Asset asset = createAsset();
+        MobileTerminal mobileTerminal = createMobileterminal();
+        mobileTerminal.getCurrentEvent().setActive(false);
+        MobileTerminalEvent event = new MobileTerminalEvent();
+        event.setActive(true);
+        event.setAsset(asset);
+        event.setEventCodeType(EventCodeEnum.CREATE);
+        event.setMobileterminal(mobileTerminal);
+        mobileTerminal.getMobileTerminalEvents().add(event);
+        mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
+        UUID mobileTerminalId = mobileTerminal.getId();
+        Asset fetchedAsset   = assetService.getAssetByConnectId(mobileTerminalId);
+        Assert.assertNotNull(fetchedAsset);
+        Assert.assertEquals(asset.getId(), fetchedAsset.getId());
     }
 
 
