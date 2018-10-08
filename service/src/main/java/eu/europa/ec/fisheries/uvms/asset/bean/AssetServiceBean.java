@@ -22,8 +22,17 @@ import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
+import eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetId;
+import eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetIdList;
+import eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetIdType;
+import eu.europa.ec.fisheries.schema.movementrules.movement.v1.RawMovementType;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.MobileTerminalService;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
@@ -58,6 +67,11 @@ public class AssetServiceBean implements AssetService {
     
     @Inject
     private ContactInfoDao contactDao;
+
+    @Inject
+    private MobileTerminalServiceBean mobileTerminalService;
+
+
 
     /**
      *
@@ -436,4 +450,170 @@ public class AssetServiceBean implements AssetService {
     public Asset getAssetByConnectId(UUID uuid) {
         return assetDao.getAssetByConnectId(uuid);
     }
+
+    @Override
+    public AssetMTEnrichmentResponse setMovementReportReceived(RawMovementType rawMovement, String pluginType, String username) {
+
+
+        AssetMTEnrichmentResponse assetMTEnrichmentResponse = new AssetMTEnrichmentResponse();
+
+        // Get Mobile Terminal if it exists
+        MobileTerminalType mobileTerminal = mobileTerminalService.getMobileTerminalByRawMovement(rawMovement);
+
+        // Get Asset
+        Asset asset = null;
+        if (mobileTerminal != null) {
+            String connectId = mobileTerminal.getConnectId();
+            if (connectId != null) {
+                UUID connectId_UUID = UUID.fromString(connectId);
+                asset = getAssetByConnectId(connectId_UUID);
+                assetMTEnrichmentResponse.setAsset(asset);
+            }
+        } else {
+            asset =  getAssetByCfrIrcs(rawMovement.getAssetId());
+            if (isPluginTypeWithoutMobileTerminal(rawMovement.getPluginType()) && asset != null) {
+                assetMTEnrichmentResponse.setAsset(asset);
+                mobileTerminal = mobileTerminalService.findMobileTerminalByAsset(asset.getId());
+                rawMovement.setMobileTerminal(mapMobileTerminal(mobileTerminal));
+                assetMTEnrichmentResponse.setMobileTerminalType(mobileTerminal);
+            }
+        }
+        if (rawMovement.getAssetId() == null && asset != null) {
+            AssetId assetId = createAssetId(asset);
+            rawMovement.setAssetId(assetId);
+        }
+        return assetMTEnrichmentResponse;
+    }
+
+    public eu.europa.ec.fisheries.schema.movementrules.mobileterminal.v1.MobileTerminalType mapMobileTerminal(eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType mobileTerminalType) {
+        if (mobileTerminalType == null) {
+            return null;
+        }
+        eu.europa.ec.fisheries.schema.movementrules.mobileterminal.v1.MobileTerminalType rawMobileTerminalType = new eu.europa.ec.fisheries.schema.movementrules.mobileterminal.v1.MobileTerminalType();
+        rawMobileTerminalType.setConnectId(mobileTerminalType.getConnectId());
+        rawMobileTerminalType.setGuid(mobileTerminalType.getMobileTerminalId().getGuid());
+
+        return rawMobileTerminalType;
+    }
+
+    private  AssetId createAssetId(Asset asset) {
+        AssetId newAssetId = new AssetId();
+        if(asset.getCfr() != null && asset.getCfr().length() > 0){
+            AssetIdList id = new AssetIdList();
+            id.setIdType(AssetIdType.CFR);
+            id.setValue(asset.getCfr());
+            newAssetId.getAssetIdList().add(id);
+        }
+        if(asset.getId() != null ){
+            AssetIdList id = new AssetIdList();
+            id.setIdType(AssetIdType.GUID);
+            id.setValue(asset.getId().toString());
+            newAssetId.getAssetIdList().add(id);
+        }
+        if(asset.getImo() != null && asset.getImo().length() > 0){
+            AssetIdList id = new AssetIdList();
+            id.setIdType(AssetIdType.IMO);
+            id.setValue(asset.getImo());
+            newAssetId.getAssetIdList().add(id);
+        }
+        if(asset.getIrcs() != null && asset.getIrcs().length() > 0){
+            AssetIdList id = new AssetIdList();
+            id.setIdType(AssetIdType.IRCS);
+            id.setValue(asset.getIrcs());
+            newAssetId.getAssetIdList().add(id);
+        }
+        if(asset.getMmsi() != null && asset.getMmsi().length() > 0){
+            AssetIdList id = new AssetIdList();
+            id.setIdType(AssetIdType.MMSI);
+            id.setValue(asset.getMmsi());
+            newAssetId.getAssetIdList().add(id);
+        }
+        return newAssetId;
+    }
+
+    private Asset getAssetByCfrIrcs(AssetId assetId) {
+
+        try {
+            // If no asset information exists, don't look for one
+            if (assetId == null || assetId.getAssetIdList() == null) {
+                LOG.warn("No asset information exists!");
+                return null;
+            }
+
+            List<AssetIdList> ids = assetId.getAssetIdList();
+
+            String cfr = null;
+            String ircs = null;
+            String mmsi = null;
+
+            // Get possible search parameters
+            for (AssetIdList id : ids) {
+                if (eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetIdType.CFR.equals(id.getIdType())) {
+                    cfr = id.getValue();
+                }
+                if (eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetIdType.IRCS.equals(id.getIdType())) {
+                    ircs = id.getValue();
+                }
+                if (eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetIdType.MMSI.equals(id.getIdType())) {
+                    mmsi = id.getValue();
+                }
+
+            }
+
+            Asset asset = null;
+            if (ircs != null && cfr != null && mmsi != null) {
+                try {
+                    asset = getAssetById(AssetIdentifier.CFR, cfr);
+                    // If the asset matches on ircs as well we have a winner
+                    if (asset != null && asset.getIrcs().equals(ircs)) {
+                        return asset;
+                    }
+                    // If asset is null, try fetching by IRCS (cfr will fail for SE national db)
+                    if (asset == null) {
+                        asset = getAssetById(AssetIdentifier.IRCS, ircs);
+                        // If asset is still null, try mmsi (this should be the case for movement coming from AIS)
+                        if (asset == null) {
+                            return getAssetById(AssetIdentifier.MMSI, mmsi);
+                        }
+                    }
+                } catch (Exception e) {
+                    return  getAssetById(AssetIdentifier.IRCS, ircs);
+                }
+            } else if (cfr != null) {
+                return getAssetById(AssetIdentifier.CFR, cfr);
+            } else if (ircs != null) {
+                return  getAssetById(AssetIdentifier.IRCS, ircs);
+            } else if (mmsi != null) {
+                return getAssetById(AssetIdentifier.MMSI, mmsi);
+            }
+
+        } catch (Exception e) {
+            // Log and continue validation
+            LOG.warn("Could not find asset!");
+        }
+        return null;
+    }
+
+    private boolean isPluginTypeWithoutMobileTerminal(String pluginType) {
+        if (pluginType == null) {
+            return true;
+        }
+        try {
+            PluginType type = PluginType.valueOf(pluginType);
+            switch (type) {
+                case MANUAL:
+                case NAF:
+                case OTHER:
+                    return true;
+                default:
+                    return false;
+            }
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+
+
+
 }

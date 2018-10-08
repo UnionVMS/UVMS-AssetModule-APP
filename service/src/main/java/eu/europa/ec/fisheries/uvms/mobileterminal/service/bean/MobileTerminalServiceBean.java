@@ -14,6 +14,8 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.bean;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollableQuery;
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
+import eu.europa.ec.fisheries.schema.movementrules.mobileterminal.v1.IdList;
+import eu.europa.ec.fisheries.schema.movementrules.movement.v1.RawMovementType;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
@@ -596,4 +598,72 @@ public class MobileTerminalServiceBean {
         MobileTerminalType terminalType = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
         return terminalType;
     }
+
+    public MobileTerminalType getMobileTerminalByRawMovement(RawMovementType rawMovement) {
+        MobileTerminalListQuery query = new MobileTerminalListQuery();
+
+        // If no mobile terminal information exists, don't look for one
+        if (rawMovement.getMobileTerminal() == null || rawMovement.getMobileTerminal().getMobileTerminalIdList() == null) {
+            return null;
+        }
+
+        List<IdList> ids = rawMovement.getMobileTerminal().getMobileTerminalIdList();
+        MobileTerminalSearchCriteria criteria = new MobileTerminalSearchCriteria();
+        for (IdList id : ids) {
+            eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListCriteria crit = new eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListCriteria();
+            switch (id.getType()) {
+                case DNID:
+                    if (id.getValue() != null) {
+                        crit.setKey(eu.europa.ec.fisheries.schema.mobileterminal.types.v1.SearchKey.DNID);
+                        crit.setValue(id.getValue());
+                        criteria.getCriterias().add(crit);
+                    }
+                    break;
+                case MEMBER_NUMBER:
+                    if (id.getValue() != null) {
+                        crit.setKey(eu.europa.ec.fisheries.schema.mobileterminal.types.v1.SearchKey.MEMBER_NUMBER);
+                        crit.setValue(id.getValue());
+                        criteria.getCriterias().add(crit);
+                    }
+                    break;
+                case SERIAL_NUMBER:
+                    if (id.getValue() != null) {
+                        crit.setKey(eu.europa.ec.fisheries.schema.mobileterminal.types.v1.SearchKey.SERIAL_NUMBER);
+                        crit.setValue(id.getValue());
+                        criteria.getCriterias().add(crit);
+                    }
+                    break;
+                case LES:
+                default:
+                    LOG.error("[ERROR] Unhandled Mobile Terminal id: {} ]", id.getType());
+                    break;
+            }
+        }
+
+        // If no valid criterias, don't look for a mobile terminal
+        if (criteria.getCriterias().isEmpty()) {
+            return null;
+        }
+
+        // If we know the transponder type from the source, use it in the search criteria
+
+        if(rawMovement.getSource() != null && rawMovement.getSource().name() != null){
+            eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListCriteria transponderTypeCrit = new eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListCriteria();
+            transponderTypeCrit.setKey(eu.europa.ec.fisheries.schema.mobileterminal.types.v1.SearchKey.TRANSPONDER_TYPE);
+            transponderTypeCrit.setValue(rawMovement.getSource().name());
+            criteria.getCriterias().add(transponderTypeCrit);
+        }
+
+        query.setMobileTerminalSearchCriteria(criteria);
+        eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListPagination pagination = new eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListPagination();
+        // To leave room to find erroneous results - it must be only one in the list
+        pagination.setListSize(2);
+        pagination.setPage(1);
+        query.setPagination(pagination);
+
+        MobileTerminalListResponse mobileTerminalListResponse = getMobileTerminalList(query);
+        List<MobileTerminalType> resultList = mobileTerminalListResponse.getMobileTerminal();
+        return resultList.size() != 1 ? null : resultList.get(0);
+    }
+
 }
