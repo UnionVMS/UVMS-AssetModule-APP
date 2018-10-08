@@ -30,6 +30,8 @@ import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import eu.europa.ec.fisheries.schema.movementrules.movement.v1.RawMovementType;
+import eu.europa.ec.fisheries.uvms.asset.bean.AssetMTBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
@@ -58,6 +60,11 @@ public class InternalResource {
 
     @Inject
     private CustomCodesService customCodesService;
+
+
+    @Inject
+    AssetMTBean assetMTBean;
+
 
 
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
@@ -243,6 +250,25 @@ public class InternalResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
         }
     }
+
+    //@ formatter:off
+
+    /**
+     * @responseMessage 200 Success
+     * @responseMessage 500 Error
+     * @summary Gets a specific asset revision by history id
+     */
+    @POST
+    @Path("enrich")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response enrich(RawMovementType rawMovement) {
+
+        return Response.status(Response.Status.BAD_REQUEST).header("MDC", MDC.get("requestId")).build();
+
+
+    }
+    //@ formatter:on
 
 }
 

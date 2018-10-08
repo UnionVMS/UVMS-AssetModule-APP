@@ -39,7 +39,11 @@ import java.util.UUID;
  * 
  */
 @Entity
-@NamedQuery(name="MobileTerminalEvent.findAll", query="SELECT m FROM MobileTerminalEvent m")
+@NamedQueries({
+		@NamedQuery(name = "MobileTerminalEvent.findAll", query = "SELECT m FROM MobileTerminalEvent m"),
+		@NamedQuery(name = MobileTerminalEvent.GET_ASSET_USING_CONNECTID, query = "SELECT m.asset  FROM MobileTerminalEvent m  where m.mobileterminal.id = :connectId"),
+		@NamedQuery(name = MobileTerminalEvent.GET_MOBILETERMINAL_USING_CONNECTID, query = "SELECT m.mobileterminal FROM MobileTerminalEvent  m where m.asset.id = :connectId"),
+})
 @Audited
 @Table(name = "mobileterminalevent", indexes = { @Index(columnList = "mobileterminal_id", name = "mobileterminalevent_mobterm_FK_INX10", unique = false),
 												 @Index(columnList = "chan_def", name = "mobileterminalevent_channel_FK_INX10", unique = false),
@@ -49,6 +53,10 @@ import java.util.UUID;
 @JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class /*, property="id"*/)
 public class MobileTerminalEvent implements Serializable {
 	private static final long serialVersionUID = 1L;
+
+	public static final String GET_ASSET_USING_CONNECTID = "MobileTerminalEvent.getAssetUsingConnectId";
+	public static final String GET_MOBILETERMINAL_USING_CONNECTID = "MobileTerminalEvent.getMobileTerminalUsingConnectId";
+
 
 	@Id
 	@GeneratedValue(generator = "MOBILETERMINALEVENT_UUID")

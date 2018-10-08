@@ -212,5 +212,7 @@ public interface AssetService {
      * @param id @description internal id of contactinfo
      */
     void deleteContactInfo(UUID id);
+
+    Asset getAssetByConnectId(UUID mobileTerminalConnectId);
 }
 

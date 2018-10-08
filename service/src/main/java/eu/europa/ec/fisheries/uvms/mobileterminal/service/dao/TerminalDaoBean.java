@@ -11,21 +11,24 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.dao;
 
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
 
 import javax.ejb.Stateless;
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Stateless
-public class TerminalDaoBean  {
+public class TerminalDaoBean {
 
     @PersistenceContext
     private EntityManager em;
 
-    public MobileTerminal getMobileTerminalById(UUID id)  {
+    public MobileTerminal getMobileTerminalById(UUID id) {
         try {
             TypedQuery<MobileTerminal> query = em.createNamedQuery(MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_ID, MobileTerminal.class);
             query.setParameter("id", id);
@@ -45,7 +48,7 @@ public class TerminalDaoBean  {
 //        }
 //	}
 
-    public MobileTerminal getMobileTerminalBySerialNo(String serialNo)  {
+    public MobileTerminal getMobileTerminalBySerialNo(String serialNo) {
         try {
             TypedQuery<MobileTerminal> query = em.createNamedQuery(MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_SERIAL_NO, MobileTerminal.class);
             query.setParameter("serialNo", serialNo);
@@ -55,24 +58,32 @@ public class TerminalDaoBean  {
         }
     }
 
-    public void removeMobileTerminalAfterTests (String guid){
+    public void removeMobileTerminalAfterTests(String guid) {
         MobileTerminal mobileTerminal = getMobileTerminalById(UUID.fromString(guid));
         em.remove(em.contains(mobileTerminal) ? mobileTerminal : em.merge(mobileTerminal));
     }
 
-    public MobileTerminal createMobileTerminal(MobileTerminal terminal)  {
-            em.persist(terminal);
-            return terminal;
+    public MobileTerminal createMobileTerminal(MobileTerminal terminal) {
+        em.persist(terminal);
+        return terminal;
     }
 
     public MobileTerminal updateMobileTerminal(MobileTerminal terminal) {
-	    if(terminal == null || terminal.getId() == null)
-	        throw new IllegalArgumentException();
+        if (terminal == null || terminal.getId() == null)
+            throw new IllegalArgumentException();
         return em.merge(terminal);
     }
 
     public List<MobileTerminal> getMobileTerminalsByQuery(String sql) {
         Query query = em.createQuery(sql, MobileTerminal.class);
         return query.getResultList();
+    }
+
+    public MobileTerminal findMobileTerminalByAsset(UUID assetid) {
+
+        // ConnectId exists in MobileTerminalEvent so we must look there
+        List<MobileTerminal> ret = em.createNamedQuery(MobileTerminalEvent.GET_MOBILETERMINAL_USING_CONNECTID, MobileTerminal.class).setParameter("connectId", assetid).getResultList();
+        if (ret.size() > 0) return ret.get(0);
+        return null;
     }
 }
