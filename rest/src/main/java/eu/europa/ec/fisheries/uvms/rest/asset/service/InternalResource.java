@@ -262,7 +262,7 @@ public class InternalResource {
             @PathParam("pluginType") String pluginType,
             @PathParam("username") String username,
             RawMovementType rawMovement) {
-        AssetMTEnrichmentResponse assetMTEnrichmentResponse = assetService.setMovementReportReceived(rawMovement, pluginType, username);
+        AssetMTEnrichmentResponse assetMTEnrichmentResponse = assetService.collectAssetMT(rawMovement, pluginType, username);
         return Response.ok(assetMTEnrichmentResponse).header("MDC", MDC.get("requestId")).build();
     }
     //@ formatter:on

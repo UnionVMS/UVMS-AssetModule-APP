@@ -4,12 +4,14 @@ import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 
 import java.io.Serializable;
-import java.util.Objects;
+import java.util.List;
+import java.util.UUID;
 
 public class AssetMTEnrichmentResponse implements Serializable {
 
     private MobileTerminalType mobileTerminalType;
     private Asset asset;
+    private List<UUID> assetGroupList = null;
 
     public AssetMTEnrichmentResponse(){}
 
@@ -29,17 +31,11 @@ public class AssetMTEnrichmentResponse implements Serializable {
         this.asset = asset;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AssetMTEnrichmentResponse that = (AssetMTEnrichmentResponse) o;
-        return Objects.equals(mobileTerminalType, that.mobileTerminalType) &&
-                Objects.equals(asset, that.asset);
+    public List<UUID> getAssetGroupList() {
+        return assetGroupList;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(mobileTerminalType, asset);
+    public void setAssetGroupList(List<UUID> assetGroupList) {
+        this.assetGroupList = assetGroupList;
     }
 }

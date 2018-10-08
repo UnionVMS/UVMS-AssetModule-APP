@@ -437,7 +437,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         AssetId assetId = createAssetId(asset);
         rawMomenet.setAssetId(assetId);
         rawMomenet.setMobileTerminal(mtType);
-        AssetMTEnrichmentResponse response = assetService.setMovementReportReceived(rawMomenet, null, "test");
+        AssetMTEnrichmentResponse response = assetService.collectAssetMT(rawMomenet, null, "test");
 
         Assert.assertNotNull(response.getAsset());
         Assert.assertNotNull(response.getMobileTerminalType());

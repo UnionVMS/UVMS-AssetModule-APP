@@ -218,6 +218,6 @@ public interface AssetService {
 
     Asset getAssetByConnectId(UUID mobileTerminalConnectId);
 
-    AssetMTEnrichmentResponse setMovementReportReceived(RawMovementType rawMovement, String pluginType, String username);
+    AssetMTEnrichmentResponse collectAssetMT(RawMovementType rawMovement, String pluginType, String username);
 }
 

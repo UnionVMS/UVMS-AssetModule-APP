@@ -452,7 +452,7 @@ public class AssetServiceBean implements AssetService {
     }
 
     @Override
-    public AssetMTEnrichmentResponse setMovementReportReceived(RawMovementType rawMovement, String pluginType, String username) {
+    public AssetMTEnrichmentResponse collectAssetMT(RawMovementType rawMovement, String pluginType, String username) {
 
 
         AssetMTEnrichmentResponse assetMTEnrichmentResponse = new AssetMTEnrichmentResponse();
@@ -482,6 +482,17 @@ public class AssetServiceBean implements AssetService {
             AssetId assetId = createAssetId(asset);
             rawMovement.setAssetId(assetId);
         }
+
+        List<UUID> assetGroupList = new ArrayList<>();
+        if(asset != null){
+                List<AssetGroup> list = assetGroupService.getAssetGroupListByAssetId(asset.getId());
+                for(AssetGroup assetGroup : list){
+                    UUID assetGroupId = assetGroup.getId();
+                    assetGroupList.add(assetGroupId);
+                }
+        }
+
+        assetMTEnrichmentResponse.setAssetGroupList(assetGroupList);
         return assetMTEnrichmentResponse;
     }
 
