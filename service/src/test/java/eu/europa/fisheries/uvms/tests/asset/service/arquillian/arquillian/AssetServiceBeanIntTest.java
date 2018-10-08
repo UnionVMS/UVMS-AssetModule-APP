@@ -410,17 +410,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         String mobtermidtype_membernumber = "";
 
 
-        AssetMTEnrichmentResponse data = assetMtBean.getRequiredEnrichment(
-                movementSourceName,
-                rawMovementPluginType,
-                cfrValue,
-                ircsValue,
-                imoValue,
-                mmsiValue,
-                mobtermidtype_serialnumber,
-                mobtermidtype_les,
-                mobtermidtype_dnid,
-                mobtermidtype_membernumber);
 
 
     }

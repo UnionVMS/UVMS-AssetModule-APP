@@ -34,7 +34,7 @@
         <docker.dev.start.phase>test-compile</docker.dev.start.phase>
         <docker.liquibase.phase>test-compile</docker.liquibase.phase>
         <docker.dev.prestop.phase>validate</docker.dev.prestop.phase>
-
+        <movementrules.version>0.9.3</movementrules.version>
     </properties>
     
     <profiles>
@@ -140,7 +140,11 @@
             <version>RELEASE</version>
             <scope>compile</scope>
         </dependency>
-
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.movement-rules</groupId>
+            <artifactId>movement-rules-model</artifactId>
+            <version>${movementrules.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
