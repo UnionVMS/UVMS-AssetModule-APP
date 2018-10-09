@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.time.Clock;
+import java.time.OffsetDateTime;
 import java.util.*;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -22,8 +24,12 @@ import eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetIdList;
 import eu.europa.ec.fisheries.schema.movementrules.mobileterminal.v1.IdList;
 import eu.europa.ec.fisheries.schema.movementrules.mobileterminal.v1.IdType;
 import eu.europa.ec.fisheries.schema.movementrules.movement.v1.RawMovementType;
+import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
+import eu.europa.ec.fisheries.uvms.asset.bean.AssetGroupServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.bean.AssetMTBean;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.MobileTerminalService;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
@@ -38,9 +44,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.asset.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
@@ -58,10 +61,8 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     private MobileTerminalServiceBean mobileTerminalService;
 
     @Inject
-    private MobileTerminalPluginDaoBean pluginDao;
+    private AssetGroupService assetGroupService;
 
-    @Inject
-    private AssetMTBean assetMtBean;
 
     @PersistenceContext
     private EntityManager em;
@@ -404,6 +405,8 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         // create stuff so we can create a valid rawMovement
         Asset asset = createAsset();
+        AssetGroup createdAssetGroup = createAssetGroup(asset);
+        UUID createdAssetGroupId = createdAssetGroup.getId();
         MobileTerminal mobileTerminal = createMobileterminal();
         mobileTerminal.getCurrentEvent().setActive(false);
         MobileTerminalEvent event = new MobileTerminalEvent();
@@ -448,6 +451,34 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Assert.assertEquals(asset.getId(), fetchedAsset.getId());
         Assert.assertEquals(mobileTerminal.getId().toString(), mobileTerminalType.getMobileTerminalId().getGuid());
 
+        List<UUID> fetchedAssetGroups = response.getAssetGroupList();
+        Assert.assertNotNull(fetchedAssetGroups);
+        Assert.assertTrue(fetchedAssetGroups.size() > 0);
+        Assert.assertTrue(fetchedAssetGroups.contains(createdAssetGroupId));
+    }
+
+
+    private AssetGroup createAssetGroup(Asset asset) {
+
+        AssetGroup ag = new AssetGroup();
+        ag.setUpdatedBy("test");
+        ag.setUpdateTime(OffsetDateTime.now(Clock.systemUTC()));
+        ag.setArchived(false);
+        ag.setName("The Name");
+        ag.setOwner("test");
+        ag.setDynamic(false);
+        ag.setGlobal(true);
+
+
+        AssetGroup createdAssetGroup = assetGroupService.createAssetGroup(ag,"test");
+        AssetGroupField assetGroupField = new AssetGroupField();
+        assetGroupField.setAssetGroup(createdAssetGroup);
+        assetGroupField.setKey("GUID");
+        assetGroupField.setValue(asset.getId().toString());
+        assetGroupField.setUpdateTime(OffsetDateTime.now(Clock.systemUTC()));
+        assetGroupService.createAssetGroupField(createdAssetGroup.getId(), assetGroupField, "TEST");
+
+        return createdAssetGroup;
     }
 
 
