@@ -215,7 +215,26 @@ public class TestPollHelper {
         mtp.setName("Thrane&Thrane&Thrane");
         mtp.setPluginSatelliteType("INMARSAT_C");
         mtp.setPluginInactive(false);
+        mobileTerminalType.setArchived(false);
+        mobileTerminalType.setInactive(false);
         MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType,null ,mobileTerminalType.getAttributes().get(0).getValue(), mtp, "TEST_USERNAME");
+        mobileTerminal.setSerialNo("SN1234567890");
+
+        Channel c = new Channel();
+        c.setArchived(false);
+        c.setInstalledBy("kanalbolaget");
+        c.setMemberNumber("MEMBER1234567890");
+        c.setExpectedFrequencyInPort(Duration.ofSeconds(60));
+        c.setExpectedFrequency(Duration.ofSeconds(60));
+        c.setFrequencyGracePeriod(Duration.ofSeconds(60));
+        c.setLesDescription("LESDESCRIPTION");
+
+        c.setDNID("dnid1234567890");
+
+        mobileTerminal.getChannels().add(c);
+
+
+
         return mobileTerminal;
     }
 

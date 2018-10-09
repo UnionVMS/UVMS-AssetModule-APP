@@ -37,6 +37,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
 import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
@@ -60,11 +61,6 @@ public class InternalResource {
 
     @Inject
     private CustomCodesService customCodesService;
-
-
-    @Inject
-    AssetMTBean assetMTBean;
-
 
 
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
@@ -259,14 +255,15 @@ public class InternalResource {
      * @summary Gets a specific asset revision by history id
      */
     @POST
-    @Path("enrich")
+    @Path("enrich/{pluginType}/{username}")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response enrich(RawMovementType rawMovement) {
-
-        return Response.status(Response.Status.BAD_REQUEST).header("MDC", MDC.get("requestId")).build();
-
-
+    public Response enrich(
+            @PathParam("pluginType") String pluginType,
+            @PathParam("username") String username,
+            RawMovementType rawMovement) {
+        AssetMTEnrichmentResponse assetMTEnrichmentResponse = assetService.collectAssetMT(rawMovement, pluginType, username);
+        return Response.ok(assetMTEnrichmentResponse).header("MDC", MDC.get("requestId")).build();
     }
     //@ formatter:on
 

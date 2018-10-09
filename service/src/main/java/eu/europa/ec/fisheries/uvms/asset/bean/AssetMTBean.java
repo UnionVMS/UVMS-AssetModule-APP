@@ -2,13 +2,9 @@ package eu.europa.ec.fisheries.uvms.asset.bean;
 
 import eu.europa.ec.fisheries.schema.exchange.movement.mobileterminal.v1.IdList;
 import eu.europa.ec.fisheries.schema.exchange.movement.mobileterminal.v1.IdType;
-import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
 import eu.europa.ec.fisheries.uvms.asset.AssetService;
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +14,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Stateless
 @LocalBean
@@ -26,50 +21,11 @@ public class AssetMTBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(AssetMTBean.class);
 
-    @Inject
-    private AssetService assetService;
 
     @Inject
     private MobileTerminalServiceBean mobileTerminalService;
 
 
-    //@ formatter:off
-    public AssetMTEnrichmentResponse getRequiredEnrichment(
-            String movementSourceName,
-            String rawMovementPluginType,
-
-            String cfrValue,
-            String ircsValue,
-            String imoValue,
-            String mmsiValue,
-
-            String mobtermidtype_serialnumber,
-            String mobtermidtype_les,
-            String mobtermidtype_dnid,
-            String mobtermidtype_membernumber) {
-        /**/
-        AssetMTEnrichmentResponse response = new AssetMTEnrichmentResponse();
-        Asset asset = null;
-
-
-        // try to find a mobileterminal
-        MobileTerminalType mobileTerminal = getMobileTerminalByIdList(createIdList(mobtermidtype_serialnumber, mobtermidtype_les, mobtermidtype_dnid, mobtermidtype_membernumber), movementSourceName);
-        if (mobileTerminal != null) {
-            UUID mobileTerminalConnectId = UUID.fromString(mobileTerminal.getConnectId());
-            if (mobileTerminalConnectId != null) {
-                asset = assetService.getAssetByConnectId(mobileTerminalConnectId);
-            }
-        } else {
-            asset = getAsset(cfrValue, ircsValue, imoValue, mmsiValue);
-            if (isPluginTypeWithoutMobileTerminal(rawMovementPluginType) && asset != null) {
-                mobileTerminal = mobileTerminalService.findMobileTerminalByAsset(asset.getId());
-            }
-        }
-        response.setMobileTerminalType(mobileTerminal);
-        response.setAsset(asset);
-        return response;
-    }
-    //@ formatter:on
 
 
     private List<IdList> createIdList(String mobtermidtype_serialnumber, String mobtermidtype_les, String mobtermidtype_dnid, String mobtermidtype_membernumber) {
@@ -166,53 +122,7 @@ public class AssetMTBean {
     }
 
 
-    private boolean isPluginTypeWithoutMobileTerminal(String pluginType) {
-        if (pluginType == null) {
-            return true;
-        }
-        try {
-            PluginType type = PluginType.valueOf(pluginType);
-            switch (type) {
-                case MANUAL:
-                case NAF:
-                case OTHER:
-                    return true;
-                default:
-                    return false;
-            }
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
-    }
 
-    private Asset getAsset(String cfrValue, String ircsValue, String imoValue, String mmsiValue) {
-
-        Asset asset = null;
-
-        if (ircsValue != null && cfrValue != null && mmsiValue != null) {
-            asset = assetService.getAssetById(AssetIdentifier.CFR, cfrValue);
-            // If the asset matches on ircs as well we have a winner
-            if (asset != null && asset.getIrcs().equals(ircsValue)) {
-                return asset;
-            }
-            // If asset is null, try fetching by IRCS (cfr will fail for SE national db)
-            if (asset == null) {
-                asset = assetService.getAssetById(AssetIdentifier.IRCS, ircsValue);
-                // If asset is still null, try mmsi (this should be the case for movement coming from AIS)
-                if (asset == null) {
-                    asset = assetService.getAssetById(AssetIdentifier.MMSI, mmsiValue);
-                    return asset;
-                }
-            }
-        } else if (cfrValue != null) {
-            return assetService.getAssetById(AssetIdentifier.CFR, cfrValue);
-        } else if (ircsValue != null) {
-            return assetService.getAssetById(AssetIdentifier.IRCS, ircsValue);
-        } else if (mmsiValue != null) {
-            return assetService.getAssetById(AssetIdentifier.MMSI, mmsiValue);
-        }
-        return asset;
-    }
 
 
 }
