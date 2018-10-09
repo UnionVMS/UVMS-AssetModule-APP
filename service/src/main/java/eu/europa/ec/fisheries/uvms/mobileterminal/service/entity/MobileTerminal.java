@@ -67,7 +67,7 @@ public class MobileTerminal implements Serializable {
 	private UUID historyId;
 
 	@NotNull
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.EAGER,  cascade=CascadeType.ALL)
 	@JoinColumn(name="plugin_id", foreignKey = @ForeignKey(name = "MobileTerminal_Plugin_FK"))
 	private MobileTerminalPlugin plugin;
 	
