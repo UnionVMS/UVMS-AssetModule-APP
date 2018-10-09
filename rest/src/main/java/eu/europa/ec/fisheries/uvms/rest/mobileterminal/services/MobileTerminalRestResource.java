@@ -74,10 +74,11 @@ public class MobileTerminalRestResource {
             UUID id = null;
             if(mobileTerminalType.getMobileTerminalId() != null
                     && mobileTerminalType.getMobileTerminalId().getGuid() != null
-                    && !mobileTerminalType.getMobileTerminalId().getGuid().isEmpty()){
+                    && !mobileTerminalType.getMobileTerminalId().getGuid().isEmpty()) {
                 id = UUID.fromString(mobileTerminalType.getMobileTerminalId().getGuid());
+                mobileTerminalService.assertTerminalNotExists(id, serialNumber);
             }
-            mobileTerminalService.assertTerminalNotExists(id, serialNumber);
+
             MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(mobileTerminalType.getPlugin().getServiceName());
             if(plugin == null){
                 plugin = pluginDao.initAndGetPlugin(mobileTerminalType.getPlugin().getServiceName());

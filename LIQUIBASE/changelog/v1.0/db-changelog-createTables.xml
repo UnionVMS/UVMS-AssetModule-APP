@@ -192,7 +192,6 @@
                 <constraints nullable="false"/>
             </column>
             <column name="dnid" type="VARCHAR(255)">
-                <constraints nullable="false"/>
             </column>
             <column name="active" type="BOOLEAN"/>
             <column name="archived" type="BOOLEAN"/>
@@ -212,13 +211,10 @@
             <column name="historyid" type="UUID"/>
             <column name="install_date" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="installed_by" type="VARCHAR(255)">
-                <constraints nullable="false"/>
             </column>
             <column name="les_description" type="VARCHAR(255)">
-                <constraints nullable="false"/>
             </column>
             <column name="member_number" type="VARCHAR(255)">
-                <constraints nullable="false"/>
             </column>
             <column name="com_channel_name" type="VARCHAR(255)"/>
             <column name="chan_poll" type="BOOLEAN"/>

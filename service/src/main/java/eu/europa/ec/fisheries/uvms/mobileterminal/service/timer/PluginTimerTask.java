@@ -12,24 +12,27 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.timer;
 
 import eu.europa.ec.fisheries.schema.exchange.service.v1.ServiceResponseType;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.ConfigService;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.ConfigServiceBeanMT;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.ServiceToPluginMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import java.util.List;
 
-public class PluginTimerTask implements Runnable{
+@Stateless
+public class PluginTimerTask {
 
-    private ConfigService configService;
+    @EJB
+    private ConfigServiceBeanMT configService;
+
     private final static Logger LOG = LoggerFactory.getLogger(PluginTimerTask.class);
 
-    PluginTimerTask(ConfigService configService){
-        this.configService = configService;
-    }
-
-    @Override
-    public void run() {
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void sync() {
         try {
             List<ServiceResponseType> serviceTypes = configService.getRegisteredMobileTerminalPlugins();
             LOG.debug("get services from exchange registry");

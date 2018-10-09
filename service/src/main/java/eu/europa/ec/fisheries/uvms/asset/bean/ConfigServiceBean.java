@@ -25,7 +25,6 @@ import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
 
-
 @Stateless
 public class ConfigServiceBean {
 	private static final Logger LOG = LoggerFactory.getLogger(ConfigServiceBean.class);
@@ -33,10 +32,7 @@ public class ConfigServiceBean {
 	@EJB
 	private ParameterService parameterService;
 
-
-
-
-		public List<Object> getConfiguration() throws AssetServiceException {
+	public List<Object> getConfiguration() throws AssetServiceException {
 		//ConfigurationDto configuration = getConfiguration(ConfigFieldEnum.ALL);
 		//return configuration.getConfigList();
 		return null;
@@ -55,8 +51,6 @@ public class ConfigServiceBean {
 			throw new AssetServiceException("Couldn't get parameters");
 		}
 	}
-
-
 
 	public Map<String, List<String>> getSettings() throws AssetServiceException {
 		Map<String, List<String>> settings = new HashMap<>();
@@ -82,11 +76,10 @@ public class ConfigServiceBean {
 //	public ConfigurationDto getConfiguration(ConfigFieldEnum config) throws ConfigModelException {
 //		public Object getConfiguration(ConfigFieldEnum config) throws ConfigModelException {
 
-			/*
+	/*
 		//TODO fix if config != ALL
 		ConfigurationDto dto = new ConfigurationDto();
 		Map<String, List<String>> settings = getSettings();
-
 
 		switch (config) {
 			case ALL:
@@ -103,12 +96,8 @@ public class ConfigServiceBean {
 			case UNIT_TONNAGE:
 				dto.addConfig(createConfigFromList(ConfigFieldEnum.UNIT_TONNAGE, getTonnageUnit()));
 		}
-
 		return dto;
-
-		*/
-
-
+	*/
 //			return null;
 //	}
 
@@ -149,7 +138,5 @@ public class ConfigServiceBean {
 //		 return null;
 		 
 //	}
-
-
 
 }

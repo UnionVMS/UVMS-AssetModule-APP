@@ -69,7 +69,6 @@ public class MobileTerminalServiceBean {
     @EJB
     private PluginServiceBean pluginService;
 
-
     @EJB
     private ConfigServiceBeanMT configModel;
 
@@ -79,14 +78,13 @@ public class MobileTerminalServiceBean {
     @EJB
     private TerminalDaoBean terminalDao;
 
-    @EJB
-    private MobileTerminalPluginDaoBean pluginDao;
+    @Inject
+    private AssetDao assetDao;
 
     public MobileTerminal createMobileTerminal(MobileTerminal mobileTerminal, String username) {
         MobileTerminal createdMobileTerminal = terminalDao.createMobileTerminal(mobileTerminal);
 
         boolean dnidUpdated = configModel.checkDNIDListChange(createdMobileTerminal.getPlugin().getPluginServiceName());
-
 
         //send stuff to audit
         try {
@@ -98,7 +96,6 @@ public class MobileTerminalServiceBean {
         if(dnidUpdated) {
         	pluginService.processUpdatedDNIDList(createdMobileTerminal.getPlugin().getPluginServiceName());
         }
-        
         return createdMobileTerminal;
     }
 
@@ -111,7 +108,6 @@ public class MobileTerminalServiceBean {
         return response;
     }
 
-
     public MobileTerminal upsertMobileTerminal(MobileTerminal data, MobileTerminalSource source, String username) {
         if (data == null) {
             throw new NullPointerException("No Mobile terminal to update [ NULL ]");
@@ -123,7 +119,6 @@ public class MobileTerminalServiceBean {
         if(dnidUpdated) {
         	pluginService.processUpdatedDNIDList(data.getPlugin().getPluginServiceName());
         }
-        
         return terminalUpserted;
     }
 
@@ -150,8 +145,6 @@ public class MobileTerminalServiceBean {
             throw new NullPointerException("Non valid id of terminal to update");
         }
 
-
-
         MobileTerminal oldTerminal = getMobileTerminalEntityById(mobileTerminal.getId());
         MobileTerminalPlugin updatedPlugin = null;
 
@@ -168,7 +161,6 @@ public class MobileTerminalServiceBean {
         }
 
         mobileTerminal.setPlugin(updatedPlugin);
-
 
         //TODO check type
         MobileTerminal updatedTerminal;
@@ -204,7 +196,6 @@ public class MobileTerminalServiceBean {
             LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was assigned", terminalAssign.getId()
                     .toString());
         }
-
         return terminalAssign;
     }
 
@@ -216,7 +207,6 @@ public class MobileTerminalServiceBean {
         } catch (AuditModelMarshallException e) {
             LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was unassigned", terminalUnAssign.getId().toString());
         }
-
         return terminalUnAssign;
     }
 
@@ -224,10 +214,8 @@ public class MobileTerminalServiceBean {
         //MobileTerminal terminalStatus = setStatusMobileTerminal(terminalId, comment, status, username);
         MobileTerminal terminalStatus = getMobileTerminalEntityById(terminalId);
 
-
         //create event and update MT for this happening
         terminalStatus = createMTEventForStatusChange(terminalStatus, comment, status, username);
-
 
         //audit stuff
         try {
@@ -267,7 +255,6 @@ public class MobileTerminalServiceBean {
         if (status == null) {
             throw new IllegalArgumentException("No terminal status to set");
         }
-
 
         MobileTerminalEvent current = mobileTerminal.getCurrentEvent();
         current.setActive(false);
@@ -335,22 +322,19 @@ public class MobileTerminalServiceBean {
         }
         channelListDto.setPollableChannels(pollChannelList);
         return channelListDto;
-
-
     }
 
-    /***************************************************************************************************************************/
+    /*****************************************************************************************************************/
 
-    public MobileTerminal getMobileTerminalEntityById(UUID id)
-    {
+    public MobileTerminal getMobileTerminalEntityById(UUID id) {
         if(id == null)
-            throw new IllegalArgumentException("Non valid id: " + id);
+            throw new IllegalArgumentException("Non valid id: NULL");
         return terminalDao.getMobileTerminalById(id);
     }
 
     public MobileTerminal getMobileTerminalEntityById(MobileTerminalId id) {
         if(id == null || id.getGuid() == null || id.getGuid().isEmpty())
-            throw new IllegalArgumentException("Non valid id: " + id);
+            throw new IllegalArgumentException("Non valid id: NULL or Empty");
         return terminalDao.getMobileTerminalById(UUID.fromString(id.getGuid()));
     }
 
@@ -359,7 +343,6 @@ public class MobileTerminalServiceBean {
             throw new NullPointerException("Non valid serial no");
         return terminalDao.getMobileTerminalBySerialNo(serialNo);
     }
-
 
     public String assertTerminalHasSerialNumber(MobileTerminalType mobileTerminal) {
         String serialNumber = null;
@@ -380,13 +363,8 @@ public class MobileTerminalServiceBean {
     }
 
     public void assertTerminalNotExists(UUID mobileTerminalGUID, String serialNr) {
-        MobileTerminal terminal = null;
 
-        if(mobileTerminalGUID == null || mobileTerminalGUID.toString().isEmpty()){
-            //do nothing
-        }else{
-            terminal = getMobileTerminalEntityById(mobileTerminalGUID);
-        }
+        MobileTerminal terminal = getMobileTerminalEntityById(mobileTerminalGUID);
 
         if(terminal != null){
             throw new IllegalArgumentException("Mobile terminal already exists in database for id: " + mobileTerminalGUID.toString());
@@ -399,13 +377,7 @@ public class MobileTerminalServiceBean {
         if (!terminalBySerialNo.getArchived()) {
             throw new IllegalArgumentException("Mobile terminal already exists in database for serial number: " + serialNr);
         }
-
-
-
     }
-
-    @Inject
-    AssetDao assetDao;
 
     public MobileTerminal assignMobileTerminalToCarrier(MobileTerminalAssignQuery query, String comment, String username) {
         if (query == null) {
@@ -453,7 +425,6 @@ public class MobileTerminalServiceBean {
 
             return terminal;
         }
-
         throw new IllegalArgumentException("Terminal " + mobTermId + " is already linked to an asset with guid " + currentConnectId);
     }
 
@@ -493,7 +464,6 @@ public class MobileTerminalServiceBean {
 
             return terminal;
         }
-
         throw new IllegalArgumentException("Terminal " + mobTermId + " is not linked to an asset with guid " + connectId);
     }
 
@@ -523,7 +493,6 @@ public class MobileTerminalServiceBean {
         return createdmobileTerminal;
     }
 
-
     public MobileTerminalHistory getMobileTerminalHistoryList(MobileTerminalId id) {
         if (id == null) {
             throw new NullPointerException("No Mobile Terminal");
@@ -542,10 +511,6 @@ public class MobileTerminalServiceBean {
         if (query.getMobileTerminalSearchCriteria() == null) {
             throw new IllegalArgumentException("No list criteria");
         }
-        if (query.getMobileTerminalSearchCriteria().getCriterias().isEmpty()) {
-            throw new IllegalArgumentException("No list criteria");
-        }
-
 
         ListResponseDto response = new ListResponseDto();
         List<MobileTerminalType> mobileTerminalList = new ArrayList<>();

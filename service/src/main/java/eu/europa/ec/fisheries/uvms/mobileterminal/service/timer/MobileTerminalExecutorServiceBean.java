@@ -11,15 +11,12 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.timer;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.ConfigService;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.PollService;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.PollServiceBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.ejb.*;
-import javax.enterprise.concurrent.ManagedExecutorService;
 
 @Startup
 @Singleton
@@ -28,25 +25,18 @@ public class MobileTerminalExecutorServiceBean {
     private static final Logger LOG = LoggerFactory.getLogger(MobileTerminalExecutorServiceBean.class);
 
     @EJB
-    private ConfigService configService;
+    private PollServiceBean pollService;
 
     @EJB
-    private PollService pollService;
-
-    @Resource
-    ManagedExecutorService managedExecutorService;
-
     private PluginTimerTask pluginTimerTask;
+
     private PollTimerTask pollTimerTask;
 
     @PostConstruct
     public void initPlugins() {
-
         try {
-            if(pluginTimerTask == null) {
-                pluginTimerTask = new PluginTimerTask(configService);
-            }
-            managedExecutorService.execute(pluginTimerTask);
+            pluginTimerTask.sync();
+            LOG.info("PluginTimerTask initialized.");
         } catch (Exception e) {
             LOG.error("Error when initializing PluginTimerTask", e);
         }
@@ -55,11 +45,8 @@ public class MobileTerminalExecutorServiceBean {
     @Schedule(minute = "*/5", hour = "*", persistent = false)
     public void initPluginTimer() {
         try {
-            if(pluginTimerTask == null) {
-                pluginTimerTask = new PluginTimerTask(configService);
-            }
+            pluginTimerTask.sync();
             LOG.info("PluginTimerTask initialized.");
-            pluginTimerTask.run();
         } catch (Exception e) {
             LOG.error("[ Error when initializing PluginTimerTask. ] {}", e);
         }
@@ -77,4 +64,5 @@ public class MobileTerminalExecutorServiceBean {
             LOG.error("[ Error when initializing PollTimerTask. ] {}", e);
         }
     }
+
 }

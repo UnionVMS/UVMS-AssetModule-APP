@@ -19,7 +19,6 @@ import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallExcep
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ModuleQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.PollService;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.ChannelDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.PollDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.PollProgramDaoBean;
@@ -41,7 +40,7 @@ import java.util.*;
 
 @Stateless
 @LocalBean
-public class PollServiceBean implements PollService {
+public class PollServiceBean {
 
     private final static Logger LOG = LoggerFactory.getLogger(PollServiceBean.class);
 
@@ -50,9 +49,6 @@ public class PollServiceBean implements PollService {
 
     @EJB
     private PluginServiceBean sendPollService;
-
-    @EJB
-    private MobileTerminalPollTimerServiceBean timerService;
 
     @EJB
     private PollDaoBean pollDao;

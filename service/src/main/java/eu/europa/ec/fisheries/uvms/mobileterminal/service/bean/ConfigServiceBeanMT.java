@@ -24,7 +24,6 @@ import eu.europa.ec.fisheries.uvms.exchange.model.mapper.ExchangeModuleRequestMa
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageConsumer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ModuleQueue;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.ConfigService;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConfigType;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.ChannelDaoBean;
@@ -50,7 +49,7 @@ import java.util.*;
 
 @Stateless
 @LocalBean
-public class ConfigServiceBeanMT implements ConfigService {
+public class ConfigServiceBeanMT {
 
     private final static Logger LOG = LoggerFactory.getLogger(ConfigServiceBeanMT.class);
 

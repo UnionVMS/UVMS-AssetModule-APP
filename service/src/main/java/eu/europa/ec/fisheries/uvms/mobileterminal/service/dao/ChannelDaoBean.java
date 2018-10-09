@@ -12,11 +12,8 @@
 
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.dao;
 
-
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.AttributeMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.poll.PollSearchMapper;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -24,9 +21,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-
 
 @Stateless
 public class ChannelDaoBean  {
@@ -34,10 +29,9 @@ public class ChannelDaoBean  {
     @PersistenceContext
     private EntityManager em;
 
-
     public List<Channel> getPollableListSearch(List<String> idList) {
         if(idList == null){
-            return new ArrayList<Channel>();
+            return new ArrayList<>();
         }
         String sql = PollSearchMapper.createPollableSearchSql(idList);
         List<UUID> uuidList = new ArrayList<>();
@@ -45,7 +39,7 @@ public class ChannelDaoBean  {
             uuidList.add(UUID.fromString(s));
         }
         TypedQuery<Channel> query = em.createQuery(sql, Channel.class);
-        if(idList != null && !idList.isEmpty()) {
+        if(!idList.isEmpty()) {
             query.setParameter("idList", uuidList);
         }
         return query.getResultList();
