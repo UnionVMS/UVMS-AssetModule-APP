@@ -748,6 +748,9 @@
     <changeSet author="thofan (generated)" id="1535445328879-70">
         <addUniqueConstraint columnNames="service_name" constraintName="plugin_uc_service_name" tableName="plugin"/>
     </changeSet>
+    <changeSet author="thofan (generated)" id="4535445328880-99">
+        <addUniqueConstraint columnNames="serial_no" constraintName="mobileterminal_uc_serialnumber" tableName="mobileterminal"/>
+    </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-71">
         <createIndex indexName="assetgroupfield_assetgroup_fk_inx10" tableName="assetgroupfield">
             <column name="assetgroup"/>
