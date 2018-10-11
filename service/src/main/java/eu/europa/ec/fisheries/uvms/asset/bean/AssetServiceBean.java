@@ -22,16 +22,13 @@ import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import eu.europa.ec.fisheries.schema.exchange.movement.asset.v1.AssetIdList;
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
-import eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetId;
-import eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetIdList;
-import eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetIdType;
-import eu.europa.ec.fisheries.schema.movementrules.movement.v1.RawMovementType;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.MobileTerminalService;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -451,50 +448,7 @@ public class AssetServiceBean implements AssetService {
         return assetDao.getAssetByConnectId(uuid);
     }
 
-    @Override
-    public AssetMTEnrichmentResponse collectAssetMT(RawMovementType rawMovement, String pluginType, String username) {
 
-
-        AssetMTEnrichmentResponse assetMTEnrichmentResponse = new AssetMTEnrichmentResponse();
-
-        // Get Mobile Terminal if it exists
-        MobileTerminalType mobileTerminal = mobileTerminalService.getMobileTerminalByRawMovement(rawMovement);
-
-        // Get Asset
-        Asset asset = null;
-        if (mobileTerminal != null) {
-            String connectId = mobileTerminal.getConnectId();
-            if (connectId != null) {
-                UUID connectId_UUID = UUID.fromString(connectId);
-                asset = getAssetByConnectId(connectId_UUID);
-                assetMTEnrichmentResponse.setAsset(asset);
-            }
-        } else {
-            asset =  getAssetByCfrIrcs(rawMovement.getAssetId());
-            if (isPluginTypeWithoutMobileTerminal(rawMovement.getPluginType()) && asset != null) {
-                assetMTEnrichmentResponse.setAsset(asset);
-                mobileTerminal = mobileTerminalService.findMobileTerminalByAsset(asset.getId());
-                rawMovement.setMobileTerminal(mapMobileTerminal(mobileTerminal));
-                assetMTEnrichmentResponse.setMobileTerminalType(mobileTerminal);
-            }
-        }
-        if (rawMovement.getAssetId() == null && asset != null) {
-            AssetId assetId = createAssetId(asset);
-            rawMovement.setAssetId(assetId);
-        }
-
-        List<UUID> assetGroupList = new ArrayList<>();
-        if(asset != null){
-                List<AssetGroup> list = assetGroupService.getAssetGroupListByAssetId(asset.getId());
-                for(AssetGroup assetGroup : list){
-                    UUID assetGroupId = assetGroup.getId();
-                    assetGroupList.add(assetGroupId);
-                }
-        }
-
-        assetMTEnrichmentResponse.setAssetGroupList(assetGroupList);
-        return assetMTEnrichmentResponse;
-    }
 
     public eu.europa.ec.fisheries.schema.movementrules.mobileterminal.v1.MobileTerminalType mapMobileTerminal(eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType mobileTerminalType) {
         if (mobileTerminalType == null) {
@@ -541,6 +495,43 @@ public class AssetServiceBean implements AssetService {
         }
         return newAssetId;
     }
+
+    private  AssetId createAssetId(AssetMTEnrichmentRequest request) {
+        AssetId newAssetId = new AssetId();
+        if(request.getCfrValue() != null &&request.getCfrValue().length() > 0){
+            AssetIdList id = new AssetIdList();
+            id.setIdType(AssetIdType.CFR);
+            id.setValue(request.getCfrValue());
+            newAssetId.getAssetIdList().add(id);
+        }
+        if(request.getImoValue() != null &&request.getImoValue().length() > 0){
+            AssetIdList id = new AssetIdList();
+            id.setIdType(AssetIdType.IMO);
+            id.setValue(request.getImoValue());
+            newAssetId.getAssetIdList().add(id);
+        }
+        if(request.getIrcsValue() != null && request.getIrcsValue().length() > 0){
+            AssetIdList id = new AssetIdList();
+            id.setIdType(AssetIdType.IRCS);
+            id.setValue(request.getIrcsValue());
+            newAssetId.getAssetIdList().add(id);
+        }
+        if(request.getMmsiValue() != null && request.getMmsiValue().length() > 0){
+            AssetIdList id = new AssetIdList();
+            id.setIdType(AssetIdType.MMSI);
+            id.setValue(request.getMmsiValue());
+            newAssetId.getAssetIdList().add(id);
+        }
+        if(request.getIdValue() != null){
+            AssetIdList id = new AssetIdList();
+            id.setIdType(AssetIdType.GUID);
+            id.setValue(request.getIdValue().toString());
+            newAssetId.getAssetIdList().add(id);
+        }
+        return newAssetId;
+    }
+
+
 
     private Asset getAssetByCfrIrcs(AssetId assetId) {
 
@@ -623,6 +614,56 @@ public class AssetServiceBean implements AssetService {
             return false;
         }
     }
+
+
+    @Override
+    public AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request) {
+
+
+        AssetMTEnrichmentResponse assetMTEnrichmentResponse = new AssetMTEnrichmentResponse();
+
+        // Get Mobile Terminal if it exists
+        MobileTerminalType mobileTerminal = mobileTerminalService.getMobileTerminalByAssetMTEnrichmentRequest(request);
+
+        // Get Asset
+        Asset asset = null;
+        if (mobileTerminal != null) {
+            String connectId = mobileTerminal.getConnectId();
+            if (connectId != null) {
+                UUID connectId_UUID = UUID.fromString(connectId);
+                asset = getAssetByConnectId(connectId_UUID);
+                assetMTEnrichmentResponse.setAsset(asset);
+            }
+        } else {
+            asset =  getAssetByCfrIrcs(createAssetId(request));
+            if (isPluginTypeWithoutMobileTerminal(request.getPluginType().value()) && asset != null) {
+                assetMTEnrichmentResponse.setAsset(asset);
+                mobileTerminal = mobileTerminalService.findMobileTerminalByAsset(asset.getId());
+
+                // OBS OBS
+                //rawMovement.setMobileTerminal(mapMobileTerminal(mobileTerminal));
+                assetMTEnrichmentResponse.setMobileTerminalType(mobileTerminal);
+            }
+        }
+        if ((createAssetId(request).getAssetIdList().size() < 1)  && (asset != null)) {
+            // OBS OBS
+            AssetId assetId = createAssetId(asset);
+            //rawMovement.setAssetId(assetId);
+        }
+
+        List<UUID> assetGroupList = new ArrayList<>();
+        if(asset != null){
+            List<AssetGroup> list = assetGroupService.getAssetGroupListByAssetId(asset.getId());
+            for(AssetGroup assetGroup : list){
+                UUID assetGroupId = assetGroup.getId();
+                assetGroupList.add(assetGroupId);
+            }
+        }
+
+        assetMTEnrichmentResponse.setAssetGroupList(assetGroupList);
+        return assetMTEnrichmentResponse;
+    }
+
 
 
 

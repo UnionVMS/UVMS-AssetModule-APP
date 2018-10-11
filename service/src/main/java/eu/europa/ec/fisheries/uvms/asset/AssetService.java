@@ -15,7 +15,6 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import eu.europa.ec.fisheries.schema.movementrules.movement.v1.RawMovementType;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
@@ -24,6 +23,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
 
 public interface AssetService {
@@ -218,6 +218,11 @@ public interface AssetService {
 
     Asset getAssetByConnectId(UUID mobileTerminalConnectId);
 
-    AssetMTEnrichmentResponse collectAssetMT(RawMovementType rawMovement, String pluginType, String username);
+    //@Deprecated
+    //AssetMTEnrichmentResponse collectAssetMT(RawMovementType rawMovement, String pluginType, String username);
+
+    AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request);
+
+
 }
 
