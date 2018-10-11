@@ -21,6 +21,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import eu.europa.ec.fisheries.uvms.asset.client.constants.ParameterKey;
 import eu.europa.ec.fisheries.uvms.asset.client.model.*;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.junit.Arquillian;
@@ -228,6 +230,17 @@ public class AssetClientTest extends AbstractClientTest {
         assetClient.replace(customCode);
 
     }
+
+    @Test
+    public void collectAssetMTTest() throws Exception {
+
+        //public AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request) throws Exception {
+        AssetMTEnrichmentRequest request = new AssetMTEnrichmentRequest();
+        AssetMTEnrichmentResponse response = assetClient.collectAssetMT(request);
+
+        Assert.assertNotNull(response);  // proofs we reach the endpoint  . . .
+    }
+
 
 
 }

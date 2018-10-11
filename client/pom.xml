@@ -58,7 +58,6 @@
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>asset-service</artifactId>
             <version>${project.parent.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>

@@ -33,6 +33,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import eu.europa.ec.fisheries.uvms.asset.client.constants.ParameterKey;
 import eu.europa.ec.fisheries.uvms.asset.client.model.*;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
@@ -244,4 +246,26 @@ public class AssetClient {
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(customCode), CustomCode.class);
     }
+
+
+    public AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request) throws Exception {
+
+        // @formatter:off
+        Response ret =  webTarget
+                .path("collectassetmt")
+                .request(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .post(Entity.json(request), Response.class);
+        // @formatter:on
+
+        AssetMTEnrichmentResponse response = ret.readEntity(new GenericType<AssetMTEnrichmentResponse>() {
+        });
+
+        return response;
+    }
+
+
+
+
+
 }
