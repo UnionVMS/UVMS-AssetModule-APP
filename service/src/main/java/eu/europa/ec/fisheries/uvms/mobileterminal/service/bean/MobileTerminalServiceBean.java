@@ -294,6 +294,7 @@ public class MobileTerminalServiceBean {
         for(MobileTerminalAttributes mta : current.getMobileTerminalAttributes()){
             mta.setMobileTerminalEvent(event);
         }
+        current.setMobileTerminalAttributes(null);
         mobileTerminal.getMobileTerminalEvents().add(event);
         terminalDao.updateMobileTerminal(mobileTerminal);
 
@@ -429,6 +430,7 @@ public class MobileTerminalServiceBean {
             for(MobileTerminalAttributes mta : current.getMobileTerminalAttributes()){
                 mta.setMobileTerminalEvent(event);
             }
+            current.setMobileTerminalAttributes(null);
 
             terminal.getMobileTerminalEvents().add(event);
             asset.getMobileTerminalEvent().add(event);
@@ -476,6 +478,7 @@ public class MobileTerminalServiceBean {
             for(MobileTerminalAttributes mta : current.getMobileTerminalAttributes()){
                 mta.setMobileTerminalEvent(event);
             }
+            current.setMobileTerminalAttributes(null);
 
 
             terminal.getMobileTerminalEvents().add(event);
