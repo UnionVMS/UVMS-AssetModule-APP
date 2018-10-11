@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.asset.dto;
+package eu.europa.ec.fisheries.uvms.asset.client.model;
 
 
 import java.io.Serializable;
@@ -8,6 +8,8 @@ import java.util.UUID;
 
 public class AssetMTEnrichmentResponse implements Serializable {
 
+   // private MobileTerminalType mobileTerminalType;
+   // private Asset asset;
     private List<UUID> assetGroupList = null;
     private Map<String,String > assetId = null;
 

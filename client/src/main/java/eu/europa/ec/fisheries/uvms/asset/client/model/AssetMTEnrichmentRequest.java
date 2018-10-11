@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.asset.dto;
+package eu.europa.ec.fisheries.uvms.asset.client.model;
 
 
 import java.util.UUID;
@@ -7,7 +7,7 @@ public class AssetMTEnrichmentRequest {
 
 
     private String transpondertypeValue = null;  // the server only looks for TRANSPONDER_TYPE
-    private String pluginType = null;
+    private String pluginType;
 
     // for mobileTerminal
     private String dnidValue = null;

@@ -469,14 +469,14 @@ public class AssetServiceBean implements AssetService {
             if (connectId != null) {
                 UUID connectId_UUID = UUID.fromString(connectId);
                 asset = getAssetByConnectId(connectId_UUID);
-                assetMTEnrichmentResponse.setAsset(asset);
+                //   OBS ONLY nessessary data NOT entire object assetMTEnrichmentResponse.setAsset(asset);
             }
         } else {
             asset =  getAssetByCfrIrcs(createAssetId(request));
-            if (isPluginTypeWithoutMobileTerminal(request.getPluginType().value()) && asset != null) {
-                assetMTEnrichmentResponse.setAsset(asset);
+            if (isPluginTypeWithoutMobileTerminal(request.getPluginType()) && asset != null) {
+                //   OBS ONLY nessessary data NOT entire object assetMTEnrichmentResponse.setAsset(asset);
                 mobileTerminal = mobileTerminalService.findMobileTerminalByAsset(asset.getId());
-                assetMTEnrichmentResponse.setMobileTerminalType(mobileTerminal);
+                //   OBS ONLY nessessary data NOT entire object assetMTEnrichmentResponse.setMobileTerminalType(mobileTerminal);
             }
         }
         if ((createAssetId(request).size() < 1)  && (asset != null)) {
