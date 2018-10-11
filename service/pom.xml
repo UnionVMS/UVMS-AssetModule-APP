@@ -140,11 +140,12 @@
             <version>RELEASE</version>
             <scope>compile</scope>
         </dependency>
-        <!--dependency>
+        <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.movement-rules</groupId>
             <artifactId>movement-rules-model</artifactId>
             <version>${movementrules.version}</version>
-        </dependency-->
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

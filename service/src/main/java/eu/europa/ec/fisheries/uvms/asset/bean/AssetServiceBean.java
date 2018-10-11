@@ -13,16 +13,11 @@ package eu.europa.ec.fisheries.uvms.asset.bean;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import eu.europa.ec.fisheries.schema.exchange.movement.asset.v1.AssetIdList;
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
@@ -47,6 +42,13 @@ import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
 
 @Stateless
 public class AssetServiceBean implements AssetService {
+
+    private final String GUID = "GUID";
+    private final String IMO = "IMO";
+    private final String IRCS = "IRCS";
+    private final String MMSI = "MMSI";
+    private final String CFR = "CFR";
+
 
     private static final Logger LOG = LoggerFactory.getLogger(AssetServiceBean.class);
     
@@ -449,118 +451,106 @@ public class AssetServiceBean implements AssetService {
     }
 
 
+    @Override
+    public AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request) {
 
-    public eu.europa.ec.fisheries.schema.movementrules.mobileterminal.v1.MobileTerminalType mapMobileTerminal(eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType mobileTerminalType) {
-        if (mobileTerminalType == null) {
-            return null;
+
+        AssetMTEnrichmentResponse assetMTEnrichmentResponse = new AssetMTEnrichmentResponse();
+
+        // Get Mobile Terminal if it exists
+        MobileTerminalType mobileTerminal = mobileTerminalService.getMobileTerminalByAssetMTEnrichmentRequest(request);
+
+        // Get Asset
+        Asset asset = null;
+        if (mobileTerminal != null) {
+            String connectId = mobileTerminal.getConnectId();
+            if (connectId != null) {
+                UUID connectId_UUID = UUID.fromString(connectId);
+                asset = getAssetByConnectId(connectId_UUID);
+                assetMTEnrichmentResponse.setAsset(asset);
+            }
+        } else {
+            asset =  getAssetByCfrIrcs(createAssetId(request));
+            if (isPluginTypeWithoutMobileTerminal(request.getPluginType().value()) && asset != null) {
+                assetMTEnrichmentResponse.setAsset(asset);
+                mobileTerminal = mobileTerminalService.findMobileTerminalByAsset(asset.getId());
+                assetMTEnrichmentResponse.setMobileTerminalType(mobileTerminal);
+            }
         }
-        eu.europa.ec.fisheries.schema.movementrules.mobileterminal.v1.MobileTerminalType rawMobileTerminalType = new eu.europa.ec.fisheries.schema.movementrules.mobileterminal.v1.MobileTerminalType();
-        rawMobileTerminalType.setConnectId(mobileTerminalType.getConnectId());
-        rawMobileTerminalType.setGuid(mobileTerminalType.getMobileTerminalId().getGuid());
+        if ((createAssetId(request).size() < 1)  && (asset != null)) {
+            Map<String,String> assetId = createAssetId(asset);
+            assetMTEnrichmentResponse.setAssetId(assetId);
+        }
 
-        return rawMobileTerminalType;
+        List<UUID> assetGroupList = new ArrayList<>();
+        if(asset != null){
+            List<AssetGroup> list = assetGroupService.getAssetGroupListByAssetId(asset.getId());
+            for(AssetGroup assetGroup : list){
+                UUID assetGroupId = assetGroup.getId();
+                assetGroupList.add(assetGroupId);
+            }
+        }
+
+        assetMTEnrichmentResponse.setAssetGroupList(assetGroupList);
+        return assetMTEnrichmentResponse;
     }
 
-    private  AssetId createAssetId(Asset asset) {
-        AssetId newAssetId = new AssetId();
+
+    private  Map<String,String> createAssetId(Asset asset) {
+        Map<String,String> assetId = new HashMap<>();
+
         if(asset.getCfr() != null && asset.getCfr().length() > 0){
-            AssetIdList id = new AssetIdList();
-            id.setIdType(AssetIdType.CFR);
-            id.setValue(asset.getCfr());
-            newAssetId.getAssetIdList().add(id);
+            assetId.put(CFR, asset.getCfr());
         }
         if(asset.getId() != null ){
-            AssetIdList id = new AssetIdList();
-            id.setIdType(AssetIdType.GUID);
-            id.setValue(asset.getId().toString());
-            newAssetId.getAssetIdList().add(id);
+            assetId.put(GUID, asset.getId().toString());
         }
         if(asset.getImo() != null && asset.getImo().length() > 0){
-            AssetIdList id = new AssetIdList();
-            id.setIdType(AssetIdType.IMO);
-            id.setValue(asset.getImo());
-            newAssetId.getAssetIdList().add(id);
+            assetId.put(IMO, asset.getImo());
         }
         if(asset.getIrcs() != null && asset.getIrcs().length() > 0){
-            AssetIdList id = new AssetIdList();
-            id.setIdType(AssetIdType.IRCS);
-            id.setValue(asset.getIrcs());
-            newAssetId.getAssetIdList().add(id);
+            assetId.put(IRCS, asset.getIrcs());
         }
         if(asset.getMmsi() != null && asset.getMmsi().length() > 0){
-            AssetIdList id = new AssetIdList();
-            id.setIdType(AssetIdType.MMSI);
-            id.setValue(asset.getMmsi());
-            newAssetId.getAssetIdList().add(id);
+            assetId.put(MMSI, asset.getMmsi());
         }
-        return newAssetId;
+        return assetId;
     }
 
-    private  AssetId createAssetId(AssetMTEnrichmentRequest request) {
-        AssetId newAssetId = new AssetId();
-        if(request.getCfrValue() != null &&request.getCfrValue().length() > 0){
-            AssetIdList id = new AssetIdList();
-            id.setIdType(AssetIdType.CFR);
-            id.setValue(request.getCfrValue());
-            newAssetId.getAssetIdList().add(id);
+    private  Map<String,String> createAssetId(AssetMTEnrichmentRequest request) {
+        Map<String,String> assetId = new HashMap<>();
+
+        if(request.getCfrValue() != null && request.getCfrValue().length() > 0){
+            assetId.put(CFR, request.getCfrValue());
         }
-        if(request.getImoValue() != null &&request.getImoValue().length() > 0){
-            AssetIdList id = new AssetIdList();
-            id.setIdType(AssetIdType.IMO);
-            id.setValue(request.getImoValue());
-            newAssetId.getAssetIdList().add(id);
+        if(request.getIdValue() != null ){
+            assetId.put(GUID, request.getIdValue().toString());
+        }
+        if(request.getImoValue() != null && request.getImoValue().length() > 0){
+            assetId.put(IMO, request.getImoValue());
         }
         if(request.getIrcsValue() != null && request.getIrcsValue().length() > 0){
-            AssetIdList id = new AssetIdList();
-            id.setIdType(AssetIdType.IRCS);
-            id.setValue(request.getIrcsValue());
-            newAssetId.getAssetIdList().add(id);
+            assetId.put(IRCS, request.getIrcsValue());
         }
         if(request.getMmsiValue() != null && request.getMmsiValue().length() > 0){
-            AssetIdList id = new AssetIdList();
-            id.setIdType(AssetIdType.MMSI);
-            id.setValue(request.getMmsiValue());
-            newAssetId.getAssetIdList().add(id);
+            assetId.put(MMSI, request.getMmsiValue());
         }
-        if(request.getIdValue() != null){
-            AssetIdList id = new AssetIdList();
-            id.setIdType(AssetIdType.GUID);
-            id.setValue(request.getIdValue().toString());
-            newAssetId.getAssetIdList().add(id);
-        }
-        return newAssetId;
+        return assetId;
     }
 
 
-
-    private Asset getAssetByCfrIrcs(AssetId assetId) {
+    private Asset getAssetByCfrIrcs(Map<String,String> assetId) {
 
         try {
             // If no asset information exists, don't look for one
-            if (assetId == null || assetId.getAssetIdList() == null) {
+            if (assetId == null || assetId.size() < 1) {
                 LOG.warn("No asset information exists!");
                 return null;
             }
-
-            List<AssetIdList> ids = assetId.getAssetIdList();
-
-            String cfr = null;
-            String ircs = null;
-            String mmsi = null;
-
             // Get possible search parameters
-            for (AssetIdList id : ids) {
-                if (eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetIdType.CFR.equals(id.getIdType())) {
-                    cfr = id.getValue();
-                }
-                if (eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetIdType.IRCS.equals(id.getIdType())) {
-                    ircs = id.getValue();
-                }
-                if (eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetIdType.MMSI.equals(id.getIdType())) {
-                    mmsi = id.getValue();
-                }
-
-            }
+            String cfr = assetId.getOrDefault(CFR, null);
+            String ircs = assetId.getOrDefault(IRCS, null);
+            String mmsi = assetId.getOrDefault(MMSI, null);
 
             Asset asset = null;
             if (ircs != null && cfr != null && mmsi != null) {
@@ -614,57 +604,6 @@ public class AssetServiceBean implements AssetService {
             return false;
         }
     }
-
-
-    @Override
-    public AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request) {
-
-
-        AssetMTEnrichmentResponse assetMTEnrichmentResponse = new AssetMTEnrichmentResponse();
-
-        // Get Mobile Terminal if it exists
-        MobileTerminalType mobileTerminal = mobileTerminalService.getMobileTerminalByAssetMTEnrichmentRequest(request);
-
-        // Get Asset
-        Asset asset = null;
-        if (mobileTerminal != null) {
-            String connectId = mobileTerminal.getConnectId();
-            if (connectId != null) {
-                UUID connectId_UUID = UUID.fromString(connectId);
-                asset = getAssetByConnectId(connectId_UUID);
-                assetMTEnrichmentResponse.setAsset(asset);
-            }
-        } else {
-            asset =  getAssetByCfrIrcs(createAssetId(request));
-            if (isPluginTypeWithoutMobileTerminal(request.getPluginType().value()) && asset != null) {
-                assetMTEnrichmentResponse.setAsset(asset);
-                mobileTerminal = mobileTerminalService.findMobileTerminalByAsset(asset.getId());
-
-                // OBS OBS
-                //rawMovement.setMobileTerminal(mapMobileTerminal(mobileTerminal));
-                assetMTEnrichmentResponse.setMobileTerminalType(mobileTerminal);
-            }
-        }
-        if ((createAssetId(request).getAssetIdList().size() < 1)  && (asset != null)) {
-            // OBS OBS
-            AssetId assetId = createAssetId(asset);
-            //rawMovement.setAssetId(assetId);
-        }
-
-        List<UUID> assetGroupList = new ArrayList<>();
-        if(asset != null){
-            List<AssetGroup> list = assetGroupService.getAssetGroupListByAssetId(asset.getId());
-            for(AssetGroup assetGroup : list){
-                UUID assetGroupId = assetGroup.getId();
-                assetGroupList.add(assetGroupId);
-            }
-        }
-
-        assetMTEnrichmentResponse.setAssetGroupList(assetGroupList);
-        return assetMTEnrichmentResponse;
-    }
-
-
 
 
 
