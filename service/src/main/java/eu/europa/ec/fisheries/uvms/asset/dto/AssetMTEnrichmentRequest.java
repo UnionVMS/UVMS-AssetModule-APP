@@ -7,7 +7,7 @@ import java.util.UUID;
 public class AssetMTEnrichmentRequest {
 
 
-    private String source = null;
+    private String transpondertypeValue = null;  // the server only looks for TRANSPONDER_TYPE
     private PluginType pluginType;
 
     // for mobileTerminal
@@ -22,18 +22,21 @@ public class AssetMTEnrichmentRequest {
     private String ircsValue = null;
     private String imoValue = null;
     private String mmsiValue = null;
+    private String gfcmValue = null;
+    private String uviValue = null;
+    private String iccatValue = null;
 
 
     public AssetMTEnrichmentRequest(){
 
     }
 
-    public String getSource() {
-        return source;
+    public String getTranspondertypeValue() {
+        return transpondertypeValue;
     }
 
-    public void setSource(String source) {
-        this.source = source;
+    public void setTranspondertypeValue(String transpondertypeValue) {
+        this.transpondertypeValue = transpondertypeValue;
     }
 
     public String getDnidValue() {
@@ -104,8 +107,32 @@ public class AssetMTEnrichmentRequest {
         return id;
     }
 
-    public void  getIdValue(UUID id) {
+    public void  setIdValue(UUID id) {
         this.id = id;
+    }
+
+    public String getGfcmValue() {
+        return gfcmValue;
+    }
+
+    public void setGfcmValue(String gfcmValue) {
+        this.gfcmValue = gfcmValue;
+    }
+
+    public String getUviValue() {
+        return uviValue;
+    }
+
+    public void setUviValue(String uviValue) {
+        this.uviValue = uviValue;
+    }
+
+    public String getIccatValue() {
+        return iccatValue;
+    }
+
+    public void setIccatValue(String iccatValue) {
+        this.iccatValue = iccatValue;
     }
 
     public PluginType getPluginType() {

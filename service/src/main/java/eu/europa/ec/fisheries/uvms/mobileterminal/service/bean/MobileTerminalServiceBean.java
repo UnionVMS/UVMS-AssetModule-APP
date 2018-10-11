@@ -586,26 +586,23 @@ public class MobileTerminalServiceBean {
             crit.setValue(request.getSerialNumberValue());
             criteria.getCriterias().add(crit);
         }
-        return getMobileTerminalBySourceAndSearchCriteria(request.getSource(), criteria);
+        if (request.getTranspondertypeValue() != null && request.getTranspondertypeValue().length() > 0) {
+            ListCriteria crit = new ListCriteria();
+            crit.setKey(SearchKey.TRANSPONDER_TYPE);
+            crit.setValue(request.getTranspondertypeValue());
+            criteria.getCriterias().add(crit);
+        }
+        return getMobileTerminalBySourceAndSearchCriteria(criteria);
     }
 
 
-    public MobileTerminalType getMobileTerminalBySourceAndSearchCriteria(String sourceName, MobileTerminalSearchCriteria criteria) {
+    /***************************************************/
+    public MobileTerminalType getMobileTerminalBySourceAndSearchCriteria(MobileTerminalSearchCriteria criteria) {
         MobileTerminalListQuery query = new MobileTerminalListQuery();
-
 
         // If no valid criterias, don't look for a mobile terminal
         if (criteria.getCriterias().isEmpty()) {
             return null;
-        }
-
-        // If we know the transponder type from the source, use it in the search criteria
-
-        if (sourceName != null) {
-            eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListCriteria transponderTypeCrit = new eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListCriteria();
-            transponderTypeCrit.setKey(eu.europa.ec.fisheries.schema.mobileterminal.types.v1.SearchKey.TRANSPONDER_TYPE);
-            transponderTypeCrit.setValue(sourceName);
-            criteria.getCriterias().add(transponderTypeCrit);
         }
 
         query.setMobileTerminalSearchCriteria(criteria);
@@ -619,6 +616,9 @@ public class MobileTerminalServiceBean {
         List<MobileTerminalType> resultList = mobileTerminalListResponse.getMobileTerminal();
         return resultList.size() != 1 ? null : resultList.get(0);
     }
+
+
+
 
 
 }

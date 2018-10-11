@@ -75,8 +75,8 @@ public class TerminalDaoBean {
     }
 
     public List<MobileTerminal> getMobileTerminalsByQuery(String sql) {
-        Query query = em.createQuery(sql, MobileTerminal.class);
-        return query.getResultList();
+            Query query = em.createQuery(sql, MobileTerminal.class);
+            return query.getResultList();
     }
 
     public MobileTerminal findMobileTerminalByAsset(UUID assetid) {

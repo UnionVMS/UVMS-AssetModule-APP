@@ -48,7 +48,9 @@ public class AssetServiceBean implements AssetService {
     private final String IRCS = "IRCS";
     private final String MMSI = "MMSI";
     private final String CFR = "CFR";
-
+    private final String GFCM = "GFCM";
+    private final String UVI = "UVI";
+    private final String ICCAT = "ICCAT";
 
     private static final Logger LOG = LoggerFactory.getLogger(AssetServiceBean.class);
     
@@ -495,7 +497,6 @@ public class AssetServiceBean implements AssetService {
         return assetMTEnrichmentResponse;
     }
 
-
     private  Map<String,String> createAssetId(Asset asset) {
         Map<String,String> assetId = new HashMap<>();
 
@@ -513,6 +514,15 @@ public class AssetServiceBean implements AssetService {
         }
         if(asset.getMmsi() != null && asset.getMmsi().length() > 0){
             assetId.put(MMSI, asset.getMmsi());
+        }
+        if(asset.getGfcm() != null && asset.getGfcm().length() > 0){
+            assetId.put(GFCM, asset.getGfcm());
+        }
+        if(asset.getUvi() != null && asset.getUvi().length() > 0){
+            assetId.put(UVI, asset.getUvi());
+        }
+        if(asset.getIccat() != null && asset.getIccat().length() > 0){
+            assetId.put(ICCAT, asset.getIccat());
         }
         return assetId;
     }
@@ -535,10 +545,20 @@ public class AssetServiceBean implements AssetService {
         if(request.getMmsiValue() != null && request.getMmsiValue().length() > 0){
             assetId.put(MMSI, request.getMmsiValue());
         }
+        if(request.getGfcmValue() != null && request.getGfcmValue().length() > 0){
+            assetId.put(GFCM, request.getGfcmValue());
+        }
+        if(request.getUviValue() != null && request.getUviValue().length() > 0){
+            assetId.put(UVI, request.getUviValue());
+        }
+        if(request.getIccatValue() != null && request.getIccatValue().length() > 0){
+            assetId.put(ICCAT, request.getIccatValue());
+        }
         return assetId;
     }
 
 
+    // TODO ? the belgian constants as well if so how ?? no spec !!!
     private Asset getAssetByCfrIrcs(Map<String,String> assetId) {
 
         try {
