@@ -33,9 +33,7 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.io.StringReader;
-import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -598,6 +596,76 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
     }
 
+    @Test
+    public void searchForSerialNumberAfterCreatingNewEvents() throws Exception{
+        MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        Asset asset = createAndRestBasicAsset();
+
+        String created = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminal), String.class);
+
+        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(created));
+        MobileTerminalType createdMT = deserializeResponseDto(created, MobileTerminalType.class);
+        String guid = createdMT.getMobileTerminalId().getGuid();
+
+        MobileTerminalListQuery mobileTerminalListQuery = MobileTerminalTestHelper.createMobileTerminalListQuery();
+
+        //check the search result
+        MobileTerminalListResponse returnList = sendMTListQuery(mobileTerminalListQuery);
+        assertEquals(1, returnList.getMobileTerminal().size());
+
+        //Start assign query
+        MobileTerminalAssignQuery query = new MobileTerminalAssignQuery();
+        String connectId = asset.getId().toString();
+        query.setConnectId(connectId);
+
+        MobileTerminalId mobileTerminalId = new MobileTerminalId();
+        mobileTerminalId.setGuid(guid);
+        query.setMobileTerminalId(mobileTerminalId);
+
+        String response = getWebTarget()
+                .path("/mobileterminal/assign")
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query), String.class);
+
+        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
+
+        //check the search result
+        returnList = sendMTListQuery(mobileTerminalListQuery);
+        assertEquals(1, returnList.getMobileTerminal().size());
+
+        //Unassign
+        String responseUnAssign = getWebTarget()
+                .path("/mobileterminal/unassign")
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query), String.class);
+
+        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(responseUnAssign));
+
+        //check the search result
+        returnList = sendMTListQuery(mobileTerminalListQuery);
+        assertEquals(1, returnList.getMobileTerminal().size());
+
+        //And inactivate
+        response = getWebTarget()
+                .path("mobileterminal/status/inactivate")
+                .queryParam("comment", "Test Comment Inactivate")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(createdMT.getMobileTerminalId()), String.class);
+
+
+        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
+
+
+        //check the search result
+        returnList = sendMTListQuery(mobileTerminalListQuery);
+        assertEquals(1, returnList.getMobileTerminal().size());
+    }
+
     private MobileTerminalType createAndRestMobileTerminal(String boat) throws Exception {
         MobileTerminalType mt = MobileTerminalTestHelper.createBasicMobileTerminal();
         mt.setConnectId(boat);
@@ -624,5 +692,16 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertNotNull(createdAsset);
 
         return createdAsset;
+    }
+
+    private MobileTerminalListResponse sendMTListQuery(MobileTerminalListQuery mobileTerminalListQuery) throws Exception{
+        String response = getWebTarget()
+                .path("/mobileterminal/list")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminalListQuery), String.class);
+
+        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
+        MobileTerminalListResponse returnList = deserializeResponseDto(response, MobileTerminalListResponse.class);
+        return returnList;
     }
 }

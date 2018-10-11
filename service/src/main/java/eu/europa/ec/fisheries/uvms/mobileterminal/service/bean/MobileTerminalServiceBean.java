@@ -34,6 +34,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalAttributes;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
@@ -289,6 +290,11 @@ public class MobileTerminalServiceBean {
                 throw new IllegalArgumentException("Non valid status to set");
         }
 
+        event.setMobileTerminalAttributes(current.getMobileTerminalAttributes());
+        for(MobileTerminalAttributes mta : current.getMobileTerminalAttributes()){
+            mta.setMobileTerminalEvent(event);
+        }
+        current.setMobileTerminalAttributes(null);
         mobileTerminal.getMobileTerminalEvents().add(event);
         terminalDao.updateMobileTerminal(mobileTerminal);
 
@@ -419,8 +425,16 @@ public class MobileTerminalServiceBean {
             event.setMobileterminal(terminal);
             event.setUpdateuser(username);
             event.setEventCodeType(EventCodeEnum.LINK);
+
+            event.setMobileTerminalAttributes(current.getMobileTerminalAttributes());
+            for(MobileTerminalAttributes mta : current.getMobileTerminalAttributes()){
+                mta.setMobileTerminalEvent(event);
+            }
+            current.setMobileTerminalAttributes(null);
+
             terminal.getMobileTerminalEvents().add(event);
             asset.getMobileTerminalEvent().add(event);
+
             terminalDao.updateMobileTerminal(terminal);
 
             return terminal;
@@ -459,6 +473,14 @@ public class MobileTerminalServiceBean {
             event.setMobileterminal(terminal);
             event.setUpdateuser(username);
             event.setEventCodeType(EventCodeEnum.UNLINK);
+
+            event.setMobileTerminalAttributes(current.getMobileTerminalAttributes());
+            for(MobileTerminalAttributes mta : current.getMobileTerminalAttributes()){
+                mta.setMobileTerminalEvent(event);
+            }
+            current.setMobileTerminalAttributes(null);
+
+
             terminal.getMobileTerminalEvents().add(event);
             terminalDao.updateMobileTerminal(terminal);
 
