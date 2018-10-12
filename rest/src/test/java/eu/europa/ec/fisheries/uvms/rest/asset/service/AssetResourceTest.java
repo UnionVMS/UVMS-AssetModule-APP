@@ -65,7 +65,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         
         assertThat(createdAsset.getCfr(), is(asset.getCfr()));
 
-        assertEquals(EventCode.MOD, createdAsset.getEventCode());
+        assertEquals(EventCode.MOD.value(), createdAsset.getEventCode());
     }
     
     @Test
@@ -127,7 +127,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .put(Entity.json(createdAsset), Asset.class);
         
         assertThat(updatedAsset.getName(), is(newName));
-        assertEquals(EventCode.MOD, updatedAsset.getEventCode());
+        assertEquals(EventCode.MOD.value(), updatedAsset.getEventCode());
         
         Response response = getWebTarget()
                 .path("asset")

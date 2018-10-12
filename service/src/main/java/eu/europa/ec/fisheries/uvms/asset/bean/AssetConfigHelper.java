@@ -24,7 +24,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.ServiceConst
 @Stateless
 public class AssetConfigHelper implements ConfigHelper {
 
-    //private static final String ASSET_PU = "asset";
+    private static final String ASSET_PU = "asset";
 
 
     @PersistenceContext
@@ -41,7 +41,7 @@ public class AssetConfigHelper implements ConfigHelper {
 
     @Override
     public String getModuleName() {
-        return ServiceConstants.ASSETMT_CONFIG_NAME;
+        return ASSET_PU;
     }
 
     @Override
