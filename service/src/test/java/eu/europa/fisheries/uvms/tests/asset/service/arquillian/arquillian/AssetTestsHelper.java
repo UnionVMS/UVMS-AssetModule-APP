@@ -23,7 +23,8 @@ public class AssetTestsHelper {
         assetEntity.setActive(true);
         assetEntity.setExternalMarking("EXT123");
         assetEntity.setFlagStateCode("SWE");
-        
+        assetEntity.setGearFishingType("gearFishingType");
+
         assetEntity.setCommissionDate(OffsetDateTime.now(ZoneOffset.UTC));
         assetEntity.setCfr("CRF" + getRandomIntegers(9));
         assetEntity.setIrcs("F" + getRandomIntegers(7));

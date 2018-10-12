@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import eu.europa.ec.fisheries.schema.exchange.movement.mobileterminal.v1.IdList;
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ComChannelAttribute;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ComChannelType;
@@ -46,14 +45,17 @@ import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
 @Stateless
 public class AssetServiceBean implements AssetService {
 
-    private final String GUID = "GUID";
-    private final String IMO = "IMO";
-    private final String IRCS = "IRCS";
-    private final String MMSI = "MMSI";
-    private final String CFR = "CFR";
-    private final String GFCM = "GFCM";
-    private final String UVI = "UVI";
-    private final String ICCAT = "ICCAT";
+
+    private static final String DNID = "DNID";
+    private static final String MEMBER_NUMBER = "MEMBER_NUMBER";
+    private static final String GUID = "GUID";
+    private static final String IMO = "IMO";
+    private static final String IRCS = "IRCS";
+    private static final String MMSI = "MMSI";
+    private static final String CFR = "CFR";
+    private static final String GFCM = "GFCM";
+    private static final String UVI = "UVI";
+    private static final String ICCAT = "ICCAT";
 
     private static final Logger LOG = LoggerFactory.getLogger(AssetServiceBean.class);
 
@@ -486,35 +488,92 @@ public class AssetServiceBean implements AssetService {
             }
         }
         assetMTEnrichmentResponse.setAssetGroupList(assetGroupList);
-
         if (mobileTerminal != null) {
-            // here we put into response data about mobiletreminal / channels etc etc
-            String channelGuid = getChannelGuid(mobileTerminal, request);
-            assetMTEnrichmentResponse.setChannelGuid(channelGuid);
-            UUID connectidUUID = null;
-            if (mobileTerminal.getConnectId() != null) {
-                try {
-                    connectidUUID = UUID.fromString(mobileTerminal.getConnectId());
-                } catch (IllegalArgumentException e) {
-                    connectidUUID = null;
-                }
-                assetMTEnrichmentResponse.setMobileTerminalConnectId(connectidUUID);
-            }
+            assetMTEnrichmentResponse = enrichementHelper(request, assetMTEnrichmentResponse,mobileTerminal);
             assetMTEnrichmentResponse.setMobileTerminalType(mobileTerminal.getType());
         }
         return assetMTEnrichmentResponse;
     }
 
-    private AssetMTEnrichmentResponse enrichementHelper(AssetMTEnrichmentResponse assetMTEnrichmentResponse, Asset asset) {
-        Map<String, String> assetId = createAssetId(asset);
-        assetMTEnrichmentResponse.setAssetId(assetId);
-        assetMTEnrichmentResponse.setAssetUUID(asset.getId());
-        assetMTEnrichmentResponse.setAssetName(asset.getName());
-        assetMTEnrichmentResponse.setAssetHistoryId(asset.getHistoryId());
-        assetMTEnrichmentResponse.setFlagstate(asset.getFlagStateCode());
-        return assetMTEnrichmentResponse;
-    }
+        /*
+    private String externalMarking = null;
+    private String gearType = null;
+    private String cfr = null;
+    private String ircs = null;
+    private String assetStatus = null;
+    private String mmsi = null;
 
+    private String dnid = null;
+    private String mobileTerminalGuid = null;
+    private String memberNumber = null;
+    private String serialNumber = null;
+    private Boolean mobileTerminalIsInactive = null;
+     */
+
+    private AssetMTEnrichmentResponse enrichementHelper(AssetMTEnrichmentResponse resp, Asset asset) {
+        Map<String, String> assetId = createAssetId(asset);
+        resp.setAssetId(assetId);
+        resp.setAssetUUID(asset.getId());
+        resp.setAssetName(asset.getName());
+        resp.setAssetHistoryId(asset.getHistoryId());
+        resp.setFlagstate(asset.getFlagStateCode());
+        resp.setExternalMarking(asset.getExternalMarking());
+        resp.setGearType(asset.getGearFishingType());
+        resp.setCfr(asset.getCfr());
+        resp.setIrcs(asset.getIrcs());
+        resp.setMmsi(asset.getMmsi());
+
+        // resp.setAssetStatus(asset.get);
+
+
+        return resp;
+    }
+/*
+    private String dnid = null;
+    private String memberNumber = null;
+    private String serialNumber = null;
+    */
+    private AssetMTEnrichmentResponse enrichementHelper(AssetMTEnrichmentRequest req, AssetMTEnrichmentResponse resp, MobileTerminalType mobTerm) {
+
+        // here we put into response data about mobiletreminal / channels etc etc
+        String channelGuid = getChannelGuid(mobTerm, req);
+        resp.setChannelGuid(channelGuid);
+        if (mobTerm.getConnectId() != null) {
+            UUID connectidUUID = null;
+            try {
+                connectidUUID = UUID.fromString(mobTerm.getConnectId());
+            } catch (IllegalArgumentException e) {
+                connectidUUID = null;
+            }
+            resp.setMobileTerminalConnectId(connectidUUID);
+        }
+        resp.setMobileTerminalType(mobTerm.getType());
+        if(mobTerm.getMobileTerminalId() != null) {
+            resp.setMobileTerminalGuid(mobTerm.getMobileTerminalId().getGuid());
+        }
+        resp.setMobileTerminalIsInactive(mobTerm.isInactive());
+
+        if(mobTerm.getChannels() != null){
+            List<ComChannelType> channelTypes = mobTerm.getChannels();
+            for(ComChannelType channelType : channelTypes){
+                if(!channelType.getGuid().equals(channelGuid)){
+                    continue;
+                }
+                List<ComChannelAttribute> attributes = channelType.getAttributes();
+                for(ComChannelAttribute attr : attributes){
+                    String type = attr.getType();
+                    String val = attr.getValue();
+                    if (DNID.equals(type)) {
+                        resp.setDNID(val);
+                    }
+                    if (MEMBER_NUMBER.equals(type)) {
+                        resp.setMemberNumber(val);
+                    }
+                }
+            }
+        }
+        return resp;
+    }
 
     private String getChannelGuid(MobileTerminalType mobileTerminal, AssetMTEnrichmentRequest request) {
         String dnid = "";
@@ -536,10 +595,10 @@ public class AssetServiceBean implements AssetService {
                 String type = attribute.getType();
                 String value = attribute.getValue();
 
-                if ("DNID".equals(type)) {
+                if (DNID.equals(type)) {
                     correctDnid = value.equals(dnid);
                 }
-                if ("MEMBER_NUMBER".equals(type)) {
+                if (MEMBER_NUMBER.equals(type)) {
                     correctMemberNumber = value.equals(memberNumber);
                 }
             }
