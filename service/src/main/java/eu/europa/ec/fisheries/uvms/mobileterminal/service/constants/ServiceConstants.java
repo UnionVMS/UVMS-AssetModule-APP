@@ -16,7 +16,7 @@ public class ServiceConstants {
 	public static final String FIND_BY_NAME = "Parameter.findByName";
 
     /* The name used to represent the Mobile terminal module in the Config module. */
-    public static final String MOBILE_TERMINAL_CONFIG_NAME = "mobileTerminal";
+    public static final String ASSETMT_CONFIG_NAME = "AssetMT";
     public static final String DB_ACCESS_POLL_DOMAIN_MODEL = "java:global/mobileterminal-dbaccess-module/mobileterminal-dbaccess-domain/PollDomainModelBean!eu.europa.ec.fisheries.uvms.mobileterminal.PollDomainModel";
     public static final String DB_ACCESS_CONFIG_MODEL = "java:global/mobileterminal-dbaccess-module/mobileterminal-dbaccess-domain/ConfigModelBean!eu.europa.ec.fisheries.uvms.mobileterminal.ConfigModel";
     public static final String DB_ACCESS_MOBILE_TERMINAL_DOMAIN_MODEL = "java:global/mobileterminal-dbaccess-module/mobileterminal-dbaccess-domain/MobileTerminalDomainModelBean!eu.europa.ec.fisheries.uvms.mobileterminal.MobileTerminalDomainModel";
