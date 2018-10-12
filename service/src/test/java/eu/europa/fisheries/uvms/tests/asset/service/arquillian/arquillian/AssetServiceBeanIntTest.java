@@ -426,14 +426,12 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         AssetMTEnrichmentRequest request = createRequest(asset);
         AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
 
-        //Assert.assertNotNull(response.getAsset());
-        //Assert.assertNotNull(response.getMobileTerminalType());
+        Assert.assertNotNull(response.getAssetId());
+        Assert.assertNotNull(response.getMobileTerminalType());
 
-        //Asset fetchedAsset = response.getAsset();
-        //MobileTerminalType mobileTerminalType = response.getMobileTerminalType();
+        UUID assetUUID = response.getAssetUUID();
 
-        //Assert.assertEquals(asset.getId(), fetchedAsset.getId());
-        //Assert.assertEquals(mobileTerminal.getId().toString(), mobileTerminalType.getMobileTerminalId().getGuid());
+        Assert.assertEquals(asset.getId(), assetUUID);
 
         List<UUID> fetchedAssetGroups = response.getAssetGroupList();
         Assert.assertNotNull(fetchedAssetGroups);
