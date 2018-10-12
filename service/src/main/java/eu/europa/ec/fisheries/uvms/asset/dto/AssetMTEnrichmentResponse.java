@@ -12,15 +12,24 @@ public class AssetMTEnrichmentResponse implements Serializable {
     private String mobileTerminalType = null;
     private String channelGuid = null;
 
-
-
-    // private Asset asset;
     private String assetName;
     private Map<String,String > assetId = null;
     private List<UUID> assetGroupList = null;
     private UUID assetUUID = null;
     private UUID assetHistoryId = null;
     private String flagstate = null;
+
+    private String externalMarking = null;
+    private String gearType = null;
+    private String cfr = null;
+    private String ircs = null;
+    private String assetStatus = null;
+    private String mmsi = null;
+    private String dnid = null;
+    private String mobileTerminalGuid = null;
+    private String memberNumber = null;
+    private String serialNumber = null;
+    private Boolean mobileTerminalIsInactive = null;
 
     public AssetMTEnrichmentResponse(){}
 
@@ -94,5 +103,94 @@ public class AssetMTEnrichmentResponse implements Serializable {
 
     public void setAssetHistoryId(UUID assetHistoryId) {
         this.assetHistoryId = assetHistoryId;
+    }
+
+
+    public String getExternalMarking() {
+        return externalMarking;
+    }
+
+    public void setExternalMarking(String externalMarking) {
+        this.externalMarking = externalMarking;
+    }
+
+    public String getGearType() {
+        return gearType;
+    }
+
+    public void setGearType(String gearType) {
+        this.gearType = gearType;
+    }
+
+    public String getCfr() {
+        return cfr;
+    }
+
+    public void setCfr(String cfr) {
+        this.cfr = cfr;
+    }
+
+    public String getIrcs() {
+        return ircs;
+    }
+
+    public void setIrcs(String ircs) {
+        this.ircs = ircs;
+    }
+
+    public String getAssetStatus() {
+        return assetStatus;
+    }
+
+    public void setAssetStatus(String assetStatus) {
+        this.assetStatus = assetStatus;
+    }
+
+    public String getMmsi() {
+        return mmsi;
+    }
+
+    public void setMmsi(String mmsi) {
+        this.mmsi = mmsi;
+    }
+
+    public String getMobileTerminalGuid() {
+        return mobileTerminalGuid;
+    }
+
+    public void setMobileTerminalGuid(String mobileTerminalGuid) {
+        this.mobileTerminalGuid = mobileTerminalGuid;
+    }
+
+    public String getDNID() {
+        return dnid;
+    }
+
+    public void setDNID(String dnid) {
+        this.dnid = dnid;
+    }
+
+    public String getMemberNumber() {
+        return memberNumber;
+    }
+
+    public void setMemberNumber(String memberNumber) {
+        this.memberNumber = memberNumber;
+    }
+
+    public String getSerialNumber() {
+        return serialNumber;
+    }
+
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
+
+    public Boolean getMobileTerminalIsInactive() {
+        return mobileTerminalIsInactive;
+    }
+
+    public void setMobileTerminalIsInactive(Boolean mobileTerminalIsInactive) {
+        this.mobileTerminalIsInactive = mobileTerminalIsInactive;
     }
 }

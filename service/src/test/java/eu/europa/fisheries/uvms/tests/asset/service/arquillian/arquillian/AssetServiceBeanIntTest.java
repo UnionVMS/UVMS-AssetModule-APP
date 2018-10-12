@@ -18,6 +18,7 @@ import javax.transaction.SystemException;
 
 
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ComChannelType;
 import eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetId;
 import eu.europa.ec.fisheries.schema.exchange.movement.asset.v1.AssetIdType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
@@ -437,6 +438,8 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Assert.assertNotNull(fetchedAssetGroups);
         Assert.assertTrue(fetchedAssetGroups.size() > 0);
         Assert.assertTrue(fetchedAssetGroups.contains(createdAssetGroupId));
+
+
     }
 
     private AssetMTEnrichmentRequest createRequest(Asset asset) {
