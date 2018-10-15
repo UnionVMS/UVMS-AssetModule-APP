@@ -14,6 +14,7 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 
@@ -35,7 +36,7 @@ public class DateUtils {
         if(dateString == null || dateString.isEmpty()){
             return null;
         }
-        return OffsetDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATE_TIME_FORMAT));
+        return ZonedDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)).toOffsetDateTime();
     }
 
 }
