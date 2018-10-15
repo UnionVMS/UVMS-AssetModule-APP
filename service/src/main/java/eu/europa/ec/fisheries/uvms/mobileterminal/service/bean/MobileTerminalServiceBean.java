@@ -555,11 +555,16 @@ public class MobileTerminalServiceBean {
         return response;
     }
 
-    public MobileTerminalType findMobileTerminalByAsset(UUID assetid) {
+    public MobileTerminalType findMobileTerminalTypeByAsset(UUID assetid) {
         MobileTerminal terminal = terminalDao.findMobileTerminalByAsset(assetid);
         if (terminal == null) return null;
         MobileTerminalType terminalType = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
         return terminalType;
+    }
+
+    public MobileTerminal findMobileTerminalByAsset(UUID assetid) {
+        MobileTerminal terminal = terminalDao.findMobileTerminalByAsset(assetid);
+        return terminal;
     }
 
 

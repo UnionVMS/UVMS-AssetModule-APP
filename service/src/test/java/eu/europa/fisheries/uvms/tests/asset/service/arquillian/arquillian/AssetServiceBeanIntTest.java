@@ -18,23 +18,14 @@ import javax.transaction.SystemException;
 
 
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ComChannelType;
 import eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetId;
-import eu.europa.ec.fisheries.schema.exchange.movement.asset.v1.AssetIdType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetIdList;
-import eu.europa.ec.fisheries.schema.movementrules.mobileterminal.v1.IdList;
-import eu.europa.ec.fisheries.schema.movementrules.mobileterminal.v1.IdType;
-import eu.europa.ec.fisheries.schema.movementrules.movement.v1.RawMovementType;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
-import eu.europa.ec.fisheries.uvms.asset.bean.AssetGroupServiceBean;
-import eu.europa.ec.fisheries.uvms.asset.bean.AssetMTBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.MobileTerminalService;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
@@ -377,7 +368,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         mobileTerminal.getMobileTerminalEvents().add(event);
         mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
 
-        MobileTerminalType fetchedTerminal = mobileTerminalService.findMobileTerminalByAsset(asset.getId());
+        MobileTerminalType fetchedTerminal = mobileTerminalService.findMobileTerminalTypeByAsset(asset.getId());
         Assert.assertNotNull(fetchedTerminal);
         Assert.assertNotNull(fetchedTerminal.getMobileTerminalId());
         Assert.assertNotNull(fetchedTerminal.getMobileTerminalId().getGuid());
@@ -438,6 +429,9 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Assert.assertNotNull(fetchedAssetGroups);
         Assert.assertTrue(fetchedAssetGroups.size() > 0);
         Assert.assertTrue(fetchedAssetGroups.contains(createdAssetGroupId));
+
+        Assert.assertEquals(request.getSerialNumberValue(), response.getSerialNumber());
+
 
 
     }
