@@ -55,17 +55,17 @@
         <insert tableName='parameter'>
             <column name='param_description' value='PARAMETER'/>
             <column name='param_id' value='NATIONAL_GENERAL_NOTIFICATION_SERVICE_ENDPOINT'/>
-            <column name='param_value' value='http://livmipl02p:8001/esb/GeneralNotification/v1'/>
+            <column name='param_value' value='http://osbtest.havochvatten.se:8011/esb/GeneralNotification/v1'/>
         </insert>
         <insert tableName='parameter'>
             <column name='param_description' value='PARAMETER'/>
             <column name='param_id' value='NATIONAL_SERVICE_ENDPOINT'/>
-            <column name='param_value' value='http://livmipl02t:8011/esb/Vessel/v2'/>
+            <column name='param_value' value='http://osbtest.havochvatten.se:8011/esb/Vessel/v2'/>
         </insert>
         <insert tableName='parameter'>
             <column name='param_description' value='PARAMETER'/>
             <column name='param_id' value='NATIONAL_VESSEL_COMP_SERVICE_ENDPOINT'/>
-            <column name='param_value' value='http://livmipl02p:8001/esb/VesselComp/v2'/>
+            <column name='param_value' value='http://osbtest.havochvatten.se:8011/esb/VesselComp/v2'/>
         </insert>
         <insert tableName='parameter'>
             <column name='param_description' value='PARAMETER'/>

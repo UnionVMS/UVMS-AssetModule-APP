@@ -20,6 +20,7 @@ import javax.ws.rs.core.Response.Status;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
+import eu.europa.ec.fisheries.wsdl.asset.types.EventCode;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Ignore;
@@ -63,6 +64,8 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         assertTrue(createdAsset != null);
         
         assertThat(createdAsset.getCfr(), is(asset.getCfr()));
+
+        assertEquals(EventCode.MOD.value(), createdAsset.getEventCode());
     }
     
     @Test
@@ -124,6 +127,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .put(Entity.json(createdAsset), Asset.class);
         
         assertThat(updatedAsset.getName(), is(newName));
+        assertEquals(EventCode.MOD.value(), updatedAsset.getEventCode());
         
         Response response = getWebTarget()
                 .path("asset")

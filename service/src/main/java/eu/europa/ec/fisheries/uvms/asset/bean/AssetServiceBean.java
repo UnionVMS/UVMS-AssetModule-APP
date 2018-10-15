@@ -29,6 +29,7 @@ import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalEntityToModelMapper;
+import eu.europa.ec.fisheries.wsdl.asset.types.EventCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
@@ -91,6 +92,7 @@ public class AssetServiceBean implements AssetService {
         asset.setUpdatedBy(username);
         asset.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         asset.setActive(true);
+        asset.setEventCode(EventCode.MOD.value());
         Asset createdAssetEntity = assetDao.createAsset(asset);
 
         auditService.logAssetCreated(createdAssetEntity, username);
@@ -185,6 +187,7 @@ public class AssetServiceBean implements AssetService {
 
         asset.setUpdatedBy(username);
         asset.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        asset.setEventCode(EventCode.MOD.value());
         return assetDao.updateAsset(asset);
     }
 
