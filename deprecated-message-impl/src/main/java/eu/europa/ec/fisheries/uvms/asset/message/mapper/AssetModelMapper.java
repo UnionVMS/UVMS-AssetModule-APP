@@ -74,7 +74,7 @@ public class AssetModelMapper {
         }
         asset.setName(assetModel.getName());
         asset.setFlagStateCode(assetModel.getCountryCode());
-        asset.setMainFishingGearCode(assetModel.getGearType());
+        asset.setGearFishingType(assetModel.getGearType());
         asset.setIrcsIndicator(assetModel.getHasIrcs().equals("Y") ? true : false);
         asset.setIrcs(assetModel.getIrcs());
         asset.setExternalMarking(assetModel.getExternalMarking());
