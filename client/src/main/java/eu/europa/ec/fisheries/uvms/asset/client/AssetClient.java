@@ -64,7 +64,7 @@ public class AssetClient {
     // this is a temporary solution
     private String getAssetEndpoint() {
 
-        return "http://localhost:8080/asset/rest/";
+        return "http://localhost:8080/UnionVMS/asset/rest/";
 
     }
 
