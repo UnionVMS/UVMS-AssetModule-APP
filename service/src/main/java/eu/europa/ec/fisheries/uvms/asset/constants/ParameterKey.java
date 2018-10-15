@@ -26,6 +26,8 @@ public enum ParameterKey {
 
 	NATIONAL_USE("ASSET.NATIONAL.USE"),
 
+	USE_NATIONAL("mobileterminal.national.use"),
+
 	EU_USE("ASSET.EU.USE"),
 
 	// THIRDCOUNTRY_USE("vessel.thirdcountry.use"),

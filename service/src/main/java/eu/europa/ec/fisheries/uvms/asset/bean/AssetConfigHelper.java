@@ -19,11 +19,13 @@ import javax.persistence.PersistenceContext;
 
 import eu.europa.ec.fisheries.uvms.asset.constants.ParameterKey;
 import eu.europa.ec.fisheries.uvms.config.constants.ConfigHelper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.ServiceConstants;
 
 @Stateless
 public class AssetConfigHelper implements ConfigHelper {
 
     private static final String ASSET_PU = "asset";
+
 
     @PersistenceContext
     protected EntityManager em;
