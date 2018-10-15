@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.asset.dto;
+package eu.europa.ec.fisheries.uvms.asset.client.model;
 
 
 import java.io.Serializable;

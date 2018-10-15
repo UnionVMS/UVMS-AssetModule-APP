@@ -17,21 +17,15 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 
 
+import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
 import eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetId;
-import eu.europa.ec.fisheries.schema.exchange.movement.asset.v1.AssetIdType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetIdList;
-import eu.europa.ec.fisheries.schema.movementrules.mobileterminal.v1.IdList;
-import eu.europa.ec.fisheries.schema.movementrules.mobileterminal.v1.IdType;
-import eu.europa.ec.fisheries.schema.movementrules.movement.v1.RawMovementType;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
-import eu.europa.ec.fisheries.uvms.asset.bean.AssetGroupServiceBean;
-import eu.europa.ec.fisheries.uvms.asset.bean.AssetMTBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.MobileTerminalService;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
@@ -374,7 +368,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         mobileTerminal.getMobileTerminalEvents().add(event);
         mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
 
-        MobileTerminalType fetchedTerminal = mobileTerminalService.findMobileTerminalByAsset(asset.getId());
+        MobileTerminalType fetchedTerminal = mobileTerminalService.findMobileTerminalTypeByAsset(asset.getId());
         Assert.assertNotNull(fetchedTerminal);
         Assert.assertNotNull(fetchedTerminal.getMobileTerminalId());
         Assert.assertNotNull(fetchedTerminal.getMobileTerminalId().getGuid());
@@ -401,60 +395,72 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    public void testGetRequiredEnrichment() {
+    public void testGetRequiredEnrichment() throws AssetServiceException {
 
-        // create stuff so we can create a valid rawMovement
-        Asset asset = createAsset();
-        AssetGroup createdAssetGroup = createAssetGroup(asset);
-        UUID createdAssetGroupId = createdAssetGroup.getId();
-        MobileTerminal mobileTerminal = createMobileterminal();
-        mobileTerminal.getCurrentEvent().setActive(false);
-        MobileTerminalEvent event = new MobileTerminalEvent();
-        event.setActive(true);
-        event.setAsset(asset);
-        event.setEventCodeType(EventCodeEnum.CREATE);
-        event.setMobileterminal(mobileTerminal);
-        mobileTerminal.getMobileTerminalEvents().add(event);
+            // create stuff so we can create a valid rawMovement
+            Asset asset = createAsset();
+            AssetGroup createdAssetGroup = createAssetGroup(asset);
+            UUID createdAssetGroupId = createdAssetGroup.getId();
+            MobileTerminal mobileTerminal = createMobileterminal();
+            mobileTerminal.setArchived(false);
+            mobileTerminal.getCurrentEvent().setActive(false);
+            MobileTerminalEvent event = new MobileTerminalEvent();
+            event.setActive(true);
+            event.setAsset(asset);
+            event.setEventCodeType(EventCodeEnum.CREATE);
+            event.setMobileterminal(mobileTerminal);
+            mobileTerminal.getMobileTerminalEvents().add(event);
 
-        IdList DNID = new IdList();
-        DNID.setType(IdType.DNID);
-        DNID.setValue("DNID1234567890");
-        IdList MEMBER_NUMBER = new IdList();
-        MEMBER_NUMBER.setType(IdType.MEMBER_NUMBER);
-        MEMBER_NUMBER.setValue("MEMBER1234567890");
-        IdList SERIAL_NUMBER = new IdList();
-        SERIAL_NUMBER.setType(IdType.SERIAL_NUMBER);
-        SERIAL_NUMBER.setValue("SN1234567890");
+            mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
 
-        mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
+            em.flush();
 
-        eu.europa.ec.fisheries.schema.movementrules.mobileterminal.v1.MobileTerminalType mtType = new eu.europa.ec.fisheries.schema.movementrules.mobileterminal.v1.MobileTerminalType();
-        mtType.setConnectId(asset.getId().toString());
-        mtType.getMobileTerminalIdList().add(DNID);
-        mtType.getMobileTerminalIdList().add(MEMBER_NUMBER);
-        mtType.getMobileTerminalIdList().add(SERIAL_NUMBER);
-        mtType.setConnectId(asset.getId().toString());
+        AssetMTEnrichmentRequest request = createRequest(asset);
+        AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
 
-        RawMovementType rawMomenet = new RawMovementType();
-
-        AssetId assetId = createAssetId(asset);
-        rawMomenet.setAssetId(assetId);
-        rawMomenet.setMobileTerminal(mtType);
-        AssetMTEnrichmentResponse response = assetService.collectAssetMT(rawMomenet, null, "test");
-
-        Assert.assertNotNull(response.getAsset());
+        Assert.assertNotNull(response.getAssetId());
         Assert.assertNotNull(response.getMobileTerminalType());
 
-        Asset fetchedAsset = response.getAsset();
-        MobileTerminalType mobileTerminalType = response.getMobileTerminalType();
+        UUID assetUUID = response.getAssetUUID();
 
-        Assert.assertEquals(asset.getId(), fetchedAsset.getId());
-        Assert.assertEquals(mobileTerminal.getId().toString(), mobileTerminalType.getMobileTerminalId().getGuid());
+        Assert.assertEquals(asset.getId(), assetUUID);
 
         List<UUID> fetchedAssetGroups = response.getAssetGroupList();
         Assert.assertNotNull(fetchedAssetGroups);
         Assert.assertTrue(fetchedAssetGroups.size() > 0);
         Assert.assertTrue(fetchedAssetGroups.contains(createdAssetGroupId));
+
+        Assert.assertEquals(request.getSerialNumberValue(), response.getSerialNumber());
+
+
+
+    }
+
+    private AssetMTEnrichmentRequest createRequest(Asset asset) {
+
+        AssetMTEnrichmentRequest request = new AssetMTEnrichmentRequest();
+
+        // for mobileTerminal
+        request.setMemberNumberValue("MEMBER1234567890");
+        request.setSerialNumberValue("SN1234567890");
+        request.setDnidValue("DNID1234567890");
+        request.setLesValue("LES1234567890");
+
+        // for asset
+        request.setIdValue(asset.getId());
+        request.setCfrValue(asset.getCfr());
+        request.setImoValue(asset.getImo());
+        request.setIrcsValue(asset.getIrcs());
+        request.setMmsiValue(asset.getMmsi());
+        request.setGfcmValue(asset.getGfcm());
+        request.setUviValue(asset.getUvi());
+        request.setIccatValue(asset.getIccat());
+
+        request.setPluginType(PluginType.NAF.value());
+
+        request.setTranspondertypeValue("TRANSPONDERTYP_100");
+        return request;
+
     }
 
 
@@ -470,7 +476,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         ag.setGlobal(true);
 
 
-        AssetGroup createdAssetGroup = assetGroupService.createAssetGroup(ag,"test");
+        AssetGroup createdAssetGroup = assetGroupService.createAssetGroup(ag, "test");
         AssetGroupField assetGroupField = new AssetGroupField();
         assetGroupField.setAssetGroup(createdAssetGroup);
         assetGroupField.setKey("GUID");
@@ -482,27 +488,26 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
 
 
-
     private AssetId createAssetId(Asset asset) {
 
         AssetId i = new AssetId();
 
         String mmsiValue = asset.getMmsi();
-        if(mmsiValue != null && mmsiValue.length() > 0 ){
+        if (mmsiValue != null && mmsiValue.length() > 0) {
             AssetIdList line = new AssetIdList();
             line.setIdType(eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetIdType.MMSI);
             line.setValue(mmsiValue);
             i.getAssetIdList().add(line);
         }
         String cfrValue = asset.getCfr();
-        if(cfrValue != null && cfrValue.length() > 0 ){
+        if (cfrValue != null && cfrValue.length() > 0) {
             AssetIdList line = new AssetIdList();
             line.setIdType(eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetIdType.CFR);
             line.setValue(cfrValue);
             i.getAssetIdList().add(line);
         }
         String ircsValue = asset.getIrcs();
-        if(ircsValue != null && ircsValue.length() > 0 ){
+        if (ircsValue != null && ircsValue.length() > 0) {
             AssetIdList line = new AssetIdList();
             line.setIdType(eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetIdType.IRCS);
             line.setValue(ircsValue);

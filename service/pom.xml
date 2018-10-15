@@ -144,6 +144,7 @@
             <groupId>eu.europa.ec.fisheries.uvms.movement-rules</groupId>
             <artifactId>movement-rules-model</artifactId>
             <version>${movementrules.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

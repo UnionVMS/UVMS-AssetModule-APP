@@ -229,5 +229,16 @@ public class AssetClientTest extends AbstractClientTest {
 
     }
 
+    @Test
+    public void collectAssetMTTest() throws Exception {
+
+        //public AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request) throws Exception {
+        AssetMTEnrichmentRequest request = new AssetMTEnrichmentRequest();
+        AssetMTEnrichmentResponse response = assetClient.collectAssetMT(request);
+
+        Assert.assertNotNull(response);  // proofs we reach the endpoint  . . .
+    }
+
+
 
 }

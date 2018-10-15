@@ -60,9 +60,18 @@ public class AssetClient {
             }
         });
         String assetEndpoint = parameterService.getStringValue(ParameterKey.ASSET_ENDPOINT.getKey());
+       // String assetEndpoint = getAssetEndpoint();
         webTarget = client.target(assetEndpoint + "internal/");
     }
-    
+
+    // this is a temporary solution
+    private String getAssetEndpoint() {
+
+//        return "http://localhost:8080/asset/rest/";
+        return "http://localhost:8080/UnionVMS/asset/rest/";
+
+    }
+
     public AssetDTO getAssetById(AssetIdentifier type, String value) {
         return webTarget
                 .path("asset")
@@ -244,4 +253,26 @@ public class AssetClient {
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(customCode), CustomCode.class);
     }
+
+
+    public AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request) throws Exception {
+
+        // @formatter:off
+        Response ret =  webTarget
+                .path("collectassetmt")
+                .request(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .post(Entity.json(request), Response.class);
+        // @formatter:on
+
+        AssetMTEnrichmentResponse response = ret.readEntity(new GenericType<AssetMTEnrichmentResponse>() {
+        });
+
+        return response;
+    }
+
+
+
+
+
 }

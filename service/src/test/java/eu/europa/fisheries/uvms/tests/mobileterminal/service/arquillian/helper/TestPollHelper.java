@@ -217,6 +217,15 @@ public class TestPollHelper {
         mtp.setPluginInactive(false);
         mobileTerminalType.setArchived(false);
         mobileTerminalType.setInactive(false);
+
+        MobileTerminalAttribute attr = new MobileTerminalAttribute();
+        attr.setType("TRANSPONDER_TYPE");
+        attr.setValue("TRANSPONDERTYP_100");
+
+
+        mobileTerminalType.getAttributes().add(attr);
+
+
         MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType,null ,mobileTerminalType.getAttributes().get(0).getValue(), mtp, "TEST_USERNAME");
         mobileTerminal.setSerialNo("SN1234567890");
 
@@ -229,12 +238,8 @@ public class TestPollHelper {
         c.setFrequencyGracePeriod(Duration.ofSeconds(60));
         c.setLesDescription("LESDESCRIPTION");
 
-        c.setDNID("dnid1234567890");
-
+        c.setDNID("DNID1234567890");
         mobileTerminal.getChannels().add(c);
-
-
-
         return mobileTerminal;
     }
 

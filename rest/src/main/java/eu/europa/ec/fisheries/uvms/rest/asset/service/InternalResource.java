@@ -37,6 +37,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
 import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
@@ -255,14 +256,11 @@ public class InternalResource {
      * @summary Gets a specific asset revision by history id
      */
     @POST
-    @Path("enrich/{pluginType}/{username}")
+    @Path("collectassetmt")
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
-    public Response enrich(
-            @PathParam("pluginType") String pluginType,
-            @PathParam("username") String username,
-            RawMovementType rawMovement) {
-        AssetMTEnrichmentResponse assetMTEnrichmentResponse = assetService.collectAssetMT(rawMovement, pluginType, username);
+    public Response enrich( AssetMTEnrichmentRequest request) {
+        AssetMTEnrichmentResponse assetMTEnrichmentResponse = assetService.collectAssetMT(request);
         return Response.ok(assetMTEnrichmentResponse).header("MDC", MDC.get("requestId")).build();
     }
     //@ formatter:on
