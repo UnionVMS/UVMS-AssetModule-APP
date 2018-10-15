@@ -135,6 +135,8 @@ public class AssetModelMapper {
         
         AssetId assetId = new AssetId();
         assetId.setGuid(assetEntity.getId().toString());
+        assetId.setValue(assetEntity.getId().toString());
+        assetId.setType(AssetIdType.GUID);
         
         assetModel.setAssetId(assetId);
         assetModel.setActive(assetEntity.getActive());

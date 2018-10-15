@@ -79,6 +79,10 @@ public class AssetEventQueueTest extends AbstractMessageTest {
         assertThat(assetById.getName(), is(asset.getName()));
         assertThat(assetById.getExternalMarking(), is(asset.getExternalMarking()));
         assertThat(assetById.getIrcs(), is(asset.getIrcs()));
+
+        assertEquals(AssetIdType.GUID, assetById.getAssetId().getType());
+        assertEquals(asset.getAssetId().getGuid(), asset.getAssetId().getGuid());
+        assertEquals(asset.getAssetId().getGuid(), asset.getAssetId().getValue()); //since guid and value are supposed t obe the same
     }
     
     @Test
