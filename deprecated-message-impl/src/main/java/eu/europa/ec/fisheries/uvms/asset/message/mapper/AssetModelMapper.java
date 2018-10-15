@@ -74,7 +74,7 @@ public class AssetModelMapper {
         }
         asset.setName(assetModel.getName());
         asset.setFlagStateCode(assetModel.getCountryCode());
-        asset.setMainFishingGearCode(assetModel.getGearType());
+        asset.setGearFishingType(assetModel.getGearType());
         asset.setIrcsIndicator(assetModel.getHasIrcs().equals("Y") ? true : false);
         asset.setIrcs(assetModel.getIrcs());
         asset.setExternalMarking(assetModel.getExternalMarking());
@@ -153,7 +153,7 @@ public class AssetModelMapper {
         assetModel.setEventHistory(assetHistory);
         assetModel.setName(assetEntity.getName());
         assetModel.setCountryCode(assetEntity.getFlagStateCode());
-        assetModel.setGearType(assetEntity.getMainFishingGearCode());
+        assetModel.setGearType(assetEntity.getGearFishingType());
         assetModel.setHasIrcs(assetEntity.getIrcsIndicator() != null && assetEntity.getIrcsIndicator() ? "Y" : "N");
         assetModel.setIrcs(assetEntity.getIrcs());
         assetModel.setExternalMarking(assetEntity.getExternalMarking());
