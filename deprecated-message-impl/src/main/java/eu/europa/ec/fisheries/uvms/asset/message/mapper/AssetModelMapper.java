@@ -153,7 +153,7 @@ public class AssetModelMapper {
         assetModel.setEventHistory(assetHistory);
         assetModel.setName(assetEntity.getName());
         assetModel.setCountryCode(assetEntity.getFlagStateCode());
-        assetModel.setGearType(assetEntity.getMainFishingGearCode());
+        assetModel.setGearType(assetEntity.getGearFishingType());
         assetModel.setHasIrcs(assetEntity.getIrcsIndicator() != null && assetEntity.getIrcsIndicator() ? "Y" : "N");
         assetModel.setIrcs(assetEntity.getIrcs());
         assetModel.setExternalMarking(assetEntity.getExternalMarking());
