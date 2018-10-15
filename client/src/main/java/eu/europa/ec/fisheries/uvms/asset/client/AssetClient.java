@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -31,24 +30,22 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import eu.europa.ec.fisheries.uvms.asset.client.constants.ParameterKey;
 import eu.europa.ec.fisheries.uvms.asset.client.model.*;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
-import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
 
 @Stateless
 public class AssetClient {
 
-    @EJB
-    private ParameterService parameterService;
-            
+
+
+
     private WebTarget webTarget;
-    
-    @PostConstruct
-    public void postConstruct() throws ConfigServiceException {
+
+
+    private void setUpClient(Boolean testMode){
         Client client = ClientBuilder.newClient();
         client.register(new ContextResolver<ObjectMapper>() {
             @Override
@@ -59,17 +56,34 @@ public class AssetClient {
                 return mapper;
             }
         });
-        String assetEndpoint = parameterService.getStringValue(ParameterKey.ASSET_ENDPOINT.getKey());
-       // String assetEndpoint = getAssetEndpoint();
+        String assetEndpoint = getAssetEndpoint(testMode);
         webTarget = client.target(assetEndpoint + "internal/");
+
     }
 
+
+    // postConstruct is default productionmode
+    @PostConstruct
+    public void postConstruct() throws ConfigServiceException {
+        setUpClient(false);
+    }
+
+
+    // run from test execute this method for reinintialization
+    public void setTestMode(){
+        setUpClient(true);
+    }
+
+
     // this is a temporary solution
-    private String getAssetEndpoint() {
+    private String getAssetEndpoint(Boolean testMode) {
 
-//        return "http://localhost:8080/asset/rest/";
-        return "http://localhost:8080/UnionVMS/asset/rest/";
-
+        if(testMode){
+            return "http://localhost:8080/asset/rest/";
+        }
+        else{
+            return "http://localhost:8080/UnionVMS/asset/rest/";
+        }
     }
 
     public AssetDTO getAssetById(AssetIdentifier type, String value) {

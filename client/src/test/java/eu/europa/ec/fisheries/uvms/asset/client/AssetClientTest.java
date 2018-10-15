@@ -25,6 +25,7 @@ import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,44 +43,12 @@ public class AssetClientTest extends AbstractClientTest {
         assertThat(response, CoreMatchers.is("pong"));
     }
 
-    @EJB
-    private ParameterService parameterService;
 
-    @Test
-    @Ignore
-    public void test() throws Exception{
-        Client client = ClientBuilder.newClient();
-        client.register(new ContextResolver<ObjectMapper>() {
-            @Override
-            public ObjectMapper getContext(Class<?> type) {
-                ObjectMapper mapper = new ObjectMapper();
-                mapper.registerModule(new JavaTimeModule());
-                mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-                return mapper;
-            }
-        });
-        String assetEndpoint = parameterService.getStringValue(ParameterKey.ASSET_ENDPOINT.getKey());
-        WebTarget webTarget = client.target("http://localhost:8080/asset/rest");
-
-        AssetDTO a = AssetHelper.createBasicAsset();
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-        String json = mapper.writeValueAsString(a);
-
-        Asset entity = mapper.readValue(json, Asset.class);
-
-        entity.getHasLicence();
-
-
-        String s = webTarget
-                .path("asset")
-                .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(a), String.class);
-
+    @Before
+    public void before(){
+        assetClient.setTestMode();
     }
+
 
     @Test
     public void getAssetByGuidTest() {
