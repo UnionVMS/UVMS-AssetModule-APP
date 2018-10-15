@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -30,17 +31,19 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import eu.europa.ec.fisheries.uvms.asset.client.constants.ParameterKey;
 import eu.europa.ec.fisheries.uvms.asset.client.model.*;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
+import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
 
 @Stateless
 public class AssetClient {
 
-   // @EJB
-   // private ParameterService parameterService;
+    @EJB
+    private ParameterService parameterService;
             
     private WebTarget webTarget;
     
@@ -56,14 +59,15 @@ public class AssetClient {
                 return mapper;
             }
         });
-    //    String assetEndpoint = parameterService.getStringValue(ParameterKey.ASSET_ENDPOINT.getKey());
-        String assetEndpoint = getAssetEndpoint();
+        String assetEndpoint = parameterService.getStringValue(ParameterKey.ASSET_ENDPOINT.getKey());
+       // String assetEndpoint = getAssetEndpoint();
         webTarget = client.target(assetEndpoint + "internal/");
     }
 
     // this is a temporary solution
     private String getAssetEndpoint() {
 
+//        return "http://localhost:8080/asset/rest/";
         return "http://localhost:8080/UnionVMS/asset/rest/";
 
     }
