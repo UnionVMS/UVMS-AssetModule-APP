@@ -44,7 +44,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     private static final Logger LOG = LoggerFactory.getLogger(MobileTerminalRestResourceTest.class);
 
     @Test
-    public void createMobileTerminalTest() {
+    public void createMobileTerminalTest() throws Exception{
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
         String response = getWebTarget()
@@ -52,10 +52,11 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                                 .request(MediaType.APPLICATION_JSON)
                                 .post(Entity.json(mobileTerminal), String.class);
         
-        JsonReader jsonReader = Json.createReader(new StringReader(response));
-        JsonObject jsonObject = jsonReader.readObject();
-        
-        assertThat(jsonObject.getInt("code"), CoreMatchers.is(MTResponseCode.OK.getCode()));
+
+        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
+        MobileTerminalType createdMT = deserializeResponseDto(response, MobileTerminalType.class);
+
+        assertEquals(mobileTerminal.getChannels().get(0).getName(), createdMT.getChannels().get(0).getName());
     }
 
     @Test
@@ -141,6 +142,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         assertTrue(res.contains(guid));
         assertTrue(res.contains(asset.getId().toString()));
+        assertTrue(res.contains(mobileTerminal.getChannels().get(0).getName()));
     }
 
     @Test
@@ -168,6 +170,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         mobileTerminal.setId(id.intValue());
         mobileTerminal.setMobileTerminalId(mobileTerminalId);
         mobileTerminal.setType("IRIDIUM");
+        mobileTerminal.getChannels().get(0).setName("BETTER_VMS");
 
         String updated = getWebTarget()
                 .path("mobileterminal")
@@ -178,6 +181,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertTrue(updated.contains("IRIDIUM"));
         assertTrue(updated.contains(guid));
         assertTrue(updated.contains(String.valueOf(id.intValue())));
+        assertTrue(updated.contains("BETTER_VMS"));
     }
 
     @Test
