@@ -33,8 +33,7 @@ public abstract class AbstractClientTest {
         File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
                 .resolve("eu.europa.ec.fisheries.uvms.asset:asset-service",
                          "eu.europa.ec.fisheries.uvms.asset:deprecated-asset-message-impl",
-                         "eu.europa.ec.fisheries.uvms.commons:uvms-commons-message",
-                         "eu.europa.ec.fisheries.uvms:uvms-config")
+                         "eu.europa.ec.fisheries.uvms.commons:uvms-commons-message")
                 .withTransitivity().asFile();
         testWar.addAsLibraries(files);
 

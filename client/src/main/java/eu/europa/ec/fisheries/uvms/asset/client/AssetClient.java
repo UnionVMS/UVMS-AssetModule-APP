@@ -34,7 +34,6 @@ import eu.europa.ec.fisheries.uvms.asset.client.model.*;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
-import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
 
 @Stateless
 public class AssetClient {
@@ -64,7 +63,7 @@ public class AssetClient {
 
     // postConstruct is default productionmode
     @PostConstruct
-    public void postConstruct() throws ConfigServiceException {
+    public void postConstruct()  {
         setUpClient(false);
     }
 
