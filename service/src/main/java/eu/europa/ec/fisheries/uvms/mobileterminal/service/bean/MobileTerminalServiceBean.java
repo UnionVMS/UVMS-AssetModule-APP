@@ -619,11 +619,9 @@ public class MobileTerminalServiceBean {
             crit.setValue(request.getTranspondertypeValue());
             criteria.getCriterias().add(crit);
         }
-        return getMobileTerminalBySourceAndSearchCriteria(criteria);
+        return getMobileTerminalBySourceAndSearchCriteria2(criteria);
     }
 
-
-    /***************************************************/
     public MobileTerminalType getMobileTerminalBySourceAndSearchCriteria(MobileTerminalSearchCriteria criteria) {
         MobileTerminalListQuery query = new MobileTerminalListQuery();
 
@@ -644,6 +642,38 @@ public class MobileTerminalServiceBean {
         return resultList.size() != 1 ? null : resultList.get(0);
     }
 
+    /**************************************************************************************************************
+     *
+     *    ANALYZE WHAT IS GOING ON IN THIS QUERY
+     *
+     **************************************************************************************************************/
+
+
+    public MobileTerminalType getMobileTerminalBySourceAndSearchCriteria2(MobileTerminalSearchCriteria criteria) {
+
+        MobileTerminalListQuery query = new MobileTerminalListQuery();
+        query.setMobileTerminalSearchCriteria(criteria);
+        List<MobileTerminalType> resultList = getTerminalListByQuery2(query);
+        return resultList.size() != 1 ? null : resultList.get(0);
+    }
+
+
+    public List<MobileTerminalType>  getTerminalListByQuery2(MobileTerminalListQuery query) {
+
+        List<MobileTerminalType> mobileTerminalList = new ArrayList<>();
+        boolean isDynamic = query.getMobileTerminalSearchCriteria().isIsDynamic() == null ? true : query.getMobileTerminalSearchCriteria().isIsDynamic();
+        List<ListCriteria> criterias = query.getMobileTerminalSearchCriteria().getCriterias();
+        String searchSql = SearchMapper.createSelectSearchSql(criterias, isDynamic);
+        List<MobileTerminal> terminals = terminalDao.getMobileTerminalsByQuery(searchSql);
+        for (MobileTerminal terminal : terminals) {
+            MobileTerminalType terminalType = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
+            mobileTerminalList.add(terminalType);
+        }
+
+        mobileTerminalList.sort(new MobileTerminalTypeComparator());
+
+        return mobileTerminalList;
+    }
 
 
 
