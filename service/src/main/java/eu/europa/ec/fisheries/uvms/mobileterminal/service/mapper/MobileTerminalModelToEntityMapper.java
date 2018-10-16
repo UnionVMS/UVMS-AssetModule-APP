@@ -103,7 +103,7 @@ public class MobileTerminalModelToEntityMapper {
             channel.setUpdateUser(username);
             channel.setArchived(false);
 
-
+            channel.setName(channelType.getName());
             channel.setMobileTerminalEvent(entity.getCurrentEvent());
             AttributeMapper.mapComChannelAttributes(channel, channelType.getAttributes());
 
