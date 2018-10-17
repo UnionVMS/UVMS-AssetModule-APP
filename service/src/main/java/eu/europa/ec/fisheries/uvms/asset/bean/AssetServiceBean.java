@@ -488,12 +488,12 @@ public class AssetServiceBean implements AssetService {
             assetMTEnrichmentResponse = enrichementHelper(assetMTEnrichmentResponse, asset);
         }
 
-        List<UUID> assetGroupList = new ArrayList<>();
+        List<String> assetGroupList = new ArrayList<>();
         if (asset != null) {
             List<AssetGroup> list = assetGroupService.getAssetGroupListByAssetId(asset.getId());
             for (AssetGroup assetGroup : list) {
                 UUID assetGroupId = assetGroup.getId();
-                assetGroupList.add(assetGroupId);
+                assetGroupList.add(assetGroupId.toString());
             }
         }
         assetMTEnrichmentResponse.setAssetGroupList(assetGroupList);
@@ -504,27 +504,13 @@ public class AssetServiceBean implements AssetService {
         return assetMTEnrichmentResponse;
     }
 
-        /*
-    private String externalMarking = null;
-    private String gearType = null;
-    private String cfr = null;
-    private String ircs = null;
-    private String assetStatus = null;
-    private String mmsi = null;
-
-    private String dnid = null;
-    private String mobileTerminalGuid = null;
-    private String memberNumber = null;
-    private String serialNumber = null;
-    private Boolean mobileTerminalIsInactive = null;
-     */
 
     private AssetMTEnrichmentResponse enrichementHelper(AssetMTEnrichmentResponse resp, Asset asset) {
         Map<String, String> assetId = createAssetId(asset);
         resp.setAssetId(assetId);
-        resp.setAssetUUID(asset.getId());
+        resp.setAssetUUID(asset.getId() == null ? null : asset.getId().toString());
         resp.setAssetName(asset.getName());
-        resp.setAssetHistoryId(asset.getHistoryId());
+        resp.setAssetHistoryId(asset.getHistoryId() == null ? null : asset.getHistoryId().toString());
         resp.setFlagstate(asset.getFlagStateCode());
         resp.setExternalMarking(asset.getExternalMarking());
         resp.setGearType(asset.getGearFishingType());
@@ -537,11 +523,8 @@ public class AssetServiceBean implements AssetService {
 
         return resp;
     }
-/*
-    private String dnid = null;
-    private String memberNumber = null;
-    private String serialNumber = null;
-    */
+
+
     private AssetMTEnrichmentResponse enrichementHelper(AssetMTEnrichmentRequest req, AssetMTEnrichmentResponse resp, MobileTerminalType mobTerm, MobileTerminal mobileTerminal) {
 
         // here we put into response data about mobiletreminal / channels etc etc
@@ -554,7 +537,7 @@ public class AssetServiceBean implements AssetService {
             } catch (IllegalArgumentException e) {
                 connectidUUID = null;
             }
-            resp.setMobileTerminalConnectId(connectidUUID);
+            resp.setMobileTerminalConnectId(connectidUUID == null ? null : connectidUUID.toString());
         }
         resp.setMobileTerminalType(mobTerm.getType());
         if(mobTerm.getMobileTerminalId() != null) {

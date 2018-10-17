@@ -421,14 +421,14 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Assert.assertNotNull(response.getAssetId());
         Assert.assertNotNull(response.getMobileTerminalType());
 
-        UUID assetUUID = response.getAssetUUID();
+        String assetUUID = response.getAssetUUID();
 
-        Assert.assertEquals(asset.getId(), assetUUID);
+        Assert.assertEquals(asset.getId(), UUID.fromString(assetUUID));
 
-        List<UUID> fetchedAssetGroups = response.getAssetGroupList();
+        List<String> fetchedAssetGroups = response.getAssetGroupList();
         Assert.assertNotNull(fetchedAssetGroups);
         Assert.assertTrue(fetchedAssetGroups.size() > 0);
-        Assert.assertTrue(fetchedAssetGroups.contains(createdAssetGroupId));
+        Assert.assertTrue(fetchedAssetGroups.contains(createdAssetGroupId.toString()));
 
         Assert.assertEquals(request.getSerialNumberValue(), response.getSerialNumber());
 
