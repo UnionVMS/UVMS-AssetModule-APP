@@ -271,17 +271,17 @@ public class AssetClient {
     public AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request) throws Exception {
 
         // @formatter:off
-        Response ret =  webTarget
+        Response response =  webTarget
                 .path("collectassetmt")
                 .request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .post(Entity.json(request), Response.class);
         // @formatter:on
 
-        AssetMTEnrichmentResponse response = ret.readEntity(new GenericType<AssetMTEnrichmentResponse>() {
+        AssetMTEnrichmentResponse ret= response.readEntity(new GenericType<AssetMTEnrichmentResponse>() {
         });
-
-        return response;
+        response.close();
+        return ret;
     }
 
 
