@@ -173,11 +173,11 @@ public class AssetClient {
         return assets;
     }
     
-    public AssetDTO upsertAsset(AssetBO asset) {
+    public AssetBO upsertAsset(AssetBO asset) {
         return webTarget
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(asset), AssetDTO.class);
+                .post(Entity.json(asset), AssetBO.class);
     }
     
     public void upsertAssetAsync(AssetBO asset) throws MessageException, JsonProcessingException {

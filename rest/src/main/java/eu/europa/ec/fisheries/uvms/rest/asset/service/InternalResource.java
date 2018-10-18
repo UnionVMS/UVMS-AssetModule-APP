@@ -126,7 +126,7 @@ public class InternalResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response upsertAsset(AssetBO assetBo) {
-        Asset upsertedAsset = assetService.upsertAssetBO(assetBo, "UVMS (REST)");
+        AssetBO upsertedAsset = assetService.upsertAssetBO(assetBo, "UVMS (REST)");
         return Response.ok(upsertedAsset).build();
     }
     

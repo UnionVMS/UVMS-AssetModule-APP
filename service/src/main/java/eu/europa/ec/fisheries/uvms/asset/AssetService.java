@@ -101,7 +101,7 @@ public interface AssetService {
      * @param username
      * @return
      */
-    Asset upsertAssetBO(AssetBO asset, String username);
+    AssetBO upsertAssetBO(AssetBO asset, String username);
     
     /**
      *

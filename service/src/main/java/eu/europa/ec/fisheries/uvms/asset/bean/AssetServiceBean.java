@@ -26,6 +26,7 @@ import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
+import eu.europa.ec.fisheries.uvms.asset.util.AssetComparator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalEntityToModelMapper;
@@ -229,30 +230,35 @@ public class AssetServiceBean implements AssetService {
     }
 
     @Override
-    public Asset upsertAssetBO(AssetBO assetBo, String username) {
+    public AssetBO upsertAssetBO(AssetBO assetBo, String username) {
         if (assetBo == null) {
             throw new IllegalArgumentException("No asset business object to upsert");
         }
-
+        
         Asset asset = assetBo.getAsset();
         Asset existingAsset = getAssetById(AssetIdentifier.CFR, asset.getCfr());
         if (existingAsset != null) {
             asset.setId(existingAsset.getId());
+            asset.setHistoryId(existingAsset.getHistoryId());
         }
-        Asset upsertedAsset = upsertAsset(asset, username);
+        
+        if (!AssetComparator.assetEquals(asset, existingAsset)) {
+            asset = upsertAsset(asset, username);
+        }
 
         // Clear and create new contacts and notes for now
+        UUID assetId = asset.getId();
         if (assetBo.getContacts() != null) {
-            getContactInfoForAsset(upsertedAsset.getId()).stream().forEach(c -> deleteContactInfo(c.getId()));
-            assetBo.getContacts().stream().forEach(c -> createContactInfoForAsset(upsertedAsset.getId(), c, username));
+            getContactInfoForAsset(assetId).stream().forEach(c -> deleteContactInfo(c.getId()));
+            assetBo.getContacts().stream().forEach(c -> createContactInfoForAsset(assetId, c, username));
         }
 
         if (assetBo.getNotes() != null) {
-            getNotesForAsset(upsertedAsset.getId()).stream().forEach(n -> deleteNote(n.getId()));
-            assetBo.getNotes().stream().forEach(c -> createNoteForAsset(upsertedAsset.getId(), c, username));
+            getNotesForAsset(assetId).stream().forEach(n -> deleteNote(n.getId()));
+            assetBo.getNotes().stream().forEach(c -> createNoteForAsset(assetId, c, username));
         }
 
-        return upsertedAsset;
+        return assetBo;
     }
 
     /**

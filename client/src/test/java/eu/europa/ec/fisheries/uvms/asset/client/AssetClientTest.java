@@ -6,22 +6,7 @@ import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import javax.ejb.EJB;
 import javax.inject.Inject;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.ContextResolver;
-
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import eu.europa.ec.fisheries.uvms.asset.client.constants.ParameterKey;
-import eu.europa.ec.fisheries.uvms.asset.client.model.*;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
@@ -29,7 +14,13 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetBO;
 import eu.europa.ec.fisheries.uvms.asset.client.model.AssetDTO;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetIdentifier;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetMTEnrichmentRequest;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetMTEnrichmentResponse;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetQuery;
+import eu.europa.ec.fisheries.uvms.asset.client.model.CustomCode;
 
 @RunWith(Arquillian.class)
 public class AssetClientTest extends AbstractClientTest {
@@ -54,19 +45,43 @@ public class AssetClientTest extends AbstractClientTest {
     public void getAssetByGuidTest() {
         AssetBO assetBo = new AssetBO();
         assetBo.setAsset(AssetHelper.createBasicAsset());
-        AssetDTO upsertAsset = assetClient.upsertAsset(assetBo);
+        AssetBO upsertAssetBo = assetClient.upsertAsset(assetBo);
 
-        AssetDTO asset = assetClient.getAssetById(AssetIdentifier.GUID, upsertAsset.getId().toString());
+        AssetDTO asset = assetClient.getAssetById(AssetIdentifier.GUID, upsertAssetBo.getAsset().getId().toString());
         assertThat(asset, CoreMatchers.is(CoreMatchers.notNullValue()));
-        assertThat(asset.getId(), CoreMatchers.is(upsertAsset.getId()));
+        assertThat(asset.getId(), CoreMatchers.is(upsertAssetBo.getAsset().getId()));
     }
 
     @Test
     public void upsertAssetTest() {
         AssetBO assetBo = new AssetBO();
         assetBo.setAsset(AssetHelper.createBasicAsset());
-        AssetDTO upsertAsset = assetClient.upsertAsset(assetBo);
+        AssetBO upsertAsset = assetClient.upsertAsset(assetBo);
+        
+        assertThat(upsertAsset.getAsset().getId(), CoreMatchers.is(CoreMatchers.notNullValue()));
+        assertThat(upsertAsset.getAsset().getHistoryId(), CoreMatchers.is(CoreMatchers.notNullValue()));
         assertThat(upsertAsset, CoreMatchers.is(CoreMatchers.notNullValue()));
+    }
+    
+    @Test
+    public void upsertAssertUpdateNameShouldCreateHistory() {
+        AssetBO assetBo = new AssetBO();
+        assetBo.setAsset(AssetHelper.createBasicAsset());
+        AssetBO upsertAssetBo = assetClient.upsertAsset(assetBo);
+        assetBo.getAsset().setName("New" + UUID.randomUUID());
+        AssetBO upsertAssetBo2 = assetClient.upsertAsset(assetBo);
+        
+        assertThat(upsertAssetBo.getAsset().getHistoryId(), CoreMatchers.is(CoreMatchers.not(upsertAssetBo2.getAsset().getHistoryId())));
+    }
+    
+    @Test
+    public void upsertAssertTwiceShouldNotCreateNewHistory() {
+        AssetBO assetBo = new AssetBO();
+        assetBo.setAsset(AssetHelper.createBasicAsset());
+        AssetBO upsertAssetBo = assetClient.upsertAsset(assetBo);
+        AssetBO upsertAssetBo2 = assetClient.upsertAsset(assetBo);
+        
+        assertThat(upsertAssetBo.getAsset().getHistoryId(), CoreMatchers.is(upsertAssetBo2.getAsset().getHistoryId()));
     }
 
 
@@ -75,12 +90,12 @@ public class AssetClientTest extends AbstractClientTest {
         AssetDTO asset = AssetHelper.createBasicAsset();
         AssetBO assetBo = new AssetBO();
         assetBo.setAsset(asset);
-        AssetDTO upsertAsset = assetClient.upsertAsset(assetBo);
+        AssetBO upsertAssetBo = assetClient.upsertAsset(assetBo);
         AssetQuery assetQuery = new AssetQuery();
         assetQuery.setFlagState(Arrays.asList(asset.getFlagStateCode()));
         List<AssetDTO> assets = assetClient.getAssetList(assetQuery, 1, 1000, true);
         assertTrue(assets.stream()
-                .filter(a -> a.getId().equals(upsertAsset.getId()))
+                .filter(a -> a.getId().equals(upsertAssetBo.getAsset().getId()))
                 .count() == 1);
     }
     @Test
@@ -207,7 +222,4 @@ public class AssetClientTest extends AbstractClientTest {
 
         Assert.assertNotNull(response);  // proofs we reach the endpoint  . . .
     }
-
-
-
 }
