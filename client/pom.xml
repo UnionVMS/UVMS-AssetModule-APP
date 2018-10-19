@@ -28,6 +28,7 @@
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-message</artifactId>
             <version>${uvms.common.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>fish.focus.uvms.maven</groupId>
