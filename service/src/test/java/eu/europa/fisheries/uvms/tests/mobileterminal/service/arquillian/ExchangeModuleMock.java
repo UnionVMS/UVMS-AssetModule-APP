@@ -15,6 +15,7 @@ import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityListType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityTypeType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.ServiceResponseType;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.ExchangeModuleResponseMapper;
 import org.slf4j.Logger;
@@ -33,7 +34,8 @@ import java.util.List;
 @MessageDriven(mappedName = "jms/queue/UVMSExchangeEvent", activationConfig = {@ActivationConfigProperty(
         propertyName = "messagingType", propertyValue = "javax.jms.MessageListener"), @ActivationConfigProperty(
                 propertyName = "destinationType", propertyValue = "javax.jms.Queue"), @ActivationConfigProperty(
-                        propertyName = "destination", propertyValue = "UVMSExchangeEvent")})
+                        propertyName = "destination", propertyValue = "UVMSExchangeEvent"),
+                @ActivationConfigProperty(propertyName = "messageSelector", propertyValue = "FUNCTION" + " NOT IN ( 'PROCESSED_MOVEMENT' ) AND JMSCorrelationID IS NULL")})
 public class ExchangeModuleMock implements MessageListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExchangeModuleMock.class);

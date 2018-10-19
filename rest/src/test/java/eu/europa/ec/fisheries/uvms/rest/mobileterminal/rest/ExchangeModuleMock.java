@@ -31,7 +31,8 @@ import java.util.List;
 @MessageDriven(mappedName = "jms/queue/UVMSExchangeEvent", activationConfig = {@ActivationConfigProperty(
         propertyName = "messagingType", propertyValue = "javax.jms.MessageListener"), @ActivationConfigProperty(
                 propertyName = "destinationType", propertyValue = "javax.jms.Queue"), @ActivationConfigProperty(
-                        propertyName = "destination", propertyValue = "UVMSExchangeEvent")})
+                        propertyName = "destination", propertyValue = "UVMSExchangeEvent"),
+        @ActivationConfigProperty(propertyName = "messageSelector", propertyValue = "FUNCTION" + " NOT IN ( 'PROCESSED_MOVEMENT' ) AND JMSCorrelationID IS NULL")})
 public class ExchangeModuleMock implements MessageListener {
 
     @Override
