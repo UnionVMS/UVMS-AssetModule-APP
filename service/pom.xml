@@ -131,7 +131,7 @@
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-message</artifactId>
-            <version>3.0.22</version>
+            <version>${uvms.common.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
