@@ -4,19 +4,19 @@ package eu.europa.ec.fisheries.uvms.asset.dto;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class AssetMTEnrichmentResponse implements Serializable {
 
-    private UUID mobileTerminalConnectId = null;
+
+    private String mobileTerminalConnectId = null;
     private String mobileTerminalType = null;
     private String channelGuid = null;
 
     private String assetName;
     private Map<String,String > assetId = null;
-    private List<UUID> assetGroupList = null;
-    private UUID assetUUID = null;
-    private UUID assetHistoryId = null;
+    private List<String> assetGroupList = null;
+    private String assetUUID = null;
+    private String assetHistoryId = null;
     private String flagstate = null;
 
     private String externalMarking = null;
@@ -49,11 +49,11 @@ public class AssetMTEnrichmentResponse implements Serializable {
         this.assetId = assetId;
     }
 
-    public List<UUID> getAssetGroupList() {
+    public List<String> getAssetGroupList() {
         return assetGroupList;
     }
 
-    public void setAssetGroupList(List<UUID> assetGroupList) {
+    public void setAssetGroupList(List<String> assetGroupList) {
         this.assetGroupList = assetGroupList;
     }
 
@@ -65,11 +65,11 @@ public class AssetMTEnrichmentResponse implements Serializable {
         this.flagstate = flagstate;
     }
 
-    public UUID getMobileTerminalConnectId() {
+    public String getMobileTerminalConnectId() {
         return mobileTerminalConnectId;
     }
 
-    public void setMobileTerminalConnectId(UUID mobileTerminalConnectId) {
+    public void setMobileTerminalConnectId(String mobileTerminalConnectId) {
         this.mobileTerminalConnectId = mobileTerminalConnectId;
     }
 
@@ -81,11 +81,11 @@ public class AssetMTEnrichmentResponse implements Serializable {
         this.mobileTerminalType = mobileTerminalType;
     }
 
-    public UUID getAssetUUID() {
+    public String getAssetUUID() {
         return assetUUID;
     }
 
-    public void setAssetUUID(UUID assetUUID) {
+    public void setAssetUUID(String assetUUID) {
         this.assetUUID = assetUUID;
     }
 
@@ -97,11 +97,11 @@ public class AssetMTEnrichmentResponse implements Serializable {
         this.channelGuid = channelGuid;
     }
 
-    public UUID getAssetHistoryId() {
+    public String getAssetHistoryId() {
         return assetHistoryId;
     }
 
-    public void setAssetHistoryId(UUID assetHistoryId) {
+    public void setAssetHistoryId(String assetHistoryId) {
         this.assetHistoryId = assetHistoryId;
     }
 
