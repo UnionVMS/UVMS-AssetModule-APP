@@ -45,7 +45,7 @@ public class ExchangeModuleMock implements MessageListener {
     public void onMessage(Message message) {
         try {
 
-            LOG.debug("READING MESSAGE: " + message.toString());
+            LOG.debug("READING MESSAGE IN EXCHANGE MOCK: " + message.toString());
 
 
             List<ServiceResponseType> serviceResponse = new ArrayList<>();

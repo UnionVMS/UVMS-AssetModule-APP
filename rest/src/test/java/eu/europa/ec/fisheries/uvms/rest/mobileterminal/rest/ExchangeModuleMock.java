@@ -17,6 +17,8 @@ import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityTypeType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.ServiceResponseType;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.ExchangeModuleResponseMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
@@ -34,11 +36,14 @@ import java.util.List;
                         propertyName = "destination", propertyValue = "UVMSExchangeEvent"),
         @ActivationConfigProperty(propertyName = "messageSelector", propertyValue = "FUNCTION" + " NOT IN ( 'PROCESSED_MOVEMENT' ) AND JMSCorrelationID IS NULL")})
 public class ExchangeModuleMock implements MessageListener {
+    private static final Logger LOG = LoggerFactory.getLogger(ExchangeModuleMock.class);
 
     @Override
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void onMessage(Message message) {
         try {
+            LOG.debug("READING MESSAGE IN EXCHANGE MOCK IN ASSET REST: " + message.toString());
+
             List<ServiceResponseType> serviceResponse = new ArrayList<ServiceResponseType>();
             ServiceResponseType serviceResponseType = new ServiceResponseType();
             serviceResponseType.setServiceClassName("eu.europa.ec.fisheries.uvms.plugins.inmarsat");
