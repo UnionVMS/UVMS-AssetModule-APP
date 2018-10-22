@@ -81,7 +81,7 @@ public class AssetClient {
             return "http://localhost:8080/asset/rest/";
         }
         else{
-            return "http://localhost:8080/UnionVMS/asset/rest/";
+            return "http://localhost:8080/unionvms/asset/rest/";
         }
     }
 
