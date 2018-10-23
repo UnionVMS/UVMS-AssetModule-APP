@@ -527,10 +527,6 @@ public class AssetServiceBean implements AssetService {
         resp.setCfr(asset.getCfr());
         resp.setIrcs(asset.getIrcs());
         resp.setMmsi(asset.getMmsi());
-
-        // resp.setAssetStatus(asset.get);
-
-
         return resp;
     }
 

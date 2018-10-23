@@ -418,24 +418,73 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         AssetMTEnrichmentRequest request = createRequest(asset);
         AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
-
         Assert.assertNotNull(response.getAssetId());
         Assert.assertNotNull(response.getMobileTerminalType());
-
         String assetUUID = response.getAssetUUID();
-
         Assert.assertEquals(asset.getId(), UUID.fromString(assetUUID));
 
         List<String> fetchedAssetGroups = response.getAssetGroupList();
         Assert.assertNotNull(fetchedAssetGroups);
         Assert.assertTrue(fetchedAssetGroups.size() > 0);
         Assert.assertTrue(fetchedAssetGroups.contains(createdAssetGroupId.toString()));
-
         Assert.assertEquals(request.getSerialNumberValue(), response.getSerialNumber());
-
-
-
     }
+
+    @Test
+    public void testGetRequiredEnrichment_NO_ASSET() throws AssetServiceException {
+
+        MobileTerminal mobileTerminal = createMobileterminal();
+        mobileTerminal.setArchived(false);
+        mobileTerminal.getCurrentEvent().setActive(false);
+        MobileTerminalEvent event = new MobileTerminalEvent();
+        event.setActive(true);
+        event.setEventCodeType(EventCodeEnum.CREATE);
+
+        event.setMobileterminal(mobileTerminal);
+        mobileTerminal.getMobileTerminalEvents().add(event);
+        mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
+
+        em.flush();
+
+        AssetMTEnrichmentRequest request = createRequest(null);
+        AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
+        Assert.assertNull(response.getAssetId());
+        Assert.assertNotNull(response.getMobileTerminalType());
+        Assert.assertEquals(request.getSerialNumberValue(), response.getSerialNumber());
+    }
+
+    @Test
+    public void testGetRequiredEnrichment_NO_MOBILETERMIUNAL() throws AssetServiceException {
+
+        // create stuff so we can create a valid rawMovement
+        Asset asset = createAsset();
+        AssetGroup createdAssetGroup = createAssetGroup(asset);
+        UUID createdAssetGroupId = createdAssetGroup.getId();
+        MobileTerminalEvent event = new MobileTerminalEvent();
+        event.setActive(true);
+        event.setAsset(asset);
+        event.setEventCodeType(EventCodeEnum.CREATE);
+
+
+
+        em.flush();
+
+        AssetMTEnrichmentRequest request = createRequest(asset);
+        AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
+        Assert.assertNotNull(response.getAssetId());
+        String assetUUID = response.getAssetUUID();
+        Assert.assertEquals(asset.getId(), UUID.fromString(assetUUID));
+
+        List<String> fetchedAssetGroups = response.getAssetGroupList();
+        Assert.assertNotNull(fetchedAssetGroups);
+        Assert.assertTrue(fetchedAssetGroups.size() > 0);
+        Assert.assertTrue(fetchedAssetGroups.contains(createdAssetGroupId.toString()));
+    }
+
+
+
+
+
 
     private AssetMTEnrichmentRequest createRequest(Asset asset) {
 
@@ -448,14 +497,16 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         request.setLesValue("LES1234567890");
 
         // for asset
-        request.setIdValue(asset.getId());
-        request.setCfrValue(asset.getCfr());
-        request.setImoValue(asset.getImo());
-        request.setIrcsValue(asset.getIrcs());
-        request.setMmsiValue(asset.getMmsi());
-        request.setGfcmValue(asset.getGfcm());
-        request.setUviValue(asset.getUvi());
-        request.setIccatValue(asset.getIccat());
+        if(asset != null) {
+            request.setIdValue(asset.getId());
+            request.setCfrValue(asset.getCfr());
+            request.setImoValue(asset.getImo());
+            request.setIrcsValue(asset.getIrcs());
+            request.setMmsiValue(asset.getMmsi());
+            request.setGfcmValue(asset.getGfcm());
+            request.setUviValue(asset.getUvi());
+            request.setIccatValue(asset.getIccat());
+        }
 
         request.setPluginType(PluginType.NAF.value());
 
