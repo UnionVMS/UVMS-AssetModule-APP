@@ -25,6 +25,7 @@
 	</properties>
 
 	<dependencies>
+<!--
 		<dependency>
 			<groupId>fish.focus.uvms.maven</groupId>
 			<artifactId>uvms-pom-test-deps</artifactId>
@@ -32,16 +33,19 @@
 			<scope>test</scope>
 			<version>1.16</version>
 		</dependency>
+-->
 		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+<!--
 		<dependency>
 			<groupId>org.jvnet.jaxb2_commons</groupId>
 			<artifactId>jaxb2-basics</artifactId>
 			<version>0.9.5</version>
 		</dependency>
+-->
 		<dependency>
 		    <groupId>org.apache.commons</groupId>
 		    <artifactId>commons-lang3</artifactId>
