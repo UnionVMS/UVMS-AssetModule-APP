@@ -49,7 +49,6 @@ import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
 @Stateless
 public class AssetServiceBean implements AssetService {
 
-
     private static final String DNID = "DNID";
     private static final String MEMBER_NUMBER = "MEMBER_NUMBER";
     private static final String GUID = "GUID";
@@ -466,8 +465,6 @@ public class AssetServiceBean implements AssetService {
 
         // Get Mobile Terminal if it exists
         MobileTerminalType mobileTerminalType = mobileTerminalService.getMobileTerminalByAssetMTEnrichmentRequest(request);
-        String serialNo = "";
-        MobileTerminal mobileTerminal = null;
 
         // Get Asset
         Asset asset = null;
@@ -479,18 +476,25 @@ public class AssetServiceBean implements AssetService {
                 if (asset != null) {
                     assetMTEnrichmentResponse = enrichementHelper(assetMTEnrichmentResponse, asset);
                 }
+                // test this as well  OBS TEST
+                else{
+                    asset = getAssetByCfrIrcs(createAssetId(request));
+                    if (asset != null) {
+                        assetMTEnrichmentResponse = enrichementHelper(assetMTEnrichmentResponse, asset);
+                    }
+                }
             }
         } else {
             asset = getAssetByCfrIrcs(createAssetId(request));
             if (isPluginTypeWithoutMobileTerminal(request.getPluginType()) && asset != null) {
                 assetMTEnrichmentResponse = enrichementHelper(assetMTEnrichmentResponse, asset);
-                mobileTerminal = mobileTerminalService.findMobileTerminalByAsset(asset.getId());
+                MobileTerminal mobileTerminal = mobileTerminalService.findMobileTerminalByAsset(asset.getId());
                 if(mobileTerminal != null){
                     mobileTerminalType = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminal);
                 }
             }
         }
-        if ((createAssetId(request).size() < 1) && (asset != null)) {
+        if (asset != null) {
             assetMTEnrichmentResponse = enrichementHelper(assetMTEnrichmentResponse, asset);
         }
 
@@ -504,7 +508,7 @@ public class AssetServiceBean implements AssetService {
         }
         assetMTEnrichmentResponse.setAssetGroupList(assetGroupList);
         if (mobileTerminalType != null) {
-            assetMTEnrichmentResponse = enrichementHelper(request, assetMTEnrichmentResponse,mobileTerminalType, mobileTerminal);
+            assetMTEnrichmentResponse = enrichementHelper(request, assetMTEnrichmentResponse,mobileTerminalType);
             assetMTEnrichmentResponse.setMobileTerminalType(mobileTerminalType.getType());
         }
         return assetMTEnrichmentResponse;
@@ -531,7 +535,7 @@ public class AssetServiceBean implements AssetService {
     }
 
 
-    private AssetMTEnrichmentResponse enrichementHelper(AssetMTEnrichmentRequest req, AssetMTEnrichmentResponse resp, MobileTerminalType mobTerm, MobileTerminal mobileTerminal) {
+    private AssetMTEnrichmentResponse enrichementHelper(AssetMTEnrichmentRequest req, AssetMTEnrichmentResponse resp, MobileTerminalType mobTerm) {
 
         // here we put into response data about mobiletreminal / channels etc etc
         String channelGuid = getChannelGuid(mobTerm, req);
@@ -570,7 +574,6 @@ public class AssetServiceBean implements AssetService {
                 }
             }
         }
-        resp.setSerialNumber(mobileTerminal.getSerialNo());
         return resp;
     }
 

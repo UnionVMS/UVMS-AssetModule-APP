@@ -408,6 +408,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
             event.setActive(true);
             event.setAsset(asset);
             event.setEventCodeType(EventCodeEnum.CREATE);
+
             event.setMobileterminal(mobileTerminal);
             mobileTerminal.getMobileTerminalEvents().add(event);
 

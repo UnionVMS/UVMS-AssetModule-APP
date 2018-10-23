@@ -237,6 +237,8 @@ public class TestPollHelper {
         c.setExpectedFrequency(Duration.ofSeconds(60));
         c.setFrequencyGracePeriod(Duration.ofSeconds(60));
         c.setLesDescription("LESDESCRIPTION");
+        c.setMobileTerminal(mobileTerminal);
+
 
         c.setDNID("DNID1234567890");
         mobileTerminal.getChannels().add(c);
