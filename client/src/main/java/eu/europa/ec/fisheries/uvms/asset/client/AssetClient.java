@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -38,12 +39,11 @@ import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 @Stateless
 public class AssetClient {
 
-
-
-
     private WebTarget webTarget;
 
-
+    @Resource(name = "java:global/asset_endpoint")
+    private String assetEndpoint;
+    
     private void setUpClient(Boolean testMode){
         Client client = ClientBuilder.newClient();
         client.register(new ContextResolver<ObjectMapper>() {
@@ -55,11 +55,9 @@ public class AssetClient {
                 return mapper;
             }
         });
-        String assetEndpoint = getAssetEndpoint(testMode);
-        webTarget = client.target(assetEndpoint + "internal/");
-
+        String asset = getAssetEndpoint(testMode);
+        webTarget = client.target(asset + "/internal");
     }
-
 
     // postConstruct is default productionmode
     @PostConstruct
@@ -67,21 +65,18 @@ public class AssetClient {
         setUpClient(false);
     }
 
-
     // run from test execute this method for reinintialization
     public void setTestMode(){
         setUpClient(true);
     }
 
-
     // this is a temporary solution
     private String getAssetEndpoint(Boolean testMode) {
-
         if(testMode){
-            return "http://localhost:8080/asset/rest/";
+            return "http://localhost:8080/asset/rest";
         }
         else{
-            return "http://localhost:8080/unionvms/asset/rest/";
+            return assetEndpoint;
         }
     }
 
