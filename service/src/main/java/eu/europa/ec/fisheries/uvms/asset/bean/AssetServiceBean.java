@@ -574,6 +574,23 @@ public class AssetServiceBean implements AssetService {
                 }
             }
         }
+
+        if(mobTerm.getMobileTerminalId() != null){
+            String guid = mobTerm.getMobileTerminalId().getGuid();
+
+            try {
+                UUID mobileTerminalId = UUID.fromString(guid);
+                MobileTerminal mobileTerminal = mobileTerminalService.getMobileTerminalEntityById(mobileTerminalId);
+                if(mobileTerminal != null){
+                    resp.setSerialNumber(mobileTerminal.getSerialNo());
+                }
+            }
+            catch(IllegalArgumentException IllegalSoWeSkipTryingToFetchIt){
+                // DONT CARE
+            }
+        }
+
+
         return resp;
     }
 
