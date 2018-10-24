@@ -77,7 +77,7 @@
         <dependency>
             <groupId>com.github.phillip-kruger</groupId>
             <artifactId>apiee-core</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.8</version>
         </dependency>
 
         <dependency>
