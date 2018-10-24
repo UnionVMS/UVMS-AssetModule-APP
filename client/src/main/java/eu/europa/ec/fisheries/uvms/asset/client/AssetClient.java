@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.ejb.Stateless;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -30,11 +31,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import eu.europa.ec.fisheries.uvms.asset.client.model.*;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetBO;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetDTO;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetGroup;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetIdentifier;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetListResponse;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetMTEnrichmentRequest;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetMTEnrichmentResponse;
+import eu.europa.ec.fisheries.uvms.asset.client.model.AssetQuery;
+import eu.europa.ec.fisheries.uvms.asset.client.model.CustomCode;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 
+@Stateless
 public class AssetClient {
 
     private WebTarget webTarget;
@@ -42,7 +52,8 @@ public class AssetClient {
     @Resource(name = "java:global/asset_endpoint")
     private String assetEndpoint;
     
-    private void setUpClient(Boolean testMode){
+    @PostConstruct
+    private void setUpClient() {
         Client client = ClientBuilder.newClient();
         client.register(new ContextResolver<ObjectMapper>() {
             @Override
@@ -53,29 +64,7 @@ public class AssetClient {
                 return mapper;
             }
         });
-        String asset = getAssetEndpoint(testMode);
-        webTarget = client.target(asset + "/internal");
-    }
-
-    // postConstruct is default productionmode
-    @PostConstruct
-    public void postConstruct()  {
-        setUpClient(false);
-    }
-
-    // run from test execute this method for reinintialization
-    public void setTestMode(){
-        setUpClient(true);
-    }
-
-    // this is a temporary solution
-    private String getAssetEndpoint(Boolean testMode) {
-        if(testMode){
-            return "http://localhost:8080/asset/rest";
-        }
-        else{
-            return assetEndpoint;
-        }
+        webTarget = client.target(assetEndpoint + "/internal");
     }
 
     public AssetDTO getAssetById(AssetIdentifier type, String value) {

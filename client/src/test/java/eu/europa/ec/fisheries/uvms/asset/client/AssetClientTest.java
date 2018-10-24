@@ -7,8 +7,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import javax.inject.Inject;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.junit.Arquillian;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -26,20 +29,25 @@ import eu.europa.ec.fisheries.uvms.asset.client.model.CustomCode;
 public class AssetClientTest extends AbstractClientTest {
 
     @Inject
-    eu.europa.ec.fisheries.uvms.asset.client.AssetClient assetClient;
+    AssetClient assetClient;
     
+    @Before
+    public void before() throws NamingException{
+        InitialContext ctx = new InitialContext();
+        ctx.bind("java:global/asset_endpoint", "http://localhost:8080/asset/rest");
+    }
+    
+    @After
+    public void after() throws NamingException {
+        InitialContext ctx = new InitialContext();
+        ctx.unbind("java:global/asset_endpoint");
+    }
+
     @Test
     public void pingTest() {
         String response = assetClient.ping();
         assertThat(response, CoreMatchers.is("pong"));
     }
-
-
-    @Before
-    public void before(){
-        assetClient.setTestMode();
-    }
-
 
     @Test
     public void getAssetByGuidTest() {
