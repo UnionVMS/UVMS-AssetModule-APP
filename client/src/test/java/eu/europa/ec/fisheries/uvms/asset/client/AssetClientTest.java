@@ -11,7 +11,6 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -34,13 +33,7 @@ public class AssetClientTest extends AbstractClientTest {
     @Before
     public void before() throws NamingException{
         InitialContext ctx = new InitialContext();
-        ctx.bind("java:global/asset_endpoint", "http://localhost:8080/asset/rest");
-    }
-    
-    @After
-    public void after() throws NamingException {
-        InitialContext ctx = new InitialContext();
-        ctx.unbind("java:global/asset_endpoint");
+        ctx.rebind("java:global/asset_endpoint", "http://localhost:8080/asset/rest");
     }
 
     @Test
