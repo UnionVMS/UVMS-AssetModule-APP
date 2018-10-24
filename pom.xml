@@ -15,9 +15,9 @@
     </parent>
 
     <properties>
-    	<asset.api.check.against.version>4.0.0</asset.api.check.against.version>
+    	<asset.api.check.against.version>4.0.18</asset.api.check.against.version>
     	<docker.dev.version>3.25.0</docker.dev.version>
-        <usm4uvms.version>4.0.6</usm4uvms.version>
+        <usm4uvms.version>4.0.12</usm4uvms.version>
         <uvms.config.version>4.0.0</uvms.config.version>
 		<uvms.common.version>3.0.18</uvms.common.version>
         <audit.model.version>4.0.8</audit.model.version>
@@ -90,6 +90,47 @@
         <connection>scm:git:https://github.com/UnionVMS/UVMS-AssetModule-APP.git</connection>
         <tag>HEAD</tag>
     </scm>
+
+    <profiles>
+        <!-- enforce-jdk-version -->
+        <profile>
+            <id>enforce-jdk-version</id>
+            <activation>
+                <!-- To disable profile, define property -Dfocus-pom.enforce.jdk.version.disabled=true -->
+                <property>
+                    <name>!focus-pom.enforce.jdk.version.disabled</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <inherited>false</inherited>
+                        <executions>
+                            <execution>
+                                <id>enforce-jdk-version</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <enforceBytecodeVersion>
+                                            <maxJdkVersion>${focus-pom.java.version}</maxJdkVersion>
+                                            <!-- NOTE: xstream do contain support for multiple jdk:s -->
+                                            <excludes>
+                                                <exclude>com.thoughtworks.xstream:xstream</exclude>
+                                            </excludes>
+                                        </enforceBytecodeVersion>
+                                    </rules>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <modules>
     	<module>model</module>
