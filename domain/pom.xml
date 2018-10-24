@@ -40,8 +40,12 @@
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-date</artifactId>
             <version>${uvms.common.version}</version>
-        </dependency>                
- 		<dependency>
+        </dependency>
+      <dependency>
+        <groupId>javax</groupId>
+        <artifactId>javaee-api</artifactId>
+      </dependency>
+      <dependency>
 			<groupId>fish.focus.uvms.maven</groupId>
 			<artifactId>uvms-pom-gis-deps</artifactId>
 			<type>pom</type>
@@ -83,6 +87,26 @@
                     </execution>
                 </executions>
             </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>integration-test</goal>
+                  <goal>verify</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <skipITs>${skipIT}</skipITs>
+              <includes>
+                <include>%regex[eu.europa.ec.fisheries.uvms.asset.arquillian.*IT.class]</include>
+              </includes>
+            </configuration>
+
+          </plugin>
         </plugins>
     </build>
 </project>

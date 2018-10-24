@@ -15,6 +15,8 @@
     </parent>
 
     <properties>
+      <!--skip integration tests by default, but with possibility to re-enable them via -DskipIT=false on maven CLI-->
+      <skipIT>true</skipIT>
     	<asset.api.check.against.version>4.0.0</asset.api.check.against.version>
     	<docker.dev.version>3.25.0</docker.dev.version>
         <usm4uvms.version>4.0.6</usm4uvms.version>
@@ -24,12 +26,6 @@
         <project.scm.id>github</project.scm.id>
     </properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
-		</dependency>
-	</dependencies>
     <dependencyManagement>
         <dependencies>
         	<dependency>
@@ -62,6 +58,11 @@
 				<version>1.18</version>
 				<type>pom</type>
 			</dependency>
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.16.18</version>
+      </dependency>
         </dependencies>
     </dependencyManagement>
 

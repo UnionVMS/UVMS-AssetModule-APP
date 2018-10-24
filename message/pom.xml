@@ -18,7 +18,11 @@
     </properties>
     
     <dependencies>
-        <dependency>
+      <dependency>
+        <groupId>javax</groupId>
+        <artifactId>javaee-api</artifactId>
+      </dependency>
+      <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>asset-model</artifactId>
             <version>${project.version}</version>

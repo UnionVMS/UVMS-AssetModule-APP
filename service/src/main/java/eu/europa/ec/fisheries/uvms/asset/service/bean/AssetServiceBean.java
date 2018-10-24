@@ -11,7 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
-import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.asset.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
@@ -38,6 +37,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.jms.TextMessage;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Stateless
@@ -303,7 +303,7 @@ public class AssetServiceBean implements AssetService {
         try {
             return assetDomainModel.getAssetHistoryListByAssetId(assetId, maxResults);
         } catch (NoAssetEntityFoundException e) {
-            return Lists.newArrayList();
+            return Collections.emptyList();
         }
     }
 }

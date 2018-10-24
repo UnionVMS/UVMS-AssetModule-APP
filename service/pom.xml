@@ -52,6 +52,14 @@
 
     <dependencies>
         <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>asset-model</artifactId>
             <version>${project.version}</version>
@@ -124,6 +132,34 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>%regex[eu.europa.fisheries.uvms.asset.service.arquillian.*IntTest.class]</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <!--Arquillian IT tests will be executed only when doing 'mvn verify' or 'mvn integration-test' but not on 'mvn test'-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <skipITs>${skipIT}</skipITs>
+                    <includes>
+                        <include>%regex[eu.europa.fisheries.uvms.asset.service.arquillian.*IntTest.class]</include>
+                    </includes>
+                </configuration>
             </plugin>
         </plugins>
     </build>
