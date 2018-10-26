@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.asset.client.model;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Objects;
 import javax.persistence.Embeddable;
 
@@ -30,8 +31,8 @@ public class CustomCodesPK implements Serializable {
     public CustomCodesPK(String constant, String code) {
         this.constant = constant;
         this.code = code;
-        this.validFromDate = OffsetDateTime.MIN;
-        this.validToDate = OffsetDateTime.MAX;
+        this.validFromDate = OffsetDateTime.of(1970,01,01,1,1,1,1, ZoneOffset.UTC);
+        this.validToDate = OffsetDateTime.of(3070,01,01,01,1,1,1, ZoneOffset.UTC);
     }
 
     public String getConstant() {
