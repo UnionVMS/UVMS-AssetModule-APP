@@ -39,8 +39,6 @@ public abstract class AbstractClientTest {
 
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset.client");
         
-        testWar.addAsWebInfResource("jboss-deployment-structure.xml");
-
         testWar.addAsResource("beans.xml", "META-INF/beans.xml");
 
         return testWar;

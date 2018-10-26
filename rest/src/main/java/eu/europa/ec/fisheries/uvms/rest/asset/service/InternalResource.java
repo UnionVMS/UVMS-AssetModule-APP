@@ -27,28 +27,25 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
+import org.slf4j.MDC;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import eu.europa.ec.fisheries.schema.movementrules.movement.v1.RawMovementType;
-import eu.europa.ec.fisheries.uvms.asset.bean.AssetMTBean;
+import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
+import eu.europa.ec.fisheries.uvms.asset.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.CustomCodesService;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
 import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
-import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
-import eu.europa.ec.fisheries.uvms.asset.AssetService;
-import eu.europa.ec.fisheries.uvms.asset.CustomCodesService;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
 import io.swagger.annotations.ApiParam;
-import org.slf4j.MDC;
 
 @Path("internal")
 @Stateless
@@ -137,7 +134,6 @@ public class InternalResource {
         return Response.ok("pong").build();
     }
 
-
     @POST
     @Path("customcode")
     @Consumes(value = {MediaType.APPLICATION_JSON})
@@ -171,11 +167,8 @@ public class InternalResource {
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getCodesForConstant(@PathParam("constant") String constant) {
         try {
-            ObjectMapper MAPPER = new ObjectMapper();
-            MAPPER.registerModule(new JavaTimeModule());
             List<CustomCode> customCodes = customCodesService.getAllFor(constant);
-            String json = MAPPER.writeValueAsString(customCodes);
-            return Response.ok(json).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
         }
@@ -190,14 +183,9 @@ public class InternalResource {
                            @ApiParam(value = "validToDate", required = true) @PathParam(value = "date") String date)
     {
         try {
-            ObjectMapper MAPPER = new ObjectMapper();
-            MAPPER.registerModule(new JavaTimeModule());
-
             OffsetDateTime aDate = OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             Boolean exists = customCodesService.verify(constant, code, aDate);
-            String json = MAPPER.writeValueAsString(exists);
-            return Response.status(200).entity(json).type(MediaType.APPLICATION_JSON)
-                    .header("MDC", MDC.get("requestId")).build();
+            return Response.ok(exists).header("MDC", MDC.get("requestId")).build();
 
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
@@ -214,16 +202,9 @@ public class InternalResource {
     {
         try {
 
-            ObjectMapper MAPPER = new ObjectMapper();
-            MAPPER.registerModule(new JavaTimeModule());
-
-
             OffsetDateTime aDate = OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             List<CustomCode> customCodes = customCodesService.getForDate(constant, code,aDate);
-
-            String json = MAPPER.writeValueAsString(customCodes);
-            return Response.status(200).entity(json).type(MediaType.APPLICATION_JSON)
-                    .header("MDC", MDC.get("requestId")).build();
+            return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
 
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
@@ -236,19 +217,12 @@ public class InternalResource {
     @Path("replace")
     public Response replace(CustomCode customCode) {
         try {
-            ObjectMapper MAPPER = new ObjectMapper();
-            MAPPER.registerModule(new JavaTimeModule());
-
             CustomCode customCodes = customCodesService.replace(customCode);
-            String json = MAPPER.writeValueAsString(customCodes);
-            return Response.status(200).entity(json).type(MediaType.APPLICATION_JSON)
-                    .header("MDC", MDC.get("requestId")).build();
+            return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
         }
     }
-
-    //@ formatter:off
 
     /**
      * @responseMessage 200 Success
@@ -263,9 +237,4 @@ public class InternalResource {
         AssetMTEnrichmentResponse assetMTEnrichmentResponse = assetService.collectAssetMT(request);
         return Response.ok(assetMTEnrichmentResponse).header("MDC", MDC.get("requestId")).build();
     }
-    //@ formatter:on
-
 }
-
-
-
