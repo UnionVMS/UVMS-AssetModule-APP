@@ -420,7 +420,7 @@ public class AssetServiceBean implements AssetService {
         if (asset == null) {
             throw new IllegalArgumentException("Could not find any asset with id: " + assetId);
         }
-        return contactDao.getContactInfoByAsset(asset);
+        return contactDao.getContactInfoByAssetId(asset.getId());
     }
 
     @Override
@@ -432,13 +432,19 @@ public class AssetServiceBean implements AssetService {
         contactInfo.setAssetId(asset.getId());
         contactInfo.setUpdatedBy(username);
         contactInfo.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        contactInfo.setAssetUpdateTime(asset.getUpdateTime());
         return contactDao.createContactInfo(contactInfo);
     }
 
     @Override
     public ContactInfo updateContactInfo(ContactInfo contactInfo, String username) {
+        Asset asset = assetDao.getAssetById(contactInfo.getAssetId());
+        if (asset == null) {
+            throw new IllegalArgumentException("Could not find any asset with id: " + contactInfo.getAssetId());
+        }
         contactInfo.setUpdatedBy(username);
         contactInfo.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        contactInfo.setAssetUpdateTime(asset.getUpdateTime());
         return contactDao.updateContactInfo(contactInfo);
     }
 
@@ -452,10 +458,12 @@ public class AssetServiceBean implements AssetService {
     }
 
     @Override
-    public List<ContactInfo> getContactInfoRevisionForAssetHistory(List<ContactInfo> contactInfoList, OffsetDateTime updatedDate) {
-        List<ContactInfo> resultList = contactDao.getContactInfoRevisionForAssetHistory(contactInfoList, updatedDate);
-        if(resultList == null) resultList = new ArrayList<>();
-        return resultList;
+    public List<ContactInfo> getContactInfoRevisionForAssetHistory(UUID assetId, OffsetDateTime updatedDate) {
+
+        List<ContactInfo> contactInfoListByAssetId = contactDao.getContactInfoByAssetId(assetId);
+        List<ContactInfo> revisionList = contactDao.getContactInfoRevisionForAssetHistory(contactInfoListByAssetId, updatedDate);
+        revisionList.sort((a1, a2) -> a1.getUpdateTime().compareTo(a2.getUpdateTime()));
+        return revisionList;
     }
 
     @Override

@@ -559,14 +559,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         assertThat(fetchedNotes.size(), is(0));
     }
 
-
-
-
-
-
-
-
-
     @Test
     public void createAssetAndContactInfoAndCompareHistoryItemsTest() throws InterruptedException {
 
@@ -579,6 +571,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
 
         // CREATE AN CONTACTINFO
         ContactInfo contactInfo = AssetHelper.createBasicContactInfo();
+        contactInfo.setAssetUpdateTime(asset.getUpdateTime());
         ContactInfo createdContactInfo = getWebTarget()
                 .path("asset")
                 .path(createdAsset.getId().toString())
@@ -589,25 +582,27 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         Thread.sleep(3000);
 
         // UPDATE THE ASSET
-        String newName = "NewAssetName";
-        createdAsset.setName(newName);
+        final String newAssetName = "NewAssetName";
+        createdAsset.setName(newAssetName);
         Asset updatedAsset = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.json(createdAsset), Asset.class);
 
-        assertEquals(newName, updatedAsset.getName());
+        assertEquals(newAssetName, updatedAsset.getName());
         assertEquals(EventCode.MOD.value(), updatedAsset.getEventCode());
 
         // UPDATE THE CONTACTINFO
-        createdContactInfo.setName(newName);
+        String newContactInfoName = "NewContactInfoName";
+        createdContactInfo.setName(newContactInfoName);
+        createdContactInfo.setAssetUpdateTime(updatedAsset.getUpdateTime());
         ContactInfo updatedContactInfo = getWebTarget()
                 .path("asset")
                 .path("contacts")
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.json(createdContactInfo), ContactInfo.class);
 
-        assertEquals(newName, updatedContactInfo.getName());
+        assertEquals(newContactInfoName, updatedContactInfo.getName());
 
         // GET ASSET HISTORY
         Response response = getWebTarget()
@@ -631,12 +626,9 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .get();
 
-        System.out.println("RESPONSE: " + res);
-
         List<ContactInfo> contactInfoRevisions = res.readEntity(new GenericType<List<ContactInfo>>() {});
 
         assertNotNull(contactInfoRevisions);
         assertEquals(1, contactInfoRevisions.size());
-
     }
 }

@@ -417,10 +417,7 @@ public class AssetResource {
 
         OffsetDateTime offsetDateTime = OffsetDateTime.parse(updatedDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
-        OffsetDateTime updatedTimeWithoutSeconds = offsetDateTime.truncatedTo(ChronoUnit.SECONDS);
-
-        List<ContactInfo> contactInfoList = assetService.getContactInfoForAsset(assetId);
-        List<ContactInfo> resultList = assetService.getContactInfoRevisionForAssetHistory(contactInfoList, updatedTimeWithoutSeconds);
+        List<ContactInfo> resultList = assetService.getContactInfoRevisionForAssetHistory(assetId, offsetDateTime);
         return Response.ok(resultList).build();
     }
 
@@ -450,10 +447,9 @@ public class AssetResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response udpateContactInfo(
-            @ApiParam(value="Contact info", required=true)  ContactInfo contactInfo) {
-        String user = servletRequest.getRemoteUser();
-        ContactInfo updatedContactInfo = assetService.updateContactInfo(contactInfo, user);
+    public Response udpateContactInfo(@ApiParam(value="Contact info", required=true)  ContactInfo contactInfo) {
+        String username = servletRequest.getRemoteUser();
+        ContactInfo updatedContactInfo = assetService.updateContactInfo(contactInfo, username);
         return Response.ok(updatedContactInfo).build();
     }
     

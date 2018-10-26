@@ -48,13 +48,14 @@ public class ContactInfoDao {
         em.remove(contactInfo);
     }
 
-    public List<ContactInfo> getContactInfoByAsset(Asset asset) {
+    public List<ContactInfo> getContactInfoByAssetId(UUID assetId) {
         TypedQuery<ContactInfo> query = em.createNamedQuery(ContactInfo.FIND_BY_ASSET, ContactInfo.class);
-        query.setParameter("assetId", asset.getId());
+        query.setParameter("assetId", assetId);
         return query.getResultList();
     }
 
     public List<ContactInfo> getContactInfoRevisionForAssetHistory(List<ContactInfo> contactInfoList, OffsetDateTime updateDate) {
+
         AuditReader auditReader = AuditReaderFactory.get(em);
 
         List<ContactInfo> resultList = new ArrayList<>();
@@ -67,8 +68,7 @@ public class ContactInfoDao {
                 revisionList.add(audited);
             }
             for(ContactInfo ci : revisionList) {
-                OffsetDateTime offsetDateTime = ci.getUpdateTime().truncatedTo(ChronoUnit.SECONDS);
-                if(offsetDateTime.equals(updateDate)) {
+                if(ci.getAssetUpdateTime().equals(updateDate)) {
                     resultList.add(ci);
                 }
             }

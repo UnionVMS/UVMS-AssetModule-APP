@@ -105,6 +105,9 @@ public class ContactInfo implements Serializable {
     @Column(name = "updatedby")
     private String updatedBy;
 
+    @Column(name = "asset_updatetime")
+    private OffsetDateTime assetUpdateTime;
+
     @PrePersist
     private void generateNewHistoryId() {
         this.historyId = UUID.randomUUID();
@@ -244,5 +247,13 @@ public class ContactInfo implements Serializable {
 
     public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
+    }
+
+    public OffsetDateTime getAssetUpdateTime() {
+        return assetUpdateTime;
+    }
+
+    public void setAssetUpdateTime(OffsetDateTime assetUpdateTime) {
+        this.assetUpdateTime = assetUpdateTime;
     }
 }
