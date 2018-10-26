@@ -29,7 +29,9 @@ import java.util.UUID;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.envers.Audited;
 
+@Audited
 @Entity
 @Table(name = "ContactInfo", indexes = { @Index(columnList = "assetId", name = "ContactInfo_asset_FK_INX10")})
 @NamedQueries({
@@ -46,6 +48,9 @@ public class ContactInfo implements Serializable {
     @GenericGenerator(name = "CONTACT_UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id")
     private UUID id;
+
+    @Column(name = "historyid")
+    private UUID historyId;
 
     @Column(name = "assetid")
     private UUID assetId;
@@ -100,12 +105,25 @@ public class ContactInfo implements Serializable {
     @Column(name = "updatedby")
     private String updatedBy;
 
+    @PrePersist
+    private void generateNewHistoryId() {
+        this.historyId = UUID.randomUUID();
+    }
+
     public UUID getId() {
         return id;
     }
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public UUID getHistoryId() {
+        return historyId;
+    }
+
+    public void setHistoryId(UUID historyId) {
+        this.historyId = historyId;
     }
 
     public UUID getAssetId() {

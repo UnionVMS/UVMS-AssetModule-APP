@@ -1,36 +1,36 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
-import static junit.framework.TestCase.assertNotNull;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.UUID;
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
+import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
+import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
+import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
+import eu.europa.ec.fisheries.wsdl.asset.types.EventCode;
+import org.jboss.arquillian.container.test.api.RunAsClient;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.UUID;
 
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
-import eu.europa.ec.fisheries.wsdl.asset.types.EventCode;
-import org.jboss.arquillian.container.test.api.RunAsClient;
-import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
-import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
-import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
-import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
+import static junit.framework.TestCase.assertNotNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 @RunAsClient
@@ -557,5 +557,86 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         
         fetchedNotes = response.readEntity(new GenericType<List<Note>>() {});
         assertThat(fetchedNotes.size(), is(0));
+    }
+
+
+
+
+
+
+
+
+
+    @Test
+    public void createAssetAndContactInfoAndCompareHistoryItemsTest() throws InterruptedException {
+
+        // CREATE AN ASSET
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+
+        // CREATE AN CONTACTINFO
+        ContactInfo contactInfo = AssetHelper.createBasicContactInfo();
+        ContactInfo createdContactInfo = getWebTarget()
+                .path("asset")
+                .path(createdAsset.getId().toString())
+                .path("contacts")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(contactInfo), ContactInfo.class);
+
+        Thread.sleep(3000);
+
+        // UPDATE THE ASSET
+        String newName = "NewAssetName";
+        createdAsset.setName(newName);
+        Asset updatedAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(createdAsset), Asset.class);
+
+        assertEquals(newName, updatedAsset.getName());
+        assertEquals(EventCode.MOD.value(), updatedAsset.getEventCode());
+
+        // UPDATE THE CONTACTINFO
+        createdContactInfo.setName(newName);
+        ContactInfo updatedContactInfo = getWebTarget()
+                .path("asset")
+                .path("contacts")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(createdContactInfo), ContactInfo.class);
+
+        assertEquals(newName, updatedContactInfo.getName());
+
+        // GET ASSET HISTORY
+        Response response = getWebTarget()
+                .path("asset")
+                .path("history/asset")
+                .path(updatedAsset.getId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+
+        List<Asset> assetRevisions = response.readEntity(new GenericType<List<Asset>>() {});
+
+        assertNotNull(assetRevisions);
+        assertEquals(2, assetRevisions.size());
+
+        // GET CONTACTINFO HISTORY FOR ASSET
+        Response res = getWebTarget()
+                .path("asset")
+                .path(updatedAsset.getId().toString())
+                .path("contacts")
+                .path(updatedAsset.getUpdateTime().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+
+        System.out.println("RESPONSE: " + res);
+
+        List<ContactInfo> contactInfoRevisions = res.readEntity(new GenericType<List<ContactInfo>>() {});
+
+        assertNotNull(contactInfoRevisions);
+        assertEquals(1, contactInfoRevisions.size());
+
     }
 }

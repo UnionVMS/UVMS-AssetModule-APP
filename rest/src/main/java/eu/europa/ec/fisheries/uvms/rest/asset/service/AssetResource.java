@@ -11,50 +11,37 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
-import java.time.OffsetDateTime;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.UUID;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
-import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
+import eu.europa.ec.fisheries.uvms.asset.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
-import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
-import eu.europa.ec.fisheries.uvms.asset.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
+import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
+import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
+import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.UUID;
 
 @Path("/asset")
 @Stateless
@@ -258,7 +245,7 @@ public class AssetResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
         }
     }
-    
+
     /**
     *
     * @responseMessage 200 Success
@@ -415,6 +402,26 @@ public class AssetResource {
     public Response getContactInfoForAsset(@ApiParam(value="Id of asset", required=true)  @PathParam("id") UUID assetId) {
         List<ContactInfo> contacts = assetService.getContactInfoForAsset(assetId);
         return Response.ok(contacts).build();
+    }
+
+    @GET
+    @ApiOperation(value = "Get contactinfo history for asset", notes = "Get contactinfo history for asset", response = ContactInfo.class,  responseContainer = "List")
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Error when querying the system"),
+            @ApiResponse(code = 200, message = "Successful processing of query") })
+    @Path("{id}/contacts/{updateDate}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public Response getContactInfoListForAssetHistory(@ApiParam(value="Id of asset", required=true)  @PathParam("id") UUID assetId,
+                                                      @PathParam("updateDate") String updatedDate) {
+
+        OffsetDateTime offsetDateTime = OffsetDateTime.parse(updatedDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+
+        OffsetDateTime updatedTimeWithoutSeconds = offsetDateTime.truncatedTo(ChronoUnit.SECONDS);
+
+        List<ContactInfo> contactInfoList = assetService.getContactInfoForAsset(assetId);
+        List<ContactInfo> resultList = assetService.getContactInfoRevisionForAssetHistory(contactInfoList, updatedTimeWithoutSeconds);
+        return Response.ok(resultList).build();
     }
 
     @POST

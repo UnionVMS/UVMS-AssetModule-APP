@@ -452,6 +452,13 @@ public class AssetServiceBean implements AssetService {
     }
 
     @Override
+    public List<ContactInfo> getContactInfoRevisionForAssetHistory(List<ContactInfo> contactInfoList, OffsetDateTime updatedDate) {
+        List<ContactInfo> resultList = contactDao.getContactInfoRevisionForAssetHistory(contactInfoList, updatedDate);
+        if(resultList == null) resultList = new ArrayList<>();
+        return resultList;
+    }
+
+    @Override
     public Asset getAssetByConnectId(UUID uuid) {
         return assetDao.getAssetByConnectId(uuid);
     }

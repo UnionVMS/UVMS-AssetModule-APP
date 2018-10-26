@@ -223,6 +223,7 @@ public interface AssetService {
 
     AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request);
 
+    List<ContactInfo> getContactInfoRevisionForAssetHistory(List<ContactInfo> list, OffsetDateTime updatedDate);
 
 }
 

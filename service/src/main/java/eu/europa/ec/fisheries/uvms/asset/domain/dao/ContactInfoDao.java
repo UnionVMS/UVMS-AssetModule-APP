@@ -10,14 +10,20 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 
-import java.util.List;
-import java.util.UUID;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
+import org.hibernate.envers.AuditReader;
+import org.hibernate.envers.AuditReaderFactory;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Stateless
 public class ContactInfoDao {
@@ -46,5 +52,27 @@ public class ContactInfoDao {
         TypedQuery<ContactInfo> query = em.createNamedQuery(ContactInfo.FIND_BY_ASSET, ContactInfo.class);
         query.setParameter("assetId", asset.getId());
         return query.getResultList();
+    }
+
+    public List<ContactInfo> getContactInfoRevisionForAssetHistory(List<ContactInfo> contactInfoList, OffsetDateTime updateDate) {
+        AuditReader auditReader = AuditReaderFactory.get(em);
+
+        List<ContactInfo> resultList = new ArrayList<>();
+        // An Asset can have multiple ContactInfo and each ContactInfo can have multiple History records.
+        for(ContactInfo contactInfo : contactInfoList) {
+            List<ContactInfo> revisionList = new ArrayList<>();
+            List<Number> revisionNumbers = auditReader.getRevisions(ContactInfo.class, contactInfo.getId());
+            for (Number rev : revisionNumbers) {
+                ContactInfo audited = auditReader.find(ContactInfo.class, contactInfo.getId(), rev);
+                revisionList.add(audited);
+            }
+            for(ContactInfo ci : revisionList) {
+                OffsetDateTime offsetDateTime = ci.getUpdateTime().truncatedTo(ChronoUnit.SECONDS);
+                if(offsetDateTime.equals(updateDate)) {
+                    resultList.add(ci);
+                }
+            }
+        }
+        return resultList;
     }
 }

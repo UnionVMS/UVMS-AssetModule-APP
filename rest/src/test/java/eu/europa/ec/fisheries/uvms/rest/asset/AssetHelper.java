@@ -10,6 +10,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
+import io.swagger.models.Contact;
 
 public abstract class AssetHelper {
 
@@ -112,16 +113,6 @@ public abstract class AssetHelper {
         assetEntity.setIrcsIndicator(true);
         assetEntity.setSource("INTERNAL");
 
-
-
-
-        List<ContactInfo> contacts = new ArrayList<>();
-        ContactInfo ci = new ContactInfo();
-        ci.setSource("INTERNAL");
-        contacts.add(ci);
-
-
-
         return assetEntity;
     }
 
@@ -131,6 +122,14 @@ public abstract class AssetHelper {
         note.setNotes("Notes: " + getRandomIntegers(10));
         note.setUser("Test");
         return note;
+    }
+
+    public static ContactInfo createBasicContactInfo() {
+        ContactInfo contactInfo = new ContactInfo();
+        contactInfo.setName("Kasim");
+        contactInfo.setEmail("kasim.gul@havochvatten.se");
+        contactInfo.setPhoneNumber("+46737112233");
+        return contactInfo;
     }
     
     public static AssetGroup createBasicAssetGroup() {
