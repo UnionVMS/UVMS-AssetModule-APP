@@ -269,6 +269,7 @@
             <column name="cityname" type="VARCHAR(100)"/>
             <column name="country" type="VARCHAR(3)"/>
             <column name="email" type="VARCHAR(255)"/>
+            <column name="historyid" type="UUID"/>
             <column name="name" type="VARCHAR(255)"/>
             <column name="nationality" type="VARCHAR(100)"/>
             <column name="owner" type="BOOLEAN"/>
@@ -280,6 +281,33 @@
             <column name="type" type="VARCHAR(100)"/>
             <column name="updatetime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="updatedby" type="VARCHAR(60)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="kasgul (generated)" id="1535445328879-116">
+        <createTable tableName="contactinfo_aud">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="SMALLINT"/>
+            <column name="assetid" type="UUID"/>
+            <column name="cityname" type="VARCHAR(255)"/>
+            <column name="country" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="historyid" type="UUID"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="nationality" type="VARCHAR(255)"/>
+            <column name="owner" type="BOOLEAN"/>
+            <column name="phone" type="VARCHAR(255)"/>
+            <column name="postofficebox" type="VARCHAR(255)"/>
+            <column name="postalarea" type="VARCHAR(255)"/>
+            <column name="source" type="VARCHAR(255)"/>
+            <column name="streetname" type="VARCHAR(255)"/>
+            <column name="type" type="VARCHAR(255)"/>
+            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="updatedby" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-10">
@@ -652,6 +680,9 @@
     <changeSet author="thofan (generated)" id="1535445328879-38">
         <addPrimaryKey columnNames="id" constraintName="contactinfo_pkey" tableName="contactinfo"/>
     </changeSet>
+    <changeSet author="kasgul (generated)" id="1535445328879-117">
+        <addPrimaryKey columnNames="id, rev" constraintName="contactinfo_aud_pkey" tableName="contactinfo_aud"/>
+    </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-39">
         <addPrimaryKey columnNames="customcode_code, customcode_constant, customcode_validfromdate, customcode_validtodate, key" constraintName="customcode_namevalue_pkey" tableName="customcode_namevalue"/>
     </changeSet>
@@ -872,6 +903,9 @@
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-95">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="mobileterminal_aud" constraintName="fk3r4svjbsvkxgvfguo50khajk2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
+    </changeSet>
+    <changeSet author="kasgul (generated)" id="1535445328879-118">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="contactinfo_aud" constraintName="fk7nb5ms3cc7s1ccd4248lrvq90" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-96">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="plugin_capability_aud" constraintName="fk9b169h47tagjwvdph50jp98s7" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
