@@ -10,13 +10,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.client.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-@JsonIdentityInfo(generator= ObjectIdGenerators.UUIDGenerator.class)
 public class AssetGroupField {
 
     private UUID id;

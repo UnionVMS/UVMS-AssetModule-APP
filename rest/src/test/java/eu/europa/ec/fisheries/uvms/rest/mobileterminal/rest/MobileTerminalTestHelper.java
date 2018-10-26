@@ -65,9 +65,10 @@ public class MobileTerminalTestHelper {
     }
 
     private static String generateARandomStringWithMaxLength(int len) {
+        Random random = new Random();
         StringBuilder ret = new StringBuilder();
         for (int i = 0; i < len; i++) {
-            int val = new Random().nextInt(10);
+            int val = random.nextInt(10);
             ret.append(String.valueOf(val));
         }
         return ret.toString();

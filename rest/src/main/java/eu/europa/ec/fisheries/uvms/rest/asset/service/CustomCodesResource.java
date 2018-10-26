@@ -28,12 +28,6 @@ import java.util.List;
 @Api(value = "CustomCodes Service")
 public class CustomCodesResource {
 
-   private  ObjectMapper MAPPER;
-    public CustomCodesResource() {
-        MAPPER = new ObjectMapper();
-        MAPPER.registerModule(new JavaTimeModule());
-    }
-
     private static final Logger LOG = LoggerFactory.getLogger(AssetConfigResource.class);
 
     @Inject
@@ -47,11 +41,10 @@ public class CustomCodesResource {
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response createCustomCode(
-            @ApiParam(value = "customCode", required = true) String json) {
+            @ApiParam(value = "customCode", required = true) CustomCode customCode) {
         try {
-            CustomCode customCode = MAPPER.readValue(json , CustomCode.class);
-            CustomCode customCodes = customCodesSvc.create(customCode);
-            return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
+            CustomCode createdCustomCode = customCodesSvc.create(customCode);
+            return Response.ok(createdCustomCode).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
             return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
@@ -69,13 +62,8 @@ public class CustomCodesResource {
     public Response replace(
             @ApiParam(value = "customCode", required = true) CustomCode customCode) {
         try {
-            ObjectMapper MAPPER = new ObjectMapper();
-            MAPPER.registerModule(new JavaTimeModule());
-
-            CustomCode customCodes = customCodesSvc.replace(customCode);
-            String json = MAPPER.writeValueAsString(customCodes);
-            return Response.status(200).entity(json).type(MediaType.APPLICATION_JSON)
-                    .header("MDC", MDC.get("requestId")).build();
+            CustomCode replacedCustomCode = customCodesSvc.replace(customCode);
+            return Response.ok(replacedCustomCode).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
         }
@@ -99,9 +87,7 @@ public class CustomCodesResource {
             OffsetDateTime fromDate = OffsetDateTime.parse(validFromDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             OffsetDateTime toDate = OffsetDateTime.parse(validToDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             CustomCode customCode = customCodesSvc.get(constant,code,fromDate,toDate);
-            String json = MAPPER.writeValueAsString(customCode);
-            return Response.status(200).entity(json).type(MediaType.APPLICATION_JSON)
-                    .header("MDC", MDC.get("requestId")).build();
+            return Response.ok(customCode).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when fetching CustomCode. " + validFromDate + " " +  validToDate);
             return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
@@ -132,9 +118,7 @@ public class CustomCodesResource {
             pk.setValidToDate(toDate);
             Boolean exists = customCodesSvc.exists(constant, code,fromDate,toDate);
 
-            return Response.status(200).entity(exists).type(MediaType.APPLICATION_JSON)
-                    .header("MDC", MDC.get("requestId")).build();
-
+            return Response.status(200).entity(exists).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
             return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
@@ -158,10 +142,7 @@ public class CustomCodesResource {
             OffsetDateTime aDate = OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             List<CustomCode> customCodes = customCodesSvc.getForDate(constant, code,aDate);
 
-            String json = MAPPER.writeValueAsString(customCodes);
-            return Response.status(200).entity(json).type(MediaType.APPLICATION_JSON)
-                    .header("MDC", MDC.get("requestId")).build();
-
+            return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
             return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
@@ -185,18 +166,12 @@ public class CustomCodesResource {
             OffsetDateTime aDate = OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             Boolean exists = customCodesSvc.verify(constant, code, aDate);
 
-            String json = MAPPER.writeValueAsString(exists);
-            return Response.status(200).entity(json).type(MediaType.APPLICATION_JSON)
-                    .header("MDC", MDC.get("requestId")).build();
-
+            return Response.ok(exists).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
             return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
         }
     }
-
-
-
 
     @GET
     @ApiOperation(value = "Get a list of constants", notes = "Get a list of constants from Custom Code", response = String.class, responseContainer = "List")
@@ -227,8 +202,7 @@ public class CustomCodesResource {
     public Response getCodesForConstant(@PathParam("constant") String constant) {
         try {
             List<CustomCode> customCodes = customCodesSvc.getAllFor(constant);
-            String json = MAPPER.writeValueAsString(customCodes);
-            return Response.ok(json).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
             return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
@@ -259,6 +233,4 @@ public class CustomCodesResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
         }
     }
-
-
 }

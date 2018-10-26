@@ -1,10 +1,13 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
-import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.Objects;
+import javax.persistence.Embeddable;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.OffsetDateTimeDeserializer;
 
 @Embeddable
 public class CustomCodesPK  implements Serializable {
@@ -12,9 +15,13 @@ public class CustomCodesPK  implements Serializable {
     private String constant;
     private String code;
 
-    private OffsetDateTime validFromDate = OffsetDateTime.of(1970,01,01,1,1,1,1, ZoneOffset.UTC);
-    private OffsetDateTime validToDate = OffsetDateTime.of(3070,01,01,01,1,1,1, ZoneOffset.UTC);
-
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
+    private OffsetDateTime validFromDate;
+    
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
+    private OffsetDateTime validToDate;
 
     public CustomCodesPK(){
         // intentionally required by JPA
@@ -30,11 +37,9 @@ public class CustomCodesPK  implements Serializable {
     public CustomCodesPK(String constant, String code){
         this.constant = constant;
         this.code = code;
-        this.validFromDate = OffsetDateTime.of(1970,01,01,1,1,1,1, ZoneOffset.UTC);
-        this.validToDate = OffsetDateTime.of(3070,01,01,01,1,1,1, ZoneOffset.UTC);
+        this.validFromDate = OffsetDateTime.MIN;
+        this.validToDate = OffsetDateTime.MAX;
     }
-
-
 
     public String getConstant() {
         return constant;
@@ -51,7 +56,6 @@ public class CustomCodesPK  implements Serializable {
     public void setCode(String code) {
         this.code = code;
     }
-
 
     public OffsetDateTime getValidFromDate() {
         return validFromDate;

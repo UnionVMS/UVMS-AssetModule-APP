@@ -19,18 +19,14 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ContextResolver;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import eu.europa.ec.fisheries.uvms.asset.client.model.AssetBO;
 import eu.europa.ec.fisheries.uvms.asset.client.model.AssetDTO;
 import eu.europa.ec.fisheries.uvms.asset.client.model.AssetGroup;
@@ -55,15 +51,6 @@ public class AssetClient {
     @PostConstruct
     private void setUpClient() {
         Client client = ClientBuilder.newClient();
-        client.register(new ContextResolver<ObjectMapper>() {
-            @Override
-            public ObjectMapper getContext(Class<?> type) {
-                ObjectMapper mapper = new ObjectMapper();
-                mapper.registerModule(new JavaTimeModule());
-                mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-                return mapper;
-            }
-        });
         webTarget = client.target(assetEndpoint + "/internal");
     }
 
@@ -108,27 +95,21 @@ public class AssetClient {
     }
     
     public List<AssetGroup> getAssetGroupsByUser(String user) {
-        Response response = webTarget
-                    .path("group")
-                    .path("user")
-                    .path(user)
-                    .request(MediaType.APPLICATION_JSON)
-                    .get();
-        List<AssetGroup> assetGroups = response.readEntity(new GenericType<List<AssetGroup>>() {});
-        response.close();
-        return assetGroups;
+        return webTarget
+                .path("group")
+                .path("user")
+                .path(user)
+                .request(MediaType.APPLICATION_JSON)
+                .get(new GenericType<List<AssetGroup>>() {});
     }
     
     public List<AssetGroup> getAssetGroupByAssetId(UUID assetId) {
-        Response response = webTarget
+        return webTarget
                 .path("group")
                 .path("asset")
                 .path(assetId.toString())
                 .request(MediaType.APPLICATION_JSON)
-                .get();
-        List<AssetGroup> assetGroups = response.readEntity(new GenericType<List<AssetGroup>>() {});
-        response.close();
-        return assetGroups;
+                .get(new GenericType<List<AssetGroup>>() {});
     }
     
     /*
@@ -144,15 +125,12 @@ public class AssetClient {
     }
      */
     public List<AssetDTO> getAssetsByGroupIds(List<UUID> groupIds) {
-        Response response = webTarget
+        return webTarget
                 .path("group")
                 .path("asset")
 //                .path(groupIds)
                 .request(MediaType.APPLICATION_JSON)
-                .get();
-        List<AssetDTO> assets = response.readEntity(new GenericType<List<AssetDTO>>() {});
-        response.close();
-        return assets;
+                .get(new GenericType<List<AssetDTO>>() {});
     }
     
     public AssetBO upsertAsset(AssetBO asset) {
@@ -162,10 +140,9 @@ public class AssetClient {
                 .post(Entity.json(asset), AssetBO.class);
     }
     
-    public void upsertAssetAsync(AssetBO asset) throws MessageException, JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        
+    public void upsertAssetAsync(AssetBO asset) throws MessageException {
+        Jsonb jsonb = JsonbBuilder.create();
+
         Map<String, String> properties = new HashMap<>();
         properties.put("METHOD", "UPSERT_ASSET");
         new AbstractProducer() {
@@ -173,7 +150,7 @@ public class AssetClient {
             public String getDestinationName() {
                 return MessageConstants.QUEUE_ASSET_EVENT;
             }
-        }.sendModuleMessageWithProps(mapper.writeValueAsString(asset), null, properties);
+        }.sendModuleMessageWithProps(jsonb.toJson(asset), null, properties);
     }
 
     public String ping() {
@@ -193,53 +170,43 @@ public class AssetClient {
 
 
     public List<String> getConstants() {
-        Response response = webTarget
+        return webTarget
                 .path("listconstants")
                 .request(MediaType.APPLICATION_JSON)
-                .get();
+                .get(new GenericType<List<String>>() {});
         
-        List<String> constants = response.readEntity(new GenericType<List<String>>() {});
-        response.close();
-        return constants;
     }
 
 
     public List<CustomCode> getCodesForConstant(String constant) {
-        Response response = webTarget
+        return webTarget
                 .path("listcodesforconstant")
                 .path(constant)
                 .request(MediaType.APPLICATION_JSON)
-                .get();
-        
-        List<CustomCode> codes = response.readEntity(new GenericType<List<CustomCode>>() {});
-        response.close();
-        return codes;
+                .get(new GenericType<List<CustomCode>>() {});
     }
 
     public Boolean isCodeValid(String constant, String code, OffsetDateTime date){
         String theDate = date.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        return webTarget
+        String response = webTarget
                 .path("verify")
                 .path(constant)
                 .path(code)
                 .path(theDate)
                 .request(MediaType.APPLICATION_JSON)
-                .get(Boolean.class);
+                .get(String.class);
+        return Boolean.valueOf(response);
     }
 
     public List<CustomCode> getCodeForDate(String constant, String code, OffsetDateTime date) {
         String theDate = date.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        Response response = webTarget
+        return webTarget
                 .path("getfordate")
                 .path(constant)
                 .path(code)
                 .path(theDate)
                 .request(MediaType.APPLICATION_JSON)
-                .get();
-
-        List<CustomCode> codes = response.readEntity(new GenericType<List<CustomCode>>() {});
-        response.close();
-        return codes;
+                .get(new GenericType<List<CustomCode>>() {});
     }
 
     public CustomCode replace(CustomCode customCode) {
@@ -249,25 +216,11 @@ public class AssetClient {
                 .post(Entity.json(customCode), CustomCode.class);
     }
 
-
-    public AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request) throws Exception {
-
-        // @formatter:off
-        Response response =  webTarget
+    public AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request) {
+        return webTarget
                 .path("collectassetmt")
                 .request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .post(Entity.json(request), Response.class);
-        // @formatter:on
-
-        AssetMTEnrichmentResponse ret= response.readEntity(new GenericType<AssetMTEnrichmentResponse>() {
-        });
-        response.close();
-        return ret;
+                .post(Entity.json(request), AssetMTEnrichmentResponse.class);
     }
-
-
-
-
-
 }

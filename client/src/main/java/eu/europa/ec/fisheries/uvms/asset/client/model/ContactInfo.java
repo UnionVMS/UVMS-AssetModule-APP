@@ -12,6 +12,7 @@ package eu.europa.ec.fisheries.uvms.asset.client.model;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
+import javax.json.bind.annotation.JsonbDateFormat;
 
 public class ContactInfo {
 
