@@ -559,14 +559,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         assertThat(fetchedNotes.size(), is(0));
     }
 
-
-
-
-
-
-
-
-
     @Test
     public void createAssetAndContactInfoAndCompareHistoryItemsTest() throws InterruptedException {
 
@@ -631,12 +623,9 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .get();
 
-        System.out.println("RESPONSE: " + res);
-
         List<ContactInfo> contactInfoRevisions = res.readEntity(new GenericType<List<ContactInfo>>() {});
 
         assertNotNull(contactInfoRevisions);
         assertEquals(1, contactInfoRevisions.size());
-
     }
 }

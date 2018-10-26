@@ -417,6 +417,8 @@ public class AssetResource {
 
         OffsetDateTime offsetDateTime = OffsetDateTime.parse(updatedDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
+        // Removing time units after seconds because there is a delay updating an Asset and updating a ContactInfo.
+        // But this can be problematic in dev/prod depending the server performance.
         OffsetDateTime updatedTimeWithoutSeconds = offsetDateTime.truncatedTo(ChronoUnit.SECONDS);
 
         List<ContactInfo> contactInfoList = assetService.getContactInfoForAsset(assetId);
