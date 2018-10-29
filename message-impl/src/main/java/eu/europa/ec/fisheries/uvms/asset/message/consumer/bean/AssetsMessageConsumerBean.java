@@ -91,7 +91,6 @@ public class AssetsMessageConsumerBean implements MessageListener {
 
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void onMessage(Message message) {
         TextMessage textMessage = (TextMessage) message;
         try {
