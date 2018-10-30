@@ -451,11 +451,6 @@ public class AssetServiceBean implements AssetService {
         contactDao.deleteContactInfo(contactInfo);
     }
 
-    @Override
-    public Asset getAssetByConnectId(UUID uuid) {
-        return assetDao.getAssetByConnectId(uuid);
-    }
-
 
     @Override
     public AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request) {
@@ -472,7 +467,7 @@ public class AssetServiceBean implements AssetService {
             String connectId = mobileTerminalType.getConnectId();
             if (connectId != null) {
                 UUID connectId_UUID = UUID.fromString(connectId);
-                asset = getAssetByConnectId(connectId_UUID);
+                asset = getAssetById(connectId_UUID);
                 if (asset != null) {
                     assetMTEnrichmentResponse = enrichementHelper(assetMTEnrichmentResponse, asset);
                 }

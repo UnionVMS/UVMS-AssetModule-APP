@@ -208,7 +208,7 @@ public class TestPollHelper {
         return mobileTerminal;
     }
 
-    public MobileTerminal createBasicMobileTerminal2(){
+    public MobileTerminal createBasicMobileTerminal2(Asset  asset){
         MobileTerminalType mobileTerminalType = createBasicMobileTerminalType();
         MobileTerminalPlugin mtp = new MobileTerminalPlugin();
         mtp.setPluginServiceName(UUID.randomUUID().toString());
@@ -217,6 +217,7 @@ public class TestPollHelper {
         mtp.setPluginInactive(false);
         mobileTerminalType.setArchived(false);
         mobileTerminalType.setInactive(false);
+        mobileTerminalType.setConnectId(asset.getId().toString());
 
         MobileTerminalAttribute attr = new MobileTerminalAttribute();
         attr.setType("TRANSPONDER_TYPE");
@@ -226,10 +227,12 @@ public class TestPollHelper {
         mobileTerminalType.getAttributes().add(attr);
 
 
-        MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType,null ,mobileTerminalType.getAttributes().get(0).getValue(), mtp, "TEST_USERNAME");
+        MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType,asset ,mobileTerminalType.getAttributes().get(0).getValue(), mtp, "TEST_USERNAME");
         mobileTerminal.setSerialNo("SN1234567890");
 
-        Channel c = new Channel();
+        List<Channel> channels = new ArrayList<>();
+        channels.addAll(mobileTerminal.getChannels());
+        Channel c = channels.get(0);
         c.setArchived(false);
         c.setInstalledBy("kanalbolaget");
         c.setMemberNumber("MEMBER1234567890");
@@ -238,9 +241,8 @@ public class TestPollHelper {
         c.setFrequencyGracePeriod(Duration.ofSeconds(60));
         c.setLesDescription("LESDESCRIPTION");
         c.setMobileTerminal(mobileTerminal);
-
-
         c.setDNID("DNID1234567890");
+        mobileTerminal.getChannels().clear();
         mobileTerminal.getChannels().add(c);
         return mobileTerminal;
     }
