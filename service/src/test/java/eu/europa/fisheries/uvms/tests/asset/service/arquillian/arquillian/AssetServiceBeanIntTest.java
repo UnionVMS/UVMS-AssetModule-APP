@@ -18,9 +18,7 @@ import javax.transaction.SystemException;
 
 
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
-import eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetId;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
-import eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetIdList;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
@@ -553,7 +551,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         return createdAssetGroup;
     }
 
-
+/*
     private AssetId createAssetId(Asset asset) {
 
         AssetId i = new AssetId();
@@ -581,7 +579,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         }
         return i;
     }
-
+*/
 
     private Asset createAsset() {
         Asset asset = AssetTestsHelper.createBasicAsset();

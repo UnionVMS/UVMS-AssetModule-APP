@@ -230,7 +230,9 @@ public class TestPollHelper {
         MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType,asset ,mobileTerminalType.getAttributes().get(0).getValue(), mtp, "TEST_USERNAME");
         mobileTerminal.setSerialNo("SN1234567890");
 
-        Channel c = new Channel();
+        List<Channel> channels = new ArrayList<>();
+        channels.addAll(mobileTerminal.getChannels());
+        Channel c = channels.get(0);
         c.setArchived(false);
         c.setInstalledBy("kanalbolaget");
         c.setMemberNumber("MEMBER1234567890");
@@ -239,9 +241,8 @@ public class TestPollHelper {
         c.setFrequencyGracePeriod(Duration.ofSeconds(60));
         c.setLesDescription("LESDESCRIPTION");
         c.setMobileTerminal(mobileTerminal);
-
-
         c.setDNID("DNID1234567890");
+        mobileTerminal.getChannels().clear();
         mobileTerminal.getChannels().add(c);
         return mobileTerminal;
     }
