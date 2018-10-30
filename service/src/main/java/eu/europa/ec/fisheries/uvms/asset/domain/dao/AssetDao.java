@@ -293,10 +293,5 @@ public class AssetDao {
                 .getSingleResult();
     }
 
-    public Asset getAssetByConnectId(UUID uuid) {
-        // ConnectId exists in MobileTerminalEvent so we must look there
-        List<Asset> ret  = em.createNamedQuery(MobileTerminalEvent.GET_ASSET_USING_CONNECTID, Asset.class).setParameter("connectId", uuid).getResultList();
-        if(ret.size() > 0 ) return ret.get(0);
-        return null;
-    }
+
 }
