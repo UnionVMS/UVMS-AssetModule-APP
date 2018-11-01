@@ -710,7 +710,6 @@ public class MobileTerminalServiceBean {
 
     private MobileTerminal tryToFindBasedOnRequestData(String dnid,String memberNumber,String serialNumber,String transponderType, List<MobileTerminal> terminals) {
 
-        MobileTerminal foundMobileTerminal = null;
 
         // iterate the list and try to find something we recognize from the request
         for(MobileTerminal terminal : terminals){
@@ -720,8 +719,7 @@ public class MobileTerminalServiceBean {
                     String channelDNID = channel.getDNID();
                     if(channelDNID != null){
                         if(channelDNID.equals(dnid)){
-                            foundMobileTerminal = terminal;
-                            break;
+                            return terminal;
                         }
                     }
                 }
@@ -729,8 +727,7 @@ public class MobileTerminalServiceBean {
                     String channelMemberNumber = channel.getMemberNumber();
                     if(channelMemberNumber != null){
                         if(channelMemberNumber.equals(memberNumber)){
-                            foundMobileTerminal = terminal;
-                            break;
+                            return terminal;
                         }
                     }
                 }
@@ -748,8 +745,7 @@ public class MobileTerminalServiceBean {
                         if(key.equals("SERIAL_NUMBER")){
                             if(val != null){
                                 if(serialNumber.equals(val)){
-                                    foundMobileTerminal = terminal;
-                                    break;
+                                    return terminal;
                                 }
                             }
                         }
@@ -758,8 +754,7 @@ public class MobileTerminalServiceBean {
                         if(key.equals("TRANSCEIVER_TYPE")){
                             if(val != null){
                                 if(transponderType.equals(val)){
-                                    foundMobileTerminal = terminal;
-                                    break;
+                                    return terminal;
                                 }
                             }
                         }
@@ -767,6 +762,6 @@ public class MobileTerminalServiceBean {
                 }
             }
         }
-        return foundMobileTerminal;
+        return null;
     }
 }
