@@ -31,12 +31,11 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTermin
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelListDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalAttributes;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.*;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.ChannelSearchAttributes;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.MobileTerminalSearchAttributes;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.SearchMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +50,10 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+
+import static eu.europa.ec.fisheries.schema.mobileterminal.types.v1.SearchKey.MEMBER_NUMBER;
 
 @Stateless
 @LocalBean
@@ -577,51 +579,6 @@ public class MobileTerminalServiceBean {
         return response;
     }
 
-    public MobileTerminalType findMobileTerminalTypeByAsset(UUID assetid) {
-        MobileTerminal terminal = terminalDao.findMobileTerminalByAsset(assetid);
-        if (terminal == null) return null;
-        MobileTerminalType terminalType = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
-        return terminalType;
-    }
-
-    public MobileTerminal findMobileTerminalByAsset(UUID assetid) {
-        MobileTerminal terminal = terminalDao.findMobileTerminalByAsset(assetid);
-        return terminal;
-    }
-
-
-
-    public MobileTerminalType getMobileTerminalByAssetMTEnrichmentRequest(AssetMTEnrichmentRequest request) {
-
-        MobileTerminalSearchCriteria criteria = new MobileTerminalSearchCriteria();
-
-        if (request.getDnidValue() != null && request.getDnidValue().length() > 0) {
-            ListCriteria crit = new ListCriteria();
-            crit.setKey(eu.europa.ec.fisheries.schema.mobileterminal.types.v1.SearchKey.DNID);
-            crit.setValue(request.getDnidValue());
-            criteria.getCriterias().add(crit);
-        }
-        if (request.getMemberNumberValue() != null && request.getMemberNumberValue().length() > 0) {
-            ListCriteria crit = new ListCriteria();
-            crit.setKey(SearchKey.MEMBER_NUMBER);
-            crit.setValue(request.getMemberNumberValue());
-            criteria.getCriterias().add(crit);
-        }
-        if (request.getSerialNumberValue() != null && request.getSerialNumberValue().length() > 0) {
-            ListCriteria crit = new ListCriteria();
-            crit.setKey(SearchKey.SERIAL_NUMBER);
-            crit.setValue(request.getSerialNumberValue());
-            criteria.getCriterias().add(crit);
-        }
-        if (request.getTranspondertypeValue() != null && request.getTranspondertypeValue().length() > 0) {
-            ListCriteria crit = new ListCriteria();
-            crit.setKey(SearchKey.TRANSPONDER_TYPE);
-            crit.setValue(request.getTranspondertypeValue());
-            criteria.getCriterias().add(crit);
-        }
-        return getMobileTerminalBySourceAndSearchCriteria2(criteria);
-    }
-
     public MobileTerminalType getMobileTerminalBySourceAndSearchCriteria(MobileTerminalSearchCriteria criteria) {
         MobileTerminalListQuery query = new MobileTerminalListQuery();
 
@@ -642,40 +599,174 @@ public class MobileTerminalServiceBean {
         return resultList.size() != 1 ? null : resultList.get(0);
     }
 
-    /**************************************************************************************************************
-     *
-     *    ANALYZE WHAT IS GOING ON IN THIS QUERY
-     *
-     **************************************************************************************************************/
 
+    public MobileTerminalType findMobileTerminalTypeByAsset(UUID assetid) {
+        MobileTerminal terminal = terminalDao.findMobileTerminalByAsset(assetid);
+        if (terminal == null) return null;
+        MobileTerminalType terminalType = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
+        return terminalType;
+    }
 
-    public MobileTerminalType getMobileTerminalBySourceAndSearchCriteria2(MobileTerminalSearchCriteria criteria) {
-
-        MobileTerminalListQuery query = new MobileTerminalListQuery();
-        query.setMobileTerminalSearchCriteria(criteria);
-        List<MobileTerminalType> resultList = getTerminalListByQuery2(query);
-        return resultList.size() != 1 ? null : resultList.get(0);
+    public MobileTerminal findMobileTerminalByAsset(UUID assetid) {
+        MobileTerminal terminal = terminalDao.findMobileTerminalByAsset(assetid);
+        return terminal;
     }
 
 
-    public List<MobileTerminalType>  getTerminalListByQuery2(MobileTerminalListQuery query) {
 
-        List<MobileTerminalType> mobileTerminalList = new ArrayList<>();
-        boolean isDynamic = query.getMobileTerminalSearchCriteria().isIsDynamic() == null ? true : query.getMobileTerminalSearchCriteria().isIsDynamic();
-        List<ListCriteria> criterias = query.getMobileTerminalSearchCriteria().getCriterias();
-        String searchSql = SearchMapper.createSelectSearchSql(criterias, isDynamic);
-        List<MobileTerminal> terminals = terminalDao.getMobileTerminalsByQuery(searchSql);
-        for (MobileTerminal terminal : terminals) {
-            MobileTerminalType terminalType = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
-            mobileTerminalList.add(terminalType);
+    public MobileTerminalType getMobileTerminalByAssetMTEnrichmentRequest(AssetMTEnrichmentRequest request) {
+
+       // String searchSql = SearchMapper.createSelectSearchSql(null, false);
+
+
+        String request_dnid = null;
+        String request_memberNumber = null;
+        String request_serialNumber = null;
+        String request_transponderType = null;
+
+
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT DISTINCT mt")
+                .append(" FROM MobileTerminal mt")
+                .append(" INNER JOIN FETCH mt.mobileTerminalEvents me")
+                .append(" LEFT JOIN FETCH mt.channels c")
+                .append(" LEFT JOIN FETCH me.mobileTerminalAttributes mta")
+                .append(" WHERE (")
+                .append("me.active = true ")
+                .append("AND ")
+                .append("mt.archived = false ")
+                .append("AND ")
+                .append("c.archived = false) ");
+
+
+        String operator = " AND (";
+        if (request.getDnidValue() != null && request.getDnidValue().length() > 0) {
+
+            request_dnid = request.getDnidValue();
+            String value = request_dnid.replace("*","%");
+            builder.append(operator)
+                    .append("  c.DNID LIKE ")
+                    .append("'")
+                    .append(value)
+                    .append("') ");
+
+            operator = " OR (";
+        }
+        if (request.getMemberNumberValue() != null && request.getMemberNumberValue().length() > 0) {
+            request_memberNumber = request.getMemberNumberValue();
+            String value = request_memberNumber.replace("*","%");
+            builder.append(operator)
+                    .append("  c.memberNumber LIKE ")
+                    .append("'")
+                    .append(value)
+                    .append("')");
+
+            operator = " AND (";
         }
 
-        mobileTerminalList.sort(new MobileTerminalTypeComparator());
 
-        return mobileTerminalList;
+        // in table MobileTerminalAttribute
+        if (request.getSerialNumberValue() != null && request.getSerialNumberValue().length() > 0) {
+
+            request_serialNumber = request.getSerialNumberValue();
+            builder.append(operator)
+                    .append("  mta.attribute = 'SERIAL_NUMBER' AND mta.value LIKE ")
+                    .append("'%")
+                    .append(request_serialNumber)
+                    .append("%')");
+
+            operator = " OR (";
+        }
+
+        if (request.getTranspondertypeValue() != null && request.getTranspondertypeValue().length() > 0) {
+
+            request_transponderType = request.getTranspondertypeValue();
+            builder.append(operator)
+                    .append("  mta.attribute = 'TRANCEIVER_TYPE' AND mta.value LIKE ")
+                    .append("'%")
+                    .append(request_transponderType)
+                    .append("%')");
+
+        }
+
+        String sql = builder.toString();
+        List<MobileTerminal> terminals = terminalDao.getMobileTerminalsByQuery(sql);
+        switch (terminals.size()){
+            case 0 : return null;
+            case 1 : return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminals.get(0));
+            default :{
+                MobileTerminal  triedMobileTerminal = tryToFindBasedOnRequestData(request_dnid,request_memberNumber,request_serialNumber,request_transponderType, terminals);
+                if(triedMobileTerminal != null){
+                    return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(triedMobileTerminal);
+                }else{
+                    return null;
+                }
+            }
+        }
     }
 
 
 
+    private MobileTerminal tryToFindBasedOnRequestData(String dnid,String memberNumber,String serialNumber,String transponderType, List<MobileTerminal> terminals) {
 
+        MobileTerminal foundMobileTerminal = null;
+
+        // iterate the list and try to find something we recognize from the request
+        for(MobileTerminal terminal : terminals){
+            Set<Channel> channels =  terminal.getChannels();
+            for(Channel channel : channels){
+                if(dnid != null) {
+                    String channelDNID = channel.getDNID();
+                    if(channelDNID != null){
+                        if(channelDNID.equals(dnid)){
+                            foundMobileTerminal = terminal;
+                            break;
+                        }
+                    }
+                }
+                if(memberNumber != null) {
+                    String channelMemberNumber = channel.getMemberNumber();
+                    if(channelMemberNumber != null){
+                        if(channelMemberNumber.equals(memberNumber)){
+                            foundMobileTerminal = terminal;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            MobileTerminalEvent event = terminal.getCurrentEvent();
+            if(event != null){
+                Set<MobileTerminalAttributes> attributes = event.getMobileTerminalAttributes();
+                for(MobileTerminalAttributes attr : attributes){
+
+                    String key = attr.getAttribute();
+                    String val = attr.getValue();
+
+                    if(serialNumber != null){
+                        if(key.equals("SERIAL_NUMBER")){
+                            if(val != null){
+                                if(serialNumber.equals(val)){
+                                    foundMobileTerminal = terminal;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if(transponderType != null){
+                        if(key.equals("TRANSCEIVER_TYPE")){
+                            if(val != null){
+                                if(transponderType.equals(val)){
+                                    foundMobileTerminal = terminal;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return foundMobileTerminal;
+    }
 }
