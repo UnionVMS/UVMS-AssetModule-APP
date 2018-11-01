@@ -614,6 +614,7 @@ public class MobileTerminalServiceBean {
 
 
 
+    //@formatter:off
     public MobileTerminalType getMobileTerminalByAssetMTEnrichmentRequest(AssetMTEnrichmentRequest request) {
 
        // String searchSql = SearchMapper.createSelectSearchSql(null, false);
@@ -626,18 +627,18 @@ public class MobileTerminalServiceBean {
 
 
 
-        StringBuilder builder = new StringBuilder();
-        builder.append("SELECT DISTINCT mt")
-                .append(" FROM MobileTerminal mt")
-                .append(" INNER JOIN FETCH mt.mobileTerminalEvents me")
-                .append(" LEFT JOIN FETCH mt.channels c")
-                .append(" LEFT JOIN FETCH me.mobileTerminalAttributes mta")
-                .append(" WHERE (")
-                .append("me.active = true ")
-                .append("AND ")
-                .append("mt.archived = false ")
-                .append("AND ")
-                .append("c.archived = false) ");
+        String  sql = "";
+        sql += "SELECT DISTINCT mt";
+        sql += " FROM MobileTerminal mt";
+        sql += " INNER JOIN FETCH mt.mobileTerminalEvents me";
+        sql += " LEFT JOIN FETCH mt.channels c";
+        sql += " LEFT JOIN FETCH me.mobileTerminalAttributes mta";
+        sql += " WHERE (";
+        sql += "me.active = true ";
+        sql += "AND ";
+        sql += "mt.archived = false ";
+        sql += "AND ";
+        sql += "c.archived = false) ";
 
 
         String operator = " AND (";
@@ -645,22 +646,22 @@ public class MobileTerminalServiceBean {
 
             request_dnid = request.getDnidValue();
             String value = request_dnid.replace("*","%");
-            builder.append(operator)
-                    .append("  c.DNID LIKE ")
-                    .append("'")
-                    .append(value)
-                    .append("') ");
+            sql += operator;
+            sql += "  c.DNID LIKE ";
+            sql += "'";
+            sql += value;
+            sql += "') ";
 
             operator = " OR (";
         }
         if (request.getMemberNumberValue() != null && request.getMemberNumberValue().length() > 0) {
             request_memberNumber = request.getMemberNumberValue();
             String value = request_memberNumber.replace("*","%");
-            builder.append(operator)
-                    .append("  c.memberNumber LIKE ")
-                    .append("'")
-                    .append(value)
-                    .append("')");
+            sql += operator;
+            sql += "  c.memberNumber LIKE ";
+            sql += "'";
+            sql += value;
+            sql += "')";
 
             operator = " AND (";
         }
@@ -670,11 +671,11 @@ public class MobileTerminalServiceBean {
         if (request.getSerialNumberValue() != null && request.getSerialNumberValue().length() > 0) {
 
             request_serialNumber = request.getSerialNumberValue();
-            builder.append(operator)
-                    .append("  mta.attribute = 'SERIAL_NUMBER' AND mta.value LIKE ")
-                    .append("'%")
-                    .append(request_serialNumber)
-                    .append("%')");
+            sql += operator;
+            sql += "  mta.attribute = 'SERIAL_NUMBER' AND mta.value LIKE ";
+            sql += "'%";
+            sql += request_serialNumber;
+            sql += "%')";
 
             operator = " OR (";
         }
@@ -682,15 +683,14 @@ public class MobileTerminalServiceBean {
         if (request.getTranspondertypeValue() != null && request.getTranspondertypeValue().length() > 0) {
 
             request_transponderType = request.getTranspondertypeValue();
-            builder.append(operator)
-                    .append("  mta.attribute = 'TRANCEIVER_TYPE' AND mta.value LIKE ")
-                    .append("'%")
-                    .append(request_transponderType)
-                    .append("%')");
+            sql += operator;
+            sql += "  mta.attribute = 'TRANCEIVER_TYPE' AND mta.value LIKE ";
+            sql += "'%";
+            sql += request_transponderType;
+            sql += "%')";
 
         }
 
-        String sql = builder.toString();
         List<MobileTerminal> terminals = terminalDao.getMobileTerminalsByQuery(sql);
         switch (terminals.size()){
             case 0 : return null;
@@ -705,6 +705,7 @@ public class MobileTerminalServiceBean {
             }
         }
     }
+    //@ formatter:on
 
 
 
