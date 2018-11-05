@@ -727,7 +727,7 @@ public class MobileTerminalServiceBean {
                 if(triedMobileTerminal != null){
                     return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(triedMobileTerminal);
                 }else{
-                    LOG.error("No Mobiletreminal found for {} {} {} {}", request_dnid,request_memberNumber,request_serialNumber,request_transponderType)
+                    LOG.error("No Mobiletreminal found for {} {} {} {}", request_dnid,request_memberNumber,request_serialNumber,request_transponderType);
                     return null;
                 }
             }
