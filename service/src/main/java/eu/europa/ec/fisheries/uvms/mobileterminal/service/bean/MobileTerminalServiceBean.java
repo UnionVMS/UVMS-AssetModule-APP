@@ -291,7 +291,7 @@ public class MobileTerminalServiceBean {
         }
 
         event.setMobileTerminalAttributes(current.getMobileTerminalAttributes());
-        for(MobileTerminalAttributes mta : current.getMobileTerminalAttributes()){
+        for (MobileTerminalAttributes mta : current.getMobileTerminalAttributes()) {
             mta.setMobileTerminalEvent(event);
         }
         current.setMobileTerminalAttributes(null);
@@ -427,7 +427,7 @@ public class MobileTerminalServiceBean {
             event.setEventCodeType(EventCodeEnum.LINK);
 
             event.setMobileTerminalAttributes(current.getMobileTerminalAttributes());
-            for(MobileTerminalAttributes mta : current.getMobileTerminalAttributes()){
+            for (MobileTerminalAttributes mta : current.getMobileTerminalAttributes()) {
                 mta.setMobileTerminalEvent(event);
             }
             current.setMobileTerminalAttributes(null);
@@ -475,7 +475,7 @@ public class MobileTerminalServiceBean {
             event.setEventCodeType(EventCodeEnum.UNLINK);
 
             event.setMobileTerminalAttributes(current.getMobileTerminalAttributes());
-            for(MobileTerminalAttributes mta : current.getMobileTerminalAttributes()){
+            for (MobileTerminalAttributes mta : current.getMobileTerminalAttributes()) {
                 mta.setMobileTerminalEvent(event);
             }
             current.setMobileTerminalAttributes(null);
@@ -613,7 +613,6 @@ public class MobileTerminalServiceBean {
     }
 
 
-
     //@formatter:off
     public MobileTerminalType getMobileTerminalByAssetMTEnrichmentRequest(AssetMTEnrichmentRequest request) {
 
@@ -641,54 +640,82 @@ public class MobileTerminalServiceBean {
         sql += "c.archived = false) ";
 
 
-        String operator = " AND (";
-        if (request.getDnidValue() != null && request.getDnidValue().length() > 0) {
-
+        // dnid AND member is a unique combination
+        if (request.getDnidValue() != null && request.getDnidValue().length() > 0 && request.getMemberNumberValue() != null && request.getMemberNumberValue().length() > 0) {
+            String operator = " AND (";
             request_dnid = request.getDnidValue();
-            String value = request_dnid.replace("*","%");
-            sql += operator;
-            sql += "  c.DNID LIKE ";
-            sql += "'";
-            sql += value;
-            sql += "') ";
-
-            operator = " OR (";
-        }
-        if (request.getMemberNumberValue() != null && request.getMemberNumberValue().length() > 0) {
             request_memberNumber = request.getMemberNumberValue();
-            String value = request_memberNumber.replace("*","%");
-            sql += operator;
-            sql += "  c.memberNumber LIKE ";
-            sql += "'";
-            sql += value;
-            sql += "')";
+                sql += operator;
+                sql += "  c.DNID = ";
+                sql += "'";
+                sql += request_dnid;
+                sql += "') ";
+                sql += operator;
+                sql += "  c.memberNumber = ";
+                sql += "'";
+                sql += request_memberNumber;
+                sql += "')";
 
-            operator = " AND (";
+                List<MobileTerminal> terminals = terminalDao.getMobileTerminalsByQuery(sql);
+                if(terminals.size() == 1){
+                    return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminals.get(0));
+                }
+                else{
+                    LOG.error("more than one record with combination dnid, membernumber {}/{}", request_dnid,request_memberNumber);
+                    return null;
+                }
         }
+        else {
+
+            String operator = " AND (";
+            if (request.getDnidValue() != null && request.getDnidValue().length() > 0) {
+
+                request_dnid = request.getDnidValue();
+                String value = request_dnid.replace("*","%");
+                sql += operator;
+                sql += "  c.DNID LIKE ";
+                sql += "'";
+                sql += value;
+                sql += "') ";
+
+                operator = " OR (";
+            }
+            if (request.getMemberNumberValue() != null && request.getMemberNumberValue().length() > 0) {
+                request_memberNumber = request.getMemberNumberValue();
+                String value = request_memberNumber.replace("*","%");
+                sql += operator;
+                sql += "  c.memberNumber LIKE ";
+                sql += "'";
+                sql += value;
+                sql += "')";
+
+                operator = " OR (";
+            }
 
 
-        // in table MobileTerminalAttribute
-        if (request.getSerialNumberValue() != null && request.getSerialNumberValue().length() > 0) {
+            // in table MobileTerminalAttribute
+            if (request.getSerialNumberValue() != null && request.getSerialNumberValue().length() > 0) {
 
-            request_serialNumber = request.getSerialNumberValue();
-            sql += operator;
-            sql += "  mta.attribute = 'SERIAL_NUMBER' AND mta.value LIKE ";
-            sql += "'%";
-            sql += request_serialNumber;
-            sql += "%')";
+                request_serialNumber = request.getSerialNumberValue();
+                sql += operator;
+                sql += "  mta.attribute = 'SERIAL_NUMBER' AND mta.value LIKE ";
+                sql += "'%";
+                sql += request_serialNumber;
+                sql += "%')";
 
-            operator = " OR (";
-        }
+                operator = " OR (";
+            }
 
-        if (request.getTranspondertypeValue() != null && request.getTranspondertypeValue().length() > 0) {
+            if (request.getTranspondertypeValue() != null && request.getTranspondertypeValue().length() > 0) {
 
-            request_transponderType = request.getTranspondertypeValue();
-            sql += operator;
-            sql += "  mta.attribute = 'TRANCEIVER_TYPE' AND mta.value LIKE ";
-            sql += "'%";
-            sql += request_transponderType;
-            sql += "%')";
+                request_transponderType = request.getTranspondertypeValue();
+                sql += operator;
+                sql += "  mta.attribute = 'TRANCEIVER_TYPE' AND mta.value LIKE ";
+                sql += "'%";
+                sql += request_transponderType;
+                sql += "%')";
 
+            }
         }
 
         List<MobileTerminal> terminals = terminalDao.getMobileTerminalsByQuery(sql);
@@ -700,6 +727,7 @@ public class MobileTerminalServiceBean {
                 if(triedMobileTerminal != null){
                     return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(triedMobileTerminal);
                 }else{
+                    LOG.error("No Mobiletreminal found for {} {} {} {}", request_dnid,request_memberNumber,request_serialNumber,request_transponderType)
                     return null;
                 }
             }
@@ -714,26 +742,6 @@ public class MobileTerminalServiceBean {
 
         // iterate the list and try to find something we recognize from the request
         for(MobileTerminal terminal : terminals){
-            Set<Channel> channels =  terminal.getChannels();
-            for(Channel channel : channels){
-                if(dnid != null) {
-                    String channelDNID = channel.getDNID();
-                    if(channelDNID != null){
-                        if(channelDNID.equals(dnid)){
-                            return terminal;
-                        }
-                    }
-                }
-                if(memberNumber != null) {
-                    String channelMemberNumber = channel.getMemberNumber();
-                    if(channelMemberNumber != null){
-                        if(channelMemberNumber.equals(memberNumber)){
-                            return terminal;
-                        }
-                    }
-                }
-            }
-
             MobileTerminalEvent event = terminal.getCurrentEvent();
             if(event != null){
                 Set<MobileTerminalAttributes> attributes = event.getMobileTerminalAttributes();
@@ -758,6 +766,25 @@ public class MobileTerminalServiceBean {
                                     return terminal;
                                 }
                             }
+                        }
+                    }
+                }
+            }
+            Set<Channel> channels =  terminal.getChannels();
+            for(Channel channel : channels){
+                if(dnid != null) {
+                    String channelDNID = channel.getDNID();
+                    if(channelDNID != null){
+                        if(channelDNID.equals(dnid)){
+                            return terminal;
+                        }
+                    }
+                }
+                if(memberNumber != null) {
+                    String channelMemberNumber = channel.getMemberNumber();
+                    if(channelMemberNumber != null){
+                        if(channelMemberNumber.equals(memberNumber)){
+                            return terminal;
                         }
                     }
                 }
