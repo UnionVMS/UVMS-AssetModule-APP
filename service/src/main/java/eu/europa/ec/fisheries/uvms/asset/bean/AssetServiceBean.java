@@ -461,11 +461,6 @@ public class AssetServiceBean implements AssetService {
     }
 
     @Override
-    public Asset getAssetByConnectId(UUID uuid) {
-        return assetDao.getAssetByConnectId(uuid);
-    }
-
-    @Override
     public AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request) {
 
         AssetMTEnrichmentResponse assetMTEnrichmentResponse = new AssetMTEnrichmentResponse();
