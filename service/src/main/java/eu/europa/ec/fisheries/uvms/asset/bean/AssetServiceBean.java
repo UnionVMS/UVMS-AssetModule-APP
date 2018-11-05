@@ -142,7 +142,6 @@ public class AssetServiceBean implements AssetService {
         if (searchFields == null || searchFields.isEmpty()) {
             throw new IllegalArgumentException("Cannot get asset list because query is null.");
         }
-
         return assetDao.getAssetCount(searchFields, dynamic);
     }
 
@@ -256,7 +255,6 @@ public class AssetServiceBean implements AssetService {
             getNotesForAsset(assetId).stream().forEach(n -> deleteNote(n.getId()));
             assetBo.getNotes().stream().forEach(c -> createNoteForAsset(assetId, c, username));
         }
-
         return assetBo;
     }
 
@@ -275,7 +273,6 @@ public class AssetServiceBean implements AssetService {
         if (value == null) {
             throw new IllegalArgumentException("AssetIdentity value is null");
         }
-
         return assetDao.getAssetFromAssetId(assetId, value);
     }
 
@@ -304,10 +301,8 @@ public class AssetServiceBean implements AssetService {
                 throw new IllegalArgumentException("Not a valid UUID");
             }
         }
-
         return assetDao.getAssetFromAssetIdAtDate(idType, idValue, date);
     }
-
 
     /**
      * @param id
@@ -318,7 +313,6 @@ public class AssetServiceBean implements AssetService {
         if (id == null) {
             throw new IllegalArgumentException("Id is null");
         }
-
         return assetDao.getAssetById(id);
     }
 
@@ -471,10 +465,8 @@ public class AssetServiceBean implements AssetService {
         return assetDao.getAssetByConnectId(uuid);
     }
 
-
     @Override
     public AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request) {
-
 
         AssetMTEnrichmentResponse assetMTEnrichmentResponse = new AssetMTEnrichmentResponse();
 
@@ -487,7 +479,7 @@ public class AssetServiceBean implements AssetService {
             String connectId = mobileTerminalType.getConnectId();
             if (connectId != null) {
                 UUID connectId_UUID = UUID.fromString(connectId);
-                asset = getAssetByConnectId(connectId_UUID);
+                asset = getAssetById(connectId_UUID);
                 if (asset != null) {
                     assetMTEnrichmentResponse = enrichementHelper(assetMTEnrichmentResponse, asset);
                 }
@@ -529,7 +521,6 @@ public class AssetServiceBean implements AssetService {
         return assetMTEnrichmentResponse;
     }
 
-
     private AssetMTEnrichmentResponse enrichementHelper(AssetMTEnrichmentResponse resp, Asset asset) {
         Map<String, String> assetId = createAssetId(asset);
         resp.setAssetId(assetId);
@@ -544,7 +535,6 @@ public class AssetServiceBean implements AssetService {
         resp.setMmsi(asset.getMmsi());
         return resp;
     }
-
 
     private AssetMTEnrichmentResponse enrichementHelper(AssetMTEnrichmentRequest req, AssetMTEnrichmentResponse resp, MobileTerminalType mobTerm) {
 
@@ -592,8 +582,6 @@ public class AssetServiceBean implements AssetService {
                 // DONT CARE
             }
         }
-
-
         return resp;
     }
 
@@ -631,7 +619,6 @@ public class AssetServiceBean implements AssetService {
         }
         return channelGuid;
     }
-
 
     private Map<String, String> createAssetId(Asset asset) {
         Map<String, String> assetId = new HashMap<>();
@@ -692,7 +679,6 @@ public class AssetServiceBean implements AssetService {
         }
         return assetId;
     }
-
 
     // TODO ? the belgian constants as well if so how ?? no spec !!!
     private Asset getAssetByCfrIrcs(Map<String, String> assetId) {
@@ -760,6 +746,4 @@ public class AssetServiceBean implements AssetService {
             return false;
         }
     }
-
-
 }

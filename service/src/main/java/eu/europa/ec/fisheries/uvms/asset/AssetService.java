@@ -215,11 +215,6 @@ public interface AssetService {
      */
     void deleteContactInfo(UUID id);
 
-    Asset getAssetByConnectId(UUID mobileTerminalConnectId);
-
-    //@Deprecated
-    //AssetMTEnrichmentResponse collectAssetMT(RawMovementType rawMovement, String pluginType, String username);
-
     AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request);
 
     List<ContactInfo> getContactInfoRevisionForAssetHistory(UUID assetId, OffsetDateTime updatedDate);

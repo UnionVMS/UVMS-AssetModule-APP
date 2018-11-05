@@ -10,14 +10,11 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.client.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.time.OffsetDateTime;
 import java.util.UUID;
+import javax.json.bind.annotation.JsonbDateFormat;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class AssetDTO {
-
 
     private UUID id;
     private UUID historyId;

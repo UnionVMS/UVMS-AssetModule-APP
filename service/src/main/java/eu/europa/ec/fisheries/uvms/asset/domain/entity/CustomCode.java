@@ -12,7 +12,7 @@ import java.util.Map;
 @Entity
 @Table(name = "customcode"/*, indexes = { @Index(columnList = "id", name = "customcodes00", unique = true),}*/)
 @NamedQueries({
-        @NamedQuery(name = CUSTOMCODES_GETALLFOR, query = "SELECT m FROM CustomCode m where  m.primaryKey.constant=:constant"),
+        @NamedQuery(name = CUSTOMCODES_GETALLFOR, query = "SELECT m FROM CustomCode m where  upper(m.primaryKey.constant) =: constant"),
         @NamedQuery(name = CUSTOMCODES_GETALLCONSTANTS, query = "SELECT distinct m.primaryKey.constant FROM CustomCode m "),
         @NamedQuery(name = CUSTOMCODES_GETCUSTOMCODE_FOR_SPECIFIC_DATE, query = "SELECT  m FROM CustomCode m where m.primaryKey.constant = :constant and  m.primaryKey.code = :code and ( :aDate Between m.primaryKey.validFromDate and m.primaryKey.validToDate)"),
 })
@@ -33,8 +33,7 @@ public class CustomCode {
     private String description;
 
     @Column(name = "namevalue")
-    private Map<String,String> namevalue = new HashMap<>();
-
+    private Map<String,String> nameValue = new HashMap<>();
 
 
     @EmbeddedId
@@ -54,15 +53,15 @@ public class CustomCode {
         this.description = description;
     }
 
-    @ElementCollection // this is a collection of primitives
+    @ElementCollection(fetch = FetchType.EAGER) // this is a collection of primitives
     @MapKeyColumn(name="key") // column name for map "key"
     @Column(name="value") // column name for map "value"
     public Map<String,String> getNameValue() {
-        return namevalue;
+        return nameValue;
     }
 
-    public void  setNameValue(Map<String,String> namevalue) {
-        this.namevalue=namevalue;
+    public void  setNameValue(Map<String,String> nameValue) {
+        this.nameValue = nameValue;
     }
 
 

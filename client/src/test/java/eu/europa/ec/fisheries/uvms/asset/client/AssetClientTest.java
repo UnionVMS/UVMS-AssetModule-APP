@@ -13,7 +13,6 @@ import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.asset.client.model.AssetBO;
@@ -46,6 +45,7 @@ public class AssetClientTest extends AbstractClientTest {
     public void getAssetByGuidTest() {
         AssetBO assetBo = new AssetBO();
         assetBo.setAsset(AssetHelper.createBasicAsset());
+        
         AssetBO upsertAssetBo = assetClient.upsertAsset(assetBo);
 
         AssetDTO asset = assetClient.getAssetById(AssetIdentifier.GUID, upsertAssetBo.getAsset().getId().toString());
@@ -99,6 +99,7 @@ public class AssetClientTest extends AbstractClientTest {
                 .filter(a -> a.getId().equals(upsertAssetBo.getAsset().getId()))
                 .count() == 1);
     }
+    
     @Test
     public void upsertAssetJMSTest() throws Exception {
         AssetDTO asset = AssetHelper.createBasicAsset();
@@ -119,9 +120,7 @@ public class AssetClientTest extends AbstractClientTest {
         Assert.assertTrue(rs.size() > 0);
     }
 
-    // TODO investigate why this is not 100% ok
     @Test
-    @Ignore
     public void getCodesForConstantsTest() throws Exception {
 
         String constant = "Test_Constant" + UUID.randomUUID().toString();
@@ -146,7 +145,7 @@ public class AssetClientTest extends AbstractClientTest {
         String code = createdCustomCode.getPrimaryKey().getCode();
         OffsetDateTime validFromDate = createdCustomCode.getPrimaryKey().getValidFromDate();
 
-        Boolean ok =  assetClient.isCodeValid(cst,code,validFromDate.plusDays(5));
+        Boolean ok = assetClient.isCodeValid(cst,code,validFromDate.plusDays(5));
         Assert.assertTrue(ok);
     }
 
@@ -162,7 +161,7 @@ public class AssetClientTest extends AbstractClientTest {
         String code = createdCustomCode.getPrimaryKey().getCode();
         OffsetDateTime validToDate = createdCustomCode.getPrimaryKey().getValidToDate();
 
-        Boolean ok =  assetClient.isCodeValid(cst,code,validToDate.plusDays(5));
+        Boolean ok = assetClient.isCodeValid(cst,code,validToDate.plusDays(5));
         Assert.assertFalse(ok);
     }
 
@@ -208,7 +207,7 @@ public class AssetClientTest extends AbstractClientTest {
 
         String constant = "Test_Constant" + UUID.randomUUID().toString();
         CustomCode customCode = AssetHelper.createCustomCode(constant);
-         assetClient.replace(customCode);
+        assetClient.replace(customCode);
         customCode.setDescription("replaced");
         assetClient.replace(customCode);
 

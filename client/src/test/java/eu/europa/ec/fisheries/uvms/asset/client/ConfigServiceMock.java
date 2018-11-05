@@ -18,7 +18,6 @@ import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 import eu.europa.ec.fisheries.schema.config.types.v1.PullSettingsStatus;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
-import eu.europa.ec.fisheries.uvms.asset.client.constants.ParameterKey;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
@@ -35,8 +34,8 @@ public class ConfigServiceMock implements MessageListener {
     public void onMessage(Message message) {
         try {
             SettingType endpointSetting = new SettingType();
-            endpointSetting.setKey(ParameterKey.ASSET_ENDPOINT.getKey());
-            endpointSetting.setValue("http://localhost:8080/asset/rest/");
+            endpointSetting.setKey("APA");
+            endpointSetting.setValue("BEPA");
             endpointSetting.setDescription("From ConfigServiceMock.java");
             String response = ModuleResponseMapper.toPullSettingsResponse(Arrays.asList(endpointSetting), PullSettingsStatus.OK);
             new AbstractProducer() {
