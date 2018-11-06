@@ -203,7 +203,6 @@ public interface AssetService {
     ContactInfo createContactInfoForAsset(UUID assetId, ContactInfo contactInfo, String username);
 
     /**
-     *
      * @param contactInfo @description a contactinfo object
      * @param username @description  user that performs the action
      * @return ContactInfo @description contactinfo
@@ -218,6 +217,7 @@ public interface AssetService {
 
     AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request);
 
+    List<ContactInfo> getContactInfoRevisionForAssetHistory(UUID assetId, OffsetDateTime updatedDate);
 
 }
 
