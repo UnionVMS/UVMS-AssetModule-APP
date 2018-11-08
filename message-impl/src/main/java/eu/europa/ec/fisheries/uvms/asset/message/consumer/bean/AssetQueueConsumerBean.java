@@ -25,7 +25,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
 @Stateless
-public class AssetQueueConsumerBean extends AbstractConsumer implements AssetQueueConsumer, ConfigMessageConsumer {
+public class AssetQueueConsumerBean extends AbstractConsumer implements AssetQueueConsumer {
 
     private final static Logger LOG = LoggerFactory.getLogger(AssetQueueConsumerBean.class);
 
@@ -42,17 +42,6 @@ public class AssetQueueConsumerBean extends AbstractConsumer implements AssetQue
         } catch (Exception e) {
             LOG.error("[ Error when retrieving message. ] {}", e.getMessage());
             throw new AssetMessageException("Error when retrieving message: " + e.getMessage());
-        }
-    }
-
-    @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public <T> T getConfigMessage(String correlationId, Class type) throws ConfigMessageException {
-        try {
-            return getMessageOv(correlationId, type);
-        } catch (AssetMessageException e) {
-            LOG.error("[ Error when getting config message. ] {}", e.getMessage());
-            throw new ConfigMessageException(e.getMessage());
         }
     }
 

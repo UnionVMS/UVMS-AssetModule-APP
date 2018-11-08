@@ -20,7 +20,7 @@ import javax.jms.Queue;
 public class AssetConfigServiceBean extends AbstractProducer implements ConfigMessageProducer {
 
     /**
-     * Once a message is sent to config, config needs to know where to send the response... This is MDRQueue in case of MDR modules..
+     * Once a message is sent to config, config needs to know where to send the response... This is AssetQueue in case of Asset module..
      */
     private Queue assetInQueue;
 
