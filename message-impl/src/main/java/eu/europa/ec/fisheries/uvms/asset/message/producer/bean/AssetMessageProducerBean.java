@@ -24,8 +24,6 @@ import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.JMSUtils;
-import eu.europa.ec.fisheries.uvms.config.exception.ConfigMessageException;
-import eu.europa.ec.fisheries.uvms.config.message.ConfigMessageProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +38,7 @@ import javax.jms.Queue;
 import javax.jms.TextMessage;
 
 @Stateless
-public class AssetMessageProducerBean extends AbstractProducer implements AssetMessageProducer, ConfigMessageProducer {
+public class AssetMessageProducerBean extends AbstractProducer implements AssetMessageProducer {
 
     private static final Logger LOG = LoggerFactory.getLogger(AssetMessageProducerBean.class);
 
@@ -113,17 +111,6 @@ public class AssetMessageProducerBean extends AbstractProducer implements AssetM
             LOG.error("[ Error when returning Error message to recipient. ] {} ", e.getMessage());
         } catch (EJBTransactionRolledbackException e) {
             LOG.error("[ Error when returning Error message to recipient. Usual cause is NoAssetEntityFoundException ] {} ", e.getMessage());
-        }
-    }
-
-    @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public String sendConfigMessage(String text) throws ConfigMessageException {
-        try {
-            return sendModuleMessage(text, ModuleQueue.CONFIG);
-        } catch (AssetMessageException e) {
-            LOG.error("[ Error when sending config message. ] {}", e.getMessage());
-            throw new ConfigMessageException(e.getMessage());
         }
     }
 
