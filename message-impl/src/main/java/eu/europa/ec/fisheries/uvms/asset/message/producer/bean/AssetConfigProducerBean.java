@@ -17,7 +17,7 @@ import javax.jms.Queue;
 
 @Stateless
 @Slf4j
-public class AssetConfigServiceBean extends AbstractProducer implements ConfigMessageProducer {
+public class AssetConfigProducerBean extends AbstractProducer implements ConfigMessageProducer {
 
     /**
      * Once a message is sent to config, config needs to know where to send the response... This is AssetQueue in case of Asset module..

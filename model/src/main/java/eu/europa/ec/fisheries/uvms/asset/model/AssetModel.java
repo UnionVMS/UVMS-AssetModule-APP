@@ -21,18 +21,18 @@ import java.util.Map;
  **/
 public interface AssetModel {
 
-    public Long createAsset(Asset assetDto) throws AssetModelException;
+     Long createAsset(Asset assetDto) throws AssetModelException;
 
-    public List<Asset> getAssetList(Map<String, String> criteria) throws AssetModelException;
+     List<Asset> getAssetList(Map<String, String> criteria) throws AssetModelException;
 
-    public Asset getAssetById(Long id) throws AssetModelException;
+     Asset getAssetById(Long id) throws AssetModelException;
 
-    public Asset getAssetByCfr(String cfr) throws AssetModelException;
+     Asset getAssetByCfr(String cfr) throws AssetModelException;
 
-    public Asset getAssetByIrcs(String ircs) throws AssetModelException;
+     Asset getAssetByIrcs(String ircs) throws AssetModelException;
 
-    public Long updateAsset(Asset assetDto) throws AssetModelException;
+     Long updateAsset(Asset assetDto) throws AssetModelException;
 
-    public void deleteAsset(Long id) throws AssetModelException;
+     void deleteAsset(Long id) throws AssetModelException;
 
 }

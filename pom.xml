@@ -21,6 +21,7 @@
         <uvms.config.version>4.0.2</uvms.config.version>
 		<uvms.common.version>3.0.29</uvms.common.version>
         <audit.model.version>4.0.8</audit.model.version>
+        <javaee.version>8.0</javaee.version>
         <project.scm.id>github</project.scm.id>
     </properties>
 
@@ -28,6 +29,8 @@
 		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-api</artifactId>
+            <version>${javaee.version}</version>
+            <scope>provided</scope>
 		</dependency>
 	</dependencies>
     <dependencyManagement>
