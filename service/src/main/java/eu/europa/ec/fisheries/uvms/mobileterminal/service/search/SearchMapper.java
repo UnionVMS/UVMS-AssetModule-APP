@@ -102,12 +102,12 @@ public class SearchMapper {
 
         builder.append("SELECT DISTINCT mt")
                 .append(" FROM MobileTerminal mt")
-                .append(" INNER JOIN FETCH mt.mobileTerminalEvents me")
+//                .append(" INNER JOIN FETCH mt.mobileTerminalEvents me")
                 .append(" LEFT JOIN FETCH mt.channels c")
-                .append(" LEFT JOIN FETCH me.mobileTerminalAttributes mta")
+                .append(" LEFT JOIN FETCH mt.mobileTerminalAttributes mta")
                 .append(" WHERE ( ")
-                .append("me.active = true ")
-                .append("AND ")
+//                .append("me.active = true ")
+//                .append("AND ")
                 .append("mt.archived = false ")
                 .append("AND ")
                 .append("c.archived = false ")
@@ -116,7 +116,7 @@ public class SearchMapper {
         String operator = isDynamic ? "OR" : "AND";
 
         if (criteriaList != null && !criteriaList.isEmpty()) {
-            builder.append(" AND (");
+            builder.append(" AND ");
             boolean first = true;
             for (ListCriteria criteria : criteriaList) {
                 String key = criteria.getKey().value();
@@ -126,7 +126,7 @@ public class SearchMapper {
                     builder.append(operator);
                 }
                 if ("CONNECT_ID".equals(key)) {
-                    builder.append(" ( me.asset.id = ")
+                    builder.append(" ( mt.asset.id = ")
                             .append("'").append(criteria.getValue()).append("' ) ");
                 } else {
                     if (MobileTerminalSearchAttributes.isAttribute(key)) {
@@ -160,9 +160,10 @@ public class SearchMapper {
                     }
                 }
             }
-            builder.append(")");
+//            builder.append(")");
         }
         LOG.debug("SELECT SQL {}", builder.toString());
+        System.out.println("SQL: " + builder.toString());
         return builder.toString();
     }
 }

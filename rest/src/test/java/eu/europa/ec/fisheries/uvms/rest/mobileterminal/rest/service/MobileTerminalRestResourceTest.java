@@ -334,12 +334,11 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     @Test
     public void getMobileTerminalListWithDNIDTest() {
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
-
         String created = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(mobileTerminal), String.class);
-
+        System.out.println("CREATED: " + created);
         JsonReader jsonReader = Json.createReader(new StringReader(created));
         JsonObject jsonObject = jsonReader.readObject();
 
@@ -353,7 +352,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .path("/mobileterminal/list")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(mobileTerminalListQuery), String.class);
-
+        System.out.println("RESPONSE: " + response);
         assertNotNull(response);
         jsonReader = Json.createReader(new StringReader(response));
         jsonObject = jsonReader.readObject();
@@ -703,7 +702,6 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .path("/mobileterminal/list")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(mobileTerminalListQuery), String.class);
-
         assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
         MobileTerminalListResponse returnList = deserializeResponseDto(response, MobileTerminalListResponse.class);
         return returnList;
