@@ -28,14 +28,10 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.DurationDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.JSR310StringParsableDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.DurationSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.OffsetDateTimeDeserializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 
@@ -53,7 +49,7 @@ import java.util.UUID;
  */
 @Entity
 @Table(name = "channel", indexes = {@Index(columnList = "mobterm_id", name = "channel_mobterm_FK_INX01", unique = false),
-		@Index(columnList = "mobterm_event_id", name = "channel_mobterm_event_FK_INX02", unique = false),
+//		@Index(columnList = "mobterm_event_id", name = "channel_mobterm_event_FK_INX02", unique = false),
 		@Index(columnList = "dnid", name = "channel_INX01", unique = false),},
 		uniqueConstraints = @UniqueConstraint(name = "channel_uc_historyid" , columnNames = "historyid"))
 @Audited
@@ -92,15 +88,15 @@ public class Channel implements Serializable {
 	private boolean active;
 
 
-	@Enumerated(EnumType.STRING)
-	@Column(name="eventtype")
-	private EventCodeEnum eventCodeType;
+//	@Enumerated(EnumType.STRING)
+//	@Column(name="eventtype")
+//	private EventCodeEnum eventCodeType;
 
-	// ???????? kanske
-	@Fetch(FetchMode.JOIN)
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "mobterm_event_id", foreignKey = @ForeignKey(name = "Channel_MobileTerminalEvent_FK"))
-	private MobileTerminalEvent mobileTerminalEvent;
+//	// ???????? kanske
+//	@Fetch(FetchMode.JOIN)
+//	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//	@JoinColumn(name = "mobterm_event_id", foreignKey = @ForeignKey(name = "Channel_MobileTerminalEvent_FK"))
+//	private MobileTerminalEvent mobileTerminalEvent;
 
 	@Column(name="chan_def")
 	private boolean defaultChannel;
@@ -236,21 +232,21 @@ public class Channel implements Serializable {
 	}
 
 
-	public EventCodeEnum getEventCodeType() {
-		return eventCodeType;
-	}
+//	public EventCodeEnum getEventCodeType() {
+//		return eventCodeType;
+//	}
+//
+//	public void setEventCodeType(EventCodeEnum eventCodeType) {
+//		this.eventCodeType = eventCodeType;
+//	}
 
-	public void setEventCodeType(EventCodeEnum eventCodeType) {
-		this.eventCodeType = eventCodeType;
-	}
-
-	public MobileTerminalEvent getMobileTerminalEvent() {
-		return mobileTerminalEvent;
-	}
-
-	public void setMobileTerminalEvent(MobileTerminalEvent mobileTerminalEvent) {
-		this.mobileTerminalEvent = mobileTerminalEvent;
-	}
+//	public MobileTerminalEvent getMobileTerminalEvent() {
+//		return mobileTerminalEvent;
+//	}
+//
+//	public void setMobileTerminalEvent(MobileTerminalEvent mobileTerminalEvent) {
+//		this.mobileTerminalEvent = mobileTerminalEvent;
+//	}
 
 	public boolean isDefaultChannel() {
 		return defaultChannel;
@@ -380,8 +376,8 @@ public class Channel implements Serializable {
 				Objects.equals(updateUser, channel.updateUser) &&
 				Objects.equals(mobileTerminal, channel.mobileTerminal) &&
 				Objects.equals(name, channel.name) &&
-				eventCodeType == channel.eventCodeType &&
-				Objects.equals(mobileTerminalEvent, channel.mobileTerminalEvent) &&
+//				eventCodeType == channel.eventCodeType &&
+//				Objects.equals(mobileTerminalEvent, channel.mobileTerminalEvent) &&
 				Objects.equals(DNID, channel.DNID) &&
 				Objects.equals(expectedFrequency, channel.expectedFrequency) &&
 				Objects.equals(expectedFrequencyInPort, channel.expectedFrequencyInPort) &&
@@ -398,6 +394,6 @@ public class Channel implements Serializable {
 	@Override
 	public int hashCode() {
 
-		return Objects.hash(id, historyId, archived, updateTime, updateUser, mobileTerminal, name, active, eventCodeType, mobileTerminalEvent, defaultChannel, configChannel, pollChannel, DNID, expectedFrequency, expectedFrequencyInPort, frequencyGracePeriod, lesDescription, memberNumber, installedBy, installDate, uninstallDate, startDate, endDate);
+		return Objects.hash(id, historyId, archived, updateTime, updateUser, mobileTerminal, name, active, defaultChannel, configChannel, pollChannel, DNID, expectedFrequency, expectedFrequencyInPort, frequencyGracePeriod, lesDescription, memberNumber, installedBy, installDate, uninstallDate, startDate, endDate);
 	}
 }

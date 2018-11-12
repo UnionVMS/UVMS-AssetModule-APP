@@ -35,7 +35,9 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.poll.PollSearch
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ejb.*;
+import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import java.util.*;
 
 @Stateless
@@ -255,7 +257,7 @@ public class PollServiceBean {
             if(mobileTerminalEntity == null){
                 throw new IllegalArgumentException("No mobile terminal connected to this poll request or the mobile terminal can not be found, for mobile terminal id: " + pollTerminal.getMobileTerminalId());
             }
-            String connectId = mobileTerminalEntity.getCurrentEvent().getAsset().getId().toString();
+            String connectId = mobileTerminalEntity.getAsset().getId().toString();
             if (!pollTerminal.getConnectId().equals(connectId)) {
                 throw new IllegalStateException("Terminal " + mobileTerminalEntity.getId() + " can not be polled, because it is not linked to asset " + connectId);
             }
@@ -274,7 +276,7 @@ public class PollServiceBean {
             if(mobileTerminalEntity == null){
                 throw new IllegalArgumentException("No mobile terminal connected to this poll request or the mobile terminal can not be found, for mobile terminal id: " + pollTerminal.getMobileTerminalId());
             }
-            String connectId = mobileTerminalEntity.getCurrentEvent().getAsset().getId().toString();
+            String connectId = mobileTerminalEntity.getAsset().getId().toString();
             if (pollTerminal.getConnectId() == null || !pollTerminal.getConnectId().equals(connectId)) {
                 throw new IllegalStateException("Terminal " + mobileTerminalEntity.getId() + " can not be polled, because it is not linked to asset " + connectId);
             }

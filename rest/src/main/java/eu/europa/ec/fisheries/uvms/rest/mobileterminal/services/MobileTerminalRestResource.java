@@ -42,6 +42,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 import java.util.UUID;
 
 @Path("/mobileterminal")
@@ -58,6 +59,9 @@ public class MobileTerminalRestResource {
 
     @Inject
     private MobileTerminalPluginDaoBean pluginDao;
+
+    @Inject
+    private AssetDao assetDao;
 
     @Context
     private HttpServletRequest request;
@@ -87,9 +91,14 @@ public class MobileTerminalRestResource {
             if(mobileTerminalType.getConnectId() != null){
                 asset = assetDao.getAssetById(UUID.fromString(mobileTerminalType.getConnectId()));
             }
-            MobileTerminal mobileTerminalEntity = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType, asset, serialNumber, plugin, request.getRemoteUser());
+            MobileTerminal mobileTerminalEntity = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType, serialNumber, plugin, request.getRemoteUser());
+            if(asset != null)
+                mobileTerminalEntity.setAsset(asset);
             mobileTerminalEntity = mobileTerminalService.createMobileTerminal(mobileTerminalEntity, request.getRemoteUser());
-
+//            if(asset != null) {
+//                asset.getMobileTerminals().add(mobileTerminalEntity);
+//                assetDao.updateAsset(asset);
+//            }
             return new MTResponseDto<>(MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminalEntity), MTResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when creating mobile terminal ] {}", ex, ex.getStackTrace());
@@ -134,9 +143,6 @@ public class MobileTerminalRestResource {
         }
     }
 
-    @Inject
-    AssetDao assetDao;
-
     @PUT
     @Path("/")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
@@ -153,8 +159,11 @@ public class MobileTerminalRestResource {
             if(mobileTerminalType.getConnectId() != null){
                 asset = assetDao.getAssetById(UUID.fromString(mobileTerminalType.getConnectId()));
             }
-            MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapMobileTerminalEntity(mobileTerminalService.getMobileTerminalEntityById(mobileTerminalType.getMobileTerminalId()), mobileTerminalType, asset,  serialNumber, plugin, request.getRemoteUser(), comment, EventCodeEnum.MODIFY);
-
+            MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapMobileTerminalEntity(
+                    mobileTerminalService.getMobileTerminalEntityById(mobileTerminalType.getMobileTerminalId()),
+                    mobileTerminalType, serialNumber, plugin, request.getRemoteUser(), EventCodeEnum.MODIFY);
+            if(asset != null)
+                mobileTerminal.setAsset(asset);
             mobileTerminal = mobileTerminalService.updateMobileTerminal(mobileTerminal, comment, request.getRemoteUser());
 
             MobileTerminalType updatedMobileTerminalType = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminal);
@@ -184,7 +193,8 @@ public class MobileTerminalRestResource {
     public MTResponseDto<MobileTerminalType> assignMobileTerminal(@QueryParam("comment") String comment, MobileTerminalAssignQuery query) {
         LOG.info("Assign mobile terminal invoked in rest layer.");
         try {
-            MobileTerminalType mobileTerminalType = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminalService.assignMobileTerminal(query, comment, request.getRemoteUser()));
+            MobileTerminal mobileTerminal = mobileTerminalService.assignMobileTerminal(query, comment, request.getRemoteUser());
+            MobileTerminalType mobileTerminalType = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminal);
             return new MTResponseDto<>(mobileTerminalType, MTResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when assigning mobile terminal ] {}", ex);
@@ -198,7 +208,8 @@ public class MobileTerminalRestResource {
     public MTResponseDto<MobileTerminalType> unAssignMobileTerminal(@QueryParam("comment") String comment, MobileTerminalAssignQuery query) {
         LOG.info("Unassign mobile terminal invoked in rest layer.");
         try {
-            MobileTerminalType mobileTerminalType = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminalService.unAssignMobileTerminal(query, comment, request.getRemoteUser()));
+            MobileTerminal mobileTerminal = mobileTerminalService.unAssignMobileTerminal(query, comment, request.getRemoteUser());
+            MobileTerminalType mobileTerminalType = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminal);
             return new MTResponseDto<>(mobileTerminalType, MTResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when unassigning mobile terminal ] {}", ex);
@@ -251,15 +262,31 @@ public class MobileTerminalRestResource {
     @GET
     @Path("/history/{id}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public MTResponseDto<MobileTerminalHistory> getMobileTerminalHistoryListByMobileTerminalId(@PathParam("id") String guid) {
+    public Response getMobileTerminalHistoryListByMobileTerminalId(@PathParam("id") String id) {
         LOG.info("Get mobile terminal history by mobile terminal id invoked in rest layer.");
         try {
-            return new MTResponseDto<>(mobileTerminalService.getMobileTerminalHistoryList(guid), MTResponseCode.OK);
+            MobileTerminal mt = mobileTerminalService.getMobileTerminalEntityById(UUID.fromString(id));
+            List<MobileTerminal> mobileTerminalRevisions = mobileTerminalService.getMobileTerminalRevisions(mt.getHistoryId());
+            return Response.ok().entity(mobileTerminalRevisions).status(Response.Status.OK).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting mobile terminal history by terminalId ] {}", ex);
-            return MTErrorHandler.getFault(ex);
+//            return MTErrorHandler.getFault(ex);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+//    @GET
+//    @Path("/history/{id}")
+//    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+//    public MTResponseDto<MobileTerminalHistory> getMobileTerminalHistoryListByMobileTerminalId(@PathParam("id") String guid) {
+//        LOG.info("Get mobile terminal history by mobile terminal id invoked in rest layer.");
+//        try {
+//            return new MTResponseDto<>(mobileTerminalService.getMobileTerminalHistoryList(guid), MTResponseCode.OK);
+//        } catch (Exception ex) {
+//            LOG.error("[ Error when getting mobile terminal history by terminalId ] {}", ex);
+//            return MTErrorHandler.getFault(ex);
+//        }
+//    }
 
 
 }

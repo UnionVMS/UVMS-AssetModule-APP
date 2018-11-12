@@ -140,18 +140,18 @@ public class PollSearchMapper {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT DISTINCT c FROM Channel c");
 		builder.append(" INNER JOIN FETCH c.mobileTerminal mt");
-		builder.append(" INNER JOIN FETCH mt.mobileTerminalEvents me");
-		builder.append(" INNER JOIN FETCH me.pollChannel pc");
+//		builder.append(" INNER JOIN FETCH mt.mobileTerminalEvents me");
+		builder.append(" INNER JOIN FETCH mt.pollChannel pc");
 		builder.append(" INNER JOIN FETCH mt.plugin p ");
 		builder.append(" INNER JOIN FETCH p.capabilities cap ");
 		builder.append(" WHERE ");
 		builder.append(" c.id = pc.id ");
-		builder.append(" AND me.active = true ");
+//		builder.append(" AND me.active = true ");
 		builder.append(" AND mt.archived = '0' AND mt.inactivated = '0' AND p.pluginInactive = '0' ");
 		builder.append(" AND (cap.name = 'POLLABLE' AND UPPER(cap.value) = 'TRUE' ) ");
-		builder.append(" AND (me.asset is not null) ");
+		builder.append(" AND (mt.asset is not null) ");
 		if (idList != null && !idList.isEmpty()) {
-			builder.append(" AND me.asset.id IN :idList");
+			builder.append(" AND mt.asset.id IN :idList");
 		}
 		builder.append(" ORDER BY c.id DESC ");
 		return builder.toString();

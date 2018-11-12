@@ -326,7 +326,9 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
 
-        assertTrue(response.contains(MobileTerminalTestHelper.getSerialNumber()));
+        // TODO: Figure out if this was the right way to test serialNumber (KASIM)
+//        assertTrue(response.contains(MobileTerminalTestHelper.getSerialNumber()));
+        assertTrue(response.contains(mobileTerminal.getAttributes().get(1).getValue()));
         assertTrue(response.contains("INMARSAT_C"));
         assertTrue(response.contains(MobileTerminalSource.INTERNAL.value()));
     }
@@ -340,10 +342,12 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(mobileTerminal), String.class);
 
+        System.out.println("CREATED MT: " + created);
+
         JsonReader jsonReader = Json.createReader(new StringReader(created));
         JsonObject jsonObject = jsonReader.readObject();
 
-        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
+        assertEquals(MTResponseCode.OK.getCode(), jsonObject.getInt("code"));
 
         MobileTerminalListQuery mobileTerminalListQuery = MobileTerminalTestHelper.createMobileTerminalListQuery();
         mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setKey(SearchKey.DNID);
@@ -353,7 +357,6 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .path("/mobileterminal/list")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(mobileTerminalListQuery), String.class);
-
         assertNotNull(response);
         jsonReader = Json.createReader(new StringReader(response));
         jsonObject = jsonReader.readObject();
@@ -571,6 +574,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .get(String.class);
 
+        System.out.println("RESPONSE: " + response);
         assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
         MobileTerminalHistory mobileTerminalHistory = deserializeResponseDto(response, MobileTerminalHistory.class);
 
@@ -679,7 +683,6 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(mt), String.class);
 
-
         assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
         MobileTerminalType createdMT = deserializeResponseDto(response, MobileTerminalType.class);
         return createdMT;
@@ -703,7 +706,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .path("/mobileterminal/list")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(mobileTerminalListQuery), String.class);
-
+        System.out.println("RESPONSE from MobileTerminalListResponse#sendMTListQuery(): " + response);
         assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
         MobileTerminalListResponse returnList = deserializeResponseDto(response, MobileTerminalListResponse.class);
         return returnList;
