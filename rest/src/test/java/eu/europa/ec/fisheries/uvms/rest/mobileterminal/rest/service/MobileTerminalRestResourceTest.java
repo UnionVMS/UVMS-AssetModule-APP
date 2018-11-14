@@ -442,7 +442,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
-    public void assignMobileTerminalTest() throws Exception {
+    public void assignMobileTerminalTest() {
 
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
@@ -478,9 +478,9 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertNotNull(response);
         assertTrue(response.contains(guid));
     }
-    
+
     @Test
-    public void unAssignMobileTerminalTest() throws Exception {
+    public void unAssignMobileTerminalTest() {
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
         String created = getWebTarget()

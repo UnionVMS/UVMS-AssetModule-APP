@@ -39,7 +39,7 @@ public class MobileTerminalAttributes implements Serializable {
     @Column(name = "id")
     private UUID id;
 
-    @NotNull
+//    @NotNull
     @ManyToOne
     @JoinColumn(name="mobileterminal_id", foreignKey = @ForeignKey(name = "MobileTerminalAttributes_MobileTerminal_FK"))
     @Fetch(FetchMode.SELECT)
