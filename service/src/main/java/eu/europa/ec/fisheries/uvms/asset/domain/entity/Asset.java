@@ -276,12 +276,6 @@ public class Asset implements Serializable {
     @Fetch(FetchMode.SELECT)
     private List<MobileTerminal> mobileTerminals;
 
-
-//    @JsonIgnore         //to stop json from serializing the entire MT tree
-//    @OneToMany(fetch = FetchType.EAGER, mappedBy = "asset", cascade = CascadeType.ALL)
-//    @Fetch(FetchMode.SELECT)
-//    private List<MobileTerminalEvent> mobileTerminalEvent;
-
     @PrePersist
     private void generateNewHistoryId() {
         this.historyId = UUID.randomUUID();
@@ -727,18 +721,6 @@ public class Asset implements Serializable {
     public void setProdOrgName(String prodOrgName) {
         this.prodOrgName = prodOrgName;
     }
-
-//    public List<MobileTerminalEvent> getMobileTerminalEvent() {
-//        if(mobileTerminalEvent == null){
-//            mobileTerminalEvent = new ArrayList<>();
-//        }
-//        return mobileTerminalEvent;
-//    }
-//
-//    public void setMobileTerminalEvent(List<MobileTerminalEvent> mobileTerminalEvent) {
-//        this.mobileTerminalEvent = mobileTerminalEvent;
-//    }
-
 
     public List<MobileTerminal> getMobileTerminals() {
         if(mobileTerminals == null)

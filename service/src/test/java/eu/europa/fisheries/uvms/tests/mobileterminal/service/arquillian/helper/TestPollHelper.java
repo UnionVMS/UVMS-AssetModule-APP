@@ -38,7 +38,6 @@ public class TestPollHelper {
     @Inject
     AssetDao assetDao;
 
-
     public PollRequestType createPollRequestType() {
         PollRequestType prt = new PollRequestType();
         prt.setComment("aComment" + UUID.randomUUID().toString());
@@ -100,19 +99,10 @@ public class TestPollHelper {
 
         mtp.getCapabilities().addAll(capabilityList);
 
-//        Set<MobileTerminalEvent> mobileTerminalEvents = new HashSet<>();
-//        MobileTerminalEvent mte = new MobileTerminalEvent();
         if(connectId != null && !connectId.trim().isEmpty()) {
             Asset asset = assetDao.getAssetById(UUID.fromString(connectId));
             mt.setAsset(asset);
         }
-//        mte.setActive(true);
-//        mte.setMobileterminal(mt);
-
-//        String attributes = PollAttributeType.START_DATE.value() + "=" + OffsetDateTime.now(ZoneOffset.UTC).toString();
-//        attributes = attributes + ";";
-//        attributes = attributes + PollAttributeType.END_DATE.value() + "=" + OffsetDateTime.now(ZoneOffset.UTC).toString();
-//        mte.setAttributes(attributes);
 
         Channel pollChannel = new Channel();
         pollChannel.setArchived(false);
@@ -126,9 +116,6 @@ public class TestPollHelper {
         pollChannel.setExpectedFrequencyInPort(Duration.ofSeconds(60));
 
         mt.setPollChannel(pollChannel);
-//        mobileTerminalEvents.add(mte);
-//        mt.getMobileTerminalEvents().addAll(mobileTerminalEvents);
-
 
         Channel channel = new Channel();
         channel.setArchived(false);
@@ -140,7 +127,6 @@ public class TestPollHelper {
         channel.setExpectedFrequency(Duration.ofSeconds(60));
         channel.setFrequencyGracePeriod(Duration.ofSeconds(60));
         channel.setExpectedFrequencyInPort(Duration.ofSeconds(60));
-
 
         Set<Channel> channels = new HashSet<>();
         channels.add(channel);
@@ -253,14 +239,6 @@ public class TestPollHelper {
         mtp.setPluginSatelliteType("INMARSAT_C");
         mtp.setPluginInactive(false);
         MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType,null, mtp, "TEST_USERNAME");
-
-//        MobileTerminalEvent event  = new MobileTerminalEvent();
-//        event.setActive(true);
-//        event.setAsset(asset);
-//        event.setEventCodeType(EventCodeEnum.CREATE);
-//        event.setMobileterminal(mobileTerminal);
-//        Set<MobileTerminalEvent> events = mobileTerminal.getMobileTerminalEvents();
-//        events.add(event);
         return mobileTerminal;
     }
 

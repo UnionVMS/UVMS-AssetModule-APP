@@ -102,13 +102,9 @@ public class SearchMapper {
 
         builder.append("SELECT DISTINCT mt")
                 .append(" FROM MobileTerminal mt")
-//                .append(" INNER JOIN FETCH mt.mobileTerminalEvents me")
                 .append(" LEFT JOIN FETCH mt.channels c")
-//                .append(" LEFT JOIN FETCH me.mobileTerminalAttributes mta")
                 .append(" INNER JOIN FETCH mt.mobileTerminalAttributes mta")
                 .append(" WHERE ( ")
-//                .append("me.active = true ")
-//                .append("AND ")
                 .append("mt.archived = false ")
                 .append("AND ")
                 .append("c.archived = false ")

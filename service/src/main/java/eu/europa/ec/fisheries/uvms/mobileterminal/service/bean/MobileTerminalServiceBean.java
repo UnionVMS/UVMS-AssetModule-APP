@@ -208,8 +208,6 @@ public class MobileTerminalServiceBean {
         //MobileTerminal terminalStatus = setStatusMobileTerminal(terminalId, comment, status, username);
         MobileTerminal terminalStatus = getMobileTerminalEntityById(terminalId);
 
-        //create event and update MT for this happening
-//        terminalStatus = createMTEventForStatusChange(terminalStatus, comment, status, username);
         terminalStatus = changeUpdateMobileTerminalStatus(terminalStatus, comment, status, username);
 
         //audit stuff
@@ -269,67 +267,6 @@ public class MobileTerminalServiceBean {
         mobileTerminal.setUpdateuser(username);
         return terminalDao.updateMobileTerminal(mobileTerminal);
     }
-
-
-
-//    private MobileTerminal createMTEventForStatusChange(MobileTerminal mobileTerminal, String comment, MobileTerminalStatus status, String username) {
-//        if (mobileTerminal == null) {
-//            throw new IllegalArgumentException("No Mobile Terminal");
-//        }
-//        if (status == null) {
-//            throw new IllegalArgumentException("No terminal status to set");
-//        }
-//
-//        MobileTerminalEvent current = mobileTerminal.getCurrentEvent();
-//        current.setActive(false);
-//
-//        MobileTerminalEvent event = new MobileTerminalEvent();
-//        event.setActive(true);
-//        event.setPollChannel(current.getPollChannel());
-//        event.setDefaultChannel(current.getDefaultChannel());
-//        event.setUpdatetime(OffsetDateTime.now(ZoneOffset.UTC));
-//        event.setConfigChannel(current.getConfigChannel());
-//        event.setAttributes(current.getAttributes());
-//        event.setComment(comment);
-//        event.setAsset(current.getAsset());
-//        event.setMobileterminal(mobileTerminal);
-//        event.setUpdateuser(username);
-//        switch (status) {
-//            case ACTIVE:
-//                event.setEventCodeType(EventCodeEnum.ACTIVATE);
-//                mobileTerminal.setInactivated(false);
-//                break;
-//            case INACTIVE:
-//                event.setEventCodeType(EventCodeEnum.INACTIVATE);
-//                mobileTerminal.setInactivated(true);
-//                break;
-//            case ARCHIVE:
-//                event.setEventCodeType(EventCodeEnum.ARCHIVE);
-//                mobileTerminal.setArchived(true);
-//                mobileTerminal.setInactivated(true);
-//                break;
-//            default:
-//                LOG.error("[ Non valid status to set ] {}", status);
-//                throw new IllegalArgumentException("Non valid status to set");
-//        }
-//
-//        event.setMobileTerminalAttributes(current.getMobileTerminalAttributes());
-//        for(MobileTerminalAttributes mta : current.getMobileTerminalAttributes()){
-//            mta.setMobileTerminalEvent(event);
-//        }
-//        current.setMobileTerminalAttributes(null);
-//        mobileTerminal.getMobileTerminalEvents().add(event);
-//        terminalDao.updateMobileTerminal(mobileTerminal);
-//
-//        return mobileTerminal;
-//    }
-
-//    public MobileTerminalHistory getMobileTerminalHistoryList(String guid) {
-//        MobileTerminalId terminalId = new MobileTerminalId();
-//        terminalId.setGuid(guid);
-//        MobileTerminalHistory historyList = getMobileTerminalHistoryList(terminalId);
-//        return historyList;
-//    }
 
     public List<MobileTerminal> getMobileTerminalRevisions(UUID historyId) {
         return terminalDao.getMobileTerminalRevisionForHistoryId(historyId);
@@ -500,14 +437,6 @@ public class MobileTerminalServiceBean {
         return createdMobileTerminal;
     }
 
-//    public MobileTerminalHistory getMobileTerminalHistoryList(MobileTerminalId id) {
-//        if (id == null) {
-//            throw new NullPointerException("No Mobile Terminal");
-//        }
-//        MobileTerminal terminal = getMobileTerminalEntityById(id);
-//        return HistoryMapper.getHistory(terminal);
-//    }
-
     public ListResponseDto getTerminalListByQuery(MobileTerminalListQuery query) {
         if (query == null) {
             throw new IllegalArgumentException("No list query");
@@ -598,8 +527,6 @@ public class MobileTerminalServiceBean {
     //@formatter:off
     public MobileTerminalType getMobileTerminalByAssetMTEnrichmentRequest(AssetMTEnrichmentRequest request) {
 
-       // String searchSql = SearchMapper.createSelectSearchSql(null, false);
-
         String request_dnid = null;
         String request_memberNumber = null;
         String request_serialNumber = null;
@@ -608,16 +535,12 @@ public class MobileTerminalServiceBean {
         String  sql = "";
         sql += "SELECT DISTINCT mt";
         sql += " FROM MobileTerminal mt";
-//        sql += " INNER JOIN FETCH mt.mobileTerminalEvents me";
         sql += " LEFT JOIN FETCH mt.channels c";
-        sql += " LEFT JOIN FETCH mt.mobileTerminalAttributes mta";
+        sql += " INNER JOIN FETCH mt.mobileTerminalAttributes mta";
         sql += " WHERE (";
-//        sql += "me.active = true ";
-//        sql += "AND ";
         sql += "mt.archived = false ";
         sql += "AND ";
         sql += "c.archived = false) ";
-
 
         String operator = " AND (";
         if (request.getDnidValue() != null && request.getDnidValue().length() > 0) {
@@ -644,7 +567,6 @@ public class MobileTerminalServiceBean {
             operator = " AND (";
         }
 
-
         // in table MobileTerminalAttribute
         if (request.getSerialNumberValue() != null && request.getSerialNumberValue().length() > 0) {
 
@@ -666,7 +588,6 @@ public class MobileTerminalServiceBean {
             sql += "'%";
             sql += request_transponderType;
             sql += "%')";
-
         }
 
         List<MobileTerminal> terminals = terminalDao.getMobileTerminalsByQuery(sql);
@@ -708,34 +629,31 @@ public class MobileTerminalServiceBean {
                 }
             }
 
-//            MobileTerminalEvent event = terminal.getCurrentEvent();
-//            if(event != null){
-                Set<MobileTerminalAttributes> attributes = terminal.getMobileTerminalAttributes();
-                for(MobileTerminalAttributes attr : attributes){
+            Set<MobileTerminalAttributes> attributes = terminal.getMobileTerminalAttributes();
+            for(MobileTerminalAttributes attr : attributes){
 
-                    String key = attr.getAttribute();
-                    String val = attr.getValue();
+                String key = attr.getAttribute();
+                String val = attr.getValue();
 
-                    if(serialNumber != null){
-                        if(key.equals("SERIAL_NUMBER")){
-                            if(val != null){
-                                if(serialNumber.equals(val)){
-                                    return terminal;
-                                }
-                            }
-                        }
-                    }
-                    if(transponderType != null){
-                        if(key.equals("TRANSCEIVER_TYPE")){
-                            if(val != null){
-                                if(transponderType.equals(val)){
-                                    return terminal;
-                                }
+                if(serialNumber != null){
+                    if(key.equals("SERIAL_NUMBER")){
+                        if(val != null){
+                            if(serialNumber.equals(val)){
+                                return terminal;
                             }
                         }
                     }
                 }
-//            }
+                if(transponderType != null){
+                    if(key.equals("TRANSCEIVER_TYPE")){
+                        if(val != null){
+                            if(transponderType.equals(val)){
+                                return terminal;
+                            }
+                        }
+                    }
+                }
+            }
         }
         return null;
     }

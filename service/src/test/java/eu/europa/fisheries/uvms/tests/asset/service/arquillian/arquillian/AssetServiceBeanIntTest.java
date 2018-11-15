@@ -47,10 +47,8 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     @Inject
     private AssetGroupService assetGroupService;
 
-
     @PersistenceContext
     private EntityManager em;
-
 
     @Test
     @OperateOnDeployment("normal")
@@ -62,11 +60,11 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
             Asset asset = AssetTestsHelper.createBiggerAsset();
             Asset createdAsset = assetService.createAsset(asset, "test");
             commit();
-            Assert.assertTrue(createdAsset != null);
+            assertNotNull(createdAsset);
             assetService.deleteAsset(AssetIdentifier.GUID, createdAsset.getId().toString());
             commit();
         } catch (AssetServiceException e) {
-            Assert.fail();
+            fail();
         }
     }
 
@@ -85,7 +83,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         // fetch it and check name
         Asset fetchedAsset = assetService.getAssetById(createdAsset.getId());
-        Assert.assertEquals(createdAsset.getName(), fetchedAsset.getName());
+        assertEquals(createdAsset.getName(), fetchedAsset.getName());
         assetService.deleteAsset(AssetIdentifier.GUID, createdAsset.getId().toString());
         commit();
     }
@@ -109,7 +107,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         // fetch it and it should be null
         Asset fetchedAsset = assetService.getAssetById(createdAsset.getId());
-        Assert.assertEquals(fetchedAsset, null);
+        assertNull(fetchedAsset);
     }
 
     @Test
@@ -139,16 +137,14 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         UUID historyId3 = changedAsset3.getHistoryId();
 
         List<Asset> assetVersions = assetService.getRevisionsForAsset(asset.getId());
-        Assert.assertEquals(assetVersions.size(), 4);
+        assertEquals(assetVersions.size(), 4);
         commit();
 
         Asset fetchedAssetAtRevision = assetService.getAssetRevisionForRevisionId(historyId2);
-        Assert.assertEquals(historyId2, fetchedAssetAtRevision.getHistoryId());
+        assertEquals(historyId2, fetchedAssetAtRevision.getHistoryId());
 
         assetService.deleteAsset(AssetIdentifier.GUID, createdAsset.getId().toString());
         commit();
-
-
     }
 
     @Test
@@ -169,7 +165,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         assetService.deleteAsset(AssetIdentifier.GUID, createdAsset.getId().toString());
         commit();
-
     }
 
     @Test
@@ -190,7 +185,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         assetService.deleteAsset(AssetIdentifier.GUID, createdAsset.getId().toString());
         commit();
-
     }
 
     @Test
@@ -213,7 +207,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         List<SearchKeyValue> searchValues = new ArrayList<>();
         SearchKeyValue searchValue = new SearchKeyValue();
         searchValue.setSearchField(SearchFields.GUID);
-        searchValue.setSearchValues(Arrays.asList(asset.getId().toString()));
+        searchValue.setSearchValues(Collections.singletonList(asset.getId().toString()));
         searchValues.add(searchValue);
 
         List<Asset> assets = assetService.getAssetList(searchValues, 1, 100, true).getAssetList();
@@ -233,7 +227,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         List<SearchKeyValue> searchValues = new ArrayList<>();
         SearchKeyValue searchValue = new SearchKeyValue();
         searchValue.setSearchField(SearchFields.NAME);
-        searchValue.setSearchValues(Arrays.asList(asset.getName()));
+        searchValue.setSearchValues(Collections.singletonList(asset.getName()));
         searchValues.add(searchValue);
 
         List<Asset> assets = assetService.getAssetList(searchValues, 1, 100, true).getAssetList();
@@ -242,7 +236,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         assertEquals(asset.getCfr(), assets.get(0).getCfr());
         assetService.deleteAsset(AssetIdentifier.GUID, asset.getId().toString());
         commit();
-
     }
 
     @Test
@@ -352,47 +345,37 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         asset.getMobileTerminals().add(mobileTerminal);
         assetService.updateAsset(asset, "TEST", "TEST_COMMENT");
         MobileTerminalType fetchedTerminal = mobileTerminalService.findMobileTerminalTypeByAsset(asset.getId());
-        Assert.assertNotNull(fetchedTerminal);
-        Assert.assertNotNull(fetchedTerminal.getMobileTerminalId());
-        Assert.assertNotNull(fetchedTerminal.getMobileTerminalId().getGuid());
+        assertNotNull(fetchedTerminal);
+        assertNotNull(fetchedTerminal.getMobileTerminalId());
+        assertNotNull(fetchedTerminal.getMobileTerminalId().getGuid());
         UUID fetchedUUID = UUID.fromString(fetchedTerminal.getMobileTerminalId().getGuid());
-        Assert.assertEquals(mobileTerminal.getId(), fetchedUUID);
+        assertEquals(mobileTerminal.getId(), fetchedUUID);
     }
-
 
     @Test
     public void testGetRequiredEnrichment() {
-            // create stuff so we can create a valid rawMovement
-            Asset asset = createAsset();
-            AssetGroup createdAssetGroup = createAssetGroup(asset);
-            UUID createdAssetGroupId = createdAssetGroup.getId();
-            MobileTerminal mobileTerminal = createMobileTerminal(asset);
-            mobileTerminal.setArchived(false);
-//            mobileTerminal.getCurrentEvent().setActive(false);
-//            MobileTerminalEvent event = new MobileTerminalEvent();
-//            event.setActive(true);
-//            event.setAsset(asset);
-//            event.setEventCodeType(EventCodeEnum.CREATE);
+        // create stuff so we can create a valid rawMovement
+        Asset asset = createAsset();
+        AssetGroup createdAssetGroup = createAssetGroup(asset);
+        UUID createdAssetGroupId = createdAssetGroup.getId();
+        MobileTerminal mobileTerminal = createMobileTerminal(asset);
+        mobileTerminal.setArchived(false);
 
-//            event.setMobileterminal(mobileTerminal);
-//            mobileTerminal.getMobileTerminalEvents().add(event);
-
-            mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
-
-            em.flush();
+        mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
+        em.flush();
 
         AssetMTEnrichmentRequest request = createRequest(asset);
         AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
-        Assert.assertNotNull(response.getAssetId());
-        Assert.assertNotNull(response.getMobileTerminalType());
+        assertNotNull(response.getAssetId());
+        assertNotNull(response.getMobileTerminalType());
         String assetUUID = response.getAssetUUID();
-        Assert.assertEquals(asset.getId(), UUID.fromString(assetUUID));
+        assertEquals(asset.getId(), UUID.fromString(assetUUID));
 
         List<String> fetchedAssetGroups = response.getAssetGroupList();
-        Assert.assertNotNull(fetchedAssetGroups);
-        Assert.assertTrue(fetchedAssetGroups.size() > 0);
-        Assert.assertTrue(fetchedAssetGroups.contains(createdAssetGroupId.toString()));
-        Assert.assertEquals(request.getSerialNumberValue(), response.getSerialNumber());
+        assertNotNull(fetchedAssetGroups);
+        assertTrue(fetchedAssetGroups.size() > 0);
+        assertTrue(fetchedAssetGroups.contains(createdAssetGroupId.toString()));
+        assertEquals(request.getSerialNumberValue(), response.getSerialNumber());
     }
 
     @Test
@@ -404,17 +387,8 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         UUID createdAssetGroupId = createdAssetGroup.getId();
         MobileTerminal mobileTerminal = createMobileTerminal(asset);
         mobileTerminal.setArchived(false);
-//        mobileTerminal.getCurrentEvent().setActive(false);
-//        MobileTerminalEvent event = new MobileTerminalEvent();
-//        event.setActive(true);
-//        event.setAsset(asset);
-//        event.setEventCodeType(EventCodeEnum.CREATE);
-//
-//        event.setMobileterminal(mobileTerminal);
-//        mobileTerminal.getMobileTerminalEvents().add(event);
 
         mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
-
         em.flush();
 
         AssetMTEnrichmentRequest request = new AssetMTEnrichmentRequest();
@@ -436,15 +410,15 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         request.setDnidValue(dnid);
 
         AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
-        Assert.assertNotNull(response.getAssetId());
-        Assert.assertNotNull(response.getMobileTerminalType());
+        assertNotNull(response.getAssetId());
+        assertNotNull(response.getMobileTerminalType());
         String assetUUID = response.getAssetUUID();
-        Assert.assertEquals(asset.getId(), UUID.fromString(assetUUID));
+        assertEquals(asset.getId(), UUID.fromString(assetUUID));
 
         List<String> fetchedAssetGroups = response.getAssetGroupList();
-        Assert.assertNotNull(fetchedAssetGroups);
-        Assert.assertTrue(fetchedAssetGroups.size() > 0);
-        Assert.assertTrue(fetchedAssetGroups.contains(createdAssetGroupId.toString()));
+        assertNotNull(fetchedAssetGroups);
+        assertTrue(fetchedAssetGroups.size() > 0);
+        assertTrue(fetchedAssetGroups.contains(createdAssetGroupId.toString()));
     }
 
     @Test
@@ -454,23 +428,19 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Asset asset = createAsset();
         AssetGroup createdAssetGroup = createAssetGroup(asset);
         UUID createdAssetGroupId = createdAssetGroup.getId();
-//        MobileTerminalEvent event = new MobileTerminalEvent();
-//        event.setActive(true);
-//        event.setAsset(asset);
-//        event.setEventCodeType(EventCodeEnum.CREATE);
 
         em.flush();
 
         AssetMTEnrichmentRequest request = createRequest(asset);
         AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
-        Assert.assertNotNull(response.getAssetId());
+        assertNotNull(response.getAssetId());
         String assetUUID = response.getAssetUUID();
-        Assert.assertEquals(asset.getId(), UUID.fromString(assetUUID));
+        assertEquals(asset.getId(), UUID.fromString(assetUUID));
 
         List<String> fetchedAssetGroups = response.getAssetGroupList();
-        Assert.assertNotNull(fetchedAssetGroups);
-        Assert.assertTrue(fetchedAssetGroups.size() > 0);
-        Assert.assertTrue(fetchedAssetGroups.contains(createdAssetGroupId.toString()));
+        assertNotNull(fetchedAssetGroups);
+        assertTrue(fetchedAssetGroups.size() > 0);
+        assertTrue(fetchedAssetGroups.contains(createdAssetGroupId.toString()));
     }
 
     private AssetMTEnrichmentRequest createRequest(Asset asset) {

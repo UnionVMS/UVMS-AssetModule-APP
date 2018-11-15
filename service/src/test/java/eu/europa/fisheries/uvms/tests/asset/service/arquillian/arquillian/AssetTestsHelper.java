@@ -110,15 +110,10 @@ public class AssetTestsHelper {
         assetEntity.setIrcsIndicator(true);
         assetEntity.setSource("INTERNAL");
 
-
-
-
         List<ContactInfo> contacts = new ArrayList<>();
         ContactInfo ci = new ContactInfo();
         ci.setSource("INTERNAL");
         contacts.add(ci);
-
-
 
         return assetEntity;
     }

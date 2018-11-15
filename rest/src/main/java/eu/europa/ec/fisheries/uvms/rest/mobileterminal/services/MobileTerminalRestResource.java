@@ -95,14 +95,9 @@ public class MobileTerminalRestResource {
             if(asset != null)
                 mobileTerminalEntity.setAsset(asset);
             mobileTerminalEntity = mobileTerminalService.createMobileTerminal(mobileTerminalEntity, request.getRemoteUser());
-//            if(asset != null) {
-//                asset.getMobileTerminals().add(mobileTerminalEntity);
-//                assetDao.updateAsset(asset);
-//            }
             return new MTResponseDto<>(MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminalEntity), MTResponseCode.OK);
         } catch (Exception ex) {
             LOG.error("[ Error when creating mobile terminal ] {}", ex, ex.getStackTrace());
-
             return MTErrorHandler.getFault(ex);
         }
     }
@@ -262,31 +257,17 @@ public class MobileTerminalRestResource {
     @GET
     @Path("/history/{id}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getMobileTerminalHistoryListByMobileTerminalId(@PathParam("id") String id) {
+    public Response getMobileTerminalHistoryListByMobileTerminalId(@PathParam("id") String guid) {
         LOG.info("Get mobile terminal history by mobile terminal id invoked in rest layer.");
         try {
-            MobileTerminal mt = mobileTerminalService.getMobileTerminalEntityById(UUID.fromString(id));
+            MobileTerminal mt = mobileTerminalService.getMobileTerminalEntityById(UUID.fromString(guid));
             List<MobileTerminal> mobileTerminalRevisions = mobileTerminalService.getMobileTerminalRevisions(mt.getHistoryId());
-            return Response.ok().entity(mobileTerminalRevisions).status(Response.Status.OK).build();
+            //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
+            String returnString = objectMapper().writeValueAsString(mobileTerminalRevisions);
+            return Response.ok(returnString).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting mobile terminal history by terminalId ] {}", ex);
-//            return MTErrorHandler.getFault(ex);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).build();
         }
     }
-
-//    @GET
-//    @Path("/history/{id}")
-//    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-//    public MTResponseDto<MobileTerminalHistory> getMobileTerminalHistoryListByMobileTerminalId(@PathParam("id") String guid) {
-//        LOG.info("Get mobile terminal history by mobile terminal id invoked in rest layer.");
-//        try {
-//            return new MTResponseDto<>(mobileTerminalService.getMobileTerminalHistoryList(guid), MTResponseCode.OK);
-//        } catch (Exception ex) {
-//            LOG.error("[ Error when getting mobile terminal history by terminalId ] {}", ex);
-//            return MTErrorHandler.getFault(ex);
-//        }
-//    }
-
-
 }

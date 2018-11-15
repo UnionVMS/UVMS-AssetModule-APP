@@ -12,7 +12,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -117,11 +116,6 @@ public class MobileTerminal implements Serializable {
 	@OneToMany(mappedBy = "mobileTerminal", cascade = CascadeType.ALL)
 	@Fetch(FetchMode.SELECT)
 	private Set<Channel> channels;
-
-//	//bi-directional many-to-one association to Mobileterminalevent
-//	@OneToMany(mappedBy="mobileterminal", cascade = CascadeType.ALL)
-//	@Fetch(FetchMode.SELECT)
-//	private Set<MobileTerminalEvent> mobileTerminalEvents;
 
 	@OneToMany(mappedBy="mobileTerminal", cascade = CascadeType.ALL)
 	@Fetch(FetchMode.SELECT)
@@ -238,16 +232,6 @@ public class MobileTerminal implements Serializable {
 		this.serialNo = serialNo;
 	}
 
-//	public Set<MobileTerminalEvent> getMobileTerminalEvents() {
-//		if(mobileTerminalEvents == null)
-//			mobileTerminalEvents = new HashSet<>();
-//		return mobileTerminalEvents;
-//	}
-//
-//	public void setMobileTerminalEvents(Set<MobileTerminalEvent> mobileTerminalEvents) {
-//		this.mobileTerminalEvents = mobileTerminalEvents;
-//	}
-
 	public Set<Channel> getChannels() {
 		if(channels == null)
 			channels = new HashSet<>();
@@ -324,7 +308,6 @@ public class MobileTerminal implements Serializable {
 				Objects.equals(updatetime, that.updatetime) &&
 				Objects.equals(updateuser, that.updateuser) &&
 				Objects.equals(serialNo, that.serialNo) &&
-//				Objects.equals(mobileTerminalEvents, that.mobileTerminalEvents) &&
 				Objects.equals(channels, that.channels);
 	}
 
@@ -332,16 +315,4 @@ public class MobileTerminal implements Serializable {
 	public int hashCode() {
 		return Objects.hash(id);
 	}
-
-//	@JsonIgnore
-//	public MobileTerminalEvent getCurrentEvent() {
-//		for (MobileTerminalEvent event : getMobileTerminalEvents()) {
-//			if (event.isActive()) {
-//				return event;
-//			}
-//		}
-//		return null;
-//	}
-
-
 }

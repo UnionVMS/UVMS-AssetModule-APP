@@ -200,7 +200,6 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     public void createMobileTerminal_WillFail_Null_Plugin() {
 
         thrown.expect(EJBTransactionRolledbackException.class);
-//        thrown.expectMessage("Cannot create Mobile terminal when plugin is not null");
 
         MobileTerminalType mobileTerminalType = testPollHelper.createBasicMobileTerminalType();
         mobileTerminalType.setPlugin(null);
@@ -213,7 +212,6 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     public void createMobileTerminal_WillFail_Null_SerialNumber() {
 
         thrown.expect(EJBTransactionRolledbackException.class);
-//        thrown.expectMessage("Cannot create mobile terminal without serial number");
 
         MobileTerminalType mobileTerminalType = testPollHelper.createBasicMobileTerminalType();
         List<MobileTerminalAttribute> attributes = mobileTerminalType.getAttributes();

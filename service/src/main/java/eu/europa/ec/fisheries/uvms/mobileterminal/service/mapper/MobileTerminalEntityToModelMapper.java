@@ -35,11 +35,6 @@ public class MobileTerminalEntityToModelMapper {
             throw new NullPointerException("No mobile terminal entity to map");
         }
 
-//        MobileTerminalEvent currentEvent = entity.getCurrentEvent();
-//        if (currentEvent == null) {
-//            throw new NullPointerException("No mobile terminal event entity to map");
-//        }
-
         MobileTerminalType model = new MobileTerminalType();
         model.setMobileTerminalId(mapToMobileTerminalId(entity.getId().toString()));
 
@@ -129,12 +124,12 @@ public class MobileTerminalEntityToModelMapper {
         return channelList;
     }
 
-    private static MobileTerminalId mapToMobileTerminalId(String mobtermGuid) {
-        if (mobtermGuid == null || mobtermGuid.isEmpty()) {
+    private static MobileTerminalId mapToMobileTerminalId(String mobTermGuid) {
+        if (mobTermGuid == null || mobTermGuid.isEmpty()) {
             throw new NullPointerException("No GUID found");
         }
         MobileTerminalId terminalId = new MobileTerminalId();
-        terminalId.setGuid(mobtermGuid);
+        terminalId.setGuid(mobTermGuid);
         return terminalId;
     }
 }
