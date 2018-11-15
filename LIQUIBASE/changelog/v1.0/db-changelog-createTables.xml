@@ -198,7 +198,6 @@
             <column name="chan_conf" type="BOOLEAN"/>
             <column name="chan_def" type="BOOLEAN"/>
             <column name="end_date" type="TIMESTAMP(6) WITH TIME ZONE"/>
-            <!--<column name="eventtype" type="VARCHAR(255)"/>-->
             <column name="expected_frequency" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
@@ -241,7 +240,6 @@
             <column name="chan_conf" type="BOOLEAN"/>
             <column name="chan_def" type="BOOLEAN"/>
             <column name="end_date" type="TIMESTAMP(6) WITH TIME ZONE"/>
-            <!--<column name="eventtype" type="VARCHAR(255)"/>-->
             <column name="expected_frequency" type="BIGINT"/>
             <column name="expected_frequency_in_port" type="BIGINT"/>
             <column name="frequency_grace_period" type="BIGINT"/>
@@ -469,48 +467,6 @@
             <column name="mobileterminal_id" type="UUID"/>
         </createTable>
     </changeSet>
-    <!--<changeSet author="thofan (generated)" id="1535445328879-19">-->
-        <!--<createTable tableName="mobileterminalevent">-->
-            <!--<column name="id" type="UUID">-->
-                <!--<constraints nullable="false"/>-->
-            <!--</column>-->
-            <!--<column name="active" type="BOOLEAN"/>-->
-            <!--<column name="attributes" type="VARCHAR(1000)"/>-->
-            <!--<column name="comment" type="VARCHAR(400)"/>-->
-            <!--<column name="eventtype" type="VARCHAR(255)"/>-->
-            <!--<column name="updattime" type="TIMESTAMP(6) WITH TIME ZONE"/>-->
-            <!--<column name="upuser" type="VARCHAR(60)"/>-->
-            <!--<column name="asset_id" type="UUID"/>-->
-            <!--<column name="chan_conf" type="UUID"/>-->
-            <!--<column name="chan_def" type="UUID"/>-->
-            <!--<column name="mobileterminal_id" type="UUID">-->
-                <!--<constraints nullable="false"/>-->
-            <!--</column>-->
-            <!--<column name="chan_poll" type="UUID"/>-->
-        <!--</createTable>-->
-    <!--</changeSet>-->
-    <!--<changeSet author="thofan (generated)" id="1535445328879-20">-->
-        <!--<createTable tableName="mobileterminalevent_aud">-->
-            <!--<column name="id" type="UUID">-->
-                <!--<constraints nullable="false"/>-->
-            <!--</column>-->
-            <!--<column name="rev" type="INT">-->
-                <!--<constraints nullable="false"/>-->
-            <!--</column>-->
-            <!--<column name="revtype" type="SMALLINT"/>-->
-            <!--<column name="active" type="BOOLEAN"/>-->
-            <!--<column name="attributes" type="VARCHAR(255)"/>-->
-            <!--<column name="comment" type="VARCHAR(255)"/>-->
-            <!--<column name="eventtype" type="VARCHAR(255)"/>-->
-            <!--<column name="updattime" type="TIMESTAMP(6) WITH TIME ZONE"/>-->
-            <!--<column name="upuser" type="VARCHAR(255)"/>-->
-            <!--<column name="asset_id" type="UUID"/>-->
-            <!--<column name="chan_conf" type="UUID"/>-->
-            <!--<column name="chan_def" type="UUID"/>-->
-            <!--<column name="mobileterminal_id" type="UUID"/>-->
-            <!--<column name="chan_poll" type="UUID"/>-->
-        <!--</createTable>-->
-    <!--</changeSet>-->
     <changeSet author="thofan (generated)" id="1535445328879-21">
         <createTable tableName="note">
             <column name="id" type="UUID">
@@ -720,12 +676,6 @@
     <changeSet author="thofan (generated)" id="1535445328879-47">
         <addPrimaryKey columnNames="id" constraintName="mobileterminalattributes_pkey" tableName="mobileterminalattributes"/>
     </changeSet>
-    <!--<changeSet author="thofan (generated)" id="1535445328879-48">-->
-        <!--<addPrimaryKey columnNames="id, rev" constraintName="mobileterminalevent_aud_pkey" tableName="mobileterminalevent_aud"/>-->
-    <!--</changeSet>-->
-    <!--<changeSet author="thofan (generated)" id="1535445328879-49">-->
-        <!--<addPrimaryKey columnNames="id" constraintName="mobileterminalevent_pkey" tableName="mobileterminalevent"/>-->
-    <!--</changeSet>-->
     <changeSet author="thofan (generated)" id="1535445328879-50">
         <addPrimaryKey columnNames="id" constraintName="note_pkey" tableName="note"/>
     </changeSet>
@@ -857,11 +807,6 @@
             <column name="chan_poll"/>
         </createIndex>
     </changeSet>
-    <!--<changeSet author="thofan (generated)" id="1535445328879-84">-->
-        <!--<createIndex indexName="mobileterminalevent_mobterm_fk_inx10" tableName="mobileterminalevent">-->
-            <!--<column name="mobileterminal_id"/>-->
-        <!--</createIndex>-->
-    <!--</changeSet>-->
     <changeSet author="thofan (generated)" id="1535445328879-85">
         <createIndex indexName="note_asset_fk_inx10" tableName="note">
             <column name="assetid"/>
@@ -908,9 +853,6 @@
     <changeSet author="thofan (generated)" id="1535445328879-93">
         <addForeignKeyConstraint baseColumnNames="mobterm_id" baseTableName="channel" constraintName="channel_mobileterminal_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="mobileterminal"/>
     </changeSet>
-    <!--<changeSet author="thofan (generated)" id="1535445328879-94">-->
-        <!--<addForeignKeyConstraint baseColumnNames="mobterm_event_id" baseTableName="channel" constraintName="channel_mobileterminalevent_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="mobileterminalevent"/>-->
-    <!--</changeSet>-->
     <changeSet author="thofan (generated)" id="1535445328879-95">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="mobileterminal_aud" constraintName="fk3r4svjbsvkxgvfguo50khajk2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
     </changeSet>
@@ -923,9 +865,6 @@
     <changeSet author="thofan (generated)" id="1535445328879-97">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="plugin_aud" constraintName="fkd143bksa8cu5ornqnwyx0f14e" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
     </changeSet>
-    <!--<changeSet author="thofan (generated)" id="1535445328879-98">-->
-        <!--<addForeignKeyConstraint baseColumnNames="rev" baseTableName="mobileterminalevent_aud" constraintName="fkf1iqxu2cigqsv9qf4ajl4o9gg" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>-->
-    <!--</changeSet>-->
     <changeSet author="thofan (generated)" id="1535445328879-99">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="channel_aud" constraintName="fkjcnf5hokby2hgv1gaeed8d0o8" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
     </changeSet>
@@ -938,9 +877,6 @@
     <changeSet author="thofan (generated)" id="1535445328879-102">
         <addForeignKeyConstraint baseColumnNames="customcode_code,customcode_constant,customcode_validfromdate,customcode_validtodate" baseTableName="customcode_namevalue" constraintName="fksrk26l9dvtlshmfakxgh88qun" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="code,constant,validfromdate,validtodate" referencedTableName="customcode"/>
     </changeSet>
-    <!--<changeSet author="thofan (generated)" id="1535445328879-103">-->
-        <!--<addForeignKeyConstraint baseColumnNames="inmarsatc_history_id" baseTableName="inmarsatc_oceanregion" constraintName="inmarsatchistoryoceanregion_mobileterminalevent_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="mobileterminalevent"/>-->
-    <!--</changeSet>-->
     <changeSet author="thofan (generated)" id="1535445328879-104">
         <addForeignKeyConstraint baseColumnNames="plugin_id" baseTableName="mobileterminal" constraintName="mobileterminal_plugin_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="plugin"/>
     </changeSet>
@@ -959,9 +895,6 @@
     <changeSet author="thofan (generated)" id="1535445328879-109">
         <addForeignKeyConstraint baseColumnNames="chan_poll" baseTableName="mobileterminal" constraintName="mobileterminal_channel_fk30" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="channel"/>
     </changeSet>
-    <!--<changeSet author="thofan (generated)" id="1535445328879-110">-->
-        <!--<addForeignKeyConstraint baseColumnNames="mobileterminal_id" baseTableName="mobileterminalevent" constraintName="mobileterminalevent_mobileterminal_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="mobileterminal"/>-->
-    <!--</changeSet>-->
     <changeSet author="thofan (generated)" id="1535445328879-111">
         <addForeignKeyConstraint baseColumnNames="plugin_id" baseTableName="plugin_capability" constraintName="plugin_capability_plugin_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="plugin"/>
     </changeSet>

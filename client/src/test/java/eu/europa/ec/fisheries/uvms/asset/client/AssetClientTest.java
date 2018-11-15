@@ -118,7 +118,6 @@ public class AssetClientTest extends AbstractClientTest {
     public void getCodesForConstantsTest() {
 
         String constant = "Test_Constant" + UUID.randomUUID().toString();
-        constant = constant.toUpperCase();
 
         for (int i = 0; i < 5; i++) {
             CustomCode customCode = AssetHelper.createCustomCode(constant);

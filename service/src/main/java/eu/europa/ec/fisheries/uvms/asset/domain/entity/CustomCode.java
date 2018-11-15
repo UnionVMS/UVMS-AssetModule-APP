@@ -12,7 +12,7 @@ import java.util.Map;
 @Entity
 @Table(name = "customcode"/*, indexes = { @Index(columnList = "id", name = "customcodes00", unique = true),}*/)
 @NamedQueries({
-        @NamedQuery(name = CUSTOMCODES_GETALLFOR, query = "SELECT m FROM CustomCode m where  m.primaryKey.constant=:constant"),
+        @NamedQuery(name = CUSTOMCODES_GETALLFOR, query = "SELECT m FROM CustomCode m WHERE UPPER(m.primaryKey.constant) LIKE UPPER(:constant)"),
         @NamedQuery(name = CUSTOMCODES_GETALLCONSTANTS, query = "SELECT distinct m.primaryKey.constant FROM CustomCode m "),
         @NamedQuery(name = CUSTOMCODES_GETCUSTOMCODE_FOR_SPECIFIC_DATE, query = "SELECT  m FROM CustomCode m where m.primaryKey.constant = :constant and  m.primaryKey.code = :code and ( :aDate Between m.primaryKey.validFromDate and m.primaryKey.validToDate)"),
 })
