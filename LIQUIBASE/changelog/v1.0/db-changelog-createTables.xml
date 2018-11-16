@@ -347,23 +347,6 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-12">
-        <createTable tableName="customcodes">
-            <column name="code" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="constant" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="validfromdate" type="TIMESTAMP WITH TIME ZONE">
-                <constraints nullable="false"/>
-            </column>
-            <column name="validtodate" type="TIMESTAMP WITH TIME ZONE">
-                <constraints nullable="false"/>
-            </column>
-            <column name="description" type="VARCHAR(255)"/>
-        </createTable>
-    </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-13">
         <createTable tableName="dnid_list">
             <column name="id" type="UUID">
@@ -654,9 +637,6 @@
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-40">
         <addPrimaryKey columnNames="code, constant, validfromdate, validtodate" constraintName="customcode_pkey" tableName="customcode"/>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-41">
-        <addPrimaryKey columnNames="code, constant, validfromdate, validtodate" constraintName="customcodes_pkey" tableName="customcodes"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-42">
         <addPrimaryKey columnNames="id" constraintName="dnid_list_pkey" tableName="dnid_list"/>
