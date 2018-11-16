@@ -17,11 +17,13 @@
     <properties>
     	<asset.api.check.against.version>4.0.18</asset.api.check.against.version>
     	<docker.dev.version>3.25.0</docker.dev.version>
-        <usm4uvms.version>4.0.14-W14-J8</usm4uvms.version>
-        <uvms.config.version>4.0.2-W14-J8</uvms.config.version>
-		<uvms.common.version>3.0.29</uvms.common.version>
         <audit.model.version>4.0.8</audit.model.version>
         <javaee.version>8.0</javaee.version>
+
+        <usm4uvms.version>4.0.14-W14-J8</usm4uvms.version>
+        <uvms.config.version>4.0.2-W14-J8</uvms.config.version>
+        <uvms.common.version>3.0.29</uvms.common.version>
+
         <project.scm.id>github</project.scm.id>
     </properties>
 
