@@ -495,24 +495,6 @@
             <column name="upuser" type="VARCHAR(60)"/>
         </createTable>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-24">
-        <createTable tableName="plugin_aud">
-            <column name="id" type="UUID">
-                <constraints nullable="false"/>
-            </column>
-            <column name="rev" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="revtype" type="SMALLINT"/>
-            <column name="description" type="VARCHAR(255)"/>
-            <column name="name" type="VARCHAR(255)"/>
-            <column name="inactive" type="BOOLEAN"/>
-            <column name="satellite_type" type="VARCHAR(255)"/>
-            <column name="service_name" type="VARCHAR(255)"/>
-            <column name="updattim" type="TIMESTAMP(6) WITH TIME ZONE"/>
-            <column name="upuser" type="VARCHAR(255)"/>
-        </createTable>
-    </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-25">
         <createTable tableName="plugin_capability">
             <column name="id" type="UUID">
@@ -522,22 +504,6 @@
             <column name="updattim" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="upuser" type="VARCHAR(60)"/>
             <column name="value" type="VARCHAR(25)"/>
-            <column name="plugin_id" type="UUID"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-26">
-        <createTable tableName="plugin_capability_aud">
-            <column name="id" type="UUID">
-                <constraints nullable="false"/>
-            </column>
-            <column name="rev" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="revtype" type="SMALLINT"/>
-            <column name="capability" type="VARCHAR(255)"/>
-            <column name="updattim" type="TIMESTAMP(6) WITH TIME ZONE"/>
-            <column name="upuser" type="VARCHAR(255)"/>
-            <column name="value" type="VARCHAR(255)"/>
             <column name="plugin_id" type="UUID"/>
         </createTable>
     </changeSet>
@@ -661,12 +627,6 @@
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-51">
         <addPrimaryKey columnNames="param_id" constraintName="param_pk" tableName="parameter"/>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-52">
-        <addPrimaryKey columnNames="id, rev" constraintName="plugin_aud_pkey" tableName="plugin_aud"/>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-53">
-        <addPrimaryKey columnNames="id, rev" constraintName="plugin_capability_aud_pkey" tableName="plugin_capability_aud"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-54">
         <addPrimaryKey columnNames="id" constraintName="plugin_capability_pkey" tableName="plugin_capability"/>
@@ -838,12 +798,6 @@
     </changeSet>
     <changeSet author="kasgul (generated)" id="1535445328879-118">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="contactinfo_aud" constraintName="fk7nb5ms3cc7s1ccd4248lrvq90" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-96">
-        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="plugin_capability_aud" constraintName="fk9b169h47tagjwvdph50jp98s7" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-97">
-        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="plugin_aud" constraintName="fkd143bksa8cu5ornqnwyx0f14e" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-99">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="channel_aud" constraintName="fkjcnf5hokby2hgv1gaeed8d0o8" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>

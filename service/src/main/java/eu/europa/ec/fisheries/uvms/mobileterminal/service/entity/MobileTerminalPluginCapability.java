@@ -15,13 +15,9 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.JSR310StringParsableDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.OffsetDateTimeDeserializer;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.RelationTargetAuditMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -39,7 +35,6 @@ import java.util.UUID;
 @NamedQueries({
 	@NamedQuery(name = "PluginCapability.findAll", query = "SELECT p FROM MobileTerminalPluginCapability p"),
 })
-@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 @JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class/*, property="id"*/)
 public class MobileTerminalPluginCapability implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -137,7 +132,6 @@ public class MobileTerminalPluginCapability implements Serializable {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(id);
     }
 }

@@ -26,6 +26,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -75,6 +76,7 @@ public class MobileTerminal implements Serializable {
 	private UUID historyId;
 
 	@NotNull
+	@NotAudited
 	@ManyToOne(fetch=FetchType.EAGER,  cascade=CascadeType.ALL)
 	@JoinColumn(name="plugin_id", foreignKey = @ForeignKey(name = "MobileTerminal_Plugin_FK"))
 	private MobileTerminalPlugin plugin;
