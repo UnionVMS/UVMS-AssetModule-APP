@@ -233,7 +233,6 @@ public class TestPollHelper {
 
         MobileTerminalType mobileTerminalType = createBasicMobileTerminalType();
         MobileTerminalPlugin mtp = new MobileTerminalPlugin();
-//        mtp.setPluginServiceName("eu.europa.ec.fisheries.uvms.plugins.inmarsat");
         mtp.setPluginServiceName(UUID.randomUUID().toString());
         mtp.setName("Thrane&Thrane&Thrane");
         mtp.setPluginSatelliteType("INMARSAT_C");

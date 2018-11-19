@@ -89,7 +89,6 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
             };
             List<CustomCode> codes = MAPPER.readValue(json, typeref);
         }
-        // Assert.assertTrue(found);
     }
 
     @Test
@@ -97,16 +96,12 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
         String txt = UUID.randomUUID().toString();
         String createdJson = createACustomCodeHelper(txt);
-        System.out.println(createdJson);
         CustomCode customCodes = MAPPER.readValue(createdJson, CustomCode.class);
 
         Assert.assertTrue(customCodes.getPrimaryKey().getConstant().endsWith(txt));
     }
 
     // TODO DO NOT DELETE THIS !!!!!
-
-
-
     @Test
     @Ignore
     @RunAsClient

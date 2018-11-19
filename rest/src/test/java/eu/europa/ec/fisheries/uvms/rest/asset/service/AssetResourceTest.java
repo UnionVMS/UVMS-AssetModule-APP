@@ -299,7 +299,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .get(Asset.class);
 
-//        assertEquals(2, presentAsset.getMobileTerminalEvent().size());
 
         Asset pastAsset = getWebTarget()
                 .path("asset")
@@ -311,7 +310,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .get(Asset.class);
 
         assertNotNull(pastAsset);
-//        assertEquals(1, pastAsset.getMobileTerminalEvent().size());
     }
 
     @Ignore //since we no longer serialize the connection between asset and MT this will not work
@@ -339,9 +337,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .get(Asset.class);
 
         assertNotNull(fetchedAsset);
-
-//        assertEquals(1, fetchedAsset.getMobileTerminalEvent().size());
-//        assertEquals(mobileTerminal.getMobileTerminalId().getGuid(), fetchedAsset.getMobileTerminalEvent().get(0).getMobileterminal().getId().toString());
     }
 
     @Test

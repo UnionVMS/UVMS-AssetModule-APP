@@ -87,7 +87,6 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
         AssetGroup updatedAssetGroupEntity = assetGroupService.updateAssetGroup(createdAssetGroupEntity, newUserName);
         AssetGroup fetchedAssetGroupEntity = assetGroupService.getAssetGroupById(guid);
         Assert.assertFalse(fetchedAssetGroupEntity.getOwner().equalsIgnoreCase(oldUserName));
-//            Assert.assertTrue(false);
         em.createQuery("delete from AssetGroup ag where ag.id = :id").setParameter("id",guid).executeUpdate();
     }
 
@@ -118,7 +117,6 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
         assetGroupField.setUpdateTime(OffsetDateTime.now(Clock.systemUTC()));
 
         assetGroupService.createAssetGroupField(anAssetGroup.getId(), assetGroupField, "TEST");
-        //       commit();
 
         List<AssetGroup> fetchedEntityList = assetGroupService.getAssetGroupListByAssetId(assetGuid);
         List<UUID> fetchedList = new ArrayList<>();

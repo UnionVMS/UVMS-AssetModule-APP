@@ -336,8 +336,6 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(mobileTerminal), String.class);
 
-        System.out.println("CREATED MT: " + created);
-
         JsonReader jsonReader = Json.createReader(new StringReader(created));
         JsonObject jsonObject = jsonReader.readObject();
 
@@ -672,7 +670,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .path("/mobileterminal/list")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(mobileTerminalListQuery), String.class);
-        System.out.println("RESPONSE from MobileTerminalListResponse#sendMTListQuery(): " + response);
+
         assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
         MobileTerminalListResponse returnList = deserializeResponseDto(response, MobileTerminalListResponse.class);
         return returnList;

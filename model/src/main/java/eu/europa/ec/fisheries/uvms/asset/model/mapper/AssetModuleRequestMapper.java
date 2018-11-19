@@ -116,12 +116,7 @@ public class AssetModuleRequestMapper {
     public static String createFlagStateRequest(String guid, Date date) throws AssetException {
         //DateUtils
         String dateStr;
-     //   try {
-            //dateStr = URLEncoder.encode(parseUTCDateToString(date), "UTF-8");
-            dateStr = parseUTCDateToString(date);
-      //  } catch (UnsupportedEncodingException e) {
-      //      throw new AssetModelMarshallException(e.toString());
-      //  }
+        dateStr = parseUTCDateToString(date);
 
         GetFlagStateByGuidAndDateRequest request = new GetFlagStateByGuidAndDateRequest();
         request.setAssetGuid(guid);

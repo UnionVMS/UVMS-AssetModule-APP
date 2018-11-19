@@ -128,7 +128,6 @@ public class AssetClient {
         return webTarget
                 .path("group")
                 .path("asset")
-//                .path(groupIds)
                 .request(MediaType.APPLICATION_JSON)
                 .get(new GenericType<List<AssetDTO>>() {});
     }

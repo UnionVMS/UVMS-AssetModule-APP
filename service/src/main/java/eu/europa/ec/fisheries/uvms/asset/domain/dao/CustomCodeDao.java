@@ -16,14 +16,6 @@ public class CustomCodeDao {
     private EntityManager em;
 
     public CustomCode create(CustomCode record) {
-
-        // NO DUPLICATES on constants AND code ALLOWED
-        //CustomCode fetched = get(record.getPrimaryKey());
-        //if (fetched != null) return record;
-        //if(record.getDescription() == null){
-        //    record.setDescription("");
-        //}
-
         em.persist(record);
         return record;
     }

@@ -35,7 +35,6 @@ public class PollEntityToModelMapper {
         response.setComment(pollBase.getComment());
         response.setUserName(pollBase.getUpdatedBy());
         // TODO created time?
-        // response.setCreatedTime();
         response.setMobileTerminal(mobileTerminalType);
         response.getAttributes().add(createPollAttribute(PollAttributeType.USER, pollBase.getUpdatedBy()));
         return response;
@@ -65,8 +64,6 @@ public class PollEntityToModelMapper {
     private static List<PollAttribute> getProgramPollAttributes(PollProgram program) {
         List<PollAttribute> attributes = new ArrayList<>();
         attributes.add(createPollAttribute(PollAttributeType.FREQUENCY, program.getFrequency().toString()));
-//        attributes.add(createPollAttribute(PollAttributeType.START_DATE, DateUtils.parseUTCDateTimeToString(program.getStartDate())));
-//        attributes.add(createPollAttribute(PollAttributeType.START_DATE, DateUtils.parseUTCDateTimeToString(program.getStopDate())));
         attributes.add(createPollAttribute(PollAttributeType.START_DATE, program.getStartDate().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_WO_TIMEZONE))));
         attributes.add(createPollAttribute(PollAttributeType.END_DATE, program.getStopDate().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_WO_TIMEZONE))));
 

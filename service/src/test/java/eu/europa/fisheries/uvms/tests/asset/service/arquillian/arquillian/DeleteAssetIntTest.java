@@ -16,66 +16,18 @@ import javax.ejb.EJB;
 @RunWith(Arquillian.class)
 public class DeleteAssetIntTest extends TransactionalTests {
 
-
     @EJB
-    AssetService assetService;
-
+    private AssetService assetService;
 
     @Test
     @OperateOnDeployment("normal")
     public void deleteAsset() {
 
-        /*
-
-        // simplest possible test
-        // Since it uses AssetEntity internally cascaded deletion should be automatically handled
-
-        try {
-            AssetDTO createdAsset = null;
-            // create an Asset
-            createdAsset = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID), "test");
-            em.flush();
-
-            AssetId assetId = createdAsset.getAsset();
-
-            assetService.deleteAsset(assetId);
-            Assert.assertTrue(createdAsset != null);
-        } catch (AssetException e) {
-            Assert.fail();
-        } catch (RuntimeException e) {
-            Assert.fail();
-        }
-
-        */
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void deleteAsset_FAIL_NonsenseKey() {
 
-        /*
-
-        // simplest possible test
-        // Since it uses AssetEntity internally cascaded deletion should be automatically handled
-
-        try {
-            AssetDTO createdAsset = null;
-            // create an Asset
-            createdAsset = assetService.createAsset(AssetHelper.helper_createAsset(AssetIdType.GUID), "test");
-            em.flush();
-
-            AssetId assetId = createdAsset.getAsset();
-            assetId.setValue("NONSENS");
-
-            assetService.deleteAsset(assetId);
-            Assert.fail();
-        } catch (AssetException e) {
-            Assert.assertTrue(true);
-        }
-
-        */
-
     }
-
-
 }

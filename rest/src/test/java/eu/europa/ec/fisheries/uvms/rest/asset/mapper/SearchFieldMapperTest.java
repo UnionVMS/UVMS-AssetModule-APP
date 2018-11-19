@@ -38,8 +38,5 @@ public class SearchFieldMapperTest {
 
         searchFields.add(val1);
         searchFields.add(val2);
-
-        // System.out.println(SearchFieldMapper.createSelectSearchSql(searchFields, true));
-
     }
 }

@@ -11,47 +11,11 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.error;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.exception.*;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTResponseDto;
 
 public class MTErrorHandler {
     
     public static MTResponseDto getFault(Exception ex) {
-
-    	/*if(ex instanceof MobileTerminalModelException) {
-//    		if(ex instanceof MobileTerminalModelValidationException) {
-//    			return new MTResponseDto<>(ex, MTResponseCode.INPUT_ERROR);
-//    		}
-//
-//    		if(ex instanceof MobileTerminalModelMapperException) {
-//    			//MobileTerminalValidationException
-//        		//MobileTerminalUnmarshallException
-//    			return new MTResponseDto<>(ex, MTResponseCode.MAPPING_ERROR);
-//    		}
-//
-//    		if(ex instanceof MobileTerminalFaultException) {
-//        		return extractFault((MobileTerminalFaultException)ex);
-//        	}
-    		
-    		return new MTResponseDto<>(ex, MTResponseCode.MODEL_ERROR);
-    	}*/
-
-    	/*if(ex instanceof MobileTerminalModelException) {
-    		return new MTResponseDto<>(ex, MTResponseCode.MOBILE_TERMINAL_ERROR);
-    	}*/
         return new MTResponseDto<>(ex, MTResponseCode.UNDEFINED_ERROR);
     }
-
-//    private static MTResponseDto extractFault(MobileTerminalFaultException ex) {
-//        MobileTerminalFault fault = ex.getMobileTerminalFault();
-//        if (fault == null) {
-//            return new MTResponseDto<>(ex, MTResponseCode.DOMAIN_ERROR);
-//        }
-//
-//        MobileTerminalType terminal = fault.getTerminal();
-//        if (terminal == null) {
-//            return new MTResponseDto<>(fault.getMessage(), fault.getCode());
-//        }
-//        return new MTResponseDto<>(terminal, fault.getCode());
-//    }
 }

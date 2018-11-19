@@ -39,9 +39,6 @@ public class MobileTerminalModelToEntityMapper {
                                                          EventCodeEnum event) {
         if (model == null)
             throw new NullPointerException("No mobile terminal to map");
-//        if (entity.getId() == null) {
-//            entity.setId(UUID.randomUUID());
-//        }
         entity.setArchived(model.isArchived());
         entity.setInactivated(model.isInactive());
         entity.setPlugin(plugin);
@@ -53,14 +50,8 @@ public class MobileTerminalModelToEntityMapper {
             throw new NullPointerException("Non valid mobile terminal type when mapping");
         entity.setMobileTerminalType(type);
 
-        // Channels can only change for these events
         if (event == EventCodeEnum.MODIFY || event == EventCodeEnum.CREATE) {
-//            try {
-                mapChannels(entity, model, username);
-//            } catch (MobileTerminalModelException e) {
-//                LOG.error("[ Error when mapping channel field types ]");
-//                throw new MobileTerminalModelException(MAP_CHANNEL_FIELD_TYPES_ERROR.getMessage(), e, MAP_CHANNEL_FIELD_TYPES_ERROR.getCode());
-//            }
+            mapChannels(entity, model, username);
         }
         entity.setUpdatetime(OffsetDateTime.now(ZoneOffset.UTC));
         entity.setUpdateuser(username);
@@ -92,7 +83,6 @@ public class MobileTerminalModelToEntityMapper {
 
             if (channel == null) {
                 channel = new Channel();
-                //channel.setGuid(UUID.randomUUID().toString());
             }
             channel.setMobileTerminal(entity);
             channel.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
@@ -116,44 +106,12 @@ public class MobileTerminalModelToEntityMapper {
                     channel.setPollChannel(capability.isValue());
                 }
             }
-
-            // No changes to channel means no new history
-            /*ChannelHistory channelHistory = channel.getCurrentHistory();
-            if (channelHistory != null) {
-                if (channelHistory.equals(history)) {
-                    channels.add(channel);
-                    continue;
-                } else {
-                    for (ChannelHistory ch : channel.getHistories()) {
-                        ch.setActive(false);
-                        channels.add(channel);
-                    }
-                }
-            }
-
-            for (ChannelHistory ch : channel.getHistories()) {
-                ch.setActive(false);
-            }
-            channel.getHistories().add(history);*/
             channels.add(channel);
         }
 
         for (Channel channel : entity.getChannels()) {
             if (!channels.contains(channel)) {
                 channel.setArchived(true);
-              /*  ChannelHistory current = channel.getCurrentHistory();
-                current.setActive(false);
-
-                ChannelHistory archive = new ChannelHistory();
-                archive.setEventCodeType(EventCodeEnum.ARCHIVE);
-                archive.setName(current.getName());
-                archive.setMobileTerminalEvent(entity.getCurrentEvent());
-                archive.setActive(true);
-                archive.setAttributes(current.getAttributes());
-                archive.setChannel(channel);
-                archive.setUpdatedBy(username);
-                archive.setUpdateTime(DateUtils.getNowDateUTC());
-                channel.getHistories().add(archive);*/
             }
         }
         entity.setChannels(channels);
