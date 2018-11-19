@@ -50,7 +50,6 @@ public class PluginServiceBean {
     @EJB
     private MTMessageConsumer MTMessageConsumer;
 
-//    @EJB(lookup = ServiceConstants.DB_ACCESS_CONFIG_MODEL)
     @EJB
     private ConfigServiceBeanMT configModel;
 

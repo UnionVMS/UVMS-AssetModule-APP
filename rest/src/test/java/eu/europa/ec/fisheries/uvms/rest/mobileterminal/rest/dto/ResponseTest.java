@@ -12,7 +12,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.dto;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalSource;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mock.MockData;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
@@ -44,15 +43,9 @@ public class ResponseTest {
     @InjectMocks
     private MobileTerminalRestResource mobileTerminalRestResource;
 
-//    private MobileTerminalRestResource SERVICE_NULL = new MobileTerminalRestResource();
-//    private static final Integer LIST_SIZE = 3;
-
     private static final Integer MOBILE_TERMINAL_ID_INT = 1;
     private static final String MOBILE_TERMINAL_ID = "NKJSDGHKJy9239";
 
-//    private final ResponseCode ERROR_RESULT;
-
-//    private final ResponseDto SUCCESS_RESULT_CREATE;
     private final MTResponseDto SUCCESS_RESULT_LIST_RESPONSE;
     private final MTResponseDto SUCCESS_RESULT_UPDATE;
     private final MTResponseDto SUCCESS_RESULT_GET_BY_ID;
@@ -61,10 +54,8 @@ public class ResponseTest {
     private final MobileTerminalListResponse MOBILE_TERMINAL_LIST_RESPONSE = MockData.createMobileTerminalListResponse();
 
     public ResponseTest() {
-//        ERROR_RESULT = ResponseCode.UNDEFINED_ERROR;
         SUCCESS_RESULT_UPDATE = new MTResponseDto<>(MOBILE_TERMINAL_DTO, MTResponseCode.OK);
         SUCCESS_RESULT_LIST_RESPONSE = new MTResponseDto<>(MOBILE_TERMINAL_LIST_RESPONSE, MTResponseCode.OK);
-//        SUCCESS_RESULT_CREATE = new ResponseDto<>(MOBILE_TERMINAL_DTO, ResponseCode.OK);
         SUCCESS_RESULT_GET_BY_ID = new MTResponseDto<>(MOBILE_TERMINAL_DTO, MTResponseCode.OK);
     }
 
@@ -73,41 +64,12 @@ public class ResponseTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Ignore
     @Test
-    public void testGetMobileTerminalById() throws Exception {
-     /*   doReturn(MOBILE_TERMINAL_DTO).when(mobileTerminalServiceBean).getMobileTerminalByIdFromInternalOrExternalSource(MOBILE_TERMINAL_ID);
-        MTResponseDto result = mobileTerminalRestResource.getMobileTerminalByIdFromInternalOrExternalSource(MOBILE_TERMINAL_ID);
-        Mockito.verify(mobileTerminalServiceBean).getMobileTerminalByIdFromInternalOrExternalSource(MOBILE_TERMINAL_ID);
-        assertEquals(SUCCESS_RESULT_GET_BY_ID.toString(), result.toString());*/
-    }
-
-    @Test
-    public void testGetMobileTerminalList() throws Exception {
+    public void testGetMobileTerminalList() {
         doReturn(MOBILE_TERMINAL_LIST_RESPONSE).when(mobileTerminalServiceBean).getMobileTerminalList(null);
         MTResponseDto result = mobileTerminalRestResource.getMobileTerminalList(null);
         Mockito.verify(mobileTerminalServiceBean).getMobileTerminalList(null);
         assertEquals(SUCCESS_RESULT_LIST_RESPONSE.toString(), result.toString());
-    }
-
-    @Ignore
-    @Test
-    public void testUpdateMobileTeriminal() throws Exception {
-       /* doReturn(MOBILE_TERMINAL_DTO).when(mobileTerminalServiceBean).updateMobileTerminal(MOBILE_TERMINAL_DTO, "", MobileTerminalSource.INTERNAL, "TEST");
-        doReturn("TEST").when(request).getRemoteUser();
-        MTResponseDto result = mobileTerminalRestResource.updateMobileTerminal("", MOBILE_TERMINAL_DTO);
-        Mockito.verify(mobileTerminalServiceBean).updateMobileTerminal(MOBILE_TERMINAL_DTO, "", MobileTerminalSource.INTERNAL, "TEST");
-        assertEquals(SUCCESS_RESULT_UPDATE.toString(), result.toString());*/
-    }
-
-    @Ignore
-    @Test
-    public void testCreateMobileTeriminal() throws Exception {
-    /*    doReturn(MOBILE_TERMINAL_DTO).when(mobileTerminalServiceBean).createAndPersistMobileTerminal(MOBILE_TERMINAL_DTO, MobileTerminalSource.INTERNAL, "TEST");
-        doReturn("TEST").when(request).getRemoteUser();
-        MTResponseDto result = mobileTerminalRestResource.createAndPersistMobileTerminal(MOBILE_TERMINAL_DTO);
-        Mockito.verify(mobileTerminalServiceBean).createAndPersistMobileTerminal(MOBILE_TERMINAL_DTO, MobileTerminalSource.INTERNAL, "TEST");
-        assertEquals(SUCCESS_RESULT_UPDATE.toString(), result.toString());*/
     }
 
     @Test

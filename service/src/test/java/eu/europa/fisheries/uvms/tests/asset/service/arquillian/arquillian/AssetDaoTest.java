@@ -266,16 +266,6 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.deleteAsset(asset);
 
         commit();
-
-
-//        Asset rev1 = assetRevisions.get(0);
-//        assertEquals(rev1.getName(), asset.getName());
-//        
-//        Asset rev2 = assetRevisions.get(1);
-//        assertEquals(rev2.getName(), newName1);
-//        
-//        Asset rev3 = assetRevisions.get(2);
-//        assertEquals(rev3.getName(), newName2);
     }
 
     @Test

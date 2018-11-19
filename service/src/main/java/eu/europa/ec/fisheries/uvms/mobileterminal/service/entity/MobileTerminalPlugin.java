@@ -12,7 +12,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -20,28 +19,26 @@ import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.OffsetDateTimeDeserializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.RelationTargetAuditMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
-import java.util.*;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * The persistent class for the landearthstation database table.
- *
  */
 @Entity
-@Table(name = "plugin", indexes = { @Index(columnList = "service_name", name = "plugin_INX10", unique = false),},
-        uniqueConstraints = @UniqueConstraint(name = "plugin_uc_service_name" , columnNames = "service_name"))
+@Table(name = "plugin", indexes = {@Index(columnList = "service_name", name = "plugin_INX10", unique = false),},
+        uniqueConstraints = @UniqueConstraint(name = "plugin_uc_service_name", columnNames = "service_name"))
 @NamedQueries({
-	@NamedQuery(name = MobileTerminalConstants.PLUGIN_FIND_ALL, query = "SELECT p FROM MobileTerminalPlugin p WHERE p.pluginInactive = false"),
-	@NamedQuery(name = MobileTerminalConstants.PLUGIN_FIND_BY_SERVICE_NAME, query = "SELECT p FROM MobileTerminalPlugin p WHERE p.pluginServiceName = :serviceName")
+        @NamedQuery(name = MobileTerminalConstants.PLUGIN_FIND_ALL, query = "SELECT p FROM MobileTerminalPlugin p WHERE p.pluginInactive = false"),
+        @NamedQuery(name = MobileTerminalConstants.PLUGIN_FIND_BY_SERVICE_NAME, query = "SELECT p FROM MobileTerminalPlugin p WHERE p.pluginServiceName = :serviceName")
 })
-@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class/*, property="id"*/)
+@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class/*, property="id"*/)
 public class MobileTerminalPlugin implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -79,13 +76,9 @@ public class MobileTerminalPlugin implements Serializable {
     @Column(name = "upuser")
     private String updatedBy;
 
-    @JsonIgnore  //added to stop jackson from serializing the entire DB on a get query for a mt with a popular plugin
-    @OneToMany(mappedBy="plugin", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-    private List<MobileTerminal> mobileTerminals;
-    
-    @OneToMany(mappedBy="plugin", fetch=FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=true)
+    @OneToMany(mappedBy = "plugin", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MobileTerminalPluginCapability> capabilities;
-    
+
     public MobileTerminalPlugin() {
     }
 
@@ -153,14 +146,6 @@ public class MobileTerminalPlugin implements Serializable {
         this.updatedBy = updatedBy;
     }
 
-    public List<MobileTerminal> getMobileTerminals() {
-        return mobileTerminals;
-    }
-
-    public void setMobileTerminals(List<MobileTerminal> mobileTerminals) {
-        this.mobileTerminals = mobileTerminals;
-    }
-
     public Set<MobileTerminalPluginCapability> getCapabilities() {
         return capabilities;
     }
@@ -182,13 +167,11 @@ public class MobileTerminalPlugin implements Serializable {
                 Objects.equals(pluginInactive, that.pluginInactive) &&
                 Objects.equals(updateTime, that.updateTime) &&
                 Objects.equals(updatedBy, that.updatedBy) &&
-                Objects.equals(mobileTerminals, that.mobileTerminals) &&
                 Objects.equals(capabilities, that.capabilities);
     }
 
     @Override
     public int hashCode() {
-
         return Objects.hash(id);
     }
 }

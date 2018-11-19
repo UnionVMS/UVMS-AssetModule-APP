@@ -8,7 +8,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTermin
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollStateEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalModelToEntityMapper;
@@ -38,7 +37,6 @@ public class TestPollHelper {
 
     @Inject
     AssetDao assetDao;
-
 
     public PollRequestType createPollRequestType() {
         PollRequestType prt = new PollRequestType();
@@ -73,13 +71,9 @@ public class TestPollHelper {
         return pmt;
     }
 
-
-
     public MobileTerminal createAndPersistMobileTerminal(String connectId)  {
 
         String serialNo = UUID.randomUUID().toString();
-
-
 
         List<MobileTerminalPlugin> plugs = mobileTerminalPluginDao.getPluginList();
         MobileTerminalPlugin mtp = plugs.get(0);
@@ -105,17 +99,10 @@ public class TestPollHelper {
 
         mtp.getCapabilities().addAll(capabilityList);
 
-        Set<MobileTerminalEvent> mobileTerminalEvents = new HashSet<>();
-        MobileTerminalEvent mte = new MobileTerminalEvent();
-        if(connectId != null && !connectId.trim().isEmpty())
-            mte.setAsset(assetDao.getAssetById(UUID.fromString(connectId)));
-        mte.setActive(true);
-        mte.setMobileterminal(mt);
-
-        String attributes = PollAttributeType.START_DATE.value() + "=" + OffsetDateTime.now(ZoneOffset.UTC).toString();
-        attributes = attributes + ";";
-        attributes = attributes + PollAttributeType.END_DATE.value() + "=" + OffsetDateTime.now(ZoneOffset.UTC).toString();
-        mte.setAttributes(attributes);
+        if(connectId != null && !connectId.trim().isEmpty()) {
+            Asset asset = assetDao.getAssetById(UUID.fromString(connectId));
+            mt.setAsset(asset);
+        }
 
         Channel pollChannel = new Channel();
         pollChannel.setArchived(false);
@@ -128,10 +115,7 @@ public class TestPollHelper {
         pollChannel.setFrequencyGracePeriod(Duration.ofSeconds(60));
         pollChannel.setExpectedFrequencyInPort(Duration.ofSeconds(60));
 
-        mte.setPollChannel(pollChannel);
-        mobileTerminalEvents.add(mte);
-        mt.getMobileTerminalEvents().addAll(mobileTerminalEvents);
-
+        mt.setPollChannel(pollChannel);
 
         Channel channel = new Channel();
         channel.setArchived(false);
@@ -143,7 +127,6 @@ public class TestPollHelper {
         channel.setExpectedFrequency(Duration.ofSeconds(60));
         channel.setFrequencyGracePeriod(Duration.ofSeconds(60));
         channel.setExpectedFrequencyInPort(Duration.ofSeconds(60));
-
 
         Set<Channel> channels = new HashSet<>();
         channels.add(channel);
@@ -204,7 +187,7 @@ public class TestPollHelper {
         mtp.setName("Thrane&Thrane&Thrane");
         mtp.setPluginSatelliteType("INMARSAT_C");
         mtp.setPluginInactive(false);
-        MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType,null ,mobileTerminalType.getAttributes().get(0).getValue(), mtp, "TEST_USERNAME");
+        MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType,null, mtp, "TEST_USERNAME");
         return mobileTerminal;
     }
 
@@ -223,11 +206,9 @@ public class TestPollHelper {
         attr.setType("TRANSPONDER_TYPE");
         attr.setValue("TRANSPONDERTYP_100");
 
-
         mobileTerminalType.getAttributes().add(attr);
 
-
-        MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType,asset ,mobileTerminalType.getAttributes().get(0).getValue(), mtp, "TEST_USERNAME");
+        MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType, null, mtp, "TEST_USERNAME");
         mobileTerminal.setSerialNo("SN1234567890");
 
         List<Channel> channels = new ArrayList<>();
@@ -252,20 +233,11 @@ public class TestPollHelper {
 
         MobileTerminalType mobileTerminalType = createBasicMobileTerminalType();
         MobileTerminalPlugin mtp = new MobileTerminalPlugin();
-//        mtp.setPluginServiceName("eu.europa.ec.fisheries.uvms.plugins.inmarsat");
         mtp.setPluginServiceName(UUID.randomUUID().toString());
         mtp.setName("Thrane&Thrane&Thrane");
         mtp.setPluginSatelliteType("INMARSAT_C");
         mtp.setPluginInactive(false);
-        MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType,null ,mobileTerminalType.getAttributes().get(0).getValue(), mtp, "TEST_USERNAME");
-
-        MobileTerminalEvent event  = new MobileTerminalEvent();
-        event.setActive(true);
-        event.setAsset(asset);
-        event.setEventCodeType(EventCodeEnum.CREATE);
-        event.setMobileterminal(mobileTerminal);
-        Set<MobileTerminalEvent> events = mobileTerminal.getMobileTerminalEvents();
-        events.add(event);
+        MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType,null, mtp, "TEST_USERNAME");
         return mobileTerminal;
     }
 

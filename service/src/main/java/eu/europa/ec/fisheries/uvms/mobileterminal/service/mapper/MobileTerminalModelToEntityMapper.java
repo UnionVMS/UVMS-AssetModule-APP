@@ -11,73 +11,60 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper;
 
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
-import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ComChannelCapability;
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ComChannelType;
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.*;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.Channel;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalAttributes;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.EventCodeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ejb.EJB;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 public class MobileTerminalModelToEntityMapper {
     private static Logger LOG = LoggerFactory.getLogger(MobileTerminalModelToEntityMapper.class);
 
     //DO NOT USE WITH AN EMPTY ENTITY UNLESS YOU REALLY KNOW WHAT YOU ARE DOING
-    public static MobileTerminal mapMobileTerminalEntity(MobileTerminal entity, MobileTerminalType model, Asset asset,
+    public static MobileTerminal mapMobileTerminalEntity(MobileTerminal entity, MobileTerminalType model,
                                                          String serialNumber, MobileTerminalPlugin plugin, String username,
-                                                         String comment, EventCodeEnum event) {
+                                                         EventCodeEnum event) {
         if (model == null)
             throw new NullPointerException("No mobile terminal to map");
-//        if (entity.getId() == null) {
-//            entity.setId(UUID.randomUUID());
-//        }
         entity.setArchived(model.isArchived());
         entity.setInactivated(model.isInactive());
         entity.setPlugin(plugin);
         entity.setSerialNo(serialNumber);
-
-
         entity.setSource(model.getSource());
-
 
         MobileTerminalTypeEnum type = MobileTerminalTypeEnum.getType(model.getType());
         if (type == null)
             throw new NullPointerException("Non valid mobile terminal type when mapping");
         entity.setMobileTerminalType(type);
 
-        mapHistoryAttributes(entity, model, asset, username, comment, event);
-
-        // Channels can only change for these events
         if (event == EventCodeEnum.MODIFY || event == EventCodeEnum.CREATE) {
-//            try {
-                mapChannels(entity, model, username);
-//            } catch (MobileTerminalModelException e) {
-//                LOG.error("[ Error when mapping channel field types ]");
-//                throw new MobileTerminalModelException(MAP_CHANNEL_FIELD_TYPES_ERROR.getMessage(), e, MAP_CHANNEL_FIELD_TYPES_ERROR.getCode());
-//            }
+            mapChannels(entity, model, username);
         }
         entity.setUpdatetime(OffsetDateTime.now(ZoneOffset.UTC));
         entity.setUpdateuser(username);
+        List<MobileTerminalAttributes> attrList = AttributeMapper.mapModelAttributesToEntityAttributes(entity, model.getAttributes());
+        entity.getMobileTerminalAttributes().addAll(attrList);
 
         return entity;
     }
 
-    public static MobileTerminal mapNewMobileTerminalEntity(MobileTerminalType model, Asset asset,
-                                String serialNumber, MobileTerminalPlugin plugin, String username) {
+    public static MobileTerminal mapNewMobileTerminalEntity(MobileTerminalType model, String serialNumber, MobileTerminalPlugin plugin, String username) {
         if (model == null)
             throw new NullPointerException("No mobile terminal to map");
-        return mapMobileTerminalEntity(new MobileTerminal(), model, asset, serialNumber, plugin, username,
-                MobileTerminalConstants.CREATE_COMMENT, EventCodeEnum.CREATE);
+        return mapMobileTerminalEntity(new MobileTerminal(), model, serialNumber, plugin, username, EventCodeEnum.CREATE);
     }
 
     private static void mapChannels(MobileTerminal entity, MobileTerminalType model, String username) {
@@ -87,7 +74,7 @@ public class MobileTerminalModelToEntityMapper {
             Channel channel = null;
             if (entity != null) {
                 for (Channel c : entity.getChannels()) {
-                    if (c.getId().equals(channelType.getGuid())) {
+                    if (c.getId().toString().equals(channelType.getGuid())) {
                         channel = c;
                         break;
                     }
@@ -96,7 +83,6 @@ public class MobileTerminalModelToEntityMapper {
 
             if (channel == null) {
                 channel = new Channel();
-                //channel.setGuid(UUID.randomUUID().toString());
             }
             channel.setMobileTerminal(entity);
             channel.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
@@ -104,116 +90,30 @@ public class MobileTerminalModelToEntityMapper {
             channel.setArchived(false);
 
             channel.setName(channelType.getName());
-            channel.setMobileTerminalEvent(entity.getCurrentEvent());
             AttributeMapper.mapComChannelAttributes(channel, channelType.getAttributes());
-
-            /*if (channel.getHistories().size() == 0) {
-                history.setEventCodeType(EventCodeEnum.CREATE);
-            } else {
-                history.setEventCodeType(EventCodeEnum.MODIFY);
-            }*/
 
             for (ComChannelCapability capability : channelType.getCapabilities()) {
                 if (MobileTerminalConstants.CAPABILITY_CONFIGURABLE.equalsIgnoreCase(capability.getType()) && capability.isValue()) {
-                    entity.getCurrentEvent().setConfigChannel(channel);
+                    entity.setConfigChannel(channel);
                     channel.setConfigChannel(capability.isValue());
                 }
                 if (MobileTerminalConstants.CAPABILITY_DEFAULT_REPORTING.equalsIgnoreCase(capability.getType()) && capability.isValue()) {
-                    entity.getCurrentEvent().setDefaultChannel(channel);
+                    entity.setDefaultChannel(channel);
                     channel.setDefaultChannel(capability.isValue());
                 }
                 if (MobileTerminalConstants.CAPABILITY_POLLABLE.equalsIgnoreCase(capability.getType()) && capability.isValue()) {
-                    entity.getCurrentEvent().setPollChannel(channel);
+                    entity.setPollChannel(channel);
                     channel.setPollChannel(capability.isValue());
                 }
             }
-
-            // No changes to channel means no new history
-            /*ChannelHistory channelHistory = channel.getCurrentHistory();
-            if (channelHistory != null) {
-                if (channelHistory.equals(history)) {
-                    channels.add(channel);
-                    continue;
-                } else {
-                    for (ChannelHistory ch : channel.getHistories()) {
-                        ch.setActive(false);
-                        channels.add(channel);
-                    }
-                }
-            }
-
-            for (ChannelHistory ch : channel.getHistories()) {
-                ch.setActive(false);
-            }
-            channel.getHistories().add(history);*/
             channels.add(channel);
-
         }
 
         for (Channel channel : entity.getChannels()) {
             if (!channels.contains(channel)) {
                 channel.setArchived(true);
-              /*  ChannelHistory current = channel.getCurrentHistory();
-                current.setActive(false);
-
-                ChannelHistory archive = new ChannelHistory();
-                archive.setEventCodeType(EventCodeEnum.ARCHIVE);
-                archive.setName(current.getName());
-                archive.setMobileTerminalEvent(entity.getCurrentEvent());
-                archive.setActive(true);
-                archive.setAttributes(current.getAttributes());
-                archive.setChannel(channel);
-                archive.setUpdatedBy(username);
-                archive.setUpdateTime(DateUtils.getNowDateUTC());
-                channel.getHistories().add(archive);*/
             }
         }
         entity.setChannels(channels);
     }
-
-
-    private static void mapHistoryAttributes(MobileTerminal entity, MobileTerminalType model, Asset asset, String username, String comment, EventCodeEnum eventCode) {
-        List<MobileTerminalAttribute> modelAttributes = model.getAttributes();
-        MobileTerminalEvent current = entity.getCurrentEvent();
-
-        MobileTerminalEvent history = new MobileTerminalEvent();
-        history.setActive(true);
-        history.setUpdatetime(OffsetDateTime.now(ZoneOffset.UTC));
-        history.setUpdateuser(username);
-        history.setMobileterminal(entity);
-        history.setComment(comment);
-        history.setEventCodeType(eventCode);
-        if (current != null && model.getConnectId() == null && eventCode != EventCodeEnum.UNLINK) {
-            history.setAsset(current.getAsset());
-        } else {
-            if(model.getConnectId() == null){
-                history.setAsset(null);
-            }else {
-                history.setAsset(asset);
-            }
-        }
-
-        history.setAttributes(mapHistoryAttributes(modelAttributes, history));
-        for (MobileTerminalEvent event : entity.getMobileTerminalEvents()) {
-            event.setActive(false);
-        }
-        entity.getMobileTerminalEvents().add(history);
-    }
-
-    private static String mapHistoryAttributes(List<MobileTerminalAttribute> modelAttributes, MobileTerminalEvent mobileTerminalEvent) {
-        StringBuilder sb = new StringBuilder();
-        for (MobileTerminalAttribute attr : modelAttributes) {
-            sb.append(attr.getType()).append("=");
-            sb.append(attr.getValue()).append(";");
-
-            MobileTerminalAttributes mta = new MobileTerminalAttributes();
-            mta.setAttribute(attr.getType());
-            mta.setValue(attr.getValue());
-            mta.setMobileTerminalEvent(mobileTerminalEvent);
-            mobileTerminalEvent.getMobileTerminalAttributes().add(mta);
-        }
-        return sb.toString();
-    }
-
-
 }

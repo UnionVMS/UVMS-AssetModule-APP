@@ -12,17 +12,15 @@
 
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper;
 
-
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ComChannelAttribute;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalAttribute;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.Channel;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalAttributes;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.util.DateUtils;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by osdjup on 2016-11-16.
@@ -79,7 +77,7 @@ public class AttributeMapper {
         return attr;
     }
 
-    public static void mapComChannelAttributes(Channel channel, List<ComChannelAttribute> modelAttributes){
+    static void mapComChannelAttributes(Channel channel, List<ComChannelAttribute> modelAttributes){
         for (ComChannelAttribute attr : modelAttributes) {
             switch (attr.getType()) {
                 case DNID:
@@ -119,16 +117,26 @@ public class AttributeMapper {
         }
     }
 
-    static List<MobileTerminalAttribute> mapAttributeStringToTerminalAttribute(String attributeString) {
-        List<MobileTerminalAttribute> attributeList = new ArrayList<>();
-        if(attributeString == null) return attributeList;
-        Map<String, String> attributes = mapAttributeString(attributeString);
-        for (String key : attributes.keySet()) {
-            MobileTerminalAttribute attribute = new MobileTerminalAttribute();
-            attribute.setType(key);
-            attribute.setValue(attributes.get(key));
-            attributeList.add(attribute);
+    static List<MobileTerminalAttributes> mapModelAttributesToEntityAttributes(MobileTerminal entity, List<MobileTerminalAttribute> attributes) {
+        List<MobileTerminalAttributes> attrList = new ArrayList<>();
+        for(MobileTerminalAttribute attribute : attributes) {
+            MobileTerminalAttributes attr = new MobileTerminalAttributes();
+            attr.setAttribute(attribute.getType());
+            attr.setValue(attribute.getValue());
+            attr.setMobileTerminal(entity);
+            attrList.add(attr);
         }
-        return attributeList;
+        return attrList;
+    }
+
+    static List<MobileTerminalAttribute> mapEntityAttributesToModelAttributes(Set<MobileTerminalAttributes> attributes) {
+        List<MobileTerminalAttribute> attrList = new ArrayList<>();
+        for (MobileTerminalAttributes attribute : attributes) {
+            MobileTerminalAttribute attr = new MobileTerminalAttribute();
+            attr.setType(attribute.getAttribute());
+            attr.setValue(attribute.getValue());
+            attrList.add(attr);
+        }
+        return attrList;
     }
 }

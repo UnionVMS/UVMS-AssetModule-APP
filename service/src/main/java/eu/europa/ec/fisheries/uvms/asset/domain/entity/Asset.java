@@ -1,25 +1,5 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_ALL;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_BY_CFR;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_BY_GFCM;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_BY_ICCAT;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_BY_IDS;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_BY_IMO;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_BY_IRCS;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_BY_MMSI;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.ASSET_FIND_BY_UVI;
-import java.io.Serializable;
-import java.time.OffsetDateTime;
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
-import javax.persistence.*;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -27,13 +7,24 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.OffsetDateTimeDeserializer;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
+
+import javax.persistence.*;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.*;
 
 @Audited
 @Entity
@@ -280,11 +271,10 @@ public class Asset implements Serializable {
     @Column(name = "prodorgname")
     private String prodOrgName;
 
-
-    @JsonIgnore         //to stop json from serializing the entire MT tree
+    @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "asset", cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
-    private List<MobileTerminalEvent> mobileTerminalEvent;
+    private List<MobileTerminal> mobileTerminals;
 
     @PrePersist
     private void generateNewHistoryId() {
@@ -732,14 +722,13 @@ public class Asset implements Serializable {
         this.prodOrgName = prodOrgName;
     }
 
-    public List<MobileTerminalEvent> getMobileTerminalEvent() {
-        if(mobileTerminalEvent == null){
-            mobileTerminalEvent = new ArrayList<>();
-        }
-        return mobileTerminalEvent;
+    public List<MobileTerminal> getMobileTerminals() {
+        if(mobileTerminals == null)
+            mobileTerminals = new ArrayList<>();
+        return mobileTerminals;
     }
 
-    public void setMobileTerminalEvent(List<MobileTerminalEvent> mobileTerminalEvent) {
-        this.mobileTerminalEvent = mobileTerminalEvent;
+    public void setMobileTerminals(List<MobileTerminal> mobileTerminals) {
+        this.mobileTerminals = mobileTerminals;
     }
 }

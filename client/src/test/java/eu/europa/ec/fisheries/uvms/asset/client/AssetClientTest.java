@@ -1,27 +1,22 @@
 package eu.europa.ec.fisheries.uvms.asset.client;
 
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import java.time.OffsetDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-import javax.inject.Inject;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import eu.europa.ec.fisheries.uvms.asset.client.model.*;
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetBO;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetDTO;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetMTEnrichmentRequest;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetMTEnrichmentResponse;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetQuery;
-import eu.europa.ec.fisheries.uvms.asset.client.model.CustomCode;
+
+import javax.inject.Inject;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import java.time.OffsetDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 public class AssetClientTest extends AbstractClientTest {
@@ -85,7 +80,6 @@ public class AssetClientTest extends AbstractClientTest {
         assertThat(upsertAssetBo.getAsset().getHistoryId(), CoreMatchers.is(upsertAssetBo2.getAsset().getHistoryId()));
     }
 
-
     @Test
     public void queryAssetsTest() {
         AssetDTO asset = AssetHelper.createBasicAsset();
@@ -93,11 +87,11 @@ public class AssetClientTest extends AbstractClientTest {
         assetBo.setAsset(asset);
         AssetBO upsertAssetBo = assetClient.upsertAsset(assetBo);
         AssetQuery assetQuery = new AssetQuery();
-        assetQuery.setFlagState(Arrays.asList(asset.getFlagStateCode()));
+        assetQuery.setFlagState(Collections.singletonList(asset.getFlagStateCode()));
         List<AssetDTO> assets = assetClient.getAssetList(assetQuery, 1, 1000, true);
-        assertTrue(assets.stream()
+        assertEquals(1, assets.stream()
                 .filter(a -> a.getId().equals(upsertAssetBo.getAsset().getId()))
-                .count() == 1);
+                .count());
     }
     
     @Test
@@ -112,50 +106,51 @@ public class AssetClientTest extends AbstractClientTest {
     }
 
     @Test
-    public void getConstantsTest() throws Exception {
+    public void getConstantsTest() {
         CustomCode customCode = AssetHelper.createCustomCode("TEST_Constant");
         CustomCode createdCustomCode = assetClient.createCustomCode(customCode);
-        Assert.assertTrue(createdCustomCode != null);
+        assertNotNull(createdCustomCode);
         List<String> rs = assetClient.getConstants();
-        Assert.assertTrue(rs.size() > 0);
+        assertTrue(rs.size() > 0);
     }
 
     @Test
-    public void getCodesForConstantsTest() throws Exception {
+    public void getCodesForConstantsTest() {
 
         String constant = "Test_Constant" + UUID.randomUUID().toString();
+
         for (int i = 0; i < 5; i++) {
             CustomCode customCode = AssetHelper.createCustomCode(constant);
             CustomCode createdCustomCode = assetClient.createCustomCode(customCode);
-            Assert.assertTrue(createdCustomCode != null);
+            assertNotNull(createdCustomCode);
         }
         List<CustomCode> rs = assetClient.getCodesForConstant(constant);
-        Assert.assertTrue(rs.size() == 5);
+        assertEquals(5, rs.size());
     }
 
     @Test
-    public void isCodeValidTest() throws Exception {
+    public void isCodeValidTest() {
 
         String constant = "Test_Constant" + UUID.randomUUID().toString();
         CustomCode customCode = AssetHelper.createCustomCode(constant);
         CustomCode createdCustomCode = assetClient.createCustomCode(customCode);
-        Assert.assertTrue(createdCustomCode != null);
+        assertNotNull(createdCustomCode);
 
         String cst = createdCustomCode.getPrimaryKey().getConstant();
         String code = createdCustomCode.getPrimaryKey().getCode();
         OffsetDateTime validFromDate = createdCustomCode.getPrimaryKey().getValidFromDate();
 
         Boolean ok = assetClient.isCodeValid(cst,code,validFromDate.plusDays(5));
-        Assert.assertTrue(ok);
+        assertTrue(ok);
     }
 
     @Test
-    public void isCodeValidNegativeTest() throws Exception {
+    public void isCodeValidNegativeTest() {
 
         String constant = "Test_Constant" + UUID.randomUUID().toString();
         CustomCode customCode = AssetHelper.createCustomCode(constant);
         CustomCode createdCustomCode = assetClient.createCustomCode(customCode);
-        Assert.assertTrue(createdCustomCode != null);
+        assertNotNull(createdCustomCode);
 
         String cst = createdCustomCode.getPrimaryKey().getConstant();
         String code = createdCustomCode.getPrimaryKey().getCode();
@@ -165,14 +160,13 @@ public class AssetClientTest extends AbstractClientTest {
         Assert.assertFalse(ok);
     }
 
-
     @Test
-    public void getCodeForDateTest() throws Exception {
+    public void getCodeForDateTest() {
 
         String constant = "Test_Constant" + UUID.randomUUID().toString();
         CustomCode customCode = AssetHelper.createCustomCode(constant);
         CustomCode createdCustomCode = assetClient.createCustomCode(customCode);
-        Assert.assertTrue(createdCustomCode != null);
+        assertNotNull(createdCustomCode);
 
         String cst = createdCustomCode.getPrimaryKey().getConstant();
         String code = createdCustomCode.getPrimaryKey().getCode();
@@ -180,17 +174,17 @@ public class AssetClientTest extends AbstractClientTest {
         OffsetDateTime validToDate = createdCustomCode.getPrimaryKey().getValidToDate();
 
         List<CustomCode> retrievedCustomCode = assetClient.getCodeForDate(cst, code, validToDate);
-        Assert.assertTrue(retrievedCustomCode != null );
-        Assert.assertTrue(retrievedCustomCode.size() > 0 );
+        assertNotNull(retrievedCustomCode);
+        assertTrue(retrievedCustomCode.size() > 0 );
     }
 
     @Test
-    public void getCodeForDateNegativeTest() throws Exception {
+    public void getCodeForDateNegativeTest() {
 
         String constant = "Test_Constant" + UUID.randomUUID().toString();
         CustomCode customCode = AssetHelper.createCustomCode(constant);
         CustomCode createdCustomCode = assetClient.createCustomCode(customCode);
-        Assert.assertTrue(createdCustomCode != null);
+        assertNotNull(createdCustomCode);
 
         String cst = createdCustomCode.getPrimaryKey().getConstant();
         String code = createdCustomCode.getPrimaryKey().getCode();
@@ -198,28 +192,27 @@ public class AssetClientTest extends AbstractClientTest {
         OffsetDateTime validToDate = createdCustomCode.getPrimaryKey().getValidToDate();
 
         List<CustomCode> retrievedCustomCode = assetClient.getCodeForDate(cst, code, validToDate.plusDays(5));
-        Assert.assertTrue(retrievedCustomCode != null );
-        Assert.assertTrue(retrievedCustomCode.size() == 0 );
+        assertNotNull(retrievedCustomCode);
+        assertEquals(0, retrievedCustomCode.size());
     }
 
     @Test
-    public void customCodesReplaceTest() throws Exception {
+    public void customCodesReplaceTest() {
 
         String constant = "Test_Constant" + UUID.randomUUID().toString();
         CustomCode customCode = AssetHelper.createCustomCode(constant);
         assetClient.replace(customCode);
         customCode.setDescription("replaced");
         assetClient.replace(customCode);
-
     }
 
     @Test
-    public void collectAssetMTTest() throws Exception {
+    public void collectAssetMTTest() {
 
         //public AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request) throws Exception {
         AssetMTEnrichmentRequest request = new AssetMTEnrichmentRequest();
         AssetMTEnrichmentResponse response = assetClient.collectAssetMT(request);
 
-        Assert.assertNotNull(response);  // proofs we reach the endpoint  . . .
+        assertNotNull(response);  // proofs we reach the endpoint  . . .
     }
 }

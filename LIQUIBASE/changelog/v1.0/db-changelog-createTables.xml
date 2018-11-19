@@ -198,7 +198,6 @@
             <column name="chan_conf" type="BOOLEAN"/>
             <column name="chan_def" type="BOOLEAN"/>
             <column name="end_date" type="TIMESTAMP(6) WITH TIME ZONE"/>
-            <column name="eventtype" type="VARCHAR(255)"/>
             <column name="expected_frequency" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
@@ -241,7 +240,6 @@
             <column name="chan_conf" type="BOOLEAN"/>
             <column name="chan_def" type="BOOLEAN"/>
             <column name="end_date" type="TIMESTAMP(6) WITH TIME ZONE"/>
-            <column name="eventtype" type="VARCHAR(255)"/>
             <column name="expected_frequency" type="BIGINT"/>
             <column name="expected_frequency_in_port" type="BIGINT"/>
             <column name="frequency_grace_period" type="BIGINT"/>
@@ -349,23 +347,6 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-12">
-        <createTable tableName="customcodes">
-            <column name="code" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="constant" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="validfromdate" type="TIMESTAMP WITH TIME ZONE">
-                <constraints nullable="false"/>
-            </column>
-            <column name="validtodate" type="TIMESTAMP WITH TIME ZONE">
-                <constraints nullable="false"/>
-            </column>
-            <column name="description" type="VARCHAR(255)"/>
-        </createTable>
-    </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-13">
         <createTable tableName="dnid_list">
             <column name="id" type="UUID">
@@ -412,6 +393,10 @@
             <column name="plugin_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
+            <column name="asset_id" type="UUID"/>
+            <column name="chan_conf" type="UUID"/>
+            <column name="chan_def" type="UUID"/>
+            <column name="chan_poll" type="UUID"/>
         </createTable>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-16">
@@ -433,6 +418,10 @@
             <column name="updatetime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="updateuser" type="VARCHAR(255)"/>
             <column name="plugin_id" type="UUID"/>
+            <column name="asset_id" type="UUID"/>
+            <column name="chan_conf" type="UUID"/>
+            <column name="chan_def" type="UUID"/>
+            <column name="chan_poll" type="UUID"/>
         </createTable>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-17">
@@ -442,7 +431,7 @@
             </column>
             <column name="attribute" type="VARCHAR(60)"/>
             <column name="value" type="VARCHAR(60)"/>
-            <column name="mobileterminalevent_id" type="UUID">
+            <column name="mobileterminal_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -458,49 +447,7 @@
             <column name="revtype" type="SMALLINT"/>
             <column name="attribute" type="VARCHAR(255)"/>
             <column name="value" type="VARCHAR(255)"/>
-            <column name="mobileterminalevent_id" type="UUID"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-19">
-        <createTable tableName="mobileterminalevent">
-            <column name="id" type="UUID">
-                <constraints nullable="false"/>
-            </column>
-            <column name="active" type="BOOLEAN"/>
-            <column name="attributes" type="VARCHAR(1000)"/>
-            <column name="comment" type="VARCHAR(400)"/>
-            <column name="eventtype" type="VARCHAR(255)"/>
-            <column name="updattime" type="TIMESTAMP(6) WITH TIME ZONE"/>
-            <column name="upuser" type="VARCHAR(60)"/>
-            <column name="asset_id" type="UUID"/>
-            <column name="chan_conf" type="UUID"/>
-            <column name="chan_def" type="UUID"/>
-            <column name="mobileterminal_id" type="UUID">
-                <constraints nullable="false"/>
-            </column>
-            <column name="chan_poll" type="UUID"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-20">
-        <createTable tableName="mobileterminalevent_aud">
-            <column name="id" type="UUID">
-                <constraints nullable="false"/>
-            </column>
-            <column name="rev" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="revtype" type="SMALLINT"/>
-            <column name="active" type="BOOLEAN"/>
-            <column name="attributes" type="VARCHAR(255)"/>
-            <column name="comment" type="VARCHAR(255)"/>
-            <column name="eventtype" type="VARCHAR(255)"/>
-            <column name="updattime" type="TIMESTAMP(6) WITH TIME ZONE"/>
-            <column name="upuser" type="VARCHAR(255)"/>
-            <column name="asset_id" type="UUID"/>
-            <column name="chan_conf" type="UUID"/>
-            <column name="chan_def" type="UUID"/>
             <column name="mobileterminal_id" type="UUID"/>
-            <column name="chan_poll" type="UUID"/>
         </createTable>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-21">
@@ -548,24 +495,6 @@
             <column name="upuser" type="VARCHAR(60)"/>
         </createTable>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-24">
-        <createTable tableName="plugin_aud">
-            <column name="id" type="UUID">
-                <constraints nullable="false"/>
-            </column>
-            <column name="rev" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="revtype" type="SMALLINT"/>
-            <column name="description" type="VARCHAR(255)"/>
-            <column name="name" type="VARCHAR(255)"/>
-            <column name="inactive" type="BOOLEAN"/>
-            <column name="satellite_type" type="VARCHAR(255)"/>
-            <column name="service_name" type="VARCHAR(255)"/>
-            <column name="updattim" type="TIMESTAMP(6) WITH TIME ZONE"/>
-            <column name="upuser" type="VARCHAR(255)"/>
-        </createTable>
-    </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-25">
         <createTable tableName="plugin_capability">
             <column name="id" type="UUID">
@@ -575,22 +504,6 @@
             <column name="updattim" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="upuser" type="VARCHAR(60)"/>
             <column name="value" type="VARCHAR(25)"/>
-            <column name="plugin_id" type="UUID"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-26">
-        <createTable tableName="plugin_capability_aud">
-            <column name="id" type="UUID">
-                <constraints nullable="false"/>
-            </column>
-            <column name="rev" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="revtype" type="SMALLINT"/>
-            <column name="capability" type="VARCHAR(255)"/>
-            <column name="updattim" type="TIMESTAMP(6) WITH TIME ZONE"/>
-            <column name="upuser" type="VARCHAR(255)"/>
-            <column name="value" type="VARCHAR(255)"/>
             <column name="plugin_id" type="UUID"/>
         </createTable>
     </changeSet>
@@ -691,9 +604,6 @@
     <changeSet author="thofan (generated)" id="1535445328879-40">
         <addPrimaryKey columnNames="code, constant, validfromdate, validtodate" constraintName="customcode_pkey" tableName="customcode"/>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-41">
-        <addPrimaryKey columnNames="code, constant, validfromdate, validtodate" constraintName="customcodes_pkey" tableName="customcodes"/>
-    </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-42">
         <addPrimaryKey columnNames="id" constraintName="dnid_list_pkey" tableName="dnid_list"/>
     </changeSet>
@@ -712,23 +622,11 @@
     <changeSet author="thofan (generated)" id="1535445328879-47">
         <addPrimaryKey columnNames="id" constraintName="mobileterminalattributes_pkey" tableName="mobileterminalattributes"/>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-48">
-        <addPrimaryKey columnNames="id, rev" constraintName="mobileterminalevent_aud_pkey" tableName="mobileterminalevent_aud"/>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-49">
-        <addPrimaryKey columnNames="id" constraintName="mobileterminalevent_pkey" tableName="mobileterminalevent"/>
-    </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-50">
         <addPrimaryKey columnNames="id" constraintName="note_pkey" tableName="note"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-51">
         <addPrimaryKey columnNames="param_id" constraintName="param_pk" tableName="parameter"/>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-52">
-        <addPrimaryKey columnNames="id, rev" constraintName="plugin_aud_pkey" tableName="plugin_aud"/>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-53">
-        <addPrimaryKey columnNames="id, rev" constraintName="plugin_capability_aud_pkey" tableName="plugin_capability_aud"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-54">
         <addPrimaryKey columnNames="id" constraintName="plugin_capability_pkey" tableName="plugin_capability"/>
@@ -825,33 +723,28 @@
         </createIndex>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-79">
-        <createIndex indexName="mobileterminalattributes_mobterm_event_fk_inx10" tableName="mobileterminalattributes">
-            <column name="mobileterminalevent_id"/>
+        <createIndex indexName="mobileterminalattributes_mobterm_fk_inx10" tableName="mobileterminalattributes">
+            <column name="mobileterminal_id"/>
         </createIndex>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-80">
-        <createIndex indexName="mobileterminalevent_asset_fk_inx10" tableName="mobileterminalevent">
+        <createIndex indexName="mobileterminal_asset_fk_inx10" tableName="mobileterminal">
             <column name="asset_id"/>
         </createIndex>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-81">
-        <createIndex indexName="mobileterminalevent_channel_fk_inx10" tableName="mobileterminalevent">
+        <createIndex indexName="mobileterminal_channel_fk_inx10" tableName="mobileterminal">
             <column name="chan_def"/>
         </createIndex>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-82">
-        <createIndex indexName="mobileterminalevent_channel_fk_inx20" tableName="mobileterminalevent">
+        <createIndex indexName="mobileterminal_channel_fk_inx20" tableName="mobileterminal">
             <column name="chan_conf"/>
         </createIndex>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-83">
-        <createIndex indexName="mobileterminalevent_channel_fk_inx30" tableName="mobileterminalevent">
+        <createIndex indexName="mobileterminal_channel_fk_inx30" tableName="mobileterminal">
             <column name="chan_poll"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-84">
-        <createIndex indexName="mobileterminalevent_mobterm_fk_inx10" tableName="mobileterminalevent">
-            <column name="mobileterminal_id"/>
         </createIndex>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-85">
@@ -900,23 +793,11 @@
     <changeSet author="thofan (generated)" id="1535445328879-93">
         <addForeignKeyConstraint baseColumnNames="mobterm_id" baseTableName="channel" constraintName="channel_mobileterminal_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="mobileterminal"/>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-94">
-        <addForeignKeyConstraint baseColumnNames="mobterm_event_id" baseTableName="channel" constraintName="channel_mobileterminalevent_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="mobileterminalevent"/>
-    </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-95">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="mobileterminal_aud" constraintName="fk3r4svjbsvkxgvfguo50khajk2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
     </changeSet>
     <changeSet author="kasgul (generated)" id="1535445328879-118">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="contactinfo_aud" constraintName="fk7nb5ms3cc7s1ccd4248lrvq90" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-96">
-        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="plugin_capability_aud" constraintName="fk9b169h47tagjwvdph50jp98s7" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-97">
-        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="plugin_aud" constraintName="fkd143bksa8cu5ornqnwyx0f14e" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-98">
-        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="mobileterminalevent_aud" constraintName="fkf1iqxu2cigqsv9qf4ajl4o9gg" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-99">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="channel_aud" constraintName="fkjcnf5hokby2hgv1gaeed8d0o8" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
@@ -930,29 +811,23 @@
     <changeSet author="thofan (generated)" id="1535445328879-102">
         <addForeignKeyConstraint baseColumnNames="customcode_code,customcode_constant,customcode_validfromdate,customcode_validtodate" baseTableName="customcode_namevalue" constraintName="fksrk26l9dvtlshmfakxgh88qun" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="code,constant,validfromdate,validtodate" referencedTableName="customcode"/>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-103">
-        <addForeignKeyConstraint baseColumnNames="inmarsatc_history_id" baseTableName="inmarsatc_oceanregion" constraintName="inmarsatchistoryoceanregion_mobileterminalevent_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="mobileterminalevent"/>
-    </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-104">
         <addForeignKeyConstraint baseColumnNames="plugin_id" baseTableName="mobileterminal" constraintName="mobileterminal_plugin_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="plugin"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-105">
-        <addForeignKeyConstraint baseColumnNames="mobileterminalevent_id" baseTableName="mobileterminalattributes" constraintName="mobileterminalattributes_mobileterminalevent_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="mobileterminalevent"/>
+        <addForeignKeyConstraint baseColumnNames="mobileterminal_id" baseTableName="mobileterminalattributes" constraintName="mobileterminalattributes_mobileterminal_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="mobileterminal"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-106">
-        <addForeignKeyConstraint baseColumnNames="asset_id" baseTableName="mobileterminalevent" constraintName="mobileterminalevent_asset_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="asset"/>
+        <addForeignKeyConstraint baseColumnNames="asset_id" baseTableName="mobileterminal" constraintName="mobileterminal_asset_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="asset"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-107">
-        <addForeignKeyConstraint baseColumnNames="chan_def" baseTableName="mobileterminalevent" constraintName="mobileterminalevent_channel_fk10" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="channel"/>
+        <addForeignKeyConstraint baseColumnNames="chan_def" baseTableName="mobileterminal" constraintName="mobileterminal_channel_fk10" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="channel"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-108">
-        <addForeignKeyConstraint baseColumnNames="chan_conf" baseTableName="mobileterminalevent" constraintName="mobileterminalevent_channel_fk20" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="channel"/>
+        <addForeignKeyConstraint baseColumnNames="chan_conf" baseTableName="mobileterminal" constraintName="mobileterminal_channel_fk20" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="channel"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-109">
-        <addForeignKeyConstraint baseColumnNames="chan_poll" baseTableName="mobileterminalevent" constraintName="mobileterminalevent_channel_fk30" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="channel"/>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-110">
-        <addForeignKeyConstraint baseColumnNames="mobileterminal_id" baseTableName="mobileterminalevent" constraintName="mobileterminalevent_mobileterminal_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="mobileterminal"/>
+        <addForeignKeyConstraint baseColumnNames="chan_poll" baseTableName="mobileterminal" constraintName="mobileterminal_channel_fk30" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="channel"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-111">
         <addForeignKeyConstraint baseColumnNames="plugin_id" baseTableName="plugin_capability" constraintName="plugin_capability_plugin_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="plugin"/>

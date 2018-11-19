@@ -21,6 +21,7 @@ public class MobileTerminalConstants {
 	public static final String MOBILE_TERMINAL_FIND_ALL = "Mobileterminal.findAll";
 	public static final String MOBILE_TERMINAL_FIND_BY_ID = "Mobileterminal.findById";
 	public static final String MOBILE_TERMINAL_FIND_BY_SERIAL_NO = "Mobileterminal.findBySerialNo";
+	public static final String MOBILE_TERMINAL_FIND_BY_ASSET_ID = "Mobileterminal.findByAssetId";
 
 	public static final String PLUGIN_FIND_ALL = "Plugin.findAll";
 	public static final String PLUGIN_FIND_BY_SERVICE_NAME = "Plugin.findByServiceName";

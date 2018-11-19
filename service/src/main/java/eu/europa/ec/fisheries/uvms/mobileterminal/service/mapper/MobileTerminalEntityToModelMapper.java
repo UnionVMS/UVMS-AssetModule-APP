@@ -4,7 +4,6 @@ import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +25,7 @@ public class MobileTerminalEntityToModelMapper {
         MobileTerminalType type = mapToMobileTerminalType(entity);
 
         type.getChannels().clear();
-        type.getChannels().addAll(mapChannels(entity.getChannels(), entity.getCurrentEvent()));
+        type.getChannels().addAll(mapChannels(entity));
 
         return type;
     }
@@ -34,11 +33,6 @@ public class MobileTerminalEntityToModelMapper {
     public static MobileTerminalType mapToMobileTerminalType(MobileTerminal entity) {
         if (entity == null) {
             throw new NullPointerException("No mobile terminal entity to map");
-        }
-
-        MobileTerminalEvent currentEvent = entity.getCurrentEvent();
-        if (currentEvent == null) {
-            throw new NullPointerException("No mobile terminal event entity to map");
         }
 
         MobileTerminalType model = new MobileTerminalType();
@@ -54,26 +48,24 @@ public class MobileTerminalEntityToModelMapper {
             throw new RuntimeException(e);
         }
 
-        if(currentEvent.getAsset() != null){
-            model.setConnectId(currentEvent.getAsset().getId().toString());
+        if(entity.getAsset() != null){
+            model.setConnectId(entity.getAsset().getId().toString());
         }
-
-
-
 
         model.setType(entity.getMobileTerminalType().name());
         model.setInactive(entity.getInactivated());
         model.setArchived(entity.getArchived());
         model.setId(new Long(entity.getCreateTime().toEpochSecond()).intValue());
 
-        model.getChannels().addAll(mapChannels(entity.getChannels(), currentEvent));
-
-        model.getAttributes().addAll(AttributeMapper.mapAttributeStringToTerminalAttribute(currentEvent.getAttributes()));
+        model.getChannels().addAll(mapChannels(entity));
+        model.getAttributes().addAll(AttributeMapper.mapEntityAttributesToModelAttributes(entity.getMobileTerminalAttributes()));
 
         return model;
     }
 
-    private static List<ComChannelType> mapChannels(Set<Channel> channels, MobileTerminalEvent currentEvent) {
+    private static List<ComChannelType> mapChannels(MobileTerminal entity) {
+
+        Set<Channel> channels = entity.getChannels();
         //TODO: fix later
         // (fix what? the channel history removal is done from this part, is there anything else?)
 
@@ -96,9 +88,8 @@ public class MobileTerminalEntityToModelMapper {
                 ComChannelCapability pollCapability = new ComChannelCapability();
                 pollCapability.setType(MobileTerminalConstants.CAPABILITY_POLLABLE);
 
-                Channel wrkPollChannel = currentEvent.getPollChannel();
-                if(wrkPollChannel != null) {
-                    pollCapability.setValue(currentEvent.getPollChannel().equals(channel));
+                if(entity.getPollChannel() != null) {
+                    pollCapability.setValue(entity.getPollChannel().equals(channel));
                 }
                 else{
                     pollCapability.setValue(false);
@@ -108,9 +99,8 @@ public class MobileTerminalEntityToModelMapper {
                 ComChannelCapability configCapability = new ComChannelCapability();
                 configCapability.setType(MobileTerminalConstants.CAPABILITY_CONFIGURABLE);
 
-                Channel wrkConfigChannel = currentEvent.getConfigChannel();
-                if (wrkConfigChannel != null) {
-                    configCapability.setValue(currentEvent.getConfigChannel().equals(channel));
+                if (entity.getConfigChannel() != null) {
+                    configCapability.setValue(entity.getConfigChannel().equals(channel));
                 } else {
                     configCapability.setValue(false);
                 }
@@ -120,9 +110,8 @@ public class MobileTerminalEntityToModelMapper {
                 ComChannelCapability defaultCapability = new ComChannelCapability();
                 defaultCapability.setType(MobileTerminalConstants.CAPABILITY_DEFAULT_REPORTING);
 
-                Channel wrkDefaultChannel = currentEvent.getDefaultChannel();
-                if(wrkDefaultChannel != null) {
-                    defaultCapability.setValue(currentEvent.getDefaultChannel().equals(channel));
+                if(entity.getDefaultChannel() != null) {
+                    defaultCapability.setValue(entity.getDefaultChannel().equals(channel));
                 }
                 else{
                     defaultCapability.setValue(false);
@@ -135,12 +124,12 @@ public class MobileTerminalEntityToModelMapper {
         return channelList;
     }
 
-    private static MobileTerminalId mapToMobileTerminalId(String mobtermGuid) {
-        if (mobtermGuid == null || mobtermGuid.isEmpty()) {
+    private static MobileTerminalId mapToMobileTerminalId(String mobTermGuid) {
+        if (mobTermGuid == null || mobTermGuid.isEmpty()) {
             throw new NullPointerException("No GUID found");
         }
         MobileTerminalId terminalId = new MobileTerminalId();
-        terminalId.setGuid(mobtermGuid);
+        terminalId.setGuid(mobTermGuid);
         return terminalId;
     }
 }

@@ -196,10 +196,8 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .get(String.class);
 
-        //System.out.println(response);
         assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
         String  deserializeResponse = deserializeResponseDto(response, String.class);
-        //System.out.println(deserializeResponse);
 
         ObjectMapper objectMapper = new ObjectMapper();
         PollProgram checkThatThePollIsArchived = objectMapper.readValue(deserializeResponse, PollProgram.class);

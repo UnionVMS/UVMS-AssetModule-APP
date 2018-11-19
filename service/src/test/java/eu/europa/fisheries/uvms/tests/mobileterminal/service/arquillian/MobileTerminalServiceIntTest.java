@@ -40,7 +40,7 @@ import static org.junit.Assert.assertNotNull;
 public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     // TODO we do test on those transactions that are wrong in construction
-    public static final String MESSAGE_PRODUCER_METHODS_FAIL = "MESSAGE_PRODUCER_METHODS_FAIL";
+    private static final String MESSAGE_PRODUCER_METHODS_FAIL = "MESSAGE_PRODUCER_METHODS_FAIL";
 
 
     @EJB
@@ -104,7 +104,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void createMobileTerminal() throws Exception {
+    public void createMobileTerminal() {
 
         MobileTerminalType created = createAndPersistMobileTerminalType();
         assertNotNull(created);
@@ -112,7 +112,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void upsertMobileTerminal() throws Exception {
+    public void upsertMobileTerminal() {
 
         MobileTerminal created = createAndPersistMobileTerminal();
         assertNotNull(created);
@@ -125,7 +125,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void createMobileTerminalByUpsert() throws Exception {
+    public void createMobileTerminalByUpsert() {
 
         MobileTerminal created = testPollHelper.createBasicMobileTerminal();
         MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(created.getPlugin().getPluginServiceName());
@@ -145,7 +145,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void updateMobileTerminal() throws Exception {
+    public void updateMobileTerminal() {
 
         MobileTerminal created = createAndPersistMobileTerminal();
         assertNotNull(created);
@@ -159,7 +159,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void assignMobileTerminal() throws Exception {
+    public void assignMobileTerminal() {
 
         MobileTerminalType created = createAndPersistMobileTerminalType();
         Asset asset = createAndPersistAsset();
@@ -178,7 +178,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void unAssignMobileTerminalFromCarrier() throws Exception{
+    public void unAssignMobileTerminalFromCarrier() {
 
         MobileTerminalType created = createAndPersistMobileTerminalType();
         Asset asset = createAndPersistAsset();
@@ -197,23 +197,21 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void createMobileTerminal_WillFail_Null_Plugin() throws Exception{
+    public void createMobileTerminal_WillFail_Null_Plugin() {
 
         thrown.expect(EJBTransactionRolledbackException.class);
-//        thrown.expectMessage("Cannot create Mobile terminal when plugin is not null");
 
         MobileTerminalType mobileTerminalType = testPollHelper.createBasicMobileTerminalType();
         mobileTerminalType.setPlugin(null);
-        MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType,null , "123456789", null, USERNAME);   //this really should be such that that testPollHelper creates a mobile terminal, but until such a time
+        MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType,"123456789", null, USERNAME); //this really should be such that that testPollHelper creates a mobile terminal, but until such a time
         mobileTerminalService.createMobileTerminal(mobileTerminal, USERNAME);
     }
 
     @Test
     @OperateOnDeployment("normal")
-    public void createMobileTerminal_WillFail_Null_SerialNumber() throws Exception {
+    public void createMobileTerminal_WillFail_Null_SerialNumber() {
 
         thrown.expect(EJBTransactionRolledbackException.class);
-//        thrown.expectMessage("Cannot create mobile terminal without serial number");
 
         MobileTerminalType mobileTerminalType = testPollHelper.createBasicMobileTerminalType();
         List<MobileTerminalAttribute> attributes = mobileTerminalType.getAttributes();
@@ -224,13 +222,13 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
                 break;
             }
         }
-        MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType, null, null, null, USERNAME);
+        MobileTerminal mobileTerminal = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType,null, null, USERNAME);
         mobileTerminalService.createMobileTerminal(mobileTerminal, USERNAME);
     }
 
     @Test
     @OperateOnDeployment("normal")
-    public void upsertMobileTerminal_WillFail_Null_TerminalId() throws Exception {
+    public void upsertMobileTerminal_WillFail_Null_TerminalId() {
 
         MobileTerminal created = createAndPersistMobileTerminal();
         assertNotNull(created);
@@ -245,7 +243,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void updateMobileTerminal_WillFail_Null_TerminalId() throws Exception {
+    public void updateMobileTerminal_WillFail_Null_TerminalId() {
 
 
         MobileTerminal created = createAndPersistMobileTerminal();
@@ -260,12 +258,12 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
         }
     }
 
-    private MobileTerminalType createAndPersistMobileTerminalType() throws Exception {
+    private MobileTerminalType createAndPersistMobileTerminalType() {
 
         return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(createAndPersistMobileTerminal());
     }
 
-    private MobileTerminal createAndPersistMobileTerminal() throws Exception {
+    private MobileTerminal createAndPersistMobileTerminal() {
 
         MobileTerminal mobileTerminal = testPollHelper.createBasicMobileTerminal();
         MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(mobileTerminal.getPlugin().getPluginServiceName());
@@ -281,14 +279,14 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
         Asset asset = AssetTestsHelper.createBasicAsset();
         return assetDao.createAsset(asset);
     }
-    private MobileTerminal updateMobileTerminalType(MobileTerminal created) throws Exception {
+    private MobileTerminal updateMobileTerminalType(MobileTerminal created) {
         created.setMobileTerminalType(MobileTerminalTypeEnum.IRIDIUM);
         created.setSource(MobileTerminalSource.INTERNAL);
         return mobileTerminalService.updateMobileTerminal(created, TEST_COMMENT, USERNAME);
     }
 
 
-    private MobileTerminal upsertMobileTerminalEntity(MobileTerminal created) throws Exception{
+    private MobileTerminal upsertMobileTerminalEntity(MobileTerminal created) {
         MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(created.getPlugin().getPluginServiceName());
         if(plugin == null){
             plugin = PluginMapper.mapModelToEntity(testPollHelper.createPluginService());

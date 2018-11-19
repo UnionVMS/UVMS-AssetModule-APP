@@ -11,15 +11,16 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.dao;
 
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalEvent;
+import org.hibernate.envers.AuditReader;
+import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.query.AuditEntity;
+import org.hibernate.envers.query.AuditQuery;
 
 import javax.ejb.Stateless;
 import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Stateless
@@ -37,16 +38,6 @@ public class TerminalDaoBean {
             return null;
         }
     }
-
-//	public MobileTerminal getMobileTerminalByGuid(String guid)  {
-//		try {
-//            TypedQuery<MobileTerminal> query = em.createNamedQuery(MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_ID, MobileTerminal.class);
-//            query.setParameter("guid", UUID.fromString(guid));
-//            return query.getSingleResult();
-//        } catch (NoResultException e) {
-//		    return null;
-//        }
-//	}
 
     public MobileTerminal getMobileTerminalBySerialNo(String serialNo) {
         try {
@@ -74,16 +65,23 @@ public class TerminalDaoBean {
         return em.merge(terminal);
     }
 
+    @SuppressWarnings("unchecked")
     public List<MobileTerminal> getMobileTerminalsByQuery(String sql) {
             Query query = em.createQuery(sql, MobileTerminal.class);
             return query.getResultList();
     }
 
-    public MobileTerminal findMobileTerminalByAsset(UUID assetid) {
-
-        // ConnectId exists in MobileTerminalEvent so we must look there
-        List<MobileTerminal> ret = em.createNamedQuery(MobileTerminalEvent.GET_MOBILETERMINAL_USING_CONNECTID, MobileTerminal.class).setParameter("connectId", assetid).getResultList();
+    public MobileTerminal findMobileTerminalByAsset(UUID assetId) {
+        List<MobileTerminal> ret = em.createNamedQuery(MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_ASSET_ID, MobileTerminal.class)
+                .setParameter("assetId", assetId).getResultList();
         if (ret.size() > 0) return ret.get(0);
         return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<MobileTerminal> getMobileTerminalRevisionForHistoryId(UUID historyId) {
+        AuditReader auditReader = AuditReaderFactory.get(em);
+        AuditQuery query = auditReader.createQuery().forRevisionsOfEntity(MobileTerminal.class, true, true);
+        return query.add(AuditEntity.property("historyId").eq(historyId)).getResultList();
     }
 }

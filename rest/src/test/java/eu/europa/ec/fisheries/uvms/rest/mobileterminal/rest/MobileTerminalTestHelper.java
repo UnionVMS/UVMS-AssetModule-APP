@@ -90,10 +90,10 @@ public class MobileTerminalTestHelper {
     }
 
     private static void addAttribute(List<MobileTerminalAttribute> attributes, String type, String value) {
-        MobileTerminalAttribute serialNumberMobileTerminalAttribute = new MobileTerminalAttribute();
-        serialNumberMobileTerminalAttribute.setType(type);
-        serialNumberMobileTerminalAttribute.setValue(value);
-        attributes.add(serialNumberMobileTerminalAttribute);
+        MobileTerminalAttribute attribute = new MobileTerminalAttribute();
+        attribute.setType(type);
+        attribute.setValue(value);
+        attributes.add(attribute);
     }
 
     public static MobileTerminalListQuery createMobileTerminalListQuery() {
@@ -109,8 +109,7 @@ public class MobileTerminalTestHelper {
         MobileTerminalSearchCriteria criteria = new MobileTerminalSearchCriteria();
 
         ListCriteria crt = new ListCriteria();
-        SearchKey searchKey = SearchKey.SERIAL_NUMBER;
-        crt.setKey(searchKey);
+        crt.setKey(SearchKey.SERIAL_NUMBER);
         crt.setValue(serialNumber);
 
         criteria.getCriterias().add(crt);

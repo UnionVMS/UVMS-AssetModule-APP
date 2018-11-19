@@ -62,11 +62,9 @@ public class PollModelToEntityMapper {
                     break;
                 case START_DATE:
                     poll.setStartDate(OffsetDateTime.parse(attr.getValue(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss Z"))); // Not sure if it will work without a format pattern
-//                    poll.setStartDate(parseToUTCDateTime(attr.getValue()));
                     break;
                 case END_DATE:
                     poll.setStopDate(OffsetDateTime.parse(attr.getValue(),  DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss Z"))); // Not sure if it will work without a format pattern
-//                    poll.setStopDate(parseToUTCDateTime(attr.getValue()));
                     break;
                 default:
                     LOG.debug("ProgramPoll with attr [ " + attr.getKey() + " ] is non valid to map");
@@ -153,11 +151,9 @@ public class PollModelToEntityMapper {
         	try {
         		switch (attr.getKey()) {
         		case START_DATE:
-//        			payload.setStartDate(parseToUTCDateTime(attr.getValue()));
                     payload.setStartDate(OffsetDateTime.parse(attr.getValue())); // Not sure if it will work without a format pattern
                 	break;
         		case END_DATE:
-//        			payload.setStopDate(parseToUTCDateTime(attr.getValue()));
                     payload.setStartDate(OffsetDateTime.parse(attr.getValue())); // Not sure if it will work without a format pattern
                     break;
         		}

@@ -26,10 +26,6 @@ public abstract class AbstractMessageTest {
 
         WebArchive testWar = ShrinkWrap.create(WebArchive.class, "test.war");
 
-//        File[] files = Maven.resolver().loadPomFromFile("pom.xml").importRuntimeAndTestDependencies().resolve()
-//                .withTransitivity().asFile();
-//        testWar.addAsLibraries(files);
-        
         File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
                 .resolve("eu.europa.ec.fisheries.uvms.asset:asset-model",
                          "eu.europa.ec.fisheries.uvms.asset:asset-service",

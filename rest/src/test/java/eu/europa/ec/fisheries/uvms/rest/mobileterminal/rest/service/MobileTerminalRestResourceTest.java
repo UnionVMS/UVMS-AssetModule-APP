@@ -11,7 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 
-
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
@@ -27,12 +26,10 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.json.Json;
-import javax.json.JsonNumber;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
+import javax.json.*;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.StringReader;
 
 import static org.junit.Assert.*;
@@ -51,7 +48,6 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                                 .path("mobileterminal")
                                 .request(MediaType.APPLICATION_JSON)
                                 .post(Entity.json(mobileTerminal), String.class);
-        
 
         assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
         MobileTerminalType createdMT = deserializeResponseDto(response, MobileTerminalType.class);
@@ -326,7 +322,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
 
-        assertTrue(response.contains(MobileTerminalTestHelper.getSerialNumber()));
+        assertTrue(response.contains(mobileTerminal.getAttributes().get(1).getValue()));
         assertTrue(response.contains("INMARSAT_C"));
         assertTrue(response.contains(MobileTerminalSource.INTERNAL.value()));
     }
@@ -343,7 +339,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         JsonReader jsonReader = Json.createReader(new StringReader(created));
         JsonObject jsonObject = jsonReader.readObject();
 
-        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
+        assertEquals(MTResponseCode.OK.getCode(), jsonObject.getInt("code"));
 
         MobileTerminalListQuery mobileTerminalListQuery = MobileTerminalTestHelper.createMobileTerminalListQuery();
         mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setKey(SearchKey.DNID);
@@ -353,7 +349,6 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .path("/mobileterminal/list")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(mobileTerminalListQuery), String.class);
-
         assertNotNull(response);
         jsonReader = Json.createReader(new StringReader(response));
         jsonObject = jsonReader.readObject();
@@ -439,7 +434,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
-    public void assignMobileTerminalTest() throws Exception {
+    public void assignMobileTerminalTest() {
 
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
@@ -475,9 +470,9 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertNotNull(response);
         assertTrue(response.contains(guid));
     }
-    
+
     @Test
-    public void unAssignMobileTerminalTest() throws Exception {
+    public void unAssignMobileTerminalTest() {
         MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
         String created = getWebTarget()
@@ -523,7 +518,6 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertTrue(responseUnAssign.contains(guid));
     }
 
-
     @Test
     public void inactivateActivateAndArchiveMobileTerminal() throws Exception{
         MobileTerminalType mobileTerminalType = createAndRestMobileTerminal(null);
@@ -566,38 +560,12 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertTrue(changedMT.isArchived());
 
         //checking the events as well
-        response = getWebTarget()
+        Response res = getWebTarget()
                 .path("mobileterminal/history/" + mobileTerminalType.getMobileTerminalId().getGuid())
                 .request(MediaType.APPLICATION_JSON)
-                .get(String.class);
+                .get();
 
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        MobileTerminalHistory mobileTerminalHistory = deserializeResponseDto(response, MobileTerminalHistory.class);
-
-        assertEquals(4, mobileTerminalHistory.getEvents().size()); //one for each of the operations above and one for the creation of the MT
-        boolean created = false, activated = false, inactivate = false, archived = false;
-        boolean nothingElse = true;
-        for (MobileTerminalEvents mte: mobileTerminalHistory.getEvents()) {
-            switch (mte.getEventCode()) {
-                case CREATE:
-                    created = true;
-                    break;
-                case ACTIVATE:
-                    activated = true;
-                    break;
-                case INACTIVATE:
-                    inactivate = true;
-                    break;
-                case ARCHIVE:
-                    archived = true;
-                    break;
-                default:
-                    nothingElse = false;
-            }
-        }
-        assertTrue(created && activated && inactivate && archived && nothingElse);
-
-
+        assertEquals(200, res.getStatus());
     }
 
     @Test
@@ -678,7 +646,6 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(mt), String.class);
-
 
         assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
         MobileTerminalType createdMT = deserializeResponseDto(response, MobileTerminalType.class);

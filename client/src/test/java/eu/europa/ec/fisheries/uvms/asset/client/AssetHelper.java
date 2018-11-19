@@ -132,7 +132,6 @@ public abstract class AssetHelper {
     public static AssetGroup createBasicAssetGroup() {
         AssetGroup assetGroup = new AssetGroup();
         assetGroup.setName("Group: " + getRandomIntegers(5));
-//        assetGroup.setOwner("User: " + getRandomIntegers(5));
         assetGroup.setArchived(false);
         return assetGroup;
     }

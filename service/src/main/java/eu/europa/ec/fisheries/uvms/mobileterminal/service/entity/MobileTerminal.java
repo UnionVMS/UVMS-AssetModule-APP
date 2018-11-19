@@ -12,16 +12,13 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.JSR310StringParsableDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalAttribute;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalSource;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.OffsetDateTimeDeserializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
@@ -29,6 +26,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -36,7 +34,10 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * The persistent class for the mobileterminal database table.
@@ -44,14 +45,21 @@ import java.util.*;
  */
 @Audited
 @Entity
-@Table(name = "mobileterminal", indexes = { @Index(columnList = "plugin_id", name = "mobileterminal_plugin_FK_INX01", unique = false),
-		@Index(columnList = "serial_no", name = "mobileterminal_INX01", unique = false),},
+@Table(name = "mobileterminal", indexes = {
+		@Index(columnList = "plugin_id", name = "mobileterminal_plugin_FK_INX01", unique = false),
+		@Index(columnList = "serial_no", name = "mobileterminal_INX01", unique = false),
+		@Index(columnList = "chan_def", name = "mobileterminal_channel_FK_INX10", unique = false),
+		@Index(columnList = "chan_conf", name = "mobileterminal_channel_FK_INX20", unique = false),
+		@Index(columnList = "chan_poll", name = "mobileterminal_channel_FK_INX30", unique = false),
+		@Index(columnList = "asset_id", name = "mobileterminal_asset_FK_INX10", unique = false)
+		},
 		uniqueConstraints = {@UniqueConstraint(name = "mobileterminal_uc_historyid" , columnNames = "historyid"),
 				             @UniqueConstraint(name = "mobileterminal_uc_serialnumber" , columnNames = "serial_no")})
 @NamedQueries({
 	@NamedQuery(name=MobileTerminalConstants.MOBILE_TERMINAL_FIND_ALL, query = "SELECT m FROM MobileTerminal m"),
 	@NamedQuery(name=MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_ID, query="SELECT m FROM MobileTerminal m WHERE m.id = :id"),
-	@NamedQuery(name=MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_SERIAL_NO, query="SELECT m FROM MobileTerminal m WHERE m.serialNo = :serialNo")
+	@NamedQuery(name=MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_SERIAL_NO, query="SELECT m FROM MobileTerminal m WHERE m.serialNo = :serialNo"),
+	@NamedQuery(name=MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_ASSET_ID, query="SELECT m FROM MobileTerminal m WHERE m.asset.id = :assetId")
 })
 @JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class/*, property="id"*/)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -68,6 +76,7 @@ public class MobileTerminal implements Serializable {
 	private UUID historyId;
 
 	@NotNull
+	@NotAudited
 	@ManyToOne(fetch=FetchType.EAGER,  cascade=CascadeType.ALL)
 	@JoinColumn(name="plugin_id", foreignKey = @ForeignKey(name = "MobileTerminal_Plugin_FK"))
 	private MobileTerminalPlugin plugin;
@@ -106,14 +115,30 @@ public class MobileTerminal implements Serializable {
 	@Column(name="serial_no")
 	private String serialNo;
 
-	//bi-directional many-to-one association to Mobileterminalevent
-	@OneToMany(mappedBy="mobileterminal", cascade = CascadeType.ALL)
-	@Fetch(FetchMode.SELECT)
-	private Set<MobileTerminalEvent> mobileTerminalEvents;
-
 	@OneToMany(mappedBy = "mobileTerminal", cascade = CascadeType.ALL)
 	@Fetch(FetchMode.SELECT)
 	private Set<Channel> channels;
+
+	@OneToMany(mappedBy="mobileTerminal", cascade = CascadeType.ALL)
+	@Fetch(FetchMode.SELECT)
+	private Set<MobileTerminalAttributes> mobileTerminalAttributes;
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name="chan_def", foreignKey = @ForeignKey(name = "MobileTerminal_Channel_FK10"))
+	private Channel defaultChannel;
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name="chan_conf", foreignKey = @ForeignKey(name = "MobileTerminal_Channel_FK20"))
+	private Channel configChannel;
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name="chan_poll", foreignKey = @ForeignKey(name = "MobileTerminal_Channel_FK30"))
+	private Channel pollChannel;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="asset_id", foreignKey = @ForeignKey(name = "MobileTerminal_Asset_FK"))
+	@Fetch(FetchMode.SELECT)
+	private Asset asset;
 
 	public MobileTerminal() {
 	}
@@ -209,16 +234,6 @@ public class MobileTerminal implements Serializable {
 		this.serialNo = serialNo;
 	}
 
-	public Set<MobileTerminalEvent> getMobileTerminalEvents() {
-		if(mobileTerminalEvents == null)
-			mobileTerminalEvents = new HashSet<>();
-		return mobileTerminalEvents;
-	}
-
-	public void setMobileTerminalEvents(Set<MobileTerminalEvent> mobileTerminalEvents) {
-		this.mobileTerminalEvents = mobileTerminalEvents;
-	}
-
 	public Set<Channel> getChannels() {
 		if(channels == null)
 			channels = new HashSet<>();
@@ -237,6 +252,49 @@ public class MobileTerminal implements Serializable {
 		this.createTime = createTime;
 	}
 
+	public Set<MobileTerminalAttributes> getMobileTerminalAttributes() {
+		if(mobileTerminalAttributes == null){
+			mobileTerminalAttributes = new HashSet<>();
+		}
+		return mobileTerminalAttributes;
+	}
+
+	public void setMobileTerminalAttributes(Set<MobileTerminalAttributes> mobileTerminalAttributes) {
+		this.mobileTerminalAttributes = mobileTerminalAttributes;
+	}
+
+	public Channel getDefaultChannel() {
+		return defaultChannel;
+	}
+
+	public void setDefaultChannel(Channel defaultChannel) {
+		this.defaultChannel = defaultChannel;
+	}
+
+	public Channel getConfigChannel() {
+		return configChannel;
+	}
+
+	public void setConfigChannel(Channel configChannel) {
+		this.configChannel = configChannel;
+	}
+
+	public Channel getPollChannel() {
+		return pollChannel;
+	}
+
+	public void setPollChannel(Channel pollChannel) {
+		this.pollChannel = pollChannel;
+	}
+
+	public Asset getAsset() {
+		return asset;
+	}
+
+	public void setAsset(Asset asset) {
+		this.asset = asset;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -252,25 +310,11 @@ public class MobileTerminal implements Serializable {
 				Objects.equals(updatetime, that.updatetime) &&
 				Objects.equals(updateuser, that.updateuser) &&
 				Objects.equals(serialNo, that.serialNo) &&
-				Objects.equals(mobileTerminalEvents, that.mobileTerminalEvents) &&
 				Objects.equals(channels, that.channels);
 	}
 
 	@Override
 	public int hashCode() {
-
 		return Objects.hash(id);
 	}
-
-	@JsonIgnore
-	public MobileTerminalEvent getCurrentEvent() {
-		for (MobileTerminalEvent event : getMobileTerminalEvents()) {
-			if (event.isActive()) {
-				return event;
-			}
-		}
-		return null;
-	}
-
-
 }

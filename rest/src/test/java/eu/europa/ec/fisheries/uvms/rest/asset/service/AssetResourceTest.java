@@ -11,13 +11,11 @@ import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHe
 import eu.europa.ec.fisheries.wsdl.asset.types.EventCode;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -301,7 +299,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .get(Asset.class);
 
-        assertEquals(2, presentAsset.getMobileTerminalEvent().size());
 
         Asset pastAsset = getWebTarget()
                 .path("asset")
@@ -313,7 +310,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .get(Asset.class);
 
         assertNotNull(pastAsset);
-        assertEquals(1, pastAsset.getMobileTerminalEvent().size());
     }
 
     @Ignore //since we no longer serialize the connection between asset and MT this will not work
@@ -341,10 +337,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .get(Asset.class);
 
         assertNotNull(fetchedAsset);
-        assertEquals(1, fetchedAsset.getMobileTerminalEvent().size());
-        assertEquals(mobileTerminal.getMobileTerminalId().getGuid(),
-                fetchedAsset.getMobileTerminalEvent().get(0).getMobileterminal().getId().toString());
-
     }
 
     @Test
