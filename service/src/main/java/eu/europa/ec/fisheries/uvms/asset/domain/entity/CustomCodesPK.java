@@ -8,7 +8,7 @@ import javax.persistence.Embeddable;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.OffsetDateTimeDeserializer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.util.OffsetDateTimeDeserializer;
 
 @Embeddable
 public class CustomCodesPK  implements Serializable {

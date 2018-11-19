@@ -19,9 +19,9 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.DataSourceQueue;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageConsumer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.message.MTMessageProducer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.DataSourceQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ModuleQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.MobileTerminalDataSourceRequestMapper;
@@ -31,8 +31,13 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTermin
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.PollChannelListDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.*;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.Channel;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalAttributes;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.AuditModuleRequestMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.MobileTerminalEntityToModelMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PollMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.SearchMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -143,10 +148,6 @@ public class MobileTerminalServiceBean {
         MobileTerminalPlugin updatedPlugin = null;
 
         if (mobileTerminal.getPlugin() == null || mobileTerminal.getPlugin().getName() == null) {
-            /*if(!mobileTerminal.getPlugin().getName().equalsIgnoreCase(oldTerminal.getPlugin().getName())) {
-                updatedPlugin = pluginDao.getPluginByServiceName(mobileTerminal.getPlugin().getPluginServiceName());
-                oldTerminal.setPlugin(updatedPlugin);
-            }*/
             updatedPlugin = oldTerminal.getPlugin();
         }
 
@@ -205,7 +206,6 @@ public class MobileTerminalServiceBean {
     }
 
     public MobileTerminal setStatusMobileTerminal(MobileTerminalId terminalId, String comment, MobileTerminalStatus status, String username) {
-        //MobileTerminal terminalStatus = setStatusMobileTerminal(terminalId, comment, status, username);
         MobileTerminal terminalStatus = getMobileTerminalEntityById(terminalId);
 
         terminalStatus = changeUpdateMobileTerminalStatus(terminalStatus, comment, status, username);
@@ -416,22 +416,14 @@ public class MobileTerminalServiceBean {
         if (mobileTerminal == null) {
             throw new NullPointerException("RequestQuery is null");
         }
-        /*if (mobileTerminalType.getMobileTerminalId() == null) {
-            throw new NullPointerException("No Mobile terminalId in request");
-        }*/
 
         try {
-
             MobileTerminal updatedMobileTerminal = updateMobileTerminal(mobileTerminal, "Upserted by external module", username);
-
             return updatedMobileTerminal;
-
         } catch (RuntimeException e) {
             LOG.error("[ Error when upserting mobile terminal: Mobile terminal update failed trying to insert. ] {} {}", e, e.getStackTrace());
             //TODO: Should this swallow an error and just continue on?
         }
-
-        //MobileTerminal mobileTerminal1Entity = MobileTerminalModelToEntityMapper.mapNewMobileTerminalEntity(mobileTerminalType, assertTerminalHasSerialNumber(mobileTerminalType), plugin, username);
         MobileTerminal createdMobileTerminal = createMobileTerminal(mobileTerminal, username);
 
         return createdMobileTerminal;
@@ -502,7 +494,8 @@ public class MobileTerminalServiceBean {
         }
 
         query.setMobileTerminalSearchCriteria(criteria);
-        eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListPagination pagination = new eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListPagination();
+        eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListPagination pagination =
+                new eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListPagination();
         // To leave room to find erroneous results - it must be only one in the list
         pagination.setListSize(2);
         pagination.setPage(1);

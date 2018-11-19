@@ -4,7 +4,6 @@ import eu.europa.ec.fisheries.schema.exchange.movement.mobileterminal.v1.IdList;
 import eu.europa.ec.fisheries.schema.exchange.movement.mobileterminal.v1.IdType;
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
-import eu.europa.ec.fisheries.uvms.asset.AssetService;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +20,8 @@ public class AssetMTBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(AssetMTBean.class);
 
-
     @Inject
     private MobileTerminalServiceBean mobileTerminalService;
-
-
-
 
     private List<IdList> createIdList(String mobtermidtype_serialnumber, String mobtermidtype_les, String mobtermidtype_dnid, String mobtermidtype_membernumber) {
         List<IdList> ret = new ArrayList<>();
@@ -120,9 +115,4 @@ public class AssetMTBean {
         List<MobileTerminalType> resultList = mobileTerminalListResponse.getMobileTerminal();
         return resultList.size() != 1 ? null : resultList.get(0);
     }
-
-
-
-
-
 }

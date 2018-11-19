@@ -26,5 +26,4 @@ public class TransactionalTests extends BuildAssetServiceDeployment {
         //userTransaction.commit();
         userTransaction.rollback();
     }
-
 }

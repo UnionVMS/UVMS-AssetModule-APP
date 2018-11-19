@@ -26,7 +26,6 @@ import java.util.UUID;
  */
 @Entity
 @Table(name = "inmarsatc_oceanregion")
-//@Table(name = "inmarsatc_oceanregion", indexes = {@Index(columnList = "inmarsatc_history_id", name = "inmarsatc_oceanregion_mobterm_event_FK_INX01", unique = false),})
 @NamedQuery(name="InmarsatCHistoryOceanRegion.findAll", query="SELECT i FROM InmarsatCHistoryOceanRegion i")
 public class InmarsatCHistoryOceanRegion implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -39,11 +38,6 @@ public class InmarsatCHistoryOceanRegion implements Serializable {
 
 	@Column(name="code")
 	private Integer code;
-
-//	@NotNull
-//	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//	@JoinColumn(name="inmarsatc_history_id", foreignKey = @ForeignKey(name = "InmarsatCHistoryOceanRegion_MobileTerminalEvent_FK"))
-//	private MobileTerminalEvent event;
 
 	@Size(max=200)
 	@Column(name="name")
@@ -74,14 +68,6 @@ public class InmarsatCHistoryOceanRegion implements Serializable {
 	public void setCode(Integer code) {
 		this.code = code;
 	}
-
-//	public MobileTerminalEvent getEvent() {
-//		return event;
-//	}
-//
-//	public void setEvent(MobileTerminalEvent event) {
-//		this.event = event;
-//	}
 
 	public String getName() {
 		return name;
@@ -114,7 +100,6 @@ public class InmarsatCHistoryOceanRegion implements Serializable {
 		InmarsatCHistoryOceanRegion that = (InmarsatCHistoryOceanRegion) o;
 		return Objects.equals(id, that.id) &&
 				Objects.equals(code, that.code) &&
-//				Objects.equals(event, that.event) &&
 				Objects.equals(name, that.name) &&
 				Objects.equals(updatetime, that.updatetime) &&
 				Objects.equals(updateuser, that.updateuser);
@@ -122,7 +107,6 @@ public class InmarsatCHistoryOceanRegion implements Serializable {
 
 	@Override
 	public int hashCode() {
-
 		return Objects.hash(id, code, name, updatetime, updateuser);
 	}
 }

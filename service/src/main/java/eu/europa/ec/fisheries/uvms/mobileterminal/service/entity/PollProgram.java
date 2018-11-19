@@ -13,10 +13,8 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.JSR310StringParsableDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.OffsetDateTimeDeserializer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.util.OffsetDateTimeDeserializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.PollStateEnum;
 import org.hibernate.annotations.GenericGenerator;
@@ -51,16 +49,13 @@ public class PollProgram implements Serializable {
     @Column(name = "id")
     private UUID id;
 
-
     @Column(name = "frequency")
     private Integer frequency; // this is probably in seconds
-
 
     @JsonSerialize(using = OffsetDateTimeSerializer.class)
     @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name = "startdate")
     private OffsetDateTime startDate;
-
 
     @JsonSerialize(using = OffsetDateTimeSerializer.class)
     @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
@@ -177,7 +172,6 @@ public class PollProgram implements Serializable {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(id, frequency, startDate, stopDate, latestRun, updatedBy, updateTime, pollBase, pollState);
     }
 }

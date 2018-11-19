@@ -28,6 +28,9 @@ import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 @RunWith(Arquillian.class)
 public class AssetGroupServiceBeanIntTest extends TransactionalTests {
 
@@ -39,37 +42,37 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void createAssetGroup() throws AssetServiceException {
+    public void createAssetGroup() {
         AssetGroup createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
-        Assert.assertTrue(createdAssetGroupEntity != null);
+        assertNotNull(createdAssetGroupEntity);
         assetGroupService.deleteAssetGroupById(createdAssetGroupEntity.getId(), "TEST");
     }
 
     @Test
     @OperateOnDeployment("normal")
-    public void deleteAssetGroupById() throws AssetServiceException {
+    public void deleteAssetGroupById() {
 
         AssetGroup createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
         UUID guid = createdAssetGroupEntity.getId();
         assetGroupService.deleteAssetGroupById(createdAssetGroupEntity.getId(), createdAssetGroupEntity.getOwner());
         AssetGroup fetchedAssetGroupEntity = assetGroupService.getAssetGroupById(guid);
-        Assert.assertTrue(fetchedAssetGroupEntity != null);
+        assertNotNull(fetchedAssetGroupEntity);
     }
 
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetGroupById() throws AssetServiceException, HeuristicRollbackException, RollbackException, NotSupportedException, HeuristicMixedException, SystemException {
+    public void getAssetGroupById() throws HeuristicRollbackException, RollbackException, NotSupportedException, HeuristicMixedException, SystemException {
 
         AssetGroup createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
         UUID guid = createdAssetGroupEntity.getId();
-        Assert.assertTrue(createdAssetGroupEntity.getArchived().equals(false));
+        assertEquals(false, createdAssetGroupEntity.getArchived());
 
         assetGroupService.deleteAssetGroupById(createdAssetGroupEntity.getId(), createdAssetGroupEntity.getOwner());
         commit();
 
         AssetGroup fetchedAssetGroupEntity = assetGroupService.getAssetGroupById(guid);
-        Assert.assertTrue(fetchedAssetGroupEntity.getId().equals(guid));
-        Assert.assertTrue(fetchedAssetGroupEntity.getArchived().equals(true));
+        assertEquals(fetchedAssetGroupEntity.getId(), guid);
+        assertEquals(true, fetchedAssetGroupEntity.getArchived());
         em.createQuery("delete from AssetGroup ag where ag.id = :id").setParameter("id",guid).executeUpdate();
         userTransaction.commit();
         userTransaction.begin();
@@ -77,7 +80,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void updateAssetGroup() throws AssetServiceException {
+    public void updateAssetGroup() {
         AssetGroup createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
         UUID guid = createdAssetGroupEntity.getId();
         String oldUserName = createdAssetGroupEntity.getOwner();
@@ -93,7 +96,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     @Ignore
-    public void getAssetGroupListByAssetGuid() throws AssetServiceException, HeuristicRollbackException, RollbackException, NotSupportedException, HeuristicMixedException, SystemException {
+    public void getAssetGroupListByAssetGuid() {
 
         Asset asset = AssetTestsHelper.createBiggerAsset();
         Asset createdAsset = assetService.createAsset(asset, "test");
@@ -124,7 +127,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
             fetchedList.add(e.getId());
         }
         // the list from db MUST contain our created GUID:s
-        Boolean ok = false;
+        boolean ok = false;
         if (createdList.contains(fetchedList.get(0))) {
             ok = true;
         }
@@ -133,7 +136,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetGroupList() throws AssetServiceException {
+    public void getAssetGroupList() {
 
         String user1 = UUID.randomUUID().toString();
         String user2 = UUID.randomUUID().toString();
@@ -153,23 +156,23 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
         List<AssetGroup> listUser2 = assetGroupService.getAssetGroupList(user2);
         List<AssetGroup> listUser3 = assetGroupService.getAssetGroupList(user3);
 
-        Assert.assertTrue(listUser1.size() == 3);
-        Assert.assertTrue(listUser2.size() == 8);
-        Assert.assertTrue(listUser3.size() == 11);
+        assertEquals(3, listUser1.size());
+        assertEquals(8, listUser2.size());
+        assertEquals(11, listUser3.size());
     }
 
     @Test
     @OperateOnDeployment("normal")
-    public void createAssetGroupField() throws AssetServiceException {
+    public void createAssetGroupField() {
 
         AssetGroupField createdAssetGroupField = createAssetGroupFieldHelper();
         AssetGroupField fetchedAssetGroupField = assetGroupService.getAssetGroupField(createdAssetGroupField.getId());
-        Assert.assertNotNull(fetchedAssetGroupField);
+        assertNotNull(fetchedAssetGroupField);
     }
 
     @Test
     @OperateOnDeployment("normal")
-    public void updateAssetGroupField() throws AssetServiceException {
+    public void updateAssetGroupField() {
 
         AssetGroupField createdAssetGroupField = createAssetGroupFieldHelper();
         AssetGroupField fetchedAssetGroupField = assetGroupService.getAssetGroupField(createdAssetGroupField.getId());
@@ -177,29 +180,28 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
         fetchedAssetGroupField.setValue("CHANGEDVALUE");
         assetGroupService.updateAssetGroupField(fetchedAssetGroupField, "TEST");
         AssetGroupField fetchedAssetGroupField2 = assetGroupService.getAssetGroupField(createdAssetGroupField.getId());
-        Assert.assertEquals(fetchedAssetGroupField2.getValue(), "CHANGEDVALUE");
+        assertEquals(fetchedAssetGroupField2.getValue(), "CHANGEDVALUE");
     }
 
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetGroupField() throws AssetServiceException {
+    public void getAssetGroupField() {
         // same as create . . .
         AssetGroupField createdAssetGroupField = createAssetGroupFieldHelper();
         AssetGroupField fetchedAssetGroupField = assetGroupService.getAssetGroupField(createdAssetGroupField.getId());
-        Assert.assertNotNull(fetchedAssetGroupField);
+        assertNotNull(fetchedAssetGroupField);
     }
 
     @Test
     @OperateOnDeployment("normal")
-    public void deleteAssetGroupField() throws AssetServiceException {
-
+    public void deleteAssetGroupField() {
         AssetGroupField createdAssetGroupField = createAssetGroupFieldHelper();
         AssetGroupField fetchedAssetGroupField = assetGroupService.deleteAssetGroupField(createdAssetGroupField.getId(), "TESTER");
         fetchedAssetGroupField = assetGroupService.getAssetGroupField(createdAssetGroupField.getId());
         Assert.assertNull(fetchedAssetGroupField);
     }
 
-    private AssetGroupField createAssetGroupFieldHelper() throws AssetServiceException {
+    private AssetGroupField createAssetGroupFieldHelper() {
         AssetGroup anAssetGroup = createAndStoreAssetGroupEntity("TEST");
         AssetGroupField assetGroupField = new AssetGroupField();
         assetGroupField.setAssetGroup(anAssetGroup);
@@ -209,12 +211,12 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
         return assetGroupService.createAssetGroupField(anAssetGroup.getId(), assetGroupField, "TEST");
     }
 
-    private AssetGroup createAndStoreAssetGroupEntity(String user) throws AssetServiceException {
+    private AssetGroup createAndStoreAssetGroupEntity(String user) {
         AssetGroup assetGroupEntity = createAssetGroupEntity(user);
-        Assert.assertTrue(assetGroupEntity.getId() == null);
+        Assert.assertNull(assetGroupEntity.getId());
 
         AssetGroup createdAssetGroupEntity = assetGroupService.createAssetGroup(assetGroupEntity, user);
-        Assert.assertTrue(createdAssetGroupEntity.getId() != null);
+        Assert.assertNotNull(createdAssetGroupEntity.getId());
         return createdAssetGroupEntity;
     }
 

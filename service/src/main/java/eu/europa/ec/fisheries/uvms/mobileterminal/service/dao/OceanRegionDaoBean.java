@@ -11,7 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.dao;
 
-
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.OceanRegion;
 
@@ -26,7 +25,6 @@ public class OceanRegionDaoBean  {
 
     @PersistenceContext
     private EntityManager em;
-
 
 	public List<OceanRegion> getOceanRegionList()  {
             TypedQuery<OceanRegion> query = em.createNamedQuery(MobileTerminalConstants.OCEAN_REGIONS, OceanRegion.class);

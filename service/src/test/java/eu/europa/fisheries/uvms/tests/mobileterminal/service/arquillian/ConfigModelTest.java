@@ -81,7 +81,6 @@ public class ConfigModelTest {
         when(twostage.getPluginSatelliteType()).thenReturn("INMARSAT_C");
 	}
 
-
 	@Test
 	public void testGetAllTerminalSystemsEmpty()  {
 		List<MobileTerminalPlugin> pluginList = new ArrayList<>();
@@ -94,8 +93,6 @@ public class ConfigModelTest {
 		assertEquals(0, terminalSystems.size());
 	}
 
-
-
 	@Test
 	public void testGetAllTerminalSystems()  {
 		List<MobileTerminalPlugin> pluginList = new ArrayList<>();
@@ -106,7 +103,6 @@ public class ConfigModelTest {
 		when(oceanRegionDao.getOceanRegionList()).thenReturn(oceanRegionList);
 
 		List<TerminalSystemType> terminalSystems = testModelBean.getAllTerminalSystems();
-
 		assertEquals(2, terminalSystems.size());
 
 		for(TerminalSystemType system : terminalSystems) {
@@ -114,10 +110,8 @@ public class ConfigModelTest {
 		}
 	}
 
-
 	@Test
 	public void testGetAllTerminalSystemsException()  {
-
 		List<MobileTerminalPlugin> list = mobileTerminalPluginDao.getPluginList();
 		Assert.assertNotNull(list);
 		List<TerminalSystemType> list2 = testModelBean.getAllTerminalSystems();
@@ -204,10 +198,8 @@ public class ConfigModelTest {
 		}
 	}
 
-
 	@Test
 	public void testInactivatePluginsException()  {
-
 		List<MobileTerminalPlugin> list = mobileTerminalPluginDao.getPluginList();
 		Assert.assertNotNull(list);
 
@@ -303,5 +295,4 @@ public class ConfigModelTest {
 		boolean isChanged = testModelBean.checkDNIDListChange(serviceName);
 		assertTrue(isChanged);
 	}
-
 }

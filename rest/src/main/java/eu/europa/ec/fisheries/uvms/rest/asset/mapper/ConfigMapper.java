@@ -11,38 +11,14 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.mapper;
 
-
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class ConfigMapper {
 
-//	public static Map<String, List> mapConfiguration(List<Config> configuration) {
-		public static Map<String, List> mapConfiguration(List<Object> configuration) {
+	public static Map<String, List> mapConfiguration(List<Object> configuration) {
 		Map<String, List> config = new HashMap<>();
-		/*
-		if(configuration != null) {
-			for(Config conf : configuration) {
-				List retValues = new ArrayList();
-				List<ConfigValue> values = conf.getValues();
-				for(ConfigValue value : values) {
-					if(value.getValues() != null && !value.getValues().isEmpty()) {
-						Map<String, List<String>> tmp = new HashMap<>();
-						tmp.put(value.getKeyValue(), value.getValues());
-						retValues.add(tmp);
-					} else {
-						retValues.add(value.getKeyValue());
-					}
-				}
-				config.put(conf.getField().name(), retValues);
-			}
-		}
-		*/
 		return config;
 	}
-
 }

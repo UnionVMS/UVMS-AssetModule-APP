@@ -1,9 +1,8 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+
 import java.util.List;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
@@ -25,7 +24,7 @@ import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 public class AssetGroupResourceTest extends AbstractAssetRestTest {
 
     @Test
-    public void createAssetGroupCheckResponseCodeTest() throws Exception {
+    public void createAssetGroupCheckResponseCodeTest() {
         
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
         
@@ -33,13 +32,13 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
                 .path("/group")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(assetGroup));
-        
-        assertTrue(response != null);
+
+        assertNotNull(response);
         assertEquals(200, response.getStatus());
     }
     
     @Test
-    public void createAssetTest() throws Exception {
+    public void createAssetTest() {
 
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
         
@@ -47,25 +46,27 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
                 .path("/group")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(assetGroup), AssetGroup.class);
-        
-        assertTrue(createdAssetGroup != null);
+
+        assertNotNull(createdAssetGroup);
         
         assertThat(createdAssetGroup.getName(), is(assetGroup.getName()));
     }
     
     @Test
-    public void getAssetGroupListByUserNoUserParamTest() throws Exception {
+    public void getAssetGroupListByUserNoUserParamTest() {
         Response response = getWebTarget()
                 .path("group")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)
                 .get();
 
-        assertThat(response.getStatus(), is(Status.INTERNAL_SERVER_ERROR.getStatusCode()));   //You really could argue that this should be a bad request but the server was returning 400 for everything, if there is only one thing returned for every error it is better if it is a 500
+        // You really could argue that this should be a bad request but the server was returning 400 for everything,
+        // if there is only one thing returned for every error it is better if it is a 500
+        assertThat(response.getStatus(), is(Status.INTERNAL_SERVER_ERROR.getStatusCode()));
     }
     
     @Test
-    public void getAssetGroupListByUserTest() throws Exception {
+    public void getAssetGroupListByUserTest() {
 
         Response responseBefore = getWebTarget()
                 .path("group")
@@ -89,13 +90,13 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
                 .get();
         
         List<AssetGroup> fetchedAssetGroups = response.readEntity(new GenericType<List<AssetGroup>>() {});
-        
-        assertTrue(fetchedAssetGroups != null);
+
+        assertNotNull(fetchedAssetGroups);
         assertThat(fetchedAssetGroups.size(), is(groupsBefore.size() + 1));
     }
     
     @Test
-    public void getAssetGroupListByUserTwoGroupsTest() throws Exception {
+    public void getAssetGroupListByUserTwoGroupsTest() {
 
         Response responseBefore = getWebTarget()
                 .path("group")
@@ -124,13 +125,13 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
                 .get();
         
         List<AssetGroup> fetchedAssetGroups = response.readEntity(new GenericType<List<AssetGroup>>() {});
-        
-        assertTrue(fetchedAssetGroups != null);
+
+        assertNotNull(fetchedAssetGroups);
         assertThat(fetchedAssetGroups.size(), is(groupsBefore.size() + 2));
     }
     
     @Test
-    public void getAssetGroupByIdTest() throws Exception {
+    public void getAssetGroupByIdTest() {
 
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
         AssetGroup createdAssetGroup = getWebTarget()
@@ -143,15 +144,15 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
                 .path(createdAssetGroup.getId().toString())
                 .request(MediaType.APPLICATION_JSON)
                 .get(AssetGroup.class);
-        
-       
-        assertTrue(fetchedAssetGroup != null);
+
+
+        assertNotNull(fetchedAssetGroup);
         assertThat(fetchedAssetGroup.getId(), is(createdAssetGroup.getId()));
         assertThat(fetchedAssetGroup.getName(), is(createdAssetGroup.getName()));
     }
     
     @Test
-    public void getAssetGroupListByAssetId() throws Exception {
+    public void getAssetGroupListByAssetId() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
                 .path("asset")
@@ -183,11 +184,10 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
                 .get();
         
         List<AssetGroup> fetchedAssetGroups = response.readEntity(new GenericType<List<AssetGroup>>() {});
-       
-        assertTrue(fetchedAssetGroups != null);
+
+        assertNotNull(fetchedAssetGroups);
         assertThat(fetchedAssetGroups.size(), is(1));
         assertThat(fetchedAssetGroups.get(0).getId(), is(createdAssetGroup.getId()));
         assertThat(fetchedAssetGroups.get(0).getName(), is(createdAssetGroup.getName()));
     }
-    
 }

@@ -191,21 +191,21 @@ public class AssetServiceBean implements AssetService {
     }
 
     private void checkIdentifierNullValues(Asset asset) {
-        if (asset.getCfr() == null || asset.getCfr().isEmpty())
+        if (asset.getCfr().isEmpty())
             asset.setCfr(null);
-        if (asset.getImo() == null || asset.getImo().isEmpty())
+        if (asset.getImo().isEmpty())
             asset.setImo(null);
-        if (asset.getMmsi() == null || asset.getMmsi().isEmpty())
+        if (asset.getMmsi().isEmpty())
             asset.setMmsi(null);
-        if (asset.getIrcs() == null || asset.getIrcs().isEmpty())
+        if (asset.getIrcs().isEmpty())
             asset.setIrcs(null);
-        if (asset.getImo() == null || asset.getImo().isEmpty())
+        if (asset.getImo().isEmpty())
             asset.setImo(null);
-        if (asset.getGfcm() == null || asset.getGfcm().isEmpty())
+        if (asset.getGfcm().isEmpty())
             asset.setGfcm(null);
-        if (asset.getIccat() == null || asset.getIccat().isEmpty())
+        if (asset.getIccat().isEmpty())
             asset.setIccat(null);
-        if (asset.getUvi() == null || asset.getUvi().isEmpty())
+        if (asset.getUvi().isEmpty())
             asset.setUvi(null);
     }
 

@@ -377,18 +377,9 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     }
 
     private MobileTerminalType createAndRestMobileTerminal(String boat) throws Exception {
-        MobileTerminalType mt = MobileTerminalTestHelper.createBasicMobileTerminal();
-        mt.setConnectId(boat);
-
-        String response = getWebTarget()
-                .path("mobileterminal")
-                .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mt), String.class);
-
-
+        String response = MobileTerminalTestHelper.createRestMobileTerminal(getWebTarget(), boat);
         assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        MobileTerminalType createdMT = deserializeResponseDto(response, MobileTerminalType.class);
-        return createdMT;
+        return deserializeResponseDto(response, MobileTerminalType.class);
     }
 
     private Asset createAndRestBasicAsset(){

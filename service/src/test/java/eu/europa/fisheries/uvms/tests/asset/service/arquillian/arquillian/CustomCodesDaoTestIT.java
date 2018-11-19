@@ -156,8 +156,8 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
     }
 
     private CustomCode createHelper(String constant, Boolean active, CustomCodesPK primaryKey) {
-        Integer n = rnd.nextInt(10);
-        Integer duration = rnd.nextInt(90);
+        int n = rnd.nextInt(10);
+        int duration = rnd.nextInt(90);
         OffsetDateTime fromDate = OffsetDateTime.now(Clock.systemUTC());
         fromDate = fromDate.minusDays(n);
         OffsetDateTime toDate = OffsetDateTime.now(Clock.systemUTC());
@@ -183,8 +183,8 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
     }
 
     private CustomCodesPK createPrimaryKey(String constant, String code) {
-        Integer n = rnd.nextInt(10);
-        Integer duration = rnd.nextInt(90);
+        int n = rnd.nextInt(10);
+        int duration = rnd.nextInt(90);
         OffsetDateTime fromDate = OffsetDateTime.now(Clock.systemUTC());
         fromDate = fromDate.minusDays(n);
         OffsetDateTime toDate = OffsetDateTime.now(Clock.systemUTC());

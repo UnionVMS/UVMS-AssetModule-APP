@@ -337,7 +337,9 @@ public class AssetDaoTest extends TransactionalTests {
         asset.setConstructionYear("1924");
         asset.setConstructionPlace("BEJ");
 
-        UUID prevHistoryID = asset.getHistoryId();  //this is here since we no longer update HistId in closing the DB connection but rather update manually in the middle. Reason for this is to stop it from first creating and then updating on create.
+        // This is here since we no longer update HistId in closing the DB connection but rather update manually
+        // in the middle. Reason for this is to stop it from first creating and then updating on create.
+        UUID prevHistoryID = asset.getHistoryId();
         Asset updatedAsset = assetDao.updateAsset(asset);
         commit();
 

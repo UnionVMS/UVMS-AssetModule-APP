@@ -46,12 +46,9 @@ public class ChannelDaoBean  {
     }
 
     public List<String> getActiveDNID(String pluginName) {
-        //return new ArrayList<String>();   //TODO: Fix so that this actually returns something sane  //might be fixed
-        //throw new NotImplementedException();
         String sql = getSQLActiveDNID(pluginName);
         TypedQuery<String> query = em.createQuery(sql, String.class);
         return query.getResultList();
-
     }
 
     private String getSQLActiveDNID(String pluginName) {

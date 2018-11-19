@@ -3,7 +3,6 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.bean;
 import eu.europa.ec.fisheries.schema.mobileterminal.module.v1.MobileTerminalListRequest;
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
-import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.constants.MessageConstants;
@@ -27,7 +26,7 @@ import java.util.List;
 @LocalBean
 public class ListReceivedEventBean {
 
-    final static Logger LOG = LoggerFactory.getLogger(ListReceivedEventBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ListReceivedEventBean.class);
 
     @EJB
     private MobileTerminalServiceBean mobileTerminalService;
@@ -37,10 +36,9 @@ public class ListReceivedEventBean {
 
     @Inject
     @ErrorEvent
-    Event<EventMessage> errorEvent;
+    private Event<EventMessage> errorEvent;
 
     public void list(EventMessage message) {
-
         LOG.info("List Mobile terminals:{}",message);
         try {
             MobileTerminalListRequest request = JAXBMarshaller.unmarshallTextMessage(message.getJmsMessage(), MobileTerminalListRequest.class);
@@ -64,6 +62,5 @@ public class ListReceivedEventBean {
             // Propagate error
             throw new EJBException(e);
         }
-
     }
 }

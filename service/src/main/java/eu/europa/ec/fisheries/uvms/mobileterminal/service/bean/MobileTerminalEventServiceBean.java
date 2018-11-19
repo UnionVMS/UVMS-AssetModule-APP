@@ -31,14 +31,14 @@ import javax.jms.*;
 @LocalBean
 public class MobileTerminalEventServiceBean {
 
-    final static Logger LOG = LoggerFactory.getLogger(MobileTerminalEventServiceBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MobileTerminalEventServiceBean.class);
 
     @Resource(lookup = MessageConstants.JAVA_MESSAGE_CONNECTION_FACTORY)
     private ConnectionFactory connectionFactory;
 
     @Inject
     @ErrorEvent
-    Event<EventMessage> errorEvent;
+    private Event<EventMessage> errorEvent;
 
     public void returnError(@Observes @ErrorEvent EventMessage message) {
         try (Connection connection = connectionFactory.createConnection()) {
