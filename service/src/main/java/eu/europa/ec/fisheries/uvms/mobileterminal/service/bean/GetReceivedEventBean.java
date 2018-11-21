@@ -2,17 +2,16 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.bean;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.module.v1.GetMobileTerminalRequest;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
+import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.constants.MessageConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.DataSourceQueue;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ErrorEvent;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.EventMessage;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.MobileTerminalModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.ParameterKey;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +41,7 @@ public class GetReceivedEventBean {
     private MobileTerminalServiceBean service;
 
     @Inject
-    @ErrorEvent
+    @AssetMessageErrorEvent
     private Event<EventMessage> errorEvent;
 
     public void get(EventMessage message) {

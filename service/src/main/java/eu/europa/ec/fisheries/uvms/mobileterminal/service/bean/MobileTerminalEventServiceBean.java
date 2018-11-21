@@ -12,9 +12,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.bean;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalFault;
+import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.constants.MessageConstants;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ErrorEvent;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.EventMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,10 +37,10 @@ public class MobileTerminalEventServiceBean {
     private ConnectionFactory connectionFactory;
 
     @Inject
-    @ErrorEvent
+    @AssetMessageErrorEvent
     private Event<EventMessage> errorEvent;
 
-    public void returnError(@Observes @ErrorEvent EventMessage message) {
+    public void returnError(@Observes @AssetMessageErrorEvent EventMessage message) {
         try (Connection connection = connectionFactory.createConnection()) {
             LOG.debug("Sending error message back from Mobile Terminal module to recipient om JMS Queue with correlationID: {} ",
                     message.getJmsMessage().getJMSMessageID());

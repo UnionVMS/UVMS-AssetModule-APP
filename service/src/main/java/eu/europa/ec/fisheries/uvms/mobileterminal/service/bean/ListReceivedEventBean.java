@@ -3,10 +3,10 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.bean;
 import eu.europa.ec.fisheries.schema.mobileterminal.module.v1.MobileTerminalListRequest;
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
+import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.constants.MessageConstants;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ErrorEvent;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.EventMessage;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.MobileTerminalModuleRequestMapper;
 import org.slf4j.Logger;
@@ -35,7 +35,7 @@ public class ListReceivedEventBean {
     private ConnectionFactory connectionFactory;
 
     @Inject
-    @ErrorEvent
+    @AssetMessageErrorEvent
     private Event<EventMessage> errorEvent;
 
     public void list(EventMessage message) {
