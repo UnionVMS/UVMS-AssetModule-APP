@@ -2,7 +2,6 @@ package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalId;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.constants.MessageConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.EventMessage;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.MobileTerminalModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.GetReceivedEventBean;
@@ -30,7 +29,7 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(Arquillian.class)
 public class GetReceivedEventBeanTest extends TransactionalTests {
 
-    @Resource(lookup = MessageConstants.JAVA_MESSAGE_CONNECTION_FACTORY)
+    @Resource(lookup = "java:/ConnectionFactory")
     private ConnectionFactory connectionFactory;
 
     @Inject

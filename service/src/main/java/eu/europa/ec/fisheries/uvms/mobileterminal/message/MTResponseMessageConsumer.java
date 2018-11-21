@@ -11,7 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.message;
 
 import eu.europa.ec.fisheries.uvms.commons.message.impl.JMSUtils;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.constants.MessageConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +34,7 @@ public class MTResponseMessageConsumer implements MTMessageConsumer{
     @PostConstruct
     private void init() {
         connectionFactory = JMSUtils.lookupConnectionFactory();
-        responseMobileTerminalQueue = JMSUtils.lookupQueue(MessageConstants.COMPONENT_RESPONSE_QUEUE);
+        responseMobileTerminalQueue = JMSUtils.lookupQueue("jms/queue/UVMSMobileTerminal");
     }
 
     /*
@@ -47,7 +46,7 @@ public class MTResponseMessageConsumer implements MTMessageConsumer{
         if (correlationId == null || correlationId.isEmpty()) {
             throw new NullPointerException("No CorrelationID provided!");
         }
-        LOG.info("Looking for message " + correlationId + " in " + MessageConstants.COMPONENT_RESPONSE_QUEUE + " with " + responseMobileTerminalQueue);
+        LOG.info("Looking for message " + correlationId + " in jms/queue/UVMSMobileTerminal with " + responseMobileTerminalQueue);
         try (Connection connection = connectionFactory.createConnection()) {
             final Session session = JMSUtils.connectToQueue(connection);
             MessageConsumer consumer = session.createConsumer(responseMobileTerminalQueue, "JMSCorrelationID='" + correlationId + "'");

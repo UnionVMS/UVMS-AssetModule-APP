@@ -14,7 +14,6 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.service.bean;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalFault;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.constants.MessageConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.EventMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +32,7 @@ public class MobileTerminalEventServiceBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(MobileTerminalEventServiceBean.class);
 
-    @Resource(lookup = MessageConstants.JAVA_MESSAGE_CONNECTION_FACTORY)
+    @Resource(lookup = "java:/ConnectionFactory")
     private ConnectionFactory connectionFactory;
 
     @Inject

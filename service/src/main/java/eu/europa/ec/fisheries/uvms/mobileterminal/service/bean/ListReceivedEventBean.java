@@ -6,7 +6,6 @@ import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.constants.MessageConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.EventMessage;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.MobileTerminalModuleRequestMapper;
 import org.slf4j.Logger;
@@ -31,7 +30,7 @@ public class ListReceivedEventBean {
     @EJB
     private MobileTerminalServiceBean mobileTerminalService;
 
-    @Resource(lookup = MessageConstants.JAVA_MESSAGE_CONNECTION_FACTORY)
+    @Resource(lookup = "java:/ConnectionFactory")
     private ConnectionFactory connectionFactory;
 
     @Inject

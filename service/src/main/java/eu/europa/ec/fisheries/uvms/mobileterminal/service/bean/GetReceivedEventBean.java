@@ -7,7 +7,6 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
 import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.constants.MessageConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.DataSourceQueue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.EventMessage;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.MobileTerminalModuleRequestMapper;
@@ -30,7 +29,7 @@ public class GetReceivedEventBean {
 
     private final static Logger LOG = LoggerFactory.getLogger(GetReceivedEventBean.class);
 
-    @Resource(lookup = MessageConstants.JAVA_MESSAGE_CONNECTION_FACTORY)
+    @Resource(lookup = "java:/ConnectionFactory")
     private ConnectionFactory connectionFactory;
 
     // TODO: NOOOOOOOOOO, Config Module is locally deployed in MobileTerminal...
