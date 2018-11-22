@@ -120,6 +120,33 @@ public class AssetClient {
                 .get(new GenericType<List<AssetDTO>>() {});
     }
     
+    public List<AssetDTO> getAssetHistoryListByAssetId(UUID id) {
+        return webTarget
+                .path("history/asset")
+                .path(id.toString())
+                .request(MediaType.APPLICATION_JSON)
+                .get(new GenericType<List<AssetDTO>>() {});
+    }
+    
+    public AssetDTO getAssetFromAssetIdAndDate(AssetIdentifier type, String value, OffsetDateTime date) {
+        String formattedDate = date.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        return webTarget
+                .path("history")
+                .path(type.name().toLowerCase())
+                .path(value)
+                .path(formattedDate)
+                .request(MediaType.APPLICATION_JSON)
+                .get(AssetDTO.class);
+    }
+
+    public AssetDTO getAssetHistoryByAssetHistGuid(UUID historyId) {
+        return webTarget
+                .path("history")
+                .path(historyId.toString())
+                .request(MediaType.APPLICATION_JSON)
+                .get(AssetDTO.class);
+    }
+    
     public AssetBO upsertAsset(AssetBO asset) {
         return webTarget
                 .path("asset")

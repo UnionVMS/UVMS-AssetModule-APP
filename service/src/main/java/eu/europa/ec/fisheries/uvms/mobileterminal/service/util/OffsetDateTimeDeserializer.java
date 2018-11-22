@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.mobileterminal.service;
+package eu.europa.ec.fisheries.uvms.mobileterminal.service.util;
 
 import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer;
 

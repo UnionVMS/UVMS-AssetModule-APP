@@ -97,7 +97,8 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .get();
 
         assertNotNull(response);
-        assertThat(response.getStatus(), is(Status.INTERNAL_SERVER_ERROR.getStatusCode())); //until someone has made a better errorhandler that can send a 404 only when neccessary, this one will return 500
+        //until someone has made a better errorHandler that can send a 404 only when necessary, this one will return 500
+        assertThat(response.getStatus(), is(Status.INTERNAL_SERVER_ERROR.getStatusCode()));
     }
 
     @Test
@@ -140,7 +141,9 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .put(Entity.json(asset));
 
         assertNotNull(response);
-        assertThat(response.getStatus(), is(Status.INTERNAL_SERVER_ERROR.getStatusCode())); //You really could argue that this should be a bad request but the server was returning 400 for everything, if there is only one thing returned for every error it is better if it is a 500
+        // You really could argue that this should be a bad request but the server was returning 400 for everything,
+        // if there is only one thing returned for every error it is better if it is a 500
+        assertThat(response.getStatus(), is(Status.INTERNAL_SERVER_ERROR.getStatusCode()));
     }
 
     @Test
@@ -171,7 +174,9 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .put(Entity.json(asset));
 
         assertNotNull(response);
-        assertThat(response.getStatus() , is(Status.INTERNAL_SERVER_ERROR.getStatusCode())); //You really could argue that this should be a bad request but the server was returning 400 for everything, if there is only one thing returned for every error it is better if it is a 500
+        // You really could argue that this should be a bad request but the server was returning 400 for everything,
+        // if there is only one thing returned for every error it is better if it is a 500
+        assertThat(response.getStatus() , is(Status.INTERNAL_SERVER_ERROR.getStatusCode()));
     }
 
     @Test

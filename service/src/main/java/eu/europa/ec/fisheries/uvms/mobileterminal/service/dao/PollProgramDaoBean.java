@@ -52,27 +52,27 @@ public class PollProgramDaoBean {
     }
 
     public List<PollProgram> getPollProgramRunningAndStarted()  {
-            TypedQuery<PollProgram> query = em.createNamedQuery(MobileTerminalConstants.POLL_PROGRAM_FIND_RUNNING_AND_STARTED, PollProgram.class);
-            query.setParameter("currentDate", OffsetDateTime.now(ZoneOffset.UTC)/*.toString()*/);
-            List<PollProgram> pollPrograms = query.getResultList();
-            List<PollProgram> validPollPrograms = new ArrayList<>();
+        TypedQuery<PollProgram> query = em.createNamedQuery(MobileTerminalConstants.POLL_PROGRAM_FIND_RUNNING_AND_STARTED, PollProgram.class);
+        query.setParameter("currentDate", OffsetDateTime.now(ZoneOffset.UTC)/*.toString()*/);
+        List<PollProgram> pollPrograms = query.getResultList();
+        List<PollProgram> validPollPrograms = new ArrayList<>();
 
-            for (PollProgram pollProgram : pollPrograms) {
-                OffsetDateTime lastRun = pollProgram.getLatestRun();
-                Integer frequency = pollProgram.getFrequency();
-                OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        for (PollProgram pollProgram : pollPrograms) {
+            OffsetDateTime lastRun = pollProgram.getLatestRun();
+            Integer frequency = pollProgram.getFrequency();
+            OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
 
-                long lastRunEpoch = lastRun == null ? 0 : lastRun.toEpochSecond();
-                long nowEpoch = now.toEpochSecond();
+            long lastRunEpoch = lastRun == null ? 0 : lastRun.toEpochSecond();
+            long nowEpoch = now.toEpochSecond();
 
-                boolean createPoll = lastRun == null || nowEpoch >= lastRunEpoch + frequency * 1000;
+            boolean createPoll = lastRun == null || nowEpoch >= lastRunEpoch + frequency * 1000;
 
-                if (createPoll) {
-                    pollProgram.setLatestRun(now);
-                    validPollPrograms.add(pollProgram);
-                }
+            if (createPoll) {
+                pollProgram.setLatestRun(now);
+                validPollPrograms.add(pollProgram);
             }
-            return validPollPrograms;
+        }
+        return validPollPrograms;
     }
 
     public PollProgram getPollProgramByGuid(String guid) {

@@ -22,17 +22,6 @@ public abstract class BuildAssetServiceDeployment {
                 .withTransitivity().asFile();
         testWar.addAsLibraries(files);
 
-        /*File[]*/ /*files = Maven.configureResolver().loadPomFromFile("pom.xml")
-                /*.importRuntimeAndTestDependencies()*/
-                /*.resolve(/*"eu.europa.ec.fisheries.uvms.asset:deprecated-asset-message",
-
-                        "eu.europa.ec.fisheries.uvms.audit:audit-model",
-                        "eu.europa.ec.fisheries.uvms:config-library",
-                        "eu.europa.ec.fisheries.uvms.config:config-model:4.0.0")*/
-                /*.withTransitivity().asFile();
-        testWar.addAsLibraries(files);*/
-        
-
         testWar.addPackages(true, "eu.europa.fisheries.uvms.tests");
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset");
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.mobileterminal");

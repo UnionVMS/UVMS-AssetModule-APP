@@ -50,7 +50,6 @@ public class PollRestResource {
 
     private final static Logger LOG = LoggerFactory.getLogger(PollRestResource.class);
 
-
     @Inject
     private PollServiceBean pollServiceBean;
 
@@ -164,7 +163,6 @@ public class PollRestResource {
         }
     }
 
-
     @GET
     @Path("/program/{id}")
     @RequiresFeature(UnionVMSFeature.viewMobileTerminalPolls)
@@ -181,6 +179,4 @@ public class PollRestResource {
 
         }
     }
-
-
 }

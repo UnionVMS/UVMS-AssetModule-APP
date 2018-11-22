@@ -11,8 +11,22 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
-import java.util.List;
-import java.util.Map;
+import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.ConfigList;
+import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemType;
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.SearchKey;
+import eu.europa.ec.fisheries.uvms.asset.bean.ConfigServiceBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.ConfigServiceBeanMT;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTMobileTerminalConfig;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTMobileTerminalDeviceConfig;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTResponseDto;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTErrorHandler;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
+import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
+import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
+import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -22,23 +36,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
-import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.ConfigList;
-import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemType;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.SearchKey;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.ConfigServiceBeanMT;
-import eu.europa.ec.fisheries.uvms.rest.asset.mapper.ConfigMapper;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTMobileTerminalConfig;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTMobileTerminalDeviceConfig;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTResponseDto;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTErrorHandler;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import eu.europa.ec.fisheries.uvms.asset.bean.ConfigServiceBean;
-import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
-import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
-import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
+import java.util.List;
+import java.util.Map;
 
 @Path("/config")
 @Stateless
@@ -68,7 +67,7 @@ public class AssetConfigResource {
     public Response getConfiguration() {
         try {
         	List<Object> configuration = configService.getConfiguration();
-        	return Response.ok(ConfigMapper.mapConfiguration(configuration)).build();
+        	return Response.ok(configuration).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();

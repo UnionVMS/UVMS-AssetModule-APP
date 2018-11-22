@@ -2,9 +2,7 @@ package eu.europa.fisheries.uvms.tests.asset.service.arquillian.arquillian;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -200,5 +198,15 @@ public class AssetTestsHelper {
                 break;
         }
         return assetEntity;
+    }
+
+    static AssetGroupField createAssetGroupField(AssetGroup assetGroupEntity, String key, String keyFieldValue, OffsetDateTime dt, String user) {
+        AssetGroupField ag = new AssetGroupField();
+        ag.setAssetGroup(assetGroupEntity);
+        ag.setUpdatedBy(user);
+        ag.setUpdateTime(dt);
+        ag.setKey(key);
+        ag.setValue(keyFieldValue);
+        return ag;
     }
 }

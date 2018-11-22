@@ -1,8 +1,6 @@
 package eu.europa.fisheries.uvms.tests.asset.service.arquillian.arquillian;
 
-
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetGroupDao;
-import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetGroupFieldDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
@@ -19,14 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 @RunWith(Arquillian.class)
 public class AssetGroupTestsIT extends TransactionalTests {
 
     @Inject
     private AssetGroupDao assetGroupDao;
-
-    @Inject
-    private AssetGroupFieldDao assetGroupFieldDaoBean;
 
     @Test
     @OperateOnDeployment("normal")
@@ -45,7 +43,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
         }
 
         // the list from db MUST contain our created Id:s
-        Boolean ok = true;
+        boolean ok = true;
         for (UUID aCreated : createdList) {
             if (!fetchedList.contains(aCreated)) {
                 ok = false;
@@ -58,15 +56,13 @@ public class AssetGroupTestsIT extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void createAssetGroup() {
-
         AssetGroup createdAssetGroupEntity1 = createAndStoreAssetGroupEntity("TEST",1);
-        Assert.assertTrue(createdAssetGroupEntity1 != null);
+        assertNotNull(createdAssetGroupEntity1);
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void getAssetGroupByUser() {
-
         String user1 = UUID.randomUUID().toString();
         String user2 = UUID.randomUUID().toString();
         String user3 = UUID.randomUUID().toString();
@@ -85,9 +81,9 @@ public class AssetGroupTestsIT extends TransactionalTests {
         List<AssetGroup> listUser2 = assetGroupDao.getAssetGroupByUser(user2);
         List<AssetGroup> listUser3 = assetGroupDao.getAssetGroupByUser(user3);
 
-        Assert.assertTrue(listUser1.size() == 3);
-        Assert.assertTrue(listUser2.size() == 8);
-        Assert.assertTrue(listUser3.size() == 11);
+        assertEquals(3, listUser1.size());
+        assertEquals(8, listUser2.size());
+        assertEquals(11, listUser3.size());
     }
 
     @Test
@@ -96,12 +92,11 @@ public class AssetGroupTestsIT extends TransactionalTests {
 
         AssetGroup createdAssetGroupEntity = createAndStoreAssetGroupEntity("TEST",1);
         UUID guid = createdAssetGroupEntity.getId();
-        Assert.assertTrue(guid != null);
+        assertNotNull(guid);
 
         AssetGroup fetchedAssetGroupEntity = assetGroupDao.getAssetGroupByGuid(guid);
-        Assert.assertEquals(guid, fetchedAssetGroupEntity.getId());
+        assertEquals(guid, fetchedAssetGroupEntity.getId());
     }
-
 
     @Test
     @OperateOnDeployment("normal")
@@ -121,7 +116,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
         }
 
         // the list from db MUST contain our created GUIDS:s
-        Boolean ok = true;
+        boolean ok = true;
         for (UUID aCreatedGUID : createdList) {
             if (!fetchedList.contains(aCreatedGUID)) {
                 ok = false;
@@ -134,19 +129,17 @@ public class AssetGroupTestsIT extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void deleteAssetGroup() {
-
         AssetGroup assetGroupEntity = createAndStoreAssetGroupEntity("TEST",1);
         UUID uuid = assetGroupEntity.getId();
         assetGroupDao.deleteAssetGroup(assetGroupEntity);
 
             AssetGroup fetchedGroup = assetGroupDao.getAssetGroupByGuid(uuid);
-            Assert.assertTrue(fetchedGroup == null);
+        Assert.assertNull(fetchedGroup);
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void updateAssetGroup() {
-
         AssetGroup assetGroupEntity = createAndStoreAssetGroupEntity("TEST",1);
         UUID uuid = assetGroupEntity.getId();
 
@@ -158,14 +151,9 @@ public class AssetGroupTestsIT extends TransactionalTests {
         Assert.assertTrue(fetchedGroup.getOwner().equalsIgnoreCase("NEW OWNER"));
     }
 
-
     @Test
     @OperateOnDeployment("normal")
     public void updateAssetGroupAndFields() {
-
-
-
-
         AssetGroup assetGroupEntity = createAndStoreAssetGroupEntity("TEST",42);
         UUID uuid = assetGroupEntity.getId();
 
@@ -179,15 +167,12 @@ public class AssetGroupTestsIT extends TransactionalTests {
         Assert.assertTrue(fetchedGroup.getOwner().equalsIgnoreCase("NEW OWNER"));
     }
 
-
-
     private AssetGroup createAndStoreAssetGroupEntity(String user, int numberOfGroupFields) {
 
         AssetGroup assetGroupEntity = createAssetGroupEntity(user,numberOfGroupFields);
         AssetGroup createdAssetGroupEntity = assetGroupDao.createAssetGroup(assetGroupEntity);
         return createdAssetGroupEntity;
     }
-
 
     private AssetGroup createAssetGroupEntity(String user, int numberOfGroupFields) {
         AssetGroup ag = new AssetGroup();
@@ -206,31 +191,13 @@ public class AssetGroupTestsIT extends TransactionalTests {
         return ag;
     }
 
-
     private  List<AssetGroupField> createAssetGroupFields(AssetGroup assetGroupEntity, OffsetDateTime dt, String user, int n) {
-
         List<AssetGroupField> groupFields = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             String uuid = UUID.randomUUID().toString();
-            AssetGroupField field = createAssetGroupField(assetGroupEntity, "GUID", uuid, dt, user);
+            AssetGroupField field = AssetTestsHelper.createAssetGroupField(assetGroupEntity, "GUID", uuid, dt, user);
             groupFields.add(field);
         }
         return groupFields;
     }
-
-
-    private AssetGroupField createAssetGroupField(AssetGroup assetGroupEntity, String key, String keyFieldValue, OffsetDateTime dt, String user) {
-
-        AssetGroupField ag = new AssetGroupField();
-        ag.setAssetGroup(assetGroupEntity);
-        ag.setUpdatedBy(user);
-        ag.setUpdateTime(dt);
-        ag.setKey(key);
-        ag.setValue(keyFieldValue);
-
-
-        return ag;
-    }
-
-
 }

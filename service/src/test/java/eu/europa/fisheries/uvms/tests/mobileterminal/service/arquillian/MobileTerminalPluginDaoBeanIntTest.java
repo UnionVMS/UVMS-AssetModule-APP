@@ -77,8 +77,6 @@ public class MobileTerminalPluginDaoBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void testCreateMobileTerminalPlugin_persistNullEntityFailsWithTerminalDaoException() {
-
-
         try {
             mobileTerminalPluginDao.createMobileTerminalPlugin(null);
             Assert.fail(); // it MUST fail so coming here is ERROR
@@ -238,8 +236,6 @@ public class MobileTerminalPluginDaoBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void testUpdatePlugin_updateInsteadOfPersistFailsWithTerminalDaoException() {
-
-
         MobileTerminalPlugin mobileTerminalPlugin = createMobileTerminalPluginHelper();
 
         MobileTerminalPlugin obj = mobileTerminalPluginDao.updateMobileTerminalPlugin(mobileTerminalPlugin);
@@ -249,8 +245,6 @@ public class MobileTerminalPluginDaoBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void testUpdatePlugin_persistNullEntityFailsWithTerminalDaoException() {
-
-
         try {
             mobileTerminalPluginDao.updateMobileTerminalPlugin(null);
             Assert.fail();

@@ -400,7 +400,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         String dnid = "";
         String memberNumber = "";
         Set<Channel> channels = mobileTerminal.getChannels();
-        for(Channel channel : channels){
+        for (Channel channel : channels) {
             dnid = channel.getDNID();
             memberNumber = channel.getMemberNumber();
             break; // contains only one
@@ -454,7 +454,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         request.setLesValue("LES1234567890");
 
         // for asset
-        if(asset != null) {
+        if (asset != null) {
             request.setIdValue(asset.getId());
             request.setCfrValue(asset.getCfr());
             request.setImoValue(asset.getImo());
@@ -491,36 +491,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         return createdAssetGroup;
     }
-
-/*
-    private AssetId createAssetId(Asset asset) {
-
-        AssetId i = new AssetId();
-
-        String mmsiValue = asset.getMmsi();
-        if (mmsiValue != null && mmsiValue.length() > 0) {
-            AssetIdList line = new AssetIdList();
-            line.setIdType(eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetIdType.MMSI);
-            line.setValue(mmsiValue);
-            i.getAssetIdList().add(line);
-        }
-        String cfrValue = asset.getCfr();
-        if (cfrValue != null && cfrValue.length() > 0) {
-            AssetIdList line = new AssetIdList();
-            line.setIdType(eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetIdType.CFR);
-            line.setValue(cfrValue);
-            i.getAssetIdList().add(line);
-        }
-        String ircsValue = asset.getIrcs();
-        if (ircsValue != null && ircsValue.length() > 0) {
-            AssetIdList line = new AssetIdList();
-            line.setIdType(eu.europa.ec.fisheries.schema.movementrules.asset.v1.AssetIdType.IRCS);
-            line.setValue(ircsValue);
-            i.getAssetIdList().add(line);
-        }
-        return i;
-    }
-*/
 
     private Asset createAsset() {
         Asset asset = AssetTestsHelper.createBasicAsset();

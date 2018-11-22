@@ -13,10 +13,16 @@ package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
 
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
 
 public class MobileTerminalTestHelper {
 
@@ -122,5 +128,15 @@ public class MobileTerminalTestHelper {
 
     public static String getSerialNumber() {
         return serialNumber;
+    }
+
+    public static String createRestMobileTerminal(WebTarget webTarget, String boat) {
+        MobileTerminalType mt = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mt.setConnectId(boat);
+
+        return webTarget
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mt), String.class);
     }
 }

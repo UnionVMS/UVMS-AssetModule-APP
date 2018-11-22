@@ -15,7 +15,6 @@ import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityListType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityTypeType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.ServiceResponseType;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.ExchangeModuleResponseMapper;
 import org.slf4j.Logger;
@@ -46,7 +45,6 @@ public class ExchangeModuleMock implements MessageListener {
 
             LOG.debug("READING MESSAGE IN EXCHANGE MOCK: " + message.toString());
 
-
             List<ServiceResponseType> serviceResponse = new ArrayList<>();
             ServiceResponseType serviceResponseType = new ServiceResponseType();
             serviceResponseType.setServiceClassName("eu.europa.ec.fisheries.uvms.plugins.inmarsat");
@@ -58,12 +56,6 @@ public class ExchangeModuleMock implements MessageListener {
             capabilityType.setType(CapabilityTypeType.POLLABLE);
             capabilityType.setValue("TRUE");
             capabilityList.getCapability().add(capabilityType);
-
-            /*capabilityType = new CapabilityType();
-            capabilityType.setType(CapabilityTypeType.CONFIGURABLE);
-            capabilityType.setValue("TRUE");
-            capabilityList.getCapability().add(capabilityType);*/
-
             serviceResponseType.setCapabilityList(capabilityList);
 
             serviceResponse.add(serviceResponseType);
@@ -79,5 +71,4 @@ public class ExchangeModuleMock implements MessageListener {
             LOG.error("Mock error", e);
         }
     }
-
 }

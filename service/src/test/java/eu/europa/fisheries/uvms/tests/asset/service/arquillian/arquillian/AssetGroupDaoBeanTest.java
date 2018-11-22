@@ -38,7 +38,7 @@ import static org.mockito.Mockito.*;
 public class AssetGroupDaoBeanTest {
 
     @Mock
-    EntityManager em;
+    private EntityManager em;
 
     @InjectMocks
     private AssetGroupDao dao;
@@ -103,13 +103,6 @@ public class AssetGroupDaoBeanTest {
 
 		filter.setUpdatedBy("DAOTEST");
 		filter.setUpdateTime(OffsetDateTime.now(Clock.systemUTC()));
-
-
 		return group;
 	}
-
-
-
-
-
 }

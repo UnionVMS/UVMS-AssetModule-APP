@@ -23,7 +23,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 public class NoteDao {
 
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     public Note findNote(UUID id) {
         return em.find(Note.class, id);

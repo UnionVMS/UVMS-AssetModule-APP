@@ -19,16 +19,13 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.time.OffsetDateTime;
-import java.time.OffsetDateTime;
 import java.util.List;
-
 
 @Stateless
 public class CustomCodesServiceBean implements CustomCodesService {
 
 	@EJB
 	private CustomCodeDao dao;
-
 
 	@Override
 	public CustomCode create(String constant, String code, OffsetDateTime validFromDate, OffsetDateTime validToDate, String description){
@@ -77,8 +74,6 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		return dao.create(customCode);
 	}
 
-
-
 	@Override
 	public CustomCode get(String constant, String code , OffsetDateTime validFromDate, OffsetDateTime validToDate){
 
@@ -114,7 +109,6 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		return dao.get(primaryKey);
 	}
 
-
 	@Override
 	public Boolean exists(String constant, String code, OffsetDateTime validFromDate, OffsetDateTime validToDate ){
 
@@ -139,7 +133,6 @@ public class CustomCodesServiceBean implements CustomCodesService {
 
 		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code,validFromDate,validToDate);
 		return dao.exists(primaryKey);
-
 	}
 
 	@Override
@@ -164,11 +157,8 @@ public class CustomCodesServiceBean implements CustomCodesService {
 			throw new IllegalArgumentException("ValifToDate cannot be null");
 		}
 
-
 		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code,validFromDate,validToDate);
-
 		return dao.update(primaryKey, newValue);
-
 	}
 
 	@Override
@@ -194,7 +184,6 @@ public class CustomCodesServiceBean implements CustomCodesService {
 
 		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code,validFromDate,validToDate);
 		dao.delete(primaryKey);
-
 	}
 
 	@Override
@@ -206,7 +195,6 @@ public class CustomCodesServiceBean implements CustomCodesService {
 			throw new IllegalArgumentException("Constant cannot be empty");
 		}
 		return dao.getAllFor(constant.toUpperCase());
-
 	}
 
 	@Override
@@ -218,14 +206,11 @@ public class CustomCodesServiceBean implements CustomCodesService {
 			throw new IllegalArgumentException("Constant cannot be empty");
 		}
 		dao.deleteAllFor(constant.toUpperCase());
-
 	}
 
 	@Override
 	public List<String> getAllConstants(){
-
 		return dao.getAllConstants();
-
 	}
 
 	@Override
@@ -246,7 +231,6 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		if(aDate == null){
 			throw new IllegalArgumentException("ValifFromDate cannot be null");
 		}
-
 		return dao.getForDate(constant,code,aDate);
 	}
 
@@ -267,9 +251,7 @@ public class CustomCodesServiceBean implements CustomCodesService {
 		if(aDate == null){
 			throw new IllegalArgumentException("ValifFromDate cannot be null");
 		}
-
 		return dao.verify(constant,code,aDate);
-
 	}
 
 	@Override
@@ -307,10 +289,5 @@ public class CustomCodesServiceBean implements CustomCodesService {
 
 		CustomCode storedCustomCode = dao.replace(customCode);
 		return storedCustomCode;
-
-
 	}
-
-
-
 }

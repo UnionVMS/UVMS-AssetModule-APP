@@ -629,9 +629,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.json(createdMT.getMobileTerminalId()), String.class);
 
-
         assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-
 
         //check the search result
         returnList = sendMTListQuery(mobileTerminalListQuery);
@@ -639,17 +637,9 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     private MobileTerminalType createAndRestMobileTerminal(String boat) throws Exception {
-        MobileTerminalType mt = MobileTerminalTestHelper.createBasicMobileTerminal();
-        mt.setConnectId(boat);
-
-        String response = getWebTarget()
-                .path("mobileterminal")
-                .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mt), String.class);
-
+        String response = MobileTerminalTestHelper.createRestMobileTerminal(getWebTarget(), boat);
         assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        MobileTerminalType createdMT = deserializeResponseDto(response, MobileTerminalType.class);
-        return createdMT;
+        return deserializeResponseDto(response, MobileTerminalType.class);
     }
 
     private Asset createAndRestBasicAsset() {

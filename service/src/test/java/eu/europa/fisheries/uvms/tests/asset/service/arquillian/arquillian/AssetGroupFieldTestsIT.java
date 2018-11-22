@@ -6,8 +6,6 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -17,6 +15,8 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 public class AssetGroupFieldTestsIT extends TransactionalTests {
@@ -35,36 +35,32 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
         AssetGroupField createdAssetGroupField = createAndStoreAssetGroupFieldEntity(assetGroup);
         UUID createdId = createdAssetGroupField.getId();
         AssetGroupField fetchedAssetGroupField =  getField(createdId);
-        Assert.assertTrue(fetchedAssetGroupField != null);
-
+        assertNotNull(fetchedAssetGroupField);
     }
 
     @Test
     public void get() {
-
         String user = "test";
         AssetGroup assetGroup = createAndStoreAssetGroupEntity(user);
         AssetGroupField createdAssetGroupField = createAndStoreAssetGroupFieldEntity(assetGroup);
         UUID createdId = createdAssetGroupField.getId();
         AssetGroupField fetchedAssetGroupField =  getField(createdId);
-        Assert.assertEquals(createdId, fetchedAssetGroupField.getId());
+        assertEquals(createdId, fetchedAssetGroupField.getId());
     }
 
     @Test
     public void delete() {
-
         String user = "test";
         AssetGroup assetGroup = createAndStoreAssetGroupEntity(user);
         AssetGroupField createdAssetGroupField = createAndStoreAssetGroupFieldEntity(assetGroup);
         UUID createdId = createdAssetGroupField.getId();
         assetGroupFieldDaoBean.delete(createdAssetGroupField);
         AssetGroupField fetchedAssetGroupField =  getField(createdId);
-        Assert.assertTrue(fetchedAssetGroupField == null);
+        assertNull(fetchedAssetGroupField);
     }
 
     @Test
     public void update() {
-
         String user = "test";
         AssetGroup assetGroup = createAndStoreAssetGroupEntity(user);
         AssetGroupField createdAssetGroupField = createAndStoreAssetGroupFieldEntity(assetGroup);
@@ -74,9 +70,8 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
         assetGroupFieldDaoBean.update(createdAssetGroupField);
         AssetGroupField fetchedAssetGroupField =  getField(createdId);
 
-        Assert.assertNotNull(fetchedAssetGroupField);
-        Assert.assertNotEquals(createdUpdatedBy, fetchedAssetGroupField.getUpdatedBy());
-
+        assertNotNull(fetchedAssetGroupField);
+        assertNotEquals(createdUpdatedBy, fetchedAssetGroupField.getUpdatedBy());
     }
 
     @Test
@@ -88,40 +83,27 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
         List<AssetGroupField> createdAssetGroupFields1 = createAndStoreAssetGroupFieldEntityList(assetGroup1, 50);
         List<AssetGroupField> createdAssetGroupFields2 = createAndStoreAssetGroupFieldEntityList(assetGroup2, 25 );
 
-
         assetGroupFieldDaoBean.removeFieldsForGroup(assetGroup1);
 
         List<AssetGroupField> retrievedAssetGroupFields1 =  assetGroupFieldDaoBean.retrieveFieldsForGroup(assetGroup1);
         List<AssetGroupField> retrievedAssetGroupFields2 =  assetGroupFieldDaoBean.retrieveFieldsForGroup(assetGroup2);
 
-        Assert.assertEquals(retrievedAssetGroupFields1.size(), 0);
-        Assert.assertEquals(retrievedAssetGroupFields2.size(), 25);
-
-
-
-
+        assertEquals(retrievedAssetGroupFields1.size(), 0);
+        assertEquals(retrievedAssetGroupFields2.size(), 25);
     }
 
-
-
-    private List<AssetGroupField>  createAndStoreAssetGroupFieldEntityList(AssetGroup assetGroup, int n)
-    {
+    private List<AssetGroupField>  createAndStoreAssetGroupFieldEntityList(AssetGroup assetGroup, int n) {
         OffsetDateTime dt = OffsetDateTime.now(Clock.systemUTC());
         List<AssetGroupField> groupFields = createAssetGroupFields(assetGroup,dt,assetGroup.getOwner(), n);
         return groupFields;
-
     }
 
-
     private AssetGroupField getField(UUID id) {
-
         AssetGroupField assetGroupField =  assetGroupFieldDaoBean.get(id);
         return assetGroupField;
     }
 
-
     private AssetGroupField createAndStoreAssetGroupFieldEntity(AssetGroup assetGroup) {
-
         OffsetDateTime dt = OffsetDateTime.now(Clock.systemUTC());
         List<AssetGroupField> groupFields = createAssetGroupFields(assetGroup,dt,assetGroup.getOwner(), 1);
         AssetGroupField assetGroupField = groupFields.get(0);
@@ -129,10 +111,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
         return createdAssetGroupField;
     }
 
-
-
     private AssetGroup createAndStoreAssetGroupEntity(String user) {
-
         AssetGroup assetGroupEntity = createAssetGroupEntity(user);
         AssetGroup createdAssetGroupEntity = assetGroupDao.createAssetGroup(assetGroupEntity);
         return createdAssetGroupEntity;
@@ -151,36 +130,16 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
         ag.setDynamic(false);
         ag.setGlobal(true);
         return ag;
-
     }
 
     private  List<AssetGroupField> createAssetGroupFields(AssetGroup assetGroupEntity, OffsetDateTime dt, String user, int n) {
-
         List<AssetGroupField> groupFields = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             String uuid = UUID.randomUUID().toString();
-            AssetGroupField field = createAssetGroupField(assetGroupEntity, "GUID", uuid, dt, user);
+            AssetGroupField field = AssetTestsHelper.createAssetGroupField(assetGroupEntity, "GUID", uuid, dt, user);
             assetGroupFieldDaoBean.create(field);
             groupFields.add(field);
         }
         return groupFields;
     }
-
-
-    private AssetGroupField createAssetGroupField(AssetGroup assetGroupEntity, String key, String keyFieldValue, OffsetDateTime dt, String user) {
-
-        AssetGroupField ag = new AssetGroupField();
-        ag.setAssetGroup(assetGroupEntity);
-        ag.setUpdatedBy(user);
-        ag.setUpdateTime(dt);
-        ag.setKey(key);
-        ag.setValue(keyFieldValue);
-
-
-        return ag;
-    }
-
-
-
-
 }
