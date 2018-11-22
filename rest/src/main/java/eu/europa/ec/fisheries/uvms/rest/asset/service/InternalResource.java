@@ -29,7 +29,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.slf4j.MDC;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.CustomCodesService;
@@ -116,6 +115,34 @@ public class InternalResource {
                                             .collect(Collectors.toList());
         List<Asset> assets = assetService.getAssetListByAssetGroups(assetGroups);
         return Response.ok(assets).build();
+    }
+    
+    @GET
+    @Path("/history/asset/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAssetHistoryListByAssetId(@PathParam("id") UUID id, @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
+        List<Asset> assetRevisions = assetService.getRevisionsForAssetLimited(id, maxNbr);
+        return Response.ok(assetRevisions).build();
+    }
+
+    @GET
+    @Path("/history/{type : (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)}/{id}/{date}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAssetFromAssetIdAndDate(@PathParam("type") String type,
+                                               @PathParam("id") String id,
+                                               @PathParam("date") String date) {
+        AssetIdentifier assetId = AssetIdentifier.valueOf(type.toUpperCase());
+        OffsetDateTime offsetDateTime = OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        Asset assetRevision = assetService.getAssetFromAssetIdAtDate(assetId, id, offsetDateTime);
+        return Response.ok(assetRevision).build();
+    }
+
+    @GET
+    @Path("history/{guid}")
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Response getAssetHistoryByAssetHistGuid(@PathParam("guid") UUID guid) {
+        Asset asset = assetService.getAssetRevisionForRevisionId(guid);
+        return Response.ok(asset).build();
     }
     
     @POST
