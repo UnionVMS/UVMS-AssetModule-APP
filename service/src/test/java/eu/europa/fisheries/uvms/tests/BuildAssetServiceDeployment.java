@@ -27,7 +27,7 @@ public abstract class BuildAssetServiceDeployment {
                 /*.resolve(/*"eu.europa.ec.fisheries.uvms.asset:deprecated-asset-message",
 
                         "eu.europa.ec.fisheries.uvms.audit:audit-model",
-                        "eu.europa.ec.fisheries.uvms:uvms-config",
+                        "eu.europa.ec.fisheries.uvms:config-library",
                         "eu.europa.ec.fisheries.uvms.config:config-model:4.0.0")*/
                 /*.withTransitivity().asFile();
         testWar.addAsLibraries(files);*/

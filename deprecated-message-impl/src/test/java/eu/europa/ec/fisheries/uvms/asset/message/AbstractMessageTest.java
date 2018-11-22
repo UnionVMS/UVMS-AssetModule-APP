@@ -29,7 +29,7 @@ public abstract class AbstractMessageTest {
         File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
                 .resolve("eu.europa.ec.fisheries.uvms.asset:asset-model",
                          "eu.europa.ec.fisheries.uvms.asset:asset-service",
-                         "eu.europa.ec.fisheries.uvms:uvms-config",
+                         "eu.europa.ec.fisheries.uvms:config-library",
                          "eu.europa.ec.fisheries.uvms.commons:uvms-commons-message",
                          "org.apache.activemq:activemq-client")
                 .withTransitivity().asFile();

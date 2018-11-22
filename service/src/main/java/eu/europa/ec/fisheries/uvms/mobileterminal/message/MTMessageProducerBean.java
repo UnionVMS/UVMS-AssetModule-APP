@@ -42,7 +42,7 @@ public class MTMessageProducerBean implements MTMessageProducer {
         responseQueue = JMSUtils.lookupQueue(MessageConstants.COMPONENT_RESPONSE_QUEUE);
         auditQueue = JMSUtils.lookupQueue(MessageConstants.AUDIT_MODULE_QUEUE);
         exchangeQueue = JMSUtils.lookupQueue(MessageConstants.EXCHANGE_MODULE_QUEUE);
-        configQueue = JMSUtils.lookupQueue(ConfigConstants.CONFIG_MESSAGE_IN_QUEUE);
+        configQueue = JMSUtils.lookupQueue(eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants.QUEUE_CONFIG);
     }
 
     @Override

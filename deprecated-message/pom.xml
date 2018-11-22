@@ -26,7 +26,7 @@
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms</groupId>
-            <artifactId>uvms-config</artifactId>
+            <artifactId>config-library</artifactId>
             <version>${uvms.config.version}</version>
         </dependency>
         <dependency>

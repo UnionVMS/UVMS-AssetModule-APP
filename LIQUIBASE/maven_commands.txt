@@ -2,7 +2,10 @@
 mvn liquibase:update -P postgres-dev
 
 ##test database on postgres
-mvn liquibase:update -P postgres-test
+mvn liquibase:update -Ppostgres
+
+## Drop the schema
+mvn liquibase:dropAll -P postgres
 
 ## rolback the database till a specified tag
 mvn liquibase:rollback -P postgres-dev -Dliquibase.rollbackTag=version_0.1
