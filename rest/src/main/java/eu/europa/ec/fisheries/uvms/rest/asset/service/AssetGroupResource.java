@@ -216,7 +216,6 @@ public class AssetGroupResource {
         }
     }
 
-
     //TODO: This lacks a propper test!!!!!
     @PUT
     @ApiOperation(value = "UpdateAssetGroupField", notes = "UpdateAssetGroupField", response = AssetGroupField.class)
@@ -283,7 +282,6 @@ public class AssetGroupResource {
             LOG.error("Error when delete AssetGroupField. ", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
         }
-
     }
 
     //TODO: This lacks a proper test
@@ -309,7 +307,6 @@ public class AssetGroupResource {
 
     }
 
-
     @DELETE
     @ApiOperation(value = "Delete Assetgroupfields  for AssetGroupId",  response = AssetGroupField.class, responseContainer = "List")
     @ApiResponses(value = {
@@ -330,8 +327,4 @@ public class AssetGroupResource {
         }
 
     }
-
-
-
 }
-

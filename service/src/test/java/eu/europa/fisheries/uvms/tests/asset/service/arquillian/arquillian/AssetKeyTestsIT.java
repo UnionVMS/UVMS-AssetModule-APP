@@ -13,7 +13,6 @@ import org.junit.runner.RunWith;
 import javax.inject.Inject;
 import java.util.UUID;
 
-
 /**
  * Main focus for this testclass is to verify that the keyhandling is ok
  * since it is divided with different columns for different keytypes
@@ -26,7 +25,6 @@ public class AssetKeyTestsIT extends TransactionalTests {
 
     @Inject
     private AssetDao assetDao;
-
 
     @Test
     @OperateOnDeployment("normal")
@@ -73,11 +71,9 @@ public class AssetKeyTestsIT extends TransactionalTests {
         create(AssetIdentifier.GFCM, val);
     }
 
-
     @Test
     @OperateOnDeployment("normal")
     public void get_Asset_IRCS() {
-
         AssetIdentifier keyType = AssetIdentifier.IRCS;
         String val = UUID.randomUUID().toString();
         if (val.length() > 8) val = val.substring(0, 8);
@@ -95,7 +91,6 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void get_Asset_MMSI() {
-
         AssetIdentifier keyType = AssetIdentifier.MMSI;
         String val = UUID.randomUUID().toString();
         if (val.length() > 9) val = val.substring(0, 9);
@@ -113,7 +108,6 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void get_Asset_CFR() {
-
         AssetIdentifier keyType = AssetIdentifier.CFR;
         String val = UUID.randomUUID().toString();
         if (val.length() > 12) val = val.substring(0, 12);
@@ -131,7 +125,6 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void get_Asset_IMO() {
-
         AssetIdentifier keyType = AssetIdentifier.IMO;
         String val = UUID.randomUUID().toString();
         if (val.length() > 7) val = val.substring(0, 7);
@@ -146,11 +139,9 @@ public class AssetKeyTestsIT extends TransactionalTests {
         }
     }
 
-
     @Test
     @OperateOnDeployment("normal")
     public void get_Asset_ICCAT() {
-
         AssetIdentifier keyType = AssetIdentifier.ICCAT;
         String val = UUID.randomUUID().toString();
         Asset theCreatedAsset = create(keyType, val);
@@ -167,7 +158,6 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void get_Asset_UVI() {
-
         AssetIdentifier keyType = AssetIdentifier.UVI;
         String val = UUID.randomUUID().toString();
         Asset theCreatedAsset = create(keyType, val);
@@ -184,7 +174,6 @@ public class AssetKeyTestsIT extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void get_Asset_GFCM() {
-
         AssetIdentifier keyType = AssetIdentifier.GFCM;
         String val = UUID.randomUUID().toString();
         Asset theCreatedAsset = create(keyType, val);
@@ -198,248 +187,133 @@ public class AssetKeyTestsIT extends TransactionalTests {
         }
     }
 
-
     @Test
     @OperateOnDeployment("normal")
     public void delete_Asset_IRCS() {
-
         AssetIdentifier keyType = AssetIdentifier.IRCS;
         String val = UUID.randomUUID().toString();
         if (val.length() > 8) val = val.substring(0, 8);
         Asset theCreatedAsset = create(keyType, val);
         String createdIRCS = theCreatedAsset.getIrcs();
-        try {
-            assetDao.deleteAsset(theCreatedAsset);
-            Asset fetchedAsset = get(keyType, createdIRCS);
-            if (fetchedAsset != null) {
-                Assert.fail();
-            }
-        } catch (Exception e) {
-            Assert.fail();
-        }
+        deleteAssetAndValidateNull(keyType, theCreatedAsset, createdIRCS);
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void delete_Asset_MMSI() {
-
         AssetIdentifier keyType = AssetIdentifier.MMSI;
         String val = UUID.randomUUID().toString();
         if (val.length() > 9) val = val.substring(0, 9);
         Asset theCreatedAsset = create(keyType, val);
         String createdMMSI = theCreatedAsset.getMmsi();
-        try {
-            assetDao.deleteAsset(theCreatedAsset);
-            Asset fetchedAsset = get(keyType, createdMMSI);
-            if (fetchedAsset != null) {
-                Assert.fail();
-            }
-        } catch (Exception e) {
-            Assert.fail();
-        }
+        deleteAssetAndValidateNull(keyType, theCreatedAsset, createdMMSI);
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void delete_Asset_CFR() {
-
         AssetIdentifier keyType = AssetIdentifier.CFR;
         String val = UUID.randomUUID().toString();
         if (val.length() > 12) val = val.substring(0, 12);
         Asset theCreatedAsset = create(keyType, val);
         String createdCFR = theCreatedAsset.getCfr();
-        try {
-            assetDao.deleteAsset(theCreatedAsset);
-            Asset fetchedAsset = get(keyType, createdCFR);
-            if (fetchedAsset != null) {
-                Assert.fail();
-            }
-        } catch (Exception e) {
-            Assert.fail();
-        }
+        deleteAssetAndValidateNull(keyType, theCreatedAsset, createdCFR);
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void delete_Asset_IMO() {
-
         AssetIdentifier keyType = AssetIdentifier.IMO;
         String val = UUID.randomUUID().toString();
         if (val.length() > 7) val = val.substring(0, 7);
         Asset theCreatedAsset = create(keyType, val);
         String createdIMO = theCreatedAsset.getImo();
-        try {
-            assetDao.deleteAsset(theCreatedAsset);
-            Asset fetchedAsset = get(keyType, createdIMO);
-            if (fetchedAsset != null) {
-                Assert.fail();
-            }
-        } catch (Exception e) {
-            Assert.fail();
-        }
+        deleteAssetAndValidateNull(keyType, theCreatedAsset, createdIMO);
     }
-
 
     @Test
     @OperateOnDeployment("normal")
     public void delete_Asset_ICCAT() {
-
         AssetIdentifier keyType = AssetIdentifier.ICCAT;
         String val = UUID.randomUUID().toString();
         Asset theCreatedAsset = create(keyType, val);
         String createdIccat = theCreatedAsset.getIccat();
-        try {
-            assetDao.deleteAsset(theCreatedAsset);
-            Asset fetchedAsset = get(keyType, createdIccat);
-            if (fetchedAsset != null) {
-                Assert.fail();
-            }
-        } catch (Exception e) {
-            Assert.fail();
-        }
+        deleteAssetAndValidateNull(keyType, theCreatedAsset, createdIccat);
     }
-
 
     @Test
     @OperateOnDeployment("normal")
     public void delete_Asset_UVI() {
-
         AssetIdentifier keyType = AssetIdentifier.UVI;
         String val = UUID.randomUUID().toString();
         Asset theCreatedAsset = create(keyType, val);
         String createdUvi = theCreatedAsset.getUvi();
-        try {
-            assetDao.deleteAsset(theCreatedAsset);
-            Asset fetchedAsset = get(keyType, createdUvi);
-            if (fetchedAsset != null) {
-                Assert.fail();
-            }
-        } catch (Exception e) {
-            Assert.fail();
-        }
+        deleteAssetAndValidateNull(keyType, theCreatedAsset, createdUvi);
     }
-
 
     @Test
     @OperateOnDeployment("normal")
     public void delete_Asset_GFCM() {
-
         AssetIdentifier keyType = AssetIdentifier.GFCM;
         String val = UUID.randomUUID().toString();
         Asset theCreatedAsset = create(keyType, val);
         String createdGFCM = theCreatedAsset.getGfcm();
-        try {
-            assetDao.deleteAsset(theCreatedAsset);
-            Asset fetchedAsset = get(keyType, createdGFCM);
-            if (fetchedAsset != null) {
-                Assert.fail();
-            }
-        } catch (Exception e) {
-            Assert.fail();
-        }
+        deleteAssetAndValidateNull(keyType, theCreatedAsset, createdGFCM);
     }
-
 
     @Test
     @OperateOnDeployment("normal")
     public void update_Asset_IRCS() {
-
         AssetIdentifier keyType = AssetIdentifier.IRCS;
         String val = UUID.randomUUID().toString();
         if (val.length() > 8) val = val.substring(0, 8);
         Asset theCreatedAsset = create(keyType, val);
         String createdIRCS = theCreatedAsset.getIrcs();
-        try {
-            theCreatedAsset.setUpdatedBy("CHANGED");
-            assetDao.updateAsset(theCreatedAsset);
-            em.flush();
-            Asset fetchedAsset = get(keyType, createdIRCS);
-            Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
-        } catch (Exception e) {
-            Assert.fail();
-        }
+        updateAssetAndValidate(keyType, theCreatedAsset, createdIRCS);
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void update_Asset_MMSI() {
-
         AssetIdentifier keyType = AssetIdentifier.MMSI;
         String val = UUID.randomUUID().toString();
         if (val.length() > 9) val = val.substring(0, 9);
         Asset theCreatedAsset = create(keyType, val);
         String createdMMSI = theCreatedAsset.getMmsi();
-        try {
-            theCreatedAsset.setUpdatedBy("CHANGED");
-            assetDao.updateAsset(theCreatedAsset);
-            em.flush();
-            Asset fetchedAsset = get(keyType, createdMMSI);
-            Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
-        } catch (Exception e) {
-            Assert.fail();
-        }
+        updateAssetAndValidate(keyType, theCreatedAsset, createdMMSI);
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void update_Asset_CFR() {
-
         AssetIdentifier keyType = AssetIdentifier.CFR;
         String val = UUID.randomUUID().toString();
         if (val.length() > 12) val = val.substring(0, 12);
         Asset theCreatedAsset = create(keyType, val);
         String createdCFR = theCreatedAsset.getCfr();
-        try {
-            theCreatedAsset.setUpdatedBy("CHANGED");
-            assetDao.updateAsset(theCreatedAsset);
-            em.flush();
-            Asset fetchedAsset = get(keyType, createdCFR);
-            Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
-        } catch (Exception e) {
-            Assert.fail();
-        }
+        updateAssetAndValidate(keyType, theCreatedAsset, createdCFR);
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void update_Asset_IMO() {
-
         AssetIdentifier keyType = AssetIdentifier.IMO;
         String val = UUID.randomUUID().toString();
         if (val.length() > 7) val = val.substring(0, 7);
         Asset theCreatedAsset = create(keyType, val);
         String createdIMO = theCreatedAsset.getImo();
-        try {
-            theCreatedAsset.setUpdatedBy("CHANGED");
-            assetDao.updateAsset(theCreatedAsset);
-            em.flush();
-            Asset fetchedAsset = get(keyType, createdIMO);
-            Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
-        } catch (Exception e) {
-            Assert.fail();
-        }
+        updateAssetAndValidate(keyType, theCreatedAsset, createdIMO);
     }
-
 
     @Test
     @OperateOnDeployment("normal")
     public void update_Asset_ICCAT() {
-
         AssetIdentifier keyType = AssetIdentifier.ICCAT;
         String val = UUID.randomUUID().toString();
         Asset theCreatedAsset = create(keyType, val);
         String createdICCAT = theCreatedAsset.getIccat();
-        try {
-            theCreatedAsset.setUpdatedBy("CHANGED");
-            assetDao.updateAsset(theCreatedAsset);
-            em.flush();
-            Asset fetchedAsset = get(keyType, createdICCAT);
-            Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
-        } catch (Exception e) {
-            Assert.fail();
-        }
+        updateAssetAndValidate(keyType, theCreatedAsset, createdICCAT);
     }
-
 
     @Test
     @OperateOnDeployment("normal")
@@ -449,42 +323,21 @@ public class AssetKeyTestsIT extends TransactionalTests {
         String val = UUID.randomUUID().toString();
         Asset theCreatedAsset = create(keyType, val);
         String createdUVI = theCreatedAsset.getUvi();
-        try {
-            theCreatedAsset.setUpdatedBy("CHANGED");
-            assetDao.updateAsset(theCreatedAsset);
-            em.flush();
-            Asset fetchedAsset = get(keyType, createdUVI);
-            Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
-        } catch (Exception e) {
-            Assert.fail();
-        }
+        updateAssetAndValidate(keyType, theCreatedAsset, createdUVI);
     }
-
 
     @Test
     @OperateOnDeployment("normal")
     public void update_Asset_GFCM() {
-
         AssetIdentifier keyType = AssetIdentifier.GFCM;
         String val = UUID.randomUUID().toString();
         Asset theCreatedAsset = create(keyType, val);
         String createdGFCM = theCreatedAsset.getGfcm();
-        try {
-            theCreatedAsset.setUpdatedBy("CHANGED");
-            assetDao.updateAsset(theCreatedAsset);
-            em.flush();
-            Asset fetchedAsset = get(keyType, createdGFCM);
-            Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
-        } catch (Exception e) {
-            Assert.fail();
-        }
+        updateAssetAndValidate(keyType, theCreatedAsset, createdGFCM);
     }
 
-
     private Asset get(AssetIdentifier assetIdType, String value) {
-        Asset fetchedEntity = getAssetHelper(assetIdType, value);
-        return fetchedEntity;
-
+        return getAssetHelper(assetIdType, value);
     }
 
     private Asset getAssetHelper(AssetIdentifier assetIdType, String value) {
@@ -516,9 +369,7 @@ public class AssetKeyTestsIT extends TransactionalTests {
         return fetchedAsset;
     }
 
-
     private Asset create(AssetIdentifier key, String value) {
-
         Asset assetEntity = assetTestsHelper.createAssetHelper(key, value);
         Asset createdAsset = assetDao.createAsset(assetEntity);
         em.flush();
@@ -528,5 +379,27 @@ public class AssetKeyTestsIT extends TransactionalTests {
         return fetchedAsset;
     }
 
+    private void updateAssetAndValidate(AssetIdentifier keyType, Asset theCreatedAsset, String createdIRCS) {
+        try {
+            theCreatedAsset.setUpdatedBy("CHANGED");
+            assetDao.updateAsset(theCreatedAsset);
+            em.flush();
+            Asset fetchedAsset = get(keyType, createdIRCS);
+            Assert.assertEquals("CHANGED", fetchedAsset.getUpdatedBy());
+        } catch (Exception e) {
+            Assert.fail();
+        }
+    }
 
+    private void deleteAssetAndValidateNull(AssetIdentifier keyType, Asset theCreatedAsset, String createdIRCS) {
+        try {
+            assetDao.deleteAsset(theCreatedAsset);
+            Asset fetchedAsset = get(keyType, createdIRCS);
+            if (fetchedAsset != null) {
+                Assert.fail();
+            }
+        } catch (Exception e) {
+            Assert.fail();
+        }
+    }
 }

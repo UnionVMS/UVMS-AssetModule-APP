@@ -10,27 +10,27 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
+import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
+import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
+import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
-import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
-import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
+
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 @RunAsClient
@@ -45,15 +45,15 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .post(Entity.json(asset), Asset.class);
         
         AssetQuery query = new AssetQuery();
-        query.setCfr(Arrays.asList(createdAsset.getCfr()));
+        query.setCfr(Collections.singletonList(createdAsset.getCfr()));
         
         AssetListResponse listResponse = getWebTarget()
                 .path("asset")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(query), AssetListResponse.class);
-        
-        assertTrue(listResponse != null);
+
+        assertNotNull(listResponse);
         assertThat(listResponse.getAssetList().size(), is(1));
         assertThat(listResponse.getAssetList().get(0), is(AssetMatcher.assetEquals(createdAsset)));
     }
@@ -62,7 +62,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
     @RunAsClient
     public void getAssetListQueryTestEmptyResult() {
         AssetQuery query = new AssetQuery();
-        query.setCfr(Arrays.asList("APA"));
+        query.setCfr(Collections.singletonList("APA"));
 
         AssetListResponse listResponse = getWebTarget()
                 .path("asset")
@@ -70,7 +70,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(query), AssetListResponse.class);
 
-        assertTrue(listResponse != null);
+        assertNotNull(listResponse);
         assertThat(listResponse.getAssetList().size(), is(0));
     }
 
@@ -87,9 +87,9 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .post(Entity.json(asset), Asset.class);
 
         AssetQuery query = new AssetQuery();
-        query.setCfr(Arrays.asList(cfrValue));
+        query.setCfr(Collections.singletonList(cfrValue));
         AssetQuery query2 = new AssetQuery();
-        query2.setCfr(Arrays.asList(cfrValue.toLowerCase()));
+        query2.setCfr(Collections.singletonList(cfrValue.toLowerCase()));
 
         AssetListResponse listResponse1 = getWebTarget()
                 .path("asset")
@@ -103,17 +103,15 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(query2), AssetListResponse.class);
 
-        assertTrue(listResponse1 != null);
-        assertTrue(listResponse2 != null);
+        assertNotNull(listResponse1);
+        assertNotNull(listResponse2);
         assertTrue(listResponse1.getAssetList().size() > 0);
         assertTrue(listResponse2.getAssetList().size() > 0);
-
 
         Asset asset1 = listResponse1.getAssetList().get(0);
         Asset asset2 = listResponse2.getAssetList().get(0);
 
-        assertTrue(asset1.getCfr().equals(asset2.getCfr()));
-
+        assertEquals(asset1.getCfr(), asset2.getCfr());
     }
 
     @Test
@@ -139,7 +137,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
 
 
         AssetQuery query = new AssetQuery();
-        query.setCfr(Arrays.asList(cfrValue));
+        query.setCfr(Collections.singletonList(cfrValue));
         AssetQuery query2 = new AssetQuery();
         query2.setCfr(Arrays.asList(cfrValue.toLowerCase(), cfrValue2.toLowerCase()));
 
@@ -157,18 +155,17 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(query2), AssetListResponse.class);
 
-        assertTrue(listResponse1 != null);
-        assertTrue(listResponse2 != null);
-        assertTrue(listResponse1.getAssetList().size() == 1);
-        assertTrue(listResponse2.getAssetList().size() == 2);
+        assertNotNull(listResponse1);
+        assertNotNull(listResponse2);
+        assertEquals(1, listResponse1.getAssetList().size());
+        assertEquals(2, listResponse2.getAssetList().size());
 
 
         Asset fetched_asset1 = listResponse1.getAssetList().get(0);
         Asset fetched_asset2 = listResponse2.getAssetList().get(0);
 
-        assertTrue(fetched_asset1.getCfr().equals(fetched_asset2.getCfr()));
-        assertTrue(listResponse2.getAssetList().get(1).getCfr().equals(cfrValue2));
-
+        assertEquals(fetched_asset1.getCfr(), fetched_asset2.getCfr());
+        assertEquals(listResponse2.getAssetList().get(1).getCfr(), cfrValue2);
     }
 
     @Test
@@ -176,7 +173,6 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
     public void testCaseIncompleteCFR() {
 
         String cfrValue = UUID.randomUUID().toString().substring(0,11).toUpperCase();
-
         String cfrValue2 = UUID.randomUUID().toString().substring(0,11).toUpperCase();
 
         Asset asset1 = AssetHelper.createBasicAsset();
@@ -192,9 +188,8 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset2), Asset.class);
 
-
         AssetQuery query = new AssetQuery();
-        query.setCfr(Arrays.asList(cfrValue));
+        query.setCfr(Collections.singletonList(cfrValue));
         AssetQuery query2 = new AssetQuery();
         query2.setCfr(Arrays.asList(cfrValue.toLowerCase().substring(5), cfrValue2.toLowerCase().substring(3,8)));
 
@@ -212,8 +207,8 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(query2), AssetListResponse.class);
 
-        assertTrue(listResponse1 != null);
-        assertTrue(listResponse2 != null);
+        assertNotNull(listResponse1);
+        assertNotNull(listResponse2);
         assertTrue(listResponse1.getAssetList().size() >= 1);
         assertTrue(listResponse2.getAssetList().size() >= 2);
 
@@ -233,7 +228,6 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
             }
         }
         assertTrue(found);
-
     }
 
     @Test
@@ -253,8 +247,8 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .queryParam("size", "1000")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(query), AssetListResponse.class);
-        
-        assertTrue(listResponse != null);
+
+        assertNotNull(listResponse);
         assertTrue(listResponse.getAssetList().stream()
                 .anyMatch(fetchedAsset -> fetchedAsset.getId().equals(createdAsset.getId())));
     }
@@ -282,9 +276,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(query), AssetListResponse.class);
 
-        assertTrue(listResponse != null);
-
-        
+        assertNotNull(listResponse);
         assertTrue(listResponse.getAssetList().stream()
                 .anyMatch(fetchedAsset -> fetchedAsset.getId().equals(createdAsset.getId())));
     }
@@ -310,7 +302,6 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         
         int sizeBefore = listResponse.getAssetList().size();
 
-
         // Archive the asset
         getWebTarget()
                 .path("asset")
@@ -325,7 +316,6 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .queryParam("size","1000")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(query), AssetListResponse.class);
-
 
         assertEquals(sizeBefore  - 1, listResponseAfter.getAssetList().size());
     }
@@ -350,7 +340,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .post(Entity.json(asset2), Asset.class);
         
         AssetQuery query = new AssetQuery();
-        query.setFlagState(Arrays.asList(customFlagState));
+        query.setFlagState(Collections.singletonList(customFlagState));
         
         AssetListResponse listResponse = getWebTarget()
                 .path("asset")
@@ -391,7 +381,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .post(Entity.json(asset), Asset.class);
         
         AssetQuery query = new AssetQuery();
-        query.setName(Arrays.asList("shipn*me" + randomNumbers));
+        query.setName(Collections.singletonList("shipn*me" + randomNumbers));
         
         AssetListResponse listResponse = getWebTarget()
                 .path("asset")

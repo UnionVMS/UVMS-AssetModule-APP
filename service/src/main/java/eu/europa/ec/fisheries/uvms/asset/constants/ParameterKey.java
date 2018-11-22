@@ -30,9 +30,6 @@ public enum ParameterKey {
 
 	EU_USE("ASSET.EU.USE"),
 
-	// THIRDCOUNTRY_USE("vessel.thirdcountry.use"),
-	// THIRDCOUNTRY_JMS_JNDI("vessel.thirdcountry.jms.jndi"),
-
 	NATIONAL_SERVICE_ENDPOINT("NATIONAL_SERVICE_ENDPOINT"),
 
 	DEFAULT_FLAG_STATE("ASSET.DEFAULT.FLAGSTATE"),
@@ -60,15 +57,10 @@ public enum ParameterKey {
 	private final String key;
 
 	private ParameterKey(String key) {
-
 		this.key = key;
-
 	}
 
 	public String getKey() {
-
 		return key;
-
 	}
-
 }

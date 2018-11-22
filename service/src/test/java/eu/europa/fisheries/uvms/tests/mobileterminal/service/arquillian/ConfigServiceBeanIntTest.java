@@ -55,7 +55,6 @@ public class ConfigServiceBeanIntTest extends TransactionalTests {
         // TODO: getRegisteredMobileTerminalPlugins() method has TransactionAttributeType.NEVER defined.
         // Which makes this tests to fail because that method throws exception when client code has a transaction.
         thrown.expect(/*MobileTerminalModel*/Exception.class);
-        // thrown.expectMessage("Failed to map to exchange get service list request");
 
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "true");
         configService.getRegisteredMobileTerminalPlugins();
@@ -111,8 +110,6 @@ public class ConfigServiceBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void testUpsertPluginsBadLabelName() {
-
-
         try {
         List<PluginService> pluginList = new ArrayList<>();
         PluginService pluginService = createPluginService();
@@ -129,8 +126,6 @@ public class ConfigServiceBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void testUpsertPluginsBadSatelliteType() {
-
-
         try {
             List<PluginService> pluginList = new ArrayList<>();
             PluginService pluginService = createPluginService();
@@ -143,7 +138,6 @@ public class ConfigServiceBeanIntTest extends TransactionalTests {
             Assert.assertTrue(true);
         }
     }
-
 
     @Test
     @OperateOnDeployment("normal")

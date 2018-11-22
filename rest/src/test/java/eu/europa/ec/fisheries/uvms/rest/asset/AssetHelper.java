@@ -47,14 +47,10 @@ public abstract class AssetHelper {
         return assetEntity;
     }
 
-
-
-
     public static Asset createBiggerAsset() {
 
         Asset assetEntity = new Asset();
         OffsetDateTime  now =  OffsetDateTime.now(ZoneOffset.UTC);
-
 
         assetEntity.setName("Test asset");
         assetEntity.setActive(true);

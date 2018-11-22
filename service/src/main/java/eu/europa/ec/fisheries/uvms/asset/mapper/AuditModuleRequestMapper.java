@@ -16,11 +16,11 @@ import eu.europa.ec.fisheries.uvms.audit.model.mapper.AuditLogMapper;
 
 public class AuditModuleRequestMapper {
 
-    public static final String ASSET = "Asset";
-    public static final String ASSET_GROUP = "Asset Group";
-    public static final String CREATE = "Create";
-    public static final String UPDATE = "Update";
-    public static final String ARCHIVE = "Archive";
+    private static final String ASSET = "Asset";
+    private static final String ASSET_GROUP = "Asset Group";
+    private static final String CREATE = "Create";
+    private static final String UPDATE = "Update";
+    private static final String ARCHIVE = "Archive";
     
     private AuditModuleRequestMapper() {}
     

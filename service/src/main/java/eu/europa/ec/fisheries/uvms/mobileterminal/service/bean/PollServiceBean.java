@@ -68,7 +68,6 @@ public class PollServiceBean {
     public CreatePollResultDto createPoll(PollRequestType poll, String username) {
 
         List<PollResponseType> createdPolls = createPolls(poll, username);
-
         boolean triggerTimer = false;
         List<String> unsentPolls = new ArrayList<>();
         List<String> sentPolls = new ArrayList<>();
@@ -93,11 +92,11 @@ public class PollServiceBean {
             }
         }
 
-            CreatePollResultDto result = new CreatePollResultDto();
-            result.setSentPolls(sentPolls);
-            result.setUnsentPolls(unsentPolls);
-            result.setUnsentPoll(!unsentPolls.isEmpty());
-            return result;
+        CreatePollResultDto result = new CreatePollResultDto();
+        result.setSentPolls(sentPolls);
+        result.setUnsentPolls(unsentPolls);
+        result.setUnsentPoll(!unsentPolls.isEmpty());
+        return result;
     }
 
 
@@ -119,9 +118,7 @@ public class PollServiceBean {
         } catch (AuditModelMarshallException | RuntimeException e) {
             LOG.error("Failed to send audit log message due tue: " + e + "! Poll with guid {} was started", startedPoll.getPollId().getGuid());
         }
-
         return startedPoll;
-
     }
 
     public PollResponseType stopProgramPoll(String pollId, String username){
@@ -149,14 +146,12 @@ public class PollServiceBean {
         } catch (AuditModelMarshallException | RuntimeException e) {
             LOG.error("Failed to send audit log message due tue: " + e + "! Poll with guid {} was inactivated", inactivatedPoll.getPollId().getGuid());
         }
-
         return inactivatedPoll;
     }
 
     public PollChannelListDto getPollBySearchCriteria(PollListQuery query) {
 
         PollChannelListDto channelListDto = new PollChannelListDto();
-
         PollListResponse pollResponse = getPollList(query);    //this is where the magic happens, rest of the method is just a mapper
         channelListDto.setCurrentPage(pollResponse.getCurrentPage());
         channelListDto.setTotalNumberOfPages(pollResponse.getTotalNumberOfPages());
@@ -169,12 +164,9 @@ public class PollServiceBean {
         }
         channelListDto.setPollableChannels(pollChannelList);
         return channelListDto;
-
-
     }
 
     public List<PollResponseType> timer() {
-
         return getPollProgramRunningAndStarted();
     }
 
@@ -387,9 +379,6 @@ public class PollServiceBean {
         response.getPollList().addAll(pollResponseList);
         return response;
     }
-
-
-
 
     public List<PollResponseType> getPollProgramRunningAndStarted() {
         List<PollProgram> pollPrograms = pollProgramDao.getPollProgramRunningAndStarted();

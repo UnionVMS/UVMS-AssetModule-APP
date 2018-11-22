@@ -17,9 +17,9 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 
 public class AssetListResponse {
 
-    List<Asset> assetList = new ArrayList<>();
-    Integer totalNumberOfPages = 0;
-    Integer currentPage = 0;
+    private List<Asset> assetList = new ArrayList<>();
+    private Integer totalNumberOfPages = 0;
+    private Integer currentPage = 0;
 
     public List<Asset> getAssetList() {
         return assetList;

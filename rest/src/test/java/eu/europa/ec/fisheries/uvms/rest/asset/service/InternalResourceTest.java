@@ -31,7 +31,7 @@ public class InternalResourceTest extends AbstractAssetRestTest {
                 .get();
         
         assertThat(response.getStatus(), is(Status.INTERNAL_SERVER_ERROR.getStatusCode()));
-                
+
     }
     
     @Test

@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalSource;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.OffsetDateTimeDeserializer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.util.OffsetDateTimeDeserializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.types.MobileTerminalTypeEnum;
 import org.hibernate.annotations.Fetch;
