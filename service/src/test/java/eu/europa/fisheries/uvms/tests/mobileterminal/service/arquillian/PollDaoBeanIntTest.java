@@ -1,10 +1,10 @@
 package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.PollDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.Poll;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.PollSearchField;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.PollSearchKeyValue;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.search.poll.PollSearchMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollDaoBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Poll;
+import eu.europa.ec.fisheries.uvms.mobileterminal.search.PollSearchField;
+import eu.europa.ec.fisheries.uvms.mobileterminal.search.PollSearchKeyValue;
+import eu.europa.ec.fisheries.uvms.mobileterminal.search.poll.PollSearchMapper;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import org.hamcrest.core.StringContains;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
@@ -308,7 +308,7 @@ public class PollDaoBeanIntTest extends TransactionalTests {
 
         // TODO: This exception is thrown unintentionally. Should be fixed by implementing MobileTerminalConnect entity class.
         thrown.expect(EJBTransactionRolledbackException.class);
-        checkExpectedMessage("could not resolve property: mobileterminalconnect of: eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal [SELECT COUNT (DISTINCT p) FROM eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.Poll p  INNER JOIN p.pollBase pb INNER JOIN pb.mobileterminal mt  INNER JOIN mt.mobileterminalconnect tc  WHERE tc.connectValue IN (:connectionValue) ]");
+        checkExpectedMessage("could not resolve property: mobileterminalconnect of: eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal [SELECT COUNT (DISTINCT p) FROM eu.europa.ec.fisheries.uvms.mobileterminal.entity.Poll p  INNER JOIN p.pollBase pb INNER JOIN pb.mobileterminal mt  INNER JOIN mt.mobileterminalconnect tc  WHERE tc.connectValue IN (:connectionValue) ]");
 
         PollSearchKeyValue pollSearchKeyValue1 = new PollSearchKeyValue();
         pollSearchKeyValue1.setSearchField(PollSearchField.CONNECT_ID);
@@ -361,7 +361,7 @@ public class PollDaoBeanIntTest extends TransactionalTests {
         // TODO: This exception is thrown unintentionally. Should be fixed by implementing MobileTerminalConnect entity class.
         thrown.expect(EJBTransactionRolledbackException.class);
 
-        checkExpectedMessage("could not resolve property: mobileterminalconnect of: eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal [SELECT DISTINCT p FROM eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.Poll p  INNER JOIN p.pollBase pb INNER JOIN pb.mobileterminal mt  INNER JOIN mt.mobileterminalconnect tc  WHERE tc.connectValue IN (:connectionValue) ]");
+        checkExpectedMessage("could not resolve property: mobileterminalconnect of: eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal [SELECT DISTINCT p FROM eu.europa.ec.fisheries.uvms.mobileterminal.entity.Poll p  INNER JOIN p.pollBase pb INNER JOIN pb.mobileterminal mt  INNER JOIN mt.mobileterminalconnect tc  WHERE tc.connectValue IN (:connectionValue) ]");
 
         PollSearchKeyValue pollSearchKeyValue1 = new PollSearchKeyValue();
         pollSearchKeyValue1.setSearchField(PollSearchField.CONNECT_ID);

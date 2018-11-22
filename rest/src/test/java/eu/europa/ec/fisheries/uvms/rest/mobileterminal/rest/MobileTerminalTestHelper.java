@@ -12,15 +12,13 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
+import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
