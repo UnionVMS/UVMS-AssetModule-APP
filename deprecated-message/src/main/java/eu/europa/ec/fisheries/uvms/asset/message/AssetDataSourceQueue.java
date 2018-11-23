@@ -12,6 +12,6 @@ package eu.europa.ec.fisheries.uvms.asset.message;
 
 public enum AssetDataSourceQueue {
 
-    INTERNAL, NATIONAL, XEU;
+    INTERNAL, NATIONAL, INTEGRATION, XEU
 
 }
