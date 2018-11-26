@@ -11,23 +11,22 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.dto;
 
-import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mock.MockData;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.MTListResponse;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTResponseDto;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.MobileTerminalRestResource;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doReturn;
@@ -36,9 +35,6 @@ public class ResponseTest {
 
     @Mock
     private MobileTerminalServiceBean mobileTerminalServiceBean;
-
-    @Mock
-    private HttpServletRequest request;
 
     @InjectMocks
     private MobileTerminalRestResource mobileTerminalRestResource;
@@ -51,7 +47,7 @@ public class ResponseTest {
     private final MTResponseDto SUCCESS_RESULT_GET_BY_ID;
 
     private final MobileTerminalType MOBILE_TERMINAL_DTO = MockData.createMobileTerminalDto(MOBILE_TERMINAL_ID_INT);
-    private final MobileTerminalListResponse MOBILE_TERMINAL_LIST_RESPONSE = MockData.createMobileTerminalListResponse();
+    private final MTListResponse MOBILE_TERMINAL_LIST_RESPONSE = ResponseTestPollHelper.createMTListResponse();
 
     public ResponseTest() {
         SUCCESS_RESULT_UPDATE = new MTResponseDto<>(MOBILE_TERMINAL_DTO, MTResponseCode.OK);
@@ -67,9 +63,9 @@ public class ResponseTest {
     @Test
     public void testGetMobileTerminalList() {
         doReturn(MOBILE_TERMINAL_LIST_RESPONSE).when(mobileTerminalServiceBean).getMobileTerminalList(null);
-        MTResponseDto result = mobileTerminalRestResource.getMobileTerminalList(null);
+        Response result = mobileTerminalRestResource.getMobileTerminalList(null);
         Mockito.verify(mobileTerminalServiceBean).getMobileTerminalList(null);
-        assertEquals(SUCCESS_RESULT_LIST_RESPONSE.toString(), result.toString());
+        assertEquals(Response.Status.OK.getStatusCode(), result.getStatus());
     }
 
     @Test

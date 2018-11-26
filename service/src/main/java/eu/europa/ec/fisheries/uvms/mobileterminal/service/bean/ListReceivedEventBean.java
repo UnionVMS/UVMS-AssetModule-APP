@@ -1,14 +1,13 @@
 package eu.europa.ec.fisheries.uvms.mobileterminal.service.bean;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.module.v1.MobileTerminalListRequest;
-import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.constants.MessageConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.ErrorEvent;
 import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.EventMessage;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.MobileTerminalModuleRequestMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.dto.MTListResponse;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,14 +42,14 @@ public class ListReceivedEventBean {
         try {
             MobileTerminalListRequest request = JAXBMarshaller.unmarshallTextMessage(message.getJmsMessage(), MobileTerminalListRequest.class);
 
-            MobileTerminalListResponse mobileTerminalListResponse = mobileTerminalService.getMobileTerminalList(request.getQuery());
-            List<MobileTerminalType> mobileTerminalTypes = mobileTerminalListResponse.getMobileTerminal();
+            MTListResponse mobileTerminalListResponse = mobileTerminalService.getMobileTerminalList(request.getQuery());
+            List<MobileTerminal> mobileTerminalList = mobileTerminalListResponse.getMobileTerminalList();
 
             try (Connection connection = connectionFactory.createConnection()) {
                 // In a Java EE web or EJB container, when there is an active JTA transaction in progress:
                 // Both arguments transacted and acknowledgeMode are ignored.
                 Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-                String response = MobileTerminalModuleRequestMapper.mapGetMobileTerminalList(mobileTerminalTypes);
+                String response = JAXBMarshaller.marshallJaxBObjectToString(mobileTerminalList);
                 TextMessage responseMessage = session.createTextMessage(response);
                 responseMessage.setJMSCorrelationID(message.getJmsMessage().getJMSMessageID());
                 javax.jms.MessageProducer producer = session.createProducer(message.getJmsMessage().getJMSReplyTo());

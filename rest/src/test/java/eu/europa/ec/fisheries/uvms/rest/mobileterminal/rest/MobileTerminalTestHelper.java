@@ -13,6 +13,7 @@ package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.constants.MobileTerminalConstants;
+import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
 
 import javax.ws.rs.client.Entity;
@@ -48,7 +49,7 @@ public class MobileTerminalTestHelper {
         comChannelType.setName("VMS");
 
         addChannelAttribute(comChannelType, "FREQUENCY_GRACE_PERIOD", "54000");
-        addChannelAttribute(comChannelType, "MEMBER_NUMBER", "100");
+        addChannelAttribute(comChannelType, "MEMBER_NUMBER", generateARandomStringWithMaxLength(3));
         addChannelAttribute(comChannelType, "FREQUENCY_EXPECTED", "7200");
         addChannelAttribute(comChannelType, "FREQUENCY_IN_PORT", "10800");
         addChannelAttribute(comChannelType, "LES_DESCRIPTION", "Thrane&Thrane");
@@ -130,13 +131,13 @@ public class MobileTerminalTestHelper {
         return serialNumber;
     }
 
-    public static String createRestMobileTerminal(WebTarget webTarget, String boat) {
-        MobileTerminalType mt = MobileTerminalTestHelper.createBasicMobileTerminal();
+    public static MobileTerminal createRestMobileTerminal(WebTarget webTarget, String boat) {
+        MobileTerminalType mt = createBasicMobileTerminal();
         mt.setConnectId(boat);
 
         return webTarget
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mt), String.class);
+                .post(Entity.json(mt), MobileTerminal.class);
     }
 }

@@ -5,43 +5,40 @@ import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginCapability;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginCapabilityType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 @RunAsClient
 public class PluginRestResourceTest extends AbstractAssetRestTest {
 
     @Test
-    public void upsertPluginTest() throws Exception{
+    public void upsertPluginTest() {
         List<PluginService> pluginList = createPluginList();
 
-
-        String response = getWebTarget()
+        Response response = getWebTarget()
                 .path("/plugin")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(pluginList), String.class);
+                .post(Entity.json(pluginList));
 
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
 
-        Plugin[] output = deserializeResponseDto(response, Plugin[].class);
-        List<Plugin> outputList = Arrays.asList(output);
+        List<Plugin> pluginEntityList = response.readEntity(new GenericType<List<Plugin>>() {});
 
-        assertEquals(2, output.length);
-        assertTrue(response.contains("eu.europa.ec.fisheries.uvms.plugins.inmarTEST"));
-        assertTrue(response.contains("eu.europa.ec.fisheries.uvms.plugins.inmarsat"));
+        assertEquals(2, pluginEntityList.size());
+        assertEquals("eu.europa.ec.fisheries.uvms.plugins.inmarTEST", pluginEntityList.get(0).getServiceName());
+        assertEquals("eu.europa.ec.fisheries.uvms.plugins.inmarsat", pluginEntityList.get(1).getServiceName());
     }
 
     private List<PluginService> createPluginList() {
@@ -52,7 +49,6 @@ public class PluginRestResourceTest extends AbstractAssetRestTest {
         pluginService.setLabelName("Thrane&Thrane&Test");
         pluginService.setSatelliteType("INMARSAT_C");
         pluginService.setServiceName("eu.europa.ec.fisheries.uvms.plugins.inmarTEST");
-
 
         PluginCapability capability = new PluginCapability();
         capability.setName(PluginCapabilityType.POLLABLE);

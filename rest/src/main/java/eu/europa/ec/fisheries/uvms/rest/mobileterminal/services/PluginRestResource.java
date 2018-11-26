@@ -3,13 +3,8 @@ package eu.europa.ec.fisheries.uvms.rest.mobileterminal.services;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.Plugin;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
 import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.ConfigServiceBeanMT;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTResponseDto;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
-import eu.europa.ec.fisheries.wsdl.user.types.UserContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -20,6 +15,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/plugin")
@@ -27,8 +23,6 @@ import java.util.List;
 @Consumes(value = { MediaType.APPLICATION_JSON })
 @Produces(value = { MediaType.APPLICATION_JSON })
 public class PluginRestResource {
-
-    private final static Logger LOG = LoggerFactory.getLogger(PluginRestResource.class);
 
     @Inject
     private ConfigServiceBeanMT configServiceMT;
@@ -39,8 +33,8 @@ public class PluginRestResource {
     @POST
     @Path("/")
     @RequiresFeature(UnionVMSFeature.mobileTerminalPlugins)
-    public MTResponseDto<List<Plugin>> upsertPlugins(List<PluginService> pluginServiceList){
-        List<Plugin> pluginList = configServiceMT.upsertPlugins(pluginServiceList, "Dummy Name");   //TODO: Chose a better name then "dummy name". And maybe make it mean something.
-        return new MTResponseDto<>(pluginList, MTResponseCode.OK);
+    public Response upsertPlugins(List<PluginService> pluginServiceList){
+        List<Plugin> pluginList = configServiceMT.upsertPlugins(pluginServiceList, request.getRemoteUser());
+        return Response.ok(pluginList).build();
     }
 }
