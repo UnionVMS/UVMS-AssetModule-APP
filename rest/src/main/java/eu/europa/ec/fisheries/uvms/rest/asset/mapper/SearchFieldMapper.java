@@ -88,6 +88,9 @@ public class SearchFieldMapper {
         if (query.getMaxPower() != null) {
             searchValues.add(new SearchKeyValue(SearchFields.MAX_POWER, Arrays.asList(query.getMaxPower().toString())));
         }
+        if (query.getDate() != null) {
+            searchValues.add(new SearchKeyValue(SearchFields.DATE, Arrays.asList(query.getDate().toString())));
+        }
         return searchValues;
     }
 }

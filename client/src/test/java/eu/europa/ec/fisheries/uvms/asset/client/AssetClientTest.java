@@ -11,7 +11,9 @@ import org.junit.runner.RunWith;
 import javax.inject.Inject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -151,6 +153,25 @@ public class AssetClientTest extends AbstractClientTest {
         AssetDTO assetHistory = assetClient.getAssetHistoryByAssetHistGuid(firstAssetBo.getAsset().getHistoryId());
         assertThat(assetHistory.getId(), CoreMatchers.is(firstAssetBo.getAsset().getId()));
         assertThat(assetHistory.getHistoryId(), CoreMatchers.is(firstAssetBo.getAsset().getHistoryId()));
+    }
+    
+    @Test
+    public void getAssetHistoryByDateQuery() {
+        AssetDTO asset = AssetHelper.createBasicAsset();
+        AssetBO assetBo = new AssetBO();
+        assetBo.setAsset(asset);
+        AssetBO firstAssetBo = assetClient.upsertAsset(assetBo);
+        Instant timestamp = Instant.now();
+        firstAssetBo.getAsset().setName(UUID.randomUUID().toString());
+        assetClient.upsertAsset(firstAssetBo);
+    
+        AssetQuery query = new AssetQuery();
+        query.setCfr(Arrays.asList(asset.getCfr()));
+        query.setName(Arrays.asList(asset.getName()));
+        query.setDate(timestamp);
+        List<AssetDTO> assetList = assetClient.getAssetList(query);
+        assertThat(assetList.size(), CoreMatchers.is(1));
+        assertThat(assetList.get(0).getHistoryId(), CoreMatchers.is(firstAssetBo.getAsset().getHistoryId()));
     }
 
     @Test
