@@ -199,13 +199,13 @@ public class ConfigServiceBeanMT {
         List<Plugin> responseList = new ArrayList<>();
         for (PluginService plugin : pluginList) {
             if (plugin.getLabelName() == null || plugin.getLabelName().isEmpty()) {
-                throw new IllegalArgumentException("No plugin name");
+                throw new IllegalArgumentException("No plugin name for plugin: " + plugin);
             }
             if (plugin.getServiceName() == null || plugin.getServiceName().isEmpty()) {
-                throw new IllegalArgumentException("No service name");
+                throw new IllegalArgumentException("No service name for plugin: " + plugin.getLabelName());
             }
             if (plugin.getSatelliteType() == null || plugin.getSatelliteType().isEmpty()) {
-                throw new IllegalArgumentException("No satellite type");
+                throw new IllegalArgumentException("No satellite type for plugin: " + plugin.getServiceName());
             }
 
             MobileTerminalPlugin entity = updatePlugin(plugin);
