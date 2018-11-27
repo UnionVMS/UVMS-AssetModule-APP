@@ -23,6 +23,7 @@ import org.junit.runner.RunWith;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -393,5 +394,199 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         List<Asset> assetList = listResponse.getAssetList();
         assertThat(assetList.size(), is(1));
         assertThat(assetList.get(0).getId(), is(createdAsset.getId()));
+    }
+    
+    @Test
+    @RunAsClient
+    public void getAssetWithDateSearch() {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+        
+        Instant timestamp = Instant.now();
+        
+        createdAsset.setName(createdAsset.getName() + "UPDATE");
+        Asset updatedAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(createdAsset), Asset.class);
+        
+        
+        // Get history
+        AssetQuery query = new AssetQuery();
+        query.setCfr(Arrays.asList(asset.getCfr()));
+        query.setDate(timestamp);
+        
+        AssetListResponse listResponse = getWebTarget()
+                .path("asset")
+                .path("list")
+                .queryParam("size","1000")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query), AssetListResponse.class);
+        
+        List<Asset> assetList = listResponse.getAssetList();
+        assertThat(assetList.size(), is(1));
+        assertThat(assetList.get(0).getId(), is(createdAsset.getId()));
+        assertThat(assetList.get(0).getHistoryId(), is(createdAsset.getHistoryId()));
+        assertThat(assetList.get(0).getName(), is(asset.getName()));
+        
+        // Get current
+        AssetQuery query2 = new AssetQuery();
+        query2.setCfr(Arrays.asList(asset.getCfr()));
+        query2.setDate(Instant.now());
+        
+        AssetListResponse listResponse2 = getWebTarget()
+                .path("asset")
+                .path("list")
+                .queryParam("size","1000")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query2), AssetListResponse.class);
+        
+        List<Asset> assetList2 = listResponse2.getAssetList();
+        assertThat(assetList2.size(), is(1));
+        assertThat(assetList2.get(0).getId(), is(updatedAsset.getId()));
+        assertThat(assetList2.get(0).getHistoryId(), is(updatedAsset.getHistoryId()));
+        assertThat(assetList2.get(0).getName(), is(updatedAsset.getName()));
+    }
+    
+    @Test
+    @RunAsClient
+    public void getAssetWithDateSearchThreeRevisions() {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+        
+        Instant timestamp = Instant.now();
+        
+        String updatedName1 = createdAsset.getName() + "UPDATE";
+        createdAsset.setName(updatedName1);
+        Asset updatedAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(createdAsset), Asset.class);
+        
+        Instant timestamp2 = Instant.now();
+        
+        String updatedName2 = createdAsset.getName() + "UPDATE2";
+        updatedAsset.setName(updatedName2);
+        Asset updatedAsset2 = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(createdAsset), Asset.class);
+        
+        // Get history1
+        AssetQuery query = new AssetQuery();
+        query.setCfr(Arrays.asList(asset.getCfr()));
+        query.setDate(timestamp);
+        
+        AssetListResponse listResponse = getWebTarget()
+                .path("asset")
+                .path("list")
+                .queryParam("size","1000")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query), AssetListResponse.class);
+        
+        List<Asset> assetList = listResponse.getAssetList();
+        assertThat(assetList.size(), is(1));
+        assertThat(assetList.get(0).getId(), is(createdAsset.getId()));
+        assertThat(assetList.get(0).getHistoryId(), is(createdAsset.getHistoryId()));
+        assertThat(assetList.get(0).getName(), is(asset.getName()));
+        
+        // Get history2
+        AssetQuery query2 = new AssetQuery();
+        query2.setCfr(Arrays.asList(asset.getCfr()));
+        query2.setDate(timestamp2);
+        
+        AssetListResponse listResponse2 = getWebTarget()
+                .path("asset")
+                .path("list")
+                .queryParam("size","1000")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query2), AssetListResponse.class);
+        
+        List<Asset> assetList2 = listResponse2.getAssetList();
+        assertThat(assetList2.size(), is(1));
+        assertThat(assetList2.get(0).getId(), is(updatedAsset.getId()));
+        assertThat(assetList2.get(0).getHistoryId(), is(updatedAsset.getHistoryId()));
+        assertThat(assetList2.get(0).getName(), is(updatedName1));
+    }
+    
+    @Test
+    @RunAsClient
+    public void getAssetsAtDate() {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+        
+        Asset asset2 = AssetHelper.createBasicAsset();
+        Asset createdAsset2 = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset2), Asset.class);
+        
+        AssetQuery query2 = new AssetQuery();
+        query2.setDate(Instant.now());
+        
+        AssetListResponse listResponse = getWebTarget()
+                .path("asset")
+                .path("list")
+                .queryParam("size","1000")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query2), AssetListResponse.class);
+        
+        List<Asset> assetList2 = listResponse.getAssetList();
+        assertTrue(listResponse.getAssetList().stream()
+                .anyMatch(fetchedAsset -> fetchedAsset.getId().equals(createdAsset.getId())));
+        assertTrue(listResponse.getAssetList().stream()
+                .anyMatch(fetchedAsset -> fetchedAsset.getId().equals(createdAsset2.getId())));
+    }
+    
+    @Test
+    @RunAsClient
+    public void getAssetsAtDateAndIrcsAndFs() {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+        
+        Asset asset2 = AssetHelper.createBasicAsset();
+        Asset createdAsset2 = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset2), Asset.class);
+        
+        Instant timestamp = Instant.now();
+        
+        String newIrcs = "F" + AssetHelper.getRandomIntegers(7);
+        createdAsset.setIrcs(newIrcs);
+        Asset updatedAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(createdAsset), Asset.class);
+        
+        AssetQuery query = new AssetQuery();
+        query.setIrcs(Arrays.asList(asset.getIrcs()));
+        query.setFlagState(Arrays.asList(asset.getFlagStateCode()));
+        query.setDate(timestamp);
+        
+        AssetListResponse listResponse = getWebTarget()
+                .path("asset")
+                .path("list")
+                .queryParam("size","1000")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query), AssetListResponse.class);
+        
+        List<Asset> assetList = listResponse.getAssetList();
+        assertThat(assetList.size(), is(1));
+        assertThat(assetList.get(0).getId(), is(createdAsset.getId()));
+        assertThat(assetList.get(0).getHistoryId(), is(createdAsset.getHistoryId()));
+        assertThat(assetList.get(0).getIrcs(), is(asset.getIrcs()));
     }
 }
