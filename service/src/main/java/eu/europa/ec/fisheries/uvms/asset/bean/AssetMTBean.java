@@ -2,9 +2,10 @@ package eu.europa.ec.fisheries.uvms.asset.bean;
 
 import eu.europa.ec.fisheries.schema.exchange.movement.mobileterminal.v1.IdList;
 import eu.europa.ec.fisheries.schema.exchange.movement.mobileterminal.v1.IdType;
-import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +54,7 @@ public class AssetMTBean {
         return ret;
     }
 
-    private MobileTerminalType getMobileTerminalByIdList(List<IdList> ids, String rawMovementSourceName) {
+    private MobileTerminal getMobileTerminalByIdList(List<IdList> ids, String rawMovementSourceName) {
 
         MobileTerminalSearchCriteria criteria = new MobileTerminalSearchCriteria();
         for (IdList id : ids) {
@@ -111,8 +112,8 @@ public class AssetMTBean {
         pagination.setPage(1);
         query.setPagination(pagination);
 
-        MobileTerminalListResponse mobileTerminalListResponse = mobileTerminalService.getMobileTerminalList(query);
-        List<MobileTerminalType> resultList = mobileTerminalListResponse.getMobileTerminal();
+        MTListResponse mobileTerminalListResponse = mobileTerminalService.getMobileTerminalList(query);
+        List<MobileTerminal> resultList = mobileTerminalListResponse.getMobileTerminalList();
         return resultList.size() != 1 ? null : resultList.get(0);
     }
 }

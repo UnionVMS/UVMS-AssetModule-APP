@@ -13,7 +13,6 @@ package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.ConfigList;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemType;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.Plugin;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
 import eu.europa.ec.fisheries.uvms.asset.bean.ConfigServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.ConfigServiceBeanMT;
@@ -132,7 +131,7 @@ public class ConfigModelTest {
 	@Test
 	public void testUpsertPluginsEmptyInput()  {
 		List<PluginService> pluginList = new ArrayList<>();
-		List<Plugin> plugins = testModelBean.upsertPlugins(pluginList);
+		List<MobileTerminalPlugin> plugins = testModelBean.upsertPlugins(pluginList);
 		assertEquals(pluginList.size(), plugins.size());
 	}
 
@@ -210,7 +209,7 @@ public class ConfigModelTest {
 	@Test
 	public void testInactivatePluginsNoPlugin()  {
 		Map<String, PluginService> map = new HashMap<>();
-		List<Plugin> resEntityList = testModelBean.inactivatePlugins(map);
+		List<MobileTerminalPlugin> resEntityList = testModelBean.inactivatePlugins(map);
 
 		assertNotNull(resEntityList);
 		assertEquals(0, resEntityList.size());
@@ -226,11 +225,11 @@ public class ConfigModelTest {
 		entityList.add(siriusone);
 		when(mobileTerminalPluginDao.getPluginList()).thenReturn(entityList);
 
-		List<Plugin> resEntityList = testModelBean.inactivatePlugins(map);
+		List<MobileTerminalPlugin> resEntityList = testModelBean.inactivatePlugins(map);
 		assertNotNull(resEntityList);
 		assertEquals(1, resEntityList.size());
-		for(Plugin p : resEntityList) {
-			assertFalse(p.isInactive());
+		for(MobileTerminalPlugin p : resEntityList) {
+			assertFalse(p.getPluginInactive());
 		}
 	}
 
@@ -245,7 +244,7 @@ public class ConfigModelTest {
 		when(mobileTerminalPluginDao.getPluginList()).thenReturn(entityList);
 		map.put(serviceName, pluginType);
 
-		List<Plugin> resEntityList = testModelBean.inactivatePlugins(map);
+		List<MobileTerminalPlugin> resEntityList = testModelBean.inactivatePlugins(map);
 		assertNotNull(resEntityList);
 		assertEquals(0, resEntityList.size());
 	}
@@ -260,7 +259,7 @@ public class ConfigModelTest {
 		entityList.add(siriusone);
 		when(mobileTerminalPluginDao.getPluginList()).thenReturn(entityList);
 
-		List<Plugin> resEntityList = testModelBean.inactivatePlugins(map);
+		List<MobileTerminalPlugin> resEntityList = testModelBean.inactivatePlugins(map);
 		assertNotNull(resEntityList);
 		assertEquals(0, resEntityList.size());
 	}

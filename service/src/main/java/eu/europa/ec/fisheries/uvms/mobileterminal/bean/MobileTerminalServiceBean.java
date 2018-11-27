@@ -24,21 +24,21 @@ import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException
 import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
+import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.MobileTerminalDataSourceRequestMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.MobileTerminalDataSourceResponseMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
-import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalTypeComparator;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalAttributes;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.AuditModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalEntityToModelMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.MobileTerminalDataSourceRequestMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.MobileTerminalDataSourceResponseMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.SearchMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,10 +49,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jms.TextMessage;
 import javax.ws.rs.NotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Stateless
 @LocalBean
@@ -99,12 +96,8 @@ public class MobileTerminalServiceBean {
         return createdMobileTerminal;
     }
 
-    public MobileTerminalListResponse getMobileTerminalList(MobileTerminalListQuery query) {
-        ListResponseDto listResponse = getTerminalListByQuery(query);
-        MobileTerminalListResponse response = new MobileTerminalListResponse();
-        response.setCurrentPage(listResponse.getCurrentPage());
-        response.setTotalNumberOfPages(listResponse.getTotalNumberOfPages());
-        response.getMobileTerminal().addAll(listResponse.getMobileTerminalList());
+    public MTListResponse getMobileTerminalList(MobileTerminalListQuery query) {
+        MTListResponse response = getTerminalListByQuery(query);
         return response;
     }
 
@@ -431,7 +424,7 @@ public class MobileTerminalServiceBean {
         return createdMobileTerminal;
     }
 
-    public ListResponseDto getTerminalListByQuery(MobileTerminalListQuery query) {
+    public MTListResponse getTerminalListByQuery(MobileTerminalListQuery query) {
         if (query == null) {
             throw new IllegalArgumentException("No list query");
         }
@@ -442,11 +435,10 @@ public class MobileTerminalServiceBean {
             throw new IllegalArgumentException("No list criteria");
         }
 
-        ListResponseDto response = new ListResponseDto();
-        List<MobileTerminalType> mobileTerminalList = new ArrayList<>();
+        MTListResponse response = new MTListResponse();
 
-        Integer page = query.getPagination().getPage();
-        Integer listSize = query.getPagination().getListSize();
+        int page = query.getPagination().getPage();
+        int listSize = query.getPagination().getListSize();
         int startIndex = (page - 1) * listSize;
         int stopIndex = startIndex + listSize;
         LOG.debug("page: " + page + ", listSize: " + listSize + ", startIndex: " + startIndex);
@@ -459,27 +451,23 @@ public class MobileTerminalServiceBean {
 
         List<MobileTerminal> terminals = terminalDao.getMobileTerminalsByQuery(searchSql);
 
-        for (MobileTerminal terminal : terminals) {
-            MobileTerminalType terminalType = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
-            mobileTerminalList.add(terminalType);
-        }
+        terminals.sort(Comparator.comparing(MobileTerminal::getId));
 
-        mobileTerminalList.sort(new MobileTerminalTypeComparator());
-        int totalMatches = mobileTerminalList.size();
+        int totalMatches = terminals.size();
         LOG.debug("totalMatches: " + totalMatches);
 
         int numberOfPages = totalMatches / listSize;
         if (totalMatches % listSize != 0) {
             numberOfPages += 1;
         }
-        response.setMobileTerminalList(mobileTerminalList);
+        response.setMobileTerminalList(terminals);
 
         if ((totalMatches - 1) > 0) {
             if (stopIndex >= totalMatches) {
                 stopIndex = totalMatches;
             }
             LOG.debug("stopIndex: " + stopIndex);
-            response.setMobileTerminalList(new ArrayList<>(mobileTerminalList.subList(startIndex, stopIndex)));
+            response.setMobileTerminalList(new ArrayList<>(terminals.subList(startIndex, stopIndex)));
         }
         response.setTotalNumberOfPages(numberOfPages);
         response.setCurrentPage(page);
@@ -487,7 +475,7 @@ public class MobileTerminalServiceBean {
         return response;
     }
 
-    public MobileTerminalType getMobileTerminalBySourceAndSearchCriteria(MobileTerminalSearchCriteria criteria) {
+    public MobileTerminal getMobileTerminalBySourceAndSearchCriteria(MobileTerminalSearchCriteria criteria) {
         MobileTerminalListQuery query = new MobileTerminalListQuery();
 
         // If no valid criterias, don't look for a mobile terminal
@@ -503,8 +491,8 @@ public class MobileTerminalServiceBean {
         pagination.setPage(1);
         query.setPagination(pagination);
 
-        MobileTerminalListResponse mobileTerminalListResponse = getMobileTerminalList(query);
-        List<MobileTerminalType> resultList = mobileTerminalListResponse.getMobileTerminal();
+        MTListResponse mobileTerminalListResponse = getMobileTerminalList(query);
+        List<MobileTerminal> resultList = mobileTerminalListResponse.getMobileTerminalList();
         return resultList.size() != 1 ? null : resultList.get(0);
     }
 
