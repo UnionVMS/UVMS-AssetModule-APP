@@ -153,6 +153,8 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
         Assert.assertEquals("CHANGED", fetched_record.getDescription());
 
         service.deleteAllFor(CONSTANT);
+        userTransaction.commit();
+        userTransaction.begin();
     }
 
     private CustomCodesPK createPrimaryKey() {

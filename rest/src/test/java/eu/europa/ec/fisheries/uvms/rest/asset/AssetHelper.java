@@ -1,16 +1,14 @@
 package eu.europa.ec.fisheries.uvms.rest.asset;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
-import io.swagger.models.Contact;
+
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.Random;
 
 public abstract class AssetHelper {
 

@@ -17,13 +17,11 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalSource;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.util.OffsetDateTimeDeserializer;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
@@ -34,7 +32,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -90,7 +88,7 @@ public class MobileTerminal implements Serializable {
 	@Enumerated(EnumType.STRING)
 	@NotNull
 	@Column(name="source")
-	private MobileTerminalSource source;
+	private TerminalSourceEnum source;
 
 	@Enumerated(EnumType.STRING)
 	@NotNull
@@ -112,32 +110,30 @@ public class MobileTerminal implements Serializable {
 	@Column(name="updateuser")
 	private String updateuser;
 
+	@NotNull
 	@Column(name="serial_no")
 	private String serialNo;
 
-	@OneToMany(mappedBy = "mobileTerminal", cascade = CascadeType.ALL)
-	@Fetch(FetchMode.SELECT)
+	@OneToMany(mappedBy = "mobileTerminal", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<Channel> channels;
 
-	@OneToMany(mappedBy="mobileTerminal", cascade = CascadeType.ALL)
-	@Fetch(FetchMode.SELECT)
+	@OneToMany(mappedBy = "mobileTerminal", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<MobileTerminalAttributes> mobileTerminalAttributes;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="chan_def", foreignKey = @ForeignKey(name = "MobileTerminal_Channel_FK10"))
 	private Channel defaultChannel;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="chan_conf", foreignKey = @ForeignKey(name = "MobileTerminal_Channel_FK20"))
 	private Channel configChannel;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="chan_poll", foreignKey = @ForeignKey(name = "MobileTerminal_Channel_FK30"))
 	private Channel pollChannel;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="asset_id", foreignKey = @ForeignKey(name = "MobileTerminal_Asset_FK"))
-	@Fetch(FetchMode.SELECT)
 	private Asset asset;
 
 	public MobileTerminal() {
@@ -194,11 +190,11 @@ public class MobileTerminal implements Serializable {
 		this.inactivated = inactivated;
 	}
 
-	public MobileTerminalSource getSource() {
+	public TerminalSourceEnum getSource() {
 		return source;
 	}
 
-	public void setSource(MobileTerminalSource source) {
+	public void setSource(TerminalSourceEnum source) {
 		this.source = source;
 	}
 
@@ -234,16 +230,6 @@ public class MobileTerminal implements Serializable {
 		this.serialNo = serialNo;
 	}
 
-	public Set<Channel> getChannels() {
-		if(channels == null)
-			channels = new HashSet<>();
-		return channels;
-	}
-
-	public void setChannels(Set<Channel> channels) {
-		this.channels = channels;
-	}
-
 	public OffsetDateTime getCreateTime() {
 		return createTime;
 	}
@@ -252,9 +238,19 @@ public class MobileTerminal implements Serializable {
 		this.createTime = createTime;
 	}
 
+	public Set<Channel> getChannels() {
+		if(channels == null)
+			channels = new LinkedHashSet<>();
+		return channels;
+	}
+
+	public void setChannels(Set<Channel> channels) {
+		this.channels = channels;
+	}
+
 	public Set<MobileTerminalAttributes> getMobileTerminalAttributes() {
-		if(mobileTerminalAttributes == null){
-			mobileTerminalAttributes = new HashSet<>();
+		if (mobileTerminalAttributes == null) {
+			mobileTerminalAttributes = new LinkedHashSet<>();
 		}
 		return mobileTerminalAttributes;
 	}

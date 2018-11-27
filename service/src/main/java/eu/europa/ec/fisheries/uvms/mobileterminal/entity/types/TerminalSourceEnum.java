@@ -20,8 +20,16 @@ public enum TerminalSourceEnum {
     TerminalSourceEnum(int id) {
         this.id = id;
     }
-	
+
 	public Integer getId() {
 		return id;
+	}
+
+	public String value() {
+		return name();
+	}
+
+	public static TerminalSourceEnum fromValue(String v) {
+		return valueOf(v);
 	}
 }

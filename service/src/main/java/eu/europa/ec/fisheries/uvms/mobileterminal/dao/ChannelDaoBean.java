@@ -48,7 +48,8 @@ public class ChannelDaoBean  {
     public List<String> getActiveDNID(String pluginName) {
         String sql = getSQLActiveDNID(pluginName);
         TypedQuery<String> query = em.createQuery(sql, String.class);
-        return query.getResultList();
+        List<String> resultList = query.getResultList();
+        return resultList;
     }
 
     private String getSQLActiveDNID(String pluginName) {

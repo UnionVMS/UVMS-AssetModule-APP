@@ -13,32 +13,26 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.bean;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollableQuery;
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
-import eu.europa.ec.fisheries.uvms.asset.message.AssetDataSourceQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.ModuleQueue;
-import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.MobileTerminalDataSourceRequestMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.MobileTerminalDataSourceResponseMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
-import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalTypeComparator;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.*;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalAttributes;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalStatus;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.AuditModuleRequestMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalEntityToModelMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.SearchMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,12 +41,8 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.jms.TextMessage;
 import javax.ws.rs.NotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Stateless
 @LocalBean
@@ -62,9 +52,6 @@ public class MobileTerminalServiceBean {
 
     @EJB
     private AssetMessageProducer assetMessageProducer;
-
-    @EJB
-    private AssetQueueConsumer AssetMessageConsumer;
 
     @EJB
     private PluginServiceBean pluginService;
@@ -83,8 +70,8 @@ public class MobileTerminalServiceBean {
 
     public MobileTerminal createMobileTerminal(MobileTerminal mobileTerminal, String username) {
         MobileTerminal createdMobileTerminal = terminalDao.createMobileTerminal(mobileTerminal);
-
-        boolean dnidUpdated = configModel.checkDNIDListChange(createdMobileTerminal.getPlugin().getPluginServiceName());
+        String pluginServiceName = createdMobileTerminal.getPlugin().getPluginServiceName();
+        boolean dnidUpdated = configModel.checkDNIDListChange(pluginServiceName);
 
         //send stuff to audit
         try {
@@ -94,21 +81,17 @@ public class MobileTerminalServiceBean {
             LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was created", createdMobileTerminal.getId().toString());
         }
         if (dnidUpdated) {
-            pluginService.processUpdatedDNIDList(createdMobileTerminal.getPlugin().getPluginServiceName());
+            pluginService.processUpdatedDNIDList(pluginServiceName);
         }
         return createdMobileTerminal;
     }
 
-    public MobileTerminalListResponse getMobileTerminalList(MobileTerminalListQuery query) {
-        ListResponseDto listResponse = getTerminalListByQuery(query);
-        MobileTerminalListResponse response = new MobileTerminalListResponse();
-        response.setCurrentPage(listResponse.getCurrentPage());
-        response.setTotalNumberOfPages(listResponse.getTotalNumberOfPages());
-        response.getMobileTerminal().addAll(listResponse.getMobileTerminalList());
+    public MTListResponse getMobileTerminalList(MobileTerminalListQuery query) {
+        MTListResponse response = getTerminalListByQuery(query);
         return response;
     }
 
-    public MobileTerminal upsertMobileTerminal(MobileTerminal data, MobileTerminalSource source, String username) {
+    public MobileTerminal upsertMobileTerminal(MobileTerminal data, TerminalSourceEnum source, String username) {
         if (data == null) {
             throw new NullPointerException("No Mobile terminal to update [ NULL ]");
         }
@@ -120,20 +103,6 @@ public class MobileTerminalServiceBean {
             pluginService.processUpdatedDNIDList(data.getPlugin().getPluginServiceName());
         }
         return terminalUpserted;
-    }
-
-    public MobileTerminalType getMobileTerminalByIdFromInternalOrExternalSource(MobileTerminalId id, AssetDataSourceQueue queue) throws AssetException, AssetMessageException {
-        if (id == null) {
-            throw new NullPointerException("No id");
-        }
-        if (queue != null && queue.equals(AssetDataSourceQueue.INTERNAL)) {
-            //return getMobileTerminalByIdFromInternalOrExternalSource(id.getGuid());
-            return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminalDao.getMobileTerminalById(UUID.fromString(id.getGuid())));
-        }
-        String data = MobileTerminalDataSourceRequestMapper.mapGetMobileTerminal(id);
-        String messageId = assetMessageProducer.sendDataSourceMessage(data, queue);
-        TextMessage response = AssetMessageConsumer.getMessage(messageId, TextMessage.class);
-        return MobileTerminalDataSourceResponseMapper.mapToMobileTerminalFromResponse(response, messageId);
     }
 
     public MobileTerminal updateMobileTerminal(MobileTerminal mobileTerminal, String comment, String username) {
@@ -183,8 +152,8 @@ public class MobileTerminalServiceBean {
         return updatedTerminal;
     }
 
-    public MobileTerminal assignMobileTerminal(MobileTerminalAssignQuery query, String comment, String username) {
-        MobileTerminal terminalAssign = assignMobileTerminalToCarrier(query, comment, username);
+    public MobileTerminal assignMobileTerminal(UUID connectId, UUID guid, String comment, String username) {
+        MobileTerminal terminalAssign = assignMobileTerminalToCarrier(connectId, guid, comment, username);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalAssigned(terminalAssign.getId().toString(), comment, username);
             assetMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
@@ -195,8 +164,8 @@ public class MobileTerminalServiceBean {
         return terminalAssign;
     }
 
-    public MobileTerminal unAssignMobileTerminal(MobileTerminalAssignQuery query, String comment, String username) {
-        MobileTerminal terminalUnAssign = unAssignMobileTerminalFromCarrier(query, comment, username);
+    public MobileTerminal unAssignMobileTerminal(UUID connectId, UUID guid, String comment, String username) {
+        MobileTerminal terminalUnAssign = unAssignMobileTerminalFromCarrier(connectId, guid, comment, username);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalUnassigned(terminalUnAssign.getId().toString(), comment, username);
             assetMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
@@ -206,8 +175,8 @@ public class MobileTerminalServiceBean {
         return terminalUnAssign;
     }
 
-    public MobileTerminal setStatusMobileTerminal(MobileTerminalId terminalId, String comment, MobileTerminalStatus status, String username) {
-        MobileTerminal terminalStatus = getMobileTerminalEntityById(terminalId);
+    public MobileTerminal setStatusMobileTerminal(UUID guid, String comment, MobileTerminalStatus status, String username) {
+        MobileTerminal terminalStatus = getMobileTerminalEntityById(guid);
 
         terminalStatus = changeUpdateMobileTerminalStatus(terminalStatus, comment, status, username);
 
@@ -230,8 +199,7 @@ public class MobileTerminalServiceBean {
             }
             assetMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException | AssetMessageException e) {
-            LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was set to status {}", terminalStatus
-                    .getId().toString(), status);
+            LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was set to status {}", terminalStatus.getId().toString(), status);
         }
 
         boolean dnidUpdated = configModel.checkDNIDListChange(terminalStatus.getPlugin().getName());
@@ -303,22 +271,16 @@ public class MobileTerminalServiceBean {
         return terminalDao.getMobileTerminalById(id);
     }
 
-    public MobileTerminal getMobileTerminalEntityById(MobileTerminalId id) {
-        if (id == null || id.getGuid() == null || id.getGuid().isEmpty())
-            throw new IllegalArgumentException("Non valid id: NULL or Empty");
-        return terminalDao.getMobileTerminalById(UUID.fromString(id.getGuid()));
-    }
-
     public MobileTerminal getMobileTerminalEntityBySerialNo(String serialNo) {
         if (serialNo == null || serialNo.isEmpty())
             throw new NullPointerException("Non valid serial no");
         return terminalDao.getMobileTerminalBySerialNo(serialNo);
     }
 
-    public String assertTerminalHasSerialNumber(MobileTerminalType mobileTerminal) {
+    public String assertTerminalHasSerialNumber(MobileTerminal mobileTerminal) {
         String serialNumber = null;
-        for (MobileTerminalAttribute attribute : mobileTerminal.getAttributes()) {
-            if (MobileTerminalConstants.SERIAL_NUMBER.equalsIgnoreCase(attribute.getType()) &&
+        for (MobileTerminalAttributes attribute : mobileTerminal.getMobileTerminalAttributes()) {
+            if (MobileTerminalConstants.SERIAL_NUMBER.equalsIgnoreCase(attribute.getAttribute()) &&
                     attribute.getValue() != null && !attribute.getValue().isEmpty()) {
                 serialNumber = attribute.getValue();
                 break;
@@ -350,29 +312,24 @@ public class MobileTerminalServiceBean {
         }
     }
 
-    public MobileTerminal assignMobileTerminalToCarrier(MobileTerminalAssignQuery query, String comment, String username) {
-        if (query == null) {
-            throw new NullPointerException("RequestQuery is null");
-        }
-        if (query.getMobileTerminalId() == null) {
+    public MobileTerminal assignMobileTerminalToCarrier(UUID connectId, UUID guid, String comment, String username) {
+
+        if (guid == null) {
             throw new NullPointerException("No Mobile terminalId in request");
         }
-        if (query.getConnectId() == null || query.getConnectId().isEmpty()) {
+        if (connectId == null) {
             throw new NullPointerException("No connect id in request");
         }
 
-        MobileTerminalId mobTermId = query.getMobileTerminalId();
-        String connectId = query.getConnectId();
-
-        Asset asset = assetDao.getAssetById(UUID.fromString(connectId));
+        Asset asset = assetDao.getAssetById(connectId);
         if (asset == null) {
             throw new NotFoundException("No Asset with ID " + connectId + " found. Can not link Mobile Terminal.");
         }
 
-        MobileTerminal terminal = getMobileTerminalEntityById(mobTermId);
+        MobileTerminal terminal = getMobileTerminalEntityById(guid);
 
         if(terminal.getAsset() != null) {
-            throw new IllegalArgumentException("Terminal " + mobTermId + " is already linked to an asset with guid " + query.getConnectId());
+            throw new IllegalArgumentException("Terminal " + guid + " is already linked to an asset with guid " + connectId);
         }
         terminal.setAsset(asset);
         terminal.setUpdateuser(username);
@@ -383,20 +340,16 @@ public class MobileTerminalServiceBean {
         return terminal;
     }
 
-    public MobileTerminal unAssignMobileTerminalFromCarrier(MobileTerminalAssignQuery query, String comment, String username) {
-        if (query == null) {
-            throw new IllegalArgumentException("RequestQuery is null");
+    public MobileTerminal unAssignMobileTerminalFromCarrier(UUID connectId, UUID guid, String comment, String username) {
+
+        if (guid == null) {
+            throw new IllegalArgumentException("No Mobile GUID in request");
         }
-        if (query.getMobileTerminalId() == null) {
-            throw new IllegalArgumentException("No Mobile terminalId in request");
-        }
-        if (query.getConnectId() == null || query.getConnectId().isEmpty()) {
+        if (connectId == null) {
             throw new IllegalArgumentException("No connect id in request");
         }
 
-        MobileTerminalId mobTermId = query.getMobileTerminalId();
-
-        MobileTerminal terminal = getMobileTerminalEntityById(mobTermId);
+        MobileTerminal terminal = getMobileTerminalEntityById(guid);
         terminal.setUpdateuser(username);
 
         Asset asset = terminal.getAsset();
@@ -406,7 +359,7 @@ public class MobileTerminalServiceBean {
 
         boolean remove = asset.getMobileTerminals().remove(terminal);
         if(!remove) {
-            throw new IllegalArgumentException("Terminal " + mobTermId + " is not linked to an asset with ID " + asset.getId());
+            throw new IllegalArgumentException("Terminal " + guid + " is not linked to an asset with ID " + asset.getId());
         }
         assetDao.updateAsset(asset);
         return terminal;
@@ -418,20 +371,18 @@ public class MobileTerminalServiceBean {
             throw new NullPointerException("RequestQuery is null");
         }
 
-        try {
-            MobileTerminal updatedMobileTerminal = updateMobileTerminal(mobileTerminal, "Upserted by external module", username);
-            return updatedMobileTerminal;
-        } catch (RuntimeException e) {
-            LOG.error("[ Error when upserting mobile terminal: Mobile terminal update failed trying to insert. ] {} {}", e, e.getStackTrace());
-            //TODO: Should this swallow an error and just continue on?
-        }
-        MobileTerminal createdMobileTerminal = null;
-        createdMobileTerminal = createMobileTerminal(mobileTerminal, username);
+        MobileTerminal upsertedMT;
 
-        return createdMobileTerminal;
+        if(mobileTerminal.getId() == null) {
+            upsertedMT = createMobileTerminal(mobileTerminal, username);
+        } else {
+            upsertedMT = updateMobileTerminal(mobileTerminal, "Upserted by external module", username);
+        }
+
+        return upsertedMT;
     }
 
-    public ListResponseDto getTerminalListByQuery(MobileTerminalListQuery query) {
+    public MTListResponse getTerminalListByQuery(MobileTerminalListQuery query) {
         if (query == null) {
             throw new IllegalArgumentException("No list query");
         }
@@ -442,16 +393,15 @@ public class MobileTerminalServiceBean {
             throw new IllegalArgumentException("No list criteria");
         }
 
-        ListResponseDto response = new ListResponseDto();
-        List<MobileTerminalType> mobileTerminalList = new ArrayList<>();
+        MTListResponse response = new MTListResponse();
 
-        Integer page = query.getPagination().getPage();
-        Integer listSize = query.getPagination().getListSize();
+        int page = query.getPagination().getPage();
+        int listSize = query.getPagination().getListSize();
         int startIndex = (page - 1) * listSize;
         int stopIndex = startIndex + listSize;
         LOG.debug("page: " + page + ", listSize: " + listSize + ", startIndex: " + startIndex);
 
-        boolean isDynamic = query.getMobileTerminalSearchCriteria().isIsDynamic() == null ? true : query.getMobileTerminalSearchCriteria().isIsDynamic();
+        boolean isDynamic = query.getMobileTerminalSearchCriteria().isDynamic() == null ? true : query.getMobileTerminalSearchCriteria().isDynamic();
 
         List<ListCriteria> criterias = query.getMobileTerminalSearchCriteria().getCriterias();
 
@@ -459,27 +409,23 @@ public class MobileTerminalServiceBean {
 
         List<MobileTerminal> terminals = terminalDao.getMobileTerminalsByQuery(searchSql);
 
-        for (MobileTerminal terminal : terminals) {
-            MobileTerminalType terminalType = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
-            mobileTerminalList.add(terminalType);
-        }
+        terminals.sort(Comparator.comparing(MobileTerminal::getId));
 
-        mobileTerminalList.sort(new MobileTerminalTypeComparator());
-        int totalMatches = mobileTerminalList.size();
+        int totalMatches = terminals.size();
         LOG.debug("totalMatches: " + totalMatches);
 
         int numberOfPages = totalMatches / listSize;
         if (totalMatches % listSize != 0) {
             numberOfPages += 1;
         }
-        response.setMobileTerminalList(mobileTerminalList);
+        response.setMobileTerminalList(terminals);
 
         if ((totalMatches - 1) > 0) {
             if (stopIndex >= totalMatches) {
                 stopIndex = totalMatches;
             }
             LOG.debug("stopIndex: " + stopIndex);
-            response.setMobileTerminalList(new ArrayList<>(mobileTerminalList.subList(startIndex, stopIndex)));
+            response.setMobileTerminalList(new ArrayList<>(terminals.subList(startIndex, stopIndex)));
         }
         response.setTotalNumberOfPages(numberOfPages);
         response.setCurrentPage(page);
@@ -487,7 +433,7 @@ public class MobileTerminalServiceBean {
         return response;
     }
 
-    public MobileTerminalType getMobileTerminalBySourceAndSearchCriteria(MobileTerminalSearchCriteria criteria) {
+    public MobileTerminal getMobileTerminalBySourceAndSearchCriteria(MobileTerminalSearchCriteria criteria) {
         MobileTerminalListQuery query = new MobileTerminalListQuery();
 
         // If no valid criterias, don't look for a mobile terminal
@@ -496,31 +442,23 @@ public class MobileTerminalServiceBean {
         }
 
         query.setMobileTerminalSearchCriteria(criteria);
-        eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListPagination pagination =
-                new eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListPagination();
+        ListPagination pagination = new ListPagination();
         // To leave room to find erroneous results - it must be only one in the list
         pagination.setListSize(2);
         pagination.setPage(1);
         query.setPagination(pagination);
 
-        MobileTerminalListResponse mobileTerminalListResponse = getMobileTerminalList(query);
-        List<MobileTerminalType> resultList = mobileTerminalListResponse.getMobileTerminal();
+        MTListResponse mobileTerminalListResponse = getMobileTerminalList(query);
+        List<MobileTerminal> resultList = mobileTerminalListResponse.getMobileTerminalList();
         return resultList.size() != 1 ? null : resultList.get(0);
     }
 
-
-    public MobileTerminalType findMobileTerminalTypeByAsset(UUID assetId) {
-        MobileTerminal terminal = terminalDao.findMobileTerminalByAsset(assetId);
-        return terminal == null ? null : MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
-    }
-
     public MobileTerminal findMobileTerminalByAsset(UUID assetid) {
-        MobileTerminal terminal = terminalDao.findMobileTerminalByAsset(assetid);
-        return terminal;
+        return terminalDao.findMobileTerminalByAsset(assetid);
     }
 
     //@formatter:off
-    public MobileTerminalType getMobileTerminalByAssetMTEnrichmentRequest(AssetMTEnrichmentRequest request) {
+    public MobileTerminal getMobileTerminalByAssetMTEnrichmentRequest(AssetMTEnrichmentRequest request) {
 
         String request_dnid = null;
         String request_memberNumber = null;
@@ -588,11 +526,11 @@ public class MobileTerminalServiceBean {
         List<MobileTerminal> terminals = terminalDao.getMobileTerminalsByQuery(sql);
         switch (terminals.size()){
             case 0 : return null;
-            case 1 : return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminals.get(0));
+            case 1 : return terminals.get(0);
             default :{
                 MobileTerminal  triedMobileTerminal = tryToFindBasedOnRequestData(request_dnid,request_memberNumber,request_serialNumber,request_transponderType, terminals);
                 if(triedMobileTerminal != null){
-                    return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(triedMobileTerminal);
+                    return triedMobileTerminal;
                 }else{
                     return null;
                 }

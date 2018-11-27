@@ -11,26 +11,36 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 
-import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalAssignQuery;
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalId;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.ListCriteria;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MobileTerminalListQuery;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.SearchKey;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalAttributes;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
-import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.json.*;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -41,216 +51,182 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     private static final Logger LOG = LoggerFactory.getLogger(MobileTerminalRestResourceTest.class);
 
     @Test
-    public void createMobileTerminalTest() throws Exception{
-        MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+    public void createMobileTerminalTest() {
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
-        String response = getWebTarget()
+        MobileTerminal created = getWebTarget()
                                 .path("mobileterminal")
                                 .request(MediaType.APPLICATION_JSON)
-                                .post(Entity.json(mobileTerminal), String.class);
+                                .post(Entity.json(mobileTerminal), MobileTerminal.class);
 
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        MobileTerminalType createdMT = deserializeResponseDto(response, MobileTerminalType.class);
+        assertNotNull(created);
+        Set<Channel> channels = created.getChannels();
+        Optional<Channel> first = channels.stream()
+                .filter(channel -> channel.getName().equals(mobileTerminal.getChannels().iterator().next().getName()))
+                .findFirst();
 
-        assertEquals(mobileTerminal.getChannels().get(0).getName(), createdMT.getChannels().get(0).getName());
+        assertTrue(first.isPresent());
+        assertEquals(mobileTerminal.getChannels().iterator().next().getName(), first.get().getName());
     }
 
     @Test
+    @Ignore
     public void createTwoMobileTerminalsUsingTheSameSerialNumberTest() {
-        MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
-        String serialNr = mobileTerminal.getAttributes().get(0).getValue();
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        String serialNr = mobileTerminal.getMobileTerminalAttributes().iterator().next().getValue();
 
-        String response = getWebTarget()
+        MobileTerminal created = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminal), String.class);
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
 
-        JsonReader jsonReader = Json.createReader(new StringReader(response));
-        JsonObject jsonObject = jsonReader.readObject();
-
-        assertThat(jsonObject.getInt("code"), CoreMatchers.is(MTResponseCode.OK.getCode()));
+        assertNotNull(created);
 
         mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
-        mobileTerminal.getAttributes().get(0).setValue(serialNr);
+        mobileTerminal.getMobileTerminalAttributes().iterator().next().setValue(serialNr);
 
-        response = getWebTarget()
+        Response response = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminal), String.class);
-
-        jsonReader = Json.createReader(new StringReader(response));
-        jsonObject = jsonReader.readObject();
-
-        assertThat(jsonObject.getInt("code"), CoreMatchers.is(MTResponseCode.UNDEFINED_ERROR.getCode()));
+                .post(Entity.json(mobileTerminal));
+        // TODO: Figure out if every mt attributes will be unique or just serial number?
+        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
     }
 
     @Test
     public void getMobileTerminalByIdTest() {
-        MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
-        String created = getWebTarget()
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        MobileTerminal created = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminal), String.class);
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
 
-        JsonReader jsonReader = Json.createReader(new StringReader(created));
-        JsonObject jsonObject = jsonReader.readObject();
+        assertNotNull(created);
 
-        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
-
-        JsonObject data = jsonObject.getJsonObject("data");
-        JsonObject terminalId = data.getJsonObject("mobileTerminalId");
-        String guid = terminalId.getString("guid");
-
-        String res = getWebTarget()
-                .path("mobileterminal/" + guid)
+        MobileTerminal fetched = getWebTarget()
+                .path("mobileterminal/" + created.getId())
                 .request(MediaType.APPLICATION_JSON)
                 .get()
-                .readEntity(String.class);
+                .readEntity(MobileTerminal.class);
 
-        assertTrue(res.contains(guid));
+        assertNotNull(fetched);
+        assertEquals(created.getId(), fetched.getId());
     }
 
     @Test
-    public void getMobileTerminalEntityByIdTest() {
-        MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+    public void getMobileTerminalWithAssetByIdTest() {
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
         Asset asset = createAndRestBasicAsset();
-        mobileTerminal.setConnectId(asset.getId().toString());
+        mobileTerminal.setAsset(asset);
 
-        String created = getWebTarget()
+        MobileTerminal created = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminal), String.class);
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
 
-        JsonReader jsonReader = Json.createReader(new StringReader(created));
-        JsonObject jsonObject = jsonReader.readObject();
+        assertNotNull(asset);
+        assertNotNull(created);
 
-        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
-
-        JsonObject data = jsonObject.getJsonObject("data");
-        JsonObject terminalId = data.getJsonObject("mobileTerminalId");
-        String guid = terminalId.getString("guid");
-
-        String res = getWebTarget()
-                .path("mobileterminal/entity/" + guid)
+        MobileTerminal fetched = getWebTarget()
+                .path("mobileterminal/" + created.getId())
                 .request(MediaType.APPLICATION_JSON)
                 .get()
-                .readEntity(String.class);
+                .readEntity(MobileTerminal.class);
 
-        assertTrue(res.contains(guid));
-        assertTrue(res.contains(asset.getId().toString()));
-        assertTrue(res.contains(mobileTerminal.getChannels().get(0).getName()));
+        assertNotNull(fetched);
+        assertEquals(created.getId(), fetched.getId());
+        assertEquals(created.getAsset().getId(), fetched.getAsset().getId());
     }
 
     @Test
     public void updateMobileTerminalTest() {
-        MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
-        String created = getWebTarget()
+        MobileTerminal created = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminal), String.class);
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
 
-        JsonReader jsonReader = Json.createReader(new StringReader(created));
-        JsonObject jsonObject = jsonReader.readObject();
+        assertNotNull(created);
+        assertNotEquals(MobileTerminalTypeEnum.IRIDIUM, created.getMobileTerminalType());
 
-        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
-        assertFalse(created.contains("IRIDIUM"));
+        created.setMobileTerminalType(MobileTerminalTypeEnum.IRIDIUM);
+        created.getChannels().iterator().next().setName("BETTER_VMS");
 
-        JsonObject data = jsonObject.getJsonObject("data");
-        JsonNumber id = data.getJsonNumber("id");
-        JsonObject terminalId = data.getJsonObject("mobileTerminalId");
-        String guid = terminalId.getString("guid");
-
-        MobileTerminalId mobileTerminalId = new MobileTerminalId();
-        mobileTerminalId.setGuid(guid);
-        mobileTerminal.setId(id.intValue());
-        mobileTerminal.setMobileTerminalId(mobileTerminalId);
-        mobileTerminal.setType("IRIDIUM");
-        mobileTerminal.getChannels().get(0).setName("BETTER_VMS");
-
-        String updated = getWebTarget()
+        MobileTerminal updated = getWebTarget()
                 .path("mobileterminal")
                 .queryParam("comment", "NEW_TEST_COMMENT")
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(mobileTerminal), String.class);
+                .put(Entity.json(created), MobileTerminal.class);
 
-        assertTrue(updated.contains("IRIDIUM"));
-        assertTrue(updated.contains(guid));
-        assertTrue(updated.contains(String.valueOf(id.intValue())));
-        assertTrue(updated.contains("BETTER_VMS"));
+        assertNotNull(updated);
+        assertEquals(created.getId(), updated.getId());
+        assertEquals(MobileTerminalTypeEnum.IRIDIUM, updated.getMobileTerminalType());
+        assertEquals("BETTER_VMS", updated.getChannels().iterator().next().getName());
     }
 
     @Test
     public void getMobileTerminalListTest() {
-        MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
-        String created = getWebTarget()
+        MobileTerminal created = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminal), String.class);
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
 
-        JsonReader jsonReader = Json.createReader(new StringReader(created));
-        JsonObject jsonObject = jsonReader.readObject();
-
-        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
+        assertNotNull(created);
 
         MobileTerminalListQuery mobileTerminalListQuery = MobileTerminalTestHelper.createMobileTerminalListQuery();
 
-        String response = getWebTarget()
+        MTListResponse response = getWebTarget()
                 .path("/mobileterminal/list")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminalListQuery), String.class);
+                .post(Entity.json(mobileTerminalListQuery), MTListResponse.class);
 
         assertNotNull(response);
-        jsonReader = Json.createReader(new StringReader(response));
-        jsonObject = jsonReader.readObject();
 
-        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
+        MobileTerminal terminal = response.getMobileTerminalList().get(0);
 
-        assertTrue(response.contains(MobileTerminalTestHelper.getSerialNumber()));
-        assertTrue(response.contains("INMARSAT_C"));
-        assertTrue(response.contains(MobileTerminalSource.INTERNAL.value()));
+        assertEquals(terminal.getSerialNo(), MobileTerminalTestHelper.getSerialNumber());
+        assertEquals(MobileTerminalTypeEnum.INMARSAT_C, terminal.getMobileTerminalType());
+        assertEquals(TerminalSourceEnum.INTERNAL, terminal.getSource());
     }
 
     @Test
-    public void getMobileTerminalListWithWildCardsInSerialNumberTest() throws Exception{
-        MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+    public void getMobileTerminalListWithWildCardsInSerialNumberTest() {
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
-        String created = getWebTarget()
+        MobileTerminal created = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminal), String.class);
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
 
-        JsonReader jsonReader = Json.createReader(new StringReader(created));
-        JsonObject jsonObject = jsonReader.readObject();
-
-        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
+        assertNotNull(created);
 
         MobileTerminalListQuery mobileTerminalListQuery = MobileTerminalTestHelper.createMobileTerminalListQuery();
         String serialNumber = mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).getValue();
 
-        //wildcard in front of serial
+        // Wildcard in front of serialNumber
         String wildCardInFront = "*" + serialNumber.substring(3);
 
         mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setValue(wildCardInFront);
 
-        String response = getWebTarget()
+        MTListResponse response = getWebTarget()
                 .path("/mobileterminal/list")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminalListQuery), String.class);
+                .post(Entity.json(mobileTerminalListQuery), MTListResponse.class);
 
         assertNotNull(response);
-        jsonReader = Json.createReader(new StringReader(response));
-        jsonObject = jsonReader.readObject();
 
-        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
+        MobileTerminal terminal = response.getMobileTerminalList().get(0);
 
-        assertTrue(response.contains(MobileTerminalTestHelper.getSerialNumber()));
-        assertTrue(response.contains("INMARSAT_C"));
-        assertTrue(response.contains(MobileTerminalSource.INTERNAL.value()));
-        assertEquals(1, deserializeResponseDto(response, MobileTerminalListResponse.class).getMobileTerminal().size());  //only one returnee
+        assertEquals(terminal.getSerialNo(), MobileTerminalTestHelper.getSerialNumber());
+        assertEquals(MobileTerminalTypeEnum.INMARSAT_C, terminal.getMobileTerminalType());
+        assertEquals(TerminalSourceEnum.INTERNAL, terminal.getSource());
 
-        //wildcard in back of serial
+        assertEquals(1, response.getMobileTerminalList().size());
+
+        // Wildcard in back of serial
         String wildCardInBack = serialNumber.substring(0, serialNumber.length()-3) + "*";
         mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setValue(wildCardInBack);
 
@@ -258,20 +234,19 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         response = getWebTarget()
                 .path("/mobileterminal/list")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminalListQuery), String.class);
+                .post(Entity.json(mobileTerminalListQuery), MTListResponse.class);
 
         assertNotNull(response);
-        jsonReader = Json.createReader(new StringReader(response));
-        jsonObject = jsonReader.readObject();
 
-        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
+        terminal = response.getMobileTerminalList().get(0);
 
-        assertTrue(response.contains(MobileTerminalTestHelper.getSerialNumber()));
-        assertTrue(response.contains("INMARSAT_C"));
-        assertTrue(response.contains(MobileTerminalSource.INTERNAL.value()));
-        assertEquals(1, deserializeResponseDto(response, MobileTerminalListResponse.class).getMobileTerminal().size());  //only one returnee
+        assertEquals(terminal.getSerialNo(), MobileTerminalTestHelper.getSerialNumber());
+        assertEquals(MobileTerminalTypeEnum.INMARSAT_C, terminal.getMobileTerminalType());
+        assertEquals(TerminalSourceEnum.INTERNAL, terminal.getSource());
 
-        //wildcard at both ends
+        assertEquals(1, response.getMobileTerminalList().size());
+
+        // Wildcard at both ends
         String wildCardAtBothEnds = "*" + serialNumber.substring(3, serialNumber.length()-3) + "*";
         mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setValue(wildCardAtBothEnds);
 
@@ -279,289 +254,267 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         response = getWebTarget()
                 .path("/mobileterminal/list")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminalListQuery), String.class);
+                .post(Entity.json(mobileTerminalListQuery), MTListResponse.class);
 
         assertNotNull(response);
-        jsonReader = Json.createReader(new StringReader(response));
-        jsonObject = jsonReader.readObject();
 
-        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
+        terminal = response.getMobileTerminalList().get(0);
 
-        assertTrue(response.contains(MobileTerminalTestHelper.getSerialNumber()));
-        assertTrue(response.contains("INMARSAT_C"));
-        assertTrue(response.contains(MobileTerminalSource.INTERNAL.value()));
-        assertEquals(1, deserializeResponseDto(response, MobileTerminalListResponse.class).getMobileTerminal().size());  //only one returnee
+        assertEquals(terminal.getSerialNo(), MobileTerminalTestHelper.getSerialNumber());
+        assertEquals(MobileTerminalTypeEnum.INMARSAT_C, terminal.getMobileTerminalType());
+        assertEquals(TerminalSourceEnum.INTERNAL, terminal.getSource());
+
+        assertEquals(1, response.getMobileTerminalList().size());
     }
 
     @Test
     public void getMobileTerminalListWithSatelliteNrTest() {
-        MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
-        String created = getWebTarget()
+        MobileTerminal created = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminal), String.class);
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
 
-        JsonReader jsonReader = Json.createReader(new StringReader(created));
-        JsonObject jsonObject = jsonReader.readObject();
-
-        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
+        assertNotNull(created);
 
         MobileTerminalListQuery mobileTerminalListQuery = MobileTerminalTestHelper.createMobileTerminalListQuery();
         mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setKey(SearchKey.SATELLITE_NUMBER);
-        mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setValue(mobileTerminal.getAttributes().get(1).getValue());
+        List<MobileTerminalAttributes> attributesList = new ArrayList<>(mobileTerminal.getMobileTerminalAttributes());
+        mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setValue(attributesList.get(1).getValue());
 
-        String response = getWebTarget()
+        MTListResponse response = getWebTarget()
                 .path("/mobileterminal/list")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminalListQuery), String.class);
+                .post(Entity.json(mobileTerminalListQuery), MTListResponse.class);
 
         assertNotNull(response);
-        jsonReader = Json.createReader(new StringReader(response));
-        jsonObject = jsonReader.readObject();
 
-        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
+        MobileTerminal terminal = response.getMobileTerminalList().get(0);
 
-        assertTrue(response.contains(mobileTerminal.getAttributes().get(1).getValue()));
-        assertTrue(response.contains("INMARSAT_C"));
-        assertTrue(response.contains(MobileTerminalSource.INTERNAL.value()));
+        assertEquals(terminal.getSerialNo(), MobileTerminalTestHelper.getSerialNumber());
+        assertEquals(MobileTerminalTypeEnum.INMARSAT_C, terminal.getMobileTerminalType());
+        assertEquals(TerminalSourceEnum.INTERNAL, terminal.getSource());
+
+        assertEquals(1, response.getMobileTerminalList().size());
     }
 
     @Test
     public void getMobileTerminalListWithDNIDTest() {
-        MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
-        String created = getWebTarget()
+        MobileTerminal created = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminal), String.class);
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
 
-        JsonReader jsonReader = Json.createReader(new StringReader(created));
-        JsonObject jsonObject = jsonReader.readObject();
-
-        assertEquals(MTResponseCode.OK.getCode(), jsonObject.getInt("code"));
+        assertNotNull(created);
 
         MobileTerminalListQuery mobileTerminalListQuery = MobileTerminalTestHelper.createMobileTerminalListQuery();
         mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setKey(SearchKey.DNID);
-        mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setValue(mobileTerminal.getChannels().get(0).getAttributes().get(5).getValue());
+        List<Channel> channelList = new ArrayList<>(mobileTerminal.getChannels());
+        mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setValue(channelList.get(0).getDNID());
 
-        String response = getWebTarget()
+        MTListResponse response = getWebTarget()
                 .path("/mobileterminal/list")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminalListQuery), String.class);
+                .post(Entity.json(mobileTerminalListQuery), MTListResponse.class);
+
         assertNotNull(response);
-        jsonReader = Json.createReader(new StringReader(response));
-        jsonObject = jsonReader.readObject();
 
-        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
+        MobileTerminal terminal = response.getMobileTerminalList().get(0);
 
-        assertTrue(response.contains(MobileTerminalTestHelper.getSerialNumber()));
-        assertTrue(response.contains("INMARSAT_C"));
-        assertTrue(response.contains(MobileTerminalSource.INTERNAL.value()));
+        assertEquals(terminal.getSerialNo(), MobileTerminalTestHelper.getSerialNumber());
+        assertEquals(MobileTerminalTypeEnum.INMARSAT_C, terminal.getMobileTerminalType());
+        assertEquals(TerminalSourceEnum.INTERNAL, terminal.getSource());
+
+        assertEquals(1, response.getMobileTerminalList().size());
     }
 
     @Test
     public void getMobileTerminalListWithMemberNumberTest() {
-        MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
-        String created = getWebTarget()
+        MobileTerminal created = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminal), String.class);
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
 
-        JsonReader jsonReader = Json.createReader(new StringReader(created));
-        JsonObject jsonObject = jsonReader.readObject();
-
-        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
+        assertNotNull(created);
 
         MobileTerminalListQuery mobileTerminalListQuery = MobileTerminalTestHelper.createMobileTerminalListQuery();
         mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setKey(SearchKey.MEMBER_NUMBER);
-        mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setValue(mobileTerminal.getChannels().get(0).getAttributes().get(1).getValue());
+        List<Channel> channelList = new ArrayList<>(mobileTerminal.getChannels());
+        mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setValue(channelList.get(0).getMemberNumber());
 
-        String response = getWebTarget()
+        MTListResponse response = getWebTarget()
                 .path("/mobileterminal/list")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminalListQuery), String.class);
+                .post(Entity.json(mobileTerminalListQuery), MTListResponse.class);
 
         assertNotNull(response);
-        jsonReader = Json.createReader(new StringReader(response));
-        jsonObject = jsonReader.readObject();
 
-        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
+        MobileTerminal terminal = response.getMobileTerminalList().get(0);
 
-        assertTrue(response.contains(MobileTerminalTestHelper.getSerialNumber()));
-        assertTrue(response.contains("INMARSAT_C"));
-        assertTrue(response.contains(MobileTerminalSource.INTERNAL.value()));
+        assertEquals(1, response.getMobileTerminalList().size());
+
+        assertEquals(MobileTerminalTestHelper.getSerialNumber(), terminal.getSerialNo());
+        assertEquals(MobileTerminalTypeEnum.INMARSAT_C, terminal.getMobileTerminalType());
+        assertEquals(TerminalSourceEnum.INTERNAL, terminal.getSource());
+
+        assertEquals(1, response.getMobileTerminalList().size());
     }
 
     @Test
     public void getMobileTerminalListWithSatelliteAndDNIDTest() {
-        MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
-        String created = getWebTarget()
+        MobileTerminal created = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminal), String.class);
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
 
-        JsonReader jsonReader = Json.createReader(new StringReader(created));
-        JsonObject jsonObject = jsonReader.readObject();
+        assertNotNull(created);
 
-        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
-
-        //one thing from channel and one from MobileTerminalEvents
-        MobileTerminalListQuery mobileTerminalListQuery = MobileTerminalTestHelper.createMobileTerminalListQuery();
-        mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setKey(SearchKey.DNID);
-        mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setValue(mobileTerminal.getChannels().get(0).getAttributes().get(5).getValue());
         ListCriteria criteria = new ListCriteria();
         criteria.setKey(SearchKey.SATELLITE_NUMBER);
-        criteria.setValue(mobileTerminal.getAttributes().get(1).getValue());
+        List<MobileTerminalAttributes> attributesList = new ArrayList<>(mobileTerminal.getMobileTerminalAttributes());
+        criteria.setValue(attributesList.get(1).getValue());
+
+        // One thing from channel
+        MobileTerminalListQuery mobileTerminalListQuery = MobileTerminalTestHelper.createMobileTerminalListQuery();
+        mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setKey(SearchKey.DNID);
+        List<Channel> channelList = new ArrayList<>(mobileTerminal.getChannels());
+        mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setValue(channelList.get(0).getDNID());
         mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().add(criteria);
 
-        String response = getWebTarget()
+        MTListResponse response = getWebTarget()
                 .path("/mobileterminal/list")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminalListQuery), String.class);
+                .post(Entity.json(mobileTerminalListQuery), MTListResponse.class);
 
         assertNotNull(response);
-        jsonReader = Json.createReader(new StringReader(response));
-        jsonObject = jsonReader.readObject();
 
-        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
+        MobileTerminal terminal = response.getMobileTerminalList().get(0);
 
-        assertTrue(response.contains(MobileTerminalTestHelper.getSerialNumber()));
-        assertTrue(response.contains("INMARSAT_C"));
-        assertTrue(response.contains(MobileTerminalSource.INTERNAL.value()));
+        assertEquals(terminal.getSerialNo(), MobileTerminalTestHelper.getSerialNumber());
+        assertEquals(MobileTerminalTypeEnum.INMARSAT_C, terminal.getMobileTerminalType());
+        assertEquals(TerminalSourceEnum.INTERNAL, terminal.getSource());
+
+        assertEquals(1, response.getMobileTerminalList().size());
     }
 
     @Test
     public void assignMobileTerminalTest() {
 
-        MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
-        String created = getWebTarget()
+        MobileTerminal created = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminal), String.class);
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
 
-        JsonReader jsonReader = Json.createReader(new StringReader(created));
-        JsonObject jsonObject = jsonReader.readObject();
+        assertNotNull(created);
 
-        assertEquals(MTResponseCode.OK.getCode(), jsonObject.getInt("code"));
-
-        JsonObject data = jsonObject.getJsonObject("data");
-        JsonObject terminalId = data.getJsonObject("mobileTerminalId");
-        String guid = terminalId.getString("guid");
-
-        MobileTerminalAssignQuery query = new MobileTerminalAssignQuery();
         Asset asset = createAndRestBasicAsset();
-        String connectId = asset.getId().toString();
-        query.setConnectId(connectId);
+        assertNotNull(asset);
 
-        MobileTerminalId mobileTerminalId = new MobileTerminalId();
-        mobileTerminalId.setGuid(guid);
-        query.setMobileTerminalId(mobileTerminalId);
-
-        String response = getWebTarget()
+        MobileTerminal response = getWebTarget()
                 .path("/mobileterminal/assign")
                 .queryParam("comment", "NEW_TEST_COMMENT")
+                .queryParam("connectId", asset.getId())
+                .queryParam("guid", created.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(query), String.class);
+                .get(MobileTerminal.class);
 
         assertNotNull(response);
-        assertTrue(response.contains(guid));
+        assertEquals(created.getId(), response.getId());
     }
 
     @Test
     public void unAssignMobileTerminalTest() {
-        MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
-        String created = getWebTarget()
+        MobileTerminal created = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminal), String.class);
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
 
-        JsonReader jsonReader = Json.createReader(new StringReader(created));
-        JsonObject jsonObject = jsonReader.readObject();
+        assertNotNull(created);
 
-        assertEquals(jsonObject.getInt("code"), MTResponseCode.OK.getCode());
-
-        JsonObject data = jsonObject.getJsonObject("data");
-        JsonObject terminalId = data.getJsonObject("mobileTerminalId");
-        String guid = terminalId.getString("guid");
-
-        MobileTerminalAssignQuery query = new MobileTerminalAssignQuery();
         Asset asset = createAndRestBasicAsset();
-        String connectId = asset.getId().toString();
-        query.setConnectId(connectId);
+        assertNotNull(asset);
 
-        MobileTerminalId mobileTerminalId = new MobileTerminalId();
-        mobileTerminalId.setGuid(guid);
-        query.setMobileTerminalId(mobileTerminalId);
-
-
-        String responseAssign = getWebTarget()
+        MobileTerminal responseAssign = getWebTarget()
                 .path("/mobileterminal/assign")
                 .queryParam("comment", "NEW_TEST_COMMENT")
+                .queryParam("connectId", asset.getId())
+                .queryParam("guid", created.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(query), String.class);
+                .get(MobileTerminal.class);
 
         assertNotNull(responseAssign);
-        assertTrue(responseAssign.contains(guid));
+        assertNotNull(responseAssign.getAsset());
+        assertEquals(created.getId(), responseAssign.getId());
 
-        String responseUnAssign = getWebTarget()
+        MobileTerminal responseUnAssign = getWebTarget()
                 .path("/mobileterminal/unassign")
                 .queryParam("comment", "NEW_TEST_COMMENT")
+                .queryParam("connectId", asset.getId())
+                .queryParam("guid", created.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(query), String.class);
+                .get(MobileTerminal.class);
 
         assertNotNull(responseUnAssign);
-        assertTrue(responseUnAssign.contains(guid));
+        assertNull(responseUnAssign.getAsset());
+        assertEquals(created.getId(), responseUnAssign.getId());
     }
 
     @Test
-    public void inactivateActivateAndArchiveMobileTerminal() throws Exception{
-        MobileTerminalType mobileTerminalType = createAndRestMobileTerminal(null);
-        assertFalse(mobileTerminalType.isInactive());
-        assertFalse(mobileTerminalType.isArchived());
+    public void inactivateActivateAndArchiveMobileTerminal() {
+        MobileTerminal mt = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mt.setAsset(null);
 
-        String response = getWebTarget()
+        MobileTerminal created = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mt), MobileTerminal.class);
+
+        assertFalse(created.getInactivated());
+        assertFalse(created.getArchived());
+
+        MobileTerminal response = getWebTarget()
                 .path("mobileterminal/status/inactivate")
                 .queryParam("comment", "Test Comment Inactivate")
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(mobileTerminalType.getMobileTerminalId()), String.class);
+                .put(Entity.json(created.getId()))
+                .readEntity(MobileTerminal.class);
 
-
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        MobileTerminalType changedMT = deserializeResponseDto(response, MobileTerminalType.class);
-
-        assertTrue(changedMT.isInactive());
+        assertNotNull(response);
+        assertTrue(response.getInactivated());
 
         response = getWebTarget()
                 .path("mobileterminal/status/activate")
                 .queryParam("comment", "Test Comment Activate")
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(mobileTerminalType.getMobileTerminalId()), String.class);
+                .put(Entity.json(created.getId()))
+                .readEntity(MobileTerminal.class);
 
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        changedMT = deserializeResponseDto(response, MobileTerminalType.class);
-
-        assertFalse(changedMT.isInactive());
+        assertFalse(response.getInactivated());
 
         response = getWebTarget()
                 .path("mobileterminal/status/remove")
                 .queryParam("comment", "Test Comment Remove")
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(mobileTerminalType.getMobileTerminalId()), String.class);
+                .put(Entity.json(created.getId()))
+                .readEntity(MobileTerminal.class);
 
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        changedMT = deserializeResponseDto(response, MobileTerminalType.class);
-
-        assertTrue(changedMT.isInactive());
-        assertTrue(changedMT.isArchived());
+        assertTrue(response.getInactivated());
+        assertTrue(response.getArchived());
 
         //checking the events as well
         Response res = getWebTarget()
-                .path("mobileterminal/history/" + mobileTerminalType.getMobileTerminalId().getGuid())
+                .path("mobileterminal/history/" + created.getId())
                 .request(MediaType.APPLICATION_JSON)
                 .get();
 
@@ -569,77 +522,63 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
-    public void searchForSerialNumberAfterCreatingNewEvents() throws Exception{
-        MobileTerminalType mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+    public void searchForSerialNumberAfterCreatingNewEvents() {
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
         Asset asset = createAndRestBasicAsset();
 
-        String created = getWebTarget()
+        MobileTerminal created = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminal), String.class);
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
 
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(created));
-        MobileTerminalType createdMT = deserializeResponseDto(created, MobileTerminalType.class);
-        String guid = createdMT.getMobileTerminalId().getGuid();
 
         MobileTerminalListQuery mobileTerminalListQuery = MobileTerminalTestHelper.createMobileTerminalListQuery();
 
-        //check the search result
-        MobileTerminalListResponse returnList = sendMTListQuery(mobileTerminalListQuery);
-        assertEquals(1, returnList.getMobileTerminal().size());
+        // Check the search result
+        MTListResponse returnList = sendMTListQuery(mobileTerminalListQuery);
+        assertEquals(1, returnList.getMobileTerminalList().size());
 
-        //Start assign query
-        MobileTerminalAssignQuery query = new MobileTerminalAssignQuery();
-        String connectId = asset.getId().toString();
-        query.setConnectId(connectId);
-
-        MobileTerminalId mobileTerminalId = new MobileTerminalId();
-        mobileTerminalId.setGuid(guid);
-        query.setMobileTerminalId(mobileTerminalId);
-
-        String response = getWebTarget()
+        MobileTerminal response = getWebTarget()
                 .path("/mobileterminal/assign")
                 .queryParam("comment", "NEW_TEST_COMMENT")
+                .queryParam("connectId", asset.getId())
+                .queryParam("guid", created.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(query), String.class);
+                .get(MobileTerminal.class);
 
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
+        assertNotNull(response);
 
-        //check the search result
+        // Check the search result
         returnList = sendMTListQuery(mobileTerminalListQuery);
-        assertEquals(1, returnList.getMobileTerminal().size());
+        assertEquals(1, returnList.getMobileTerminalList().size());
 
-        //Unassign
-        String responseUnAssign = getWebTarget()
+        // Unassign
+        MobileTerminal responseUnAssign = getWebTarget()
                 .path("/mobileterminal/unassign")
                 .queryParam("comment", "NEW_TEST_COMMENT")
+                .queryParam("connectId", asset.getId())
+                .queryParam("guid", created.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(query), String.class);
+                .get(MobileTerminal.class);
 
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(responseUnAssign));
+        assertNotNull(responseUnAssign);
 
         //check the search result
         returnList = sendMTListQuery(mobileTerminalListQuery);
-        assertEquals(1, returnList.getMobileTerminal().size());
+        assertEquals(1, returnList.getMobileTerminalList().size());
 
         //And inactivate
         response = getWebTarget()
                 .path("mobileterminal/status/inactivate")
                 .queryParam("comment", "Test Comment Inactivate")
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(createdMT.getMobileTerminalId()), String.class);
+                .put(Entity.json(created.getId()), MobileTerminal.class);
 
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
+        assertNotNull(response);
 
         //check the search result
         returnList = sendMTListQuery(mobileTerminalListQuery);
-        assertEquals(1, returnList.getMobileTerminal().size());
-    }
-
-    private MobileTerminalType createAndRestMobileTerminal(String boat) throws Exception {
-        String response = MobileTerminalTestHelper.createRestMobileTerminal(getWebTarget(), boat);
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        return deserializeResponseDto(response, MobileTerminalType.class);
+        assertEquals(1, returnList.getMobileTerminalList().size());
     }
 
     private Asset createAndRestBasicAsset() {
@@ -655,14 +594,10 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         return createdAsset;
     }
 
-    private MobileTerminalListResponse sendMTListQuery(MobileTerminalListQuery mobileTerminalListQuery) throws Exception{
-        String response = getWebTarget()
+    private MTListResponse sendMTListQuery(MobileTerminalListQuery mobileTerminalListQuery) {
+        return getWebTarget()
                 .path("/mobileterminal/list")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminalListQuery), String.class);
-
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        MobileTerminalListResponse returnList = deserializeResponseDto(response, MobileTerminalListResponse.class);
-        return returnList;
+                .post(Entity.json(mobileTerminalListQuery), MTListResponse.class);
     }
 }

@@ -15,12 +15,12 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.mapper;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ComChannelAttribute;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalAttribute;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalAttributes;
 import eu.europa.ec.fisheries.uvms.mobileterminal.util.DateUtils;
 
-import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by osdjup on 2016-11-16.
@@ -38,19 +38,6 @@ public class AttributeMapper {
     public static final String UNINSTALLED_ON = "UNINSTALLED_ON";
     public static final String START_DATE = "START_DATE";
     public static final String END_DATE = "END_DATE";
-
-
-    public static Map<String, String> mapAttributeString(String attributeString) {
-        Map<String, String> attributes = new HashMap<>();
-
-        String[] parts = attributeString.split(";");
-        for (String attribute : parts) {
-            String[] pair =attribute.split("=");
-            attributes.put(pair[0], pair[1]);
-        }
-
-        return attributes;
-    }
 
     static List<ComChannelAttribute> mapAttributeStringToComChannelAttribute(Channel channel) {
         List<ComChannelAttribute> attributeList = new ArrayList<>();
@@ -75,58 +62,6 @@ public class AttributeMapper {
         attr.setType(key);
         attr.setValue(value);
         return attr;
-    }
-
-    static void mapComChannelAttributes(Channel channel, List<ComChannelAttribute> modelAttributes){
-        for (ComChannelAttribute attr : modelAttributes) {
-            switch (attr.getType()) {
-                case DNID:
-                    channel.setDNID(attr.getValue());
-                    break;
-                case FREQUENCY_EXPECTED:
-                    channel.setExpectedFrequency(Duration.ofSeconds(Long.parseLong(attr.getValue())));
-                    break;
-                case FREQUENCY_IN_PORT:
-                    channel.setExpectedFrequencyInPort(Duration.ofSeconds(Long.parseLong(attr.getValue())));
-                    break;
-                case LES_DESCRIPTION:
-                    channel.setLesDescription(attr.getValue());
-                    break;
-                case FREQUENCY_GRACE_PERIOD:
-                    channel.setFrequencyGracePeriod(Duration.ofSeconds(Long.parseLong(attr.getValue())));
-                    break;
-                case MEMBER_NUMBER:
-                    channel.setMemberNumber(attr.getValue());
-                    break;
-                case INSTALLED_BY:
-                    channel.setInstalledBy(attr.getValue());
-                    break;
-                case INSTALLED_ON:
-                    channel.setInstallDate(DateUtils.parseStringToOffsetDateTime(attr.getValue()));
-                    break;
-                case UNINSTALLED_ON:
-                    channel.setUninstallDate(DateUtils.parseStringToOffsetDateTime(attr.getValue()));
-                    break;
-                case START_DATE:
-                    channel.setStartDate(DateUtils.parseStringToOffsetDateTime(attr.getValue()));
-                    break;
-                case END_DATE:
-                    channel.setEndDate(DateUtils.parseStringToOffsetDateTime(attr.getValue()));
-                    break;
-            }
-        }
-    }
-
-    static List<MobileTerminalAttributes> mapModelAttributesToEntityAttributes(MobileTerminal entity, List<MobileTerminalAttribute> attributes) {
-        List<MobileTerminalAttributes> attrList = new ArrayList<>();
-        for(MobileTerminalAttribute attribute : attributes) {
-            MobileTerminalAttributes attr = new MobileTerminalAttributes();
-            attr.setAttribute(attribute.getType());
-            attr.setValue(attribute.getValue());
-            attr.setMobileTerminal(entity);
-            attrList.add(attr);
-        }
-        return attrList;
     }
 
     static List<MobileTerminalAttribute> mapEntityAttributesToModelAttributes(Set<MobileTerminalAttributes> attributes) {

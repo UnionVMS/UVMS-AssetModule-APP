@@ -9,6 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.UUID;
@@ -29,6 +30,7 @@ public class MobileTerminalAttributes implements Serializable {
     @ManyToOne
     @JoinColumn(name="mobileterminal_id", foreignKey = @ForeignKey(name = "MobileTerminalAttributes_MobileTerminal_FK"))
     @Fetch(FetchMode.SELECT)
+    @NotNull
     private MobileTerminal mobileTerminal;
 
     @Size(max = 60)

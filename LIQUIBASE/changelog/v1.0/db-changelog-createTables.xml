@@ -222,7 +222,6 @@
             <column name="updattime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="updateuser" type="VARCHAR(255)"/>
             <column name="mobterm_id" type="UUID"/>
-            <column name="mobterm_event_id" type="UUID"/>
         </createTable>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-8">
@@ -255,7 +254,6 @@
             <column name="updattime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="updateuser" type="VARCHAR(255)"/>
             <column name="mobterm_id" type="UUID"/>
-            <column name="mobterm_event_id" type="UUID"/>
         </createTable>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-9">
@@ -384,7 +382,9 @@
             <column name="type" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="serial_no" type="VARCHAR(255)"/>
+            <column name="serial_no" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
             <column name="source" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
@@ -690,11 +690,6 @@
     <changeSet author="thofan (generated)" id="1535445328879-72">
         <createIndex indexName="channel_inx01" tableName="channel">
             <column name="dnid"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-73">
-        <createIndex indexName="channel_mobterm_event_fk_inx02" tableName="channel">
-            <column name="mobterm_event_id"/>
         </createIndex>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-74">

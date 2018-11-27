@@ -2,7 +2,6 @@ package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.ConfigList;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemType;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.Plugin;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.ConfigServiceBeanMT;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConfigType;
@@ -64,7 +63,7 @@ public class ConfigServiceBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void testUpsertPlugins() {
         List<PluginService> pluginList = Collections.singletonList(createPluginService());
-        List<Plugin> plugins = configService.upsertPlugins(pluginList, "TEST");
+        List<MobileTerminalPlugin> plugins = configService.upsertPlugins(pluginList, "TEST");
         assertNotNull(plugins);
         assertTrue(pluginsContains(pluginList, "TEST_SERVICE"));
     }
@@ -73,7 +72,7 @@ public class ConfigServiceBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void testUpsertPluginsUpdate()  {
         List<PluginService> pluginList = Collections.singletonList(createPluginService());
-        List<Plugin> plugins = configService.upsertPlugins(pluginList, "TEST");
+        List<MobileTerminalPlugin> plugins = configService.upsertPlugins(pluginList, "TEST");
         assertNotNull(plugins);
         assertTrue(pluginsContains(pluginList, "TEST_SERVICE"));
         assertEquals(1, pluginList.size());
@@ -85,7 +84,7 @@ public class ConfigServiceBeanIntTest extends TransactionalTests {
 
         assertEquals(1, pluginList.size());
 
-        List<Plugin> updatedPlugins = configService.upsertPlugins(pluginList, "TEST");
+        List<MobileTerminalPlugin> updatedPlugins = configService.upsertPlugins(pluginList, "TEST");
         assertNotNull(updatedPlugins);
         assertEquals(1, updatedPlugins.size());
     }

@@ -1,7 +1,6 @@
 package eu.europa.fisheries.uvms.tests.asset.service.arquillian.arquillian;
 
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
@@ -340,14 +339,12 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     public void testGetMobileTerminalByConnectId() {
         Asset asset = createAsset();
         MobileTerminal mobileTerminal = createMobileTerminal(asset);
-        mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
         asset.getMobileTerminals().add(mobileTerminal);
         assetService.updateAsset(asset, "TEST", "TEST_COMMENT");
-        MobileTerminalType fetchedTerminal = mobileTerminalService.findMobileTerminalTypeByAsset(asset.getId());
+        MobileTerminal fetchedTerminal = mobileTerminalService.findMobileTerminalByAsset(asset.getId());
         assertNotNull(fetchedTerminal);
-        assertNotNull(fetchedTerminal.getMobileTerminalId());
-        assertNotNull(fetchedTerminal.getMobileTerminalId().getGuid());
-        UUID fetchedUUID = UUID.fromString(fetchedTerminal.getMobileTerminalId().getGuid());
+        assertNotNull(fetchedTerminal.getId());
+        UUID fetchedUUID = fetchedTerminal.getId();
         assertEquals(mobileTerminal.getId(), fetchedUUID);
     }
 
@@ -357,11 +354,9 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Asset asset = createAsset();
         AssetGroup createdAssetGroup = createAssetGroup(asset);
         UUID createdAssetGroupId = createdAssetGroup.getId();
-        MobileTerminal mobileTerminal = createMobileTerminal(asset);
-        mobileTerminal.setArchived(false);
+        MobileTerminal mobileTerminal = testPollHelper.createBasicMobileTerminal2(asset);
 
         mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
-        em.flush();
 
         AssetMTEnrichmentRequest request = createRequest(asset);
         AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
@@ -387,26 +382,20 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         MobileTerminal mobileTerminal = createMobileTerminal(asset);
         mobileTerminal.setArchived(false);
 
-        mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
-        em.flush();
-
         AssetMTEnrichmentRequest request = new AssetMTEnrichmentRequest();
 
         // put membernumber into request
         // put dnid into request
         // shall give Asset and Mobileterminal in response
 
-        String dnid = "";
-        String memberNumber = "";
         Set<Channel> channels = mobileTerminal.getChannels();
-        for (Channel channel : channels) {
-            dnid = channel.getDNID();
-            memberNumber = channel.getMemberNumber();
-            break; // contains only one
-        }
+        Channel channel = channels.iterator().next();
+        String dnid = channel.getDNID();
+        String memberNumber = channel.getMemberNumber();
 
         request.setMemberNumberValue(memberNumber);
         request.setDnidValue(dnid);
+        request.setIdValue(asset.getId());
 
         AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
         assertNotNull(response.getAssetId());
@@ -498,7 +487,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
 
     private MobileTerminal createMobileTerminal(Asset asset) {
-        MobileTerminal mobileTerminal = testPollHelper.createBasicMobileTerminal2(asset);
+        MobileTerminal mobileTerminal = testPollHelper.createBasicMobileTerminal();
         mobileTerminal.setAsset(asset);
         MobileTerminal created = mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
         return created;

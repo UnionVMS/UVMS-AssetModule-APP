@@ -4,6 +4,7 @@ import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
@@ -282,8 +283,9 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
 
-        MobileTerminalType mobileTerminal1 = MobileTerminalTestHelper.createBasicMobileTerminal();
-        mobileTerminal1.setConnectId(createdAsset.getId().toString());
+        MobileTerminal mobileTerminal1 = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminal1.setAsset(createdAsset);
+
         String response = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
@@ -291,8 +293,9 @@ public class AssetResourceTest extends AbstractAssetRestTest {
 
         OffsetDateTime timeStamp = OffsetDateTime.now(ZoneOffset.UTC);
 
-        MobileTerminalType mobileTerminal2 = MobileTerminalTestHelper.createBasicMobileTerminal();
-        mobileTerminal2.setConnectId(createdAsset.getId().toString());
+        MobileTerminal mobileTerminal2 = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminal2.setAsset(createdAsset);
+
         String response2 = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
@@ -303,7 +306,6 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .path(createdAsset.getId().toString())
                 .request(MediaType.APPLICATION_JSON)
                 .get(Asset.class);
-
 
         Asset pastAsset = getWebTarget()
                 .path("asset")
@@ -326,12 +328,13 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(asset), Asset.class);
 
-        MobileTerminalType mobileTerminalType = MobileTerminalTestHelper.createBasicMobileTerminal();
-        mobileTerminalType.setConnectId(createdAsset.getId().toString());
+        MobileTerminal mobileTerminal1 = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminal1.setAsset(createdAsset);
+
         String response = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mobileTerminalType), String.class);
+                .post(Entity.json(mobileTerminal1), String.class);
         assertNotNull(response);
         MobileTerminalType mobileTerminal = deserializeResponseDto(response, MobileTerminalType.class);
 

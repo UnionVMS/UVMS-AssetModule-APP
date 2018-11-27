@@ -1,6 +1,7 @@
 package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.ChannelDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
@@ -36,12 +37,13 @@ public class ChannelDaoIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void testGetPollableListSearch() {
         //Given - need a string list of id's.
-        String id1 = assetDao.createAsset(AssetTestsHelper.createBasicAsset()).getId().toString();;//"test_id1";
+        Asset asset = assetDao.createAsset(AssetTestsHelper.createBasicAsset());
+        String id1 = asset.getId().toString();
         String id2 = UUID.randomUUID().toString();//"test_id2";
         List<String> idList = Arrays.asList(id1, id2);
 
 
-        MobileTerminal mobileTerminal = testPollHelper.createAndPersistMobileTerminal(id1);
+        MobileTerminal mobileTerminal = testPollHelper.createAndPersistMobileTerminal(asset);
         assertNotNull(mobileTerminal.getId());
 
         //When
