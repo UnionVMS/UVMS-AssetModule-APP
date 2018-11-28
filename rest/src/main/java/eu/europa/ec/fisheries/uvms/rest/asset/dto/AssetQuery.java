@@ -10,6 +10,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.dto;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,6 +36,7 @@ public class AssetQuery {
     private Double maxLength;
     private Double minPower;
     private Double maxPower;
+    private Instant date;
 
     public List<UUID> getId() {
         return id;
@@ -155,5 +157,11 @@ public class AssetQuery {
     }
     public void setMaxPower(Double maxPower) {
         this.maxPower = maxPower;
+    }
+    public Instant getDate() {
+        return date;
+    }
+    public void setDate(Instant date) {
+        this.date = date;
     }
 }

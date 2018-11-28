@@ -15,7 +15,7 @@ import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.ConfigList;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.SearchKey;
 import eu.europa.ec.fisheries.uvms.asset.bean.ConfigServiceBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.ConfigServiceBeanMT;
+import eu.europa.ec.fisheries.uvms.mobileterminal.bean.ConfigServiceBeanMT;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTMobileTerminalConfig;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTMobileTerminalDeviceConfig;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTResponseDto;

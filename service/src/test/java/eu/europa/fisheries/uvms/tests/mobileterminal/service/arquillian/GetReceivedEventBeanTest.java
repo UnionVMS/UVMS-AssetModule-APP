@@ -2,15 +2,14 @@ package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalId;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.constants.MessageConstants;
-import eu.europa.ec.fisheries.uvms.mobileterminal.message.event.EventMessage;
+import eu.europa.ec.fisheries.uvms.asset.message.event.EventMessage;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.MobileTerminalModuleRequestMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.GetReceivedEventBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.MobileTerminalServiceBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.MobileTerminalPluginDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminal;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.MobileTerminalPlugin;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.mapper.PluginMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.bean.GetReceivedEventBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
+import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PluginMapper;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper.TestPollHelper;
 import org.jboss.arquillian.junit.Arquillian;
@@ -30,7 +29,7 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(Arquillian.class)
 public class GetReceivedEventBeanTest extends TransactionalTests {
 
-    @Resource(lookup = MessageConstants.JAVA_MESSAGE_CONNECTION_FACTORY)
+    @Resource(lookup = "java:/ConnectionFactory")
     private ConnectionFactory connectionFactory;
 
     @Inject

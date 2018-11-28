@@ -52,6 +52,7 @@ public class AssetMessageProducerBean implements AssetMessageProducer, ConfigMes
     private Queue auditQueue;
     private Queue configQueue;
     private Queue responseQueue;
+    private Queue exchangeQueue;
     private ConnectionFactory connectionFactory;
     
     private static final Logger LOG = LoggerFactory.getLogger(AssetMessageProducerBean.class);
@@ -63,6 +64,7 @@ public class AssetMessageProducerBean implements AssetMessageProducer, ConfigMes
         nationalSourceQueue = JMSUtils.lookupQueue(AssetConstants.QUEUE_DATASOURCE_NATIONAL);
         xeuSourceQueue = JMSUtils.lookupQueue(AssetConstants.QUEUE_DATASOURCE_XEU);
         auditQueue = JMSUtils.lookupQueue(AssetConstants.AUDIT_MODULE_QUEUE);
+        exchangeQueue = JMSUtils.lookupQueue(AssetConstants.EXCHANGE_MODULE_QUEUE);
         configQueue = JMSUtils.lookupQueue(MessageConstants.QUEUE_CONFIG);
     }
 
@@ -121,6 +123,9 @@ public class AssetMessageProducerBean implements AssetMessageProducer, ConfigMes
             switch (queue) {
                 case AUDIT:
                     getProducer(session, auditQueue).send(message);
+                    break;
+                case EXCHANGE:
+                    getProducer(session, exchangeQueue).send(message);
                     break;
                 case CONFIG:
                     getProducer(session, configQueue).send(message);

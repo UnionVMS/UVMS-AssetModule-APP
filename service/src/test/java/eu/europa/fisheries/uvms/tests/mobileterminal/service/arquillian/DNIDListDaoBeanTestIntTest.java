@@ -1,7 +1,7 @@
 package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.dao.DNIDListDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.entity.DNIDList;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dao.DNIDListDaoBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.DNIDList;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;

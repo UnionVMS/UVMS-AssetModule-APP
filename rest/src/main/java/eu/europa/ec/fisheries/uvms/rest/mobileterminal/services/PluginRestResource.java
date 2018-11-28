@@ -2,12 +2,11 @@ package eu.europa.ec.fisheries.uvms.rest.mobileterminal.services;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.Plugin;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
-import eu.europa.ec.fisheries.uvms.mobileterminal.service.bean.ConfigServiceBeanMT;
+import eu.europa.ec.fisheries.uvms.mobileterminal.bean.ConfigServiceBeanMT;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTResponseDto;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
-import eu.europa.ec.fisheries.wsdl.user.types.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

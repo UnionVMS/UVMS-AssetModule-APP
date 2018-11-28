@@ -1,10 +1,17 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchFieldType;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.exception.RevisionDoesNotExistException;
@@ -14,18 +21,11 @@ import org.hibernate.envers.query.criteria.AuditCriterion;
 import org.hibernate.envers.query.criteria.AuditDisjunction;
 import org.hibernate.envers.query.criteria.ExtendableCriterion;
 import org.hibernate.envers.query.criteria.MatchMode;
-
-import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchFieldType;
+import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 
 @Stateless
 public class AssetDao {
@@ -144,15 +144,22 @@ public class AssetDao {
 
     private AuditQuery createQuery(List<SearchKeyValue> searchFields, boolean isDynamic) {
         AuditReader auditReader = AuditReaderFactory.get(em);
-        AuditQuery query = auditReader.createQuery().forRevisionsOfEntity(Asset.class, true, true);
+        
+        AuditQuery query;
+        SearchKeyValue dateSearchField = getDateSearchField(searchFields);
+        if (dateSearchField != null) {
+            Instant date = Instant.parse(dateSearchField.getSearchValues().get(0));
+            Number revisionNumberForDate = auditReader.getRevisionNumberForDate(Date.from(date));
+            query = auditReader.createQuery().forEntitiesAtRevision(Asset.class, revisionNumberForDate);
+        } else {
+            query = auditReader.createQuery().forRevisionsOfEntity(Asset.class, true, true);
 
-
-        if (!searchRevisions(searchFields)) {
-            query.add(AuditEntity.revisionNumber().maximize().computeAggregationInInstanceContext());
+            if (!searchRevisions(searchFields)) {
+                query.add(AuditEntity.revisionNumber().maximize().computeAggregationInInstanceContext());
+            }
         }
 
         query.add(AuditEntity.property("active").eq(true));
-
 
         ExtendableCriterion operator;
         if (isDynamic) {
@@ -160,7 +167,6 @@ public class AssetDao {
         } else {
             operator = AuditEntity.disjunction();
         }
-
 
         boolean operatorUsed = false;
         for (SearchKeyValue searchKeyValue : searchFields) {
@@ -191,7 +197,7 @@ public class AssetDao {
                 List<UUID> ids = searchKeyValue.getSearchValues().stream().map(UUID::fromString).collect(Collectors.toList());
                 operatorUsed = true;
                 operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).in(ids));
-            } else { // Boolean
+            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.BOOLEAN)) {
                 operatorUsed = true;
                 operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).eq(searchKeyValue.getSearchValues().get(0)));
             }
@@ -203,9 +209,22 @@ public class AssetDao {
     }
 
     private boolean searchRevisions(List<SearchKeyValue> searchFields) {
-        return searchFields.stream().anyMatch(s -> s.getSearchField().equals(SearchFields.HIST_GUID));
+        for (SearchKeyValue searchKeyValue : searchFields) {
+            if (searchKeyValue.getSearchField().equals(SearchFields.HIST_GUID)) { 
+                return true;
+            }
+        }
+        return false;
     }
-
+    
+    private SearchKeyValue getDateSearchField(List<SearchKeyValue> searchFields) {
+        for (SearchKeyValue searchKeyValue : searchFields) {
+            if (searchKeyValue.getSearchField().equals(SearchFields.DATE)) { 
+                return searchKeyValue;
+            }
+        }
+        return null;
+    }
     private boolean useLike(SearchKeyValue entry) {
         for (String searchValue : entry.getSearchValues()) {
             if (searchValue.contains("*")) {
