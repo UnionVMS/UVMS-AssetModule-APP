@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -14,6 +15,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.exception.AuditException;
 import org.hibernate.envers.exception.RevisionDoesNotExistException;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
@@ -129,17 +131,25 @@ public class AssetDao {
     }
 
     public Long getAssetCount(List<SearchKeyValue> searchFields, Boolean isDynamic) {
-        AuditQuery query = createQuery(searchFields, isDynamic);
-        return (Long) query.addProjection(AuditEntity.id().count()).getSingleResult();
+        try {
+            AuditQuery query = createQuery(searchFields, isDynamic);
+            return (Long) query.addProjection(AuditEntity.id().count()).getSingleResult();
+        } catch (AuditException e) {
+            return 0l;
+        }
     }
 
     @SuppressWarnings("unchecked")
     public List<Asset> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize,
                                                    List<SearchKeyValue> searchFields, boolean isDynamic) {
-        AuditQuery query = createQuery(searchFields, isDynamic);
-        query.setFirstResult(pageSize * (pageNumber - 1));
-        query.setMaxResults(pageSize);
-        return query.getResultList();
+        try {
+            AuditQuery query = createQuery(searchFields, isDynamic);
+            query.setFirstResult(pageSize * (pageNumber - 1));
+            query.setMaxResults(pageSize);
+            return query.getResultList();
+        } catch (AuditException e) {
+            return Collections.emptyList();
+        }
     }
 
     private AuditQuery createQuery(List<SearchKeyValue> searchFields, boolean isDynamic) {
@@ -157,9 +167,10 @@ public class AssetDao {
             if (!searchRevisions(searchFields)) {
                 query.add(AuditEntity.revisionNumber().maximize().computeAggregationInInstanceContext());
             }
+
+            query.add(AuditEntity.property("active").eq(true));
         }
 
-        query.add(AuditEntity.property("active").eq(true));
 
         ExtendableCriterion operator;
         if (isDynamic) {

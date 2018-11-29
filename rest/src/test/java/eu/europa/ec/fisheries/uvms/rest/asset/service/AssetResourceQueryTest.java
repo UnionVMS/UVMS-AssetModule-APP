@@ -10,28 +10,31 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import org.jboss.arquillian.container.test.api.RunAsClient;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
-import org.jboss.arquillian.container.test.api.RunAsClient;
-import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-import java.time.Instant;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 @RunAsClient
@@ -588,5 +591,32 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         assertThat(assetList.get(0).getId(), is(createdAsset.getId()));
         assertThat(assetList.get(0).getHistoryId(), is(createdAsset.getHistoryId()));
         assertThat(assetList.get(0).getIrcs(), is(asset.getIrcs()));
+    }
+    
+    @Test
+    @RunAsClient
+    public void getAssetAtInvalidDate() {
+        Asset asset = AssetHelper.createBasicAsset();
+        getWebTarget()
+            .path("asset")
+            .request(MediaType.APPLICATION_JSON)
+            .post(Entity.json(asset), Asset.class);
+        
+        Instant pastDate = OffsetDateTime.now().minus(100, ChronoUnit.YEARS).toInstant();
+        
+        AssetQuery query = new AssetQuery();
+        query.setIrcs(Arrays.asList(asset.getIrcs()));
+        query.setFlagState(Arrays.asList(asset.getFlagStateCode()));
+        query.setDate(pastDate);
+        
+        AssetListResponse listResponse = getWebTarget()
+                .path("asset")
+                .path("list")
+                .queryParam("size","1000")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query), AssetListResponse.class);
+        
+        List<Asset> assetList = listResponse.getAssetList();
+        assertThat(assetList.size(), is(0));
     }
 }
