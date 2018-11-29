@@ -83,11 +83,10 @@ public class InternalResource {
     public Response getAssetList(@DefaultValue("1") @QueryParam("page") int page,
                                  @DefaultValue("100") @QueryParam("size") int size,
                                  @DefaultValue("true") @QueryParam("dynamic") boolean dynamic,
-                                 AssetQuery query) throws Exception {
+                                 AssetQuery query) {
         List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
         AssetListResponse assetList = assetService.getAssetList(searchFields, page, size, dynamic);
-        String s = objectMapper().writeValueAsString(assetList);
-        return Response.ok(s).build();
+        return Response.ok(assetList).build();
     }
     
     @GET
