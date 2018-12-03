@@ -132,7 +132,7 @@ public class MobileTerminalServiceBean {
         }
         String data = MobileTerminalDataSourceRequestMapper.mapGetMobileTerminal(id);
         String messageId = assetMessageProducer.sendDataSourceMessage(data, queue);
-        TextMessage response = AssetMessageConsumer.getMessage(messageId, TextMessage.class);
+        TextMessage response = AssetMessageConsumer.getMessageAss(messageId, TextMessage.class);
         return MobileTerminalDataSourceResponseMapper.mapToMobileTerminalFromResponse(response, messageId);
     }
 

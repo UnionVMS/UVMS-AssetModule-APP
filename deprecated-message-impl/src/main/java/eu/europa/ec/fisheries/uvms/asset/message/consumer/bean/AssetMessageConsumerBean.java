@@ -44,9 +44,9 @@ import eu.europa.ec.fisheries.wsdl.asset.module.UpsertAssetModuleRequest;
     @ActivationConfigProperty(propertyName = "destinationJndiName", propertyValue = AssetConstants.QUEUE_ASSET_EVENT),
     @ActivationConfigProperty(propertyName = "connectionFactoryJndiName", propertyValue = AssetConstants.CONNECTION_FACTORY)
 })
-public class MessageConsumerBean implements MessageListener {
+public class AssetMessageConsumerBean implements MessageListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MessageConsumerBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AssetMessageConsumerBean.class);
 
     @Inject
     private AssetMessageEventBean messageEventBean;

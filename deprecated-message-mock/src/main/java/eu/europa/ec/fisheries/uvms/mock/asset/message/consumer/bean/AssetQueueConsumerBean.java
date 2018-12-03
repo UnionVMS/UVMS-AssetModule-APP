@@ -22,7 +22,7 @@ public class AssetQueueConsumerBean implements AssetQueueConsumer, ConfigMessage
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T getMessage(String correlationId, Class type) throws AssetMessageException {
+    public <T> T getMessageAss(String correlationId, Class type) throws AssetMessageException {
         try {
             return (T) type.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
@@ -33,7 +33,7 @@ public class AssetQueueConsumerBean implements AssetQueueConsumer, ConfigMessage
     @Override
     public <T> T getConfigMessage(String correlationId, Class type) throws ConfigMessageException {
         try {
-            return getMessage(correlationId, type);
+            return getMessageAss(correlationId, type);
         }
         catch (AssetMessageException e) {
             throw new ConfigMessageException(e.getMessage());

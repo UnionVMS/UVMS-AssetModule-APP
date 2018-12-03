@@ -61,7 +61,7 @@ public class PluginServiceBean {
             String pluginServiceName = poll.getMobileTerminal().getPlugin().getServiceName();
             String exchangeData = ExchangeModuleRequestMapper.createSetCommandSendPollRequest(pluginServiceName, pollType, username, null);
             String messageId = assetMessageProducer.sendModuleMessage(exchangeData, ModuleQueue.EXCHANGE);
-            TextMessage response = AssetMessageConsumer.getMessage(messageId, TextMessage.class);
+            TextMessage response = AssetMessageConsumer.getMessageAss(messageId, TextMessage.class);
             if(response == null)
                 return AcknowledgeTypeType.NOK;
             AcknowledgeType ack = ExchangeModuleResponseMapper.mapSetCommandResponse(response, messageId);
@@ -105,7 +105,7 @@ public class PluginServiceBean {
 
         String setSettingRequest = ModuleRequestMapper.toSetSettingRequest(EXCHANGE_MODULE_NAME, setting, "UVMS");
         String messageId = assetMessageProducer.sendModuleMessage(setSettingRequest, ModuleQueue.CONFIG);
-        TextMessage response = AssetMessageConsumer.getMessage(messageId, TextMessage.class);
+        TextMessage response = AssetMessageConsumer.getMessageAss(messageId, TextMessage.class);
         LOG.info("UpdatedDNIDList sent to config module");
     }
 
@@ -113,7 +113,7 @@ public class PluginServiceBean {
         try {
             String request = ExchangeModuleRequestMapper.createUpdatePluginSettingRequest(pluginName, settingKey, settingValue);
             String messageId = assetMessageProducer.sendModuleMessage(request, ModuleQueue.EXCHANGE);
-            TextMessage response = AssetMessageConsumer.getMessage(messageId, TextMessage.class);
+            TextMessage response = AssetMessageConsumer.getMessageAss(messageId, TextMessage.class);
             LOG.info("UpdatedDNIDList sent to exchange module {} {}",pluginName,settingKey);
         } catch (ExchangeModelMarshallException | RuntimeException | AssetMessageException e) {
             LOG.error("Failed to send updated DNID list {} {} {}",pluginName,settingKey,e);

@@ -27,7 +27,7 @@
 //            EventMessage message = createEventMessage();
 //            pingReceivedEventBean.ping(message);
 //        } catch (Exception e) {
-//            fail(e.getMessage());
+//            fail(e.getMessageAss());
 //        }
 //    }
 //

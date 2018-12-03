@@ -25,12 +25,12 @@ import javax.jms.TextMessage;
 @Local
 public interface AssetMessageProducer {
 
-    public String sendDataSourceMessage(String text, AssetDataSourceQueue queue);
+    String sendDataSourceMessage(String text, AssetDataSourceQueue queue);
 
-    public void sendModuleResponseMessage(TextMessage message, String text);
+    void sendModuleResponseMessageAss(TextMessage message, String text);
 
-    public void sendModuleErrorResponseMessage(@Observes @AssetMessageErrorEvent AssetMessageEvent message);
+    void sendModuleErrorResponseMessage(@Observes @AssetMessageErrorEvent AssetMessageEvent message);
 
-    public String sendModuleMessage(String text, ModuleQueue queue) throws AssetMessageException;
+    String sendModuleMessage(String text, ModuleQueue queue) throws AssetMessageException;
 
 }

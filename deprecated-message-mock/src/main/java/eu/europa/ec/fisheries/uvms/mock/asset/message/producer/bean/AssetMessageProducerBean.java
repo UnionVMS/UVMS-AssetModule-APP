@@ -60,7 +60,7 @@ public class AssetMessageProducerBean implements AssetMessageProducer, ConfigMes
     }
 
     @Override
-    public void sendModuleResponseMessage(TextMessage message, String text) {
+    public void sendModuleResponseMessageAss(TextMessage message, String text) {
         successfulTestEvent.fire(new SuccessfulTestEvent(text));
     }
 

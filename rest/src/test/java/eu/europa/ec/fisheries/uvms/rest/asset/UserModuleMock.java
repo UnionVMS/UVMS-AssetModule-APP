@@ -46,7 +46,7 @@ public class UserModuleMock implements MessageListener {
         String responseString;
             responseString = UserModuleResponseMapper.mapToGetUserContextResponse(userContext);
 
-        assetMessageProducer.sendModuleResponseMessage((TextMessage) message, responseString);
+        assetMessageProducer.sendModuleResponseMessageAss((TextMessage) message, responseString);
 
         } catch (Exception e) {
             LOG.error("MTUserModuleMock Error", e);

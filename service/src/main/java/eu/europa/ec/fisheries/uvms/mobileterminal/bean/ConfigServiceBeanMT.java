@@ -92,7 +92,7 @@ public class ConfigServiceBeanMT {
             pluginTypes.add(PluginType.SATELLITE_RECEIVER);
             String data = ExchangeModuleRequestMapper.createGetServiceListRequest(pluginTypes);
             String messageId = assetMessageProducer.sendModuleMessage(data, ModuleQueue.EXCHANGE);
-            TextMessage response = assetMessageConsumer.getMessage(messageId, TextMessage.class);
+            TextMessage response = assetMessageConsumer.getMessageAss(messageId, TextMessage.class);
             if(response == null){
                 throw new NullPointerException("No response from exchange");
             }
@@ -104,8 +104,6 @@ public class ConfigServiceBeanMT {
     }
 
     public List<TerminalSystemType> getAllTerminalSystems() {
-
-
         Map<MobileTerminalTypeEnum, List<MobileTerminalPlugin>> pluginsByType = getPlugins();
         List<TerminalSystemType> terminalSystemList = new ArrayList<>();
 

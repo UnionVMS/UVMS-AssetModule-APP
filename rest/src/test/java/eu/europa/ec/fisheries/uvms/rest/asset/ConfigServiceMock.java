@@ -40,7 +40,7 @@ public class ConfigServiceMock implements MessageListener {
             mockSetting.setValue("Value");
             mockSetting.setDescription("From ConfigServiceMock.java");
             String response = ModuleResponseMapper.toPullSettingsResponse(Arrays.asList(mockSetting), PullSettingsStatus.OK);
-            assetMessageProducer.sendModuleResponseMessage((TextMessage) message, response);
+            assetMessageProducer.sendModuleResponseMessageAss((TextMessage) message, response);
         } catch (ModelMarshallException e) {
         }
     }
