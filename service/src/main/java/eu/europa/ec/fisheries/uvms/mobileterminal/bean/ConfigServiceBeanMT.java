@@ -77,10 +77,6 @@ public class ConfigServiceBeanMT {
         return getAllTerminalSystems();
     }
 
-    public List<ConfigList> getConfig() {
-        return getConfigValues();
-    }
-
     public List<MobileTerminalPlugin> upsertPlugins(List<PluginService> plugins, String username) {
         return upsertPlugins(plugins);
     }

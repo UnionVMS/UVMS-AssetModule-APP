@@ -2,7 +2,6 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.util;
 
 import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer;
 
-import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class OffsetDateTimeDeserializer extends InstantDeserializer {

@@ -54,5 +54,4 @@ public class AuditModuleRequestMapper {
     private static String mapToAuditLog(String objectType, String operation, String affectedObject, String username,String name) throws AuditModelMarshallException {
         return AuditLogMapper.mapToAuditLog(objectType, operation, affectedObject, name, username);
     }
-
 }

@@ -64,7 +64,6 @@ public abstract class AbstractAssetRestTest {
         return testWar;
     }
 
-
     protected int getReturnCode(String responsDto) throws Exception{
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(responsDto, ObjectNode.class).get("code").asInt();

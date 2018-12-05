@@ -33,12 +33,6 @@ public class ConfigServiceBean {
 	@EJB
 	private ParameterService parameterService;
 
-	public List<Object> getConfiguration() throws AssetServiceException {
-		//ConfigurationDto configuration = getConfiguration(ConfigFieldEnum.ALL);
-		//return configuration.getConfigList();
-		return null;
-	}
-
 	public Map<String, String> getParameters() throws AssetServiceException {
 		try {
 			Map<String, String> parameters = new HashMap<>();
@@ -51,27 +45,6 @@ public class ConfigServiceBean {
 			LOG.error("[ Error when getting asset parameters from local database. ] {}", e);
 			throw new AssetServiceException("Couldn't get parameters");
 		}
-	}
-
-	public Map<String, List<String>> getSettings() throws AssetServiceException {
-		Map<String, List<String>> settings = new HashMap<>();
-/*
-		try {
-			List<ManagementAssertion.Setting> list = settingDao.getAllSettings();
-			for (ManagementAssertion.Setting setting : list) {
-				List<String> fieldSettings = settings.get(setting.getField());
-				if (fieldSettings == null) {
-					fieldSettings = new ArrayList<>();
-				}
-				fieldSettings.add(setting.getLabel());
-				settings.put(setting.getField(), fieldSettings);
-			}
-			return settings;
-		} catch (AssetDaoException e) {
-			throw new ConfigModelException("Couldn't fetch settings " + e);
-		}
-		*/
-		return settings;
 	}
 
 	private  List<String> getGearTypes() {

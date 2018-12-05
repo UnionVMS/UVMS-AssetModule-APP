@@ -1,11 +1,14 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 
-import javax.ejb.Stateless;
-import javax.persistence.*;
-import javax.ws.rs.NotFoundException;
-
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
+
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.ws.rs.NotFoundException;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -19,7 +22,6 @@ public class CustomCodeDao {
         em.persist(record);
         return record;
     }
-
 
     public CustomCode get(CustomCodesPK primaryKey) {
         try {
@@ -41,7 +43,6 @@ public class CustomCodeDao {
         return customCode;
     }
 
-
     public void delete(CustomCodesPK primaryKey) {
 
         CustomCode record = get(primaryKey);
@@ -49,7 +50,6 @@ public class CustomCodeDao {
             em.remove(record);
         }
     }
-
 
     public Boolean exists(CustomCodesPK primaryKey) {
 
@@ -66,7 +66,6 @@ public class CustomCodeDao {
         query.setParameter("constant", constant);
         return query.getResultList();
     }
-
 
     public void deleteAllFor(String constant) {
 
@@ -86,7 +85,6 @@ public class CustomCodeDao {
             return null;
         }
     }
-
 
     public List<CustomCode> getForDate(String constant, String code, OffsetDateTime aDate) {
 

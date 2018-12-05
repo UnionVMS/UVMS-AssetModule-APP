@@ -48,13 +48,12 @@ public class ChannelDaoBean  {
     public List<String> getActiveDNID(String pluginName) {
         String sql = getSQLActiveDNID(pluginName);
         TypedQuery<String> query = em.createQuery(sql, String.class);
-        List<String> resultList = query.getResultList();
-        return resultList;
+        return query.getResultList();
     }
 
     private String getSQLActiveDNID(String pluginName) {
         return "SELECT DISTINCT c.DNID FROM Channel c " +
-                "INNER JOIN c.mobileTerminal mobTerm " + //Mobileterminal
+                "INNER JOIN c.mobileTerminal mobTerm " +
                 "INNER JOIN mobTerm.plugin p " +
                 "WHERE c.active = '1' " +
                 "AND mobTerm.archived = '0' AND p.pluginInactive = '0' " +

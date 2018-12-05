@@ -12,11 +12,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalAttributes;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
@@ -26,7 +24,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import java.time.Duration;
 import java.util.Random;
-import java.util.Set;
 
 public class MobileTerminalTestHelper {
 
@@ -36,15 +33,13 @@ public class MobileTerminalTestHelper {
         MobileTerminal mobileTerminal = new MobileTerminal();
         mobileTerminal.setSource(TerminalSourceEnum.INTERNAL);
         mobileTerminal.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
-        Set<MobileTerminalAttributes> attributes = mobileTerminal.getMobileTerminalAttributes();
         serialNumber = generateARandomStringWithMaxLength(10);
         mobileTerminal.setSerialNo(serialNumber);
 
-        addAttribute(attributes, MobileTerminalConstants.SERIAL_NUMBER, serialNumber, mobileTerminal);
-        addAttribute(attributes, MobileTerminalConstants.SATELLITE_NUMBER, "S" + generateARandomStringWithMaxLength(4), mobileTerminal);
-        addAttribute(attributes, MobileTerminalConstants.ANTENNA, "A", mobileTerminal);
-        addAttribute(attributes, MobileTerminalConstants.TRANSCEIVER_TYPE, "A", mobileTerminal);
-        addAttribute(attributes, MobileTerminalConstants.SOFTWARE_VERSION, "A", mobileTerminal);
+        mobileTerminal.setSatelliteNumber("S" + generateARandomStringWithMaxLength(4));
+        mobileTerminal.setAntenna("A");
+        mobileTerminal.setTransceiverType("A");
+        mobileTerminal.setSoftwareVersion("A");
 
         Channel channel = new Channel();
         channel.setName("VMS");
@@ -86,14 +81,6 @@ public class MobileTerminalTestHelper {
             ret.append(String.valueOf(val));
         }
         return ret.toString();
-    }
-
-    private static void addAttribute(Set<MobileTerminalAttributes> attributes, String type, String value, MobileTerminal mobileTerminal) {
-        MobileTerminalAttributes attribute = new MobileTerminalAttributes();
-        attribute.setAttribute(type);
-        attribute.setValue(value);
-        attribute.setMobileTerminal(mobileTerminal);
-        attributes.add(attribute);
     }
 
     public static MobileTerminalListQuery createMobileTerminalListQuery() {

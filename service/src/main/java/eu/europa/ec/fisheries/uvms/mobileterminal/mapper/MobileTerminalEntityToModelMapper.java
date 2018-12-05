@@ -59,7 +59,6 @@ public class MobileTerminalEntityToModelMapper {
         model.setId(new Long(entity.getCreateTime().toEpochSecond()).intValue());
 
         model.getChannels().addAll(mapChannels(entity));
-        model.getAttributes().addAll(AttributeMapper.mapEntityAttributesToModelAttributes(entity.getMobileTerminalAttributes()));
 
         return model;
     }

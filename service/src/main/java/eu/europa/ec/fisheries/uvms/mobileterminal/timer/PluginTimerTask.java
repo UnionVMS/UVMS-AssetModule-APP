@@ -43,6 +43,5 @@ public class PluginTimerTask {
         } catch (Exception e) {
             LOG.error("Couldn't update plugins... ", e);
         }
-
     }
 }

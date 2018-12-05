@@ -95,7 +95,7 @@ public class AssetGroupDaoBeanTest {
 		group.setUpdatedBy("DAOTEST");
 		group.setOwner(user);
 
-		List<AssetGroupField> filters = new ArrayList<AssetGroupField>();
+		List<AssetGroupField> filters = new ArrayList<>();
 		AssetGroupField filter = new AssetGroupField();
 		filter.setAssetGroup(group);
 		filter.setKey("FIELD NAME");

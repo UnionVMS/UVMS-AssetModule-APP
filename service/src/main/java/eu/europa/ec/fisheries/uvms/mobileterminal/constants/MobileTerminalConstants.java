@@ -33,13 +33,6 @@ public class MobileTerminalConstants {
 	
     public static final String CREATE_COMMENT = "Automatic create comment";
 
-	public static final String SERIAL_NUMBER = "SERIAL_NUMBER";
-	public static final String SATELLITE_NUMBER = "SATELLITE_NUMBER";
-	public static final String ANTENNA = "ANTENNA";
-	public static final String TRANSCEIVER_TYPE = "TRANSCEIVER_TYPE";
-	public static final String SOFTWARE_VERSION = "SOFTWARE_VERSION";
-
-
     public static final String UPDATE_USER = "UVMS";
 
     public static final String TRUE = "TRUE";

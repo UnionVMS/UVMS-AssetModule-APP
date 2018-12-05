@@ -11,18 +11,17 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.GROUP_ASSET_BY_GUID;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.GROUP_ASSET_BY_GUID_LIST;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.GROUP_ASSET_BY_USER;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.GROUP_ASSET_FIND_ALL;
-import java.util.List;
-import java.util.UUID;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
+import java.util.List;
+import java.util.UUID;
+
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.*;
 
 @Stateless
 public class AssetGroupDao  {
@@ -72,5 +71,4 @@ public class AssetGroupDao  {
         query.setParameter("guidList", guidList);
         return query.getResultList();
     }
-
 }

@@ -39,7 +39,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -464,5 +463,4 @@ public class AssetResource {
         assetService.deleteContactInfo(id);
         return Response.ok().build();
     }
-
 }

@@ -1,10 +1,10 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 
-import javax.ejb.Stateless;
-import javax.persistence.*;
-
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
+
+import javax.ejb.Stateless;
+import javax.persistence.*;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,5 +51,4 @@ public class AssetGroupFieldDao {
         qry.setParameter("assetgroup", assetGroup);
         return qry.getResultList();
     }
-
 }

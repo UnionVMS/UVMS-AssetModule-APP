@@ -1,13 +1,10 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
-
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode.CUSTOMCODES_GETALLCONSTANTS;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode.CUSTOMCODES_GETALLFOR;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode.CUSTOMCODES_GETCUSTOMCODE_FOR_SPECIFIC_DATE;
-
 import javax.persistence.*;
 import java.util.HashMap;
 import java.util.Map;
+
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode.*;
 
 @Entity
 @Table(name = "customcode"/*, indexes = { @Index(columnList = "id", name = "customcodes00", unique = true),}*/)
@@ -63,6 +60,4 @@ public class CustomCode {
     public void  setNameValue(Map<String,String> nameValue) {
         this.nameValue = nameValue;
     }
-
-
 }

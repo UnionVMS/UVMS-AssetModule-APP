@@ -11,7 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.search.poll;
 
-
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.ListCriteria;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.PollSearchField;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.PollSearchKeyValue;
@@ -140,13 +139,11 @@ public class PollSearchMapper {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT DISTINCT c FROM Channel c");
 		builder.append(" INNER JOIN FETCH c.mobileTerminal mt");
-//		builder.append(" INNER JOIN FETCH mt.mobileTerminalEvents me");
 		builder.append(" INNER JOIN FETCH mt.pollChannel pc");
 		builder.append(" INNER JOIN FETCH mt.plugin p ");
 		builder.append(" INNER JOIN FETCH p.capabilities cap ");
 		builder.append(" WHERE ");
 		builder.append(" c.id = pc.id ");
-//		builder.append(" AND me.active = true ");
 		builder.append(" AND mt.archived = '0' AND mt.inactivated = '0' AND p.pluginInactive = '0' ");
 		builder.append(" AND (cap.name = 'POLLABLE' AND UPPER(cap.value) = 'TRUE' ) ");
 		builder.append(" AND (mt.asset is not null) ");

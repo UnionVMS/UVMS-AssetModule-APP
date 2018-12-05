@@ -11,8 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalAssignQuery;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalId;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.ListCriteria;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
@@ -20,7 +18,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MobileTerminalListQuery;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.SearchKey;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalAttributes;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
@@ -28,11 +25,8 @@ import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
@@ -47,8 +41,6 @@ import static org.junit.Assert.*;
 @RunWith(Arquillian.class)
 @RunAsClient
 public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
-
-    private static final Logger LOG = LoggerFactory.getLogger(MobileTerminalRestResourceTest.class);
 
     @Test
     public void createMobileTerminalTest() {
@@ -70,10 +62,9 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
-    @Ignore
     public void createTwoMobileTerminalsUsingTheSameSerialNumberTest() {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
-        String serialNr = mobileTerminal.getMobileTerminalAttributes().iterator().next().getValue();
+        String serialNr = mobileTerminal.getSerialNo();
 
         MobileTerminal created = getWebTarget()
                 .path("mobileterminal")
@@ -83,13 +74,12 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertNotNull(created);
 
         mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
-        mobileTerminal.getMobileTerminalAttributes().iterator().next().setValue(serialNr);
+        mobileTerminal.setSerialNo(serialNr);
 
         Response response = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(mobileTerminal));
-        // TODO: Figure out if every mt attributes will be unique or just serial number?
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
     }
 
@@ -280,8 +270,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         MobileTerminalListQuery mobileTerminalListQuery = MobileTerminalTestHelper.createMobileTerminalListQuery();
         mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setKey(SearchKey.SATELLITE_NUMBER);
-        List<MobileTerminalAttributes> attributesList = new ArrayList<>(mobileTerminal.getMobileTerminalAttributes());
-        mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setValue(attributesList.get(1).getValue());
+        mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().get(0).setValue(mobileTerminal.getSatelliteNumber());
 
         MTListResponse response = getWebTarget()
                 .path("/mobileterminal/list")
@@ -378,8 +367,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         ListCriteria criteria = new ListCriteria();
         criteria.setKey(SearchKey.SATELLITE_NUMBER);
-        List<MobileTerminalAttributes> attributesList = new ArrayList<>(mobileTerminal.getMobileTerminalAttributes());
-        criteria.setValue(attributesList.get(1).getValue());
+        criteria.setValue(mobileTerminal.getSatelliteNumber());
 
         // One thing from channel
         MobileTerminalListQuery mobileTerminalListQuery = MobileTerminalTestHelper.createMobileTerminalListQuery();
@@ -423,9 +411,8 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .path("/mobileterminal/assign")
                 .queryParam("comment", "NEW_TEST_COMMENT")
                 .queryParam("connectId", asset.getId())
-                .queryParam("guid", created.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .get(MobileTerminal.class);
+                .put(Entity.json(created.getId()), MobileTerminal.class);
 
         assertNotNull(response);
         assertEquals(created.getId(), response.getId());
@@ -449,9 +436,8 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .path("/mobileterminal/assign")
                 .queryParam("comment", "NEW_TEST_COMMENT")
                 .queryParam("connectId", asset.getId())
-                .queryParam("guid", created.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .get(MobileTerminal.class);
+                .put(Entity.json(created.getId()), MobileTerminal.class);
 
         assertNotNull(responseAssign);
         assertNotNull(responseAssign.getAsset());
@@ -461,9 +447,8 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .path("/mobileterminal/unassign")
                 .queryParam("comment", "NEW_TEST_COMMENT")
                 .queryParam("connectId", asset.getId())
-                .queryParam("guid", created.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .get(MobileTerminal.class);
+                .put(Entity.json(created.getId()), MobileTerminal.class);
 
         assertNotNull(responseUnAssign);
         assertNull(responseUnAssign.getAsset());
@@ -542,9 +527,8 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .path("/mobileterminal/assign")
                 .queryParam("comment", "NEW_TEST_COMMENT")
                 .queryParam("connectId", asset.getId())
-                .queryParam("guid", created.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .get(MobileTerminal.class);
+                .put(Entity.json(created.getId()), MobileTerminal.class);
 
         assertNotNull(response);
 
@@ -557,9 +541,8 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .path("/mobileterminal/unassign")
                 .queryParam("comment", "NEW_TEST_COMMENT")
                 .queryParam("connectId", asset.getId())
-                .queryParam("guid", created.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .get(MobileTerminal.class);
+                .put(Entity.json(created.getId()), MobileTerminal.class);
 
         assertNotNull(responseUnAssign);
 

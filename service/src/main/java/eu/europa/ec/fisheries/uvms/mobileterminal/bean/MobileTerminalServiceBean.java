@@ -21,12 +21,10 @@ import eu.europa.ec.fisheries.uvms.asset.message.ModuleQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
-import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalAttributes;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalStatus;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
@@ -277,22 +275,14 @@ public class MobileTerminalServiceBean {
         return terminalDao.getMobileTerminalBySerialNo(serialNo);
     }
 
-    public String assertTerminalHasSerialNumber(MobileTerminal mobileTerminal) {
-        String serialNumber = null;
-        for (MobileTerminalAttributes attribute : mobileTerminal.getMobileTerminalAttributes()) {
-            if (MobileTerminalConstants.SERIAL_NUMBER.equalsIgnoreCase(attribute.getAttribute()) &&
-                    attribute.getValue() != null && !attribute.getValue().isEmpty()) {
-                serialNumber = attribute.getValue();
-                break;
-            }
-        }
+    public void assertTerminalHasSerialNumber(MobileTerminal mobileTerminal) {
+        String serialNumber = mobileTerminal.getSerialNo();
         if (serialNumber == null) {
             throw new NullPointerException("Cannot create mobile terminal without serial number");
         }
         if (mobileTerminal.getPlugin() == null) {
             throw new NullPointerException("Cannot create Mobile terminal when plugin is null");
         }
-        return serialNumber;
     }
 
     public void assertTerminalNotExists(UUID mobileTerminalGUID, String serialNr) {
@@ -469,7 +459,6 @@ public class MobileTerminalServiceBean {
         sql += "SELECT DISTINCT mt";
         sql += " FROM MobileTerminal mt";
         sql += " LEFT JOIN FETCH mt.channels c";
-        sql += " INNER JOIN FETCH mt.mobileTerminalAttributes mta";
         sql += " WHERE (";
         sql += "mt.archived = false ";
         sql += "AND ";
@@ -505,7 +494,7 @@ public class MobileTerminalServiceBean {
 
             request_serialNumber = request.getSerialNumberValue();
             sql += operator;
-            sql += "  mta.attribute = 'SERIAL_NUMBER' AND mta.value LIKE ";
+            sql += "  mt.serialNo LIKE ";
             sql += "'%";
             sql += request_serialNumber;
             sql += "%')";
@@ -517,7 +506,7 @@ public class MobileTerminalServiceBean {
 
             request_transponderType = request.getTranspondertypeValue();
             sql += operator;
-            sql += "  mta.attribute = 'TRANCEIVER_TYPE' AND mta.value LIKE ";
+            sql += "  mt.transceiverType LIKE ";
             sql += "'%";
             sql += request_transponderType;
             sql += "%')";
@@ -541,7 +530,7 @@ public class MobileTerminalServiceBean {
 
     private MobileTerminal tryToFindBasedOnRequestData(String dnid,String memberNumber,String serialNumber,String transponderType, List<MobileTerminal> terminals) {
         // iterate the list and try to find something we recognize from the request
-        for(MobileTerminal terminal : terminals){
+        for(MobileTerminal terminal : terminals) {
             Set<Channel> channels =  terminal.getChannels();
             for(Channel channel : channels){
                 if(dnid != null) {
@@ -561,30 +550,14 @@ public class MobileTerminalServiceBean {
                     }
                 }
             }
-
-            Set<MobileTerminalAttributes> attributes = terminal.getMobileTerminalAttributes();
-            for(MobileTerminalAttributes attr : attributes){
-
-                String key = attr.getAttribute();
-                String val = attr.getValue();
-
-                if(serialNumber != null){
-                    if(key.equals("SERIAL_NUMBER")){
-                        if(val != null){
-                            if(serialNumber.equals(val)){
-                                return terminal;
-                            }
-                        }
-                    }
+            if(serialNumber != null && terminal.getSerialNo() != null){
+                if(serialNumber.equals(terminal.getSerialNo())){
+                    return terminal;
                 }
-                if(transponderType != null){
-                    if(key.equals("TRANSCEIVER_TYPE")){
-                        if(val != null){
-                            if(transponderType.equals(val)){
-                                return terminal;
-                            }
-                        }
-                    }
+            }
+            if(transponderType != null && terminal.getTransceiverType() != null){
+                if(transponderType.equals(terminal.getTransceiverType())){
+                    return terminal;
                 }
             }
         }

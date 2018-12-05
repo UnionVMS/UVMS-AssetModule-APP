@@ -13,14 +13,11 @@
 package eu.europa.ec.fisheries.uvms.mobileterminal.mapper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ComChannelAttribute;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalAttribute;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalAttributes;
 import eu.europa.ec.fisheries.uvms.mobileterminal.util.DateUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by osdjup on 2016-11-16.
@@ -62,16 +59,5 @@ public class AttributeMapper {
         attr.setType(key);
         attr.setValue(value);
         return attr;
-    }
-
-    static List<MobileTerminalAttribute> mapEntityAttributesToModelAttributes(Set<MobileTerminalAttributes> attributes) {
-        List<MobileTerminalAttribute> attrList = new ArrayList<>();
-        for (MobileTerminalAttributes attribute : attributes) {
-            MobileTerminalAttribute attr = new MobileTerminalAttribute();
-            attr.setType(attribute.getAttribute());
-            attr.setValue(attribute.getValue());
-            attrList.add(attr);
-        }
-        return attrList;
     }
 }

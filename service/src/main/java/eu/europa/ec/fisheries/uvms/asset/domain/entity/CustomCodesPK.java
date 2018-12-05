@@ -1,14 +1,15 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
-import java.io.Serializable;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.Objects;
-import javax.persistence.Embeddable;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.util.OffsetDateTimeDeserializer;
+
+import javax.persistence.Embeddable;
+import java.io.Serializable;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.Objects;
 
 @Embeddable
 public class CustomCodesPK  implements Serializable {
@@ -87,7 +88,6 @@ public class CustomCodesPK  implements Serializable {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(constant, code, validFromDate, validToDate);
     }
 }

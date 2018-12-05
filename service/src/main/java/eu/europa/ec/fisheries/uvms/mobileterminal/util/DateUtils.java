@@ -17,7 +17,6 @@ import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-
 public class DateUtils {
     private static Logger LOG = LoggerFactory.getLogger(DateUtils.class);
     public final static String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss Z";
@@ -38,5 +37,4 @@ public class DateUtils {
         }
         return ZonedDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)).toOffsetDateTime();
     }
-
 }

@@ -33,7 +33,7 @@ public interface AssetService {
      * @param username @description username
      * @return Asset @description the created asset
      */
-    Asset createAsset(Asset asset, String username) ;
+    Asset createAsset(Asset asset, String username);
 
     /**
      * @param searchFields @description fields to use in search
@@ -50,7 +50,7 @@ public interface AssetService {
      * @param dynamic @description dynamic true or false
      * @return Long @description number of assets in search
      */
-    Long getAssetListCount(List<SearchKeyValue> searchFields, boolean dynamic) ;
+    Long getAssetListCount(List<SearchKeyValue> searchFields, boolean dynamic);
 
     /**
      *
@@ -58,7 +58,7 @@ public interface AssetService {
      * @param value @description idvalue
      * @return Asset @description an asset
      */
-    Asset getAssetById(AssetIdentifier assetId, String value) ;
+    Asset getAssetById(AssetIdentifier assetId, String value);
 
 
     /**
@@ -66,7 +66,7 @@ public interface AssetService {
      * @param id @description internal id
      * @return Asset @description an asset
      */
-    Asset getAssetById(UUID id) ;
+    Asset getAssetById(UUID id);
 
     /**
      *
@@ -75,7 +75,7 @@ public interface AssetService {
      * @param comment @description comment , reason of action
      * @return Asset @description
      */
-    Asset updateAsset(Asset asset, String username, String comment) ;
+    Asset updateAsset(Asset asset, String username, String comment);
 
     /**
      *
@@ -84,7 +84,7 @@ public interface AssetService {
      * @param comment @description comment , reason of action
      * @return Asset @description
      */
-    Asset archiveAsset(Asset asset, String username, String comment) ;
+    Asset archiveAsset(Asset asset, String username, String comment);
 
     /**
      *
@@ -92,7 +92,7 @@ public interface AssetService {
      * @param username @description user that performs the action
      * @return Asset @description an asset
      */
-    Asset upsertAsset(Asset asset, String username) ;
+    Asset upsertAsset(Asset asset, String username);
     
     /**
      * Upsert asset business object. (Asset/Contacts/Notes)
@@ -108,14 +108,14 @@ public interface AssetService {
      * @param groups @description list of assetgroups
      * @return List of assets @description list of assets
      */
-    List<Asset> getAssetListByAssetGroups(List<AssetGroup> groups) ;
+    List<Asset> getAssetListByAssetGroups(List<AssetGroup> groups);
 
     /**
      *
      * @param assetId @description id
      * @param value @description value of id
      */
-    void deleteAsset(AssetIdentifier assetId, String value) ;
+    void deleteAsset(AssetIdentifier assetId, String value);
 
 
     /**
@@ -123,7 +123,7 @@ public interface AssetService {
      * @param id @description an asset id
      * @return List of assets @description list of historic versions of this asset
      */
-    List<Asset> getRevisionsForAsset(UUID id) ;
+    List<Asset> getRevisionsForAsset(UUID id);
 
 
     /**
@@ -131,7 +131,7 @@ public interface AssetService {
      * @param historyId @description id of history
      * @return asset @description an asset
      */
-    Asset getAssetRevisionForRevisionId(UUID historyId) ;
+    Asset getAssetRevisionForRevisionId(UUID historyId);
 
 
     /**
@@ -141,7 +141,7 @@ public interface AssetService {
      * @param date @description date to look up
      * @return asset @description an asset
      */
-    Asset getAssetFromAssetIdAtDate(AssetIdentifier idType, String idValue, OffsetDateTime date) ;
+    Asset getAssetFromAssetIdAtDate(AssetIdentifier idType, String idValue, OffsetDateTime date);
 
     /**
      * Returns asset revisions for given asset id. Result size limited by maxNbr

@@ -27,7 +27,6 @@ public class SearchMapper {
         builder.append("SELECT DISTINCT mt")
                 .append(" FROM MobileTerminal mt")
                 .append(" LEFT JOIN FETCH mt.channels c")
-                .append(" INNER JOIN FETCH mt.mobileTerminalAttributes mta")
                 .append(" WHERE ( ")
                 .append("mt.archived = false ")
                 .append("AND ")
@@ -49,15 +48,28 @@ public class SearchMapper {
                 if ("CONNECT_ID".equals(key)) {
                     builder.append(" ( mt.asset.id = ")
                             .append("'").append(criteria.getValue()).append("' ) ");
+                } else if("SERIAL_NUMBER".equals(key)) {
+                    builder.append(" ( mt.serialNo LIKE ")
+                            .append("'")
+                            .append(criteria.getValue().replace('*', '%')).append("%' ) ");
+                } else if("SATELLITE_NUMBER".equals(key)) {
+                    builder.append(" ( mt.satelliteNumber LIKE ")
+                            .append("'")
+                            .append(criteria.getValue().replace('*', '%')).append("%' ) ");
+                } else if("ANTENNA".equals(key)) {
+                    builder.append(" ( mt.antenna LIKE ")
+                            .append("'")
+                            .append(criteria.getValue().replace('*', '%')).append("%' ) ");
+                } else if("TRANSCEIVER_TYPE".equals(key) || "TRANSPONDER_TYPE".equals(key)) {
+                    builder.append(" ( mt.transceiverType LIKE ")
+                            .append("'")
+                            .append(criteria.getValue().replace('*', '%')).append("%' ) ");
+                } else if("SOFTWARE_VERSION".equals(key)) {
+                    builder.append(" ( mt.softwareVersion LIKE ")
+                            .append("'")
+                            .append(criteria.getValue().replace('*', '%')).append("%' ) ");
                 } else {
-                    if (MobileTerminalSearchAttributes.isAttribute(key)) {
-                        builder.append(" ( mta.attribute LIKE ")
-                                .append("'").append(key).append("'")
-                                .append(" AND ")
-                                .append(" mta.value LIKE ")
-                                .append("'%")
-                                .append(criteria.getValue().replace('*', '%')).append("%' ) ");
-                    } else if (ChannelSearchAttributes.isAttribute(key)) {
+                    if (ChannelSearchAttributes.isAttribute(key)) {
                         if(ChannelSearchAttributes.DNID.name().equals(key)) {
                             builder.append(" ( c.DNID LIKE ")
                                     .append("'%")
@@ -67,13 +79,6 @@ public class SearchMapper {
                                     .append("'%")
                                     .append(criteria.getValue().replace('*', '%')).append("%' ) ");
                         }
-                    } else {
-                        builder.append(" ( mta.attribute LIKE ")
-                                .append("'%").append(key).append("%'")
-                                .append(" AND ")
-                                .append(" mta.value LIKE ")
-                                .append("'%")
-                                .append(criteria.getValue().replace('*', '%')).append("%' ) ");
                     }
                 }
             }

@@ -25,9 +25,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollProgram;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollMapper;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTResponseDto;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTErrorHandler;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import org.slf4j.Logger;
@@ -122,9 +119,9 @@ public class PollRestResource {
     }
 
     @GET
-    @Path("/inactivate/{id}")                       //TODO: change this to /archive/{id} when we have a moment to change it in frontend
+    @Path("/inactivate/{id}")  //TODO: change this to /archive/{id} when we have a moment to change it in frontend
     @RequiresFeature(UnionVMSFeature.managePolls)
-    public Response archiveProgramPoll(@PathParam("id") String pollId) {       //This gives a poll the status "ARCHIVED"
+    public Response archiveProgramPoll(@PathParam("id") String pollId) { // This gives a poll the status "ARCHIVED"
         LOG.info("Archive poll invoked in rest layer:{}",pollId);
         try {
             PollResponseType pollResponse = pollServiceBean.inactivateProgramPoll(pollId, request.getRemoteUser());

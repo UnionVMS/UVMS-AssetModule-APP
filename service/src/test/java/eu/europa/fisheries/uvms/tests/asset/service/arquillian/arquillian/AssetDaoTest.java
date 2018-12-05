@@ -29,7 +29,8 @@ import java.time.ZoneOffset;
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 @RunWith(Arquillian.class)
 public class AssetDaoTest extends TransactionalTests {
@@ -500,7 +501,7 @@ public class AssetDaoTest extends TransactionalTests {
         searchKeyValues.add(searchKey);
         SearchKeyValue searchKey2 = new SearchKeyValue();
         searchKey2.setSearchField(SearchFields.IRCS);
-        searchKey2.setSearchValues(Arrays.<String>asList(asset2.getIrcs()));
+        searchKey2.setSearchValues(Collections.singletonList(asset2.getIrcs()));
         searchKeyValues.add(searchKey2);
         List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, false);
         
@@ -657,7 +658,7 @@ public class AssetDaoTest extends TransactionalTests {
         List<SearchKeyValue> searchKeyValues = new ArrayList<>();
         SearchKeyValue searchKey = new SearchKeyValue();
         searchKey.setSearchField(SearchFields.GEAR_TYPE);
-        searchKey.setSearchValues(Arrays.asList(asset.getGearFishingType()));
+        searchKey.setSearchValues(Collections.singletonList(asset.getGearFishingType()));
         searchKeyValues.add(searchKey);
         SearchKeyValue searchKey2 = new SearchKeyValue();
         searchKey2.setSearchField(SearchFields.CFR);
@@ -683,7 +684,7 @@ public class AssetDaoTest extends TransactionalTests {
         List<SearchKeyValue> searchKeyValues = new ArrayList<>();
         SearchKeyValue searchKey = new SearchKeyValue();
         searchKey.setSearchField(SearchFields.NAME);
-        searchKey.setSearchValues(Arrays.asList("*LikeSearch*" + randomNumbers));
+        searchKey.setSearchValues(Collections.singletonList("*LikeSearch*" + randomNumbers));
         searchKeyValues.add(searchKey);
         List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
         
@@ -703,7 +704,7 @@ public class AssetDaoTest extends TransactionalTests {
         List<SearchKeyValue> searchKeyValues = new ArrayList<>();
         SearchKeyValue searchKey = new SearchKeyValue();
         searchKey.setSearchField(SearchFields.NAME);
-        searchKey.setSearchValues(Arrays.asList("*likeSearch*" + randomNumbers));
+        searchKey.setSearchValues(Collections.singletonList("*likeSearch*" + randomNumbers));
         searchKeyValues.add(searchKey);
         List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
         

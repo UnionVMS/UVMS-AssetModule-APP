@@ -181,19 +181,6 @@ public class PollServiceBean {
         if(terminal != null) {
             checkPollable(terminal);
         }
-
-//        if (channelGuid != null && !channelGuid.trim().isEmpty()) {
-//            for (Channel channel : terminal.getChannels()) {
-//                if (channel.getId().toString().equalsIgnoreCase(channelGuid)) {
-//                    if (!channel.getMobileTerminal().getId().toString().equalsIgnoreCase(guid)) {
-//                        throw new IllegalStateException("Channel " + channel.getId() + " can not be polled, because it is not part of terminal " + terminal.getId());
-//                    }
-//                    return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal, channel);
-//                }
-//            }
-//        } else {
-//            throw new NullPointerException("Could not find channel " + channelGuid + " based on");
-//        }
         return terminal;
     }
 

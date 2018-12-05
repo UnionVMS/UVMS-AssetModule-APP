@@ -111,14 +111,28 @@ public class MobileTerminal implements Serializable {
 	private String updateuser;
 
 	@NotNull
+	@Size(max = 60)
 	@Column(name="serial_no")
 	private String serialNo;
 
-	@OneToMany(mappedBy = "mobileTerminal", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<Channel> channels;
+	@Size(max = 60)
+	@Column(name = "satellite_number")
+	private String satelliteNumber;
+
+	@Size(max = 60)
+	@Column(name = "antenna")
+	private String antenna;
+
+	@Size(max = 60)
+	@Column(name = "transceiver_type")
+	private String transceiverType;
+
+	@Size(max = 60)
+	@Column(name = "software_version")
+	private String softwareVersion;
 
 	@OneToMany(mappedBy = "mobileTerminal", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Set<MobileTerminalAttributes> mobileTerminalAttributes;
+	private Set<Channel> channels;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="chan_def", foreignKey = @ForeignKey(name = "MobileTerminal_Channel_FK10"))
@@ -248,17 +262,6 @@ public class MobileTerminal implements Serializable {
 		this.channels = channels;
 	}
 
-	public Set<MobileTerminalAttributes> getMobileTerminalAttributes() {
-		if (mobileTerminalAttributes == null) {
-			mobileTerminalAttributes = new LinkedHashSet<>();
-		}
-		return mobileTerminalAttributes;
-	}
-
-	public void setMobileTerminalAttributes(Set<MobileTerminalAttributes> mobileTerminalAttributes) {
-		this.mobileTerminalAttributes = mobileTerminalAttributes;
-	}
-
 	public Channel getDefaultChannel() {
 		return defaultChannel;
 	}
@@ -291,6 +294,38 @@ public class MobileTerminal implements Serializable {
 		this.asset = asset;
 	}
 
+	public String getSatelliteNumber() {
+		return satelliteNumber;
+	}
+
+	public void setSatelliteNumber(String satelliteNumber) {
+		this.satelliteNumber = satelliteNumber;
+	}
+
+	public String getAntenna() {
+		return antenna;
+	}
+
+	public void setAntenna(String antenna) {
+		this.antenna = antenna;
+	}
+
+	public String getTransceiverType() {
+		return transceiverType;
+	}
+
+	public void setTransceiverType(String transceiverType) {
+		this.transceiverType = transceiverType;
+	}
+
+	public String getSoftwareVersion() {
+		return softwareVersion;
+	}
+
+	public void setSoftwareVersion(String softwareVersion) {
+		this.softwareVersion = softwareVersion;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -306,6 +341,10 @@ public class MobileTerminal implements Serializable {
 				Objects.equals(updatetime, that.updatetime) &&
 				Objects.equals(updateuser, that.updateuser) &&
 				Objects.equals(serialNo, that.serialNo) &&
+				Objects.equals(satelliteNumber, that.satelliteNumber) &&
+				Objects.equals(antenna, that.antenna) &&
+				Objects.equals(transceiverType, that.transceiverType) &&
+				Objects.equals(softwareVersion, that.softwareVersion) &&
 				Objects.equals(channels, that.channels);
 	}
 

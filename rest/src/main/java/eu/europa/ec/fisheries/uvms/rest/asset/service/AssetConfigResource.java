@@ -61,18 +61,6 @@ public class AssetConfigResource {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
         }
     }
-
-    @GET
-    @Path(value = "/")
-    public Response getConfiguration() {
-        try {
-        	List<Object> configuration = configService.getConfiguration();
-        	return Response.ok(configuration).build();
-        } catch (Exception e) {
-            LOG.error("Error when getting config search fields.");
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
-        }
-    }
     
     @GET
     @Path(value = "/parameters")
@@ -119,7 +107,7 @@ public class AssetConfigResource {
     @Path("/MT/")
     public MTResponseDto<Map<String, List<String>>>getMTConfiguration() {
         try {
-            List<ConfigList> config = configServiceMT.getConfig();
+            List<ConfigList> config = configServiceMT.getConfigValues();
             return new MTResponseDto<>(MTMobileTerminalConfig.mapConfigList(config), MTResponseCode.OK);
         } catch (Exception ex) {
             return MTErrorHandler.getFault(ex);

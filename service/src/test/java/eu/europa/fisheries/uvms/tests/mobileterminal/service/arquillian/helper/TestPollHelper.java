@@ -3,7 +3,6 @@ package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.*;
@@ -53,13 +52,12 @@ public class TestPollHelper {
         mtp.setPluginInactive(false);
         mobileTerminal.setPlugin(mtp);
 
-        Set<MobileTerminalAttributes> attributes = mobileTerminal.getMobileTerminalAttributes();
         serialNumber = generateARandomStringWithMaxLength(10);
-        addAttribute(attributes, MobileTerminalConstants.SERIAL_NUMBER, serialNumber, mobileTerminal);
-        addAttribute(attributes, MobileTerminalConstants.SATELLITE_NUMBER, "S" + generateARandomStringWithMaxLength(4), mobileTerminal);
-        addAttribute(attributes, MobileTerminalConstants.ANTENNA, "A", mobileTerminal);
-        addAttribute(attributes, MobileTerminalConstants.TRANSCEIVER_TYPE, "A", mobileTerminal);
-        addAttribute(attributes, MobileTerminalConstants.SOFTWARE_VERSION, "A", mobileTerminal);
+
+        mobileTerminal.setSatelliteNumber("S" + generateARandomStringWithMaxLength(4));
+        mobileTerminal.setAntenna("A");
+        mobileTerminal.setTransceiverType("A");
+        mobileTerminal.setSoftwareVersion("A");
         mobileTerminal.setSerialNo(serialNumber);
 
         Channel channel = new Channel();
@@ -95,14 +93,6 @@ public class TestPollHelper {
             ret.append(String.valueOf(val));
         }
         return ret.toString();
-    }
-
-    private void addAttribute(Set<MobileTerminalAttributes> attributes, String type, String value, MobileTerminal terminal) {
-        MobileTerminalAttributes attribute = new MobileTerminalAttributes();
-        attribute.setAttribute(type);
-        attribute.setValue(value);
-        attribute.setMobileTerminal(terminal);
-        attributes.add(attribute);
     }
 
     public PollRequestType createPollRequestType() {
@@ -212,12 +202,7 @@ public class TestPollHelper {
         mtp.setPluginSatelliteType("INMARSAT_C");
         mtp.setPluginInactive(false);
         mobileTerminal.setPlugin(mtp);
-
-        MobileTerminalAttributes attr = new MobileTerminalAttributes();
-        attr.setAttribute("TRANSPONDER_TYPE");
-        attr.setValue("TRANSPONDERTYP_100");
-        attr.setMobileTerminal(mobileTerminal);
-        mobileTerminal.getMobileTerminalAttributes().add(attr);
+        mobileTerminal.setTransceiverType("TRANSPONDERTYP_100");
         mobileTerminal.setSerialNo("SN1234567890");
 
         Channel channel = new Channel();

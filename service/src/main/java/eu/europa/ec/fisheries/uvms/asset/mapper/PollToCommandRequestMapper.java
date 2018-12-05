@@ -25,13 +25,11 @@ import java.util.List;
 public class PollToCommandRequestMapper {
 
     public enum PollReceiverInmarsatC {
-
         MOBILE_TERMINAL_ID, CONNECT_ID,
         SERIAL_NUMBER, DNID, MEMBER_NUMBER, LES_NAME, LES_SERVICE_NAME, SATELLITE_NUMBER;
     }
 
     public enum PollReceiverIridium {
-
         MOBILE_TERMINAL_ID, CONNECT_ID,
         SERIAL_NUMBER;
     }

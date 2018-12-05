@@ -52,7 +52,8 @@ public class MobileTerminalExecutorServiceBean {
         }
     }
 
-    @Schedule(minute = "*/5", hour = "*", persistent = false) //TODO schedule: Ask andreas about how often we should do this check, change accordingly
+    //TODO schedule: Ask andreas about how often we should do this check, change accordingly
+    @Schedule(minute = "*/5", hour = "*", persistent = false)
     public void initPollTimer() {
         try {
             if(pollTimerTask == null) {
@@ -64,5 +65,4 @@ public class MobileTerminalExecutorServiceBean {
             LOG.error("[ Error when initializing PollTimerTask. ] {}", e);
         }
     }
-
 }

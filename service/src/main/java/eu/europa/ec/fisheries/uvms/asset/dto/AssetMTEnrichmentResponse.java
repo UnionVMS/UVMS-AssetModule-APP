@@ -1,12 +1,10 @@
 package eu.europa.ec.fisheries.uvms.asset.dto;
 
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 public class AssetMTEnrichmentResponse implements Serializable {
-
 
     private String mobileTerminalConnectId = null;
     private String mobileTerminalType = null;
@@ -104,7 +102,6 @@ public class AssetMTEnrichmentResponse implements Serializable {
     public void setAssetHistoryId(String assetHistoryId) {
         this.assetHistoryId = assetHistoryId;
     }
-
 
     public String getExternalMarking() {
         return externalMarking;

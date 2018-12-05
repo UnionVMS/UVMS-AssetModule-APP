@@ -23,7 +23,7 @@ public interface AssetGroupService {
      * @param user @description user that perforns action
      * @return @description list of assetgroups
      */
-    List<AssetGroup> getAssetGroupList(String user) ;
+    List<AssetGroup> getAssetGroupList(String user);
 
 
     /**
@@ -31,14 +31,14 @@ public interface AssetGroupService {
      * @param assetId @description internal assetid
      * @return @description list of assetgroups
      */
-    List<AssetGroup> getAssetGroupListByAssetId(UUID assetId)  ;
+    List<AssetGroup> getAssetGroupListByAssetId(UUID assetId);
 
     /**
      *
      * @param guid @description internal id
      * @return @description assetgroup
      */
-    AssetGroup getAssetGroupById(UUID guid) ;
+    AssetGroup getAssetGroupById(UUID guid);
 
 
     /**
@@ -47,7 +47,7 @@ public interface AssetGroupService {
      * @param username @description user that perforns action
      * @return  @description an assetgroup
      */
-    AssetGroup createAssetGroup(AssetGroup assetGroup, String username) ;
+    AssetGroup createAssetGroup(AssetGroup assetGroup, String username);
 
 
     /**
@@ -56,7 +56,7 @@ public interface AssetGroupService {
      * @param username @description user that perforns action
      * @return @description an assetgroup
      */
-    AssetGroup updateAssetGroup(AssetGroup assetGroup, String username) ;
+    AssetGroup updateAssetGroup(AssetGroup assetGroup, String username);
 
 
     /**
@@ -65,7 +65,7 @@ public interface AssetGroupService {
      * @param username @description user that perforns action
      * @return  @description  an assetgroup
      */
-    AssetGroup deleteAssetGroupById(UUID guid, String username) ;
+    AssetGroup deleteAssetGroupById(UUID guid, String username);
 
 
     /**
@@ -75,7 +75,7 @@ public interface AssetGroupService {
      * @param username @description user that perforns action
      * @return @description
      */
-    AssetGroupField createAssetGroupField(UUID parentAssetgroup, AssetGroupField assetGroupField, String username) ;
+    AssetGroupField createAssetGroupField(UUID parentAssetgroup, AssetGroupField assetGroupField, String username);
 
 
     /**
@@ -84,7 +84,7 @@ public interface AssetGroupService {
      * @param username @description user that perforns action
      * @return an assetgroupfield
      */
-    AssetGroupField updateAssetGroupField(AssetGroupField assetGroupField, String username) ;
+    AssetGroupField updateAssetGroupField(AssetGroupField assetGroupField, String username);
 
 
     /**
@@ -92,7 +92,7 @@ public interface AssetGroupService {
      * @param id @description an internal id
      * @return @description an assetgroupfield
      */
-    AssetGroupField getAssetGroupField(UUID id) ;
+    AssetGroupField getAssetGroupField(UUID id);
 
 
     /**
@@ -101,7 +101,7 @@ public interface AssetGroupService {
      * @param username @description user that perforns action
      * @return @description an assetgroupfield
      */
-    AssetGroupField deleteAssetGroupField(UUID id, String username)  ;
+    AssetGroupField deleteAssetGroupField(UUID id, String username);
 
 
     /**
@@ -109,14 +109,12 @@ public interface AssetGroupService {
      * @param assetGroupId @description internal id
      * @return @description list of assetgroupfields
      */
-    List<AssetGroupField> retrieveFieldsForGroup(UUID assetGroupId) ;
+    List<AssetGroupField> retrieveFieldsForGroup(UUID assetGroupId);
 
 
     /**
      *
      * @param assetGroupId @description internal id of assetgroup
      */
-    void removeFieldsForGroup(UUID assetGroupId)  ;
-
-
+    void removeFieldsForGroup(UUID assetGroupId);
 }

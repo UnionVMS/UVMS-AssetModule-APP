@@ -39,7 +39,7 @@ public class ConfigServiceBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void testGetConfig() {
-        List<ConfigList> rs = configService.getConfig();
+        List<ConfigList> rs = configService.getConfigValues();
         assertNotNull(rs);
         assertTrue(configListContains(rs, MobileTerminalConfigType.POLL_TIME_SPAN.toString()));
         assertTrue(configListContains(rs, MobileTerminalConfigType.POLL_TYPE.toString()));

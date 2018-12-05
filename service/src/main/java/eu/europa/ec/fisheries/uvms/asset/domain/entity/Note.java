@@ -35,12 +35,13 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.UUID;
-import javax.persistence.*;
-import javax.validation.constraints.Size;
-import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "Note", indexes = { @Index(columnList = "assetId", name = "Note_asset_FK_INX10", unique = false),})
@@ -217,5 +218,4 @@ public class Note implements Serializable {
     public String toString() {
         return "Note [id=" + id + ", activity=" + activityCode + ", user=" + user + ", notes=" + notes + "]";
     }
-
 }

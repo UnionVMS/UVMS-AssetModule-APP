@@ -11,20 +11,19 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField.ASSETGROUP_FIELD_CLEAR;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField.ASSETGROUP_FIELD_GETBYID;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField.ASSETGROUP_RETRIEVE_FIELDS_FOR_GROUP;
-import java.io.Serializable;
-import java.time.OffsetDateTime;
-import java.util.UUID;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.time.OffsetDateTime;
+import java.util.UUID;
+
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField.*;
 
 @Entity
 @Table(name = "Assetgroupfield", indexes = { @Index(columnList = "assetgroup", name="assetgroupfield_assetgroup_FK_INX10")})
@@ -118,5 +117,4 @@ public class AssetGroupField implements Serializable {
     public void setAssetGroup(AssetGroup assetGroup) {
         this.assetGroup = assetGroup;
     }
-
 }

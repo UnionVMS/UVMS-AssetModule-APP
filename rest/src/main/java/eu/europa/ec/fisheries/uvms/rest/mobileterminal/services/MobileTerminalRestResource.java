@@ -133,12 +133,12 @@ public class MobileTerminalRestResource {
         }
     }
 
-    @GET
+    @PUT
     @Path("/assign")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
     public Response assignMobileTerminal(@QueryParam("comment") String comment,
                                          @QueryParam("connectId") UUID connectId,
-                                         @QueryParam("guid") UUID guid) {
+                                         UUID guid) {
         LOG.info("Assign mobile terminal invoked in rest layer.");
         try {
             MobileTerminal mobileTerminal = mobileTerminalService.assignMobileTerminal(connectId, guid, comment, request.getRemoteUser());
@@ -150,12 +150,12 @@ public class MobileTerminalRestResource {
         }
     }
 
-    @GET
+    @PUT
     @Path("/unassign")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
     public Response unAssignMobileTerminal(@QueryParam("comment") String comment,
                                            @QueryParam("connectId") UUID connectId,
-                                           @QueryParam("guid") UUID guid ) {
+                                           UUID guid) {
         LOG.info("Unassign mobile terminal invoked in rest layer.");
         try {
             MobileTerminal mobileTerminal = mobileTerminalService.unAssignMobileTerminal(connectId, guid, comment, request.getRemoteUser());

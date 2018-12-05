@@ -23,13 +23,14 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.envers.Audited;
+
+import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.UUID;
-import javax.persistence.*;
-import javax.validation.constraints.Size;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.envers.Audited;
 
 @Audited
 @Entity
