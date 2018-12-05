@@ -432,32 +432,6 @@
             <column name="software_version" type="VARCHAR(60)"/>
         </createTable>
     </changeSet>
-    <!--<changeSet author="thofan (generated)" id="1535445328879-17">-->
-        <!--<createTable tableName="mobileterminalattributes">-->
-            <!--<column name="id" type="UUID">-->
-                <!--<constraints nullable="false"/>-->
-            <!--</column>-->
-            <!--<column name="attribute" type="VARCHAR(60)"/>-->
-            <!--<column name="value" type="VARCHAR(60)"/>-->
-            <!--<column name="mobileterminal_id" type="UUID">-->
-                <!--<constraints nullable="false"/>-->
-            <!--</column>-->
-        <!--</createTable>-->
-    <!--</changeSet>-->
-    <!--<changeSet author="thofan (generated)" id="1535445328879-18">-->
-        <!--<createTable tableName="mobileterminalattributes_aud">-->
-            <!--<column name="id" type="UUID">-->
-                <!--<constraints nullable="false"/>-->
-            <!--</column>-->
-            <!--<column name="rev" type="INT">-->
-                <!--<constraints nullable="false"/>-->
-            <!--</column>-->
-            <!--<column name="revtype" type="SMALLINT"/>-->
-            <!--<column name="attribute" type="VARCHAR(255)"/>-->
-            <!--<column name="value" type="VARCHAR(255)"/>-->
-            <!--<column name="mobileterminal_id" type="UUID"/>-->
-        <!--</createTable>-->
-    <!--</changeSet>-->
     <changeSet author="thofan (generated)" id="1535445328879-21">
         <createTable tableName="note">
             <column name="id" type="UUID">
@@ -624,12 +598,6 @@
     <changeSet author="thofan (generated)" id="1535445328879-45">
         <addPrimaryKey columnNames="id" constraintName="mobileterminal_pkey" tableName="mobileterminal"/>
     </changeSet>
-    <!--<changeSet author="thofan (generated)" id="1535445328879-46">-->
-        <!--<addPrimaryKey columnNames="id, rev" constraintName="mobileterminalattributes_aud_pkey" tableName="mobileterminalattributes_aud"/>-->
-    <!--</changeSet>-->
-    <!--<changeSet author="thofan (generated)" id="1535445328879-47">-->
-        <!--<addPrimaryKey columnNames="id" constraintName="mobileterminalattributes_pkey" tableName="mobileterminalattributes"/>-->
-    <!--</changeSet>-->
     <changeSet author="thofan (generated)" id="1535445328879-50">
         <addPrimaryKey columnNames="id" constraintName="note_pkey" tableName="note"/>
     </changeSet>
@@ -725,11 +693,6 @@
             <column name="plugin_id"/>
         </createIndex>
     </changeSet>
-    <!--<changeSet author="thofan (generated)" id="1535445328879-79">-->
-        <!--<createIndex indexName="mobileterminalattributes_mobterm_fk_inx10" tableName="mobileterminalattributes">-->
-            <!--<column name="mobileterminal_id"/>-->
-        <!--</createIndex>-->
-    <!--</changeSet>-->
     <changeSet author="thofan (generated)" id="1535445328879-80">
         <createIndex indexName="mobileterminal_asset_fk_inx10" tableName="mobileterminal">
             <column name="asset_id"/>
@@ -805,9 +768,6 @@
     <changeSet author="thofan (generated)" id="1535445328879-99">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="channel_aud" constraintName="fkjcnf5hokby2hgv1gaeed8d0o8" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
     </changeSet>
-    <!--<changeSet author="thofan (generated)" id="1535445328879-100">-->
-        <!--<addForeignKeyConstraint baseColumnNames="rev" baseTableName="mobileterminalattributes_aud" constraintName="fkjuxj14cfcjx71a5phtpcm7j3d" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>-->
-    <!--</changeSet>-->
     <changeSet author="thofan (generated)" id="1535445328879-101">
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="asset_aud" constraintName="fklq7kauhigk0mdew67qs2l39ci" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
     </changeSet>
@@ -817,9 +777,6 @@
     <changeSet author="thofan (generated)" id="1535445328879-104">
         <addForeignKeyConstraint baseColumnNames="plugin_id" baseTableName="mobileterminal" constraintName="mobileterminal_plugin_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="plugin"/>
     </changeSet>
-    <!--<changeSet author="thofan (generated)" id="1535445328879-105">-->
-        <!--<addForeignKeyConstraint baseColumnNames="mobileterminal_id" baseTableName="mobileterminalattributes" constraintName="mobileterminalattributes_mobileterminal_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="mobileterminal"/>-->
-    <!--</changeSet>-->
     <changeSet author="thofan (generated)" id="1535445328879-106">
         <addForeignKeyConstraint baseColumnNames="asset_id" baseTableName="mobileterminal" constraintName="mobileterminal_asset_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="asset"/>
     </changeSet>
