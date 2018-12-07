@@ -17,9 +17,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-
 public interface CustomCodesService {
-
 
     /**
      *
@@ -46,7 +44,6 @@ public interface CustomCodesService {
     CustomCode get(String constant, String code , OffsetDateTime validFromDate, OffsetDateTime validToDate);
 
     CustomCode get(CustomCodesPK customCodesPrimaryKey);
-
 
 
         /**
@@ -100,11 +97,9 @@ public interface CustomCodesService {
      */
     List<String> getAllConstants();
 
-
     List<CustomCode> getForDate(String constant, String code, OffsetDateTime aDate);
 
     Boolean verify(String constant, String code, OffsetDateTime aDate);
-
 
     /**
      *
@@ -112,10 +107,4 @@ public interface CustomCodesService {
      * @return
      */
     CustomCode replace(CustomCode customCode);
-
-
-
 }
-
-
-

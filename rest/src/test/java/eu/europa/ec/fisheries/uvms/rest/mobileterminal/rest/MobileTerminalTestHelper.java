@@ -11,58 +11,63 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest;
 
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.*;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
+import java.time.Duration;
 import java.util.Random;
-
-import static org.junit.Assert.assertEquals;
 
 public class MobileTerminalTestHelper {
 
     private static String serialNumber;
 
-    public static MobileTerminalType createBasicMobileTerminal() {
-        MobileTerminalType mobileTerminal = new MobileTerminalType();
-        mobileTerminal.setSource(MobileTerminalSource.INTERNAL);
-        mobileTerminal.setType("INMARSAT_C");
-        List<MobileTerminalAttribute> attributes = mobileTerminal.getAttributes();
+    public static MobileTerminal createBasicMobileTerminal() {
+        MobileTerminal mobileTerminal = new MobileTerminal();
+        mobileTerminal.setSource(TerminalSourceEnum.INTERNAL);
+        mobileTerminal.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
         serialNumber = generateARandomStringWithMaxLength(10);
-        addAttribute(attributes, MobileTerminalConstants.SERIAL_NUMBER, serialNumber);
-        addAttribute(attributes, "SATELLITE_NUMBER", "S" + generateARandomStringWithMaxLength(4));
-        addAttribute(attributes, "ANTENNA", "A");
-        addAttribute(attributes, "TRANSCEIVER_TYPE", "A");
-        addAttribute(attributes, "SOFTWARE_VERSION", "A");
+        mobileTerminal.setSerialNo(serialNumber);
 
-        List<ComChannelType> channels = mobileTerminal.getChannels();
-        ComChannelType comChannelType = new ComChannelType();
-        channels.add(comChannelType);
+        mobileTerminal.setSatelliteNumber("S" + generateARandomStringWithMaxLength(4));
+        mobileTerminal.setAntenna("A");
+        mobileTerminal.setTransceiverType("A");
+        mobileTerminal.setSoftwareVersion("A");
 
-        //comChannelType.setGuid(UUID.randomUUID().toString());
-        comChannelType.setName("VMS");
+        Channel channel = new Channel();
+        channel.setName("VMS");
+        channel.setFrequencyGracePeriod(Duration.ofSeconds(54000));
+        channel.setMemberNumber(generateARandomStringWithMaxLength(3));
+        channel.setExpectedFrequency(Duration.ofSeconds(7200));
+        channel.setExpectedFrequencyInPort(Duration.ofSeconds(10800));
+        channel.setLesDescription("Thrane&Thrane");
+        channel.setDNID("1" + generateARandomStringWithMaxLength(3));
+        channel.setInstalledBy("Mike Great");
+        channel.setArchived(false);
+        channel.setConfigChannel(true);
+        channel.setDefaultChannel(true);
+        channel.setPollChannel(true);
+        channel.setMobileTerminal(mobileTerminal);
 
-        addChannelAttribute(comChannelType, "FREQUENCY_GRACE_PERIOD", "54000");
-        addChannelAttribute(comChannelType, "MEMBER_NUMBER", "100");
-        addChannelAttribute(comChannelType, "FREQUENCY_EXPECTED", "7200");
-        addChannelAttribute(comChannelType, "FREQUENCY_IN_PORT", "10800");
-        addChannelAttribute(comChannelType, "LES_DESCRIPTION", "Thrane&Thrane");
-        addChannelAttribute(comChannelType, "DNID", "1" + generateARandomStringWithMaxLength(3));
-        addChannelAttribute(comChannelType, "INSTALLED_BY", "Mike Great");
+        mobileTerminal.setConfigChannel(channel);
+        mobileTerminal.setDefaultChannel(channel);
+        mobileTerminal.setPollChannel(channel);
 
-        addChannelCapability(comChannelType, "POLLABLE", true);
-        addChannelCapability(comChannelType, "CONFIGURABLE", true);
-        addChannelCapability(comChannelType, "DEFAULT_REPORTING", true);
+        mobileTerminal.getChannels().clear();
+        mobileTerminal.getChannels().add(channel);
 
-        Plugin plugin = new Plugin();
-        plugin.setServiceName("eu.europa.ec.fisheries.uvms.plugins.inmarsat");
-        plugin.setLabelName("Thrane&Thrane");
-        plugin.setSatelliteType("INMARSAT_C");
-        plugin.setInactive(false);
-
+        MobileTerminalPlugin plugin = new MobileTerminalPlugin();
+        plugin.setPluginServiceName("eu.europa.ec.fisheries.uvms.plugins.inmarsat");
+        plugin.setName("Thrane&Thrane");
+        plugin.setPluginSatelliteType("INMARSAT_C");
+        plugin.setPluginInactive(false);
         mobileTerminal.setPlugin(plugin);
 
         return mobileTerminal;
@@ -76,28 +81,6 @@ public class MobileTerminalTestHelper {
             ret.append(String.valueOf(val));
         }
         return ret.toString();
-    }
-
-    private static void addChannelCapability(ComChannelType comChannelType, String type, boolean value) {
-        ComChannelCapability channelCapability = new ComChannelCapability();
-
-        channelCapability.setType(type);
-        channelCapability.setValue(value);
-        comChannelType.getCapabilities().add(channelCapability);
-    }
-
-    private static void addChannelAttribute(ComChannelType comChannelType, String type, String value) {
-        ComChannelAttribute channelAttribute = new ComChannelAttribute();
-        channelAttribute.setType(type);
-        channelAttribute.setValue(value);
-        comChannelType.getAttributes().add(channelAttribute);
-    }
-
-    private static void addAttribute(List<MobileTerminalAttribute> attributes, String type, String value) {
-        MobileTerminalAttribute attribute = new MobileTerminalAttribute();
-        attribute.setType(type);
-        attribute.setValue(value);
-        attributes.add(attribute);
     }
 
     public static MobileTerminalListQuery createMobileTerminalListQuery() {
@@ -128,13 +111,14 @@ public class MobileTerminalTestHelper {
         return serialNumber;
     }
 
-    public static String createRestMobileTerminal(WebTarget webTarget, String boat) {
-        MobileTerminalType mt = MobileTerminalTestHelper.createBasicMobileTerminal();
-        mt.setConnectId(boat);
+    public static MobileTerminal createRestMobileTerminal(WebTarget webTarget, Asset asset) {
+        MobileTerminal mt = createBasicMobileTerminal();
+        if(asset != null)
+            mt.setAsset(asset);
 
         return webTarget
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mt), String.class);
+                .post(Entity.json(mt), MobileTerminal.class);
     }
 }

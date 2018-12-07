@@ -13,7 +13,6 @@ package eu.europa.ec.fisheries.uvms.rest.asset;
 
 import eu.europa.ec.fisheries.uvms.rest.asset.filter.AssetRestExceptionMapper;
 import eu.europa.ec.fisheries.uvms.rest.asset.service.*;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.MTConfigRestResource;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.MobileTerminalRestResource;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.PluginRestResource;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.PollRestResource;
@@ -42,7 +41,6 @@ public class RestActivator extends Application {
         set.add(com.github.phillipkruger.apiee.ApieeService.class);
         set.add(MobileTerminalRestResource.class);
         set.add(PollRestResource.class);
-        set.add(MTConfigRestResource.class);
         set.add(PluginRestResource.class);
     }
 

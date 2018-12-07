@@ -20,7 +20,7 @@ public class PollValue {
         this.key = key;
         this.value = value;
     }
-    PollValue(){}           //added to stop json from complaining
+    PollValue(){/* for json */}
 
     public PollKey getKey() {
         return key;

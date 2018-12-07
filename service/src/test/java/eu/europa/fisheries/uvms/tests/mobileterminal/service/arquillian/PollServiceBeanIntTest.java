@@ -2,6 +2,7 @@ package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollProgramDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
@@ -375,11 +376,11 @@ public class PollServiceBeanIntTest extends TransactionalTests {
 
     private PollMobileTerminal helper_createPollMobileTerminal() {
 
-        UUID connectId = assetDao.createAsset(AssetTestsHelper.createBasicAsset()).getId();
+        Asset asset = assetDao.createAsset(AssetTestsHelper.createBasicAsset());
 
-        MobileTerminal mobileTerminal = testPollHelper.createAndPersistMobileTerminal(connectId.toString());
+        MobileTerminal mobileTerminal = testPollHelper.createAndPersistMobileTerminal(asset);
         PollMobileTerminal pmt = new PollMobileTerminal();
-        pmt.setConnectId(connectId.toString());
+        pmt.setConnectId(asset.getId().toString());
         pmt.setMobileTerminalId(mobileTerminal.getId().toString());
 
         Set<Channel> channels = mobileTerminal.getChannels();

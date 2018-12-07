@@ -1,11 +1,11 @@
 package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalSource;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -21,7 +21,10 @@ import javax.ejb.EJB;
 import javax.ejb.EJBTransactionRolledbackException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -271,7 +274,7 @@ public class TerminalDaoBeanIT extends TransactionalTests {
             mt.setSerialNo(serialNo);
             mt.setUpdatetime(OffsetDateTime.now(ZoneOffset.UTC));
             mt.setUpdateuser("TEST");
-            mt.setSource(MobileTerminalSource.INTERNAL);
+            mt.setSource(TerminalSourceEnum.INTERNAL);
             mt.setPlugin(mtp);
             mt.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
             mt.setArchived(false);

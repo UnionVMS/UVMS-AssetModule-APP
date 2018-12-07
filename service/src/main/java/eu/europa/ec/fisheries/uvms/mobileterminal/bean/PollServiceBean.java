@@ -171,30 +171,17 @@ public class PollServiceBean {
         return getPollProgramRunningAndStarted();
     }
 
-    private MobileTerminalType mapPollableTerminalType(MobileTerminalTypeEnum type, String guid) {
-        MobileTerminal terminal = terminalDao.getMobileTerminalById(UUID.fromString(guid));
-        return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
+    private MobileTerminal mapPollableTerminal(MobileTerminalTypeEnum type, UUID guid) {
+        MobileTerminal terminal = terminalDao.getMobileTerminalById(guid);
+        return terminal;
     }
 
-    private MobileTerminalType getPollableTerminalType(String guid, String channelGuid) {
+    private MobileTerminal getPollableTerminal(String guid, String channelGuid) {
         MobileTerminal terminal = terminalDao.getMobileTerminalById(UUID.fromString(guid));
         if(terminal != null) {
             checkPollable(terminal);
         }
-
-        if (channelGuid != null && !channelGuid.isEmpty()) {
-            for (Channel channel : terminal.getChannels()) {
-                if (channel.getId().toString().equalsIgnoreCase(channelGuid)) {
-                    if (!channel.getMobileTerminal().getId().toString().equalsIgnoreCase(guid)) {
-                        throw new IllegalStateException("Channel " + channel.getId() + " can not be polled, because it is not part of terminal " + terminal.getId());
-                    }
-                    return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal, channel);
-                }
-            }
-        } else {
-            throw new NullPointerException("Could not find channel " + channelGuid + " based on");
-        }
-        return MobileTerminalEntityToModelMapper.mapToMobileTerminalType(terminal);
+        return terminal;
     }
 
     private void checkPollable(MobileTerminal terminal){
@@ -223,17 +210,17 @@ public class PollServiceBean {
         }
 
         List<PollResponseType> responseList;
-        Map<Poll, MobileTerminalType> pollMobileTerminalTypeMap;
+        Map<Poll, MobileTerminal> pollMobileTerminalMap;
         switch (pollRequest.getPollType()) {
             case PROGRAM_POLL:
-                Map<PollProgram, MobileTerminalType> pollProgramMobileTerminalTypeMap = validateAndMapToProgramPolls(pollRequest, username);
+                Map<PollProgram, MobileTerminal> pollProgramMobileTerminalTypeMap = validateAndMapToProgramPolls(pollRequest, username);
                 responseList = createPollPrograms(pollProgramMobileTerminalTypeMap, username);
                 break;
             case CONFIGURATION_POLL:
             case MANUAL_POLL:
             case SAMPLING_POLL:
-                pollMobileTerminalTypeMap = validateAndMapToPolls(pollRequest, username);
-                responseList = createPolls(pollMobileTerminalTypeMap, pollRequest.getPollType());
+                pollMobileTerminalMap = validateAndMapToPolls(pollRequest, username);
+                responseList = createPolls(pollMobileTerminalMap, pollRequest.getPollType());
                 break;
             default:
                 LOG.error("[ Could not decide poll type ] {}", pollRequest.getPollType());
@@ -242,8 +229,8 @@ public class PollServiceBean {
         return responseList;
     }
 
-    private Map<PollProgram, MobileTerminalType> validateAndMapToProgramPolls(PollRequestType pollRequest, String username) {
-        Map<PollProgram, MobileTerminalType> map = new HashMap<>();
+    private Map<PollProgram, MobileTerminal> validateAndMapToProgramPolls(PollRequestType pollRequest, String username) {
+        Map<PollProgram, MobileTerminal> map = new HashMap<>();
 
         for (PollMobileTerminal pollTerminal : pollRequest.getMobileTerminals()) {
             MobileTerminal mobileTerminalEntity = terminalDao.getMobileTerminalById(UUID.fromString(pollTerminal.getMobileTerminalId()));
@@ -254,15 +241,15 @@ public class PollServiceBean {
             if (!pollTerminal.getConnectId().equals(connectId)) {
                 throw new IllegalStateException("Terminal " + mobileTerminalEntity.getId() + " can not be polled, because it is not linked to asset " + connectId);
             }
-            MobileTerminalType terminalType = getPollableTerminalType(pollTerminal.getMobileTerminalId(), pollTerminal.getComChannelId());
+            MobileTerminal terminal = getPollableTerminal(pollTerminal.getMobileTerminalId(), pollTerminal.getComChannelId());
             PollProgram pollProgram = PollModelToEntityMapper.mapToProgramPoll(mobileTerminalEntity, connectId, pollTerminal.getComChannelId(), pollRequest, username);
-            map.put(pollProgram, terminalType);
+            map.put(pollProgram, terminal);
         }
         return map;
     }
 
-    private Map<Poll, MobileTerminalType> validateAndMapToPolls(PollRequestType pollRequest, String username) {
-        Map<Poll, MobileTerminalType> map = new HashMap<>();
+    private Map<Poll, MobileTerminal> validateAndMapToPolls(PollRequestType pollRequest, String username) {
+        Map<Poll, MobileTerminal> map = new HashMap<>();
 
         for (PollMobileTerminal pollTerminal : pollRequest.getMobileTerminals()) {
             MobileTerminal mobileTerminalEntity = terminalDao.getMobileTerminalById(UUID.fromString(pollTerminal.getMobileTerminalId()));
@@ -277,9 +264,9 @@ public class PollServiceBean {
             if (pollRequest.getPollType() != PollType.MANUAL_POLL) {
                 validateMobileTerminalPluginCapability(mobileTerminalEntity.getPlugin().getCapabilities(), pollRequest.getPollType(), mobileTerminalEntity.getPlugin().getPluginServiceName());
             }
-            MobileTerminalType terminalType = getPollableTerminalType(pollTerminal.getMobileTerminalId(), pollTerminal.getComChannelId());
+            MobileTerminal terminal = getPollableTerminal(pollTerminal.getMobileTerminalId(), pollTerminal.getComChannelId());
             Poll poll = PollModelToEntityMapper.mapToPoll(mobileTerminalEntity, connectId, pollTerminal.getComChannelId(), pollRequest, username);
-            map.put(poll, terminalType);
+            map.put(poll, terminal);
         }
         return map;
     }
@@ -310,24 +297,24 @@ public class PollServiceBean {
         return false;
     }
 
-    private List<PollResponseType> createPollPrograms (Map<PollProgram, MobileTerminalType> map, String username) {
+    private List<PollResponseType> createPollPrograms (Map<PollProgram, MobileTerminal> map, String username) {
         List<PollResponseType> responseList = new ArrayList<>();
-        for (Map.Entry<PollProgram, MobileTerminalType> next : map.entrySet()) {
+        for (Map.Entry<PollProgram, MobileTerminal> next : map.entrySet()) {
             PollProgram pollProgram = next.getKey();
-            MobileTerminalType mobileTerminalType = next.getValue();
+            MobileTerminal mobileTerminalType = next.getValue();
             pollProgramDao.createPollProgram(pollProgram);
             responseList.add(PollEntityToModelMapper.mapToPollResponseType(pollProgram, mobileTerminalType));
         }
         return responseList;
     }
 
-    private List<PollResponseType> createPolls(Map<Poll, MobileTerminalType> map, PollType pollType) {
+    private List<PollResponseType> createPolls(Map<Poll, MobileTerminal> map, PollType pollType) {
         List<PollResponseType> responseList = new ArrayList<>();
-        for (Map.Entry<Poll, MobileTerminalType> next : map.entrySet()) {
+        for (Map.Entry<Poll, MobileTerminal> next : map.entrySet()) {
             Poll poll = next.getKey();
-            MobileTerminalType mobileTerminalType = next.getValue();
+            MobileTerminal mobileTerminal = next.getValue();
             pollDao.createPoll(poll);
-            responseList.add(PollEntityToModelMapper.mapToPollResponseType(poll, mobileTerminalType, pollType));
+            responseList.add(PollEntityToModelMapper.mapToPollResponseType(poll, mobileTerminal, pollType));
         }
         return responseList;
     }
@@ -361,8 +348,8 @@ public class PollServiceBean {
         for (Poll poll : pollList) {
             try {
                 MobileTerminal mobileTerminalEntity = poll.getPollBase().getMobileterminal();
-                MobileTerminalType mobileTerminalType = mapPollableTerminalType(mobileTerminalEntity.getMobileTerminalType(), mobileTerminalEntity.getId().toString());
-                PollResponseType pollType = PollEntityToModelMapper.mapToPollResponseType(poll, mobileTerminalType, EnumMapper.getPollModelFromType(poll.getPollType()));
+                MobileTerminal mobileTerminal = mapPollableTerminal(mobileTerminalEntity.getMobileTerminalType(), mobileTerminalEntity.getId());
+                PollResponseType pollType = PollEntityToModelMapper.mapToPollResponseType(poll, mobileTerminal, EnumMapper.getPollModelFromType(poll.getPollType()));
                 pollResponseList.add(pollType);
             } catch (RuntimeException e) {
                 LOG.error("[ Poll " + poll.getId() + "  couldn't map type ]");
@@ -396,7 +383,7 @@ public class PollServiceBean {
 
         PollProgram program = pollProgramDao.getPollProgramByGuid(id.getGuid());
         MobileTerminal terminal = program.getPollBase().getMobileterminal();
-        MobileTerminalType terminalType = mapPollableTerminalType(terminal.getMobileTerminalType(), terminal.getId().toString());
+        MobileTerminal mobileTerminal = mapPollableTerminal(terminal.getMobileTerminalType(), terminal.getId());
 
         switch (program.getPollState()) {
             case ARCHIVED:
@@ -409,7 +396,7 @@ public class PollServiceBean {
 
         program.setPollState(EnumMapper.getPollStateTypeFromModel(state));
 
-        return PollEntityToModelMapper.mapToPollResponseType(program, terminalType);
+        return PollEntityToModelMapper.mapToPollResponseType(program, mobileTerminal);
     }
 
     public ListResponseDto getMobileTerminalPollableList(PollableQuery query) {
@@ -472,9 +459,8 @@ public class PollServiceBean {
         List<PollResponseType> responseList = new ArrayList<>();
         for (PollProgram pollProgram : pollPrograms) {
                 MobileTerminal terminal = pollProgram.getPollBase().getMobileterminal();
-            MobileTerminalType terminalType = null;
-            terminalType = mapPollableTerminalType(terminal.getMobileTerminalType(), terminal.getId().toString());
-            responseList.add(PollEntityToModelMapper.mapToPollResponseType(pollProgram, terminalType));
+            MobileTerminal mobileTerminal = mapPollableTerminal(terminal.getMobileTerminalType(), terminal.getId());
+            responseList.add(PollEntityToModelMapper.mapToPollResponseType(pollProgram, mobileTerminal));
         }
         return responseList;
     }

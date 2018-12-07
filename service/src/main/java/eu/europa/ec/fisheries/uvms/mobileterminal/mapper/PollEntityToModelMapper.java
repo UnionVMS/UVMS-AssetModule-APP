@@ -12,8 +12,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.mapper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Poll;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollBase;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollProgram;
@@ -27,18 +27,18 @@ public class PollEntityToModelMapper {
     private final static String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss Z";
     private final static String DATE_TIME_FORMAT_WO_TIMEZONE = "yyyy-MM-dd HH:mm:ss";
 
-    private static PollResponseType mapToPollResponseType(PollBase pollBase, MobileTerminalType mobileTerminalType)  {
+    private static PollResponseType mapToPollResponseType(PollBase pollBase, MobileTerminal mobileTerminal)  {
         PollResponseType response = new PollResponseType();
         response.setComment(pollBase.getComment());
         response.setUserName(pollBase.getUpdatedBy());
         // TODO created time?
-        response.setMobileTerminal(mobileTerminalType);
+        response.setMobileTerminal(MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminal));
         response.getAttributes().add(createPollAttribute(PollAttributeType.USER, pollBase.getUpdatedBy()));
         return response;
     }
 
-    public static PollResponseType mapToPollResponseType(PollProgram program, MobileTerminalType mobileTerminalType) {
-        PollResponseType response = mapToPollResponseType(program.getPollBase(), mobileTerminalType);
+    public static PollResponseType mapToPollResponseType(PollProgram program, MobileTerminal mobileTerminal) {
+        PollResponseType response = mapToPollResponseType(program.getPollBase(), mobileTerminal);
         response.setPollType(PollType.PROGRAM_POLL);
         PollId pollId = new PollId();
         pollId.setGuid(program.getId().toString());
@@ -48,8 +48,8 @@ public class PollEntityToModelMapper {
         return response;
     }
 
-    public static PollResponseType mapToPollResponseType(Poll poll, MobileTerminalType mobileTerminalType, PollType pollType)  {
-        PollResponseType response = mapToPollResponseType(poll.getPollBase(), mobileTerminalType);
+    public static PollResponseType mapToPollResponseType(Poll poll, MobileTerminal mobileTerminal, PollType pollType)  {
+        PollResponseType response = mapToPollResponseType(poll.getPollBase(), mobileTerminal);
         response.setPollType(pollType);
         PollId pollId = new PollId();
         pollId.setGuid(poll.getId().toString());

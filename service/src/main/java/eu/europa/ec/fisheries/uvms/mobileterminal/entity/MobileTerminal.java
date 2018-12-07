@@ -17,13 +17,11 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalSource;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.util.OffsetDateTimeDeserializer;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
@@ -34,7 +32,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -90,7 +88,7 @@ public class MobileTerminal implements Serializable {
 	@Enumerated(EnumType.STRING)
 	@NotNull
 	@Column(name="source")
-	private MobileTerminalSource source;
+	private TerminalSourceEnum source;
 
 	@Enumerated(EnumType.STRING)
 	@NotNull
@@ -112,32 +110,44 @@ public class MobileTerminal implements Serializable {
 	@Column(name="updateuser")
 	private String updateuser;
 
+	@NotNull
+	@Size(max = 60)
 	@Column(name="serial_no")
 	private String serialNo;
 
-	@OneToMany(mappedBy = "mobileTerminal", cascade = CascadeType.ALL)
-	@Fetch(FetchMode.SELECT)
+	@Size(max = 60)
+	@Column(name = "satellite_number")
+	private String satelliteNumber;
+
+	@Size(max = 60)
+	@Column(name = "antenna")
+	private String antenna;
+
+	@Size(max = 60)
+	@Column(name = "transceiver_type")
+	private String transceiverType;
+
+	@Size(max = 60)
+	@Column(name = "software_version")
+	private String softwareVersion;
+
+	@OneToMany(mappedBy = "mobileTerminal", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<Channel> channels;
 
-	@OneToMany(mappedBy="mobileTerminal", cascade = CascadeType.ALL)
-	@Fetch(FetchMode.SELECT)
-	private Set<MobileTerminalAttributes> mobileTerminalAttributes;
-
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="chan_def", foreignKey = @ForeignKey(name = "MobileTerminal_Channel_FK10"))
 	private Channel defaultChannel;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="chan_conf", foreignKey = @ForeignKey(name = "MobileTerminal_Channel_FK20"))
 	private Channel configChannel;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="chan_poll", foreignKey = @ForeignKey(name = "MobileTerminal_Channel_FK30"))
 	private Channel pollChannel;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="asset_id", foreignKey = @ForeignKey(name = "MobileTerminal_Asset_FK"))
-	@Fetch(FetchMode.SELECT)
 	private Asset asset;
 
 	public MobileTerminal() {
@@ -194,11 +204,11 @@ public class MobileTerminal implements Serializable {
 		this.inactivated = inactivated;
 	}
 
-	public MobileTerminalSource getSource() {
+	public TerminalSourceEnum getSource() {
 		return source;
 	}
 
-	public void setSource(MobileTerminalSource source) {
+	public void setSource(TerminalSourceEnum source) {
 		this.source = source;
 	}
 
@@ -234,16 +244,6 @@ public class MobileTerminal implements Serializable {
 		this.serialNo = serialNo;
 	}
 
-	public Set<Channel> getChannels() {
-		if(channels == null)
-			channels = new HashSet<>();
-		return channels;
-	}
-
-	public void setChannels(Set<Channel> channels) {
-		this.channels = channels;
-	}
-
 	public OffsetDateTime getCreateTime() {
 		return createTime;
 	}
@@ -252,15 +252,14 @@ public class MobileTerminal implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public Set<MobileTerminalAttributes> getMobileTerminalAttributes() {
-		if(mobileTerminalAttributes == null){
-			mobileTerminalAttributes = new HashSet<>();
-		}
-		return mobileTerminalAttributes;
+	public Set<Channel> getChannels() {
+		if(channels == null)
+			channels = new LinkedHashSet<>();
+		return channels;
 	}
 
-	public void setMobileTerminalAttributes(Set<MobileTerminalAttributes> mobileTerminalAttributes) {
-		this.mobileTerminalAttributes = mobileTerminalAttributes;
+	public void setChannels(Set<Channel> channels) {
+		this.channels = channels;
 	}
 
 	public Channel getDefaultChannel() {
@@ -295,6 +294,38 @@ public class MobileTerminal implements Serializable {
 		this.asset = asset;
 	}
 
+	public String getSatelliteNumber() {
+		return satelliteNumber;
+	}
+
+	public void setSatelliteNumber(String satelliteNumber) {
+		this.satelliteNumber = satelliteNumber;
+	}
+
+	public String getAntenna() {
+		return antenna;
+	}
+
+	public void setAntenna(String antenna) {
+		this.antenna = antenna;
+	}
+
+	public String getTransceiverType() {
+		return transceiverType;
+	}
+
+	public void setTransceiverType(String transceiverType) {
+		this.transceiverType = transceiverType;
+	}
+
+	public String getSoftwareVersion() {
+		return softwareVersion;
+	}
+
+	public void setSoftwareVersion(String softwareVersion) {
+		this.softwareVersion = softwareVersion;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -310,6 +341,10 @@ public class MobileTerminal implements Serializable {
 				Objects.equals(updatetime, that.updatetime) &&
 				Objects.equals(updateuser, that.updateuser) &&
 				Objects.equals(serialNo, that.serialNo) &&
+				Objects.equals(satelliteNumber, that.satelliteNumber) &&
+				Objects.equals(antenna, that.antenna) &&
+				Objects.equals(transceiverType, that.transceiverType) &&
+				Objects.equals(softwareVersion, that.softwareVersion) &&
 				Objects.equals(channels, that.channels);
 	}
 

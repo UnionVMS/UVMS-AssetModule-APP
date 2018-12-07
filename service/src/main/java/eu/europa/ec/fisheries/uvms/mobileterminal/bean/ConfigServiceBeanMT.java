@@ -17,7 +17,6 @@ import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.CapabilityConfigur
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.ConfigList;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemConfiguration;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemType;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.Plugin;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
 import eu.europa.ec.fisheries.uvms.asset.message.ModuleQueue;
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
@@ -78,11 +77,7 @@ public class ConfigServiceBeanMT {
         return getAllTerminalSystems();
     }
 
-    public List<ConfigList> getConfig() {
-        return getConfigValues();
-    }
-
-    public List<Plugin> upsertPlugins(List<PluginService> plugins, String username) {
+    public List<MobileTerminalPlugin> upsertPlugins(List<PluginService> plugins, String username) {
         return upsertPlugins(plugins);
     }
 
@@ -190,13 +185,13 @@ public class ConfigServiceBeanMT {
     }
 
 
-    public List<Plugin> upsertPlugins(List<PluginService> pluginList) {
+    public List<MobileTerminalPlugin> upsertPlugins(List<PluginService> pluginList) {
         if (pluginList == null) {
             throw new IllegalArgumentException("No pluginList to upsert");
         }
 
         Map<String, PluginService> map = new HashMap<>();
-        List<Plugin> responseList = new ArrayList<>();
+        List<MobileTerminalPlugin> responseList = new ArrayList<>();
         for (PluginService plugin : pluginList) {
             if (plugin.getLabelName() == null || plugin.getLabelName().isEmpty()) {
                 throw new IllegalArgumentException("No plugin name for plugin: " + plugin);
@@ -214,7 +209,7 @@ public class ConfigServiceBeanMT {
                 entity = mobileTerminalPluginDao.createMobileTerminalPlugin(entity);
             }
             map.put(plugin.getServiceName(), plugin);
-            responseList.add(PluginMapper.mapEntityToModel(entity));
+            responseList.add(entity);
         }
 
         responseList.addAll(inactivatePlugins(map));
@@ -223,10 +218,10 @@ public class ConfigServiceBeanMT {
 
     }
 
-    public List<Plugin> inactivatePlugins(Map<String, PluginService> map) {
+    public List<MobileTerminalPlugin> inactivatePlugins(Map<String, PluginService> map) {
 
 
-        List<Plugin> responseList = new ArrayList<>();
+        List<MobileTerminalPlugin> responseList = new ArrayList<>();
 
         List<MobileTerminalPlugin> availablePlugins = mobileTerminalPluginDao.getPluginList();
         for (MobileTerminalPlugin plugin : availablePlugins) {
@@ -234,7 +229,7 @@ public class ConfigServiceBeanMT {
             if (pluginService == null && !plugin.getPluginInactive()) {
                 LOG.debug("inactivate no longer available plugin");
                 plugin.setPluginInactive(true);
-                responseList.add(PluginMapper.mapEntityToModel(plugin));
+                responseList.add(plugin);
             }
         }
         return responseList;

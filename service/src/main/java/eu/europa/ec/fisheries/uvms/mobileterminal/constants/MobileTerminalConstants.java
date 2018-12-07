@@ -33,8 +33,6 @@ public class MobileTerminalConstants {
 	
     public static final String CREATE_COMMENT = "Automatic create comment";
 
-	public static final String SERIAL_NUMBER = "SERIAL_NUMBER";
-
     public static final String UPDATE_USER = "UVMS";
 
     public static final String TRUE = "TRUE";

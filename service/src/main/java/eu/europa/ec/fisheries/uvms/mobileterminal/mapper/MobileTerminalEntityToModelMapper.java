@@ -42,7 +42,8 @@ public class MobileTerminalEntityToModelMapper {
         model.setPlugin(plugin);
 
         try {
-            model.setSource(entity.getSource());
+            String value = entity.getSource().value();
+            model.setSource(MobileTerminalSource.valueOf(value));
         } catch (RuntimeException e) {
             LOG.error("[ Error when setting mobile terminal source. ] {}", e);
             throw new RuntimeException(e);
@@ -58,7 +59,6 @@ public class MobileTerminalEntityToModelMapper {
         model.setId(new Long(entity.getCreateTime().toEpochSecond()).intValue());
 
         model.getChannels().addAll(mapChannels(entity));
-        model.getAttributes().addAll(AttributeMapper.mapEntityAttributesToModelAttributes(entity.getMobileTerminalAttributes()));
 
         return model;
     }

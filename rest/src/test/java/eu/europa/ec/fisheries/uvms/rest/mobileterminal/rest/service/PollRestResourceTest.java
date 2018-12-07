@@ -3,34 +3,28 @@ package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListPagination;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollProgram;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.util.DateUtils;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
-import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
-import java.io.StringReader;
+import javax.ws.rs.core.Response;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
-
 
 import static org.junit.Assert.*;
 
@@ -41,131 +35,103 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     @Test
     public void getRunningProgramPollsTest() {
 
-        String response = getWebTarget()
+        Response response = getWebTarget()
                 .path("/poll/running")
                 .request(MediaType.APPLICATION_JSON)
-                .get()
-                .readEntity(String.class);
+                .get();
 
-        JsonReader jsonReader = Json.createReader(new StringReader(response));
-        JsonObject jsonObject = jsonReader.readObject();
-
-        assertThat(jsonObject.getInt("code"), CoreMatchers.is(MTResponseCode.OK.getCode()));
+        assertNotNull(response);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 
-
     @Test
-    public void createPollTest() throws Exception {
+    public void createPollTest() {
         PollRequestType input = new PollRequestType();
         Asset asset = createAndRestBasicAsset();
-        MobileTerminalType createdMT = createAndRestMobileTerminal(asset.getId().toString());
+        MobileTerminal createdMT = createAndRestMobileTerminal(asset);
 
         PollMobileTerminal pmt = new PollMobileTerminal();
-        pmt.setComChannelId(createdMT.getChannels().get(0).getGuid());
-        pmt.setConnectId(createdMT.getConnectId());
-        pmt.setMobileTerminalId(createdMT.getMobileTerminalId().getGuid());
+        pmt.setComChannelId(createdMT.getChannels().iterator().next().getId().toString());
+        pmt.setConnectId(createdMT.getAsset().getId().toString());
+        pmt.setMobileTerminalId(createdMT.getId().toString());
         input.getMobileTerminals().add(pmt);
 
         input.setPollType(PollType.MANUAL_POLL);
         input.setComment("Test Comment");
         input.setUserName("Test User");
 
-        String response = getWebTarget()
+        CreatePollResultDto createdPoll = getWebTarget()
                 .path("/poll")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(input), String.class);
+                .post(Entity.json(input), CreatePollResultDto.class);
 
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        CreatePollResultDto output = deserializeResponseDto(response, CreatePollResultDto.class);
+        assertNotNull(createdPoll);
 
         //TODO: Change when we get the message system working in a sane way
-        assertEquals(1, output.getSentPolls().size() + output.getUnsentPolls().size());
-        //assertFalse(output.isUnsentPoll());
-        //assertTrue(output.getUnsentPolls().isEmpty());
-
-        //cleanup
-        String pollGuid;
-        if(output.isUnsentPoll()){
-            pollGuid = output.getUnsentPolls().get(0);
-        }else{
-            pollGuid = output.getSentPolls().get(0);
-        }
-
-        //pollDaoBean.removePollAfterTests(pollGuid);
-        //terminalDaoBean.removeMobileTerminalAfterTests(mt.getMobileTerminalId().getGuid());
-
-
+        assertEquals(1, createdPoll.getSentPolls().size() + createdPoll.getUnsentPolls().size());
     }
 
     @Test
-    public void stopAndStartProgramPollTest() throws Exception{
+    public void stopAndStartProgramPollTest() {
         Asset asset = createAndRestBasicAsset();
-        MobileTerminalType createdMT = createAndRestMobileTerminal(asset.getId().toString());
+        MobileTerminal createdMT = createAndRestMobileTerminal(asset);
 
         //Create program poll
         PollRequestType input = createProgramPoll(createdMT);
 
-        String response = getWebTarget()
+        CreatePollResultDto createdPoll = getWebTarget()
                 .path("/poll")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(input), String.class);
+                .post(Entity.json(input), CreatePollResultDto.class);
 
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        CreatePollResultDto output = deserializeResponseDto(response, CreatePollResultDto.class);
+        assertNotNull(createdPoll);
 
         //Stopping since autostart
         String pollGuid;
-        if(output.isUnsentPoll()){
-            pollGuid = output.getUnsentPolls().get(0);
+        if(createdPoll.isUnsentPoll()){
+            pollGuid = createdPoll.getUnsentPolls().get(0);
         }else{
-            pollGuid = output.getSentPolls().get(0);
+            pollGuid = createdPoll.getSentPolls().get(0);
         }
-        response = getWebTarget()
+
+        PollDto pollDto = getWebTarget()
                 .path("/poll/stop/" + pollGuid)
                 .request(MediaType.APPLICATION_JSON)
-                .get(String.class);
+                .get(PollDto.class);
 
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        PollDto startStopOutput = deserializeResponseDto(response, PollDto.class);
+        assertNotNull(pollDto);
 
-        assertFalse(startStopOutput.getValue().isEmpty());
-        assertEquals(pollGuid, startStopOutput.getValue().get(2).getValue());       //pray to god that theses are fixed......
-        assertEquals("FALSE", startStopOutput.getValue().get(8).getValue());
-
+        assertFalse(pollDto.getValue().isEmpty());
+        assertEquals(pollGuid, pollDto.getValue().get(2).getValue());
+        assertEquals("FALSE", pollDto.getValue().get(8).getValue());
 
         //and starting again
-        response = getWebTarget()
+        pollDto = getWebTarget()
                 .path("/poll/start/" + pollGuid)
                 .request(MediaType.APPLICATION_JSON)
-                .get(String.class);
+                .get(PollDto.class);
 
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        startStopOutput = deserializeResponseDto(response, PollDto.class);
+        assertNotNull(pollDto);
 
-        assertFalse(startStopOutput.getValue().isEmpty());
-        assertEquals(pollGuid, startStopOutput.getValue().get(2).getValue());       //pray to god that theses are fixed in position......
-        assertEquals("TRUE", startStopOutput.getValue().get(8).getValue());
-
-        //cleanup
-        //pollProgramDaoBean.removePollProgrameAfterTests(pollGuid);
-        //terminalDaoBean.removeMobileTerminalAfterTests(mt.getMobileTerminalId().getGuid());
+        assertFalse(pollDto.getValue().isEmpty());
+        assertEquals(pollGuid, pollDto.getValue().get(2).getValue());
+        assertEquals("TRUE", pollDto.getValue().get(8).getValue());
     }
 
     @Test
     public void archiveProgramPollTest() throws Exception{
         Asset asset = createAndRestBasicAsset();
-        MobileTerminalType createdMT = createAndRestMobileTerminal(asset.getId().toString());
+        MobileTerminal createdMT = createAndRestMobileTerminal(asset);
 
         //Create program poll
         PollRequestType input = createProgramPoll(createdMT);
 
-        String response = getWebTarget()
+        CreatePollResultDto createdPoll = getWebTarget()
                 .path("/poll")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(input), String.class);
+                .post(Entity.json(input), CreatePollResultDto.class);
 
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        CreatePollResultDto createdPoll = deserializeResponseDto(response, CreatePollResultDto.class);
+        assertNotNull(createdPoll);
 
         //Archiving
         String pollGuid;
@@ -174,57 +140,52 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         }else{
             pollGuid = createdPoll.getSentPolls().get(0);
         }
-        response = getWebTarget()
+        PollDto pollDto = getWebTarget()
                 .path("/poll/inactivate/" + pollGuid)
                 .request(MediaType.APPLICATION_JSON)
-                .get(String.class);
+                .get(PollDto.class);
 
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        PollDto output = deserializeResponseDto(response, PollDto.class);
+        assertNotNull(pollGuid);
 
-        assertFalse(output.getValue().isEmpty());
-        assertEquals(pollGuid, output.getValue().get(2).getValue());       //pray to god that theses are fixed in position......
-        assertEquals("FALSE", output.getValue().get(8).getValue());
+        assertFalse(pollDto.getValue().isEmpty());
+        assertEquals(pollGuid, pollDto.getValue().get(2).getValue());
+        assertEquals("FALSE", pollDto.getValue().get(8).getValue());
 
-        //PollProgram checkThatThePollIsArchived = pollProgramDaoBean.getPollProgramById(UUID.fromString(pollGuid));  //b4 run as client
-        response = getWebTarget()
+        String retVal = getWebTarget()
                 .path("/poll/program/" + pollGuid)
                 .request(MediaType.APPLICATION_JSON)
                 .get(String.class);
 
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        String  deserializeResponse = deserializeResponseDto(response, String.class);
+        assertTrue(retVal.contains(String.valueOf(Response.Status.OK.getStatusCode())));
 
         ObjectMapper objectMapper = new ObjectMapper();
-        PollProgram checkThatThePollIsArchived = objectMapper.readValue(deserializeResponse, PollProgram.class);
+        PollProgram checkThatThePollIsArchived = objectMapper.readValue(retVal, PollProgram.class);
 
         assertEquals(PollStateEnum.ARCHIVED, checkThatThePollIsArchived.getPollState());
-
     }
 
     @Test
-    public void getPollBySearchCriteria() throws Exception {
+    public void getPollBySearchCriteria() {
         PollRequestType pollRequestType = new PollRequestType();
         Asset asset = createAndRestBasicAsset();
-        MobileTerminalType createdMT = createAndRestMobileTerminal(asset.getId().toString());
+        MobileTerminal createdMT = createAndRestMobileTerminal(asset);
 
         PollMobileTerminal pmt = new PollMobileTerminal();
-        pmt.setComChannelId(createdMT.getChannels().get(0).getGuid());
-        pmt.setConnectId(createdMT.getConnectId());
-        pmt.setMobileTerminalId(createdMT.getMobileTerminalId().getGuid());
+        pmt.setComChannelId(createdMT.getChannels().iterator().next().getId().toString());
+        pmt.setConnectId(createdMT.getAsset().getId().toString());
+        pmt.setMobileTerminalId(createdMT.getId().toString());
         pollRequestType.getMobileTerminals().add(pmt);
 
         pollRequestType.setPollType(PollType.MANUAL_POLL);
         pollRequestType.setComment("Test Comment");
         pollRequestType.setUserName("Test User");
 
-        String response = getWebTarget()
+        CreatePollResultDto createdPoll = getWebTarget()
                 .path("/poll")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(pollRequestType), String.class);
+                .post(Entity.json(pollRequestType), CreatePollResultDto.class);
 
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        CreatePollResultDto createdPoll = deserializeResponseDto(response, CreatePollResultDto.class);
+        assertNotNull(createdPoll);
 
         String pollGuid;
         if(createdPoll.isUnsentPoll()){
@@ -234,54 +195,52 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         }
 
         PollListQuery input = new PollListQuery();
-        ListPagination pagination = new ListPagination();   //I absolutely detest pagination
+        ListPagination pagination = new ListPagination();
         pagination.setListSize(100);
         pagination.setPage(1);
         input.setPagination(pagination);
 
         PollSearchCriteria pollSearchCriteria = new PollSearchCriteria();
         pollSearchCriteria.setIsDynamic(true);
-        eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.ListCriteria listCriteria = new eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.ListCriteria();
+        ListCriteria listCriteria = new ListCriteria();
         listCriteria.setKey(SearchKey.POLL_ID);
         listCriteria.setValue(pollGuid);
         pollSearchCriteria.getCriterias().add(listCriteria);
         input.setPollSearchCriteria(pollSearchCriteria);
 
-        response = getWebTarget()
+        PollChannelListDto pollChannelListDto = getWebTarget()
                 .path("/poll/list")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(input), String.class);
+                .post(Entity.json(input), PollChannelListDto.class);
 
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        PollChannelListDto outputPollList = deserializeResponseDto(response, PollChannelListDto.class);
+        assertNotNull(pollChannelListDto);
 
-        assertEquals(pollGuid, outputPollList.getPollableChannels().get(0).getPoll().getValue().get(2).getValue());
-        assertEquals(createdMT.getMobileTerminalId().getGuid(), outputPollList.getPollableChannels().get(0).getMobileTerminalId());
+        assertEquals(pollGuid, pollChannelListDto.getPollableChannels().get(0).getPoll().getValue().get(2).getValue());
+        assertEquals(createdMT.getId().toString(), pollChannelListDto.getPollableChannels().get(0).getMobileTerminalId());
     }
 
     @Test
-    public void getPollByTwoSearchCriteria() throws Exception {
+    public void getPollByTwoSearchCriteria() {
         PollRequestType pollRequestType = new PollRequestType();
         Asset asset = createAndRestBasicAsset();
-        MobileTerminalType createdMT = createAndRestMobileTerminal(asset.getId().toString());
+        MobileTerminal createdMT = createAndRestMobileTerminal(asset);
 
         PollMobileTerminal pmt = new PollMobileTerminal();
-        pmt.setComChannelId(createdMT.getChannels().get(0).getGuid());
-        pmt.setConnectId(createdMT.getConnectId());
-        pmt.setMobileTerminalId(createdMT.getMobileTerminalId().getGuid());
+        pmt.setComChannelId(createdMT.getChannels().iterator().next().getId().toString());
+        pmt.setConnectId(createdMT.getAsset().getId().toString());
+        pmt.setMobileTerminalId(createdMT.getId().toString());
         pollRequestType.getMobileTerminals().add(pmt);
 
         pollRequestType.setPollType(PollType.MANUAL_POLL);
         pollRequestType.setComment("Test Comment");
         pollRequestType.setUserName("Test User");
 
-        String response = getWebTarget()
+        CreatePollResultDto createdPoll = getWebTarget()
                 .path("/poll")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(pollRequestType), String.class);
+                .post(Entity.json(pollRequestType), CreatePollResultDto.class);
 
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        CreatePollResultDto createdPoll = deserializeResponseDto(response, CreatePollResultDto.class);
+        assertNotNull(createdPoll);
 
         String pollGuid;
         if(createdPoll.isUnsentPoll()){
@@ -291,14 +250,14 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         }
 
         PollListQuery input = new PollListQuery();
-        ListPagination pagination = new ListPagination();   //I absolutely detest pagination
+        ListPagination pagination = new ListPagination();
         pagination.setListSize(100);
         pagination.setPage(1);
         input.setPagination(pagination);
 
         PollSearchCriteria pollSearchCriteria = new PollSearchCriteria();
         pollSearchCriteria.setIsDynamic(true);
-        eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.ListCriteria listCriteria = new eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.ListCriteria();
+        ListCriteria listCriteria = new ListCriteria();
         listCriteria.setKey(SearchKey.POLL_ID);
         listCriteria.setValue(pollGuid);
         pollSearchCriteria.getCriterias().add(listCriteria);
@@ -310,42 +269,39 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         input.setPollSearchCriteria(pollSearchCriteria);
 
 
-        response = getWebTarget()
+        PollChannelListDto pollChannelListDto = getWebTarget()
                 .path("/poll/list")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(input), String.class);
+                .post(Entity.json(input), PollChannelListDto.class);
 
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        PollChannelListDto outputPollList = deserializeResponseDto(response, PollChannelListDto.class);
+        assertNotNull(pollChannelListDto);
 
-        assertEquals(pollGuid, outputPollList.getPollableChannels().get(0).getPoll().getValue().get(2).getValue());
-        assertEquals(createdMT.getMobileTerminalId().getGuid(), outputPollList.getPollableChannels().get(0).getMobileTerminalId());
+        assertEquals(pollGuid, pollChannelListDto.getPollableChannels().get(0).getPoll().getValue().get(2).getValue());
+        assertEquals(createdMT.getId().toString(), pollChannelListDto.getPollableChannels().get(0).getMobileTerminalId());
     }
 
     @Test
-    //@Ignore             //throws a 404 for some reason
-    public void getPollableChannelsTest() throws Exception {
+    public void getPollableChannelsTest() {
         Asset asset = createAndRestBasicAsset();
-        MobileTerminalType createdMT = createAndRestMobileTerminal(asset.getId().toString());
+        MobileTerminal createdMT = createAndRestMobileTerminal(asset);
         PollRequestType pollRequestType = new PollRequestType();
 
         PollMobileTerminal pmt = new PollMobileTerminal();
-        pmt.setComChannelId(createdMT.getChannels().get(0).getGuid());
-        pmt.setConnectId(createdMT.getConnectId());
-        pmt.setMobileTerminalId(createdMT.getMobileTerminalId().getGuid());
+        pmt.setComChannelId(createdMT.getChannels().iterator().next().getId().toString());
+        pmt.setConnectId(createdMT.getAsset().getId().toString());
+        pmt.setMobileTerminalId(createdMT.getId().toString());
         pollRequestType.getMobileTerminals().add(pmt);
 
         pollRequestType.setPollType(PollType.MANUAL_POLL);
         pollRequestType.setComment("Test Comment");
         pollRequestType.setUserName("Test User");
 
-        String response = getWebTarget()
+        CreatePollResultDto createdPoll = getWebTarget()
                 .path("/poll")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(pollRequestType), String.class);
+                .post(Entity.json(pollRequestType), CreatePollResultDto.class);
 
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        CreatePollResultDto createdPoll = deserializeResponseDto(response, CreatePollResultDto.class);
+        assertNotNull(createdPoll);
 
         PollableQuery input = new PollableQuery();
         ListPagination hate = new ListPagination();
@@ -354,17 +310,16 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         input.setPagination(hate);
         input.getConnectIdList().add(asset.getId().toString());
 
-        response = getWebTarget()
+        PollChannelListDto pollChannelListDto = getWebTarget()
                 .path("/poll/pollable")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(input), String.class);
+                .post(Entity.json(input), PollChannelListDto.class);
 
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        PollChannelListDto output = deserializeResponseDto(response, PollChannelListDto.class);
+        assertNotNull(pollChannelListDto);
 
         boolean contains = false;
-        for (PollChannelDto pollChannelDto: output.getPollableChannels()) {
-            if(pollChannelDto.getMobileTerminalId().equals(createdMT.getMobileTerminalId().getGuid())){
+        for (PollChannelDto pollChannelDto: pollChannelListDto.getPollableChannels()) {
+            if(pollChannelDto.getMobileTerminalId().equals(createdMT.getId().toString())){
                 contains = true;
                 break;
             }
@@ -372,10 +327,10 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         assertTrue(contains);
     }
 
-    private MobileTerminalType createAndRestMobileTerminal(String boat) throws Exception {
-        String response = MobileTerminalTestHelper.createRestMobileTerminal(getWebTarget(), boat);
-        assertEquals(MTResponseCode.OK.getCode(), getReturnCode(response));
-        return deserializeResponseDto(response, MobileTerminalType.class);
+    private MobileTerminal createAndRestMobileTerminal(Asset asset) {
+        MobileTerminal response = MobileTerminalTestHelper.createRestMobileTerminal(getWebTarget(), asset);
+        assertNotNull(response);
+        return response;
     }
 
     private Asset createAndRestBasicAsset(){
@@ -391,12 +346,12 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         return createdAsset;
     }
 
-    private PollRequestType createProgramPoll(MobileTerminalType mobileTerminal){
+    private PollRequestType createProgramPoll(MobileTerminal mobileTerminal){
         PollRequestType pollRequestType = new PollRequestType();
         PollMobileTerminal pmt = new PollMobileTerminal();
-        pmt.setComChannelId(mobileTerminal.getChannels().get(0).getGuid());
-        pmt.setConnectId(mobileTerminal.getConnectId());
-        pmt.setMobileTerminalId(mobileTerminal.getMobileTerminalId().getGuid());
+        pmt.setComChannelId(mobileTerminal.getChannels().iterator().next().getId().toString());
+        pmt.setConnectId(mobileTerminal.getAsset().getId().toString());
+        pmt.setMobileTerminalId(mobileTerminal.getId().toString());
         pollRequestType.getMobileTerminals().add(pmt);
 
         pollRequestType.setPollType(PollType.PROGRAM_POLL);
@@ -425,5 +380,4 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         return pollRequestType;
     }
-
 }

@@ -11,24 +11,22 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.GROUP_ASSET_BY_GUID;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.GROUP_ASSET_BY_GUID_LIST;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.GROUP_ASSET_BY_USER;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.GROUP_ASSET_FIND_ALL;
-import java.io.Serializable;
-import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.UUID;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.UUID;
+
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.*;
 
 @Entity
 @Table(name = "assetgroup")
@@ -152,7 +150,6 @@ public class AssetGroup implements Serializable {
         this.owner = owner;
     }
 
-
     public List<AssetGroupField> getAssetGroupFields() {
         return assetGroupFields;
     }
@@ -160,5 +157,4 @@ public class AssetGroup implements Serializable {
     public void setAssetGroupFields(List<AssetGroupField> assetGroupFields) {
         this.assetGroupFields = assetGroupFields;
     }
-
 }

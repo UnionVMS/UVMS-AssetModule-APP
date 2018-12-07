@@ -1,10 +1,8 @@
 package eu.europa.ec.fisheries.uvms.asset.dto;
 
-
 import java.util.UUID;
 
 public class AssetMTEnrichmentRequest {
-
 
     private String transpondertypeValue = null;  // the server only looks for TRANSPONDER_TYPE
     private String pluginType = null;
@@ -26,9 +24,7 @@ public class AssetMTEnrichmentRequest {
     private String uviValue = null;
     private String iccatValue = null;
 
-
     public AssetMTEnrichmentRequest(){
-
     }
 
     public String getTranspondertypeValue() {
