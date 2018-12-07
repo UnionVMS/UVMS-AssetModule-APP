@@ -59,8 +59,6 @@ public class ConfigServiceBeanMT {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConfigServiceBeanMT.class);
     
-    private static final long TIMEOUT = 10000L;
-
     @Inject
     private ExchangeProducer exchangeProducer;
 
@@ -93,7 +91,7 @@ public class ConfigServiceBeanMT {
             pluginTypes.add(PluginType.SATELLITE_RECEIVER);
             String data = ExchangeModuleRequestMapper.createGetServiceListRequest(pluginTypes);
             String messageId = exchangeProducer.sendModuleMessage(data);
-            TextMessage response = assetConsumer.getMessage(messageId, TextMessage.class, TIMEOUT);
+            TextMessage response = assetConsumer.getMessage(messageId, TextMessage.class);
             if(response == null){
                 throw new NullPointerException("No response from exchange");
             }
