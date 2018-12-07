@@ -11,24 +11,22 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.ejb.ActivationConfigProperty;
+import javax.ejb.MessageDriven;
+import javax.inject.Inject;
+import javax.jms.Message;
+import javax.jms.MessageListener;
+import javax.jms.TextMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityListType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityTypeType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.ServiceResponseType;
-import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
+import eu.europa.ec.fisheries.uvms.asset.message.AssetProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.ExchangeModuleResponseMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.ejb.ActivationConfigProperty;
-import javax.ejb.MessageDriven;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.TextMessage;
-import java.util.ArrayList;
-import java.util.List;
 
 @MessageDriven(mappedName = "jms/queue/UVMSExchangeEvent", activationConfig = {@ActivationConfigProperty(
         propertyName = "messagingType", propertyValue = "javax.jms.MessageListener"), @ActivationConfigProperty(
@@ -38,8 +36,10 @@ public class ExchangeModuleMock implements MessageListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExchangeModuleMock.class);
 
+    @Inject
+    private AssetProducer producer;
+    
     @Override
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void onMessage(Message message) {
         try {
 
@@ -61,12 +61,7 @@ public class ExchangeModuleMock implements MessageListener {
             serviceResponse.add(serviceResponseType);
             String response = ExchangeModuleResponseMapper.mapServiceListResponse(serviceResponse);
 
-            new AbstractProducer() {
-                @Override
-                public String getDestinationName() {
-                    return "jms/queue/UVMSMobileTerminal";
-                }
-            }.sendResponseMessageToSender((TextMessage) message, response);
+            producer.sendResponseMessageToSender((TextMessage) message, response);
         } catch (Exception e) {
             LOG.error("Mock error", e);
         }

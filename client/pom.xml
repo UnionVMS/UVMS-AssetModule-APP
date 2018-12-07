@@ -45,12 +45,6 @@
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-            <artifactId>deprecated-asset-message-impl</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>asset-service</artifactId>
             <version>${project.parent.version}</version>
             <scope>test</scope>

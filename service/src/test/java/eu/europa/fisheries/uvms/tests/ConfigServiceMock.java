@@ -8,18 +8,19 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.asset.message;
+package eu.europa.fisheries.uvms.tests;
 
 import java.util.Arrays;
 import javax.ejb.ActivationConfigProperty;
+import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
-import javax.inject.Inject;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 import eu.europa.ec.fisheries.schema.config.types.v1.PullSettingsStatus;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
-import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
+import eu.europa.ec.fisheries.uvms.asset.message.AssetProducer;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleResponseMapper;
 
@@ -29,9 +30,9 @@ import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleResponseMapper;
         @ActivationConfigProperty(propertyName = "destination", propertyValue = "UVMSConfigEvent")})
 public class ConfigServiceMock implements MessageListener {
     
-    @Inject
-    AssetMessageProducer assetMessageProducer;
-
+    @EJB
+    AssetProducer producer;
+    
     @Override
     public void onMessage(Message message) {
         try {
@@ -40,8 +41,8 @@ public class ConfigServiceMock implements MessageListener {
             mockSetting.setValue("Value");
             mockSetting.setDescription("From ConfigServiceMock.java");
             String response = ModuleResponseMapper.toPullSettingsResponse(Arrays.asList(mockSetting), PullSettingsStatus.OK);
-            assetMessageProducer.sendModuleResponseMessage((TextMessage) message, response);
-        } catch (ModelMarshallException e) {
+            producer.sendResponseMessageToSender((TextMessage) message, response);
+        } catch (ModelMarshallException | MessageException e) {
         }
     }
 }

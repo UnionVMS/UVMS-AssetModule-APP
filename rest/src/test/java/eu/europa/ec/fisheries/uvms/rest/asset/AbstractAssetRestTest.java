@@ -52,6 +52,9 @@ public abstract class AbstractAssetRestTest {
         File[] files = Maven.resolver().loadPomFromFile("pom.xml").importRuntimeAndTestDependencies().resolve()
                 .withTransitivity().asFile();
         testWar.addAsLibraries(files);
+        
+        testWar.addAsLibraries(Maven.configureResolver().loadPomFromFile("pom.xml")
+                .resolve("eu.europa.ec.fisheries.uvms.asset:asset-service").withTransitivity().asFile());
             
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.rest.asset");
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.rest.mobileterminal");

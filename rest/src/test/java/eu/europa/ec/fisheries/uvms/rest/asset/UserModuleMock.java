@@ -11,14 +11,14 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.rest.asset;
 
 import javax.ejb.ActivationConfigProperty;
+import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
-import javax.inject.Inject;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
+import eu.europa.ec.fisheries.uvms.asset.message.AssetProducer;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import eu.europa.ec.fisheries.uvms.user.model.mapper.UserModuleResponseMapper;
 import eu.europa.ec.fisheries.wsdl.user.types.Context;
@@ -35,8 +35,8 @@ public class UserModuleMock implements MessageListener {
 
     final static Logger LOG = LoggerFactory.getLogger(UserModuleMock.class);
     
-    @Inject
-    AssetMessageProducer assetMessageProducer;
+    @EJB
+    AssetProducer producer;
     
     @Override
     public void onMessage(Message message) {
@@ -46,7 +46,7 @@ public class UserModuleMock implements MessageListener {
         String responseString;
             responseString = UserModuleResponseMapper.mapToGetUserContextResponse(userContext);
 
-        assetMessageProducer.sendModuleResponseMessage((TextMessage) message, responseString);
+        producer.sendResponseMessageToSender((TextMessage) message, responseString);
 
         } catch (Exception e) {
             LOG.error("MTUserModuleMock Error", e);

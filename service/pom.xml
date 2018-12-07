@@ -83,11 +83,6 @@
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-            <artifactId>deprecated-asset-message</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.audit</groupId>
             <artifactId>audit-model</artifactId>
             <version>${audit.model.version}</version>
@@ -96,6 +91,11 @@
             <groupId>eu.europa.ec.fisheries.uvms</groupId>
             <artifactId>uvms-config</artifactId>
             <version>${uvms.config.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
+            <artifactId>uvms-commons-message</artifactId>
+            <version>${uvms.common.version}</version>
         </dependency>
         <dependency>
             <groupId>fish.focus.uvms.maven</groupId>
@@ -117,24 +117,6 @@
         </dependency>
 
         <dependency>
-            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-            <artifactId>deprecated-asset-message-mock</artifactId>
-            <version>${project.parent.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>${project.groupId}</groupId>
-                    <artifactId>deprecated-asset-message-impl</artifactId>
-                </exclusion>
-            </exclusions>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
-            <artifactId>uvms-commons-message</artifactId>
-            <version>${uvms.common.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>RELEASE</version>
@@ -144,6 +126,12 @@
             <groupId>eu.europa.ec.fisheries.uvms.movement-rules</groupId>
             <artifactId>movement-rules-model</artifactId>
             <version>${movementrules.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-client</artifactId>
+            <version>5.15.5</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

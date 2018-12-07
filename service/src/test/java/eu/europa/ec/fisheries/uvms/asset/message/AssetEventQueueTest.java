@@ -15,7 +15,6 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import java.util.ArrayList;
 import java.util.List;
 import javax.jms.Message;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -23,8 +22,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetModuleMethod;
 import eu.europa.ec.fisheries.wsdl.asset.module.PingRequest;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
@@ -33,9 +30,10 @@ import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteriaPair;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.wsdl.asset.types.CarrierSource;
 import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
+import eu.europa.fisheries.uvms.tests.BuildAssetServiceDeployment;
 
 @RunWith(Arquillian.class)
-public class AssetEventQueueTest extends AbstractMessageTest {
+public class AssetEventQueueTest extends BuildAssetServiceDeployment {
 
     private JMSHelper jmsHelper = new JMSHelper();
 

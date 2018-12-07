@@ -9,7 +9,7 @@
  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
  copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.asset.message.consumer.bean;
+package eu.europa.ec.fisheries.uvms.asset.message;
 
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
@@ -20,14 +20,14 @@ import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import eu.europa.ec.fisheries.uvms.asset.message.AssetConstants;
-import eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean.AssetMessageEventBean;
-import eu.europa.ec.fisheries.uvms.asset.message.consumer.event.bean.AssetMessageJSONBean;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
+import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEventBean;
+import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageJSONBean;
 import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetListModuleRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetModuleMethod;
@@ -37,12 +37,12 @@ import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.UpsertAssetModuleRequest;
 
-@MessageDriven(mappedName = AssetConstants.QUEUE_ASSET_EVENT, activationConfig = {
-    @ActivationConfigProperty(propertyName = "messagingType", propertyValue = AssetConstants.CONNECTION_TYPE),
-    @ActivationConfigProperty(propertyName = "destinationType", propertyValue = AssetConstants.DESTINATION_TYPE_QUEUE),
-    @ActivationConfigProperty(propertyName = "destination", propertyValue = AssetConstants.QUEUE_NAME_ASSET_EVENT),
-    @ActivationConfigProperty(propertyName = "destinationJndiName", propertyValue = AssetConstants.QUEUE_ASSET_EVENT),
-    @ActivationConfigProperty(propertyName = "connectionFactoryJndiName", propertyValue = AssetConstants.CONNECTION_FACTORY)
+@MessageDriven(mappedName = MessageConstants.QUEUE_ASSET_EVENT, activationConfig = {
+    @ActivationConfigProperty(propertyName = "messagingType", propertyValue = MessageConstants.CONNECTION_TYPE),
+    @ActivationConfigProperty(propertyName = "destinationType", propertyValue = MessageConstants.DESTINATION_TYPE_QUEUE),
+    @ActivationConfigProperty(propertyName = "destination", propertyValue = "UVMSAssetEvent"),
+    @ActivationConfigProperty(propertyName = "destinationJndiName", propertyValue = MessageConstants.QUEUE_ASSET_EVENT),
+    @ActivationConfigProperty(propertyName = "connectionFactoryJndiName", propertyValue = MessageConstants.CONNECTION_FACTORY)
 })
 public class MessageConsumerBean implements MessageListener {
 

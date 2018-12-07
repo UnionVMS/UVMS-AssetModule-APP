@@ -11,14 +11,31 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.bean;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.schema.exchange.common.v1.AcknowledgeTypeType;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollId;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollListQuery;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollListResponse;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollMobileTerminal;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollStatus;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollableQuery;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginCapabilityType;
-import eu.europa.ec.fisheries.uvms.asset.message.ModuleQueue;
-import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
-import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
-import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
+import eu.europa.ec.fisheries.uvms.asset.message.AuditProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.ChannelDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollProgramDaoBean;
@@ -27,28 +44,30 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.*;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPluginCapability;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Poll;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollProgram;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.*;
+import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.AuditModuleRequestMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.EnumMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalEntityToModelMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollEntityToModelMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollModelToEntityMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.PollSearchKeyValue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.poll.PollSearchMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import java.util.*;
 
 @Stateless
 @LocalBean
 public class PollServiceBean {
 
-    private final static Logger LOG = LoggerFactory.getLogger(PollServiceBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PollServiceBean.class);
 
-    @EJB
-    private AssetMessageProducer assetMessageProducer;
+    @Inject
+    private AuditProducer auditProducer;
 
     @EJB
     private PluginServiceBean sendPollService;
@@ -87,8 +106,8 @@ public class PollServiceBean {
 
             try {
                 String auditData = AuditModuleRequestMapper.mapAuditLogPollCreated(createdPoll.getPollType(), createdPoll.getPollId().getGuid(), createdPoll.getComment(), username);
-                assetMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-            } catch (AuditModelMarshallException | RuntimeException | AssetMessageException e) {
+                auditProducer.sendModuleMessage(auditData);
+            } catch (Exception e) {
                 LOG.error("Failed to send audit log message! Poll with guid {} was created", createdPoll.getPollId().getGuid());
             }
         }
@@ -115,8 +134,8 @@ public class PollServiceBean {
         PollResponseType startedPoll = setStatusPollProgram(pollIdType, PollStatus.STARTED);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollStarted(startedPoll.getPollId().getGuid(), username);
-            assetMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-        } catch (AuditModelMarshallException | RuntimeException | AssetMessageException e) {
+            auditProducer.sendModuleMessage(auditData);
+        } catch (Exception e) {
             LOG.error("Failed to send audit log message due tue: " + e + "! Poll with guid {} was started", startedPoll.getPollId().getGuid());
         }
         return startedPoll;
@@ -129,8 +148,8 @@ public class PollServiceBean {
         PollResponseType stoppedPoll = setStatusPollProgram(pollIdType, PollStatus.STOPPED);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollStopped(stoppedPoll.getPollId().getGuid(), username);
-            assetMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-        } catch (AuditModelMarshallException | RuntimeException | AssetMessageException e) {
+            auditProducer.sendModuleMessage(auditData);
+        } catch (Exception e) {
             LOG.error("Failed to send audit log message due tue: " + e + "! Poll with guid {} was stopped", stoppedPoll.getPollId().getGuid());
         }
         return stoppedPoll;
@@ -143,8 +162,8 @@ public class PollServiceBean {
         PollResponseType inactivatedPoll = setStatusPollProgram(pollIdType, PollStatus.ARCHIVED);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollInactivated(inactivatedPoll.getPollId().getGuid(), username);
-            assetMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-        } catch (AuditModelMarshallException | RuntimeException | AssetMessageException e) {
+            auditProducer.sendModuleMessage(auditData);
+        } catch (Exception e) {
             LOG.error("Failed to send audit log message due tue: " + e + "! Poll with guid {} was inactivated", inactivatedPoll.getPollId().getGuid());
         }
         return inactivatedPoll;
