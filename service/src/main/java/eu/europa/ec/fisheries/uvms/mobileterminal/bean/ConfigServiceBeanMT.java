@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.ejb.EJB;
-import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jms.TextMessage;
@@ -54,7 +53,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.ExchangeModuleResponseM
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PluginMapper;
 
 @Stateless
-@LocalBean
 public class ConfigServiceBeanMT {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConfigServiceBeanMT.class);

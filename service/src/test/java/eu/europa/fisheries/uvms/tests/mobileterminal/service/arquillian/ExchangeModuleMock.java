@@ -28,10 +28,10 @@ import eu.europa.ec.fisheries.schema.exchange.service.v1.ServiceResponseType;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.ExchangeModuleResponseMapper;
 
-@MessageDriven(mappedName = "jms/queue/UVMSExchangeEvent", activationConfig = {@ActivationConfigProperty(
-        propertyName = "messagingType", propertyValue = "javax.jms.MessageListener"), @ActivationConfigProperty(
-                propertyName = "destinationType", propertyValue = "javax.jms.Queue"), @ActivationConfigProperty(
-                        propertyName = "destination", propertyValue = "UVMSExchangeEvent")})
+@MessageDriven(mappedName = "jms/queue/UVMSExchangeEvent", activationConfig = {
+        @ActivationConfigProperty(propertyName = "messagingType", propertyValue = "javax.jms.MessageListener"), 
+        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"), 
+        @ActivationConfigProperty(propertyName = "destination", propertyValue = "UVMSExchangeEvent")})
 public class ExchangeModuleMock implements MessageListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExchangeModuleMock.class);
