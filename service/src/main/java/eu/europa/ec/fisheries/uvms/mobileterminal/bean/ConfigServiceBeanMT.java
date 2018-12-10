@@ -11,6 +11,20 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.bean;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.jms.TextMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.ServiceResponseType;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.CapabilityConfiguration;
@@ -18,10 +32,9 @@ import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.ConfigList;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemConfiguration;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
-import eu.europa.ec.fisheries.uvms.asset.message.ModuleQueue;
-import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
-import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
-import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
+import eu.europa.ec.fisheries.uvms.asset.message.AssetConsumer;
+import eu.europa.ec.fisheries.uvms.asset.message.ExchangeProducer;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.exchange.model.exception.ExchangeModelMapperException;
 import eu.europa.ec.fisheries.uvms.exchange.model.mapper.ExchangeModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConfigType;
@@ -38,25 +51,14 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTyp
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.ExchangeModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PluginMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.jms.TextMessage;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.*;
 
 @Stateless
-@LocalBean
 public class ConfigServiceBeanMT {
 
-    private final static Logger LOG = LoggerFactory.getLogger(ConfigServiceBeanMT.class);
-
-    @EJB
-    private AssetMessageProducer assetMessageProducer;
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigServiceBeanMT.class);
+    
+    @Inject
+    private ExchangeProducer exchangeProducer;
 
     @EJB
     private OceanRegionDaoBean oceanRegionDao;
@@ -71,7 +73,7 @@ public class ConfigServiceBeanMT {
     private DNIDListDaoBean dnidListDao;
 
     @EJB
-    private AssetQueueConsumer assetMessageConsumer;
+    private AssetConsumer assetConsumer;
 
     public List<TerminalSystemType> getTerminalSystems() {
         return getAllTerminalSystems();
@@ -86,13 +88,13 @@ public class ConfigServiceBeanMT {
             List<PluginType> pluginTypes = new ArrayList<>();
             pluginTypes.add(PluginType.SATELLITE_RECEIVER);
             String data = ExchangeModuleRequestMapper.createGetServiceListRequest(pluginTypes);
-            String messageId = assetMessageProducer.sendModuleMessage(data, ModuleQueue.EXCHANGE);
-            TextMessage response = assetMessageConsumer.getMessage(messageId, TextMessage.class);
+            String messageId = exchangeProducer.sendModuleMessage(data);
+            TextMessage response = assetConsumer.getMessage(messageId, TextMessage.class);
             if(response == null){
                 throw new NullPointerException("No response from exchange");
             }
             return ExchangeModuleResponseMapper.mapServiceListResponse(response, messageId);
-        } catch (ExchangeModelMapperException | RuntimeException | AssetMessageException e) {
+        } catch (ExchangeModelMapperException | RuntimeException | MessageException e) {
             LOG.error("Failed to map to exchange get service list request due tue: " + e);
             throw new RuntimeException("Failed to map to exchange get service list request", e);
         }

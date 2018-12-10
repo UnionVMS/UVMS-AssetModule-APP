@@ -9,61 +9,57 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
+package eu.europa.ec.fisheries.uvms.asset.client;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
-import javax.inject.Inject;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityListType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityTypeType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.ServiceResponseType;
-import eu.europa.ec.fisheries.uvms.asset.message.AssetProducer;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
+import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.ExchangeModuleResponseMapper;
 
 @MessageDriven(mappedName = "jms/queue/UVMSExchangeEvent", activationConfig = {
-        @ActivationConfigProperty(propertyName = "messagingType", propertyValue = "javax.jms.MessageListener"), 
-        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"), 
+        @ActivationConfigProperty(propertyName = "messagingType", propertyValue = "javax.jms.MessageListener"),
+        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
         @ActivationConfigProperty(propertyName = "destination", propertyValue = "UVMSExchangeEvent")})
 public class ExchangeModuleMock implements MessageListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ExchangeModuleMock.class);
-
-    @Inject
-    private AssetProducer producer;
-    
     @Override
     public void onMessage(Message message) {
         try {
-
-            LOG.debug("READING MESSAGE IN EXCHANGE MOCK: " + message.toString());
-
-            List<ServiceResponseType> serviceResponse = new ArrayList<>();
+            List<ServiceResponseType> serviceResponse = new ArrayList<ServiceResponseType>();
             ServiceResponseType serviceResponseType = new ServiceResponseType();
-            serviceResponseType.setServiceClassName("eu.europa.ec.fisheries.uvms.plugins.test");
-            serviceResponseType.setName("Test&Test");
-            serviceResponseType.setSatelliteType("INMARSAT_D");
+            serviceResponseType.setServiceClassName("eu.europa.ec.fisheries.uvms.plugins.inmarsat");
+            serviceResponseType.setName("Thrane&Thrane");
+            serviceResponseType.setSatelliteType("INMARSAT_C");
             serviceResponseType.setActive(true);
             CapabilityListType capabilityList = new CapabilityListType();
             CapabilityType capabilityType = new CapabilityType();
             capabilityType.setType(CapabilityTypeType.POLLABLE);
             capabilityType.setValue("TRUE");
             capabilityList.getCapability().add(capabilityType);
+
             serviceResponseType.setCapabilityList(capabilityList);
 
             serviceResponse.add(serviceResponseType);
             String response = ExchangeModuleResponseMapper.mapServiceListResponse(serviceResponse);
 
-            producer.sendResponseMessageToSender((TextMessage) message, response);
+            new AbstractProducer() {
+                @Override
+                public String getDestinationName() {
+                    return MessageConstants.QUEUE_ASSET;
+                }
+            }.sendResponseMessageToSender((TextMessage) message, response);
         } catch (Exception e) {
-            LOG.error("Mock error", e);
         }
     }
+
 }

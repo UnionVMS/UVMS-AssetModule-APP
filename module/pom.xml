@@ -28,14 +28,6 @@
                     <modules>
                         <ejbModule>
                             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-                            <artifactId>deprecated-asset-message</artifactId>
-                        </ejbModule>
-                        <ejbModule>
-                            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-                            <artifactId>deprecated-asset-message-impl</artifactId>
-                        </ejbModule>
-                        <ejbModule>
-                            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
                             <artifactId>asset-service</artifactId>
                         </ejbModule>
                         <jarModule>
@@ -60,18 +52,6 @@
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-            <artifactId>deprecated-asset-message</artifactId>
-            <version>${project.parent.version}</version>
-            <type>ejb</type>
-        </dependency>
-        <dependency>
-            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-            <artifactId>deprecated-asset-message-impl</artifactId>
-            <version>${project.parent.version}</version>
-            <type>ejb</type>
-        </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>asset-service</artifactId>

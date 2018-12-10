@@ -11,20 +11,23 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.bean;
 
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalFault;
-import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
-import eu.europa.ec.fisheries.uvms.asset.message.event.EventMessage;
-import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.annotation.Resource;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
-import javax.jms.*;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.MessageProducer;
+import javax.jms.Session;
+import javax.jms.TextMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalFault;
+import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
+import eu.europa.ec.fisheries.uvms.asset.message.event.EventMessage;
+import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 
 @Stateless
 @LocalBean

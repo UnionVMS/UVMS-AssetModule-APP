@@ -11,18 +11,35 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.bean;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.ws.rs.NotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollableQuery;
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
-import eu.europa.ec.fisheries.uvms.asset.message.ModuleQueue;
-import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
-import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
+import eu.europa.ec.fisheries.uvms.asset.message.AuditProducer;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.*;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.ListCriteria;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.ListPagination;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MobileTerminalListQuery;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MobileTerminalSearchCriteria;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
@@ -32,24 +49,15 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.AuditModuleRequestMappe
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.SearchMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.ws.rs.NotFoundException;
-import java.util.*;
 
 @Stateless
 @LocalBean
 public class MobileTerminalServiceBean {
 
-    private final static Logger LOG = LoggerFactory.getLogger(MobileTerminalServiceBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MobileTerminalServiceBean.class);
 
-    @EJB
-    private AssetMessageProducer assetMessageProducer;
+    @Inject
+    private AuditProducer auditProducer;
 
     @EJB
     private PluginServiceBean pluginService;
@@ -74,8 +82,8 @@ public class MobileTerminalServiceBean {
         //send stuff to audit
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalCreated(createdMobileTerminal.getId().toString(), username);
-            assetMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-        } catch (AuditModelMarshallException | AssetMessageException e) {
+            auditProducer.sendModuleMessage(auditData);
+        } catch (AuditModelMarshallException | MessageException e) {
             LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was created", createdMobileTerminal.getId().toString());
         }
         if (dnidUpdated) {
@@ -137,8 +145,8 @@ public class MobileTerminalServiceBean {
         //send to audit
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalUpdated(updatedTerminal.getId().toString(), comment, username);
-            assetMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-        } catch (AuditModelMarshallException | AssetMessageException e) {
+            auditProducer.sendModuleMessage(auditData);
+        } catch (AuditModelMarshallException | MessageException e) {
             LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was updated", updatedTerminal.getId().toString());
         }
 
@@ -154,8 +162,8 @@ public class MobileTerminalServiceBean {
         MobileTerminal terminalAssign = assignMobileTerminalToCarrier(connectId, guid, comment, username);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalAssigned(terminalAssign.getId().toString(), comment, username);
-            assetMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-        } catch (AuditModelMarshallException | AssetMessageException e) {
+            auditProducer.sendModuleMessage(auditData);
+        } catch (AuditModelMarshallException | MessageException e) {
             LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was assigned", terminalAssign.getId()
                     .toString());
         }
@@ -166,8 +174,8 @@ public class MobileTerminalServiceBean {
         MobileTerminal terminalUnAssign = unAssignMobileTerminalFromCarrier(connectId, guid, comment, username);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalUnassigned(terminalUnAssign.getId().toString(), comment, username);
-            assetMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-        } catch (AuditModelMarshallException | AssetMessageException e) {
+            auditProducer.sendModuleMessage(auditData);
+        } catch (AuditModelMarshallException | MessageException e) {
             LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was unassigned", terminalUnAssign.getId().toString());
         }
         return terminalUnAssign;
@@ -195,8 +203,8 @@ public class MobileTerminalServiceBean {
                 default:
                     break;
             }
-            assetMessageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
-        } catch (AuditModelMarshallException | AssetMessageException e) {
+            auditProducer.sendModuleMessage(auditData);
+        } catch (AuditModelMarshallException | MessageException e) {
             LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was set to status {}", terminalStatus.getId().toString(), status);
         }
 

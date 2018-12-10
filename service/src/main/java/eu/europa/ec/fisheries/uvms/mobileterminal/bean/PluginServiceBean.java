@@ -11,45 +11,52 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.bean;
 
+import java.util.List;
+import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
+import javax.jms.TextMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.schema.exchange.common.v1.AcknowledgeType;
 import eu.europa.ec.fisheries.schema.exchange.common.v1.AcknowledgeTypeType;
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PollType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
 import eu.europa.ec.fisheries.uvms.asset.mapper.PollToCommandRequestMapper;
-import eu.europa.ec.fisheries.uvms.asset.message.ModuleQueue;
-import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
-import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
-import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
+import eu.europa.ec.fisheries.uvms.asset.message.AssetConsumer;
+import eu.europa.ec.fisheries.uvms.asset.message.AssetProducer;
+import eu.europa.ec.fisheries.uvms.asset.message.ExchangeProducer;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.exchange.model.exception.ExchangeModelMapperException;
 import eu.europa.ec.fisheries.uvms.exchange.model.exception.ExchangeModelMarshallException;
 import eu.europa.ec.fisheries.uvms.exchange.model.mapper.ExchangeModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.ExchangeModuleResponseMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.ejb.*;
-import javax.jms.TextMessage;
-import java.util.List;
 
 @Stateless
 @LocalBean
 public class PluginServiceBean {
 
-    private final static Logger LOG = LoggerFactory.getLogger(PluginServiceBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PluginServiceBean.class);
 
     private static final String EXCHANGE_MODULE_NAME = "exchange";
     private static final String DELIMETER = ".";
     private static final String INTERNAL_DELIMETER = ",";
     private static final String SETTING_KEY_DNID_LIST = "DNIDS";
 
-    @EJB
-    private AssetMessageProducer assetMessageProducer;
+    @Inject
+    private ExchangeProducer exchangeProducer;
 
     @EJB
-    private AssetQueueConsumer AssetMessageConsumer;
+    private AssetProducer configProducer;
+    
+    @EJB
+    private AssetConsumer assetConsumer;
 
     @EJB
     private ConfigServiceBeanMT configModel;
@@ -60,14 +67,14 @@ public class PluginServiceBean {
             PollType pollType = PollToCommandRequestMapper.mapToPollType(poll);
             String pluginServiceName = poll.getMobileTerminal().getPlugin().getServiceName();
             String exchangeData = ExchangeModuleRequestMapper.createSetCommandSendPollRequest(pluginServiceName, pollType, username, null);
-            String messageId = assetMessageProducer.sendModuleMessage(exchangeData, ModuleQueue.EXCHANGE);
-            TextMessage response = AssetMessageConsumer.getMessage(messageId, TextMessage.class);
+            String messageId = exchangeProducer.sendModuleMessage(exchangeData);
+            TextMessage response = assetConsumer.getMessage(messageId, TextMessage.class);
             if(response == null)
                 return AcknowledgeTypeType.NOK;
             AcknowledgeType ack = ExchangeModuleResponseMapper.mapSetCommandResponse(response, messageId);
             LOG.debug("Poll: " + poll.getPollId().getGuid() + " sent to exchange. Response: " + ack.getType());
             return ack.getType();
-        } catch (ExchangeModelMapperException | RuntimeException | AssetMessageException e) {
+        } catch (ExchangeModelMapperException | RuntimeException | MessageException e) {
             LOG.error("Failed to send poll command! Poll with guid {} was created but not sent", poll.getPollId().getGuid());
             return AcknowledgeTypeType.NOK;
         }
@@ -89,13 +96,13 @@ public class PluginServiceBean {
 
             try {
                 sendUpdatedDNIDListToConfig(settingKey, settingValue);
-            } catch (ModelMarshallException | AssetMessageException e) {
+            } catch (ModelMarshallException | MessageException e) {
                 LOG.debug("Couldn't send to config module. Sending to exchange module.");
                 sendUpdatedDNIDListToExchange(pluginName, SETTING_KEY_DNID_LIST, settingValue);
             }
     }
 
-    private void sendUpdatedDNIDListToConfig(String settingKey, String settingValue) throws ModelMarshallException, AssetMessageException {
+    private void sendUpdatedDNIDListToConfig(String settingKey, String settingValue) throws ModelMarshallException, MessageException {
         SettingType setting = new SettingType();
         setting.setKey(settingKey);
         setting.setModule(EXCHANGE_MODULE_NAME);
@@ -104,18 +111,18 @@ public class PluginServiceBean {
         setting.setValue(settingValue);
 
         String setSettingRequest = ModuleRequestMapper.toSetSettingRequest(EXCHANGE_MODULE_NAME, setting, "UVMS");
-        String messageId = assetMessageProducer.sendModuleMessage(setSettingRequest, ModuleQueue.CONFIG);
-        TextMessage response = AssetMessageConsumer.getMessage(messageId, TextMessage.class);
+        String messageId = configProducer.sendModuleMessage(setSettingRequest);
+        TextMessage response = assetConsumer.getMessage(messageId, TextMessage.class);
         LOG.info("UpdatedDNIDList sent to config module");
     }
 
     private void sendUpdatedDNIDListToExchange(String pluginName, String settingKey, String settingValue) {
         try {
             String request = ExchangeModuleRequestMapper.createUpdatePluginSettingRequest(pluginName, settingKey, settingValue);
-            String messageId = assetMessageProducer.sendModuleMessage(request, ModuleQueue.EXCHANGE);
-            TextMessage response = AssetMessageConsumer.getMessage(messageId, TextMessage.class);
+            String messageId = exchangeProducer.sendModuleMessage(request);
+            TextMessage response = assetConsumer.getMessage(messageId, TextMessage.class);
             LOG.info("UpdatedDNIDList sent to exchange module {} {}",pluginName,settingKey);
-        } catch (ExchangeModelMarshallException | RuntimeException | AssetMessageException e) {
+        } catch (ExchangeModelMarshallException | RuntimeException | MessageException e) {
             LOG.error("Failed to send updated DNID list {} {} {}",pluginName,settingKey,e);
         }
     }
