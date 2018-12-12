@@ -30,6 +30,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.DurationDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.DurationSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.util.AssetDurationDeserializer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.util.AssetDurationSerializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.util.OffsetDateTimeDeserializer;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
@@ -97,20 +99,20 @@ public class Channel implements Serializable {
 	@Column(name="dnid")
 	private String DNID;
 
-	@JsonSerialize(using = DurationSerializer.class)
-	@JsonDeserialize(using = DurationDeserializer.class)
+	@JsonSerialize(using = AssetDurationSerializer.class)
+	@JsonDeserialize(using = AssetDurationDeserializer.class)
 	@NotNull
 	@Column(name="expected_frequency")
 	private Duration expectedFrequency;
 
-	@JsonSerialize(using = DurationSerializer.class)
-	@JsonDeserialize(using = DurationDeserializer.class)
+	@JsonSerialize(using = AssetDurationSerializer.class)
+	@JsonDeserialize(using = AssetDurationDeserializer.class)
 	@NotNull
 	@Column(name="expected_frequency_in_port")
 	private Duration expectedFrequencyInPort;
 
-	@JsonSerialize(using = DurationSerializer.class)
-	@JsonDeserialize(using = DurationDeserializer.class)
+	@JsonSerialize(using = AssetDurationSerializer.class)
+	@JsonDeserialize(using = AssetDurationDeserializer.class)
 	@NotNull
 	@Column(name="frequency_grace_period")
 	private Duration frequencyGracePeriod;
