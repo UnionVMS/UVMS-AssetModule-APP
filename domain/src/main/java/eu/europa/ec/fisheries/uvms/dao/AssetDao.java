@@ -118,6 +118,11 @@ public interface AssetDao {
     List<AssetHistory> getAssetHistoryByCriteria(List<AssetListCriteriaPair> criteriaPairs, Integer maxResult) throws AssetDaoException;
 
     /**
+     * replacement for the above method, used by remote ejb only
+     */
+    List<AssetHistory> _getAssetHistoryByCriteria(String reportDate, String cfr, String regCountry, String ircs, String extMark, String iccat) throws AssetDaoException;
+
+    /**
      * Get assetHistory by vesselHistoryId - guid
      *
      * @param guid

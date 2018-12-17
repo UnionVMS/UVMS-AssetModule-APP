@@ -138,7 +138,8 @@
     </profiles>
 
     <modules>
-    	<module>model</module>
+        <module>ejb-client</module>
+        <module>model</module>
         <module>LIQUIBASE</module>
         <module>domain</module>
         <module>rest</module>

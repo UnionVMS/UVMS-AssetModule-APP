@@ -29,7 +29,6 @@ import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.ActivityRulesServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.FindAssetByCfrBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetEventBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetGroupEventBean;
@@ -77,9 +76,6 @@ public class AssetsMessageConsumerBean implements MessageListener {
 
     @EJB
     private FindAssetByCfrBean findAssetByCfrBean;
-
-    @EJB
-    private ActivityRulesServiceBean activityRulesServiceBean;
 
 
     @EJB
@@ -139,13 +135,10 @@ public class AssetsMessageConsumerBean implements MessageListener {
                     AssetMessageEvent fishingGearMessageEvent = new AssetMessageEvent(textMessage, upsertFishingGearListModuleRequest.getFishingGear(), upsertFishingGearListModuleRequest.getUsername());
                     upsertFishingGearsMessageEventBean.upsertFishingGears(fishingGearMessageEvent);
                     break;
+                    /**TODO: remove if not used **/
                 case FIND_ASSET_HISTORIES_BY_CFR:
                     FindAssetHistoriesByCfrModuleRequest findAssetByCfrModuleRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, FindAssetHistoriesByCfrModuleRequest.class);
                     findAssetByCfrBean.findAssetByCfr(findAssetByCfrModuleRequest, textMessage);
-                    break;
-                case FIND_ASSET_ACTIVITY_RULES:
-                    ActivityRulesAssetModuleRequest activityRulesAssetModuleRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, ActivityRulesAssetModuleRequest.class);
-                    activityRulesServiceBean.findAssetByCriteria(activityRulesAssetModuleRequest, textMessage);
                     break;
                 default:
                     LOG.error("[ Not implemented assetsMethod consumed: {} ]", assetsMethod);
