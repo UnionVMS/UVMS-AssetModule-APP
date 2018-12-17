@@ -13,8 +13,6 @@ package eu.europa.ec.fisheries.uvms.asset.message;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.jms.Queue;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
@@ -26,7 +24,6 @@ public class AuditProducer extends AbstractProducer {
     @Resource(mappedName = "java:/jms/queue/UVMSAsset")
     private Queue replyToQueue;
     
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public String sendModuleMessage(String text) throws MessageException {
         return sendModuleMessage(text, replyToQueue);
     }
