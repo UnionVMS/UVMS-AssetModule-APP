@@ -10,6 +10,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.bean;
 
+import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import org.slf4j.Logger;
@@ -25,7 +26,8 @@ public class AuditServiceBean {
     
     @Inject
     private AuditProducer auditProducer;
-    
+
+    @Asynchronous
     public void logAssetCreated(Asset asset, String username) {
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetCreated(asset.getId().toString(),
@@ -35,7 +37,8 @@ public class AuditServiceBean {
             LOG.warn("Failed to send audit log message! Asset with guid {} was created ", asset.getId());
         }
     }
-    
+
+    @Asynchronous
     public void logAssetUpdated(Asset asset, String comment, String username) {
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetUpdated(asset.getId().toString(), comment,
@@ -47,6 +50,7 @@ public class AuditServiceBean {
         }
     }
 
+    @Asynchronous
     public void logAssetArchived(Asset asset, String comment, String username) {
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetArchived(asset.getId().toString(), comment,
