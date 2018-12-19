@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.filter;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,10 +36,10 @@ public class AssetRestExceptionMapper implements ExceptionMapper<Exception> {
     public Response toResponse(Exception ex) {
         if (ex instanceof IllegalArgumentException) {
             LOG.error(ex.getMessage(), ex);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).type(MediaType.APPLICATION_JSON).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).type(MediaType.APPLICATION_JSON).build();
         } else {
             LOG.error(ex.getMessage(), ex);
-            return Response.status(500).entity(ex).type(MediaType.APPLICATION_JSON).build();
+            return Response.status(500).entity(ExceptionUtils.getRootCause(ex)).type(MediaType.APPLICATION_JSON).build();
         }
     }
 }

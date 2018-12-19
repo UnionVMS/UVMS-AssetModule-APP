@@ -12,10 +12,11 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.error;
 
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTResponseDto;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 public class MTErrorHandler {
     
     public static MTResponseDto getFault(Exception ex) {
-        return new MTResponseDto<>(ex, MTResponseCode.UNDEFINED_ERROR);
+        return new MTResponseDto<>(ExceptionUtils.getRootCause(ex), MTResponseCode.UNDEFINED_ERROR);
     }
 }

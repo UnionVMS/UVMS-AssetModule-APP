@@ -24,6 +24,7 @@ import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +59,7 @@ public class AssetConfigResource {
             return Response.ok(ConfigSearchField.values()).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
     
@@ -70,7 +71,7 @@ public class AssetConfigResource {
         	return Response.ok(parameters).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
     //Stuff copied from MT

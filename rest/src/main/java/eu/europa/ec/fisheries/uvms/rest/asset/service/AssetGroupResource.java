@@ -20,6 +20,7 @@ import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import io.swagger.annotations.*;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,7 +74,7 @@ public class AssetGroupResource {
             return Response.ok(response).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset group list by user. {}", user, e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
 
@@ -97,7 +98,7 @@ public class AssetGroupResource {
             return Response.ok(response).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset by ID. ", id, e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
 
@@ -121,7 +122,7 @@ public class AssetGroupResource {
             return Response.ok(createdAssetGroup).build();
         } catch (Exception e) {
             LOG.error("Error when creating asset group: {}", assetGroup, e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
 
@@ -146,7 +147,7 @@ public class AssetGroupResource {
             return Response.ok(response).build();
         } catch (Exception e) {
             LOG.error("Error when updating asset group. {}", assetGroup, e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
 
@@ -170,7 +171,7 @@ public class AssetGroupResource {
             return Response.ok().build();
         } catch (Exception e) {
             LOG.error("Error when deleting asset group by id: {}", id, e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
 
@@ -190,7 +191,7 @@ public class AssetGroupResource {
             return Response.ok(response).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset group list by user. {}", assetId, toString(), e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
 
@@ -212,7 +213,7 @@ public class AssetGroupResource {
             return Response.ok(response).build();
         } catch (Exception e) {
             LOG.error("Error when creating AssetGroupField. ", e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
 
@@ -235,7 +236,7 @@ public class AssetGroupResource {
             return Response.ok(response).build();
         } catch (Exception e) {
             LOG.error("Error when creating AssetGroupField. ", e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
 
@@ -257,7 +258,7 @@ public class AssetGroupResource {
             return Response.ok(response).build();
         } catch (Exception e) {
             LOG.error("Error when creating AssetGroupField. ", e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
 
@@ -280,7 +281,7 @@ public class AssetGroupResource {
             return Response.ok(response).build();
         } catch (Exception e) {
             LOG.error("Error when delete AssetGroupField. ", e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
 
@@ -302,7 +303,7 @@ public class AssetGroupResource {
             return Response.ok(response).build();
         } catch (Exception e) {
             LOG.error("Error when fetching AssetGroupFields. ", e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
         }
 
     }
@@ -323,7 +324,7 @@ public class AssetGroupResource {
             return Response.ok().build();
         } catch (Exception e) {
             LOG.error("Error when fetching AssetGroupFields. ", e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
         }
 
     }

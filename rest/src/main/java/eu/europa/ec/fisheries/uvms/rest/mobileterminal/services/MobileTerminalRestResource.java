@@ -24,6 +24,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnu
 import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +79,7 @@ public class MobileTerminalRestResource {
             return Response.ok(returnString).build();
         } catch (Exception ex) {
             LOG.error("[ Error when creating mobile terminal ] {}", ex, ex.getStackTrace());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
 
@@ -93,7 +94,7 @@ public class MobileTerminalRestResource {
             return Response.ok(returnString).build();
         } catch (Exception ex) {
             LOG.error("[ Error when fetching mobile terminal ] {}", ex);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
 
@@ -115,7 +116,7 @@ public class MobileTerminalRestResource {
             return Response.ok(returnString).build();
         } catch (Exception ex) {
             LOG.error("[ Error when updating mobile terminal ] {}", ex);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
 
@@ -129,7 +130,7 @@ public class MobileTerminalRestResource {
             return Response.ok(mobileTerminalList).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting mobile terminal list ] {}", ex);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
 
@@ -146,7 +147,7 @@ public class MobileTerminalRestResource {
             return Response.ok(returnString).build();
         } catch (Exception ex) {
             LOG.error("[ Error when assigning mobile terminal ] {}", ex);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
 
@@ -163,7 +164,7 @@ public class MobileTerminalRestResource {
             return Response.ok(returnString).build();
         } catch (Exception ex) {
             LOG.error("[ Error when unassigning mobile terminal ] {}", ex);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
 
@@ -178,7 +179,7 @@ public class MobileTerminalRestResource {
             return Response.ok(returnString).build();
         } catch (Exception ex) {
             LOG.error("[ Error when activating mobile terminal ] {}", ex);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
 
@@ -193,7 +194,7 @@ public class MobileTerminalRestResource {
             return Response.ok(returnString).build();
         } catch (Exception ex) {
             LOG.error("[ Error when inactivating mobile terminal ] {}", ex);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
 
@@ -208,7 +209,7 @@ public class MobileTerminalRestResource {
             return Response.ok(returnString).build();
         } catch (Exception ex) {
             LOG.error("[ Error when removing mobile terminal ] {}", ex);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
 
@@ -224,7 +225,7 @@ public class MobileTerminalRestResource {
             return Response.ok(returnString).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting mobile terminal history by terminalId ] {}", ex);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
 
