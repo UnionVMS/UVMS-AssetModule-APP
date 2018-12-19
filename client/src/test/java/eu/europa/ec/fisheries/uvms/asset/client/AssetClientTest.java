@@ -284,4 +284,18 @@ public class AssetClientTest extends AbstractClientTest {
 
         assertNotNull(response);  // proofs we reach the endpoint  . . .
     }
+
+    @Test
+    public void createNewAssetOnUnknown(){
+        AssetMTEnrichmentRequest request = new AssetMTEnrichmentRequest();
+        request.setMmsiValue("123456789");
+        AssetMTEnrichmentResponse response = assetClient.collectAssetMT(request);
+
+        assertNotNull(response);
+        assertNotNull(response.getAssetHistoryId());
+        assertNotNull(response.getAssetUUID());
+        assertTrue(response.getAssetName().contains("Unknown ship"));
+        assertTrue(response.getFlagstate().equals("UNK"));
+        assertEquals("123456789", response.getAssetId().get("MMSI"));
+    }
 }

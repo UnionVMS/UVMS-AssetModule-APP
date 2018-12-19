@@ -37,6 +37,7 @@ public class AssetDao {
 
     public Asset createAsset(Asset asset) {
         em.persist(asset);
+        em.flush();
         return asset;
     }
 

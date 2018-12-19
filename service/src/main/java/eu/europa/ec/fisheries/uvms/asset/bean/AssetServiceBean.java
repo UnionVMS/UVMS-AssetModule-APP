@@ -25,6 +25,7 @@ import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
 import eu.europa.ec.fisheries.uvms.asset.util.AssetComparator;
+import eu.europa.ec.fisheries.uvms.asset.util.AssetUtil;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
@@ -486,9 +487,13 @@ public class AssetServiceBean implements AssetService {
                 }
             }
         }
-        if (asset != null) {
-            assetMTEnrichmentResponse = enrichementHelper(assetMTEnrichmentResponse, asset);
+
+        if(asset == null){
+            asset = AssetUtil.createNewAssetFromRequest(request);
+            assetDao.createAsset(asset);
         }
+
+        assetMTEnrichmentResponse = enrichementHelper(assetMTEnrichmentResponse, asset);
 
         List<String> assetGroupList = new ArrayList<>();
         if (asset != null) {
