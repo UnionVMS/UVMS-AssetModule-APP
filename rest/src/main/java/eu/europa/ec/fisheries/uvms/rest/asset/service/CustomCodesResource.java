@@ -6,6 +6,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import io.swagger.annotations.*;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -44,7 +45,7 @@ public class CustomCodesResource {
             return Response.ok(createdCustomCode).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -62,7 +63,7 @@ public class CustomCodesResource {
             CustomCode replacedCustomCode = customCodesSvc.replace(customCode);
             return Response.ok(replacedCustomCode).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -87,7 +88,7 @@ public class CustomCodesResource {
             return Response.ok(customCode).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when fetching CustomCode. " + validFromDate + " " +  validToDate);
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -118,7 +119,7 @@ public class CustomCodesResource {
             return Response.status(200).entity(exists).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -142,7 +143,7 @@ public class CustomCodesResource {
             return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -166,7 +167,7 @@ public class CustomCodesResource {
             return Response.ok(exists).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -184,7 +185,7 @@ public class CustomCodesResource {
             return Response.ok(constants).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -202,7 +203,7 @@ public class CustomCodesResource {
             return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -227,7 +228,7 @@ public class CustomCodesResource {
             return Response.ok().header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(e).header("MDC", MDC.get("requestId")).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
 }

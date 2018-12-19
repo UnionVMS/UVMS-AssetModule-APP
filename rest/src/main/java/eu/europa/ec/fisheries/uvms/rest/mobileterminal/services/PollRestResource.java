@@ -27,6 +27,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollProgram;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollMapper;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +71,7 @@ public class PollRestResource {
             return Response.ok(createPollResultDto).build();
         } catch (Exception ex) {
             LOG.error("[ Error when creating poll {}] {}",createPoll, ex.getStackTrace());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
 
@@ -84,7 +85,7 @@ public class PollRestResource {
             return Response.ok(polls).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting running program polls ] {}", (Object) ex.getStackTrace());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
 
@@ -99,7 +100,7 @@ public class PollRestResource {
             return Response.ok(poll).build();
         } catch (Exception ex) {
             LOG.error("[ Error when starting program poll {}] {}", pollId, ex.getStackTrace());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
 
@@ -114,7 +115,7 @@ public class PollRestResource {
             return Response.ok(poll).build();
         } catch (Exception ex) {
             LOG.error("[ Error when stopping program poll {} ] {}",pollId, ex.getStackTrace());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
 
@@ -129,7 +130,7 @@ public class PollRestResource {
             return Response.ok(poll).build();
         } catch (Exception ex) {
             LOG.error("[ Error when inactivating program poll {}] {}",pollId, ex.getStackTrace());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
 
@@ -143,7 +144,7 @@ public class PollRestResource {
             return Response.ok(pollChannelList).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting poll by search criteria {}] {}",query, ex.getStackTrace());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
 
@@ -157,7 +158,7 @@ public class PollRestResource {
             return Response.ok(pollChannelList).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting poll by search criteria {}] {}", query, ex.getStackTrace());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
 
@@ -172,7 +173,7 @@ public class PollRestResource {
             String returnString = objectMapper.writeValueAsString(pollProgram);
             return Response.ok(returnString).build();
         } catch (Exception ex) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
 
         }
     }
