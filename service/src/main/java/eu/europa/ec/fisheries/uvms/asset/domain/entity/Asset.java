@@ -37,6 +37,7 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.*;
             @UniqueConstraint(name = "asset_uc_uvi" , columnNames = "uvi"),
             @UniqueConstraint(name = "asset_uc_gfcm" , columnNames = "gfcm"),
             @UniqueConstraint(name = "asset_uc_historyid" , columnNames = "historyid"),
+            @UniqueConstraint(name = "asset_uc_cfr" , columnNames = "cfr"),
         })
 
 @NamedQueries({
@@ -49,6 +50,7 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.*;
           @NamedQuery(name = ASSET_FIND_BY_UVI, query = "SELECT v FROM Asset v WHERE v.uvi = :uvi AND v.active = true"),
           @NamedQuery(name = ASSET_FIND_BY_GFCM, query = "SELECT v FROM Asset v WHERE v.gfcm = :gfcm AND v.active = true"),
           @NamedQuery(name = ASSET_FIND_BY_IDS, query = "SELECT v FROM Asset v WHERE v.id in :idList AND v.active = true"),
+          @NamedQuery(name = ASSET_FIND_BY_ALL_IDENTIFIERS, query = "SELECT v FROM Asset v WHERE (v.cfr = :cfr OR v.ircs = :ircs OR v.imo = :imo OR v.mmsi = :mmsi OR v.iccat = :iccat OR v.uvi = :uvi OR v.gfcm = :gfcm) AND v.active = true"),
 })
 @JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -63,6 +65,7 @@ public class Asset implements Serializable {
     public static final String ASSET_FIND_BY_GFCM = "Asset.findByGfcm";
     public static final String ASSET_FIND_ALL = "Asset.findAll";
     public static final String ASSET_FIND_BY_IDS = "Asset.findByIds";
+    public static final String ASSET_FIND_BY_ALL_IDENTIFIERS = "Asset.findByAllIds";
 
     private static final long serialVersionUID = -320627625723663100L;
 
