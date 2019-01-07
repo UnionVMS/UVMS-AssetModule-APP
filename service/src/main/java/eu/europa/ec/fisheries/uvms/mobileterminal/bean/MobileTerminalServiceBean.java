@@ -137,6 +137,9 @@ public class MobileTerminalServiceBean {
         
         mobileTerminal.getChannels().forEach(channel -> channel.setMobileTerminal(oldTerminal));
 
+        MobileTerminal mt = oldTerminal.getChannels().iterator().next().getMobileTerminal();
+        mobileTerminal.getChannels().forEach(channel -> channel.setMobileTerminal(mt));
+
         //TODO check type
         MobileTerminal updatedTerminal;
         if (oldTerminal.getMobileTerminalType() != null) {
