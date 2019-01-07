@@ -31,10 +31,7 @@ import org.junit.runner.RunWith;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -562,6 +559,33 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         //check the search result
         returnList = sendMTListQuery(mobileTerminalListQuery);
         assertEquals(1, returnList.getMobileTerminalList().size());
+    }
+
+    @Test
+    public void updateMobileTerminal_ChannelHasNoMobileTerminalTTest() {
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        MobileTerminal created = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        assertNotNull(created);
+
+        UUID channelId = created.getChannels().iterator().next().getId();
+
+        created.getChannels().iterator().next().setMobileTerminal(null);
+
+        MobileTerminal updated = getWebTarget()
+                .path("mobileterminal")
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(created), MobileTerminal.class);
+
+        assertNotNull(updated);
+        assertEquals(created.getId(), updated.getId());
+        assertEquals(created.getId(), updated.getChannels().iterator().next().getMobileTerminal().getId());
+        assertEquals(channelId, updated.getChannels().iterator().next().getId());
     }
 
     private Asset createAndRestBasicAsset() {
