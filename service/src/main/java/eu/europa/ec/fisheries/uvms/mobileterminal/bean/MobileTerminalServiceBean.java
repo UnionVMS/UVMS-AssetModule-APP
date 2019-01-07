@@ -134,6 +134,8 @@ public class MobileTerminalServiceBean {
         }
 
         mobileTerminal.setPlugin(updatedPlugin);
+        
+        mobileTerminal.getChannels().forEach(channel -> channel.setMobileTerminal(oldTerminal));
 
         //TODO check type
         MobileTerminal updatedTerminal;
