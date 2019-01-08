@@ -19,10 +19,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jms.TextMessage;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.europa.ec.fisheries.schema.exchange.module.v1.ExchangeModuleMethod;
+import eu.europa.ec.fisheries.schema.exchange.module.v1.GetServiceListRequest;
+import eu.europa.ec.fisheries.schema.exchange.module.v1.GetServiceListResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
@@ -83,21 +94,26 @@ public class ConfigServiceBeanMT {
         return upsertPlugins(plugins);
     }
 
+    //@Resource(name = "java:global/exchange_endpoint")
+    private String exchangeEndpoint = "http://localhost:8080/unionvms/exchange/rest";
+
     public List<ServiceResponseType> getRegisteredMobileTerminalPlugins() {
-        try {
             List<PluginType> pluginTypes = new ArrayList<>();
             pluginTypes.add(PluginType.SATELLITE_RECEIVER);
-            String data = ExchangeModuleRequestMapper.createGetServiceListRequest(pluginTypes);
-            String messageId = exchangeProducer.sendModuleMessage(data);
-            TextMessage response = assetConsumer.getMessage(messageId, TextMessage.class);
+            GetServiceListRequest request = new GetServiceListRequest();
+            request.getType().addAll(pluginTypes);
+
+            Client client = ClientBuilder.newClient();
+            GetServiceListResponse response = client.target(exchangeEndpoint + "/api/serviceList")
+                    .request(MediaType.APPLICATION_JSON)
+                    .post(Entity.json(request), GetServiceListResponse.class);
+
+
             if(response == null){
                 throw new NullPointerException("No response from exchange");
             }
-            return ExchangeModuleResponseMapper.mapServiceListResponse(response, messageId);
-        } catch (ExchangeModelMapperException | RuntimeException | MessageException e) {
-            LOG.error("Failed to map to exchange get service list request due tue: " + e);
-            throw new RuntimeException("Failed to map to exchange get service list request", e);
-        }
+            client.close();
+            return response.getService();
     }
 
     public List<TerminalSystemType> getAllTerminalSystems() {

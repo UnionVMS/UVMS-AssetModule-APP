@@ -5,6 +5,7 @@ import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginCapabilityTyp
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
+import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -24,6 +25,7 @@ import static org.junit.Assert.assertEquals;
 public class PluginRestResourceTest extends AbstractAssetRestTest {
 
     @Test
+    @OperateOnDeployment("normal")
     public void upsertPluginTest() {
         List<PluginService> pluginList = createPluginList();
 

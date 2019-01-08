@@ -18,6 +18,8 @@ import javax.ws.rs.client.WebTarget;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.ExchangeModuleRestMock;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.UnionVMSMock;
 import org.eu.ingwar.tools.arquillian.extension.suite.annotations.ArquillianSuiteDeployment;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -44,7 +46,7 @@ public abstract class AbstractAssetRestTest {
         //return client.target("http://localhost:8080/test/rest");    //internal
     }
 
-    @Deployment(name = "normal", order = 1)
+    @Deployment(name = "normal", order = 2)
     public static Archive<?> createDeployment() {
 
         WebArchive testWar = ShrinkWrap.create(WebArchive.class, "test.war");
@@ -63,6 +65,22 @@ public abstract class AbstractAssetRestTest {
 
         testWar.delete("/WEB-INF/web.xml");
         testWar.addAsWebInfResource("mock-web.xml", "web.xml");
+
+        return testWar;
+    }
+
+    @Deployment(name = "uvms", order = 1)
+    public static Archive<?> createExchangeMock(){
+
+        WebArchive testWar = ShrinkWrap.create(WebArchive.class, "unionvms.war");
+        File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
+                .resolve("eu.europa.ec.fisheries.uvms.exchange:exchange-model:4.0.14").withTransitivity().asFile();
+
+        testWar.addAsLibraries(files);
+
+
+        testWar.addClass(UnionVMSMock.class);
+        testWar.addClass(ExchangeModuleRestMock.class);
 
         return testWar;
     }

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
+import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
@@ -40,6 +41,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getConstants() {
         String txt = UUID.randomUUID().toString().toUpperCase();
         String createdJson = createACustomCodeHelper(txt);
@@ -60,6 +62,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getCodesPerConstant() throws IOException {
 
         String txt = UUID.randomUUID().toString().toUpperCase();
@@ -90,6 +93,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void createACustomCode() throws IOException {
         String txt = UUID.randomUUID().toString();
         String createdJson = createACustomCodeHelper(txt);
@@ -366,6 +370,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void deleteCustomCode() throws IOException {
 
         String txt = UUID.randomUUID().toString().toUpperCase();
@@ -469,6 +474,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
 
     @Test
+    @OperateOnDeployment("normal")
     public void verifyCustomCodeInDateRangePositive() throws IOException {
 
         String txt = UUID.randomUUID().toString().toUpperCase();
@@ -502,6 +508,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
 
 
     @Test
+    @OperateOnDeployment("normal")
     public void verifyCustomCodeInDateRangeNegative() throws IOException {
 
         String txt = UUID.randomUUID().toString().toUpperCase();
@@ -534,6 +541,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void existsCustomCodeInDateRangePositive() throws IOException {
 
         String txt = UUID.randomUUID().toString().toUpperCase();
@@ -561,6 +569,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void existsCustomCodeInDateRangeNegative() throws IOException {
 
         String txt = UUID.randomUUID().toString().toUpperCase();
@@ -589,6 +598,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getCodeAtDateWithinRange() throws IOException {
 
         String txt = UUID.randomUUID().toString().toUpperCase();

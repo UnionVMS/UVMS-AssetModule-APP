@@ -60,6 +60,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     private Calendar cal = Calendar.getInstance();
 
     @Test
+    @OperateOnDeployment("normal")
     public void createPoll()  {
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
         PollRequestType pollRequestType = testPollHelper.createPollRequestType();
@@ -83,6 +84,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void createPollWithBrokenJMS_WillFail() {
 
         try {
@@ -97,6 +99,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getRunningProgramPolls() {
         OffsetDateTime startDate = testPollHelper.getStartDate();
         OffsetDateTime latestRun = testPollHelper.getLatestRunDate();
@@ -114,6 +117,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void startProgramPoll() {
 
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
@@ -167,6 +171,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void stopProgramPoll() {
 
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
@@ -224,6 +229,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void inactivateProgramPoll() {
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
 
@@ -286,6 +292,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getPollProgramRunningAndStarted() {
 
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");

@@ -5,6 +5,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetGroupFieldDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
+import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +29,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     private AssetGroupFieldDao assetGroupFieldDaoBean;
 
     @Test
+    @OperateOnDeployment("normal")
     public void create() {
 
         String user = "test";
@@ -39,6 +41,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void get() {
         String user = "test";
         AssetGroup assetGroup = createAndStoreAssetGroupEntity(user);
@@ -49,6 +52,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void delete() {
         String user = "test";
         AssetGroup assetGroup = createAndStoreAssetGroupEntity(user);
@@ -60,6 +64,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void update() {
         String user = "test";
         AssetGroup assetGroup = createAndStoreAssetGroupEntity(user);
@@ -75,6 +80,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void removeFieldsForGroup() {
 
         String user = "test";

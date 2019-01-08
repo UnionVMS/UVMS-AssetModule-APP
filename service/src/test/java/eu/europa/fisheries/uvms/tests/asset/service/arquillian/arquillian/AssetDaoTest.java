@@ -354,6 +354,7 @@ public class AssetDaoTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetCountTest() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset);
@@ -372,6 +373,7 @@ public class AssetDaoTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetCountTwoRevisionsTest() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset);
@@ -394,6 +396,7 @@ public class AssetDaoTest extends TransactionalTests {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetCountTwoRevisionsAndTwoAssetsTest() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset);
@@ -421,6 +424,7 @@ public class AssetDaoTest extends TransactionalTests {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetCountShouldNotFindAssetTest() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset);
@@ -439,6 +443,7 @@ public class AssetDaoTest extends TransactionalTests {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTest() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset);
@@ -459,6 +464,7 @@ public class AssetDaoTest extends TransactionalTests {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTestTwoAssets() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset);
@@ -485,6 +491,7 @@ public class AssetDaoTest extends TransactionalTests {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTestTwoAssetsNotDynamic() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset);
@@ -515,6 +522,7 @@ public class AssetDaoTest extends TransactionalTests {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTestTwoAssestPageSizeOne() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset);
@@ -549,6 +557,7 @@ public class AssetDaoTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTestFlagStateAndExtMarking() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset);
@@ -577,6 +586,7 @@ public class AssetDaoTest extends TransactionalTests {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTestGuid() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
@@ -597,6 +607,7 @@ public class AssetDaoTest extends TransactionalTests {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTestHistoryGuid() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
@@ -631,6 +642,7 @@ public class AssetDaoTest extends TransactionalTests {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTestMinLength() throws Exception {
         Asset asset = AssetTestsHelper.createBiggerAsset();
         assetDao.createAsset(asset);
@@ -650,6 +662,7 @@ public class AssetDaoTest extends TransactionalTests {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTestNumber() throws Exception {
         Asset asset = AssetTestsHelper.createBiggerAsset();
         assetDao.createAsset(asset);
@@ -673,6 +686,7 @@ public class AssetDaoTest extends TransactionalTests {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTestWildcardSearch() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
         String randomNumbers = AssetTestsHelper.getRandomIntegers(10);
@@ -693,6 +707,7 @@ public class AssetDaoTest extends TransactionalTests {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTestWildcardSearchCaseInsensitive() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
         String randomNumbers = AssetTestsHelper.getRandomIntegers(10);
