@@ -68,9 +68,6 @@ public class ConfigServiceBeanMT {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConfigServiceBeanMT.class);
     
-    @Inject
-    private ExchangeProducer exchangeProducer;
-
     @EJB
     private OceanRegionDaoBean oceanRegionDao;
 
@@ -83,8 +80,8 @@ public class ConfigServiceBeanMT {
     @EJB
     private DNIDListDaoBean dnidListDao;
 
-    @EJB
-    private AssetConsumer assetConsumer;
+    @Resource(name = "java:global/exchange_endpoint")
+    private String exchangeEndpoint;
 
     public List<TerminalSystemType> getTerminalSystems() {
         return getAllTerminalSystems();
@@ -93,9 +90,6 @@ public class ConfigServiceBeanMT {
     public List<MobileTerminalPlugin> upsertPlugins(List<PluginService> plugins, String username) {
         return upsertPlugins(plugins);
     }
-
-    //@Resource(name = "java:global/exchange_endpoint")
-    private String exchangeEndpoint = "http://localhost:8080/unionvms/exchange/rest";
 
     public List<ServiceResponseType> getRegisteredMobileTerminalPlugins() {
             List<PluginType> pluginTypes = new ArrayList<>();
@@ -109,10 +103,10 @@ public class ConfigServiceBeanMT {
                     .post(Entity.json(request), GetServiceListResponse.class);
 
 
+            client.close();
             if(response == null){
                 throw new NullPointerException("No response from exchange");
             }
-            client.close();
             return response.getService();
     }
 
