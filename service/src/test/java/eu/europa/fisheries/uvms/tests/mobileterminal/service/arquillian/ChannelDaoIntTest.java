@@ -35,7 +35,7 @@ public class ChannelDaoIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void testGetPollableListSearch() {
+    public void testGetPollableListSearch() throws Exception{
         //Given - need a string list of id's.
         Asset asset = assetDao.createAsset(AssetTestsHelper.createBasicAsset());
         String id1 = asset.getId().toString();
@@ -46,6 +46,7 @@ public class ChannelDaoIntTest extends TransactionalTests {
         MobileTerminal mobileTerminal = testPollHelper.createAndPersistMobileTerminal(asset);
         assertNotNull(mobileTerminal.getId());
 
+        Thread.sleep(5000);
         //When
         List<Channel> channels = channelDao.getPollableListSearch(idList);
 
