@@ -44,8 +44,8 @@ public class ExchangeModuleRestMock {
             List<ServiceResponseType> serviceResponse = new ArrayList<>();
             ServiceResponseType serviceResponseType = new ServiceResponseType();
             serviceResponseType.setServiceClassName("eu.europa.ec.fisheries.uvms.plugins.test");
-            serviceResponseType.setName("Test&Test");
-            serviceResponseType.setSatelliteType("INMARSAT_D");
+            serviceResponseType.setName("Thrane&Thrane");
+            serviceResponseType.setSatelliteType("INMARSAT_C");
             serviceResponseType.setActive(true);
             CapabilityListType capabilityList = new CapabilityListType();
             CapabilityType capabilityType = new CapabilityType();
