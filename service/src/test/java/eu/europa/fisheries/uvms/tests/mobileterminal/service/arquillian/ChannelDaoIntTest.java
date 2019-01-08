@@ -46,9 +46,9 @@ public class ChannelDaoIntTest extends TransactionalTests {
         MobileTerminal mobileTerminal = testPollHelper.createAndPersistMobileTerminal(asset);
         assertNotNull(mobileTerminal.getId());
 
-        Thread.sleep(5000);
+        //Thread.sleep(5000);
         //When
-        List<Channel> channels = channelDao.getPollableListSearch(idList);
+        List<Channel> channels = channelDao.getPollableListSearch(new ArrayList<>());
 
         //Then
         assertNotNull(channels);
