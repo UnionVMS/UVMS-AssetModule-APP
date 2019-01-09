@@ -7,6 +7,7 @@ import javax.ws.rs.core.Response;
 
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import org.hamcrest.CoreMatchers;
+import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -17,6 +18,7 @@ import org.junit.runner.RunWith;
 public class MTRequestFilterTest extends AbstractAssetRestTest {
 
     @Test
+    @OperateOnDeployment("normal")
     public void checkMDCNoHeaderTest() {
         Response response = getWebTarget()
                 .path("internal")
@@ -29,6 +31,7 @@ public class MTRequestFilterTest extends AbstractAssetRestTest {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void checkMDCHeaderSetTest() {
         String requestId = UUID.randomUUID().toString();
         Response response = getWebTarget()

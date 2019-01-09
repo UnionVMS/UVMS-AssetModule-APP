@@ -23,6 +23,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnu
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
+import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -41,6 +42,7 @@ import static org.junit.Assert.*;
 public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
     @Test
+    @OperateOnDeployment("normal")
     public void createMobileTerminalTest() {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
@@ -113,6 +115,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getMobileTerminalByIdTest() {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
         MobileTerminal created = getWebTarget()
@@ -133,6 +136,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getMobileTerminalWithAssetByIdTest() {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
         Asset asset = createAndRestBasicAsset();
@@ -158,6 +162,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void updateMobileTerminalTest() {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
@@ -185,6 +190,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getMobileTerminalListTest() {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
@@ -212,6 +218,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getMobileTerminalListWithWildCardsInSerialNumberTest() {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
@@ -287,6 +294,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getMobileTerminalListWithSatelliteNrTest() {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
@@ -318,6 +326,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getMobileTerminalListWithDNIDTest() {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
@@ -350,6 +359,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getMobileTerminalListWithMemberNumberTest() {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
@@ -384,6 +394,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getMobileTerminalListWithSatelliteAndDNIDTest() {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
@@ -422,6 +433,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void assignMobileTerminalTest() {
 
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
@@ -448,6 +460,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void unAssignMobileTerminalTest() {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
@@ -485,6 +498,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void inactivateActivateAndArchiveMobileTerminal() {
         MobileTerminal mt = MobileTerminalTestHelper.createBasicMobileTerminal();
         mt.setAsset(null);
@@ -536,6 +550,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void searchForSerialNumberAfterCreatingNewEvents() {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
         Asset asset = createAndRestBasicAsset();

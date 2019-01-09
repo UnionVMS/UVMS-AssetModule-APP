@@ -15,6 +15,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.util.DateUtils;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
+import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -33,6 +34,7 @@ import static org.junit.Assert.*;
 public class PollRestResourceTest extends AbstractAssetRestTest {
 
     @Test
+    @OperateOnDeployment("normal")
     public void getRunningProgramPollsTest() {
 
         Response response = getWebTarget()
@@ -45,6 +47,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void createPollTest() {
         PollRequestType input = new PollRequestType();
         Asset asset = createAndRestBasicAsset();
@@ -72,6 +75,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void stopAndStartProgramPollTest() {
         Asset asset = createAndRestBasicAsset();
         MobileTerminal createdMT = createAndRestMobileTerminal(asset);
@@ -119,6 +123,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void archiveProgramPollTest() throws Exception{
         Asset asset = createAndRestBasicAsset();
         MobileTerminal createdMT = createAndRestMobileTerminal(asset);
@@ -165,6 +170,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getPollBySearchCriteria() {
         PollRequestType pollRequestType = new PollRequestType();
         Asset asset = createAndRestBasicAsset();
@@ -220,6 +226,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getPollByTwoSearchCriteria() {
         PollRequestType pollRequestType = new PollRequestType();
         Asset asset = createAndRestBasicAsset();
@@ -281,6 +288,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getPollableChannelsTest() {
         Asset asset = createAndRestBasicAsset();
         MobileTerminal createdMT = createAndRestMobileTerminal(asset);

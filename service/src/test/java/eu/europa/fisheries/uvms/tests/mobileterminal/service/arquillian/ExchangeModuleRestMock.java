@@ -13,37 +13,33 @@ package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.ejb.ActivationConfigProperty;
-import javax.ejb.MessageDriven;
-import javax.inject.Inject;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.TextMessage;
+import javax.ejb.Stateless;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+
+import eu.europa.ec.fisheries.schema.exchange.module.v1.GetServiceListRequest;
+import eu.europa.ec.fisheries.schema.exchange.module.v1.GetServiceListResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityListType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityTypeType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.ServiceResponseType;
-import eu.europa.ec.fisheries.uvms.asset.message.AssetProducer;
-import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.ExchangeModuleResponseMapper;
 
-@MessageDriven(mappedName = "jms/queue/UVMSExchangeEvent", activationConfig = {
-        @ActivationConfigProperty(propertyName = "messagingType", propertyValue = "javax.jms.MessageListener"), 
-        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"), 
-        @ActivationConfigProperty(propertyName = "destination", propertyValue = "UVMSExchangeEvent")})
-public class ExchangeModuleMock implements MessageListener {
+@Path("exchange/rest/api")
+@Stateless
+public class ExchangeModuleRestMock {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ExchangeModuleMock.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ExchangeModuleRestMock.class);
 
-    @Inject
-    private AssetProducer producer;
-    
-    @Override
-    public void onMessage(Message message) {
+    @POST
+    @Path("serviceList")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public GetServiceListResponse getServiceList(GetServiceListRequest request) {
         try {
 
-            LOG.debug("READING MESSAGE IN EXCHANGE MOCK: " + message.toString());
+            LOG.debug("READING MESSAGE IN EXCHANGE MOCK: " + request.toString());
 
             List<ServiceResponseType> serviceResponse = new ArrayList<>();
             ServiceResponseType serviceResponseType = new ServiceResponseType();
@@ -59,11 +55,14 @@ public class ExchangeModuleMock implements MessageListener {
             serviceResponseType.setCapabilityList(capabilityList);
 
             serviceResponse.add(serviceResponseType);
-            String response = ExchangeModuleResponseMapper.mapServiceListResponse(serviceResponse);
 
-            producer.sendResponseMessageToSender((TextMessage) message, response);
+            GetServiceListResponse response = new GetServiceListResponse();
+            response.getService().addAll(serviceResponse);
+
+            return response;
         } catch (Exception e) {
             LOG.error("Mock error", e);
+            return null;
         }
     }
 }

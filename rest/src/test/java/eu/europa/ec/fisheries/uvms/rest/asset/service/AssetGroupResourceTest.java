@@ -9,6 +9,8 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
+import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -24,6 +26,7 @@ import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 public class AssetGroupResourceTest extends AbstractAssetRestTest {
 
     @Test
+    @OperateOnDeployment("normal")
     public void createAssetGroupCheckResponseCodeTest() {
         
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
@@ -38,6 +41,7 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void createAssetTest() {
 
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
@@ -53,6 +57,7 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetGroupListByUserNoUserParamTest() {
         Response response = getWebTarget()
                 .path("group")
@@ -66,6 +71,7 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetGroupListByUserTest() {
 
         Response responseBefore = getWebTarget()
@@ -96,6 +102,7 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetGroupListByUserTwoGroupsTest() {
 
         Response responseBefore = getWebTarget()
@@ -131,6 +138,7 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetGroupByIdTest() {
 
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
@@ -152,6 +160,7 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetGroupListByAssetId() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()

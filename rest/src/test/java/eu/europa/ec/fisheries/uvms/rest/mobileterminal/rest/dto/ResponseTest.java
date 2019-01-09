@@ -18,6 +18,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTResponseDto;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.MobileTerminalRestResource;
+import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,6 +62,7 @@ public class ResponseTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void testGetMobileTerminalList() {
         doReturn(MOBILE_TERMINAL_LIST_RESPONSE).when(mobileTerminalServiceBean).getMobileTerminalList(null);
         Response result = mobileTerminalRestResource.getMobileTerminalList(null);
@@ -69,6 +71,7 @@ public class ResponseTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void checkDtoReturnsValid() {
         String VALUE = "HELLO_DTO";
         MTResponseDto dto = new MTResponseDto<>(VALUE, MTResponseCode.OK);

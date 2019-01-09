@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.UUID;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
+
+import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -41,6 +43,7 @@ import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
 public class AssetResourceQueryTest extends AbstractAssetRestTest {
 
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetListQueryTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -64,6 +67,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
 
     @Test
     @RunAsClient
+    @OperateOnDeployment("normal")
     public void getAssetListQueryTestEmptyResult() {
         AssetQuery query = new AssetQuery();
         query.setCfr(Collections.singletonList("APA"));
@@ -80,6 +84,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
 
     @Test
     @RunAsClient
+    @OperateOnDeployment("normal")
     public void testCaseSensitiveiness() {
 
         String cfrValue = UUID.randomUUID().toString().substring(0,11).toUpperCase();
@@ -120,6 +125,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
 
     @Test
     @RunAsClient
+    @OperateOnDeployment("normal")
     public void testCaseSensitiveinessTwoEntities() {
 
         String cfrValue = UUID.randomUUID().toString().substring(0,11).toUpperCase();
@@ -174,6 +180,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
 
     @Test
     @RunAsClient
+    @OperateOnDeployment("normal")
     public void testCaseIncompleteCFR() {
 
         String cfrValue = UUID.randomUUID().toString().substring(0,11).toUpperCase();
@@ -236,6 +243,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
 
     @Test
     @RunAsClient
+    @OperateOnDeployment("normal")
     public void getAssetListEmptyCriteriasShouldReturnAllAssets() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -259,6 +267,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
 
     @Test
     @RunAsClient
+    @OperateOnDeployment("normal")
     public void getAssetListEmptyCriteriasShouldReturnAllAssetsOR() {
 
         // create an asset
@@ -287,6 +296,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
 
     @Test
     @RunAsClient
+    @OperateOnDeployment("normal")
     public void getAssetListEmptyCriteriasShouldNotReturnInactivatedAssets() {
         Asset asset = AssetHelper.createBasicAsset();
         // create an Asset
@@ -326,6 +336,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
     
     @Test
     @RunAsClient
+    @OperateOnDeployment("normal")
     public void getAssetListPaginationTest() {
         String customFlagState = AssetHelper.getRandomIntegers(3);
         
@@ -375,6 +386,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
     
     @Test
     @RunAsClient
+    @OperateOnDeployment("normal")
     public void getAssetListWildcardSearchCaseInsensitive() {
         Asset asset = AssetHelper.createBasicAsset();
         String randomNumbers = AssetHelper.getRandomIntegers(10);
@@ -401,6 +413,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
     
     @Test
     @RunAsClient
+    @OperateOnDeployment("normal")
     public void getAssetWithDateSearch() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -456,6 +469,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
     
     @Test
     @RunAsClient
+    @OperateOnDeployment("normal")
     public void getAssetWithDateSearchThreeRevisions() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -520,6 +534,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
     
     @Test
     @RunAsClient
+    @OperateOnDeployment("normal")
     public void getAssetsAtDate() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -552,6 +567,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
     
     @Test
     @RunAsClient
+    @OperateOnDeployment("normal")
     public void getAssetsAtDateAndIrcsAndFs() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -595,6 +611,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
     
     @Test
     @RunAsClient
+    @OperateOnDeployment("normal")
     public void getAssetAtInvalidDate() {
         Asset asset = AssetHelper.createBasicAsset();
         getWebTarget()

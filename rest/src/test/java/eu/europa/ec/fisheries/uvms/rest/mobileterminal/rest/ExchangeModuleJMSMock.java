@@ -1,3 +1,5 @@
+package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest;
+
 /*
 ﻿Developed with the contribution of the European Commission - Directorate General for Maritime Affairs and Fisheries
 © European Union, 2015-2016.
@@ -9,40 +11,32 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest;
 
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityListType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityTypeType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.ServiceResponseType;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.ExchangeModuleResponseMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 import java.util.ArrayList;
 import java.util.List;
 
-@MessageDriven(mappedName = "jms/queue/UVMSExchangeEvent", activationConfig = {@ActivationConfigProperty(
-        propertyName = "messagingType", propertyValue = "javax.jms.MessageListener"), @ActivationConfigProperty(
-                propertyName = "destinationType", propertyValue = "javax.jms.Queue"), @ActivationConfigProperty(
-                        propertyName = "destination", propertyValue = "UVMSExchangeEvent")})
-public class ExchangeModuleMock implements MessageListener {
-    private static final Logger LOG = LoggerFactory.getLogger(ExchangeModuleMock.class);
+@MessageDriven(mappedName = "jms/queue/UVMSExchangeEvent", activationConfig = {
+        @ActivationConfigProperty(propertyName = "messagingType", propertyValue = "javax.jms.MessageListener"),
+        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
+        @ActivationConfigProperty(propertyName = "destination", propertyValue = "UVMSExchangeEvent")})
+public class ExchangeModuleJMSMock implements MessageListener {
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void onMessage(Message message) {
         try {
-            LOG.debug("READING MESSAGE IN EXCHANGE MOCK IN ASSET REST: " + message.toString());
-
             List<ServiceResponseType> serviceResponse = new ArrayList<ServiceResponseType>();
             ServiceResponseType serviceResponseType = new ServiceResponseType();
             serviceResponseType.setServiceClassName("eu.europa.ec.fisheries.uvms.plugins.inmarsat");
@@ -63,7 +57,7 @@ public class ExchangeModuleMock implements MessageListener {
             new AbstractProducer() {
                 @Override
                 public String getDestinationName() {
-                    return "jms/queue/UVMSMobileTerminal";
+                    return MessageConstants.QUEUE_ASSET;
                 }
             }.sendResponseMessageToSender((TextMessage) message, response);
         } catch (Exception e) {

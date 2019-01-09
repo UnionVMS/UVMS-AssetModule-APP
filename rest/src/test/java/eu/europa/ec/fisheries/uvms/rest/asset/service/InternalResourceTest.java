@@ -8,6 +8,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.hamcrest.CoreMatchers;
+import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -23,6 +24,7 @@ import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
 public class InternalResourceTest extends AbstractAssetRestTest {
 
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetByIdNonValidIdentifierTest() {
         
         Response response = getWebTarget()
@@ -35,6 +37,7 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetByIdGUIDTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -51,6 +54,7 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetByIdCfrTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -67,6 +71,7 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetByIdIrcsTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -83,6 +88,7 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetByIdImoTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -99,6 +105,7 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetByIdMmsiTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -115,6 +122,7 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetByIdIccatTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -131,6 +139,7 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetByIdUviTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -147,6 +156,7 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetByIdGfcmTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -163,6 +173,7 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void upsertAssetTest() {
         Asset asset = AssetHelper.createBasicAsset();
         AssetBO assetBo = new AssetBO();
