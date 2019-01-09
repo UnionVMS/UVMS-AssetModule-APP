@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.asset.client;
 
 import eu.europa.ec.fisheries.uvms.asset.client.model.*;
 import org.hamcrest.CoreMatchers;
+import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
 import org.junit.Before;
@@ -33,12 +34,14 @@ public class AssetClientTest extends AbstractClientTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void pingTest() {
         String response = assetClient.ping();
         assertThat(response, CoreMatchers.is("pong"));
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetByGuidTest() {
         AssetBO assetBo = new AssetBO();
         assetBo.setAsset(AssetHelper.createBasicAsset());
@@ -51,6 +54,7 @@ public class AssetClientTest extends AbstractClientTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void upsertAssetTest() {
         AssetBO assetBo = new AssetBO();
         assetBo.setAsset(AssetHelper.createBasicAsset());
@@ -62,6 +66,7 @@ public class AssetClientTest extends AbstractClientTest {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void upsertAssertUpdateNameShouldCreateHistory() {
         AssetBO assetBo = new AssetBO();
         assetBo.setAsset(AssetHelper.createBasicAsset());
@@ -73,6 +78,7 @@ public class AssetClientTest extends AbstractClientTest {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void upsertAssertTwiceShouldNotCreateNewHistory() {
         AssetBO assetBo = new AssetBO();
         assetBo.setAsset(AssetHelper.createBasicAsset());
@@ -83,6 +89,7 @@ public class AssetClientTest extends AbstractClientTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void queryAssetsTest() {
         AssetDTO asset = AssetHelper.createBasicAsset();
         AssetBO assetBo = new AssetBO();
@@ -97,6 +104,7 @@ public class AssetClientTest extends AbstractClientTest {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void upsertAssetJMSTest() throws Exception {
         AssetDTO asset = AssetHelper.createBasicAsset();
         AssetBO assetBo = new AssetBO();
@@ -108,6 +116,7 @@ public class AssetClientTest extends AbstractClientTest {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetHistoryListByAssetIdTest() {
         AssetDTO asset = AssetHelper.createBasicAsset();
         AssetBO assetBo = new AssetBO();
@@ -127,6 +136,7 @@ public class AssetClientTest extends AbstractClientTest {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetFromAssetIdAndDateTest() {
         AssetDTO asset = AssetHelper.createBasicAsset();
         AssetBO assetBo = new AssetBO();
@@ -142,6 +152,7 @@ public class AssetClientTest extends AbstractClientTest {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetHistoryByAssetHistGuidTest() {
         AssetDTO asset = AssetHelper.createBasicAsset();
         AssetBO assetBo = new AssetBO();
@@ -156,6 +167,7 @@ public class AssetClientTest extends AbstractClientTest {
     }
     
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetHistoryByDateQuery() {
         AssetDTO asset = AssetHelper.createBasicAsset();
         AssetBO assetBo = new AssetBO();
@@ -175,6 +187,7 @@ public class AssetClientTest extends AbstractClientTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getConstantsTest() {
         CustomCode customCode = AssetHelper.createCustomCode("TEST_Constant");
         CustomCode createdCustomCode = assetClient.createCustomCode(customCode);
@@ -184,6 +197,7 @@ public class AssetClientTest extends AbstractClientTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getCodesForConstantsTest() {
 
         String constant = "Test_Constant" + UUID.randomUUID().toString();
@@ -198,6 +212,7 @@ public class AssetClientTest extends AbstractClientTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void isCodeValidTest() {
 
         String constant = "Test_Constant" + UUID.randomUUID().toString();
@@ -214,6 +229,7 @@ public class AssetClientTest extends AbstractClientTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void isCodeValidNegativeTest() {
 
         String constant = "Test_Constant" + UUID.randomUUID().toString();
@@ -230,6 +246,7 @@ public class AssetClientTest extends AbstractClientTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getCodeForDateTest() {
 
         String constant = "Test_Constant" + UUID.randomUUID().toString();
@@ -248,6 +265,7 @@ public class AssetClientTest extends AbstractClientTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getCodeForDateNegativeTest() {
 
         String constant = "Test_Constant" + UUID.randomUUID().toString();
@@ -266,6 +284,7 @@ public class AssetClientTest extends AbstractClientTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void customCodesReplaceTest() {
 
         String constant = "Test_Constant" + UUID.randomUUID().toString();
@@ -276,6 +295,7 @@ public class AssetClientTest extends AbstractClientTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void collectAssetMTTest() {
 
         //public AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request) throws Exception {
@@ -286,6 +306,7 @@ public class AssetClientTest extends AbstractClientTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void createNewAssetOnUnknown(){
         AssetMTEnrichmentRequest request = new AssetMTEnrichmentRequest();
         request.setMmsiValue("123456789");

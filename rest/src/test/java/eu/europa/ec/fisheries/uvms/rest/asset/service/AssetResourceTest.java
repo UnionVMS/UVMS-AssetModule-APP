@@ -10,6 +10,7 @@ import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
 import eu.europa.ec.fisheries.wsdl.asset.types.EventCode;
+import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Ignore;
@@ -36,6 +37,7 @@ import static org.junit.Assert.*;
 public class AssetResourceTest extends AbstractAssetRestTest {
 
     @Test
+    @OperateOnDeployment("normal")
     public void createAssetCheckResponseCodeTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Response response = getWebTarget()
@@ -48,6 +50,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void createAssetTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -61,6 +64,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetByIdTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -79,6 +83,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetByIdRandomValueTest() {
         Asset asset = getWebTarget()
                 .path("asset")
@@ -90,6 +95,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetByIdInvalidIdTest() {
         Response response = getWebTarget()
                 .path("asset")
@@ -103,6 +109,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void updateAssetChangedNameTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -134,6 +141,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void updateAssetNonExistingAssetTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Response response = getWebTarget()
@@ -148,6 +156,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void archiveAssetTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -166,6 +175,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void archiveAssetNonExistingAssetTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Response response = getWebTarget()
@@ -181,6 +191,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetFromAssetIdAndDateCfrTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -223,6 +234,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetFromAssetIdPastDateTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -244,6 +256,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getPastAssetFromAssetIdPastDateTest() {
         Asset asset = AssetHelper.createBasicAsset();
         String originalName = "Original Name";
@@ -276,6 +289,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
 
     @Ignore //since we no longer serialize the connection between asset and MT this will not work
     @Test
+    @OperateOnDeployment("normal")
     public void checkPastNumberOfMTTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -321,6 +335,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
 
     @Ignore //since we no longer serialize the connection between asset and MT this will not work
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetAndConnectedMobileTerminalTest() throws Exception {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -348,6 +363,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetFromAssetIdPastDateTestWithDateToEarly() {
         OffsetDateTime timeStamp = OffsetDateTime.now(ZoneOffset.UTC);
         Asset asset = AssetHelper.createBasicAsset();
@@ -369,6 +385,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetHistoryByAssetHistGuidTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -387,6 +404,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetHistoryByAssetHistGuidTwoRevisionsTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -422,6 +440,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void createNoteTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -443,6 +462,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getNotesForAssetTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -475,6 +495,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void deleteNoteTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()
@@ -531,6 +552,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void createAssetAndContactInfoAndCompareHistoryItemsTest() throws InterruptedException {
 
         // CREATE AN ASSET

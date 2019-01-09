@@ -1,5 +1,7 @@
 package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
+import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityTypeType;
+import eu.europa.ec.fisheries.schema.exchange.service.v1.ServiceResponseType;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.ConfigList;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
@@ -57,6 +59,24 @@ public class ConfigServiceBeanIntTest extends TransactionalTests {
 
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "true");
         configService.getRegisteredMobileTerminalPlugins();
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void testGetRegisteredMobileTerminalPlugins() {
+
+        List<ServiceResponseType> output = configService.getRegisteredMobileTerminalPlugins();
+
+        assertEquals(1, output.size());
+        ServiceResponseType serviceResponseType = output.get(0);
+
+        //values from exchange module mock, the one in service
+        assertEquals("eu.europa.ec.fisheries.uvms.plugins.test", serviceResponseType.getServiceClassName());
+        assertEquals("Test&Test", serviceResponseType.getName());
+        assertEquals("INMARSAT_D", serviceResponseType.getSatelliteType());
+        assertEquals(1, serviceResponseType.getCapabilityList().getCapability().size());
+        assertEquals(CapabilityTypeType.POLLABLE, serviceResponseType.getCapabilityList().getCapability().get(0).getType());
+
     }
 
     @Test

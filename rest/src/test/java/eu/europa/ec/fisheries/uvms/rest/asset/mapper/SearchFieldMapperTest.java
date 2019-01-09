@@ -13,6 +13,7 @@ package eu.europa.ec.fisheries.uvms.rest.asset.mapper;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
+import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import java.util.List;
 public class SearchFieldMapperTest {
 
     @Test
+    @OperateOnDeployment("normal")
     public void testQuerySql() {
 
         List<SearchKeyValue> searchFields = new ArrayList<>();

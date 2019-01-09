@@ -21,7 +21,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 @ArquillianSuiteDeployment
 public abstract class AbstractClientTest {
 
-    @Deployment(name = "normal", order = 1)
+    @Deployment(name = "normal", order = 2)
     public static Archive<?> createDeployment() {
 
         WebArchive testWar = ShrinkWrap.create(WebArchive.class, "asset.war");
@@ -39,6 +39,22 @@ public abstract class AbstractClientTest {
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.asset.client");
         
         testWar.addAsResource("beans.xml", "META-INF/beans.xml");
+
+        return testWar;
+    }
+
+    @Deployment(name = "uvms", order = 1)
+    public static Archive<?> createExchangeMock(){
+
+        WebArchive testWar = ShrinkWrap.create(WebArchive.class, "unionvms.war");
+        File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
+                .resolve("eu.europa.ec.fisheries.uvms.exchange:exchange-model:4.0.14").withTransitivity().asFile();
+
+        testWar.addAsLibraries(files);
+
+
+        testWar.addClass(UnionVMSMock.class);
+        testWar.addClass(ExchangeModuleMock.class);
 
         return testWar;
     }

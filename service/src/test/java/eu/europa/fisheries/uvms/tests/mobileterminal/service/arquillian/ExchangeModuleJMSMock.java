@@ -1,3 +1,5 @@
+package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
+
 /*
 ﻿Developed with the contribution of the European Commission - Directorate General for Maritime Affairs and Fisheries
 © European Union, 2015-2016.
@@ -9,24 +11,14 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.asset.client;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
-import javax.ejb.Stateless;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
-import eu.europa.ec.fisheries.schema.exchange.module.v1.GetServiceListRequest;
-import eu.europa.ec.fisheries.schema.exchange.module.v1.GetServiceListResponse;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityListType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityTypeType;
@@ -35,15 +27,14 @@ import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.ExchangeModuleResponseMapper;
 
-@Path("exchange/rest/api")
-@Stateless
-public class ExchangeModuleMock {
+@MessageDriven(mappedName = "jms/queue/UVMSExchangeEvent", activationConfig = {
+        @ActivationConfigProperty(propertyName = "messagingType", propertyValue = "javax.jms.MessageListener"),
+        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
+        @ActivationConfigProperty(propertyName = "destination", propertyValue = "UVMSExchangeEvent")})
+public class ExchangeModuleJMSMock implements MessageListener {
 
-    @POST
-    @Path("serviceList")
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Produces(value = {MediaType.APPLICATION_JSON})
-    public GetServiceListResponse getServiceList(GetServiceListRequest request) {
+    @Override
+    public void onMessage(Message message) {
         try {
             List<ServiceResponseType> serviceResponse = new ArrayList<ServiceResponseType>();
             ServiceResponseType serviceResponseType = new ServiceResponseType();
@@ -60,12 +51,15 @@ public class ExchangeModuleMock {
             serviceResponseType.setCapabilityList(capabilityList);
 
             serviceResponse.add(serviceResponseType);
-            GetServiceListResponse response = new GetServiceListResponse();
-            response.getService().addAll(serviceResponse);
+            String response = ExchangeModuleResponseMapper.mapServiceListResponse(serviceResponse);
 
-            return response;
+            new AbstractProducer() {
+                @Override
+                public String getDestinationName() {
+                    return MessageConstants.QUEUE_ASSET;
+                }
+            }.sendResponseMessageToSender((TextMessage) message, response);
         } catch (Exception e) {
-            return null;
         }
     }
 

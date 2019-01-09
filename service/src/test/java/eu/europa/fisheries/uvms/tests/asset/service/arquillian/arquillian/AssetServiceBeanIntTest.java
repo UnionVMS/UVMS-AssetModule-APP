@@ -146,6 +146,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getRevisionsForAssetLimitedTest() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
         Asset createdAsset = assetService.createAsset(asset, "test");
@@ -166,6 +167,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getRevisionsForAssetLimitedMaxNumberTest() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
         Asset createdAsset = assetService.createAsset(asset, "test");
@@ -186,6 +188,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void archiveAssetTest() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
         Asset createdAsset = assetService.createAsset(asset, "test");
@@ -197,6 +200,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetListTestIdQuery() throws Exception {
         Asset asset = AssetTestsHelper.createBiggerAsset();
         asset = assetService.createAsset(asset, "test");
@@ -217,6 +221,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void getAssetListTestNameQuery() throws Exception {
         Asset asset = AssetTestsHelper.createBiggerAsset();
         asset = assetService.createAsset(asset, "test");
@@ -237,6 +242,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void createNotesTest() {
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetService.createAsset(asset, "test");
@@ -249,6 +255,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void addNoteTest() {
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetService.createAsset(asset, "test");
@@ -265,6 +272,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void deleteNoteTest() {
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetService.createAsset(asset, "test");
@@ -282,6 +290,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void createContactInfoTest() {
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetService.createAsset(asset, "test");
@@ -294,6 +303,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void addContactInfoTest() {
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetService.createAsset(asset, "test");
@@ -310,6 +320,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void deleteContactInfoTest() {
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetService.createAsset(asset, "test");
@@ -336,6 +347,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void testGetMobileTerminalByConnectId() {
         Asset asset = createAsset();
         MobileTerminal mobileTerminal = createMobileTerminal(asset);
@@ -349,6 +361,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void testGetRequiredEnrichment() {
         // create stuff so we can create a valid rawMovement
         Asset asset = createAsset();
@@ -373,6 +386,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void testGetRequiredEnrichmentOnlyMT_InmarsatSpecific() {
 
         // create stuff so we can create a valid rawMovement
@@ -410,6 +424,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
+    @OperateOnDeployment("normal")
     public void testGetRequiredEnrichment_NO_MOBILETERMIUNAL() {
 
         // create stuff so we can create a valid rawMovement

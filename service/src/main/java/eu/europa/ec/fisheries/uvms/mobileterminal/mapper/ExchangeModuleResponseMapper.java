@@ -76,17 +76,7 @@ public class ExchangeModuleResponseMapper {
 		response.getService().addAll(serviceList);
 		return JAXBMarshaller.marshallJaxBObjectToString(response);
 	}
-	
-	public static List<ServiceResponseType> mapServiceListResponse(TextMessage response, String correlationId) throws ExchangeModelMapperException {
-		try {
-			validateResponse(response, correlationId);
-			GetServiceListResponse unmarshalledResponse = JAXBMarshaller.unmarshallTextMessage(response, GetServiceListResponse.class);
-			return unmarshalledResponse.getService();
-		} catch(JMSException | ExchangeValidationException e) {
-			LOG.error("[ Error when mapping response to service types ]");
-			throw new ExchangeModelMapperException("[ Error when mapping response to service types ] " + e);
-		}
-	}
+
 
 	public static AcknowledgeType mapSetCommandResponse(TextMessage response, String correlationId) throws ExchangeModelMapperException {
 		try {
