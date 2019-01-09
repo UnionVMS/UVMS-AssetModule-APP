@@ -35,7 +35,9 @@ public class ChannelDaoIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void testGetPollableListSearch() {
+    public void testGetPollableListSearch() throws Exception {
+        Thread.sleep(2000); //If this test is run on a clean DB it will do most of its things b4 the background plugin poll has had time to do its work, thus giving the created MT inactivated values that can not be searched for
+
         //Given - need a string list of id's.
         Asset asset = assetDao.createAsset(AssetTestsHelper.createBasicAsset());
         String id1 = asset.getId().toString();
