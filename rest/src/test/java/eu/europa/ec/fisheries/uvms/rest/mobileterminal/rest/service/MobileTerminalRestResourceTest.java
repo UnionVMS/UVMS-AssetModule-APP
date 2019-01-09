@@ -31,6 +31,7 @@ import org.junit.runner.RunWith;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.time.Duration;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -56,6 +57,37 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         assertTrue(first.isPresent());
         assertEquals(mobileTerminal.getChannels().iterator().next().getName(), first.get().getName());
+    }
+
+    @Test
+    public void createMobileTerminalWithMultipleChannelsTest() {
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        Channel channel2 = new Channel();
+        channel2.setName("VMS");
+        channel2.setFrequencyGracePeriod(Duration.ofSeconds(53000));
+        channel2.setMemberNumber(MobileTerminalTestHelper.generateARandomStringWithMaxLength(3));
+        channel2.setExpectedFrequency(Duration.ofSeconds(7100));
+        channel2.setExpectedFrequencyInPort(Duration.ofSeconds(10400));
+        channel2.setLesDescription("Thrane&Thrane");
+        channel2.setDNID("1" + MobileTerminalTestHelper.generateARandomStringWithMaxLength(3));
+        channel2.setInstalledBy("Mike Great");
+        channel2.setArchived(false);
+        channel2.setConfigChannel(true);
+        channel2.setDefaultChannel(true);
+        channel2.setPollChannel(true);
+        channel2.setMobileTerminal(mobileTerminal);
+
+        mobileTerminal.getChannels().add(channel2);
+
+        MobileTerminal created = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        assertNotNull(created);
+        Set<Channel> channels = created.getChannels();
+        assertEquals(2, channels.size());
     }
 
     @Test
