@@ -76,7 +76,7 @@ public class MobileTerminalServiceBean {
 
     public MobileTerminal createMobileTerminal(MobileTerminal mobileTerminal, String username) {
         Set<Channel> channels = mobileTerminal.getChannels();
-        channels.iterator().forEachRemaining(channel -> channel.setMobileTerminal(mobileTerminal));
+        channels.forEach(channel -> channel.setMobileTerminal(mobileTerminal));
         MobileTerminal createdMobileTerminal = terminalDao.createMobileTerminal(mobileTerminal);
         String pluginServiceName = createdMobileTerminal.getPlugin().getPluginServiceName();
         boolean dnidUpdated = configModel.checkDNIDListChange(pluginServiceName);
@@ -134,6 +134,8 @@ public class MobileTerminalServiceBean {
         }
 
         mobileTerminal.setPlugin(updatedPlugin);
+        
+        mobileTerminal.getChannels().forEach(channel -> channel.setMobileTerminal(oldTerminal));
 
         //TODO check type
         MobileTerminal updatedTerminal;

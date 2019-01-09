@@ -32,10 +32,8 @@ import org.junit.runner.RunWith;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.time.Duration;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -64,7 +62,37 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
-    @OperateOnDeployment("normal")
+    public void createMobileTerminalWithMultipleChannelsTest() {
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        Channel channel2 = new Channel();
+        channel2.setName("VMS");
+        channel2.setFrequencyGracePeriod(Duration.ofSeconds(53000));
+        channel2.setMemberNumber(MobileTerminalTestHelper.generateARandomStringWithMaxLength(3));
+        channel2.setExpectedFrequency(Duration.ofSeconds(7100));
+        channel2.setExpectedFrequencyInPort(Duration.ofSeconds(10400));
+        channel2.setLesDescription("Thrane&Thrane");
+        channel2.setDNID("1" + MobileTerminalTestHelper.generateARandomStringWithMaxLength(3));
+        channel2.setInstalledBy("Mike Great");
+        channel2.setArchived(false);
+        channel2.setConfigChannel(true);
+        channel2.setDefaultChannel(true);
+        channel2.setPollChannel(true);
+        channel2.setMobileTerminal(mobileTerminal);
+
+        mobileTerminal.getChannels().add(channel2);
+
+        MobileTerminal created = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        assertNotNull(created);
+        Set<Channel> channels = created.getChannels();
+        assertEquals(2, channels.size());
+    }
+
+    @Test
     public void createTwoMobileTerminalsUsingTheSameSerialNumberTest() {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
         String serialNr = mobileTerminal.getSerialNo();
@@ -578,6 +606,33 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         //check the search result
         returnList = sendMTListQuery(mobileTerminalListQuery);
         assertEquals(1, returnList.getMobileTerminalList().size());
+    }
+
+    @Test
+    public void updateMobileTerminal_ChannelHasNoMobileTerminalTTest() {
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        MobileTerminal created = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        assertNotNull(created);
+
+        UUID channelId = created.getChannels().iterator().next().getId();
+
+        created.getChannels().iterator().next().setMobileTerminal(null);
+
+        MobileTerminal updated = getWebTarget()
+                .path("mobileterminal")
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(created), MobileTerminal.class);
+
+        assertNotNull(updated);
+        assertEquals(created.getId(), updated.getId());
+        assertEquals(created.getId(), updated.getChannels().iterator().next().getMobileTerminal().getId());
+        assertEquals(channelId, updated.getChannels().iterator().next().getId());
     }
 
     private Asset createAndRestBasicAsset() {
