@@ -16,9 +16,11 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import eu.europa.ec.fisheries.schema.exchange.module.v1.GetServiceListRequest;
 import eu.europa.ec.fisheries.schema.exchange.module.v1.GetServiceListResponse;
+import eu.europa.ec.fisheries.schema.exchange.module.v1.SetCommandRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityListType;
@@ -64,5 +66,13 @@ public class ExchangeModuleRestMock {
             LOG.error("Mock error", e);
             return null;
         }
+    }
+
+    @POST
+    @Consumes(value = { MediaType.APPLICATION_JSON })
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Path("/pluginCommand")
+    public Response sendCommandToPlugin(SetCommandRequest request) {
+        return Response.ok().build();
     }
 }
