@@ -13,12 +13,7 @@ package eu.europa.ec.fisheries.uvms.asset.client;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.ejb.ActivationConfigProperty;
-import javax.ejb.MessageDriven;
 import javax.ejb.Stateless;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.TextMessage;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -33,9 +28,6 @@ import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityListType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityTypeType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.ServiceResponseType;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
-import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
-import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.ExchangeModuleResponseMapper;
 
 @Path("exchange/rest/api")
 @Stateless
