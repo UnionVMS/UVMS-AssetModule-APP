@@ -12,6 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.bean;
 
 import java.util.List;
+import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -19,10 +20,20 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.jms.TextMessage;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import eu.europa.ec.fisheries.schema.exchange.common.v1.CommandType;
+import eu.europa.ec.fisheries.schema.exchange.common.v1.CommandTypeType;
+import eu.europa.ec.fisheries.schema.exchange.module.v1.ExchangeModuleMethod;
+import eu.europa.ec.fisheries.schema.exchange.module.v1.SetCommandRequest;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
-import eu.europa.ec.fisheries.schema.exchange.common.v1.AcknowledgeType;
 import eu.europa.ec.fisheries.schema.exchange.common.v1.AcknowledgeTypeType;
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PollType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
@@ -33,10 +44,8 @@ import eu.europa.ec.fisheries.uvms.asset.message.ExchangeProducer;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleRequestMapper;
-import eu.europa.ec.fisheries.uvms.exchange.model.exception.ExchangeModelMapperException;
 import eu.europa.ec.fisheries.uvms.exchange.model.exception.ExchangeModelMarshallException;
 import eu.europa.ec.fisheries.uvms.exchange.model.mapper.ExchangeModuleRequestMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.ExchangeModuleResponseMapper;
 
 @Stateless
 @LocalBean
@@ -61,20 +70,28 @@ public class PluginServiceBean {
     @EJB
     private ConfigServiceBeanMT configModel;
 
+    @Resource(name = "java:global/exchange_endpoint")
+    private String exchangeEndpoint;
+
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public AcknowledgeTypeType sendPoll(PollResponseType poll, String username) {
         try {
             PollType pollType = PollToCommandRequestMapper.mapToPollType(poll);
             String pluginServiceName = poll.getMobileTerminal().getPlugin().getServiceName();
-            String exchangeData = ExchangeModuleRequestMapper.createSetCommandSendPollRequest(pluginServiceName, pollType, username, null);
-            String messageId = exchangeProducer.sendModuleMessage(exchangeData);
-            TextMessage response = assetConsumer.getMessage(messageId, TextMessage.class);
-            if(response == null)
+            SetCommandRequest request = createSetCommandRequest(pluginServiceName, CommandTypeType.POLL, username, null);
+            request.getCommand().setPoll(pollType);
+
+            Client client = ClientBuilder.newClient();
+            Response response = client.target(exchangeEndpoint + "/api/pluginCommand")
+                    .request(MediaType.APPLICATION_JSON)
+                    .post(Entity.json(request), Response.class);
+
+            if(response == null || response.getStatus() != 200) {
                 return AcknowledgeTypeType.NOK;
-            AcknowledgeType ack = ExchangeModuleResponseMapper.mapSetCommandResponse(response, messageId);
-            LOG.debug("Poll: " + poll.getPollId().getGuid() + " sent to exchange. Response: " + ack.getType());
-            return ack.getType();
-        } catch (ExchangeModelMapperException | RuntimeException | MessageException e) {
+            }
+            LOG.debug("Poll: " + poll.getPollId().getGuid() + " sent to exchange. Response: " + AcknowledgeTypeType.OK);
+            return AcknowledgeTypeType.OK;
+        } catch (RuntimeException e) {
             LOG.error("Failed to send poll command! Poll with guid {} was created but not sent", poll.getPollId().getGuid());
             return AcknowledgeTypeType.NOK;
         }
@@ -125,5 +142,18 @@ public class PluginServiceBean {
         } catch (ExchangeModelMarshallException | RuntimeException | MessageException e) {
             LOG.error("Failed to send updated DNID list {} {} {}",pluginName,settingKey,e);
         }
+    }
+
+    private SetCommandRequest createSetCommandRequest(String pluginName, CommandTypeType type, String username, String fwdRule) {
+        SetCommandRequest request = new SetCommandRequest();
+        request.setMethod(ExchangeModuleMethod.SET_COMMAND);
+        CommandType commandType = new CommandType();
+        commandType.setTimestamp(DateUtils.nowUTC().toDate());
+        commandType.setCommand(type);
+        commandType.setPluginName(pluginName);
+        commandType.setFwdRule(fwdRule);
+        request.setUsername(username);
+        request.setCommand(commandType);
+        return request;
     }
 }
