@@ -160,6 +160,11 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
         mobileTerminal.setAsset(asset);
         mobileTerminal = mobileTerminalService.unAssignMobileTerminal(asset.getId(), guid, TEST_COMMENT, USERNAME);
         assertNotNull(mobileTerminal);
+
+        assetDao.deleteAsset(asset);
+
+        userTransaction.commit();
+        userTransaction.begin();
     }
 
     @Test
