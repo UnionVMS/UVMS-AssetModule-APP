@@ -153,6 +153,8 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
         MobileTerminal mobileTerminal = mobileTerminalService.assignMobileTerminal(asset.getId(), guid, TEST_COMMENT, USERNAME);
         assertNotNull(mobileTerminal);
 
+        em.flush();
+
         mobileTerminal.setAsset(asset);
         mobileTerminal = mobileTerminalService.unAssignMobileTerminal(asset.getId(), guid, TEST_COMMENT, USERNAME);
         assertNotNull(mobileTerminal);
