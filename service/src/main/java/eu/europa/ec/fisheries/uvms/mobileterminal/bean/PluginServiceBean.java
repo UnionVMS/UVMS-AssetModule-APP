@@ -87,6 +87,11 @@ public class PluginServiceBean {
                     .post(Entity.json(request), Response.class);
 
             if(response == null || response.getStatus() != 200) {
+                if(response != null) {
+                    LOG.info("Send poll failed due to: " + response.getStatus() + response.getEntity());
+                }else{
+                    LOG.info("Send poll failed due to null response");
+                }
                 return AcknowledgeTypeType.NOK;
             }
             LOG.debug("Poll: " + poll.getPollId().getGuid() + " sent to exchange. Response: " + AcknowledgeTypeType.OK);
