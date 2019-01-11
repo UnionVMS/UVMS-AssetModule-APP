@@ -337,8 +337,6 @@ public class MobileTerminalServiceBean {
         terminal.setUpdateuser(username);
         terminalDao.updateMobileTerminal(terminal);
 
-        asset.getMobileTerminals().add(terminal);
-        assetDao.updateAsset(asset);
         return terminal;
     }
 
@@ -355,7 +353,6 @@ public class MobileTerminalServiceBean {
         terminal.setUpdateuser(username);
 
         Asset asset = terminal.getAsset();
-        asset.setUpdatedBy(username);
         terminal.setAsset(null);
         terminalDao.updateMobileTerminal(terminal);
 
@@ -363,7 +360,6 @@ public class MobileTerminalServiceBean {
         if(!remove) {
             throw new IllegalArgumentException("Terminal " + guid + " is not linked to an asset with ID " + asset.getId());
         }
-        assetDao.updateAsset(asset);
         return terminal;
     }
 

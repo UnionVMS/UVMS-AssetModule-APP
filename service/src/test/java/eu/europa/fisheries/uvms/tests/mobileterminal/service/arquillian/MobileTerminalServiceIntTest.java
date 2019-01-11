@@ -22,6 +22,7 @@ import org.junit.runner.RunWith;
 import javax.ejb.EJB;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.inject.Inject;
+import javax.transaction.*;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -142,7 +143,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void unAssignMobileTerminalFromCarrier() {
+    public void unAssignMobileTerminalFromCarrier() throws HeuristicRollbackException, RollbackException, HeuristicMixedException, SystemException, NotSupportedException {
 
         MobileTerminal created = testPollHelper.createAndPersistMobileTerminal(null);
         Asset asset = createAndPersistAsset();
@@ -153,9 +154,17 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
         MobileTerminal mobileTerminal = mobileTerminalService.assignMobileTerminal(asset.getId(), guid, TEST_COMMENT, USERNAME);
         assertNotNull(mobileTerminal);
 
+        userTransaction.commit();
+        userTransaction.begin();
+
         mobileTerminal.setAsset(asset);
         mobileTerminal = mobileTerminalService.unAssignMobileTerminal(asset.getId(), guid, TEST_COMMENT, USERNAME);
         assertNotNull(mobileTerminal);
+
+        assetDao.deleteAsset(asset);
+
+        userTransaction.commit();
+        userTransaction.begin();
     }
 
     @Test
