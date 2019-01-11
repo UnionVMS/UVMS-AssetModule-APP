@@ -34,7 +34,7 @@ public interface AssetDao {
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
      */
-    public AssetEntity createAsset(AssetEntity asset) throws AssetDaoException;
+    AssetEntity createAsset(AssetEntity asset) throws AssetDaoException;
 
     /**
      * Get vessel by internal vessel id
@@ -43,7 +43,7 @@ public interface AssetDao {
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
      */
-    public AssetEntity getAssetById(Long id) throws AssetDaoException;
+    AssetEntity getAssetById(Long id) throws AssetDaoException;
 
     /**
      * Get asset by cfr
@@ -52,7 +52,7 @@ public interface AssetDao {
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
      */
-    public AssetEntity getAssetByCfr(String cfr) throws AssetDaoException;
+    AssetEntity getAssetByCfr(String cfr) throws AssetDaoException;
 
     /**
      * Get asset by ircs
@@ -61,7 +61,7 @@ public interface AssetDao {
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
      */
-    public AssetEntity getAssetByIrcs(String ircs) throws AssetDaoException;
+    AssetEntity getAssetByIrcs(String ircs) throws AssetDaoException;
 
     /**
      * Get asset by guid
@@ -70,7 +70,7 @@ public interface AssetDao {
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
      */
-    public AssetEntity getAssetByGuid(String guid) throws AssetDaoException;
+    AssetEntity getAssetByGuid(String guid) throws AssetDaoException;
 
     /**
      * Get asset by IMO
@@ -79,7 +79,7 @@ public interface AssetDao {
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
      */
-    public AssetEntity getAssetByImo(String value) throws AssetDaoException;
+    AssetEntity getAssetByImo(String value) throws AssetDaoException;
 
     /**
      * Get asset by MMSI
@@ -88,7 +88,7 @@ public interface AssetDao {
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
      */
-    public AssetEntity getAssetByMmsi(String value) throws AssetDaoException;
+    AssetEntity getAssetByMmsi(String value) throws AssetDaoException;
 
     /**
      * Update asset in database
@@ -97,7 +97,7 @@ public interface AssetDao {
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
      */
-    public AssetEntity updateAsset(AssetEntity asset) throws AssetDaoException;
+    AssetEntity updateAsset(AssetEntity asset) throws AssetDaoException;
 
     /**
      * Delete asset from database
@@ -105,7 +105,7 @@ public interface AssetDao {
      * @param assetEntity
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
      */
-    public void deleteAsset(AssetEntity assetEntity) throws AssetDaoException;
+    void deleteAsset(AssetEntity assetEntity) throws AssetDaoException;
 
     /**
      * Get all assets (FIND_ALL)
@@ -113,7 +113,7 @@ public interface AssetDao {
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
      */
-    public List<AssetEntity> getAssetListAll() throws AssetDaoException;
+    List<AssetEntity> getAssetListAll() throws AssetDaoException;
 
     List<AssetHistory> getAssetHistoryByCriteria(List<AssetListCriteriaPair> criteriaPairs, Integer maxResult) throws AssetDaoException;
 
@@ -129,7 +129,7 @@ public interface AssetDao {
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
      */
-    public AssetHistory getAssetHistoryByGuid(String guid) throws AssetDaoException;
+    AssetHistory getAssetHistoryByGuid(String guid) throws AssetDaoException;
 
     /**
      * Get count of search in sql countSql must be count(*)
@@ -140,7 +140,7 @@ public interface AssetDao {
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
      */
-    public Long getAssetCount(String countSql, List<SearchKeyValue> searchFields, boolean isDynamic) throws AssetDaoException;
+    Long getAssetCount(String countSql, List<SearchKeyValue> searchFields, boolean isDynamic) throws AssetDaoException;
 
     /**
      * Get a page of the list with assets matching the search in sql. This
@@ -154,7 +154,7 @@ public interface AssetDao {
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
      */
-    public List<AssetHistory> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize, String sql, List<SearchKeyValue> searchFields, boolean isDynamic) throws AssetDaoException;
+    List<AssetHistory> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize, String sql, List<SearchKeyValue> searchFields, boolean isDynamic) throws AssetDaoException;
 
     /**
      * Get a page of the list with assets matching the search in sql. This
@@ -166,17 +166,17 @@ public interface AssetDao {
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
      */
-    public List<AssetHistory> getAssetListSearchNotPaginated(String sql, List<SearchKeyValue> searchFields, boolean isDynamic) throws AssetDaoException;
+    List<AssetHistory> getAssetListSearchNotPaginated(String sql, List<SearchKeyValue> searchFields, boolean isDynamic) throws AssetDaoException;
 
     List<AssetHistory> getAssetListByAssetGuids(List<String> assetGuids) throws AssetDaoException;
 
-    public AssetEntity getAssetByCfrExcludeArchived(String cfr) throws AssetDaoException;
+    AssetEntity getAssetByCfrExcludeArchived(String cfr) throws AssetDaoException;
 
-    public AssetEntity getAssetByIrcsExcludeArchived(String ircs) throws AssetDaoException;
+    AssetEntity getAssetByIrcsExcludeArchived(String ircs) throws AssetDaoException;
 
-    public AssetEntity getAssetByImoExcludeArchived(String value) throws AssetDaoException;
+    AssetEntity getAssetByImoExcludeArchived(String value) throws AssetDaoException;
 
-    public AssetEntity getAssetByMmsiExcludeArchived(String value) throws AssetDaoException;
+    AssetEntity getAssetByMmsiExcludeArchived(String value) throws AssetDaoException;
 
     List<NotesActivityCode> getNoteActivityCodes();
 

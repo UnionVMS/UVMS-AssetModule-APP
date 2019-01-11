@@ -40,13 +40,13 @@ import java.util.Map;
 public class ConfigDomainModelBean  {
 
     @EJB
-    LicenseTypeDao licenseDao;
+    private LicenseTypeDao licenseDao;
 
     @EJB
-    FlagStateDao flagStateDao;
+    private FlagStateDao flagStateDao;
 
     @EJB
-    SettingDao settingDao;
+    private SettingDao settingDao;
 
     public List<String> getLicenseType() throws ConfigModelException {
         try {

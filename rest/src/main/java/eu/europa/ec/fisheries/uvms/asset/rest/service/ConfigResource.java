@@ -43,7 +43,7 @@ import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 public class ConfigResource {
 
     @EJB
-    ConfigServiceBean configService;
+    private ConfigServiceBean configService;
     
     final static Logger LOG = LoggerFactory.getLogger(ConfigResource.class);
 

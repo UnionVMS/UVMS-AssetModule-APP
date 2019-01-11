@@ -46,10 +46,10 @@ import org.slf4j.LoggerFactory;
 public class AssetResource {
 
     @EJB
-    AssetService assetService;
+    private AssetService assetService;
 
     @EJB
-    AssetHistoryService assetHistoryService;
+    private AssetHistoryService assetHistoryService;
 
     @Context
     private HttpServletRequest servletRequest;

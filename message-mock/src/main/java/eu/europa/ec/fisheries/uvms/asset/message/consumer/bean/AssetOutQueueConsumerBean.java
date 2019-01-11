@@ -14,6 +14,7 @@ package eu.europa.ec.fisheries.uvms.asset.message.consumer.bean;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetConstants;
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.exception.AssetMessageException;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractConsumer;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigMessageException;
 import eu.europa.ec.fisheries.uvms.config.message.ConfigMessageConsumer;
@@ -31,10 +32,10 @@ public class AssetOutQueueConsumerBean extends AbstractConsumer implements Asset
 
     @Override
     public <T> T getMessageOv(String correlationId, Class type) throws AssetMessageException {
-    	if (correlationId == null || correlationId.isEmpty()) {
-    		throw new AssetMessageException("No CorrelationID provided!");
-    	}
-    	try {
+        if (correlationId == null || correlationId.isEmpty()) {
+            throw new AssetMessageException("No CorrelationID provided!");
+        }
+        try {
             return getMessage(correlationId, type, TIMEOUT);
         } catch (Exception e) {
             LOG.error("[ Error when retrieving message. ] {}", e.getMessage());
@@ -45,9 +46,8 @@ public class AssetOutQueueConsumerBean extends AbstractConsumer implements Asset
     @Override
     public <T> T getConfigMessage(String correlationId, Class type) throws ConfigMessageException {
         try {
-            return getMessageOv(correlationId, type);
-        }
-        catch (AssetMessageException e) {
+            return getMessage(correlationId, type);
+        } catch (MessageException e) {
             LOG.error("[ Error when getting config message. ] {}", e.getMessage());
             throw new ConfigMessageException(e.getMessage());
         }

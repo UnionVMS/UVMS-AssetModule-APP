@@ -11,15 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.bean;
 
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.InputArgumentException;
@@ -29,43 +20,36 @@ import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
-import eu.europa.ec.fisheries.uvms.mapper.EntityToModelMapper;
-import eu.europa.ec.fisheries.uvms.mapper.MapperUtil;
-import eu.europa.ec.fisheries.uvms.mapper.ModelToEntityMapper;
-import eu.europa.ec.fisheries.uvms.mapper.SearchFieldMapper;
-import eu.europa.ec.fisheries.uvms.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.uvms.mapper.*;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetHistoryId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.wsdl.asset.types.NoteActivityCode;
-import eu.europa.ec.fisheries.wsdl.asset.types.NumberOfAssetsGroupByFlagState;
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import java.util.*;
 
 @Stateless
 @LocalBean
 public class AssetDomainModelBean {
 
     @EJB
-    AssetDao assetDao;
+    private AssetDao assetDao;
 
     @EJB
-    ConfigDomainModelBean configModel;
+    private ConfigDomainModelBean configModel;
 
     @EJB
-    AssetGroupDomainModelBean assetGroupModel;
+    private AssetGroupDomainModelBean assetGroupModel;
 
-
-    private static final Logger LOG = LoggerFactory
-            .getLogger(AssetDomainModelBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AssetDomainModelBean.class);
 
     public Asset createAsset(Asset asset, String username) throws AssetModelException {
         assertAssetDoesNotExist(asset);
-        AssetEntity assetEntity = ModelToEntityMapper.mapToNewAssetEntity(
-                asset, configModel.getLicenseType(), username);
+        AssetEntity assetEntity = ModelToEntityMapper.mapToNewAssetEntity(asset, configModel.getLicenseType(), username);
         assetDao.createAsset(assetEntity);
         return EntityToModelMapper.toAssetFromEntity(assetEntity);
     }
@@ -226,30 +210,21 @@ public class AssetDomainModelBean {
 
     }
 
-    public Long getAssetListCount(AssetListQuery query)
-            throws AssetModelException {
+    public Long getAssetListCount(AssetListQuery query) throws AssetModelException {
         if (query == null) {
             throw new InputArgumentException("Cannot get asset list count because query is null.");
         }
-
         if (query.getAssetSearchCriteria() == null
                 || query.getAssetSearchCriteria().isIsDynamic() == null
                 || query.getAssetSearchCriteria().getCriterias() == null) {
             throw new InputArgumentException("Cannot get asset list count because criteria are null.");
         }
-
         if (query.getPagination() == null) {
             throw new InputArgumentException("Cannot get asset list count because criteria pagination is null.");
         }
-
-        GetAssetListResponseDto response = new GetAssetListResponseDto();
-
         boolean isDynamic = query.getAssetSearchCriteria().isIsDynamic();
-
         List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query.getAssetSearchCriteria().getCriterias());
-
         String countSql = SearchFieldMapper.createCountSearchSql(searchFields, isDynamic);
-
         return assetDao.getAssetCount(countSql, searchFields, isDynamic);
 
     }
@@ -263,17 +238,14 @@ public class AssetDomainModelBean {
         }
     }
 
-    public List<Asset> getAssetHistoryListByAssetId(AssetId assetId,
-                                                    Integer maxNbr) throws AssetModelException {
+    public List<Asset> getAssetHistoryListByAssetId(AssetId assetId, Integer maxNbr) throws AssetModelException {
         AssetEntity vesselHistories = getAssetEntityById(assetId);
         return EntityToModelMapper.toAssetHistoryList(vesselHistories, maxNbr);
     }
 
-    public Asset getAssetHistory(AssetHistoryId historyId)
-            throws AssetModelException {
+    public Asset getAssetHistory(AssetHistoryId historyId) throws AssetModelException {
         if (historyId == null || historyId.getEventId() == null) {
-            throw new InputArgumentException(
-                    "Cannot get asset history because asset history ID is null.");
+            throw new InputArgumentException("Cannot get asset history because asset history ID is null.");
         }
 
         AssetHistory assetHistory = assetDao.getAssetHistoryByGuid(historyId

@@ -80,8 +80,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
     }
 
     @Override
-    public void deleteAsset(AssetEntity assetEntity) throws AssetDaoException {
-
+    public void deleteAsset(AssetEntity assetEntity) {
         if (assetEntity == null) {
             // does not destroy anything so just log and return
             LOG.debug("deleteAsset. assetEntity is null. check you code");
@@ -113,7 +112,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
     }
 
     @Override
-    public AssetEntity getAssetByIrcs(String ircs) throws NoAssetEntityFoundException, AssetDaoException {
+    public AssetEntity getAssetByIrcs(String ircs) throws AssetDaoException {
         try {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_IRCS, AssetEntity.class);
             query.setParameter("ircs", ircs);
@@ -173,7 +172,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
     }
 
     @Override
-    public List<AssetHistory> getAssetHistoryByCriteria(List<AssetListCriteriaPair> criteriaPairs, Integer maxResult) throws AssetDaoException {
+    public List<AssetHistory> getAssetHistoryByCriteria(List<AssetListCriteriaPair> criteriaPairs, Integer maxResult) {
         List<AssetHistory> resultList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(criteriaPairs)){
             TypedQuery<AssetHistory> query = em.createNamedQuery(UvmsConstants.ASSETHISTORY_FIND_BY_CRITERIA, AssetHistory.class);
@@ -197,7 +196,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
 
     @Override
     public List<AssetHistory> _getAssetHistoryByCriteria(String reportDate, String cfr, String regCountry, String ircs, String extMark, String iccat) throws AssetDaoException {
-        List<AssetHistory> resultList = new ArrayList<>();
+        List<AssetHistory> resultList;
 
             TypedQuery<AssetHistory> query = em.createNamedQuery(UvmsConstants.ASSETHISTORY_FIND_BY_CRITERIA, AssetHistory.class);
             query.setParameter("EXTERNAL_MARKING",null);
@@ -217,7 +216,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
 
 
     @Override
-    public Long getAssetCount(String sql, List<SearchKeyValue> searchFields, boolean isDynamic) throws AssetDaoException {
+    public Long getAssetCount(String sql, List<SearchKeyValue> searchFields, boolean isDynamic) {
         TypedQuery<Long> query = em.createQuery(sql, Long.class);
 
         for (SearchKeyValue field : searchFields) {
@@ -315,7 +314,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
     }
 
     @Override
-    public AssetEntity getAssetByIrcsExcludeArchived(String ircs) throws NoAssetEntityFoundException, AssetDaoException {
+    public AssetEntity getAssetByIrcsExcludeArchived(String ircs) throws AssetDaoException {
         try {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_IRCS_EXCLUDE_ARCHIVED, AssetEntity.class);
             query.setParameter("ircs", ircs);

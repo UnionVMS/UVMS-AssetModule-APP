@@ -18,10 +18,9 @@ import javax.ejb.Local;
 @Local
 public interface FishingGearTypeDao {
 
+    FishingGearType getFishingGearByCode(Long code) throws Exception;
 
-    public FishingGearType getFishingGearByCode(Long code) throws Exception;
+    void create(FishingGearType fishingGearType);
 
-    public void create(FishingGearType fishingGearType);
-
-    public FishingGearType update(FishingGearType fishingGearType);
+    FishingGearType update(FishingGearType fishingGearType);
 }

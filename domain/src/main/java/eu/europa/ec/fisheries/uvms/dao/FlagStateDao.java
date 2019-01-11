@@ -21,5 +21,5 @@ import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
 @Local
 public interface FlagStateDao {
 
-	public List<FlagState> getAllFlagState() throws AssetDaoException;
+	List<FlagState> getAllFlagState() throws AssetDaoException;
 }

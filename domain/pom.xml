@@ -29,12 +29,6 @@
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
-
-       <dependency>
-            <groupId>eu.europa.ec.fisheries.uvms</groupId>
-            <artifactId>config-library</artifactId>
-            <version>${uvms.config.version}</version>
-        </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-message</artifactId>
@@ -83,6 +77,16 @@
                 </exclusion>
             </exclusions>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>${hibernate.version}</version>
         </dependency>
     </dependencies>
     

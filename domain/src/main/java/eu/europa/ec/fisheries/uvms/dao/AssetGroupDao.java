@@ -11,12 +11,11 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.dao;
 
-import java.util.List;
-
-import javax.ejb.Local;
-
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
 import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroup;
+
+import javax.ejb.Local;
+import java.util.List;
 
 @Local
 public interface AssetGroupDao {
@@ -26,21 +25,21 @@ public interface AssetGroupDao {
 	 * @param group
 	 * @return
 	 */
-	public AssetGroup createAssetGroup(AssetGroup group) throws AssetGroupDaoException;
+	AssetGroup createAssetGroup(AssetGroup group) throws AssetGroupDaoException;
 	
 	/**
 	 * Get asset group by guid
 	 * @param guid
 	 * @return
 	 */
-	public AssetGroup getAssetGroupByGuid(String guid) throws AssetGroupDaoException;
+	AssetGroup getAssetGroupByGuid(String guid) throws AssetGroupDaoException;
 	
 	/**
 	 * Update asset group
 	 * @param group
 	 * @return
 	 */
-	public AssetGroup updateAssetGroup(AssetGroup group) throws AssetGroupDaoException;
+	AssetGroup updateAssetGroup(AssetGroup group) throws AssetGroupDaoException;
 	
 	/**
 	 * Delete asset group
@@ -48,14 +47,14 @@ public interface AssetGroupDao {
 	 * @return
 	 * @throws eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException
 	 */
-	public AssetGroup deleteAssetGroup(AssetGroup group) throws AssetGroupDaoException;
+	AssetGroup deleteAssetGroup(AssetGroup group) throws AssetGroupDaoException;
 	
 	/**
 	 * Get all asset groups (FIND_ALL)
 	 * @return
      * @throws eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException
 	 */
-	public List<AssetGroup> getAssetGroupAll() throws AssetGroupDaoException;
+	List<AssetGroup> getAssetGroupAll() throws AssetGroupDaoException;
 	
 	/**
 	 * Get asset groups by user
@@ -63,7 +62,7 @@ public interface AssetGroupDao {
 	 * @return
      * @throws eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException
 	 */
-	public List<AssetGroup> getAssetGroupByUser(String user) throws AssetGroupDaoException;
+	List<AssetGroup> getAssetGroupByUser(String user) throws AssetGroupDaoException;
 	
 	/**
 	 * Get asset groups by guidList
@@ -71,5 +70,5 @@ public interface AssetGroupDao {
 	 * @return
 	 * @throws eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException
 	 */
-	public List<AssetGroup> getAssetGroupsByGroupGuidList(List<String> guidList) throws AssetGroupDaoException;
+	List<AssetGroup> getAssetGroupsByGroupGuidList(List<String> guidList) throws AssetGroupDaoException;
 }

@@ -11,16 +11,15 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.dao;
 
-import java.util.List;
-
-import javax.ejb.Local;
-
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.entity.model.Setting;
+
+import javax.ejb.Local;
+import java.util.List;
 
 @Local
 public interface SettingDao {
 
-	public List<Setting> getAllSettings() throws AssetDaoException;
-	public List<Setting> getSettingByField(String field) throws AssetDaoException;
+	List<Setting> getAllSettings() throws AssetDaoException;
+	List<Setting> getSettingByField(String field) throws AssetDaoException;
 }

@@ -95,13 +95,13 @@
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>asset-model</artifactId>
-            <version>${project.version}</version>
+            <version>${project.parent.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>asset-ejb-client</artifactId>
-            <version>${project.version}</version>
+            <version>${project.parent.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -134,8 +134,6 @@
                 </plugins>
             </build>
         </profile>
-
-
     </profiles>
 
 </project>

@@ -11,15 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.bean;
 
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.ConfigurationDto;
@@ -30,22 +21,26 @@ import eu.europa.ec.fisheries.wsdl.asset.config.ConfigField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 
 @Stateless
 @LocalBean
 public class ConfigServiceBean {
-	final static Logger LOG = LoggerFactory.getLogger(ConfigServiceBean.class);
 
+	private static final Logger LOG = LoggerFactory.getLogger(ConfigServiceBean.class);
 
 	@EJB
 	private ParameterService parameterService;
 
 	@EJB
 	private ConfigDomainModelBean configDomainModel;
-
-	@PersistenceContext
-    private EntityManager entityManager;
 
 	public List<Config> getConfiguration() throws AssetException {
 		ConfigurationDto configuration = configDomainModel.getConfiguration(ConfigField.ALL);

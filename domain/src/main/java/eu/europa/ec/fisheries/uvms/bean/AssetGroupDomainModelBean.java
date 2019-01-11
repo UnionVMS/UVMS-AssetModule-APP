@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 public class AssetGroupDomainModelBean  {
 
     @EJB
-    AssetGroupDao assetGroupDao;
+    private AssetGroupDao assetGroupDao;
 
     private static final Logger LOG = LoggerFactory.getLogger(AssetGroupDomainModelBean.class);
 
