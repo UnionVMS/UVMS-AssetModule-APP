@@ -18,6 +18,8 @@ public class AssetMTEnrichmentRequest {
 
     // for Asset
     private UUID id = null;
+    private String assetName = null;
+    private String flagState = null;
     private String cfrValue = null;
     private String ircsValue = null;
     private String imoValue = null;
@@ -25,6 +27,7 @@ public class AssetMTEnrichmentRequest {
     private String gfcmValue = null;
     private String uviValue = null;
     private String iccatValue = null;
+    private String externalMarking = null;
 
 
     public AssetMTEnrichmentRequest(){
@@ -149,5 +152,29 @@ public class AssetMTEnrichmentRequest {
 
     public void setUser(String user) {
         this.user = user;
+    }
+
+    public String getAssetName() {
+        return assetName;
+    }
+
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
+    }
+
+    public String getFlagState() {
+        return flagState;
+    }
+
+    public void setFlagState(String flagState) {
+        this.flagState = flagState;
+    }
+
+    public String getExternalMarking() {
+        return externalMarking;
+    }
+
+    public void setExternalMarking(String externalMarking) {
+        this.externalMarking = externalMarking;
     }
 }
