@@ -10,10 +10,11 @@ public class AssetUtil {
     public static Asset createNewAssetFromRequest(AssetMTEnrichmentRequest request){
         Asset asset = new Asset();
 
-        asset.setName("Unknown ship: " + (Math.random() * 10000d) );
+        asset.setName((request.getAssetName() == null) ? ("Unknown ship: " + (int) (Math.random() * 10000d)) : request.getAssetName());
         asset.setUpdateTime(OffsetDateTime.now());
+        asset.setSource("INTERNAL");
         asset.setUpdatedBy("UVMS");
-        asset.setFlagStateCode("UNK");
+        asset.setFlagStateCode((request.getFlagState() == null) ? ("UNK") : request.getFlagState());
         asset.setActive(true);
 
         asset.setCfr(request.getCfrValue());
@@ -23,6 +24,7 @@ public class AssetUtil {
         asset.setIccat(request.getIccatValue());
         asset.setMmsi(request.getMmsiValue());
         asset.setUvi(request.getUviValue());
+        asset.setExternalMarking(request.getExternalMarking());
 
 
         return asset;

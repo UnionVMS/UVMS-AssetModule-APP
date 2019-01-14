@@ -112,7 +112,7 @@ public class Asset implements Serializable {
     private OffsetDateTime updateTime;
 
     @Column(name = "source")
-    private String source;
+    private String source;      //if this is not set then frontend has a hissyfit about formating
 
     @Size(max = 100)
     @Column(name = "vesseltype")
