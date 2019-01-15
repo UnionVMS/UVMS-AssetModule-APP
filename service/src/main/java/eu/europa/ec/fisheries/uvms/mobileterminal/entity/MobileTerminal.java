@@ -46,9 +46,6 @@ import java.util.UUID;
 @Table(name = "mobileterminal", indexes = {
 		@Index(columnList = "plugin_id", name = "mobileterminal_plugin_FK_INX01", unique = false),
 		@Index(columnList = "serial_no", name = "mobileterminal_INX01", unique = false),
-//		@Index(columnList = "chan_def", name = "mobileterminal_channel_FK_INX10", unique = false),
-//		@Index(columnList = "chan_conf", name = "mobileterminal_channel_FK_INX20", unique = false),
-//		@Index(columnList = "chan_poll", name = "mobileterminal_channel_FK_INX30", unique = false),
 		@Index(columnList = "asset_id", name = "mobileterminal_asset_FK_INX10", unique = false)
 		},
 		uniqueConstraints = {@UniqueConstraint(name = "mobileterminal_uc_historyid" , columnNames = "historyid"),
@@ -133,18 +130,6 @@ public class MobileTerminal implements Serializable {
 
 	@OneToMany(mappedBy = "mobileTerminal", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<Channel> channels;
-
-//	@OneToOne(cascade = CascadeType.ALL)
-//	@JoinColumn(name="chan_def", foreignKey = @ForeignKey(name = "MobileTerminal_Channel_FK10"))
-//	private Channel defaultChannel;
-//
-//	@OneToOne(cascade = CascadeType.ALL)
-//	@JoinColumn(name="chan_conf", foreignKey = @ForeignKey(name = "MobileTerminal_Channel_FK20"))
-//	private Channel configChannel;
-//
-//	@OneToOne(cascade = CascadeType.ALL)
-//	@JoinColumn(name="chan_poll", foreignKey = @ForeignKey(name = "MobileTerminal_Channel_FK30"))
-//	private Channel pollChannel;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="asset_id", foreignKey = @ForeignKey(name = "MobileTerminal_Asset_FK"))
@@ -261,30 +246,6 @@ public class MobileTerminal implements Serializable {
 	public void setChannels(Set<Channel> channels) {
 		this.channels = channels;
 	}
-
-//	public Channel getDefaultChannel() {
-//		return defaultChannel;
-//	}
-//
-//	public void setDefaultChannel(Channel defaultChannel) {
-//		this.defaultChannel = defaultChannel;
-//	}
-//
-//	public Channel getConfigChannel() {
-//		return configChannel;
-//	}
-//
-//	public void setConfigChannel(Channel configChannel) {
-//		this.configChannel = configChannel;
-//	}
-//
-//	public Channel getPollChannel() {
-//		return pollChannel;
-//	}
-//
-//	public void setPollChannel(Channel pollChannel) {
-//		this.pollChannel = pollChannel;
-//	}
 
 	public Asset getAsset() {
 		return asset;
