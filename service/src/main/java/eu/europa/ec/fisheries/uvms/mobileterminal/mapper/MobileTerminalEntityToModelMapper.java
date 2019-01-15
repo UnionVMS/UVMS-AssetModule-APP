@@ -83,8 +83,8 @@ public class MobileTerminalEntityToModelMapper {
             ComChannelCapability pollCapability = new ComChannelCapability();
             pollCapability.setType(MobileTerminalConstants.CAPABILITY_POLLABLE);
 
-            if(entity.getPollChannel() != null) {
-                pollCapability.setValue(entity.getPollChannel().equals(channel));
+            if(channel.isPollChannel()) {
+                pollCapability.setValue(true);
             }
             else{
                 pollCapability.setValue(false);
@@ -94,8 +94,8 @@ public class MobileTerminalEntityToModelMapper {
             ComChannelCapability configCapability = new ComChannelCapability();
             configCapability.setType(MobileTerminalConstants.CAPABILITY_CONFIGURABLE);
 
-            if (entity.getConfigChannel() != null) {
-                configCapability.setValue(entity.getConfigChannel().equals(channel));
+            if (channel.isConfigChannel()) {
+                configCapability.setValue(true);
             } else {
                 configCapability.setValue(false);
             }
@@ -105,8 +105,8 @@ public class MobileTerminalEntityToModelMapper {
             ComChannelCapability defaultCapability = new ComChannelCapability();
             defaultCapability.setType(MobileTerminalConstants.CAPABILITY_DEFAULT_REPORTING);
 
-            if(entity.getDefaultChannel() != null) {
-                defaultCapability.setValue(entity.getDefaultChannel().equals(channel));
+            if(channel.isDefaultChannel()) {
+                defaultCapability.setValue(true);
             }
             else{
                 defaultCapability.setValue(false);
