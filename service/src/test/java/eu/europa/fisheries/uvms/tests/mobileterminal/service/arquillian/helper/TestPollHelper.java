@@ -75,10 +75,6 @@ public class TestPollHelper {
         channel.setDefaultChannel(true);
         channel.setPollChannel(true);
 
-        mobileTerminal.setConfigChannel(channel);
-        mobileTerminal.setDefaultChannel(channel);
-        mobileTerminal.setPollChannel(channel);
-
         mobileTerminal.getChannels().clear();
         mobileTerminal.getChannels().add(channel);
 
@@ -167,8 +163,7 @@ public class TestPollHelper {
         pollChannel.setExpectedFrequency(Duration.ofSeconds(60));
         pollChannel.setFrequencyGracePeriod(Duration.ofSeconds(60));
         pollChannel.setExpectedFrequencyInPort(Duration.ofSeconds(60));
-
-        mt.setPollChannel(pollChannel);
+        pollChannel.setPollChannel(true);
 
         Channel channel = new Channel();
         channel.setArchived(false);
@@ -183,6 +178,8 @@ public class TestPollHelper {
 
         Set<Channel> channels = new HashSet<>();
         channels.add(channel);
+        channels.add(pollChannel);
+        mt.getChannels().clear();
         mt.getChannels().addAll(channels);
         terminalDao.createMobileTerminal(mt);
         return mt;

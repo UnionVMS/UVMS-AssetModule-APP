@@ -394,9 +394,6 @@
                 <constraints nullable="false"/>
             </column>
             <column name="asset_id" type="UUID"/>
-            <column name="chan_conf" type="UUID"/>
-            <column name="chan_def" type="UUID"/>
-            <column name="chan_poll" type="UUID"/>
             <column name="satellite_number" type="VARCHAR(60)"/>
             <column name="antenna" type="VARCHAR(60)"/>
             <column name="transceiver_type" type="VARCHAR(60)"/>
@@ -423,9 +420,6 @@
             <column name="updateuser" type="VARCHAR(255)"/>
             <column name="plugin_id" type="UUID"/>
             <column name="asset_id" type="UUID"/>
-            <column name="chan_conf" type="UUID"/>
-            <column name="chan_def" type="UUID"/>
-            <column name="chan_poll" type="UUID"/>
             <column name="satellite_number" type="VARCHAR(60)"/>
             <column name="antenna" type="VARCHAR(60)"/>
             <column name="transceiver_type" type="VARCHAR(60)"/>
@@ -701,21 +695,6 @@
             <column name="asset_id"/>
         </createIndex>
     </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-81">
-        <createIndex indexName="mobileterminal_channel_fk_inx10" tableName="mobileterminal">
-            <column name="chan_def"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-82">
-        <createIndex indexName="mobileterminal_channel_fk_inx20" tableName="mobileterminal">
-            <column name="chan_conf"/>
-        </createIndex>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-83">
-        <createIndex indexName="mobileterminal_channel_fk_inx30" tableName="mobileterminal">
-            <column name="chan_poll"/>
-        </createIndex>
-    </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-85">
         <createIndex indexName="note_asset_fk_inx10" tableName="note">
             <column name="assetid"/>
@@ -782,15 +761,6 @@
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-106">
         <addForeignKeyConstraint baseColumnNames="asset_id" baseTableName="mobileterminal" constraintName="mobileterminal_asset_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="asset"/>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-107">
-        <addForeignKeyConstraint baseColumnNames="chan_def" baseTableName="mobileterminal" constraintName="mobileterminal_channel_fk10" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="channel"/>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-108">
-        <addForeignKeyConstraint baseColumnNames="chan_conf" baseTableName="mobileterminal" constraintName="mobileterminal_channel_fk20" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="channel"/>
-    </changeSet>
-    <changeSet author="thofan (generated)" id="1535445328879-109">
-        <addForeignKeyConstraint baseColumnNames="chan_poll" baseTableName="mobileterminal" constraintName="mobileterminal_channel_fk30" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="channel"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-111">
         <addForeignKeyConstraint baseColumnNames="plugin_id" baseTableName="plugin_capability" constraintName="plugin_capability_plugin_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="plugin"/>

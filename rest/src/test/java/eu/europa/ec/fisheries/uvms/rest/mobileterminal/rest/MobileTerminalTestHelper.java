@@ -56,10 +56,6 @@ public class MobileTerminalTestHelper {
         channel.setPollChannel(true);
         channel.setMobileTerminal(mobileTerminal);
 
-        mobileTerminal.setConfigChannel(channel);
-        mobileTerminal.setDefaultChannel(channel);
-        mobileTerminal.setPollChannel(channel);
-
         mobileTerminal.getChannels().clear();
         mobileTerminal.getChannels().add(channel);
 
