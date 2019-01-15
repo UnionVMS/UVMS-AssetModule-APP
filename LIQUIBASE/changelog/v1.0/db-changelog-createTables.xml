@@ -276,7 +276,7 @@
             <column name="source" type="VARCHAR(255)"/>
             <column name="streetname" type="VARCHAR(100)"/>
             <column name="type" type="VARCHAR(100)"/>
-            <column name="updatetime" type="TIMESTAMP(6) WITH TIME ZONE"/>
+            <column name="createtime" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="updatedby" type="VARCHAR(60)"/>
         </createTable>
     </changeSet>
@@ -304,7 +304,7 @@
             <column name="source" type="VARCHAR(255)"/>
             <column name="streetname" type="VARCHAR(255)"/>
             <column name="type" type="VARCHAR(255)"/>
-            <column name="updatetime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="createtime" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
             <column name="updatedby" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>

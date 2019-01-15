@@ -12,7 +12,6 @@ package eu.europa.ec.fisheries.uvms.asset.client.model;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
-import javax.json.bind.annotation.JsonbDateFormat;
 
 public class ContactInfo {
 
@@ -30,7 +29,7 @@ public class ContactInfo {
     private String postalArea;
     private String cityName;
     private String country;
-    private OffsetDateTime updateTime;
+    private OffsetDateTime createTime;
     private String updatedBy;
     
     public UUID getId() {
@@ -117,11 +116,11 @@ public class ContactInfo {
     public void setCountry(String country) {
         this.country = country;
     }
-    public OffsetDateTime getUpdateTime() {
-        return updateTime;
+    public OffsetDateTime getCreateTime() {
+        return createTime;
     }
-    public void setUpdateTime(OffsetDateTime updateTime) {
-        this.updateTime = updateTime;
+    public void setCreateTime(OffsetDateTime createTime) {
+        this.createTime = createTime;
     }
     public String getUpdatedBy() {
         return updatedBy;

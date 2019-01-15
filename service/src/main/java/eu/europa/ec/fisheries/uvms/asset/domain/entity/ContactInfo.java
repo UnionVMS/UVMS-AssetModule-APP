@@ -99,8 +99,8 @@ public class ContactInfo implements Serializable {
     @Column(name = "country")
     private String country;
 
-    @Column(name = "updatetime")
-    private OffsetDateTime updateTime;
+    @Column(name = "createtime")
+    private OffsetDateTime createTime;
 
     @Size(max = 60)
     @Column(name = "updatedby")
@@ -234,12 +234,12 @@ public class ContactInfo implements Serializable {
         this.country = country;
     }
 
-    public OffsetDateTime getUpdateTime() {
-        return updateTime;
+    public OffsetDateTime getCreateTime() {
+        return createTime;
     }
 
-    public void setUpdateTime(OffsetDateTime updateTime) {
-        this.updateTime = updateTime;
+    public void setCreateTime(OffsetDateTime createTime) {
+        this.createTime = createTime;
     }
 
     public String getUpdatedBy() {
