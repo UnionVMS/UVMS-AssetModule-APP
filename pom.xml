@@ -10,7 +10,6 @@
     <parent>
         <groupId>fish.focus.uvms.maven</groupId>
         <artifactId>uvms-pom</artifactId>
-        <relativePath />
         <version>1.21</version>
     </parent>
 

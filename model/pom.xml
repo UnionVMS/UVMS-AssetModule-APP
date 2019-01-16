@@ -5,7 +5,6 @@
 		<groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
 		<artifactId>asset</artifactId>
 		<version>4.0.19-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>asset-model</artifactId>
