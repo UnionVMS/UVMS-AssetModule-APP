@@ -88,22 +88,22 @@ public class PollServiceBean {
     public CreatePollResultDto createPoll(PollRequestType poll, String username) {
 
         List<PollResponseType> createdPolls = createPolls(poll, username);
-        boolean triggerTimer = false;
         List<String> unsentPolls = new ArrayList<>();
         List<String> sentPolls = new ArrayList<>();
         for (PollResponseType createdPoll : createdPolls) {
-            triggerTimer = PollType.PROGRAM_POLL.equals(createdPoll.getPollType());
-
-            AcknowledgeTypeType ack = sendPollService.sendPoll(createdPoll, username);
-            switch (ack) {
-                case NOK:
-                    unsentPolls.add(createdPoll.getPollId().getGuid());
-                    break;
-                case OK:
-                    sentPolls.add(createdPoll.getPollId().getGuid());
-                    break;
+            if (PollType.PROGRAM_POLL.equals(createdPoll.getPollType())) {
+                unsentPolls.add(createdPoll.getPollId().getGuid());
+            } else {
+                AcknowledgeTypeType ack = sendPollService.sendPoll(createdPoll, username);
+                switch (ack) {
+                    case NOK:
+                        unsentPolls.add(createdPoll.getPollId().getGuid());
+                        break;
+                    case OK:
+                        sentPolls.add(createdPoll.getPollId().getGuid());
+                        break;
+                }
             }
-
             try {
                 String auditData = AuditModuleRequestMapper.mapAuditLogPollCreated(createdPoll.getPollType(), createdPoll.getPollId().getGuid(), createdPoll.getComment(), username);
                 auditProducer.sendModuleMessage(auditData);
