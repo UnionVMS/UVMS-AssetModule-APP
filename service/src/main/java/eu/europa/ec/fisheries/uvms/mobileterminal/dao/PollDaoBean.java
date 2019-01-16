@@ -16,7 +16,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Poll;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.PollSearchKeyValue;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateless;
@@ -64,7 +63,7 @@ public class PollDaoBean  {
 
 	//ToDo: This method is not implemented. Need to evaluate if the functionality is required or not.
     public List<Poll> getPollListByProgramPoll(Integer pollProgramId)  {
-        throw new NotImplementedException();
+        throw new IllegalStateException("getPollListByProgramPoll not implemented!");
     }
 
 	public Long getPollListSearchCount(String sql, List<PollSearchKeyValue> searchKeyValues) {

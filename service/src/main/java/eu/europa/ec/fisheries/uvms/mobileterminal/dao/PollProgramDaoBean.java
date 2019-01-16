@@ -65,7 +65,7 @@ public class PollProgramDaoBean {
             long lastRunEpoch = lastRun == null ? 0 : lastRun.toEpochSecond();
             long nowEpoch = now.toEpochSecond();
 
-            boolean createPoll = lastRun == null || nowEpoch >= lastRunEpoch + frequency * 1000;
+            boolean createPoll = lastRun == null || nowEpoch >= lastRunEpoch + frequency;
 
             if (createPoll) {
                 pollProgram.setLatestRun(now);

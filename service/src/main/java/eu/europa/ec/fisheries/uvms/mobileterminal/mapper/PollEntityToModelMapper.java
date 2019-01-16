@@ -61,8 +61,8 @@ public class PollEntityToModelMapper {
     private static List<PollAttribute> getProgramPollAttributes(PollProgram program) {
         List<PollAttribute> attributes = new ArrayList<>();
         attributes.add(createPollAttribute(PollAttributeType.FREQUENCY, program.getFrequency().toString()));
-        attributes.add(createPollAttribute(PollAttributeType.START_DATE, program.getStartDate().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_WO_TIMEZONE))));
-        attributes.add(createPollAttribute(PollAttributeType.END_DATE, program.getStopDate().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_WO_TIMEZONE))));
+        attributes.add(createPollAttribute(PollAttributeType.START_DATE, program.getStartDate().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT))));
+        attributes.add(createPollAttribute(PollAttributeType.END_DATE, program.getStopDate().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT))));
 
         switch (program.getPollState()) {
         case STARTED:
