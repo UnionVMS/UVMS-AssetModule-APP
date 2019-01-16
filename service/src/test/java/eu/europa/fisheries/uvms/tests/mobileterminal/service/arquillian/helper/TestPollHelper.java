@@ -158,7 +158,7 @@ public class TestPollHelper {
         pollChannel.setMobileTerminal(mt);
         pollChannel.setInstalledBy("Mike the not so Great");
         pollChannel.setDNID("5555");
-        pollChannel.setMemberNumber("666");
+        pollChannel.setMemberNumber("" + (int)(Math.random() * 100000));
         pollChannel.setLesDescription("Thrane&Thrane");
         pollChannel.setExpectedFrequency(Duration.ofSeconds(60));
         pollChannel.setFrequencyGracePeriod(Duration.ofSeconds(60));
@@ -170,7 +170,7 @@ public class TestPollHelper {
         channel.setMobileTerminal(mt);
         channel.setInstalledBy("Mike the not so Great");
         channel.setDNID("555");
-        channel.setMemberNumber("666");
+        channel.setMemberNumber("" + (int)(Math.random() * 100000));
         channel.setLesDescription("Thrane&Thrane");
         channel.setExpectedFrequency(Duration.ofSeconds(60));
         channel.setFrequencyGracePeriod(Duration.ofSeconds(60));
