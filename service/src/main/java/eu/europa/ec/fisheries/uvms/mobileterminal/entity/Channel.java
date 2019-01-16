@@ -51,7 +51,9 @@ import java.util.UUID;
 @Entity
 @Table(name = "channel", indexes = {@Index(columnList = "mobterm_id", name = "channel_mobterm_FK_INX01", unique = false),
 		@Index(columnList = "dnid", name = "channel_INX01", unique = false),},
-		uniqueConstraints = @UniqueConstraint(name = "channel_uc_historyid" , columnNames = "historyid"))
+		uniqueConstraints = {@UniqueConstraint(name = "channel_uc_historyid" , columnNames = "historyid"),
+							 @UniqueConstraint(name = "channel_uc_dnid" , columnNames = "dnid"),
+							 @UniqueConstraint(name = "channel_uc_member_number" , columnNames = "member_number")})
 @Audited
 @JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class)
 public class Channel implements Serializable {
