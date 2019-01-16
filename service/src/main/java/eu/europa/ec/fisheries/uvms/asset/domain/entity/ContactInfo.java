@@ -92,7 +92,7 @@ public class ContactInfo implements Serializable {
     private String postalArea;
 
     @Size(max = 100)
-    @Column(name = "zipCode")
+    @Column(name = "zipcode")
     private String zipCode;
     
     @Size(max = 100)
