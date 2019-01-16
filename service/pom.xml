@@ -100,7 +100,6 @@
             <version>4.0.19-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-        <!--- used to bridge asset and rules -->
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>asset-ejb-client</artifactId>
