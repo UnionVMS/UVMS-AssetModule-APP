@@ -419,7 +419,9 @@ public class AssetServiceBean implements AssetService {
         }
         contactInfo.setAssetId(asset.getId());
         contactInfo.setUpdatedBy(username);
-        contactInfo.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        if (contactInfo.getId() == null) {
+            contactInfo.setCreateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        }
         contactInfo.setAssetUpdateTime(asset.getUpdateTime());
         return contactDao.createContactInfo(contactInfo);
     }
@@ -431,7 +433,6 @@ public class AssetServiceBean implements AssetService {
             throw new IllegalArgumentException("Could not find any asset with id: " + contactInfo.getAssetId());
         }
         contactInfo.setUpdatedBy(username);
-        contactInfo.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         contactInfo.setAssetUpdateTime(asset.getUpdateTime());
         return contactDao.updateContactInfo(contactInfo);
     }
@@ -450,7 +451,7 @@ public class AssetServiceBean implements AssetService {
 
         List<ContactInfo> contactInfoListByAssetId = contactDao.getContactInfoByAssetId(assetId);
         List<ContactInfo> revisionList = contactDao.getContactInfoRevisionForAssetHistory(contactInfoListByAssetId, updatedDate);
-        revisionList.sort((a1, a2) -> a1.getUpdateTime().compareTo(a2.getUpdateTime()));
+        revisionList.sort(Comparator.comparing(ContactInfo::getCreateTime));
         return revisionList;
     }
 
