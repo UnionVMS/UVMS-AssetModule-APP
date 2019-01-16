@@ -319,4 +319,21 @@ public class AssetClientTest extends AbstractClientTest {
         assertTrue(response.getFlagstate().equals("UNK"));
         assertEquals("123456789", response.getAssetId().get("MMSI"));
     }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createNewAssetOnUnknownUseNameAndFSFromRequest(){
+        AssetMTEnrichmentRequest request = new AssetMTEnrichmentRequest();
+        request.setMmsiValue("987654321");
+        request.setAssetName("Named Ship");
+        request.setFlagState("SWE");
+        AssetMTEnrichmentResponse response = assetClient.collectAssetMT(request);
+
+        assertNotNull(response);
+        assertNotNull(response.getAssetHistoryId());
+        assertNotNull(response.getAssetUUID());
+        assertTrue(response.getAssetName(), response.getAssetName().equals("Named Ship"));
+        assertTrue(response.getFlagstate().equals("SWE"));
+        assertEquals("987654321", response.getAssetId().get("MMSI"));
+    }
 }

@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 
+import java.math.BigInteger;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -9,10 +10,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
+
+import org.hibernate.SQLQuery;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.exception.AuditException;
@@ -39,6 +39,11 @@ public class AssetDao {
         em.persist(asset);
         em.flush();
         return asset;
+    }
+
+    public int getNextUnknownShipNumber(){
+        Query query = em.createNativeQuery("select nextval('assetpo_id_seq')");
+        return ((BigInteger)query.getSingleResult()).intValue();
     }
 
     public Asset getAssetById(UUID id) {
