@@ -273,6 +273,7 @@
             <column name="phone" type="VARCHAR(255)"/>
             <column name="postofficebox" type="VARCHAR(100)"/>
             <column name="postalarea" type="VARCHAR(100)"/>
+            <column name="zipCode" type="VARCHAR(100)"/>
             <column name="source" type="VARCHAR(255)"/>
             <column name="streetname" type="VARCHAR(100)"/>
             <column name="type" type="VARCHAR(100)"/>
@@ -301,6 +302,7 @@
             <column name="phone" type="VARCHAR(255)"/>
             <column name="postofficebox" type="VARCHAR(255)"/>
             <column name="postalarea" type="VARCHAR(255)"/>
+            <column name="zipCode" type="VARCHAR(100)"/>
             <column name="source" type="VARCHAR(255)"/>
             <column name="streetname" type="VARCHAR(255)"/>
             <column name="type" type="VARCHAR(255)"/>

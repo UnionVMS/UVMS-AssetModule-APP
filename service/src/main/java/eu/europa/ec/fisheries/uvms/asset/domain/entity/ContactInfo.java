@@ -92,6 +92,10 @@ public class ContactInfo implements Serializable {
     private String postalArea;
 
     @Size(max = 100)
+    @Column(name = "zipCode")
+    private String zipCode;
+    
+    @Size(max = 100)
     @Column(name = "cityname")
     private String cityName;
 
@@ -216,6 +220,14 @@ public class ContactInfo implements Serializable {
 
     public void setPostalArea(String postalArea) {
         this.postalArea = postalArea;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
     }
 
     public String getCityName() {
