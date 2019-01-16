@@ -490,7 +490,7 @@ public class AssetServiceBean implements AssetService {
         }
 
         if(asset == null){
-            asset = AssetUtil.createNewAssetFromRequest(request);
+            asset = AssetUtil.createNewAssetFromRequest(request, assetDao.getNextUnknownShipNumber());
             assetDao.createAsset(asset);
         }
 

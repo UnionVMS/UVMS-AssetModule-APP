@@ -7,10 +7,10 @@ import java.time.OffsetDateTime;
 
 public class AssetUtil {
 
-    public static Asset createNewAssetFromRequest(AssetMTEnrichmentRequest request){
+    public static Asset createNewAssetFromRequest(AssetMTEnrichmentRequest request,int shipNumber){
         Asset asset = new Asset();
 
-        asset.setName((request.getAssetName() == null) ? ("Unknown ship: " + (int) (Math.random() * 10000d)) : request.getAssetName());
+        asset.setName((request.getAssetName() == null) ? ("Unknown ship: " + shipNumber) : request.getAssetName());
         asset.setUpdateTime(OffsetDateTime.now());
         asset.setSource("INTERNAL");
         asset.setUpdatedBy("UVMS");
