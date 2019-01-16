@@ -646,6 +646,9 @@
     <changeSet author="thofan (generated)" id="1535445328879-68">
         <addUniqueConstraint columnNames="historyid" constraintName="channel_uc_historyid" tableName="channel"/>
     </changeSet>
+    <changeSet author="joemat" id="4535445328880-100">
+        <addUniqueConstraint columnNames="dnid, member_number" constraintName="channel_uc_dnid_member_number" tableName="channel"/>
+    </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-69">
         <addUniqueConstraint columnNames="historyid" constraintName="mobileterminal_uc_historyid" tableName="mobileterminal"/>
     </changeSet>
