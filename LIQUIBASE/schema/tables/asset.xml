@@ -60,7 +60,7 @@
 		</createIndex>
 	</changeSet>
 	<changeSet id="asset-cfr-unique" author="nhily">
-		<addUniqueConstraint columnNames="asset_cfr" constraintName="asset_cfr_unique" deferrable="true" disabled="true" initiallyDeferred="true" tableName="asset"/>
+		<addUniqueConstraint columnNames="asset_cfr" constraintName="asset_cfr_unique" deferrable="true" initiallyDeferred="true" tableName="asset"/>
 		<rollback>
 			<dropUniqueConstraint constraintName="asset_cfr_unique" tableName="asset"/>
 		</rollback>
