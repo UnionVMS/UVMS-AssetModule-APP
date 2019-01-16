@@ -42,7 +42,7 @@ public class AssetDao {
     }
 
     public int getNextUnknownShipNumber(){
-        Query query = em.createNativeQuery("select nextval('assetpo_id_seq')");
+        Query query = em.createNativeQuery("select nextval('next_unknown_ship_seq')");
         return ((BigInteger)query.getSingleResult()).intValue();
     }
 
