@@ -15,6 +15,7 @@
             <xsd:enumeration value="SAMPLING_POLL"/>
             <xsd:enumeration value="MANUAL_POLL"/>
             <xsd:enumeration value="CONFIGURATION_POLL"/>
+            <xsd:enumeration value="AUTOMATIC_POLL"/>
         </xsd:restriction>
     </xsd:simpleType>
     
