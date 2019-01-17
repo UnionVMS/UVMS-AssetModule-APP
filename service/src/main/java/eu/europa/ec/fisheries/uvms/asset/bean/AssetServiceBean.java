@@ -228,7 +228,7 @@ public class AssetServiceBean implements AssetService {
         }
         
         Asset asset = assetBo.getAsset();
-        Asset existingAsset = getAssetById(AssetIdentifier.CFR, asset.getCfr());
+        Asset existingAsset = getAssetByCfrIrcs(createAssetId(asset));
         if (existingAsset != null) {
             asset.setId(existingAsset.getId());
             asset.setHistoryId(existingAsset.getHistoryId());
