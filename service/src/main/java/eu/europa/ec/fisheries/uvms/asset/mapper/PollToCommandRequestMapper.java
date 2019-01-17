@@ -42,6 +42,7 @@ public class PollToCommandRequestMapper {
                 return PollTypeType.SAMPLING;
             case MANUAL_POLL:
             case PROGRAM_POLL:
+            case AUTOMATIC_POLL:
                 return PollTypeType.POLL;
             default:
                 throw new IllegalArgumentException("Error when mapping PollType to PollTypeType ");

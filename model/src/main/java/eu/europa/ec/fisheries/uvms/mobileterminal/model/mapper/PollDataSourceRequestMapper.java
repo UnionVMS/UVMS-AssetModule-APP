@@ -20,7 +20,7 @@ public class PollDataSourceRequestMapper {
 
     public static PollRequestType mapCreatePollRequest(PollResponseType pollProgram) {
         PollRequestType poll = new PollRequestType();
-        poll.setPollType(PollType.MANUAL_POLL);
+        poll.setPollType(PollType.AUTOMATIC_POLL);
         poll.setComment(pollProgram.getComment());
         poll.setUserName(pollProgram.getUserName());
 
