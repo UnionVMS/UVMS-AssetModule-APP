@@ -27,6 +27,7 @@ public class ContactInfo {
     private String streetName;
     private String postOfficeBox;
     private String postalArea;
+    private String zipCode;
     private String cityName;
     private String country;
     private OffsetDateTime createTime;
@@ -103,6 +104,12 @@ public class ContactInfo {
     }
     public void setPostalArea(String postalArea) {
         this.postalArea = postalArea;
+    }
+    public String getZipCode() {
+        return zipCode;
+    }
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
     }
     public String getCityName() {
         return cityName;
