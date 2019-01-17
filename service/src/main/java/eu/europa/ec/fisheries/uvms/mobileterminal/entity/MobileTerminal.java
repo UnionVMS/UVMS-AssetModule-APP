@@ -147,6 +147,7 @@ public class MobileTerminal implements Serializable {
 	@PreUpdate
 	private void generateNewHistoryId() {
 		this.historyId = UUID.randomUUID();
+		this.updatetime = OffsetDateTime.now(ZoneOffset.UTC);
 	}
 
 	public UUID getId() {
