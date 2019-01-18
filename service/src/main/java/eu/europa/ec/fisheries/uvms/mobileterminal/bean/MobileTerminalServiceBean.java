@@ -247,8 +247,13 @@ public class MobileTerminalServiceBean {
         return terminalDao.updateMobileTerminal(mobileTerminal);
     }
 
-    public List<MobileTerminal> getMobileTerminalRevisions(UUID historyId) {
-        return terminalDao.getMobileTerminalRevisionForHistoryId(historyId);
+    public List<MobileTerminal> getMobileTerminalRevisions(UUID mobileTerminalId, int maxNbr) {
+        List<MobileTerminal> revisions = terminalDao.getMobileTerminalHistoryById(mobileTerminalId);
+        revisions.sort(Comparator.comparing(MobileTerminal::getCreateTime));
+        if (revisions.size() > maxNbr) {
+            return revisions.subList(0, maxNbr);
+        }
+        return revisions;
     }
 
     public PollChannelListDto getPollableMobileTerminal(PollableQuery query) {

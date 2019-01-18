@@ -20,6 +20,7 @@ import org.hibernate.envers.query.AuditQuery;
 
 import javax.ejb.Stateless;
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -83,5 +84,17 @@ public class TerminalDaoBean {
         AuditReader auditReader = AuditReaderFactory.get(em);
         AuditQuery query = auditReader.createQuery().forRevisionsOfEntity(MobileTerminal.class, true, true);
         return query.add(AuditEntity.property("historyId").eq(historyId)).getResultList();
+    }
+
+    public List<MobileTerminal> getMobileTerminalHistoryById(UUID id) {
+        AuditReader auditReader = AuditReaderFactory.get(em);
+        List<MobileTerminal> resultList = new ArrayList<>();
+
+        List<Number> revisionNumbers = auditReader.getRevisions(MobileTerminal.class, id);
+        for (Number rev : revisionNumbers) {
+            MobileTerminal audited = auditReader.find(MobileTerminal.class, id, rev);
+            resultList.add(audited);
+        }
+        return resultList;
     }
 }
