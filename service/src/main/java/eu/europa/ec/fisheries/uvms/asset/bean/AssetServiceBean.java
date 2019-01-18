@@ -451,7 +451,7 @@ public class AssetServiceBean implements AssetService {
 
         List<ContactInfo> contactInfoListByAssetId = contactDao.getContactInfoByAssetId(assetId);
         List<ContactInfo> revisionList = contactDao.getContactInfoRevisionForAssetHistory(contactInfoListByAssetId, updatedDate);
-        revisionList.sort(Comparator.comparing(ContactInfo::getCreateTime));
+        revisionList.sort(Comparator.comparing(ContactInfo::getAssetUpdateTime));
         return revisionList;
     }
 
