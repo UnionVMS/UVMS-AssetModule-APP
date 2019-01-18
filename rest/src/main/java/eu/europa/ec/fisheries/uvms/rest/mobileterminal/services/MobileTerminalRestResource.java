@@ -216,11 +216,10 @@ public class MobileTerminalRestResource {
     @GET
     @Path("/history/{id}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getMobileTerminalHistoryListByMobileTerminalId(@PathParam("id") UUID guid) {
+    public Response getMobileTerminalHistoryListByMobileTerminalId(@PathParam("id") UUID id, @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
         LOG.info("Get mobile terminal history by mobile terminal id invoked in rest layer.");
         try {
-            MobileTerminal mt = mobileTerminalService.getMobileTerminalEntityById(guid);
-            List<MobileTerminal> mobileTerminalRevisions = mobileTerminalService.getMobileTerminalRevisions(mt.getHistoryId());
+            List<MobileTerminal> mobileTerminalRevisions = mobileTerminalService.getMobileTerminalRevisions(id, maxNbr);
             String returnString = objectMapper().writeValueAsString(mobileTerminalRevisions);
             return Response.ok(returnString).build();
         } catch (Exception ex) {
