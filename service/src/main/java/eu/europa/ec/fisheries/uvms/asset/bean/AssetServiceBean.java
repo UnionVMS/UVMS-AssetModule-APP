@@ -432,6 +432,8 @@ public class AssetServiceBean implements AssetService {
         if (asset == null) {
             throw new IllegalArgumentException("Could not find any asset with id: " + contactInfo.getAssetId());
         }
+        ContactInfo old = contactDao.findContactInfo(contactInfo.getId());
+        contactInfo.setCreateTime(old.getCreateTime());
         contactInfo.setUpdatedBy(username);
         contactInfo.setAssetUpdateTime(asset.getUpdateTime());
         return contactDao.updateContactInfo(contactInfo);
