@@ -13,7 +13,7 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.search;
 
 public enum SearchTable {
     
-	TERMINALCONNECT("MobileTerminalConnect", "tc"),
+	ASSET("Asset", "a"),
 	TERMINAL("MobileTerminal", "mt"),
 	
 	INMARSATC("MobileTerminalInmarsatC", "t"),

@@ -57,6 +57,9 @@ public class AuditModuleRequestMapper {
             case PROGRAM_POLL:
                 pollTypeEnum = AuditObjectTypeEnum.PROGRAM_POLL;
                 break;
+            case AUTOMATIC_POLL:
+                pollTypeEnum = AuditObjectTypeEnum.AUTOMATIC_POLL;
+                break;
             default:
                 pollTypeEnum = AuditObjectTypeEnum.POLL;
                 break;

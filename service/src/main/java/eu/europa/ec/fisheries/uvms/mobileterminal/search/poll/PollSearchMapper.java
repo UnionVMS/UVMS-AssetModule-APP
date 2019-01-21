@@ -106,7 +106,7 @@ public class PollSearchMapper {
 				builder.append(" INNER JOIN p.pollBase pb");
 			if (!searchFields.contains(terminalTypeTableName))
 				builder.append(" INNER JOIN pb.mobileterminal mt ");
-			builder.append(" INNER JOIN mt.mobileterminalconnect tc ");
+			builder.append(" INNER JOIN mt.asset a ");
 		}
 
 		if (!searchKeys.isEmpty()) {

@@ -6,6 +6,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.search.PollSearchField;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.PollSearchKeyValue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.poll.PollSearchMapper;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
+import org.hamcrest.CoreMatchers;
 import org.hamcrest.core.StringContains;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -26,6 +27,7 @@ import java.util.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 /**
  * Created by roblar on 2017-05-03.
@@ -304,20 +306,18 @@ public class PollDaoBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void testGetPollListSearchCount_settingPollSearchField_CONNECT_ID_inPollSearchKeyValueWillBuildNoneWorkingSqlPhrase() {
-
-        // TODO: This exception is thrown unintentionally. Should be fixed by implementing MobileTerminalConnect entity class.
-        thrown.expect(EJBTransactionRolledbackException.class);
-        checkExpectedMessage("could not resolve property: mobileterminalconnect of: eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal [SELECT COUNT (DISTINCT p) FROM eu.europa.ec.fisheries.uvms.mobileterminal.entity.Poll p  INNER JOIN p.pollBase pb INNER JOIN pb.mobileterminal mt  INNER JOIN mt.mobileterminalconnect tc  WHERE tc.connectValue IN (:connectionValue) ]");
-
+    public void testGetPollListSearchCount_settingPollSearchField_CONNECT_ID() {
+       
         PollSearchKeyValue pollSearchKeyValue1 = new PollSearchKeyValue();
         pollSearchKeyValue1.setSearchField(PollSearchField.CONNECT_ID);
+        pollSearchKeyValue1.setValues(Collections.singletonList(UUID.randomUUID().toString()));
 
         List<PollSearchKeyValue> listOfPollSearchKeyValue = Collections.singletonList(pollSearchKeyValue1);
 
         String countSearchSql = PollSearchMapper.createCountSearchSql(listOfPollSearchKeyValue, true);
 
-        pollDao.getPollListSearchCount(countSearchSql, listOfPollSearchKeyValue);
+        Long pollListSearchCount = pollDao.getPollListSearchCount(countSearchSql, listOfPollSearchKeyValue);
+        assertThat(pollListSearchCount, CoreMatchers.is(CoreMatchers.notNullValue()));
     }
 
     @Test
@@ -356,15 +356,11 @@ public class PollDaoBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void testGetPollListSearchPaginated_settingPollSearchField_CONNECT_ID_inPollSearchKeyValueWillBuildNoneWorkingSqlPhrase() {
-
-        // TODO: This exception is thrown unintentionally. Should be fixed by implementing MobileTerminalConnect entity class.
-        thrown.expect(EJBTransactionRolledbackException.class);
-
-        checkExpectedMessage("could not resolve property: mobileterminalconnect of: eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal [SELECT DISTINCT p FROM eu.europa.ec.fisheries.uvms.mobileterminal.entity.Poll p  INNER JOIN p.pollBase pb INNER JOIN pb.mobileterminal mt  INNER JOIN mt.mobileterminalconnect tc  WHERE tc.connectValue IN (:connectionValue) ]");
+    public void testGetPollListSearchPaginated_settingPollSearchField_CONNECT_ID() {
 
         PollSearchKeyValue pollSearchKeyValue1 = new PollSearchKeyValue();
         pollSearchKeyValue1.setSearchField(PollSearchField.CONNECT_ID);
+        pollSearchKeyValue1.setValues(Collections.singletonList(UUID.randomUUID().toString()));
 
         List<PollSearchKeyValue> listOfPollSearchKeyValue = Collections.singletonList(pollSearchKeyValue1);
 
@@ -373,7 +369,8 @@ public class PollDaoBeanIntTest extends TransactionalTests {
 
         String selectSearchSql = PollSearchMapper.createSelectSearchSql(listOfPollSearchKeyValue, true);
 
-        pollDao.getPollListSearchPaginated(pageNumber, pageSize, selectSearchSql, listOfPollSearchKeyValue);
+        List<Poll> pollListSearchPaginated = pollDao.getPollListSearchPaginated(pageNumber, pageSize, selectSearchSql, listOfPollSearchKeyValue);
+        assertThat(pollListSearchPaginated, CoreMatchers.is(CoreMatchers.notNullValue()));
     }
 
     @Test

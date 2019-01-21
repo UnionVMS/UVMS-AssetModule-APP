@@ -241,6 +241,8 @@ public class TestPollHelper {
         pb.setMobileterminal(mobileTerminal);
         pb.setChannelId(UUID.randomUUID());
         pb.setTerminalConnect(terminalConnect);
+        pb.setUpdatedBy("TEST");
+        pb.setComment("Comment");
         pp.setFrequency(1);
         pp.setLatestRun(latestRun);
         pp.setPollBase(pb);

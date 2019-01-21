@@ -237,6 +237,7 @@ public class PollServiceBean {
                 break;
             case CONFIGURATION_POLL:
             case MANUAL_POLL:
+            case AUTOMATIC_POLL:
             case SAMPLING_POLL:
                 pollMobileTerminalMap = validateAndMapToPolls(pollRequest, username);
                 responseList = createPolls(pollMobileTerminalMap, pollRequest.getPollType());
@@ -280,7 +281,7 @@ public class PollServiceBean {
                 throw new IllegalStateException("Terminal " + mobileTerminalEntity.getId() + " can not be polled, because it is not linked to asset " + connectId);
             }
 
-            if (pollRequest.getPollType() != PollType.MANUAL_POLL) {
+            if (pollRequest.getPollType() != PollType.MANUAL_POLL && pollRequest.getPollType() != PollType.AUTOMATIC_POLL) {
                 validateMobileTerminalPluginCapability(mobileTerminalEntity.getPlugin().getCapabilities(), pollRequest.getPollType(), mobileTerminalEntity.getPlugin().getPluginServiceName());
             }
             MobileTerminal terminal = getPollableTerminal(pollTerminal.getMobileTerminalId(), pollTerminal.getComChannelId());
