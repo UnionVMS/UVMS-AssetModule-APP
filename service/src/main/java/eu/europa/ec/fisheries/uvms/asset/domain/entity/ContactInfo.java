@@ -114,7 +114,12 @@ public class ContactInfo implements Serializable {
     private OffsetDateTime assetUpdateTime;
 
     @PrePersist
-    private void generateNewHistoryId() {
+    private void onPrePersist() {
+        this.historyId = UUID.randomUUID();
+    }
+
+    @PreUpdate
+    private void onPreUpdate() {
         this.historyId = UUID.randomUUID();
     }
 
