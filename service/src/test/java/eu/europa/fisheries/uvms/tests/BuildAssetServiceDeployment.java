@@ -19,7 +19,7 @@ public abstract class BuildAssetServiceDeployment {
 
         WebArchive testWar = ShrinkWrap.create(WebArchive.class, "test.war");
 
-        File[] files = Maven.resolver().loadPomFromFile("pom.xml").importRuntimeAndTestDependencies().resolve()
+        File[] files = Maven.configureResolver().loadPomFromFile("pom.xml").importRuntimeAndTestDependencies().resolve()
                 .withTransitivity().asFile();
         testWar.addAsLibraries(files);
 

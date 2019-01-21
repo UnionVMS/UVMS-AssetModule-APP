@@ -28,7 +28,7 @@ public class PollTimerTask implements Runnable{
     private final static Logger LOG = LoggerFactory.getLogger(PollTimerTask.class);
     private PollServiceBean pollService;
 
-    PollTimerTask(PollServiceBean pollService){
+    public PollTimerTask(PollServiceBean pollService){
         this.pollService = pollService;
     }
 
@@ -48,7 +48,7 @@ public class PollTimerTask implements Runnable{
                     pollService.inactivateProgramPoll(guid, "MobileTerminalPollTimer");
                     LOG.info("Poll program {} has expired. Status set to ARCHIVED.", guid);
                 } else {
-                    pollService.createPoll(PollDataSourceRequestMapper.mapCreatePollRequest(pollProgram),"AutoPollTimer for: "+ pollProgram.getUserName());
+                    pollService.createPoll(PollDataSourceRequestMapper.mapCreatePollRequest(pollProgram), pollProgram.getUserName());
                     LOG.info("Poll created by poll program {}", guid);
                 }
             }

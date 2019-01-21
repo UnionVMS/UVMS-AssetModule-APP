@@ -17,7 +17,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import java.util.UUID;
 
 public enum PollSearchField {
-	CONNECT_ID(SearchTable.TERMINALCONNECT, "connectValue", "connectionValue"),
+	CONNECT_ID(SearchTable.ASSET, "id", "connectionValue", UUID.class),
 	TERMINAL_TYPE(SearchTable.TERMINAL, "mobileTerminalType", "mobileTerminalType", MobileTerminalTypeEnum.class),
 	POLL_ID(SearchTable.POLL, "id", "id", UUID.class),
 	POLL_TYPE(SearchTable.POLL, "pollType", "pollType", PollTypeEnum.class),

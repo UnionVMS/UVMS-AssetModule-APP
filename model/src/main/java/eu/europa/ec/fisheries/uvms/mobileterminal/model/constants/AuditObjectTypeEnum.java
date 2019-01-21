@@ -14,7 +14,8 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.model.constants;
 public enum AuditObjectTypeEnum {
     MOBILE_TERMINAL("Mobile Terminal"),
     POLL("Poll"),
-    PROGRAM_POLL("Program poll");
+    PROGRAM_POLL("Program poll"),
+    AUTOMATIC_POLL("Automatic poll");
 
     private String value;
 

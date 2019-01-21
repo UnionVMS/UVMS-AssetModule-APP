@@ -82,6 +82,7 @@ public class PollModelToEntityMapper {
         	return mapToConfigurationPoll(comchannel, connectId, channelGuid, requestType, username);
         case SAMPLING_POLL:
         	return mapToSamplingPoll(comchannel, connectId, channelGuid, requestType, username);
+        case AUTOMATIC_POLL:
         case MANUAL_POLL:
         	return createPollBase(comchannel, connectId, channelGuid, requestType, username);
         default:

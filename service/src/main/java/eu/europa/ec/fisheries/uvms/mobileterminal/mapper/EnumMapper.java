@@ -145,6 +145,8 @@ public class EnumMapper {
                     return PollType.SAMPLING_POLL;
                 case CONFIGURATION_POLL:
                     return PollType.CONFIGURATION_POLL;
+                case AUTOMATIC_POLL:
+                    return PollType.AUTOMATIC_POLL;
                 default:
                     throw new IllegalArgumentException("Couldn't map enum (from type) in " + PollTypeEnum.class.getName());
             }
@@ -163,6 +165,8 @@ public class EnumMapper {
                 return PollTypeEnum.SAMPLING_POLL;
             case CONFIGURATION_POLL:
                 return PollTypeEnum.CONFIGURATION_POLL;
+            case AUTOMATIC_POLL:
+                return PollTypeEnum.AUTOMATIC_POLL;
             default:
                 throw new IllegalArgumentException("Couldn't map enum (from model) in " + PollTypeEnum.class.getName());
             }
