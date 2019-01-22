@@ -12,6 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.dao.bean;
 
 import javax.ejb.Stateless;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -193,11 +194,10 @@ public class AssetDaoBean extends Dao implements AssetDao {
         return resultList;
     }
 
-
     @Override
-    public List<AssetHistory> _getAssetHistoryByCriteria(String reportDate, String cfr, String regCountry, String ircs, String extMark, String iccat) throws AssetDaoException {
-        List<AssetHistory> resultList;
-
+    public List<AssetHistory> _getAssetHistoryByCriteria(String reportDate, String cfr, String regCountry, String ircs, String extMark, String iccat) {
+        List<AssetHistory> resultList = new ArrayList<>();
+        try {
             TypedQuery<AssetHistory> query = em.createNamedQuery(UvmsConstants.ASSETHISTORY_FIND_BY_CRITERIA, AssetHistory.class);
             query.setParameter("EXTERNAL_MARKING",null);
             query.setParameter("CFR", cfr);
@@ -208,9 +208,11 @@ public class AssetDaoBean extends Dao implements AssetDao {
             query.setParameter("UVI", null);
             query.setParameter("FLAG_STATE", regCountry);
             query.setParameter("DATE", reportDate);
-
             resultList = query.getResultList();
-
+        }
+        catch (EntityNotFoundException e){
+            // nothing to do
+        }
         return resultList;
     }
 
