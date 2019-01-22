@@ -17,7 +17,7 @@ import javax.ws.rs.ext.Provider;
 @Provider
 public class AssetRestExceptionMapper implements ExceptionMapper<Exception> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RequestFilter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AssetRestExceptionMapper.class);
 
     @Context
     private HttpServletRequest request;
