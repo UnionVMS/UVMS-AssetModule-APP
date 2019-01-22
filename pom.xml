@@ -22,7 +22,7 @@
         <docker.liquibase.db.passwd>asset</docker.liquibase.db.passwd>
         <usm4uvms.version>4.0.10</usm4uvms.version>
         <uvms.config.version>4.0.2</uvms.config.version>
-        <uvms.common.version>3.0.31</uvms.common.version>
+        <uvms.common.version>3.0.32</uvms.common.version>
         <audit.model.version>4.0.4</audit.model.version>
         <project.scm.id>github</project.scm.id>
         <installAtEnd>false</installAtEnd>

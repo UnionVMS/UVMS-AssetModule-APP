@@ -28,8 +28,7 @@ import eu.europa.ec.fisheries.uvms.rest.asset.Constant;
 @WebFilter("/*")
 public class RequestFilter implements Filter {
 
-    private static final String MDC_REQUEST = "requestId";
-    
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
@@ -37,20 +36,11 @@ public class RequestFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-
-        String mdcRequest = httpRequest.getHeader(MDC_REQUEST);
-        if (mdcRequest != null && mdcRequest.trim().length() > 0) {
-            MDC.put(MDC_REQUEST, mdcRequest);
-        } else {
-            MDC.put(MDC_REQUEST, UUID.randomUUID().toString());
-        }
 
         HttpServletResponse response = (HttpServletResponse) res;
         response.setHeader(Constant.ACCESS_CONTROL_ALLOW_ORIGIN, Constant.ACCESS_CONTROL_ALLOW_METHODS_ALL);
         response.setHeader(Constant.ACCESS_CONTROL_ALLOW_METHODS, Constant.ACCESS_CONTROL_ALLOWED_METHODS);
         response.setHeader(Constant.ACCESS_CONTROL_ALLOW_HEADERS, Constant.ACCESS_CONTROL_ALLOW_HEADERS_ALL);
-        response.setHeader(MDC_REQUEST, MDC.get(MDC_REQUEST));
 
         chain.doFilter(request, res);
     }

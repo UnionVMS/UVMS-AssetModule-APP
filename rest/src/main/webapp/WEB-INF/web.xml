@@ -54,6 +54,12 @@
 
 
 	<filter-mapping>
+		<filter-name>MDCFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+
+	<filter-mapping>
 		<filter-name>AuthenticationFilter</filter-name>
 		<url-pattern>/rest/config/*</url-pattern>
 	</filter-mapping>
@@ -83,10 +89,6 @@
 	</filter-mapping>
 
 
-	<filter-mapping>
-	     <filter-name>MDCFilter</filter-name>
-	     <url-pattern>/*</url-pattern>
-	 </filter-mapping>
 
 
 </web-app>
