@@ -159,7 +159,6 @@
     </profiles>
 
     <modules>
-        <module>ejb-client</module>
         <module>model</module>
         <module>LIQUIBASE</module>
         <module>domain</module>
