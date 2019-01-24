@@ -47,10 +47,6 @@
                             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
                             <artifactId>asset-model</artifactId>
                         </jarModule>
-                        <jarModule>
-                            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-                            <artifactId>asset-ejb-client</artifactId>
-                        </jarModule>
                         <webModule>
                             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
                             <context-root>${context.root}${project.parent.artifactId}</context-root>
