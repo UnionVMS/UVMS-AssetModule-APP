@@ -39,9 +39,12 @@ import eu.europa.ec.fisheries.uvms.asset.client.model.CustomCode;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
+import org.slf4j.MDC;
 
 @Stateless
 public class AssetClient {
+
+    private final String REQ_ID = "requestId";
 
     private WebTarget webTarget;
 
@@ -60,6 +63,7 @@ public class AssetClient {
                 .path(type.toString().toLowerCase())
                 .path(value)
                 .request(MediaType.APPLICATION_JSON)
+                .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .get(AssetDTO.class);
     }
     
@@ -67,6 +71,7 @@ public class AssetClient {
         AssetListResponse assetResponse = webTarget
                 .path("query")
                 .request(MediaType.APPLICATION_JSON)
+                .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .post(Entity.json(query), AssetListResponse.class);
     
         return assetResponse.getAssetList();
@@ -77,6 +82,7 @@ public class AssetClient {
                 .path("query")
                 .queryParam("dynamic", dynamic)
                 .request(MediaType.APPLICATION_JSON)
+                .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .post(Entity.json(query), AssetListResponse.class);
     
         return assetResponse.getAssetList();
@@ -84,12 +90,13 @@ public class AssetClient {
     
     public List<AssetDTO> getAssetList(AssetQuery query, int page, int size, boolean dynamic) {
         AssetListResponse assetResponse = webTarget
-                    .path("query")
-                    .queryParam("page", page)
-                    .queryParam("size", size)
-                    .queryParam("dynamic", dynamic)
-                    .request(MediaType.APPLICATION_JSON)
-                    .post(Entity.json(query), AssetListResponse.class);
+                .path("query")
+                .queryParam("page", page)
+                .queryParam("size", size)
+                .queryParam("dynamic", dynamic)
+                .request(MediaType.APPLICATION_JSON)
+                .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
+                .post(Entity.json(query), AssetListResponse.class);
         
         return assetResponse.getAssetList();
     }
@@ -100,6 +107,7 @@ public class AssetClient {
                 .path("user")
                 .path(user)
                 .request(MediaType.APPLICATION_JSON)
+                .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .get(new GenericType<List<AssetGroup>>() {});
     }
     
@@ -109,6 +117,7 @@ public class AssetClient {
                 .path("asset")
                 .path(assetId.toString())
                 .request(MediaType.APPLICATION_JSON)
+                .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .get(new GenericType<List<AssetGroup>>() {});
     }
 
@@ -117,6 +126,7 @@ public class AssetClient {
                 .path("group")
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .get(new GenericType<List<AssetDTO>>() {});
     }
     
@@ -125,6 +135,7 @@ public class AssetClient {
                 .path("history/asset")
                 .path(id.toString())
                 .request(MediaType.APPLICATION_JSON)
+                .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .get(new GenericType<List<AssetDTO>>() {});
     }
     
@@ -136,6 +147,7 @@ public class AssetClient {
                 .path(value)
                 .path(formattedDate)
                 .request(MediaType.APPLICATION_JSON)
+                .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .get(AssetDTO.class);
     }
 
@@ -144,6 +156,7 @@ public class AssetClient {
                 .path("history")
                 .path(historyId.toString())
                 .request(MediaType.APPLICATION_JSON)
+                .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .get(AssetDTO.class);
     }
     
@@ -151,6 +164,7 @@ public class AssetClient {
         return webTarget
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .post(Entity.json(asset), AssetBO.class);
     }
     
@@ -171,6 +185,7 @@ public class AssetClient {
         return webTarget
                 .path("ping")
                 .request(MediaType.APPLICATION_JSON)
+                .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .get(String.class);
     }
 
@@ -178,6 +193,7 @@ public class AssetClient {
         return webTarget
                 .path("customcode")
                 .request(MediaType.APPLICATION_JSON)
+                .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .post(Entity.json(customCode), CustomCode.class);
     }
 
@@ -185,6 +201,7 @@ public class AssetClient {
         return webTarget
                 .path("listconstants")
                 .request(MediaType.APPLICATION_JSON)
+                .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .get(new GenericType<List<String>>() {});
         
     }
@@ -194,6 +211,7 @@ public class AssetClient {
                 .path("listcodesforconstant")
                 .path(constant)
                 .request(MediaType.APPLICATION_JSON)
+                .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .get(new GenericType<List<CustomCode>>() {});
     }
 
@@ -205,6 +223,7 @@ public class AssetClient {
                 .path(code)
                 .path(theDate)
                 .request(MediaType.APPLICATION_JSON)
+                .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .get(String.class);
         return Boolean.valueOf(response);
     }
@@ -217,6 +236,7 @@ public class AssetClient {
                 .path(code)
                 .path(theDate)
                 .request(MediaType.APPLICATION_JSON)
+                .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .get(new GenericType<List<CustomCode>>() {});
     }
 
@@ -224,6 +244,7 @@ public class AssetClient {
         return webTarget
                 .path("replace")
                 .request(MediaType.APPLICATION_JSON)
+                .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .post(Entity.json(customCode), CustomCode.class);
     }
 
@@ -232,6 +253,7 @@ public class AssetClient {
                 .path("collectassetmt")
                 .request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
+                .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .post(Entity.json(request), AssetMTEnrichmentResponse.class);
     }
 }
