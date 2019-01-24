@@ -13,6 +13,7 @@ import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper.TestPollHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
@@ -410,6 +411,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         request.setMemberNumberValue(memberNumber);
         request.setDnidValue(dnid);
         request.setIdValue(asset.getId());
+        request.setTranspondertypeValue(mobileTerminal.getMobileTerminalType().toString());
 
         AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
         assertNotNull(response.getAssetId());
@@ -425,7 +427,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void testGetRequiredEnrichment_NO_MOBILETERMIUNAL() {
+    public void testGetRequiredEnrichment_NO_MOBILETERMINAL() {
 
         // create stuff so we can create a valid rawMovement
         Asset asset = createAsset();
@@ -469,7 +471,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         }
         request.setPluginType(PluginType.NAF.value());
 
-        request.setTranspondertypeValue("TRANSPONDERTYP_100");
+        request.setTranspondertypeValue(MobileTerminalTypeEnum.INMARSAT_C.name());
         return request;
     }
 
