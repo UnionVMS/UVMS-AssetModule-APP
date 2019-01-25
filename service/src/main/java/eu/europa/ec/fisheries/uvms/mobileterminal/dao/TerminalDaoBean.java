@@ -11,8 +11,10 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.dao;
 
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.query.AuditEntity;
@@ -96,5 +98,17 @@ public class TerminalDaoBean {
             resultList.add(audited);
         }
         return resultList;
+    }
+
+    public MobileTerminal getMobileTerminalByRequest(AssetMTEnrichmentRequest request) {
+        try {
+            return em.createNamedQuery(MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_DNID_AND_MEMBER_NR_AND_TYPE, MobileTerminal.class)
+                    .setParameter("dnid", request.getDnidValue())
+                    .setParameter("memberNumber", request.getMemberNumberValue())
+                    .setParameter("mobileTerminalType", MobileTerminalTypeEnum.valueOf(request.getTranspondertypeValue()))
+                    .getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
     }
 }

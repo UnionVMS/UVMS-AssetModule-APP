@@ -29,6 +29,7 @@ import eu.europa.ec.fisheries.uvms.asset.util.AssetUtil;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.wsdl.asset.types.EventCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -460,60 +461,66 @@ public class AssetServiceBean implements AssetService {
     @Override
     public AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request) {
 
-        AssetMTEnrichmentResponse assetMTEnrichmentResponse = new AssetMTEnrichmentResponse();
-
         // Get Mobile Terminal if it exists
         MobileTerminal terminal = mobileTerminalService.getMobileTerminalByAssetMTEnrichmentRequest(request);
 
         Asset asset = terminal == null ? null : terminal.getAsset();
 
-        // Get Asset
-        if (terminal != null) {
-
-            if (asset != null) {
-                assetMTEnrichmentResponse = enrichementHelper(assetMTEnrichmentResponse, asset);
-            }
-            // test this as well  OBS TEST
-            else{
-                asset = getAssetByCfrIrcs(createAssetId(request));
-                if (asset != null) {
-                    assetMTEnrichmentResponse = enrichementHelper(assetMTEnrichmentResponse, asset);
-                }
-            }
-        } else {
+        if (asset == null) {
             asset = getAssetByCfrIrcs(createAssetId(request));
-            if (isPluginTypeWithoutMobileTerminal(request.getPluginType()) && asset != null) {
-                assetMTEnrichmentResponse = enrichementHelper(assetMTEnrichmentResponse, asset);
-                MobileTerminal mobileTerminal = mobileTerminalService.findMobileTerminalByAsset(asset.getId());
-                if(mobileTerminal != null){
-                    terminal = mobileTerminal;
-                }
+        }
+
+        if (isPluginTypeWithoutMobileTerminal(request.getPluginType()) && asset != null) {
+            MobileTerminal mobileTerminal = mobileTerminalService.findMobileTerminalByAsset(asset.getId());
+            if (mobileTerminal != null) {
+                terminal = mobileTerminal;
             }
         }
 
-        if(asset == null){
+        MobileTerminalTypeEnum transponderType = getTransponderType(request);
+        if (asset == null && 
+                (transponderType == null || !transponderType.equals(MobileTerminalTypeEnum.INMARSAT_C))) {
             asset = AssetUtil.createNewAssetFromRequest(request, assetDao.getNextUnknownShipNumber());
             assetDao.createAsset(asset);
         }
 
-        assetMTEnrichmentResponse = enrichementHelper(assetMTEnrichmentResponse, asset);
+        AssetMTEnrichmentResponse assetMTEnrichmentResponse = new AssetMTEnrichmentResponse();
+        enrichAssetAndMobileTerminal(request, assetMTEnrichmentResponse, terminal, asset);
+        enrichAssetGroup(assetMTEnrichmentResponse, asset);
 
-        List<String> assetGroupList = new ArrayList<>();
+        return assetMTEnrichmentResponse;
+    }
+
+    private void enrichAssetAndMobileTerminal(AssetMTEnrichmentRequest request,
+            AssetMTEnrichmentResponse assetMTEnrichmentResponse, MobileTerminal terminal, Asset asset) {
         if (asset != null) {
+            enrichementHelper(assetMTEnrichmentResponse, asset);
+        }
+        if (terminal != null) {
+            enrichementHelper(request, assetMTEnrichmentResponse, terminal);
+        }
+    }
+
+    private void enrichAssetGroup(AssetMTEnrichmentResponse assetMTEnrichmentResponse, Asset asset) {
+        if (asset != null) {
+            List<String> assetGroupList = new ArrayList<>();
             List<AssetGroup> list = assetGroupService.getAssetGroupListByAssetId(asset.getId());
             for (AssetGroup assetGroup : list) {
                 UUID assetGroupId = assetGroup.getId();
                 assetGroupList.add(assetGroupId.toString());
             }
+            assetMTEnrichmentResponse.setAssetGroupList(assetGroupList);
         }
-        assetMTEnrichmentResponse.setAssetGroupList(assetGroupList);
-        if (terminal != null) {
-            assetMTEnrichmentResponse = enrichementHelper(request, assetMTEnrichmentResponse, terminal);
-            assetMTEnrichmentResponse.setMobileTerminalType(terminal.getMobileTerminalType().name());
-        }
-        return assetMTEnrichmentResponse;
     }
-
+    
+    private MobileTerminalTypeEnum getTransponderType(AssetMTEnrichmentRequest request) {
+        try {
+            return MobileTerminalTypeEnum.valueOf(request.getTranspondertypeValue());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
     private AssetMTEnrichmentResponse enrichementHelper(AssetMTEnrichmentResponse resp, Asset asset) {
         Map<String, String> assetId = createAssetId(asset);
         resp.setAssetId(assetId);
