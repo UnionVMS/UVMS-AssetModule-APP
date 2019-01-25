@@ -101,16 +101,14 @@ public class TerminalDaoBean {
     }
 
     public MobileTerminal getMobileTerminalByRequest(AssetMTEnrichmentRequest request) {
-        MobileTerminal singleResult = null;
         try {
-            singleResult = em.createNamedQuery(MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_DNID_AND_MEMBER_NR_AND_TYPE, MobileTerminal.class)
+            return em.createNamedQuery(MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_DNID_AND_MEMBER_NR_AND_TYPE, MobileTerminal.class)
                     .setParameter("dnid", request.getDnidValue())
                     .setParameter("memberNumber", request.getMemberNumberValue())
                     .setParameter("mobileTerminalType", MobileTerminalTypeEnum.valueOf(request.getTranspondertypeValue()))
                     .getSingleResult();
         } catch (NoResultException nre) {
-            // We want to return null if there is no result instead of throwing exception.
+            return null;
         }
-        return singleResult;
     }
 }
