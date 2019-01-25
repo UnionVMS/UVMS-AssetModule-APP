@@ -13,9 +13,11 @@ import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper.TestPollHelper;
+import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -447,7 +449,86 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         assertTrue(fetchedAssetGroups.size() > 0);
         assertTrue(fetchedAssetGroups.contains(createdAssetGroupId.toString()));
     }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void collectAssetMTAssingCorrectAssetFromMTInformation() {
+        String dnid = "1234";
+        
+        Asset asset1 = createAsset();
+        MobileTerminal mobileTerminal1 = testPollHelper.createBasicMobileTerminal();
+        mobileTerminal1.getChannels().iterator().next().setDNID(dnid);
+        mobileTerminal1.setAsset(asset1);
+        mobileTerminal1 = mobileTerminalService.createMobileTerminal(mobileTerminal1, "TEST");
+        MobileTerminalPlugin plugin = mobileTerminal1.getPlugin();
+        
+        Asset asset2 = createAsset();
+        MobileTerminal mobileTerminal2 = testPollHelper.createBasicMobileTerminal();
+        mobileTerminal2.setPlugin(plugin);
+        mobileTerminal2.getChannels().iterator().next().setDNID(dnid);
+        mobileTerminal2.setAsset(asset2);
+        mobileTerminal2 = mobileTerminalService.createMobileTerminal(mobileTerminal2, "TEST");
+        
+        Asset asset3 = createAsset();
+        MobileTerminal mobileTerminal3 = testPollHelper.createBasicMobileTerminal();
+        mobileTerminal3.setPlugin(plugin);
+        mobileTerminal3.getChannels().iterator().next().setDNID(dnid);
+        mobileTerminal3.setAsset(asset3);
+        mobileTerminal3 = mobileTerminalService.createMobileTerminal(mobileTerminal3, "TEST");
 
+        AssetMTEnrichmentRequest request = createRequest(mobileTerminal1);
+        AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
+        assertThat(response.getAssetUUID(), CoreMatchers.is(asset1.getId().toString()));
+        
+        AssetMTEnrichmentRequest request2 = createRequest(mobileTerminal2);
+        AssetMTEnrichmentResponse response2 = assetService.collectAssetMT(request2);
+        assertThat(response2.getAssetUUID(), CoreMatchers.is(asset2.getId().toString()));
+        
+        AssetMTEnrichmentRequest request3 = createRequest(mobileTerminal3);
+        AssetMTEnrichmentResponse response3 = assetService.collectAssetMT(request3);
+        assertThat(response3.getAssetUUID(), CoreMatchers.is(asset3.getId().toString()));
+
+    }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void collectAssetMTCreateUnknownAsset() {
+        Asset nonExisting = AssetTestsHelper.createBasicAsset();
+        nonExisting.setName(null);
+        
+        AssetMTEnrichmentRequest request = createRequest(nonExisting);
+        request.setDnidValue(null);
+        request.setMemberNumberValue(null);
+        request.setTranspondertypeValue(null);
+        AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
+        assertTrue(response.getAssetName().startsWith("Unknown ship"));
+    }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void collectAssetMTDontCreateUnknownAssetForInmarsat() {
+        MobileTerminal mobileTerminalNonExisting = testPollHelper.createBasicMobileTerminal();
+        
+        AssetMTEnrichmentRequest request = createRequest(mobileTerminalNonExisting);
+        AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
+        assertThat(response.getAssetId(), CoreMatchers.is(CoreMatchers.nullValue()));
+        assertThat(response.getAssetName(), CoreMatchers.is(CoreMatchers.nullValue()));
+    }
+
+    private AssetMTEnrichmentRequest createRequest(MobileTerminal mobileTerminal) {
+
+        AssetMTEnrichmentRequest request = new AssetMTEnrichmentRequest();
+
+        Channel channel = mobileTerminal.getChannels().iterator().next();
+        
+        // for mobileTerminal
+        request.setMemberNumberValue(channel.getMemberNumber());
+        request.setDnidValue(channel.getDNID());
+        request.setTranspondertypeValue(mobileTerminal.getMobileTerminalType().toString());
+        
+        return request;
+    }
+    
     private AssetMTEnrichmentRequest createRequest(Asset asset) {
 
         AssetMTEnrichmentRequest request = new AssetMTEnrichmentRequest();
