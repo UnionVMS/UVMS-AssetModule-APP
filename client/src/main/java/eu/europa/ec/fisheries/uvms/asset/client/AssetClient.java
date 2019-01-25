@@ -10,12 +10,12 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.client;
 
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import eu.europa.ec.fisheries.uvms.asset.client.model.*;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
+import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
+import org.slf4j.MDC;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
@@ -27,19 +27,12 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetBO;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetDTO;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetGroup;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetListResponse;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetMTEnrichmentRequest;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetMTEnrichmentResponse;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetQuery;
-import eu.europa.ec.fisheries.uvms.asset.client.model.CustomCode;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
-import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
-import org.slf4j.MDC;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Stateless
 public class AssetClient {
@@ -50,14 +43,33 @@ public class AssetClient {
 
     @Resource(name = "java:global/asset_endpoint")
     private String assetEndpoint;
-    
+
     @PostConstruct
     private void setUpClient() {
         Client client = ClientBuilder.newClient();
         webTarget = client.target(assetEndpoint + "/internal");
     }
 
+
     public AssetDTO getAssetById(AssetIdentifier type, String value) {
+
+        String requestId = MDC.get(REQ_ID);
+        if (requestId != null) {
+            return webTarget.
+                    path("asset")
+                    .path(type.toString().toLowerCase())
+                    .path(value)
+                    .request(MediaType.APPLICATION_JSON).header(REQ_ID, requestId).get(AssetDTO.class);
+        } else {
+            return webTarget
+                    .path("asset")
+                    .path(type.toString().toLowerCase())
+                    .path(value)
+                    .request(MediaType.APPLICATION_JSON).get(AssetDTO.class);
+        }
+    }
+
+    public AssetDTO getAssetByIdX(AssetIdentifier type, String value) {
         return webTarget
                 .path("asset")
                 .path(type.toString().toLowerCase())
@@ -66,17 +78,17 @@ public class AssetClient {
                 .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .get(AssetDTO.class);
     }
-    
+
     public List<AssetDTO> getAssetList(AssetQuery query) {
         AssetListResponse assetResponse = webTarget
                 .path("query")
                 .request(MediaType.APPLICATION_JSON)
                 .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .post(Entity.json(query), AssetListResponse.class);
-    
+
         return assetResponse.getAssetList();
     }
-    
+
     public List<AssetDTO> getAssetList(AssetQuery query, boolean dynamic) {
         AssetListResponse assetResponse = webTarget
                 .path("query")
@@ -84,10 +96,10 @@ public class AssetClient {
                 .request(MediaType.APPLICATION_JSON)
                 .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .post(Entity.json(query), AssetListResponse.class);
-    
+
         return assetResponse.getAssetList();
     }
-    
+
     public List<AssetDTO> getAssetList(AssetQuery query, int page, int size, boolean dynamic) {
         AssetListResponse assetResponse = webTarget
                 .path("query")
@@ -97,10 +109,10 @@ public class AssetClient {
                 .request(MediaType.APPLICATION_JSON)
                 .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .post(Entity.json(query), AssetListResponse.class);
-        
+
         return assetResponse.getAssetList();
     }
-    
+
     public List<AssetGroup> getAssetGroupsByUser(String user) {
         return webTarget
                 .path("group")
@@ -108,9 +120,10 @@ public class AssetClient {
                 .path(user)
                 .request(MediaType.APPLICATION_JSON)
                 .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
-                .get(new GenericType<List<AssetGroup>>() {});
+                .get(new GenericType<List<AssetGroup>>() {
+                });
     }
-    
+
     public List<AssetGroup> getAssetGroupByAssetId(UUID assetId) {
         return webTarget
                 .path("group")
@@ -118,7 +131,8 @@ public class AssetClient {
                 .path(assetId.toString())
                 .request(MediaType.APPLICATION_JSON)
                 .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
-                .get(new GenericType<List<AssetGroup>>() {});
+                .get(new GenericType<List<AssetGroup>>() {
+                });
     }
 
     public List<AssetDTO> getAssetsByGroupIds(List<UUID> groupIds) {
@@ -127,18 +141,20 @@ public class AssetClient {
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
-                .get(new GenericType<List<AssetDTO>>() {});
+                .get(new GenericType<List<AssetDTO>>() {
+                });
     }
-    
+
     public List<AssetDTO> getAssetHistoryListByAssetId(UUID id) {
         return webTarget
                 .path("history/asset")
                 .path(id.toString())
                 .request(MediaType.APPLICATION_JSON)
                 .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
-                .get(new GenericType<List<AssetDTO>>() {});
+                .get(new GenericType<List<AssetDTO>>() {
+                });
     }
-    
+
     public AssetDTO getAssetFromAssetIdAndDate(AssetIdentifier type, String value, OffsetDateTime date) {
         String formattedDate = date.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         return webTarget
@@ -159,7 +175,7 @@ public class AssetClient {
                 .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .get(AssetDTO.class);
     }
-    
+
     public AssetBO upsertAsset(AssetBO asset) {
         return webTarget
                 .path("asset")
@@ -167,7 +183,7 @@ public class AssetClient {
                 .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
                 .post(Entity.json(asset), AssetBO.class);
     }
-    
+
     public void upsertAssetAsync(AssetBO asset) throws MessageException {
         Jsonb jsonb = JsonbBuilder.create();
 
@@ -202,8 +218,9 @@ public class AssetClient {
                 .path("listconstants")
                 .request(MediaType.APPLICATION_JSON)
                 .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
-                .get(new GenericType<List<String>>() {});
-        
+                .get(new GenericType<List<String>>() {
+                });
+
     }
 
     public List<CustomCode> getCodesForConstant(String constant) {
@@ -212,10 +229,11 @@ public class AssetClient {
                 .path(constant)
                 .request(MediaType.APPLICATION_JSON)
                 .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
-                .get(new GenericType<List<CustomCode>>() {});
+                .get(new GenericType<List<CustomCode>>() {
+                });
     }
 
-    public Boolean isCodeValid(String constant, String code, OffsetDateTime date){
+    public Boolean isCodeValid(String constant, String code, OffsetDateTime date) {
         String theDate = date.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         String response = webTarget
                 .path("verify")
@@ -237,7 +255,8 @@ public class AssetClient {
                 .path(theDate)
                 .request(MediaType.APPLICATION_JSON)
                 .header(REQ_ID, MDC.get(REQ_ID) == null ? UUID.randomUUID().toString() : MDC.get(REQ_ID))
-                .get(new GenericType<List<CustomCode>>() {});
+                .get(new GenericType<List<CustomCode>>() {
+                });
     }
 
     public CustomCode replace(CustomCode customCode) {
