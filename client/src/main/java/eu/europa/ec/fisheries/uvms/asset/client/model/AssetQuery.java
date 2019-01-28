@@ -31,7 +31,7 @@ public class AssetQuery {
     private List<String> portOfRegistration;
     private List<String> licenseType;
     private List<String> producerName;
-    private Integer gearType;
+    private String gearType;
     private Double minLength;
     private Double maxLength;
     private Double minPower;
@@ -128,10 +128,10 @@ public class AssetQuery {
     public void setProducerName(List<String> producerName) {
         this.producerName = producerName;
     }
-    public Integer getGearType() {
+    public String getGearType() {
         return gearType;
     }
-    public void setGearType(Integer gearType) {
+    public void setGearType(String gearType) {
         this.gearType = gearType;
     }
     public Double getMinLength() {
