@@ -74,7 +74,7 @@ public class SearchFieldMapper {
             searchValues.add(new SearchKeyValue(SearchFields.PRODUCER_NAME, query.getProducerName()));
         }
         if (query.getGearType() != null) {
-            searchValues.add(new SearchKeyValue(SearchFields.GEAR_TYPE, Arrays.asList(query.getGearType().toString())));
+            searchValues.add(new SearchKeyValue(SearchFields.GEAR_TYPE, Arrays.asList(query.getGearType())));
         }
         if (query.getMinLength() != null) {
             searchValues.add(new SearchKeyValue(SearchFields.MIN_LENGTH, Arrays.asList(query.getMinLength().toString())));
