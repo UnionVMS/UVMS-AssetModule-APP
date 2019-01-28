@@ -162,8 +162,8 @@ public class MobileTerminalServiceBean {
         return updatedTerminal;
     }
 
-    public MobileTerminal assignMobileTerminal(UUID connectId, UUID guid, String comment, String username) {
-        MobileTerminal terminalAssign = assignMobileTerminalToCarrier(connectId, guid, comment, username);
+    public MobileTerminal assignMobileTerminal(UUID connectId, UUID mobileTerminalId, String comment, String username) {
+        MobileTerminal terminalAssign = assignMobileTerminalToCarrier(connectId, mobileTerminalId, comment, username);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalAssigned(terminalAssign.getId().toString(), comment, username);
             auditProducer.sendModuleMessage(auditData);
@@ -319,9 +319,9 @@ public class MobileTerminalServiceBean {
         }
     }
 
-    public MobileTerminal assignMobileTerminalToCarrier(UUID connectId, UUID guid, String comment, String username) {
+    public MobileTerminal assignMobileTerminalToCarrier(UUID connectId, UUID mobileTerminalId, String comment, String username) {
 
-        if (guid == null) {
+        if (mobileTerminalId == null) {
             throw new NullPointerException("No Mobile terminalId in request");
         }
         if (connectId == null) {
@@ -333,11 +333,12 @@ public class MobileTerminalServiceBean {
             throw new NotFoundException("No Asset with ID " + connectId + " found. Can not link Mobile Terminal.");
         }
 
-        MobileTerminal terminal = getMobileTerminalEntityById(guid);
+        MobileTerminal terminal = getMobileTerminalEntityById(mobileTerminalId);
 
         if(terminal.getAsset() != null) {
-            throw new IllegalArgumentException("Terminal " + guid + " is already linked to an asset with guid " + connectId);
+            throw new IllegalArgumentException("Terminal " + mobileTerminalId + " is already linked to an asset with guid " + connectId);
         }
+        asset.setHistoryId(UUID.randomUUID()); // No @PreUpdate in Asset.
         terminal.setAsset(asset);
         terminal.setUpdateuser(username);
         terminalDao.updateMobileTerminal(terminal);

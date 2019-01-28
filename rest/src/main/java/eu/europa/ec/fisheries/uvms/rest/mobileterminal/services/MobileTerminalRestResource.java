@@ -139,10 +139,10 @@ public class MobileTerminalRestResource {
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
     public Response assignMobileTerminal(@QueryParam("comment") String comment,
                                          @QueryParam("connectId") UUID connectId,
-                                         UUID guid) {
+                                         UUID mobileTerminalId) {
         LOG.info("Assign mobile terminal invoked in rest layer.");
         try {
-            MobileTerminal mobileTerminal = mobileTerminalService.assignMobileTerminal(connectId, guid, comment, request.getRemoteUser());
+            MobileTerminal mobileTerminal = mobileTerminalService.assignMobileTerminal(connectId, mobileTerminalId, comment, request.getRemoteUser());
             String returnString = objectMapper().writeValueAsString(mobileTerminal);
             return Response.ok(returnString).build();
         } catch (Exception ex) {
