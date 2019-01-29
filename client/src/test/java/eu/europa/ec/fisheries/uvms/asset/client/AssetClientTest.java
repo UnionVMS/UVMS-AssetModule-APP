@@ -83,9 +83,11 @@ public class AssetClientTest extends AbstractClientTest {
         AssetBO assetBo = new AssetBO();
         assetBo.setAsset(AssetHelper.createBasicAsset());
         AssetBO upsertAssetBo = assetClient.upsertAsset(assetBo);
+        AssetDTO created = assetClient.getAssetById(AssetIdentifier.GUID, upsertAssetBo.getAsset().getId().toString());
         AssetBO upsertAssetBo2 = assetClient.upsertAsset(assetBo);
+        AssetDTO updated = assetClient.getAssetById(AssetIdentifier.GUID, upsertAssetBo2.getAsset().getId().toString());
         
-        assertThat(upsertAssetBo.getAsset().getHistoryId(), CoreMatchers.is(upsertAssetBo2.getAsset().getHistoryId()));
+        assertEquals(created.getHistoryId(), updated.getHistoryId());
     }
 
     @Test

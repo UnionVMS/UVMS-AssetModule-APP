@@ -232,9 +232,8 @@ public class AssetServiceBean implements AssetService {
         Asset existingAsset = getAssetByCfrIrcs(createAssetId(asset));
         if (existingAsset != null) {
             asset.setId(existingAsset.getId());
-            asset.setHistoryId(existingAsset.getHistoryId());
         }
-        
+
         if (!AssetComparator.assetEquals(asset, existingAsset)) {
             asset = upsertAsset(asset, username);
         }
@@ -242,13 +241,13 @@ public class AssetServiceBean implements AssetService {
         // Clear and create new contacts and notes for now
         UUID assetId = asset.getId();
         if (assetBo.getContacts() != null) {
-            getContactInfoForAsset(assetId).stream().forEach(c -> deleteContactInfo(c.getId()));
-            assetBo.getContacts().stream().forEach(c -> createContactInfoForAsset(assetId, c, username));
+            getContactInfoForAsset(assetId).forEach(c -> deleteContactInfo(c.getId()));
+            assetBo.getContacts().forEach(c -> createContactInfoForAsset(assetId, c, username));
         }
 
         if (assetBo.getNotes() != null) {
-            getNotesForAsset(assetId).stream().forEach(n -> deleteNote(n.getId()));
-            assetBo.getNotes().stream().forEach(c -> createNoteForAsset(assetId, c, username));
+            getNotesForAsset(assetId).forEach(n -> deleteNote(n.getId()));
+            assetBo.getNotes().forEach(c -> createNoteForAsset(assetId, c, username));
         }
         return assetBo;
     }

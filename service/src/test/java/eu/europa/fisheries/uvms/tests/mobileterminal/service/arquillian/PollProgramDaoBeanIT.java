@@ -464,7 +464,7 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
 
     private OffsetDateTime getStopDate() {
         cal.set(Calendar.DAY_OF_MONTH, 28);
-        cal.set(Calendar.YEAR, 2019);
+        cal.set(Calendar.YEAR, 2059);
         return OffsetDateTime.ofInstant(cal.toInstant(), ZoneOffset.UTC);
     }
 
