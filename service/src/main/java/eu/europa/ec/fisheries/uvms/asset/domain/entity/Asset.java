@@ -284,6 +284,10 @@ public class Asset implements Serializable {
         this.historyId = UUID.randomUUID();
     }
 
+    @PreUpdate
+    private void generateNewHistoryIdOnUpdate() {
+        this.historyId = UUID.randomUUID();
+    }
 
     public UUID getId() {
         return id;

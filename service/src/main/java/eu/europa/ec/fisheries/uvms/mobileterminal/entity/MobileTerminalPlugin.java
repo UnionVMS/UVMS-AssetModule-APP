@@ -163,8 +163,7 @@ public class MobileTerminalPlugin implements Serializable {
                 Objects.equals(pluginSatelliteType, that.pluginSatelliteType) &&
                 Objects.equals(pluginInactive, that.pluginInactive) &&
                 Objects.equals(updateTime, that.updateTime) &&
-                Objects.equals(updatedBy, that.updatedBy) &&
-                Objects.equals(capabilities, that.capabilities);
+                Objects.equals(updatedBy, that.updatedBy);
     }
 
     @Override

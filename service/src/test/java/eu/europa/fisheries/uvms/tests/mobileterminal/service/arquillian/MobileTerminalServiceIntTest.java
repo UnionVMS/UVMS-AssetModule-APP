@@ -143,28 +143,25 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void unAssignMobileTerminalFromCarrier() throws HeuristicRollbackException, RollbackException, HeuristicMixedException, SystemException, NotSupportedException {
+    public void unAssignMobileTerminalFromCarrier() {
 
-        MobileTerminal created = testPollHelper.createAndPersistMobileTerminal(null);
-        Asset asset = createAndPersistAsset();
-        assertNotNull(created);
+        MobileTerminal persistMobileTerminal = testPollHelper.createAndPersistMobileTerminal(null);
+        Asset persistAsset = createAndPersistAsset();
+        assertNotNull(persistMobileTerminal.getId());
+        assertNotNull(persistAsset.getId());
 
-        UUID guid = created.getId();
+        UUID mobileTerminalId = persistMobileTerminal.getId();
+        UUID assetId = persistAsset.getId();
 
-        MobileTerminal mobileTerminal = mobileTerminalService.assignMobileTerminal(asset.getId(), guid, TEST_COMMENT, USERNAME);
+        MobileTerminal mobileTerminal = mobileTerminalService.assignMobileTerminal(assetId, mobileTerminalId, TEST_COMMENT, USERNAME);
         assertNotNull(mobileTerminal);
+        assertNotNull(mobileTerminal.getAsset());
+        assertEquals(1, persistAsset.getMobileTerminals().size());
 
-        userTransaction.commit();
-        userTransaction.begin();
-
-        mobileTerminal.setAsset(asset);
-        mobileTerminal = mobileTerminalService.unAssignMobileTerminal(asset.getId(), guid, TEST_COMMENT, USERNAME);
+        mobileTerminal = mobileTerminalService.unAssignMobileTerminal(assetId, mobileTerminalId, TEST_COMMENT, USERNAME);
         assertNotNull(mobileTerminal);
-
-        assetDao.deleteAsset(asset);
-
-        userTransaction.commit();
-        userTransaction.begin();
+        assertNull(mobileTerminal.getAsset());
+        assertEquals(0, persistAsset.getMobileTerminals().size());
     }
 
     @Test

@@ -347,7 +347,6 @@ public class Channel implements Serializable {
 				Objects.equals(archived, channel.archived) &&
 				Objects.equals(updateTime, channel.updateTime) &&
 				Objects.equals(updateUser, channel.updateUser) &&
-				Objects.equals(mobileTerminal, channel.mobileTerminal) &&
 				Objects.equals(name, channel.name) &&
 				Objects.equals(DNID, channel.DNID) &&
 				Objects.equals(expectedFrequency, channel.expectedFrequency) &&

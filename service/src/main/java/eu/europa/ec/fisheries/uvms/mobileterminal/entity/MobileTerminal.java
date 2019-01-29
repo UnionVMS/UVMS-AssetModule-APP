@@ -298,7 +298,6 @@ public class MobileTerminal implements Serializable {
 		MobileTerminal that = (MobileTerminal) o;
 		return Objects.equals(id, that.id) &&
 				Objects.equals(historyId, that.historyId) &&
-				Objects.equals(plugin, that.plugin) &&
 				Objects.equals(archived, that.archived) &&
 				Objects.equals(inactivated, that.inactivated) &&
 				source == that.source &&
@@ -309,8 +308,7 @@ public class MobileTerminal implements Serializable {
 				Objects.equals(satelliteNumber, that.satelliteNumber) &&
 				Objects.equals(antenna, that.antenna) &&
 				Objects.equals(transceiverType, that.transceiverType) &&
-				Objects.equals(softwareVersion, that.softwareVersion) &&
-				Objects.equals(channels, that.channels);
+				Objects.equals(softwareVersion, that.softwareVersion);
 	}
 
 	@Override

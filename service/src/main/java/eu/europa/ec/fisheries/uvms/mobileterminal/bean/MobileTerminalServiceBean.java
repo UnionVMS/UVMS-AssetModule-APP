@@ -338,7 +338,7 @@ public class MobileTerminalServiceBean {
         if(terminal.getAsset() != null) {
             throw new IllegalArgumentException("Terminal " + mobileTerminalId + " is already linked to an asset with guid " + connectId);
         }
-        asset.setHistoryId(UUID.randomUUID()); // No @PreUpdate in Asset.
+        asset.getMobileTerminals().add(terminal);
         terminal.setAsset(asset);
         terminal.setUpdateuser(username);
         terminalDao.updateMobileTerminal(terminal);
@@ -360,12 +360,12 @@ public class MobileTerminalServiceBean {
 
         Asset asset = terminal.getAsset();
         terminal.setAsset(null);
-        terminalDao.updateMobileTerminal(terminal);
 
         boolean remove = asset.getMobileTerminals().remove(terminal);
         if(!remove) {
             throw new IllegalArgumentException("Terminal " + guid + " is not linked to an asset with ID " + asset.getId());
         }
+        terminalDao.updateMobileTerminal(terminal);
         return terminal;
     }
 
