@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.mobileterminal.mapper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
+import eu.europa.ec.fisheries.uvms.asset.mapper.PollToCommandRequestMapper.PollReceiverInmarsatC;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
@@ -60,6 +61,17 @@ public class MobileTerminalEntityToModelMapper {
 
         model.getChannels().addAll(mapChannels(entity));
 
+        
+        MobileTerminalAttribute serialNumber = new MobileTerminalAttribute();
+        serialNumber.setType(PollReceiverInmarsatC.SERIAL_NUMBER.toString());
+        serialNumber.setValue(entity.getSerialNo());
+        model.getAttributes().add(serialNumber);
+        
+        MobileTerminalAttribute satelliteNumber = new MobileTerminalAttribute();
+        serialNumber.setType(PollReceiverInmarsatC.SATELLITE_NUMBER.toString());
+        serialNumber.setValue(entity.getSatelliteNumber());
+        model.getAttributes().add(satelliteNumber);
+        
         return model;
     }
 
