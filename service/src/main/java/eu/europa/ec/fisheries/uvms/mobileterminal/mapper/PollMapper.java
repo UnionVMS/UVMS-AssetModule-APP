@@ -14,16 +14,16 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.mapper;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttribute;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttributeType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ComChannelAttribute;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalAttribute;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.AttributeDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollKey;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public class PollMapper {
 
@@ -110,14 +110,19 @@ public class PollMapper {
         	attributes.add(dto);
         }
 
-        //Only first channel
-        if(mobileTerminal.getChannels().get(0) != null) {
-        	for(ComChannelAttribute channel : mobileTerminal.getChannels().get(0).getAttributes()) {
-        		AttributeDto cDto = new AttributeDto();
-        		cDto.setType(channel.getType());
-        		cDto.setValue(channel.getValue());
-        		attributes.add(cDto);
-        	}
+        if(mobileTerminal.getChannels() != null && !mobileTerminal.getChannels().isEmpty()) {
+            for(ComChannelType comChannelType : mobileTerminal.getChannels()) {
+                for(ComChannelCapability capability : comChannelType.getCapabilities()) {
+                    if(capability.getType().equalsIgnoreCase("POLLABLE") && capability.isValue()) {
+                        for(ComChannelAttribute attr : comChannelType.getAttributes()) {
+                            AttributeDto cDto = new AttributeDto();
+                            cDto.setType(attr.getType());
+                            cDto.setValue(attr.getValue());
+                            attributes.add(cDto);
+                        }
+                    }
+                }
+            }
         }
 
         pollChannel.setMobileTerminalAttributes(attributes);
