@@ -148,9 +148,12 @@ public class AssetServiceBean implements AssetService {
      */
     @Override
     public Asset updateAsset(Asset asset, String username, String comment) {
-        Asset updatedAsset = updateAssetInternal(asset, username);
-        auditService.logAssetUpdated(updatedAsset, comment, username);
-        return updatedAsset;
+        Asset persistedAsset = assetDao.getAssetById(asset.getId());
+        if (!AssetComparator.assetEquals(asset, persistedAsset)) {
+            persistedAsset = updateAssetInternal(asset, username);
+            auditService.logAssetUpdated(persistedAsset, comment, username);
+        }
+        return persistedAsset;
     }
 
     /**
