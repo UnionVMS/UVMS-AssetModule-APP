@@ -63,7 +63,7 @@ public class PluginMapper {
 		List<MobileTerminalPluginCapability> capabilityList = new ArrayList<>();
 		for(PluginCapability capability : capabilities) {
 			MobileTerminalPluginCapability entity = new MobileTerminalPluginCapability();
-			entity.setPlugin(parent);
+			entity.setPlugin(parent.getId());
 			entity.setName(capability.getName().name());
 			entity.setValue(capability.getValue());
 			entity.setUpdatedBy(MobileTerminalConstants.UPDATE_USER);

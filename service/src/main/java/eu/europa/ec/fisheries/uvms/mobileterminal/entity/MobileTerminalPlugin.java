@@ -73,7 +73,8 @@ public class MobileTerminalPlugin implements Serializable {
     @Column(name = "upuser")
     private String updatedBy;
 
-    @OneToMany(mappedBy = "plugin", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "plugin_id", referencedColumnName = "id")
     private Set<MobileTerminalPluginCapability> capabilities;
 
     public MobileTerminalPlugin() {

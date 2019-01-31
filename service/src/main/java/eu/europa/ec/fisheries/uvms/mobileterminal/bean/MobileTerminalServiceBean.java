@@ -341,8 +341,7 @@ public class MobileTerminalServiceBean {
         asset.getMobileTerminals().add(terminal);
         terminal.setAsset(asset);
         terminal.setUpdateuser(username);
-        terminalDao.updateMobileTerminal(terminal);
-
+        terminal = terminalDao.updateMobileTerminal(terminal);
         return terminal;
     }
 

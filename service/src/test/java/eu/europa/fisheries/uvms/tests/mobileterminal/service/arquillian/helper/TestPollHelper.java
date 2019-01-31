@@ -140,7 +140,7 @@ public class TestPollHelper {
 
         Set<MobileTerminalPluginCapability> capabilityList = new HashSet<>();
         MobileTerminalPluginCapability mtpc = new MobileTerminalPluginCapability();
-        mtpc.setPlugin(mtp);
+        mtpc.setPlugin(mtp.getId());
         mtpc.setName("test");
         mtpc.setValue("test");
         mtpc.setUpdatedBy("TEST_USER");
