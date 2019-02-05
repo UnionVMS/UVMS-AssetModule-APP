@@ -131,7 +131,7 @@ public class MobileTerminal implements Serializable {
 	@Column(name = "software_version")
 	private String softwareVersion;
 
-	@OneToMany(mappedBy = "mobileTerminal", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "mobileTerminal", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Channel> channels;
 
 	@ManyToOne(fetch = FetchType.LAZY)

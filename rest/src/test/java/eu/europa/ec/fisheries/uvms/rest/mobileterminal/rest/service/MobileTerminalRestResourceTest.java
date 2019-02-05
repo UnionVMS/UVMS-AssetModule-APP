@@ -191,6 +191,54 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void updateMobileTerminalTest_RemoveOneOfTwoChannels() {
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        mobileTerminal.getChannels().forEach(channel -> {
+            channel.setMemberNumber("111");
+            channel.setDNID("1111");
+        });
+
+        Channel c2 = new Channel();
+        c2.setName("VMS");
+        c2.setFrequencyGracePeriod(Duration.ofSeconds(54000));
+        c2.setMemberNumber("222");
+        c2.setExpectedFrequency(Duration.ofSeconds(7200));
+        c2.setExpectedFrequencyInPort(Duration.ofSeconds(10800));
+        c2.setLesDescription("Thrane&Thrane");
+        c2.setDNID("2222");
+        c2.setInstalledBy("Mike Great");
+        c2.setArchived(false);
+        c2.setConfigChannel(false);
+        c2.setDefaultChannel(false);
+        c2.setPollChannel(false);
+        c2.setMobileTerminal(mobileTerminal);
+
+        mobileTerminal.getChannels().add(c2);
+
+        MobileTerminal created = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        assertNotNull(created.getId());
+        assertEquals(2, created.getChannels().size());
+
+        Channel c1 = created.getChannels().iterator().next();
+        created.getChannels().remove(c1);
+
+        MobileTerminal updated = getWebTarget()
+                .path("mobileterminal")
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(created), MobileTerminal.class);
+
+        assertNotNull(updated.getId());
+        assertEquals(1, updated.getChannels().size());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void getMobileTerminalListTest() {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
