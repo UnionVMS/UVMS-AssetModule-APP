@@ -213,7 +213,8 @@ public class AssetDao {
                 List<UUID> ids = searchKeyValue.getSearchValues().stream().map(UUID::fromString).collect(Collectors.toList());
                 operatorUsed = true;
                 operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).in(ids));
-            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.BOOLEAN)) {
+            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.BOOLEAN) ||
+                    searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.STRING)) {
                 operatorUsed = true;
                 operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).eq(searchKeyValue.getSearchValues().get(0)));
             }
