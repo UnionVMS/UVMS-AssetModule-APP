@@ -450,10 +450,8 @@ public class AssetServiceBean implements AssetService {
 
     @Override
     public List<ContactInfo> getContactInfoRevisionForAssetHistory(UUID assetId, OffsetDateTime updatedDate) {
-
         List<ContactInfo> contactInfoListByAssetId = contactDao.getContactInfoByAssetId(assetId);
         List<ContactInfo> revisionList = contactDao.getContactInfoRevisionForAssetHistory(contactInfoListByAssetId, updatedDate);
-        revisionList.sort(Comparator.comparing(ContactInfo::getAssetUpdateTime));
         return revisionList;
     }
 

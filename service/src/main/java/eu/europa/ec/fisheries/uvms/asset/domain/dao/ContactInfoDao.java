@@ -19,9 +19,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Stateless
 public class ContactInfoDao {
@@ -53,24 +51,45 @@ public class ContactInfoDao {
     }
 
     public List<ContactInfo> getContactInfoRevisionForAssetHistory(List<ContactInfo> contactInfoList, OffsetDateTime updateDate) {
-
         AuditReader auditReader = AuditReaderFactory.get(em);
-
         List<ContactInfo> resultList = new ArrayList<>();
-        // An Asset can have multiple ContactInfo and each ContactInfo can have multiple History records.
-        for(ContactInfo contactInfo : contactInfoList) {
-            List<ContactInfo> revisionList = new ArrayList<>();
-            List<Number> revisionNumbers = auditReader.getRevisions(ContactInfo.class, contactInfo.getId());
-            for (Number rev : revisionNumbers) {
-                ContactInfo audited = auditReader.find(ContactInfo.class, contactInfo.getId(), rev);
-                revisionList.add(audited);
-            }
-            for(ContactInfo ci : revisionList) {
-                if(ci.getAssetUpdateTime().equals(updateDate)) {
+        for(ContactInfo contactInfo : contactInfoList) { // An Asset can have multiple ContactInfo and each ContactInfo can have multiple History records.
+            List<ContactInfo> revisionList = getSortedContactInfoRevisions(auditReader, contactInfo);
+            filterOlderRevisionsByAssetUpdatetime(resultList, updateDate, revisionList);
+        }
+        return resultList;
+    }
+
+    private List<ContactInfo> getSortedContactInfoRevisions(AuditReader auditReader, ContactInfo contactInfo) {
+        List<ContactInfo> revisionList = new ArrayList<>();
+        List<Number> revisionNumbers = auditReader.getRevisions(ContactInfo.class, contactInfo.getId());
+        for (Number rev : revisionNumbers) {
+            ContactInfo audited = auditReader.find(ContactInfo.class, contactInfo.getId(), rev);
+            revisionList.add(audited);
+        }
+        revisionList.sort(Comparator.comparing(ContactInfo::getCreateTime));
+        Collections.reverse(revisionList);
+        return revisionList;
+    }
+
+    private void filterOlderRevisionsByAssetUpdatetime(List<ContactInfo> resultList, OffsetDateTime updateDate, List<ContactInfo> revisionList) {
+        for(ContactInfo ci : revisionList) {
+            if(ci.getAssetUpdateTime().equals(updateDate)) {
+                resultList.add(ci);
+            } else if(ci.getAssetUpdateTime().isBefore(updateDate)) {
+                if(isUnique(ci.getId(), resultList)) {
                     resultList.add(ci);
                 }
             }
         }
-        return resultList;
+    }
+
+    private boolean isUnique(final UUID id, final List<ContactInfo> resultList) {
+        Optional<String> first = resultList
+                .stream()
+                .map(contactInfo -> contactInfo.getId().toString())
+                .filter(idValue -> idValue.equals(id.toString()))
+                .findFirst();
+        return !first.isPresent();
     }
 }
