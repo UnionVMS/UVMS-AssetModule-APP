@@ -661,4 +661,37 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         assertThat(listResponse.getAssetList().size(), is(1));
         assertThat(listResponse.getAssetList().get(0), is(AssetMatcher.assetEquals(createdAsset)));
     }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetListQueryGearTypeNoWildcardSearch() {
+        String gearType1 = "tempGearType" + AssetHelper.getRandomIntegers(10);
+        Asset asset = AssetHelper.createBasicAsset();
+        asset.setGearFishingType(gearType1);
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+        
+        String gearType2 = gearType1 + AssetHelper.getRandomIntegers(5);
+        Asset asset2 = AssetHelper.createBasicAsset();
+        asset2.setGearFishingType(gearType2);
+        getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset2), Asset.class);
+        
+        AssetQuery query = new AssetQuery();
+        query.setGearType(gearType1);
+        
+        AssetListResponse listResponse = getWebTarget()
+                .path("asset")
+                .path("list")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(query), AssetListResponse.class);
+
+        assertNotNull(listResponse);
+        assertThat(listResponse.getAssetList().size(), is(1));
+        assertThat(listResponse.getAssetList().get(0), is(AssetMatcher.assetEquals(createdAsset)));
+    }
 }
