@@ -3,13 +3,13 @@
 
 	<groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
 	<artifactId>liquibase</artifactId>
-	<version>4.0.23-W14J8-MARE</version>
+	<version>4.0.22-SNAPSHOT</version>
 	<name>liquibase</name>
 
 	<parent>
 	    <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
 	    <artifactId>asset</artifactId>
-	    <version>4.0.23-W14J8-MARE</version>
+	    <version>4.0.22-SNAPSHOT</version>
     </parent>
 
 	<properties>
