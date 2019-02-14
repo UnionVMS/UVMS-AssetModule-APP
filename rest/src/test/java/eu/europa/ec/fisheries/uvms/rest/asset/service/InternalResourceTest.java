@@ -1,12 +1,18 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import java.util.UUID;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollMobileTerminal;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType;
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -185,5 +191,27 @@ public class InternalResourceTest extends AbstractAssetRestTest {
                 .post(Entity.json(assetBo), Asset.class);
         
         assertThat(upsertedAsset, is(CoreMatchers.notNullValue()));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createPollTest() {      //just checking that the endpoint exists, there are better tests for the logic in pollRestResources
+        PollRequestType input = new PollRequestType();
+
+        PollMobileTerminal pmt = new PollMobileTerminal();
+        input.getMobileTerminals().add(pmt);
+
+        input.setPollType(PollType.MANUAL_POLL);
+        input.setComment("Test Comment");
+        input.setUserName("Test User");
+
+        Response response = getWebTarget()
+                .path("/internal/poll")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(input), Response.class);
+
+        assertNotNull(response);
+        assertEquals(500, response.getStatus());
+
     }
 }
