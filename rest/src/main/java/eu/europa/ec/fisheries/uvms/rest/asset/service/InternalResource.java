@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.CustomCodesService;
@@ -23,11 +24,17 @@ import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
+import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
+import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
+import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import javax.ejb.Stateless;
@@ -45,6 +52,8 @@ import java.util.stream.Collectors;
 @Stateless
 public class InternalResource {
 
+    private final static Logger LOG = LoggerFactory.getLogger(InternalResource.class);
+
     @Inject
     private AssetService assetService;
     
@@ -53,6 +62,9 @@ public class InternalResource {
 
     @Inject
     private CustomCodesService customCodesService;
+
+    @Inject
+    private PollServiceBean pollServiceBean;
 
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
     private ObjectMapper objectMapper(){
@@ -253,5 +265,17 @@ public class InternalResource {
     public Response enrich( AssetMTEnrichmentRequest request) {
         AssetMTEnrichmentResponse assetMTEnrichmentResponse = assetService.collectAssetMT(request);
         return Response.ok(assetMTEnrichmentResponse).header("MDC", MDC.get("requestId")).build();
+    }
+
+    @POST
+    @Path("poll")
+    public Response createPoll(PollRequestType createPoll) {
+        try {
+            CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(createPoll, "Internal UVMS");
+            return Response.ok(createPollResultDto).build();
+        } catch (Exception ex) {
+            LOG.error("[ Error when creating poll {}] {}",createPoll, ex.getStackTrace());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
+        }
     }
 }
