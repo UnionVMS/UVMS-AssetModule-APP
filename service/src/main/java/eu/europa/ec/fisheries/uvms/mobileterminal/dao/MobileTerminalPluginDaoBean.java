@@ -54,17 +54,6 @@ public class MobileTerminalPluginDaoBean  {
 			return null;
         }
 	}
-	public MobileTerminalPlugin initAndGetPlugin(String serviceName) {
-		MobileTerminalPlugin plugin = null;
-
-		List<ServiceResponseType> serviceTypes = configServiceMT.getRegisteredMobileTerminalPlugins();
-		if(serviceTypes != null) {
-			configServiceMT.upsertPlugins(ServiceToPluginMapper.mapToPluginList(serviceTypes), "PluginTimerBean");
-		}
-		plugin = getPluginByServiceName(serviceName);
-
-		return plugin;
-	}
 
 	public MobileTerminalPlugin updateMobileTerminalPlugin(MobileTerminalPlugin entity)  {
 			return  em.merge(entity);

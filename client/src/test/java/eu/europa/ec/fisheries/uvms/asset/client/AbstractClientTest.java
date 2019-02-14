@@ -54,7 +54,7 @@ public abstract class AbstractClientTest {
 
 
         testWar.addClass(UnionVMSMock.class);
-        testWar.addClass(ExchangeModuleMock.class);
+        testWar.addClass(ExchangeModuleRestMock.class);
 
         return testWar;
     }
