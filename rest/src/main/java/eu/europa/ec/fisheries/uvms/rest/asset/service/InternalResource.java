@@ -271,7 +271,7 @@ public class InternalResource {
     @Path("poll")
     public Response createPoll(PollRequestType createPoll) {
         try {
-            CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(createPoll, "Internal UVMS");
+            CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(createPoll, "Internal UVMS " + createPoll.getUserName());
             return Response.ok(createPollResultDto.isUnsentPoll()).build();
         } catch (Exception ex) {
             LOG.error("[ Error when creating poll {}] {}",createPoll, ex.getStackTrace());
