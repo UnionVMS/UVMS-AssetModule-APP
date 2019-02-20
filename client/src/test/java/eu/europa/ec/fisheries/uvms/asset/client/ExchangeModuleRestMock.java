@@ -29,7 +29,7 @@ import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.CapabilityTypeType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.ServiceResponseType;
 
-@Path("exchange/rest/api")
+@Path("exchange/unsecured/rest/api")
 @Stateless
 public class ExchangeModuleRestMock {
 

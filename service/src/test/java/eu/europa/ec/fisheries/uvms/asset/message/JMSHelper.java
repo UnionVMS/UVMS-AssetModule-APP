@@ -10,14 +10,20 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.message;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Message;
 import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.TextMessage;
-import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.artemis.api.core.TransportConfiguration;
+import org.apache.activemq.artemis.api.jms.ActiveMQJMSClient;
+import org.apache.activemq.artemis.api.jms.JMSFactoryType;
+import org.apache.activemq.artemis.core.remoting.impl.netty.NettyConnectorFactory;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleResponse;
@@ -30,9 +36,7 @@ public class JMSHelper {
 
     private static final long TIMEOUT = 20000;
     private static final String ASSET_QUEUE = "UVMSAssetEvent";
-    private static final String RESPONSE_QUEUE = "AssetTestQueue";
-
-    private ConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
+    private static final String RESPONSE_QUEUE = "IntegrationTestsResponseQueue";
 
     public Asset upsertAsset(Asset asset) throws Exception {
         String request = AssetModuleRequestMapper.createUpsertAssetModuleRequest(asset, "Test user");
@@ -57,7 +61,8 @@ public class JMSHelper {
     }
     
     public String sendAssetMessage(String text) throws Exception {
-        Connection connection = connectionFactory.createConnection();
+        Connection connection = getConnectionFactory().createConnection("test", "test");
+        connection.setClientID(UUID.randomUUID().toString());
         try {
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             Queue responseQueue = session.createQueue(RESPONSE_QUEUE);
@@ -76,7 +81,8 @@ public class JMSHelper {
     }
 
     public Message listenForResponse(String correlationId) throws Exception {
-        Connection connection = connectionFactory.createConnection();
+        Connection connection = getConnectionFactory().createConnection("test", "test");
+        connection.setClientID(UUID.randomUUID().toString());
         try {
             connection.start();
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -86,5 +92,13 @@ public class JMSHelper {
         } finally {
             connection.close();
         }
+    }
+
+    private ConnectionFactory getConnectionFactory() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("host", "localhost");
+        params.put("port", 5445);
+        TransportConfiguration transportConfiguration = new TransportConfiguration(NettyConnectorFactory.class.getName(), params);
+        return ActiveMQJMSClient.createConnectionFactoryWithoutHA(JMSFactoryType.CF,transportConfiguration);
     }
 }
