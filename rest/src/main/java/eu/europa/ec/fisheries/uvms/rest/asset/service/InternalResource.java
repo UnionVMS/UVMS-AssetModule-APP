@@ -269,12 +269,14 @@ public class InternalResource {
 
     @POST
     @Path("poll")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response createPoll(PollRequestType createPoll) {
         try {
             CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(createPoll, "Internal UVMS " + createPoll.getUserName());
             return Response.ok(createPollResultDto.isUnsentPoll()).build();
         } catch (Exception ex) {
-            LOG.error("[ Error when creating poll {}] {}",createPoll, ex.getStackTrace());
+            LOG.error("[ Error when creating poll {}] {}",createPoll, ex);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
