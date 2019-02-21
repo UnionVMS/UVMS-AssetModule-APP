@@ -6,7 +6,7 @@ import java.util.List;
 public class MobileTerminalSearchCriteria {
 
     private List<ListCriteria> criterias;
-    private Boolean dynamic;
+    private Boolean isDynamic;
 
     public List<ListCriteria> getCriterias() {
         if (criterias == null) {
@@ -19,11 +19,11 @@ public class MobileTerminalSearchCriteria {
         this.criterias = criterias;
     }
 
-    public Boolean isDynamic() {
-        return dynamic;
+    public Boolean getDynamic() {
+        return isDynamic;
     }
 
     public void setDynamic(Boolean dynamic) {
-        this.dynamic = dynamic;
+        isDynamic = dynamic;
     }
 }
