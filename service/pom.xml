@@ -36,46 +36,14 @@
         <docker.dev.prestop.phase>validate</docker.dev.prestop.phase>
         <movementrules.version>0.9.3</movementrules.version>
     </properties>
-    
-    <profiles>
-        <profile>
-            <id>weblogic</id>
-            <properties>
-                <jta.data-source>jdbc.uvms_asset</jta.data-source>
-                <jta.platform>org.hibernate.service.jta.platform.internal.WeblogicJtaPlatform</jta.platform>
-            </properties>
-        </profile>
-        <profile>
-            <id>oracle</id>
-            <properties>
-                <hibernate.dialect>org.hibernate.dialect.Oracle10gDialect</hibernate.dialect>
-            </properties>
-        </profile>
-    </profiles>
 
     <dependencies>
-
-
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>5.3.6.Final</version>
+            <groupId>fish.focus.uvms.maven</groupId>
+            <artifactId>uvms-pom-gis-deps</artifactId>
+            <type>pom</type>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-java8</artifactId>
-            <version>5.3.6.Final</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-envers</artifactId>
-            <version>5.3.6.Final</version>
-            <scope>provided</scope>
-        </dependency>
-
-
 
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
@@ -115,12 +83,11 @@
             <version>${exchange.model.version}</version>
             <type>jar</type>
         </dependency>
-
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>RELEASE</version>
-            <scope>compile</scope>
+            <version>2.9.5</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.movement-rules</groupId>
@@ -130,8 +97,8 @@
         </dependency>
         <dependency>
             <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-client</artifactId>
-            <version>5.15.5</version>
+            <artifactId>artemis-jms-client-all</artifactId>
+            <version>2.6.3</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

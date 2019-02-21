@@ -10,9 +10,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset;
 
+import java.util.Objects;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
-import org.jboss.util.Objects;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 
 public class AssetMatcher extends TypeSafeDiagnosingMatcher<Asset> {
