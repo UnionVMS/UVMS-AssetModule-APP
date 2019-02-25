@@ -35,5 +35,14 @@ public class AssetMessageJSONBean {
         AssetBO assetBo = mapper.readValue(message.getText(), AssetBO.class);
         assetService.upsertAssetBO(assetBo, "UVMS (JMS)");
     }
-    
+
+    public void assetInformation(TextMessage message) throws IOException, JMSException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        AssetBO assetBo = mapper.readValue(message.getText(), AssetBO.class);
+        assetService.assetInformation(assetBo, "UVMS (JMS)");
+    }
 }

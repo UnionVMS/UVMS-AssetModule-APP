@@ -69,7 +69,11 @@ public class MessageConsumerBean implements MessageListener {
                 assetJsonBean.upsertAsset(textMessage);
                 return;
             }
-            
+            if (propertyMethod != null && propertyMethod.equals("ASSET_INFORMATION")) {
+                assetJsonBean.assetInformation(textMessage);
+                return;
+            }
+
             AssetModuleRequest request = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetModuleRequest.class);
             AssetModuleMethod method = request.getMethod();
 
