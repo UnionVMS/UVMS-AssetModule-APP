@@ -36,6 +36,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -455,6 +457,7 @@ public class AssetServiceBean implements AssetService {
         return revisionList;
     }
 
+
     @Override
     public AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request) {
 
@@ -720,4 +723,43 @@ public class AssetServiceBean implements AssetService {
             return false;
         }
     }
+
+
+    @Override
+    public void assetInformation(Asset assetInfo, String user) {
+
+        if (assetInfo == null) {
+            throw new IllegalArgumentException("No asset in AssetBO");
+        }
+        if (assetInfo.getMmsi() == null) {
+            throw new IllegalArgumentException("No asset mmsi in Asset");
+        }
+
+        try {
+            Asset asset = getAssetById(AssetIdentifier.MMSI, assetInfo.getMmsi());
+            if((asset.getIrcs() == null) && (assetInfo.getIrcs() != null)){
+                asset.setIrcs(assetInfo.getIrcs());
+            }
+            if((asset.getVesselType() == null) && (assetInfo.getVesselType() != null)){
+                asset.setVesselType(assetInfo.getVesselType());
+            }
+            if((asset.getImo() == null) && (assetInfo.getImo() != null)){
+                asset.setImo(assetInfo.getImo());
+            }
+            if((asset.getName() == null) && (assetInfo.getName() != null)){
+                asset.setName(assetInfo.getName());
+            }
+        }
+        catch(NoResultException | NonUniqueResultException e){
+            LOG.error(e.toString(), e);
+            throw e;
+        }
+    }
+
+
+
+
+
+
+
 }

@@ -43,6 +43,6 @@ public class AssetMessageJSONBean {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         AssetBO assetBo = mapper.readValue(message.getText(), AssetBO.class);
-        assetService.assetInformation(assetBo, "UVMS (JMS)");
+        assetService.assetInformation(assetBo.getAsset(), "UVMS (JMS)");
     }
 }
