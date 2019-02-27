@@ -735,6 +735,8 @@ public class AssetServiceBean implements AssetService {
             throw new IllegalArgumentException("No asset mmsi in Asset");
         }
 
+        LOG.warn("assetInformation " + assetInfo.toString());
+
         try {
             Asset asset = getAssetById(AssetIdentifier.MMSI, assetInfo.getMmsi());
             if((asset.getIrcs() == null) && (assetInfo.getIrcs() != null)){
@@ -746,7 +748,7 @@ public class AssetServiceBean implements AssetService {
             if((asset.getImo() == null) && (assetInfo.getImo() != null)){
                 asset.setImo(assetInfo.getImo());
             }
-            if((asset.getName() == null) && (assetInfo.getName() != null)){
+            if((asset.getName().startsWith("Unknown")) && (assetInfo.getName() != null)){
                 asset.setName(assetInfo.getName());
             }
         }

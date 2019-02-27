@@ -69,7 +69,8 @@ public class MessageConsumerBean implements MessageListener {
                 assetJsonBean.upsertAsset(textMessage);
                 return;
             }
-            if (propertyMethod != null && propertyMethod.equals("ASSET_INFORMATION")) {
+            String propertyFunction = textMessage.getStringProperty(MessageConstants.JMS_FUNCTION_PROPERTY);
+            if (propertyFunction != null && propertyFunction.equals("ASSET_INFORMATION")) {
                 assetJsonBean.assetInformation(textMessage);
                 return;
             }
