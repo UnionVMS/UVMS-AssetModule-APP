@@ -35,6 +35,8 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
 public class MobileTerminalExecutorServiceBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(MobileTerminalExecutorServiceBean.class);
+    
+    private static final long RECEIVE_TIMEOUT = 600000L;
 
     @EJB
     private PollServiceBean pollService;
@@ -95,8 +97,8 @@ public class MobileTerminalExecutorServiceBean {
             exchangeRequest.setMethod(ExchangeModuleMethod.PING);
             String request = JAXBMarshaller.marshallJaxBObjectToString(exchangeRequest);
             String messageId = exchangeProducer.sendModuleMessage(request);
-            assetConsumer.getMessage(messageId, TextMessage.class);
-            TimeUnit.SECONDS.sleep(5);
+            assetConsumer.getMessage(messageId, TextMessage.class, RECEIVE_TIMEOUT);
+            TimeUnit.SECONDS.sleep(2);
         } catch (Exception e) {
             LOG.warn("Could not ping exchange", e);
         }
