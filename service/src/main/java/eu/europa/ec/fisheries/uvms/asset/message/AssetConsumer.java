@@ -25,6 +25,8 @@ import eu.europa.ec.fisheries.uvms.config.message.ConfigMessageConsumer;
 @Stateless
 public class AssetConsumer extends AbstractConsumer implements ConfigMessageConsumer {
 
+    private static final long CONFIG_TIMEOUT = 600000L;
+
     @Override
     public String getDestinationName() {
         return MessageConstants.QUEUE_ASSET;
@@ -34,7 +36,7 @@ public class AssetConsumer extends AbstractConsumer implements ConfigMessageCons
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public <T> T getConfigMessage(String correlationId, Class type) throws ConfigMessageException {
         try {
-            return getMessage(correlationId, type);
+            return getMessage(correlationId, type, CONFIG_TIMEOUT);
         } catch (MessageException e) {
             throw new ConfigMessageException(e.getMessage());
         }
