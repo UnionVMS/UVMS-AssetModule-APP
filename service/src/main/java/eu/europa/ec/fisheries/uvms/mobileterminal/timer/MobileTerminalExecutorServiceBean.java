@@ -96,7 +96,7 @@ public class MobileTerminalExecutorServiceBean {
             String request = JAXBMarshaller.marshallJaxBObjectToString(exchangeRequest);
             String messageId = exchangeProducer.sendModuleMessage(request);
             assetConsumer.getMessage(messageId, TextMessage.class);
-            TimeUnit.SECONDS.sleep(10);
+            TimeUnit.SECONDS.sleep(5);
         } catch (Exception e) {
             LOG.warn("Could not ping exchange", e);
         }
