@@ -739,13 +739,13 @@ public class AssetServiceBean implements AssetService {
 
         try {
             Asset asset = getAssetById(AssetIdentifier.MMSI, assetInfo.getMmsi());
-            if((asset.getIrcs() == null) && (assetInfo.getIrcs() != null)){
+            if((assetInfo.getIrcs() != null) && !assetInfo.getIrcs().equals(asset.getIrcs())){
                 asset.setIrcs(assetInfo.getIrcs());
             }
             if((assetInfo.getVesselType() != null) && !assetInfo.getVesselType().equals(asset.getVesselType())){
                 asset.setVesselType(assetInfo.getVesselType());
             }
-            if((asset.getImo() == null) && (assetInfo.getImo() != null)){
+            if((assetInfo.getImo() != null) && !assetInfo.getImo().equals(asset.getImo())){
                 asset.setImo(assetInfo.getImo());
             }
             if((assetInfo.getName() != null) && !assetInfo.getName().equals(asset.getName())){
