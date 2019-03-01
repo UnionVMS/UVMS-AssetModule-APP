@@ -38,6 +38,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
+import javax.ws.rs.HEAD;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -738,44 +739,36 @@ public class AssetServiceBean implements AssetService {
             return;
         }
 
-        for(Asset assetInfo : assetInfos){
+        for(Asset assetInfo : assetInfos) {
 
             try {
                 Asset asset = getAssetById(AssetIdentifier.MMSI, assetInfo.getMmsi());
 
                 // dont touch if info is from national db
-                if(asset.getSource().equals("NATIONAL")){
+                if (asset.getSource().equals("NATIONAL")) {
                     continue;
                 }
 
-                if((asset.getIrcs() == null) && (assetInfo.getIrcs() != null)){
+                if ((asset.getIrcs() == null) && (assetInfo.getIrcs() != null)) {
                     asset.setIrcs(assetInfo.getIrcs());
                 }
-                if((asset.getVesselType() == null) && (assetInfo.getVesselType() != null)){
+                if ((asset.getVesselType() == null) && (assetInfo.getVesselType() != null)) {
                     asset.setVesselType(assetInfo.getVesselType());
                 }
-                if((asset.getImo() == null) && (assetInfo.getImo() != null)){
+                if ((asset.getImo() == null) && (assetInfo.getImo() != null)) {
                     asset.setImo(assetInfo.getImo());
                 }
-                if((asset.getName().startsWith("Unknown")) && (assetInfo.getName() != null)){
+                if ((asset.getName().startsWith("Unknown")) && (assetInfo.getName() != null)) {
                     asset.setName(assetInfo.getName());
                 }
-            }
-            catch(NoResultException | NonUniqueResultException e){
+            } catch (NoResultException | NonUniqueResultException e) {
                 LOG.error(e.toString(), e);
                 continue;
             }
-
         }
 
 
-
-
     }
-
-
-
-
 
 
 
