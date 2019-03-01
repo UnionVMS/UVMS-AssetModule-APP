@@ -726,36 +726,51 @@ public class AssetServiceBean implements AssetService {
 
 
     @Override
-    public void assetInformation(Asset assetInfo, String user) {
+    public void assetInformation(List<Asset> assetInfos, String user) {
 
-        if (assetInfo == null) {
+        LOG.info("ASSET INFO UPDATING");
+
+        if (assetInfos == null) {
             throw new IllegalArgumentException("No asset in AssetBO");
         }
-        if (assetInfo.getMmsi() == null) {
-            throw new IllegalArgumentException("No asset mmsi in Asset");
+
+        if (assetInfos.size() < 1) {
+            return;
         }
 
-        LOG.warn("assetInformation " + assetInfo.toString());
+        for(Asset assetInfo : assetInfos){
 
-        try {
-            Asset asset = getAssetById(AssetIdentifier.MMSI, assetInfo.getMmsi());
-            if((asset.getIrcs() == null) && (assetInfo.getIrcs() != null)){
-                asset.setIrcs(assetInfo.getIrcs());
+            try {
+                Asset asset = getAssetById(AssetIdentifier.MMSI, assetInfo.getMmsi());
+
+                // dont touch if info is from national db
+                if(asset.getSource().equals("NATIONAL")){
+                    continue;
+                }
+
+                if((asset.getIrcs() == null) && (assetInfo.getIrcs() != null)){
+                    asset.setIrcs(assetInfo.getIrcs());
+                }
+                if((asset.getVesselType() == null) && (assetInfo.getVesselType() != null)){
+                    asset.setVesselType(assetInfo.getVesselType());
+                }
+                if((asset.getImo() == null) && (assetInfo.getImo() != null)){
+                    asset.setImo(assetInfo.getImo());
+                }
+                if((asset.getName().startsWith("Unknown")) && (assetInfo.getName() != null)){
+                    asset.setName(assetInfo.getName());
+                }
             }
-            if((asset.getVesselType() == null) && (assetInfo.getVesselType() != null)){
-                asset.setVesselType(assetInfo.getVesselType());
+            catch(NoResultException | NonUniqueResultException e){
+                LOG.error(e.toString(), e);
+                continue;
             }
-            if((asset.getImo() == null) && (assetInfo.getImo() != null)){
-                asset.setImo(assetInfo.getImo());
-            }
-            if((asset.getName().startsWith("Unknown")) && (assetInfo.getName() != null)){
-                asset.setName(assetInfo.getName());
-            }
+
         }
-        catch(NoResultException | NonUniqueResultException e){
-            LOG.error(e.toString(), e);
-            throw e;
-        }
+
+
+
+
     }
 
 

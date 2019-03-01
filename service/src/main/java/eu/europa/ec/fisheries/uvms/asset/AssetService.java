@@ -219,6 +219,6 @@ public interface AssetService {
 
     List<ContactInfo> getContactInfoRevisionForAssetHistory(UUID assetId, OffsetDateTime updatedDate);
 
-    void assetInformation(Asset asset, String user);
+    void assetInformation(List<Asset> assetInfos, String user);
 }
 

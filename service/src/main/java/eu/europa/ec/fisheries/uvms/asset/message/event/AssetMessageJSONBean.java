@@ -11,14 +11,19 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.message.event;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import eu.europa.ec.fisheries.uvms.asset.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
 
 @Stateless
@@ -42,7 +47,7 @@ public class AssetMessageJSONBean {
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        AssetBO assetBo = mapper.readValue(message.getText(), AssetBO.class);
-        assetService.assetInformation(assetBo.getAsset(), "UVMS (JMS)");
+        List<Asset> assetBos = mapper.readValue(message.getText(), new TypeReference<ArrayList<Asset>>() {});
+        assetService.assetInformation(assetBos, "UVMS (JMS)");
     }
 }
