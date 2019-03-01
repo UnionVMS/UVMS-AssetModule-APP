@@ -742,16 +742,16 @@ public class AssetServiceBean implements AssetService {
             if((asset.getIrcs() == null) && (assetInfo.getIrcs() != null)){
                 asset.setIrcs(assetInfo.getIrcs());
             }
-            if((asset.getVesselType() == null) && (assetInfo.getVesselType() != null)){
+            if((assetInfo.getVesselType() != null) && !assetInfo.getVesselType().equals(asset.getVesselType())){
                 asset.setVesselType(assetInfo.getVesselType());
             }
             if((asset.getImo() == null) && (assetInfo.getImo() != null)){
                 asset.setImo(assetInfo.getImo());
             }
-            if((asset.getName().startsWith("Unknown")) && (assetInfo.getName() != null)){
+            if((assetInfo.getName() != null) && !assetInfo.getName().equals(asset.getName())){
                 asset.setName(assetInfo.getName());
             }
-            if(asset.getFlagStateCode().startsWith("UNK") && assetInfo.getFlagStateCode() != null){
+            if(assetInfo.getFlagStateCode() != null && !assetInfo.getFlagStateCode().equals(asset.getFlagStateCode())){
                 asset.setFlagStateCode(assetInfo.getFlagStateCode());
             }
         }
