@@ -15,6 +15,8 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
 import java.util.List;
 import javax.jms.Message;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -145,5 +147,28 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         
         Asset fetchedAsset = jmsHelper.getAssetById(asset.getCfr(), AssetIdType.CFR);
         assertThat(fetchedAsset.getSource(), is(asset.getSource()));
+    }
+
+    @Test
+    @RunAsClient
+    public void assetInformationTest() throws Exception {
+        Asset asset = AssetTestHelper.createBasicAsset();
+        asset.setName(null);
+        jmsHelper.upsertAsset(asset);
+        Thread.sleep(5000);
+
+        Asset assetById = jmsHelper.getAssetById(asset.getMmsiNo(), AssetIdType.MMSI);
+        assertTrue(assetById.getName() == null);
+        eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset newAsset = new eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset();
+        newAsset.setMmsi(asset.getMmsiNo());
+        newAsset.setName("namebyassetinfo");
+        List<eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset> assetList = new ArrayList<>();
+        assetList.add(newAsset);
+        jmsHelper.assetInfo(assetList);
+        Thread.sleep(5000);
+        assetById = jmsHelper.getAssetById(asset.getMmsiNo(), AssetIdType.MMSI);
+        assertTrue(assetById.getName() != null);
+        assertTrue(assetById.getName().equals("namebyassetinfo"));
+
     }
 }

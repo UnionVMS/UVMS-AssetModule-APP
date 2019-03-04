@@ -20,6 +20,9 @@ import javax.jms.Message;
 import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.TextMessage;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import org.apache.activemq.artemis.api.core.TransportConfiguration;
 import org.apache.activemq.artemis.api.jms.ActiveMQJMSClient;
 import org.apache.activemq.artemis.api.jms.JMSFactoryType;
@@ -80,6 +83,27 @@ public class JMSHelper {
         }
     }
 
+    public String sendAssetMessageWithFunction(String text, String function) throws Exception {
+        Connection connection = getConnectionFactory().createConnection("test", "test");
+        connection.setClientID(UUID.randomUUID().toString());
+        try {
+            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            Queue responseQueue = session.createQueue(RESPONSE_QUEUE);
+            Queue assetQueue = session.createQueue(ASSET_QUEUE);
+
+            TextMessage message = session.createTextMessage();
+            message.setJMSReplyTo(responseQueue);
+            message.setStringProperty(MessageConstants.JMS_FUNCTION_PROPERTY, function);
+            message.setText(text);
+
+            session.createProducer(assetQueue).send(message);
+
+            return message.getJMSMessageID();
+        } finally {
+            connection.close();
+        }
+    }
+
     public Message listenForResponse(String correlationId) throws Exception {
         Connection connection = getConnectionFactory().createConnection("test", "test");
         connection.setClientID(UUID.randomUUID().toString());
@@ -101,4 +125,16 @@ public class JMSHelper {
         TransportConfiguration transportConfiguration = new TransportConfiguration(NettyConnectorFactory.class.getName(), params);
         return ActiveMQJMSClient.createConnectionFactoryWithoutHA(JMSFactoryType.CF,transportConfiguration);
     }
+
+    public void assetInfo(List<eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset> asset) throws Exception {
+
+        ObjectMapper MAPPER = new ObjectMapper();
+
+        String json = MAPPER.writeValueAsString(asset);
+        sendAssetMessageWithFunction(json, "ASSET_INFORMATION");
+    }
+
+
+
+
 }

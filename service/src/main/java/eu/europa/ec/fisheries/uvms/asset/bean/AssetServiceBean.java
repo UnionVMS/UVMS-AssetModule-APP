@@ -758,7 +758,7 @@ public class AssetServiceBean implements AssetService {
                 if ((asset.getImo() == null) && (assetInfo.getImo() != null)) {
                     asset.setImo(assetInfo.getImo());
                 }
-                if ((asset.getName().startsWith("Unknown")) && (assetInfo.getName() != null)) {
+                if ((asset.getName() == null || asset.getName().startsWith("Unknown")) && (assetInfo.getName() != null) ) {
                     asset.setName(assetInfo.getName());
                 }
             } catch (NoResultException | NonUniqueResultException e) {
