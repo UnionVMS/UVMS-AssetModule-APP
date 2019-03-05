@@ -15,7 +15,7 @@
     </parent>
 
     <properties>
-        <maven.javadoc.plugin.version>2.9.1</maven.javadoc.plugin.version>
+        <maven.javadoc.plugin.version>3.1.0</maven.javadoc.plugin.version>
         <swagger.doclet.version>1.0.4.2</swagger.doclet.version>
         <replacer.version>1.5.3</replacer.version>
         <movementrules.version>0.9.3</movementrules.version>
