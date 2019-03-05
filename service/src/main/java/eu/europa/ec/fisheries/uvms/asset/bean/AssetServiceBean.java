@@ -36,6 +36,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
+import javax.ws.rs.HEAD;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -455,6 +458,7 @@ public class AssetServiceBean implements AssetService {
         return revisionList;
     }
 
+
     @Override
     public AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request) {
 
@@ -720,4 +724,69 @@ public class AssetServiceBean implements AssetService {
             return false;
         }
     }
+
+
+    @Override
+    public void assetInformation(List<Asset> assetInfos, String user) {
+
+        LOG.info("ASSET INFO UPDATING");
+
+        if (assetInfos == null) {
+            throw new IllegalArgumentException("No asset in AssetBO");
+        }
+
+        if (assetInfos.size() < 1) {
+            return;
+        }
+
+        for(Asset assetInfo : assetInfos) {
+
+            // IRCS
+            boolean assetFoundByMMSI = false;
+            try {
+                Asset asset = getAssetById(AssetIdentifier.MMSI, assetInfo.getMmsi());
+                if(asset != null){
+                    assetFoundByMMSI = true;
+                } else {
+                    if(assetInfo.getIrcs() != null) {
+                        asset = getAssetById(AssetIdentifier.IRCS, assetInfo.getIrcs());
+                        if(asset != null){
+                            assetFoundByMMSI = false;
+                        } else {
+                            return;
+                        }
+                    }
+                }
+
+                // dont touch if info is from national db
+                    if (assetFoundByMMSI && asset.getSource().equals("NATIONAL")) {
+                        continue;
+                    }
+
+                if ((asset.getIrcs() == null) && (assetInfo.getIrcs() != null)) {
+                    asset.setIrcs(assetInfo.getIrcs());
+                }
+                if ((asset.getVesselType() == null) && (assetInfo.getVesselType() != null)) {
+                    asset.setVesselType(assetInfo.getVesselType());
+                }
+                if ((asset.getImo() == null) && (assetInfo.getImo() != null)) {
+                    asset.setImo(assetInfo.getImo());
+                }
+                if ((asset.getName() == null || asset.getName().startsWith("Unknown")) && (assetInfo.getName() != null) ) {
+                    asset.setName(assetInfo.getName());
+                }
+                if ((asset.getFlagStateCode() == null  || asset.getFlagStateCode().startsWith("UNK")) && (assetInfo.getFlagStateCode() != null) ) {
+                    asset.setFlagStateCode(assetInfo.getFlagStateCode());
+                }
+            } catch (NoResultException | NonUniqueResultException e) {
+                LOG.error(e.toString(), e);
+                continue;
+            }
+        }
+
+
+    }
+
+
+
 }
