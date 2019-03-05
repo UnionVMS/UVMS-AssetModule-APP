@@ -741,13 +741,28 @@ public class AssetServiceBean implements AssetService {
 
         for(Asset assetInfo : assetInfos) {
 
+            // IRCS
+            boolean assetFoundByMMSI = false;
             try {
                 Asset asset = getAssetById(AssetIdentifier.MMSI, assetInfo.getMmsi());
+                if(asset != null){
+                    assetFoundByMMSI = true;
+                } else {
+                    if(assetInfo.getIrcs() != null) {
+                        asset = getAssetById(AssetIdentifier.IRCS, assetInfo.getIrcs());
+                        if(asset != null){
+                            assetFoundByMMSI = false;
+                        } else {
+                            LOG.warn("asset not found by either MMSI or IRCS");
+                            return;
+                        }
+                    }
+                }
 
                 // dont touch if info is from national db
-                if (asset.getSource().equals("NATIONAL")) {
-                    continue;
-                }
+                    if (assetFoundByMMSI && asset.getSource().equals("NATIONAL")) {
+                        continue;
+                    }
 
                 if ((asset.getIrcs() == null) && (assetInfo.getIrcs() != null)) {
                     asset.setIrcs(assetInfo.getIrcs());
@@ -766,6 +781,10 @@ public class AssetServiceBean implements AssetService {
                 }
             } catch (NoResultException | NonUniqueResultException e) {
                 LOG.error(e.toString(), e);
+                continue;
+            }
+            catch(Throwable t){
+                LOG.error(t.toString(), t);
                 continue;
             }
         }
