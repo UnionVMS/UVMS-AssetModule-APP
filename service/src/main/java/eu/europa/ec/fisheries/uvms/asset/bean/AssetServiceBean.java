@@ -761,6 +761,9 @@ public class AssetServiceBean implements AssetService {
                 if ((asset.getName() == null || asset.getName().startsWith("Unknown")) && (assetInfo.getName() != null) ) {
                     asset.setName(assetInfo.getName());
                 }
+                if ((asset.getFlagStateCode() == null ) && (assetInfo.getFlagStateCode() != null) ) {
+                    asset.setFlagStateCode(assetInfo.getFlagStateCode());
+                }
             } catch (NoResultException | NonUniqueResultException e) {
                 LOG.error(e.toString(), e);
                 continue;
