@@ -753,7 +753,6 @@ public class AssetServiceBean implements AssetService {
                         if(asset != null){
                             assetFoundByMMSI = false;
                         } else {
-                            LOG.warn("asset not found by either MMSI or IRCS");
                             return;
                         }
                     }
@@ -776,15 +775,11 @@ public class AssetServiceBean implements AssetService {
                 if ((asset.getName() == null || asset.getName().startsWith("Unknown")) && (assetInfo.getName() != null) ) {
                     asset.setName(assetInfo.getName());
                 }
-                if ((asset.getFlagStateCode() == null ) && (assetInfo.getFlagStateCode() != null) ) {
+                if ((asset.getFlagStateCode() == null  || asset.getFlagStateCode().startsWith("UNK")) && (assetInfo.getFlagStateCode() != null) ) {
                     asset.setFlagStateCode(assetInfo.getFlagStateCode());
                 }
             } catch (NoResultException | NonUniqueResultException e) {
                 LOG.error(e.toString(), e);
-                continue;
-            }
-            catch(Throwable t){
-                LOG.error(t.toString(), t);
                 continue;
             }
         }
