@@ -15,6 +15,7 @@ import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.ContactInfoDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.NoteDao;
@@ -30,14 +31,14 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.wsdl.asset.types.EventCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
+import javax.persistence.*;
 import javax.ws.rs.HEAD;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -77,6 +78,10 @@ public class AssetServiceBean implements AssetService {
 
     @Inject
     private MobileTerminalServiceBean mobileTerminalService;
+
+    @PersistenceContext
+    private EntityManager em;
+
 
 
     /**
@@ -725,11 +730,61 @@ public class AssetServiceBean implements AssetService {
         }
     }
 
+    // if more than 1 hit put data from ais into fartyg2record
+    // remove the duplicate
+    private Asset normalizeAssetOnMMSI_IRCS(String mmsi, String ircs){
+
+        List<Asset>  assets = null;
+
+        if((mmsi != null) && (ircs != null)){
+            assets = getAssetList(Arrays.asList(
+                    new SearchKeyValue(SearchFields.MMSI, Arrays.asList(mmsi)),
+                    new SearchKeyValue(SearchFields.IRCS, Arrays.asList(ircs))), 1, 10, false).getAssetList();
+        }
+        else if((mmsi != null) && (ircs == null)){
+            assets = getAssetList(Arrays.asList(
+                    new SearchKeyValue(SearchFields.MMSI, Arrays.asList(mmsi))
+                    ), 1, 10, false).getAssetList();
+        } else if((mmsi == null) && (ircs != null)){
+            assets = getAssetList(Arrays.asList(
+                    new SearchKeyValue(SearchFields.IRCS, Arrays.asList(ircs))), 1, 10, false).getAssetList();
+        } else{
+            return null;
+        }
+
+        int assetsSize = assets.size();
+        if(assetsSize == 0) {
+            return null;
+        }
+        else if(assetsSize == 1) {
+            return assets.get(0);
+        }
+        else{
+            Asset fartyg2Asset = null;
+            Asset nonFartyg2Asset = null;
+            // find the fartyg2 record
+
+            for(int i = 0 ; i < assetsSize ; i++){
+                if((assets.get(i).getSource() != null) && (assets.get(i).getSource().equals("NATIONAL"))){
+                    fartyg2Asset = assets.get(i);
+                }else{
+                    nonFartyg2Asset  = assets.get(i);
+                }
+            }
+            if((fartyg2Asset != null) && (nonFartyg2Asset != null)){
+                assetDao.deleteAsset(nonFartyg2Asset);
+                // flush is nessessary to avoid dups on MMSI
+                em.flush();
+                return fartyg2Asset;
+            }
+        }
+        return null;
+    }
+
 
     @Override
     public void assetInformation(List<Asset> assetInfos, String user) {
 
-        LOG.info("ASSET INFO UPDATING");
 
         if (assetInfos == null) {
             throw new IllegalArgumentException("No asset in AssetBO");
@@ -739,54 +794,37 @@ public class AssetServiceBean implements AssetService {
             return;
         }
 
-        for(Asset assetInfo : assetInfos) {
+        for(Asset assetFromAIS : assetInfos) {
 
-            // IRCS
-            boolean assetFoundByMMSI = false;
-            try {
-                Asset asset = getAssetById(AssetIdentifier.MMSI, assetInfo.getMmsi());
-                if(asset != null){
-                    assetFoundByMMSI = true;
-                } else {
-                    if(assetInfo.getIrcs() != null) {
-                        asset = getAssetById(AssetIdentifier.IRCS, assetInfo.getIrcs());
-                        if(asset != null){
-                            assetFoundByMMSI = false;
-                        } else {
-                            return;
-                        }
-                    }
-                }
+            Asset assetFromDB = normalizeAssetOnMMSI_IRCS(assetFromAIS.getMmsi(), assetFromAIS.getIrcs());
 
-                // dont touch if info is from national db
-                    if (assetFoundByMMSI && asset.getSource().equals("NATIONAL")) {
-                        continue;
-                    }
-
-                if ((asset.getIrcs() == null) && (assetInfo.getIrcs() != null)) {
-                    asset.setIrcs(assetInfo.getIrcs());
-                }
-                if ((asset.getVesselType() == null) && (assetInfo.getVesselType() != null)) {
-                    asset.setVesselType(assetInfo.getVesselType());
-                }
-                if ((asset.getImo() == null) && (assetInfo.getImo() != null)) {
-                    asset.setImo(assetInfo.getImo());
-                }
-                if ((asset.getName() == null || asset.getName().startsWith("Unknown")) && (assetInfo.getName() != null) ) {
-                    asset.setName(assetInfo.getName());
-                }
-                if ((asset.getFlagStateCode() == null  || asset.getFlagStateCode().startsWith("UNK")) && (assetInfo.getFlagStateCode() != null) ) {
-                    asset.setFlagStateCode(assetInfo.getFlagStateCode());
-                }
-            } catch (NoResultException | NonUniqueResultException e) {
-                LOG.error(e.toString(), e);
+            if(assetFromDB == null){
                 continue;
             }
+
+            if ((assetFromDB.getMmsi() == null) && (assetFromAIS.getMmsi() != null)) {
+               assetFromDB.setMmsi(assetFromAIS.getMmsi());
+            }
+            if ((assetFromDB.getIrcs() == null) && (assetFromAIS.getIrcs() != null)) {
+                assetFromDB.setIrcs(assetFromAIS.getIrcs());
+            }
+            if ((assetFromDB.getVesselType() == null) && (assetFromAIS.getVesselType() != null)) {
+                assetFromDB.setVesselType(assetFromAIS.getVesselType());
+            }
+            if ((assetFromDB.getImo() == null) && (assetFromAIS.getImo() != null)) {
+                assetFromDB.setImo(assetFromAIS.getImo());
+            }
+            if ((assetFromDB.getName() == null || assetFromDB.getName().startsWith("Unknown")) && (assetFromAIS.getName() != null) ) {
+                assetFromDB.setName(assetFromAIS.getName());
+            }
+            if ((assetFromDB.getFlagStateCode() == null  || assetFromDB.getFlagStateCode().startsWith("UNK")) && (assetFromAIS.getFlagStateCode() != null) ) {
+                assetFromDB.setFlagStateCode(assetFromAIS.getFlagStateCode());
+            }
+
+            em.merge(assetFromDB);
+
+
         }
-
-
     }
-
-
 
 }

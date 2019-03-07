@@ -1,18 +1,10 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 
-import java.math.BigInteger;
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import javax.ejb.Stateless;
-import javax.persistence.*;
-
-import org.hibernate.SQLQuery;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchFieldType;
+import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.exception.AuditException;
@@ -23,11 +15,14 @@ import org.hibernate.envers.query.criteria.AuditCriterion;
 import org.hibernate.envers.query.criteria.AuditDisjunction;
 import org.hibernate.envers.query.criteria.ExtendableCriterion;
 import org.hibernate.envers.query.criteria.MatchMode;
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchFieldType;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
+
+import javax.ejb.Stateless;
+import javax.persistence.*;
+import java.math.BigInteger;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Stateless
 public class AssetDao {
@@ -41,9 +36,9 @@ public class AssetDao {
         return asset;
     }
 
-    public int getNextUnknownShipNumber(){
+    public int getNextUnknownShipNumber() {
         Query query = em.createNativeQuery("select nextval('next_unknown_ship_seq')");
-        return ((BigInteger)query.getSingleResult()).intValue();
+        return ((BigInteger) query.getSingleResult()).intValue();
     }
 
     public Asset getAssetById(UUID id) {
@@ -126,6 +121,7 @@ public class AssetDao {
         return updated;
     }
 
+
     public void deleteAsset(Asset asset) {
         em.remove(em.contains(asset) ? asset : em.merge(asset));
     }
@@ -159,7 +155,7 @@ public class AssetDao {
 
     private AuditQuery createQuery(List<SearchKeyValue> searchFields, boolean isDynamic) {
         AuditReader auditReader = AuditReaderFactory.get(em);
-        
+
         AuditQuery query;
         SearchKeyValue dateSearchField = getDateSearchField(searchFields);
         if (dateSearchField != null) {
@@ -201,7 +197,7 @@ public class AssetDao {
                 operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).le(Double.valueOf(searchKeyValue.getSearchValues().get(0))));
             } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.LIST)) {
                 operatorUsed = true;
-                for(String v : searchKeyValue.getSearchValuesAsLowerCase()){
+                for (String v : searchKeyValue.getSearchValuesAsLowerCase()) {
                     operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).ilike(v, MatchMode.ANYWHERE));
                 }
 
@@ -219,7 +215,7 @@ public class AssetDao {
                 operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).eq(searchKeyValue.getSearchValues().get(0)));
             }
         }
-        if(operatorUsed) {
+        if (operatorUsed) {
             query.add((AuditCriterion) operator);
         }
         return query;
@@ -227,21 +223,22 @@ public class AssetDao {
 
     private boolean searchRevisions(List<SearchKeyValue> searchFields) {
         for (SearchKeyValue searchKeyValue : searchFields) {
-            if (searchKeyValue.getSearchField().equals(SearchFields.HIST_GUID)) { 
+            if (searchKeyValue.getSearchField().equals(SearchFields.HIST_GUID)) {
                 return true;
             }
         }
         return false;
     }
-    
+
     private SearchKeyValue getDateSearchField(List<SearchKeyValue> searchFields) {
         for (SearchKeyValue searchKeyValue : searchFields) {
-            if (searchKeyValue.getSearchField().equals(SearchFields.DATE)) { 
+            if (searchKeyValue.getSearchField().equals(SearchFields.DATE)) {
                 return searchKeyValue;
             }
         }
         return null;
     }
+
     private boolean useLike(SearchKeyValue entry) {
         for (String searchValue : entry.getSearchValues()) {
             if (searchValue.contains("*")) {
@@ -310,7 +307,7 @@ public class AssetDao {
             return null;
         }
     }
-    
+
     public Asset getAssetAtDate(Asset asset, OffsetDateTime OffsetDateTime) {
         Date date = Date.from(OffsetDateTime.toInstant());
         AuditReader auditReader = AuditReaderFactory.get(em);
