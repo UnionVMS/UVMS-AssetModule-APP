@@ -59,7 +59,9 @@ public class MobileTerminalExecutorServiceBean {
     public void initPlugins() {
         try {
             executorService.submit(() -> {
-                pingExchange();
+                pingExchange(2);
+                pluginTimerTask.syncPlugins();
+                pingExchange(10);
                 pluginTimerTask.syncPlugins();
                 LOG.info("Done synchronizing plugins at startup");
             });
@@ -91,14 +93,14 @@ public class MobileTerminalExecutorServiceBean {
         }
     }
     
-    private void pingExchange() {
+    private void pingExchange(long delay) {
         try {
             PingRequest exchangeRequest = new PingRequest();
             exchangeRequest.setMethod(ExchangeModuleMethod.PING);
             String request = JAXBMarshaller.marshallJaxBObjectToString(exchangeRequest);
             String messageId = exchangeProducer.sendModuleMessage(request);
             assetConsumer.getMessage(messageId, TextMessage.class, RECEIVE_TIMEOUT);
-            TimeUnit.SECONDS.sleep(2);
+            TimeUnit.SECONDS.sleep(delay);
         } catch (Exception e) {
             LOG.warn("Could not ping exchange", e);
         }
