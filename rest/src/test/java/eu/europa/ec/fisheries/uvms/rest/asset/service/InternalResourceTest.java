@@ -1,29 +1,34 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import java.util.UUID;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollMobileTerminal;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
+import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
+import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
+import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
-import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
-import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
+
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 @RunAsClient
@@ -176,6 +181,45 @@ public class InternalResourceTest extends AbstractAssetRestTest {
                 .get(Asset.class);
         
         assertThat(fetchedAsset, is(AssetMatcher.assetEquals(createdAsset)));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetByGroupIds() {
+
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = getWebTarget()
+                .path("/asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+
+        AssetGroup basicAssetGroup = AssetHelper.createBasicAssetGroup();
+        basicAssetGroup.setAssetGroupFields(new ArrayList<>());
+
+        AssetGroupField field = new AssetGroupField();
+        field.setKey("GUID");
+        field.setValue(createdAsset.getId().toString());
+
+        basicAssetGroup.getAssetGroupFields().add(field);
+
+        AssetGroup createdAssetGroup = getWebTarget()
+                .path("/group")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(basicAssetGroup), AssetGroup.class);
+
+        List<UUID> groupIds = Collections.singletonList(createdAssetGroup.getId());
+
+        Response response = getWebTarget()
+                .path("internal")
+                .path("/group/asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(groupIds));
+
+        assertEquals(Status.OK.getStatusCode(), response.getStatus());
+
+        List<Asset> groupList = response.readEntity(new GenericType<List<Asset>>(){});
+        assertEquals(1, groupList.size());
+        assertEquals(createdAsset.getId(), groupList.get(0).getId());
     }
     
     @Test
