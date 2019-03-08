@@ -110,10 +110,10 @@ public class InternalResource {
         return Response.ok(assetGroups).build();
     }
     
-    @GET
-    @Path("asset/group/{ids}")
+    @POST
+    @Path("group/asset")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAssetByGroupIds(@PathParam("ids") List<UUID> groupIds) {
+    public Response getAssetByGroupIds(List<UUID> groupIds) {
         List<AssetGroup> assetGroups = groupIds.stream()
                                             .map(assetGroupService::getAssetGroupById)
                                             .collect(Collectors.toList());

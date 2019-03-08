@@ -117,7 +117,7 @@ public class AssetClient {
                 .path("group")
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
-                .get(new GenericType<List<AssetDTO>>() {});
+                .post(Entity.json(groupIds), new GenericType<List<AssetDTO>>(){});
     }
     
     public List<AssetDTO> getAssetHistoryListByAssetId(UUID id) {
