@@ -121,7 +121,6 @@ public class AssetDao {
         return updated;
     }
 
-
     public void deleteAsset(Asset asset) {
         em.remove(em.contains(asset) ? asset : em.merge(asset));
     }
@@ -136,7 +135,7 @@ public class AssetDao {
             AuditQuery query = createQuery(searchFields, isDynamic);
             return (Long) query.addProjection(AuditEntity.id().count()).getSingleResult();
         } catch (AuditException e) {
-            return 0l;
+            return 0L;
         }
     }
 
@@ -168,10 +167,7 @@ public class AssetDao {
             if (!searchRevisions(searchFields)) {
                 query.add(AuditEntity.revisionNumber().maximize().computeAggregationInInstanceContext());
             }
-
-            query.add(AuditEntity.property("active").eq(true));
         }
-
 
         ExtendableCriterion operator;
         if (isDynamic) {
@@ -324,6 +320,4 @@ public class AssetDao {
                 .add(AuditEntity.property("historyId").eq(historyId))
                 .getSingleResult();
     }
-
-
 }

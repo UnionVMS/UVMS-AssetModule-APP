@@ -170,6 +170,7 @@ public class AssetServiceBean implements AssetService {
     @Override
     public Asset archiveAsset(Asset asset, String username, String comment) {
         asset.setActive(false);
+        asset.getMobileTerminals().clear();
         Asset archivedAsset = updateAssetInternal(asset, username);
         auditService.logAssetArchived(archivedAsset, comment, username);
         return archivedAsset;

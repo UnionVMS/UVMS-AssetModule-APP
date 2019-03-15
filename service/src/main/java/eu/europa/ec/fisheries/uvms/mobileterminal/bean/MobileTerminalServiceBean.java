@@ -234,10 +234,12 @@ public class MobileTerminalServiceBean {
                 break;
             case INACTIVE:
                 mobileTerminal.setInactivated(true);
+                mobileTerminal.setAsset(null);
                 break;
             case ARCHIVE:
                 mobileTerminal.setArchived(true);
                 mobileTerminal.setInactivated(true);
+                mobileTerminal.setAsset(null);
                 break;
             default:
                 LOG.error("[ Non valid status to set ] {}", status);
@@ -339,7 +341,8 @@ public class MobileTerminalServiceBean {
             throw new IllegalArgumentException("Terminal " + mobileTerminalId + " is already linked to an asset with guid " + connectId);
         }
         asset.getMobileTerminals().add(terminal);
-        terminal.setAsset(asset);
+        Asset assetWithMT = assetDao.updateAsset(asset);
+        terminal.setAsset(assetWithMT);
         terminal.setUpdateuser(username);
         terminal = terminalDao.updateMobileTerminal(terminal);
         return terminal;
@@ -358,12 +361,13 @@ public class MobileTerminalServiceBean {
         terminal.setUpdateuser(username);
 
         Asset asset = terminal.getAsset();
-        terminal.setAsset(null);
 
         boolean remove = asset.getMobileTerminals().remove(terminal);
         if(!remove) {
             throw new IllegalArgumentException("Terminal " + guid + " is not linked to an asset with ID " + asset.getId());
         }
+        assetDao.updateAsset(asset);
+        terminal.setAsset(null);
         terminalDao.updateMobileTerminal(terminal);
         return terminal;
     }

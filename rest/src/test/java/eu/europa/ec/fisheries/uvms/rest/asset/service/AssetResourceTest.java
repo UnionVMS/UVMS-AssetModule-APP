@@ -176,6 +176,68 @@ public class AssetResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void archiveAssetWithMobileTerminal_ThenMobileTerminalIsInactivatedTest() {
+
+        // Create Asset
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+        assertNotNull(createdAsset.getId());
+
+        // Create MobileTerminal
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        MobileTerminal createdMT = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+        assertNotNull(createdMT.getId());
+
+        // Assign MobileTerminal
+        MobileTerminal assignedToAsset = getWebTarget()
+                .path("mobileterminal")
+                .path("assign")
+                .queryParam("comment", "Assigning")
+                .queryParam("connectId", createdAsset.getId())
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(createdMT.getId()), MobileTerminal.class);
+        assertNotNull(assignedToAsset.getId());
+
+        // Archive Asset
+        Asset archivedAsset = getWebTarget()
+                .path("asset")
+                .path("archive")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(createdAsset), Asset.class);
+        assertNotNull(archivedAsset);
+        assertThat(archivedAsset.getActive() , is(false));
+        assertTrue(archivedAsset.getMobileTerminals().isEmpty());
+
+        // UnAssign MobileTerminal
+        MobileTerminal unassigned = getWebTarget()
+                .path("mobileterminal")
+                .path("unassign")
+                .queryParam("comment", "UnAssigning")
+                .queryParam("connectId", createdAsset.getId())
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(createdMT.getId()), MobileTerminal.class);
+        assertNotNull(unassigned.getId());
+
+        // Inactivate MobileTerminal
+        MobileTerminal inactivated = getWebTarget()
+                .path("mobileterminal")
+                .path("status")
+                .path("inactivate")
+                .queryParam("comment", "UnAssigning")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(unassigned.getId()), MobileTerminal.class);
+        assertNotNull(inactivated.getId());
+        assertTrue(inactivated.getInactivated());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void archiveAssetNonExistingAssetTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Response response = getWebTarget()
