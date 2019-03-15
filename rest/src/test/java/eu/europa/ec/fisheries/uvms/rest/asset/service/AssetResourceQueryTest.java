@@ -29,6 +29,7 @@ import javax.ws.rs.core.MediaType;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
@@ -297,6 +298,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
     @Test
     @RunAsClient
     @OperateOnDeployment("normal")
+    @Ignore("Inactivated Assets are fetched now along with Active Assets.")
     public void getAssetListEmptyCriteriasShouldNotReturnInactivatedAssets() {
         Asset asset = AssetHelper.createBasicAsset();
         // create an Asset
