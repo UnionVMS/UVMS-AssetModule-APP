@@ -130,9 +130,9 @@ public class AssetDao {
         return query.getResultList();
     }
 
-    public Long getAssetCount(List<SearchKeyValue> searchFields, Boolean isDynamic) {
+    public Long getAssetCount(List<SearchKeyValue> searchFields, Boolean isDynamic, boolean includeInactivated) {
         try {
-            AuditQuery query = createQuery(searchFields, isDynamic);
+            AuditQuery query = createQuery(searchFields, isDynamic, includeInactivated);
             return (Long) query.addProjection(AuditEntity.id().count()).getSingleResult();
         } catch (AuditException e) {
             return 0L;
@@ -141,9 +141,9 @@ public class AssetDao {
 
     @SuppressWarnings("unchecked")
     public List<Asset> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize,
-                                                   List<SearchKeyValue> searchFields, boolean isDynamic) {
+                                                   List<SearchKeyValue> searchFields, boolean isDynamic, boolean includeInactivated) {
         try {
-            AuditQuery query = createQuery(searchFields, isDynamic);
+            AuditQuery query = createQuery(searchFields, isDynamic, includeInactivated);
             query.setFirstResult(pageSize * (pageNumber - 1));
             query.setMaxResults(pageSize);
             return query.getResultList();
@@ -152,7 +152,7 @@ public class AssetDao {
         }
     }
 
-    private AuditQuery createQuery(List<SearchKeyValue> searchFields, boolean isDynamic) {
+    private AuditQuery createQuery(List<SearchKeyValue> searchFields, boolean isDynamic, boolean includeInactivated) {
         AuditReader auditReader = AuditReaderFactory.get(em);
 
         AuditQuery query;
@@ -166,6 +166,9 @@ public class AssetDao {
 
             if (!searchRevisions(searchFields)) {
                 query.add(AuditEntity.revisionNumber().maximize().computeAggregationInInstanceContext());
+            }
+            if(!includeInactivated) {
+                query.add(AuditEntity.property("active").eq(true));
             }
         }
 

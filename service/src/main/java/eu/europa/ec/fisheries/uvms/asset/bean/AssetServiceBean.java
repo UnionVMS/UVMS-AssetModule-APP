@@ -31,15 +31,14 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.wsdl.asset.types.EventCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.*;
-import javax.ws.rs.HEAD;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -111,12 +110,12 @@ public class AssetServiceBean implements AssetService {
      * @return
      */
     @Override
-    public AssetListResponse getAssetList(List<SearchKeyValue> searchFields, int page, int listSize, boolean dynamic) {
+    public AssetListResponse getAssetList(List<SearchKeyValue> searchFields, int page, int listSize, boolean dynamic, boolean includeInactivated) {
         if (searchFields == null) {
             throw new IllegalArgumentException("Cannot get asset list because search values is null.");
         }
 
-        Long numberOfAssets = assetDao.getAssetCount(searchFields, dynamic);
+        Long numberOfAssets = assetDao.getAssetCount(searchFields, dynamic, includeInactivated);
 
         int numberOfPages = 0;
         if (listSize != 0) {
@@ -126,7 +125,7 @@ public class AssetServiceBean implements AssetService {
             }
         }
 
-        List<Asset> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, searchFields, dynamic);
+        List<Asset> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, searchFields, dynamic, includeInactivated);
 
         AssetListResponse listAssetResponse = new AssetListResponse();
         listAssetResponse.setCurrentPage(page);
@@ -141,11 +140,11 @@ public class AssetServiceBean implements AssetService {
      * @return
      */
     @Override
-    public Long getAssetListCount(List<SearchKeyValue> searchFields, boolean dynamic) {
+    public Long getAssetListCount(List<SearchKeyValue> searchFields, boolean dynamic, boolean includeInactivated) {
         if (searchFields == null || searchFields.isEmpty()) {
             throw new IllegalArgumentException("Cannot get asset list because query is null.");
         }
-        return assetDao.getAssetCount(searchFields, dynamic);
+        return assetDao.getAssetCount(searchFields, dynamic, includeInactivated);
     }
 
     /**
@@ -735,20 +734,22 @@ public class AssetServiceBean implements AssetService {
     // remove the duplicate
     private Asset normalizeAssetOnMMSI_IRCS(String mmsi, String ircs){
 
-        List<Asset>  assets = null;
+        List<Asset> assets;
 
         if((mmsi != null) && (ircs != null)){
             assets = getAssetList(Arrays.asList(
-                    new SearchKeyValue(SearchFields.MMSI, Arrays.asList(mmsi)),
-                    new SearchKeyValue(SearchFields.IRCS, Arrays.asList(ircs))), 1, 10, false).getAssetList();
+                    new SearchKeyValue(SearchFields.MMSI, Collections.singletonList(mmsi)),
+                    new SearchKeyValue(SearchFields.IRCS, Collections.singletonList(ircs))),
+                    1, 10, false, false).getAssetList();
         }
-        else if((mmsi != null) && (ircs == null)){
-            assets = getAssetList(Arrays.asList(
-                    new SearchKeyValue(SearchFields.MMSI, Arrays.asList(mmsi))
-                    ), 1, 10, false).getAssetList();
-        } else if((mmsi == null) && (ircs != null)){
-            assets = getAssetList(Arrays.asList(
-                    new SearchKeyValue(SearchFields.IRCS, Arrays.asList(ircs))), 1, 10, false).getAssetList();
+        else if(mmsi != null){
+            assets = getAssetList(Collections.singletonList(
+                    new SearchKeyValue(SearchFields.MMSI, Collections.singletonList(mmsi))
+            ), 1, 10, false, false).getAssetList();
+        } else if(ircs != null){
+            assets = getAssetList(Collections.singletonList(
+                    new SearchKeyValue(SearchFields.IRCS, Collections.singletonList(ircs))),
+                    1, 10, false, false).getAssetList();
         } else{
             return null;
         }
