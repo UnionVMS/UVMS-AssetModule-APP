@@ -118,10 +118,11 @@ public class MobileTerminalRestResource {
     @POST
     @Path("/list")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getMobileTerminalList(MobileTerminalListQuery query) {
+    public Response getMobileTerminalList(MobileTerminalListQuery query,
+                                          @DefaultValue("false") @QueryParam("includeArchived") boolean includeArchived) {
         LOG.info("Get mobile terminal list invoked in rest layer.");
         try {
-            MTListResponse mobileTerminalList = mobileTerminalService.getMobileTerminalList(query);
+            MTListResponse mobileTerminalList = mobileTerminalService.getMobileTerminalList(query, includeArchived);
             return Response.ok(mobileTerminalList).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting mobile terminal list ] {}", ex);

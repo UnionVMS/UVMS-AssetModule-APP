@@ -30,6 +30,7 @@ import org.mockito.MockitoAnnotations;
 import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doReturn;
 
 public class ResponseTest {
@@ -64,9 +65,9 @@ public class ResponseTest {
     @Test
     @OperateOnDeployment("normal")
     public void testGetMobileTerminalList() {
-        doReturn(MOBILE_TERMINAL_LIST_RESPONSE).when(mobileTerminalServiceBean).getMobileTerminalList(null);
-        Response result = mobileTerminalRestResource.getMobileTerminalList(null);
-        Mockito.verify(mobileTerminalServiceBean).getMobileTerminalList(null);
+        doReturn(MOBILE_TERMINAL_LIST_RESPONSE).when(mobileTerminalServiceBean).getMobileTerminalList(null, false);
+        Response result = mobileTerminalRestResource.getMobileTerminalList(null, false);
+        Mockito.verify(mobileTerminalServiceBean).getMobileTerminalList(null, false);
         assertEquals(Response.Status.OK.getStatusCode(), result.getStatus());
     }
 
