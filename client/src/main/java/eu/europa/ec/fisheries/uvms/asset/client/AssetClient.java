@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
@@ -50,7 +51,10 @@ public class AssetClient {
     
     @PostConstruct
     private void setUpClient() {
-        Client client = ClientBuilder.newClient();
+        ClientBuilder clientBuilder = ClientBuilder.newBuilder();
+        clientBuilder.connectTimeout(30, TimeUnit.SECONDS);
+        clientBuilder.readTimeout(30, TimeUnit.SECONDS);
+        Client client = clientBuilder.build();
         webTarget = client.target(assetEndpoint + "/internal");
     }
 
