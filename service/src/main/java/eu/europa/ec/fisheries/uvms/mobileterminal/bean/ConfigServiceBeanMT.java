@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -86,7 +87,10 @@ public class ConfigServiceBeanMT {
             GetServiceListRequest request = new GetServiceListRequest();
             request.getType().addAll(pluginTypes);
 
-            Client client = ClientBuilder.newClient();
+            ClientBuilder clientBuilder = ClientBuilder.newBuilder();
+            clientBuilder.connectTimeout(30, TimeUnit.SECONDS);
+            clientBuilder.readTimeout(30, TimeUnit.SECONDS);
+            Client client = clientBuilder.build();
             GetServiceListResponse response = client.target(exchangeEndpoint + "/api/serviceList")
                     .request(MediaType.APPLICATION_JSON)
                     .post(Entity.json(request), GetServiceListResponse.class);
