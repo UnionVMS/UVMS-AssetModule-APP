@@ -29,7 +29,7 @@ import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
 public interface AssetService {
 
     /**
-     * @param asset @description the asset to create
+     * @param asset    @description the asset to create
      * @param username @description username
      * @return Asset @description the created asset
      */
@@ -37,89 +37,80 @@ public interface AssetService {
 
     /**
      * @param searchFields @description fields to use in search
-     * @param page  @description page
-     * @param listSize @description size of the list
-     * @param dynamic @description dynamic true or false
+     * @param page         @description page
+     * @param listSize     @description size of the list
+     * @param dynamic      @description dynamic true or false
      * @return AssetListResponse
      */
     AssetListResponse getAssetList(List<SearchKeyValue> searchFields, int page, int listSize, boolean dynamic);
 
     /**
-     *
      * @param searchFields @description fields to use in search
-     * @param dynamic @description dynamic true or false
+     * @param dynamic      @description dynamic true or false
      * @return Long @description number of assets in search
      */
     Long getAssetListCount(List<SearchKeyValue> searchFields, boolean dynamic);
 
     /**
-     *
      * @param assetId @description id
-     * @param value @description idvalue
+     * @param value   @description idvalue
      * @return Asset @description an asset
      */
     Asset getAssetById(AssetIdentifier assetId, String value);
 
 
     /**
-     *
      * @param id @description internal id
      * @return Asset @description an asset
      */
     Asset getAssetById(UUID id);
 
     /**
-     *
-     * @param asset @description an asset
+     * @param asset    @description an asset
      * @param username @description user that performs action
-     * @param comment @description comment , reason of action
+     * @param comment  @description comment , reason of action
      * @return Asset @description
      */
     Asset updateAsset(Asset asset, String username, String comment);
 
     /**
-     *
-     * @param asset @description an asset
+     * @param asset    @description an asset
      * @param username @description user that performs action
-     * @param comment @description comment , reason of action
+     * @param comment  @description comment , reason of action
      * @return Asset @description
      */
     Asset archiveAsset(Asset asset, String username, String comment);
 
     /**
-     *
-     * @param asset @description an asset
+     * @param asset    @description an asset
      * @param username @description user that performs the action
      * @return Asset @description an asset
      */
     Asset upsertAsset(Asset asset, String username);
-    
+
     /**
      * Upsert asset business object. (Asset/Contacts/Notes)
-     * 
+     *
      * @param asset
      * @param username
      * @return
      */
     AssetBO upsertAssetBO(AssetBO asset, String username);
-    
+
     /**
-     *
      * @param groups @description list of assetgroups
      * @return List of assets @description list of assets
      */
     List<Asset> getAssetListByAssetGroups(List<AssetGroup> groups);
 
     /**
-     *
      * @param assetId @description id
-     * @param value @description value of id
+     * @param value   @description value of id
      */
     void deleteAsset(AssetIdentifier assetId, String value);
 
 
     /**
-     *
      * @param id @description an asset id
      * @return List of assets @description list of historic versions of this asset
      */
@@ -127,7 +118,6 @@ public interface AssetService {
 
 
     /**
-     *
      * @param historyId @description id of history
      * @return asset @description an asset
      */
@@ -135,17 +125,16 @@ public interface AssetService {
 
 
     /**
-     *
-     * @param idType @description idtype
+     * @param idType  @description idtype
      * @param idValue @description value of id
-     * @param date @description date to look up
+     * @param date    @description date to look up
      * @return asset @description an asset
      */
     Asset getAssetFromAssetIdAtDate(AssetIdentifier idType, String idValue, OffsetDateTime date);
 
     /**
      * Returns asset revisions for given asset id. Result size limited by maxNbr
-     * 
+     *
      * @param id
      * @param maxNbr
      * @return
@@ -153,40 +142,41 @@ public interface AssetService {
     List<Asset> getRevisionsForAssetLimited(UUID id, Integer maxNbr);
 
     /**
-     *
      * @param assetId @description an assets internal id
      * @return list of note @description a list of notes
      */
     List<Note> getNotesForAsset(UUID assetId);
-    
+
 
     /**
      * Create a note for given asset UUID.
-     * 
-     * @param assetId @description an assets internal id
-     * @param note @description a note object
+     *
+     * @param assetId  @description an assets internal id
+     * @param note     @description a note object
      * @param username @description  user that performs the action
      * @return a Note @description a note
      */
     Note createNoteForAsset(UUID assetId, Note note, String username);
-    
+
     /**
      * Update a note.
-     * 
-     * @param note @description a note object
+     *
+     * @param note     @description a note object
      * @param username @description  user that performs the action
      * @return a Note @description a note
      */
     Note updateNote(Note note, String username);
-    
+
     /**
      * Delete a note with given id
+     *
      * @param id @description  internal id of note
      */
     void deleteNote(UUID id);
-    
+
     /**
      * Returns all contact info for given asset UUID.
+     *
      * @param assetId @description internal id of asset
      * @return List of ContactInfo @description
      */
@@ -194,23 +184,23 @@ public interface AssetService {
 
 
     /**
-     *
-     * @param assetId @description internal id of asset
+     * @param assetId     @description internal id of asset
      * @param contactInfo @description contactinfo object
-     * @param username @description  user that performs the action
+     * @param username    @description  user that performs the action
      * @return ContactInfo @description contactinfo
      */
     ContactInfo createContactInfoForAsset(UUID assetId, ContactInfo contactInfo, String username);
 
     /**
      * @param contactInfo @description a contactinfo object
-     * @param username @description  user that performs the action
+     * @param username    @description  user that performs the action
      * @return ContactInfo @description contactinfo
      */
     ContactInfo updateContactInfo(ContactInfo contactInfo, String username);
-    
+
     /**
      * Delete the contact info with given id
+     *
      * @param id @description internal id of contactinfo
      */
     void deleteContactInfo(UUID id);
@@ -219,6 +209,10 @@ public interface AssetService {
 
     List<ContactInfo> getContactInfoRevisionForAssetHistory(UUID assetId, OffsetDateTime updatedDate);
 
-    void assetInformation(List<Asset> assetInfos, String user);
+    void assetInformation(Asset assetFromAIS, String user);
+
+
 }
+
+
 

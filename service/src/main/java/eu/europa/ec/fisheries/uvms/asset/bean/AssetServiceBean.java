@@ -31,15 +31,16 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.wsdl.asset.types.EventCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
-import javax.persistence.*;
-import javax.ws.rs.HEAD;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -81,7 +82,6 @@ public class AssetServiceBean implements AssetService {
 
     @PersistenceContext
     private EntityManager em;
-
 
 
     /**
@@ -235,7 +235,7 @@ public class AssetServiceBean implements AssetService {
         if (assetBo == null) {
             throw new IllegalArgumentException("No asset business object to upsert");
         }
-        
+
         Asset asset = assetBo.getAsset();
         Asset existingAsset = getAssetByCfrIrcs(createAssetId(asset));
         if (existingAsset != null) {
@@ -484,7 +484,7 @@ public class AssetServiceBean implements AssetService {
         }
 
         MobileTerminalTypeEnum transponderType = getTransponderType(request);
-        if (asset == null && 
+        if (asset == null &&
                 (transponderType == null || !transponderType.equals(MobileTerminalTypeEnum.INMARSAT_C))) {
             asset = AssetUtil.createNewAssetFromRequest(request, assetDao.getNextUnknownShipNumber());
             assetDao.createAsset(asset);
@@ -498,7 +498,7 @@ public class AssetServiceBean implements AssetService {
     }
 
     private void enrichAssetAndMobileTerminal(AssetMTEnrichmentRequest request,
-            AssetMTEnrichmentResponse assetMTEnrichmentResponse, MobileTerminal terminal, Asset asset) {
+                                              AssetMTEnrichmentResponse assetMTEnrichmentResponse, MobileTerminal terminal, Asset asset) {
         if (asset != null) {
             enrichementHelper(assetMTEnrichmentResponse, asset);
         }
@@ -518,7 +518,7 @@ public class AssetServiceBean implements AssetService {
             assetMTEnrichmentResponse.setAssetGroupList(assetGroupList);
         }
     }
-    
+
     private MobileTerminalTypeEnum getTransponderType(AssetMTEnrichmentRequest request) {
         try {
             return MobileTerminalTypeEnum.valueOf(request.getTranspondertypeValue());
@@ -526,7 +526,7 @@ public class AssetServiceBean implements AssetService {
             return null;
         }
     }
-    
+
     private AssetMTEnrichmentResponse enrichementHelper(AssetMTEnrichmentResponse resp, Asset asset) {
         Map<String, String> assetId = createAssetId(asset);
         resp.setAssetId(assetId);
@@ -549,15 +549,15 @@ public class AssetServiceBean implements AssetService {
         resp.setChannelGuid(channelGuid);
         resp.setMobileTerminalConnectId(mobTerm.getAsset().getId().toString());
         resp.setMobileTerminalType(mobTerm.getMobileTerminalType().name());
-        if(mobTerm.getId() != null) {
+        if (mobTerm.getId() != null) {
             resp.setMobileTerminalGuid(mobTerm.getId().toString());
         }
         resp.setMobileTerminalIsInactive(mobTerm.getInactivated());
 
-        if(mobTerm.getChannels() != null){
+        if (mobTerm.getChannels() != null) {
             Set<Channel> channels = mobTerm.getChannels();
-            for(Channel channel : channels) {
-                if(!channel.getId().toString().equals(channelGuid)){
+            for (Channel channel : channels) {
+                if (!channel.getId().toString().equals(channelGuid)) {
                     continue;
                 }
 
@@ -566,14 +566,13 @@ public class AssetServiceBean implements AssetService {
             }
         }
 
-        if(mobTerm.getId() != null){
+        if (mobTerm.getId() != null) {
             try {
                 MobileTerminal mobileTerminal = mobileTerminalService.getMobileTerminalEntityById(mobTerm.getId());
-                if(mobileTerminal != null){
+                if (mobileTerminal != null) {
                     resp.setSerialNumber(mobileTerminal.getSerialNo());
                 }
-            }
-            catch(IllegalArgumentException IllegalSoWeSkipTryingToFetchIt){
+            } catch (IllegalArgumentException IllegalSoWeSkipTryingToFetchIt) {
                 // DON'T CARE
             }
         }
@@ -732,46 +731,43 @@ public class AssetServiceBean implements AssetService {
 
     // if more than 1 hit put data from ais into fartyg2record
     // remove the duplicate
-    private Asset normalizeAssetOnMMSI_IRCS(String mmsi, String ircs){
+    private Asset normalizeAssetOnMMSI_IRCS(String mmsi, String ircs) {
 
-        List<Asset>  assets = null;
+        List<Asset> assets = null;
 
-        if((mmsi != null) && (ircs != null)){
+        if ((mmsi != null) && (ircs != null)) {
             assets = getAssetList(Arrays.asList(
                     new SearchKeyValue(SearchFields.MMSI, Arrays.asList(mmsi)),
                     new SearchKeyValue(SearchFields.IRCS, Arrays.asList(ircs))), 1, 10, false).getAssetList();
-        }
-        else if((mmsi != null) && (ircs == null)){
+        } else if ((mmsi != null) && (ircs == null)) {
             assets = getAssetList(Arrays.asList(
                     new SearchKeyValue(SearchFields.MMSI, Arrays.asList(mmsi))
-                    ), 1, 10, false).getAssetList();
-        } else if((mmsi == null) && (ircs != null)){
+            ), 1, 10, false).getAssetList();
+        } else if ((mmsi == null) && (ircs != null)) {
             assets = getAssetList(Arrays.asList(
                     new SearchKeyValue(SearchFields.IRCS, Arrays.asList(ircs))), 1, 10, false).getAssetList();
-        } else{
+        } else {
             return null;
         }
 
         int assetsSize = assets.size();
-        if(assetsSize == 0) {
+        if (assetsSize == 0) {
             return null;
-        }
-        else if(assetsSize == 1) {
+        } else if (assetsSize == 1) {
             return assets.get(0);
-        }
-        else{
+        } else {
             Asset fartyg2Asset = null;
             Asset nonFartyg2Asset = null;
             // find the fartyg2 record
 
-            for(int i = 0 ; i < assetsSize ; i++){
-                if((assets.get(i).getSource() != null) && (assets.get(i).getSource().equals("NATIONAL"))){
+            for (int i = 0; i < assetsSize; i++) {
+                if ((assets.get(i).getSource() != null) && (assets.get(i).getSource().equals("NATIONAL"))) {
                     fartyg2Asset = assets.get(i);
-                }else{
-                    nonFartyg2Asset  = assets.get(i);
+                } else {
+                    nonFartyg2Asset = assets.get(i);
                 }
             }
-            if((fartyg2Asset != null) && (nonFartyg2Asset != null)){
+            if ((fartyg2Asset != null) && (nonFartyg2Asset != null)) {
                 assetDao.deleteAsset(nonFartyg2Asset);
                 // flush is nessessary to avoid dups on MMSI
                 em.flush();
@@ -783,48 +779,42 @@ public class AssetServiceBean implements AssetService {
 
 
     @Override
-    public void assetInformation(List<Asset> assetInfos, String user) {
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void assetInformation(Asset assetFromAIS, String user) {
 
-
-        if (assetInfos == null) {
-            throw new IllegalArgumentException("No asset in AssetBO");
-        }
-
-        if (assetInfos.size() < 1) {
+        if (assetFromAIS == null) {
             return;
         }
 
-        for(Asset assetFromAIS : assetInfos) {
+        Asset assetFromDB = normalizeAssetOnMMSI_IRCS(assetFromAIS.getMmsi(), assetFromAIS.getIrcs());
 
-            Asset assetFromDB = normalizeAssetOnMMSI_IRCS(assetFromAIS.getMmsi(), assetFromAIS.getIrcs());
+        if (assetFromDB == null) {
+            return;
+        }
 
-            if(assetFromDB == null){
-                continue;
-            }
-
-            if ((assetFromDB.getMmsi() == null) && (assetFromAIS.getMmsi() != null)) {
-               assetFromDB.setMmsi(assetFromAIS.getMmsi());
-            }
-            if ((assetFromDB.getIrcs() == null) && (assetFromAIS.getIrcs() != null)) {
-                assetFromDB.setIrcs(assetFromAIS.getIrcs());
-            }
-            if ((assetFromDB.getVesselType() == null) && (assetFromAIS.getVesselType() != null)) {
-                assetFromDB.setVesselType(assetFromAIS.getVesselType());
-            }
-            if ((assetFromDB.getImo() == null) && (assetFromAIS.getImo() != null)) {
-                assetFromDB.setImo(assetFromAIS.getImo());
-            }
-            if ((assetFromDB.getName() == null || assetFromDB.getName().startsWith("Unknown")) && (assetFromAIS.getName() != null) ) {
+        if ((assetFromDB.getMmsi() == null) && (assetFromAIS.getMmsi() != null)) {
+            assetFromDB.setMmsi(assetFromAIS.getMmsi());
+        }
+        if ((assetFromDB.getIrcs() == null) && (assetFromAIS.getIrcs() != null)) {
+            assetFromDB.setIrcs(assetFromAIS.getIrcs());
+        }
+        if ((assetFromDB.getVesselType() == null) && (assetFromAIS.getVesselType() != null)) {
+            assetFromDB.setVesselType(assetFromAIS.getVesselType());
+        }
+        if ((assetFromDB.getImo() == null) && (assetFromAIS.getImo() != null)) {
+            assetFromDB.setImo(assetFromAIS.getImo());
+        }
+        if ((assetFromDB.getName() == null || assetFromDB.getName().startsWith("Unknown")) && (assetFromAIS.getName() != null)) {
+            if(assetFromAIS.getName().length() > 0) {
                 assetFromDB.setName(assetFromAIS.getName());
             }
-            if ((assetFromDB.getFlagStateCode() == null  || assetFromDB.getFlagStateCode().startsWith("UNK")) && (assetFromAIS.getFlagStateCode() != null) ) {
-                assetFromDB.setFlagStateCode(assetFromAIS.getFlagStateCode());
-            }
-
-            em.merge(assetFromDB);
-
-
         }
+        if ((assetFromDB.getFlagStateCode() == null || assetFromDB.getFlagStateCode().startsWith("UNK")) && (assetFromAIS.getFlagStateCode() != null)) {
+            assetFromDB.setFlagStateCode(assetFromAIS.getFlagStateCode());
+        }
+
+        em.merge(assetFromDB);
+
     }
 
 }
