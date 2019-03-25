@@ -796,6 +796,7 @@ public class AssetServiceBean implements AssetService {
 
         for(Asset assetFromAIS : assetInfos) {
 
+            boolean shouldUpdate = false;   //to stop this method from updating the db every time it gets a message
             Asset assetFromDB = normalizeAssetOnMMSI_IRCS(assetFromAIS.getMmsi(), assetFromAIS.getIrcs());
 
             if(assetFromDB == null){
@@ -803,25 +804,35 @@ public class AssetServiceBean implements AssetService {
             }
 
             if ((assetFromDB.getMmsi() == null) && (assetFromAIS.getMmsi() != null)) {
+                shouldUpdate = true;
                assetFromDB.setMmsi(assetFromAIS.getMmsi());
             }
             if ((assetFromDB.getIrcs() == null) && (assetFromAIS.getIrcs() != null)) {
+                shouldUpdate = true;
                 assetFromDB.setIrcs(assetFromAIS.getIrcs());
             }
             if ((assetFromDB.getVesselType() == null) && (assetFromAIS.getVesselType() != null)) {
+                shouldUpdate = true;
                 assetFromDB.setVesselType(assetFromAIS.getVesselType());
             }
             if ((assetFromDB.getImo() == null) && (assetFromAIS.getImo() != null)) {
+                shouldUpdate = true;
                 assetFromDB.setImo(assetFromAIS.getImo());
             }
             if ((assetFromDB.getName() == null || assetFromDB.getName().startsWith("Unknown")) && (assetFromAIS.getName() != null) ) {
+                shouldUpdate = true;
                 assetFromDB.setName(assetFromAIS.getName());
             }
             if ((assetFromDB.getFlagStateCode() == null  || assetFromDB.getFlagStateCode().startsWith("UNK")) && (assetFromAIS.getFlagStateCode() != null) ) {
+                shouldUpdate = true;
                 assetFromDB.setFlagStateCode(assetFromAIS.getFlagStateCode());
             }
 
-            em.merge(assetFromDB);
+            if(shouldUpdate) {
+                assetFromDB.setUpdatedBy(user);
+                assetFromDB.setUpdateTime(OffsetDateTime.now());
+                em.merge(assetFromDB);
+            }
 
 
         }
