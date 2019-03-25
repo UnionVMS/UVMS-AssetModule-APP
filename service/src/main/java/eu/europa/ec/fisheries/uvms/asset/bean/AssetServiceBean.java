@@ -820,8 +820,10 @@ public class AssetServiceBean implements AssetService {
                 assetFromDB.setImo(assetFromAIS.getImo());
             }
             if ((assetFromDB.getName() == null || assetFromDB.getName().startsWith("Unknown")) && (assetFromAIS.getName() != null) ) {
-                shouldUpdate = true;
-                assetFromDB.setName(assetFromAIS.getName());
+                if(!assetFromAIS.getName().isEmpty()) {
+                    shouldUpdate = true;
+                    assetFromDB.setName(assetFromAIS.getName());
+                }
             }
             if ((assetFromDB.getFlagStateCode() == null  || assetFromDB.getFlagStateCode().startsWith("UNK")) && (assetFromAIS.getFlagStateCode() != null) ) {
                 shouldUpdate = true;
