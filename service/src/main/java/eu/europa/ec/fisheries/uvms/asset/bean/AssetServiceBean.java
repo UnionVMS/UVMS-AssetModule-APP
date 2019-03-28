@@ -803,29 +803,29 @@ public class AssetServiceBean implements AssetService {
                 continue;
             }
 
-            if ((assetFromDB.getMmsi() == null) && (assetFromAIS.getMmsi() != null)) {
+            if ((assetFromDB.getMmsi() == null || !assetFromDB.getMmsi().equals(assetFromAIS.getMmsi())) && (assetFromAIS.getMmsi() != null)) {
                 shouldUpdate = true;
                assetFromDB.setMmsi(assetFromAIS.getMmsi());
             }
-            if ((assetFromDB.getIrcs() == null) && (assetFromAIS.getIrcs() != null)) {
+            if ((assetFromDB.getIrcs() == null) && (assetFromAIS.getIrcs() != null) && (!assetFromDB.getIrcs().equals(assetFromAIS.getIrcs()))) {
                 shouldUpdate = true;
                 assetFromDB.setIrcs(assetFromAIS.getIrcs());
             }
-            if ((assetFromDB.getVesselType() == null) && (assetFromAIS.getVesselType() != null)) {
+            if ((assetFromDB.getVesselType() == null) && (assetFromAIS.getVesselType() != null) && (!assetFromDB.getVesselType().equals(assetFromAIS.getVesselType()))) {
                 shouldUpdate = true;
                 assetFromDB.setVesselType(assetFromAIS.getVesselType());
             }
-            if ((assetFromDB.getImo() == null) && (assetFromAIS.getImo() != null)) {
+            if ((assetFromDB.getImo() == null) && (assetFromAIS.getImo() != null) && (!assetFromDB.getImo().equals(assetFromAIS.getImo()))) {
                 shouldUpdate = true;
                 assetFromDB.setImo(assetFromAIS.getImo());
             }
-            if ((assetFromDB.getName() == null || assetFromDB.getName().startsWith("Unknown")) && (assetFromAIS.getName() != null) ) {
+            if ((assetFromDB.getName() == null || assetFromDB.getName().startsWith("Unknown") || !assetFromDB.getName().equals(assetFromAIS.getName())) && (assetFromAIS.getName() != null) ) {
                 if(!assetFromAIS.getName().isEmpty()) {
                     shouldUpdate = true;
                     assetFromDB.setName(assetFromAIS.getName());
                 }
             }
-            if ((assetFromDB.getFlagStateCode() == null  || assetFromDB.getFlagStateCode().startsWith("UNK")) && (assetFromAIS.getFlagStateCode() != null) ) {
+            if ((assetFromDB.getFlagStateCode() == null  || assetFromDB.getFlagStateCode().startsWith("UNK")) && (assetFromAIS.getFlagStateCode() != null) && (!assetFromDB.getFlagStateCode().equals(assetFromAIS.getFlagStateCode())) ) {
                 shouldUpdate = true;
                 assetFromDB.setFlagStateCode(assetFromAIS.getFlagStateCode());
             }
