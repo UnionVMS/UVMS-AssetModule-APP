@@ -803,7 +803,7 @@ public class AssetServiceBean implements AssetService {
                 continue;
             }
 
-            if ((assetFromDB.getMmsi() == null) && (assetFromAIS.getMmsi() != null) && (!assetFromDB.getMmsi().equals(assetFromAIS.getMmsi()))) {
+            if ((assetFromDB.getMmsi() == null || !assetFromDB.getMmsi().equals(assetFromAIS.getMmsi())) && (assetFromAIS.getMmsi() != null)) {
                 shouldUpdate = true;
                assetFromDB.setMmsi(assetFromAIS.getMmsi());
             }
@@ -819,8 +819,8 @@ public class AssetServiceBean implements AssetService {
                 shouldUpdate = true;
                 assetFromDB.setImo(assetFromAIS.getImo());
             }
-            if ((assetFromDB.getName() == null || assetFromDB.getName().startsWith("Unknown")) && (assetFromAIS.getName() != null) ) {
-                if(!assetFromAIS.getName().isEmpty() && !assetFromDB.getName().equals(assetFromAIS.getName())) {
+            if ((assetFromDB.getName() == null || assetFromDB.getName().startsWith("Unknown") || !assetFromDB.getName().equals(assetFromAIS.getName())) && (assetFromAIS.getName() != null) ) {
+                if(!assetFromAIS.getName().isEmpty()) {
                     shouldUpdate = true;
                     assetFromDB.setName(assetFromAIS.getName());
                 }
