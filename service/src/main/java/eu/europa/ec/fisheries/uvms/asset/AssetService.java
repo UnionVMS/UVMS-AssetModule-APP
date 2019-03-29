@@ -42,7 +42,7 @@ public interface AssetService {
      * @param dynamic @description dynamic true or false
      * @return AssetListResponse
      */
-    AssetListResponse getAssetList(List<SearchKeyValue> searchFields, int page, int listSize, boolean dynamic);
+    AssetListResponse getAssetList(List<SearchKeyValue> searchFields, int page, int listSize, boolean dynamic, boolean includeInactivated);
 
     /**
      *
@@ -50,7 +50,7 @@ public interface AssetService {
      * @param dynamic @description dynamic true or false
      * @return Long @description number of assets in search
      */
-    Long getAssetListCount(List<SearchKeyValue> searchFields, boolean dynamic);
+    Long getAssetListCount(List<SearchKeyValue> searchFields, boolean dynamic, boolean includeInactivated);
 
     /**
      *

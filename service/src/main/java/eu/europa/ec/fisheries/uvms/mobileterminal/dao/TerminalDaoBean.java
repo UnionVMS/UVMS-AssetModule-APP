@@ -64,7 +64,7 @@ public class TerminalDaoBean {
 
     public MobileTerminal updateMobileTerminal(MobileTerminal terminal) {
         if (terminal == null || terminal.getId() == null)
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Can't update a non-persisted MobileTerminal");
         return em.merge(terminal);
     }
 

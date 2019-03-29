@@ -82,11 +82,12 @@ public class AssetResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetList(@DefaultValue("1") @QueryParam("page") int page,
                                  @DefaultValue("100") @QueryParam("size") int size,
-                                 @DefaultValue("true") @QueryParam("dynamic") boolean dynamic, 
+                                 @DefaultValue("true") @QueryParam("dynamic") boolean dynamic,
+                                 @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
                                  AssetQuery query) {
         try {
             List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
-            AssetListResponse assetList = assetService.getAssetList(searchFields, page, size, dynamic);
+            AssetListResponse assetList = assetService.getAssetList(searchFields, page, size, dynamic, includeInactivated);
             //This is needed to force Hibernate to fetch everything related to the assets, reason it does not is that AuditQuery, used to find stuff, does not support eager fetching
             String returnString = objectMapper().writeValueAsString(assetList);
             return Response.ok(returnString).build();
@@ -113,11 +114,12 @@ public class AssetResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetListItemCount(@DefaultValue("true") @QueryParam("dynamic") boolean dynamic, 
+    public Response getAssetListItemCount(@DefaultValue("true") @QueryParam("dynamic") boolean dynamic,
+                                          @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
                                           AssetQuery query) {
         try {
             List<SearchKeyValue> searchValues = SearchFieldMapper.createSearchFields(query);
-            Long assetListCount = assetService.getAssetListCount(searchValues, dynamic);
+            Long assetListCount = assetService.getAssetListCount(searchValues, dynamic, includeInactivated);
             return Response.ok(assetListCount).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset list: {}", query, e);
@@ -233,7 +235,9 @@ public class AssetResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response archiveAsset(@ApiParam(value="The asset to update", required=true)  final Asset asset,  @ApiParam(value="Archive comment", required=true)  @QueryParam("comment") String comment) {
+    public Response archiveAsset(@ApiParam(value="The asset to update", required=true)  final Asset asset,
+                                 @ApiParam(value="Archive comment", required=true)
+                                 @QueryParam("comment") String comment) {
         try {
             String remoteUser = servletRequest.getRemoteUser();
             Asset archivedAsset = assetService.archiveAsset(asset, remoteUser, comment);

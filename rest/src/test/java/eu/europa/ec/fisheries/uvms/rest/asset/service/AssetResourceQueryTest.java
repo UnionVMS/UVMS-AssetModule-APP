@@ -12,10 +12,8 @@ package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
@@ -317,11 +315,13 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         int sizeBefore = listResponse.getAssetList().size();
 
         // Archive the asset
-        getWebTarget()
+        Asset archived = getWebTarget()
                 .path("asset")
                 .path("archive")
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.json(createdAsset), Asset.class);
+
+        assertFalse(archived.getActive());
 
         // ask for it
         AssetListResponse listResponseAfter = getWebTarget()
@@ -331,7 +331,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(query), AssetListResponse.class);
 
-        assertEquals(sizeBefore  - 1, listResponseAfter.getAssetList().size());
+        assertEquals(sizeBefore - 1, listResponseAfter.getAssetList().size());
     }
     
     @Test

@@ -21,14 +21,22 @@ public class SearchMapper {
 
     private final static Logger LOG = LoggerFactory.getLogger(SearchMapper.class);
 
-    public static String createSelectSearchSql(List<ListCriteria> criteriaList, boolean isDynamic) {
+    public static String createSelectSearchSql(List<ListCriteria> criteriaList, boolean isDynamic, boolean includeArchived) {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("SELECT DISTINCT mt")
+        builder
+                .append("SELECT DISTINCT mt")
                 .append(" FROM MobileTerminal mt")
                 .append(" LEFT JOIN FETCH mt.channels c")
-                .append(" WHERE ( ")
-                .append("mt.archived = false ")
+                .append(" WHERE ( ");
+
+        if(!includeArchived) {
+            builder.append("mt.archived = false ");
+        } else {
+            builder.append("mt.archived = true ");
+        }
+
+        builder
                 .append("AND ")
                 .append("c.archived = false ")
                 .append(" ) ");

@@ -94,9 +94,9 @@ public class AssetMessageEventBean {
             int page = query.getPagination().getPage();
             int listSize = query.getPagination().getListSize();
             Boolean dynamic = query.getAssetSearchCriteria().isIsDynamic();
-            
-            
-            AssetListResponse assetList = assetService.getAssetList(searchValues, page, listSize, dynamic);
+
+
+            AssetListResponse assetList = assetService.getAssetList(searchValues, page, listSize, dynamic, false);
             
             ListAssetResponse response = assetMapper.toListAssetResponse(assetList); 
             assetMessageProducer.sendResponseMessageToSender(message.getMessage(), AssetModuleResponseMapper.mapAssetModuleResponse(response));
