@@ -663,52 +663,34 @@ public class AssetServiceBean implements AssetService {
         return assetId;
     }
 
-    // TODO ? the belgian constants as well if so how ?? no spec !!!
+
     private Asset getAssetByCfrIrcs(Map<String, String> assetId) {
+        Asset asset = null;
 
-        try {
-            // If no asset information exists, don't look for one
-            if (assetId == null || assetId.size() < 1) {
-                LOG.warn("No asset information exists!");
-                return null;
-            }
-            // Get possible search parameters
-            String cfr = assetId.getOrDefault(CFR, null);
-            String ircs = assetId.getOrDefault(IRCS, null);
-            String mmsi = assetId.getOrDefault(MMSI, null);
-
-            Asset asset = null;
-            if (ircs != null && cfr != null && mmsi != null) {
-                try {
-                    asset = getAssetById(AssetIdentifier.CFR, cfr);
-                    // If the asset matches on ircs as well we have a winner
-                    if (asset != null && asset.getIrcs().equals(ircs)) {
-                        return asset;
-                    }
-                    // If asset is null, try fetching by IRCS (cfr will fail for SE national db)
-                    if (asset == null) {
-                        asset = getAssetById(AssetIdentifier.IRCS, ircs);
-                        // If asset is still null, try mmsi (this should be the case for movement coming from AIS)
-                        if (asset == null) {
-                            return getAssetById(AssetIdentifier.MMSI, mmsi);
-                        }
-                    }
-                } catch (Exception e) {
-                    return getAssetById(AssetIdentifier.IRCS, ircs);
-                }
-            } else if (cfr != null) {
-                return getAssetById(AssetIdentifier.CFR, cfr);
-            } else if (ircs != null) {
-                return getAssetById(AssetIdentifier.IRCS, ircs);
-            } else if (mmsi != null) {
-                return getAssetById(AssetIdentifier.MMSI, mmsi);
-            }
-
-        } catch (Exception e) {
-            // Log and continue validation
-            LOG.warn("Could not find asset!");
+        // If no asset information exists, don't look for one
+        if (assetId == null || assetId.size() < 1) {
+            LOG.warn("No asset information exists!");
+            return null;
         }
-        return null;
+
+        // Get possible search parameters
+        String cfr = assetId.getOrDefault(CFR, null);
+        String ircs = assetId.getOrDefault(IRCS, null);
+        String mmsi = assetId.getOrDefault(MMSI, null);
+
+        if (cfr != null) {
+            asset = getAssetById(AssetIdentifier.CFR, cfr);
+        }
+
+        if (asset == null && ircs != null) {
+            asset = getAssetById(AssetIdentifier.IRCS, ircs);
+        }
+
+        if (asset == null && mmsi != null) {
+            asset = getAssetById(AssetIdentifier.MMSI, mmsi);
+        }
+
+        return asset;
     }
 
     private boolean isPluginTypeWithoutMobileTerminal(String pluginType) {
