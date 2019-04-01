@@ -19,7 +19,7 @@ public class AssetUtil {
 
         asset.setCfr(request.getCfrValue());
         asset.setImo(request.getImoValue());
-        asset.setIrcs( ((request.getIrcsValue().length() > 8) ? null : request.getIrcsValue()) );
+        asset.setIrcs( ((request.getIrcsValue() == null || request.getIrcsValue().length() > 8) ? null : request.getIrcsValue()) );
         asset.setGfcm(request.getGfcmValue());
         asset.setIccat(request.getIccatValue());
         asset.setMmsi(request.getMmsiValue());
