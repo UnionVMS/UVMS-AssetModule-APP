@@ -11,18 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.bean;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.ws.rs.NotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollableQuery;
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
@@ -33,13 +21,7 @@ import eu.europa.ec.fisheries.uvms.asset.message.AuditProducer;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.ListCriteria;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.ListPagination;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MobileTerminalListQuery;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MobileTerminalSearchCriteria;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
@@ -49,6 +31,15 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.AuditModuleRequestMappe
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.SearchMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.ws.rs.NotFoundException;
+import java.util.*;
 
 @Stateless
 @LocalBean
@@ -94,8 +85,8 @@ public class MobileTerminalServiceBean {
         return createdMobileTerminal;
     }
 
-    public MTListResponse getMobileTerminalList(MobileTerminalListQuery query) {
-        MTListResponse response = getTerminalListByQuery(query);
+    public MTListResponse getMobileTerminalList(MobileTerminalListQuery query, boolean includeArchived) {
+        MTListResponse response = getTerminalListByQuery(query, includeArchived);
         return response;
     }
 
@@ -238,6 +229,7 @@ public class MobileTerminalServiceBean {
             case ARCHIVE:
                 mobileTerminal.setArchived(true);
                 mobileTerminal.setInactivated(true);
+                mobileTerminal.setAsset(null);
                 break;
             default:
                 LOG.error("[ Non valid status to set ] {}", status);
@@ -282,7 +274,7 @@ public class MobileTerminalServiceBean {
 
     public MobileTerminal getMobileTerminalEntityById(UUID id) {
         if (id == null)
-            throw new IllegalArgumentException("Non valid id: NULL");
+            throw new IllegalArgumentException("Non valid MobileTerminal ID: NULL");
         return terminalDao.getMobileTerminalById(id);
     }
 
@@ -339,7 +331,8 @@ public class MobileTerminalServiceBean {
             throw new IllegalArgumentException("Terminal " + mobileTerminalId + " is already linked to an asset with guid " + connectId);
         }
         asset.getMobileTerminals().add(terminal);
-        terminal.setAsset(asset);
+        Asset assetWithMT = assetDao.updateAsset(asset);
+        terminal.setAsset(assetWithMT);
         terminal.setUpdateuser(username);
         terminal = terminalDao.updateMobileTerminal(terminal);
         return terminal;
@@ -347,9 +340,6 @@ public class MobileTerminalServiceBean {
 
     public MobileTerminal unAssignMobileTerminalFromCarrier(UUID connectId, UUID guid, String comment, String username) {
 
-        if (guid == null) {
-            throw new IllegalArgumentException("No Mobile GUID in request");
-        }
         if (connectId == null) {
             throw new IllegalArgumentException("No connect id in request");
         }
@@ -358,14 +348,14 @@ public class MobileTerminalServiceBean {
         terminal.setUpdateuser(username);
 
         Asset asset = terminal.getAsset();
-        terminal.setAsset(null);
 
         boolean remove = asset.getMobileTerminals().remove(terminal);
         if(!remove) {
             throw new IllegalArgumentException("Terminal " + guid + " is not linked to an asset with ID " + asset.getId());
         }
-        terminalDao.updateMobileTerminal(terminal);
-        return terminal;
+        assetDao.updateAsset(asset);
+        terminal.setAsset(null);
+        return terminalDao.updateMobileTerminal(terminal);
     }
 
     public MobileTerminal upsertMobileTerminal(MobileTerminal mobileTerminal, String username) {
@@ -385,7 +375,7 @@ public class MobileTerminalServiceBean {
         return upsertedMT;
     }
 
-    public MTListResponse getTerminalListByQuery(MobileTerminalListQuery query) {
+    public MTListResponse getTerminalListByQuery(MobileTerminalListQuery query, boolean includeArchived) {
         if (query == null) {
             throw new IllegalArgumentException("No list query");
         }
@@ -408,7 +398,7 @@ public class MobileTerminalServiceBean {
 
         List<ListCriteria> criterias = query.getMobileTerminalSearchCriteria().getCriterias();
 
-        String searchSql = SearchMapper.createSelectSearchSql(criterias, isDynamic);
+        String searchSql = SearchMapper.createSelectSearchSql(criterias, isDynamic, includeArchived);
 
         List<MobileTerminal> terminals = terminalDao.getMobileTerminalsByQuery(searchSql);
 
@@ -451,7 +441,7 @@ public class MobileTerminalServiceBean {
         pagination.setPage(1);
         query.setPagination(pagination);
 
-        MTListResponse mobileTerminalListResponse = getMobileTerminalList(query);
+        MTListResponse mobileTerminalListResponse = getMobileTerminalList(query, false);
         List<MobileTerminal> resultList = mobileTerminalListResponse.getMobileTerminalList();
         return resultList.size() != 1 ? null : resultList.get(0);
     }

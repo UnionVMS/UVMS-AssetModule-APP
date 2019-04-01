@@ -84,11 +84,6 @@ public class AssetServiceBean implements AssetService {
     private EntityManager em;
 
 
-    /**
-     * @param asset
-     * @param username
-     * @return
-     */
     @Override
     public Asset createAsset(Asset asset, String username) {
 
@@ -103,20 +98,13 @@ public class AssetServiceBean implements AssetService {
         return createdAssetEntity;
     }
 
-    /**
-     * @param searchFields
-     * @param page
-     * @param listSize
-     * @param dynamic
-     * @return
-     */
     @Override
-    public AssetListResponse getAssetList(List<SearchKeyValue> searchFields, int page, int listSize, boolean dynamic) {
+    public AssetListResponse getAssetList(List<SearchKeyValue> searchFields, int page, int listSize, boolean dynamic, boolean includeInactivated) {
         if (searchFields == null) {
             throw new IllegalArgumentException("Cannot get asset list because search values is null.");
         }
 
-        Long numberOfAssets = assetDao.getAssetCount(searchFields, dynamic);
+        Long numberOfAssets = assetDao.getAssetCount(searchFields, dynamic, includeInactivated);
 
         int numberOfPages = 0;
         if (listSize != 0) {
@@ -126,7 +114,7 @@ public class AssetServiceBean implements AssetService {
             }
         }
 
-        List<Asset> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, searchFields, dynamic);
+        List<Asset> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, searchFields, dynamic, includeInactivated);
 
         AssetListResponse listAssetResponse = new AssetListResponse();
         listAssetResponse.setCurrentPage(page);
@@ -135,25 +123,14 @@ public class AssetServiceBean implements AssetService {
         return listAssetResponse;
     }
 
-    /**
-     * @param searchFields
-     * @param dynamic
-     * @return
-     */
     @Override
-    public Long getAssetListCount(List<SearchKeyValue> searchFields, boolean dynamic) {
+    public Long getAssetListCount(List<SearchKeyValue> searchFields, boolean dynamic, boolean includeInactivated) {
         if (searchFields == null || searchFields.isEmpty()) {
             throw new IllegalArgumentException("Cannot get asset list because query is null.");
         }
-        return assetDao.getAssetCount(searchFields, dynamic);
+        return assetDao.getAssetCount(searchFields, dynamic, includeInactivated);
     }
 
-    /**
-     * @param asset
-     * @param username
-     * @param comment
-     * @return
-     */
     @Override
     public Asset updateAsset(Asset asset, String username, String comment) {
         Asset updatedAsset = updateAssetInternal(asset, username);
@@ -161,12 +138,6 @@ public class AssetServiceBean implements AssetService {
         return updatedAsset;
     }
 
-    /**
-     * @param asset    an asset
-     * @param username
-     * @param comment  a comment to the archiving
-     * @return
-     */
     @Override
     public Asset archiveAsset(Asset asset, String username, String comment) {
         asset.setActive(false);
@@ -176,15 +147,12 @@ public class AssetServiceBean implements AssetService {
     }
 
     private Asset updateAssetInternal(Asset asset, String username) {
-
         if (asset == null) {
             throw new IllegalArgumentException("No asset to update");
         }
-
         if (asset.getId() == null) {
             throw new IllegalArgumentException("No id on asset to update");
         }
-
         checkIdentifierNullValues(asset);
 
         asset.setUpdatedBy(username);
@@ -212,21 +180,14 @@ public class AssetServiceBean implements AssetService {
             asset.setUvi(null);
     }
 
-    /**
-     * @param asset
-     * @param username
-     * @return
-     */
     @Override
     public Asset upsertAsset(Asset asset, String username) {
         if (asset == null) {
             throw new IllegalArgumentException("No asset to upsert");
         }
-
         if (asset.getId() == null) {
             return createAsset(asset, username);
         }
-
         return updateAsset(asset, username, "");
     }
 
@@ -241,18 +202,15 @@ public class AssetServiceBean implements AssetService {
         if (existingAsset != null) {
             asset.setId(existingAsset.getId());
         }
-
         if (!AssetComparator.assetEquals(asset, existingAsset)) {
             asset = upsertAsset(asset, username);
         }
-
         // Clear and create new contacts and notes for now
         UUID assetId = asset.getId();
         if (assetBo.getContacts() != null) {
             getContactInfoForAsset(assetId).forEach(c -> deleteContactInfo(c.getId()));
             assetBo.getContacts().forEach(c -> createContactInfoForAsset(assetId, c, username));
         }
-
         if (assetBo.getNotes() != null) {
             getNotesForAsset(assetId).forEach(n -> deleteNote(n.getId()));
             assetBo.getNotes().forEach(c -> createNoteForAsset(assetId, c, username));
@@ -260,11 +218,6 @@ public class AssetServiceBean implements AssetService {
         return assetBo;
     }
 
-    /**
-     * @param assetId
-     * @param value
-     * @return
-     */
     @Override
     public Asset getAssetById(AssetIdentifier assetId, String value) {
 
@@ -278,12 +231,6 @@ public class AssetServiceBean implements AssetService {
         return assetDao.getAssetFromAssetId(assetId, value);
     }
 
-    /**
-     * @param idType
-     * @param idValue
-     * @param date
-     * @return
-     */
     @Override
     public Asset getAssetFromAssetIdAtDate(AssetIdentifier idType, String idValue, OffsetDateTime date) {
 
@@ -298,7 +245,7 @@ public class AssetServiceBean implements AssetService {
         }
         if (idType == AssetIdentifier.GUID) {
             try {
-                UUID.fromString(idValue);
+                UUID fromString = UUID.fromString(idValue); // Result is ignored?
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException("Not a valid UUID");
             }
@@ -306,10 +253,6 @@ public class AssetServiceBean implements AssetService {
         return assetDao.getAssetFromAssetIdAtDate(idType, idValue, date);
     }
 
-    /**
-     * @param id
-     * @return
-     */
     @Override
     public Asset getAssetById(UUID id) {
         if (id == null) {
@@ -318,10 +261,6 @@ public class AssetServiceBean implements AssetService {
         return assetDao.getAssetById(id);
     }
 
-    /**
-     * @param groups
-     * @return
-     */
     @Override
     public List<Asset> getAssetListByAssetGroups(List<AssetGroup> groups) {
         LOG.debug("Getting asset by ID.");
@@ -330,7 +269,7 @@ public class AssetServiceBean implements AssetService {
         }
         List<AssetGroupField> groupFields = groups.stream()
                 .map(g -> assetGroupService.retrieveFieldsForGroup(g.getId()))
-                .flatMap(x -> x.stream())
+                .flatMap(Collection::stream)
                 .collect(Collectors.toList());
 
         Set<Asset> assets = new HashSet<>();
@@ -366,7 +305,7 @@ public class AssetServiceBean implements AssetService {
     @Override
     public List<Asset> getRevisionsForAssetLimited(UUID id, Integer maxNbr) {
         List<Asset> revisions = assetDao.getRevisionsForAsset(id);
-        revisions.sort((a1, a2) -> a1.getUpdateTime().compareTo(a2.getUpdateTime()));
+        revisions.sort(Comparator.comparing(Asset::getUpdateTime));
         if (revisions.size() > maxNbr) {
             return revisions.subList(0, maxNbr);
         }
@@ -462,7 +401,6 @@ public class AssetServiceBean implements AssetService {
         List<ContactInfo> revisionList = contactDao.getContactInfoRevisionForAssetHistory(contactInfoListByAssetId, updatedDate);
         return revisionList;
     }
-
 
     @Override
     public AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request) {
@@ -662,52 +600,34 @@ public class AssetServiceBean implements AssetService {
         return assetId;
     }
 
-    // TODO ? the belgian constants as well if so how ?? no spec !!!
+
     private Asset getAssetByCfrIrcs(Map<String, String> assetId) {
+        Asset asset = null;
 
-        try {
-            // If no asset information exists, don't look for one
-            if (assetId == null || assetId.size() < 1) {
-                LOG.warn("No asset information exists!");
-                return null;
-            }
-            // Get possible search parameters
-            String cfr = assetId.getOrDefault(CFR, null);
-            String ircs = assetId.getOrDefault(IRCS, null);
-            String mmsi = assetId.getOrDefault(MMSI, null);
-
-            Asset asset = null;
-            if (ircs != null && cfr != null && mmsi != null) {
-                try {
-                    asset = getAssetById(AssetIdentifier.CFR, cfr);
-                    // If the asset matches on ircs as well we have a winner
-                    if (asset != null && asset.getIrcs().equals(ircs)) {
-                        return asset;
-                    }
-                    // If asset is null, try fetching by IRCS (cfr will fail for SE national db)
-                    if (asset == null) {
-                        asset = getAssetById(AssetIdentifier.IRCS, ircs);
-                        // If asset is still null, try mmsi (this should be the case for movement coming from AIS)
-                        if (asset == null) {
-                            return getAssetById(AssetIdentifier.MMSI, mmsi);
-                        }
-                    }
-                } catch (Exception e) {
-                    return getAssetById(AssetIdentifier.IRCS, ircs);
-                }
-            } else if (cfr != null) {
-                return getAssetById(AssetIdentifier.CFR, cfr);
-            } else if (ircs != null) {
-                return getAssetById(AssetIdentifier.IRCS, ircs);
-            } else if (mmsi != null) {
-                return getAssetById(AssetIdentifier.MMSI, mmsi);
-            }
-
-        } catch (Exception e) {
-            // Log and continue validation
-            LOG.warn("Could not find asset!");
+        // If no asset information exists, don't look for one
+        if (assetId == null || assetId.size() < 1) {
+            LOG.warn("No asset information exists!");
+            return null;
         }
-        return null;
+
+        // Get possible search parameters
+        String cfr = assetId.getOrDefault(CFR, null);
+        String ircs = assetId.getOrDefault(IRCS, null);
+        String mmsi = assetId.getOrDefault(MMSI, null);
+
+        if (cfr != null) {
+            asset = getAssetById(AssetIdentifier.CFR, cfr);
+        }
+
+        if (asset == null && ircs != null) {
+            asset = getAssetById(AssetIdentifier.IRCS, ircs);
+        }
+
+        if (asset == null && mmsi != null) {
+            asset = getAssetById(AssetIdentifier.MMSI, mmsi);
+        }
+
+        return asset;
     }
 
     private boolean isPluginTypeWithoutMobileTerminal(String pluginType) {
@@ -733,19 +653,23 @@ public class AssetServiceBean implements AssetService {
     // remove the duplicate
     private Asset normalizeAssetOnMMSI_IRCS(String mmsi, String ircs) {
 
+
         List<Asset> assets = null;
 
         if ((mmsi != null) && (ircs != null)) {
             assets = getAssetList(Arrays.asList(
-                    new SearchKeyValue(SearchFields.MMSI, Arrays.asList(mmsi)),
-                    new SearchKeyValue(SearchFields.IRCS, Arrays.asList(ircs))), 1, 10, false).getAssetList();
-        } else if ((mmsi != null) && (ircs == null)) {
-            assets = getAssetList(Arrays.asList(
-                    new SearchKeyValue(SearchFields.MMSI, Arrays.asList(mmsi))
-            ), 1, 10, false).getAssetList();
-        } else if ((mmsi == null) && (ircs != null)) {
-            assets = getAssetList(Arrays.asList(
-                    new SearchKeyValue(SearchFields.IRCS, Arrays.asList(ircs))), 1, 10, false).getAssetList();
+                    new SearchKeyValue(SearchFields.MMSI, Collections.singletonList(mmsi)),
+                    new SearchKeyValue(SearchFields.IRCS, Collections.singletonList(ircs))),
+                    1, 10, false, false).getAssetList();
+        }
+        else if(mmsi != null) {
+            assets = getAssetList(Collections.singletonList(
+                    new SearchKeyValue(SearchFields.MMSI, Collections.singletonList(mmsi))),
+                    1, 10, false, false).getAssetList();
+        } else if(ircs != null) {
+            assets = getAssetList(Collections.singletonList(
+                    new SearchKeyValue(SearchFields.IRCS, Collections.singletonList(ircs))),
+                    1, 10, false, false).getAssetList();
         } else {
             return null;
         }
@@ -760,23 +684,22 @@ public class AssetServiceBean implements AssetService {
             Asset nonFartyg2Asset = null;
             // find the fartyg2 record
 
-            for (int i = 0; i < assetsSize; i++) {
-                if ((assets.get(i).getSource() != null) && (assets.get(i).getSource().equals("NATIONAL"))) {
-                    fartyg2Asset = assets.get(i);
+            for (Asset asset : assets) {
+                if ((asset.getSource() != null) && (asset.getSource().equals("NATIONAL"))) {
+                    fartyg2Asset = asset;
                 } else {
-                    nonFartyg2Asset = assets.get(i);
+                    nonFartyg2Asset = asset;
                 }
             }
-            if ((fartyg2Asset != null) && (nonFartyg2Asset != null)) {
+            if((fartyg2Asset != null) && (nonFartyg2Asset != null)) {
                 assetDao.deleteAsset(nonFartyg2Asset);
-                // flush is nessessary to avoid dups on MMSI
+                // flush is necessary to avoid dumps on MMSI
                 em.flush();
                 return fartyg2Asset;
             }
         }
         return null;
     }
-
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -793,30 +716,38 @@ public class AssetServiceBean implements AssetService {
                 return;
             }
 
-            if ((assetFromDB.getMmsi() == null) && (assetFromAIS.getMmsi() != null)) {
-                assetFromDB.setMmsi(assetFromAIS.getMmsi());
+            if ((assetFromDB.getMmsi() == null || !assetFromDB.getMmsi().equals(assetFromAIS.getMmsi())) && (assetFromAIS.getMmsi() != null)) {
+                shouldUpdate = true;
+               assetFromDB.setMmsi(assetFromAIS.getMmsi());
             }
-            if ((assetFromDB.getIrcs() == null) && (assetFromAIS.getIrcs() != null)) {
+            if ((assetFromDB.getIrcs() == null) && (assetFromAIS.getIrcs() != null) && (!assetFromDB.getIrcs().equals(assetFromAIS.getIrcs()))) {
+                shouldUpdate = true;
                 assetFromDB.setIrcs(assetFromAIS.getIrcs());
             }
-            if ((assetFromDB.getVesselType() == null) && (assetFromAIS.getVesselType() != null)) {
+            if ((assetFromDB.getVesselType() == null) && (assetFromAIS.getVesselType() != null) && (!assetFromDB.getVesselType().equals(assetFromAIS.getVesselType()))) {
+                shouldUpdate = true;
                 assetFromDB.setVesselType(assetFromAIS.getVesselType());
             }
-            if ((assetFromDB.getImo() == null) && (assetFromAIS.getImo() != null)) {
+            if ((assetFromDB.getImo() == null) && (assetFromAIS.getImo() != null) && (!assetFromDB.getImo().equals(assetFromAIS.getImo()))) {
+                shouldUpdate = true;
                 assetFromDB.setImo(assetFromAIS.getImo());
             }
-            if ((assetFromDB.getName() == null || assetFromDB.getName().startsWith("Unknown")) && (assetFromAIS.getName() != null)) {
-                if (assetFromAIS.getName().length() > 0) {
+
+            if ((assetFromDB.getName() == null || assetFromDB.getName().startsWith("Unknown") || !assetFromDB.getName().equals(assetFromAIS.getName())) && (assetFromAIS.getName() != null) ) {
+                if(!assetFromAIS.getName().isEmpty()) {
+                    shouldUpdate = true;
                     assetFromDB.setName(assetFromAIS.getName());
                 }
             }
-            if ((assetFromDB.getFlagStateCode() == null || assetFromDB.getFlagStateCode().startsWith("UNK")) && (assetFromAIS.getFlagStateCode() != null)) {
+            if ((assetFromDB.getFlagStateCode() == null  || assetFromDB.getFlagStateCode().startsWith("UNK")) && (assetFromAIS.getFlagStateCode() != null) && (!assetFromDB.getFlagStateCode().equals(assetFromAIS.getFlagStateCode())) ) {
+                shouldUpdate = true;
                 assetFromDB.setFlagStateCode(assetFromAIS.getFlagStateCode());
             }
-
-         em.merge(assetFromDB);
-            em.flush();
-
+            if(shouldUpdate) {
+                assetFromDB.setUpdatedBy(user);
+                assetFromDB.setUpdateTime(OffsetDateTime.now());
+                em.merge(assetFromDB);
+            }
+        }
     }
-
 }

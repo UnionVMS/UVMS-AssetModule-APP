@@ -215,7 +215,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         searchValue.setSearchValues(Collections.singletonList(asset.getId().toString()));
         searchValues.add(searchValue);
 
-        List<Asset> assets = assetService.getAssetList(searchValues, 1, 100, true).getAssetList();
+        List<Asset> assets = assetService.getAssetList(searchValues, 1, 100, true, false).getAssetList();
 
         assertEquals(1, assets.size());
         assertEquals(asset.getCfr(), assets.get(0).getCfr());
@@ -236,7 +236,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         searchValue.setSearchValues(Collections.singletonList(asset.getName()));
         searchValues.add(searchValue);
 
-        List<Asset> assets = assetService.getAssetList(searchValues, 1, 100, true).getAssetList();
+        List<Asset> assets = assetService.getAssetList(searchValues, 1, 100, true, false).getAssetList();
 
         assertTrue(!assets.isEmpty());
         assertEquals(asset.getCfr(), assets.get(0).getCfr());

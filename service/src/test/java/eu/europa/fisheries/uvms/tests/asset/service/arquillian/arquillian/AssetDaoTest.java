@@ -365,7 +365,7 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey.setSearchField(SearchFields.CFR);
         searchKey.setSearchValues(Collections.singletonList(asset.getCfr()));
         searchKeyValues.add(searchKey);
-        Long count = assetDao.getAssetCount(searchKeyValues, false);
+        Long count = assetDao.getAssetCount(searchKeyValues, false, false);
         assertEquals(new Long(1), count);
 
         assetDao.deleteAsset(asset);
@@ -388,7 +388,7 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey.setSearchField(SearchFields.CFR);
         searchKey.setSearchValues(Collections.singletonList(asset.getCfr()));
         searchKeyValues.add(searchKey);
-        Long count = assetDao.getAssetCount(searchKeyValues, false);
+        Long count = assetDao.getAssetCount(searchKeyValues, false, false);
         assertEquals(new Long(1), count);
 
         assetDao.deleteAsset(asset);
@@ -415,7 +415,7 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey.setSearchField(SearchFields.CFR);
         searchKey.setSearchValues(Collections.singletonList(asset.getCfr()));
         searchKeyValues.add(searchKey);
-        Long count = assetDao.getAssetCount(searchKeyValues, false);
+        Long count = assetDao.getAssetCount(searchKeyValues, false, false);
         assertEquals(new Long(1), count);
 
         assetDao.deleteAsset(asset);
@@ -435,7 +435,7 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey.setSearchField(SearchFields.CFR);
         searchKey.setSearchValues(Collections.singletonList("TESTCFR"));
         searchKeyValues.add(searchKey);
-        Long count = assetDao.getAssetCount(searchKeyValues, false);
+        Long count = assetDao.getAssetCount(searchKeyValues, false, false);
         assertEquals(new Long(0), count);
 
         assetDao.deleteAsset(asset);
@@ -454,7 +454,7 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey.setSearchField(SearchFields.CFR);
         searchKey.setSearchValues(Collections.singletonList(asset.getCfr()));
         searchKeyValues.add(searchKey);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true, false);
         
         assertThat(assets.size(), is(1));
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -479,7 +479,7 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey.setSearchField(SearchFields.CFR);
         searchKey.setSearchValues(Arrays.asList(asset.getCfr(), asset2.getCfr()));
         searchKeyValues.add(searchKey);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, false);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, false, false);
         
         assertEquals(2, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -510,7 +510,7 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey2.setSearchField(SearchFields.IRCS);
         searchKey2.setSearchValues(Collections.singletonList(asset2.getIrcs()));
         searchKeyValues.add(searchKey2);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, false);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, false, false);
         
         assertEquals(2, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -541,12 +541,12 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey2.setSearchField(SearchFields.IRCS);
         searchKey2.setSearchValues(Collections.singletonList(asset2.getIrcs()));
         searchKeyValues.add(searchKey2);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 1, searchKeyValues, false);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 1, searchKeyValues, false, false);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));
         
-        assets = assetDao.getAssetListSearchPaginated(2, 1, searchKeyValues, false);
+        assets = assetDao.getAssetListSearchPaginated(2, 1, searchKeyValues, false, false);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getId(), is(asset2.getId()));
@@ -576,7 +576,7 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey3.setSearchField(SearchFields.CFR);
         searchKey3.setSearchValues(Collections.singletonList(asset.getCfr()));
         searchKeyValues.add(searchKey3);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true, false);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -597,7 +597,7 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey.setSearchField(SearchFields.GUID);
         searchKey.setSearchValues(Collections.singletonList(asset.getId().toString()));
         searchKeyValues.add(searchKey);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true, false);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -624,14 +624,14 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey.setSearchField(SearchFields.HIST_GUID);
         searchKey.setSearchValues(Collections.singletonList(asset.getHistoryId().toString()));
         searchKeyValues.add(searchKey);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
-        
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true, false);
+
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getHistoryId(), is(asset.getHistoryId()));
         assertThat(assets.get(0).getName(), is(asset.getName()));
         
         searchKey.setSearchValues(Collections.singletonList(updatedAsset.getHistoryId().toString()));
-        assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
+        assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true, false);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getHistoryId(), is(updatedAsset.getHistoryId()));
@@ -653,7 +653,7 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey.setSearchField(SearchFields.MIN_LENGTH);
         searchKey.setSearchValues(Collections.singletonList((asset.getLengthOverAll().toString())));
         searchKeyValues.add(searchKey);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true, false);
         
         assertEquals(1, assets.size());
 
@@ -677,7 +677,7 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey2.setSearchField(SearchFields.CFR);
         searchKey2.setSearchValues(Collections.singletonList((asset.getCfr())));
         searchKeyValues.add(searchKey2);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true, false);
         
         assertEquals(1, assets.size());
 
@@ -700,7 +700,7 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey.setSearchField(SearchFields.NAME);
         searchKey.setSearchValues(Collections.singletonList("*LikeSearch*" + randomNumbers));
         searchKeyValues.add(searchKey);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true, false);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getName(), is(searchName));
@@ -721,7 +721,7 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey.setSearchField(SearchFields.NAME);
         searchKey.setSearchValues(Collections.singletonList("*likeSearch*" + randomNumbers));
         searchKeyValues.add(searchKey);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true, false);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getName(), is(searchName));
