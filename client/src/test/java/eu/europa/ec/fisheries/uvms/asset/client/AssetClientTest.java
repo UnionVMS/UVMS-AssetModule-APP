@@ -324,6 +324,23 @@ public class AssetClientTest extends AbstractClientTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void createNewAssetOnUnknownWithVeryLongIRCS(){
+        AssetMTEnrichmentRequest request = new AssetMTEnrichmentRequest();
+        request.setMmsiValue("123456789");
+        request.setIrcsValue("An IRCS value that is longer then 8 and should thus be set to null");
+        AssetMTEnrichmentResponse response = assetClient.collectAssetMT(request);
+
+        assertNotNull(response);
+        assertNotNull(response.getAssetHistoryId());
+        assertNotNull(response.getAssetUUID());
+        assertTrue(response.getAssetName().contains("Unknown ship"));
+        assertTrue(response.getFlagstate().equals("UNK"));
+        assertEquals("123456789", response.getAssetId().get("MMSI"));
+        assertNull(response.getIrcs());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void createNewAssetOnUnknownUseNameAndFSFromRequest(){
         AssetMTEnrichmentRequest request = new AssetMTEnrichmentRequest();
         request.setMmsiValue("987654321");
