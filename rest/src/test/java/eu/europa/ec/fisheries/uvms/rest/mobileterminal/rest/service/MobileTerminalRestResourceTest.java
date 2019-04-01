@@ -599,6 +599,58 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void getMobileTerminalList_ArchivedMobileTerminalsIncluded() {
+
+        MobileTerminal prePersist = MobileTerminalTestHelper.createBasicMobileTerminal();
+        prePersist.setAsset(null);
+
+        MobileTerminalListQuery mobileTerminalListQuery = MobileTerminalTestHelper.createMobileTerminalListQuery();
+
+        MTListResponse mtListResponse = getWebTarget()
+                .path("/mobileterminal/list")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminalListQuery), MTListResponse.class);
+
+        int sizeBefore = mtListResponse.getMobileTerminalList().size();
+
+        MobileTerminal created = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(prePersist), MobileTerminal.class);
+
+        assertFalse(created.getArchived());
+
+        MobileTerminal response = getWebTarget()
+                .path("mobileterminal/status/remove")
+                .queryParam("comment", "Test Comment Remove")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(created.getId()))
+                .readEntity(MobileTerminal.class);
+
+        assertTrue(response.getArchived());
+
+        MTListResponse responseWithoutArchived = getWebTarget()
+                .path("/mobileterminal/list")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminalListQuery), MTListResponse.class);
+
+        int sizeAfter = responseWithoutArchived.getMobileTerminalList().size();
+
+        assertEquals(sizeBefore, sizeAfter);
+
+        MTListResponse responseWithArchived = getWebTarget()
+                .path("/mobileterminal/list")
+                .queryParam("includeArchived", true)
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminalListQuery), MTListResponse.class);
+
+        int sizeAfterWithArchived = responseWithArchived.getMobileTerminalList().size();
+
+        assertEquals(sizeBefore + 1, sizeAfterWithArchived);
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void searchForSerialNumberAfterCreatingNewEvents() {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
         Asset asset = createAndRestBasicAsset();
