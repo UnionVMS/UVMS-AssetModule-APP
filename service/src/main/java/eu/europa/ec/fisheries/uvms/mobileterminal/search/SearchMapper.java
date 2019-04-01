@@ -28,18 +28,16 @@ public class SearchMapper {
                 .append("SELECT DISTINCT mt")
                 .append(" FROM MobileTerminal mt")
                 .append(" LEFT JOIN FETCH mt.channels c")
-                .append(" WHERE ( ");
+                .append(" WHERE ( ")
+                .append("c.archived = false ");
 
         if(!includeArchived) {
-            builder.append("mt.archived = false ");
-        } else {
-            builder.append("mt.archived = true ");
+            builder
+                .append("AND ")
+                .append("mt.archived = false ");
         }
 
-        builder
-                .append("AND ")
-                .append("c.archived = false ")
-                .append(" ) ");
+        builder.append(" ) ");
 
         String operator = isDynamic ? "OR" : "AND";
 
