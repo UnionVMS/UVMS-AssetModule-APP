@@ -260,7 +260,7 @@ public class AssetResource {
     @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public Response unarchiveAsset(@ApiParam(value="The asset to update", required=true)  final Asset asset,
-                                 @ApiParam(value="Archive comment", required=true)
+                                 @ApiParam(value="Unarchive comment", required=true)
                                  @QueryParam("comment") String comment) {
         try {
             String remoteUser = servletRequest.getRemoteUser();
@@ -269,7 +269,7 @@ public class AssetResource {
             String returnString = objectMapper().writeValueAsString(archivedAsset);
             return Response.ok(returnString).build();
         } catch (Exception e) {
-            LOG.error("Error when archiving asset. {}",asset, e);
+            LOG.error("Error when unarchiving asset. {}",asset, e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
