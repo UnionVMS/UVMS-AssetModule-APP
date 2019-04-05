@@ -149,9 +149,9 @@ public class AssetServiceBean implements AssetService {
     @Override
     public Asset unarchiveAsset(Asset asset, String username, String comment) {
         asset.setActive(true);
-        Asset archivedAsset = updateAssetInternal(asset, username);
-        auditService.logAssetArchived(archivedAsset, comment, username);
-        return archivedAsset;
+        Asset unarchivedAsset = updateAssetInternal(asset, username);
+        auditService.logAssetArchived(unarchivedAsset, comment, username);
+        return unarchivedAsset;
     }
 
     private Asset updateAssetInternal(Asset asset, String username) {

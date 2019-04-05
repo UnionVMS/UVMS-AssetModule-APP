@@ -264,9 +264,9 @@ public class AssetResource {
                                  @QueryParam("comment") String comment) {
         try {
             String remoteUser = servletRequest.getRemoteUser();
-            Asset archivedAsset = assetService.unarchiveAsset(asset, remoteUser, comment);
+            Asset unarchivedAsset = assetService.unarchiveAsset(asset, remoteUser, comment);
             //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
-            String returnString = objectMapper().writeValueAsString(archivedAsset);
+            String returnString = objectMapper().writeValueAsString(unarchivedAsset);
             return Response.ok(returnString).build();
         } catch (Exception e) {
             LOG.error("Error when unarchiving asset. {}",asset, e);
