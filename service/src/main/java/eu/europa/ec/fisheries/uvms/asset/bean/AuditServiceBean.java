@@ -61,4 +61,16 @@ public class AuditServiceBean {
                     asset.getId().toString());
         }
     }
+
+    @Asynchronous
+    public void logAssetUnarchived(Asset asset, String comment, String username) {
+        try {
+            String auditData = AuditModuleRequestMapper.mapAuditLogAssetUnarchived(asset.getId().toString(), comment,
+                    username);
+            auditProducer.sendModuleMessage(auditData);
+        } catch (Exception e) {
+            LOG.error("Failed to send audit log message! Asset with guid {} was archived ",
+                    asset.getId().toString());
+        }
+    }
 }

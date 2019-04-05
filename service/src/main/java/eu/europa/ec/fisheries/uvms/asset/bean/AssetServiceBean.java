@@ -146,6 +146,14 @@ public class AssetServiceBean implements AssetService {
         return archivedAsset;
     }
 
+    @Override
+    public Asset unarchiveAsset(Asset asset, String username, String comment) {
+        asset.setActive(true);
+        Asset archivedAsset = updateAssetInternal(asset, username);
+        auditService.logAssetArchived(archivedAsset, comment, username);
+        return archivedAsset;
+    }
+
     private Asset updateAssetInternal(Asset asset, String username) {
         if (asset == null) {
             throw new IllegalArgumentException("No asset to update");

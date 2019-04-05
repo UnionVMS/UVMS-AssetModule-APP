@@ -250,6 +250,30 @@ public class AssetResource {
         }
     }
 
+    @PUT
+    @ApiOperation(value = "Unarchive an Asset", notes = "Unarchive an Asset", response = Asset.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Error when unarchiving asset"),
+            @ApiResponse(code = 200, message = "Asset successfully unarchived") })
+    @Path("/unarchive")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @RequiresFeature(UnionVMSFeature.manageVessels)
+    public Response unarchiveAsset(@ApiParam(value="The asset to update", required=true)  final Asset asset,
+                                 @ApiParam(value="Archive comment", required=true)
+                                 @QueryParam("comment") String comment) {
+        try {
+            String remoteUser = servletRequest.getRemoteUser();
+            Asset archivedAsset = assetService.unarchiveAsset(asset, remoteUser, comment);
+            //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
+            String returnString = objectMapper().writeValueAsString(archivedAsset);
+            return Response.ok(returnString).build();
+        } catch (Exception e) {
+            LOG.error("Error when archiving asset. {}",asset, e);
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+        }
+    }
+
     /**
     *
     * @responseMessage 200 Success
