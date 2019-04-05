@@ -51,6 +51,10 @@ public class AuditModuleRequestMapper {
         return mapToAuditLog(AuditObjectTypeEnum.MOBILE_TERMINAL.getValue(), AuditOperationEnum.ARCHIVE.getValue(), guid, comment, username);
     }
 
+    public static String mapAuditLogMobileTerminalUnarchived(String guid, String comment, String username) throws AuditModelMarshallException {
+        return mapToAuditLog(AuditObjectTypeEnum.MOBILE_TERMINAL.getValue(), AuditOperationEnum.UNARCHIVE.getValue(), guid, comment, username);
+    }
+
     public static String mapAuditLogPollCreated(PollType pollType, String guid, String comment, String username) throws AuditModelMarshallException {
         AuditObjectTypeEnum pollTypeEnum;
         switch (pollType){

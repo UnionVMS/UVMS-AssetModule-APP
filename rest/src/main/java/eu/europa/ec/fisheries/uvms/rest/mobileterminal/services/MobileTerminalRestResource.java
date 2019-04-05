@@ -209,6 +209,21 @@ public class MobileTerminalRestResource {
         }
     }
 
+    @PUT
+    @Path("/status/unarchive")
+    @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
+    public Response setStatusUnarchived(@QueryParam("comment") String comment, UUID guid) {
+        LOG.info("Set mobile terminal status unarchived invoked in rest layer.");
+        try {
+            MobileTerminal mobileTerminal = mobileTerminalService.setStatusMobileTerminal(guid, comment, MobileTerminalStatus.UNARCHIVE, request.getRemoteUser());
+            String returnString = objectMapper().writeValueAsString(mobileTerminal);
+            return Response.ok(returnString).build();
+        } catch (Exception ex) {
+            LOG.error("[ Error when removing mobile terminal ] {}", ex);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
+        }
+    }
+
     @GET
     @Path("/history/{id}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)

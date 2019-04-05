@@ -15,6 +15,7 @@ public enum AuditOperationEnum {
     CREATE("Create"),
     UPDATE("Update"),
     ARCHIVE("Archive"),
+    UNARCHIVE("Unarchive"),
     LINKED("Linked"),
     UNLINKED("Unlinked"),
     ACTIVATE("Activate"),

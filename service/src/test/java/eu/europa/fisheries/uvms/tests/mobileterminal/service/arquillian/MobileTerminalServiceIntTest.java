@@ -166,6 +166,21 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
+    public void archiveAndUnarchiveMobileTerminal() {
+        MobileTerminal created = testPollHelper.createAndPersistMobileTerminal(null);
+        assertFalse(created.getArchived());
+
+        created.setArchived(true);
+        MobileTerminal archived = updateMobileTerminal(created);
+        assertTrue(archived.getArchived());
+
+        archived.setArchived(false);
+        MobileTerminal unarchived = updateMobileTerminal(created);
+        assertFalse(unarchived.getArchived());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void createMobileTerminal_WillFail_Null_Plugin() {
 
         thrown.expect(EJBTransactionRolledbackException.class);

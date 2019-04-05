@@ -599,6 +599,48 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void archiveAndUnarchiveMobileTerminal() {
+        MobileTerminal mt = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mt.setAsset(null);
+
+        MobileTerminal created = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mt), MobileTerminal.class);
+
+        assertFalse(created.getInactivated());
+        assertFalse(created.getArchived());
+
+        MobileTerminal response = getWebTarget()
+                .path("mobileterminal/status/remove")
+                .queryParam("comment", "Test Comment Archive")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(created.getId()))
+                .readEntity(MobileTerminal.class);
+
+        assertNotNull(response);
+        assertTrue(response.getArchived());
+
+        response = getWebTarget()
+                .path("mobileterminal/status/unarchive")
+                .queryParam("comment", "Test Comment Unarchive")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(created.getId()))
+                .readEntity(MobileTerminal.class);
+
+        assertFalse(response.getArchived());
+
+        //checking the events as well
+        Response res = getWebTarget()
+                .path("mobileterminal/history/" + created.getId())
+                .request(MediaType.APPLICATION_JSON)
+                .get();
+
+        assertEquals(200, res.getStatus());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void getMobileTerminalList_ArchivedMobileTerminalsIncluded() {
 
         MobileTerminal prePersist = MobileTerminalTestHelper.createBasicMobileTerminal();

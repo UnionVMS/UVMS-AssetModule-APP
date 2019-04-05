@@ -195,6 +195,9 @@ public class MobileTerminalServiceBean {
                 case ARCHIVE:
                     auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalArchived(terminalStatus.getId().toString(), comment, username);
                     break;
+                case UNARCHIVE:
+                    auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalUnarchived(terminalStatus.getId().toString(), comment, username);
+                    break;
                 default:
                     break;
             }
@@ -230,6 +233,9 @@ public class MobileTerminalServiceBean {
                 mobileTerminal.setArchived(true);
                 mobileTerminal.setInactivated(true);
                 mobileTerminal.setAsset(null);
+                break;
+            case UNARCHIVE:
+                mobileTerminal.setArchived(false);
                 break;
             default:
                 LOG.error("[ Non valid status to set ] {}", status);
