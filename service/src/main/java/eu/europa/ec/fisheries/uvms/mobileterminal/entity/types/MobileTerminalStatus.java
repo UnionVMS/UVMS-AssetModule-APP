@@ -3,7 +3,8 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.entity.types;
 public enum  MobileTerminalStatus {
     ACTIVE,
     INACTIVE,
-    ARCHIVE;
+    ARCHIVE,
+    UNARCHIVE;
 
     public String value() {
         return name();
