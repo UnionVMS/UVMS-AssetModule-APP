@@ -150,7 +150,7 @@ public class AssetServiceBean implements AssetService {
     public Asset unarchiveAsset(Asset asset, String username, String comment) {
         asset.setActive(true);
         Asset unarchivedAsset = updateAssetInternal(asset, username);
-        auditService.logAssetArchived(unarchivedAsset, comment, username);
+        auditService.logAssetUnarchived(unarchivedAsset, comment, username);
         return unarchivedAsset;
     }
 
