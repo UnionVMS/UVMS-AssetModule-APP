@@ -136,7 +136,6 @@ public class MobileTerminal implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="asset_id", foreignKey = @ForeignKey(name = "MobileTerminal_Asset_FK"))
-	@NotAudited
 	private Asset asset;
 
 	public MobileTerminal() {
