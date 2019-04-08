@@ -21,7 +21,8 @@ public class AuditModuleRequestMapper {
     private static final String CREATE = "Create";
     private static final String UPDATE = "Update";
     private static final String ARCHIVE = "Archive";
-    
+    private static final String UNARCHIVE = "Unarchive";
+
     private AuditModuleRequestMapper() {}
     
     public static String mapAuditLogAssetCreated(String guid, String username) throws AuditModelMarshallException {
@@ -34,6 +35,10 @@ public class AuditModuleRequestMapper {
 
     public static String mapAuditLogAssetArchived(String guid, String comment, String username) throws AuditModelMarshallException {
         return AuditLogMapper.mapToAuditLog(ASSET, ARCHIVE, guid, comment, username);
+    }
+
+    public static String mapAuditLogAssetUnarchived(String guid, String comment, String username) throws AuditModelMarshallException {
+        return AuditLogMapper.mapToAuditLog(ASSET, UNARCHIVE, guid, comment, username);
     }
 
     public static String mapAuditLogAssetGroupCreated(String guid, String username,String name) throws AuditModelMarshallException {

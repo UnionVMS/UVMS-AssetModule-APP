@@ -192,7 +192,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void archiveAssetTest() throws Exception {
+    public void archiveAssetTest() {
         Asset asset = AssetTestsHelper.createBasicAsset();
         Asset createdAsset = assetService.createAsset(asset, "test");
         assetService.archiveAsset(createdAsset, "test", "archived");
@@ -200,6 +200,23 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Asset assetByCfr = assetService.getAssetById(AssetIdentifier.CFR, createdAsset.getCfr());
 
         assertNull(assetByCfr);
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void unarchiveAssetTest() {
+        Asset asset = AssetTestsHelper.createBasicAsset();
+        Asset createdAsset = assetService.createAsset(asset, "test");
+
+        Asset archived = assetService.archiveAsset(createdAsset, "test", "archived");
+        assertFalse(archived.getActive());
+        Asset assetByCfr = assetService.getAssetById(AssetIdentifier.CFR, createdAsset.getCfr());
+        assertNull(assetByCfr);
+
+        Asset unarchived = assetService.unarchiveAsset(archived, "test", "archived");
+        assertTrue(unarchived.getActive());
+        Asset assetByCfr2 = assetService.getAssetById(AssetIdentifier.CFR, createdAsset.getCfr());
+        assertNotNull(assetByCfr2);
     }
 
     @Test

@@ -176,6 +176,34 @@ public class AssetResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void unarchiveAssetTest() {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+
+        Asset archivedAsset = getWebTarget()
+                .path("asset")
+                .path("archive")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(createdAsset), Asset.class);
+
+        assertNotNull(archivedAsset);
+        assertThat(archivedAsset.getActive() , is(false));
+
+        Asset unarchivedAsset = getWebTarget()
+                .path("asset")
+                .path("unarchive")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(archivedAsset), Asset.class);
+
+        assertNotNull(unarchivedAsset);
+        assertThat(unarchivedAsset.getActive() , is(true));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void archiveAssetNonExistingAssetTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Response response = getWebTarget()

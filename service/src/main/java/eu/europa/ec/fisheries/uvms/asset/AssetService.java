@@ -83,6 +83,14 @@ public interface AssetService {
 
     /**
      * @param asset    @description an asset
+     * @param username @description user that performs action
+     * @param comment  @description comment , reason of action
+     * @return Asset @description
+     */
+    Asset unarchiveAsset(Asset asset, String username, String comment);
+
+    /**
+     * @param asset    @description an asset
      * @param username @description user that performs the action
      * @return Asset @description an asset
      */
