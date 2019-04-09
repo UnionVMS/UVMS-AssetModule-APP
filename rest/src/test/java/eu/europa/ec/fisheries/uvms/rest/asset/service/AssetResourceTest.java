@@ -17,6 +17,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
@@ -172,6 +173,59 @@ public class AssetResourceTest extends AbstractAssetRestTest {
 
         assertNotNull(archivedAsset);
         assertThat(archivedAsset.getActive() , is(false));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void archiveAsset_ThenVerifyMobileTerminalUnlinkedAndInactivatedTest() {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+
+        MobileTerminal terminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        MobileTerminal createdMT = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(terminal), MobileTerminal.class);
+
+        assertFalse(createdMT.getInactivated());
+
+        MobileTerminal assignedMT = getWebTarget()
+                .path("mobileterminal")
+                .path("assign")
+                .queryParam("comment", "assign")
+                .queryParam("connectId", createdAsset.getId())
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(createdMT.getId()), MobileTerminal.class);
+
+        assertNotNull(assignedMT.getAsset().getId());
+
+        Asset fetchedAsset = getWebTarget()
+                .path("asset")
+                .path(createdAsset.getId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .get(Asset.class);
+
+        assertTrue(fetchedAsset.getMobileTerminals().size() > 0);
+
+        Asset archivedAsset = getWebTarget()
+                .path("asset")
+                .path("archive")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(fetchedAsset), Asset.class);
+
+        assertFalse(archivedAsset.getActive());
+
+        MobileTerminal fetchedMT = getWebTarget()
+                .path("mobileterminal")
+                .path(createdMT.getId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .get(MobileTerminal.class);
+
+        assertNull(fetchedMT.getAsset());
+        assertTrue(fetchedMT.getInactivated());
     }
 
     @Test

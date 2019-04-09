@@ -462,4 +462,11 @@ public class MobileTerminalServiceBean {
         }
         return terminalDao.getMobileTerminalByRequest(request);
     }
+
+    public void inactivateAndUnlink(Asset asset, String comment, String username) {
+        asset.getMobileTerminals().forEach(mt -> {
+            unAssignMobileTerminal(asset.getId(),mt.getId(), comment, username);
+            setStatusMobileTerminal(mt.getId(), comment, MobileTerminalStatus.INACTIVE, username);
+        });
+    }
 }
