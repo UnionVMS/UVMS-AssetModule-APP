@@ -13,6 +13,7 @@
     <include file="v1.0\db-changelog-createTables.xml" relativeToChangelogFile="true"/>
 	<include file="v1.0\insertCustomCodes.xml" relativeToChangelogFile="true"/>
 	<include file="v1.0\insertParameter.xml" relativeToChangelogFile="true"/>
+	<include file="v6.0.44\db-changelog_1.xml" relativeToChangelogFile="true"/>
 
 
 	<include file="properties.xml" relativeToChangelogFile="true"/>
