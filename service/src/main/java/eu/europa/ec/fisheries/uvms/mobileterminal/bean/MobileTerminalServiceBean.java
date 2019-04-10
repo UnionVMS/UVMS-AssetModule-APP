@@ -124,6 +124,7 @@ public class MobileTerminalServiceBean {
             updatedPlugin = oldTerminal.getPlugin();
         }
 
+        mobileTerminal.setComment(comment);
         mobileTerminal.setPlugin(updatedPlugin);
 
         mobileTerminal.getChannels().forEach(channel -> channel.setMobileTerminal(mobileTerminal));
@@ -242,6 +243,7 @@ public class MobileTerminalServiceBean {
                 throw new IllegalArgumentException("Non valid status to set");
         }
         mobileTerminal.setUpdateuser(username);
+        mobileTerminal.setComment(comment);
         return terminalDao.updateMobileTerminal(mobileTerminal);
     }
 
@@ -340,6 +342,7 @@ public class MobileTerminalServiceBean {
         Asset assetWithMT = assetDao.updateAsset(asset);
         terminal.setAsset(assetWithMT);
         terminal.setUpdateuser(username);
+        terminal.setComment(comment);
         terminal = terminalDao.updateMobileTerminal(terminal);
         return terminal;
     }
@@ -361,6 +364,7 @@ public class MobileTerminalServiceBean {
         }
         assetDao.updateAsset(asset);
         terminal.setAsset(null);
+        terminal.setComment(comment);
         return terminalDao.updateMobileTerminal(terminal);
     }
 

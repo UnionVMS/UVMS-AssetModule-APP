@@ -133,7 +133,7 @@ public class AssetServiceBean implements AssetService {
 
     @Override
     public Asset updateAsset(Asset asset, String username, String comment) {
-        Asset updatedAsset = updateAssetInternal(asset, username);
+        Asset updatedAsset = updateAssetInternal(asset, username, comment);
         auditService.logAssetUpdated(updatedAsset, comment, username);
         return updatedAsset;
     }
@@ -146,7 +146,7 @@ public class AssetServiceBean implements AssetService {
         }
         asset.setActive(false);
         asset.getMobileTerminals().clear();
-        Asset archivedAsset = updateAssetInternal(asset, username);
+        Asset archivedAsset = updateAssetInternal(asset, username, comment);
         auditService.logAssetArchived(archivedAsset, comment, username);
         return archivedAsset;
     }
@@ -154,12 +154,12 @@ public class AssetServiceBean implements AssetService {
     @Override
     public Asset unarchiveAsset(Asset asset, String username, String comment) {
         asset.setActive(true);
-        Asset unarchivedAsset = updateAssetInternal(asset, username);
+        Asset unarchivedAsset = updateAssetInternal(asset, username, comment);
         auditService.logAssetUnarchived(unarchivedAsset, comment, username);
         return unarchivedAsset;
     }
 
-    private Asset updateAssetInternal(Asset asset, String username) {
+    private Asset updateAssetInternal(Asset asset, String username, String comment) {
         if (asset == null) {
             throw new IllegalArgumentException("No asset to update");
         }
@@ -171,6 +171,7 @@ public class AssetServiceBean implements AssetService {
         asset.setUpdatedBy(username);
         asset.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         asset.setEventCode(EventCode.MOD.value());
+        asset.setComment(comment);
         return assetDao.updateAsset(asset);
     }
 

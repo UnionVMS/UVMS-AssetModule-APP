@@ -279,6 +279,10 @@ public class Asset implements Serializable {
     @NotAudited
     private List<MobileTerminal> mobileTerminals;
 
+    @Size(max = 255)
+    @Column(name = "comment")
+    private String comment;
+
     @PrePersist
     private void generateNewHistoryId() {
         this.historyId = UUID.randomUUID();
@@ -737,5 +741,13 @@ public class Asset implements Serializable {
 
     public void setMobileTerminals(List<MobileTerminal> mobileTerminals) {
         this.mobileTerminals = mobileTerminals;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

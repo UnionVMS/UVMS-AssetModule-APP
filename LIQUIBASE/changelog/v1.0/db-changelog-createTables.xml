@@ -86,6 +86,7 @@
             <column name="vesseldateofentry" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="vesseltype" type="VARCHAR(100)"/>
             <column name="vmsindicator" type="BOOLEAN"/>
+            <column name="comment" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-4">
@@ -151,6 +152,7 @@
             <column name="vesseldateofentry" type="TIMESTAMP(6) WITH TIME ZONE"/>
             <column name="vesseltype" type="VARCHAR(255)"/>
             <column name="vmsindicator" type="BOOLEAN"/>
+            <column name="comment" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-5">
@@ -401,6 +403,7 @@
             <column name="antenna" type="VARCHAR(60)"/>
             <column name="transceiver_type" type="VARCHAR(60)"/>
             <column name="software_version" type="VARCHAR(60)"/>
+            <column name="comment" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-16">
@@ -427,6 +430,7 @@
             <column name="antenna" type="VARCHAR(60)"/>
             <column name="transceiver_type" type="VARCHAR(60)"/>
             <column name="software_version" type="VARCHAR(60)"/>
+            <column name="comment" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-21">
