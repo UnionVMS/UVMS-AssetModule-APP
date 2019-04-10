@@ -138,6 +138,10 @@ public class MobileTerminal implements Serializable {
 	@JoinColumn(name="asset_id", foreignKey = @ForeignKey(name = "MobileTerminal_Asset_FK"))
 	private Asset asset;
 
+	@Size(max = 255)
+	@Column(name = "comment")
+	private String comment;
+
 	public MobileTerminal() {
 	}
 
@@ -289,6 +293,14 @@ public class MobileTerminal implements Serializable {
 
 	public void setSoftwareVersion(String softwareVersion) {
 		this.softwareVersion = softwareVersion;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	@Override
