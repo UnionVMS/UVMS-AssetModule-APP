@@ -18,16 +18,16 @@
 
     <changeSet author="kasim" id="Insert_Comment_Column">
         <addColumn tableName="asset">
-            <column name="comment" type="string"/>
+            <column name="comment" type="VARCHAR(255)"/>
         </addColumn>
         <addColumn tableName="asset_aud">
-            <column name="comment" type="string"/>
+            <column name="comment" type="VARCHAR(255)"/>
         </addColumn>
         <addColumn tableName="mobileterminal">
-            <column name="comment" type="string"/>
+            <column name="comment" type="VARCHAR(255)"/>
         </addColumn>
         <addColumn tableName="mobileterminal_aud">
-            <column name="comment" type="string"/>
+            <column name="comment" type="VARCHAR(255)"/>
         </addColumn>
     </changeSet>
 
