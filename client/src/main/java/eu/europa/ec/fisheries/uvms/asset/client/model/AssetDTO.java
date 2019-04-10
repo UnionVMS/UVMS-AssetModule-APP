@@ -10,10 +10,14 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.client.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import java.time.OffsetDateTime;
 import java.util.UUID;
 import javax.json.bind.annotation.JsonbDateFormat;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AssetDTO {
 
     private UUID id;
@@ -23,12 +27,15 @@ public class AssetDTO {
     private Boolean aisIndicator;
     private Boolean vmsIndicator;
     private String hullMaterial;
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     private OffsetDateTime commissionDate;
     private String constructionYear;
     private String constructionPlace;
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     private OffsetDateTime updateTime;
     private String source;
     private String vesselType;
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     private OffsetDateTime vesselDateOfEntry;
     private String cfr;
     private String imo;
@@ -63,6 +70,7 @@ public class AssetDTO {
     private String assetAgentAddress;
     private String countryOfImportOrExport;
     private String typeOfExport;
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     private OffsetDateTime administrativeDecisionDate;
     private String segment;
     private String segmentOfAdministrativeDecision;
