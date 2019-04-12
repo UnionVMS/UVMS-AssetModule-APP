@@ -473,4 +473,20 @@ public class MobileTerminalServiceBean {
             setStatusMobileTerminal(mt.getId(), comment, MobileTerminalStatus.INACTIVE, username);
         });
     }
+
+    public Map<UUID, List<MobileTerminal>> getMobileTerminalRevisionsByAssetId(UUID assetId, int maxNbr) {
+        Map<UUID, List<MobileTerminal>> revisionMap = new HashMap<>();
+        Asset asset = assetDao.getAssetById(assetId);
+        List<MobileTerminal> mtList = asset.getMobileTerminals();
+
+        mtList.forEach( terminal -> {
+            List<MobileTerminal> revisions = terminalDao.getMobileTerminalHistoryById(terminal.getId());
+            revisions.sort(Comparator.comparing(MobileTerminal::getCreateTime));
+            if (revisions.size() > maxNbr) {
+                revisions = revisions.subList(0, maxNbr);
+            }
+            revisionMap.put(terminal.getId(), revisions);
+        });
+        return revisionMap;
+    }
 }
