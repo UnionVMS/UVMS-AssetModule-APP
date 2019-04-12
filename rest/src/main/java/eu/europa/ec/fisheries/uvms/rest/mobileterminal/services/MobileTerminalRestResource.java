@@ -37,6 +37,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Path("/mobileterminal")
@@ -235,6 +236,21 @@ public class MobileTerminalRestResource {
             return Response.ok(returnString).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting mobile terminal history by terminalId ] {}", ex);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
+        }
+    }
+
+    @GET
+    @Path("/history/asset/{assetId}")
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public Response getMobileTerminalHistoryByAssetId(@PathParam("assetId") UUID assetId, @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
+        LOG.info("Get mobile terminal history by asset id invoked in rest layer.");
+        try {
+            Map<UUID, List<MobileTerminal>> mobileTerminalRevisionMap = mobileTerminalService.getMobileTerminalRevisionsByAssetId(assetId, maxNbr);
+            String returnString = objectMapper().writeValueAsString(mobileTerminalRevisionMap);
+            return Response.ok(returnString).build();
+        } catch (Exception ex) {
+            LOG.error("[ Error when getting mobile terminal history by assetId ] {}", ex);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
