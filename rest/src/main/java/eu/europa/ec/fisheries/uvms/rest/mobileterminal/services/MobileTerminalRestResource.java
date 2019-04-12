@@ -241,7 +241,7 @@ public class MobileTerminalRestResource {
     }
 
     @GET
-    @Path("/{assetId}")
+    @Path("/history/asset/{assetId}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getMobileTerminalHistoryByAssetId(@PathParam("assetId") UUID assetId, @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
         LOG.info("Get mobile terminal history by asset id invoked in rest layer.");

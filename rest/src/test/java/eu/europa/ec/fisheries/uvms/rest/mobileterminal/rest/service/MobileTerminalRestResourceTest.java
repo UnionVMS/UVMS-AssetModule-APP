@@ -30,6 +30,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.Duration;
@@ -637,6 +638,48 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .get();
 
         assertEquals(200, res.getStatus());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getMobileTerminalRevisionsByAssetId() {
+        MobileTerminal mt1 = MobileTerminalTestHelper.createBasicMobileTerminal();
+        MobileTerminal mt2 = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        MobileTerminal created1 = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mt1), MobileTerminal.class);
+
+        MobileTerminal created2 = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mt2), MobileTerminal.class);
+
+        Asset asset = createAndRestBasicAsset();
+
+        getWebTarget()
+                .path("/mobileterminal/assign")
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .queryParam("connectId", asset.getId())
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(created1.getId()), MobileTerminal.class);
+
+        getWebTarget()
+                .path("/mobileterminal/assign")
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .queryParam("connectId", asset.getId())
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(created2.getId()), MobileTerminal.class);
+
+        Map<UUID, List<MobileTerminal>> mtRevisions = getWebTarget()
+                .path("/mobileterminal/history/asset")
+                .path(asset.getId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .get(new GenericType<Map<UUID, List<MobileTerminal>>>() {
+                });
+
+        assertEquals(2, mtRevisions.size());
     }
 
     @Test
