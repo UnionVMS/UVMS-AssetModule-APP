@@ -98,7 +98,7 @@ public class MobileTerminalExecutorServiceBean {
             PingRequest exchangeRequest = new PingRequest();
             exchangeRequest.setMethod(ExchangeModuleMethod.PING);
             String request = JAXBMarshaller.marshallJaxBObjectToString(exchangeRequest);
-            String messageId = exchangeProducer.sendModuleMessage(request);
+            String messageId = exchangeProducer.sendModuleMessage(request, ExchangeModuleMethod.PING.value());
             assetConsumer.getMessage(messageId, TextMessage.class, RECEIVE_TIMEOUT);
             TimeUnit.SECONDS.sleep(delay);
         } catch (Exception e) {

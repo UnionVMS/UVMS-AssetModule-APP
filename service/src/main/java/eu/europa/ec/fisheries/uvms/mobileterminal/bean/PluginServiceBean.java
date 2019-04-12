@@ -44,7 +44,6 @@ import eu.europa.ec.fisheries.uvms.asset.message.ExchangeProducer;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleRequestMapper;
-import eu.europa.ec.fisheries.uvms.exchange.model.exception.ExchangeModelMarshallException;
 import eu.europa.ec.fisheries.uvms.exchange.model.mapper.ExchangeModuleRequestMapper;
 
 @Stateless
@@ -140,11 +139,11 @@ public class PluginServiceBean {
 
     private void sendUpdatedDNIDListToExchange(String pluginName, String settingKey, String settingValue) {
         try {
-            String request = ExchangeModuleRequestMapper.createUpdatePluginSettingRequest(pluginName, settingKey, settingValue);
-            String messageId = exchangeProducer.sendModuleMessage(request);
+            String request = ExchangeModuleRequestMapper.createUpdatePluginSettingRequest(pluginName, settingKey, settingValue, "MobileTerminal (Asset)");
+            String messageId = exchangeProducer.sendModuleMessage(request, ExchangeModuleMethod.UPDATE_PLUGIN_SETTING.value());
             TextMessage response = assetConsumer.getMessage(messageId, TextMessage.class);
             LOG.info("UpdatedDNIDList sent to exchange module {} {}",pluginName,settingKey);
-        } catch (ExchangeModelMarshallException | RuntimeException | MessageException e) {
+        } catch (RuntimeException | MessageException e) {
             LOG.error("Failed to send updated DNID list {} {} {}",pluginName,settingKey,e);
         }
     }

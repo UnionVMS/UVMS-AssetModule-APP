@@ -26,9 +26,8 @@ public class ExchangeProducer extends AbstractProducer {
     @Resource(mappedName = "java:/jms/queue/UVMSAsset")
     private Queue replyToQueue;
     
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public String sendModuleMessage(String text) throws MessageException {
-        return sendModuleMessage(text, replyToQueue);
+    public String sendModuleMessage(String text, String function) throws MessageException {
+        return sendMessageToSpecificQueueWithFunction(text, getDestination(), replyToQueue, function, null);
     }
     
     @Override
