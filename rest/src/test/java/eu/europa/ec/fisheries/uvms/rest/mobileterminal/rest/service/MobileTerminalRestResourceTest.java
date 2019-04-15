@@ -687,7 +687,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .put(Entity.json(created2.getId()), MobileTerminal.class);
 
         Map<UUID, List<MobileTerminal>> mtRevisions = getWebTarget()
-                .path("/mobileterminal/history/asset")
+                .path("/mobileterminal/history/mobileterminal/asset")
                 .path(asset.getId().toString())
                 .request(MediaType.APPLICATION_JSON)
                 .get(new GenericType<Map<UUID, List<MobileTerminal>>>() {
