@@ -40,6 +40,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Stateless
 @LocalBean
@@ -476,10 +477,15 @@ public class MobileTerminalServiceBean {
 
     public Map<UUID, List<MobileTerminal>> getMobileTerminalRevisionsByAssetId(UUID assetId, int maxNbr) {
         Map<UUID, List<MobileTerminal>> revisionMap = new HashMap<>();
-        Asset asset = assetDao.getAssetById(assetId);
-        List<MobileTerminal> mtList = asset.getMobileTerminals();
+        List<Asset> assetRevisions = assetDao.getRevisionsForAsset(assetId);
 
-        mtList.forEach( terminal -> {
+        List<MobileTerminal> mobileTerminals = assetRevisions.stream()
+                .map(Asset::getMobileTerminals)
+                .flatMap(List::stream)
+                .distinct()
+                .collect(Collectors.toList());
+
+        mobileTerminals.forEach( terminal -> {
             List<MobileTerminal> revisions = terminalDao.getMobileTerminalHistoryById(terminal.getId());
             revisions.sort(Comparator.comparing(MobileTerminal::getCreateTime));
             if (revisions.size() > maxNbr) {

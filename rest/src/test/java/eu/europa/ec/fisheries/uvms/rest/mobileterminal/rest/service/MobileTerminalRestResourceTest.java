@@ -672,6 +672,20 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.json(created2.getId()), MobileTerminal.class);
 
+        getWebTarget()
+                .path("/mobileterminal/unassign")
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .queryParam("connectId", asset.getId())
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(created1.getId()), MobileTerminal.class);
+
+        getWebTarget()
+                .path("/mobileterminal/unassign")
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .queryParam("connectId", asset.getId())
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(created2.getId()), MobileTerminal.class);
+
         Map<UUID, List<MobileTerminal>> mtRevisions = getWebTarget()
                 .path("/mobileterminal/history/asset")
                 .path(asset.getId().toString())
@@ -818,6 +832,43 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertEquals(created.getId(), updated.getId());
         assertEquals(created.getId(), updated.getChannels().iterator().next().getMobileTerminal().getId());
         assertEquals(channelId, updated.getChannels().iterator().next().getId());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getMobileTerminalListWithMultipleResultTest() {
+        MobileTerminal mobileTerminal1 = MobileTerminalTestHelper.createBasicMobileTerminal();
+        MobileTerminal mobileTerminal2 = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        MobileTerminal created1 = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminal1), MobileTerminal.class);
+
+        MobileTerminal created2 = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminal2), MobileTerminal.class);
+
+        String serialNr1 = created1.getSerialNo();
+        String serialNr2 = created2.getSerialNo();
+
+        List<String> serialNumberList = Arrays.asList(serialNr1, serialNr2);
+
+        MobileTerminalListQuery mobileTerminalListQuery =
+                MobileTerminalTestHelper.createMobileTerminalListQueryWithMultipleCriteria(serialNumberList);
+
+        MTListResponse response = getWebTarget()
+                .path("/mobileterminal/list")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mobileTerminalListQuery), MTListResponse.class);
+
+        List<MobileTerminal> mtList = response.getMobileTerminalList();
+
+        assertEquals(2, mtList.size());
+
+        assertTrue(mtList.get(0).getSerialNo().equals(serialNr1) || mtList.get(1).getSerialNo().equals(serialNr1));
+        assertTrue(mtList.get(0).getSerialNo().equals(serialNr2) || mtList.get(1).getSerialNo().equals(serialNr2));
     }
 
     private Asset createAndRestBasicAsset() {

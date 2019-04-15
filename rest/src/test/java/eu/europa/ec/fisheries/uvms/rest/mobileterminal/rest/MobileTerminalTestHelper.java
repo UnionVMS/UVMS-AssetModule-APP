@@ -23,6 +23,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import java.time.Duration;
+import java.util.List;
 import java.util.Random;
 
 public class MobileTerminalTestHelper {
@@ -116,5 +117,25 @@ public class MobileTerminalTestHelper {
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(mt), MobileTerminal.class);
+    }
+
+    public static MobileTerminalListQuery createMobileTerminalListQueryWithMultipleCriteria(List<String> serialNumberList) {
+        MobileTerminalListQuery query = new MobileTerminalListQuery();
+        MobileTerminalSearchCriteria criteria = new MobileTerminalSearchCriteria();
+
+        // ListPagination
+        ListPagination pagination = new ListPagination();
+        pagination.setListSize(100);
+        pagination.setPage(1);
+        query.setPagination(pagination);
+
+        serialNumberList.forEach(sn -> {
+            ListCriteria crt = new ListCriteria();
+            crt.setKey(SearchKey.SERIAL_NUMBER);
+            crt.setValue(sn);
+            criteria.getCriterias().add(crt);
+        });
+        query.setMobileTerminalSearchCriteria(criteria);
+        return query;
     }
 }

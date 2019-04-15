@@ -13,7 +13,6 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
@@ -276,7 +275,6 @@ public class Asset implements Serializable {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "asset", cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
-    @NotAudited
     private List<MobileTerminal> mobileTerminals;
 
     @Size(max = 255)
