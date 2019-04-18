@@ -91,6 +91,7 @@ public class AssetServiceBean implements AssetService {
         asset.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         asset.setActive(true);
         asset.setEventCode(EventCode.MOD.value());
+        asset.getMobileTerminals(); // instantiate list
         Asset createdAssetEntity = assetDao.createAsset(asset);
 
         auditService.logAssetCreated(createdAssetEntity, username);
@@ -172,6 +173,7 @@ public class AssetServiceBean implements AssetService {
         asset.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         asset.setEventCode(EventCode.MOD.value());
         asset.setComment(comment);
+        asset.getMobileTerminals(); // instantiate list
         return assetDao.updateAsset(asset);
     }
 
