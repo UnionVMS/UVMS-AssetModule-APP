@@ -52,6 +52,24 @@ public class AssetResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void createAssetCheckHistoryIdTest() {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset created = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+
+        Asset fetched = getWebTarget()
+                .path("asset")
+                .path(created.getId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .get(Asset.class);
+
+        assertEquals(created.getHistoryId(), fetched.getHistoryId());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void createAssetTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTarget()

@@ -274,9 +274,7 @@ public class Asset implements Serializable {
     @Column(name = "prodorgname")
     private String prodOrgName;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "asset", cascade = CascadeType.ALL)
-    @Fetch(FetchMode.SELECT)
-    @NotAudited
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "asset", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     private List<MobileTerminal> mobileTerminals;
 
     @Size(max = 255)
