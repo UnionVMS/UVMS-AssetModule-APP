@@ -9,11 +9,8 @@ import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.util.OffsetDateTimeDeserializer;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
@@ -274,9 +271,7 @@ public class Asset implements Serializable {
     @Column(name = "prodorgname")
     private String prodOrgName;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "asset", cascade = CascadeType.ALL)
-    @Fetch(FetchMode.SELECT)
-    @NotAudited
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "asset", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     private List<MobileTerminal> mobileTerminals;
 
     @Size(max = 255)
