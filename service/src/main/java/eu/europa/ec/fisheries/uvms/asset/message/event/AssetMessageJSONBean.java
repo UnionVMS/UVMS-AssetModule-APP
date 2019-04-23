@@ -38,7 +38,7 @@ public class AssetMessageJSONBean {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         
         AssetBO assetBo = mapper.readValue(message.getText(), AssetBO.class);
-        assetService.upsertAssetBO(assetBo, "UVMS (JMS)");
+        assetService.upsertAssetBO(assetBo, assetBo.getAsset().getUpdatedBy() == null ? "UVMS (JMS)" : assetBo.getAsset().getUpdatedBy());
     }
 
     public void assetInformation(TextMessage message) throws IOException, JMSException {
@@ -49,7 +49,7 @@ public class AssetMessageJSONBean {
 
         List<Asset> assetBos = mapper.readValue(message.getText(), new TypeReference<ArrayList<Asset>>() {});
         for(Asset oneAsset : assetBos){
-            assetService.assetInformation(oneAsset, "UVMS (JMS)");
+            assetService.assetInformation(oneAsset, oneAsset.getUpdatedBy() == null ? "UVMS (JMS)" : oneAsset.getUpdatedBy());
         }
     }
 }
