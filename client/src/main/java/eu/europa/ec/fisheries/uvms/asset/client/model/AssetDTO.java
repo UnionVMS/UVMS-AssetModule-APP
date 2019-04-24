@@ -79,7 +79,7 @@ public class AssetDTO {
     private String updatedBy;
     private String prodOrgCode;
     private String prodOrgName;
-    
+
     public UUID getId() {
         return id;
     }

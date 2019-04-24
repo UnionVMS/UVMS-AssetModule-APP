@@ -10,6 +10,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
@@ -26,6 +28,7 @@ import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
@@ -56,7 +59,7 @@ public class InternalResource {
 
     @Inject
     private AssetService assetService;
-    
+
     @Inject
     private AssetGroupService assetGroupService;
 
@@ -69,7 +72,10 @@ public class InternalResource {
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
     private ObjectMapper objectMapper(){
         ObjectMapperContextResolver omcr = new ObjectMapperContextResolver();
-        return omcr.getContext(Asset.class);
+        ObjectMapper objectMapper = omcr.getContext(InternalResource.class);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .findAndRegisterModules();
+        return objectMapper;
     }
 
     @GET
@@ -80,7 +86,7 @@ public class InternalResource {
         Asset asset = assetService.getAssetById(assetId, id);
         return Response.ok(asset).build();
     }
-    
+
     @POST
     @Path("query")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -90,11 +96,17 @@ public class InternalResource {
                                  @DefaultValue("true") @QueryParam("dynamic") boolean dynamic,
                                  @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
                                  AssetQuery query) {
-        List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
-        AssetListResponse assetList = assetService.getAssetList(searchFields, page, size, dynamic, includeInactivated);
-        return Response.ok(assetList).build();
+        try {
+            List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
+            AssetListResponse assetList = assetService.getAssetList(searchFields, page, size, dynamic, includeInactivated);
+            String returnString = objectMapper().writeValueAsString(assetList);
+            return Response.ok(returnString).build();
+        } catch (JsonProcessingException e) {
+            LOG.error("Error when getting getAssetList", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+        }
     }
-    
+
     @GET
     @Path("group/user/{user}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -102,7 +114,7 @@ public class InternalResource {
         List<AssetGroup> assetGroups = assetGroupService.getAssetGroupList(user);
         return Response.ok(assetGroups).build();
     }
-    
+
     @GET
     @Path("group/asset/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -110,7 +122,7 @@ public class InternalResource {
         List<AssetGroup> assetGroups = assetGroupService.getAssetGroupListByAssetId(assetId);
         return Response.ok(assetGroups).build();
     }
-    
+
     @POST
     @Path("group/asset")
     @Produces(MediaType.APPLICATION_JSON)
@@ -121,7 +133,7 @@ public class InternalResource {
         List<Asset> assets = assetService.getAssetListByAssetGroups(assetGroups);
         return Response.ok(assets).build();
     }
-    
+
     @GET
     @Path("/history/asset/{id}")
     @Produces(MediaType.APPLICATION_JSON)

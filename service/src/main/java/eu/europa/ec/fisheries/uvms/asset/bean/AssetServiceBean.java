@@ -83,10 +83,8 @@ public class AssetServiceBean implements AssetService {
     @PersistenceContext
     private EntityManager em;
 
-
     @Override
     public Asset createAsset(Asset asset, String username) {
-
         asset.setUpdatedBy(username);
         asset.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         asset.setActive(true);
@@ -116,7 +114,12 @@ public class AssetServiceBean implements AssetService {
         }
 
         List<Asset> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, searchFields, dynamic, includeInactivated);
-
+        // force to load children. FetchType.EAGER didn't work.
+        assetEntityList.forEach(asset -> {
+            if(asset.getMobileTerminals() != null) {
+                asset.getMobileTerminals().size();
+            }
+        });
         AssetListResponse listAssetResponse = new AssetListResponse();
         listAssetResponse.setCurrentPage(page);
         listAssetResponse.setTotalNumberOfPages(numberOfPages);
@@ -266,7 +269,10 @@ public class AssetServiceBean implements AssetService {
                 throw new IllegalArgumentException("Not a valid UUID");
             }
         }
-        return assetDao.getAssetFromAssetIdAtDate(idType, idValue, date);
+        Asset asset = assetDao.getAssetFromAssetIdAtDate(idType, idValue, date);
+        if(asset != null && asset.getMobileTerminals() != null)
+            asset.getMobileTerminals().size(); // force to load children. FetchType.EAGER didn't work.
+        return asset;
     }
 
     @Override
@@ -315,12 +321,20 @@ public class AssetServiceBean implements AssetService {
 
     @Override
     public Asset getAssetRevisionForRevisionId(UUID historyId) {
-        return assetDao.getAssetRevisionForHistoryId(historyId);
+        Asset revision = assetDao.getAssetRevisionForHistoryId(historyId);
+        if(revision.getMobileTerminals() != null)
+            revision.getMobileTerminals().size(); // force to load children. FetchType.EAGER didn't work.
+        return revision;
     }
 
     @Override
     public List<Asset> getRevisionsForAssetLimited(UUID id, Integer maxNbr) {
         List<Asset> revisions = assetDao.getRevisionsForAsset(id);
+        // force to load children. FetchType.EAGER didn't work.
+        revisions.forEach(asset -> {
+            if(asset.getMobileTerminals() != null)
+                asset.getMobileTerminals().size();
+        });
         revisions.sort(Comparator.comparing(Asset::getUpdateTime));
         if (revisions.size() > maxNbr) {
             return revisions.subList(0, maxNbr);
