@@ -250,7 +250,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .path("asset")
                 .path("unarchive")
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(archivedAsset), Asset.class);
+                .put(Entity.json(archivedAsset.getId()), Asset.class);
 
         assertNotNull(unarchivedAsset);
         assertThat(unarchivedAsset.getActive() , is(true));

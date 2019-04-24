@@ -263,17 +263,17 @@ public class AssetResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response unarchiveAsset(@ApiParam(value="The asset to update", required=true)  final Asset asset,
+    public Response unarchiveAsset(@ApiParam(value="The asset to update", required=true)  final UUID assetId,
                                  @ApiParam(value="Unarchive comment", required=true)
                                  @QueryParam("comment") String comment) {
         try {
             String remoteUser = servletRequest.getRemoteUser();
-            Asset unarchivedAsset = assetService.unarchiveAsset(asset, remoteUser, comment);
+            Asset unarchivedAsset = assetService.unarchiveAsset(assetId, remoteUser, comment);
             //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
             String returnString = objectMapper().writeValueAsString(unarchivedAsset);
             return Response.ok(returnString).build();
         } catch (Exception e) {
-            LOG.error("Error when unarchiving asset. {}",asset, e);
+            LOG.error("Error when unarchiving Asset with ID: {}", assetId, e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
