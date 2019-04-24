@@ -19,6 +19,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class PollProgramDaoBean {
 
     public List<PollProgram> getPollProgramRunningAndStarted()  {
         TypedQuery<PollProgram> query = em.createNamedQuery(MobileTerminalConstants.POLL_PROGRAM_FIND_RUNNING_AND_STARTED, PollProgram.class);
-        query.setParameter("currentDate", OffsetDateTime.now(ZoneOffset.UTC)/*.toString()*/);
+        query.setParameter("currentDate", OffsetDateTime.now(ZoneOffset.UTC));
         List<PollProgram> pollPrograms = query.getResultList();
         List<PollProgram> validPollPrograms = new ArrayList<>();
 
@@ -68,7 +69,7 @@ public class PollProgramDaoBean {
             boolean createPoll = lastRun == null || nowEpoch >= lastRunEpoch + frequency;
 
             if (createPoll) {
-                pollProgram.setLatestRun(now);
+                pollProgram.setLatestRun((lastRunEpoch == 0) ? pollProgram.getStartDate() : Instant.ofEpochSecond(lastRunEpoch + frequency).atOffset(ZoneOffset.UTC));
                 validPollPrograms.add(pollProgram);
             }
         }
