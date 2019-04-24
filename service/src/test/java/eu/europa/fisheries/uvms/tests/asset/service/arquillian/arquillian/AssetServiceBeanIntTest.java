@@ -213,7 +213,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Asset assetByCfr = assetService.getAssetById(AssetIdentifier.CFR, createdAsset.getCfr());
         assertNull(assetByCfr);
 
-        Asset unarchived = assetService.unarchiveAsset(archived, "test", "archived");
+        Asset unarchived = assetService.unarchiveAsset(archived.getId(), "test", "archived");
         assertTrue(unarchived.getActive());
         Asset assetByCfr2 = assetService.getAssetById(AssetIdentifier.CFR, createdAsset.getCfr());
         assertNotNull(assetByCfr2);

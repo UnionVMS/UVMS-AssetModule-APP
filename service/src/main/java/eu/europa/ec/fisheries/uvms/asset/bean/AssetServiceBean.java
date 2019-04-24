@@ -156,7 +156,8 @@ public class AssetServiceBean implements AssetService {
     }
 
     @Override
-    public Asset unarchiveAsset(Asset asset, String username, String comment) {
+    public Asset unarchiveAsset(UUID assetId, String username, String comment) {
+        Asset asset = assetDao.getAssetById(assetId);
         asset.setActive(true);
         Asset unarchivedAsset = updateAssetInternal(asset, username, comment);
         auditService.logAssetUnarchived(unarchivedAsset, comment, username);

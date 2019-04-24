@@ -82,12 +82,12 @@ public interface AssetService {
     Asset archiveAsset(Asset asset, String username, String comment);
 
     /**
-     * @param asset    @description an asset
+     * @param assetId    @description an asset
      * @param username @description user that performs action
      * @param comment  @description comment , reason of action
      * @return Asset @description
      */
-    Asset unarchiveAsset(Asset asset, String username, String comment);
+    Asset unarchiveAsset(UUID assetId, String username, String comment);
 
     /**
      * @param asset    @description an asset
