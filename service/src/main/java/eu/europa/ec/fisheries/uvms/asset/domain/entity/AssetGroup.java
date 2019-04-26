@@ -36,7 +36,7 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.*;
 	@NamedQuery(name=GROUP_ASSET_BY_GUID, query="SELECT a FROM AssetGroup a WHERE a.id = :guid"),
 	@NamedQuery(name=GROUP_ASSET_BY_GUID_LIST, query="SELECT a FROM AssetGroup a WHERE a.archived = false AND a.id IN :guidList")
 })
-@JsonIdentityInfo(generator= ObjectIdGenerators.UUIDGenerator.class)
+@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class AssetGroup implements Serializable {
 
     public static final String GROUP_ASSET_FIND_ALL = "AssetGroup.findAll";

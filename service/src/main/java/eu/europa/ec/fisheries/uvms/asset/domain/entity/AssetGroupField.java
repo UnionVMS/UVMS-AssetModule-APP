@@ -33,7 +33,7 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField.*;
 		@NamedQuery(name=ASSETGROUP_FIELD_CLEAR, query="DELETE  FROM AssetGroupField a where a.assetGroup=:assetgroup"),
 		@NamedQuery(name=ASSETGROUP_RETRIEVE_FIELDS_FOR_GROUP, query="SELECT a  FROM AssetGroupField a where a.assetGroup=:assetgroup"),
 })
-@JsonIdentityInfo(generator= ObjectIdGenerators.UUIDGenerator.class)
+@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class AssetGroupField implements Serializable {
 
     public static final String ASSETGROUP_FIELD_CLEAR = "Assetgroupfield.clear";

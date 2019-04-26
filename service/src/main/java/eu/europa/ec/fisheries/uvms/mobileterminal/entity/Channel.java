@@ -54,7 +54,7 @@ import java.util.UUID;
 		uniqueConstraints = {@UniqueConstraint(name = "channel_uc_historyid" , columnNames = "historyid"),
 							 @UniqueConstraint(name = "channel_uc_dnid_member_number" , columnNames = {"dnid", "member_number"})})
 @Audited
-@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class)
+//@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Channel implements Serializable {
 	private static final long serialVersionUID = 1L;
 

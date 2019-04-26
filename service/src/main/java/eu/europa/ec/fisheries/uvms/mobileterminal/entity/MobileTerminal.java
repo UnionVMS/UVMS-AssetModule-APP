@@ -59,7 +59,7 @@ import java.util.UUID;
             query="SELECT DISTINCT m FROM MobileTerminal m LEFT OUTER JOIN Channel c ON m.id = c.mobileTerminal.id " +
                     "WHERE m.archived = false AND c.archived = false AND c.DNID = :dnid AND c.memberNumber = :memberNumber AND m.mobileTerminalType = :mobileTerminalType")
 })
-@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class/*, property="id"*/)
+//@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = MobileTerminal.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MobileTerminal implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -131,6 +131,7 @@ public class MobileTerminal implements Serializable {
 	@Column(name = "software_version")
 	private String softwareVersion;
 
+	@JsonIgnoreProperties(value = {"mobileTerminal"}, allowSetters = true)
 	@OneToMany(mappedBy = "mobileTerminal", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Channel> channels;
 
