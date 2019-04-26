@@ -35,7 +35,7 @@ import java.util.UUID;
 @NamedQueries({
 	@NamedQuery(name = "PluginCapability.findAll", query = "SELECT p FROM MobileTerminalPluginCapability p"),
 })
-@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class/*, property="id"*/)
+@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class MobileTerminalPluginCapability implements Serializable {
     private static final long serialVersionUID = 1L;
 

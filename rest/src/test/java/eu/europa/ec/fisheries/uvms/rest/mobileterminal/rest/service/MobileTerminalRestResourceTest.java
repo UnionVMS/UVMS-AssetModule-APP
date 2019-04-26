@@ -816,7 +816,6 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         assertNotNull(updated);
         assertEquals(created.getId(), updated.getId());
-        assertEquals(created.getId(), updated.getChannels().iterator().next().getMobileTerminal().getId());
         assertEquals(channelId, updated.getChannels().iterator().next().getId());
     }
 

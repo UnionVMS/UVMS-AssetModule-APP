@@ -1,8 +1,6 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
@@ -49,7 +47,6 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.*;
           @NamedQuery(name = ASSET_FIND_BY_IDS, query = "SELECT v FROM Asset v WHERE v.id in :idList AND v.active = true"),
           @NamedQuery(name = ASSET_FIND_BY_ALL_IDENTIFIERS, query = "SELECT v FROM Asset v WHERE (v.cfr = :cfr OR v.ircs = :ircs OR v.imo = :imo OR v.mmsi = :mmsi OR v.iccat = :iccat OR v.uvi = :uvi OR v.gfcm = :gfcm) AND v.active = true"),
 })
-@JsonIdentityInfo(generator=ObjectIdGenerators.UUIDGenerator.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Asset implements Serializable {
 
@@ -271,7 +268,8 @@ public class Asset implements Serializable {
     @Column(name = "prodorgname")
     private String prodOrgName;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "asset", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @JsonIgnoreProperties(value = {"asset"}, allowSetters = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "asset", cascade = {CascadeType.REFRESH})
     private List<MobileTerminal> mobileTerminals;
 
     @Size(max = 255)
