@@ -17,7 +17,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
@@ -541,6 +540,87 @@ public class AssetResourceTest extends AbstractAssetRestTest {
 
         assertNotNull(createdNote);
         assertThat(createdNote.getNotes(), is(note.getNotes()));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetHistory_ThenVerifyItHoldsMobileTerminalHistory() {
+
+        // Create Asset
+        Asset asset = AssetHelper.createBasicAsset();
+        String cfr = asset.getCfr();
+        Asset createdAsset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+
+        // Create MobileTerminal
+        MobileTerminal terminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        MobileTerminal createdMT = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(terminal), MobileTerminal.class);
+
+        // Assign MobileTerminal
+        MobileTerminal assignedMT = getWebTarget()
+                .path("mobileterminal")
+                .path("assign")
+                .queryParam("comment", "assign")
+                .queryParam("connectId", createdAsset.getId())
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(createdMT.getId()), MobileTerminal.class);
+
+        // Verify Updated Asset holds correct MobileTerminal history
+        OffsetDateTime firstTimeStamp = OffsetDateTime.now(ZoneOffset.UTC);
+        Asset assetHistory1 = getWebTarget()
+                .path("asset")
+                .path("history")
+                .path("cfr")
+                .path(cfr)
+                .path(firstTimeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+                .request(MediaType.APPLICATION_JSON)
+                .get(Asset.class);
+
+        List<MobileTerminal> mtList = assetHistory1.getMobileTerminals();
+        assertEquals(1, mtList.size());
+
+        MobileTerminal mt1 = mtList.get(0);
+        assertEquals("A", mt1.getAntenna());
+        assertEquals("assign", mt1.getComment());
+
+        // Update MobileTerminal
+        assignedMT.setAntenna("New Improved Antenna");
+        getWebTarget()
+                .path("mobileterminal")
+                .queryParam("comment", "New Comment")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(assignedMT), MobileTerminal.class);
+
+        String newCfr = "CRF123456789";
+        // Update Asset
+        OffsetDateTime secondTimeStamp = OffsetDateTime.now(ZoneOffset.UTC);
+        createdAsset.setCfr(newCfr);
+        getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(createdAsset), Asset.class);
+
+        // Verify Updated Asset holds correct MobileTerminal history
+        Asset assetHistory2 = getWebTarget()
+                .path("asset")
+                .path("history")
+                .path("cfr")
+                .path(newCfr)
+                .path(secondTimeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+                .request(MediaType.APPLICATION_JSON)
+                .get(Asset.class);
+
+        List<MobileTerminal> mobileTerminals = assetHistory2.getMobileTerminals();
+        assertEquals(1, mobileTerminals.size());
+
+        MobileTerminal mt2 = mobileTerminals.get(0);
+        assertEquals("New Improved Antenna", mt2.getAntenna());
+        assertEquals("New Comment", mt2.getComment());
     }
 
     @Test
