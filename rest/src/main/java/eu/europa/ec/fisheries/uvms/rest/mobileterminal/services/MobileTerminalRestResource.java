@@ -246,7 +246,7 @@ public class MobileTerminalRestResource {
     public Response getMobileTerminalHistoryByAssetId(@PathParam("assetId") UUID assetId, @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
         LOG.info("Get mobile terminal history by asset id invoked in rest layer.");
         try {
-            Map<UUID, List<MobileTerminal>> mobileTerminalRevisionMap = mobileTerminalService.getMobileTerminalRevisionsByAssetId(assetId, maxNbr);
+            List<Map<UUID, List<MobileTerminal>>> mobileTerminalRevisionMap = mobileTerminalService.getMobileTerminalRevisionsByAssetId(assetId, maxNbr);
             String returnString = objectMapper().writeValueAsString(mobileTerminalRevisionMap);
             return Response.ok(returnString).build();
         } catch (Exception ex) {

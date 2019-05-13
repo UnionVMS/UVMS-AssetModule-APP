@@ -476,7 +476,8 @@ public class MobileTerminalServiceBean {
         });
     }
 
-    public Map<UUID, List<MobileTerminal>> getMobileTerminalRevisionsByAssetId(UUID assetId, int maxNbr) {
+    public List<Map<UUID, List<MobileTerminal>>> getMobileTerminalRevisionsByAssetId(UUID assetId, int maxNbr) {
+        List<Map<UUID, List<MobileTerminal>>> revisionList = new ArrayList<>();
         Map<UUID, List<MobileTerminal>> revisionMap = new HashMap<>();
         Asset asset = assetDao.getAssetById(assetId);
         List<MobileTerminal> mtList = asset.getMobileTerminals();
@@ -489,6 +490,7 @@ public class MobileTerminalServiceBean {
             }
             revisionMap.put(terminal.getId(), revisions);
         });
-        return revisionMap;
+        revisionList.add(revisionMap);
+        return revisionList;
     }
 }
