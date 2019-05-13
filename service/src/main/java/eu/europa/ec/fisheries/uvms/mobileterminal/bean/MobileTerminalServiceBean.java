@@ -482,7 +482,7 @@ public class MobileTerminalServiceBean {
         Map<UUID, List<MobileTerminal>> revisionMap = new HashMap<>();
         List<MobileTerminal> mtList = terminalDao.getMobileTerminalRevisionByAssetId(assetId);
 
-       mtList.forEach(terminal -> {
+        mtList.forEach(terminal -> {
             List<MobileTerminal> revisions = terminalDao.getMobileTerminalRevisionById(terminal.getId());
             revisions.sort(Comparator.comparing(MobileTerminal::getCreateTime));
             if (revisions.size() > maxNbr) {
@@ -498,11 +498,9 @@ public class MobileTerminalServiceBean {
     public List<Asset> getAssetRevisionsByMobileTerminalId(UUID mobileTerminalId) {
         List<MobileTerminal> mtRevisions = terminalDao.getMobileTerminalRevisionById(mobileTerminalId);
 
-        List<Asset> assetRevisions = mtRevisions.stream()
+        return mtRevisions.stream()
                 .filter(mt -> mt.getAsset() != null)
                 .map(MobileTerminal::getAsset)
                 .collect(Collectors.toList());
-
-        return assetRevisions;
     }
 }

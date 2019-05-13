@@ -692,12 +692,12 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     @Test
     @OperateOnDeployment("normal")
     public void getAssetRevisionsByMobileTerminalId() {
-        MobileTerminal mt1 = MobileTerminalTestHelper.createBasicMobileTerminal();
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
-        MobileTerminal createdMT = getWebTarget()
+        mobileTerminal = getWebTarget()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(mt1), MobileTerminal.class);
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
 
         Asset asset1 = createAndRestBasicAsset();
         Asset asset2 = createAndRestBasicAsset();
@@ -707,25 +707,25 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .queryParam("comment", "NEW_TEST_COMMENT")
                 .queryParam("connectId", asset1.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(createdMT.getId()));
+                .put(Entity.json(mobileTerminal.getId()));
 
         getWebTarget()
                 .path("/mobileterminal/unassign")
                 .queryParam("comment", "NEW_TEST_COMMENT")
                 .queryParam("connectId", asset1.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(createdMT.getId()));
+                .put(Entity.json(mobileTerminal.getId()));
 
         getWebTarget()
                 .path("/mobileterminal/assign")
                 .queryParam("comment", "NEW_TEST_COMMENT")
                 .queryParam("connectId", asset2.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(createdMT.getId()));
+                .put(Entity.json(mobileTerminal.getId()));
 
         List<Asset> assetRevisions = getWebTarget()
                 .path("/mobileterminal/history/mobileterminal")
-                .path(createdMT.getId().toString())
+                .path(mobileTerminal.getId().toString())
                 .request(MediaType.APPLICATION_JSON)
                 .get(new GenericType<List<Asset>>() {});
 
