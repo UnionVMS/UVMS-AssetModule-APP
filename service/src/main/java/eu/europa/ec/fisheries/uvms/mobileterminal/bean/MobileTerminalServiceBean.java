@@ -482,15 +482,15 @@ public class MobileTerminalServiceBean {
         Asset asset = assetDao.getAssetById(assetId);
         List<MobileTerminal> mtList = asset.getMobileTerminals();
 
-        mtList.forEach( terminal -> {
+       mtList.forEach(terminal -> {
             List<MobileTerminal> revisions = terminalDao.getMobileTerminalHistoryById(terminal.getId());
             revisions.sort(Comparator.comparing(MobileTerminal::getCreateTime));
             if (revisions.size() > maxNbr) {
                 revisions = revisions.subList(0, maxNbr);
             }
             revisionMap.put(terminal.getId(), revisions);
+            revisionList.add(revisionMap);
         });
-        revisionList.add(revisionMap);
         return revisionList;
     }
 }
