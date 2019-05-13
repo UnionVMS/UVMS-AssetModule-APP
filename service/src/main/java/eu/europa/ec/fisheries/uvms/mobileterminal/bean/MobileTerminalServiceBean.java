@@ -39,6 +39,8 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 @Stateless
@@ -339,8 +341,8 @@ public class MobileTerminalServiceBean {
             throw new IllegalArgumentException("Terminal " + mobileTerminalId + " is already linked to an asset with guid " + connectId);
         }
         asset.getMobileTerminals().add(terminal);
-        Asset assetWithMT = assetDao.updateAsset(asset);
-        terminal.setAsset(assetWithMT);
+        asset.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        terminal.setAsset(asset);
         terminal.setUpdateuser(username);
         terminal.setComment(comment);
         terminal = terminalDao.updateMobileTerminal(terminal);
@@ -362,7 +364,7 @@ public class MobileTerminalServiceBean {
         if(!remove) {
             throw new IllegalArgumentException("Terminal " + guid + " is not linked to an asset with ID " + asset.getId());
         }
-        assetDao.updateAsset(asset);
+        asset.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         terminal.setAsset(null);
         terminal.setComment(comment);
         return terminalDao.updateMobileTerminal(terminal);
