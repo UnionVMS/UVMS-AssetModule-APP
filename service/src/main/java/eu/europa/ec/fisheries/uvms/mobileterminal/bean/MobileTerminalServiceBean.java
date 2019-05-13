@@ -250,7 +250,7 @@ public class MobileTerminalServiceBean {
     }
 
     public List<MobileTerminal> getMobileTerminalRevisions(UUID mobileTerminalId, int maxNbr) {
-        List<MobileTerminal> revisions = terminalDao.getMobileTerminalHistoryById(mobileTerminalId);
+        List<MobileTerminal> revisions = terminalDao.getMobileTerminalRevisionById(mobileTerminalId);
         revisions.sort(Comparator.comparing(MobileTerminal::getCreateTime));
         if (revisions.size() > maxNbr) {
             return revisions.subList(0, maxNbr);
@@ -479,11 +479,10 @@ public class MobileTerminalServiceBean {
     public List<Map<UUID, List<MobileTerminal>>> getMobileTerminalRevisionsByAssetId(UUID assetId, int maxNbr) {
         List<Map<UUID, List<MobileTerminal>>> revisionList = new ArrayList<>();
         Map<UUID, List<MobileTerminal>> revisionMap = new HashMap<>();
-        Asset asset = assetDao.getAssetById(assetId);
-        List<MobileTerminal> mtList = asset.getMobileTerminals();
+        List<MobileTerminal> mtList = terminalDao.getMobileTerminalRevisionByAssetId(assetId);
 
        mtList.forEach(terminal -> {
-            List<MobileTerminal> revisions = terminalDao.getMobileTerminalHistoryById(terminal.getId());
+            List<MobileTerminal> revisions = terminalDao.getMobileTerminalRevisionById(terminal.getId());
             revisions.sort(Comparator.comparing(MobileTerminal::getCreateTime));
             if (revisions.size() > maxNbr) {
                 revisions = revisions.subList(0, maxNbr);

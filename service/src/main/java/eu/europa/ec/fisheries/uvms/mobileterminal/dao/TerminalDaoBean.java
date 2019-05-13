@@ -82,22 +82,29 @@ public class TerminalDaoBean {
     }
 
     @SuppressWarnings("unchecked")
-    public List<MobileTerminal> getMobileTerminalRevisionForHistoryId(UUID historyId) {
+    public List<MobileTerminal> getMobileTerminalRevisionByHistoryId(UUID historyId) {
         AuditReader auditReader = AuditReaderFactory.get(em);
         AuditQuery query = auditReader.createQuery().forRevisionsOfEntity(MobileTerminal.class, true, true);
         return query.add(AuditEntity.property("historyId").eq(historyId)).getResultList();
     }
 
-    public List<MobileTerminal> getMobileTerminalHistoryById(UUID id) {
+    public List<MobileTerminal> getMobileTerminalRevisionById(UUID mobileTerminalId) {
         AuditReader auditReader = AuditReaderFactory.get(em);
         List<MobileTerminal> resultList = new ArrayList<>();
 
-        List<Number> revisionNumbers = auditReader.getRevisions(MobileTerminal.class, id);
+        List<Number> revisionNumbers = auditReader.getRevisions(MobileTerminal.class, mobileTerminalId);
         for (Number rev : revisionNumbers) {
-            MobileTerminal audited = auditReader.find(MobileTerminal.class, id, rev);
+            MobileTerminal audited = auditReader.find(MobileTerminal.class, mobileTerminalId, rev);
             resultList.add(audited);
         }
         return resultList;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<MobileTerminal> getMobileTerminalRevisionByAssetId(UUID assetId) {
+        AuditReader auditReader = AuditReaderFactory.get(em);
+        AuditQuery query = auditReader.createQuery().forRevisionsOfEntity(MobileTerminal.class, true, true);
+        return query.add(AuditEntity.property("asset_id").eq(assetId)).getResultList();
     }
 
     public MobileTerminal getMobileTerminalByRequest(AssetMTEnrichmentRequest request) {
