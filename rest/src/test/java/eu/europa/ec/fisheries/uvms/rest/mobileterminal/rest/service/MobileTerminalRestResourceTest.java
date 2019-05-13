@@ -691,6 +691,49 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void getAssetRevisionsByMobileTerminalId() {
+        MobileTerminal mt1 = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        MobileTerminal createdMT = getWebTarget()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(mt1), MobileTerminal.class);
+
+        Asset asset1 = createAndRestBasicAsset();
+        Asset asset2 = createAndRestBasicAsset();
+
+        getWebTarget()
+                .path("/mobileterminal/assign")
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .queryParam("connectId", asset1.getId())
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(createdMT.getId()));
+
+        getWebTarget()
+                .path("/mobileterminal/unassign")
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .queryParam("connectId", asset1.getId())
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(createdMT.getId()));
+
+        getWebTarget()
+                .path("/mobileterminal/assign")
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .queryParam("connectId", asset2.getId())
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(createdMT.getId()));
+
+        List<Asset> assetRevisions = getWebTarget()
+                .path("/mobileterminal/history/mobileterminal")
+                .path(createdMT.getId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .get(new GenericType<List<Asset>>() {});
+
+        assertEquals(2, assetRevisions.size());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void getMobileTerminalList_ArchivedMobileTerminalsIncluded() {
 
         MobileTerminal prePersist = MobileTerminalTestHelper.createBasicMobileTerminal();
