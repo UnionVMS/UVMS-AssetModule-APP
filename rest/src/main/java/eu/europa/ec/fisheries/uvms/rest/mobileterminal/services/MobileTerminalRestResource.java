@@ -11,7 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.services;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
@@ -108,7 +107,6 @@ public class MobileTerminalRestResource {
         try {
             terminal.setSource(TerminalSourceEnum.INTERNAL);
             mobileTerminalService.assertTerminalHasSerialNumber(terminal);
-            MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(terminal.getPlugin().getPluginServiceName());
 
             MobileTerminal mobileTerminal = mobileTerminalService.updateMobileTerminal(terminal, comment, request.getRemoteUser());
             String returnString = objectMapper().writeValueAsString(mobileTerminal);
@@ -141,7 +139,6 @@ public class MobileTerminalRestResource {
         try {
             MobileTerminal mobileTerminal = mobileTerminalService.assignMobileTerminal(
                     query.getConnectId(), query.getMobileTerminalId(), query.getComment(), request.getRemoteUser());
-            objectMapper().enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES);
             String returnString = objectMapper().writeValueAsString(mobileTerminal);
             return Response.ok(returnString).build();
         } catch (Exception ex) {
