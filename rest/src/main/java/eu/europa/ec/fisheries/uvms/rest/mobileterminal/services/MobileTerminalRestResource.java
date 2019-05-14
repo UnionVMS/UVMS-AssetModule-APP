@@ -13,6 +13,7 @@ package eu.europa.ec.fisheries.uvms.rest.mobileterminal.services;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
@@ -243,8 +244,9 @@ public class MobileTerminalRestResource {
     @GET
     @Path("/history/asset/{assetId}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getMobileTerminalHistoryByAssetId(@PathParam("assetId") UUID assetId, @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
-        LOG.info("Get mobile terminal history by asset id invoked in rest layer.");
+    public Response getMobileTerminalHistoryByAssetId(@PathParam("assetId") UUID assetId,
+                                                      @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
+
         try {
             List<Map<UUID, List<MobileTerminal>>> mobileTerminalRevisionMap = mobileTerminalService.getMobileTerminalRevisionsByAssetId(assetId, maxNbr);
             String returnString = objectMapper().writeValueAsString(mobileTerminalRevisionMap);
@@ -253,6 +255,23 @@ public class MobileTerminalRestResource {
             LOG.error("[ Error when getting mobile terminal history by assetId ] {}", ex);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
+    }
+
+
+
+    @GET
+    @Path("/history/mobileterminal/{mobileTerminalId}")
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public Response getAssetRevisionByMobileTerminalId(@PathParam("mobileTerminalId") UUID mobileTerminalId,
+                                                       @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
+    try{
+        List<Asset> assetRevisions = mobileTerminalService.getAssetRevisionsByMobileTerminalId(mobileTerminalId);
+        String returnString = objectMapper().writeValueAsString(assetRevisions);
+        return Response.ok(returnString).build();
+    } catch (Exception ex) {
+        LOG.error("[ Error when getting Asset history by mobileTerminalId ] {}", ex);
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
+    }
     }
 
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active

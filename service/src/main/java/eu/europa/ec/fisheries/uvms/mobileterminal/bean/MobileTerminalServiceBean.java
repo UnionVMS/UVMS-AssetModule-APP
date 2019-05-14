@@ -42,6 +42,7 @@ import javax.ws.rs.NotFoundException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Stateless
 @LocalBean
@@ -481,7 +482,7 @@ public class MobileTerminalServiceBean {
         Map<UUID, List<MobileTerminal>> revisionMap = new HashMap<>();
         List<MobileTerminal> mtList = terminalDao.getMobileTerminalRevisionByAssetId(assetId);
 
-       mtList.forEach(terminal -> {
+        mtList.forEach(terminal -> {
             List<MobileTerminal> revisions = terminalDao.getMobileTerminalRevisionById(terminal.getId());
             revisions.sort(Comparator.comparing(MobileTerminal::getCreateTime));
             if (revisions.size() > maxNbr) {
@@ -491,5 +492,15 @@ public class MobileTerminalServiceBean {
             revisionList.add(revisionMap);
         });
         return revisionList;
+    }
+
+
+    public List<Asset> getAssetRevisionsByMobileTerminalId(UUID mobileTerminalId) {
+        List<MobileTerminal> mtRevisions = terminalDao.getMobileTerminalRevisionById(mobileTerminalId);
+
+        return mtRevisions.stream()
+                .filter(mt -> mt.getAsset() != null)
+                .map(MobileTerminal::getAsset)
+                .collect(Collectors.toList());
     }
 }
