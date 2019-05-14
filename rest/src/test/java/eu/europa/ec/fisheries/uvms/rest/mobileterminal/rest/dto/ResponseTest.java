@@ -64,9 +64,9 @@ public class ResponseTest {
     @Test
     @OperateOnDeployment("normal")
     public void testGetMobileTerminalList() {
-        doReturn(MOBILE_TERMINAL_LIST_RESPONSE).when(mobileTerminalServiceBean).getMobileTerminalList(null, false);
-        Response result = mobileTerminalRestResource.getMobileTerminalList(null, false);
-        Mockito.verify(mobileTerminalServiceBean).getMobileTerminalList(null, false);
+        doReturn(MOBILE_TERMINAL_LIST_RESPONSE).when(mobileTerminalServiceBean).getMobileTerminalList(null);
+        Response result = mobileTerminalRestResource.getMobileTerminalList(null);
+        Mockito.verify(mobileTerminalServiceBean).getMobileTerminalList(null);
         assertEquals(Response.Status.OK.getStatusCode(), result.getStatus());
     }
 

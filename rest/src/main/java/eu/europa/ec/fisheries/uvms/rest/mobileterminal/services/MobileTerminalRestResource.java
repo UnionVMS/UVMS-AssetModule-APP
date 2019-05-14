@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.services;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
@@ -18,6 +19,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MobileTerminalListQuery;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MobileTerminalRestQuery;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalStatus;
@@ -120,11 +122,10 @@ public class MobileTerminalRestResource {
     @POST
     @Path("/list")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getMobileTerminalList(MobileTerminalListQuery query,
-                                          @DefaultValue("false") @QueryParam("includeArchived") boolean includeArchived) {
+    public Response getMobileTerminalList(MobileTerminalListQuery query) {
         LOG.info("Get mobile terminal list invoked in rest layer.");
         try {
-            MTListResponse mobileTerminalList = mobileTerminalService.getMobileTerminalList(query, includeArchived);
+            MTListResponse mobileTerminalList = mobileTerminalService.getMobileTerminalList(query);
             return Response.ok(mobileTerminalList).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting mobile terminal list ] {}", ex);
@@ -135,12 +136,12 @@ public class MobileTerminalRestResource {
     @PUT
     @Path("/assign")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
-    public Response assignMobileTerminal(@QueryParam("comment") String comment,
-                                         @QueryParam("connectId") UUID connectId,
-                                         UUID mobileTerminalId) {
+    public Response assignMobileTerminal(MobileTerminalRestQuery query) {
         LOG.info("Assign mobile terminal invoked in rest layer.");
         try {
-            MobileTerminal mobileTerminal = mobileTerminalService.assignMobileTerminal(connectId, mobileTerminalId, comment, request.getRemoteUser());
+            MobileTerminal mobileTerminal = mobileTerminalService.assignMobileTerminal(
+                    query.getConnectId(), query.getMobileTerminalId(), query.getComment(), request.getRemoteUser());
+            objectMapper().enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES);
             String returnString = objectMapper().writeValueAsString(mobileTerminal);
             return Response.ok(returnString).build();
         } catch (Exception ex) {
@@ -152,12 +153,11 @@ public class MobileTerminalRestResource {
     @PUT
     @Path("/unassign")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
-    public Response unAssignMobileTerminal(@QueryParam("comment") String comment,
-                                           @QueryParam("connectId") UUID connectId,
-                                           UUID guid) {
+    public Response unAssignMobileTerminal(MobileTerminalRestQuery query) {
         LOG.info("Unassign mobile terminal invoked in rest layer.");
         try {
-            MobileTerminal mobileTerminal = mobileTerminalService.unAssignMobileTerminal(connectId, guid, comment, request.getRemoteUser());
+            MobileTerminal mobileTerminal = mobileTerminalService.unAssignMobileTerminal(
+                    query.getConnectId(), query.getMobileTerminalId(), query.getComment(), request.getRemoteUser());
             String returnString = objectMapper().writeValueAsString(mobileTerminal);
             return Response.ok(returnString).build();
         } catch (Exception ex) {
@@ -169,10 +169,11 @@ public class MobileTerminalRestResource {
     @PUT
     @Path("/status/activate")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
-    public Response setStatusActive(@QueryParam("comment") String comment, UUID guid) {
+    public Response setStatusActive(MobileTerminalRestQuery query) {
         LOG.info("Set mobile terminal status active invoked in rest layer.");
         try {
-            MobileTerminal mobileTerminal = mobileTerminalService.setStatusMobileTerminal(guid, comment, MobileTerminalStatus.ACTIVE, request.getRemoteUser());
+            MobileTerminal mobileTerminal = mobileTerminalService.setStatusMobileTerminal(
+                    query.getMobileTerminalId(), query.getComment(), MobileTerminalStatus.ACTIVE, request.getRemoteUser());
             String returnString = objectMapper().writeValueAsString(mobileTerminal);
             return Response.ok(returnString).build();
         } catch (Exception ex) {
@@ -184,10 +185,11 @@ public class MobileTerminalRestResource {
     @PUT
     @Path("/status/inactivate")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
-    public Response setStatusInactive(@QueryParam("comment") String comment, UUID guid) {
+    public Response setStatusInactive(MobileTerminalRestQuery query) {
         LOG.info("Set mobile terminal status inactive invoked in rest layer.");
         try {
-            MobileTerminal mobileTerminal = mobileTerminalService.setStatusMobileTerminal(guid, comment, MobileTerminalStatus.INACTIVE, request.getRemoteUser());
+            MobileTerminal mobileTerminal = mobileTerminalService.setStatusMobileTerminal(
+                    query.getMobileTerminalId(), query.getComment(), MobileTerminalStatus.INACTIVE, request.getRemoteUser());
             String returnString = objectMapper().writeValueAsString(mobileTerminal);
             return Response.ok(returnString).build();
         } catch (Exception ex) {
@@ -199,10 +201,11 @@ public class MobileTerminalRestResource {
     @PUT
     @Path("/status/remove")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
-    public Response setStatusRemoved(@QueryParam("comment") String comment, UUID guid) {
+    public Response setStatusRemoved(MobileTerminalRestQuery query) {
         LOG.info("Set mobile terminal status removed invoked in rest layer.");
         try {
-            MobileTerminal mobileTerminal = mobileTerminalService.setStatusMobileTerminal(guid, comment, MobileTerminalStatus.ARCHIVE, request.getRemoteUser());
+            MobileTerminal mobileTerminal = mobileTerminalService.setStatusMobileTerminal(
+                    query.getMobileTerminalId(), query.getComment(), MobileTerminalStatus.ARCHIVE, request.getRemoteUser());
             String returnString = objectMapper().writeValueAsString(mobileTerminal);
             return Response.ok(returnString).build();
         } catch (Exception ex) {
@@ -214,10 +217,11 @@ public class MobileTerminalRestResource {
     @PUT
     @Path("/status/unarchive")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
-    public Response setStatusUnarchived(@QueryParam("comment") String comment, UUID guid) {
+    public Response setStatusUnarchived(MobileTerminalRestQuery query) {
         LOG.info("Set mobile terminal status unarchived invoked in rest layer.");
         try {
-            MobileTerminal mobileTerminal = mobileTerminalService.setStatusMobileTerminal(guid, comment, MobileTerminalStatus.UNARCHIVE, request.getRemoteUser());
+            MobileTerminal mobileTerminal = mobileTerminalService.setStatusMobileTerminal(
+                    query.getMobileTerminalId(), query.getComment(),MobileTerminalStatus.UNARCHIVE, request.getRemoteUser());
             String returnString = objectMapper().writeValueAsString(mobileTerminal);
             return Response.ok(returnString).build();
         } catch (Exception ex) {
@@ -229,7 +233,8 @@ public class MobileTerminalRestResource {
     @GET
     @Path("/history/{id}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getMobileTerminalHistoryListByMobileTerminalId(@PathParam("id") UUID id, @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
+    public Response getMobileTerminalHistoryListByMobileTerminalId(@PathParam("id") UUID id,
+                                                                   @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
         LOG.info("Get mobile terminal history by mobile terminal id invoked in rest layer.");
         try {
             List<MobileTerminal> mobileTerminalRevisions = mobileTerminalService.getMobileTerminalRevisions(id, maxNbr);
@@ -264,14 +269,14 @@ public class MobileTerminalRestResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetRevisionByMobileTerminalId(@PathParam("mobileTerminalId") UUID mobileTerminalId,
                                                        @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
-    try{
-        List<Asset> assetRevisions = mobileTerminalService.getAssetRevisionsByMobileTerminalId(mobileTerminalId);
-        String returnString = objectMapper().writeValueAsString(assetRevisions);
-        return Response.ok(returnString).build();
-    } catch (Exception ex) {
-        LOG.error("[ Error when getting Asset history by mobileTerminalId ] {}", ex);
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
-    }
+        try{
+            List<Asset> assetRevisions = mobileTerminalService.getAssetRevisionsByMobileTerminalId(mobileTerminalId);
+            String returnString = objectMapper().writeValueAsString(assetRevisions);
+            return Response.ok(returnString).build();
+        } catch (Exception ex) {
+            LOG.error("[ Error when getting Asset history by mobileTerminalId ] {}", ex);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
+        }
     }
 
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active

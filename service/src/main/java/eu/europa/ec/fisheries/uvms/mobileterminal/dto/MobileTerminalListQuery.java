@@ -9,6 +9,7 @@ public class MobileTerminalListQuery {
 
     private ListPagination pagination;
     private MobileTerminalSearchCriteria mobileTerminalSearchCriteria;
+    private boolean includeArchived = false;
 
     public ListPagination getPagination() {
         return pagination;
@@ -24,6 +25,14 @@ public class MobileTerminalListQuery {
 
     public void setMobileTerminalSearchCriteria(MobileTerminalSearchCriteria mobileTerminalSearchCriteria) {
         this.mobileTerminalSearchCriteria = mobileTerminalSearchCriteria;
+    }
+
+    public boolean isIncludeArchived() {
+        return includeArchived;
+    }
+
+    public void setIncludeArchived(boolean includeArchived) {
+        this.includeArchived = includeArchived;
     }
 
     @Override

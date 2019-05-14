@@ -4,6 +4,7 @@ import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MobileTerminalRestQuery;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
@@ -191,13 +192,14 @@ public class AssetResourceTest extends AbstractAssetRestTest {
 
         assertFalse(createdMT.getInactivated());
 
+        MobileTerminalRestQuery.QueryBuilder builder = new MobileTerminalRestQuery.QueryBuilder(createdMT.getId());
+        builder.withComment("assign").withConnectId(createdAsset.getId());
+
         MobileTerminal assignedMT = getWebTarget()
                 .path("mobileterminal")
                 .path("assign")
-                .queryParam("comment", "assign")
-                .queryParam("connectId", createdAsset.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(createdMT.getId()), MobileTerminal.class);
+                .put(Entity.json(builder.build()), MobileTerminal.class);
 
         assertNotNull(assignedMT.getAsset().getId());
 
@@ -561,14 +563,15 @@ public class AssetResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(terminal), MobileTerminal.class);
 
+        MobileTerminalRestQuery.QueryBuilder builder = new MobileTerminalRestQuery.QueryBuilder(createdMT.getId());
+        builder.withComment("assign").withConnectId(createdAsset.getId());
+
         // Assign MobileTerminal
         MobileTerminal assignedMT = getWebTarget()
                 .path("mobileterminal")
                 .path("assign")
-                .queryParam("comment", "assign")
-                .queryParam("connectId", createdAsset.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(createdMT.getId()), MobileTerminal.class);
+                .put(Entity.json(builder.build()), MobileTerminal.class);
 
         // Verify Updated Asset holds correct MobileTerminal history
         OffsetDateTime firstTimeStamp = OffsetDateTime.now(ZoneOffset.UTC);
@@ -602,6 +605,7 @@ public class AssetResourceTest extends AbstractAssetRestTest {
         createdAsset.setCfr(newCfr);
         getWebTarget()
                 .path("asset")
+                .queryParam("comment", "update")
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.json(createdAsset), Asset.class);
 

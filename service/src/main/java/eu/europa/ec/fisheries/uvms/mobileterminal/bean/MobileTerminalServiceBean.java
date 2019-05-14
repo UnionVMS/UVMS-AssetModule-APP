@@ -88,8 +88,8 @@ public class MobileTerminalServiceBean {
         return createdMobileTerminal;
     }
 
-    public MTListResponse getMobileTerminalList(MobileTerminalListQuery query, boolean includeArchived) {
-        MTListResponse response = getTerminalListByQuery(query, includeArchived);
+    public MTListResponse getMobileTerminalList(MobileTerminalListQuery query) {
+        MTListResponse response = getTerminalListByQuery(query);
         return response;
     }
 
@@ -388,7 +388,7 @@ public class MobileTerminalServiceBean {
         return upsertedMT;
     }
 
-    public MTListResponse getTerminalListByQuery(MobileTerminalListQuery query, boolean includeArchived) {
+    public MTListResponse getTerminalListByQuery(MobileTerminalListQuery query) {
         if (query == null) {
             throw new IllegalArgumentException("No list query");
         }
@@ -411,7 +411,7 @@ public class MobileTerminalServiceBean {
 
         List<ListCriteria> criterias = query.getMobileTerminalSearchCriteria().getCriterias();
 
-        String searchSql = SearchMapper.createSelectSearchSql(criterias, isDynamic, includeArchived);
+        String searchSql = SearchMapper.createSelectSearchSql(criterias, isDynamic, query.isIncludeArchived());
 
         List<MobileTerminal> terminals = terminalDao.getMobileTerminalsByQuery(searchSql);
 
@@ -454,7 +454,7 @@ public class MobileTerminalServiceBean {
         pagination.setPage(1);
         query.setPagination(pagination);
 
-        MTListResponse mobileTerminalListResponse = getMobileTerminalList(query, false);
+        MTListResponse mobileTerminalListResponse = getMobileTerminalList(query);
         List<MobileTerminal> resultList = mobileTerminalListResponse.getMobileTerminalList();
         return resultList.size() != 1 ? null : resultList.get(0);
     }

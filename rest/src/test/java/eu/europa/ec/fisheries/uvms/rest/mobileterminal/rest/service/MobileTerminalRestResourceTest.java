@@ -12,10 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.ListCriteria;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MobileTerminalListQuery;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.SearchKey;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
@@ -497,12 +494,13 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         Asset asset = createAndRestBasicAsset();
         assertNotNull(asset);
 
+        MobileTerminalRestQuery.QueryBuilder builder = new MobileTerminalRestQuery.QueryBuilder(created.getId());
+        builder.withComment("NEW_TEST_COMMENT").withConnectId(asset.getId());
+
         MobileTerminal response = getWebTarget()
                 .path("/mobileterminal/assign")
-                .queryParam("comment", "NEW_TEST_COMMENT")
-                .queryParam("connectId", asset.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(created.getId()), MobileTerminal.class);
+                .put(Entity.json(builder.build()), MobileTerminal.class);
 
         assertNotNull(response);
         assertEquals(created.getId(), response.getId());
@@ -523,12 +521,13 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         Asset asset = createAndRestBasicAsset();
         assertNotNull(asset);
 
+        MobileTerminalRestQuery.QueryBuilder builder = new MobileTerminalRestQuery.QueryBuilder(created.getId());
+        builder.withComment("NEW_TEST_COMMENT").withConnectId(asset.getId());
+
         MobileTerminal responseAssign = getWebTarget()
                 .path("/mobileterminal/assign")
-                .queryParam("comment", "NEW_TEST_COMMENT")
-                .queryParam("connectId", asset.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(created.getId()), MobileTerminal.class);
+                .put(Entity.json(builder.build()), MobileTerminal.class);
 
         assertNotNull(responseAssign);
         assertNotNull(responseAssign.getAsset());
@@ -536,10 +535,8 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         MobileTerminal responseUnAssign = getWebTarget()
                 .path("/mobileterminal/unassign")
-                .queryParam("comment", "NEW_TEST_COMMENT")
-                .queryParam("connectId", asset.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(created.getId()), MobileTerminal.class);
+                .put(Entity.json(builder.build()), MobileTerminal.class);
 
         assertNotNull(responseUnAssign);
         assertNull(responseUnAssign.getAsset());
@@ -560,30 +557,35 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertFalse(created.getInactivated());
         assertFalse(created.getArchived());
 
+        MobileTerminalRestQuery.QueryBuilder builder = new MobileTerminalRestQuery.QueryBuilder(created.getId());
+        builder.withComment("Test Comment Inactivate");
+
         MobileTerminal response = getWebTarget()
                 .path("mobileterminal/status/inactivate")
-                .queryParam("comment", "Test Comment Inactivate")
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(created.getId()))
+                .put(Entity.json(builder.build()))
                 .readEntity(MobileTerminal.class);
 
         assertNotNull(response);
         assertTrue(response.getInactivated());
 
+        builder.withComment("Test Comment Activate");
+
         response = getWebTarget()
                 .path("mobileterminal/status/activate")
                 .queryParam("comment", "Test Comment Activate")
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(created.getId()))
+                .put(Entity.json(builder.build()))
                 .readEntity(MobileTerminal.class);
 
         assertFalse(response.getInactivated());
 
+        builder.withComment("Test Comment Remove");
+
         response = getWebTarget()
                 .path("mobileterminal/status/remove")
-                .queryParam("comment", "Test Comment Remove")
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(created.getId()))
+                .put(Entity.json(builder.build()))
                 .readEntity(MobileTerminal.class);
 
         assertTrue(response.getInactivated());
@@ -612,21 +614,24 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertFalse(created.getInactivated());
         assertFalse(created.getArchived());
 
+        MobileTerminalRestQuery.QueryBuilder builder = new MobileTerminalRestQuery.QueryBuilder(created.getId());
+        builder.withComment("Test Comment Archive");
+
         MobileTerminal response = getWebTarget()
                 .path("mobileterminal/status/remove")
-                .queryParam("comment", "Test Comment Archive")
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(created.getId()))
+                .put(Entity.json(builder.build()))
                 .readEntity(MobileTerminal.class);
 
         assertNotNull(response);
         assertTrue(response.getArchived());
 
+        builder.withComment("Test Comment Unarchive");
+
         response = getWebTarget()
                 .path("mobileterminal/status/unarchive")
-                .queryParam("comment", "Test Comment Unarchive")
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(created.getId()))
+                .put(Entity.json(builder.build()))
                 .readEntity(MobileTerminal.class);
 
         assertFalse(response.getArchived());
@@ -658,26 +663,26 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         Asset asset = createAndRestBasicAsset();
 
-        getWebTarget()
-                .path("/mobileterminal/assign")
-                .queryParam("comment", "NEW_TEST_COMMENT")
-                .queryParam("connectId", asset.getId())
-                .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(created1.getId()), MobileTerminal.class);
+        MobileTerminalRestQuery.QueryBuilder builder1 = new MobileTerminalRestQuery.QueryBuilder(created1.getId());
+        builder1.withComment("NEW_TEST_COMMENT").withConnectId(asset.getId());
+
+        MobileTerminalRestQuery.QueryBuilder builder2 = new MobileTerminalRestQuery.QueryBuilder(created2.getId());
+        builder2.withComment("NEW_TEST_COMMENT").withConnectId(asset.getId());
 
         getWebTarget()
                 .path("/mobileterminal/assign")
-                .queryParam("comment", "NEW_TEST_COMMENT")
-                .queryParam("connectId", asset.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(created2.getId()), MobileTerminal.class);
+                .put(Entity.json(builder1.build()), MobileTerminal.class);
+
+        getWebTarget()
+                .path("/mobileterminal/assign")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(builder2.build()), MobileTerminal.class);
 
         getWebTarget()
                 .path("/mobileterminal/unassign")
-                .queryParam("comment", "NEW_TEST_COMMENT")
-                .queryParam("connectId", asset.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(created2.getId()), MobileTerminal.class);
+                .put(Entity.json(builder2.build()), MobileTerminal.class);
 
         List<Map<UUID, List<MobileTerminal>>> mtRevisions = getWebTarget()
                 .path("/mobileterminal/history/asset")
@@ -702,26 +707,25 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         Asset asset1 = createAndRestBasicAsset();
         Asset asset2 = createAndRestBasicAsset();
 
+        MobileTerminalRestQuery.QueryBuilder builder = new MobileTerminalRestQuery.QueryBuilder(mobileTerminal.getId());
+        builder.withComment("NEW_TEST_COMMENT").withConnectId(asset1.getId());
+
         getWebTarget()
                 .path("/mobileterminal/assign")
-                .queryParam("comment", "NEW_TEST_COMMENT")
-                .queryParam("connectId", asset1.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(mobileTerminal.getId()));
+                .put(Entity.json(builder.build()));
 
         getWebTarget()
                 .path("/mobileterminal/unassign")
-                .queryParam("comment", "NEW_TEST_COMMENT")
-                .queryParam("connectId", asset1.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(mobileTerminal.getId()));
+                .put(Entity.json(builder.build()));
+
+        builder.withConnectId(asset2.getId());
 
         getWebTarget()
                 .path("/mobileterminal/assign")
-                .queryParam("comment", "NEW_TEST_COMMENT")
-                .queryParam("connectId", asset2.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(mobileTerminal.getId()));
+                .put(Entity.json(builder.build()));
 
         List<Asset> assetRevisions = getWebTarget()
                 .path("/mobileterminal/history/mobileterminal")
@@ -755,11 +759,13 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         assertFalse(created.getArchived());
 
+        MobileTerminalRestQuery.QueryBuilder builder = new MobileTerminalRestQuery.QueryBuilder(created.getId());
+        builder.withComment("Test Comment Remove");
+
         MobileTerminal response = getWebTarget()
                 .path("mobileterminal/status/remove")
-                .queryParam("comment", "Test Comment Remove")
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(created.getId()))
+                .put(Entity.json(builder.build()))
                 .readEntity(MobileTerminal.class);
 
         assertTrue(response.getArchived());
@@ -773,9 +779,10 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         assertEquals(sizeBefore, sizeAfter);
 
+        mobileTerminalListQuery.setIncludeArchived(true);
+
         MTListResponse responseWithArchived = getWebTarget()
                 .path("/mobileterminal/list")
-                .queryParam("includeArchived", true)
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(mobileTerminalListQuery), MTListResponse.class);
 
@@ -802,12 +809,13 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         MTListResponse returnList = sendMTListQuery(mobileTerminalListQuery);
         assertEquals(1, returnList.getMobileTerminalList().size());
 
+        MobileTerminalRestQuery.QueryBuilder builder = new MobileTerminalRestQuery.QueryBuilder(created.getId());
+        builder.withComment("NEW_TEST_COMMENT").withConnectId(asset.getId());
+
         MobileTerminal response = getWebTarget()
                 .path("/mobileterminal/assign")
-                .queryParam("comment", "NEW_TEST_COMMENT")
-                .queryParam("connectId", asset.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(created.getId()), MobileTerminal.class);
+                .put(Entity.json(builder.build()), MobileTerminal.class);
 
         assertNotNull(response);
 
@@ -818,10 +826,8 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         // Unassign
         MobileTerminal responseUnAssign = getWebTarget()
                 .path("/mobileterminal/unassign")
-                .queryParam("comment", "NEW_TEST_COMMENT")
-                .queryParam("connectId", asset.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(created.getId()), MobileTerminal.class);
+                .put(Entity.json(builder.build()), MobileTerminal.class);
 
         assertNotNull(responseUnAssign);
 
@@ -829,12 +835,13 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         returnList = sendMTListQuery(mobileTerminalListQuery);
         assertEquals(1, returnList.getMobileTerminalList().size());
 
+        builder.withComment("Test Comment Inactivate");
+
         //And inactivate
         response = getWebTarget()
                 .path("mobileterminal/status/inactivate")
-                .queryParam("comment", "Test Comment Inactivate")
                 .request(MediaType.APPLICATION_JSON)
-                .put(Entity.json(created.getId()), MobileTerminal.class);
+                .put(Entity.json(builder.build()), MobileTerminal.class);
 
         assertNotNull(response);
 
