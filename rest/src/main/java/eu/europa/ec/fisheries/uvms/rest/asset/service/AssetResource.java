@@ -47,6 +47,8 @@ import java.util.UUID;
 @Path("/asset")
 @Stateless
 @Api(value = "Asset Service")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class AssetResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(AssetResource.class);
@@ -56,7 +58,6 @@ public class AssetResource {
 
     @Inject
     private AssetService assetService;
-
 
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
     private ObjectMapper objectMapper(){
@@ -81,8 +82,6 @@ public class AssetResource {
             @ApiResponse(code = 500, message = "Error when retrieving asset list"),
             @ApiResponse(code = 200, message = "Asset list successfully retrieved") })
     @Path("list")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetList(@DefaultValue("1") @QueryParam("page") int page,
                                  @DefaultValue("100") @QueryParam("size") int size,
@@ -92,7 +91,6 @@ public class AssetResource {
         try {
             List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
             AssetListResponse assetList = assetService.getAssetList(searchFields, page, size, dynamic, includeInactivated);
-            //This is needed to force Hibernate to fetch everything related to the assets, reason it does not is that AuditQuery, used to find stuff, does not support eager fetching
             String returnString = objectMapper().writeValueAsString(assetList);
             return Response.ok(returnString).build();
         } catch (Exception e) {
@@ -115,8 +113,6 @@ public class AssetResource {
             @ApiResponse(code = 500, message = "Error when retrieving asset list"),
             @ApiResponse(code = 200, message = "Asset list successfully retrieved") })
     @Path("listcount")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetListItemCount(@DefaultValue("true") @QueryParam("dynamic") boolean dynamic,
                                           @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
@@ -146,13 +142,10 @@ public class AssetResource {
             @ApiResponse(code = 500, message = "Error when retrieving asset"),
             @ApiResponse(code = 200, message = "Asset successfully retrieved") })
     @Path(value = "/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetById(@ApiParam(value="UUID of the asset to retrieve", required=true) @PathParam("id") UUID id) {
         try {
             Asset asset = assetService.getAssetById(id);
-            //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
             String returnString = objectMapper().writeValueAsString(asset);
             return Response.status(200).entity(returnString).type(MediaType.APPLICATION_JSON)
                     .header("MDC", MDC.get("requestId")).build();
@@ -183,14 +176,11 @@ public class AssetResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when creating asset"),
             @ApiResponse(code = 200, message = "Asset successfully created") })
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public Response createAsset(@ApiParam(value="An asset to retrieve", required=true)  final Asset asset)  {
         try {
             String remoteUser = servletRequest.getRemoteUser();
             Asset createdAssetSE = assetService.createAsset(asset, remoteUser);
-            //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
             String returnString = objectMapper().writeValueAsString(createdAssetSE);
             return Response.status(200).entity(returnString).type(MediaType.APPLICATION_JSON )
                     .header("MDC", MDC.get("requestId")).build();
@@ -213,14 +203,12 @@ public class AssetResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when updating asset"),
             @ApiResponse(code = 200, message = "Asset successfully updated") })
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response updateAsset(@ApiParam(value="The asset to update", required=true) final Asset asset, @ApiParam(value="Update comment", required=true)  @QueryParam("comment") String comment) {
+    public Response updateAsset(@ApiParam(value="The asset to update", required=true) final Asset asset,
+                                @ApiParam(value="Update comment", required=true)  @QueryParam("comment") String comment) {
         try {
             String remoteUser = servletRequest.getRemoteUser();
             Asset updatedAsset = assetService.updateAsset(asset, remoteUser, comment);
-            //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
             String returnString = objectMapper().writeValueAsString(updatedAsset);
             return Response.status(200).entity(returnString).type(MediaType.APPLICATION_JSON )
                     .header("MDC", MDC.get("requestId")).build();
@@ -236,8 +224,6 @@ public class AssetResource {
             @ApiResponse(code = 500, message = "Error when archiving asset"),
             @ApiResponse(code = 200, message = "Asset successfully archived") })
     @Path("/archive")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public Response archiveAsset(@ApiParam(value="The asset to update", required=true)  final Asset asset,
                                  @ApiParam(value="Archive comment", required=true)
@@ -245,7 +231,6 @@ public class AssetResource {
         try {
             String remoteUser = servletRequest.getRemoteUser();
             Asset archivedAsset = assetService.archiveAsset(asset, remoteUser, comment);
-            //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
             String returnString = objectMapper().writeValueAsString(archivedAsset);
             return Response.ok(returnString).build();
         } catch (Exception e) {
@@ -260,8 +245,6 @@ public class AssetResource {
             @ApiResponse(code = 500, message = "Error when unarchiving asset"),
             @ApiResponse(code = 200, message = "Asset successfully unarchived") })
     @Path("/unarchive")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public Response unarchiveAsset(@ApiParam(value="The asset to update", required=true)  final UUID assetId,
                                  @ApiParam(value="Unarchive comment", required=true)
@@ -269,7 +252,6 @@ public class AssetResource {
         try {
             String remoteUser = servletRequest.getRemoteUser();
             Asset unarchivedAsset = assetService.unarchiveAsset(assetId, remoteUser, comment);
-            //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
             String returnString = objectMapper().writeValueAsString(unarchivedAsset);
             return Response.ok(returnString).build();
         } catch (Exception e) {
@@ -292,12 +274,10 @@ public class AssetResource {
             @ApiResponse(code = 500, message = "Error when querying the system"),
             @ApiResponse(code = 200, message = "Successful retrieval of resultset") })
     @Path("/history/asset/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getAssetHistoryListByAssetId(@ApiParam(value="The assets GUID", required=true)  @PathParam("id") UUID id,
                                                  @ApiParam(value="Max size of resultset") @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
         try {
             List<Asset> assetRevisions = assetService.getRevisionsForAssetLimited(id, maxNbr);
-            //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
             String returnString = objectMapper().writeValueAsString(assetRevisions);
             return Response.ok(returnString).build();
         } catch (Exception e) {
@@ -316,13 +296,12 @@ public class AssetResource {
      * @return
      */
     @GET
-    @ApiOperation(value = "Get a specific asset by identifier (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)  at given date", notes = "DateTimeFormatter.ISO_OFFSET_DATE_TIME, eg 2018-03-23T18:25:43+01:00", response = Asset.class, responseContainer = "List")
+    @ApiOperation(value = "Get a specific asset by identifier (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)  at given date",
+            notes = "DateTimeFormatter.ISO_OFFSET_DATE_TIME, eg 2018-03-23T18:25:43+01:00", response = Asset.class, responseContainer = "List")
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when querying the system"),
             @ApiResponse(code = 200, message = "Successful retrieval of resultset") })
     @Path("/history/{type : (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)}/{id}/{date}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getAssetFromAssetIdAndDate(@ApiParam(value="Type of id", required=true) @PathParam("type") String type,
                                                @ApiParam(value="Value of id", required=true) @PathParam("id") String id,
                                                @ApiParam(value="Point in time", required=true) @PathParam("date") String date) {
@@ -330,7 +309,6 @@ public class AssetResource {
             AssetIdentifier assetId = AssetIdentifier.valueOf(type.toUpperCase());
             OffsetDateTime offsetDateTime = OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             Asset assetRevision = assetService.getAssetFromAssetIdAtDate(assetId, id, offsetDateTime);
-            //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
             String returnString = objectMapper().writeValueAsString(assetRevision);
             return Response.ok(returnString).build();
         } catch (Exception e) {
@@ -353,12 +331,9 @@ public class AssetResource {
             @ApiResponse(code = 500, message = "Error when querying the system"),
             @ApiResponse(code = 200, message = "Successful retrieval of resultset") })
     @Path("history/{guid}")
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getAssetHistoryByAssetHistGuid(@ApiParam(value="Id", required=true) @PathParam("guid") UUID guid) {
         try {
             Asset asset = assetService.getAssetRevisionForRevisionId(guid);
-            //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
             String returnString = objectMapper().writeValueAsString(asset);
             return Response.ok(returnString).build();
         } catch (Exception e) {
@@ -374,7 +349,6 @@ public class AssetResource {
             @ApiResponse(code = 500, message = "Error when retrieving notes for asset"),
             @ApiResponse(code = 200, message = "Notes successfully retrieved") })
     @Path("{id}/notes")
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getNotesForAsset(@ApiParam(value="The id of asset to retrieve notes", required = true)  @PathParam("id") UUID assetId) {
         List<Note> notes = assetService.getNotesForAsset(assetId);
@@ -387,10 +361,9 @@ public class AssetResource {
             @ApiResponse(code = 500, message = "Error when creating note for asset"),
             @ApiResponse(code = 200, message = "Note successfully created") })
     @Path("{id}/notes")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response createNoteForAsset(@ApiParam(value="The id of asset for which to create note", required=true)  @PathParam("id") UUID assetId, @ApiParam(value="The Note to store" , required=true) Note note) {
+    public Response createNoteForAsset(@ApiParam(value="The id of asset for which to create note", required=true)
+                                           @PathParam("id") UUID assetId, @ApiParam(value="The Note to store" , required=true) Note note) {
         String user = servletRequest.getRemoteUser();
         Note createdNote = assetService.createNoteForAsset(assetId, note, user);
         return Response.ok(createdNote).build();
@@ -402,8 +375,6 @@ public class AssetResource {
             @ApiResponse(code = 500, message = "Error when updating note"),
             @ApiResponse(code = 200, message = "Note successfully updated") })
     @Path("/notes")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public Response updateNote(@ApiParam(value="A Note to be updated", required=true)  Note note) {
         String user = servletRequest.getRemoteUser();
@@ -429,7 +400,6 @@ public class AssetResource {
             @ApiResponse(code = 500, message = "Error when querying the system"),
             @ApiResponse(code = 200, message = "Successful processing of query") })
     @Path("{id}/contacts")
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getContactInfoForAsset(@ApiParam(value="Id of asset", required=true)  @PathParam("id") UUID assetId) {
         List<ContactInfo> contacts = assetService.getContactInfoForAsset(assetId);
@@ -442,13 +412,11 @@ public class AssetResource {
             @ApiResponse(code = 500, message = "Error when querying the system"),
             @ApiResponse(code = 200, message = "Successful processing of query") })
     @Path("{id}/contacts/{updateDate}")
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getContactInfoListForAssetHistory(@ApiParam(value="Id of asset", required=true)  @PathParam("id") UUID assetId,
                                                       @PathParam("updateDate") String updatedDate) {
 
         OffsetDateTime offsetDateTime = OffsetDateTime.parse(updatedDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-
         List<ContactInfo> resultList = assetService.getContactInfoRevisionForAssetHistory(assetId, offsetDateTime);
         return Response.ok(resultList).build();
     }
@@ -459,8 +427,6 @@ public class AssetResource {
             @ApiResponse(code = 500, message = "Error when create contact info"),
             @ApiResponse(code = 200, message = "Successful created contactinfo") })
     @Path("{id}/contacts")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public Response createContactInfoForAsset(
             @ApiParam(value="Id of asset", required=true) @PathParam("id") UUID assetId,
@@ -476,8 +442,6 @@ public class AssetResource {
             @ApiResponse(code = 500, message = "Error when updating contact info"),
             @ApiResponse(code = 200, message = "Successful updated contactinfo") })
     @Path("/contacts")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public Response udpateContactInfo(@ApiParam(value="Contact info", required=true)  ContactInfo contactInfo) {
         String username = servletRequest.getRemoteUser();
