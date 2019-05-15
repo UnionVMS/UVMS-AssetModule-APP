@@ -38,6 +38,8 @@ import java.util.UUID;
 @Path("/group")
 @Stateless
 @Api(value = "Asset Group Service")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class AssetGroupResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(AssetGroupResource.class);
@@ -46,7 +48,7 @@ public class AssetGroupResource {
     private HttpServletRequest servletRequest;
 
     @Inject
-    AssetGroupService assetGroupService;
+    private AssetGroupService assetGroupService;
 
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
     private ObjectMapper objectMapper(){
@@ -65,7 +67,6 @@ public class AssetGroupResource {
             @ApiResponse(code = 500, message = "Error when retrieving AssetGroup list"),
             @ApiResponse(code = 200, message = "AssetGroup list successfully retrieved")})
     @Path("list")
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetGroupListByUser(@ApiParam(value = "user", required = true) @QueryParam(value = "user") String user) {
         try {
@@ -89,7 +90,6 @@ public class AssetGroupResource {
             @ApiResponse(code = 500, message = "Error when retrieving AssetGroup list"),
             @ApiResponse(code = 200, message = "AssetGroup list successfully retrieved")})
     @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetGroupById(@ApiParam(value = "AssetGroup Id", required = true) @PathParam(value = "id") final UUID id) {
         try {
@@ -112,8 +112,6 @@ public class AssetGroupResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when creating AssetGroup"),
             @ApiResponse(code = 200, message = "AssetGroup successfully created")})
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response createAssetGroup(@ApiParam(value = "AssetGroup", required = true) final AssetGroup assetGroup) {
         try {
@@ -136,8 +134,6 @@ public class AssetGroupResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when update AssetGroup"),
             @ApiResponse(code = 200, message = "AssetGroup successfully updated")})
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response updateAssetGroup(@ApiParam(value = "AssetGroup", required = true) final AssetGroup assetGroup) {
         try {
@@ -162,7 +158,6 @@ public class AssetGroupResource {
             @ApiResponse(code = 500, message = "Error when delete AssetGroup"),
             @ApiResponse(code = 200, message = "AssetGroup successfully deleted")})
     @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response deleteAssetGroup(@ApiParam(value = "AssetGroup id", required = true) @PathParam(value = "id") final UUID id) {
         try {
@@ -181,8 +176,6 @@ public class AssetGroupResource {
             @ApiResponse(code = 500, message = "Error when delete AssetGroup"),
             @ApiResponse(code = 200, message = "AssetGroup successfully deleted")})
     @Path("/asset/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetGroupListByAssetId(@ApiParam(value = "Asset id", required = true) @PathParam(value = "id") UUID assetId) {
         try {
@@ -202,8 +195,6 @@ public class AssetGroupResource {
             @ApiResponse(code = 500, message = "Error when create AssetGroupField"),
             @ApiResponse(code = 200, message = "AssetGroupField successfully deleted")})
     @Path("/{id}/field")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response createAssetGroupField(@ApiParam(value = "Parent Assetgroup id", required = true) @PathParam(value = "id") UUID parentAssetgroupId, @ApiParam(value = "The AssetGroupField to be created", required = true) AssetGroupField assetGroupField) {
         try {
@@ -224,8 +215,6 @@ public class AssetGroupResource {
             @ApiResponse(code = 500, message = "Error when update AssetGroupField"),
             @ApiResponse(code = 200, message = "AssetGroupField successfully update")})
     @Path("/field")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response updateAssetGroupField(@ApiParam(value = "Parent AssetgroupField", required = true) AssetGroupField assetGroupField) {
 
@@ -247,8 +236,6 @@ public class AssetGroupResource {
             @ApiResponse(code = 500, message = "Error when get AssetGroupField"),
             @ApiResponse(code = 200, message = "AssetGroupField successfully fetched")})
     @Path("/field/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetGroupField(@ApiParam(value = "AssetgroupField id", required = true) @PathParam(value = "id")  UUID id) {
 
@@ -269,8 +256,6 @@ public class AssetGroupResource {
             @ApiResponse(code = 500, message = "Error when delete AssetGroupField"),
             @ApiResponse(code = 200, message = "AssetGroupField successfully deleted")})
     @Path("/field/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response deleteAssetGroupField(@ApiParam(value = "AssetgroupField id", required = true)   @PathParam(value = "id")  UUID assetGroupFieldId) {
 
@@ -292,8 +277,6 @@ public class AssetGroupResource {
             @ApiResponse(code = 500, message = "Error when retrieving Assetgroupfields"),
             @ApiResponse(code = 200, message = "Assetgroupfields successfully retrieved")})
     @Path("/{id}/fieldsForGroup")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response retrieveFieldsForGroup(@ApiParam(value = "AssetGroup id", required = true)  @PathParam(value = "id")  UUID assetGroupId) {
 
@@ -314,8 +297,6 @@ public class AssetGroupResource {
             @ApiResponse(code = 500, message = "Error when delete Assetgroupfields"),
             @ApiResponse(code = 200, message = "Assetgroupfields successfully deleted")})
     @Path("/{id}/fieldsForGroup")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response deleteFieldsForGroup(@ApiParam(value = "AssetGroup id", required = true)  @PathParam(value = "id")  UUID assetGroupId) {
 

@@ -28,12 +28,9 @@ import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
-import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
-import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -53,6 +50,8 @@ import java.util.stream.Collectors;
 
 @Path("internal")
 @Stateless
+@Consumes(value = {MediaType.APPLICATION_JSON})
+@Produces(value = {MediaType.APPLICATION_JSON})
 public class InternalResource {
 
     private final static Logger LOG = LoggerFactory.getLogger(InternalResource.class);
@@ -80,7 +79,6 @@ public class InternalResource {
 
     @GET
     @Path("asset/{idType : (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)}/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getAssetById(@PathParam("idType") String type, @PathParam("id") String id) {
         AssetIdentifier assetId = AssetIdentifier.valueOf(type.toUpperCase());
         Asset asset = assetService.getAssetById(assetId, id);
@@ -89,8 +87,6 @@ public class InternalResource {
 
     @POST
     @Path("query")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getAssetList(@DefaultValue("1") @QueryParam("page") int page,
                                  @DefaultValue("100") @QueryParam("size") int size,
                                  @DefaultValue("true") @QueryParam("dynamic") boolean dynamic,
@@ -109,7 +105,6 @@ public class InternalResource {
 
     @GET
     @Path("group/user/{user}")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getAssetGroupByUser(@PathParam("user") String user) {
         List<AssetGroup> assetGroups = assetGroupService.getAssetGroupList(user);
         return Response.ok(assetGroups).build();
@@ -117,7 +112,6 @@ public class InternalResource {
 
     @GET
     @Path("group/asset/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getAssetGroupByAssetId(@PathParam("id") UUID assetId) {
         List<AssetGroup> assetGroups = assetGroupService.getAssetGroupListByAssetId(assetId);
         return Response.ok(assetGroups).build();
@@ -125,7 +119,6 @@ public class InternalResource {
 
     @POST
     @Path("group/asset")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getAssetByGroupIds(List<UUID> groupIds) {
         List<AssetGroup> assetGroups = groupIds.stream()
                                             .map(assetGroupService::getAssetGroupById)
@@ -136,7 +129,6 @@ public class InternalResource {
 
     @GET
     @Path("/history/asset/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getAssetHistoryListByAssetId(@PathParam("id") UUID id, @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
         List<Asset> assetRevisions = assetService.getRevisionsForAssetLimited(id, maxNbr);
         return Response.ok(assetRevisions).build();
@@ -144,7 +136,6 @@ public class InternalResource {
 
     @GET
     @Path("/history/{type : (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)}/{id}/{date}")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getAssetFromAssetIdAndDate(@PathParam("type") String type,
                                                @PathParam("id") String id,
                                                @PathParam("date") String date) {
@@ -156,7 +147,6 @@ public class InternalResource {
 
     @GET
     @Path("history/{guid}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getAssetHistoryByAssetHistGuid(@PathParam("guid") UUID guid) {
         Asset asset = assetService.getAssetRevisionForRevisionId(guid);
         return Response.ok(asset).build();
@@ -164,8 +154,6 @@ public class InternalResource {
     
     @POST
     @Path("asset")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response upsertAsset(AssetBO assetBo) {
         AssetBO upsertedAsset = assetService.upsertAssetBO(assetBo, "UVMS (REST)");
         return Response.ok(upsertedAsset).build();
@@ -173,15 +161,12 @@ public class InternalResource {
     
     @GET
     @Path("ping")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response ping() {
         return Response.ok("pong").build();
     }
 
     @POST
     @Path("customcode")
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response createCustomCode(CustomCode customCode) {
         try {
             CustomCode customCodes = customCodesService.create(customCode);
@@ -193,8 +178,6 @@ public class InternalResource {
 
     @GET
     @Path("listconstants")
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getAllConstants() {
         try {
             List<String> constants = customCodesService.getAllConstants();
@@ -206,8 +189,6 @@ public class InternalResource {
 
     @GET
     @Path("listcodesforconstant/{constant}")
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getCodesForConstant(@PathParam("constant") String constant) {
         try {
             List<CustomCode> customCodes = customCodesService.getAllFor(constant);
@@ -219,8 +200,6 @@ public class InternalResource {
 
     @GET
     @Path("verify/{constant}/{code}/{date}")
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response verify(@ApiParam(value = "constants", required = true) @PathParam("constant") String constant,
                            @ApiParam(value = "code", required = true) @PathParam("code") String code,
                            @ApiParam(value = "validToDate", required = true) @PathParam(value = "date") String date)
@@ -237,8 +216,6 @@ public class InternalResource {
 
     @GET
     @Path("getfordate/{constant}/{code}/{date}")
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getForDate(@PathParam("constant") String constant,
                                @PathParam("code") String code,
                                @PathParam(value = "date") String date)
@@ -254,8 +231,6 @@ public class InternalResource {
     }
 
     @POST
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("replace")
     public Response replace(CustomCode customCode) {
         try {
@@ -273,8 +248,6 @@ public class InternalResource {
      */
     @POST
     @Path("collectassetmt")
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response enrich( AssetMTEnrichmentRequest request) {
         AssetMTEnrichmentResponse assetMTEnrichmentResponse = assetService.collectAssetMT(request);
         return Response.ok(assetMTEnrichmentResponse).header("MDC", MDC.get("requestId")).build();
@@ -282,8 +255,6 @@ public class InternalResource {
 
     @POST
     @Path("poll")
-    @Consumes(value = {MediaType.APPLICATION_JSON})
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response createPoll(PollRequestType createPoll) {
         try {
             CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(createPoll, "Internal UVMS " + createPoll.getUserName());
