@@ -23,13 +23,10 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.DurationDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.DurationSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.util.AssetDurationDeserializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.util.AssetDurationSerializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.util.OffsetDateTimeDeserializer;
@@ -49,12 +46,20 @@ import java.util.UUID;
  * 
  */
 @Entity
-@Table(name = "channel", indexes = {@Index(columnList = "mobterm_id", name = "channel_mobterm_FK_INX01", unique = false),
-		@Index(columnList = "dnid", name = "channel_INX01", unique = false),},
-		uniqueConstraints = {@UniqueConstraint(name = "channel_uc_historyid" , columnNames = "historyid"),
-							 @UniqueConstraint(name = "channel_uc_dnid_member_number" , columnNames = {"dnid", "member_number"})})
+@Table(name = "channel",
+		indexes = {
+			@Index(columnList = "mobterm_id", name = "channel_mobterm_FK_INX01", unique = false),
+			@Index(columnList = "dnid", name = "channel_INX01", unique = false)
+		},
+		uniqueConstraints = {
+			@UniqueConstraint(name = "channel_uc_historyid" , columnNames = "historyid"),
+			@UniqueConstraint(name = "channel_uc_dnid_member_number" , columnNames = {"dnid", "member_number"})
+		})
+@NamedQueries({
+		@NamedQuery(name = MobileTerminalConstants.CHANNEL_FIND_ACTIVE_DNID,
+				query = "SELECT c.DNID FROM Channel c INNER JOIN c.mobileTerminal mt INNER JOIN mt.plugin p WHERE c.active = true AND mt.archived = false AND p.pluginInactive = false AND p.pluginServiceName = :pluginName")
+})
 @Audited
-//@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Channel implements Serializable {
 	private static final long serialVersionUID = 1L;
 

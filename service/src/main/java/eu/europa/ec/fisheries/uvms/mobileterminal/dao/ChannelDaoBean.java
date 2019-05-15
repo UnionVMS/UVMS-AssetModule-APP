@@ -12,6 +12,7 @@
 
 package eu.europa.ec.fisheries.uvms.mobileterminal.dao;
 
+import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.poll.PollSearchMapper;
 
@@ -46,17 +47,8 @@ public class ChannelDaoBean  {
     }
 
     public List<String> getActiveDNID(String pluginName) {
-        String sql = getSQLActiveDNID(pluginName);
-        TypedQuery<String> query = em.createQuery(sql, String.class);
+        TypedQuery<String> query = em.createNamedQuery(MobileTerminalConstants.CHANNEL_FIND_ACTIVE_DNID, String.class);
+        query.setParameter("pluginName", pluginName);
         return query.getResultList();
-    }
-
-    private String getSQLActiveDNID(String pluginName) {
-        return "SELECT DISTINCT c.DNID FROM Channel c " +
-                "INNER JOIN c.mobileTerminal mobTerm " +
-                "INNER JOIN mobTerm.plugin p " +
-                "WHERE c.active = '1' " +
-                "AND mobTerm.archived = '0' AND p.pluginInactive = '0' " +
-                "AND p.pluginServiceName = '" + pluginName + "'";
     }
 }

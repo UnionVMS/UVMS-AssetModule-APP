@@ -24,6 +24,8 @@ public class MobileTerminalConstants {
 	public static final String MOBILE_TERMINAL_FIND_BY_ASSET_ID = "Mobileterminal.findByAssetId";
 	public static final String MOBILE_TERMINAL_FIND_BY_DNID_AND_MEMBER_NR_AND_TYPE = "Mobileterminal.findByDnidAndMemberNumberAndType";
 
+	public static final String CHANNEL_FIND_ACTIVE_DNID = "Channel.findByActiveDNID";
+
 	public static final String PLUGIN_FIND_ALL = "Plugin.findAll";
 	public static final String PLUGIN_FIND_BY_SERVICE_NAME = "Plugin.findByServiceName";
 	
