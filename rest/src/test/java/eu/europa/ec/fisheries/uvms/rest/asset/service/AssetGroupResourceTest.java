@@ -182,10 +182,6 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
                 .post(Entity.json(field))
                 .readEntity(AssetGroupField.class);
 
-        System.out.println("AGF : " + field);
-        System.out.println("AG : " + assetGroup);
-        System.out.println("AG : " + field.getAssetGroup());
-
         assertNotNull(field.getId());;
     }
 
