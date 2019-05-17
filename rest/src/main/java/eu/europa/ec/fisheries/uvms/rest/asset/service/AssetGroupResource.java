@@ -11,11 +11,11 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
-import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
@@ -53,7 +53,10 @@ public class AssetGroupResource {
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
     private ObjectMapper objectMapper(){
         ObjectMapperContextResolver omcr = new ObjectMapperContextResolver();
-        return omcr.getContext(Asset.class);
+        ObjectMapper objectMapper = omcr.getContext(AssetGroup.class);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .findAndRegisterModules();
+        return objectMapper;
     }
 
     /**
@@ -188,7 +191,6 @@ public class AssetGroupResource {
         }
     }
 
-    //TODO: This lacks a proper test
     @POST
     @ApiOperation(value = "CreateAssetGroupField", notes = "CreateAssetGroupField", response = AssetGroupField.class)
     @ApiResponses(value = {
@@ -196,10 +198,11 @@ public class AssetGroupResource {
             @ApiResponse(code = 200, message = "AssetGroupField successfully deleted")})
     @Path("/{id}/field")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response createAssetGroupField(@ApiParam(value = "Parent Assetgroup id", required = true) @PathParam(value = "id") UUID parentAssetgroupId, @ApiParam(value = "The AssetGroupField to be created", required = true) AssetGroupField assetGroupField) {
+    public Response createAssetGroupField(@ApiParam(value = "Parent AssetGroup id", required = true) @PathParam(value = "id") UUID parentAssetGroupId,
+                                          @ApiParam(value = "The AssetGroupField to be created", required = true) AssetGroupField assetGroupField) {
         try {
             String user = servletRequest.getRemoteUser();
-            AssetGroupField createdAssetGroupField = assetGroupService.createAssetGroupField(parentAssetgroupId, assetGroupField, user);
+            AssetGroupField createdAssetGroupField = assetGroupService.createAssetGroupField(parentAssetGroupId, assetGroupField, user);
             String response = objectMapper().writeValueAsString(createdAssetGroupField);
             return Response.ok(response).build();
         } catch (Exception e) {
@@ -270,7 +273,6 @@ public class AssetGroupResource {
         }
     }
 
-    //TODO: This lacks a proper test
     @GET
     @ApiOperation(value = "Retrieve Assetgroupfields  by AssetGroupId",  response = AssetGroupField.class, responseContainer = "List")
     @ApiResponses(value = {

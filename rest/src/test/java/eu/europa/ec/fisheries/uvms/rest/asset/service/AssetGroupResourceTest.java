@@ -1,25 +1,25 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
-
-import java.util.List;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
-import org.jboss.arquillian.container.test.api.OperateOnDeployment;
-import org.jboss.arquillian.container.test.api.RunAsClient;
-import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
+import org.jboss.arquillian.container.test.api.OperateOnDeployment;
+import org.jboss.arquillian.container.test.api.RunAsClient;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 @RunAsClient
@@ -42,18 +42,14 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
     
     @Test
     @OperateOnDeployment("normal")
-    public void createAssetTest() {
-
+    public void createAssetGroupTest() {
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
-        
-        AssetGroup createdAssetGroup = getWebTarget()
+        assetGroup = getWebTarget()
                 .path("/group")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(assetGroup), AssetGroup.class);
 
-        assertNotNull(createdAssetGroup);
-        
-        assertThat(createdAssetGroup.getName(), is(assetGroup.getName()));
+        assertNotNull(assetGroup.getId());
     }
     
     @Test
@@ -158,6 +154,78 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
         assertThat(fetchedAssetGroup.getId(), is(createdAssetGroup.getId()));
         assertThat(fetchedAssetGroup.getName(), is(createdAssetGroup.getName()));
     }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createAssetGroupFieldTest() {
+        Asset asset = AssetHelper.createBasicAsset();
+        asset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+
+        AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
+        assetGroup = getWebTarget()
+                .path("group")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(assetGroup), AssetGroup.class);
+
+        AssetGroupField field = new AssetGroupField();
+        field.setKey("GUID");
+        field.setValue(asset.getId().toString());
+
+        field = getWebTarget()
+                .path("group")
+                .path(assetGroup.getId().toString())
+                .path("field")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(field))
+                .readEntity(AssetGroupField.class);
+
+        System.out.println("AGF : " + field);
+        System.out.println("AG : " + assetGroup);
+        System.out.println("AG : " + field.getAssetGroup());
+
+        assertNotNull(field.getId());;
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void retrieveFieldsForGroupTest() {
+        Asset asset = AssetHelper.createBasicAsset();
+        asset = getWebTarget()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(asset), Asset.class);
+
+        AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
+        assetGroup = getWebTarget()
+                .path("group")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(assetGroup), AssetGroup.class);
+
+        AssetGroupField field = new AssetGroupField();
+        field.setKey("GUID");
+        field.setValue(asset.getId().toString());
+
+        field = getWebTarget()
+                .path("group")
+                .path(assetGroup.getId().toString())
+                .path("field")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(field))
+                .readEntity(AssetGroupField.class);
+
+        List<AssetGroupField> fieldList = getWebTarget()
+                .path("group")
+                .path(assetGroup.getId().toString())
+                .path("fieldsForGroup")
+                .request(MediaType.APPLICATION_JSON)
+                .get(new GenericType<List<AssetGroupField>>() {
+                });
+
+        assertEquals(field.getId(), fieldList.get(0).getId());
+    }
     
     @Test
     @OperateOnDeployment("normal")
@@ -173,7 +241,7 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
                 .path("group")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json(assetGroup), AssetGroup.class);
-        
+
         AssetGroupField field = new AssetGroupField();
         field.setKey("GUID");
         field.setValue(createdAsset.getId().toString());
