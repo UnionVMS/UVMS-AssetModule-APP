@@ -26,6 +26,7 @@ import javax.ejb.EJBTransactionRolledbackException;
 import javax.inject.Inject;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -287,12 +288,39 @@ public class AssetDaoTest extends TransactionalTests {
         commit();
     }
 
-    // TODO redo this test when there is time it fails on gfcm unique contraint
     @Test
-    @Ignore
+    @OperateOnDeployment("normal")
+    public void getAssetAtFirstRevisionTest() throws Exception {
+        Asset asset = AssetTestsHelper.createBasicAsset();
+        asset = assetDao.createAsset(asset);
+        commit();
+        String oldName = asset.getName();
+        asset.setName(oldName + " updated");
+        assetDao.updateAsset(asset);
+        commit();
+
+        Asset assetAtDate = assetDao.getAssetAtDate(asset, OffsetDateTime.now(ZoneOffset.UTC).minus(1, ChronoUnit.DAYS));
+
+        assertThat(assetAtDate.getId(), is(notNullValue()));
+
+        assertThat(assetAtDate.getName(), is(oldName));
+        assertThat(assetAtDate.getCfr(), is(asset.getCfr()));
+        assertThat(assetAtDate.getActive(), is(asset.getActive()));
+        assetDao.deleteAsset(asset);
+        commit();
+    }
+
+    @Test
     @OperateOnDeployment("normal")
     public void getAssetAtDateMultipleAssetsTest() throws Exception {
         Asset asset1 = AssetTestsHelper.createBasicAsset();
+        asset1.setCfr(null);
+        asset1.setIrcs(null);
+        asset1.setMmsi(null);
+        asset1.setGfcm(null);
+        asset1.setImo(null);
+        asset1.setUvi(null);
+        asset1.setIccat(null);
         asset1 = assetDao.createAsset(asset1);
         String firstName = asset1.getName();
         commit();
