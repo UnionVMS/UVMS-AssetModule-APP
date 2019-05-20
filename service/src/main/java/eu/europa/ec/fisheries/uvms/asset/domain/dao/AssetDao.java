@@ -306,14 +306,23 @@ public class AssetDao {
         }
     }
 
-    public Asset getAssetAtDate(Asset asset, OffsetDateTime OffsetDateTime) {
-        Date date = Date.from(OffsetDateTime.toInstant());
+    public Asset getAssetAtDate(Asset asset, OffsetDateTime offsetDateTime) {
+        Date date = Date.from(offsetDateTime.toInstant());
         AuditReader auditReader = AuditReaderFactory.get(em);
         try {
             return auditReader.find(Asset.class, asset.getId(), date);
         } catch (RevisionDoesNotExistException ex) {
-            return null;
+            return getFirstRevision(asset);
         }
+    }
+
+    public Asset getFirstRevision(Asset asset) {
+        AuditReader auditReader = AuditReaderFactory.get(em);
+        List<Number> revisions = auditReader.getRevisions(Asset.class, asset.getId());
+        if (!revisions.isEmpty()) {
+            return auditReader.find(Asset.class, asset.getId(), revisions.get(0));
+        }
+        return null;
     }
 
     public Asset getAssetRevisionForHistoryId(UUID historyId) {
