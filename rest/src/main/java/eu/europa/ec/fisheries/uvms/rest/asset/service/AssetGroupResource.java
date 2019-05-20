@@ -211,7 +211,6 @@ public class AssetGroupResource {
         }
     }
 
-    //TODO: This lacks a propper test!!!!!
     @PUT
     @ApiOperation(value = "UpdateAssetGroupField", notes = "UpdateAssetGroupField", response = AssetGroupField.class)
     @ApiResponses(value = {
@@ -232,7 +231,6 @@ public class AssetGroupResource {
         }
     }
 
-    //TODO: this lacks a propper test
     @GET
     @ApiOperation(value = "GetAssetGroupField by id", notes = "GetAssetGroupField by id", response = AssetGroupField.class)
     @ApiResponses(value = {
@@ -252,7 +250,6 @@ public class AssetGroupResource {
         }
     }
 
-    //TODO: This lacks a propper test
     @DELETE
     @ApiOperation(value = "DeleteAssetGroupField by id", notes = "DeleteAssetGroupField by id", response = AssetGroupField.class)
     @ApiResponses(value = {
@@ -260,7 +257,7 @@ public class AssetGroupResource {
             @ApiResponse(code = 200, message = "AssetGroupField successfully deleted")})
     @Path("/field/{id}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response deleteAssetGroupField(@ApiParam(value = "AssetgroupField id", required = true)   @PathParam(value = "id")  UUID assetGroupFieldId) {
+    public Response deleteAssetGroupField(@ApiParam(value = "AssetGroupField id", required = true)   @PathParam(value = "id")  UUID assetGroupFieldId) {
 
         try {
             String user = servletRequest.getRemoteUser();

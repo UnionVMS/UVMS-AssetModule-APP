@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -221,6 +222,114 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
                 });
 
         assertEquals(field.getId(), fieldList.get(0).getId());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void deleteAssetGroupFieldTest() {
+
+        AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
+        assetGroup = getWebTarget()
+                .path("group")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(assetGroup), AssetGroup.class);
+
+        UUID randomUUID = UUID.randomUUID();
+
+        AssetGroupField field = new AssetGroupField();
+        field.setKey("GUID");
+        field.setValue(randomUUID.toString());
+
+        field = getWebTarget()
+                .path("group")
+                .path(assetGroup.getId().toString())
+                .path("field")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(field))
+                .readEntity(AssetGroupField.class);
+
+        assertNotNull(field.getId());
+
+        field = getWebTarget()
+                .path("group")
+                .path("field")
+                .path(field.getId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .delete()
+                .readEntity(AssetGroupField.class);
+
+        assertNotNull(field);
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetGroupFieldTest() {
+        AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
+        assetGroup = getWebTarget()
+                .path("group")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(assetGroup), AssetGroup.class);
+
+        UUID randomUUID = UUID.randomUUID();
+
+        AssetGroupField field = new AssetGroupField();
+        field.setKey("GUID");
+        field.setValue(randomUUID.toString());
+
+        field = getWebTarget()
+                .path("group")
+                .path(assetGroup.getId().toString())
+                .path("field")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(field))
+                .readEntity(AssetGroupField.class);
+
+        AssetGroupField fetched = getWebTarget()
+                .path("group")
+                .path("field")
+                .path(field.getId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .get(AssetGroupField.class);
+
+        assertNotNull(fetched.getId());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void updateAssetGroupFieldTest() {
+        AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
+        assetGroup = getWebTarget()
+                .path("group")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(assetGroup), AssetGroup.class);
+
+        UUID randomUUID = UUID.randomUUID();
+
+        AssetGroupField field = new AssetGroupField();
+        field.setKey("GUID");
+        field.setValue(randomUUID.toString());
+
+        field = getWebTarget()
+                .path("group")
+                .path(assetGroup.getId().toString())
+                .path("field")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(field))
+                .readEntity(AssetGroupField.class);
+
+        assertEquals(randomUUID.toString(), field.getValue());
+
+        UUID newRandomUUID = UUID.randomUUID();
+        field.setValue(newRandomUUID.toString());
+
+        AssetGroupField fetchedField = getWebTarget()
+                .path("group")
+                .path("field")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(field))
+                .readEntity(AssetGroupField.class);
+
+        assertEquals(newRandomUUID.toString(), fetchedField.getValue());
     }
     
     @Test
