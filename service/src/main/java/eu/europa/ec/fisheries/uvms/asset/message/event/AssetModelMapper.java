@@ -198,7 +198,7 @@ public class AssetModelMapper {
         List<Note> notes = assetService.getNotesForAsset(assetEntity.getId());
         for (Note note : notes) {
             AssetNotes assetNote = new AssetNotes();
-            // TODO id?
+            assetNote.setId(note.getId().toString());
             if (note.getDate() != null) {
                 assetNote.setDate(note.getDate().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
             }
@@ -314,6 +314,9 @@ public class AssetModelMapper {
         List<Note> notes = new ArrayList<>();
         for (AssetNotes assetNote : assetNotes) {
             Note note = new Note();
+            if(assetNote.getId() != null) {
+                note.setId(UUID.fromString(assetNote.getId()));
+            }
             if (assetNote.getDate() != null) {
                 note.setDate(OffsetDateTime.parse(assetNote.getDate(), DateTimeFormatter.ISO_OFFSET_DATE_TIME));
             }
