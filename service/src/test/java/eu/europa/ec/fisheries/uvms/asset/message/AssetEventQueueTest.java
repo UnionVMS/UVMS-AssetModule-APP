@@ -101,23 +101,21 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         assertThat(assetById.getIrcs(), is(asset.getIrcs()));
     }
 
-    // TODO fix this test it is not independent
     @Test
     @RunAsClient
-    @Ignore
     public void getAssetListByQueryTest() throws Exception {
         Asset asset = AssetTestHelper.createBasicAsset();
-        jmsHelper.upsertAsset(asset);
+        Asset upserted = jmsHelper.upsertAsset(asset);
         Thread.sleep(5000);
-        
+
         AssetListQuery assetListQuery = AssetTestHelper.createBasicAssetQuery();
         AssetListCriteriaPair assetListCriteriaPair = new AssetListCriteriaPair();
         assetListCriteriaPair.setKey(ConfigSearchField.FLAG_STATE);
         assetListCriteriaPair.setValue(asset.getCountryCode());
         assetListQuery.getAssetSearchCriteria().getCriterias().add(assetListCriteriaPair);
-        
+
         List<Asset> assets = jmsHelper.getAssetByAssetListQuery(assetListQuery);
-        assertTrue(assets.stream().filter(a -> asset.getCfr() == asset.getCfr()).count() > 0);
+        assertTrue(assets.stream().anyMatch(a -> upserted.getCfr().equals(a.getCfr())));
     }
     
     @Test
