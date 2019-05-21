@@ -61,11 +61,6 @@ public class PollDaoBean  {
 		}
 	}
 
-	//ToDo: This method is not implemented. Need to evaluate if the functionality is required or not.
-    public List<Poll> getPollListByProgramPoll(Integer pollProgramId)  {
-        throw new IllegalStateException("getPollListByProgramPoll not implemented!");
-    }
-
 	public Long getPollListSearchCount(String sql, List<PollSearchKeyValue> searchKeyValues) {
 		TypedQuery<Long> query = em.createQuery(sql, Long.class);
 		queryBuilder(searchKeyValues, query);

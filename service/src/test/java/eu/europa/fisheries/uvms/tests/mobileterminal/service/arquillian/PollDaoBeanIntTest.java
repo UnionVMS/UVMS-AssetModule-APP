@@ -24,10 +24,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 /**
  * Created by roblar on 2017-05-03.
@@ -125,16 +122,6 @@ public class PollDaoBeanIntTest extends TransactionalTests {
 
         Poll poll = pollDao.getPollById(null);
         assertNull(poll);
-    }
-
-    @Test
-    @OperateOnDeployment("normal")
-    public void testGetPollListByProgramPoll_willFail() {
-
-        thrown.expect(EJBTransactionRolledbackException.class);
-
-        Integer pollProgramId = 1;
-        pollDao.getPollListByProgramPoll(pollProgramId);
     }
 
     @Test
