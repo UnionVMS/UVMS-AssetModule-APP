@@ -26,28 +26,24 @@ public class PollSearchMapper {
 	public static List<PollSearchKeyValue> createSearchFields(List<ListCriteria> criterias) {
 		Map<PollSearchField, PollSearchKeyValue> searchKeyValues = new HashMap<>();
 		for (ListCriteria criteria : criterias) {
-			PollSearchKeyValue keyValue = mapSearchKey(criteria, searchKeyValues);
+			PollSearchKeyValue keyValue = mapSearchKey(criteria);
 			searchKeyValues.put(keyValue.getSearchField(), keyValue);
 		}
 		return new ArrayList<>(searchKeyValues.values());
 	}
 
-	// TODO  FIX, done maybe?
-	private static PollSearchKeyValue mapSearchKey(ListCriteria criteria, Map<PollSearchField, PollSearchKeyValue> searchKeys) {
+	private static PollSearchKeyValue mapSearchKey(ListCriteria criteria) {
 		if (criteria == null || criteria.getKey() == null || criteria.getValue() == null) {
 			throw new IllegalArgumentException("Non valid search criteria");
 		}
 		PollSearchField searchField = getSearchField(criteria.getKey());
-		PollSearchKeyValue searchKeyValue = getSearchKeyValue(searchField, searchKeys);
+		PollSearchKeyValue searchKeyValue = getSearchKeyValue(searchField);
 		searchKeyValue.getValues().add(criteria.getValue());
 		return searchKeyValue;
 	}
 
-	private static PollSearchKeyValue getSearchKeyValue(PollSearchField field, Map<PollSearchField, PollSearchKeyValue> searchKeys) {
-		PollSearchKeyValue searchKeyValue = searchKeys.get(field);
-		if (searchKeyValue == null) {
-			searchKeyValue = new PollSearchKeyValue();
-		}
+	private static PollSearchKeyValue getSearchKeyValue(PollSearchField field) {
+		PollSearchKeyValue searchKeyValue = new PollSearchKeyValue();
 		searchKeyValue.setSearchField(field);
 		return searchKeyValue;
 	}
@@ -68,11 +64,6 @@ public class PollSearchMapper {
 				throw new IllegalArgumentException("No searchKey " + key.name());
 		}
 	}
-
-	/*
-	 * ToDo: This method builds an invalid sql phrase when enum PollSearchField.CONNECT_ID is set in PollSearchKeyValue.
-	 * ToDo: It's based on MobileTerminalConnect entity class is not implemented yet.
-	 */
 
 	private static String createSearchSql(List<PollSearchKeyValue> searchKeys, boolean isDynamic) {
 		StringBuilder builder = new StringBuilder();
@@ -139,17 +130,17 @@ public class PollSearchMapper {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT DISTINCT c FROM Channel c");
 		builder.append(" INNER JOIN FETCH c.mobileTerminal mt");
-		builder.append(" INNER JOIN FETCH mt.plugin p ");
-		builder.append(" INNER JOIN FETCH p.capabilities cap ");
-		builder.append(" WHERE ");
-		builder.append(" c.pollChannel = '1' ");
-		builder.append(" AND mt.archived = '0' AND mt.inactivated = '0' AND p.pluginInactive = '0' ");
-		builder.append(" AND (cap.name = 'POLLABLE' AND UPPER(cap.value) = 'TRUE' ) ");
+		builder.append(" INNER JOIN FETCH mt.plugin p");
+		builder.append(" INNER JOIN FETCH p.capabilities cap");
+		builder.append(" WHERE");
+		builder.append(" c.pollChannel = '1'");
+		builder.append(" AND mt.archived = '0' AND mt.inactivated = '0' AND p.pluginInactive = '0'");
+		builder.append(" AND (cap.name = 'POLLABLE' AND UPPER(cap.value) = 'TRUE' )");
 		builder.append(" AND (mt.asset is not null) ");
 		if (idList != null && !idList.isEmpty()) {
 			builder.append(" AND mt.asset.id IN :idList");
 		}
-		builder.append(" ORDER BY c.id DESC ");
+		builder.append(" ORDER BY c.id DESC");
 		return builder.toString();
 	}
 }
