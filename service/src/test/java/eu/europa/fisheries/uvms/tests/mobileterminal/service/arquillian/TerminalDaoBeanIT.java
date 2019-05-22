@@ -50,20 +50,13 @@ public class TerminalDaoBeanIT extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void createMobileTerminal() {
-
         String serialNo = createSerialNumber();
         MobileTerminal mobileTerminal = createMobileTerminalHelper(serialNo);
 
-        terminalDaoBean.createMobileTerminal(mobileTerminal);
-        em.flush();
+        MobileTerminal created = terminalDaoBean.createMobileTerminal(mobileTerminal);
 
-        MobileTerminal fetchedBySerialNo = terminalDaoBean.getMobileTerminalBySerialNo(serialNo);
-// @formatter:off
-        boolean ok = ((fetchedBySerialNo != null) &&
-                (fetchedBySerialNo.getSerialNo() != null) &&
-                (fetchedBySerialNo.getSerialNo().equals(serialNo)));
-// @formatter:on
-        assertTrue(ok);
+        assertNotNull(created.getId());
+        assertEquals(serialNo, created.getSerialNo());
     }
 
     @Test
@@ -89,9 +82,13 @@ public class TerminalDaoBeanIT extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void getMobileTerminalBySerialNo() {
+        String serialNo = createSerialNumber();
+        MobileTerminal mobileTerminal = createMobileTerminalHelper(serialNo);
 
-        // this is the same as create since they both use getMobileTerminalBySerialNo to verify functionality
-        createMobileTerminal();
+        MobileTerminal created = terminalDaoBean.createMobileTerminal(mobileTerminal);
+        MobileTerminal fetched = terminalDaoBean.getMobileTerminalBySerialNo(serialNo);
+
+        assertEquals(created.getId(), fetched.getId());
     }
 
     @Test

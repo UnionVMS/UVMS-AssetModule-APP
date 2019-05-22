@@ -57,7 +57,20 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void createPollProgram() {
 
-        // we want to be able to tamper with the dates for proper test coverage
+        OffsetDateTime startDate = getStartDate();
+        OffsetDateTime latestRun = getLatestRunDate();
+        OffsetDateTime stopDate = getStopDate();
+
+        String mobileTerminalSerialNumber = createSerialNumber();
+        PollProgram pollProgram = createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
+
+        pollProgramDao.createPollProgram(pollProgram);
+        assertNotNull(pollProgram.getId());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getPollProgramByGuid() {
         OffsetDateTime startDate = getStartDate();
         OffsetDateTime latestRun = getLatestRunDate();
         OffsetDateTime stopDate = getStopDate();
@@ -69,21 +82,14 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
         UUID guid = pollProgram.getId();
         PollProgram fetchedPollProgram = pollProgramDao.getPollProgramById(guid);
 
-//@formatter:off
-        boolean ok = ((fetchedPollProgram != null) &&
-                (fetchedPollProgram.getId() != null) &&
-                (fetchedPollProgram.getId().equals(guid)));
-//@formatter:on
-        assertTrue(ok);
+        assertEquals(guid, fetchedPollProgram.getId());
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void createPollProgram_updateUserConstraintViolation() {
-
         thrown.expect(ConstraintViolationException.class);
 
-        // we want to be able to tamper with the dates for proper test coverage
         OffsetDateTime startDate = getStartDate();
         OffsetDateTime latestRun = getLatestRunDate();
         OffsetDateTime stopDate = getStopDate();
@@ -101,13 +107,11 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void createPollProgram_withNullWillFail() {
-
         try {
             pollProgramDao.createPollProgram(null);
             Assert.fail();
         }catch(RuntimeException e){
             Assert.assertTrue(true);
-
         }
     }
 
@@ -115,7 +119,6 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void updatePollProgram() {
 
-        // we want to be able to tamper with the dates for proper test  coverage
         OffsetDateTime startDate = getStartDate();
         OffsetDateTime latestRun = getLatestRunDate();
         OffsetDateTime stopDate = getStopDate();
@@ -126,29 +129,20 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
         pollProgramDao.createPollProgram(pollProgram);
         em.flush();
 
-        // change Username
         pollProgram.setUpdatedBy("update");
-        // store
         pollProgramDao.updatePollProgram(pollProgram);
         em.flush();
 
         PollProgram fetchedPollProgram = pollProgramDao.getPollProgramById(pollProgram.getId());
 
-// @formatter:off
-        boolean ok = ((fetchedPollProgram != null) &&
-                (fetchedPollProgram.getId() != null) &&
-                (fetchedPollProgram.getUpdatedBy() != null) &&
-                (fetchedPollProgram.getUpdatedBy().equals("update")));
-// @formatter:on
-        assertTrue(ok);
+        assertNotNull(fetchedPollProgram.getId());
+        assertEquals("update", fetchedPollProgram.getUpdatedBy());
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void updatePollProgram_WithNonePersistedEntityWillFail()  {
 
-
-        // we want to be able to tamper with the dates for proper test  coverage
         OffsetDateTime startDate = getStartDate();
         OffsetDateTime latestRun = getLatestRunDate();
         OffsetDateTime stopDate = getStopDate();
@@ -164,7 +158,6 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void getProgramPollsAlive() {
 
-        // we want to be able to tamper with the dates for proper test coverage
         OffsetDateTime startDate = getStartDate();
         OffsetDateTime latestRun = getLatestRunDate();
         OffsetDateTime stopDate = getStopDate();
@@ -175,14 +168,9 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
         pollProgramDao.createPollProgram(pollProgram);
         em.flush();
         List<PollProgram> pollsAlive = pollProgramDao.getProgramPollsAlive();
-        boolean found = false;
-        for (PollProgram pp : pollsAlive) {
-            UUID tmpGuid = pp.getId();
-            if (tmpGuid.equals(pollProgram.getId())) {
-                found = true;
-                break;
-            }
-        }
+
+        boolean found = pollsAlive.stream().anyMatch(pp -> pollProgram.getId().equals(pp.getId()));
+
         assertTrue(found);
     }
 
@@ -190,7 +178,6 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void getProgramPollsAlive_ShouldFailWithCurrentDateBiggerThenStopDate() {
 
-        // we want to be able to tamper with the dates for proper test coverage
         OffsetDateTime startDate = getStartDate();
         OffsetDateTime latestRun = getLatestRunDate();
 
@@ -205,14 +192,9 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
         pollProgramDao.createPollProgram(pollProgram);
         em.flush();
         List<PollProgram> pollsAlive = pollProgramDao.getProgramPollsAlive();
-        boolean found = false;
-        for (PollProgram pp : pollsAlive) {
-            UUID tmpGuid = pp.getId();
-            if (tmpGuid.equals(pollProgram.getId())) {
-                found = true;
-                break;
-            }
-        }
+
+        boolean found = pollsAlive.stream().anyMatch(pp -> pollProgram.getId().equals(pp.getId()));
+
         assertFalse(found);
     }
 
@@ -220,7 +202,6 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void getProgramPollsAlive_ShouldFailWithPollStateArchived() {
 
-        // we want to be able to tamper with the dates for proper test coverage
         OffsetDateTime startDate = getStartDate();
         OffsetDateTime latestRun = getLatestRunDate();
         OffsetDateTime stopDate = getStopDate();
@@ -232,14 +213,9 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
         pollProgramDao.createPollProgram(pollProgram);
         em.flush();
         List<PollProgram> pollsAlive = pollProgramDao.getProgramPollsAlive();
-        boolean found = false;
-        for (PollProgram pp : pollsAlive) {
-            UUID tmpGuid = pp.getId();
-            if (tmpGuid.equals(pollProgram.getId())) {
-                found = true;
-                break;
-            }
-        }
+
+        boolean found = pollsAlive.stream().anyMatch(pp -> pollProgram.getId().equals(pp.getId()));
+
         assertFalse(found);
     }
 
@@ -247,7 +223,6 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void getPollProgramRunningAndStarted() {
 
-        // we want to be able to tamper with the dates for proper test coverage
         OffsetDateTime startDate = getStartDate();
         OffsetDateTime latestRun = getLatestRunDate();
         OffsetDateTime stopDate = getStopDate();
@@ -258,20 +233,10 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
         pollProgramDao.createPollProgram(pollProgram);
         em.flush();
 
-        List<PollProgram> pollPrograms;
+        List<PollProgram> pollPrograms = pollProgramDao.getPollProgramRunningAndStarted();
+        boolean found = pollPrograms.stream().anyMatch(pp -> pollProgram.getId().equals(pp.getId()));
 
-        pollPrograms = pollProgramDao.getPollProgramRunningAndStarted();
-
-        boolean found = false;
-        for (PollProgram pp : pollPrograms) {
-            UUID tmpGuid = pp.getId();
-            if (tmpGuid.equals(pollProgram.getId())) {
-                found = true;
-                break;
-            }
-        }
         assertTrue(found);
-        assertTrue(pollPrograms.size() > 0);
     }
 
     @Test
@@ -281,7 +246,6 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
         Date now = new Date();
         cal.setTime(now);
 
-        // we want to be able to tamper with the dates for proper test coverage
         OffsetDateTime startDate = getStartDate();
 
         cal.set(Calendar.DAY_OF_MONTH, 20);
@@ -296,20 +260,9 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
         pollProgramDao.createPollProgram(pollProgram);
         em.flush();
 
-        List<PollProgram> pollPrograms;
+        List<PollProgram> pollPrograms = pollProgramDao.getPollProgramRunningAndStarted();
 
-        pollPrograms = pollProgramDao.getPollProgramRunningAndStarted();
-
-        boolean found = false;
-        for (PollProgram pp : pollPrograms) {
-            UUID tmpGuid = pp.getId();
-            if (tmpGuid.equals(pollProgram.getId())) {
-                found = true;
-                break;
-            }
-        }
-        assertFalse(found);
-        assertFalse(pollPrograms.size() > 0);
+        assertTrue(pollPrograms.isEmpty());
     }
 
     @Test
@@ -318,7 +271,6 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
 
         cal.setTime(new Date(System.currentTimeMillis()));
 
-        // we want to be able to tamper with the dates for proper test coverage
         cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + 1);
         OffsetDateTime startDate = OffsetDateTime.now(ZoneOffset.UTC).plusYears(1);  //starting the poll one year in the future should mean that it is not running now
@@ -332,20 +284,12 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
         pollProgramDao.createPollProgram(pollProgram);
         em.flush();
 
-        List<PollProgram> pollPrograms;
+        List<PollProgram> pollPrograms = pollProgramDao.getPollProgramRunningAndStarted();
 
-        pollPrograms = pollProgramDao.getPollProgramRunningAndStarted();
+        boolean found = pollPrograms.stream().anyMatch(pp -> pollProgram.getId().equals(pp.getId()));
 
-        boolean found = false;
-        for (PollProgram pp : pollPrograms) {
-            UUID tmpGuid = pp.getId();
-            if (tmpGuid.equals(pollProgram.getId())) {
-                found = true;
-                break;
-            }
-        }
         assertFalse(found);
-        assertFalse(pollPrograms.size() > 0);
+        assertTrue(pollPrograms.isEmpty());
     }
 
     @Test
@@ -354,7 +298,6 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
 
         cal.setTime(new Date(System.currentTimeMillis()));
 
-        // we want to be able to tamper with the dates for proper test coverage
         OffsetDateTime startDate = getStartDate();
         OffsetDateTime latestRun = getLatestRunDate();
         OffsetDateTime stopDate = getStopDate();
@@ -366,34 +309,18 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
         pollProgramDao.createPollProgram(pollProgram);
         em.flush();
 
-        List<PollProgram> pollPrograms;
+        List<PollProgram> pollPrograms = pollProgramDao.getPollProgramRunningAndStarted();
 
-        pollPrograms = pollProgramDao.getPollProgramRunningAndStarted();
+        boolean found = pollPrograms.stream().anyMatch(pp -> pollProgram.getId().equals(pp.getId()));
 
-        boolean found = false;
-        for (PollProgram pp : pollPrograms) {
-            UUID tmpGuid = pp.getId();
-            if (tmpGuid.equals(pollProgram.getId())) {
-                found = true;
-                break;
-            }
-        }
         assertFalse(found);
-        assertFalse(pollPrograms.size() > 0);
-    }
-
-    @Test
-    @OperateOnDeployment("normal")
-    public void getPollProgramByGuid() {
-        // same as create since it uses the same methods to validate itself
-        createPollProgram();
+        assertTrue(pollPrograms.isEmpty());
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void getPollProgramByGuid_ShouldFailWithInvalidGuid() {
 
-        // we want to be able to tamper with the dates for proper test coverage
         OffsetDateTime startDate = getStartDate();
         OffsetDateTime latestRun = getLatestRunDate();
         OffsetDateTime stopDate = getStopDate();
@@ -407,10 +334,10 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
         assertNull(fetchedPollProgram);
     }
 
-    private PollProgram createPollProgramHelper(String mobileTerminalSerialNo, OffsetDateTime startDate, OffsetDateTime stopDate, OffsetDateTime latestRun) {
+    private PollProgram createPollProgramHelper(String mobileTerminalSerialNo, OffsetDateTime startDate,
+                                                OffsetDateTime stopDate, OffsetDateTime latestRun) {
 
         PollProgram pp = new PollProgram();
-        // create a valid mobileTerminal
         MobileTerminal mobileTerminal = createMobileTerminalHelper(mobileTerminalSerialNo);
 
         PollBase pb = new PollBase();
@@ -450,6 +377,7 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
         else return null;
     }
 
+    // we want to be able to tamper with the dates for proper test coverage
     private OffsetDateTime getStartDate() {
         cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.set(Calendar.YEAR, startYear);

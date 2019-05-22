@@ -55,17 +55,13 @@ public class PollDaoBeanIntTest extends TransactionalTests {
 
         thrown.expect(ConstraintViolationException.class);
 
-        // Given
         Poll poll = createPollHelper();
         char [] updatedBy = new char[61];
         Arrays.fill(updatedBy, 'x');
         poll.setUpdatedBy(new String(updatedBy));
 
-        // When
         pollDao.createPoll(poll);
         em.flush();
-
-        // Then throw Exception
     }
 
     @Test

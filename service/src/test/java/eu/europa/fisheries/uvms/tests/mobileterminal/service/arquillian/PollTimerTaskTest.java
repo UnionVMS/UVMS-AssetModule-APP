@@ -11,23 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
-import static org.junit.Assert.assertThat;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.List;
-import java.util.UUID;
-import javax.inject.Inject;
-import org.hamcrest.CoreMatchers;
-import org.jboss.arquillian.container.test.api.OperateOnDeployment;
-import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.ListCriteria;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollListQuery;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollListResponse;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollSearchCriteria;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.SearchKey;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListPagination;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
@@ -39,28 +23,42 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.timer.PollTimerTask;
 import eu.europa.fisheries.uvms.tests.TransactionalTests;
 import eu.europa.fisheries.uvms.tests.asset.service.arquillian.arquillian.AssetTestsHelper;
 import eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian.helper.TestPollHelper;
+import org.hamcrest.CoreMatchers;
+import org.jboss.arquillian.container.test.api.OperateOnDeployment;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import javax.inject.Inject;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.List;
+import java.util.UUID;
+
+import static org.junit.Assert.assertThat;
 
 @RunWith(Arquillian.class)
 public class PollTimerTaskTest extends TransactionalTests {
     
     @Inject
-    TestPollHelper pollHelper;
+    private TestPollHelper pollHelper;
     
     @Inject
-    AssetDao assetDao;
+    private AssetDao assetDao;
     
     @Inject
-    PollServiceBean pollService;
+    private PollServiceBean pollService;
     
     @Inject
-    PollProgramDaoBean pollDao;
+    private PollProgramDaoBean pollDao;
     
     @Test
     @OperateOnDeployment("normal")
-    public void runPollTimerTaskPollShouldBeCreated() throws Exception {
+    public void runPollTimerTaskPollShouldBeCreated() {
         
         Asset asset = assetDao.createAsset(AssetTestsHelper.createBasicAsset());
-        PollProgram pollProgram = pollHelper.createPollProgramHelper(asset.getId().toString(), OffsetDateTime.now(ZoneOffset.UTC).minusHours(1), OffsetDateTime.now(ZoneOffset.UTC).plusHours(1), null);
+        PollProgram pollProgram = pollHelper.createPollProgramHelper(asset.getId().toString(),
+                OffsetDateTime.now(ZoneOffset.UTC).minusHours(1), OffsetDateTime.now(ZoneOffset.UTC).plusHours(1), null);
         pollDao.createPollProgram(pollProgram);
         
         new PollTimerTask(pollService).run();
@@ -72,10 +70,11 @@ public class PollTimerTaskTest extends TransactionalTests {
     
     @Test
     @OperateOnDeployment("normal")
-    public void runPollTimerTaskTwoPollsShouldBeCreated() throws Exception {
+    public void runPollTimerTaskTwoPollsShouldBeCreated() {
         
         Asset asset = assetDao.createAsset(AssetTestsHelper.createBasicAsset());
-        PollProgram pollProgram = pollHelper.createPollProgramHelper(asset.getId().toString(), OffsetDateTime.now(ZoneOffset.UTC).minusHours(1), OffsetDateTime.now(ZoneOffset.UTC).plusHours(1), null);
+        PollProgram pollProgram = pollHelper.createPollProgramHelper(asset.getId().toString(),
+                OffsetDateTime.now(ZoneOffset.UTC).minusHours(1), OffsetDateTime.now(ZoneOffset.UTC).plusHours(1), null);
         pollDao.createPollProgram(pollProgram);
         
         new PollTimerTask(pollService).run();
@@ -90,10 +89,11 @@ public class PollTimerTaskTest extends TransactionalTests {
     
     @Test
     @OperateOnDeployment("normal")
-    public void runPollTimerTaskFutureDateShouldNotCreatePoll() throws Exception {
+    public void runPollTimerTaskFutureDateShouldNotCreatePoll() {
         
         Asset asset = assetDao.createAsset(AssetTestsHelper.createBasicAsset());
-        PollProgram pollProgram = pollHelper.createPollProgramHelper(asset.getId().toString(), OffsetDateTime.now(ZoneOffset.UTC).plusHours(1), OffsetDateTime.now(ZoneOffset.UTC).plusHours(2), null);
+        PollProgram pollProgram = pollHelper.createPollProgramHelper(asset.getId().toString(),
+                OffsetDateTime.now(ZoneOffset.UTC).plusHours(1), OffsetDateTime.now(ZoneOffset.UTC).plusHours(2), null);
         pollDao.createPollProgram(pollProgram);
         
         new PollTimerTask(pollService).run();
@@ -105,10 +105,11 @@ public class PollTimerTaskTest extends TransactionalTests {
     
     @Test
     @OperateOnDeployment("normal")
-    public void runPollTimerTaskLastRunShoulBeSet() throws Exception {
+    public void runPollTimerTaskLastRunShouldBeSet() {
         
         Asset asset = assetDao.createAsset(AssetTestsHelper.createBasicAsset());
-        PollProgram pollProgram = pollHelper.createPollProgramHelper(asset.getId().toString(), OffsetDateTime.now(ZoneOffset.UTC).minusHours(1), OffsetDateTime.now(ZoneOffset.UTC).plusHours(1), null);
+        PollProgram pollProgram = pollHelper.createPollProgramHelper(asset.getId().toString(),
+                OffsetDateTime.now(ZoneOffset.UTC).minusHours(1), OffsetDateTime.now(ZoneOffset.UTC).plusHours(1), null);
         pollDao.createPollProgram(pollProgram);
         
         new PollTimerTask(pollService).run();
@@ -119,10 +120,11 @@ public class PollTimerTaskTest extends TransactionalTests {
     
     @Test
     @OperateOnDeployment("normal")
-    public void runPollTimerTaskOldProgramShouldBeArchived() throws Exception {
+    public void runPollTimerTaskOldProgramShouldBeArchived() {
         
         Asset asset = assetDao.createAsset(AssetTestsHelper.createBasicAsset());
-        PollProgram pollProgram = pollHelper.createPollProgramHelper(asset.getId().toString(), OffsetDateTime.now(ZoneOffset.UTC).minusHours(2), OffsetDateTime.now(ZoneOffset.UTC).minusHours(1), null);
+        PollProgram pollProgram = pollHelper.createPollProgramHelper(asset.getId().toString(),
+                OffsetDateTime.now(ZoneOffset.UTC).minusHours(2), OffsetDateTime.now(ZoneOffset.UTC).minusHours(1), null);
         pollDao.createPollProgram(pollProgram);
         
         new PollTimerTask(pollService).run();

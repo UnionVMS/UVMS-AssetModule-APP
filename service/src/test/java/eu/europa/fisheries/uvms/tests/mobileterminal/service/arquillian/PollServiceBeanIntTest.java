@@ -52,7 +52,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     private PollProgramDaoBean pollProgramDao;
 
     @Inject
-    AssetDao assetDao;
+    private AssetDao assetDao;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -70,7 +70,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void createPoll_FromMPSBIT() throws Exception {   //MPSBIT = Mapped Poll Service Bean Int Test, a test class for a, now removed, middle layer
+    public void createPoll_FromMPSBIT() {   //MPSBIT = Mapped Poll Service Bean Int Test, a test class for a, now removed, middle layer
 
         PollRequestType pollRequestType = helper_createPollRequestType(PollType.MANUAL_POLL);
 
@@ -86,7 +86,6 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void createPollWithBrokenJMS_WillFail() {
-
         try {
             System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "true");
             PollRequestType pollRequestType = testPollHelper.createPollRequestType();
@@ -256,7 +255,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    @OperateOnDeployment("normal")   //TODO: Move to PollServiceBeanTest
+    @OperateOnDeployment("normal")
     public void inactivateProgramPoll_FromMPSBIT() {
 
         // we want to be able to tamper with the dates for proper test coverage
@@ -272,7 +271,6 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         pollProgramDao.createPollProgram(pollProgram);
         UUID guid = pollProgram.getId();
 
-        //PollDto startedProgramPoll = mappedPollService.startProgramPoll(String.valueOf(guid), username);
         PollResponseType pollResponse = pollServiceBean.startProgramPoll(guid.toString(), username);
         PollDto startedProgramPoll = PollMapper.mapPoll(pollResponse);
         assertNotNull(startedProgramPoll);
@@ -281,7 +279,6 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         boolean isRunning = validatePollKeyValue(values, PollKey.PROGRAM_RUNNING, "true");
         assertTrue(isRunning);
 
-        //PollDto inactivatedProgramPoll = mappedPollService.inactivateProgramPoll(String.valueOf(guid), username);
         pollResponse = pollServiceBean.inactivateProgramPoll(String.valueOf(guid), username);
         PollDto inactivatedProgramPoll = PollMapper.mapPoll(pollResponse);
         assertNotNull(inactivatedProgramPoll);
@@ -294,7 +291,6 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void getPollProgramRunningAndStarted() {
-
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
 
         OffsetDateTime startDate = testPollHelper.getStartDate();
@@ -324,9 +320,8 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     }
 
     @Test
-    @OperateOnDeployment("normal")    //TODO: Move to PollServiceBeanTest
+    @OperateOnDeployment("normal")
     public void startProgramPoll_ShouldFailWithNullAsPollId() {
-
         try {
             pollServiceBean.startProgramPoll(null, "TEST");
             Assert.fail();
@@ -339,14 +334,12 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void stopProgramPoll_ShouldFailWithNullAsPollId() {
-
         thrown.expect(EJBTransactionRolledbackException.class);
 
         pollServiceBean.stopProgramPoll(null, "TEST");
     }
 
-
-    private PollRequestType helper_createPollRequestType(PollType pollType) throws Exception {
+    private PollRequestType helper_createPollRequestType(PollType pollType) {
 
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2015);
