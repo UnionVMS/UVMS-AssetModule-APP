@@ -36,7 +36,9 @@ public class ChannelDaoIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void testGetPollableListSearch() throws Exception {
-        Thread.sleep(2000); //If this test is run on a clean DB it will do most of its things b4 the background plugin poll has had time to do its work, thus giving the created MT inactivated values that can not be searched for
+        // If this test is run on a clean DB it will do most of its things b4 the background plugin poll has
+        // had time to do its work, thus giving the created MT inactivated values that can not be searched for
+        Thread.sleep(2000);
 
         //Given - need a string list of id's.
         Asset asset = assetDao.createAsset(AssetTestsHelper.createBasicAsset());
@@ -44,14 +46,11 @@ public class ChannelDaoIntTest extends TransactionalTests {
         String id2 = UUID.randomUUID().toString();//"test_id2";
         List<String> idList = Arrays.asList(id1, id2);
 
-
         MobileTerminal mobileTerminal = testPollHelper.createAndPersistMobileTerminal(asset);
         assertNotNull(mobileTerminal.getId());
 
-        //When
         List<Channel> channels = channelDao.getPollableListSearch(idList);
 
-        //Then
         assertNotNull(channels);
         assertEquals(1, channels.size());
     }
@@ -59,14 +58,10 @@ public class ChannelDaoIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void testGetPollableListSearch_emptyList() {
-
-        //Given - empty id list
         List<String> emptyList = new ArrayList<>();
 
-        //When
         List<Channel> channels = channelDao.getPollableListSearch(emptyList);
 
-        //Then
         assertNotNull(channels);
         assertEquals(0, channels.size());
     }
@@ -74,14 +69,10 @@ public class ChannelDaoIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void testGetPollableListSearch_NULL() {
-
-        //Given - null
         List<String> nullAsList = null;
 
-        //When
         List<Channel> channels = channelDao.getPollableListSearch(nullAsList);
 
-        //Then
         assertNotNull(channels);
         assertEquals(0, channels.size());
     }
@@ -89,28 +80,20 @@ public class ChannelDaoIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void testGetActiveDNID() {
-
-        //Given
         String pluginName = "test_getActiveDNID";
 
-        //When
         List<String> dnidList = channelDao.getActiveDNID(pluginName);
 
-        //Then
         assertNotNull(dnidList);
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void testGetActiveDNID_emptyList() {
-
-        //Given
         String pluginName = null;
 
-        //When
         List<String> dnidList = channelDao.getActiveDNID(pluginName);
 
-        //Then
         assertThat(dnidList.size(), is(0));
     }
 }

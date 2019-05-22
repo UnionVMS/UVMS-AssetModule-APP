@@ -71,26 +71,21 @@ public class PluginServiceBeanIntTest extends TransactionalTests {
 
     private PollResponseType createPollResponseType() {
 
-        // PollID
         PollId pollId  = new PollId();
         pollId.setGuid(UUID.randomUUID().toString());
 
-        // MobileTerminalType
         MobileTerminal mobileTerminal = testPollHelper.createAndPersistMobileTerminal(null);
 
-        // PollType
         PollType pollType = PollType.PROGRAM_POLL;
 
         String comment = "TEST_COMMENT";
 
-        // PollAttribute List
         List<PollAttribute> attributes = new ArrayList<>();
         PollAttribute attribute = new PollAttribute();
         attribute.setKey(PollAttributeType.USER);
         attribute.setValue(USERNAME);
         attributes.add(attribute);
 
-        // PollResponseType
         PollResponseType pollResponseType = new PollResponseType();
         pollResponseType.setPollId(pollId);
         pollResponseType.setMobileTerminal(MobileTerminalEntityToModelMapper.mapToMobileTerminalType(mobileTerminal));

@@ -22,7 +22,6 @@ import org.junit.runner.RunWith;
 import javax.ejb.EJB;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.inject.Inject;
-import javax.transaction.*;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -211,7 +210,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
             upsertMobileTerminalEntity(created);
             Assert.fail();
         } catch (Throwable t) {
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
 
@@ -228,7 +227,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
             updateMobileTerminal(created);
             fail();
         } catch (Throwable t) {
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
 
