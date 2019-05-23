@@ -16,12 +16,8 @@ import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallExcep
 import eu.europa.ec.fisheries.uvms.audit.model.mapper.AuditLogMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.AuditObjectTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.AuditOperationEnum;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class AuditModuleRequestMapper {
-
-    final static Logger LOG = LoggerFactory.getLogger(AuditModuleRequestMapper.class);
 
     public static String mapAuditLogMobileTerminalCreated(String guid, String username) throws AuditModelMarshallException {
         return mapToAuditLog(AuditObjectTypeEnum.MOBILE_TERMINAL.getValue(), AuditOperationEnum.CREATE.getValue(), guid, AuditOperationEnum.CREATE.getValue(), username);
@@ -69,18 +65,6 @@ public class AuditModuleRequestMapper {
                 break;
         }
         return mapToAuditLog(pollTypeEnum.getValue(), AuditOperationEnum.CREATE.getValue(), guid, comment, username);
-    }
-
-    public static String mapAuditLogPollInactivated(String guid, String username) throws AuditModelMarshallException {
-        return mapToAuditLog(AuditObjectTypeEnum.POLL.getValue(), AuditOperationEnum.INACTIVATE.getValue(), guid, AuditOperationEnum.INACTIVATE.getValue(), username);
-    }
-
-    public static String mapAuditLogPollStarted(String guid, String username) throws AuditModelMarshallException {
-        return mapToAuditLog(AuditObjectTypeEnum.POLL.getValue(), AuditOperationEnum.START.getValue(), guid, AuditOperationEnum.START.getValue(), username);
-    }
-
-    public static String mapAuditLogPollStopped(String guid, String username) throws AuditModelMarshallException {
-        return mapToAuditLog(AuditObjectTypeEnum.POLL.getValue(), AuditOperationEnum.STOP.getValue(), guid, AuditOperationEnum.STOP.getValue(), username);
     }
 
     private static String mapToAuditLog(String objectType, String operation, String affectedObject, String comment, String username) throws AuditModelMarshallException {
