@@ -74,7 +74,7 @@ public class MobileTerminalEntityToModelMapper {
             comChannel.setName(channel.getName());
             comChannel.setGuid(channel.getId().toString());
 
-            comChannel.getAttributes().addAll(AttributeMapper.mapAttributeStringToComChannelAttribute(channel));
+            comChannel.getAttributes().addAll(ChannelAttrMapper.mapEntityToModel(channel));
 
             ComChannelCapability pollCapability = new ComChannelCapability();
             pollCapability.setType(MobileTerminalConstants.CAPABILITY_POLLABLE);
