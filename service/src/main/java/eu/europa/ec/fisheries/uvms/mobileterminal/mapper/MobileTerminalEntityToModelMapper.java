@@ -9,27 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class MobileTerminalEntityToModelMapper {
     private static Logger LOG = LoggerFactory.getLogger(MobileTerminalEntityToModelMapper.class);
-
-    public static MobileTerminalType mapToMobileTerminalType(MobileTerminal entity, Channel channel) {
-        Set<Channel> channels = new HashSet<>();
-        channels.add(channel);
-        return mapToMobileTerminalType(entity, channels);
-    }
-
-    private static MobileTerminalType mapToMobileTerminalType(MobileTerminal entity, Set<Channel> channels) {
-        MobileTerminalType type = mapToMobileTerminalType(entity);
-
-        type.getChannels().clear();
-        type.getChannels().addAll(mapChannels(entity));
-
-        return type;
-    }
 
     public static MobileTerminalType mapToMobileTerminalType(MobileTerminal entity) {
         if (entity == null) {

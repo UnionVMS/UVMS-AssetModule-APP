@@ -440,12 +440,11 @@ public class PollServiceBean {
         List<String> idList = query.getConnectIdList();
         long in = System.currentTimeMillis();
 
-        //Long numberMatches = channelInmarsatCDao.getPollableListSearchCount(countSql, idList);
         List<Channel> channels = channelDao.getPollableListSearch(idList);
 
         for (Channel comchannel : channels) {
             //TODO slim response from Pollable
-            MobileTerminalType terminal = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(comchannel.getMobileTerminal(), comchannel);
+            MobileTerminalType terminal = MobileTerminalEntityToModelMapper.mapToMobileTerminalType(comchannel.getMobileTerminal());
             mobileTerminalList.add(terminal);
         }
 
