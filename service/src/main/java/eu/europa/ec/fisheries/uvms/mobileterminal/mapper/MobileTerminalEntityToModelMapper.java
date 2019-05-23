@@ -74,40 +74,8 @@ public class MobileTerminalEntityToModelMapper {
             comChannel.setName(channel.getName());
             comChannel.setGuid(channel.getId().toString());
 
-            comChannel.getAttributes().addAll(ChannelAttrMapper.mapEntityToModel(channel));
-
-            ComChannelCapability pollCapability = new ComChannelCapability();
-            pollCapability.setType(MobileTerminalConstants.CAPABILITY_POLLABLE);
-
-            if(channel.isPollChannel()) {
-                pollCapability.setValue(true);
-            }
-            else{
-                pollCapability.setValue(false);
-            }
-            comChannel.getCapabilities().add(pollCapability);
-
-            ComChannelCapability configCapability = new ComChannelCapability();
-            configCapability.setType(MobileTerminalConstants.CAPABILITY_CONFIGURABLE);
-
-            if (channel.isConfigChannel()) {
-                configCapability.setValue(true);
-            } else {
-                configCapability.setValue(false);
-            }
-
-            comChannel.getCapabilities().add(configCapability);
-
-            ComChannelCapability defaultCapability = new ComChannelCapability();
-            defaultCapability.setType(MobileTerminalConstants.CAPABILITY_DEFAULT_REPORTING);
-
-            if(channel.isDefaultChannel()) {
-                defaultCapability.setValue(true);
-            }
-            else{
-                defaultCapability.setValue(false);
-            }
-            comChannel.getCapabilities().add(defaultCapability);
+            comChannel.getAttributes().addAll(ChannelMapper.mapAttributes(channel));
+            ChannelMapper.mapCapabilities(comChannel, channel);
 
             channelList.add(comChannel);
         }
