@@ -17,17 +17,39 @@ import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ComChannelCapabilit
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ComChannelType;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.util.DateUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-/**
- * Created by osdjup on 2016-11-16.
- */
 public class ChannelMapper {
 
-    static List<ComChannelAttribute> mapAttributes(Channel channel) {
+    static List<ComChannelType> mapChannels(MobileTerminal entity) {
+
+        Set<Channel> channels = entity.getChannels();
+        if (channels == null || channels.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<ComChannelType> channelList = new ArrayList<>();
+        for (Channel channel : channels) {
+            if (channel.getArchived() != null && channel.getArchived()) {
+                continue;
+            }
+            ComChannelType comChannel = new ComChannelType();
+            comChannel.setName(channel.getName());
+            comChannel.setGuid(channel.getId().toString());
+
+            comChannel.getAttributes().addAll(ChannelMapper.mapAttributes(channel));
+            ChannelMapper.mapCapabilities(comChannel, channel);
+
+            channelList.add(comChannel);
+        }
+        return channelList;
+    }
+
+    private static List<ComChannelAttribute> mapAttributes(Channel channel) {
         List<ComChannelAttribute> attributeList = new ArrayList<>();
         attributeList.add(mapAttr("DNID", channel.getDNID()));
         attributeList.add(mapAttr("FREQUENCY_EXPECTED", String.valueOf(channel.getExpectedFrequency().getSeconds())));
@@ -43,7 +65,7 @@ public class ChannelMapper {
         return attributeList;
     }
 
-    static void mapCapabilities(ComChannelType comChannel, Channel channel) {
+    private static void mapCapabilities(ComChannelType comChannel, Channel channel) {
         ComChannelCapability pollCapability = new ComChannelCapability();
         pollCapability.setType(MobileTerminalConstants.CAPABILITY_POLLABLE);
 
