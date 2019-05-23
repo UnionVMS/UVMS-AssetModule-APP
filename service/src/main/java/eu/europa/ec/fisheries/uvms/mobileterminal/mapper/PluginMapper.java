@@ -21,27 +21,22 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPluginCap
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.OceanRegion;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalCapability;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public class PluginMapper {
-	final static Logger LOG = LoggerFactory.getLogger(PluginMapper.class);
-	
-	private static Plugin mapEntityToModel(Plugin model, MobileTerminalPlugin entity) {
-	    model.setSatelliteType(entity.getPluginSatelliteType());
+
+	static Plugin mapEntityToModel(MobileTerminalPlugin entity) {
+		Plugin model = new Plugin();
+		model.setSatelliteType(entity.getPluginSatelliteType());
 		model.setInactive(entity.getPluginInactive());
 		model.setLabelName(entity.getName());
 		model.setServiceName(entity.getPluginServiceName());
 		return model;
-	}
-	
-	public static Plugin mapEntityToModel(MobileTerminalPlugin entity) {
-		Plugin plugin = new Plugin();
-		return mapEntityToModel(plugin, entity);
 	}
 	
 	public static MobileTerminalPlugin mapModelToEntity(MobileTerminalPlugin entity, PluginService model) {
