@@ -2,34 +2,12 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.mapper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
 import eu.europa.ec.fisheries.uvms.asset.mapper.PollToCommandRequestMapper.PollReceiverInmarsatC;
-import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 public class MobileTerminalEntityToModelMapper {
     private static Logger LOG = LoggerFactory.getLogger(MobileTerminalEntityToModelMapper.class);
-
-    public static MobileTerminalType mapToMobileTerminalType(MobileTerminal entity, Channel channel) {
-        Set<Channel> channels = new HashSet<>();
-        channels.add(channel);
-        return mapToMobileTerminalType(entity, channels);
-    }
-
-    private static MobileTerminalType mapToMobileTerminalType(MobileTerminal entity, Set<Channel> channels) {
-        MobileTerminalType type = mapToMobileTerminalType(entity);
-
-        type.getChannels().clear();
-        type.getChannels().addAll(mapChannels(entity));
-
-        return type;
-    }
 
     public static MobileTerminalType mapToMobileTerminalType(MobileTerminal entity) {
         if (entity == null) {
@@ -59,9 +37,8 @@ public class MobileTerminalEntityToModelMapper {
         model.setArchived(entity.getArchived());
         model.setId(new Long(entity.getCreateTime().toEpochSecond()).intValue());
 
-        model.getChannels().addAll(mapChannels(entity));
+        model.getChannels().addAll(ChannelMapper.mapChannels(entity));
 
-        
         MobileTerminalAttribute serialNumber = new MobileTerminalAttribute();
         serialNumber.setType(PollReceiverInmarsatC.SERIAL_NUMBER.toString());
         serialNumber.setValue(entity.getSerialNo());
@@ -73,61 +50,6 @@ public class MobileTerminalEntityToModelMapper {
         model.getAttributes().add(satelliteNumber);
         
         return model;
-    }
-
-    private static List<ComChannelType> mapChannels(MobileTerminal entity) {
-
-        Set<Channel> channels = entity.getChannels();
-        if (channels == null || channels.isEmpty()) {
-            return new ArrayList<>();
-        }
-        List<ComChannelType> channelList = new ArrayList<>();
-        for (Channel channel : channels) {
-            if (channel.getArchived() != null && channel.getArchived()) {
-                continue;
-            }
-            ComChannelType comChannel = new ComChannelType();
-            comChannel.setName(channel.getName());
-            comChannel.setGuid(channel.getId().toString());
-
-            comChannel.getAttributes().addAll(AttributeMapper.mapAttributeStringToComChannelAttribute(channel));
-
-            ComChannelCapability pollCapability = new ComChannelCapability();
-            pollCapability.setType(MobileTerminalConstants.CAPABILITY_POLLABLE);
-
-            if(channel.isPollChannel()) {
-                pollCapability.setValue(true);
-            }
-            else{
-                pollCapability.setValue(false);
-            }
-            comChannel.getCapabilities().add(pollCapability);
-
-            ComChannelCapability configCapability = new ComChannelCapability();
-            configCapability.setType(MobileTerminalConstants.CAPABILITY_CONFIGURABLE);
-
-            if (channel.isConfigChannel()) {
-                configCapability.setValue(true);
-            } else {
-                configCapability.setValue(false);
-            }
-
-            comChannel.getCapabilities().add(configCapability);
-
-            ComChannelCapability defaultCapability = new ComChannelCapability();
-            defaultCapability.setType(MobileTerminalConstants.CAPABILITY_DEFAULT_REPORTING);
-
-            if(channel.isDefaultChannel()) {
-                defaultCapability.setValue(true);
-            }
-            else{
-                defaultCapability.setValue(false);
-            }
-            comChannel.getCapabilities().add(defaultCapability);
-
-            channelList.add(comChannel);
-        }
-        return channelList;
     }
 
     private static MobileTerminalId mapToMobileTerminalId(String mobTermGuid) {
