@@ -38,7 +38,7 @@ public class MobileTerminalEntityToModelMapper {
         model.setId(new Long(entity.getCreateTime().toEpochSecond()).intValue());
 
         model.getChannels().addAll(ChannelMapper.mapChannels(entity));
-        
+
         MobileTerminalAttribute serialNumber = new MobileTerminalAttribute();
         serialNumber.setType(PollReceiverInmarsatC.SERIAL_NUMBER.toString());
         serialNumber.setValue(entity.getSerialNo());
