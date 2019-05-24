@@ -14,12 +14,7 @@ import java.io.File;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.ExchangeModuleRestMock;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.UnionVMSMock;
+import javax.ws.rs.core.MediaType;
 import org.eu.ingwar.tools.arquillian.extension.suite.annotations.ArquillianSuiteDeployment;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -27,14 +22,22 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.ExchangeModuleRestMock;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.UnionVMSMock;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.UserRestMock;
 
 @ArquillianSuiteDeployment
 public abstract class AbstractAssetRestTest {
 
+    private String token;
+    
     protected WebTarget getWebTarget() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -61,8 +64,6 @@ public abstract class AbstractAssetRestTest {
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.rest.asset");
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.rest.mobileterminal");
 
-        testWar.addClass(AuthenticationFilterMock.class);
-
         testWar.delete("/WEB-INF/web.xml");
         testWar.addAsWebInfResource("mock-web.xml", "web.xml");
 
@@ -74,13 +75,16 @@ public abstract class AbstractAssetRestTest {
 
         WebArchive testWar = ShrinkWrap.create(WebArchive.class, "unionvms.war");
         File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
-                .resolve("eu.europa.ec.fisheries.uvms.exchange:exchange-model:5.0.0-UVMS").withTransitivity().asFile();
+                .resolve("eu.europa.ec.fisheries.uvms.exchange:exchange-model:5.0.0-UVMS",
+                        "eu.europa.ec.fisheries.uvms:usm4uvms",
+                        "eu.europa.ec.fisheries.uvms.commons:uvms-commons-message:3.0.29").withTransitivity().asFile();
 
         testWar.addAsLibraries(files);
 
 
         testWar.addClass(UnionVMSMock.class);
         testWar.addClass(ExchangeModuleRestMock.class);
+        testWar.addClass(UserRestMock.class);
 
         return testWar;
     }
@@ -97,5 +101,15 @@ public abstract class AbstractAssetRestTest {
         ObjectNode node = objectMapper.readValue(responseDto, ObjectNode.class);
         JsonNode jsonNode = node.get("data");
         return objectMapper.readValue(objectMapper.writeValueAsString(jsonNode), clazz);
+    }
+    
+    protected String getToken() {
+        if (token == null) {
+            token = ClientBuilder.newClient()
+                .target("http://localhost:28080/unionvms/user/token")
+                .request(MediaType.APPLICATION_JSON)
+                .get(String.class);
+        }
+        return token;
     }
 }
