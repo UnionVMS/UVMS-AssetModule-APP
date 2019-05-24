@@ -29,9 +29,9 @@ public class UserRestMock {
     
     @GET
     public Response getToken() {
-        String token = tokenHandler.createToken("user", 
-                Arrays.asList(UnionVMSFeature.viewVesselsAndMobileTerminals.getFeatureId(), 
-                              UnionVMSFeature.manageVessels.getFeatureId()));
+        String token = tokenHandler.createToken("user",
+                Arrays.asList(UnionVMSFeature.viewVesselsAndMobileTerminals.getFeatureId(),
+                        UnionVMSFeature.manageVessels.getFeatureId(), UnionVMSFeature.manageMobileTerminals.getFeatureId()));
         return Response.ok(token).build();
     }
 }

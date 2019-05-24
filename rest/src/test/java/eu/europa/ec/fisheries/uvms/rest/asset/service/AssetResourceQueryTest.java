@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
@@ -47,6 +48,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         Asset createdAsset = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(asset), Asset.class);
         
         AssetQuery query = new AssetQuery();
@@ -56,6 +58,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .path("asset")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query), AssetListResponse.class);
 
         assertNotNull(listResponse);
@@ -74,6 +77,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .path("asset")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query), AssetListResponse.class);
 
         assertNotNull(listResponse);
@@ -91,6 +95,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         Asset createdAsset = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(asset), Asset.class);
 
         AssetQuery query = new AssetQuery();
@@ -102,12 +107,14 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .path("asset")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query), AssetListResponse.class);
 
         AssetListResponse listResponse2 = getWebTarget()
                 .path("asset")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query2), AssetListResponse.class);
 
         assertNotNull(listResponse1);
@@ -135,12 +142,14 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         Asset createdAsset1 = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(asset1), Asset.class);
         Asset asset2 = AssetHelper.createBasicAsset();
         asset2.setCfr(cfrValue2);
         Asset createdAsset2 = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(asset2), Asset.class);
 
 
@@ -154,6 +163,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .path("list")
                 .queryParam("dynamic","false")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query), AssetListResponse.class);
 
         AssetListResponse listResponse2 = getWebTarget()
@@ -161,6 +171,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .path("list")
                 .queryParam("dynamic","false")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query2), AssetListResponse.class);
 
         assertNotNull(listResponse1);
@@ -189,12 +200,14 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         Asset createdAsset1 = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(asset1), Asset.class);
         Asset asset2 = AssetHelper.createBasicAsset();
         asset2.setCfr(cfrValue2);
         Asset createdAsset2 = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(asset2), Asset.class);
 
         AssetQuery query = new AssetQuery();
@@ -207,6 +220,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .path("list")
                 .queryParam("dynamic","false")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query), AssetListResponse.class);
 
         AssetListResponse listResponse2 = getWebTarget()
@@ -214,6 +228,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .path("list")
                 .queryParam("dynamic","false")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query2), AssetListResponse.class);
 
         assertNotNull(listResponse1);
@@ -247,6 +262,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         Asset createdAsset = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(asset), Asset.class);
         
         AssetQuery query = new AssetQuery();
@@ -256,6 +272,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .path("list")
                 .queryParam("size", "1000")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query), AssetListResponse.class);
 
         assertNotNull(listResponse);
@@ -273,6 +290,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         Asset createdAsset = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(asset), Asset.class);
 
         // aempty query
@@ -285,6 +303,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .queryParam("dynamic","false")
                 .queryParam("size", "1000")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query), AssetListResponse.class);
 
         assertNotNull(listResponse);
@@ -301,6 +320,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         Asset createdAsset = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(asset), Asset.class);
         
         AssetQuery query = new AssetQuery();
@@ -310,6 +330,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .path("list")
                 .queryParam("size","1000")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query), AssetListResponse.class);
         
         int sizeBefore = listResponse.getAssetList().size();
@@ -319,6 +340,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .path("asset")
                 .path("archive")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .put(Entity.json(createdAsset), Asset.class);
 
         assertFalse(archived.getActive());
@@ -329,6 +351,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .path("list")
                 .queryParam("size","1000")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query), AssetListResponse.class);
 
         assertEquals(sizeBefore - 1, listResponseAfter.getAssetList().size());
@@ -345,6 +368,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         Asset createdAsset1 = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(asset1), Asset.class);
         
         Asset asset2 = AssetHelper.createBasicAsset();
@@ -352,6 +376,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         Asset createdAsset2 = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(asset2), Asset.class);
         
         AssetQuery query = new AssetQuery();
@@ -363,6 +388,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .queryParam("page", 1)
                 .queryParam("size", 1)
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query), AssetListResponse.class);
         
         assertThat(listResponse.getCurrentPage(), is(1));
@@ -375,6 +401,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .queryParam("page", 2)
                 .queryParam("size", 1)
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query), AssetListResponse.class);
         
         assertThat(listResponse2.getCurrentPage(), is(2));
@@ -394,6 +421,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         Asset createdAsset = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(asset), Asset.class);
         
         AssetQuery query = new AssetQuery();
@@ -404,6 +432,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .path("list")
                 .queryParam("size","1000")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query), AssetListResponse.class);
         
         List<Asset> assetList = listResponse.getAssetList();
@@ -419,6 +448,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         Asset createdAsset = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(asset), Asset.class);
         
         Instant timestamp = Instant.now();
@@ -427,6 +457,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         Asset updatedAsset = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .put(Entity.json(createdAsset), Asset.class);
         
         
@@ -440,6 +471,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .path("list")
                 .queryParam("size","1000")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query), AssetListResponse.class);
         
         List<Asset> assetList = listResponse.getAssetList();
@@ -458,6 +490,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .path("list")
                 .queryParam("size","1000")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query2), AssetListResponse.class);
         
         List<Asset> assetList2 = listResponse2.getAssetList();
@@ -475,6 +508,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         Asset createdAsset = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(asset), Asset.class);
         
         Instant timestamp = Instant.now();
@@ -484,6 +518,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         Asset updatedAsset = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .put(Entity.json(createdAsset), Asset.class);
         
         Instant timestamp2 = Instant.now();
@@ -493,6 +528,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         Asset updatedAsset2 = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .put(Entity.json(createdAsset), Asset.class);
         
         // Get history1
@@ -505,6 +541,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .path("list")
                 .queryParam("size","1000")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query), AssetListResponse.class);
         
         List<Asset> assetList = listResponse.getAssetList();
@@ -523,6 +560,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .path("list")
                 .queryParam("size","1000")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query2), AssetListResponse.class);
         
         List<Asset> assetList2 = listResponse2.getAssetList();
@@ -540,12 +578,14 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         Asset createdAsset = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(asset), Asset.class);
         
         Asset asset2 = AssetHelper.createBasicAsset();
         Asset createdAsset2 = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(asset2), Asset.class);
         
         AssetQuery query2 = new AssetQuery();
@@ -556,6 +596,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .path("list")
                 .queryParam("size","1000")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query2), AssetListResponse.class);
         
         List<Asset> assetList2 = listResponse.getAssetList();
@@ -573,12 +614,14 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         Asset createdAsset = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(asset), Asset.class);
         
         Asset asset2 = AssetHelper.createBasicAsset();
         Asset createdAsset2 = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(asset2), Asset.class);
         
         Instant timestamp = Instant.now();
@@ -588,6 +631,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         Asset updatedAsset = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .put(Entity.json(createdAsset), Asset.class);
         
         AssetQuery query = new AssetQuery();
@@ -600,6 +644,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .path("list")
                 .queryParam("size","1000")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query), AssetListResponse.class);
         
         List<Asset> assetList = listResponse.getAssetList();
@@ -617,6 +662,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         getWebTarget()
             .path("asset")
             .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
             .post(Entity.json(asset), Asset.class);
         
         Instant pastDate = OffsetDateTime.now().minus(100, ChronoUnit.YEARS).toInstant();
@@ -631,6 +677,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .path("list")
                 .queryParam("size","1000")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query), AssetListResponse.class);
         
         List<Asset> assetList = listResponse.getAssetList();
@@ -646,6 +693,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         Asset createdAsset = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(asset), Asset.class);
         
         AssetQuery query = new AssetQuery();
@@ -655,6 +703,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .path("asset")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query), AssetListResponse.class);
 
         assertNotNull(listResponse);
@@ -671,6 +720,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         Asset createdAsset = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(asset), Asset.class);
         
         String gearType2 = gearType1 + AssetHelper.getRandomIntegers(5);
@@ -679,6 +729,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(asset2), Asset.class);
         
         AssetQuery query = new AssetQuery();
@@ -688,6 +739,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
                 .path("asset")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(query), AssetListResponse.class);
 
         assertNotNull(listResponse);
