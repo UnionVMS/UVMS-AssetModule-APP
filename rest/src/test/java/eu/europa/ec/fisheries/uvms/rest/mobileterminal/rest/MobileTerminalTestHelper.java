@@ -21,6 +21,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnu
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import java.time.Duration;
 import java.util.Random;
@@ -107,7 +108,7 @@ public class MobileTerminalTestHelper {
         return serialNumber;
     }
 
-    public static MobileTerminal createRestMobileTerminal(WebTarget webTarget, Asset asset) {
+    public static MobileTerminal createRestMobileTerminal(WebTarget webTarget, Asset asset, String token) {
         MobileTerminal mt = createBasicMobileTerminal();
         if(asset != null)
             mt.setAsset(asset);
@@ -115,6 +116,7 @@ public class MobileTerminalTestHelper {
         return webTarget
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, token)
                 .post(Entity.json(mt), MobileTerminal.class);
     }
 }

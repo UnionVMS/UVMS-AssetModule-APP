@@ -78,23 +78,24 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
         Response responseBefore = getWebTarget()
                 .path("group")
                 .path("list")
-                .queryParam("user", "MOCK_USER") // From mock filter
+                .queryParam("user", "user")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getToken())
                 .get();
         
         List<AssetGroup> groupsBefore = responseBefore.readEntity(new GenericType<List<AssetGroup>>() {});
 
-        getWebTarget()
+        Response ret = getWebTarget()
                 .path("group")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getToken())
-                .post(Entity.json(AssetHelper.createBasicAssetGroup()), AssetGroup.class);
+                .post(Entity.json(AssetHelper.createBasicAssetGroup()), Response.class);
+        assertEquals(200, ret.getStatus());
         
         Response response = getWebTarget()
                 .path("group")
                 .path("list")
-                .queryParam("user", "MOCK_USER") // From mock filter
+                .queryParam("user", "user")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getToken())
                 .get();
@@ -112,7 +113,7 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
         Response responseBefore = getWebTarget()
                 .path("group")
                 .path("list")
-                .queryParam("user", "MOCK_USER") // From mock filter
+                .queryParam("user", "user")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getToken())
                 .get();
@@ -134,7 +135,7 @@ public class AssetGroupResourceTest extends AbstractAssetRestTest {
         Response response = getWebTarget()
                 .path("group")
                 .path("list")
-                .queryParam("user", "MOCK_USER")
+                .queryParam("user", "user")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getToken())
                 .get();

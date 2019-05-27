@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class PluginRestResourceTest extends AbstractAssetRestTest {
         Response response = getWebTarget()
                 .path("/plugin")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(pluginList));
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
