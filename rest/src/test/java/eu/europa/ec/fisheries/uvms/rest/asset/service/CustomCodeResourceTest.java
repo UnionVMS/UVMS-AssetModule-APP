@@ -18,6 +18,7 @@ import org.junit.runner.RunWith;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.time.Clock;
@@ -49,6 +50,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .path("customcodes")
                 .path("listconstants")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .get(new GenericType<List<String>>(){});
 
         // resultSet must at least contain a constants with our created customCode
@@ -75,6 +77,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .path("customcodes")
                 .path("listconstants")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .get(new GenericType<List<String>>(){});
 
         // for every constants
@@ -85,6 +88,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                     .path("listcodesforconstant")
                     .path(constant)
                     .request(MediaType.APPLICATION_JSON)
+                    .header(HttpHeaders.AUTHORIZATION, getToken())
                     .get(String.class);
             TypeReference typeref = new TypeReference<List<CustomCode>>() {
             };
@@ -98,7 +102,6 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         String txt = UUID.randomUUID().toString();
         String createdJson = createACustomCodeHelper(txt);
         CustomCode customCodes = MAPPER.readValue(createdJson, CustomCode.class);
-
         assertTrue(customCodes.getPrimaryKey().getConstant().endsWith(txt));
     }
 
@@ -319,6 +322,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         String created = getWebTarget()
                 .path("customcodes")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(json), String.class);
 
         return "";
@@ -336,6 +340,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         String created = getWebTarget()
                 .path("customcodes")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(customCode), String.class);
         return created;
     }
@@ -363,6 +368,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .path(fromDate)
                 .path(toDate)
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .get(String.class);
         CustomCode customCodes = MAPPER.readValue(json, CustomCode.class);
 
@@ -390,6 +396,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .path(fromDate)
                 .path(toDate)
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .get(Boolean.class);
 
         assertTrue(exists);
@@ -401,6 +408,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .path(fromDate)
                 .path(toDate)
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .delete(String.class);
 
 
@@ -412,6 +420,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .path(fromDate)
                 .path(toDate)
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .get(Boolean.class);
 
         Assert.assertFalse(exists);
@@ -441,6 +450,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
         String created = getWebTarget()
                 .path("customcodes")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(customCode), String.class);
         return created;
     }
@@ -467,6 +477,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
             String created = getWebTarget()
                     .path("customcodes")
                     .request(MediaType.APPLICATION_JSON)
+                    .header(HttpHeaders.AUTHORIZATION, getToken())
                     .post(Entity.json(customCode), String.class);
 
         }
@@ -496,6 +507,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .path(customCodesPk.getCode())
                 .path(dateToTest)
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .get(String.class);
         // record existed alles ok
         TypeReference typeref = new TypeReference<List<CustomCode>>() {
@@ -530,6 +542,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .path(customCodesPk.getCode())
                 .path(dateToTest)
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .get(String.class);
 
         // record existed NOT as expected alles ok
@@ -563,6 +576,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .path(customCodesPk.getCode())
                 .path(dateToTest)
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .get(Boolean.class);
         // record existed alles ok
         assertTrue(ret);
@@ -591,6 +605,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .path(customCodesPk.getCode())
                 .path(dateToTest)
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .get(Boolean.class);
 
         // record existed NOT as expected alles ok
@@ -618,6 +633,7 @@ public class CustomCodeResourceTest extends AbstractAssetRestTest {
                 .path(customCodesPk.getCode())
                 .path(dateWithin)
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .get(String.class);
 
         TypeReference typeref = new TypeReference<List<CustomCode>>() {

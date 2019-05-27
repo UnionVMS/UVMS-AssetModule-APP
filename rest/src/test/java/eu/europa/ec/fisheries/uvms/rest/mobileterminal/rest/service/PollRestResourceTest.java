@@ -22,6 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.OffsetDateTime;
@@ -40,6 +41,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         Response response = getWebTarget()
                 .path("/poll/running")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .get();
 
         assertNotNull(response);
@@ -66,6 +68,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         CreatePollResultDto createdPoll = getWebTarget()
                 .path("/poll")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(input), CreatePollResultDto.class);
 
         assertNotNull(createdPoll);
@@ -86,6 +89,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         CreatePollResultDto createdPoll = getWebTarget()
                 .path("/poll")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(input), CreatePollResultDto.class);
 
         assertNotNull(createdPoll);
@@ -101,6 +105,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         PollDto pollDto = getWebTarget()
                 .path("/poll/stop/" + pollGuid)
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .get(PollDto.class);
 
         assertNotNull(pollDto);
@@ -113,6 +118,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         pollDto = getWebTarget()
                 .path("/poll/start/" + pollGuid)
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .get(PollDto.class);
 
         assertNotNull(pollDto);
@@ -134,6 +140,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         CreatePollResultDto createdPoll = getWebTarget()
                 .path("/poll")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(input), CreatePollResultDto.class);
 
         assertNotNull(createdPoll);
@@ -148,6 +155,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         PollDto pollDto = getWebTarget()
                 .path("/poll/inactivate/" + pollGuid)
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .get(PollDto.class);
 
         assertNotNull(pollGuid);
@@ -159,6 +167,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         String retVal = getWebTarget()
                 .path("/poll/program/" + pollGuid)
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .get(String.class);
 
         assertTrue(retVal.contains(String.valueOf(Response.Status.OK.getStatusCode())));
@@ -189,6 +198,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         CreatePollResultDto createdPoll = getWebTarget()
                 .path("/poll")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(pollRequestType), CreatePollResultDto.class);
 
         assertNotNull(createdPoll);
@@ -217,6 +227,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         PollChannelListDto pollChannelListDto = getWebTarget()
                 .path("/poll/list")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(input), PollChannelListDto.class);
 
         assertNotNull(pollChannelListDto);
@@ -245,6 +256,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         CreatePollResultDto createdPoll = getWebTarget()
                 .path("/poll")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(pollRequestType), CreatePollResultDto.class);
 
         assertNotNull(createdPoll);
@@ -279,6 +291,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         PollChannelListDto pollChannelListDto = getWebTarget()
                 .path("/poll/list")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(input), PollChannelListDto.class);
 
         assertNotNull(pollChannelListDto);
@@ -307,6 +320,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         CreatePollResultDto createdPoll = getWebTarget()
                 .path("/poll")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(pollRequestType), CreatePollResultDto.class);
 
         assertNotNull(createdPoll);
@@ -321,6 +335,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         PollChannelListDto pollChannelListDto = getWebTarget()
                 .path("/poll/pollable")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(input), PollChannelListDto.class);
 
         assertNotNull(pollChannelListDto);
@@ -336,7 +351,8 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     }
 
     private MobileTerminal createAndRestMobileTerminal(Asset asset) {
-        MobileTerminal response = MobileTerminalTestHelper.createRestMobileTerminal(getWebTarget(), asset);
+
+        MobileTerminal response = MobileTerminalTestHelper.createRestMobileTerminal(getWebTarget(), asset, getToken());
         assertNotNull(response);
         return response;
     }
@@ -347,6 +363,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         Asset createdAsset = getWebTarget()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .post(Entity.json(asset), Asset.class);
 
         assertNotNull(createdAsset);

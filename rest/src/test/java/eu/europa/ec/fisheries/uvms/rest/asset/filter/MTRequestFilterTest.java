@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.rest.asset.filter;
 
 import static org.junit.Assert.assertThat;
 import java.util.UUID;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -24,6 +25,7 @@ public class MTRequestFilterTest extends AbstractAssetRestTest {
                 .path("internal")
                 .path("ping")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .get();
         
         String requestId = response.getHeaderString("requestId");
@@ -39,6 +41,7 @@ public class MTRequestFilterTest extends AbstractAssetRestTest {
                 .path("ping")
                 .request(MediaType.APPLICATION_JSON)
                 .header("requestId", requestId)
+                .header(HttpHeaders.AUTHORIZATION, getToken())
                 .get();
         
         String returnedRequestId = response.getHeaderString("requestId");
