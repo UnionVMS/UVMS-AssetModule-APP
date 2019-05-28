@@ -239,4 +239,12 @@ public class AssetClient {
                 .accept(MediaType.APPLICATION_JSON)
                 .post(Entity.json(request), AssetMTEnrichmentResponse.class);
     }
+
+    public String getMicroAssetList(List<String> assetIdList){
+        return webTarget
+                .path("microAssets")
+                .request(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .post(Entity.json(assetIdList), String.class);
+    }
 }

@@ -21,10 +21,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.dao.ContactInfoDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.NoteDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
+import eu.europa.ec.fisheries.uvms.asset.dto.*;
 import eu.europa.ec.fisheries.uvms.asset.util.AssetComparator;
 import eu.europa.ec.fisheries.uvms.asset.util.AssetUtil;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
@@ -780,6 +777,22 @@ public class AssetServiceBean implements AssetService {
             assetFromDB.setUpdateTime(OffsetDateTime.now());
             em.merge(assetFromDB);
         }
+    }
+
+    @Override
+    public List<MicroAsset> getInitialDataForRealtime(List<String> assetIdList){
+        List<UUID> assetUuidList = new ArrayList<>(assetIdList.size());
+        for (String s :assetIdList) {
+            assetUuidList.add(UUID.fromString(s));
+        }
+
+        List<Asset> assetList = assetDao.getAssetListByAssetGuids(assetUuidList);
+        List<MicroAsset> microAssetList = new ArrayList<>(assetList.size());
+        for (Asset asset : assetList) {
+            microAssetList.add(new MicroAsset(asset.getId().toString(), asset.getFlagStateCode(), asset.getName(), asset.getVesselType(), asset.getIrcs(), asset.getCfr(), asset.getExternalMarking()));
+        }
+
+        return microAssetList;
     }
 }
 
