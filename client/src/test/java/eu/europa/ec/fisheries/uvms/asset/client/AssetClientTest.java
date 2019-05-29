@@ -14,10 +14,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.time.Instant;
 import java.time.OffsetDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -354,5 +351,28 @@ public class AssetClientTest extends AbstractClientTest {
         assertTrue(response.getAssetName(), response.getAssetName().equals("Named Ship"));
         assertTrue(response.getFlagstate().equals("SWE"));
         assertEquals("987654321", response.getAssetId().get("MMSI"));
+    }
+
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getMicroAssetInformation(){
+        List<String> assetIdList = new ArrayList<>();
+
+        for (int i = 0; i < 50 ; i++){
+            assetIdList.add(createAsset());
+        }
+        String output = assetClient.getMicroAssetList(assetIdList);
+
+        assertEquals(51, output.split("assetName").length);
+        assertEquals(8801, output.length());
+    }
+
+
+    private String createAsset(){
+        AssetBO assetBo = new AssetBO();
+        assetBo.setAsset(AssetHelper.createBasicAsset());
+        AssetBO upsertAsset = assetClient.upsertAsset(assetBo);
+        return upsertAsset.getAsset().getId().toString();
     }
 }

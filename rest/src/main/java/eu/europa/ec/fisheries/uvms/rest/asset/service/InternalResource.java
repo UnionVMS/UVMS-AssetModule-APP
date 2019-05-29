@@ -22,16 +22,14 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
+import eu.europa.ec.fisheries.uvms.asset.dto.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
 import io.swagger.annotations.ApiParam;
+import jdk.nashorn.internal.objects.annotations.Getter;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -157,6 +155,13 @@ public class InternalResource {
     public Response upsertAsset(AssetBO assetBo) {
         AssetBO upsertedAsset = assetService.upsertAssetBO(assetBo, "UVMS (REST)");
         return Response.ok(upsertedAsset).build();
+    }
+
+    @POST
+    @Path("microAssets")
+    public Response getMicroAssets(List<String> assetIdList){
+        List<MicroAsset> assetList = assetService.getInitialDataForRealtime(assetIdList);
+        return Response.ok(assetList).build();
     }
     
     @GET

@@ -21,10 +21,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
+import eu.europa.ec.fisheries.uvms.asset.dto.*;
 
 public interface AssetService {
 
@@ -218,6 +215,8 @@ public interface AssetService {
     List<ContactInfo> getContactInfoRevisionForAssetHistory(UUID assetId, OffsetDateTime updatedDate);
 
     void assetInformation(Asset assetFromAIS, String user);
+
+    List<MicroAsset> getInitialDataForRealtime(List<String> assetIdList);
 
 
 }
