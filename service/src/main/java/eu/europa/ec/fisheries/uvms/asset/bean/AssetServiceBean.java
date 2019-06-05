@@ -789,7 +789,7 @@ public class AssetServiceBean implements AssetService {
         List<Asset> assetList = assetDao.getAssetListByAssetGuids(assetUuidList);
         List<MicroAsset> microAssetList = new ArrayList<>(assetList.size());
         for (Asset asset : assetList) {
-            microAssetList.add(new MicroAsset(asset.getId().toString(), asset.getFlagStateCode(), asset.getName(), asset.getVesselType(), asset.getIrcs(), asset.getCfr(), asset.getExternalMarking()));
+            microAssetList.add(new MicroAsset(asset.getId().toString(), asset.getFlagStateCode(), asset.getName(), asset.getVesselType(), asset.getIrcs(), asset.getCfr(), asset.getExternalMarking(), asset.getLengthOverAll()));
         }
 
         return microAssetList;

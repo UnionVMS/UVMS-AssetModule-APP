@@ -9,8 +9,9 @@ public class MicroAsset {
     String ircs;
     String cfr;
     String externalMarking;
+    Double lengthOverAll;
 
-    public MicroAsset(String assetId, String flagstate, String assetName, String vesselType, String ircs, String cfr, String externalMarking) {
+    public MicroAsset(String assetId, String flagstate, String assetName, String vesselType, String ircs, String cfr, String externalMarking, Double lengthOverAll) {
         this.assetId = assetId;
         this.flagstate = flagstate;
         this.assetName = assetName;
@@ -18,6 +19,7 @@ public class MicroAsset {
         this.ircs = ircs;
         this.cfr = cfr;
         this.externalMarking = externalMarking;
+        this.lengthOverAll = lengthOverAll;
     }
 
     public MicroAsset() {
@@ -77,5 +79,13 @@ public class MicroAsset {
 
     public void setExternalMarking(String externalMarking) {
         this.externalMarking = externalMarking;
+    }
+
+    public Double getLengthOverAll() {
+        return lengthOverAll;
+    }
+
+    public void setLengthOverAll(Double lengthOverAll) {
+        this.lengthOverAll = lengthOverAll;
     }
 }
