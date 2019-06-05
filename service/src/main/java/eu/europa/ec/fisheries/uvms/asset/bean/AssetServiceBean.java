@@ -22,6 +22,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.dao.NoteDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.asset.dto.*;
+import eu.europa.ec.fisheries.uvms.asset.message.event.UpdatedAssetEvent;
 import eu.europa.ec.fisheries.uvms.asset.util.AssetComparator;
 import eu.europa.ec.fisheries.uvms.asset.util.AssetUtil;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
@@ -35,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -76,6 +78,10 @@ public class AssetServiceBean implements AssetService {
 
     @Inject
     private MobileTerminalServiceBean mobileTerminalService;
+
+    @Inject
+    @UpdatedAssetEvent
+    Event<Asset> updatedAssetEvent;
 
     @PersistenceContext
     private EntityManager em;
@@ -132,10 +138,12 @@ public class AssetServiceBean implements AssetService {
         return assetDao.getAssetCount(searchFields, dynamic, includeInactivated);
     }
 
+
     @Override
     public Asset updateAsset(Asset asset, String username, String comment) {
         Asset updatedAsset = updateAssetInternal(asset, username, comment);
         auditService.logAssetUpdated(updatedAsset, comment, username);
+        updatedAssetEvent.fire(updatedAsset);
         return updatedAsset;
     }
 
@@ -728,6 +736,7 @@ public class AssetServiceBean implements AssetService {
         return null;
     }
 
+
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void assetInformation(Asset assetFromAIS, String user) {
@@ -776,6 +785,7 @@ public class AssetServiceBean implements AssetService {
             assetFromDB.setUpdatedBy(user);
             assetFromDB.setUpdateTime(OffsetDateTime.now());
             em.merge(assetFromDB);
+            updatedAssetEvent.fire(assetFromDB);
         }
     }
 

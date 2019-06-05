@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
@@ -31,6 +32,7 @@ public class AssetMessageJSONBean {
 
     @Inject
     AssetService assetService;
+
     
     public void upsertAsset(TextMessage message) throws IOException, JMSException {
         ObjectMapper mapper = new ObjectMapper();
