@@ -5,16 +5,16 @@ public class MicroAsset {
     String assetId;
     String flagstate;
     String assetName;
-    String shipType;
+    String vesselType;
     String ircs;
     String cfr;
     String externalMarking;
 
-    public MicroAsset(String assetId, String flagstate, String assetName, String shipType, String ircs, String cfr, String externalMarking) {
+    public MicroAsset(String assetId, String flagstate, String assetName, String vesselType, String ircs, String cfr, String externalMarking) {
         this.assetId = assetId;
         this.flagstate = flagstate;
         this.assetName = assetName;
-        this.shipType = shipType;
+        this.vesselType = vesselType;
         this.ircs = ircs;
         this.cfr = cfr;
         this.externalMarking = externalMarking;
@@ -47,12 +47,12 @@ public class MicroAsset {
         this.assetName = assetName;
     }
 
-    public String getShipType() {
-        return shipType;
+    public String getVesselType() {
+        return vesselType;
     }
 
-    public void setShipType(String shipType) {
-        this.shipType = shipType;
+    public void setVesselType(String vesselType) {
+        this.vesselType = vesselType;
     }
 
     public String getIrcs() {

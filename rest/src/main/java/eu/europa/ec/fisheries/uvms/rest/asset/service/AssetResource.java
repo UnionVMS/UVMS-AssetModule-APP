@@ -20,6 +20,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
+import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
 import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
@@ -459,5 +460,13 @@ public class AssetResource {
     public Response deleteContactInfo( @ApiParam(value="Id off contact info", required=true)  @PathParam("id") UUID id) {
         assetService.deleteContactInfo(id);
         return Response.ok().build();
+    }
+
+    @POST
+    @Path("microAssets")
+    @RequiresFeature(UnionVMSFeature.manageVessels)
+    public Response getMicroAssets(List<String> assetIdList){
+        List<MicroAsset> assetList = assetService.getInitialDataForRealtime(assetIdList);
+        return Response.ok(assetList).build();
     }
 }
