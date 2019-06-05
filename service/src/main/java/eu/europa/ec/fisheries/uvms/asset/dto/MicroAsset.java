@@ -5,19 +5,21 @@ public class MicroAsset {
     String assetId;
     String flagstate;
     String assetName;
-    String shipType;
+    String vesselType;
     String ircs;
     String cfr;
     String externalMarking;
+    Double lengthOverAll;
 
-    public MicroAsset(String assetId, String flagstate, String assetName, String shipType, String ircs, String cfr, String externalMarking) {
+    public MicroAsset(String assetId, String flagstate, String assetName, String vesselType, String ircs, String cfr, String externalMarking, Double lengthOverAll) {
         this.assetId = assetId;
         this.flagstate = flagstate;
         this.assetName = assetName;
-        this.shipType = shipType;
+        this.vesselType = vesselType;
         this.ircs = ircs;
         this.cfr = cfr;
         this.externalMarking = externalMarking;
+        this.lengthOverAll = lengthOverAll;
     }
 
     public MicroAsset() {
@@ -47,12 +49,12 @@ public class MicroAsset {
         this.assetName = assetName;
     }
 
-    public String getShipType() {
-        return shipType;
+    public String getVesselType() {
+        return vesselType;
     }
 
-    public void setShipType(String shipType) {
-        this.shipType = shipType;
+    public void setVesselType(String vesselType) {
+        this.vesselType = vesselType;
     }
 
     public String getIrcs() {
@@ -77,5 +79,13 @@ public class MicroAsset {
 
     public void setExternalMarking(String externalMarking) {
         this.externalMarking = externalMarking;
+    }
+
+    public Double getLengthOverAll() {
+        return lengthOverAll;
+    }
+
+    public void setLengthOverAll(Double lengthOverAll) {
+        this.lengthOverAll = lengthOverAll;
     }
 }
