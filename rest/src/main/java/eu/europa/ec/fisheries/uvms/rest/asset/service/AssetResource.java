@@ -178,7 +178,7 @@ public class AssetResource {
             @ApiResponse(code = 500, message = "Error when creating asset"),
             @ApiResponse(code = 200, message = "Asset successfully created") })
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response createAsset(@ApiParam(value="An asset to retrieve", required=true)  final Asset asset)  {
+    public Response createAsset(@ApiParam(value="An asset to create", required=true)  final Asset asset)  {
         try {
             String remoteUser = servletRequest.getRemoteUser();
             Asset createdAssetSE = assetService.createAsset(asset, remoteUser);

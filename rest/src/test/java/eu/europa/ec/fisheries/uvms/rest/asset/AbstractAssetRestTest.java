@@ -38,7 +38,7 @@ public abstract class AbstractAssetRestTest {
 
     private String token;
     
-    protected WebTarget getWebTarget() {
+    protected WebTarget getWebTargetExternal() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
@@ -47,6 +47,18 @@ public abstract class AbstractAssetRestTest {
         client.register(new JacksonJaxbJsonProvider(objectMapper, JacksonJaxbJsonProvider.DEFAULT_ANNOTATIONS));
         return client.target("http://localhost:28080/test/rest");  //external
         //return client.target("http://localhost:8080/test/rest");    //internal
+    }
+
+    //jersey does not like sse so to fix this we need the sse test to reside on the server environment instead of @RunAsClient
+    //also, if we switch from jersey to resteasy (like we have in all the other modules) for the client everything stops working with status code 405
+    protected WebTarget getWebTargetInternal() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        Client client = ClientBuilder.newClient();
+        client.register(new JacksonJaxbJsonProvider(objectMapper, JacksonJaxbJsonProvider.DEFAULT_ANNOTATIONS));
+        return client.target("http://localhost:8080/test/rest");    //internal
     }
 
     @Deployment(name = "normal", order = 2)
@@ -60,6 +72,8 @@ public abstract class AbstractAssetRestTest {
         
         testWar.addAsLibraries(Maven.configureResolver().loadPomFromFile("pom.xml")
                 .resolve("eu.europa.ec.fisheries.uvms.asset:asset-service").withTransitivity().asFile());
+
+
             
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.rest.asset");
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.rest.mobileterminal");
@@ -103,12 +117,23 @@ public abstract class AbstractAssetRestTest {
         return objectMapper.readValue(objectMapper.writeValueAsString(jsonNode), clazz);
     }
     
-    protected String getToken() {
+    protected String getTokenExternal() {
         if (token == null) {
             token = ClientBuilder.newClient()
                 .target("http://localhost:28080/unionvms/user/token")
                 .request(MediaType.APPLICATION_JSON)
                 .get(String.class);
+        }
+        return token;
+    }
+
+    //see the comment above getWebbTargetInternal
+    protected String getTokenInternal() {
+        if (token == null) {
+            token = ClientBuilder.newClient()
+                    .target("http://localhost:8080/unionvms/user/token")
+                    .request(MediaType.APPLICATION_JSON)
+                    .get(String.class);
         }
         return token;
     }

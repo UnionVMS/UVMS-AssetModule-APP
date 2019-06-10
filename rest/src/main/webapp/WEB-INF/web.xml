@@ -46,10 +46,12 @@
     <filter>
         <filter-name>AuthenticationFilter</filter-name>
         <filter-class>eu.europa.ec.fisheries.uvms.rest.security.AuthenticationFilter</filter-class>
+		<async-supported>true</async-supported>
     </filter>
 	 <filter>
 	     <filter-name>MDCFilter</filter-name>
 	     <filter-class>eu.europa.ec.fisheries.uvms.commons.rest.filter.MDCFilter</filter-class>
+		 <async-supported>true</async-supported>
 	 </filter>
 
 
@@ -86,6 +88,10 @@
 	<filter-mapping>
 		<filter-name>AuthenticationFilter</filter-name>
 		<url-pattern>/rest/plugin/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>AuthenticationFilter</filter-name>
+		<url-pattern>/rest/sse/*</url-pattern>
 	</filter-mapping>
 
 

@@ -36,7 +36,7 @@ import static org.junit.Assert.*;
  * @author Jem
  */
 @RunWith(Arquillian.class)
-@RunAsClient
+//@RunAsClient
 public class SSEResourceTest extends AbstractAssetRestTest {
     
     private final static Logger LOG = LoggerFactory.getLogger(SSEResourceTest.class);
@@ -56,7 +56,7 @@ public class SSEResourceTest extends AbstractAssetRestTest {
 
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target("http://localhost:8080/test/rest/sse/subscribe");
-        AuthorizationHeaderWebTarget jwtTarget = new AuthorizationHeaderWebTarget(target, getToken());
+        AuthorizationHeaderWebTarget jwtTarget = new AuthorizationHeaderWebTarget(target, getTokenInternal());
 
         try (SseEventSource source = SseEventSource.target(jwtTarget).reconnectingEvery(1, TimeUnit.SECONDS).build()) {
             source.register(onEvent, onError, onComplete);
@@ -67,22 +67,21 @@ public class SSEResourceTest extends AbstractAssetRestTest {
             Asset asset = createAndRestBasicAsset();
 
             asset.setName("new test name");
-
             asset = updateAsset(asset);
-
+            Thread.sleep(100);
             asset.setFlagStateCode("UNK");
-
             asset = updateAsset(asset);
-
+            Thread.sleep(100);
             asset.setLengthOverAll(42d);
-
             asset = updateAsset(asset);
-
 
             Thread.sleep(1000 * 1 * 1);
             assertTrue(source.isOpen());
             assertTrue(errorString,errorString.isEmpty());
             assertEquals(dataString,3 ,dataString.split("\\}\\{").length);
+            assertTrue(dataString, dataString.contains("new test name"));
+            assertTrue(dataString, dataString.contains("UNK"));
+            assertTrue(dataString, dataString.contains("42"));
         }
 
 
@@ -107,21 +106,21 @@ public class SSEResourceTest extends AbstractAssetRestTest {
     
     private Asset createAndRestBasicAsset(){
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTarget()
+        Asset createdAsset = getWebTargetInternal()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getToken())
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(asset), Asset.class);
 
         assertNotNull(createdAsset);
-        return asset;
+        return createdAsset;
     }
 
     private Asset updateAsset(Asset asset){
-        Asset updatedAsset = getWebTarget()
+        Asset updatedAsset = getWebTargetInternal()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getToken())
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .put(Entity.json(asset), Asset.class);
 
         return updatedAsset;
