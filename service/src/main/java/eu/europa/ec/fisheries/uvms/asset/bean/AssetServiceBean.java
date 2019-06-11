@@ -12,6 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.bean;
 
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
+import eu.europa.ec.fisheries.schema.exchange.v1.SourceType;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
@@ -29,6 +30,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
 import eu.europa.ec.fisheries.wsdl.asset.types.EventCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -712,7 +714,10 @@ public class AssetServiceBean implements AssetService {
         int assetsSize = assets.size();
         if (assetsSize == 0) {
             return null;
-        } else if (assetsSize == 1) {
+        } else if (assetsSize == 1) {           //if we have date from fartyg 2 then ais should not update that data
+            if(TerminalSourceEnum.NATIONAL.toString().equals(assets.get(0).getSource())){
+                return null;
+            }
             return assets.get(0);
         } else {
             Asset fartyg2Asset = null;
@@ -720,7 +725,7 @@ public class AssetServiceBean implements AssetService {
             // find the fartyg2 record
 
             for (Asset asset : assets) {
-                if ((asset.getSource() != null) && (asset.getSource().equals("NATIONAL"))) {
+                if ((asset.getSource() != null) && (asset.getSource().equals(TerminalSourceEnum.NATIONAL.toString()))) {
                     fartyg2Asset = asset;
                 } else {
                     nonFartyg2Asset = asset;
@@ -784,6 +789,7 @@ public class AssetServiceBean implements AssetService {
         if (shouldUpdate) {
             assetFromDB.setUpdatedBy(user);
             assetFromDB.setUpdateTime(OffsetDateTime.now());
+            assetFromDB.setSource(TerminalSourceEnum.INTERNAL.toString());
             em.merge(assetFromDB);
             updatedAssetEvent.fire(assetFromDB);
         }
