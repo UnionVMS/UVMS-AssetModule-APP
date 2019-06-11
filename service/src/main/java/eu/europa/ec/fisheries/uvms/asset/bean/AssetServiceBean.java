@@ -714,7 +714,7 @@ public class AssetServiceBean implements AssetService {
         int assetsSize = assets.size();
         if (assetsSize == 0) {
             return null;
-        } else if (assetsSize == 1) {           //if we have date from fartyg 2 then ais should not update that data
+        } else if (assetsSize == 1) { 
             return assets.get(0);
         } else {
             Asset fartyg2Asset = null;
