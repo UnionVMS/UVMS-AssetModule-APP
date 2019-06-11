@@ -715,9 +715,6 @@ public class AssetServiceBean implements AssetService {
         if (assetsSize == 0) {
             return null;
         } else if (assetsSize == 1) {           //if we have date from fartyg 2 then ais should not update that data
-            if(TerminalSourceEnum.NATIONAL.toString().equals(assets.get(0).getSource())){
-                return null;
-            }
             return assets.get(0);
         } else {
             Asset fartyg2Asset = null;
@@ -755,7 +752,7 @@ public class AssetServiceBean implements AssetService {
         boolean shouldUpdate = false;
 
 
-        if (assetFromDB == null) {
+        if (assetFromDB == null || TerminalSourceEnum.NATIONAL.toString().equals(assetFromDB.getSource())) {    //if we have data from fartyg 2 then we should not update with data from ais
             return;
         }
 
