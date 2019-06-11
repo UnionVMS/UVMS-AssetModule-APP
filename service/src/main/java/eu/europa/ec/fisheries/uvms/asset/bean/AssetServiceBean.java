@@ -12,6 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.bean;
 
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
+import eu.europa.ec.fisheries.schema.exchange.v1.SourceType;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
@@ -29,6 +30,8 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
+import eu.europa.ec.fisheries.wsdl.asset.types.CarrierSource;
 import eu.europa.ec.fisheries.wsdl.asset.types.EventCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -720,7 +723,7 @@ public class AssetServiceBean implements AssetService {
             // find the fartyg2 record
 
             for (Asset asset : assets) {
-                if ((asset.getSource() != null) && (asset.getSource().equals("NATIONAL"))) {
+                if ((asset.getSource() != null) && (asset.getSource().equals(CarrierSource.NATIONAL.toString()))) {
                     fartyg2Asset = asset;
                 } else {
                     nonFartyg2Asset = asset;
@@ -730,6 +733,9 @@ public class AssetServiceBean implements AssetService {
                 assetDao.deleteAsset(nonFartyg2Asset);
                 // flush is necessary to avoid dumps on MMSI
                 em.flush();
+                fartyg2Asset.setMmsi(nonFartyg2Asset.getMmsi());
+                em.merge(fartyg2Asset);
+                updatedAssetEvent.fire(fartyg2Asset);
                 return fartyg2Asset;
             }
         }
@@ -750,7 +756,7 @@ public class AssetServiceBean implements AssetService {
         boolean shouldUpdate = false;
 
 
-        if (assetFromDB == null) {
+        if (assetFromDB == null || CarrierSource.NATIONAL.toString().equals(assetFromDB.getSource())) {    //if we have data from fartyg 2 then we should not update with data from ais
             return;
         }
 
@@ -784,6 +790,7 @@ public class AssetServiceBean implements AssetService {
         if (shouldUpdate) {
             assetFromDB.setUpdatedBy(user);
             assetFromDB.setUpdateTime(OffsetDateTime.now());
+            assetFromDB.setSource(CarrierSource.INTERNAL.toString());
             em.merge(assetFromDB);
             updatedAssetEvent.fire(assetFromDB);
         }

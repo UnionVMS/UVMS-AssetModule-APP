@@ -2,6 +2,8 @@ package eu.europa.ec.fisheries.uvms.asset.util;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
+import eu.europa.ec.fisheries.wsdl.asset.types.CarrierSource;
 
 import java.time.OffsetDateTime;
 
@@ -12,7 +14,7 @@ public class AssetUtil {
 
         asset.setName((request.getAssetName() == null) ? ("Unknown ship: " + shipNumber) : request.getAssetName());
         asset.setUpdateTime(OffsetDateTime.now());
-        asset.setSource("INTERNAL");
+        asset.setSource(CarrierSource.INTERNAL.toString());
         asset.setUpdatedBy("UVMS");
         asset.setFlagStateCode((request.getFlagState() == null) ? ("UNK") : request.getFlagState());
         asset.setActive(true);

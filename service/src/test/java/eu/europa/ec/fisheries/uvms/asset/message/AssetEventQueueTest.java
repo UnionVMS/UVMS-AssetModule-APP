@@ -58,7 +58,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         Asset asset = AssetTestHelper.createBasicAsset();
         jmsHelper.upsertAsset(asset);
         // TODO Find better solution, this is needed due to async jms call
-        Thread.sleep(5000);
+        Thread.sleep(2000);
         Asset assetById = jmsHelper.getAssetById(asset.getCfr(), AssetIdType.CFR);
         
         assertThat(assetById, is(notNullValue()));
@@ -73,7 +73,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
     public void getAssetByIRCSTest() throws Exception {
         Asset asset = AssetTestHelper.createBasicAsset();
         jmsHelper.upsertAsset(asset);
-        Thread.sleep(5000);
+        Thread.sleep(2000);
         Asset assetById = jmsHelper.getAssetById(asset.getIrcs(), AssetIdType.IRCS);
 
         assertThat(assetById, is(notNullValue()));
@@ -91,7 +91,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
     public void getAssetByMMSITest() throws Exception {
         Asset asset = AssetTestHelper.createBasicAsset();
         jmsHelper.upsertAsset(asset);
-        Thread.sleep(5000);
+        Thread.sleep(2000);
         Asset assetById = jmsHelper.getAssetById(asset.getMmsiNo(), AssetIdType.MMSI);
         
         assertThat(assetById, is(notNullValue()));
@@ -106,7 +106,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
     public void getAssetListByQueryTest() throws Exception {
         Asset asset = AssetTestHelper.createBasicAsset();
         Asset upserted = jmsHelper.upsertAsset(asset);
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
         AssetListQuery assetListQuery = AssetTestHelper.createBasicAssetQuery();
         AssetListCriteriaPair assetListCriteriaPair = new AssetListCriteriaPair();
@@ -123,12 +123,12 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
     public void upsertAssetTest() throws Exception {
         Asset asset = AssetTestHelper.createBasicAsset();
         jmsHelper.upsertAsset(asset);
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
         String newName = "Name upserted";
         asset.setName(newName);
         jmsHelper.upsertAsset(asset);
-        Thread.sleep(5000);
+        Thread.sleep(2000);
         
         Asset assetById = jmsHelper.getAssetById(asset.getCfr(), AssetIdType.CFR);
         
@@ -145,7 +145,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         Asset asset = AssetTestHelper.createBasicAsset();
         asset.setSource(CarrierSource.INTERNAL);
         jmsHelper.upsertAsset(asset);
-        Thread.sleep(5000);
+        Thread.sleep(2000);
         
         Asset fetchedAsset = jmsHelper.getAssetById(asset.getCfr(), AssetIdType.CFR);
         assertThat(fetchedAsset.getSource(), is(asset.getSource()));
@@ -157,7 +157,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         Asset asset = AssetTestHelper.createBasicAsset();
         asset.setName(null);
         jmsHelper.upsertAsset(asset);
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
         Asset assetById = jmsHelper.getAssetById(asset.getMmsiNo(), AssetIdType.MMSI);
         assertTrue(assetById.getName() == null);
@@ -167,7 +167,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         List<eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset> assetList = new ArrayList<>();
         assetList.add(newAsset);
         jmsHelper.assetInfo(assetList);
-        Thread.sleep(5000);
+        Thread.sleep(2000);
         assetById = jmsHelper.getAssetById(asset.getMmsiNo(), AssetIdType.MMSI);
         assertTrue(assetById.getName() != null);
         assertTrue(assetById.getName().equals("namebyassetinfo"));
@@ -180,32 +180,32 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
 
         Asset assetWithsMMSI = AssetTestHelper.createBasicAsset();
         assetWithsMMSI.setIrcs(null);
-        assetWithsMMSI.setName(null);
+        assetWithsMMSI.setName("ShouldNotBeThis");
         jmsHelper.upsertAsset(assetWithsMMSI);
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
 
         Asset assetWithsIRCS = AssetTestHelper.createBasicAsset();
         assetWithsIRCS.setMmsiNo(null);
-        assetWithsIRCS.setName(null);
+        assetWithsIRCS.setName("namnetestfall2");
         assetWithsIRCS.setSource(CarrierSource.NATIONAL);
         jmsHelper.upsertAsset(assetWithsIRCS);
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
 
         eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset newAsset = new eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset();
         newAsset.setMmsi(assetWithsMMSI.getMmsiNo());
         newAsset.setIrcs(assetWithsIRCS.getIrcs());
-        newAsset.setName("namnetesfall2");
+        newAsset.setName("ShouldNotBeThis");
         List<eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset> assetList = new ArrayList<>();
         assetList.add(newAsset);
         jmsHelper.assetInfo(assetList);
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
         Asset fetchedAsset = jmsHelper.getAssetById(assetWithsMMSI.getMmsiNo(), AssetIdType.MMSI);
         assertTrue(fetchedAsset != null);
         assertTrue(fetchedAsset.getName() != null);
-        assertTrue(fetchedAsset.getName().equals(newAsset.getName()));
+        assertTrue(fetchedAsset.getName().equals(assetWithsIRCS.getName()));
         assertTrue(fetchedAsset.getMmsiNo() != null);
         assertTrue(fetchedAsset.getIrcs() != null);
     }
@@ -220,18 +220,18 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         assetWithsIRCS.setName(null);
         assetWithsIRCS.setSource(CarrierSource.NATIONAL);
         jmsHelper.upsertAsset(assetWithsIRCS);
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
         // an ais with a "random" mmsi
         String mmsi = UUID.randomUUID().toString().substring(0,10);
 
         eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset newAsset = new eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset();
         newAsset.setMmsi(mmsi);
-        newAsset.setName("namnetesfall3");
+        newAsset.setName("namnetestfall3");
         List<eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset> assetList = new ArrayList<>();
         assetList.add(newAsset);
         jmsHelper.assetInfo(assetList);
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
         Asset fetchedAsset = jmsHelper.getAssetById(mmsi, AssetIdType.MMSI);
         assertTrue(fetchedAsset == null);
@@ -246,23 +246,23 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
 
         Asset assetWithsIRCS = AssetTestHelper.createBasicAsset();
         assetWithsIRCS.setMmsiNo(null);
-        assetWithsIRCS.setName(null);
+        assetWithsIRCS.setName("namnetestfall4");
         assetWithsIRCS.setSource(CarrierSource.NATIONAL);
         jmsHelper.upsertAsset(assetWithsIRCS);
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
         eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset newAsset = new eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset();
         newAsset.setIrcs(assetWithsIRCS.getIrcs());
-        newAsset.setName("namnetesfall4");
+        newAsset.setName("ShouldNotBeThis");
         List<eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset> assetList = new ArrayList<>();
         assetList.add(newAsset);
         jmsHelper.assetInfo(assetList);
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
         Asset fetchedAsset = jmsHelper.getAssetById(assetWithsIRCS.getIrcs(), AssetIdType.IRCS);
         assertTrue(fetchedAsset != null);
         assertTrue(fetchedAsset.getName() != null);
-        assertTrue(fetchedAsset.getName().equals(newAsset.getName()));
+        assertTrue(fetchedAsset.getName().equals(assetWithsIRCS.getName()));
         assertTrue(fetchedAsset.getIrcs() != null);
         assertTrue(fetchedAsset.getIrcs().equals(assetWithsIRCS.getIrcs()));
 
@@ -278,18 +278,18 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         assetWithsMMSI.setName(null);
         assetWithsMMSI.setSource(CarrierSource.NATIONAL);
         jmsHelper.upsertAsset(assetWithsMMSI);
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
         // an ais with a "random" ircs
         String ircs = UUID.randomUUID().toString().substring(0,9);
 
         eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset newAsset = new eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset();
         newAsset.setIrcs(ircs);
-        newAsset.setName("namnetesfall5");
+        newAsset.setName("namnetestfall5");
         List<eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset> assetList = new ArrayList<>();
         assetList.add(newAsset);
         jmsHelper.assetInfo(assetList);
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
         Asset fetchedAsset = jmsHelper.getAssetById(ircs, AssetIdType.IRCS);
         assertTrue(fetchedAsset == null);
@@ -306,16 +306,45 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         assetWithsMMSI.setName(null);
         assetWithsMMSI.setSource(CarrierSource.NATIONAL);
         jmsHelper.upsertAsset(assetWithsMMSI);
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
 
         eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset newAsset = new eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset();
         newAsset.setMmsi(assetWithsMMSI.getMmsiNo());
-        newAsset.setName("namnetesfall6");
+        newAsset.setName("namnetestfall6");
         List<eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset> assetList = new ArrayList<>();
         assetList.add(newAsset);
         jmsHelper.assetInfo(assetList);
-        Thread.sleep(5000);
+        Thread.sleep(2000);
+
+        Asset fetchedAsset = jmsHelper.getAssetById(assetWithsMMSI.getMmsiNo(), AssetIdType.MMSI);
+        assertTrue(fetchedAsset != null);
+        assertTrue(fetchedAsset.getName() == null);
+        assertTrue(fetchedAsset.getMmsiNo() != null);
+        assertTrue(fetchedAsset.getMmsiNo().equals(assetWithsMMSI.getMmsiNo()));
+
+    }
+
+    @Test
+    @RunAsClient
+    public void assetInformationTest6XEUSource() throws Exception {
+
+
+        Asset assetWithsMMSI = AssetTestHelper.createBasicAsset();
+        assetWithsMMSI.setIrcs(null);
+        assetWithsMMSI.setName(null);
+        assetWithsMMSI.setSource(CarrierSource.XEU);
+        jmsHelper.upsertAsset(assetWithsMMSI);
+        Thread.sleep(2000);
+
+
+        eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset newAsset = new eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset();
+        newAsset.setMmsi(assetWithsMMSI.getMmsiNo());
+        newAsset.setName("namnetestfall6");
+        List<eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset> assetList = new ArrayList<>();
+        assetList.add(newAsset);
+        jmsHelper.assetInfo(assetList);
+        Thread.sleep(2000);
 
         Asset fetchedAsset = jmsHelper.getAssetById(assetWithsMMSI.getMmsiNo(), AssetIdType.MMSI);
         assertTrue(fetchedAsset != null);
@@ -336,16 +365,45 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         assetWithsIRCS.setName(null);
         assetWithsIRCS.setSource(CarrierSource.NATIONAL);
         jmsHelper.upsertAsset(assetWithsIRCS);
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
 
         eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset newAsset = new eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset();
         newAsset.setIrcs(assetWithsIRCS.getIrcs());
-        newAsset.setName("namnetesfall7");
+        newAsset.setName("namnetestfall7");
         List<eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset> assetList = new ArrayList<>();
         assetList.add(newAsset);
         jmsHelper.assetInfo(assetList);
-        Thread.sleep(5000);
+        Thread.sleep(2000);
+
+        Asset fetchedAsset = jmsHelper.getAssetById(assetWithsIRCS.getIrcs(), AssetIdType.IRCS);
+        assertTrue(fetchedAsset != null);
+        assertTrue(fetchedAsset.getName() == null);
+        assertTrue(fetchedAsset.getIrcs() != null);
+        assertTrue(fetchedAsset.getIrcs().equals(assetWithsIRCS.getIrcs()));
+
+    }
+
+    @Test
+    @RunAsClient
+    public void assetInformationTest7ThirdCountrySource() throws Exception {
+
+
+        Asset assetWithsIRCS = AssetTestHelper.createBasicAsset();
+        assetWithsIRCS.setMmsiNo(null);
+        assetWithsIRCS.setName(null);
+        assetWithsIRCS.setSource(CarrierSource.THIRD_COUNTRY);
+        jmsHelper.upsertAsset(assetWithsIRCS);
+        Thread.sleep(2000);
+
+
+        eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset newAsset = new eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset();
+        newAsset.setIrcs(assetWithsIRCS.getIrcs());
+        newAsset.setName("namnetestfall7");
+        List<eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset> assetList = new ArrayList<>();
+        assetList.add(newAsset);
+        jmsHelper.assetInfo(assetList);
+        Thread.sleep(2000);
 
         Asset fetchedAsset = jmsHelper.getAssetById(assetWithsIRCS.getIrcs(), AssetIdType.IRCS);
         assertTrue(fetchedAsset != null);
