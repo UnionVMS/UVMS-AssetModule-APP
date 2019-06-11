@@ -39,7 +39,7 @@ public class SSEResource {
         this.sseBroadcaster = sse.newBroadcaster();
     }
 
-    public void createdMovement(@Observes(during = TransactionPhase.AFTER_SUCCESS) @UpdatedAssetEvent Asset asset){
+    public void updatedAsset(@Observes(during = TransactionPhase.AFTER_SUCCESS) @UpdatedAssetEvent Asset asset){
         try {
             if (asset != null) {
                 MicroAsset micro = new MicroAsset(asset.getId().toString(), asset.getFlagStateCode(), asset.getName(), asset.getVesselType(), asset.getIrcs(), asset.getCfr(), asset.getExternalMarking(), asset.getLengthOverAll());
