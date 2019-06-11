@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.MDC;
 import eu.europa.ec.fisheries.uvms.rest.asset.Constant;
 
-@WebFilter("/*")
+@WebFilter(asyncSupported = true, urlPatterns = {"/*"})
 public class RequestFilter implements Filter {
 
 

@@ -21,11 +21,11 @@ public class MTRequestFilterTest extends AbstractAssetRestTest {
     @Test
     @OperateOnDeployment("normal")
     public void checkMDCNoHeaderTest() {
-        Response response = getWebTarget()
+        Response response = getWebTargetExternal()
                 .path("internal")
                 .path("ping")
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getToken())
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get();
         
         String requestId = response.getHeaderString("requestId");
@@ -36,12 +36,12 @@ public class MTRequestFilterTest extends AbstractAssetRestTest {
     @OperateOnDeployment("normal")
     public void checkMDCHeaderSetTest() {
         String requestId = UUID.randomUUID().toString();
-        Response response = getWebTarget()
+        Response response = getWebTargetExternal()
                 .path("internal")
                 .path("ping")
                 .request(MediaType.APPLICATION_JSON)
                 .header("requestId", requestId)
-                .header(HttpHeaders.AUTHORIZATION, getToken())
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get();
         
         String returnedRequestId = response.getHeaderString("requestId");

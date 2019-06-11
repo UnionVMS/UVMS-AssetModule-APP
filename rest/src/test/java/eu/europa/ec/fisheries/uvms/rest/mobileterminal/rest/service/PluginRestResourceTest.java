@@ -30,10 +30,10 @@ public class PluginRestResourceTest extends AbstractAssetRestTest {
     public void upsertPluginTest() {
         List<PluginService> pluginList = createPluginList();
 
-        Response response = getWebTarget()
+        Response response = getWebTargetExternal()
                 .path("/plugin")
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getToken())
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(pluginList));
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());

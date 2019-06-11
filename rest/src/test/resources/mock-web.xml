@@ -11,6 +11,8 @@
     <filter>
         <filter-name>AuthenticationFilter</filter-name>
         <filter-class>eu.europa.ec.fisheries.uvms.rest.security.AuthenticationFilter</filter-class>
+        <async-supported>true</async-supported>
+
     </filter>
     <filter-mapping>
         <filter-name>AuthenticationFilter</filter-name>
@@ -20,6 +22,7 @@
     <filter>
         <filter-name>MDCFilter</filter-name>
         <filter-class>eu.europa.ec.fisheries.uvms.commons.rest.filter.MDCFilter</filter-class>
+        <async-supported>true</async-supported>
     </filter>
 
 

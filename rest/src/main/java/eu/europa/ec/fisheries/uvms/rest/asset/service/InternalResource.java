@@ -153,7 +153,7 @@ public class InternalResource {
     @POST
     @Path("asset")
     public Response upsertAsset(AssetBO assetBo) {
-        AssetBO upsertedAsset = assetService.upsertAssetBO(assetBo, "UVMS (REST)");
+        AssetBO upsertedAsset = assetService.upsertAssetBO(assetBo, (assetBo.getAsset().getUpdatedBy() == null ?  "UVMS (REST)" : assetBo.getAsset().getUpdatedBy()));
         return Response.ok(upsertedAsset).build();
     }
 

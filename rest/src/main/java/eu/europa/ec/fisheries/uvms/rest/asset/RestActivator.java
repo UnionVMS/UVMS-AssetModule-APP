@@ -42,6 +42,7 @@ public class RestActivator extends Application {
         set.add(MobileTerminalRestResource.class);
         set.add(PollRestResource.class);
         set.add(PluginRestResource.class);
+        set.add(SSEResource.class);
     }
 
     @Override
