@@ -259,6 +259,9 @@ public class AssetDao {
     }
 
     public List<Asset> getAssetListByAssetGuids(List<UUID> idList) {
+        if(idList.isEmpty()){
+            return new ArrayList<>();
+        }
         TypedQuery<Asset> query = em.createNamedQuery(Asset.ASSET_FIND_BY_IDS, Asset.class);
         query.setParameter("idList", idList);
         return query.getResultList();

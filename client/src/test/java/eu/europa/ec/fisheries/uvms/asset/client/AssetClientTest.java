@@ -368,6 +368,16 @@ public class AssetClientTest extends AbstractClientTest {
         assertEquals(9951, output.length());
     }
 
+    @Test
+    @OperateOnDeployment("normal")
+    public void getMicroAssetInformationEmptyInputList(){
+        List<String> assetIdList = new ArrayList<>();
+
+        String output = assetClient.getMicroAssetList(assetIdList);
+
+        assertEquals("[]", output);
+    }
+
 
     private String createAsset(){
         AssetBO assetBo = new AssetBO();
