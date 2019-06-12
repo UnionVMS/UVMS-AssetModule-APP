@@ -42,7 +42,7 @@ public class SSEResource {
     public void updatedAsset(@Observes(during = TransactionPhase.AFTER_SUCCESS) @UpdatedAssetEvent Asset asset){
         try {
             if (asset != null) {
-                MicroAsset micro = new MicroAsset(asset.getId().toString(), asset.getFlagStateCode(), asset.getName(), asset.getVesselType(), asset.getIrcs(), asset.getCfr(), asset.getExternalMarking(), asset.getLengthOverAll());
+                MicroAsset micro = new MicroAsset(asset.getId(), asset.getFlagStateCode(), asset.getName(), asset.getVesselType(), asset.getIrcs(), asset.getCfr(), asset.getExternalMarking(), asset.getLengthOverAll());
                 OutboundSseEvent sseEvent = eventBuilder
                         .name("Asset")
                         .id("" + System.currentTimeMillis())

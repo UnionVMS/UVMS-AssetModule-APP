@@ -5,6 +5,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchFieldType;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.exception.AuditException;
@@ -263,6 +264,15 @@ public class AssetDao {
             return new ArrayList<>();
         }
         TypedQuery<Asset> query = em.createNamedQuery(Asset.ASSET_FIND_BY_IDS, Asset.class);
+        query.setParameter("idList", idList);
+        return query.getResultList();
+    }
+
+    public List<MicroAsset> getMicroAssetListByAssetGuids(List<UUID> idList) {
+        if(idList.isEmpty()){
+            return new ArrayList<>();
+        }
+        TypedQuery<MicroAsset> query = em.createNamedQuery(Asset.ASSET_MICRO_ASSET_BY_LIST, MicroAsset.class);
         query.setParameter("idList", idList);
         return query.getResultList();
     }
