@@ -1,5 +1,7 @@
 package eu.europa.ec.fisheries.uvms.asset.dto;
 
+import java.util.UUID;
+
 public class MicroAsset {
 
     String assetId;
@@ -11,8 +13,8 @@ public class MicroAsset {
     String externalMarking;
     Double lengthOverAll;
 
-    public MicroAsset(String assetId, String flagstate, String assetName, String vesselType, String ircs, String cfr, String externalMarking, Double lengthOverAll) {
-        this.assetId = assetId;
+    public MicroAsset(UUID assetId, String flagstate, String assetName, String vesselType, String ircs, String cfr, String externalMarking, Double lengthOverAll) {
+        this.assetId = assetId.toString();
         this.flagstate = flagstate;
         this.assetName = assetName;
         this.vesselType = vesselType;
