@@ -50,9 +50,9 @@ import java.util.UUID;
 @Api(value = "Asset Service")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class AssetResource {
+public class AssetRestResource {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AssetResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AssetRestResource.class);
 
     @Context
     private HttpServletRequest servletRequest;

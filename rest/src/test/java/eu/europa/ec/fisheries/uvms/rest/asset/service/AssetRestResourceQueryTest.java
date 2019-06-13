@@ -10,6 +10,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
+import static junit.framework.TestCase.assertNotNull;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.*;
@@ -17,10 +18,7 @@ import static org.junit.Assert.*;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -39,17 +37,13 @@ import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
 
 @RunWith(Arquillian.class)
 @RunAsClient
-public class AssetResourceQueryTest extends AbstractAssetRestTest {
+public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
     public void getAssetListQueryTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTargetExternal()
-                .path("asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(asset), Asset.class);
+        Asset createdAsset = sendAssetToCreation(asset);
         
         AssetQuery query = new AssetQuery();
         query.setCfr(Collections.singletonList(createdAsset.getCfr()));
@@ -92,11 +86,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         String cfrValue = UUID.randomUUID().toString().substring(0,11).toUpperCase();
         Asset asset = AssetHelper.createBasicAsset();
         asset.setCfr(cfrValue);
-        Asset createdAsset = getWebTargetExternal()
-                .path("asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(asset), Asset.class);
+        Asset createdAsset = sendAssetToCreation(asset);
 
         AssetQuery query = new AssetQuery();
         query.setCfr(Collections.singletonList(cfrValue));
@@ -139,18 +129,11 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
 
         Asset asset1 = AssetHelper.createBasicAsset();
         asset1.setCfr(cfrValue);
-        Asset createdAsset1 = getWebTargetExternal()
-                .path("asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(asset1), Asset.class);
+        Asset createdAsset1 = sendAssetToCreation(asset1);
+
         Asset asset2 = AssetHelper.createBasicAsset();
         asset2.setCfr(cfrValue2);
-        Asset createdAsset2 = getWebTargetExternal()
-                .path("asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(asset2), Asset.class);
+        Asset createdAsset2 = sendAssetToCreation(asset2);
 
 
         AssetQuery query = new AssetQuery();
@@ -197,18 +180,11 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
 
         Asset asset1 = AssetHelper.createBasicAsset();
         asset1.setCfr(cfrValue);
-        Asset createdAsset1 = getWebTargetExternal()
-                .path("asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(asset1), Asset.class);
+        Asset createdAsset1 = sendAssetToCreation(asset1);
+
         Asset asset2 = AssetHelper.createBasicAsset();
         asset2.setCfr(cfrValue2);
-        Asset createdAsset2 = getWebTargetExternal()
-                .path("asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(asset2), Asset.class);
+        Asset createdAsset2 = sendAssetToCreation(asset2);
 
         AssetQuery query = new AssetQuery();
         query.setCfr(Collections.singletonList(cfrValue));
@@ -259,11 +235,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
     @OperateOnDeployment("normal")
     public void getAssetListEmptyCriteriasShouldReturnAllAssets() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTargetExternal()
-                .path("asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(asset), Asset.class);
+        Asset createdAsset = sendAssetToCreation(asset);
         
         AssetQuery query = new AssetQuery();
 
@@ -287,11 +259,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
 
         // create an asset
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTargetExternal()
-                .path("asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(asset), Asset.class);
+        Asset createdAsset = sendAssetToCreation(asset);
 
         // aempty query
         AssetQuery query = new AssetQuery();
@@ -317,11 +285,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
     public void getAssetListEmptyCriteriasShouldNotReturnInactivatedAssets() {
         Asset asset = AssetHelper.createBasicAsset();
         // create an Asset
-        Asset createdAsset = getWebTargetExternal()
-                .path("asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(asset), Asset.class);
+        Asset createdAsset = sendAssetToCreation(asset);
         
         AssetQuery query = new AssetQuery();
 
@@ -365,19 +329,11 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         
         Asset asset1 = AssetHelper.createBasicAsset();
         asset1.setFlagStateCode(customFlagState);
-        Asset createdAsset1 = getWebTargetExternal()
-                .path("asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(asset1), Asset.class);
+        Asset createdAsset1 = sendAssetToCreation(asset1);
         
         Asset asset2 = AssetHelper.createBasicAsset();
         asset2.setFlagStateCode(customFlagState);
-        Asset createdAsset2 = getWebTargetExternal()
-                .path("asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(asset2), Asset.class);
+        Asset createdAsset2 = sendAssetToCreation(asset2);
         
         AssetQuery query = new AssetQuery();
         query.setFlagState(Collections.singletonList(customFlagState));
@@ -418,11 +374,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         Asset asset = AssetHelper.createBasicAsset();
         String randomNumbers = AssetHelper.getRandomIntegers(10);
         asset.setName("ShipName" + randomNumbers);
-        Asset createdAsset = getWebTargetExternal()
-                .path("asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(asset), Asset.class);
+        Asset createdAsset = sendAssetToCreation(asset);
         
         AssetQuery query = new AssetQuery();
         query.setName(Collections.singletonList("shipn*me" + randomNumbers));
@@ -445,11 +397,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
     @OperateOnDeployment("normal")
     public void getAssetWithDateSearch() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTargetExternal()
-                .path("asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(asset), Asset.class);
+        Asset createdAsset = sendAssetToCreation(asset);
         
         Instant timestamp = Instant.now();
         
@@ -505,11 +453,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
     @OperateOnDeployment("normal")
     public void getAssetWithDateSearchThreeRevisions() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTargetExternal()
-                .path("asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(asset), Asset.class);
+        Asset createdAsset = sendAssetToCreation(asset);
         
         Instant timestamp = Instant.now();
         
@@ -575,18 +519,10 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
     @OperateOnDeployment("normal")
     public void getAssetsAtDate() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTargetExternal()
-                .path("asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(asset), Asset.class);
+        Asset createdAsset = sendAssetToCreation(asset);
         
         Asset asset2 = AssetHelper.createBasicAsset();
-        Asset createdAsset2 = getWebTargetExternal()
-                .path("asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(asset2), Asset.class);
+        Asset createdAsset2 = sendAssetToCreation(asset2);
         
         AssetQuery query2 = new AssetQuery();
         query2.setDate(Instant.now());
@@ -611,18 +547,10 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
     @OperateOnDeployment("normal")
     public void getAssetsAtDateAndIrcsAndFs() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTargetExternal()
-                .path("asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(asset), Asset.class);
+        Asset createdAsset = sendAssetToCreation(asset);
         
         Asset asset2 = AssetHelper.createBasicAsset();
-        Asset createdAsset2 = getWebTargetExternal()
-                .path("asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(asset2), Asset.class);
+        Asset createdAsset2 = sendAssetToCreation(asset2);
         
         Instant timestamp = Instant.now();
         
@@ -659,11 +587,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
     @OperateOnDeployment("normal")
     public void getAssetAtInvalidDate() {
         Asset asset = AssetHelper.createBasicAsset();
-        getWebTargetExternal()
-            .path("asset")
-            .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-            .post(Entity.json(asset), Asset.class);
+        sendAssetToCreation(asset);
         
         Instant pastDate = OffsetDateTime.now().minus(100, ChronoUnit.YEARS).toInstant();
         
@@ -690,11 +614,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         String gearType = "tempGearType" + AssetHelper.getRandomIntegers(10);
         Asset asset = AssetHelper.createBasicAsset();
         asset.setGearFishingType(gearType);
-        Asset createdAsset = getWebTargetExternal()
-                .path("asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(asset), Asset.class);
+        Asset createdAsset = sendAssetToCreation(asset);
         
         AssetQuery query = new AssetQuery();
         query.setGearType(gearType);
@@ -717,11 +637,7 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         String gearType1 = "tempGearType" + AssetHelper.getRandomIntegers(10);
         Asset asset = AssetHelper.createBasicAsset();
         asset.setGearFishingType(gearType1);
-        Asset createdAsset = getWebTargetExternal()
-                .path("asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(asset), Asset.class);
+        Asset createdAsset = sendAssetToCreation(asset);
         
         String gearType2 = gearType1 + AssetHelper.getRandomIntegers(5);
         Asset asset2 = AssetHelper.createBasicAsset();
@@ -745,5 +661,142 @@ public class AssetResourceQueryTest extends AbstractAssetRestTest {
         assertNotNull(listResponse);
         assertThat(listResponse.getAssetList().size(), is(1));
         assertThat(listResponse.getAssetList().get(0), is(AssetMatcher.assetEquals(createdAsset)));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetListByOneFlagstateTest() {
+        Asset assetSwe = AssetHelper.createBasicAsset();
+        assetSwe.setFlagStateCode("SWE");
+        Asset createdAssetSwe = sendAssetToCreation(assetSwe);
+
+        Asset assetDnk = AssetHelper.createBasicAsset();
+        assetDnk.setFlagStateCode("DNK");
+        Asset createdAssetDnk = sendAssetToCreation(assetDnk);
+
+        AssetQuery assetQuery = new AssetQuery();
+        List<String> flagstateList = new ArrayList<>();
+        flagstateList.add(assetSwe.getFlagStateCode());
+        assetQuery.setFlagState(flagstateList);
+
+        AssetListResponse output = getWebTargetExternal()
+                .path("asset")
+                .path("list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(assetQuery), AssetListResponse.class);
+
+        assertNotNull(output);
+        assertFalse(output.getAssetList().isEmpty());
+        assertTrue(output.getAssetList().stream().anyMatch(a -> a.getId().equals(createdAssetSwe.getId())));
+        assertFalse(output.getAssetList().stream().anyMatch(a -> a.getId().equals(createdAssetDnk.getId())));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetListByTwoFlagstateTest() {
+        Asset assetSwe = AssetHelper.createBasicAsset();
+        assetSwe.setFlagStateCode("SWE");
+        Asset createdAssetSwe = sendAssetToCreation(assetSwe);
+
+        Asset assetDnk = AssetHelper.createBasicAsset();
+        assetDnk.setFlagStateCode("DNK");
+        Asset createdAssetDnk = sendAssetToCreation(assetDnk);
+
+        AssetQuery assetQuery = new AssetQuery();
+        List<String> flagstateList = new ArrayList<>();
+        flagstateList.add(assetSwe.getFlagStateCode());
+        flagstateList.add(assetDnk.getFlagStateCode());
+        assetQuery.setFlagState(flagstateList);
+
+        AssetListResponse output = getWebTargetExternal()
+                .path("asset")
+                .path("list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(assetQuery), AssetListResponse.class);
+
+        assertNotNull(output);
+        assertFalse(output.getAssetList().isEmpty());
+        assertTrue(output.getAssetList().stream().anyMatch(a -> a.getId().equals(createdAssetSwe.getId())));
+        assertTrue(output.getAssetList().stream().anyMatch(a -> a.getId().equals(createdAssetDnk.getId())));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetListByTwoFlagstateAndAIRCSTest() {
+        Asset assetSwe = AssetHelper.createBasicAsset();
+        assetSwe.setFlagStateCode("SWE");
+        Asset createdAssetSwe = sendAssetToCreation(assetSwe);
+
+        Asset assetDnk = AssetHelper.createBasicAsset();
+        assetDnk.setFlagStateCode("DNK");
+        Asset createdAssetDnk = sendAssetToCreation(assetDnk);
+
+        AssetQuery assetQuery = new AssetQuery();
+        List<String> flagstateList = new ArrayList<>();
+        flagstateList.add(assetSwe.getFlagStateCode());
+        flagstateList.add(assetDnk.getFlagStateCode());
+        assetQuery.setFlagState(flagstateList);
+
+        List<String> ircsList = new ArrayList<>();
+        ircsList.add(assetSwe.getIrcs());
+        assetQuery.setIrcs(ircsList);
+
+        AssetListResponse output = getWebTargetExternal()
+                .path("asset")
+                .path("list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(assetQuery), AssetListResponse.class);
+
+        assertNotNull(output);
+        assertFalse(output.getAssetList().isEmpty());
+        assertTrue(output.getAssetList().stream().anyMatch(a -> a.getId().equals(createdAssetSwe.getId())));
+        assertFalse(output.getAssetList().stream().anyMatch(a -> a.getId().equals(createdAssetDnk.getId())));
+    }
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetListByTwoFlagstateAndTwoIRCSTest() {
+        Asset assetSwe = AssetHelper.createBasicAsset();
+        assetSwe.setFlagStateCode("SWE");
+        Asset createdAssetSwe = sendAssetToCreation(assetSwe);
+
+        Asset assetDnk = AssetHelper.createBasicAsset();
+        assetDnk.setFlagStateCode("DNK");
+        Asset createdAssetDnk = sendAssetToCreation(assetDnk);
+
+        AssetQuery assetQuery = new AssetQuery();
+        List<String> flagstateList = new ArrayList<>();
+        flagstateList.add(assetSwe.getFlagStateCode());
+        flagstateList.add(assetDnk.getFlagStateCode());
+        assetQuery.setFlagState(flagstateList);
+
+        List<String> ircsList = new ArrayList<>();
+        ircsList.add(assetSwe.getIrcs());
+        ircsList.add(assetDnk.getIrcs());
+        assetQuery.setIrcs(ircsList);
+
+        AssetListResponse output = getWebTargetExternal()
+                .path("asset")
+                .path("list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(assetQuery), AssetListResponse.class);
+
+        assertNotNull(output);
+        assertFalse(output.getAssetList().isEmpty());
+        assertTrue(output.getAssetList().stream().anyMatch(a -> a.getId().equals(createdAssetSwe.getId())));
+        assertTrue(output.getAssetList().stream().anyMatch(a -> a.getId().equals(createdAssetDnk.getId())));
+    }
+
+
+    private Asset sendAssetToCreation(Asset asset) {
+        Asset createdAsset = getWebTargetExternal()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(asset), Asset.class);
+        return createdAsset;
     }
 }
