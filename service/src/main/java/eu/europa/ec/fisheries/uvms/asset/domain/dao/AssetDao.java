@@ -154,7 +154,7 @@ public class AssetDao {
 
     private AuditQuery createQuery(List<SearchKeyValue> searchFields, boolean isDynamic, boolean includeInactivated) {
         AuditReader auditReader = AuditReaderFactory.get(em);
-//here
+
         AuditQuery query;
         SearchKeyValue dateSearchField = getDateSearchField(searchFields);
         if (dateSearchField != null) {
