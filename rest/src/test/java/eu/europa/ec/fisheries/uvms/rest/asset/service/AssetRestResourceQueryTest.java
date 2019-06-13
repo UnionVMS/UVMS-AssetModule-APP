@@ -752,6 +752,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
 
         assertNotNull(output);
         assertFalse(output.getAssetList().isEmpty());
+        assertEquals(1, output.getAssetList().size());
         assertTrue(output.getAssetList().stream().anyMatch(a -> a.getId().equals(createdAssetSwe.getId())));
         assertFalse(output.getAssetList().stream().anyMatch(a -> a.getId().equals(createdAssetDnk.getId())));
     }
@@ -786,6 +787,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
 
         assertNotNull(output);
         assertFalse(output.getAssetList().isEmpty());
+        assertEquals(2, output.getAssetList().size());
         assertTrue(output.getAssetList().stream().anyMatch(a -> a.getId().equals(createdAssetSwe.getId())));
         assertTrue(output.getAssetList().stream().anyMatch(a -> a.getId().equals(createdAssetDnk.getId())));
     }
