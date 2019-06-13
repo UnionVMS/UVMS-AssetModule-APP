@@ -4,10 +4,12 @@ import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
+import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
 import eu.europa.ec.fisheries.wsdl.asset.types.EventCode;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
@@ -25,6 +27,7 @@ import javax.ws.rs.core.Response.Status;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,7 +37,7 @@ import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 @RunAsClient
-public class AssetResourceTest extends AbstractAssetRestTest {
+public class AssetRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")

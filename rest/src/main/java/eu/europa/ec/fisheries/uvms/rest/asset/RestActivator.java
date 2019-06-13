@@ -31,7 +31,7 @@ public class RestActivator extends Application {
 
     public RestActivator() {
         set.add(AssetRestExceptionMapper.class);
-        set.add(AssetResource.class);
+        set.add(AssetRestResource.class);
         set.add(AssetGroupResource.class);
         set.add(AssetConfigResource.class);
         set.add(CustomCodesResource.class);

@@ -196,10 +196,11 @@ public class AssetDao {
                 operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).le(Double.valueOf(searchKeyValue.getSearchValues().get(0))));
             } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.LIST)) {
                 operatorUsed = true;
+                AuditDisjunction disjunctionOperator = AuditEntity.disjunction();
                 for (String v : searchKeyValue.getSearchValuesAsLowerCase()) {
-                    operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).ilike(v, MatchMode.ANYWHERE));
+                    disjunctionOperator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).ilike(v, MatchMode.ANYWHERE));
                 }
-
+                operator.add(disjunctionOperator);
             } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.NUMBER)) {
                 List<Integer> intValues = searchKeyValue.getSearchValues().stream().map(Integer::parseInt).collect(Collectors.toList());
                 operatorUsed = true;
