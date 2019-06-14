@@ -518,7 +518,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         request.setMemberNumberValue(null);
         request.setTranspondertypeValue(null);
         AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
-        assertTrue(response.getAssetName().startsWith("Unknown ship"));
+        assertTrue(response.getAssetName().startsWith("Unknown"));
     }
     
     @Test

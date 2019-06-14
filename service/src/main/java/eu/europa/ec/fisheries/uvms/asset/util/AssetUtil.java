@@ -12,7 +12,7 @@ public class AssetUtil {
     public static Asset createNewAssetFromRequest(AssetMTEnrichmentRequest request,int shipNumber){
         Asset asset = new Asset();
 
-        asset.setName((request.getAssetName() == null) ? ("Unknown ship: " + shipNumber) : request.getAssetName());
+        asset.setName((request.getAssetName() == null) ? ("Unknown: " + shipNumber) : request.getAssetName());
         asset.setUpdateTime(OffsetDateTime.now());
         asset.setSource(CarrierSource.INTERNAL.toString());
         asset.setUpdatedBy("UVMS");
