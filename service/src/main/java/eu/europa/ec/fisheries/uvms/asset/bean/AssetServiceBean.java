@@ -99,6 +99,7 @@ public class AssetServiceBean implements AssetService {
         Asset createdAssetEntity = assetDao.createAsset(asset);
 
         auditService.logAssetCreated(createdAssetEntity, username);
+        updatedAssetEvent.fire(asset);
 
         return createdAssetEntity;
     }
@@ -464,7 +465,7 @@ public class AssetServiceBean implements AssetService {
         if (asset == null &&
                 (transponderType == null || !transponderType.equals(MobileTerminalTypeEnum.INMARSAT_C))) {
             asset = AssetUtil.createNewAssetFromRequest(request, assetDao.getNextUnknownShipNumber());
-            assetDao.createAsset(asset);
+            createAsset(asset, asset.getUpdatedBy());
         }
 
         AssetMTEnrichmentResponse assetMTEnrichmentResponse = new AssetMTEnrichmentResponse();

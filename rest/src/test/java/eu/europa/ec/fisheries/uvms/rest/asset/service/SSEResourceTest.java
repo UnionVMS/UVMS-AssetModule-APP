@@ -78,7 +78,7 @@ public class SSEResourceTest extends AbstractAssetRestTest {
             Thread.sleep(1000 * 1 * 1);
             assertTrue(source.isOpen());
             assertTrue(errorString,errorString.isEmpty());
-            assertEquals(dataString,3 ,dataString.split("\\}\\{").length);
+            assertEquals(dataString,4 ,dataString.split("\\}\\{").length);
             assertTrue(dataString, dataString.contains("new test name"));
             assertTrue(dataString, dataString.contains("UNK"));
             assertTrue(dataString, dataString.contains("42"));
