@@ -762,7 +762,7 @@ public class AssetServiceBean implements AssetService {
                 .queryParam("MovementConnectFrom", oldAssetId)
                 .queryParam("MovementConnectTo", newAssetId)
                 .request(MediaType.APPLICATION_JSON)
-                .post(Entity.json(""), Response.class);
+                .put(Entity.json(""), Response.class);
 
         if(remapResponse.getStatus() != 200){ //to we want this?
             throw new RuntimeException("Response from remapping from old asset to new asset was not 200. Return status: " + remapResponse.getStatus() + " Return error: " + remapResponse.getEntity());

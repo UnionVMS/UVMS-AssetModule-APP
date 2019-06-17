@@ -9,7 +9,7 @@ import javax.ws.rs.core.Response;
 @Stateless
 public class MovementMock {
 
-    @POST
+    @PUT
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/remapMovementConnectInMovement")
