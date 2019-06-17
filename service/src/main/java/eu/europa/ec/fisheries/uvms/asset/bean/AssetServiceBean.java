@@ -36,6 +36,8 @@ import eu.europa.ec.fisheries.wsdl.asset.types.EventCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Resource;
+import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -43,6 +45,11 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -63,6 +70,9 @@ public class AssetServiceBean implements AssetService {
     private static final String ICCAT = "ICCAT";
 
     private static final Logger LOG = LoggerFactory.getLogger(AssetServiceBean.class);
+
+    @Resource(name = "java:global/movement_endpoint")
+    private String movementEndpoint;
 
     @Inject
     private AuditServiceBean auditService;
@@ -731,6 +741,7 @@ public class AssetServiceBean implements AssetService {
                 }
             }
             if ((fartyg2Asset != null) && (nonFartyg2Asset != null)) {
+                remapAssetsInMovement(nonFartyg2Asset.getId().toString(), fartyg2Asset.getId().toString());
                 assetDao.deleteAsset(nonFartyg2Asset);
                 // flush is necessary to avoid dumps on MMSI
                 em.flush();
@@ -743,6 +754,20 @@ public class AssetServiceBean implements AssetService {
         return null;
     }
 
+
+    private void remapAssetsInMovement(String oldAssetId, String newAssetId){
+        Client client = ClientBuilder.newClient();
+        Response remapResponse = client.target(movementEndpoint)
+                .path("internal/remapMovementConnectInMovement")
+                .queryParam("MovementConnectFrom", oldAssetId)
+                .queryParam("MovementConnectTo", newAssetId)
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(""), Response.class);
+
+        if(remapResponse.getStatus() != 200){ //to we want this?
+            throw new RuntimeException("Response from remapping from old asset to new asset was not 200. Return status: " + remapResponse.getStatus() + " Return error: " + remapResponse.getEntity());
+        }
+    }
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
