@@ -44,6 +44,7 @@ public abstract class BuildAssetServiceDeployment {
 
         testWar.addClass(UnionVMSMock.class);
         testWar.addClass(ExchangeModuleRestMock.class);
+        testWar.addClass(MovementMock.class);
 
         return testWar;
     }
