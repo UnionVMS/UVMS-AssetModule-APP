@@ -29,7 +29,7 @@ import eu.europa.ec.fisheries.uvms.config.message.ConfigMessageProducer;
 public class AssetProducer extends AbstractProducer implements ConfigMessageProducer {
 
     @Resource(mappedName = "java:/" + MessageConstants.QUEUE_CONFIG)
-    private Destination destination;
+    private Queue destination;
 
     @Resource(mappedName = "java:/" + MessageConstants.QUEUE_ASSET)
     private Queue replyToQueue;

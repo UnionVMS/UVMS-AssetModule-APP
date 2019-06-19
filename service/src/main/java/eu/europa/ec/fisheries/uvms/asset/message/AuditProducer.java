@@ -23,7 +23,7 @@ import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 public class AuditProducer extends AbstractProducer {
 
     @Resource(mappedName = "java:/" + MessageConstants.QUEUE_AUDIT_EVENT)
-    private Destination destination;
+    private Queue destination;
 
     @Resource(mappedName = "java:/" + MessageConstants.QUEUE_ASSET)
     private Queue replyToQueue;
