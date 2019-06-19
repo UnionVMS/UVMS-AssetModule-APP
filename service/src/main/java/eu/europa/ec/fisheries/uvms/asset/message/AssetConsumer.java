@@ -11,12 +11,12 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.message;
 
+import javax.annotation.Resource;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import javax.jms.Destination;
+import javax.jms.JMSException;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractConsumer;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigMessageException;
 import eu.europa.ec.fisheries.uvms.config.message.ConfigMessageConsumer;
@@ -27,17 +27,19 @@ public class AssetConsumer extends AbstractConsumer implements ConfigMessageCons
 
     private static final long CONFIG_TIMEOUT = 600000L;
 
-    @Override
-    public String getDestinationName() {
-        return MessageConstants.QUEUE_ASSET;
-    }
+    @Resource(mappedName = "java:/" + MessageConstants.QUEUE_ASSET)
+    private Destination destination;
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public <T> T getConfigMessage(String correlationId, Class type) throws ConfigMessageException {
+    public Destination getDestination() {
+        return destination;
+    }
+    
+    @Override
+    public <T> T getConfigMessage(String correlationId, Class<T> type) throws ConfigMessageException {
         try {
             return getMessage(correlationId, type, CONFIG_TIMEOUT);
-        } catch (MessageException e) {
+        } catch (JMSException e) {
             throw new ConfigMessageException(e.getMessage());
         }
     }

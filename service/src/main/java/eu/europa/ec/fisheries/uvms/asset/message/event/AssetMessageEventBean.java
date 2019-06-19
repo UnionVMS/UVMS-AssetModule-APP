@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,6 @@ import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
@@ -80,7 +80,7 @@ public class AssetMessageEventBean {
             try {
                 String response = AssetModuleResponseMapper.mapAssetModuleResponse(assetMapper.toAssetModel(asset));
                 assetMessageProducer.sendResponseMessageToSender(textMessage, response);
-            } catch (AssetException | MessageException e) {
+            } catch (AssetException | JMSException e) {
                 LOG.error("[ Error when mapping asset ] ");
                 assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when mapping asset" + e)));
             }
@@ -100,7 +100,7 @@ public class AssetMessageEventBean {
             
             ListAssetResponse response = assetMapper.toListAssetResponse(assetList); 
             assetMessageProducer.sendResponseMessageToSender(message.getMessage(), AssetModuleResponseMapper.mapAssetModuleResponse(response));
-        } catch (AssetException | MessageException e) {
+        } catch (AssetException | JMSException e) {
             assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting assetlist: " + e)));
         }
     }
@@ -113,7 +113,7 @@ public class AssetMessageEventBean {
             List<AssetGroup> response = assetGroups.stream().map(assetMapper::toAssetGroupModel).collect(Collectors.toList());
 
             assetMessageProducer.sendResponseMessageToSender(message.getMessage(), AssetModuleResponseMapper.mapToAssetGroupListResponse(response));
-        } catch (AssetException | MessageException e) {
+        } catch (AssetException | JMSException e) {
             LOG.error("[ Error when getting assetGroupList from source. ] ");
             assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting AssetGroupByUserName [ " + e)));
         }
@@ -125,7 +125,7 @@ public class AssetMessageEventBean {
             List<eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup> assetGroups = assetGroup.getAssetGroupListByAssetId(UUID.fromString(message.getAssetGuid()));
             List<AssetGroup> response = assetGroups.stream().map(assetMapper::toAssetGroupModel).collect(Collectors.toList());
             assetMessageProducer.sendResponseMessageToSender(message.getMessage(), AssetModuleResponseMapper.mapToAssetGroupListResponse(response));
-        } catch (AssetException | MessageException e) {
+        } catch (AssetException | JMSException e) {
             LOG.error("[ Error when getting assetGroupList from source. ] ");
             assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting AssetGroupByUserName [ " + e)));
         }
@@ -144,7 +144,7 @@ public class AssetMessageEventBean {
 
             List<eu.europa.ec.fisheries.wsdl.asset.types.Asset> assetModels = assets.stream().map(assetMapper::toAssetModel).collect(Collectors.toList());
             assetMessageProducer.sendResponseMessageToSender(message.getMessage(), AssetModuleResponseMapper.mapToAssetListByAssetGroupResponse(assetModels));
-        } catch (AssetException | MessageException e) {
+        } catch (AssetException | JMSException e) {
             LOG.error("[ Error when getting assetGroupList from source. ] ");
             assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting AssetListByVesselGroups [ " + e)));
         }
@@ -155,7 +155,7 @@ public class AssetMessageEventBean {
             PingResponse pingResponse = new PingResponse();
             pingResponse.setResponse("pong");
             assetMessageProducer.sendResponseMessageToSender(message.getMessage(), JAXBMarshaller.marshallJaxBObjectToString(pingResponse));
-        } catch (AssetException | MessageException e) {
+        } catch (AssetException | JMSException e) {
             LOG.error("[ Error when marshalling ping response ]");
         }
     }

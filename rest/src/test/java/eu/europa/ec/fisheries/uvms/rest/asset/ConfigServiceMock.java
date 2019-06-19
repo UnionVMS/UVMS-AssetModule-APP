@@ -14,13 +14,13 @@ import java.util.Arrays;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 import eu.europa.ec.fisheries.schema.config.types.v1.PullSettingsStatus;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetProducer;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleResponseMapper;
 
@@ -42,7 +42,7 @@ public class ConfigServiceMock implements MessageListener {
             mockSetting.setDescription("From ConfigServiceMock.java");
             String response = ModuleResponseMapper.toPullSettingsResponse(Arrays.asList(mockSetting), PullSettingsStatus.OK);
             producer.sendResponseMessageToSender((TextMessage) message, response);
-        } catch (ModelMarshallException | MessageException e) {
+        } catch (ModelMarshallException | JMSException e) {
         }
     }
 }

@@ -16,9 +16,10 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.jms.Destination;
+import javax.jms.JMSException;
 import javax.jms.Queue;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigMessageException;
 import eu.europa.ec.fisheries.uvms.config.message.ConfigMessageProducer;
@@ -27,17 +28,20 @@ import eu.europa.ec.fisheries.uvms.config.message.ConfigMessageProducer;
 @Stateless
 public class AssetProducer extends AbstractProducer implements ConfigMessageProducer {
 
-    @Resource(mappedName = "java:/jms/queue/UVMSAsset")
+    @Resource(mappedName = "java:/" + MessageConstants.QUEUE_CONFIG)
+    private Destination destination;
+
+    @Resource(mappedName = "java:/" + MessageConstants.QUEUE_ASSET)
     private Queue replyToQueue;
-    
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public String sendModuleMessage(String text) throws MessageException {
-        return sendModuleMessage(text, replyToQueue);
+
+    @Override
+    public Destination getDestination() {
+        return destination;
     }
     
-    @Override
-    public String getDestinationName() {
-        return MessageConstants.QUEUE_CONFIG;
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public String sendModuleMessage(String text) throws JMSException {
+        return sendModuleMessage(text, replyToQueue);
     }
 
     @Override

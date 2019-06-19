@@ -13,24 +13,27 @@ package eu.europa.ec.fisheries.uvms.asset.message;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
+import javax.jms.Destination;
+import javax.jms.JMSException;
 import javax.jms.Queue;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 
 @Stateless
 public class AuditProducer extends AbstractProducer {
 
-    @Resource(mappedName = "java:/jms/queue/UVMSAsset")
+    @Resource(mappedName = "java:/" + MessageConstants.QUEUE_AUDIT_EVENT)
+    private Destination destination;
+
+    @Resource(mappedName = "java:/" + MessageConstants.QUEUE_ASSET)
     private Queue replyToQueue;
-    
-    public String sendModuleMessage(String text) throws MessageException {
-        return sendModuleMessage(text, replyToQueue);
-    }
-    
+
     @Override
-    public String getDestinationName() {
-        return MessageConstants.QUEUE_AUDIT_EVENT;
+    public Destination getDestination() {
+        return destination;
     }
 
+    public String sendModuleMessage(String text) throws JMSException {
+        return sendModuleMessage(text, replyToQueue);
+    }
 }

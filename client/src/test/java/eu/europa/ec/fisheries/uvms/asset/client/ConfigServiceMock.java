@@ -12,15 +12,15 @@ package eu.europa.ec.fisheries.uvms.asset.client;
 
 import java.util.Arrays;
 import javax.ejb.ActivationConfigProperty;
+import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 import eu.europa.ec.fisheries.schema.config.types.v1.PullSettingsStatus;
 import eu.europa.ec.fisheries.schema.config.types.v1.SettingType;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
-import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
+import eu.europa.ec.fisheries.uvms.asset.message.AssetProducer;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleResponseMapper;
 
@@ -30,6 +30,9 @@ import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleResponseMapper;
         @ActivationConfigProperty(propertyName = "destination", propertyValue = "UVMSConfigEvent")})
 public class ConfigServiceMock implements MessageListener {
 
+    @EJB
+    AssetProducer producer;
+    
     @Override
     public void onMessage(Message message) {
         try {
@@ -38,13 +41,8 @@ public class ConfigServiceMock implements MessageListener {
             endpointSetting.setValue("BEPA");
             endpointSetting.setDescription("From ConfigServiceMock.java");
             String response = ModuleResponseMapper.toPullSettingsResponse(Arrays.asList(endpointSetting), PullSettingsStatus.OK);
-            new AbstractProducer() {
-                @Override
-                public String getDestinationName() {
-                    return MessageConstants.QUEUE_ASSET;
-                }
-            }.sendResponseMessageToSender((TextMessage) message, response);
-        } catch (ModelMarshallException | MessageException e) {
+            producer.sendResponseMessageToSender((TextMessage) message, response);
+        } catch (ModelMarshallException | JMSException e) {
         }
     }
 }

@@ -18,7 +18,6 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetProducer;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 
 @MessageDriven(mappedName = "jms/queue/UVMSExchangeEvent", activationConfig = {
         @ActivationConfigProperty(propertyName = "messagingType", propertyValue = "javax.jms.MessageListener"), 
@@ -33,7 +32,7 @@ public class ExchangeModuleMock implements MessageListener {
     public void onMessage(Message message) {
         try {
             producer.sendResponseMessageToSender((TextMessage) message, "");
-        } catch (MessageException e) {
+        } catch (Exception e) {
         }
     }
 }
