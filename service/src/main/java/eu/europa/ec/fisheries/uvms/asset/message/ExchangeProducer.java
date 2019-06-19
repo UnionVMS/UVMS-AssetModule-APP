@@ -25,7 +25,7 @@ import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 public class ExchangeProducer extends AbstractProducer {
 
     @Resource(mappedName = "java:/" + MessageConstants.QUEUE_EXCHANGE_EVENT)
-    private Destination destination;
+    private Queue destination;
 
     @Resource(mappedName = "java:/" + MessageConstants.QUEUE_ASSET)
     private Queue replyToQueue;
