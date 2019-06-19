@@ -19,6 +19,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -41,7 +42,6 @@ import eu.europa.ec.fisheries.uvms.asset.mapper.PollToCommandRequestMapper;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.AssetProducer;
 import eu.europa.ec.fisheries.uvms.asset.message.ExchangeProducer;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.config.model.exception.ModelMarshallException;
 import eu.europa.ec.fisheries.uvms.config.model.mapper.ModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.exchange.model.mapper.ExchangeModuleRequestMapper;
@@ -117,13 +117,13 @@ public class PluginServiceBean {
 
             try {
                 sendUpdatedDNIDListToConfig(settingKey, settingValue);
-            } catch (ModelMarshallException | MessageException e) {
+            } catch (ModelMarshallException | JMSException e) {
                 LOG.debug("Couldn't send to config module. Sending to exchange module.");
                 sendUpdatedDNIDListToExchange(pluginName, SETTING_KEY_DNID_LIST, settingValue);
             }
     }
 
-    private void sendUpdatedDNIDListToConfig(String settingKey, String settingValue) throws ModelMarshallException, MessageException {
+    private void sendUpdatedDNIDListToConfig(String settingKey, String settingValue) throws ModelMarshallException, JMSException {
         SettingType setting = new SettingType();
         setting.setKey(settingKey);
         setting.setModule(EXCHANGE_MODULE_NAME);
@@ -143,7 +143,7 @@ public class PluginServiceBean {
             String messageId = exchangeProducer.sendModuleMessage(request, ExchangeModuleMethod.UPDATE_PLUGIN_SETTING.value());
             TextMessage response = assetConsumer.getMessage(messageId, TextMessage.class);
             LOG.info("UpdatedDNIDList sent to exchange module {} {}",pluginName,settingKey);
-        } catch (RuntimeException | MessageException e) {
+        } catch (RuntimeException | JMSException e) {
             LOG.error("Failed to send updated DNID list {} {} {}",pluginName,settingKey,e);
         }
     }

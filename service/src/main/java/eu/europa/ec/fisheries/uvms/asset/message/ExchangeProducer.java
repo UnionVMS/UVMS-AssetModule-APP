@@ -15,23 +15,28 @@ import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.jms.Destination;
+import javax.jms.JMSException;
 import javax.jms.Queue;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 
 @Stateless
 public class ExchangeProducer extends AbstractProducer {
 
-    @Resource(mappedName = "java:/jms/queue/UVMSAsset")
+    @Resource(mappedName = "java:/" + MessageConstants.QUEUE_EXCHANGE_EVENT)
+    private Destination destination;
+
+    @Resource(mappedName = "java:/" + MessageConstants.QUEUE_ASSET)
     private Queue replyToQueue;
-    
-    public String sendModuleMessage(String text, String function) throws MessageException {
-        return sendMessageToSpecificQueueWithFunction(text, getDestination(), replyToQueue, function, null);
-    }
-    
+
     @Override
-    public String getDestinationName() {
-        return MessageConstants.QUEUE_EXCHANGE_EVENT;
+    public Destination getDestination() {
+        return destination;
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public String sendModuleMessage(String text, String function) throws JMSException {
+        return sendMessageToSpecificQueueWithFunction(text, getDestination(), replyToQueue, function, null);
     }
 }

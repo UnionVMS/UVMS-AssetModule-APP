@@ -12,14 +12,17 @@ package eu.europa.ec.fisheries.uvms.asset.client;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.jms.Destination;
+import javax.jms.JMSContext;
+import javax.jms.JMSException;
+import javax.jms.TextMessage;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.ws.rs.client.Client;
@@ -39,8 +42,6 @@ import eu.europa.ec.fisheries.uvms.asset.client.model.AssetMTEnrichmentResponse;
 import eu.europa.ec.fisheries.uvms.asset.client.model.AssetQuery;
 import eu.europa.ec.fisheries.uvms.asset.client.model.CustomCode;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
-import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractProducer;
 
 @Stateless
 public class AssetClient {
@@ -49,7 +50,13 @@ public class AssetClient {
 
     @Resource(name = "java:global/asset_endpoint")
     private String assetEndpoint;
+
+    @Inject
+    private JMSContext context;
     
+    @Resource(mappedName = "java:/" + MessageConstants.QUEUE_ASSET_EVENT)
+    private Destination destination;
+
     @PostConstruct
     private void setUpClient() {
         ClientBuilder clientBuilder = ClientBuilder.newBuilder();
@@ -159,17 +166,12 @@ public class AssetClient {
                 .post(Entity.json(asset), AssetBO.class);
     }
     
-    public void upsertAssetAsync(AssetBO asset) throws MessageException {
+    public void upsertAssetAsync(AssetBO asset) throws JMSException {
         Jsonb jsonb = JsonbBuilder.create();
 
-        Map<String, String> properties = new HashMap<>();
-        properties.put("METHOD", "UPSERT_ASSET");
-        new AbstractProducer() {
-            @Override
-            public String getDestinationName() {
-                return MessageConstants.QUEUE_ASSET_EVENT;
-            }
-        }.sendModuleMessageWithProps(jsonb.toJson(asset), null, properties);
+        TextMessage message = context.createTextMessage(jsonb.toJson(asset));
+        message.setStringProperty("METHOD", "UPSERT_ASSET");
+        context.createProducer().send(destination, message);
     }
 
     public String ping() {

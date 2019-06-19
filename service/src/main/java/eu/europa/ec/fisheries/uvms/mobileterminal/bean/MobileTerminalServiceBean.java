@@ -19,7 +19,6 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.asset.message.AuditProducer;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
@@ -38,6 +37,7 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.jms.JMSException;
 import javax.ws.rs.NotFoundException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -79,7 +79,7 @@ public class MobileTerminalServiceBean {
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalCreated(createdMobileTerminal.getId().toString(), username);
             auditProducer.sendModuleMessage(auditData);
-        } catch (AuditModelMarshallException | MessageException e) {
+        } catch (AuditModelMarshallException | JMSException e) {
             LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was created", createdMobileTerminal.getId().toString());
         }
         if (dnidUpdated) {
@@ -145,7 +145,7 @@ public class MobileTerminalServiceBean {
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalUpdated(updatedTerminal.getId().toString(), comment, username);
             auditProducer.sendModuleMessage(auditData);
-        } catch (AuditModelMarshallException | MessageException e) {
+        } catch (AuditModelMarshallException | JMSException e) {
             LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was updated", updatedTerminal.getId().toString());
         }
 
@@ -162,7 +162,7 @@ public class MobileTerminalServiceBean {
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalAssigned(terminalAssign.getId().toString(), comment, username);
             auditProducer.sendModuleMessage(auditData);
-        } catch (AuditModelMarshallException | MessageException e) {
+        } catch (AuditModelMarshallException | JMSException e) {
             LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was assigned", terminalAssign.getId()
                     .toString());
         }
@@ -174,7 +174,7 @@ public class MobileTerminalServiceBean {
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogMobileTerminalUnassigned(terminalUnAssign.getId().toString(), comment, username);
             auditProducer.sendModuleMessage(auditData);
-        } catch (AuditModelMarshallException | MessageException e) {
+        } catch (AuditModelMarshallException | JMSException e) {
             LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was unassigned", terminalUnAssign.getId().toString());
         }
         return terminalUnAssign;
@@ -206,7 +206,7 @@ public class MobileTerminalServiceBean {
                     break;
             }
             auditProducer.sendModuleMessage(auditData);
-        } catch (AuditModelMarshallException | MessageException e) {
+        } catch (AuditModelMarshallException | JMSException e) {
             LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was set to status {}", terminalStatus.getId().toString(), status);
         }
 
