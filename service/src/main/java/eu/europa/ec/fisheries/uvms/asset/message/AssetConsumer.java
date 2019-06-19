@@ -16,6 +16,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.jms.Destination;
 import javax.jms.JMSException;
+import javax.jms.Queue;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.commons.message.impl.AbstractConsumer;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigMessageException;
@@ -28,7 +29,7 @@ public class AssetConsumer extends AbstractConsumer implements ConfigMessageCons
     private static final long CONFIG_TIMEOUT = 600000L;
 
     @Resource(mappedName = "java:/" + MessageConstants.QUEUE_ASSET)
-    private Destination destination;
+    private Queue destination;
 
     @Override
     public Destination getDestination() {
