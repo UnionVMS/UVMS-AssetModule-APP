@@ -116,7 +116,7 @@ public class AssetDao {
     }
 
     public List<Asset> getAssetByMmsiOrIrcs(String mmsi, String ircs){
-        TypedQuery<Asset> query = em.createNamedQuery(Asset.ASSET_FIND_BY_GFCM, Asset.class);
+        TypedQuery<Asset> query = em.createNamedQuery(Asset.ASSET_FIND_BY_MMSI_OR_IRCS, Asset.class);
         query.setParameter("mmsi", mmsi);
         query.setParameter("ircs", ircs);
         return query.getResultList();
