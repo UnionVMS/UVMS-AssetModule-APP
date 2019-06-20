@@ -703,25 +703,7 @@ public class AssetServiceBean implements AssetService {
     // remove the duplicate
     private Asset normalizeAssetOnMMSI_IRCS(String mmsi, String ircs) {
 
-
-        List<Asset> assets = null;
-
-        if ((mmsi != null) && (ircs != null)) {
-            assets = getAssetList(Arrays.asList(
-                    new SearchKeyValue(SearchFields.MMSI, Collections.singletonList(mmsi)),
-                    new SearchKeyValue(SearchFields.IRCS, Collections.singletonList(ircs))),
-                    1, 10, false, false).getAssetList();
-        } else if (mmsi != null) {
-            assets = getAssetList(Collections.singletonList(
-                    new SearchKeyValue(SearchFields.MMSI, Collections.singletonList(mmsi))),
-                    1, 10, false, false).getAssetList();
-        } else if (ircs != null) {
-            assets = getAssetList(Collections.singletonList(
-                    new SearchKeyValue(SearchFields.IRCS, Collections.singletonList(ircs))),
-                    1, 10, false, false).getAssetList();
-        } else {
-            return null;
-        }
+        List<Asset> assets = assetDao.getAssetByMmsiOrIrcs(mmsi, ircs);
 
         int assetsSize = assets.size();
         if (assetsSize == 0) {
