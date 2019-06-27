@@ -87,7 +87,7 @@ public class PluginServiceBean {
 
             if(response == null || response.getStatus() != 200) {
                 if(response != null) {
-                    LOG.info("Send poll failed due to: " + response.getStatus() + response.getEntity());
+                    LOG.info("Send poll failed with status {} due to: {}", response.getStatus(), response.readEntity(String.class));
                 }else{
                     LOG.info("Send poll failed due to null response");
                 }
