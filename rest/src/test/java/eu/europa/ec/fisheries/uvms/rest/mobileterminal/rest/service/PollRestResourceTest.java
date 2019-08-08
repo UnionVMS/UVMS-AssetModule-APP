@@ -302,6 +302,100 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void getTwoPollsBySearchCriteria() {
+        PollRequestType pollRequestType = new PollRequestType();
+        Asset asset = createAndRestBasicAsset();
+        MobileTerminal createdMT = createAndRestMobileTerminal(asset);
+
+        PollMobileTerminal pmt = new PollMobileTerminal();
+        pmt.setComChannelId(createdMT.getChannels().iterator().next().getId().toString());
+        pmt.setConnectId(createdMT.getAsset().getId().toString());
+        pmt.setMobileTerminalId(createdMT.getId().toString());
+        pollRequestType.getMobileTerminals().add(pmt);
+
+        pollRequestType.setPollType(PollType.MANUAL_POLL);
+        pollRequestType.setComment("Test Comment");
+        pollRequestType.setUserName("Test User");
+
+        CreatePollResultDto createdPoll = getWebTargetExternal()
+                .path("/poll")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(pollRequestType), CreatePollResultDto.class);
+
+        assertNotNull(createdPoll);
+
+        String pollGuid;
+        if(createdPoll.isUnsentPoll()){
+            pollGuid = createdPoll.getUnsentPolls().get(0);
+        }else{
+            pollGuid = createdPoll.getSentPolls().get(0);
+        }
+
+        PollRequestType pollRequestType2 = new PollRequestType();
+        Asset asset2 = createAndRestBasicAsset();
+        MobileTerminal createdMT2 = createAndRestMobileTerminal(asset2);
+
+        PollMobileTerminal pmt2 = new PollMobileTerminal();
+        pmt2.setComChannelId(createdMT2.getChannels().iterator().next().getId().toString());
+        pmt2.setConnectId(createdMT2.getAsset().getId().toString());
+        pmt2.setMobileTerminalId(createdMT2.getId().toString());
+        pollRequestType2.getMobileTerminals().add(pmt2);
+
+        pollRequestType2.setPollType(PollType.MANUAL_POLL);
+        pollRequestType2.setComment("Test Comment");
+        pollRequestType2.setUserName("Test User");
+
+        CreatePollResultDto createdPoll2 = getWebTargetExternal()
+                .path("/poll")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(pollRequestType2), CreatePollResultDto.class);
+
+        assertNotNull(createdPoll2);
+
+        String pollGuid2;
+        if(createdPoll2.isUnsentPoll()){
+            pollGuid2 = createdPoll2.getUnsentPolls().get(0);
+        }else{
+            pollGuid2 = createdPoll2.getSentPolls().get(0);
+        }
+
+        PollListQuery input = new PollListQuery();
+        ListPagination pagination = new ListPagination();
+        pagination.setListSize(100);
+        pagination.setPage(1);
+        input.setPagination(pagination);
+
+        PollSearchCriteria pollSearchCriteria = new PollSearchCriteria();
+        pollSearchCriteria.setIsDynamic(true);
+        ListCriteria listCriteria = new ListCriteria();
+        listCriteria.setKey(SearchKey.POLL_ID);
+        listCriteria.setValue(pollGuid);
+        pollSearchCriteria.getCriterias().add(listCriteria);
+
+        ListCriteria listCriteria2 = new ListCriteria();
+        listCriteria2.setKey(SearchKey.POLL_ID);
+        listCriteria2.setValue(pollGuid2);
+        pollSearchCriteria.getCriterias().add(listCriteria2);
+        input.setPollSearchCriteria(pollSearchCriteria);
+
+
+        PollChannelListDto pollChannelListDto = getWebTargetExternal()
+                .path("/poll/list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(input), PollChannelListDto.class);
+
+        assertNotNull(pollChannelListDto);
+
+        assertEquals(2, pollChannelListDto.getPollableChannels().size());
+        assertTrue(pollChannelListDto.getPollableChannels().stream().anyMatch(c -> c.getConnectId().equals(asset.getId().toString())));
+        assertTrue(pollChannelListDto.getPollableChannels().stream().anyMatch(c -> c.getConnectId().equals(asset2.getId().toString())));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void getPollableChannelsTest() {
         Asset asset = createAndRestBasicAsset();
         MobileTerminal createdMT = createAndRestMobileTerminal(asset);
