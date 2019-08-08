@@ -26,27 +26,30 @@ public class PollSearchMapper {
 	public static List<PollSearchKeyValue> createSearchFields(List<ListCriteria> criterias) {
 		Map<PollSearchField, PollSearchKeyValue> searchKeyValues = new HashMap<>();
 		for (ListCriteria criteria : criterias) {
-			PollSearchKeyValue keyValue = mapSearchKey(criteria);
+			PollSearchKeyValue keyValue = mapSearchKey(criteria, searchKeyValues);
 			searchKeyValues.put(keyValue.getSearchField(), keyValue);
 		}
 		return new ArrayList<>(searchKeyValues.values());
 	}
 
-	private static PollSearchKeyValue mapSearchKey(ListCriteria criteria) {
+	private static PollSearchKeyValue mapSearchKey(ListCriteria criteria, Map<PollSearchField, PollSearchKeyValue> searchKeys) {
 		if (criteria == null || criteria.getKey() == null || criteria.getValue() == null) {
 			throw new IllegalArgumentException("Non valid search criteria");
 		}
 		PollSearchField searchField = getSearchField(criteria.getKey());
-		PollSearchKeyValue searchKeyValue = getSearchKeyValue(searchField);
+		PollSearchKeyValue searchKeyValue = getSearchKeyValue(searchField, searchKeys);
 		searchKeyValue.getValues().add(criteria.getValue());
 		return searchKeyValue;
 	}
 
-	private static PollSearchKeyValue getSearchKeyValue(PollSearchField field) {
-		PollSearchKeyValue searchKeyValue = new PollSearchKeyValue();
-		searchKeyValue.setSearchField(field);
-		return searchKeyValue;
-	}
+    private static PollSearchKeyValue getSearchKeyValue(PollSearchField field, Map<PollSearchField, PollSearchKeyValue> searchKeys) {
+        PollSearchKeyValue searchKeyValue = searchKeys.get(field);
+        if (searchKeyValue == null) {
+            searchKeyValue = new PollSearchKeyValue();
+        }
+        searchKeyValue.setSearchField(field);
+        return searchKeyValue;
+    }
 
 	private static PollSearchField getSearchField(SearchKey key) {
 		switch (key) {
