@@ -102,20 +102,6 @@ public abstract class AbstractAssetRestTest {
 
         return testWar;
     }
-
-    protected int getReturnCode(String responsDto) throws Exception{
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(responsDto, ObjectNode.class).get("code").asInt();
-    }
-
-    protected static <T> T deserializeResponseDto(String responseDto, Class<T> clazz) throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper()
-                .registerModule(new Jdk8Module())
-                .registerModule(new JavaTimeModule());
-        ObjectNode node = objectMapper.readValue(responseDto, ObjectNode.class);
-        JsonNode jsonNode = node.get("data");
-        return objectMapper.readValue(objectMapper.writeValueAsString(jsonNode), clazz);
-    }
     
     protected String getTokenExternal() {
         if (token == null) {

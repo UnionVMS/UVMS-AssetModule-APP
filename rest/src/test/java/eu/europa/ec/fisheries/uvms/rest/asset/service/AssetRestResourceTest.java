@@ -1,23 +1,20 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
-import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
 import eu.europa.ec.fisheries.wsdl.asset.types.EventCode;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
@@ -27,7 +24,6 @@ import javax.ws.rs.core.Response.Status;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -402,7 +398,6 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         assertEquals(originalName, assetByCfrAndTimestamp1.getName());
     }
 
-    @Ignore //since we no longer serialize the connection between asset and MT this will not work
     @Test
     @OperateOnDeployment("normal")
     public void checkPastNumberOfMTTest() {
@@ -410,6 +405,7 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         Asset createdAsset = getWebTargetExternal()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(asset), Asset.class);
 
         MobileTerminal mobileTerminal1 = MobileTerminalTestHelper.createBasicMobileTerminal();
@@ -452,10 +448,9 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         assertNotNull(pastAsset);
     }
 
-    @Ignore //since we no longer serialize the connection between asset and MT this will not work
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetAndConnectedMobileTerminalTest() throws Exception {
+    public void getAssetAndConnectedMobileTerminalTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTargetExternal()
                 .path("asset")
@@ -466,13 +461,12 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         MobileTerminal mobileTerminal1 = MobileTerminalTestHelper.createBasicMobileTerminal();
         mobileTerminal1.setAsset(createdAsset);
 
-        String response = getWebTargetExternal()
+        MobileTerminal response = getWebTargetExternal()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(mobileTerminal1), String.class);
+                .post(Entity.json(mobileTerminal1), MobileTerminal.class);
         assertNotNull(response);
-        MobileTerminalType mobileTerminal = deserializeResponseDto(response, MobileTerminalType.class);
 
         Asset fetchedAsset = getWebTargetExternal()
                 .path("asset")
@@ -482,6 +476,7 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
                 .get(Asset.class);
 
         assertNotNull(fetchedAsset);
+        assertTrue(fetchedAsset.getMobileTerminals().size() > 0);
     }
 
     @Test
@@ -605,8 +600,6 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(asset), Asset.class);
-
-
 
         // Create MobileTerminal
         MobileTerminal terminal = MobileTerminalTestHelper.createBasicMobileTerminal();
@@ -776,7 +769,7 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
 
         assertNotNull(response);
         assertEquals(200, response.getStatus());
-        
+
         fetchedNotes = response.readEntity(new GenericType<List<Note>>() {});
         assertThat(fetchedNotes.size(), is(0));
     }
