@@ -452,10 +452,10 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         assertNotNull(pastAsset);
     }
 
-    @Ignore //since we no longer serialize the connection between asset and MT this will not work
+//    @Ignore //since we no longer serialize the connection between asset and MT this will not work
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetAndConnectedMobileTerminalTest() throws Exception {
+    public void getAssetAndConnectedMobileTerminalTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTargetExternal()
                 .path("asset")
@@ -466,13 +466,12 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         MobileTerminal mobileTerminal1 = MobileTerminalTestHelper.createBasicMobileTerminal();
         mobileTerminal1.setAsset(createdAsset);
 
-        String response = getWebTargetExternal()
+        MobileTerminal response = getWebTargetExternal()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(mobileTerminal1), String.class);
+                .post(Entity.json(mobileTerminal1), MobileTerminal.class);
         assertNotNull(response);
-        MobileTerminalType mobileTerminal = deserializeResponseDto(response, MobileTerminalType.class);
 
         Asset fetchedAsset = getWebTargetExternal()
                 .path("asset")
@@ -482,6 +481,7 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
                 .get(Asset.class);
 
         assertNotNull(fetchedAsset);
+        assertTrue(fetchedAsset.getMobileTerminals().size() > 0);
     }
 
     @Test
