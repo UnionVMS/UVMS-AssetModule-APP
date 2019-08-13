@@ -28,8 +28,9 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
+import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
+import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import io.swagger.annotations.ApiParam;
-import jdk.nashorn.internal.objects.annotations.Getter;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,6 +78,7 @@ public class InternalResource {
 
     @GET
     @Path("asset/{idType : (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)}/{id}")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response getAssetById(@PathParam("idType") String type, @PathParam("id") String id) {
         AssetIdentifier assetId = AssetIdentifier.valueOf(type.toUpperCase());
         Asset asset = assetService.getAssetById(assetId, id);
@@ -85,6 +87,7 @@ public class InternalResource {
 
     @POST
     @Path("query")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response getAssetList(@DefaultValue("1") @QueryParam("page") int page,
                                  @DefaultValue("100") @QueryParam("size") int size,
                                  @DefaultValue("true") @QueryParam("dynamic") boolean dynamic,
@@ -103,6 +106,7 @@ public class InternalResource {
 
     @GET
     @Path("group/user/{user}")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response getAssetGroupByUser(@PathParam("user") String user) {
         List<AssetGroup> assetGroups = assetGroupService.getAssetGroupList(user);
         return Response.ok(assetGroups).build();
@@ -110,6 +114,7 @@ public class InternalResource {
 
     @GET
     @Path("group/asset/{id}")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response getAssetGroupByAssetId(@PathParam("id") UUID assetId) {
         List<AssetGroup> assetGroups = assetGroupService.getAssetGroupListByAssetId(assetId);
         return Response.ok(assetGroups).build();
@@ -117,6 +122,7 @@ public class InternalResource {
 
     @POST
     @Path("group/asset")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response getAssetByGroupIds(List<UUID> groupIds) {
         List<AssetGroup> assetGroups = groupIds.stream()
                                             .map(assetGroupService::getAssetGroupById)
@@ -127,6 +133,7 @@ public class InternalResource {
 
     @GET
     @Path("/history/asset/{id}")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response getAssetHistoryListByAssetId(@PathParam("id") UUID id, @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
         List<Asset> assetRevisions = assetService.getRevisionsForAssetLimited(id, maxNbr);
         return Response.ok(assetRevisions).build();
@@ -134,6 +141,7 @@ public class InternalResource {
 
     @GET
     @Path("/history/{type : (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)}/{id}/{date}")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response getAssetFromAssetIdAndDate(@PathParam("type") String type,
                                                @PathParam("id") String id,
                                                @PathParam("date") String date) {
@@ -145,6 +153,7 @@ public class InternalResource {
 
     @GET
     @Path("history/{guid}")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response getAssetHistoryByAssetHistGuid(@PathParam("guid") UUID guid) {
         Asset asset = assetService.getAssetRevisionForRevisionId(guid);
         return Response.ok(asset).build();
@@ -152,6 +161,7 @@ public class InternalResource {
     
     @POST
     @Path("asset")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response upsertAsset(AssetBO assetBo) {
         AssetBO upsertedAsset = assetService.upsertAssetBO(assetBo, (assetBo.getAsset().getUpdatedBy() == null ?  "UVMS (REST)" : assetBo.getAsset().getUpdatedBy()));
         return Response.ok(upsertedAsset).build();
@@ -159,6 +169,7 @@ public class InternalResource {
 
     @POST
     @Path("microAssets")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response getMicroAssets(List<String> assetIdList){
         List<MicroAsset> assetList = assetService.getInitialDataForRealtime(assetIdList);
         return Response.ok(assetList).build();
@@ -166,12 +177,14 @@ public class InternalResource {
     
     @GET
     @Path("ping")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response ping() {
         return Response.ok("pong").build();
     }
 
     @POST
     @Path("customcode")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response createCustomCode(CustomCode customCode) {
         try {
             CustomCode customCodes = customCodesService.create(customCode);
@@ -183,6 +196,7 @@ public class InternalResource {
 
     @GET
     @Path("listconstants")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response getAllConstants() {
         try {
             List<String> constants = customCodesService.getAllConstants();
@@ -194,6 +208,7 @@ public class InternalResource {
 
     @GET
     @Path("listcodesforconstant/{constant}")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response getCodesForConstant(@PathParam("constant") String constant) {
         try {
             List<CustomCode> customCodes = customCodesService.getAllFor(constant);
@@ -205,6 +220,7 @@ public class InternalResource {
 
     @GET
     @Path("verify/{constant}/{code}/{date}")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response verify(@ApiParam(value = "constants", required = true) @PathParam("constant") String constant,
                            @ApiParam(value = "code", required = true) @PathParam("code") String code,
                            @ApiParam(value = "validToDate", required = true) @PathParam(value = "date") String date)
@@ -221,6 +237,7 @@ public class InternalResource {
 
     @GET
     @Path("getfordate/{constant}/{code}/{date}")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response getForDate(@PathParam("constant") String constant,
                                @PathParam("code") String code,
                                @PathParam(value = "date") String date)
@@ -237,6 +254,7 @@ public class InternalResource {
 
     @POST
     @Path("replace")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response replace(CustomCode customCode) {
         try {
             CustomCode customCodes = customCodesService.replace(customCode);
@@ -253,6 +271,7 @@ public class InternalResource {
      */
     @POST
     @Path("collectassetmt")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response enrich( AssetMTEnrichmentRequest request) {
         AssetMTEnrichmentResponse assetMTEnrichmentResponse = assetService.collectAssetMT(request);
         return Response.ok(assetMTEnrichmentResponse).header("MDC", MDC.get("requestId")).build();
@@ -260,6 +279,7 @@ public class InternalResource {
 
     @POST
     @Path("poll")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response createPoll(PollRequestType createPoll) {
         try {
             CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(createPoll, createPoll.getUserName());

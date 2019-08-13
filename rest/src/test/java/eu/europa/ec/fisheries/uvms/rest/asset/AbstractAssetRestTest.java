@@ -10,34 +10,40 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset;
 
-import java.io.File;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.ExchangeModuleRestMock;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.UnionVMSMock;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.UserRestMock;
+import eu.europa.ec.fisheries.uvms.rest.security.InternalRestTokenHandler;
+import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import org.eu.ingwar.tools.arquillian.extension.suite.annotations.ArquillianSuiteDeployment;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.ExchangeModuleRestMock;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.UnionVMSMock;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.UserRestMock;
+
+import javax.inject.Inject;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 @ArquillianSuiteDeployment
 public abstract class AbstractAssetRestTest {
 
     private String token;
-    
+
+    @Inject
+    private InternalRestTokenHandler tokenHandler;
+
     protected WebTarget getWebTargetExternal() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -69,12 +75,11 @@ public abstract class AbstractAssetRestTest {
         File[] files = Maven.resolver().loadPomFromFile("pom.xml").importRuntimeAndTestDependencies().resolve()
                 .withTransitivity().asFile();
         testWar.addAsLibraries(files);
-        
+
         testWar.addAsLibraries(Maven.configureResolver().loadPomFromFile("pom.xml")
                 .resolve("eu.europa.ec.fisheries.uvms.asset:asset-service").withTransitivity().asFile());
 
 
-            
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.rest.asset");
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.rest.mobileterminal");
 
@@ -85,7 +90,7 @@ public abstract class AbstractAssetRestTest {
     }
 
     @Deployment(name = "uvms", order = 1)
-    public static Archive<?> createExchangeMock(){
+    public static Archive<?> createExchangeMock() {
 
         WebArchive testWar = ShrinkWrap.create(WebArchive.class, "unionvms.war");
         File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
@@ -102,13 +107,13 @@ public abstract class AbstractAssetRestTest {
 
         return testWar;
     }
-    
+
     protected String getTokenExternal() {
         if (token == null) {
             token = ClientBuilder.newClient()
-                .target("http://localhost:28080/unionvms/user/token")
-                .request(MediaType.APPLICATION_JSON)
-                .get(String.class);
+                    .target("http://localhost:28080/unionvms/user/token")
+                    .request(MediaType.APPLICATION_JSON)
+                    .get(String.class);
         }
         return token;
     }
@@ -122,5 +127,11 @@ public abstract class AbstractAssetRestTest {
                     .get(String.class);
         }
         return token;
+    }
+
+    protected String getTokenInternalRest() {
+        List<Integer> featureIds = new ArrayList<>();
+        featureIds.add(UnionVMSFeature.manageInternalRest.getFeatureId());
+        return tokenHandler.createAndFetchToken("user", featureIds);
     }
 }
