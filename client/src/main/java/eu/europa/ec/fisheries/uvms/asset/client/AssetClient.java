@@ -30,6 +30,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
 import eu.europa.ec.fisheries.uvms.asset.client.model.AssetBO;
@@ -42,6 +43,7 @@ import eu.europa.ec.fisheries.uvms.asset.client.model.AssetMTEnrichmentResponse;
 import eu.europa.ec.fisheries.uvms.asset.client.model.AssetQuery;
 import eu.europa.ec.fisheries.uvms.asset.client.model.CustomCode;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
+import eu.europa.ec.fisheries.uvms.rest.security.InternalRestTokenHandler;
 
 @Stateless
 public class AssetClient {
@@ -56,6 +58,9 @@ public class AssetClient {
     
     @Resource(mappedName = "java:/" + MessageConstants.QUEUE_ASSET_EVENT)
     private Destination destination;
+
+    @Inject
+    private InternalRestTokenHandler tokenHandler;
 
     @PostConstruct
     private void setUpClient() {
@@ -72,6 +77,7 @@ public class AssetClient {
                 .path(type.toString().toLowerCase())
                 .path(value)
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .get(AssetDTO.class);
     }
     
@@ -79,6 +85,7 @@ public class AssetClient {
         AssetListResponse assetResponse = webTarget
                 .path("query")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .post(Entity.json(query), AssetListResponse.class);
     
         return assetResponse.getAssetList();
@@ -89,6 +96,7 @@ public class AssetClient {
                 .path("query")
                 .queryParam("dynamic", dynamic)
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .post(Entity.json(query), AssetListResponse.class);
     
         return assetResponse.getAssetList();
@@ -101,6 +109,7 @@ public class AssetClient {
                     .queryParam("size", size)
                     .queryParam("dynamic", dynamic)
                     .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                     .post(Entity.json(query), AssetListResponse.class);
         
         return assetResponse.getAssetList();
@@ -112,6 +121,7 @@ public class AssetClient {
                 .path("user")
                 .path(user)
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .get(new GenericType<List<AssetGroup>>() {});
     }
     
@@ -121,6 +131,7 @@ public class AssetClient {
                 .path("asset")
                 .path(assetId.toString())
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .get(new GenericType<List<AssetGroup>>() {});
     }
 
@@ -129,6 +140,7 @@ public class AssetClient {
                 .path("group")
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .post(Entity.json(groupIds), new GenericType<List<AssetDTO>>(){});
     }
     
@@ -137,6 +149,7 @@ public class AssetClient {
                 .path("history/asset")
                 .path(id.toString())
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .get(new GenericType<List<AssetDTO>>() {});
     }
     
@@ -148,6 +161,7 @@ public class AssetClient {
                 .path(value)
                 .path(formattedDate)
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .get(AssetDTO.class);
     }
 
@@ -156,6 +170,7 @@ public class AssetClient {
                 .path("history")
                 .path(historyId.toString())
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .get(AssetDTO.class);
     }
     
@@ -163,6 +178,7 @@ public class AssetClient {
         return webTarget
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .post(Entity.json(asset), AssetBO.class);
     }
     
@@ -178,6 +194,7 @@ public class AssetClient {
         return webTarget
                 .path("ping")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .get(String.class);
     }
 
@@ -185,6 +202,7 @@ public class AssetClient {
         return webTarget
                 .path("customcode")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .post(Entity.json(customCode), CustomCode.class);
     }
 
@@ -192,6 +210,7 @@ public class AssetClient {
         return webTarget
                 .path("listconstants")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .get(new GenericType<List<String>>() {});
         
     }
@@ -201,6 +220,7 @@ public class AssetClient {
                 .path("listcodesforconstant")
                 .path(constant)
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .get(new GenericType<List<CustomCode>>() {});
     }
 
@@ -212,6 +232,7 @@ public class AssetClient {
                 .path(code)
                 .path(theDate)
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .get(String.class);
         return Boolean.valueOf(response);
     }
@@ -224,6 +245,7 @@ public class AssetClient {
                 .path(code)
                 .path(theDate)
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .get(new GenericType<List<CustomCode>>() {});
     }
 
@@ -231,6 +253,7 @@ public class AssetClient {
         return webTarget
                 .path("replace")
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .post(Entity.json(customCode), CustomCode.class);
     }
 
@@ -239,6 +262,7 @@ public class AssetClient {
                 .path("collectassetmt")
                 .request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .post(Entity.json(request), AssetMTEnrichmentResponse.class);
     }
 
@@ -247,6 +271,7 @@ public class AssetClient {
                 .path("microAssets")
                 .request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .post(Entity.json(assetIdList), String.class);
     }
 }
