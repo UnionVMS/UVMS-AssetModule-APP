@@ -19,7 +19,6 @@ import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.ExchangeModuleRestMo
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.UnionVMSMock;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.UserRestMock;
 import eu.europa.ec.fisheries.uvms.rest.security.InternalRestTokenHandler;
-import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import org.eu.ingwar.tools.arquillian.extension.suite.annotations.ArquillianSuiteDeployment;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -33,8 +32,6 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 @ArquillianSuiteDeployment
 public abstract class AbstractAssetRestTest {
@@ -130,8 +127,6 @@ public abstract class AbstractAssetRestTest {
     }
 
     protected String getTokenInternalRest() {
-        List<Integer> featureIds = new ArrayList<>();
-        featureIds.add(UnionVMSFeature.manageInternalRest.getFeatureId());
-        return tokenHandler.createAndFetchToken("user", featureIds);
+        return tokenHandler.createAndFetchToken("user");
     }
 }
