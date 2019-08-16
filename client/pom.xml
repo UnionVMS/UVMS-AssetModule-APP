@@ -5,7 +5,7 @@
     <parent>
         <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
         <artifactId>asset</artifactId>
-        <version>6.0.57-test</version>
+        <version>6.0.59-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -21,7 +21,7 @@
     <scm>
         <url>https://github.com/unionvns/minimaven</url>
         <connection>scm:git:git://github.com/unionvms/minimaven.git</connection>
-      <tag>asset-6.0.57</tag>
+      <tag>HEAD</tag>
   </scm>
     <dependencies>
         <dependency>
@@ -72,6 +72,25 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>2.9.9</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.fisheries.uvms</groupId>
+            <artifactId>usm4uvms</artifactId>
+            <version>${usm4uvms.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.resteasy</groupId>
+                    <artifactId>resteasy-jaxrs</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>net.sf.ehcache</groupId>
+                    <artifactId>ehcache</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
+                    <artifactId>uvms-commons-message</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
     <build>

@@ -28,6 +28,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
+import eu.europa.ec.fisheries.uvms.rest.security.InternalRestTokenHandler;
 import eu.europa.ec.fisheries.wsdl.asset.types.CarrierSource;
 import eu.europa.ec.fisheries.wsdl.asset.types.EventCode;
 import org.slf4j.Logger;
@@ -44,6 +45,7 @@ import javax.persistence.PersistenceContext;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.Instant;
@@ -88,6 +90,9 @@ public class AssetServiceBean implements AssetService {
 
     @Inject
     private MobileTerminalServiceBean mobileTerminalService;
+
+    @Inject
+    private InternalRestTokenHandler tokenHandler;
 
     @Inject
     @UpdatedAssetEvent
@@ -754,6 +759,7 @@ public class AssetServiceBean implements AssetService {
                 .queryParam("MovementConnectFrom", oldAssetId)
                 .queryParam("MovementConnectTo", newAssetId)
                 .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .put(Entity.json(""), Response.class);
 
         if(remapResponse.getStatus() != 200){ //do we want this?

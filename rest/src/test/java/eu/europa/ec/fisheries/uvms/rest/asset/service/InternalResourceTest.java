@@ -12,7 +12,6 @@ import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
-import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,37 +31,34 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
-@RunAsClient
 public class InternalResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
     public void getAssetByIdNonValidIdentifierTest() {
-        
-        Response response = getWebTargetExternal()
+        Response response = getWebTargetInternal()
                 .path("/internal/asset/apa/" + UUID.randomUUID())
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
                 .get();
         
         assertThat(response.getStatus(), is(Status.INTERNAL_SERVER_ERROR.getStatusCode()));
-
     }
     
     @Test
     @OperateOnDeployment("normal")
     public void getAssetByIdGUIDTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTargetExternal()
+        Asset createdAsset = getWebTargetInternal()
                 .path("/asset")
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
                 .post(Entity.json(asset), Asset.class);
         
-        Asset fetchedAsset = getWebTargetExternal()
+        Asset fetchedAsset = getWebTargetInternal()
                 .path("/internal/asset/guid/" + createdAsset.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
                 .get(Asset.class);
         
         assertThat(fetchedAsset, is(AssetMatcher.assetEquals(createdAsset)));
@@ -72,16 +68,16 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     @OperateOnDeployment("normal")
     public void getAssetByIdCfrTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTargetExternal()
+        Asset createdAsset = getWebTargetInternal()
                 .path("/asset")
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
                 .post(Entity.json(asset), Asset.class);
         
-        Asset fetchedAsset = getWebTargetExternal()
+        Asset fetchedAsset = getWebTargetInternal()
                 .path("/internal/asset/cfr/" + createdAsset.getCfr())
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
                 .get(Asset.class);
         
         assertThat(fetchedAsset, is(AssetMatcher.assetEquals(createdAsset)));
@@ -91,16 +87,16 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     @OperateOnDeployment("normal")
     public void getAssetByIdIrcsTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTargetExternal()
+        Asset createdAsset = getWebTargetInternal()
                 .path("/asset")
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
                 .post(Entity.json(asset), Asset.class);
         
-        Asset fetchedAsset = getWebTargetExternal()
+        Asset fetchedAsset = getWebTargetInternal()
                 .path("/internal/asset/ircs/" + createdAsset.getIrcs())
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
                 .get(Asset.class);
         
         assertThat(fetchedAsset, is(AssetMatcher.assetEquals(createdAsset)));
@@ -110,16 +106,16 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     @OperateOnDeployment("normal")
     public void getAssetByIdImoTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTargetExternal()
+        Asset createdAsset = getWebTargetInternal()
                 .path("/asset")
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
                 .post(Entity.json(asset), Asset.class);
         
-        Asset fetchedAsset = getWebTargetExternal()
+        Asset fetchedAsset = getWebTargetInternal()
                 .path("/internal/asset/imo/" + createdAsset.getImo())
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
                 .get(Asset.class);
         
         assertThat(fetchedAsset, is(AssetMatcher.assetEquals(createdAsset)));
@@ -129,16 +125,16 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     @OperateOnDeployment("normal")
     public void getAssetByIdMmsiTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTargetExternal()
+        Asset createdAsset = getWebTargetInternal()
                 .path("/asset")
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
                 .post(Entity.json(asset), Asset.class);
         
-        Asset fetchedAsset = getWebTargetExternal()
+        Asset fetchedAsset = getWebTargetInternal()
                 .path("/internal/asset/mmsi/" + createdAsset.getMmsi())
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
                 .get(Asset.class);
         
         assertThat(fetchedAsset, is(AssetMatcher.assetEquals(createdAsset)));
@@ -148,16 +144,16 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     @OperateOnDeployment("normal")
     public void getAssetByIdIccatTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTargetExternal()
+        Asset createdAsset = getWebTargetInternal()
                 .path("/asset")
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
                 .post(Entity.json(asset), Asset.class);
         
-        Asset fetchedAsset = getWebTargetExternal()
+        Asset fetchedAsset = getWebTargetInternal()
                 .path("/internal/asset/iccat/" + createdAsset.getIccat())
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
                 .get(Asset.class);
         
         assertThat(fetchedAsset, is(AssetMatcher.assetEquals(createdAsset)));
@@ -167,16 +163,16 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     @OperateOnDeployment("normal")
     public void getAssetByIdUviTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTargetExternal()
+        Asset createdAsset = getWebTargetInternal()
                 .path("/asset")
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
                 .post(Entity.json(asset), Asset.class);
         
-        Asset fetchedAsset = getWebTargetExternal()
+        Asset fetchedAsset = getWebTargetInternal()
                 .path("/internal/asset/uvi/" + createdAsset.getUvi())
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
                 .get(Asset.class);
         
         assertThat(fetchedAsset, is(AssetMatcher.assetEquals(createdAsset)));
@@ -186,16 +182,16 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     @OperateOnDeployment("normal")
     public void getAssetByIdGfcmTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTargetExternal()
+        Asset createdAsset = getWebTargetInternal()
                 .path("/asset")
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
                 .post(Entity.json(asset), Asset.class);
         
-        Asset fetchedAsset = getWebTargetExternal()
+        Asset fetchedAsset = getWebTargetInternal()
                 .path("/internal/asset/gfcm/" + createdAsset.getGfcm())
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
                 .get(Asset.class);
         
         assertThat(fetchedAsset, is(AssetMatcher.assetEquals(createdAsset)));
@@ -204,12 +200,11 @@ public class InternalResourceTest extends AbstractAssetRestTest {
     @Test
     @OperateOnDeployment("normal")
     public void getAssetByGroupIds() {
-
         Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTargetExternal()
+        Asset createdAsset = getWebTargetInternal()
                 .path("/asset")
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
                 .post(Entity.json(asset), Asset.class);
 
         AssetGroup basicAssetGroup = AssetHelper.createBasicAssetGroup();
@@ -221,19 +216,19 @@ public class InternalResourceTest extends AbstractAssetRestTest {
 
         basicAssetGroup.getAssetGroupFields().add(field);
 
-        AssetGroup createdAssetGroup = getWebTargetExternal()
+        AssetGroup createdAssetGroup = getWebTargetInternal()
                 .path("/group")
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
                 .post(Entity.json(basicAssetGroup), AssetGroup.class);
 
         List<UUID> groupIds = Collections.singletonList(createdAssetGroup.getId());
 
-        Response response = getWebTargetExternal()
+        Response response = getWebTargetInternal()
                 .path("internal")
                 .path("/group/asset")
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
                 .post(Entity.json(groupIds));
 
         assertEquals(Status.OK.getStatusCode(), response.getStatus());
@@ -249,11 +244,11 @@ public class InternalResourceTest extends AbstractAssetRestTest {
         Asset asset = AssetHelper.createBasicAsset();
         AssetBO assetBo = new AssetBO();
         assetBo.setAsset(asset);
-        Asset upsertedAsset = getWebTargetExternal()
+        Asset upsertedAsset = getWebTargetInternal()
                 .path("internal")
                 .path("/asset")
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
                 .post(Entity.json(assetBo), Asset.class);
         
         assertThat(upsertedAsset, is(CoreMatchers.notNullValue()));
@@ -271,14 +266,13 @@ public class InternalResourceTest extends AbstractAssetRestTest {
         input.setComment("Test Comment");
         input.setUserName("Test User");
 
-        Response response = getWebTargetExternal()
+        Response response = getWebTargetInternal()
                 .path("/internal/poll")
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
                 .post(Entity.json(input), Response.class);
 
         assertNotNull(response);
         assertEquals(500, response.getStatus());
-
     }
 }
