@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Developed by the European Commission - Directorate General for Maritime Affairs and Fisheries @ European Union, 2015-2016.
+
+  This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can redistribute it
+  and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of
+  the License, or any later version. The IFDM Suite is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+  details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+                   logicalFilePath="changelog/v6.0.58/added_asset_remap_table.xml">
+
+    <changeSet author="joemat" id="add_asset_remap_table">
+        <createTable tableName="assetremapmapping">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="oldassetid" type="UUID"/>
+            <column name="newassetid" type="UUID"/>
+            <column name="createddate" type="TIMESTAMP(6) WITH TIME ZONE"/>
+        </createTable>
+
+        <addPrimaryKey columnNames="id" constraintName="asset_remap_mapping_pkey" tableName="assetremapmapping"/>
+    </changeSet>
+
+</databaseChangeLog>
