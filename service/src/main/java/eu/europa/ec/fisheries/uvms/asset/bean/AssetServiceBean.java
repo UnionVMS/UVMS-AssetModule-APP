@@ -723,13 +723,14 @@ public class AssetServiceBean implements AssetService {
                 String nonFartyg2AssetMmsi = nonFartyg2Asset.getMmsi();
                 nonFartyg2Asset.setMmsi(null);
                 nonFartyg2Asset.setActive(false);
-                String comment = "Found to be a duplicate of another asset with IRCS: " + ircs + " " + nonFartyg2Asset.getComment();
+                String comment = "Found to be a duplicate of another asset with IRCS: " + ircs + " " + (nonFartyg2Asset.getComment() != null ? nonFartyg2Asset.getComment() : "");
                 nonFartyg2Asset.setComment((comment.length() > 255 ? comment.substring(0, 255) : comment));
                 // flush is necessary to avoid dumps on MMSI
                 em.flush();
                 fartyg2Asset.setMmsi(nonFartyg2AssetMmsi);
                 em.merge(fartyg2Asset);
                 assetDao.createAssetRemapMapping(createAssetRemapMapping(nonFartyg2Asset.getId(), fartyg2Asset.getId()));
+                remapAssetsInMovement(nonFartyg2Asset.getId().toString(), fartyg2Asset.getId().toString());
                 updatedAssetEvent.fire(fartyg2Asset);
                 return fartyg2Asset;
             }
