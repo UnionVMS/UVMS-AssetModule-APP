@@ -712,6 +712,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         AssetListResponse output = getWebTargetExternal()
                 .path("asset")
                 .path("list")
+                .queryParam("size", 1000)
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(assetQuery), AssetListResponse.class);

@@ -17,6 +17,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import eu.europa.ec.fisheries.uvms.asset.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
+import eu.europa.ec.fisheries.uvms.asset.message.MessageConsumerBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -28,6 +31,8 @@ import java.util.List;
 
 @Stateless
 public class AssetMessageJSONBean {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AssetMessageJSONBean.class);
 
     @Inject
     AssetService assetService;
@@ -47,10 +52,10 @@ public class AssetMessageJSONBean {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
         List<Asset> assetBos = mapper.readValue(message.getText(), new TypeReference<ArrayList<Asset>>() {});
         for(Asset oneAsset : assetBos){
             assetService.assetInformation(oneAsset, oneAsset.getUpdatedBy() == null ? "UVMS (JMS)" : oneAsset.getUpdatedBy());
         }
+        LOG.info("Processed update asset list of size: " + assetBos.size());
     }
 }

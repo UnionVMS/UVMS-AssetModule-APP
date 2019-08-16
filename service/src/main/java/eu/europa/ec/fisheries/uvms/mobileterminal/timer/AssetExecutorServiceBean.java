@@ -32,9 +32,9 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
 
 @Startup
 @Singleton
-public class MobileTerminalExecutorServiceBean {
+public class AssetExecutorServiceBean {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MobileTerminalExecutorServiceBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AssetExecutorServiceBean.class);
     
     private static final long RECEIVE_TIMEOUT = 600000L;
 
@@ -51,6 +51,9 @@ public class MobileTerminalExecutorServiceBean {
 
     @EJB
     private AssetConsumer assetConsumer;
+
+    @Inject
+    private AssetRemapTask assetRemapTask;
     
     @Resource
     private ManagedExecutorService executorService;
@@ -91,6 +94,11 @@ public class MobileTerminalExecutorServiceBean {
         } catch (Exception e) {
             LOG.error("[ Error when initializing PollTimerTask. ] {}", e);
         }
+    }
+
+    @Schedule(minute = "30", hour = "*", persistent = false)
+    public void assetRemapTimer() {
+        assetRemapTask.remap();
     }
     
     private void pingExchange(long delay) {

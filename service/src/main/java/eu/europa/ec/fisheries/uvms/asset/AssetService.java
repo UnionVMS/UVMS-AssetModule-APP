@@ -218,6 +218,10 @@ public interface AssetService {
 
     List<MicroAsset> getInitialDataForRealtime(List<String> assetIdList);
 
+    void remapAssetsInMovement(String oldAssetId, String newAssetId);
+
+    void removeMovementConnectInMovement(String assetId);
+
 
 }
 

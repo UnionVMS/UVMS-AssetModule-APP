@@ -19,7 +19,12 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import javax.inject.Inject;
 import javax.jms.Message;
+
+import eu.europa.ec.fisheries.uvms.asset.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetRemapMapping;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Ignore;
@@ -205,10 +210,11 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         Asset fetchedAsset = jmsHelper.getAssetById(assetWithsMMSI.getMmsiNo(), AssetIdType.MMSI);
         assertTrue(fetchedAsset != null);
         assertTrue(fetchedAsset.getName() != null);
-        assertTrue(fetchedAsset.getName().equals(assetWithsIRCS.getName()));
+        assertTrue(fetchedAsset.getName(), fetchedAsset.getName().equals(assetWithsIRCS.getName()));
         assertTrue(fetchedAsset.getMmsiNo() != null);
         assertTrue(fetchedAsset.getIrcs() != null);
     }
+
 
     @Test
     @RunAsClient

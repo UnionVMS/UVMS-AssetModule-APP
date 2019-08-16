@@ -17,4 +17,13 @@ public class MovementMock {
 
         return Response.ok().build();
     }
+
+    @DELETE
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("/removeMovementConnect")
+    public Response removeMovementConnect(@QueryParam(value = "MovementConnectId") String movementConnectId) {
+
+        return Response.ok().build();
+    }
 }
