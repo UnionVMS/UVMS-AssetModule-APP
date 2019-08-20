@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetRemapMapping;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchFieldType;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
@@ -351,5 +352,19 @@ public class AssetDao {
         return (Asset) auditReader.createQuery().forRevisionsOfEntity(Asset.class, true, true)
                 .add(AuditEntity.property("historyId").eq(historyId))
                 .getSingleResult();
+    }
+
+    public AssetRemapMapping createAssetRemapMapping(AssetRemapMapping mapping){
+         em.persist(mapping);
+         return mapping;
+    }
+
+    public List<AssetRemapMapping> getAllAssetRemappings(){
+        Query query = em.createQuery("from AssetRemapMapping", AssetRemapMapping.class);
+        return query.getResultList();
+    }
+
+    public void deleteAssetMapping(AssetRemapMapping mapping) {
+        em.remove(em.contains(mapping) ? mapping : em.merge(mapping));
     }
 }

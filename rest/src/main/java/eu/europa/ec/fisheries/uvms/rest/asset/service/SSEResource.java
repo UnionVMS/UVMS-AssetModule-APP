@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.rest.asset.service;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
 import eu.europa.ec.fisheries.uvms.asset.message.event.UpdatedAssetEvent;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetMergeInfo;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import org.slf4j.Logger;
@@ -44,12 +45,31 @@ public class SSEResource {
             if (asset != null) {
                 MicroAsset micro = new MicroAsset(asset.getId(), asset.getFlagStateCode(), asset.getName(), asset.getVesselType(), asset.getIrcs(), asset.getCfr(), asset.getExternalMarking(), asset.getLengthOverAll());
                 OutboundSseEvent sseEvent = eventBuilder
-                        .name("Asset")
+                        .name("Updated Asset")
                         .id("" + System.currentTimeMillis())
                         .mediaType(MediaType.APPLICATION_JSON_PATCH_JSON_TYPE)
                         .data(MicroAsset.class, micro)
                         //.reconnectDelay(3000) //this one is optional and governs how long the client should wait b4 attempting to reconnect to this server
                         .comment("Updated Asset")
+                        .build();
+                sseBroadcaster.broadcast(sseEvent);
+            }
+        }catch (Exception e){
+            LOG.error("Error while broadcasting SSE: ", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void mergeAsset(@Observes(during = TransactionPhase.AFTER_SUCCESS) @UpdatedAssetEvent AssetMergeInfo mergeInfo){
+        try {
+            if (mergeInfo != null) {
+                OutboundSseEvent sseEvent = eventBuilder
+                        .name("Merged Asset")
+                        .id("" + System.currentTimeMillis())
+                        .mediaType(MediaType.APPLICATION_JSON_PATCH_JSON_TYPE)
+                        .data(AssetMergeInfo.class, mergeInfo)
+                        //.reconnectDelay(3000) //this one is optional and governs how long the client should wait b4 attempting to reconnect to this server
+                        .comment("Merged Asset")
                         .build();
                 sseBroadcaster.broadcast(sseEvent);
             }

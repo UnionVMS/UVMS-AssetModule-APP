@@ -48,6 +48,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -724,12 +725,17 @@ public class AssetServiceBean implements AssetService {
                 }
             }
             if ((fartyg2Asset != null) && (nonFartyg2Asset != null)) {
-                remapAssetsInMovement(nonFartyg2Asset.getId().toString(), fartyg2Asset.getId().toString());
-                assetDao.deleteAsset(nonFartyg2Asset);
+                String nonFartyg2AssetMmsi = nonFartyg2Asset.getMmsi();
+                nonFartyg2Asset.setMmsi(null);
+                nonFartyg2Asset.setActive(false);
+                String comment = "Found to be a duplicate of another asset with IRCS: " + ircs + " " + (nonFartyg2Asset.getComment() != null ? nonFartyg2Asset.getComment() : "");
+                nonFartyg2Asset.setComment((comment.length() > 255 ? comment.substring(0, 255) : comment));
                 // flush is necessary to avoid dumps on MMSI
                 em.flush();
-                fartyg2Asset.setMmsi(nonFartyg2Asset.getMmsi());
+                fartyg2Asset.setMmsi(nonFartyg2AssetMmsi);
                 em.merge(fartyg2Asset);
+                assetDao.createAssetRemapMapping(createAssetRemapMapping(nonFartyg2Asset.getId(), fartyg2Asset.getId()));
+                remapAssetsInMovement(nonFartyg2Asset.getId().toString(), fartyg2Asset.getId().toString());
                 updatedAssetEvent.fire(fartyg2Asset);
                 return fartyg2Asset;
             }
@@ -737,7 +743,16 @@ public class AssetServiceBean implements AssetService {
         return null;
     }
 
-    private void remapAssetsInMovement(String oldAssetId, String newAssetId){
+    private AssetRemapMapping createAssetRemapMapping(UUID oldAssetId, UUID newAssetId){
+        AssetRemapMapping mapping = new AssetRemapMapping();
+        mapping.setOldAssetId(oldAssetId);
+        mapping.setNewAssetId(newAssetId);
+        mapping.setCreatedDate(Instant.now());
+
+        return mapping;
+    }
+
+    public void remapAssetsInMovement(String oldAssetId, String newAssetId){
         Client client = ClientBuilder.newClient();
         Response remapResponse = client.target(movementEndpoint)
                 .path("internal/remapMovementConnectInMovement")
@@ -747,7 +762,20 @@ public class AssetServiceBean implements AssetService {
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .put(Entity.json(""), Response.class);
 
-        if(remapResponse.getStatus() != 200){ //to we want this?
+        if(remapResponse.getStatus() != 200){ //do we want this?
+            throw new RuntimeException("Response from remapping from old asset to new asset was not 200. Return status: " + remapResponse.getStatus() + " Return error: " + remapResponse.getEntity());
+        }
+    }
+
+    public void removeMovementConnectInMovement(String assetId){
+        Client client = ClientBuilder.newClient();
+        Response remapResponse = client.target(movementEndpoint)
+                .path("internal/removeMovementConnect")
+                .queryParam("MovementConnectId", assetId)
+                .request(MediaType.APPLICATION_JSON)
+                .delete(Response.class);
+
+        if(remapResponse.getStatus() != 200){ //do we want this?
             throw new RuntimeException("Response from remapping from old asset to new asset was not 200. Return status: " + remapResponse.getStatus() + " Return error: " + remapResponse.getEntity());
         }
     }
