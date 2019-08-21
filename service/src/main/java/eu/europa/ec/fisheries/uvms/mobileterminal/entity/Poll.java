@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -59,6 +60,7 @@ public class Poll implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private PollBase pollBase;
 
+    @JsonIgnoreProperties(value = {"poll"}, allowSetters = true)
     @OneToMany(mappedBy = "poll", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PollPayload> payloads;
 
