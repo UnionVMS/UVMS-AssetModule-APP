@@ -35,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -90,7 +91,7 @@ public class AssetServiceBean implements AssetService {
     @Inject
     private MobileTerminalServiceBean mobileTerminalService;
 
-    @Inject
+    @EJB
     private InternalRestTokenHandler tokenHandler;
 
     @Inject
