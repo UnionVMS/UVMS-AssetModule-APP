@@ -42,8 +42,10 @@ public class AssetRemapTask {
             assetService.removeMovementConnectInMovement(mappingToBeDeleted.getOldAssetId().toString());
             assetDao.deleteAssetMapping(mappingToBeDeleted);
             Asset asset = assetDao.getAssetById(mappingToBeDeleted.getOldAssetId());
-            assetDao.deleteAsset(asset);
-            updatedAssetEvent.fire(new AssetMergeInfo(mappingToBeDeleted.getOldAssetId().toString(), mappingToBeDeleted.getNewAssetId().toString()));
+            if(asset != null) {
+                assetDao.deleteAsset(asset);
+                updatedAssetEvent.fire(new AssetMergeInfo(mappingToBeDeleted.getOldAssetId().toString(), mappingToBeDeleted.getNewAssetId().toString()));
+            }
         }
     }
 }
