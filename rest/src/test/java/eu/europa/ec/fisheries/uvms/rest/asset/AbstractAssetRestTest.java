@@ -26,7 +26,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 
-import javax.inject.Inject;
+import javax.ejb.EJB;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -38,7 +38,7 @@ public abstract class AbstractAssetRestTest {
 
     private String token;
 
-    @Inject
+    @EJB
     private InternalRestTokenHandler tokenHandler;
 
     protected WebTarget getWebTargetExternal() {

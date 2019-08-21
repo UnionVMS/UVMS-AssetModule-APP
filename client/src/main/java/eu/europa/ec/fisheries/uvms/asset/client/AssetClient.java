@@ -10,13 +10,13 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.client;
 
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
+import eu.europa.ec.fisheries.uvms.asset.client.model.*;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
+import eu.europa.ec.fisheries.uvms.rest.security.InternalRestTokenHandler;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jms.Destination;
@@ -32,18 +32,11 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetBO;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetDTO;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetGroup;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetListResponse;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetMTEnrichmentRequest;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetMTEnrichmentResponse;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetQuery;
-import eu.europa.ec.fisheries.uvms.asset.client.model.CustomCode;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
-import eu.europa.ec.fisheries.uvms.rest.security.InternalRestTokenHandler;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Stateless
 public class AssetClient {
@@ -59,7 +52,7 @@ public class AssetClient {
     @Resource(mappedName = "java:/" + MessageConstants.QUEUE_ASSET_EVENT)
     private Destination destination;
 
-    @Inject
+    @EJB
     private InternalRestTokenHandler tokenHandler;
 
     @PostConstruct
