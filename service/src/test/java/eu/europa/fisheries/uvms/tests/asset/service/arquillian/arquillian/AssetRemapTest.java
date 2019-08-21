@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import javax.inject.Inject;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -71,7 +72,8 @@ public class AssetRemapTest extends TransactionalTests {
 
         assetRemapTask.remap();
 
-        assertTrue(assetDao.getAllAssetRemappings().isEmpty());
+        List<AssetRemapMapping> mappingList = assetDao.getAllAssetRemappings();
+        assertFalse(mappingList.stream().anyMatch(mapping -> mapping.getId().toString().equals(id)));
 
         oldAsset = assetDao.getAssetById(oldAsset.getId());
         assertNull(oldAsset);
@@ -96,7 +98,8 @@ public class AssetRemapTest extends TransactionalTests {
 
         assetRemapTask.remap();
 
-        assertTrue(assetDao.getAllAssetRemappings().isEmpty());
+        List<AssetRemapMapping> mappingList = assetDao.getAllAssetRemappings();
+        assertFalse(mappingList.stream().anyMatch(mapping -> mapping.getId().toString().equals(id)));
 
         Asset oldAsset = assetDao.getAssetById(assetRemapMapping.getOldAssetId());
         assertNull(oldAsset);
@@ -104,5 +107,5 @@ public class AssetRemapTest extends TransactionalTests {
         assertNotNull(newAsset);
 
     }
-    
+
 }
