@@ -5,11 +5,18 @@
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetRemapMapping;
+import eu.europa.ec.fisheries.uvms.mobileterminal.timer.AssetRemapTask;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import javax.inject.Inject;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -43,6 +50,13 @@ public class SSEResourceTest extends AbstractAssetRestTest {
     
     private static String dataString = "";
     private static String errorString = "";
+
+
+    @Inject
+    AssetDao assetDao;
+
+    @Inject
+    AssetRemapTask assetRemapTask;
 
     @Before
     public void clearStrings(){
@@ -84,6 +98,40 @@ public class SSEResourceTest extends AbstractAssetRestTest {
             assertTrue(dataString, dataString.contains("42"));
         }
 
+    }
+
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void checkThatMergeMessageComesOnSSEStreamTest() throws Exception{
+
+        Asset oldAsset = createAndRestBasicAsset();
+        Asset newAsset = createAndRestBasicAsset();
+        AssetRemapMapping assetRemapMapping = new AssetRemapMapping();
+        assetRemapMapping.setOldAssetId(oldAsset.getId());
+        assetRemapMapping.setNewAssetId(newAsset.getId());
+        assetRemapMapping.setCreatedDate(Instant.now().minus(4, ChronoUnit.HOURS));
+
+        assetRemapMapping = assetDao.createAssetRemapMapping(assetRemapMapping);
+
+        Client client = ClientBuilder.newClient();
+        WebTarget target = client.target("http://localhost:8080/test/rest/sse/subscribe");
+        AuthorizationHeaderWebTarget jwtTarget = new AuthorizationHeaderWebTarget(target, getTokenInternal());
+
+        try (SseEventSource source = SseEventSource.target(jwtTarget).reconnectingEvery(1, TimeUnit.SECONDS).build()) {
+            source.register(onEvent, onError, onComplete);
+            source.open();
+            assertTrue(source.isOpen());
+
+            assetRemapTask.remap();
+
+            Thread.sleep(1000 * 1 * 1);
+            assertTrue(source.isOpen());
+            assertTrue(errorString,errorString.isEmpty());
+            assertTrue(dataString, dataString.contains(assetRemapMapping.getOldAssetId().toString()));
+            assertTrue(dataString, dataString.contains(assetRemapMapping.getNewAssetId().toString()));
+        }
+
 
     }
 
@@ -109,7 +157,7 @@ public class SSEResourceTest extends AbstractAssetRestTest {
         Asset createdAsset = getWebTargetInternal()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
                 .post(Entity.json(asset), Asset.class);
 
         assertNotNull(createdAsset);
