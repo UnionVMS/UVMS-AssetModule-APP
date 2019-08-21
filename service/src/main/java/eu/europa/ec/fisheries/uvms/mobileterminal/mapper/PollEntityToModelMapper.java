@@ -13,11 +13,9 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.mapper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Poll;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollBase;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollProgram;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.*;
 
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +25,7 @@ public class PollEntityToModelMapper {
     private final static String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss Z";
     private final static String DATE_TIME_FORMAT_WO_TIMEZONE = "yyyy-MM-dd HH:mm:ss";
 
-    private static PollResponseType mapToPollResponseType(PollBase pollBase, MobileTerminal mobileTerminal)  {
+    private static PollResponseType mapToPollResponseType(PollBase pollBase, MobileTerminal mobileTerminal) {
         PollResponseType response = new PollResponseType();
         response.setComment(pollBase.getComment());
         response.setUserName(pollBase.getUpdatedBy());
@@ -48,15 +46,61 @@ public class PollEntityToModelMapper {
         return response;
     }
 
-    public static PollResponseType mapToPollResponseType(Poll poll, MobileTerminal mobileTerminal, PollType pollType)  {
+    public static PollResponseType mapToPollResponseType(Poll poll, MobileTerminal mobileTerminal, PollType pollType) {
         PollResponseType response = mapToPollResponseType(poll.getPollBase(), mobileTerminal);
         response.setPollType(pollType);
         PollId pollId = new PollId();
         pollId.setGuid(poll.getId().toString());
         response.setPollId(pollId);
-        
+
+
+        if (pollType == PollType.CONFIGURATION_POLL) {
+            // Add missing attributes for this kind of poll
+            List<PollPayload> payloads = poll.getPayloads();
+            if (payloads != null && payloads.size() > 0) {
+                PollPayload payLoad = payloads.get(0);
+                List<PollAttribute> pollAttributes = response.getAttributes();
+
+                if(payLoad.getGracePeriod() != null){
+                    pollAttributes.add(createPollAttribute(PollAttributeType.GRACE_PERIOD, payLoad.getGracePeriod()));
+                }
+                if(payLoad.getInPortGrace() != null){
+                    pollAttributes.add(createPollAttribute(PollAttributeType.IN_PORT_GRACE, payLoad.getInPortGrace()));
+                }
+                if(payLoad.getReportingFrequency() != null){
+                    pollAttributes.add(createPollAttribute(PollAttributeType.REPORT_FREQUENCY, payLoad.getReportingFrequency()));
+                }
+                if(payLoad.getNewDnid() != null){
+                    pollAttributes.add(createPollAttribute(PollAttributeType.DNID, payLoad.getNewDnid()));
+                }
+                if(payLoad.getNewMemberNumber() != null){
+                    pollAttributes.add(createPollAttribute(PollAttributeType.MEMBER_NUMBER, payLoad.getNewMemberNumber()));
+                }
+                if(payLoad.getStartDate() != null){
+                    pollAttributes.add(createPollAttribute(PollAttributeType.START_DATE, payLoad.getStartDate()));
+                }
+                if(payLoad.getStopDate() != null){
+                    pollAttributes.add(createPollAttribute(PollAttributeType.END_DATE, payLoad.getStopDate()));
+                }
+            }
+        }
         return response;
     }
+
+    private static PollAttribute createPollAttribute(PollAttributeType key, Integer value){
+        PollAttribute pollAttribute = new PollAttribute();
+        pollAttribute.setKey(key);
+        pollAttribute.setValue(String.valueOf(value));
+        return pollAttribute;
+    }
+    private static PollAttribute createPollAttribute(PollAttributeType key, OffsetDateTime value){
+        PollAttribute pollAttribute = new PollAttribute();
+        pollAttribute.setKey(key);
+        pollAttribute.setValue(String.valueOf(value));
+        return pollAttribute;
+    }
+
+
 
     private static List<PollAttribute> getProgramPollAttributes(PollProgram program) {
         List<PollAttribute> attributes = new ArrayList<>();
@@ -65,13 +109,13 @@ public class PollEntityToModelMapper {
         attributes.add(createPollAttribute(PollAttributeType.END_DATE, program.getStopDate().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT))));
 
         switch (program.getPollState()) {
-        case STARTED:
-        	attributes.add(createPollAttribute(PollAttributeType.PROGRAM_RUNNING, MobileTerminalConstants.TRUE));
-            break;
-        case STOPPED:
-        case ARCHIVED:
-        	attributes.add(createPollAttribute(PollAttributeType.PROGRAM_RUNNING, MobileTerminalConstants.FALSE));
-            break;
+            case STARTED:
+                attributes.add(createPollAttribute(PollAttributeType.PROGRAM_RUNNING, MobileTerminalConstants.TRUE));
+                break;
+            case STOPPED:
+            case ARCHIVED:
+                attributes.add(createPollAttribute(PollAttributeType.PROGRAM_RUNNING, MobileTerminalConstants.FALSE));
+                break;
         }
         return attributes;
     }

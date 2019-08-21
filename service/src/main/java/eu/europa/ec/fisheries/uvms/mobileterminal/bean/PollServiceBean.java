@@ -21,18 +21,13 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.validation.Payload;
+
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.schema.exchange.common.v1.AcknowledgeTypeType;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollId;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollListQuery;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollListResponse;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollMobileTerminal;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollStatus;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollableQuery;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginCapabilityType;
 import eu.europa.ec.fisheries.uvms.asset.message.AuditProducer;
@@ -44,11 +39,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPluginCapability;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Poll;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollProgram;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.AuditModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.EnumMapper;
@@ -334,7 +324,8 @@ public class PollServiceBean {
             Poll poll = next.getKey();
             MobileTerminal mobileTerminal = next.getValue();
             pollDao.createPoll(poll);
-            responseList.add(PollEntityToModelMapper.mapToPollResponseType(poll, mobileTerminal, pollType));
+            PollResponseType pollResponseType = PollEntityToModelMapper.mapToPollResponseType(poll, mobileTerminal, pollType);
+            responseList.add(pollResponseType);
         }
         return responseList;
     }

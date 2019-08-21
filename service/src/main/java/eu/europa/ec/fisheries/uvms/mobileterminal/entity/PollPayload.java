@@ -11,6 +11,10 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.util.OffsetDateTimeDeserializer;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -48,9 +52,13 @@ public class PollPayload implements Serializable {
     @Column(name = "newmemberno")
     private String newMemberNumber;
 
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name = "startdate")
     private OffsetDateTime startDate;
 
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name = "stopdate")
     private OffsetDateTime stopDate;
 
@@ -145,13 +153,13 @@ public class PollPayload implements Serializable {
                 Objects.equals(newDnid, that.newDnid) &&
                 Objects.equals(newMemberNumber, that.newMemberNumber) &&
                 Objects.equals(startDate, that.startDate) &&
-                Objects.equals(stopDate, that.stopDate) &&
-                Objects.equals(poll, that.poll);
+                Objects.equals(stopDate, that.stopDate);
+                //Objects.equals(poll, that.poll);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, reportingFrequency, gracePeriod, inPortGrace, newDnid, newMemberNumber, startDate, stopDate, poll);
+        return Objects.hash(id, reportingFrequency, gracePeriod, inPortGrace, newDnid, newMemberNumber, startDate, stopDate);
     }
 }
