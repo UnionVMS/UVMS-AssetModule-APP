@@ -101,6 +101,7 @@ public abstract class AbstractAssetRestTest {
         testWar.addClass(UnionVMSMock.class);
         testWar.addClass(ExchangeModuleRestMock.class);
         testWar.addClass(UserRestMock.class);
+        testWar.addClass(MovementMock.class);
 
         return testWar;
     }
