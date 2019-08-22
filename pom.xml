@@ -16,14 +16,15 @@
 
     <properties>
     	<asset.api.check.against.version>5.0.0</asset.api.check.against.version>
-        <docker.dev.version>3.35.0.w16</docker.dev.version>
+        <docker.dev.version>3.39.0.w17 </docker.dev.version>
     	<docker.liquibase.changeLogFile>LIQUIBASE/changelog/db-changelog-master.xml</docker.liquibase.changeLogFile>
         <docker.liquibase.db.user>asset</docker.liquibase.db.user>
         <docker.liquibase.db.passwd>asset</docker.liquibase.db.passwd>
-        <usm4uvms.version>4.0.20</usm4uvms.version>
+        <usm4uvms.version>4.0.21</usm4uvms.version>
         <uvms.config.version>4.0.4</uvms.config.version>
         <uvms.common.version>4.0.2</uvms.common.version>
-        <audit.model.version>4.0.4</audit.model.version>
+        <audit.model.version>4.1.2</audit.model.version>
+        <movementrules.version>2.1.20</movementrules.version>
         <project.scm.id>github</project.scm.id>
         <installAtEnd>false</installAtEnd>
     </properties>
@@ -45,31 +46,31 @@
 			<dependency>
 				<groupId>fish.focus.uvms.maven</groupId>
 				<artifactId>uvms-pom-gis-deps</artifactId>
-				<version>1.23</version>
+				<version>1.24</version>
 				<type>pom</type>
 			</dependency>
 			<dependency>
 				<groupId>fish.focus.uvms.maven</groupId>
 				<artifactId>uvms-pom-logging-deps</artifactId>
-				<version>1.23</version>
+				<version>1.24</version>
 				<type>pom</type>
 			</dependency>
 			<dependency>
 				<groupId>fish.focus.uvms.maven</groupId>
 				<artifactId>uvms-pom-monitoring-deps</artifactId>
-				<version>1.23</version>
+				<version>1.24</version>
 				<type>pom</type>
 			</dependency>
 			<dependency>
 				<groupId>fish.focus.uvms.maven</groupId>
 				<artifactId>uvms-pom-test-deps</artifactId>
-				<version>1.23</version>
+				<version>1.24</version>
 				<type>pom</type>
 			</dependency>
 			<dependency>
 				<groupId>fish.focus.uvms.maven</groupId>
 				<artifactId>uvms-pom-arquillian-deps</artifactId>
-				<version>1.23</version>
+				<version>1.24</version>
 				<type>pom</type>
 			</dependency>
         </dependencies>
