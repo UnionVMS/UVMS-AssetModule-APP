@@ -11,8 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.mapper;
 
-import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
-import eu.europa.ec.fisheries.uvms.audit.model.mapper.AuditLogMapper;
+import eu.europa.ec.fisheries.uvms.audit.model.mapper.AuditLogModelMapper;
 
 public class AuditModuleRequestMapper {
 
@@ -25,38 +24,38 @@ public class AuditModuleRequestMapper {
 
     private AuditModuleRequestMapper() {}
     
-    public static String mapAuditLogAssetCreated(String guid, String username) throws AuditModelMarshallException {
+    public static String mapAuditLogAssetCreated(String guid, String username)  {
         return mapToAuditLog(ASSET, CREATE, guid, username);
     }
 
-    public static String mapAuditLogAssetUpdated(String guid, String comment, String username) throws AuditModelMarshallException {
-        return AuditLogMapper.mapToAuditLog(ASSET, UPDATE, guid, comment, username);
+    public static String mapAuditLogAssetUpdated(String guid, String comment, String username)  {
+        return AuditLogModelMapper.mapToAuditLog(ASSET, UPDATE, guid, comment, username);
     }
 
-    public static String mapAuditLogAssetArchived(String guid, String comment, String username) throws AuditModelMarshallException {
-        return AuditLogMapper.mapToAuditLog(ASSET, ARCHIVE, guid, comment, username);
+    public static String mapAuditLogAssetArchived(String guid, String comment, String username)  {
+        return AuditLogModelMapper.mapToAuditLog(ASSET, ARCHIVE, guid, comment, username);
     }
 
-    public static String mapAuditLogAssetUnarchived(String guid, String comment, String username) throws AuditModelMarshallException {
-        return AuditLogMapper.mapToAuditLog(ASSET, UNARCHIVE, guid, comment, username);
+    public static String mapAuditLogAssetUnarchived(String guid, String comment, String username) {
+        return AuditLogModelMapper.mapToAuditLog(ASSET, UNARCHIVE, guid, comment, username);
     }
 
-    public static String mapAuditLogAssetGroupCreated(String guid, String username,String name) throws AuditModelMarshallException {
+    public static String mapAuditLogAssetGroupCreated(String guid, String username,String name)  {
         return mapToAuditLog(ASSET_GROUP, CREATE, guid, username, name);
     }
 
-    public static String mapAuditLogAssetGroupUpdated(String guid, String username, String name) throws AuditModelMarshallException {
+    public static String mapAuditLogAssetGroupUpdated(String guid, String username, String name)  {
         return mapToAuditLog(ASSET_GROUP, UPDATE, guid, username,name);
     }
 
-    public static String mapAuditLogAssetGroupDeleted(String guid, String username, String name) throws AuditModelMarshallException {
+    public static String mapAuditLogAssetGroupDeleted(String guid, String username, String name)  {
         return mapToAuditLog(ASSET_GROUP, ARCHIVE, guid, username, name);
     }
 
-    private static String mapToAuditLog(String objectType, String operation, String affectedObject, String username) throws AuditModelMarshallException {
-        return AuditLogMapper.mapToAuditLog(objectType, operation, affectedObject, username);
+    private static String mapToAuditLog(String objectType, String operation, String affectedObject, String username)  {
+        return AuditLogModelMapper.mapToAuditLog(objectType, operation, affectedObject, username);
     }
-    private static String mapToAuditLog(String objectType, String operation, String affectedObject, String username,String name) throws AuditModelMarshallException {
-        return AuditLogMapper.mapToAuditLog(objectType, operation, affectedObject, name, username);
+    private static String mapToAuditLog(String objectType, String operation, String affectedObject, String username,String name) {
+        return AuditLogModelMapper.mapToAuditLog(objectType, operation, affectedObject, name, username);
     }
 }
