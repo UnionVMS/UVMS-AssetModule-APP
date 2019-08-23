@@ -24,6 +24,7 @@
         <uvms.config.version>4.0.4</uvms.config.version>
         <uvms.common.version>4.0.2</uvms.common.version>
         <audit.model.version>4.0.4</audit.model.version>
+        <movementrules.version>0.9.3</movementrules.version>
         <project.scm.id>github</project.scm.id>
         <installAtEnd>false</installAtEnd>
     </properties>
@@ -72,6 +73,11 @@
 				<version>1.23</version>
 				<type>pom</type>
 			</dependency>
+            <dependency>
+                <groupId>eu.europa.ec.fisheries.uvms.movement-rules</groupId>
+                <artifactId>movement-rules-model</artifactId>
+                <version>${movementrules.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

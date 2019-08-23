@@ -7,8 +7,7 @@
 	    <version>6.0.64-SNAPSHOT</version>
 	    <relativePath>../pom.xml</relativePath>
     </parent>
-	
-	<groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+
 	<artifactId>liquibase</artifactId>
 	<version>6.0.64-SNAPSHOT</version>
 	<name>liquibase</name>
@@ -74,7 +73,7 @@
 					<plugin>
 						<groupId>org.liquibase</groupId>
 						<artifactId>liquibase-maven-plugin</artifactId>
-						<version>3.8.0</version>
+						<version>3.5.3</version>
 						<configuration>
 							<url>${db.docker.url}</url>
 							<migrationSqlOutputFile>${project.build.directory}/full-update.sql</migrationSqlOutputFile>
@@ -135,7 +134,7 @@
 				<plugin>
 					<groupId>org.liquibase</groupId>
 					<artifactId>liquibase-maven-plugin</artifactId>
-					<version>3.8.0</version>
+					<version>3.5.3</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
