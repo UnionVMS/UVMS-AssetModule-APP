@@ -11,23 +11,23 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.filter;
 
-import java.io.IOException;
-import java.util.UUID;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import eu.europa.ec.fisheries.uvms.rest.asset.Constant;
+
+import javax.annotation.Resource;
+import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.MDC;
-import eu.europa.ec.fisheries.uvms.rest.asset.Constant;
+import javax.ws.rs.ForbiddenException;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @WebFilter(asyncSupported = true, urlPatterns = {"/*"})
 public class RequestFilter implements Filter {
 
+    @Resource(lookup = "java:global/corsAllowedOriginList")
+    private String corsOriginList;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -36,13 +36,22 @@ public class RequestFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        final String HOST = httpServletRequest.getHeader("HOST");
+
+        if(!getAllowedOriginList().contains(HOST))
+            throw new ForbiddenException("You are not allowed to make any request from an external domain.");
 
         HttpServletResponse response = (HttpServletResponse) res;
-        response.setHeader(Constant.ACCESS_CONTROL_ALLOW_ORIGIN, Constant.ACCESS_CONTROL_ALLOW_METHODS_ALL);
+        response.setHeader(Constant.ACCESS_CONTROL_ALLOW_ORIGIN, HOST);
         response.setHeader(Constant.ACCESS_CONTROL_ALLOW_METHODS, Constant.ACCESS_CONTROL_ALLOWED_METHODS);
         response.setHeader(Constant.ACCESS_CONTROL_ALLOW_HEADERS, Constant.ACCESS_CONTROL_ALLOW_HEADERS_ALL);
 
         chain.doFilter(request, res);
+    }
+
+    private List<String> getAllowedOriginList() {
+        return Arrays.asList(corsOriginList.split(","));
     }
 
     @Override
