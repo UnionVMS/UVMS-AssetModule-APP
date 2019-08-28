@@ -48,7 +48,7 @@ public abstract class AbstractClientTest {
 
         WebArchive testWar = ShrinkWrap.create(WebArchive.class, "unionvms.war");
         File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
-                .resolve("eu.europa.ec.fisheries.uvms.exchange:exchange-model:4.0.14").withTransitivity().asFile();
+                .resolve("eu.europa.ec.fisheries.uvms.exchange:exchange-model").withTransitivity().asFile();
 
         testWar.addAsLibraries(files);
 
