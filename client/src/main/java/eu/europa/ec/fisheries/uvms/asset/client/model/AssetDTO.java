@@ -79,6 +79,7 @@ public class AssetDTO {
     private String updatedBy;
     private String prodOrgCode;
     private String prodOrgName;
+    private String comment;
 
     public UUID getId() {
         return id;
@@ -409,5 +410,11 @@ public class AssetDTO {
     }
     public void setProdOrgName(String prodOrgName) {
         this.prodOrgName = prodOrgName;
+    }
+    public String getComment() {
+        return comment;
+    }
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }
