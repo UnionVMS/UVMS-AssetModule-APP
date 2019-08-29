@@ -14,7 +14,7 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
-                   logicalFilePath="changelog/v6.0.44/db-changelog_1.xml">
+                   logicalFilePath="changelog/v6.0.44/add_comment_column.xml">
 
     <changeSet author="kasim" id="Insert_Comment_Column">
         <addColumn tableName="asset">

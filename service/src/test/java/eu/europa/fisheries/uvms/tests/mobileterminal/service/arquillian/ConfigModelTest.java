@@ -19,10 +19,8 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.bean.ConfigServiceBeanMT;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.ChannelDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.DNIDListDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dao.OceanRegionDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.DNIDList;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.OceanRegion;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PluginMapper;
 import org.junit.Assert;
 import org.junit.Before;
@@ -47,10 +45,6 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({PluginMapper.class, ConfigServiceBean.class})
 public class ConfigModelTest {
-
-
-	@Mock
-	private OceanRegionDaoBean oceanRegionDao;
 
 	@Mock
 	private MobileTerminalPluginDaoBean mobileTerminalPluginDao;
@@ -84,8 +78,6 @@ public class ConfigModelTest {
 	public void testGetAllTerminalSystemsEmpty()  {
 		List<MobileTerminalPlugin> pluginList = new ArrayList<>();
 		when(mobileTerminalPluginDao.getPluginList()).thenReturn(pluginList);
-		List<OceanRegion> oceanRegionList = new ArrayList<>();
-		when(oceanRegionDao.getOceanRegionList()).thenReturn(oceanRegionList);
 
 		List<TerminalSystemType> terminalSystems = testModelBean.getAllTerminalSystems();
 
@@ -98,8 +90,6 @@ public class ConfigModelTest {
 		pluginList.add(siriusone);
 		pluginList.add(twostage);
 		when(mobileTerminalPluginDao.getPluginList()).thenReturn(pluginList);
-		List<OceanRegion> oceanRegionList = new ArrayList<>();
-		when(oceanRegionDao.getOceanRegionList()).thenReturn(oceanRegionList);
 
 		List<TerminalSystemType> terminalSystems = testModelBean.getAllTerminalSystems();
 		assertEquals(2, terminalSystems.size());

@@ -92,7 +92,6 @@ public class MobileTerminal implements Serializable {
 	@Column(name="type")
 	private MobileTerminalTypeEnum mobileTerminalType;
 
-
 	@JsonSerialize(using = OffsetDateTimeSerializer.class)
 	@JsonDeserialize(using = OffsetDateTimeDeserializer.class)
 	@Column(name="updatetime")
@@ -139,6 +138,18 @@ public class MobileTerminal implements Serializable {
 	@Size(max = 255)
 	@Column(name = "comment")
 	private String comment;
+
+	@Column(name = "aor_e")
+	private Boolean eastAtlanticOceanRegion = false;
+
+	@Column(name = "aor_w")
+	private Boolean westAtlanticOceanRegion = false;
+
+	@Column(name = "por")
+	private Boolean pacificOceanRegion = false;
+
+	@Column(name = "ior")
+	private Boolean indianOceanRegion = false;
 
 	public MobileTerminal() {
 	}
@@ -301,6 +312,38 @@ public class MobileTerminal implements Serializable {
 		this.comment = comment;
 	}
 
+	public Boolean getEastAtlanticOceanRegion() {
+		return eastAtlanticOceanRegion;
+	}
+
+	public void setEastAtlanticOceanRegion(Boolean eastAtlanticOceanRegion) {
+		this.eastAtlanticOceanRegion = eastAtlanticOceanRegion;
+	}
+
+	public Boolean getWestAtlanticOceanRegion() {
+		return westAtlanticOceanRegion;
+	}
+
+	public void setWestAtlanticOceanRegion(Boolean westAtlanticOceanRegion) {
+		this.westAtlanticOceanRegion = westAtlanticOceanRegion;
+	}
+
+	public Boolean getPacificOceanRegion() {
+		return pacificOceanRegion;
+	}
+
+	public void setPacificOceanRegion(Boolean pacificOceanRegion) {
+		this.pacificOceanRegion = pacificOceanRegion;
+	}
+
+	public Boolean getIndianOceanRegion() {
+		return indianOceanRegion;
+	}
+
+	public void setIndianOceanRegion(Boolean indianOceanRegion) {
+		this.indianOceanRegion = indianOceanRegion;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -318,6 +361,10 @@ public class MobileTerminal implements Serializable {
 				Objects.equals(satelliteNumber, that.satelliteNumber) &&
 				Objects.equals(antenna, that.antenna) &&
 				Objects.equals(transceiverType, that.transceiverType) &&
+				Objects.equals(westAtlanticOceanRegion, that.westAtlanticOceanRegion) &&
+				Objects.equals(eastAtlanticOceanRegion, that.eastAtlanticOceanRegion) &&
+				Objects.equals(pacificOceanRegion, that.pacificOceanRegion) &&
+				Objects.equals(indianOceanRegion, that.indianOceanRegion) &&
 				Objects.equals(softwareVersion, that.softwareVersion);
 	}
 
