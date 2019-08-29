@@ -18,7 +18,6 @@
 
     <changeSet author="kasim" id="Drop OceanRegion Table">
         <dropTable cascadeConstraints="true"
-                   catalogName="cat"
                    schemaName="asset"
                    tableName="oceanregion"/>
     </changeSet>
