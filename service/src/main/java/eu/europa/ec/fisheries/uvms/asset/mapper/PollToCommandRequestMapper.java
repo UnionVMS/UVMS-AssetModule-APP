@@ -18,23 +18,32 @@ import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttribute;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttributeType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
+import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+@Stateless
 public class PollToCommandRequestMapper {
 
+    @Inject
+    private MobileTerminalServiceBean terminalServiceBean;
+
     public enum PollReceiverInmarsatC {
-        MOBILE_TERMINAL_ID, CONNECT_ID,
-        SERIAL_NUMBER, DNID, MEMBER_NUMBER, LES_NAME, LES_SERVICE_NAME, SATELLITE_NUMBER;
+        MOBILE_TERMINAL_ID, CONNECT_ID, SERIAL_NUMBER, DNID, MEMBER_NUMBER,
+        LES_NAME, LES_SERVICE_NAME, SATELLITE_NUMBER, AOR_E, AOR_W, POR, IOR
     }
 
     public enum PollReceiverIridium {
         MOBILE_TERMINAL_ID, CONNECT_ID,
-        SERIAL_NUMBER;
+        SERIAL_NUMBER, AOR_E, AOR_W, POR, IOR
     }
 
-    private static PollTypeType mapToPollType(eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType pollType) {
+    private PollTypeType mapToPollType(eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType pollType) {
         switch (pollType) {
             case CONFIGURATION_POLL:
                 return PollTypeType.CONFIG;
@@ -49,7 +58,7 @@ public class PollToCommandRequestMapper {
         }
     }
 
-    public static PollType mapToPollType(PollResponseType pollResponse) {
+    public PollType mapToPollType(PollResponseType pollResponse) {
         PollType pollType = new PollType();
 
         String pollId = pollResponse.getPollId() == null ? null : pollResponse.getPollId().getGuid();
@@ -79,6 +88,8 @@ public class PollToCommandRequestMapper {
                 pollType.getPollReceiver().add(mapReceiverToKeyValue(PollReceiverInmarsatC.CONNECT_ID, connectId));
                 pollType.getPollReceiver().add(mapReceiverToKeyValue(PollReceiverInmarsatC.MOBILE_TERMINAL_ID, mobileTerminalId));
 
+                addOceanRegions(pollType, mobileTerminalId);
+
                 List<MobileTerminalAttribute> attributes = mobTerm.getAttributes();
                 for (MobileTerminalAttribute attr : attributes) {
                     if (PollReceiverInmarsatC.SERIAL_NUMBER.name().equalsIgnoreCase(attr.getType())) {
@@ -106,6 +117,8 @@ public class PollToCommandRequestMapper {
                 pollType.getPollReceiver().add(mapReceiverToKeyValue(PollReceiverIridium.CONNECT_ID, connectId));
                 pollType.getPollReceiver().add(mapReceiverToKeyValue(PollReceiverIridium.MOBILE_TERMINAL_ID, mobileTerminalId));
 
+                addOceanRegions(pollType, mobileTerminalId);
+
                 List<MobileTerminalAttribute> attributes = mobTerm.getAttributes();
                 for (MobileTerminalAttribute attr : attributes) {
                     if (PollReceiverIridium.SERIAL_NUMBER.name().equalsIgnoreCase(attr.getType())) {
@@ -117,21 +130,57 @@ public class PollToCommandRequestMapper {
         return pollType;
     }
 
-    private static KeyValueType mapPollAttributeToKeyValue(PollAttributeType key, String value) {
+    private void addOceanRegions(PollType pollType, String mobileTerminalId) {
+        if(mobileTerminalId != null) {
+            List<String> oceanRegionList = getOceanRegions(mobileTerminalId);
+            for (String or : oceanRegionList) {
+                switch (or) {
+                    case "AOR_E":
+                        pollType.getPollReceiver().add(mapReceiverToKeyValue(
+                                PollReceiverInmarsatC.AOR_E, PollReceiverInmarsatC.AOR_E.name()));
+                        break;
+                    case "AOR_W":
+                        pollType.getPollReceiver().add(mapReceiverToKeyValue(
+                                PollReceiverInmarsatC.AOR_W, PollReceiverInmarsatC.AOR_W.name()));
+                        break;
+                    case "POR":
+                        pollType.getPollReceiver().add(mapReceiverToKeyValue(
+                                PollReceiverInmarsatC.POR, PollReceiverInmarsatC.POR.name()));
+                        break;
+                    case "IOR":
+                        pollType.getPollReceiver().add(mapReceiverToKeyValue(
+                                PollReceiverInmarsatC.IOR, PollReceiverInmarsatC.IOR.name()));
+                        break;
+                }
+            }
+        }
+    }
+
+    private List<String> getOceanRegions(String mobileTerminalId) {
+        MobileTerminal entity = terminalServiceBean.getMobileTerminalEntityById(UUID.fromString(mobileTerminalId));
+        List<String> oceanRegions = new ArrayList<>();
+        if(entity.getEastAtlanticOceanRegion()) oceanRegions.add(PollReceiverInmarsatC.AOR_E.name());
+        if(entity.getWestAtlanticOceanRegion()) oceanRegions.add(PollReceiverInmarsatC.AOR_W.name());
+        if(entity.getPacificOceanRegion()) oceanRegions.add(PollReceiverInmarsatC.POR.name());
+        if(entity.getIndianOceanRegion()) oceanRegions.add(PollReceiverInmarsatC.IOR.name());
+        return oceanRegions;
+    }
+
+    private KeyValueType mapPollAttributeToKeyValue(PollAttributeType key, String value) {
         KeyValueType keyValue = new KeyValueType();
         keyValue.setKey(key.name());
         keyValue.setValue(value);
         return keyValue;
     }
 
-    private static KeyValueType mapReceiverToKeyValue(PollReceiverInmarsatC key, String value) {
+    private KeyValueType mapReceiverToKeyValue(PollReceiverInmarsatC key, String value) {
         KeyValueType keyValue = new KeyValueType();
         keyValue.setKey(key.name());
         keyValue.setValue(value);
         return keyValue;
     }
 
-    private static KeyValueType mapReceiverToKeyValue(PollReceiverIridium key, String value) {
+    private KeyValueType mapReceiverToKeyValue(PollReceiverIridium key, String value) {
         KeyValueType keyValue = new KeyValueType();
         keyValue.setKey(key.name());
         keyValue.setValue(value);

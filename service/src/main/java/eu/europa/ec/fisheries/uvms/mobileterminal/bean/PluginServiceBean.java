@@ -64,13 +64,16 @@ public class PluginServiceBean {
     @EJB
     private ConfigServiceBeanMT configModel;
 
+    @Inject
+    private PollToCommandRequestMapper pollToCommandRequestMapper;
+
     @Resource(name = "java:global/exchange_endpoint")
     private String exchangeEndpoint;
 
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public AcknowledgeTypeType sendPoll(PollResponseType poll, String username) {
         try {
-            PollType pollType = PollToCommandRequestMapper.mapToPollType(poll);
+            PollType pollType = pollToCommandRequestMapper.mapToPollType(poll);
             String pluginServiceName = poll.getMobileTerminal().getPlugin().getServiceName();
             SetCommandRequest request = createSetCommandRequest(pluginServiceName, CommandTypeType.POLL, username, null);
             request.getCommand().setPoll(pollType);
