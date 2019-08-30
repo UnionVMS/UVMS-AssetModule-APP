@@ -20,6 +20,7 @@ import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseTyp
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.OceanRegionEnum;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -35,12 +36,12 @@ public class PollToCommandRequestMapper {
 
     public enum PollReceiverInmarsatC {
         MOBILE_TERMINAL_ID, CONNECT_ID, SERIAL_NUMBER, DNID, MEMBER_NUMBER,
-        LES_NAME, LES_SERVICE_NAME, SATELLITE_NUMBER, AOR_E, AOR_W, POR, IOR
+        LES_NAME, LES_SERVICE_NAME, SATELLITE_NUMBER, OCEAN_REGION
     }
 
     public enum PollReceiverIridium {
         MOBILE_TERMINAL_ID, CONNECT_ID,
-        SERIAL_NUMBER, AOR_E, AOR_W, POR, IOR
+        SERIAL_NUMBER, OCEAN_REGION
     }
 
     private PollTypeType mapToPollType(eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType pollType) {
@@ -133,36 +134,22 @@ public class PollToCommandRequestMapper {
     private void addOceanRegions(PollType pollType, String mobileTerminalId) {
         if(mobileTerminalId != null) {
             List<String> oceanRegionList = getOceanRegions(mobileTerminalId);
-            for (String or : oceanRegionList) {
-                switch (or) {
-                    case "AOR_E":
-                        pollType.getPollReceiver().add(mapReceiverToKeyValue(
-                                PollReceiverInmarsatC.AOR_E, PollReceiverInmarsatC.AOR_E.name()));
-                        break;
-                    case "AOR_W":
-                        pollType.getPollReceiver().add(mapReceiverToKeyValue(
-                                PollReceiverInmarsatC.AOR_W, PollReceiverInmarsatC.AOR_W.name()));
-                        break;
-                    case "POR":
-                        pollType.getPollReceiver().add(mapReceiverToKeyValue(
-                                PollReceiverInmarsatC.POR, PollReceiverInmarsatC.POR.name()));
-                        break;
-                    case "IOR":
-                        pollType.getPollReceiver().add(mapReceiverToKeyValue(
-                                PollReceiverInmarsatC.IOR, PollReceiverInmarsatC.IOR.name()));
-                        break;
-                }
-            }
+            oceanRegionList.forEach(code -> pollType.getPollReceiver()
+                    .add(mapReceiverToKeyValue(PollReceiverInmarsatC.OCEAN_REGION, code)));
         }
     }
 
     private List<String> getOceanRegions(String mobileTerminalId) {
         MobileTerminal entity = terminalServiceBean.getMobileTerminalEntityById(UUID.fromString(mobileTerminalId));
         List<String> oceanRegions = new ArrayList<>();
-        if(entity.getEastAtlanticOceanRegion()) oceanRegions.add(PollReceiverInmarsatC.AOR_E.name());
-        if(entity.getWestAtlanticOceanRegion()) oceanRegions.add(PollReceiverInmarsatC.AOR_W.name());
-        if(entity.getPacificOceanRegion()) oceanRegions.add(PollReceiverInmarsatC.POR.name());
-        if(entity.getIndianOceanRegion()) oceanRegions.add(PollReceiverInmarsatC.IOR.name());
+        if(entity.getWestAtlanticOceanRegion())
+            oceanRegions.add(String.valueOf(OceanRegionEnum.AOR_W.getCode()));
+        if(entity.getEastAtlanticOceanRegion())
+            oceanRegions.add(String.valueOf(OceanRegionEnum.AOR_E.getCode()));
+        if(entity.getPacificOceanRegion())
+            oceanRegions.add(String.valueOf(OceanRegionEnum.POR.getCode()));
+        if(entity.getIndianOceanRegion())
+            oceanRegions.add(String.valueOf(OceanRegionEnum.IOR.getCode()));
         return oceanRegions;
     }
 
