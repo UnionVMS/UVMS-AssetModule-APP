@@ -22,6 +22,8 @@
 	<!--include file="changelog\v0.4\db-changelog-createTables-postgres_0.4.xml"/-->
 	<include file="v0.4\db-changelog-insertStaticValues_0.4.xml" relativeToChangelogFile="true"/>
 	<include file="v0.4\db-changelog-insertTestdata-postgres_0.4.xml" relativeToChangelogFile="true"/>
+	<include file="v6.0.65\drop_ocean_region_table.xml" relativeToChangelogFile="true"/>
+	<include file="v6.0.65\mt_add_ocean_region_columns.xml" relativeToChangelogFile="true"/>
 
 
 </databaseChangeLog>

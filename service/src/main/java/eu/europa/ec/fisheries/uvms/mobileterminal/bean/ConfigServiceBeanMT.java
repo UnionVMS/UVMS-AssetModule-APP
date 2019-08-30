@@ -11,27 +11,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.bean;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-
 import eu.europa.ec.fisheries.schema.exchange.module.v1.GetServiceListRequest;
 import eu.europa.ec.fisheries.schema.exchange.module.v1.GetServiceListResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
 import eu.europa.ec.fisheries.schema.exchange.service.v1.ServiceResponseType;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.CapabilityConfiguration;
@@ -44,22 +25,31 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConsta
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.ChannelDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.DNIDListDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dao.OceanRegionDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.DNIDList;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPluginCapability;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.OceanRegion;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PluginMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Resource;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Stateless
 public class ConfigServiceBeanMT {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConfigServiceBeanMT.class);
-    
-    @EJB
-    private OceanRegionDaoBean oceanRegionDao;
 
     @EJB
     private MobileTerminalPluginDaoBean mobileTerminalPluginDao;
@@ -95,7 +85,6 @@ public class ConfigServiceBeanMT {
                     .request(MediaType.APPLICATION_JSON)
                     .post(Entity.json(request), GetServiceListResponse.class);
 
-
             client.close();
             if(response == null){
                 throw new NullPointerException("No response from exchange");
@@ -104,20 +93,15 @@ public class ConfigServiceBeanMT {
     }
 
     public List<TerminalSystemType> getAllTerminalSystems() {
-
-
         Map<MobileTerminalTypeEnum, List<MobileTerminalPlugin>> pluginsByType = getPlugins();
         List<TerminalSystemType> terminalSystemList = new ArrayList<>();
 
         for (MobileTerminalTypeEnum type : pluginsByType.keySet()) {
-
             TerminalSystemConfiguration terminalFieldConfiguration = PluginMapper.mapTerminalFieldConfiguration(type);
             TerminalSystemConfiguration comchannelFieldConfiguration = PluginMapper.mapComchannelFieldConfiguration(type);
-            List<OceanRegion> oceanRegionList = oceanRegionDao.getOceanRegionList();
-            CapabilityConfiguration capabilityConfiguration = PluginMapper.mapCapabilityConfiguration(type, pluginsByType.get(type), oceanRegionList);
+            CapabilityConfiguration capabilityConfiguration = PluginMapper.mapCapabilityConfiguration(type, pluginsByType.get(type));
 
             TerminalSystemType systemType = new TerminalSystemType();
-
             systemType.setType(type.name());
             systemType.setTerminalConfiguration(terminalFieldConfiguration);
             systemType.setComchannelConfiguration(comchannelFieldConfiguration);
@@ -135,7 +119,6 @@ public class ConfigServiceBeanMT {
             if (mobileTerminalType == null) {
                 continue;
             }
-
             List<MobileTerminalPlugin> typePlugins = plugins.get(mobileTerminalType);
             if (typePlugins == null) {
                 typePlugins = new ArrayList<>();
@@ -189,12 +172,10 @@ public class ConfigServiceBeanMT {
         return list;
     }
 
-
     public List<MobileTerminalPlugin> upsertPlugins(List<PluginService> pluginList) {
         if (pluginList == null) {
             throw new IllegalArgumentException("No pluginList to upsert");
         }
-
         Map<String, PluginService> map = new HashMap<>();
         List<MobileTerminalPlugin> responseList = new ArrayList<>();
         for (PluginService plugin : pluginList) {
@@ -207,7 +188,6 @@ public class ConfigServiceBeanMT {
             if (plugin.getSatelliteType() == null || plugin.getSatelliteType().isEmpty()) {
                 throw new IllegalArgumentException("No satellite type for plugin: " + plugin.getServiceName());
             }
-
             MobileTerminalPlugin entity = updatePlugin(plugin);
             if (entity == null) {
                 entity = PluginMapper.mapModelToEntity(plugin);
@@ -216,18 +196,12 @@ public class ConfigServiceBeanMT {
             map.put(plugin.getServiceName(), plugin);
             responseList.add(entity);
         }
-
         responseList.addAll(inactivatePlugins(map));
-
         return responseList;
-
     }
 
     public List<MobileTerminalPlugin> inactivatePlugins(Map<String, PluginService> map) {
-
-
         List<MobileTerminalPlugin> responseList = new ArrayList<>();
-
         List<MobileTerminalPlugin> availablePlugins = mobileTerminalPluginDao.getPluginList();
         for (MobileTerminalPlugin plugin : availablePlugins) {
             PluginService pluginService = map.get(plugin.getPluginServiceName());
@@ -238,12 +212,9 @@ public class ConfigServiceBeanMT {
             }
         }
         return responseList;
-
     }
 
     public MobileTerminalPlugin updatePlugin(PluginService plugin) {
-
-
         MobileTerminalPlugin entity = mobileTerminalPluginDao.getPluginByServiceName(plugin.getServiceName());
         if(entity == null){
             return null;
@@ -263,7 +234,6 @@ public class ConfigServiceBeanMT {
 
     public boolean checkDNIDListChange(String pluginName) {
         //TODO fix sql query:
-
         List<String> activeDnidList = channelDao.getActiveDNID(pluginName);
         List<DNIDList> dnidList = dnidListDao.getDNIDList(pluginName);
         if (changed(activeDnidList, dnidList)) {
@@ -297,7 +267,6 @@ public class ConfigServiceBeanMT {
                 return true;
             }
         }
-
         for (String entityDnid : entityDnidSet) {
             if (!activeDnidSet.contains(entityDnid)) {
                 return true;
