@@ -23,7 +23,6 @@ import org.junit.runner.RunWith;
 import javax.ejb.EJB;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.inject.Inject;
-import javax.transaction.*;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -55,10 +54,6 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-
-
-    @Inject
-    protected UserTransaction userTransaction;
 
     private static final String USERNAME = "TEST_USERNAME";
     private static final String NEW_MOBILETERMINAL_TYPE = "IRIDIUM";
@@ -244,15 +239,14 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void createMobileTerminalOceanRegion_all_false() {
         MobileTerminal created = testPollHelper.createAndPersistMobileTerminalOceanRegionSupport(null, false, false, false, false);
-        Asset asset = createAndPersistAsset();
         assertNotNull(created);
         UUID guid = created.getId();
         MobileTerminal mobileTerminal = mobileTerminalService.getMobileTerminalEntityById(guid);
         assertNotNull(mobileTerminal);
         assertFalse(mobileTerminal.getEastAtlanticOceanRegion());
         assertFalse(mobileTerminal.getWestAtlanticOceanRegion());
-        assertFalse(mobileTerminal.getIndianOceanRegion());
         assertFalse(mobileTerminal.getPacificOceanRegion());
+        assertFalse(mobileTerminal.getIndianOceanRegion());
     }
 
     @Test
@@ -265,8 +259,8 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
         assertNotNull(mobileTerminal);
         assertTrue(mobileTerminal.getEastAtlanticOceanRegion());
         assertFalse(mobileTerminal.getWestAtlanticOceanRegion());
-        assertFalse(mobileTerminal.getIndianOceanRegion());
         assertFalse(mobileTerminal.getPacificOceanRegion());
+        assertFalse(mobileTerminal.getIndianOceanRegion());
     }
 
     @Test
@@ -279,8 +273,8 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
         assertNotNull(mobileTerminal);
         assertFalse(mobileTerminal.getEastAtlanticOceanRegion());
         assertTrue(mobileTerminal.getWestAtlanticOceanRegion());
-        assertFalse(mobileTerminal.getIndianOceanRegion());
         assertFalse(mobileTerminal.getPacificOceanRegion());
+        assertFalse(mobileTerminal.getIndianOceanRegion());
     }
 
     @Test
@@ -293,8 +287,8 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
         assertNotNull(mobileTerminal);
         assertFalse(mobileTerminal.getEastAtlanticOceanRegion());
         assertFalse(mobileTerminal.getWestAtlanticOceanRegion());
-        assertFalse(mobileTerminal.getIndianOceanRegion());
         assertTrue(mobileTerminal.getPacificOceanRegion());
+        assertFalse(mobileTerminal.getIndianOceanRegion());
     }
 
     @Test
@@ -307,28 +301,13 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
         assertNotNull(mobileTerminal);
         assertFalse(mobileTerminal.getEastAtlanticOceanRegion());
         assertFalse(mobileTerminal.getWestAtlanticOceanRegion());
+        assertFalse(mobileTerminal.getPacificOceanRegion());
         assertTrue(mobileTerminal.getIndianOceanRegion());
-        assertFalse(mobileTerminal.getPacificOceanRegion());
     }
 
     @Test
     @OperateOnDeployment("normal")
-    public void createMobileTerminalOceanRegionXX() {
-        MobileTerminal created = testPollHelper.createAndPersistMobileTerminalOceanRegionSupport(null, false, false, false, false);
-        Asset asset = createAndPersistAsset();
-        assertNotNull(created);
-        UUID guid = created.getId();
-        MobileTerminal mobileTerminal = mobileTerminalService.assignMobileTerminal(asset.getId(), guid, TEST_COMMENT, USERNAME);
-        assertNotNull(mobileTerminal);
-        assertFalse(mobileTerminal.getEastAtlanticOceanRegion());
-        assertFalse(mobileTerminal.getWestAtlanticOceanRegion());
-        assertFalse(mobileTerminal.getIndianOceanRegion());
-        assertFalse(mobileTerminal.getPacificOceanRegion());
-    }
-
-    @Test
-    @OperateOnDeployment("normal")
-    public void assignMobileTerminalOceanRegionIOR() throws HeuristicRollbackException, RollbackException, HeuristicMixedException, SystemException, NotSupportedException {
+    public void assignMobileTerminalOceanRegionIOR() {
         MobileTerminal created = testPollHelper.createAndPersistMobileTerminalOceanRegionSupport(null, false, false, false, true);
         Asset createdAsset = createAndPersistAsset();
         assertNotNull(created);
@@ -336,17 +315,13 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
         MobileTerminal mobileTerminal = mobileTerminalService.assignMobileTerminal(createdAsset.getId(), guid, TEST_COMMENT, USERNAME);
         assertNotNull(mobileTerminal);
 
-
         Asset fetchedAsset = assetService.getAssetById(createdAsset.getId());
         assertNotNull(fetchedAsset);
         assertTrue(fetchedAsset.getMobileTerminals().get(0).getIndianOceanRegion());
         assertFalse(fetchedAsset.getMobileTerminals().get(0).getWestAtlanticOceanRegion());
         assertFalse(fetchedAsset.getMobileTerminals().get(0).getEastAtlanticOceanRegion());
         assertFalse(fetchedAsset.getMobileTerminals().get(0).getPacificOceanRegion());
-
-
     }
-
 
     private Asset createAndPersistAsset() {
         Asset asset = AssetTestsHelper.createBasicAsset();
