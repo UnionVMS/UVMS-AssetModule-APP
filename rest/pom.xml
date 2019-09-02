@@ -18,7 +18,7 @@
         <maven.javadoc.plugin.version>3.1.1</maven.javadoc.plugin.version>
         <swagger.doclet.version>1.0.4.2</swagger.doclet.version>
         <replacer.version>1.5.3</replacer.version>
-        <jackson.version>2.9.9</jackson.version>
+        <jackson.version>2.10.0.pr2</jackson.version>
     </properties>
 
     <dependencies>
