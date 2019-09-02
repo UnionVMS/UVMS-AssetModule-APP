@@ -1,5 +1,6 @@
 package eu.europa.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
+import eu.europa.ec.fisheries.uvms.asset.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
@@ -22,6 +23,7 @@ import org.junit.runner.RunWith;
 import javax.ejb.EJB;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.inject.Inject;
+import javax.transaction.*;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -48,8 +50,15 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     @Inject
     private AssetDao assetDao;
 
+    @Inject
+    private AssetService assetService;
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+
+
+    @Inject
+    protected UserTransaction userTransaction;
 
     private static final String USERNAME = "TEST_USERNAME";
     private static final String NEW_MOBILETERMINAL_TYPE = "IRIDIUM";
@@ -99,7 +108,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
         MobileTerminal created = testPollHelper.createBasicMobileTerminal();
         MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(created.getPlugin().getPluginServiceName());
-        if(plugin == null){
+        if (plugin == null) {
             plugin = pluginDao.createMobileTerminalPlugin(created.getPlugin());
         }
         created.setPlugin(plugin);
@@ -231,10 +240,119 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
         }
     }
 
-    private Asset createAndPersistAsset(){
+    @Test
+    @OperateOnDeployment("normal")
+    public void createMobileTerminalOceanRegion_all_false() {
+        MobileTerminal created = testPollHelper.createAndPersistMobileTerminalOceanRegionSupport(null, false, false, false, false);
+        Asset asset = createAndPersistAsset();
+        assertNotNull(created);
+        UUID guid = created.getId();
+        MobileTerminal mobileTerminal = mobileTerminalService.getMobileTerminalEntityById(guid);
+        assertNotNull(mobileTerminal);
+        assertFalse(mobileTerminal.getEastAtlanticOceanRegion());
+        assertFalse(mobileTerminal.getWestAtlanticOceanRegion());
+        assertFalse(mobileTerminal.getIndianOceanRegion());
+        assertFalse(mobileTerminal.getPacificOceanRegion());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createMobileTerminalOceanRegion_eastAtlantic() {
+        MobileTerminal created = testPollHelper.createAndPersistMobileTerminalOceanRegionSupport(null, true, false, false, false);
+        assertNotNull(created);
+        UUID guid = created.getId();
+        MobileTerminal mobileTerminal = mobileTerminalService.getMobileTerminalEntityById(guid);
+        assertNotNull(mobileTerminal);
+        assertTrue(mobileTerminal.getEastAtlanticOceanRegion());
+        assertFalse(mobileTerminal.getWestAtlanticOceanRegion());
+        assertFalse(mobileTerminal.getIndianOceanRegion());
+        assertFalse(mobileTerminal.getPacificOceanRegion());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createMobileTerminalOceanRegion_westAtlantic() {
+        MobileTerminal created = testPollHelper.createAndPersistMobileTerminalOceanRegionSupport(null, false, true, false, false);
+        assertNotNull(created);
+        UUID guid = created.getId();
+        MobileTerminal mobileTerminal = mobileTerminalService.getMobileTerminalEntityById(guid);
+        assertNotNull(mobileTerminal);
+        assertFalse(mobileTerminal.getEastAtlanticOceanRegion());
+        assertTrue(mobileTerminal.getWestAtlanticOceanRegion());
+        assertFalse(mobileTerminal.getIndianOceanRegion());
+        assertFalse(mobileTerminal.getPacificOceanRegion());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createMobileTerminalOceanRegion_PacificOcean() {
+        MobileTerminal created = testPollHelper.createAndPersistMobileTerminalOceanRegionSupport(null, false, false, true, false);
+        assertNotNull(created);
+        UUID guid = created.getId();
+        MobileTerminal mobileTerminal = mobileTerminalService.getMobileTerminalEntityById(guid);
+        assertNotNull(mobileTerminal);
+        assertFalse(mobileTerminal.getEastAtlanticOceanRegion());
+        assertFalse(mobileTerminal.getWestAtlanticOceanRegion());
+        assertFalse(mobileTerminal.getIndianOceanRegion());
+        assertTrue(mobileTerminal.getPacificOceanRegion());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createMobileTerminalOceanRegion_IndianOcean() {
+        MobileTerminal created = testPollHelper.createAndPersistMobileTerminalOceanRegionSupport(null, false, false, false, true);
+        assertNotNull(created);
+        UUID guid = created.getId();
+        MobileTerminal mobileTerminal = mobileTerminalService.getMobileTerminalEntityById(guid);
+        assertNotNull(mobileTerminal);
+        assertFalse(mobileTerminal.getEastAtlanticOceanRegion());
+        assertFalse(mobileTerminal.getWestAtlanticOceanRegion());
+        assertTrue(mobileTerminal.getIndianOceanRegion());
+        assertFalse(mobileTerminal.getPacificOceanRegion());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createMobileTerminalOceanRegionXX() {
+        MobileTerminal created = testPollHelper.createAndPersistMobileTerminalOceanRegionSupport(null, false, false, false, false);
+        Asset asset = createAndPersistAsset();
+        assertNotNull(created);
+        UUID guid = created.getId();
+        MobileTerminal mobileTerminal = mobileTerminalService.assignMobileTerminal(asset.getId(), guid, TEST_COMMENT, USERNAME);
+        assertNotNull(mobileTerminal);
+        assertFalse(mobileTerminal.getEastAtlanticOceanRegion());
+        assertFalse(mobileTerminal.getWestAtlanticOceanRegion());
+        assertFalse(mobileTerminal.getIndianOceanRegion());
+        assertFalse(mobileTerminal.getPacificOceanRegion());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void assignMobileTerminalOceanRegionIOR() throws HeuristicRollbackException, RollbackException, HeuristicMixedException, SystemException, NotSupportedException {
+        MobileTerminal created = testPollHelper.createAndPersistMobileTerminalOceanRegionSupport(null, false, false, false, true);
+        Asset createdAsset = createAndPersistAsset();
+        assertNotNull(created);
+        UUID guid = created.getId();
+        MobileTerminal mobileTerminal = mobileTerminalService.assignMobileTerminal(createdAsset.getId(), guid, TEST_COMMENT, USERNAME);
+        assertNotNull(mobileTerminal);
+
+
+        Asset fetchedAsset = assetService.getAssetById(createdAsset.getId());
+        assertNotNull(fetchedAsset);
+        assertTrue(fetchedAsset.getMobileTerminals().get(0).getIndianOceanRegion());
+        assertFalse(fetchedAsset.getMobileTerminals().get(0).getWestAtlanticOceanRegion());
+        assertFalse(fetchedAsset.getMobileTerminals().get(0).getEastAtlanticOceanRegion());
+        assertFalse(fetchedAsset.getMobileTerminals().get(0).getPacificOceanRegion());
+
+
+    }
+
+
+    private Asset createAndPersistAsset() {
         Asset asset = AssetTestsHelper.createBasicAsset();
         return assetDao.createAsset(asset);
     }
+
     private MobileTerminal updateMobileTerminal(MobileTerminal created) {
         created.setMobileTerminalType(MobileTerminalTypeEnum.IRIDIUM);
         created.setSource(TerminalSourceEnum.INTERNAL);

@@ -38,7 +38,9 @@ public class TestPollHelper {
 
     private String serialNumber;
 
-    public MobileTerminal createBasicMobileTerminal() {
+
+
+        public MobileTerminal createBasicMobileTerminal() {
         MobileTerminal mobileTerminal = new MobileTerminal();
         mobileTerminal.setSource(TerminalSourceEnum.INTERNAL);
         mobileTerminal.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
@@ -120,6 +122,79 @@ public class TestPollHelper {
         pmt.setComChannelId(channel.getId().toString());
         return pmt;
     }
+
+    public MobileTerminal createAndPersistMobileTerminalOceanRegionSupport(Asset asset,boolean aor_e,boolean aor_w,boolean por,boolean ior)  {
+
+        String serialNo = UUID.randomUUID().toString();
+
+        List<MobileTerminalPlugin> plugs = mobileTerminalPluginDao.getPluginList();
+        MobileTerminalPlugin mtp = plugs.get(0);
+
+        MobileTerminal mt = new MobileTerminal();
+        mt.setSerialNo(serialNo);
+        mt.setUpdatetime(OffsetDateTime.now(ZoneOffset.UTC));
+        mt.setUpdateuser("TEST");
+        mt.setSource(TerminalSourceEnum.INTERNAL);
+        mt.setPlugin(mtp);
+        mt.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
+        mt.setArchived(false);
+        mt.setInactivated(false);
+
+        // only set if true so we can see if code defaults to false
+        if(aor_e) mt.setEastAtlanticOceanRegion(aor_e);
+        if(aor_w) mt.setWestAtlanticOceanRegion(aor_w);
+        if(por) mt.setPacificOceanRegion(por);
+        if(ior) mt.setIndianOceanRegion(ior);
+
+
+        Set<MobileTerminalPluginCapability> capabilityList = new HashSet<>();
+        MobileTerminalPluginCapability mtpc = new MobileTerminalPluginCapability();
+        mtpc.setPlugin(mtp.getId());
+        mtpc.setName("test");
+        mtpc.setValue("test");
+        mtpc.setUpdatedBy("TEST_USER");
+        mtpc.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        capabilityList.add(mtpc);
+
+        mtp.getCapabilities().addAll(capabilityList);
+
+        if(asset != null) {
+            mt.setAsset(asset);
+        }
+
+        Channel pollChannel = new Channel();
+        pollChannel.setArchived(false);
+        pollChannel.setMobileTerminal(mt);
+        pollChannel.setInstalledBy("Mike the not so Great");
+        pollChannel.setDNID("5555");
+        pollChannel.setMemberNumber("" + (int)(Math.random() * 100000));
+        pollChannel.setLesDescription("Thrane&Thrane");
+        pollChannel.setExpectedFrequency(Duration.ofSeconds(60));
+        pollChannel.setFrequencyGracePeriod(Duration.ofSeconds(60));
+        pollChannel.setExpectedFrequencyInPort(Duration.ofSeconds(60));
+        pollChannel.setPollChannel(true);
+
+        Channel channel = new Channel();
+        channel.setArchived(false);
+        channel.setMobileTerminal(mt);
+        channel.setInstalledBy("Mike the not so Great");
+        channel.setDNID("555");
+        channel.setMemberNumber("" + (int)(Math.random() * 100000));
+        channel.setLesDescription("Thrane&Thrane");
+        channel.setExpectedFrequency(Duration.ofSeconds(60));
+        channel.setFrequencyGracePeriod(Duration.ofSeconds(60));
+        channel.setExpectedFrequencyInPort(Duration.ofSeconds(60));
+
+        Set<Channel> channels = new HashSet<>();
+        channels.add(channel);
+        channels.add(pollChannel);
+        mt.getChannels().clear();
+        mt.getChannels().addAll(channels);
+        terminalDao.createMobileTerminal(mt);
+        return mt;
+    }
+
+
 
     public MobileTerminal createAndPersistMobileTerminal(Asset asset)  {
 
