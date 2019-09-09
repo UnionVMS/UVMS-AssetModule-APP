@@ -11,23 +11,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.bean;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.validation.Payload;
-
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.schema.exchange.common.v1.AcknowledgeTypeType;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginCapabilityType;
 import eu.europa.ec.fisheries.uvms.asset.message.AuditProducer;
@@ -39,16 +24,20 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.AuditModuleRequestMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.EnumMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalEntityToModelMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollEntityToModelMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollModelToEntityMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.PollSearchKeyValue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.poll.PollSearchMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import java.util.*;
 
 @Stateless
 @LocalBean
@@ -73,7 +62,6 @@ public class PollServiceBean {
 
     @EJB
     private ChannelDaoBean channelDao;
-
 
     public CreatePollResultDto createPoll(PollRequestType poll, String username) {
 
@@ -108,7 +96,6 @@ public class PollServiceBean {
         result.setUnsentPoll(!unsentPolls.isEmpty());
         return result;
     }
-
 
     public List<PollDto> getRunningProgramPolls() {
         List<PollProgram> pollPrograms = pollProgramDao.getProgramPollsAlive();
@@ -185,14 +172,6 @@ public class PollServiceBean {
         return terminal;
     }
 
-    private MobileTerminal getPollableTerminal(String guid, String channelGuid) {
-        MobileTerminal terminal = terminalDao.getMobileTerminalById(UUID.fromString(guid));
-        if(terminal != null) {
-            checkPollable(terminal);
-        }
-        return terminal;
-    }
-
     private void checkPollable(MobileTerminal terminal){
         if (terminal.getArchived()) {
             throw new IllegalStateException("Terminal is archived");
@@ -251,9 +230,9 @@ public class PollServiceBean {
             if (!pollTerminal.getConnectId().equals(connectId)) {
                 throw new IllegalStateException("Terminal " + mobileTerminalEntity.getId() + " can not be polled, because it is not linked to asset " + connectId);
             }
-            MobileTerminal terminal = getPollableTerminal(pollTerminal.getMobileTerminalId(), pollTerminal.getComChannelId());
+            checkPollable(mobileTerminalEntity);
             PollProgram pollProgram = PollModelToEntityMapper.mapToProgramPoll(mobileTerminalEntity, connectId, pollTerminal.getComChannelId(), pollRequest, username);
-            map.put(pollProgram, terminal);
+            map.put(pollProgram, mobileTerminalEntity);
         }
         return map;
     }
@@ -274,9 +253,9 @@ public class PollServiceBean {
             if (pollRequest.getPollType() != PollType.MANUAL_POLL && pollRequest.getPollType() != PollType.AUTOMATIC_POLL) {
                 validateMobileTerminalPluginCapability(mobileTerminalEntity.getPlugin().getCapabilities(), pollRequest.getPollType(), mobileTerminalEntity.getPlugin().getPluginServiceName());
             }
-            MobileTerminal terminal = getPollableTerminal(pollTerminal.getMobileTerminalId(), pollTerminal.getComChannelId());
+            checkPollable(mobileTerminalEntity);
             Poll poll = PollModelToEntityMapper.mapToPoll(mobileTerminalEntity, connectId, pollTerminal.getComChannelId(), pollRequest, username);
-            map.put(poll, terminal);
+            map.put(poll, mobileTerminalEntity);
         }
         return map;
     }
@@ -422,8 +401,8 @@ public class PollServiceBean {
         ListResponseDto response = new ListResponseDto();
         List<MobileTerminalType> mobileTerminalList = new ArrayList<>();
 
-        Integer page = query.getPagination().getPage();
-        Integer listSize = query.getPagination().getListSize();
+        int page = query.getPagination().getPage();
+        int listSize = query.getPagination().getListSize();
         int startIndex = (page - 1) * listSize;
         int stopIndex = startIndex + listSize;
         LOG.debug("page: " + page + ", listSize: " + listSize + ", startIndex: " + startIndex);
