@@ -538,7 +538,7 @@ public class AssetServiceBean implements AssetService {
         // here we put into response data about mobiletreminal / channels etc etc
         String channelGuid = getChannelGuid(mobTerm, req);
         resp.setChannelGuid(channelGuid);
-        resp.setMobileTerminalConnectId(mobTerm.getAsset().getId().toString());
+        resp.setMobileTerminalConnectId(mobTerm.getAsset() == null ? null : mobTerm.getAsset().getId().toString());
         resp.setMobileTerminalType(mobTerm.getMobileTerminalType().name());
         if (mobTerm.getId() != null) {
             resp.setMobileTerminalGuid(mobTerm.getId().toString());

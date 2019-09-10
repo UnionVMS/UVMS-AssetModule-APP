@@ -532,6 +532,18 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         assertThat(response.getAssetName(), CoreMatchers.is(CoreMatchers.nullValue()));
     }
 
+    @Test
+    @OperateOnDeployment("normal")
+    public void collectAssetMTRequestOnUnlinkedMTInmarsat() {
+        MobileTerminal mobileTerminalUnlinked = testPollHelper.createBasicMobileTerminal();
+        mobileTerminalUnlinked = mobileTerminalService.createMobileTerminal(mobileTerminalUnlinked, "TEST");
+
+        AssetMTEnrichmentRequest request = createRequest(mobileTerminalUnlinked);
+        AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
+        assertThat(response.getAssetId(), CoreMatchers.is(CoreMatchers.nullValue()));
+        assertThat(response.getAssetName(), CoreMatchers.is(CoreMatchers.nullValue()));
+    }
+
     private AssetMTEnrichmentRequest createRequest(MobileTerminal mobileTerminal) {
 
         AssetMTEnrichmentRequest request = new AssetMTEnrichmentRequest();
