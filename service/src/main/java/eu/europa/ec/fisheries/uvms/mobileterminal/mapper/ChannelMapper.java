@@ -34,9 +34,10 @@ public class ChannelMapper {
         }
         List<ComChannelType> channelList = new ArrayList<>();
         for (Channel channel : channels) {
-            if (channel.getArchived() != null && channel.getArchived()) {
-                continue;
-            }
+
+            if (channel.getArchived() != null && channel.getArchived()) continue;
+            if(!channel.isPollChannel()) continue;
+
             ComChannelType comChannel = new ComChannelType();
             comChannel.setName(channel.getName());
             comChannel.setGuid(channel.getId().toString());
