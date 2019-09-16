@@ -256,6 +256,70 @@ public class InternalResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void updateAssetRetainMMSIAndCommentTest() {
+        Asset asset = AssetHelper.createBasicAsset();
+        asset.setComment("Update Asset Retain Comment");
+        AssetBO assetBo = new AssetBO();
+        assetBo.setAsset(asset);
+        AssetBO createdAsset = getWebTargetInternal()
+                .path("internal")
+                .path("/asset")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
+                .post(Entity.json(assetBo), AssetBO.class);
+
+        assertThat(createdAsset, is(CoreMatchers.notNullValue()));
+
+        createdAsset.getAsset().setMmsi(null);
+        createdAsset.getAsset().setComment(null);
+        assetBo.setAsset(createdAsset.getAsset());
+
+        AssetBO updatedAsset = getWebTargetInternal()
+                .path("internal")
+                .path("/asset")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
+                .post(Entity.json(assetBo), AssetBO.class);
+
+        assertThat(updatedAsset, is(CoreMatchers.notNullValue()));
+        assertEquals(asset.getComment(), updatedAsset.getAsset().getComment());
+        assertEquals(asset.getMmsi(), updatedAsset.getAsset().getMmsi());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void updateAssetOverwriteMMSIAndCommentTest() {
+        Asset asset = AssetHelper.createBasicAsset();
+        asset.setComment("Update Asset Discard This Comment");
+        AssetBO assetBo = new AssetBO();
+        assetBo.setAsset(asset);
+        AssetBO createdAsset = getWebTargetInternal()
+                .path("internal")
+                .path("/asset")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
+                .post(Entity.json(assetBo), AssetBO.class);
+
+        assertThat(createdAsset, is(CoreMatchers.notNullValue()));
+
+        createdAsset.getAsset().setMmsi("MMSI" + AssetHelper.getRandomIntegers(5));
+        createdAsset.getAsset().setComment("It Should Be This Comment");
+        assetBo.setAsset(createdAsset.getAsset());
+
+        AssetBO updatedAsset = getWebTargetInternal()
+                .path("internal")
+                .path("/asset")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
+                .post(Entity.json(assetBo), AssetBO.class);
+
+        assertThat(updatedAsset, is(CoreMatchers.notNullValue()));
+        assertEquals(createdAsset.getAsset().getComment(), updatedAsset.getAsset().getComment());
+        assertEquals(createdAsset.getAsset().getMmsi(), updatedAsset.getAsset().getMmsi());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void createPollTest() {      //just checking that the endpoint exists, there are better tests for the logic in pollRestResources
         PollRequestType input = new PollRequestType();
 

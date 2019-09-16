@@ -230,7 +230,7 @@ public class AssetServiceBean implements AssetService {
         if (asset.getId() == null) {
             return createAsset(asset, username);
         }
-        return updateAsset(asset, username, "");
+        return updateAsset(asset, username, asset.getComment());
     }
 
     @Override
@@ -243,6 +243,9 @@ public class AssetServiceBean implements AssetService {
         Asset existingAsset = getAssetByCfrIrcs(createAssetId(asset));
         if (existingAsset != null) {
             asset.setId(existingAsset.getId());
+
+            asset.setMmsi(asset.getMmsi() == null ? existingAsset.getMmsi() : asset.getMmsi());                     //to save values we already have and dont get from the external source
+            asset.setComment(asset.getComment() == null ? existingAsset.getComment() : asset.getComment());
         }
         if (!AssetComparator.assetEquals(asset, existingAsset)) {
             asset = upsertAsset(asset, username);
