@@ -3,12 +3,17 @@ package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListPagination;
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginCapability;
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginCapabilityType;
+import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPluginCapability;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollProgram;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.util.DateUtils;
@@ -22,11 +27,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -70,6 +79,82 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(input), CreatePollResultDto.class);
+
+        assertNotNull(createdPoll);
+
+        //TODO: Change when we get the message system working in a sane way
+        assertEquals(1, createdPoll.getSentPolls().size() + createdPoll.getUnsentPolls().size());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createConfigurationPollTest() {
+        PollRequestType pollRequest = new PollRequestType();
+        Asset asset = createAndRestBasicAsset();
+
+        MobileTerminal mt = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mt.setAsset(asset);
+
+        MobileTerminal createdMT = getWebTargetExternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mt), MobileTerminal.class);
+
+        PluginCapability configurable = new PluginCapability();
+        configurable.setName(PluginCapabilityType.CONFIGURABLE);
+        configurable.setValue("TRUE");
+
+        PluginCapability pollable = new PluginCapability();
+        pollable.setName(PluginCapabilityType.POLLABLE);
+        pollable.setValue("TRUE");
+
+        PluginService pluginService = new PluginService();
+        pluginService.setLabelName("Thrane&Thrane");
+        pluginService.setServiceName("eu.europa.ec.fisheries.uvms.plugins.inmarsat");
+        pluginService.setInactive(false);
+        pluginService.setSatelliteType("INMARSAT_C");
+        pluginService.getCapability().add(configurable);
+        pluginService.getCapability().add(pollable);
+
+        List<MobileTerminalPlugin> pluginList = getWebTargetExternal()
+                .path("plugin")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(Collections.singletonList(pluginService)),
+                        new GenericType<List<MobileTerminalPlugin>>() {});
+
+        assertNotNull(pluginList);
+
+        PollMobileTerminal pmt = new PollMobileTerminal();
+        pmt.setComChannelId(createdMT.getChannels().iterator().next().getId().toString());
+        pmt.setConnectId(createdMT.getAsset().getId().toString());
+        pmt.setMobileTerminalId(createdMT.getId().toString());
+        pollRequest.getMobileTerminals().add(pmt);
+
+        PollAttribute attrFrequency = new PollAttribute();
+        attrFrequency.setKey(PollAttributeType.REPORT_FREQUENCY);
+        attrFrequency.setValue("11000");
+
+        PollAttribute attrGracePeriod = new PollAttribute();
+        attrGracePeriod.setKey(PollAttributeType.GRACE_PERIOD);
+        attrGracePeriod.setValue("11020");
+
+        PollAttribute attrInPortGrace = new PollAttribute();
+        attrInPortGrace.setKey(PollAttributeType.IN_PORT_GRACE);
+        attrInPortGrace.setValue("11040");
+
+        pollRequest.getAttributes().addAll(Arrays.asList(attrFrequency, attrGracePeriod, attrInPortGrace));
+
+        pollRequest.setPollType(PollType.CONFIGURATION_POLL);
+        pollRequest.setComment("Test Comment");
+        pollRequest.setUserName("Test User");
+
+        CreatePollResultDto createdPoll = getWebTargetExternal()
+                .path("/poll")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(pollRequest), CreatePollResultDto.class);
 
         assertNotNull(createdPoll);
 
