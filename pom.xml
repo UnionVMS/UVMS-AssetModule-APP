@@ -1,69 +1,69 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <name>asset</name>
+	<modelVersion>4.0.0</modelVersion>
+	<name>asset</name>
 
-    <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-    <artifactId>asset</artifactId>
-    <version>4.0.22-SNAPSHOT</version>
-    <packaging>pom</packaging>
+	<groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
+	<artifactId>asset</artifactId>
+	<version>4.0.24-SNAPSHOT</version>
+	<packaging>pom</packaging>
 
-    <parent>
-        <groupId>fish.focus.uvms.maven</groupId>
-        <artifactId>uvms-pom</artifactId>
-        <version>1.21</version>
-    </parent>
+	<parent>
+		<groupId>fish.focus.uvms.maven</groupId>
+		<artifactId>uvms-pom</artifactId>
+		<version>1.21</version>
+	</parent>
 
-    <properties>
-    	<asset.api.check.against.version>4.0.18</asset.api.check.against.version>
-    	<docker.dev.version>3.25.0</docker.dev.version>
-        <audit.model.version>4.0.8</audit.model.version>
-        <javaee.version>8.0</javaee.version>
+	<properties>
+		<asset.api.check.against.version>4.0.18</asset.api.check.against.version>
+		<docker.dev.version>3.25.0</docker.dev.version>
+		<audit.model.version>4.0.10</audit.model.version>
+		<javaee.version>8.0</javaee.version>
 
-        <hibernate.version>5.1.9.Final</hibernate.version>
+		<hibernate.version>5.1.9.Final</hibernate.version>
 
-        <usm4uvms.version>4.0.14-W14-J8</usm4uvms.version>
-        <uvms.config.version>4.1-W14J8</uvms.config.version>
-        <uvms.common.version>3.3-W14J8</uvms.common.version>
 
-        <project.scm.id>github</project.scm.id>
-    </properties>
+		<usm4uvms.version>4.0.15.1-SNAPSHOT</usm4uvms.version>
+		<uvms.config.version>4.2-SNAPSHOT</uvms.config.version>
+		<uvms.common.version>3.4-SNAPSHOT</uvms.common.version>
+		<project.scm.id>github</project.scm.id>
+	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-api</artifactId>
-            <version>${javaee.version}</version>
-            <scope>provided</scope>
+			<version>${javaee.version}</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
-    <dependencyManagement>
-        <dependencies>
-        	<dependency>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
 				<groupId>fish.focus.uvms.maven</groupId>
 				<artifactId>uvms-pom-gis-deps</artifactId>
 				<version>1.21</version>
 				<type>pom</type>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.hibernate</groupId>
-                        <artifactId>hibernate-core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.hibernate</groupId>
-                        <artifactId>hibernate-entitymanager</artifactId>
-                    </exclusion>
-                </exclusions>
+				<exclusions>
+					<exclusion>
+						<groupId>org.hibernate</groupId>
+						<artifactId>hibernate-core</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.hibernate</groupId>
+						<artifactId>hibernate-entitymanager</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-core</artifactId>
-                <version>${hibernate.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-entitymanager</artifactId>
-                <version>${hibernate.version}</version>
-            </dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-core</artifactId>
+				<version>${hibernate.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-entitymanager</artifactId>
+				<version>${hibernate.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>fish.focus.uvms.maven</groupId>
 				<artifactId>uvms-pom-logging-deps</artifactId>
@@ -88,87 +88,126 @@
 				<version>1.21</version>
 				<type>pom</type>
 			</dependency>
-        </dependencies>
-    </dependencyManagement>
+		</dependencies>
+	</dependencyManagement>
 
-    <repositories>
-        <repository>
-            <id>focus-repo</id>
-            <name>Focus nexus repository</name>
-            <url>http://nexus.focus.fish/nexus</url>
-        </repository>
-    </repositories>
+	<repositories>
+		<repository>
+			<id>focus-repo</id>
+			<name>Focus nexus repository</name>
+			<url>http://nexus.focus.fish/nexus</url>
+		</repository>
+	</repositories>
 
-    <distributionManagement>
-        <repository>
-            <id>focus-releases</id>
-            <name>UnionVms Repository</name>
-            <url>http://nexus.focus.fish/nexus/content/repositories/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>focus-snapshots</id>
-            <name>UnionVms Snapshot Repository</name>
-            <url>http://nexus.focus.fish/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
+	<distributionManagement>
+		<repository>
+			<id>focus-releases</id>
+			<name>UnionVms Repository</name>
+			<url>http://nexus.focus.fish/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>focus-snapshots</id>
+			<name>UnionVms Snapshot Repository</name>
+			<url>http://nexus.focus.fish/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
-    <scm>
-        <connection>scm:git:https://github.com/UnionVMS/UVMS-AssetModule-APP.git</connection>
-        <tag>HEAD</tag>
-    </scm>
+	<scm>
+		<connection>scm:git:https://github.com/UnionVMS/UVMS-AssetModule-APP.git</connection>
+		<tag>HEAD</tag>
+	</scm>
 
-    <profiles>
-        <!-- enforce-jdk-version -->
-        <profile>
-            <id>enforce-jdk-version</id>
-            <activation>
-                <!-- To disable profile, define property -Dfocus-pom.enforce.jdk.version.disabled=true -->
-                <property>
-                    <name>!focus-pom.enforce.jdk.version.disabled</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-enforcer-plugin</artifactId>
-                        <inherited>false</inherited>
-                        <executions>
-                            <execution>
-                                <id>enforce-jdk-version</id>
-                                <goals>
-                                    <goal>enforce</goal>
-                                </goals>
-                                <configuration>
-                                    <rules>
-                                        <enforceBytecodeVersion>
-                                            <maxJdkVersion>${focus-pom.java.version}</maxJdkVersion>
-                                            <!-- NOTE: xstream do contain support for multiple jdk:s -->
-                                            <excludes>
-                                                <exclude>com.thoughtworks.xstream:xstream</exclude>
-                                            </excludes>
-                                        </enforceBytecodeVersion>
-                                    </rules>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
-    <modules>
-        <module>ejb-client</module>
-        <module>model</module>
-        <module>LIQUIBASE</module>
-        <module>domain</module>
-        <module>rest</module>
-        <module>service</module>
-        <module>message</module>
-        <module>message-impl</module>
-        <module>module</module>
-        <module>message-mock</module>
-    </modules>
+	<profiles>
+		<!-- enforce-jdk-version -->
+		<profile>
+			<id>enforce-jdk-version</id>
+			<activation>
+				<!-- To disable profile, define property -Dfocus-pom.enforce.jdk.version.disabled=true -->
+				<property>
+					<name>!focus-pom.enforce.jdk.version.disabled</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-enforcer-plugin</artifactId>
+						<inherited>false</inherited>
+						<executions>
+							<execution>
+								<id>enforce-jdk-version</id>
+								<goals>
+									<goal>enforce</goal>
+								</goals>
+								<configuration>
+									<rules>
+										<enforceBytecodeVersion>
+											<maxJdkVersion>${focus-pom.java.version}</maxJdkVersion>
+											<!-- NOTE: xstream do contain support for multiple jdk:s -->
+											<excludes>
+												<exclude>com.thoughtworks.xstream:xstream</exclude>
+											</excludes>
+										</enforceBytecodeVersion>
+									</rules>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											properties-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.0-alpha-2,)
+										</versionRange>
+										<goals>
+											<goal>
+												write-project-properties
+											</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	<modules>
+		<module>ejb-client</module>
+		<module>model</module>
+		<module>LIQUIBASE</module>
+		<module>domain</module>
+		<module>rest</module>
+		<module>service</module>
+		<module>message</module>
+		<module>message-impl</module>
+		<module>module</module>
+		<module>message-mock</module>
+	</modules>
 
 </project>
