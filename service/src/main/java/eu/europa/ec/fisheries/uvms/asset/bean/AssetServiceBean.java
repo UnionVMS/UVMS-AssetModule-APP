@@ -135,9 +135,16 @@ public class AssetServiceBean implements AssetService {
 
         List<Asset> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, searchFields, dynamic, includeInactivated);
         // force to load children. FetchType.EAGER didn't work.
+        List<MobileTerminal> terminalList = new ArrayList<>();
         assetEntityList.forEach(asset -> {
             if(asset.getMobileTerminals() != null) {
-                asset.getMobileTerminals().size();
+                List<MobileTerminal> terminals = asset.getMobileTerminals();
+                terminals.forEach(mt -> {
+                    MobileTerminal byId = mobileTerminalService.getMobileTerminalEntityById(mt.getId());
+                    terminalList.add(byId);
+                });
+                asset.getMobileTerminals().clear();
+                asset.getMobileTerminals().addAll(terminalList);
             }
         });
         AssetListResponse listAssetResponse = new AssetListResponse();
