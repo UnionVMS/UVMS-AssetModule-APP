@@ -101,7 +101,7 @@ public class AssetConfigResource {
             return Response.ok(list).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting plugins ] {}", ex.getStackTrace());
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
 
