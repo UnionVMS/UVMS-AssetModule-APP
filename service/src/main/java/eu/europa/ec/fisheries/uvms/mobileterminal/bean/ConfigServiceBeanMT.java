@@ -283,4 +283,8 @@ public class ConfigServiceBeanMT {
         }
         return dnids;
     }
+    
+    public List<MobileTerminalPlugin> getMobileTerminalPlugins() {
+        return mobileTerminalPluginDao.getPluginList();
+    }
 }
