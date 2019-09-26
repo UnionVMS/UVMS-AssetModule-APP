@@ -1,6 +1,9 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
@@ -50,6 +53,7 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.*;
           @NamedQuery(name = ASSET_MICRO_ASSET_BY_LIST, query = "SELECT new eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset(a.id, a.flagStateCode, a.name, a.vesselType, a.ircs, a.cfr, a.externalMarking, a.lengthOverAll ) FROM Asset a WHERE a.id in :idList"),
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Asset implements Serializable {
 
     public static final String ASSET_FIND_BY_CFR = "Asset.findByCfr";
@@ -272,7 +276,7 @@ public class Asset implements Serializable {
     @Column(name = "prodorgname")
     private String prodOrgName;
 
-    @JsonIgnoreProperties(value = {"asset"}, allowSetters = true)
+    @JsonIdentityReference(alwaysAsId = true)
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "asset", cascade = {CascadeType.REFRESH})
     private List<MobileTerminal> mobileTerminals;
 
