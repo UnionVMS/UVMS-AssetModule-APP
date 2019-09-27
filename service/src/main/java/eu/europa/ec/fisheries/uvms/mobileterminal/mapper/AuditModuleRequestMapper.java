@@ -52,12 +52,15 @@ public class AuditModuleRequestMapper {
 
     public static String mapAuditLogPollCreated(PollType pollType, String guid, String comment, String username)  {
         AuditObjectTypeEnum pollTypeEnum;
-        switch (pollType){
+        switch (pollType) {
             case PROGRAM_POLL:
                 pollTypeEnum = AuditObjectTypeEnum.PROGRAM_POLL;
                 break;
             case AUTOMATIC_POLL:
                 pollTypeEnum = AuditObjectTypeEnum.AUTOMATIC_POLL;
+                break;
+            case CONFIGURATION_POLL:
+                pollTypeEnum = AuditObjectTypeEnum.CONFIGURATION_POLL;
                 break;
             default:
                 pollTypeEnum = AuditObjectTypeEnum.POLL;
