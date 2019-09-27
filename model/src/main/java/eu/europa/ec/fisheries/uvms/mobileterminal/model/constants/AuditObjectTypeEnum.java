@@ -15,7 +15,8 @@ public enum AuditObjectTypeEnum {
     MOBILE_TERMINAL("Mobile Terminal"),
     POLL("Poll"),
     PROGRAM_POLL("Program poll"),
-    AUTOMATIC_POLL("Automatic poll");
+    AUTOMATIC_POLL("Automatic poll"),
+    CONFIGURATION_POLL("Configuration poll");
 
     private String value;
 
