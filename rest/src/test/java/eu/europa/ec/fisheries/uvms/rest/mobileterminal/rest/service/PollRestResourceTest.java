@@ -88,6 +88,51 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void createPollUsingOnlyAssetTest() {
+        Asset asset = createAndRestBasicAsset();
+        MobileTerminal createdMT = createAndRestMobileTerminal(asset);
+
+
+
+        CreatePollResultDto createdPoll = getWebTargetExternal()
+                .path("poll")
+                .path("createPollForAsset")
+                .path(asset.getId().toString())
+                .queryParam("comment", "Test comment")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(""), CreatePollResultDto.class);
+
+        assertNotNull(createdPoll);
+
+        //TODO: Change when we get the message system working in a sane way
+        assertEquals(1, createdPoll.getSentPolls().size() + createdPoll.getUnsentPolls().size());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createPollUsingOnlyAssetWOaMTTest() {
+        Asset asset = createAndRestBasicAsset();
+
+
+
+        Response response = getWebTargetExternal()
+                .path("poll")
+                .path("createPollForAsset")
+                .path(asset.getId().toString())
+                .queryParam("comment", "Test comment")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(""), Response.class);
+
+        assertNotNull(response);
+        assertEquals(500, response.getStatus());
+        String jsonResponse = response.readEntity(String.class);
+        assertTrue(jsonResponse, jsonResponse.contains("No active MT for this asset, unable to poll"));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void createConfigurationPollTest() {
         PollRequestType pollRequest = new PollRequestType();
         Asset asset = createAndRestBasicAsset();

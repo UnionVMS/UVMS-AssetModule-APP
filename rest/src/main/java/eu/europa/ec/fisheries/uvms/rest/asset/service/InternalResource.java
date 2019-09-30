@@ -13,7 +13,9 @@ package eu.europa.ec.fisheries.uvms.rest.asset.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollMobileTerminal;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.CustomCodesService;
@@ -23,8 +25,11 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.asset.dto.*;
+import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
@@ -282,10 +287,26 @@ public class InternalResource {
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response createPoll(PollRequestType createPoll) {
         try {
-            CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(createPoll, createPoll.getUserName());
+            CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(createPoll);
             return Response.ok(createPollResultDto.isUnsentPoll()).build();
         } catch (Exception ex) {
             LOG.error("[ Error when creating poll {}] {}",createPoll, ex);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
+        }
+    }
+
+    @Inject
+    MobileTerminalServiceBean mtServiceBean;
+
+    @POST
+    @Path("createPollForAsset/{id}")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
+    public Response createPollForAsset(@PathParam("id") String assetId, @QueryParam("username") String username, @QueryParam("comment") String comment) {
+        try {
+            UUID asset = UUID.fromString(assetId);
+            return Response.ok(pollServiceBean.createPollForAsset(asset, PollType.AUTOMATIC_POLL, username, comment)).build();
+        } catch (Exception ex) {
+            LOG.error("[ Error when creating poll for {}] {}",assetId, ex);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }

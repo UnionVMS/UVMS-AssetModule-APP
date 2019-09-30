@@ -64,7 +64,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     public void createPoll()  {
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
         PollRequestType pollRequestType = testPollHelper.createPollRequestType();
-        CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(pollRequestType, "TEST");
+        CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(pollRequestType);
         assertNotNull(createPollResultDto);
     }
 
@@ -75,7 +75,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         PollRequestType pollRequestType = helper_createPollRequestType(PollType.MANUAL_POLL);
 
         // create a poll
-        CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(pollRequestType, "TEST");
+        CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(pollRequestType);
         em.flush();
 
         if(createPollResultDto.getSentPolls().size() == 0 && createPollResultDto.getUnsentPolls().size() == 0) {
@@ -89,7 +89,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         try {
             System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "true");
             PollRequestType pollRequestType = testPollHelper.createPollRequestType();
-            pollServiceBean.createPoll(pollRequestType, "TEST");
+            pollServiceBean.createPoll(pollRequestType);
             Assert.fail();
         }
         catch(Throwable t){

@@ -37,6 +37,7 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.ws.rs.core.Response;
 import java.util.*;
 
 @Stateless
@@ -47,6 +48,9 @@ public class PollServiceBean {
 
     @Inject
     private AuditProducer auditProducer;
+
+    @Inject
+    private MobileTerminalServiceBean mobileTerminalServiceBean;
 
     @EJB
     private PluginServiceBean sendPollService;
@@ -63,16 +67,40 @@ public class PollServiceBean {
     @EJB
     private ChannelDaoBean channelDao;
 
-    public CreatePollResultDto createPoll(PollRequestType poll, String username) {
+    public CreatePollResultDto createPollForAsset(UUID assetId, PollType pollType, String username, String comment){
+        MobileTerminal mt = mobileTerminalServiceBean.getActiveMTForAsset(assetId);
 
-        List<PollResponseType> createdPolls = createPolls(poll, username);
+        if(mt == null){
+            throw new IllegalArgumentException("No active MT for this asset, unable to poll");    //if we dont have an MT it is very hard to poll it.....
+        }
+        Channel channel = mobileTerminalServiceBean.getPollableChannel(mt);
+        if(channel == null){
+            throw new IllegalArgumentException("No pollable channel for this active MT, unable to poll");    //if we dont have a channel it is very hard to poll it.....
+        }
+
+        PollRequestType prt = new PollRequestType();
+        prt.setPollType(pollType);
+        PollMobileTerminal pollMobileTerminal = new PollMobileTerminal();
+        pollMobileTerminal.setConnectId(assetId.toString());
+        pollMobileTerminal.setMobileTerminalId(mt.getId().toString());
+        pollMobileTerminal.setComChannelId(channel.getId().toString());
+        prt.setUserName(username);
+        prt.setComment(comment);
+        prt.getMobileTerminals().add(pollMobileTerminal);
+
+        return createPoll(prt);
+    }
+
+    public CreatePollResultDto createPoll(PollRequestType poll) {
+
+        List<PollResponseType> createdPolls = createPolls(poll);
         List<String> unsentPolls = new ArrayList<>();
         List<String> sentPolls = new ArrayList<>();
         for (PollResponseType createdPoll : createdPolls) {
             if (PollType.PROGRAM_POLL.equals(createdPoll.getPollType())) {
                 unsentPolls.add(createdPoll.getPollId().getGuid());
             } else {
-                AcknowledgeTypeType ack = sendPollService.sendPoll(createdPoll, username);
+                AcknowledgeTypeType ack = sendPollService.sendPoll(createdPoll);
                 switch (ack) {
                     case NOK:
                         unsentPolls.add(createdPoll.getPollId().getGuid());
@@ -83,7 +111,7 @@ public class PollServiceBean {
                 }
             }
             try {
-                String auditData = AuditModuleRequestMapper.mapAuditLogPollCreated(createdPoll.getPollType(), createdPoll.getPollId().getGuid(), createdPoll.getComment(), username);
+                String auditData = AuditModuleRequestMapper.mapAuditLogPollCreated(createdPoll.getPollType(), createdPoll.getPollId().getGuid(), createdPoll.getComment(), createdPoll.getUserName());
                 auditProducer.sendModuleMessage(auditData);
             } catch (Exception e) {
                 LOG.error("Failed to send audit log message! Poll with guid {} was created", createdPoll.getPollId().getGuid());
@@ -184,7 +212,7 @@ public class PollServiceBean {
         }
     }
 
-    public List<PollResponseType> createPolls(PollRequestType pollRequest, String username) {
+    public List<PollResponseType> createPolls(PollRequestType pollRequest) {
         if (pollRequest == null || pollRequest.getPollType() == null) {
             throw new NullPointerException("No polls to create");
         }
@@ -197,6 +225,7 @@ public class PollServiceBean {
             throw new IllegalArgumentException("No mobile terminals for " + pollRequest.getPollType());
         }
 
+        String username = pollRequest.getUserName();
         List<PollResponseType> responseList;
         Map<Poll, MobileTerminal> pollMobileTerminalMap;
         switch (pollRequest.getPollType()) {

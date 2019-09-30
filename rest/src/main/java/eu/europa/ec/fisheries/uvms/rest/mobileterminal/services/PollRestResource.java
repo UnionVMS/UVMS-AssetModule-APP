@@ -13,10 +13,7 @@ package eu.europa.ec.fisheries.uvms.rest.mobileterminal.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollListQuery;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollableQuery;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollProgramDaoBean;
@@ -40,6 +37,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.UUID;
 
 @Path("/poll")
 @Stateless
@@ -67,10 +65,24 @@ public class PollRestResource {
     public Response createPoll(PollRequestType createPoll) {
         LOG.info("Create poll invoked in rest layer:{}",createPoll);
         try {
-            CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(createPoll, request.getRemoteUser());
+            CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(createPoll);
             return Response.ok(createPollResultDto).build();
         } catch (Exception ex) {
             LOG.error("[ Error when creating poll {}] {}",createPoll, ex.getStackTrace());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
+        }
+    }
+
+    @POST
+    @Path("createPollForAsset/{id}")
+    @RequiresFeature(UnionVMSFeature.managePolls)
+    public Response createPollForAsset(@PathParam("id") String assetId, @QueryParam("comment") String comment) {
+        try {
+            UUID asset = UUID.fromString(assetId);
+            String username = request.getRemoteUser();
+            return Response.ok(pollServiceBean.createPollForAsset(asset, PollType.MANUAL_POLL, username, comment)).build();
+        } catch (Exception ex) {
+            LOG.error("[ Error when creating poll for {}] {}",assetId, ex);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }

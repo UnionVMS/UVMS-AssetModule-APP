@@ -42,7 +42,7 @@ public class PluginServiceBeanIntTest extends TransactionalTests {
 
         PollResponseType pollResponseType = createPollResponseType();
 
-        AcknowledgeTypeType ack = pluginService.sendPoll(pollResponseType, USERNAME);
+        AcknowledgeTypeType ack = pluginService.sendPoll(pollResponseType);
         assertNotNull(ack);
         /*
           This sends a message to exchange, since we don't have exchange running we mock the response
