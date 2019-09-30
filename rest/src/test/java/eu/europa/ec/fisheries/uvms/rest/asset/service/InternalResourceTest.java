@@ -1,5 +1,7 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollMobileTerminal;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType;
@@ -7,9 +9,12 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -338,5 +343,40 @@ public class InternalResourceTest extends AbstractAssetRestTest {
 
         assertNotNull(response);
         assertEquals(500, response.getStatus());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createPollUsingOnlyAssetTest() throws JsonProcessingException {      //just checking that the endpoint exists, there are better tests for the logic in pollRestResources
+        Asset asset = AssetHelper.createBasicAsset();
+        asset = getWebTargetInternal()
+                .path("/asset")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
+                .post(Entity.json(asset), Asset.class);
+        MobileTerminal mt = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mt.setAsset(asset);
+
+        ObjectMapper om = new ObjectMapper();           //for some reason serializing the mt gives a stack overflow error while serializing using the client, so we do it manually b4 instead
+        String json = om.writeValueAsString(mt);
+
+        Response mtResponse = getWebTargetInternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
+                .post(Entity.json(json), Response.class);
+        assertEquals(200, mtResponse.getStatus());
+
+        CreatePollResultDto response = getWebTargetInternal()
+                .path("/internal")
+                .path("createPollForAsset")
+                .path(asset.getId().toString())
+                .queryParam("username", "Test User")
+                .queryParam("comment", "Test comment")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
+                .post(Entity.json(""), CreatePollResultDto.class);
+
+        assertNotNull(response);
     }
 }

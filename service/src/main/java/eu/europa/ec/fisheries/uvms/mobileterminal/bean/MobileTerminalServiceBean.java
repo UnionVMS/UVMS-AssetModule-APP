@@ -258,6 +258,25 @@ public class MobileTerminalServiceBean {
         return revisions;
     }
 
+    public MobileTerminal getActiveMTForAsset(UUID assetId){
+        Asset asset = assetDao.getAssetById(assetId);
+        for (MobileTerminal mobileTerminal : asset.getMobileTerminals()) {
+            if(!mobileTerminal.getInactivated()){
+                return mobileTerminal;
+            }
+        }
+        return null;
+    }
+
+    public Channel getPollableChannel(MobileTerminal mt){
+        for (Channel channel : mt.getChannels()) {
+            if(channel.isPollChannel()){
+                return channel;
+            }
+        }
+        return null;
+    }
+
     public PollChannelListDto getPollableMobileTerminal(PollableQuery query) {
 
         PollChannelListDto channelListDto = new PollChannelListDto();
