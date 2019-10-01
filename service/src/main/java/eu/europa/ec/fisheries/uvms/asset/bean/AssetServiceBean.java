@@ -135,17 +135,8 @@ public class AssetServiceBean implements AssetService {
 
         List<Asset> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, searchFields, dynamic, includeInactivated);
         // force to load children. FetchType.EAGER didn't work.
-        List<MobileTerminal> terminalList = new ArrayList<>();
         assetEntityList.forEach(asset -> {
-            if(asset.getMobileTerminals() != null) {
-                List<MobileTerminal> terminals = asset.getMobileTerminals();
-                terminals.forEach(mt -> {
-                    MobileTerminal byId = mobileTerminalService.getMobileTerminalEntityById(mt.getId());
-                    terminalList.add(byId);
-                });
-                asset.getMobileTerminals().clear();
-                asset.getMobileTerminals().addAll(terminalList);
-            }
+            asset.getMobileTerminals().size();
         });
         AssetListResponse listAssetResponse = new AssetListResponse();
         listAssetResponse.setCurrentPage(page);
@@ -207,7 +198,9 @@ public class AssetServiceBean implements AssetService {
         asset.setEventCode(EventCode.MOD.value());
         asset.setComment(comment);
         asset.getMobileTerminals(); // instantiate list
-        return assetDao.updateAsset(asset);
+        Asset updatedAsset = assetDao.updateAsset(asset);
+        updatedAsset.getMobileTerminals().stream().forEach(mt -> mt.setUpdatetime(OffsetDateTime.now()));
+        return updatedAsset;
     }
 
     private void checkIdentifierNullValues(Asset asset) {

@@ -7,6 +7,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetRemapMapping;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchFieldType;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
+import org.hibernate.Session;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.exception.AuditException;
@@ -20,6 +21,10 @@ import org.hibernate.envers.query.criteria.MatchMode;
 
 import javax.ejb.Stateless;
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.math.BigInteger;
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -140,7 +145,7 @@ public class AssetDao {
 
     public Long getAssetCount(List<SearchKeyValue> searchFields, Boolean isDynamic, boolean includeInactivated) {
         try {
-            AuditQuery query = createQuery(searchFields, isDynamic, includeInactivated);
+            AuditQuery query = createAuditQuery(searchFields, isDynamic, includeInactivated);
             return (Long) query.addProjection(AuditEntity.id().count()).getSingleResult();
         } catch (AuditException e) {
             return 0L;
@@ -151,7 +156,7 @@ public class AssetDao {
     public List<Asset> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize, List<SearchKeyValue> searchFields,
                                                    boolean isDynamic, boolean includeInactivated) {
         try {
-            AuditQuery query = createQuery(searchFields, isDynamic, includeInactivated);
+            AuditQuery query = createAuditQuery(searchFields, isDynamic, includeInactivated);
             query.setFirstResult(pageSize * (pageNumber - 1));
             query.setMaxResults(pageSize);
             return query.getResultList();
@@ -160,7 +165,7 @@ public class AssetDao {
         }
     }
 
-    private AuditQuery createQuery(List<SearchKeyValue> searchFields, boolean isDynamic, boolean includeInactivated) {
+    private AuditQuery createAuditQuery(List<SearchKeyValue> searchFields, boolean isDynamic, boolean includeInactivated) {
         AuditReader auditReader = AuditReaderFactory.get(em);
 
         AuditQuery query;

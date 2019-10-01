@@ -23,6 +23,8 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
@@ -791,6 +793,120 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         assertEquals(2, output.getAssetList().size());
         assertTrue(output.getAssetList().stream().anyMatch(a -> a.getId().equals(createdAssetSwe.getId())));
         assertTrue(output.getAssetList().stream().anyMatch(a -> a.getId().equals(createdAssetDnk.getId())));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getTwoAssetsWithAMTEachMakeSureTheyOnlyHaveOneMTEachTest() {
+        String name = UUID.randomUUID().toString();
+        Asset asset1 = AssetHelper.createBasicAsset();
+        asset1.setName(name);
+        Asset createdAsset1 = sendAssetToCreation(asset1);
+        MobileTerminal mt1 = MobileTerminalTestHelper.createRestMobileTerminal(getWebTargetExternal(), createdAsset1, getTokenExternal());
+
+        Asset asset2 = AssetHelper.createBasicAsset();
+        asset2.setName(name);
+        Asset createdAsset2 = sendAssetToCreation(asset2);
+        MobileTerminal mt2 = MobileTerminalTestHelper.createRestMobileTerminal(getWebTargetExternal(), createdAsset2, getTokenExternal());
+
+        AssetQuery assetQuery = new AssetQuery();
+        List<String> nameList = new ArrayList<>();
+        nameList.add(name);
+        assetQuery.setName(nameList);
+
+        AssetListResponse output = getWebTargetExternal()
+                .path("asset")
+                .path("list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(assetQuery), AssetListResponse.class);
+
+        assertNotNull(output);
+        assertFalse(output.getAssetList().isEmpty());
+        assertEquals(2, output.getAssetList().size());
+        assertTrue(output.getAssetList().stream().anyMatch(a -> a.getId().equals(createdAsset1.getId())));
+        assertTrue(output.getAssetList().stream().anyMatch(a -> a.getId().equals(createdAsset2.getId())));
+
+        assertEquals(1, output.getAssetList().get(0).getMobileTerminals().size());
+        assertEquals(mt1.getId(), output.getAssetList().get(0).getMobileTerminals().get(0).getId());
+        assertEquals(1, output.getAssetList().get(1).getMobileTerminals().size());
+        assertEquals(mt2.getId(), output.getAssetList().get(1).getMobileTerminals().get(0).getId());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetAfterUpdatingMTMakeSureWeGotTheLatestMTTest() {
+        String name = UUID.randomUUID().toString();
+        Asset asset = AssetHelper.createBasicAsset();
+        asset.setName(name);
+        Asset createdAsset = sendAssetToCreation(asset);
+        MobileTerminal mt = MobileTerminalTestHelper.createRestMobileTerminal(getWebTargetExternal(), createdAsset, getTokenExternal());
+        UUID mtHistoryId1 = mt.getHistoryId();
+        mt.setComment("Updated comment");
+        mt = MobileTerminalTestHelper.restMobileTerminalUpdate(getWebTargetExternal(), mt, getTokenExternal());
+
+
+        AssetQuery assetQuery = new AssetQuery();
+        List<String> nameList = new ArrayList<>();
+        nameList.add(name);
+        assetQuery.setName(nameList);
+
+        AssetListResponse output = getWebTargetExternal()
+                .path("asset")
+                .path("list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(assetQuery), AssetListResponse.class);
+
+        assertNotNull(output);
+        assertFalse(output.getAssetList().isEmpty());
+        assertEquals(1, output.getAssetList().size());
+        assertTrue(output.getAssetList().stream().anyMatch(a -> a.getId().equals(createdAsset.getId())));
+
+        assertEquals(1, output.getAssetList().get(0).getMobileTerminals().size());
+        assertEquals(mt.getId(), output.getAssetList().get(0).getMobileTerminals().get(0).getId());
+        assertEquals(mt.getHistoryId(), output.getAssetList().get(0).getMobileTerminals().get(0).getHistoryId());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetAfterAttatchingUpdatingAndThenUnattachingAMTTest() {
+        String name = UUID.randomUUID().toString();
+        Asset asset = AssetHelper.createBasicAsset();
+        asset.setName(name);
+        Asset createdAsset = sendAssetToCreation(asset);
+        MobileTerminal mt = MobileTerminalTestHelper.createRestMobileTerminal(getWebTargetExternal(), createdAsset, getTokenExternal());
+        UUID mtHistoryId1 = mt.getHistoryId();
+        mt.setComment("Updated comment");
+        mt = MobileTerminalTestHelper.restMobileTerminalUpdate(getWebTargetExternal(), mt, getTokenExternal());
+
+        MobileTerminal responseUnAssign = getWebTargetExternal()
+                .path("/mobileterminal/unassign")
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .queryParam("connectId", createdAsset.getId())
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(mt.getId()), MobileTerminal.class);
+
+
+        AssetQuery assetQuery = new AssetQuery();
+        List<String> nameList = new ArrayList<>();
+        nameList.add(name);
+        assetQuery.setName(nameList);
+
+        AssetListResponse output = getWebTargetExternal()
+                .path("asset")
+                .path("list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(assetQuery), AssetListResponse.class);
+
+        assertNotNull(output);
+        assertFalse(output.getAssetList().isEmpty());
+        assertEquals(1, output.getAssetList().size());
+        assertTrue(output.getAssetList().stream().anyMatch(a -> a.getId().equals(createdAsset.getId())));
+
+        assertEquals(0, output.getAssetList().get(0).getMobileTerminals().size());
     }
 
 
