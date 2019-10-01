@@ -38,6 +38,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.ws.rs.NotFoundException;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -135,6 +136,10 @@ public class MobileTerminalServiceBean {
         MobileTerminal updatedTerminal;
         if (oldTerminal.getMobileTerminalType() != null) {
             updatedTerminal = terminalDao.updateMobileTerminal(mobileTerminal);
+            Asset asset = updatedTerminal.getAsset();
+            if(asset != null){
+                asset.setUpdateTime(OffsetDateTime.now());
+            }
 
         } else {
             throw new UnsupportedOperationException("Update - Not supported mobile terminal type");

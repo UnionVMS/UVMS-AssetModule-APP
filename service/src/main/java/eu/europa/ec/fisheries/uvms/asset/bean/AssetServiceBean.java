@@ -198,7 +198,9 @@ public class AssetServiceBean implements AssetService {
         asset.setEventCode(EventCode.MOD.value());
         asset.setComment(comment);
         asset.getMobileTerminals(); // instantiate list
-        return assetDao.updateAsset(asset);
+        Asset updatedAsset = assetDao.updateAsset(asset);
+        updatedAsset.getMobileTerminals().stream().forEach(mt -> mt.setUpdatetime(OffsetDateTime.now()));
+        return updatedAsset;
     }
 
     private void checkIdentifierNullValues(Asset asset) {
