@@ -204,7 +204,7 @@ public class PollServiceBean {
         if (terminal.getArchived()) {
             throw new IllegalStateException("Terminal is archived");
         }
-        if (terminal.getInactivated()) {
+        if (!terminal.getActive()) {
             throw new IllegalStateException("Terminal is inactive");
         }
         if (terminal.getPlugin() != null && terminal.getPlugin().getPluginInactive()) {

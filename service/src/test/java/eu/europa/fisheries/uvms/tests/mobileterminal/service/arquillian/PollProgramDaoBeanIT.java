@@ -370,7 +370,7 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
         mt.setPlugin(mtp);
         mt.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
         mt.setArchived(false);
-        mt.setInactivated(false);
+        mt.setActive(true);
 
         MobileTerminal mobileTerminal = terminalDaoBean.createMobileTerminal(mt);
         if (mobileTerminal != null) return mobileTerminal;

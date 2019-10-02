@@ -232,14 +232,14 @@ public class MobileTerminalServiceBean {
 
         switch (status) {
             case ACTIVE:
-                mobileTerminal.setInactivated(false);
+                mobileTerminal.setActive(true);
                 break;
             case INACTIVE:
-                mobileTerminal.setInactivated(true);
+                mobileTerminal.setActive(false);
                 break;
             case ARCHIVE:
                 mobileTerminal.setArchived(true);
-                mobileTerminal.setInactivated(true);
+                mobileTerminal.setActive(false);
                 mobileTerminal.setAsset(null);
                 break;
             case UNARCHIVE:
@@ -266,7 +266,7 @@ public class MobileTerminalServiceBean {
     public MobileTerminal getActiveMTForAsset(UUID assetId){
         Asset asset = assetDao.getAssetById(assetId);
         for (MobileTerminal mobileTerminal : asset.getMobileTerminals()) {
-            if(!mobileTerminal.getInactivated()){
+            if(mobileTerminal.getActive()){
                 return mobileTerminal;
             }
         }

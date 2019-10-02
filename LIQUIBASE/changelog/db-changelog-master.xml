@@ -25,6 +25,7 @@
 	<include file="v6.0.65\drop_ocean_region_table.xml" relativeToChangelogFile="true"/>
 	<include file="v6.0.65\mt_add_ocean_region_columns.xml" relativeToChangelogFile="true"/>
 	<include file="v6.0.67\drop_inmarsatc_oceanregion_table.xml" relativeToChangelogFile="true"/>
+	<include file="v6.0.70\rename_inactivated_in_MT_to_active.xml" relativeToChangelogFile="true"/>
 
 
 </databaseChangeLog>

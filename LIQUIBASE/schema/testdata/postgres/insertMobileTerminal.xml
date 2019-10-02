@@ -22,7 +22,7 @@
         <insert tableName="mobileterminal">
             <column name="id" value="00000000-0000-0000-0000-000000000001"/>
             <column name="archived" valueBoolean="1"/>
-            <column name="inactivated" valueBoolean="1"/>
+            <column name="inactivated" valueBoolean="0"/>
             <column name="plugin_id" value="00000000-0000-0000-0000-000000000003"/> <!-- iridium -->
             <column name="type" value="IRIDIUM"/>
             <column name="source" value="INTERNAL"/>
@@ -68,7 +68,7 @@
         <insert tableName="mobileterminal">
             <column name="id" value="00000000-0000-0000-0000-000000000002"/>
             <column name="archived" valueBoolean="0"/>
-            <column name="inactivated" valueBoolean="0"/>
+            <column name="inactivated" valueBoolean="1"/>
             <column name="plugin_id" value="00000000-0000-0000-0000-000000000001"/> <!-- twostage -->
             <column name="type" value="INMARSAT_C"/>
             <column name="source" value="INTERNAL"/>

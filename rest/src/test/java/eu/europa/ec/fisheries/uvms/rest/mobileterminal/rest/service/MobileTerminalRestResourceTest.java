@@ -590,7 +590,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mt), MobileTerminal.class);
 
-        assertFalse(created.getInactivated());
+        assertTrue(created.getActive());
         assertFalse(created.getArchived());
 
         MobileTerminal response = getWebTargetExternal()
@@ -602,7 +602,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .readEntity(MobileTerminal.class);
 
         assertNotNull(response);
-        assertTrue(response.getInactivated());
+        assertFalse(response.getActive());
 
         response = getWebTargetExternal()
                 .path("mobileterminal/status/activate")
@@ -612,7 +612,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .put(Entity.json(created.getId()))
                 .readEntity(MobileTerminal.class);
 
-        assertFalse(response.getInactivated());
+        assertTrue(response.getActive());
 
         response = getWebTargetExternal()
                 .path("mobileterminal/status/remove")
@@ -622,7 +622,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .put(Entity.json(created.getId()))
                 .readEntity(MobileTerminal.class);
 
-        assertTrue(response.getInactivated());
+        assertFalse(response.getActive());
         assertTrue(response.getArchived());
 
         //checking the events as well
@@ -647,7 +647,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mt), MobileTerminal.class);
 
-        assertFalse(created.getInactivated());
+        assertTrue(created.getActive());
         assertFalse(created.getArchived());
 
         MobileTerminal response = getWebTargetExternal()
