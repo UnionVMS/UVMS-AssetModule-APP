@@ -138,16 +138,6 @@ public class MobileTerminal implements Serializable {
 	@JoinColumn(name="asset_id", foreignKey = @ForeignKey(name = "MobileTerminal_Asset_FK"))
 	private Asset asset;
 
-	@JsonIgnore
-	public String getAssetId() {
-		return assetId;
-	}
-
-	@JsonSetter("assetId")
-	public void setAssetId(String assetId) {
-		this.assetId = assetId;
-	}
-
 	@Transient
 	private String assetId;
 
@@ -286,6 +276,16 @@ public class MobileTerminal implements Serializable {
 
 	public void setAsset(Asset asset) {
 		this.asset = asset;
+	}
+
+	@JsonIgnore
+	public String getAssetId() {
+		return assetId;
+	}
+
+	@JsonSetter("assetId")
+	public void setAssetId(String assetId) {
+		this.assetId = assetId;
 	}
 
 	public String getSatelliteNumber() {

@@ -281,16 +281,6 @@ public class Asset implements Serializable {
     @Transient
     private List<String> mobileTerminalIdList;
 
-    @JsonIgnore
-    public List<String> getMobileTerminalIdList() {
-        return mobileTerminalIdList;
-    }
-
-    @JsonSetter("mobileTerminalIds")
-    public void setMobileTerminalIdList(List<String> mobileTerminalIdList) {
-        this.mobileTerminalIdList = mobileTerminalIdList;
-    }
-
     @Size(max = 255)
     @Column(name = "comment")
     private String comment;
@@ -753,6 +743,16 @@ public class Asset implements Serializable {
 
     public void setMobileTerminals(List<MobileTerminal> mobileTerminals) {
         this.mobileTerminals = mobileTerminals;
+    }
+
+    @JsonIgnore
+    public List<String> getMobileTerminalIdList() {
+        return mobileTerminalIdList;
+    }
+
+    @JsonSetter("mobileTerminalIds")
+    public void setMobileTerminalIdList(List<String> mobileTerminalIdList) {
+        this.mobileTerminalIdList = mobileTerminalIdList;
     }
 
     public String getComment() {
