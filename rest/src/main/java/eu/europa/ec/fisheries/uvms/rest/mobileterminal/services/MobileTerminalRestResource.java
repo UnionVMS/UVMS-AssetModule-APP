@@ -73,6 +73,7 @@ public class MobileTerminalRestResource {
 
             MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(terminal.getPlugin().getPluginServiceName());
             terminal.setPlugin(plugin);
+            terminal = mobileTerminalService.populateAssetInMT(terminal);
 
             MobileTerminal mobileTerminal = mobileTerminalService.createMobileTerminal(terminal, request.getRemoteUser());
             String returnString = objectMapper().writeValueAsString(mobileTerminal);
@@ -107,6 +108,7 @@ public class MobileTerminalRestResource {
             terminal.setSource(TerminalSourceEnum.INTERNAL);
             mobileTerminalService.assertTerminalHasSerialNumber(terminal);
             MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(terminal.getPlugin().getPluginServiceName());
+            terminal = mobileTerminalService.populateAssetInMT(terminal);
 
             MobileTerminal mobileTerminal = mobileTerminalService.updateMobileTerminal(terminal, comment, request.getRemoteUser());
             String returnString = objectMapper().writeValueAsString(mobileTerminal);

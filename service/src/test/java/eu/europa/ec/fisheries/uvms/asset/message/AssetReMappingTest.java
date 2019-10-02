@@ -5,7 +5,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetRemapMapping;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 import eu.europa.ec.fisheries.wsdl.asset.types.CarrierSource;
-import eu.europa.fisheries.uvms.tests.TransactionalTests;
+import eu.europa.ec.fisheries.uvms.tests.TransactionalTests;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;

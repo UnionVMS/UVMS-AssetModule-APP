@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -106,8 +107,9 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         ObjectMapper om = new ObjectMapper();
         Asset fetchedAsset = om.readValue(fetchedAssetString, Asset.class);
         assertNotNull(fetchedAsset);
-        assertTrue(fetchedAsset.getMobileTerminals().size() == 1);
-        assertEquals(fetchedAsset.getMobileTerminals().get(0).getId(), createdMT.getId());
+        assertTrue(fetchedAsset.getMobileTerminalIdList().size() == 1);
+        assertEquals(createdMT.getId(), UUID.fromString(fetchedAsset.getMobileTerminalIdList().get(0)));
+
     }
 
 
@@ -125,6 +127,7 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mobileTerminal), MobileTerminal.class);
 
+        createdMT.setAsset(createIdOnlyAsset(createdMT.getAssetId()));
         createdMT.setComment("Updated comment 1");
         MobileTerminal updated = getWebTargetExternal()
                 .path("mobileterminal")
@@ -162,9 +165,8 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         ObjectMapper om = new ObjectMapper();
         Asset fetchedAsset = om.readValue(fetchedAssetString, Asset.class);
         assertNotNull(fetchedAsset);
-        assertTrue(fetchedAsset.getMobileTerminals().size() == 1);
-        assertEquals(fetchedAsset.getMobileTerminals().get(0).getId(), createdMT.getId());
-        assertEquals(createdMT.getComment(), fetchedAsset.getMobileTerminals().get(0).getComment());
+        assertTrue(fetchedAsset.getMobileTerminalIdList().size() == 1);
+        assertEquals(createdMT.getId(), UUID.fromString(fetchedAsset.getMobileTerminalIdList().get(0)));
     }
 
 
@@ -182,6 +184,7 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mobileTerminal), MobileTerminal.class);
 
+        createdMT.setAsset(createIdOnlyAsset(createdMT.getAssetId()));
         createdMT.setComment("Updated comment 1");
         MobileTerminal updatedMT = getWebTargetExternal()
                 .path("mobileterminal")
@@ -234,9 +237,8 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         fetchedAsset = om.readValue(fetchedAssetString, Asset.class);
 
         assertNotNull(fetchedAsset);
-        assertTrue(fetchedAsset.getMobileTerminals().size() == 1);
-        assertEquals(fetchedAsset.getMobileTerminals().get(0).getId(), createdMT.getId());
-        assertEquals(createdMT.getComment(), fetchedAsset.getMobileTerminals().get(0).getComment());
+        assertTrue(fetchedAsset.getMobileTerminalIdList().size() == 1);
+        assertEquals(createdMT.getId(), UUID.fromString(fetchedAsset.getMobileTerminalIdList().get(0)));
         assertEquals(updatedAsset.getOwnerName(), fetchedAsset.getOwnerName());
     }
 
@@ -297,6 +299,25 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void updateAssetRetainConnectedMTTest() {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = restCreateAsset(asset);
+
+        MobileTerminal mt = MobileTerminalTestHelper.createRestMobileTerminal(getWebTargetExternal(), createdAsset, getTokenExternal());
+
+        String newName = "NewAssetName";
+        createdAsset.setName(newName);
+        createdAsset.getMobileTerminals().add(mt);
+        Asset updatedAsset = restUpdateAsset(createdAsset);
+
+        assertThat(updatedAsset.getName(), is(newName));
+        assertEquals(EventCode.MOD.value(), updatedAsset.getEventCode());
+        assertEquals(mt.getId(), UUID.fromString(updatedAsset.getMobileTerminalIdList().get(0)));
+
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void updateAssetNonExistingAssetTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Response response = getWebTargetExternal()
@@ -352,7 +373,7 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .put(Entity.json(createdMT.getId()), MobileTerminal.class);
 
-        assertNotNull(assignedMT.getAsset().getId());
+        assertNotNull(assignedMT.getAssetId());
 
         Asset fetchedAsset = getWebTargetExternal()
                 .path("asset")
@@ -361,7 +382,8 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(Asset.class);
 
-        assertTrue(fetchedAsset.getMobileTerminals().size() > 0);
+        assertTrue(fetchedAsset.getMobileTerminalIdList().size() > 0);
+        fetchedAsset.setMobileTerminals(createListOfIdOnlyMTs(fetchedAsset.getMobileTerminalIdList()));
 
         Asset archivedAsset = getWebTargetExternal()
                 .path("asset")
@@ -583,7 +605,7 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
                 .get(Asset.class);
 
         assertNotNull(fetchedAsset);
-        assertTrue(fetchedAsset.getMobileTerminals().size() > 0);
+        assertTrue(fetchedAsset.getMobileTerminalIdList().size() > 0);
     }
 
     @Test
@@ -714,14 +736,11 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(Asset.class);
 
-        List<MobileTerminal> mtList = assetHistory1.getMobileTerminals();
-        assertEquals(1, mtList.size());
-
-        MobileTerminal mt1 = mtList.get(0);
-        assertEquals("A", mt1.getAntenna());
-        assertEquals("assign", mt1.getComment());
+        //List<MobileTerminal> mtList = assetHistory1.getMobileTerminals();
+        assertEquals(1, assetHistory1.getMobileTerminalIdList().size());
 
         // Update MobileTerminal
+        assignedMT.setAsset(createIdOnlyAsset(assignedMT.getAssetId()));
         assignedMT.setAntenna("New Improved Antenna");
         getWebTargetExternal()
                 .path("mobileterminal")
@@ -748,12 +767,8 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(Asset.class);
 
-        List<MobileTerminal> mobileTerminals = assetHistory2.getMobileTerminals();
-        assertEquals(1, mobileTerminals.size());
+        assertEquals(1, assetHistory2.getMobileTerminalIdList().size());
 
-        MobileTerminal mt2 = mobileTerminals.get(0);
-        assertEquals("New Improved Antenna", mt2.getAntenna());
-        assertEquals("New Comment", mt2.getComment());
     }
 
     @Test
@@ -933,6 +948,22 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .put(Entity.json(asset), Asset.class);
         return updatedAsset;
+    }
+
+    private Asset createIdOnlyAsset(String id){
+        Asset asset = new Asset();
+        asset.setId(UUID.fromString(id));
+        return asset;
+    }
+
+    private List<MobileTerminal> createListOfIdOnlyMTs(List<String> idList){
+        List<MobileTerminal> mtList = new ArrayList<>();
+        for (String s : idList) {
+            MobileTerminal mt = new MobileTerminal();
+            mt.setId(UUID.fromString(s));
+            mtList.add(mt);
+        }
+        return mtList;
     }
 
 }

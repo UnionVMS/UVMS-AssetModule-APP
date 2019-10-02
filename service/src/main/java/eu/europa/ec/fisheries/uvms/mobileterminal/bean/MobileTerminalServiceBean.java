@@ -161,6 +161,13 @@ public class MobileTerminalServiceBean {
         return updatedTerminal;
     }
 
+    public MobileTerminal populateAssetInMT(MobileTerminal mt) {
+        if(mt.getAssetId() != null){
+            mt.setAsset(assetDao.getAssetById(UUID.fromString(mt.getAssetId())));
+        }
+        return mt;
+    }
+
     public MobileTerminal assignMobileTerminal(UUID connectId, UUID mobileTerminalId, String comment, String username) {
         MobileTerminal terminalAssign = assignMobileTerminalToCarrier(connectId, mobileTerminalId, comment, username);
         try {
@@ -502,10 +509,10 @@ public class MobileTerminalServiceBean {
 
     public List<Map<UUID, List<MobileTerminal>>> getMobileTerminalRevisionsByAssetId(UUID assetId, int maxNbr) {
         List<Map<UUID, List<MobileTerminal>>> revisionList = new ArrayList<>();
-        Map<UUID, List<MobileTerminal>> revisionMap = new HashMap<>();
         List<MobileTerminal> mtList = terminalDao.getMobileTerminalRevisionByAssetId(assetId);
 
         mtList.forEach(terminal -> {
+            Map<UUID, List<MobileTerminal>> revisionMap = new HashMap<>();
             List<MobileTerminal> revisions = terminalDao.getMobileTerminalRevisionById(terminal.getId());
             revisions.sort(Comparator.comparing(MobileTerminal::getCreateTime));
             if (revisions.size() > maxNbr) {
