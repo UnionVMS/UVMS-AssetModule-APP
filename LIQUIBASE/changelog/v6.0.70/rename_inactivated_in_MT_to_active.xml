@@ -26,6 +26,10 @@
                       oldColumnName="inactivated"
                       newColumnName="active"
         />
+
+        <update tableName="mobileterminal">
+            <column name="active" valueComputed="(select not active from mobileterminal mt where mt.id = mobileterminal.id)"/>
+        </update>
     </changeSet>
 
 </databaseChangeLog>
