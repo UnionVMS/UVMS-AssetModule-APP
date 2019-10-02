@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
@@ -272,9 +272,14 @@ public class Asset implements Serializable {
     @Column(name = "prodorgname")
     private String prodOrgName;
 
-    @JsonIgnoreProperties(value = {"asset"}, allowSetters = true)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    @JsonProperty("mobileTerminalIds")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "asset", cascade = {CascadeType.REFRESH})
     private List<MobileTerminal> mobileTerminals;
+
+    @Transient
+    private List<String> mobileTerminalIdList;
 
     @Size(max = 255)
     @Column(name = "comment")
@@ -738,6 +743,16 @@ public class Asset implements Serializable {
 
     public void setMobileTerminals(List<MobileTerminal> mobileTerminals) {
         this.mobileTerminals = mobileTerminals;
+    }
+
+    @JsonIgnore
+    public List<String> getMobileTerminalIdList() {
+        return mobileTerminalIdList;
+    }
+
+    @JsonSetter("mobileTerminalIds")
+    public void setMobileTerminalIdList(List<String> mobileTerminalIdList) {
+        this.mobileTerminalIdList = mobileTerminalIdList;
     }
 
     public String getComment() {

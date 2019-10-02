@@ -209,7 +209,8 @@ public class AssetRestResource {
                                 @ApiParam(value="Update comment", required=true)  @QueryParam("comment") String comment) {
         try {
             String remoteUser = servletRequest.getRemoteUser();
-            Asset updatedAsset = assetService.updateAsset(asset, remoteUser, comment);
+            Asset assetWithMT = assetService.populateMTListInAsset(asset);
+            Asset updatedAsset = assetService.updateAsset(assetWithMT, remoteUser, comment);
             String returnString = objectMapper().writeValueAsString(updatedAsset);
             return Response.status(200).entity(returnString).type(MediaType.APPLICATION_JSON )
                     .header("MDC", MDC.get("requestId")).build();
@@ -231,7 +232,8 @@ public class AssetRestResource {
                                  @QueryParam("comment") String comment) {
         try {
             String remoteUser = servletRequest.getRemoteUser();
-            Asset archivedAsset = assetService.archiveAsset(asset, remoteUser, comment);
+            Asset assetWithMT = assetService.populateMTListInAsset(asset);
+            Asset archivedAsset = assetService.archiveAsset(assetWithMT, remoteUser, comment);
             String returnString = objectMapper().writeValueAsString(archivedAsset);
             return Response.ok(returnString).build();
         } catch (Exception e) {

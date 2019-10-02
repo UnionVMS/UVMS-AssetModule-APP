@@ -222,6 +222,7 @@ public interface AssetService {
 
     void removeMovementConnectInMovement(String assetId);
 
+    Asset populateMTListInAsset(Asset asset);
 
 }
 

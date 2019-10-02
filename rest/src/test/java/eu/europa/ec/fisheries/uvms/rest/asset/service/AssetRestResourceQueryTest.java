@@ -827,10 +827,10 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         assertTrue(output.getAssetList().stream().anyMatch(a -> a.getId().equals(createdAsset1.getId())));
         assertTrue(output.getAssetList().stream().anyMatch(a -> a.getId().equals(createdAsset2.getId())));
 
-        assertEquals(1, output.getAssetList().get(0).getMobileTerminals().size());
-        assertEquals(mt1.getId(), output.getAssetList().get(0).getMobileTerminals().get(0).getId());
-        assertEquals(1, output.getAssetList().get(1).getMobileTerminals().size());
-        assertEquals(mt2.getId(), output.getAssetList().get(1).getMobileTerminals().get(0).getId());
+        assertEquals(1, output.getAssetList().get(0).getMobileTerminalIdList().size());
+        assertEquals(mt1.getId(), UUID.fromString(output.getAssetList().get(0).getMobileTerminalIdList().get(0)));
+        assertEquals(1, output.getAssetList().get(1).getMobileTerminalIdList().size());
+        assertEquals(mt2.getId(), UUID.fromString(output.getAssetList().get(1).getMobileTerminalIdList().get(0)));
     }
 
     @Test
@@ -841,7 +841,9 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         asset.setName(name);
         Asset createdAsset = sendAssetToCreation(asset);
         MobileTerminal mt = MobileTerminalTestHelper.createRestMobileTerminal(getWebTargetExternal(), createdAsset, getTokenExternal());
+        assertEquals(createdAsset.getId(), UUID.fromString(mt.getAssetId()));
         UUID mtHistoryId1 = mt.getHistoryId();
+        mt.setAsset(createdAsset);  //this bc of how the serialization works ie it will only send the id of the connected asset in the asset id field
         mt.setComment("Updated comment");
         mt = MobileTerminalTestHelper.restMobileTerminalUpdate(getWebTargetExternal(), mt, getTokenExternal());
 
@@ -863,9 +865,8 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         assertEquals(1, output.getAssetList().size());
         assertTrue(output.getAssetList().stream().anyMatch(a -> a.getId().equals(createdAsset.getId())));
 
-        assertEquals(1, output.getAssetList().get(0).getMobileTerminals().size());
-        assertEquals(mt.getId(), output.getAssetList().get(0).getMobileTerminals().get(0).getId());
-        assertEquals(mt.getHistoryId(), output.getAssetList().get(0).getMobileTerminals().get(0).getHistoryId());
+        assertEquals(1, output.getAssetList().get(0).getMobileTerminalIdList().size());
+        assertEquals(mt.getId(), UUID.fromString(output.getAssetList().get(0).getMobileTerminalIdList().get(0)));
     }
 
     @Test
@@ -876,8 +877,10 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         asset.setName(name);
         Asset createdAsset = sendAssetToCreation(asset);
         MobileTerminal mt = MobileTerminalTestHelper.createRestMobileTerminal(getWebTargetExternal(), createdAsset, getTokenExternal());
+        assertEquals(createdAsset.getId(), UUID.fromString(mt.getAssetId()));
         UUID mtHistoryId1 = mt.getHistoryId();
         mt.setComment("Updated comment");
+        mt.setAsset(createdAsset);
         mt = MobileTerminalTestHelper.restMobileTerminalUpdate(getWebTargetExternal(), mt, getTokenExternal());
 
         MobileTerminal responseUnAssign = getWebTargetExternal()
@@ -906,7 +909,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         assertEquals(1, output.getAssetList().size());
         assertTrue(output.getAssetList().stream().anyMatch(a -> a.getId().equals(createdAsset.getId())));
 
-        assertEquals(0, output.getAssetList().get(0).getMobileTerminals().size());
+        assertEquals(0, output.getAssetList().get(0).getMobileTerminalIdList().size());
     }
 
 

@@ -168,7 +168,8 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         assertNotNull(fetched);
         assertEquals(created.getId(), fetched.getId());
-        assertEquals(created.getAsset().getId(), fetched.getAsset().getId());
+        assertEquals(created.getAssetId(), fetched.getAssetId());
+
     }
 
     @Test
@@ -562,7 +563,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .put(Entity.json(created.getId()), MobileTerminal.class);
 
         assertNotNull(responseAssign);
-        assertNotNull(responseAssign.getAsset());
+        assertNotNull(responseAssign.getAssetId());
         assertEquals(created.getId(), responseAssign.getId());
 
         MobileTerminal responseUnAssign = getWebTargetExternal()
@@ -574,7 +575,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .put(Entity.json(created.getId()), MobileTerminal.class);
 
         assertNotNull(responseUnAssign);
-        assertNull(responseUnAssign.getAsset());
+        assertNull(responseUnAssign.getAssetId());
         assertEquals(created.getId(), responseUnAssign.getId());
     }
 
@@ -734,6 +735,10 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 });
 
         assertEquals(2, mtRevisions.size());
+        assertEquals(1, mtRevisions.get(0).size());
+        assertEquals(2, mtRevisions.get(0).get(created1.getId()).size());
+        assertEquals(1, mtRevisions.get(1).size());
+        assertEquals(3, mtRevisions.get(1).get(created2.getId()).size());
     }
 
     @Test

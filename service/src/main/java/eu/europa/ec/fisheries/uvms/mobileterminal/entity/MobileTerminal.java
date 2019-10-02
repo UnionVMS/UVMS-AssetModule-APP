@@ -11,7 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
@@ -131,9 +131,15 @@ public class MobileTerminal implements Serializable {
 	@OneToMany(mappedBy = "mobileTerminal", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Channel> channels;
 
+	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+	@JsonIdentityReference(alwaysAsId = true)
+	@JsonProperty("assetId")
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="asset_id", foreignKey = @ForeignKey(name = "MobileTerminal_Asset_FK"))
 	private Asset asset;
+
+	@Transient
+	private String assetId;
 
 	@Size(max = 255)
 	@Column(name = "comment")
@@ -270,6 +276,16 @@ public class MobileTerminal implements Serializable {
 
 	public void setAsset(Asset asset) {
 		this.asset = asset;
+	}
+
+	@JsonIgnore
+	public String getAssetId() {
+		return assetId;
+	}
+
+	@JsonSetter("assetId")
+	public void setAssetId(String assetId) {
+		this.assetId = assetId;
 	}
 
 	public String getSatelliteNumber() {

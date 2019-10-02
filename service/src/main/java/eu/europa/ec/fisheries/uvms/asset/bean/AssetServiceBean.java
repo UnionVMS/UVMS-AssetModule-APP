@@ -163,6 +163,16 @@ public class AssetServiceBean implements AssetService {
     }
 
     @Override
+    public Asset populateMTListInAsset(Asset asset) {
+        if(asset.getMobileTerminalIdList() != null && !asset.getMobileTerminalIdList().isEmpty()){
+            for (String s : asset.getMobileTerminalIdList()) {
+                asset.getMobileTerminals().add(mobileTerminalService.getMobileTerminalEntityById(UUID.fromString(s)));
+            }
+        }
+        return asset;
+    }
+
+    @Override
     public Asset archiveAsset(Asset asset, String username, String comment) {
         List<MobileTerminal> mtList = asset.getMobileTerminals();
         if(mtList != null && !mtList.isEmpty()) {

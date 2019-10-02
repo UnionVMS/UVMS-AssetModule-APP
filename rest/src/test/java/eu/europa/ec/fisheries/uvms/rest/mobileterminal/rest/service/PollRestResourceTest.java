@@ -66,7 +66,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         PollMobileTerminal pmt = new PollMobileTerminal();
         pmt.setComChannelId(createdMT.getChannels().iterator().next().getId().toString());
-        pmt.setConnectId(createdMT.getAsset().getId().toString());
+        pmt.setConnectId(createdMT.getAssetId());
         pmt.setMobileTerminalId(createdMT.getId().toString());
         input.getMobileTerminals().add(pmt);
 
@@ -173,7 +173,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         PollMobileTerminal pmt = new PollMobileTerminal();
         pmt.setComChannelId(createdMT.getChannels().iterator().next().getId().toString());
-        pmt.setConnectId(createdMT.getAsset().getId().toString());
+        pmt.setConnectId(createdMT.getAssetId());
         pmt.setMobileTerminalId(createdMT.getId().toString());
         pollRequest.getMobileTerminals().add(pmt);
 
@@ -317,7 +317,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         PollMobileTerminal pmt = new PollMobileTerminal();
         pmt.setComChannelId(createdMT.getChannels().iterator().next().getId().toString());
-        pmt.setConnectId(createdMT.getAsset().getId().toString());
+        pmt.setConnectId(createdMT.getAssetId());
         pmt.setMobileTerminalId(createdMT.getId().toString());
         pollRequestType.getMobileTerminals().add(pmt);
 
@@ -375,7 +375,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         PollMobileTerminal pmt = new PollMobileTerminal();
         pmt.setComChannelId(createdMT.getChannels().iterator().next().getId().toString());
-        pmt.setConnectId(createdMT.getAsset().getId().toString());
+        pmt.setConnectId(createdMT.getAssetId());
         pmt.setMobileTerminalId(createdMT.getId().toString());
         pollRequestType.getMobileTerminals().add(pmt);
 
@@ -439,7 +439,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         PollMobileTerminal pmt = new PollMobileTerminal();
         pmt.setComChannelId(createdMT.getChannels().iterator().next().getId().toString());
-        pmt.setConnectId(createdMT.getAsset().getId().toString());
+        pmt.setConnectId(createdMT.getAssetId());
         pmt.setMobileTerminalId(createdMT.getId().toString());
         pollRequestType.getMobileTerminals().add(pmt);
 
@@ -468,7 +468,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         PollMobileTerminal pmt2 = new PollMobileTerminal();
         pmt2.setComChannelId(createdMT2.getChannels().iterator().next().getId().toString());
-        pmt2.setConnectId(createdMT2.getAsset().getId().toString());
+        pmt2.setConnectId(createdMT2.getAssetId());
         pmt2.setMobileTerminalId(createdMT2.getId().toString());
         pollRequestType2.getMobileTerminals().add(pmt2);
 
@@ -533,7 +533,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         PollMobileTerminal pmt = new PollMobileTerminal();
         pmt.setComChannelId(createdMT.getChannels().iterator().next().getId().toString());
-        pmt.setConnectId(createdMT.getAsset().getId().toString());
+        pmt.setConnectId(createdMT.getAssetId());
         pmt.setMobileTerminalId(createdMT.getId().toString());
         pollRequestType.getMobileTerminals().add(pmt);
 
@@ -599,7 +599,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         PollRequestType pollRequestType = new PollRequestType();
         PollMobileTerminal pmt = new PollMobileTerminal();
         pmt.setComChannelId(mobileTerminal.getChannels().iterator().next().getId().toString());
-        pmt.setConnectId(mobileTerminal.getAsset().getId().toString());
+        pmt.setConnectId(mobileTerminal.getAssetId());
         pmt.setMobileTerminalId(mobileTerminal.getId().toString());
         pollRequestType.getMobileTerminals().add(pmt);
 
