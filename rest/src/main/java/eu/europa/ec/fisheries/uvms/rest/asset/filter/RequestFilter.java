@@ -61,6 +61,11 @@ public class RequestFilter implements Filter {
         response.setHeader(Constant.ACCESS_CONTROL_ALLOW_METHODS, Constant.ACCESS_CONTROL_ALLOWED_METHODS);
         response.setHeader(Constant.ACCESS_CONTROL_ALLOW_HEADERS, Constant.ACCESS_CONTROL_ALLOW_HEADERS_ALL);
 
+        if (httpServletRequest.getMethod().equals("OPTIONS")) {
+            response.setStatus(200);
+            return;
+        }
+        
         chain.doFilter(request, res);
     }
 
