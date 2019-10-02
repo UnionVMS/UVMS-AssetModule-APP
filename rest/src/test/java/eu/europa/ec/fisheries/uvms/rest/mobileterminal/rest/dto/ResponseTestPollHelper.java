@@ -33,7 +33,7 @@ public class ResponseTestPollHelper {
         mt.setSource(TerminalSourceEnum.INTERNAL);
         mt.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
         mt.setArchived(false);
-        mt.setInactivated(false);
+        mt.setActive(true);
 
         Channel pollChannel = new Channel();
         pollChannel.setArchived(false);

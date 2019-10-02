@@ -38,6 +38,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.ws.rs.NotFoundException;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -135,6 +136,10 @@ public class MobileTerminalServiceBean {
         MobileTerminal updatedTerminal;
         if (oldTerminal.getMobileTerminalType() != null) {
             updatedTerminal = terminalDao.updateMobileTerminal(mobileTerminal);
+            Asset asset = updatedTerminal.getAsset();
+            if(asset != null){
+                asset.setUpdateTime(OffsetDateTime.now());
+            }
 
         } else {
             throw new UnsupportedOperationException("Update - Not supported mobile terminal type");
@@ -227,14 +232,14 @@ public class MobileTerminalServiceBean {
 
         switch (status) {
             case ACTIVE:
-                mobileTerminal.setInactivated(false);
+                mobileTerminal.setActive(true);
                 break;
             case INACTIVE:
-                mobileTerminal.setInactivated(true);
+                mobileTerminal.setActive(false);
                 break;
             case ARCHIVE:
                 mobileTerminal.setArchived(true);
-                mobileTerminal.setInactivated(true);
+                mobileTerminal.setActive(false);
                 mobileTerminal.setAsset(null);
                 break;
             case UNARCHIVE:
@@ -256,6 +261,25 @@ public class MobileTerminalServiceBean {
             return revisions.subList(0, maxNbr);
         }
         return revisions;
+    }
+
+    public MobileTerminal getActiveMTForAsset(UUID assetId){
+        Asset asset = assetDao.getAssetById(assetId);
+        for (MobileTerminal mobileTerminal : asset.getMobileTerminals()) {
+            if(mobileTerminal.getActive()){
+                return mobileTerminal;
+            }
+        }
+        return null;
+    }
+
+    public Channel getPollableChannel(MobileTerminal mt){
+        for (Channel channel : mt.getChannels()) {
+            if(channel.isPollChannel()){
+                return channel;
+            }
+        }
+        return null;
     }
 
     public PollChannelListDto getPollableMobileTerminal(PollableQuery query) {

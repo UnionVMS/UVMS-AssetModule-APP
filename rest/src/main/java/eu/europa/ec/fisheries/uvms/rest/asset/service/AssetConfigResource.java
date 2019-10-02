@@ -16,6 +16,7 @@ import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemType
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.SearchKey;
 import eu.europa.ec.fisheries.uvms.asset.bean.ConfigServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.ConfigServiceBeanMT;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTMobileTerminalConfig;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTMobileTerminalDeviceConfig;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTResponseDto;
@@ -89,6 +90,18 @@ public class AssetConfigResource {
         } catch (Exception ex) {
             LOG.error("[ Error when getting configTransponders ] {}", ex.getStackTrace());
             return MTErrorHandler.getFault(ex);
+        }
+    }
+    
+    @GET
+    @Path("/plugins")
+    public Response getPlugins() {
+        try {
+            List<MobileTerminalPlugin> list = configServiceMT.getMobileTerminalPlugins();
+            return Response.ok(list).build();
+        } catch (Exception ex) {
+            LOG.error("[ Error when getting plugins ] {}", ex.getStackTrace());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
 

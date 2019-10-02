@@ -119,4 +119,13 @@ public class MobileTerminalTestHelper {
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .post(Entity.json(mt), MobileTerminal.class);
     }
+
+    public static MobileTerminal restMobileTerminalUpdate(WebTarget webTarget, MobileTerminal mt, String token){
+        return webTarget
+                .path("mobileterminal")
+                .queryParam("comment", mt.getComment())
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .put(Entity.json(mt), MobileTerminal.class);
+    }
 }

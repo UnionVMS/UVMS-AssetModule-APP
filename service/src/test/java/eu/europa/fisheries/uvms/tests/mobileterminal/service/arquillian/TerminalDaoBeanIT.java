@@ -275,7 +275,7 @@ public class TerminalDaoBeanIT extends TransactionalTests {
             mt.setPlugin(mtp);
             mt.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
             mt.setArchived(false);
-            mt.setInactivated(false);
+            mt.setActive(true);
         return mt;
     }
 

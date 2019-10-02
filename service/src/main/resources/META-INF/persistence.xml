@@ -8,7 +8,7 @@
         <shared-cache-mode>ALL</shared-cache-mode>
         <properties>
             <property name="hibernate.dialect" value="${hibernate.dialect}"/>           
-            <property name="hibernate.cache.use_second_level_cache" value="true"/>
+            <!--property name="hibernate.cache.use_second_level_cache" value="true"/-->     <!-- Having this on causes the same MT to be serialized several times while asking for its connected asset  -->
             <property name="hibernate.generate_statistics" value="true"/>
             <!--<property name="hibernate.show_sql" value="true" />-->
             <!--<property name="hibernate.format_sql" value="true" />-->

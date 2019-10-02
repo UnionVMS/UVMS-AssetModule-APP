@@ -83,8 +83,8 @@ public class MobileTerminal implements Serializable {
 	@Column(name="archived")
 	private Boolean archived = false;
 
-	@Column(name="inactivated")
-	private Boolean inactivated = false;
+	@Column(name="active")
+	private Boolean active = true;
 
 	@Enumerated(EnumType.STRING)
 	@NotNull
@@ -203,12 +203,12 @@ public class MobileTerminal implements Serializable {
 		this.archived = archived;
 	}
 
-	public Boolean getInactivated() {
-		return inactivated;
+	public Boolean getActive() {
+		return active;
 	}
 
-	public void setInactivated(Boolean inactivated) {
-		this.inactivated = inactivated;
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 
 	public TerminalSourceEnum getSource() {
@@ -357,7 +357,7 @@ public class MobileTerminal implements Serializable {
 		return Objects.equals(id, that.id) &&
 				Objects.equals(historyId, that.historyId) &&
 				Objects.equals(archived, that.archived) &&
-				Objects.equals(inactivated, that.inactivated) &&
+				Objects.equals(active, that.active) &&
 				source == that.source &&
 				mobileTerminalType == that.mobileTerminalType &&
 				Objects.equals(updatetime, that.updatetime) &&

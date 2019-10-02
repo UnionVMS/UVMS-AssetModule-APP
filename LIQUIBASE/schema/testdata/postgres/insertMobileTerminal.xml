@@ -46,24 +46,6 @@
         </insert>
 
 
-
-
-        <!--<insert tableName="mobileterminalevent">-->
-            <!--<column name="id" value="00000000-0000-0000-0000-000000000001"/>-->
-            <!--<column name="comment" value="CREATED"/>-->
-            <!--<column name="updattime" value="${now}"/>-->
-            <!--<column name="upuser" value="osdjup"/>-->
-            <!--<column name="mobileterminal_id" value="00000000-0000-0000-0000-000000000001"/>-->
-            <!--<column name="eventtype" value="CREATE"/>-->
-            <!--<column name="chan_def" value="00000000-0000-0000-0000-000000000001"/>-->
-            <!--<column name="chan_conf" value="00000000-0000-0000-0000-000000000001"/>-->
-            <!--<column name="chan_poll" value="00000000-0000-0000-0000-000000000001"/>-->
-            <!--<column name="attributes" value="serialNumber=1122334455;"/>-->
-            <!--<column name="active" valueBoolean="1"/>-->
-        <!--</insert>-->
-
-
-
         <!-- Inmarsat-C -->
         <insert tableName="mobileterminal">
             <column name="id" value="00000000-0000-0000-0000-000000000002"/>
@@ -91,23 +73,7 @@
             <column name="member_number" value="0987654321"/>
             <column name="installed_by" value="testdata_iridium_installed_by"/>
         </insert>
-
-
-
-        <!--<insert tableName="mobileterminalevent">-->
-            <!--<column name="id" value="00000000-0000-0000-0000-000000000002"/>-->
-            <!--<column name="comment" value="CREATED"/>-->
-            <!--<column name="updattime" value="${now}"/>-->
-            <!--<column name="upuser" value="osdjup"/>-->
-            <!--<column name="mobileterminal_id" value="00000000-0000-0000-0000-000000000002"/>-->
-            <!--<column name="eventtype" value="CREATE"/>-->
-            <!--<column name="chan_def" value="00000000-0000-0000-0000-000000000002"/>-->
-            <!--<column name="chan_conf" value="00000000-0000-0000-0000-000000000002"/>-->
-            <!--<column name="chan_poll" value="00000000-0000-0000-0000-000000000002"/>-->
-            <!--<column name="attributes" value="transceiverType=A;serialNumber=1234567890;antenna=A;antennaSerialNumber=A123;softwareVersion=2.0;satelliteNumber=123456;answerBack=5;"/>-->
-            <!--<column name="active" valueBoolean="1"/>-->
-        <!--</insert>-->
-
+        
 
     </changeSet>
 

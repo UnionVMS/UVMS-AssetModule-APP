@@ -48,7 +48,7 @@ public class PollTimerTask implements Runnable{
                     pollService.inactivateProgramPoll(guid, "MobileTerminalPollTimer");
                     LOG.info("Poll program {} has expired. Status set to ARCHIVED.", guid);
                 } else {
-                    pollService.createPoll(PollDataSourceRequestMapper.mapCreatePollRequest(pollProgram), pollProgram.getUserName());
+                    pollService.createPoll(PollDataSourceRequestMapper.mapCreatePollRequest(pollProgram));
                     LOG.info("Poll created by poll program {}", guid);
                 }
             }
