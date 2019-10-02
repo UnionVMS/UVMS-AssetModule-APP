@@ -341,7 +341,7 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(terminal), MobileTerminal.class);
 
-        assertFalse(createdMT.getInactivated());
+        assertTrue(createdMT.getActive());
 
         MobileTerminal assignedMT = getWebTargetExternal()
                 .path("mobileterminal")
@@ -380,7 +380,7 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
                 .get(MobileTerminal.class);
 
         assertNull(fetchedMT.getAsset());
-        assertTrue(fetchedMT.getInactivated());
+        assertFalse(fetchedMT.getActive());
     }
 
     @Test

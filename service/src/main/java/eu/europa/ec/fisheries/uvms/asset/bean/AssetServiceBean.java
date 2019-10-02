@@ -546,7 +546,7 @@ public class AssetServiceBean implements AssetService {
         if (mobTerm.getId() != null) {
             resp.setMobileTerminalGuid(mobTerm.getId().toString());
         }
-        resp.setMobileTerminalIsInactive(mobTerm.getInactivated());
+        resp.setMobileTerminalIsInactive(!mobTerm.getActive());
 
         if (mobTerm.getChannels() != null) {
             Set<Channel> channels = mobTerm.getChannels();

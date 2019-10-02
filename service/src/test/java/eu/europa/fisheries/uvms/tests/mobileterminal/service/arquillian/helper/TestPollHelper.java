@@ -45,7 +45,7 @@ public class TestPollHelper {
         mobileTerminal.setSource(TerminalSourceEnum.INTERNAL);
         mobileTerminal.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
         mobileTerminal.setArchived(false);
-        mobileTerminal.setInactivated(false);
+        mobileTerminal.setActive(true);
 
         MobileTerminalPlugin mtp = new MobileTerminalPlugin();
         mtp.setPluginServiceName("eu.europa.ec.fisheries.uvms.plugins.inmarsat");
@@ -138,7 +138,7 @@ public class TestPollHelper {
         mt.setPlugin(mtp);
         mt.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
         mt.setArchived(false);
-        mt.setInactivated(false);
+        mt.setActive(true);
 
         // only set if true so we can see if code defaults to false
         if(aor_e) mt.setEastAtlanticOceanRegion(aor_e);
@@ -211,7 +211,7 @@ public class TestPollHelper {
         mt.setPlugin(mtp);
         mt.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
         mt.setArchived(false);
-        mt.setInactivated(false);
+        mt.setActive(true);
 
         Set<MobileTerminalPluginCapability> capabilityList = new HashSet<>();
         MobileTerminalPluginCapability mtpc = new MobileTerminalPluginCapability();
@@ -265,7 +265,7 @@ public class TestPollHelper {
         mobileTerminal.setSource(TerminalSourceEnum.INTERNAL);
         mobileTerminal.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
         mobileTerminal.setArchived(false);
-        mobileTerminal.setInactivated(false);
+        mobileTerminal.setActive(true);
         mobileTerminal.setAsset(asset);
 
         MobileTerminalPlugin mtp = new MobileTerminalPlugin();

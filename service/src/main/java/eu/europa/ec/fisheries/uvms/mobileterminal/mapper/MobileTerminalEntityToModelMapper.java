@@ -33,7 +33,7 @@ public class MobileTerminalEntityToModelMapper {
         }
 
         model.setType(entity.getMobileTerminalType().name());
-        model.setInactive(entity.getInactivated());
+        model.setInactive(!entity.getActive());
         model.setArchived(entity.getArchived());
         model.setId(new Long(entity.getCreateTime().toEpochSecond()).intValue());
 
