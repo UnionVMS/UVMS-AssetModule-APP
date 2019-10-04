@@ -355,10 +355,10 @@ public class MobileTerminalServiceBean {
     public MobileTerminal assignMobileTerminalToCarrier(UUID connectId, UUID mobileTerminalId, String comment, String username) {
 
         if (mobileTerminalId == null) {
-            throw new NullPointerException("No Mobile terminalId in request");
+            throw new IllegalArgumentException("No Mobile terminalId in request");
         }
         if (connectId == null) {
-            throw new NullPointerException("No connect id in request");
+            throw new IllegalArgumentException("No connect id in request");
         }
 
         Asset asset = assetDao.getAssetById(connectId);

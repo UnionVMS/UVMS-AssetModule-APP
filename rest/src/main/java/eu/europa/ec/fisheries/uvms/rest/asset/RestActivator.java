@@ -11,6 +11,10 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset;
 
+import eu.europa.ec.fisheries.uvms.rest.V2.mobileterminal.services.MobileTerminalRestResource2;
+import eu.europa.ec.fisheries.uvms.rest.V2.mobileterminal.services.PluginRestResource2;
+import eu.europa.ec.fisheries.uvms.rest.V2.mobileterminal.services.PollRestResource2;
+import eu.europa.ec.fisheries.uvms.rest.asset.V2.service.*;
 import eu.europa.ec.fisheries.uvms.rest.asset.filter.AssetRestExceptionMapper;
 import eu.europa.ec.fisheries.uvms.rest.asset.service.*;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.MobileTerminalRestResource;
@@ -43,6 +47,16 @@ public class RestActivator extends Application {
         set.add(PollRestResource.class);
         set.add(PluginRestResource.class);
         set.add(SSEResource.class);
+
+        //V2
+        set.add(AssetConfigRestResource2.class);
+        set.add(AssetGroupRestResource2.class);
+        set.add(AssetRestResource2.class);
+        set.add(CustomCodesRestResource2.class);
+        set.add(InternalRestResource2.class);
+        set.add(MobileTerminalRestResource2.class);
+        set.add(PluginRestResource2.class);
+        set.add(PollRestResource2.class);
     }
 
     @Override
