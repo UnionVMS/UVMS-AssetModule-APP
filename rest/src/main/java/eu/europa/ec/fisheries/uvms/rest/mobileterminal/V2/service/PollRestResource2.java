@@ -9,7 +9,7 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.rest.V2.mobileterminal.services;
+package eu.europa.ec.fisheries.uvms.rest.mobileterminal.V2.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -103,9 +103,9 @@ public class PollRestResource2 {
     }
 
     @GET
-    @Path("{id}/start/")
+    @Path("{pollProgramId}/start/")
     @RequiresFeature(UnionVMSFeature.managePolls)
-    public Response startProgramPoll(@PathParam("id") String pollId) {
+    public Response startProgramPoll(@PathParam("pollProgramId") String pollId) {
         LOG.info("Start poll invoked in rest layer:{}",pollId);
         try {
             PollResponseType pollResponse = pollServiceBean.startProgramPoll(pollId, request.getRemoteUser());
@@ -118,9 +118,9 @@ public class PollRestResource2 {
     }
 
     @GET
-    @Path("{id}/stop/")
+    @Path("{pollProgramId}/stop/")
     @RequiresFeature(UnionVMSFeature.managePolls)
-    public Response stopProgramPoll(@PathParam("id") String pollId) {
+    public Response stopProgramPoll(@PathParam("pollProgramId") String pollId) {
         LOG.info("Stop poll invoked in rest layer:{}",pollId);
         try {
             PollResponseType pollResponse = pollServiceBean.stopProgramPoll(pollId, request.getRemoteUser());
@@ -133,9 +133,9 @@ public class PollRestResource2 {
     }
 
     @GET
-    @Path("{id}/archive/")
+    @Path("{pollProgramId}/archive/")
     @RequiresFeature(UnionVMSFeature.managePolls)
-    public Response archiveProgramPoll(@PathParam("id") String pollId) { // This gives a poll the status "ARCHIVED"
+    public Response archiveProgramPoll(@PathParam("pollProgramId") String pollId) { // This gives a poll the status "ARCHIVED"
         LOG.info("Archive poll invoked in rest layer:{}",pollId);
         try {
             PollResponseType pollResponse = pollServiceBean.inactivateProgramPoll(pollId, request.getRemoteUser());
@@ -176,9 +176,9 @@ public class PollRestResource2 {
     }
 
     @GET
-    @Path("/program/{id}")
+    @Path("/program/{pollProgramId}")
     @RequiresFeature(UnionVMSFeature.viewMobileTerminalPolls)
-    public Response getPollProgram(@PathParam("id") String pollProgramId) {
+    public Response getPollProgram(@PathParam("pollProgramId") String pollProgramId) {
         try {
             PollProgram pollProgram = pollProgramDao.getPollProgramByGuid(pollProgramId);
             ObjectMapper objectMapper = new ObjectMapper();

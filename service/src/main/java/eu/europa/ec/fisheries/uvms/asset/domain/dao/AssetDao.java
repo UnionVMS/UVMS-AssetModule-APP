@@ -4,6 +4,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetRemapMapping;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchFieldType;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
@@ -371,5 +372,9 @@ public class AssetDao {
 
     public void deleteAssetMapping(AssetRemapMapping mapping) {
         em.remove(em.contains(mapping) ? mapping : em.merge(mapping));
+    }
+
+    public ContactInfo getContactById(UUID contactId){
+        return em.find(ContactInfo.class, contactId);
     }
 }

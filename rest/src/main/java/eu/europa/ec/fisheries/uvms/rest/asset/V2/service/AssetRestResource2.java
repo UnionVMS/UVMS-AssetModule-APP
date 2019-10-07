@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.asset.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
@@ -59,6 +60,9 @@ public class AssetRestResource2 {
 
     @Inject
     private AssetService assetService;
+
+    @Inject
+    private AssetDao assetDao;
 
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
     private ObjectMapper objectMapper(){
@@ -224,9 +228,9 @@ public class AssetRestResource2 {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when archiving asset"),
             @ApiResponse(code = 200, message = "Asset successfully archived") })
-    @Path("/{id}/archive")
+    @Path("/{assetId}/archive")
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response archiveAsset(@ApiParam(value="The asset to update", required=true)  UUID assetId,
+    public Response archiveAsset(@ApiParam(value="The asset to update", required=true)  @PathParam("assetId") UUID assetId,
                                  @ApiParam(value="Archive comment", required=true) @QueryParam("comment") String comment) {
         try {
             if(comment == null || comment.isEmpty()){
@@ -248,9 +252,9 @@ public class AssetRestResource2 {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when unarchiving asset"),
             @ApiResponse(code = 200, message = "Asset successfully unarchived") })
-    @Path("/{id}/unarchive")
+    @Path("/{assetId}/unarchive")
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response unarchiveAsset(@ApiParam(value="The asset to update", required=true)  final UUID assetId,
+    public Response unarchiveAsset(@ApiParam(value="The asset to update", required=true)  @PathParam("assetId") final UUID assetId,
                                  @ApiParam(value="Unarchive comment", required=true) @QueryParam("comment") String comment) {
 
         if(comment == null || comment.isEmpty()){
@@ -437,6 +441,18 @@ public class AssetRestResource2 {
         } catch (Exception e) {
             LOG.error("Error while getting contact info list for asset history. {}] ", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+        }
+    }
+
+    @GET
+    @Path("contact/{contactId}")
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public Response getContact(@PathParam("contactId") UUID contactId){
+        try{
+            return Response.ok(assetDao.getContactById(contactId)).header("MDC", MDC.get("requestId")).build();
+        }catch (Exception e){
+            LOG.error("Error while getting contact by id {}.  {}", contactId, e);
+            return Response.serverError().entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
 

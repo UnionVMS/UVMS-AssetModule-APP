@@ -9,7 +9,7 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.rest.V2.mobileterminal.services;
+package eu.europa.ec.fisheries.uvms.rest.mobileterminal.V2.service;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -185,9 +185,9 @@ public class MobileTerminalRestResource2 {
     }
 
     @GET
-    @Path("/{id}/history/")
+    @Path("/{mtId}/history/")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getMobileTerminalHistoryListByMobileTerminalId(@PathParam("id") UUID id, @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
+    public Response getMobileTerminalHistoryListByMobileTerminalId(@PathParam("mtId") UUID id, @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
         LOG.info("Get mobile terminal history by mobile terminal id invoked in rest layer.");
         try {
             List<MobileTerminal> mobileTerminalRevisions = mobileTerminalService.getMobileTerminalRevisions(id, maxNbr);

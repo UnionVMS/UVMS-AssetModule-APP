@@ -502,9 +502,13 @@ public class MobileTerminalServiceBean {
 
     public void inactivateAndUnlink(Asset asset, String comment, String username) {
         asset.getMobileTerminals().forEach(mt -> {
-            unAssignMobileTerminal(asset.getId(),mt.getId(), comment, username);
+            mt.setUpdateuser(username);
+            mt.setAsset(null);
+            mt.setComment(comment);
+            mt.setUpdatetime(OffsetDateTime.now());
             setStatusMobileTerminal(mt.getId(), comment, MobileTerminalStatus.INACTIVE, username);
         });
+        asset.getMobileTerminals().clear();
     }
 
     public List<Map<UUID, List<MobileTerminal>>> getMobileTerminalRevisionsByAssetId(UUID assetId, int maxNbr) {

@@ -11,9 +11,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset;
 
-import eu.europa.ec.fisheries.uvms.rest.V2.mobileterminal.services.MobileTerminalRestResource2;
-import eu.europa.ec.fisheries.uvms.rest.V2.mobileterminal.services.PluginRestResource2;
-import eu.europa.ec.fisheries.uvms.rest.V2.mobileterminal.services.PollRestResource2;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.V2.service.MobileTerminalRestResource2;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.V2.service.PluginRestResource2;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.V2.service.PollRestResource2;
 import eu.europa.ec.fisheries.uvms.rest.asset.V2.service.*;
 import eu.europa.ec.fisheries.uvms.rest.asset.filter.AssetRestExceptionMapper;
 import eu.europa.ec.fisheries.uvms.rest.asset.service.*;

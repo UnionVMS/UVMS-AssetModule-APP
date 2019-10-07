@@ -1,9 +1,8 @@
-package eu.europa.ec.fisheries.uvms.rest.V2.mobileterminal.services;
+package eu.europa.ec.fisheries.uvms.rest.mobileterminal.V2.service;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.ConfigServiceBeanMT;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
-import eu.europa.ec.fisheries.uvms.rest.asset.V2.service.AssetConfigRestResource2;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import org.apache.commons.lang3.exception.ExceptionUtils;

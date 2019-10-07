@@ -93,9 +93,9 @@ public class AssetGroupRestResource2 {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when retrieving AssetGroup list"),
             @ApiResponse(code = 200, message = "AssetGroup list successfully retrieved")})
-    @Path("/{id}")
+    @Path("/{assetGroupId}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetGroupById(@ApiParam(value = "AssetGroup Id", required = true) @PathParam(value = "id") final UUID id) {
+    public Response getAssetGroupById(@ApiParam(value = "AssetGroup Id", required = true) @PathParam(value = "assetGroupId") final UUID id) {
         try {
             AssetGroup assetGroup = assetGroupService.getAssetGroupById(id);
             String response = objectMapper().writeValueAsString(assetGroup);
@@ -161,9 +161,9 @@ public class AssetGroupRestResource2 {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when delete AssetGroup"),
             @ApiResponse(code = 200, message = "AssetGroup successfully deleted")})
-    @Path("/{id}")
+    @Path("/{assetGroupId}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response deleteAssetGroup(@ApiParam(value = "AssetGroup id", required = true) @PathParam(value = "id") final UUID id) {
+    public Response deleteAssetGroup(@ApiParam(value = "AssetGroup id", required = true) @PathParam(value = "assetGroupId") final UUID id) {
         try {
             String user = servletRequest.getRemoteUser();
             assetGroupService.deleteAssetGroupById(id, user);
@@ -179,9 +179,9 @@ public class AssetGroupRestResource2 {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when delete AssetGroup"),
             @ApiResponse(code = 200, message = "AssetGroup successfully deleted")})
-    @Path("/asset/{id}")
+    @Path("/asset/{assetId}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetGroupListByAssetId(@ApiParam(value = "Asset id", required = true) @PathParam(value = "id") UUID assetId) {
+    public Response getAssetGroupListByAssetId(@ApiParam(value = "Asset id", required = true) @PathParam(value = "assetId") UUID assetId) {
         try {
             List<AssetGroup> assetGroups = assetGroupService.getAssetGroupListByAssetId(assetId);
             String response = objectMapper().writeValueAsString(assetGroups);
@@ -197,9 +197,9 @@ public class AssetGroupRestResource2 {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when create AssetGroupField"),
             @ApiResponse(code = 200, message = "AssetGroupField successfully deleted")})
-    @Path("/{id}/field")
+    @Path("/{assetGroupId}/field")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response createAssetGroupField(@ApiParam(value = "Parent AssetGroup id", required = true) @PathParam(value = "id") UUID parentAssetGroupId,
+    public Response createAssetGroupField(@ApiParam(value = "Parent AssetGroup id", required = true) @PathParam(value = "assetGroupId") UUID parentAssetGroupId,
                                           @ApiParam(value = "The AssetGroupField to be created", required = true) AssetGroupField assetGroupField) {
         try {
             String user = servletRequest.getRemoteUser();
@@ -237,9 +237,9 @@ public class AssetGroupRestResource2 {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when get AssetGroupField"),
             @ApiResponse(code = 200, message = "AssetGroupField successfully fetched")})
-    @Path("/field/{id}")
+    @Path("/field/{assetGroupFieldId}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetGroupField(@ApiParam(value = "AssetgroupField id", required = true) @PathParam(value = "id")  UUID id) {
+    public Response getAssetGroupField(@ApiParam(value = "AssetgroupField id", required = true) @PathParam(value = "assetGroupFieldId")  UUID id) {
 
         try {
             AssetGroupField fetchedAssetGroupField = assetGroupService.getAssetGroupField(id);
@@ -256,9 +256,9 @@ public class AssetGroupRestResource2 {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when delete AssetGroupField"),
             @ApiResponse(code = 200, message = "AssetGroupField successfully deleted")})
-    @Path("/field/{id}")
+    @Path("/field/{assetGroupFieldId}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response deleteAssetGroupField(@ApiParam(value = "AssetGroupField id", required = true)   @PathParam(value = "id")  UUID assetGroupFieldId) {
+    public Response deleteAssetGroupField(@ApiParam(value = "AssetGroupField id", required = true)   @PathParam(value = "assetGroupFieldId")  UUID assetGroupFieldId) {
 
         try {
             String user = servletRequest.getRemoteUser();
@@ -276,9 +276,9 @@ public class AssetGroupRestResource2 {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when retrieving Assetgroupfields"),
             @ApiResponse(code = 200, message = "Assetgroupfields successfully retrieved")})
-    @Path("/{id}/fieldsForGroup")
+    @Path("/{assetGroupId}/fieldsForGroup")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response retrieveFieldsForGroup(@ApiParam(value = "AssetGroup id", required = true)  @PathParam(value = "id")  UUID assetGroupId) {
+    public Response retrieveFieldsForGroup(@ApiParam(value = "AssetGroup id", required = true)  @PathParam(value = "assetGroupId")  UUID assetGroupId) {
 
         try {
             List<AssetGroupField> fetchedAssetGroupFields = assetGroupService.retrieveFieldsForGroup(assetGroupId);
@@ -296,9 +296,9 @@ public class AssetGroupRestResource2 {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when delete Assetgroupfields"),
             @ApiResponse(code = 200, message = "Assetgroupfields successfully deleted")})
-    @Path("/{id}/fieldsForGroup")
+    @Path("/{assetGroupId}/fieldsForGroup")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response deleteFieldsForGroup(@ApiParam(value = "AssetGroup id", required = true)  @PathParam(value = "id")  UUID assetGroupId) {
+    public Response deleteFieldsForGroup(@ApiParam(value = "AssetGroup id", required = true)  @PathParam(value = "assetGroupId")  UUID assetGroupId) {
 
         try {
             assetGroupService.removeFieldsForGroup(assetGroupId);
