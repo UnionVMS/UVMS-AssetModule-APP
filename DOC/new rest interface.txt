@@ -88,7 +88,7 @@ asset: asset and mt now only sends the id for its connected asset/mt
 	GET list :MobileTerminalListQuery ?includeArchived
 	PUT {mtId}/assign/{assetId} ?comment
 	PUT {mtId}/unassign/{assetId}	?comment
-	PUT	{mtId}/status :MobileTerminalStatus ?comment
+	PUT	{mtId}/status :MobileTerminalStatus ?comment		MTS = { ACTIVE, INACTIVE, ARCHIVE, UNARCHIVE }
 	PUT {mtId}/history	?maxNbr
 	GET history/getMtHistoryForAsset/{assetId} ?maxNbr
 	GET history/getAssetHistoryForMT/{mtId}	?maxNbr
