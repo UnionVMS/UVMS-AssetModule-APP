@@ -102,7 +102,7 @@ public class PollRestResource2 {
         }
     }
 
-    @GET
+    @PUT
     @Path("{pollProgramId}/start/")
     @RequiresFeature(UnionVMSFeature.managePolls)
     public Response startProgramPoll(@PathParam("pollProgramId") String pollId) {
@@ -117,7 +117,7 @@ public class PollRestResource2 {
         }
     }
 
-    @GET
+    @PUT
     @Path("{pollProgramId}/stop/")
     @RequiresFeature(UnionVMSFeature.managePolls)
     public Response stopProgramPoll(@PathParam("pollProgramId") String pollId) {
@@ -132,7 +132,7 @@ public class PollRestResource2 {
         }
     }
 
-    @GET
+    @PUT
     @Path("{pollProgramId}/archive/")
     @RequiresFeature(UnionVMSFeature.managePolls)
     public Response archiveProgramPoll(@PathParam("pollProgramId") String pollId) { // This gives a poll the status "ARCHIVED"

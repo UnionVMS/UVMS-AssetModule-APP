@@ -237,7 +237,7 @@ public class PollRestResourceTest2 extends AbstractAssetRestTest {
                 .path("stop")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .get(PollDto.class);
+                .put(Entity.json(""), PollDto.class);
 
         assertNotNull(pollDto);
 
@@ -252,7 +252,7 @@ public class PollRestResourceTest2 extends AbstractAssetRestTest {
                 .path("start")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .get(PollDto.class);
+                .put(Entity.json(""), PollDto.class);
 
         assertNotNull(pollDto);
 
@@ -291,7 +291,7 @@ public class PollRestResourceTest2 extends AbstractAssetRestTest {
                 .path("archive")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .get(PollDto.class);
+                .put(Entity.json(""), PollDto.class);
 
         assertNotNull(pollGuid);
 
