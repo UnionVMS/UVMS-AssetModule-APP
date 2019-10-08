@@ -1,0 +1,110 @@
+valid as of 07/10/2019
+
+asset: asset and mt now only sends the id for its connected asset/mt
+? = get variable
+: = payload
+
+
+/config2
+	GET searchfields
+	GET parameters
+	GET MT/transponders
+	GET MT/searchfield 
+	GET MT
+	
+/group2
+	GET list ?user
+	GET {assetGroupId}
+	POST :AssetGroup		<- create
+	PUT :AssetGroup			<- update
+	DELETE {assetGroupId}
+	GET	asset/{assetId}
+	POST {assetGroupId}/field :AssetGroupField	<- create
+	PUT field :AssetGroupField					<- update
+	GET field/{assetGroupFieldId}
+	DELETE field/{assetGroupFieldId}
+	GET {assetGroupId}/fieldsForGroup
+	DELETE {assetGroupId}/fieldsForGroup
+	
+/asset2
+	POST list :AssetQuery ?page ?size ?dynamic ?includeInactivated
+	POST listcount:AssetQuery ?dynamic ?includeInactivated
+	GET	{assetId}
+	POST :Asset		<- create
+	PUT :Asset		<- update
+	PUT {assetId}/archive	?comment
+	PUT {assetId}/unarchive	?comment
+	GET {assetId}/history	?maxNbr
+	GET {typeOfId : (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)}/{id}/history	?date
+	GET history/{historyId}
+	GET {assetId}/notes
+	POST notes :Note	<- create
+	PUT notes	:Note	<- update
+	DELETE notes/{id}
+	GET {assetId}/contacts	?updateDate
+	GET contact/{contactId}
+	POST contacts	:ContactInfo	<- create
+	PUT contacts :ContactInfo		<- update
+	DELETE contacts/{contactId}
+	POST microAssets :List AssetIds
+	
+/customcodes2
+	POST :CustomCode		<- create
+	PUT :CustomCode			<- update
+	GET {constant}/{code} ?validFromDate ?validToDate
+	GET {constant}/{code}/exists ?validFromDate ?validToDate
+	GET {constant}/{code}/getfordate ?date
+	GET {constant}/{code}/verify ?date
+	GET listconstants
+	GET listcodesforconstant/{constant}
+	DELETE {constant}/{code} ?validFromDate ?validToDate
+	
+/internal2
+	GET asset/{idType : (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)}/{id}
+	POST query :AssetQuery ?page ?size ?dynamic ?includeInactivated
+	GET group/user/{user}
+	GET group/asset/{id}
+	POST group/asset :List AssetGroup IDs
+	GET history/asset/{id}
+	GET history/{type : (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)}/{id}/{date}
+	GET history/{guid}
+	POST asset	:AssetBo		<- upsert
+	POST microAssets :List AssetIds
+	GET ping
+	POST customcode :CustomCode	<- create
+	POST replace :CustomCode	<- update
+	GET listconstants
+	GET listcodesforconstant/{constant}
+	GET {constant}/{code}/verify ?date
+	GET {constant}/{code}/getfordate ?date
+	POST collectassetmt
+	POST poll
+	POST createPollForAsset/{id}
+	
+/mobileterminal2
+	POST :MobileTerminal	<- create
+	GET {MTId}
+	PUT :MobileTerminal		<- update
+	GET list :MobileTerminalListQuery ?includeArchived
+	PUT {mtId}/assign/{assetId} ?comment
+	PUT {mtId}/unassign/{assetId}	?comment
+	PUT	{mtId}/status :MobileTerminalStatus ?comment		MTS = { ACTIVE, INACTIVE, ARCHIVE, UNARCHIVE }
+	PUT {mtId}/history	?maxNbr
+	GET history/getMtHistoryForAsset/{assetId} ?maxNbr
+	GET history/getAssetHistoryForMT/{mtId}	?maxNbr
+	
+/plugin2
+	POST :List PluginService
+	GET plugins
+	
+/poll2
+	POST :PollRequestType	<- create
+	POST createPollForAsset/{assetId} ?comment
+	GET running
+	PUT	{programPollId}/start
+	PUT	{programPollId}/stopp
+	PUT	{programPollId}/archive
+	POST list :PollListQuery
+	Post getPollable :PollableQuery
+	GET program/{programPollId}
+	

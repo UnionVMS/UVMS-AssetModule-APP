@@ -355,10 +355,10 @@ public class MobileTerminalServiceBean {
     public MobileTerminal assignMobileTerminalToCarrier(UUID connectId, UUID mobileTerminalId, String comment, String username) {
 
         if (mobileTerminalId == null) {
-            throw new NullPointerException("No Mobile terminalId in request");
+            throw new IllegalArgumentException("No Mobile terminalId in request");
         }
         if (connectId == null) {
-            throw new NullPointerException("No connect id in request");
+            throw new IllegalArgumentException("No connect id in request");
         }
 
         Asset asset = assetDao.getAssetById(connectId);
@@ -502,9 +502,13 @@ public class MobileTerminalServiceBean {
 
     public void inactivateAndUnlink(Asset asset, String comment, String username) {
         asset.getMobileTerminals().forEach(mt -> {
-            unAssignMobileTerminal(asset.getId(),mt.getId(), comment, username);
+            mt.setUpdateuser(username);
+            mt.setAsset(null);
+            mt.setComment(comment);
+            mt.setUpdatetime(OffsetDateTime.now());
             setStatusMobileTerminal(mt.getId(), comment, MobileTerminalStatus.INACTIVE, username);
         });
+        asset.getMobileTerminals().clear();
     }
 
     public List<Map<UUID, List<MobileTerminal>>> getMobileTerminalRevisionsByAssetId(UUID assetId, int maxNbr) {

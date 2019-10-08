@@ -6,24 +6,32 @@ import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.util.OffsetDateTimeDeserializer;
 
 import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Objects;
 
 @Embeddable
 public class CustomCodesPK  implements Serializable {
 
+    @Transient
+    public static final OffsetDateTime STANDARD_START_DATE = OffsetDateTime.ofInstant(Instant.EPOCH, ZoneId.of("UTC"));
+    @Transient
+    public static final OffsetDateTime STANDARD_END_DATE = OffsetDateTime.of(3070,01,01,01,1,1,1, ZoneOffset.UTC);
+
     private String constant;
     private String code;
 
     @JsonSerialize(using = OffsetDateTimeSerializer.class)
     @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
-    private OffsetDateTime validFromDate;
-    
+    private OffsetDateTime validFromDate = STANDARD_START_DATE;
+
     @JsonSerialize(using = OffsetDateTimeSerializer.class)
     @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
-    private OffsetDateTime validToDate;
+    private OffsetDateTime validToDate = STANDARD_END_DATE;
 
     public CustomCodesPK(){
         // intentionally required by JPA
@@ -39,8 +47,6 @@ public class CustomCodesPK  implements Serializable {
     public CustomCodesPK(String constant, String code){
         this.constant = constant;
         this.code = code;
-        this.validFromDate = OffsetDateTime.of(1970,01,01,1,1,1,1, ZoneOffset.UTC);
-        this.validToDate = OffsetDateTime.of(3070,01,01,01,1,1,1, ZoneOffset.UTC);
     }
 
     public String getConstant() {

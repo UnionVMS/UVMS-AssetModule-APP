@@ -114,7 +114,7 @@ public class MobileTerminalTestHelper {
             mt.setAsset(asset);
 
         return webTarget
-                .path("mobileterminal")
+                .path("mobileterminal2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .post(Entity.json(mt), MobileTerminal.class);
@@ -122,7 +122,7 @@ public class MobileTerminalTestHelper {
 
     public static MobileTerminal restMobileTerminalUpdate(WebTarget webTarget, MobileTerminal mt, String token){
         return webTarget
-                .path("mobileterminal")
+                .path("mobileterminal2")
                 .queryParam("comment", mt.getComment())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, token)
