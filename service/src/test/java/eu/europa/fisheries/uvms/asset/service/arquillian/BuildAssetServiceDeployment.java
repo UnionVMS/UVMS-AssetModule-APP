@@ -28,7 +28,7 @@ public abstract class BuildAssetServiceDeployment extends Assert {
 
         // Import Maven runtime dependencies
         File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
-                .importRuntimeAndTestDependencies().resolve().withTransitivity().asFile();
+                .importCompileAndRuntimeDependencies().importTestDependencies().resolve().withTransitivity().asFile();
         printFiles(files);
 
         // Embedding war package which contains the test class is needed
