@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.ListPagination;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MobileTerminalListQuery;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
@@ -127,6 +128,9 @@ public class MobileTerminalRestResource2 {
                                           @DefaultValue("false") @QueryParam("includeArchived") boolean includeArchived) {
         LOG.info("Get mobile terminal list invoked in rest layer.");
         try {
+            if(query.getPagination() == null){
+                query.setPagination(new ListPagination());
+            }
             MTListResponse mobileTerminalList = mobileTerminalService.getMobileTerminalList(query, includeArchived);
             return Response.ok(mobileTerminalList).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {

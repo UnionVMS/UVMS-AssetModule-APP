@@ -12,6 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.search;
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.ListCriteria;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.SearchKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,37 +46,41 @@ public class SearchMapper {
             builder.append(" AND (");
             boolean first = true;
             for (ListCriteria criteria : criteriaList) {
-                String key = criteria.getKey().value();
+                SearchKey key = criteria.getKey();
                 if (first) {
                     first = false;
                 } else {
                     builder.append(operator);
                 }
-                if ("CONNECT_ID".equals(key)) {
-                    builder.append(" ( mt.asset.id = ")
+                if (SearchKey.CONNECT_ID.equals(key)) {
+                    builder.append(" ( mt.asset = ")
                             .append("'").append(criteria.getValue()).append("' ) ");
-                } else if("SERIAL_NUMBER".equals(key)) {
-                    builder.append(" ( mt.serialNo LIKE ")
+                } else if(SearchKey.MOBILETERMINAL_ID.equals(key)) {
+                    builder.append(" ( mt.id = ")
                             .append("'")
-                            .append(criteria.getValue().replace('*', '%')).append("%' ) ");
-                } else if("SATELLITE_NUMBER".equals(key)) {
+                            .append(criteria.getValue()).append("' ) ");
+                }else if(SearchKey.SERIAL_NUMBER.equals(key)) {
+                    builder.append(" ( mt.serialNo LIKE ")
+                        .append("'")
+                        .append(criteria.getValue().replace('*', '%')).append("%' ) ");
+                }else if(SearchKey.SATELLITE_NUMBER.equals(key)) {
                     builder.append(" ( mt.satelliteNumber LIKE ")
                             .append("'")
                             .append(criteria.getValue().replace('*', '%')).append("%' ) ");
-                } else if("ANTENNA".equals(key)) {
+                } else if(SearchKey.ANTENNA.equals(key)) {
                     builder.append(" ( mt.antenna LIKE ")
                             .append("'")
                             .append(criteria.getValue().replace('*', '%')).append("%' ) ");
-                } else if("TRANSCEIVER_TYPE".equals(key) || "TRANSPONDER_TYPE".equals(key)) {
+                } else if(SearchKey.TRANSCEIVER_TYPE.equals(key) || SearchKey.TRANSPONDER_TYPE.equals(key)) {
                     builder.append(" ( mt.transceiverType LIKE ")
                             .append("'")
                             .append(criteria.getValue().replace('*', '%')).append("%' ) ");
-                } else if("SOFTWARE_VERSION".equals(key)) {
+                } else if(SearchKey.SOFTWARE_VERSION.equals(key)) {
                     builder.append(" ( mt.softwareVersion LIKE ")
                             .append("'")
                             .append(criteria.getValue().replace('*', '%')).append("%' ) ");
                 } else {
-                    if (ChannelSearchAttributes.isAttribute(key)) {
+                    if (ChannelSearchAttributes.isAttribute(key.value())) {
                         if(ChannelSearchAttributes.DNID.name().equals(key)) {
                             builder.append(" ( c.DNID LIKE ")
                                     .append("'%")

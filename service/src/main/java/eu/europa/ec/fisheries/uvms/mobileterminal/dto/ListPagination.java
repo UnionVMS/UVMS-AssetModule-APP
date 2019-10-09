@@ -2,8 +2,8 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.dto;
 
 public class ListPagination {
 
-    private int page;
-    private int listSize;
+    private int page = 1;
+    private int listSize = 1000000;
 
     public int getPage() {
         return page;

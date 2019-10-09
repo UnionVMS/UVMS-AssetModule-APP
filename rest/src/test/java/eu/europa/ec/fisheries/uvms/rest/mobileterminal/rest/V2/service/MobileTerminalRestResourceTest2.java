@@ -11,6 +11,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.V2.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.ListCriteria;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
@@ -508,6 +510,87 @@ public class MobileTerminalRestResourceTest2 extends AbstractAssetRestTest {
         assertEquals(TerminalSourceEnum.INTERNAL, terminal.getSource());
 
         assertEquals(1, response.getMobileTerminalList().size());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getMobileTerminalListWithConnectIDTest() {
+        Asset asset = createAndRestBasicAsset();
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminal.setAsset(asset);
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        assertNotNull(created);
+
+        ListCriteria criteria = new ListCriteria();
+        criteria.setKey(SearchKey.CONNECT_ID);
+        criteria.setValue(asset.getId().toString());
+
+        // One thing from channel
+        MobileTerminalListQuery mobileTerminalListQuery = MobileTerminalTestHelper.createMobileTerminalListQuery();
+        mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().clear();
+        mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().add(criteria);
+
+        MTListResponse response = getWebTargetExternal()
+                .path("/mobileterminal2/list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminalListQuery), MTListResponse.class);
+
+        assertNotNull(response);
+        assertEquals(1, response.getMobileTerminalList().size());
+
+        MobileTerminal terminal = response.getMobileTerminalList().get(0);
+
+        assertEquals(terminal.getSerialNo(), MobileTerminalTestHelper.getSerialNumber());
+        assertEquals(MobileTerminalTypeEnum.INMARSAT_C, terminal.getMobileTerminalType());
+        assertEquals(TerminalSourceEnum.INTERNAL, terminal.getSource());
+        assertEquals(asset.getId().toString(), terminal.getAssetId());
+
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getMobileTerminalListWithMtIdTest() {
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        assertNotNull(created);
+
+        ListCriteria criteria = new ListCriteria();
+        criteria.setKey(SearchKey.MOBILETERMINAL_ID);
+        criteria.setValue(created.getId().toString());
+
+        // One thing from channel
+        MobileTerminalListQuery mobileTerminalListQuery = MobileTerminalTestHelper.createMobileTerminalListQuery();
+        mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().clear();
+        mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().add(criteria);
+
+        MTListResponse response = getWebTargetExternal()
+                .path("/mobileterminal2/list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminalListQuery), MTListResponse.class);
+
+        assertNotNull(response);
+        assertEquals(1, response.getMobileTerminalList().size());
+
+        MobileTerminal terminal = response.getMobileTerminalList().get(0);
+
+        assertEquals(terminal.getSerialNo(), MobileTerminalTestHelper.getSerialNumber());
+        assertEquals(MobileTerminalTypeEnum.INMARSAT_C, terminal.getMobileTerminalType());
+        assertEquals(TerminalSourceEnum.INTERNAL, terminal.getSource());
+
     }
 
     @Test
