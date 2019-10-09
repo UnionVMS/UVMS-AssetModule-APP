@@ -69,6 +69,9 @@ public class MobileTerminalServiceBean {
     private AssetDao assetDao;
 
     public MobileTerminal createMobileTerminal(MobileTerminal mobileTerminal, String username) {
+        if(mobileTerminal.getChannels().isEmpty()){
+            throw new IllegalArgumentException("A mobile Terminal needs to have at least one channel attached to it.");
+        }
         Set<Channel> channels = mobileTerminal.getChannels();
         channels.forEach(channel -> channel.setMobileTerminal(mobileTerminal));
         MobileTerminal createdMobileTerminal = terminalDao.createMobileTerminal(mobileTerminal);
@@ -442,6 +445,8 @@ public class MobileTerminalServiceBean {
         List<ListCriteria> criterias = query.getMobileTerminalSearchCriteria().getCriterias();
 
         String searchSql = SearchMapper.createSelectSearchSql(criterias, isDynamic, includeArchived);
+
+        LOG.debug(searchSql);
 
         List<MobileTerminal> terminals = terminalDao.getMobileTerminalsByQuery(searchSql);
 

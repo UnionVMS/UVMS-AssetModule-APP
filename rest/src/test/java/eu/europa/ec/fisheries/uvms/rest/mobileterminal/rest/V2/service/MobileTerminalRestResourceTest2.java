@@ -514,7 +514,7 @@ public class MobileTerminalRestResourceTest2 extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getMobileTerminalListWithConnectIDTest() {
+    public void getMobileTerminalListWithConnectIDTest() throws JsonProcessingException {
         Asset asset = createAndRestBasicAsset();
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
         mobileTerminal.setAsset(asset);
@@ -536,8 +536,13 @@ public class MobileTerminalRestResourceTest2 extends AbstractAssetRestTest {
         mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().clear();
         mobileTerminalListQuery.getMobileTerminalSearchCriteria().getCriterias().add(criteria);
 
+        ObjectMapper om = new ObjectMapper();
+        String json = om.writeValueAsString(mobileTerminalListQuery);
+        System.out.println(json);
+
         MTListResponse response = getWebTargetExternal()
                 .path("/mobileterminal2/list")
+                .queryParam("includeArchived", false)
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mobileTerminalListQuery), MTListResponse.class);
