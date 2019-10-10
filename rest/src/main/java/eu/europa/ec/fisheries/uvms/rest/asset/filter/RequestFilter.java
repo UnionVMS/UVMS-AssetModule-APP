@@ -49,7 +49,7 @@ public class RequestFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        final String HOST = httpServletRequest.getHeader("HOST");
+        final String HOST = httpServletRequest.getHeader("ORIGIN");
 
         boolean isValid = validateHost(HOST);
 
