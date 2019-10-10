@@ -55,7 +55,8 @@ public class RequestFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         final String HOST = httpServletRequest.getRemoteHost();
         LOG.info("Request Host: " + HOST);
-
+        LOG.info("Cors Regex: " + corsOriginRegex);
+        
         boolean isValid = validateHost(HOST);
 
         if (!isValid)
