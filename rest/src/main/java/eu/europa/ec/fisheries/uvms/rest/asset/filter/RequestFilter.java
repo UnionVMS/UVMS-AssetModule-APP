@@ -50,15 +50,17 @@ public class RequestFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        final String HOST = httpServletRequest.getRemoteHost();
+        String host = httpServletRequest.getHeader("ORIGIN");
+
+        if(host == null) host = httpServletRequest.getRemoteHost();
         
-        boolean isValid = validateHost(HOST);
+        boolean isValid = validateHost(host);
 
         if (!isValid)
-            throw new ForbiddenException("You are not allowed to make any request from an external domain. Your Host: " + HOST);
+            throw new ForbiddenException("You are not allowed to make any request from an external domain. Your Host: " + host);
 
         HttpServletResponse response = (HttpServletResponse) res;
-        response.setHeader(Constant.ACCESS_CONTROL_ALLOW_ORIGIN, HOST);
+        response.setHeader(Constant.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
         response.setHeader(Constant.ACCESS_CONTROL_ALLOW_METHODS, Constant.ACCESS_CONTROL_ALLOWED_METHODS);
         response.setHeader(Constant.ACCESS_CONTROL_ALLOW_HEADERS, Constant.ACCESS_CONTROL_ALLOW_HEADERS_ALL);
 
