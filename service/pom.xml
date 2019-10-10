@@ -59,7 +59,7 @@
           </snapshots>
           <id>swordnexus-repo</id>
           <name>focus-releases</name>
-          <url>http://bxlv-docker.swordgroup.lan:8081/repository/unionvms-releases/</url>
+          <url>http://bxlv-docker.swordgroup.lan:8081/repository/maven-public/</url>
         </repository>
         <repository>
           <releases>
@@ -68,7 +68,7 @@
           <snapshots />
           <id>swordnexus-repo-snapshot</id>
           <name>focus-snapshots</name>
-          <url>http://bxlv-docker.swordgroup.lan:8081/repository/unionvms-snapshots/</url>
+          <url>http://bxlv-docker.swordgroup.lan:8081/repository/maven-public/</url>
         </repository>
       </repositories>
       <pluginRepositories>
@@ -82,7 +82,7 @@
           </snapshots>
           <id>swordnexus-repo</id>
           <name>focus-plugin-releases</name>
-          <url>http://bxlv-docker.swordgroup.lan:8081/repository/unionvms-releases/</url>
+          <url>http://bxlv-docker.swordgroup.lan:8081/repository/maven-public/</url>
         </pluginRepository>
         <pluginRepository>
           <releases>
@@ -91,7 +91,7 @@
           <snapshots />
           <id>swordnexus-repo-snapshot</id>
           <name>focus-plugin-snapshots</name>
-          <url>http://bxlv-docker.swordgroup.lan:8081/repository/unionvms-snapshots/</url>
+          <url>http://bxlv-docker.swordgroup.lan:8081/repository/maven-public/</url>
         </pluginRepository>
       </pluginRepositories>
       <id>swordci</id>
