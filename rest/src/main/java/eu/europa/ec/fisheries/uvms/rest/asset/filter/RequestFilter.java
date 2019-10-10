@@ -12,6 +12,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.rest.asset.filter;
 
 import eu.europa.ec.fisheries.uvms.rest.asset.Constant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
 import javax.servlet.*;
@@ -26,6 +28,8 @@ import java.util.regex.Pattern;
 @WebFilter(asyncSupported = true, urlPatterns = {"/*"})
 public class RequestFilter implements Filter {
 
+    private static final Logger LOG = LoggerFactory.getLogger(RequestFilter.class);
+    
     /**
      * {@code corsOriginRegex} is valid for given host names/IPs and any range of sub domains.
      *
@@ -50,6 +54,7 @@ public class RequestFilter implements Filter {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         final String HOST = httpServletRequest.getRemoteHost();
+        LOG.info("Request Host: " + HOST);
 
         boolean isValid = validateHost(HOST);
 
@@ -77,5 +82,6 @@ public class RequestFilter implements Filter {
 
     @Override
     public void destroy() {
+        LOG.info("RequestFilter shutting down!");
     }
 }
