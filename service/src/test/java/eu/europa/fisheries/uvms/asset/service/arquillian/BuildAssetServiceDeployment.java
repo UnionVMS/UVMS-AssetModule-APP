@@ -27,7 +27,7 @@ public abstract class BuildAssetServiceDeployment extends Assert {
     public static Archive<?> createDeployment() {
 
         // Import Maven runtime dependencies
-        File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
+        File[] files = Maven.configureResolver().loadPomFromFile("pom.xml","swordci")
                 .importCompileAndRuntimeDependencies().importTestDependencies().resolve().withTransitivity().asFile();
         printFiles(files);
 
