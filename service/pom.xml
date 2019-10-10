@@ -47,6 +47,55 @@
                 <hibernate.dialect>org.hibernate.dialect.Oracle10gDialect</hibernate.dialect>
             </properties>
         </profile>
+    <profile>
+      <repositories>
+        <repository>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <id>swordnexus-repo</id>
+          <name>focus-releases</name>
+          <url>http://bxlv-docker.swordgroup.lan:8081/repository/unionvms-releases/</url>
+        </repository>
+        <repository>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+          <snapshots />
+          <id>swordnexus-repo-snapshot</id>
+          <name>focus-snapshots</name>
+          <url>http://bxlv-docker.swordgroup.lan:8081/repository/unionvms-snapshots/</url>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <id>swordnexus-repo</id>
+          <name>focus-plugin-releases</name>
+          <url>http://bxlv-docker.swordgroup.lan:8081/repository/unionvms-releases/</url>
+        </pluginRepository>
+        <pluginRepository>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+          <snapshots />
+          <id>swordnexus-repo-snapshot</id>
+          <name>focus-plugin-snapshots</name>
+          <url>http://bxlv-docker.swordgroup.lan:8081/repository/unionvms-snapshots/</url>
+        </pluginRepository>
+      </pluginRepositories>
+      <id>swordci</id>
+    </profile>
     </profiles>
 
     <dependencies>
