@@ -29,18 +29,15 @@ import java.util.regex.Pattern;
 public class RequestFilter implements Filter {
 
     private static final Logger LOG = LoggerFactory.getLogger(RequestFilter.class);
-    
+
     /**
-     * {@code corsOriginRegex} is valid for given host names/IPs and any range of sub domains.
-     *
-     * localhost:28080
-     * localhost:8080
-     * 127.0.0.1:28080
-     * 127.0.0.1:8080
-     * 192.168.***.***:28080
-     * 192.168.***.***:8080
-     * *.hav.havochvatten.se:8080
-     * *.hav.havochvatten.se:28080
+     * {@code corsOriginRegex} is valid for given host/origin names/IPs and any range of sub domains.
+     * <p>
+     * localhost:[2]8080
+     * 127.0.0.1:[2]8080
+     * 192.168.***.***:[2]8080
+     * liaswf05[t,u,d]:[2]8080
+     * havochvatten.se:[2]8080
      */
     @Resource(lookup = "java:global/cors_allowed_host_regex")
     private String corsOriginRegex;
@@ -54,13 +51,11 @@ public class RequestFilter implements Filter {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         final String HOST = httpServletRequest.getRemoteHost();
-        LOG.info("Request Host: " + HOST);
-        LOG.info("Cors Regex: " + corsOriginRegex);
         
         boolean isValid = validateHost(HOST);
 
         if (!isValid)
-            throw new ForbiddenException("You are not allowed to make any request from an external domain.");
+            throw new ForbiddenException("You are not allowed to make any request from an external domain. Your Host: " + HOST);
 
         HttpServletResponse response = (HttpServletResponse) res;
         response.setHeader(Constant.ACCESS_CONTROL_ALLOW_ORIGIN, HOST);
