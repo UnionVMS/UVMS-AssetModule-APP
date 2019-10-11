@@ -9,6 +9,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MobileTerminalListQuery;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.SearchKey;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalStatus;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
@@ -30,8 +31,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 @RunAsClient
@@ -506,6 +507,138 @@ public class MobileTerminalListQueryTest extends AbstractAssetRestTest {
         assertEquals(TerminalSourceEnum.INTERNAL, terminal.getSource());
     }
 
+    @Test
+    @OperateOnDeployment("normal")
+    public void getMobileTerminalList_ArchivedMobileTerminalsIncluded() {
+
+        MobileTerminal prePersist = MobileTerminalTestHelper.createBasicMobileTerminal();
+        prePersist.setAsset(null);
+
+        MobileTerminalListQuery mobileTerminalListQuery = MobileTerminalTestHelper.createMobileTerminalListQuery();
+
+        MTQuery mtQuery = new MTQuery();
+        mtQuery.setSerialNumbers(Arrays.asList(MobileTerminalTestHelper.getSerialNumber()));
+
+        MTListResponse mtListResponse = getWebTargetExternal()
+                .path("/mobileterminal2/list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mtQuery), MTListResponse.class);
+
+        int sizeBefore = mtListResponse.getMobileTerminalList().size();
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(prePersist), MobileTerminal.class);
+
+        assertFalse(created.getArchived());
+
+        MobileTerminal response = getWebTargetExternal()
+                .path("mobileterminal2")
+                .path(created.getId().toString())
+                .path("status")
+                .queryParam("comment", "Test Comment Remove")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(MobileTerminalStatus.ARCHIVE))
+                .readEntity(MobileTerminal.class);
+
+        assertTrue(response.getArchived());
+
+        MTListResponse responseWithoutArchived = getWebTargetExternal()
+                .path("/mobileterminal2/list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mtQuery), MTListResponse.class);
+
+        int sizeAfter = responseWithoutArchived.getMobileTerminalList().size();
+
+        assertEquals(sizeBefore, sizeAfter);
+
+        MTListResponse responseWithArchived = getWebTargetExternal()
+                .path("/mobileterminal2/list")
+                .queryParam("includeArchived", true)
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mtQuery), MTListResponse.class);
+
+        int sizeAfterWithArchived = responseWithArchived.getMobileTerminalList().size();
+
+        assertEquals(sizeBefore + 1, sizeAfterWithArchived);
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void searchForSerialNumberAfterCreatingNewEvents() {
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        Asset asset = createAndRestBasicAsset();
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+
+        MTQuery mtQuery = new MTQuery();
+        mtQuery.setSerialNumbers(Arrays.asList(MobileTerminalTestHelper.getSerialNumber()));
+
+        // Check the search result
+        MTListResponse returnList = sendMTListQuery(mtQuery);
+        assertEquals(1, returnList.getMobileTerminalList().size());
+
+        MobileTerminal response = getWebTargetExternal()
+                .path("/mobileterminal2")
+                .path(created.getId().toString())
+                .path("assign")
+                .path(asset.getId().toString())
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(""), MobileTerminal.class);
+
+        assertNotNull(response);
+
+        // Check the search result
+        returnList = sendMTListQuery(mtQuery);
+        assertEquals(1, returnList.getMobileTerminalList().size());
+
+        // Unassign
+        MobileTerminal responseUnAssign = getWebTargetExternal()
+                .path("/mobileterminal2")
+                .path(created.getId().toString())
+                .path("unassign")
+                .path(asset.getId().toString())
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(""), MobileTerminal.class);
+
+        assertNotNull(responseUnAssign);
+
+        //check the search result
+        returnList = sendMTListQuery(mtQuery);
+        assertEquals(1, returnList.getMobileTerminalList().size());
+
+        //And inactivate
+        response = getWebTargetExternal()
+                .path("mobileterminal2")
+                .path(created.getId().toString())
+                .path("status")
+                .queryParam("comment", "Test Comment Inactivate")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(MobileTerminalStatus.INACTIVE), MobileTerminal.class);
+
+        assertNotNull(response);
+
+        //check the search result
+        returnList = sendMTListQuery(mtQuery);
+        assertEquals(1, returnList.getMobileTerminalList().size());
+    }
+
     private Asset createAndRestBasicAsset() {
         Asset asset = AssetHelper.createBasicAsset();
 
@@ -518,5 +651,13 @@ public class MobileTerminalListQueryTest extends AbstractAssetRestTest {
         assertNotNull(createdAsset);
 
         return createdAsset;
+    }
+
+    private MTListResponse sendMTListQuery(MTQuery mobileTerminalListQuery) {
+        return getWebTargetExternal()
+                .path("/mobileterminal2/list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminalListQuery), MTListResponse.class);
     }
 }

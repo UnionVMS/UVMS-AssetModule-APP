@@ -29,7 +29,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.AuditModuleRequestMappe
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchKeyValue;
-import eu.europa.ec.fisheries.uvms.mobileterminal.search.SearchMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +38,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.ws.rs.NotFoundException;
-import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -426,28 +424,12 @@ public class MobileTerminalServiceBean {
         if (searchFields == null) {
             throw new IllegalArgumentException("No list query");
         }
-        /*if (query.getPagination() == null) {
-            throw new IllegalArgumentException("No list pagination");
-        }
-        if (query.getMobileTerminalSearchCriteria() == null) {
-            throw new IllegalArgumentException("No list criteria");
-        }*/
 
         MTListResponse response = new MTListResponse();
 
-        //int page = query.getPagination().getPage();
-        //int listSize = query.getPagination().getListSize();
         int startIndex = (page - 1) * listSize;
         int stopIndex = startIndex + listSize;
         LOG.debug("page: " + page + ", listSize: " + listSize + ", startIndex: " + startIndex);
-
-        //boolean isDynamic = query.getMobileTerminalSearchCriteria().isDynamic() == null ? true : query.getMobileTerminalSearchCriteria().isDynamic();
-
-        //List<ListCriteria> criterias = query.getMobileTerminalSearchCriteria().getCriterias();
-
-        //String searchSql = SearchMapper.createSelectSearchSql(criterias, isDynamic, includeArchived);
-
-        //LOG.debug(searchSql);
 
         List<MobileTerminal> terminals = terminalDao.getMTListSearchPaginated(page, listSize, searchFields, isDynamic, includeArchived);
 

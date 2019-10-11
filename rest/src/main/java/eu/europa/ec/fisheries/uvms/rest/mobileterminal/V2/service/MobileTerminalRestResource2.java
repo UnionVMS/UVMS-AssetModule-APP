@@ -17,9 +17,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.ListPagination;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MobileTerminalListQuery;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalStatus;
@@ -139,7 +137,7 @@ public class MobileTerminalRestResource2 {
             List<MTSearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
             MTListResponse mobileTerminalList = mobileTerminalService.getMobileTerminalList(searchFields, page, size, dynamic, includeArchived);
             String returnJson = objectMapper().writeValueAsString(mobileTerminalList);
-            LOG.error(returnJson);
+            LOG.debug(returnJson);
             return Response.ok(returnJson).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting mobile terminal list ] {}", ex);

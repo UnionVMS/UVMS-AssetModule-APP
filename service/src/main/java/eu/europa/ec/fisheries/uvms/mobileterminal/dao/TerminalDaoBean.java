@@ -11,10 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.dao;
 
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchFieldType;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
@@ -32,7 +29,6 @@ import org.hibernate.envers.query.criteria.AuditCriterion;
 import org.hibernate.envers.query.criteria.AuditDisjunction;
 import org.hibernate.envers.query.criteria.ExtendableCriterion;
 import org.hibernate.envers.query.criteria.MatchMode;
-import org.hibernate.envers.query.internal.impl.EntitiesAtRevisionQuery;
 
 import javax.ejb.Stateless;
 import javax.persistence.*;
@@ -136,27 +132,25 @@ public class TerminalDaoBean {
 
 
     public List<MobileTerminal> getMTListSearchPaginated(Integer pageNumber, Integer pageSize, List<MTSearchKeyValue> searchFields,
-                                                   boolean isDynamic, boolean includeInactivated) {
+                                                   boolean isDynamic, boolean includeArchived) {
         try {
-            AuditQuery query = createAuditQuery(searchFields, isDynamic, includeInactivated);
+            AuditQuery query = createAuditQuery(searchFields, isDynamic, includeArchived);
             query.setFirstResult(pageSize * (pageNumber - 1));
             query.setMaxResults(pageSize);
 
             //searching for a MT involves searching for values that reside in channel, thus we need to search the db for channels and extract the MT from there
             List<Channel> channelList = query.getResultList();
-            List<MobileTerminal> returnList = new ArrayList<>(channelList.size());
+            Map<UUID, MobileTerminal> returnMap = new HashMap<>();
             for (Channel channel : channelList) {
-                if(returnList.stream().noneMatch(mt -> mt.getId().equals(channel.getMobileTerminal().getId()))) {   //since several channels can be connected to the same MT
-                    returnList.add(channel.getMobileTerminal());
-                }
+                returnMap.put(channel.getMobileTerminal().getId(), channel.getMobileTerminal());
             }
-            return returnList;
+            return new ArrayList<>(returnMap.values());
         } catch (AuditException e) {
             return Collections.emptyList();
         }
     }
 
-    private AuditQuery createAuditQuery(List<MTSearchKeyValue> searchFields, boolean isDynamic, boolean includeInactivated) {
+    private AuditQuery createAuditQuery(List<MTSearchKeyValue> searchFields, boolean isDynamic, boolean includeArchived) {
         AuditReader auditReader = AuditReaderFactory.get(em);
 
         //separate search fields for channel and for MT
@@ -182,8 +176,8 @@ public class TerminalDaoBean {
             if (!searchRevisions(searchFields)) {
                 aaQuery.add(AuditEntity.revisionNumber().maximize().computeAggregationInInstanceContext());
             }
-            if(!includeInactivated) {
-                aaQuery.add(AuditEntity.property("active").eq(true));
+            if(!includeArchived) {
+                aaQuery.add(AuditEntity.property("archived").eq(false));
             }
         }
 
