@@ -14,9 +14,9 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.search;
 public class SearchFieldHolder {
 
 	private SearchTable table;
-	private SearchField field;
+	private MTSearchFields field;
 	
-	public SearchFieldHolder(SearchTable table, SearchField field) {
+	public SearchFieldHolder(SearchTable table, MTSearchFields field) {
 		this.table = table;
 		this.field = field;
 	}
@@ -25,7 +25,7 @@ public class SearchFieldHolder {
 		return table;
 	}
 	
-	public SearchField getSearchField() {
+	public MTSearchFields getSearchField() {
 		return field;
 	}
 }

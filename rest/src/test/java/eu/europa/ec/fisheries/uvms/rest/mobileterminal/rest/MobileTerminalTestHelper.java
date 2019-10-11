@@ -42,19 +42,7 @@ public class MobileTerminalTestHelper {
         mobileTerminal.setTransceiverType("A");
         mobileTerminal.setSoftwareVersion("A");
 
-        Channel channel = new Channel();
-        channel.setName("VMS");
-        channel.setFrequencyGracePeriod(Duration.ofSeconds(54000));
-        channel.setMemberNumber(generateARandomStringWithMaxLength(3));
-        channel.setExpectedFrequency(Duration.ofSeconds(7200));
-        channel.setExpectedFrequencyInPort(Duration.ofSeconds(10800));
-        channel.setLesDescription("Thrane&Thrane");
-        channel.setDNID("1" + generateARandomStringWithMaxLength(3));
-        channel.setInstalledBy("Mike Great");
-        channel.setArchived(false);
-        channel.setConfigChannel(true);
-        channel.setDefaultChannel(true);
-        channel.setPollChannel(true);
+        Channel channel = createBasicChannel();
         channel.setMobileTerminal(mobileTerminal);
 
         mobileTerminal.getChannels().clear();
@@ -68,6 +56,23 @@ public class MobileTerminalTestHelper {
         mobileTerminal.setPlugin(plugin);
 
         return mobileTerminal;
+    }
+
+    public static Channel createBasicChannel(){
+        Channel channel = new Channel();
+        channel.setName("VMS");
+        channel.setFrequencyGracePeriod(Duration.ofSeconds(54000));
+        channel.setMemberNumber(generateARandomStringWithMaxLength(3));
+        channel.setExpectedFrequency(Duration.ofSeconds(7200));
+        channel.setExpectedFrequencyInPort(Duration.ofSeconds(10800));
+        channel.setLesDescription("Thrane&Thrane");
+        channel.setDNID("1" + generateARandomStringWithMaxLength(3));
+        channel.setInstalledBy("Mike Great");
+        channel.setArchived(false);
+        channel.setConfigChannel(true);
+        channel.setDefaultChannel(true);
+        channel.setPollChannel(true);
+        return channel;
     }
 
     public static String generateARandomStringWithMaxLength(int len) {

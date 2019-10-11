@@ -63,15 +63,6 @@ public class ResponseTest {
 
     @Test
     @OperateOnDeployment("normal")
-    public void testGetMobileTerminalList() {
-        doReturn(MOBILE_TERMINAL_LIST_RESPONSE).when(mobileTerminalServiceBean).getMobileTerminalList(null, false);
-        Response result = mobileTerminalRestResource.getMobileTerminalList(null, false);
-        Mockito.verify(mobileTerminalServiceBean).getMobileTerminalList(null, false);
-        assertEquals(Response.Status.OK.getStatusCode(), result.getStatus());
-    }
-
-    @Test
-    @OperateOnDeployment("normal")
     public void checkDtoReturnsValid() {
         String VALUE = "HELLO_DTO";
         MTResponseDto dto = new MTResponseDto<>(VALUE, MTResponseCode.OK);

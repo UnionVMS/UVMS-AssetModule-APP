@@ -13,6 +13,7 @@ package eu.europa.ec.fisheries.uvms.rest.mobileterminal.V2.service;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
@@ -23,7 +24,10 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalStatus;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchKeyValue;
 import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
+import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTQuery;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -59,6 +63,7 @@ public class MobileTerminalRestResource2 {
 
     @Context
     private HttpServletRequest request;
+
 
     @POST
     @Path("/")
@@ -124,15 +129,18 @@ public class MobileTerminalRestResource2 {
     @POST
     @Path("/list")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getMobileTerminalList(MobileTerminalListQuery query,
+    public Response getMobileTerminalList(MTQuery query,
+                                          @DefaultValue("1") @QueryParam("page") int page,
+                                          @DefaultValue("1000000") @QueryParam("size") int size,
+                                          @DefaultValue("true") @QueryParam("dynamic") boolean dynamic,
                                           @DefaultValue("false") @QueryParam("includeArchived") boolean includeArchived) {
         LOG.info("Get mobile terminal list invoked in rest layer.");
         try {
-            if(query.getPagination() == null){
-                query.setPagination(new ListPagination());
-            }
-            MTListResponse mobileTerminalList = mobileTerminalService.getMobileTerminalList(query, includeArchived);
-            return Response.ok(mobileTerminalList).header("MDC", MDC.get("requestId")).build();
+            List<MTSearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
+            MTListResponse mobileTerminalList = mobileTerminalService.getMobileTerminalList(searchFields, page, size, dynamic, includeArchived);
+            String returnJson = objectMapper().writeValueAsString(mobileTerminalList);
+            LOG.error(returnJson);
+            return Response.ok(returnJson).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting mobile terminal list ] {}", ex);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
@@ -240,8 +248,10 @@ public class MobileTerminalRestResource2 {
     private ObjectMapper objectMapper(){
         ObjectMapperContextResolver omcr = new ObjectMapperContextResolver();
         ObjectMapper objectMapper = omcr.getContext(MobileTerminal.class);
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .findAndRegisterModules();
+        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         return objectMapper;
     }
 }

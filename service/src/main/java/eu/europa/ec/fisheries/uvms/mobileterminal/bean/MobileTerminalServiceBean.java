@@ -28,6 +28,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnu
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.AuditModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchKeyValue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.SearchMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,8 +92,8 @@ public class MobileTerminalServiceBean {
         return createdMobileTerminal;
     }
 
-    public MTListResponse getMobileTerminalList(MobileTerminalListQuery query, boolean includeArchived) {
-        MTListResponse response = getTerminalListByQuery(query, includeArchived);
+    public MTListResponse getMobileTerminalList(List<MTSearchKeyValue> searchFields, int page, int listSize, boolean isDynamic, boolean includeArchived) {
+        MTListResponse response = getTerminalListByQuery(searchFields, page, listSize, isDynamic, includeArchived);
         return response;
     }
 
@@ -421,34 +422,34 @@ public class MobileTerminalServiceBean {
         return upsertedMT;
     }
 
-    public MTListResponse getTerminalListByQuery(MobileTerminalListQuery query, boolean includeArchived) {
-        if (query == null) {
+    public MTListResponse getTerminalListByQuery(List<MTSearchKeyValue> searchFields, int page, int listSize, boolean isDynamic, boolean includeArchived) {
+        if (searchFields == null) {
             throw new IllegalArgumentException("No list query");
         }
-        if (query.getPagination() == null) {
+        /*if (query.getPagination() == null) {
             throw new IllegalArgumentException("No list pagination");
         }
         if (query.getMobileTerminalSearchCriteria() == null) {
             throw new IllegalArgumentException("No list criteria");
-        }
+        }*/
 
         MTListResponse response = new MTListResponse();
 
-        int page = query.getPagination().getPage();
-        int listSize = query.getPagination().getListSize();
+        //int page = query.getPagination().getPage();
+        //int listSize = query.getPagination().getListSize();
         int startIndex = (page - 1) * listSize;
         int stopIndex = startIndex + listSize;
         LOG.debug("page: " + page + ", listSize: " + listSize + ", startIndex: " + startIndex);
 
-        boolean isDynamic = query.getMobileTerminalSearchCriteria().isDynamic() == null ? true : query.getMobileTerminalSearchCriteria().isDynamic();
+        //boolean isDynamic = query.getMobileTerminalSearchCriteria().isDynamic() == null ? true : query.getMobileTerminalSearchCriteria().isDynamic();
 
-        List<ListCriteria> criterias = query.getMobileTerminalSearchCriteria().getCriterias();
+        //List<ListCriteria> criterias = query.getMobileTerminalSearchCriteria().getCriterias();
 
-        String searchSql = SearchMapper.createSelectSearchSql(criterias, isDynamic, includeArchived);
+        //String searchSql = SearchMapper.createSelectSearchSql(criterias, isDynamic, includeArchived);
 
-        LOG.debug(searchSql);
+        //LOG.debug(searchSql);
 
-        List<MobileTerminal> terminals = terminalDao.getMobileTerminalsByQuery(searchSql);
+        List<MobileTerminal> terminals = terminalDao.getMTListSearchPaginated(page, listSize, searchFields, isDynamic, includeArchived);
 
         terminals.sort(Comparator.comparing(MobileTerminal::getId));
 
@@ -472,26 +473,6 @@ public class MobileTerminalServiceBean {
         response.setCurrentPage(page);
 
         return response;
-    }
-
-    public MobileTerminal getMobileTerminalBySourceAndSearchCriteria(MobileTerminalSearchCriteria criteria) {
-        MobileTerminalListQuery query = new MobileTerminalListQuery();
-
-        // If no valid criterias, don't look for a mobile terminal
-        if (criteria.getCriterias().isEmpty()) {
-            return null;
-        }
-
-        query.setMobileTerminalSearchCriteria(criteria);
-        ListPagination pagination = new ListPagination();
-        // To leave room to find erroneous results - it must be only one in the list
-        pagination.setListSize(2);
-        pagination.setPage(1);
-        query.setPagination(pagination);
-
-        MTListResponse mobileTerminalListResponse = getMobileTerminalList(query, false);
-        List<MobileTerminal> resultList = mobileTerminalListResponse.getMobileTerminalList();
-        return resultList.size() != 1 ? null : resultList.get(0);
     }
 
     public MobileTerminal findMobileTerminalByAsset(UUID assetid) {

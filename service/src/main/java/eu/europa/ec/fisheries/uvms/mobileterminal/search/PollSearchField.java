@@ -22,6 +22,7 @@ public enum PollSearchField {
 	POLL_ID(SearchTable.POLL, "id", "id", UUID.class),
 	POLL_TYPE(SearchTable.POLL, "pollType", "pollType", PollTypeEnum.class),
 	USER(SearchTable.POLLBASE, "creator", "creator");
+
 	
 	private final SearchTable table;
     private final String sqlColumnName;

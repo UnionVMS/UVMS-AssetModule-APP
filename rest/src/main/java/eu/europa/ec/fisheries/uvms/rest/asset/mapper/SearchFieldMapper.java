@@ -18,7 +18,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchFields;
+import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchKeyValue;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTQuery;
 
 public class SearchFieldMapper {
     
@@ -91,6 +94,49 @@ public class SearchFieldMapper {
         if (query.getDate() != null) {
             searchValues.add(new SearchKeyValue(SearchFields.DATE, Arrays.asList(query.getDate().toString())));
         }
+        return searchValues;
+    }
+
+    public static List<MTSearchKeyValue> createSearchFields(MTQuery query) {
+        List<MTSearchKeyValue> searchValues = new ArrayList<>();
+        if(query.getAntennas() != null){
+                searchValues.add(new MTSearchKeyValue(MTSearchFields.ANTENNA, query.getAntennas()));
+        }
+        if(query.getAssetIds() != null){
+            searchValues.add(new MTSearchKeyValue(MTSearchFields.ASSET_ID, query.getAssetIds()));
+        }
+        if(query.getDate() != null){
+            searchValues.add(new MTSearchKeyValue(MTSearchFields.DATE, Arrays.asList(query.getDate().toString())));
+        }
+        if(query.getDnids() != null){
+            searchValues.add(new MTSearchKeyValue(MTSearchFields.DNID, query.getDnids()));
+        }
+        if(query.getHistoryIds() != null){
+            searchValues.add(new MTSearchKeyValue(MTSearchFields.HIST_GUID, query.getHistoryIds()));
+        }
+        if(query.getMemberNumbers() != null){
+            searchValues.add(new MTSearchKeyValue(MTSearchFields.MEMBER_NUMBER, query.getMemberNumbers()));
+        }
+        if(query.getMobileterminalIds() != null){
+            searchValues.add(new MTSearchKeyValue(MTSearchFields.MOBILETERMINAL_ID, query.getMobileterminalIds()));
+        }
+        if(query.getMobileterminalTypes() != null){
+            searchValues.add(new MTSearchKeyValue(MTSearchFields.TERMINAL_TYPE, query.getMobileterminalTypes()));
+        }
+        if(query.getSateliteNumbers() != null){
+            searchValues.add(new MTSearchKeyValue(MTSearchFields.SATELLITE_NUMBER, query.getSateliteNumbers()));
+        }
+        if(query.getSerialNumbers() != null){
+            searchValues.add(new MTSearchKeyValue(MTSearchFields.SERIAL_NUMBER, query.getSerialNumbers()));
+        }
+        if(query.getSoftwareVersions() != null){
+            searchValues.add(new MTSearchKeyValue(MTSearchFields.SOFTWARE_VERSION, query.getSoftwareVersions()));
+        }
+        if(query.getTranceiverTypes() != null){
+            searchValues.add(new MTSearchKeyValue(MTSearchFields.TRANSCEIVER_TYPE, query.getTranceiverTypes()));
+        }
+
+
         return searchValues;
     }
 }
