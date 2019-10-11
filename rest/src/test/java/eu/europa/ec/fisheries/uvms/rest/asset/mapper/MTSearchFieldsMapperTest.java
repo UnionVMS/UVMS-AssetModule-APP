@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SearchFieldMapperTest {
+public class MTSearchFieldsMapperTest {
 
     @Test
     @OperateOnDeployment("normal")

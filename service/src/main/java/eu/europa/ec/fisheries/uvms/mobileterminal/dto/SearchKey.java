@@ -6,7 +6,11 @@ public enum SearchKey {
     MEMBER_NUMBER,
     DNID,
     SATELLITE_NUMBER,
-    TRANSPONDER_TYPE;
+    SOFTWARE_VERSION,
+    TRANSCEIVER_TYPE,
+    TRANSPONDER_TYPE,
+    ANTENNA,
+    MOBILETERMINAL_ID;
 
     public String value() {
         return name();

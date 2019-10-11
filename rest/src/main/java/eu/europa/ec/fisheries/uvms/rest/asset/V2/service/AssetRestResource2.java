@@ -89,7 +89,7 @@ public class AssetRestResource2 {
     @Path("list")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetList(@DefaultValue("1") @QueryParam("page") int page,
-                                 @DefaultValue("100") @QueryParam("size") int size,
+                                 @DefaultValue("1000000") @QueryParam("size") int size,
                                  @DefaultValue("true") @QueryParam("dynamic") boolean dynamic,
                                  @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
                                  AssetQuery query) {

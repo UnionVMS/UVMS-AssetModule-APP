@@ -85,7 +85,7 @@ asset: asset and mt now only sends the id for its connected asset/mt
 	POST :MobileTerminal	<- create
 	GET {MTId}
 	PUT :MobileTerminal		<- update
-	GET list :MobileTerminalListQuery ?includeArchived
+	POST list :MTQuery ?page ?size ?dynamic ?includeArchived
 	PUT {mtId}/assign/{assetId} ?comment
 	PUT {mtId}/unassign/{assetId}	?comment
 	PUT	{mtId}/status :MobileTerminalStatus ?comment		MTS = { ACTIVE, INACTIVE, ARCHIVE, UNARCHIVE }

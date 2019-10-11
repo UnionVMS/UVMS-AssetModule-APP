@@ -76,18 +76,4 @@ public class MockData {
         response.getMobileTerminal().addAll(createMobileTerminalDtoList(1));
         return response;
     }
-
-    /*
-     * public static List<MobileTerminalListType> getMobileTerminalList() {
-     * List<MobileTerminalListType> list = new
-     * ArrayList<MobileTerminalListType>(); MobileTerminalListType one = new
-     * MobileTerminalListType(); ChannelListType channel = new
-     * ChannelListType(); channel.setDnid("122");
-     * channel.setMemberNumber("123"); channel.setSerialNumber("1234567");
-     * channel.setTransponderType(TerminalSystemType.INMARSAT_C);
-     * List<ChannelListType> channels = new ArrayList<ChannelListType>();
-     * channels.add(channel); one.setChannels(channels);
-     * one.setFlagState("SWE"); one.setVesselName("vesselName"); list.add(one);
-     * return list; }
-     */
 }
