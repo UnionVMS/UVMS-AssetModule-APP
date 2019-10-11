@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
 		<artifactId>asset</artifactId>
-		<version>6.1.3-SNAPSHOT</version>
+		<version>6.2.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -14,7 +14,7 @@
 
 	<scm>
 		<connection>scm:git:https://github.com/UnionVMS/UVMS-AssetModule-MODEL.git</connection>
-		<tag>HEAD</tag>
+		<tag>asset-6.2.0</tag>
 	</scm>
 
 	<properties>
