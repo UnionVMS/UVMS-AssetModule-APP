@@ -62,6 +62,7 @@ public class MobileTerminalListQueryTest extends AbstractAssetRestTest {
         assertEquals(terminal.getSerialNo(), MobileTerminalTestHelper.getSerialNumber());
         assertEquals(MobileTerminalTypeEnum.INMARSAT_C, terminal.getMobileTerminalType());
         assertEquals(TerminalSourceEnum.INTERNAL, terminal.getSource());
+        assertNotNull(terminal.getPlugin());
     }
 
     @Test

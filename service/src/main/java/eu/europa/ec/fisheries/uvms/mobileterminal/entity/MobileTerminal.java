@@ -23,6 +23,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.util.OffsetDateTimeDeserialize
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -71,7 +72,7 @@ public class MobileTerminal implements Serializable {
 	private UUID historyId;
 
 	@NotNull
-	@NotAudited
+	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne(fetch=FetchType.EAGER,  cascade=CascadeType.ALL)
 	@JoinColumn(name="plugin_id", foreignKey = @ForeignKey(name = "MobileTerminal_Plugin_FK"))
 	private MobileTerminalPlugin plugin;
