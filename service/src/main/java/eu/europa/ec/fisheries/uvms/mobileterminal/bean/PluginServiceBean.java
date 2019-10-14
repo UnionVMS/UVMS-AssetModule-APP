@@ -95,7 +95,7 @@ public class PluginServiceBean {
             LOG.debug("Poll: " + poll.getPollId().getGuid() + " sent to exchange. Response: " + AcknowledgeTypeType.OK);
             return AcknowledgeTypeType.OK;
         } catch (RuntimeException e) {
-            LOG.error("Failed to send poll command! Poll with guid {} was created but not sent", poll.getPollId().getGuid());
+            LOG.error("Failed to send poll command! Poll with guid {} was created but not sent. Error: {}", poll.getPollId().getGuid(), e);
             return AcknowledgeTypeType.NOK;
         }
     }
