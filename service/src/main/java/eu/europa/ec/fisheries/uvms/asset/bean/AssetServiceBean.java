@@ -717,7 +717,7 @@ public class AssetServiceBean implements AssetService {
 
     // if more than 1 hit put data from ais into fartyg2record
     // remove the duplicate
-    private Asset normalizeAssetOnMMSI_IRCS(String mmsi, String ircs) {
+    private Asset normalizeAssetOnMMSI_IRCS(String mmsi, String ircs, String updatedBy) {
 
         List<Asset> assets = assetDao.getAssetByMmsiOrIrcs(mmsi, ircs);
 
@@ -747,6 +747,8 @@ public class AssetServiceBean implements AssetService {
                 // flush is necessary to avoid dumps on MMSI
                 em.flush();
                 fartyg2Asset.setMmsi(nonFartyg2AssetMmsi);
+                fartyg2Asset.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+                fartyg2Asset.setUpdatedBy(updatedBy);
                 em.merge(fartyg2Asset);
                 assetDao.createAssetRemapMapping(createAssetRemapMapping(nonFartyg2Asset.getId(), fartyg2Asset.getId()));
                 remapAssetsInMovement(nonFartyg2Asset.getId().toString(), fartyg2Asset.getId().toString());
@@ -802,7 +804,7 @@ public class AssetServiceBean implements AssetService {
             return;
         }
 
-        Asset assetFromDB = normalizeAssetOnMMSI_IRCS(assetFromAIS.getMmsi(), assetFromAIS.getIrcs());
+        Asset assetFromDB = normalizeAssetOnMMSI_IRCS(assetFromAIS.getMmsi(), assetFromAIS.getIrcs(), user);
 
         boolean shouldUpdate = false;
 
