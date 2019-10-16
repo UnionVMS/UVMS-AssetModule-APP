@@ -102,6 +102,7 @@ public class Channel implements Serializable {
 	@Column(name="chan_poll")
 	private boolean pollChannel;
 
+	@NotNull
 	@Column(name="dnid")
 	private String DNID;
 
@@ -126,6 +127,7 @@ public class Channel implements Serializable {
 	@Column(name="les_description")
 	private String lesDescription;
 
+	@NotNull
 	@Column(name="member_number")
 	private String memberNumber;
 
