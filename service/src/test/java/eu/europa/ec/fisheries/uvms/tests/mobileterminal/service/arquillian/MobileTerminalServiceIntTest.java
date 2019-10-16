@@ -5,6 +5,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
@@ -190,6 +191,24 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
         MobileTerminal mobileTerminal = testPollHelper.createBasicMobileTerminal();
         mobileTerminal.setPlugin(null);
+        mobileTerminalService.createMobileTerminal(mobileTerminal, USERNAME);
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createMobileTerminal_WillFail_Empty_Channel() {
+
+        thrown.expect(EJBTransactionRolledbackException.class);
+        //Sadly, on jenkins this method does not exist. Dont know why jenkins picks that library when running the test but it does and at least this way the whole thing works
+        /*thrown.expectMessage("ConstraintViolationImpl{interpolatedMessage='must not be null', propertyPath=memberNumber");
+        thrown.expectMessage("ConstraintViolationImpl{interpolatedMessage='must not be null', propertyPath=expectedFrequencyInPort");
+        thrown.expectMessage("ConstraintViolationImpl{interpolatedMessage='must not be null', propertyPath=DNID");
+        thrown.expectMessage("ConstraintViolationImpl{interpolatedMessage='must not be null', propertyPath=expectedFrequency");
+        thrown.expectMessage("ConstraintViolationImpl{interpolatedMessage='must not be null', propertyPath=frequencyGracePeriod");*/
+
+        MobileTerminal mobileTerminal = testPollHelper.createBasicMobileTerminal();
+        Channel emptyChannel = new Channel();
+        mobileTerminal.getChannels().add(emptyChannel);
         mobileTerminalService.createMobileTerminal(mobileTerminal, USERNAME);
     }
 
