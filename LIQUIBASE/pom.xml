@@ -3,7 +3,6 @@
 
 	<groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
 	<artifactId>liquibase</artifactId>
-	<version>4.0.24-SNAPSHOT</version>
 	<name>liquibase</name>
 
 	<parent>
@@ -44,7 +43,7 @@
 		<profile>
 			<id>postgres</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
+				<activeByDefault>false</activeByDefault>
 			</activation>
 			<properties>
 				<db.driver>org.postgresql.Driver</db.driver>
@@ -301,15 +300,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>
-				<version>2.6</version>
 				<goals>
 					<goal>deploy-file</goal>
 				</goals>
 				<configuration>
-					<repositoryId>${repository.id}</repositoryId>
 					<packaging>zip</packaging>
 					<generatePom>true</generatePom>
-					<url>${repository.url}</url>
 					<artifactId>${project.artifactId}</artifactId>
 					<groupId>${project.groupId}</groupId>
 					<version>${project.version}</version>
