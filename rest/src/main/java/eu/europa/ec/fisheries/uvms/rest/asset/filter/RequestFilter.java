@@ -18,7 +18,6 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.ForbiddenException;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,16 +26,13 @@ import java.util.regex.Pattern;
 public class RequestFilter implements Filter {
 
     /**
-     * {@code corsOriginRegex} is valid for given host names/IPs and any range of sub domains.
-     *
-     * localhost:28080
-     * localhost:8080
-     * 127.0.0.1:28080
-     * 127.0.0.1:8080
-     * 192.168.***.***:28080
-     * 192.168.***.***:8080
-     * *.hav.havochvatten.se:8080
-     * *.hav.havochvatten.se:28080
+     * {@code corsOriginRegex} is valid for given host/origin names/IPs and any range of sub domains.
+     * <p>
+     * localhost:[2]8080/9001
+     * 127.0.0.1:[2]8080/9001
+     * 192.168.***.***:[2]8080
+     * liaswf05[t,u,d]:[2]8080
+     * havochvatten.se:[2]8080
      */
     @Resource(lookup = "java:global/cors_allowed_host_regex")
     private String corsOriginRegex;
@@ -49,23 +45,19 @@ public class RequestFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        final String HOST = httpServletRequest.getHeader("HOST");
+        String origin = httpServletRequest.getHeader("ORIGIN");
 
-        boolean isValid = validateHost(HOST);
+        if(origin != null && validateHost(origin)) {
+            HttpServletResponse response = (HttpServletResponse) res;
+            response.setHeader(Constant.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
+            response.setHeader(Constant.ACCESS_CONTROL_ALLOW_METHODS, Constant.ACCESS_CONTROL_ALLOWED_METHODS);
+            response.setHeader(Constant.ACCESS_CONTROL_ALLOW_HEADERS, Constant.ACCESS_CONTROL_ALLOW_HEADERS_ALL);
 
-        if (!isValid)
-            throw new ForbiddenException("You are not allowed to make any request from an external domain.");
-
-        HttpServletResponse response = (HttpServletResponse) res;
-        response.setHeader(Constant.ACCESS_CONTROL_ALLOW_ORIGIN, HOST);
-        response.setHeader(Constant.ACCESS_CONTROL_ALLOW_METHODS, Constant.ACCESS_CONTROL_ALLOWED_METHODS);
-        response.setHeader(Constant.ACCESS_CONTROL_ALLOW_HEADERS, Constant.ACCESS_CONTROL_ALLOW_HEADERS_ALL);
-
-        if (httpServletRequest.getMethod().equals("OPTIONS")) {
-            response.setStatus(200);
-            return;
+            if (httpServletRequest.getMethod().equals("OPTIONS")) {
+                response.setStatus(200);
+                return;
+            }
         }
-        
         chain.doFilter(request, res);
     }
 
