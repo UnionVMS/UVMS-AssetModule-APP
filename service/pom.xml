@@ -9,7 +9,7 @@
     <parent>
 	    <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
 	    <artifactId>asset</artifactId>
-	    <version>4.0.24-SNAPSHOT</version>
+	    <version>${uvms.asset.module.version}</version>
     </parent>
 
     <properties>
@@ -140,13 +140,13 @@
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>asset-model</artifactId>
-            <version>4.0.24-SNAPSHOT</version>
+            <version>${uvms.asset.module.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
             <artifactId>asset-dbaccess-domain</artifactId>
-            <version>4.0.24-SNAPSHOT</version>
+            <version>${uvms.asset.module.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
