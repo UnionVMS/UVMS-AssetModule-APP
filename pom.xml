@@ -26,7 +26,7 @@
     <audit.model.version>${uvms.audit.module.version}</audit.model.version>
 
     <usm4uvms.version>${uvms.uvms4usm.version}</usm4uvms.version>
-    <uvms.config.version>${uvms.config.module.version}</uvms.config.version>
+    <uvms.config.version>${uvms.config.library.version}</uvms.config.version>
     <uvms.commons.version>${uvms.commonsLibrary.version}</uvms.commons.version>
     <project.scm.id>github</project.scm.id>
   </properties>
