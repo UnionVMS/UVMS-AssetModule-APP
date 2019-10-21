@@ -8,7 +8,7 @@
 	<parent>
 	    <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
 	    <artifactId>asset</artifactId>
-	    <version>4.0.24-SNAPSHOT</version>
+	    <version>${uvms.asset.module.version}</version>
     </parent>
 
 	<properties>

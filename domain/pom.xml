@@ -9,7 +9,7 @@
     <parent>
 	    <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
 	    <artifactId>asset</artifactId>
-	    <version>4.0.24-SNAPSHOT</version>
+	    <version>${uvms.asset.module.version}</version>
     </parent>
 
     <properties>
@@ -31,17 +31,17 @@
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-message</artifactId>
-            <version>${uvms.common.version}</version>
+            <version>${uvms.commons.version}</version>
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-domain</artifactId>
-            <version>${uvms.common.version}</version>
+            <version>${uvms.commons.version}</version>
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-date</artifactId>
-            <version>${uvms.common.version}</version>
+            <version>${uvms.commons.version}</version>
         </dependency>                
  		<dependency>
 			<groupId>fish.focus.uvms.maven</groupId>
