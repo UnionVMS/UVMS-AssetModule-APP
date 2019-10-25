@@ -554,6 +554,7 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
 
         MobileTerminal mobileTerminal2 = MobileTerminalTestHelper.createBasicMobileTerminal();
         mobileTerminal2.setAsset(createdAsset);
+        mobileTerminal2.setActive(false);
 
         String response2 = getWebTargetExternal()
                 .path("mobileterminal")

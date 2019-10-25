@@ -177,8 +177,106 @@ public class MobileTerminalRestResourceTest2 extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void createSeveralActiveMTOnOneAssetTest() {
+        Asset asset = createAndRestBasicAsset();
+        assertNotNull(asset);
+
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminal.setAsset(asset);
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+
+        assertNotNull(created);
+
+        MobileTerminal mobileTerminal2 = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminal2.setAsset(asset);
+
+        Response failed = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal2), Response.class);
+
+        assertNotNull(failed);
+        assertEquals(500, failed.getStatus());
+        String returnMessage = failed.readEntity(String.class);
+        assertTrue(returnMessage, returnMessage.contains("An asset can not have more then one active MT."));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createActiveAndInactiveMTOnOneAssetTest() {
+        Asset asset = createAndRestBasicAsset();
+        assertNotNull(asset);
+
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminal.setAsset(asset);
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+
+        assertNotNull(created);
+
+        MobileTerminal mobileTerminal2 = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminal2.setActive(false);
+        mobileTerminal2.setAsset(asset);
+
+        MobileTerminal inactiveMT = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal2), MobileTerminal.class);
+
+        assertNotNull(inactiveMT);
+        assertFalse(inactiveMT.getActive());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void updateMobileTerminalTest() {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        assertNotNull(created);
+        assertNotEquals(MobileTerminalTypeEnum.IRIDIUM, created.getMobileTerminalType());
+
+        created.setMobileTerminalType(MobileTerminalTypeEnum.IRIDIUM);
+        created.getChannels().iterator().next().setName("BETTER_VMS");
+
+        MobileTerminal updated = getWebTargetExternal()
+                .path("mobileterminal2")
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(created), MobileTerminal.class);
+
+        assertNotNull(updated);
+        assertEquals(created.getId(), updated.getId());
+        assertEquals(MobileTerminalTypeEnum.IRIDIUM, updated.getMobileTerminalType());
+        assertEquals("BETTER_VMS", updated.getChannels().iterator().next().getName());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void updateActiveMobileTerminalWithAttachedAssetTest() {
+        Asset asset = createAndRestBasicAsset();
+        assertNotNull(asset);
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminal.setAsset(asset);
 
         MobileTerminal created = getWebTargetExternal()
                 .path("mobileterminal2")
@@ -286,6 +384,49 @@ public class MobileTerminalRestResourceTest2 extends AbstractAssetRestTest {
 
         assertNotNull(response);
         assertEquals(created.getId(), response.getId());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void assignActiveMobileTerminalToAssetWithAlreadyAnActiveMTTest() {
+        Asset asset = createAndRestBasicAsset();
+        assertNotNull(asset);
+
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminal.setAsset(asset);
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        assertNotNull(created);
+
+        MobileTerminal unassignedMT = MobileTerminalTestHelper.createBasicMobileTerminal();
+        unassignedMT = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(unassignedMT), MobileTerminal.class);
+
+        assertNotNull(unassignedMT);
+
+
+        Response response = getWebTargetExternal()
+                .path("/mobileterminal2")
+                .path(unassignedMT.getId().toString())
+                .path("assign")
+                .path(asset.getId().toString())
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(""), Response.class);
+
+        assertNotNull(response);
+        assertEquals(500, response.getStatus());
+        String returnMessage = response.readEntity(String.class);
+        assertTrue(returnMessage, returnMessage.contains("An asset can not have more then one active MT."));
     }
 
     @Test
@@ -400,6 +541,51 @@ public class MobileTerminalRestResourceTest2 extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void ActivateMTConnectedToAnAssetWithAnAlreadyActiveMT() {
+        Asset asset = createAndRestBasicAsset();
+        assertNotNull(asset);
+
+        MobileTerminal activeMT = MobileTerminalTestHelper.createBasicMobileTerminal();
+        activeMT.setAsset(asset);
+
+        activeMT = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(activeMT), MobileTerminal.class);
+
+        assertTrue(activeMT.getActive());
+
+        MobileTerminal inactiveMT = MobileTerminalTestHelper.createBasicMobileTerminal();
+        inactiveMT.setActive(false);
+        inactiveMT.setAsset(asset);
+
+        inactiveMT = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(inactiveMT), MobileTerminal.class);
+
+        assertFalse(inactiveMT.getActive());
+
+        Response failed = getWebTargetExternal()
+                .path("mobileterminal2")
+                .path(inactiveMT.getId().toString())
+                .path("status")
+                .queryParam("comment", "Test Comment Activate")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(MobileTerminalStatus.ACTIVE), Response.class);
+
+
+        assertNotNull(failed);
+        assertEquals(500, failed.getStatus());
+        String returnMessage = failed.readEntity(String.class);
+        assertTrue(returnMessage, returnMessage.contains("An asset can not have more then one active MT."));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void archiveAndUnarchiveMobileTerminal() {
         MobileTerminal mt = MobileTerminalTestHelper.createBasicMobileTerminal();
         mt.setAsset(null);
@@ -455,6 +641,7 @@ public class MobileTerminalRestResourceTest2 extends AbstractAssetRestTest {
     public void getMobileTerminalRevisionsByAssetId() {
         MobileTerminal mt1 = MobileTerminalTestHelper.createBasicMobileTerminal();
         MobileTerminal mt2 = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mt2.setActive(false);
 
         MobileTerminal created1 = getWebTargetExternal()
                 .path("mobileterminal2")
