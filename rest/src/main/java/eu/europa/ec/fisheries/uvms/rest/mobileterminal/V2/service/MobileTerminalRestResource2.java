@@ -182,7 +182,7 @@ public class MobileTerminalRestResource2 {
     @PUT
     @Path("/{mtId}/status")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
-    public Response setStatusActive(@QueryParam("comment") String comment, @PathParam("mtId") UUID mtId, MobileTerminalStatus status) {
+    public Response setStatus(@QueryParam("comment") String comment, @PathParam("mtId") UUID mtId, MobileTerminalStatus status) {
         LOG.info("Set mobile terminal status active invoked in rest layer.");
         try {
             MobileTerminal mobileTerminal = mobileTerminalService.setStatusMobileTerminal(mtId, comment, status, request.getRemoteUser());
