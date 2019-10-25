@@ -432,6 +432,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     public void getMobileTerminalRevisionsByAssetId() {
         MobileTerminal mt1 = MobileTerminalTestHelper.createBasicMobileTerminal();
         MobileTerminal mt2 = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mt2.setActive(false);
 
         MobileTerminal created1 = getWebTargetExternal()
                 .path("mobileterminal")
