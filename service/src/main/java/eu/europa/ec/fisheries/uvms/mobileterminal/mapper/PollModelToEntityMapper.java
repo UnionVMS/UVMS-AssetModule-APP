@@ -28,22 +28,9 @@ import java.util.UUID;
 public class PollModelToEntityMapper {
     private static Logger LOG = LoggerFactory.getLogger(PollModelToEntityMapper.class);
 
-    private static PollBase createNewPollBase(MobileTerminal terminal, String terminalConnect, String channelGuid, PollRequestType requestType) {
-        PollBase pollBase = new PollBase();
-        pollBase.setChannelId(UUID.fromString(channelGuid));
-        pollBase.setMobileterminal(terminal);
-        pollBase.setTerminalConnect(terminalConnect);
-        pollBase.setComment(requestType.getComment());
-        pollBase.setCreator(requestType.getUserName());
-        
-        pollBase.setUpdatedBy(requestType.getUserName());
-        pollBase.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
-        return pollBase;
-    }
-
-    public static PollProgram mapToProgramPoll(MobileTerminal terminal, String terminalConnect, String channelGuid, PollRequestType requestType) {
+    public static PollProgram mapToProgramPoll(MobileTerminal terminal, String channelGuid, PollRequestType requestType) {
         PollProgram poll = new PollProgram();
-        PollBase pollBase = createNewPollBase(terminal, terminalConnect, channelGuid, requestType);
+        PollBase pollBase = createNewPollBase(terminal, channelGuid, requestType);
         poll.setPollBase(pollBase);
         poll.setPollState(PollStateEnum.STARTED);
 
@@ -76,23 +63,36 @@ public class PollModelToEntityMapper {
         return poll;
     }
 
-    public static Poll mapToPoll(MobileTerminal comchannel, String connectId, String channelGuid, PollRequestType requestType) {
+    private static PollBase createNewPollBase(MobileTerminal terminal, String channelGuid, PollRequestType requestType) {
+        PollBase pollBase = new PollBase();
+        pollBase.setChannelId(UUID.fromString(channelGuid));
+        pollBase.setMobileterminal(terminal);
+        pollBase.setTerminalConnect(terminal.getAssetId());
+        pollBase.setComment(requestType.getComment());
+        pollBase.setCreator(requestType.getUserName());
+
+        pollBase.setUpdatedBy(requestType.getUserName());
+        pollBase.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        return pollBase;
+    }
+
+    public static Poll mapToPoll(MobileTerminal mobileTerminal, String channelGuid, PollRequestType requestType) {
     	switch (requestType.getPollType()) {
         case CONFIGURATION_POLL:
-        	return mapToConfigurationPoll(comchannel, connectId, channelGuid, requestType);
+        	return mapToConfigurationPoll(mobileTerminal, channelGuid, requestType);
         case SAMPLING_POLL:
-        	return mapToSamplingPoll(comchannel, connectId, channelGuid, requestType);
+        	return mapToSamplingPoll(mobileTerminal, channelGuid, requestType);
         case AUTOMATIC_POLL:
         case MANUAL_POLL:
-        	return createPollBase(comchannel, connectId, channelGuid, requestType);
+        	return createPollBase(mobileTerminal, channelGuid, requestType);
         default:
         	throw new IllegalArgumentException("Non valid poll type");
     	}
     }
     
-    private static Poll createPollBase(MobileTerminal comchannel, String terminalConnect, String channelGuid, PollRequestType requestType) {
+    private static Poll createPollBase(MobileTerminal comchannel, String channelGuid, PollRequestType requestType) {
         Poll poll = new Poll();
-        PollBase pollBase = createNewPollBase(comchannel, terminalConnect, channelGuid, requestType);
+        PollBase pollBase = createNewPollBase(comchannel, channelGuid, requestType);
         poll.setPollBase(pollBase);
         try {
         	poll.setPollType(EnumMapper.getPollTypeFromModel(requestType.getPollType()));
@@ -105,8 +105,8 @@ public class PollModelToEntityMapper {
         return poll;
     }
 
-    private static Poll mapToConfigurationPoll(MobileTerminal comchannel, String terminalConnect, String channelGuid, PollRequestType requestType) {
-    	Poll poll = createPollBase(comchannel, terminalConnect, channelGuid, requestType);
+    private static Poll mapToConfigurationPoll(MobileTerminal comchannel, String channelGuid, PollRequestType requestType) {
+    	Poll poll = createPollBase(comchannel, channelGuid, requestType);
         List<PollAttribute> attributes = requestType.getAttributes();
         if (attributes == null || attributes.isEmpty())
         	throw new NullPointerException("No attributes to map to configuration poll");
@@ -141,8 +141,8 @@ public class PollModelToEntityMapper {
         return poll;
     }
 
-    private static Poll mapToSamplingPoll(MobileTerminal comchannel, String terminalConnect, String channelGuid, PollRequestType requestType) {
-    	Poll poll = createPollBase(comchannel, terminalConnect, channelGuid, requestType);
+    private static Poll mapToSamplingPoll(MobileTerminal mobileTerminal, String channelGuid, PollRequestType requestType) {
+    	Poll poll = createPollBase(mobileTerminal, channelGuid, requestType);
         List<PollAttribute> attributes = requestType.getAttributes();
         if (attributes == null || attributes.isEmpty())
         	throw new NullPointerException("No attributes to map to sampling poll");
@@ -155,7 +155,7 @@ public class PollModelToEntityMapper {
                     payload.setStartDate(OffsetDateTime.parse(attr.getValue())); // Not sure if it will work without a format pattern
                 	break;
         		case END_DATE:
-                    payload.setStartDate(OffsetDateTime.parse(attr.getValue())); // Not sure if it will work without a format pattern
+                    payload.setStopDate(OffsetDateTime.parse(attr.getValue())); // Not sure if it will work without a format pattern
                     break;
         		}
         	} catch (UnsupportedOperationException | IllegalArgumentException e) {
