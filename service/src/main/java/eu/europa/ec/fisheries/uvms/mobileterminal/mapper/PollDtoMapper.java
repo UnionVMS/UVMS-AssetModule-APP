@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public class PollMapper {
+public class PollDtoMapper {
 
     public static List<PollDto> mapPolls(List<PollResponseType> pollResponses){
         List<PollDto> dtoList = new ArrayList<>();

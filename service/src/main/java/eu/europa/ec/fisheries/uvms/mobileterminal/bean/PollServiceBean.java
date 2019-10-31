@@ -133,7 +133,7 @@ public class PollServiceBean {
         List<PollProgram> pollPrograms = pollProgramDao.getProgramPollsAlive();
         List<PollResponseType> pollResponse = getResponseList(pollPrograms);
 
-        return PollMapper.mapPolls(pollResponse);
+        return PollDtoMapper.mapPolls(pollResponse);
     }
 
     public PollResponseType startProgramPoll(String pollId, String username) {
@@ -180,7 +180,7 @@ public class PollServiceBean {
 
     public PollChannelListDto getPollBySearchCriteria(PollListQuery query) {
         PollListResponse pollResponse = getPollList(query);
-        return PollMapper.pollListResponseToPollChannelListDto(pollResponse);
+        return PollDtoMapper.pollListResponseToPollChannelListDto(pollResponse);
     }
 
     public List<PollResponseType> timer() {
