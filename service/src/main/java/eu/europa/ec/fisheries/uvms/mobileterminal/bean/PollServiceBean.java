@@ -91,8 +91,7 @@ public class PollServiceBean {
     }
 
     public CreatePollResultDto createPoll(PollRequestType poll) {
-
-        List<PollResponseType> createdPolls = createPolls(poll);
+        List<PollResponseType> createdPolls = validateAndCreatePolls(poll);
         List<String> unsentPolls = new ArrayList<>();
         List<String> sentPolls = new ArrayList<>();
         for (PollResponseType createdPoll : createdPolls) {
@@ -211,7 +210,7 @@ public class PollServiceBean {
         }
     }
 
-    public List<PollResponseType> createPolls(PollRequestType pollRequest) {
+    private List<PollResponseType> validateAndCreatePolls(PollRequestType pollRequest) {
         validatePollRequest(pollRequest);
         List<PollResponseType> responseList;
         Map<Poll, MobileTerminal> pollMobileTerminalMap;
@@ -259,7 +258,7 @@ public class PollServiceBean {
                 throw new IllegalStateException("Terminal " + mobileTerminalEntity.getId() + " can not be polled, because it is not linked to asset " + connectId);
             }
             checkPollable(mobileTerminalEntity);
-            PollProgram pollProgram = PollModelToEntityMapper.mapToProgramPoll(mobileTerminalEntity, connectId, pollTerminal.getComChannelId(), pollRequest);
+            PollProgram pollProgram = PollModelToEntityMapper.mapToProgramPoll(mobileTerminalEntity, pollTerminal.getComChannelId(), pollRequest);
             map.put(pollProgram, mobileTerminalEntity);
         }
         return map;
@@ -282,7 +281,7 @@ public class PollServiceBean {
                 validateMobileTerminalPluginCapability(mobileTerminalEntity.getPlugin().getCapabilities(), pollRequest.getPollType(), mobileTerminalEntity.getPlugin().getPluginServiceName());
             }
             checkPollable(mobileTerminalEntity);
-            Poll poll = PollModelToEntityMapper.mapToPoll(mobileTerminalEntity, connectId, pollTerminal.getComChannelId(), pollRequest);
+            Poll poll = PollModelToEntityMapper.mapToPoll(mobileTerminalEntity, pollTerminal.getComChannelId(), pollRequest);
             map.put(poll, mobileTerminalEntity);
         }
         return map;
