@@ -13,12 +13,10 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.mapper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttribute;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttributeType;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.AttributeDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollKey;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -127,5 +125,20 @@ public class PollMapper {
 
         pollChannel.setMobileTerminalAttributes(attributes);
         return pollChannel;
+    }
+
+    public static PollChannelListDto pollListResponseToPollChannelListDto(PollListResponse pollResponse) {
+        PollChannelListDto channelListDto = new PollChannelListDto();
+        channelListDto.setCurrentPage(pollResponse.getCurrentPage());
+        channelListDto.setTotalNumberOfPages(pollResponse.getTotalNumberOfPages());
+
+        ArrayList<PollChannelDto> pollChannelList = new ArrayList<>();
+        for(PollResponseType responseType : pollResponse.getPollList()) {
+            PollChannelDto terminal = mapPollChannel(responseType.getMobileTerminal());
+            terminal.setPoll(mapPoll(responseType));
+            pollChannelList.add(terminal);
+        }
+        channelListDto.setPollableChannels(pollChannelList);
+        return channelListDto;
     }
 }

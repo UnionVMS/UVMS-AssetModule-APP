@@ -21,7 +21,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollProgramDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.*;
@@ -69,14 +68,21 @@ public class PollServiceBean {
     public CreatePollResultDto createPollForAsset(UUID assetId, PollType pollType, String username, String comment){
         MobileTerminal mt = mobileTerminalServiceBean.getActiveMTForAsset(assetId);
 
-        if(mt == null){
-            throw new IllegalArgumentException("No active MT for this asset, unable to poll");    //if we dont have an MT it is very hard to poll it.....
+        if(mt == null) {
+            throw new IllegalArgumentException("No active MT for this asset, unable to poll");
         }
         Channel channel = mobileTerminalServiceBean.getPollableChannel(mt);
-        if(channel == null){
-            throw new IllegalArgumentException("No pollable channel for this active MT, unable to poll");    //if we dont have a channel it is very hard to poll it.....
+        if(channel == null) {
+            throw new IllegalArgumentException("No pollable channel for this active MT, unable to poll");
         }
 
+        PollRequestType prt = buildPollRequest(assetId, pollType, username, comment, mt, channel);
+
+        return createPoll(prt);
+    }
+
+    private PollRequestType buildPollRequest(UUID assetId, PollType pollType, String username,
+                                             String comment, MobileTerminal mt, Channel channel) {
         PollRequestType prt = new PollRequestType();
         prt.setPollType(pollType);
         PollMobileTerminal pollMobileTerminal = new PollMobileTerminal();
@@ -86,12 +92,12 @@ public class PollServiceBean {
         prt.setUserName(username);
         prt.setComment(comment);
         prt.getMobileTerminals().add(pollMobileTerminal);
-
-        return createPoll(prt);
+        return prt;
     }
 
     public CreatePollResultDto createPoll(PollRequestType poll) {
         List<PollResponseType> createdPolls = validateAndCreatePolls(poll);
+
         List<String> unsentPolls = new ArrayList<>();
         List<String> sentPolls = new ArrayList<>();
         for (PollResponseType createdPoll : createdPolls) {
@@ -173,20 +179,8 @@ public class PollServiceBean {
     }
 
     public PollChannelListDto getPollBySearchCriteria(PollListQuery query) {
-
-        PollChannelListDto channelListDto = new PollChannelListDto();
-        PollListResponse pollResponse = getPollList(query);    //this is where the magic happens, rest of the method is just a mapper
-        channelListDto.setCurrentPage(pollResponse.getCurrentPage());
-        channelListDto.setTotalNumberOfPages(pollResponse.getTotalNumberOfPages());
-
-        ArrayList<PollChannelDto> pollChannelList = new ArrayList<>();
-        for(PollResponseType responseType : pollResponse.getPollList()) {
-            PollChannelDto terminal = PollMapper.mapPollChannel(responseType.getMobileTerminal());
-            terminal.setPoll(PollMapper.mapPoll(responseType));
-            pollChannelList.add(terminal);
-        }
-        channelListDto.setPollableChannels(pollChannelList);
-        return channelListDto;
+        PollListResponse pollResponse = getPollList(query);
+        return PollMapper.pollListResponseToPollChannelListDto(pollResponse);
     }
 
     public List<PollResponseType> timer() {
@@ -194,20 +188,7 @@ public class PollServiceBean {
     }
 
     private MobileTerminal mapPollableTerminal(MobileTerminalTypeEnum type, UUID guid) {
-        MobileTerminal terminal = terminalDao.getMobileTerminalById(guid);
-        return terminal;
-    }
-
-    private void checkPollable(MobileTerminal terminal){
-        if (terminal.getArchived()) {
-            throw new IllegalStateException("Terminal is archived");
-        }
-        if (!terminal.getActive()) {
-            throw new IllegalStateException("Terminal is inactive");
-        }
-        if (terminal.getPlugin() != null && terminal.getPlugin().getPluginInactive()) {
-            throw new IllegalStateException("Terminal connected to no longer active Plugin (LES)");
-        }
+        return terminalDao.getMobileTerminalById(guid);
     }
 
     private List<PollResponseType> validateAndCreatePolls(PollRequestType pollRequest) {
@@ -287,6 +268,18 @@ public class PollServiceBean {
         return map;
     }
 
+    private void checkPollable(MobileTerminal terminal){
+        if (terminal.getArchived()) {
+            throw new IllegalStateException("Terminal is archived");
+        }
+        if (!terminal.getActive()) {
+            throw new IllegalStateException("Terminal is inactive");
+        }
+        if (terminal.getPlugin() != null && terminal.getPlugin().getPluginInactive()) {
+            throw new IllegalStateException("Terminal connected to no longer active Plugin (LES)");
+        }
+    }
+
     private void validateMobileTerminalPluginCapability (Set<MobileTerminalPluginCapability> capabilities, PollType pollType, String pluginServiceName) {
         PluginCapabilityType pluginCapabilityType;
         switch (pollType) {
@@ -337,17 +330,7 @@ public class PollServiceBean {
     }
 
     public PollListResponse getPollList(PollListQuery query) {
-        if (query == null) {
-            throw new NullPointerException("Cannot get poll list because no query.");
-        }
-
-        if (query.getPagination() == null) {
-            throw new NullPointerException("Cannot get poll list because no list pagination.");
-        }
-
-        if (query.getPollSearchCriteria() == null || query.getPollSearchCriteria().getCriterias() == null) {
-            throw new NullPointerException("Cannot get poll list because criteria are null.");
-        }
+        validatePollListQuery(query);
         PollListResponse response = new PollListResponse();
         List<PollResponseType> pollResponseList = new ArrayList<>();
 
@@ -383,6 +366,18 @@ public class PollServiceBean {
         response.setCurrentPage(query.getPagination().getPage());
         response.getPollList().addAll(pollResponseList);
         return response;
+    }
+
+    private void validatePollListQuery(PollListQuery query) {
+        if (query == null) {
+            throw new NullPointerException("Cannot get poll list because no query.");
+        }
+        if (query.getPagination() == null) {
+            throw new NullPointerException("Cannot get poll list because no list pagination.");
+        }
+        if (query.getPollSearchCriteria() == null || query.getPollSearchCriteria().getCriterias() == null) {
+            throw new NullPointerException("Cannot get poll list because criteria are null.");
+        }
     }
 
     public List<PollResponseType> getPollProgramRunningAndStarted() {
