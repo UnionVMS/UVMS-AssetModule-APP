@@ -4,6 +4,10 @@ public class AssetMergeInfo {
     String oldAssetId;
     String newAssetId;
 
+    public AssetMergeInfo(){
+
+    }
+
     public AssetMergeInfo(String oldAssetId, String newAssetId) {
         this.oldAssetId = oldAssetId;
         this.newAssetId = newAssetId;
