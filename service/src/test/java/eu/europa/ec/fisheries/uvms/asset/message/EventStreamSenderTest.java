@@ -16,7 +16,6 @@ import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.timer.AssetRemapTask;
 import eu.europa.ec.fisheries.uvms.tests.BuildAssetServiceDeployment;
-import eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian.AssetRemapTest;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Before;
@@ -29,7 +28,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.jms.*;
-
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
