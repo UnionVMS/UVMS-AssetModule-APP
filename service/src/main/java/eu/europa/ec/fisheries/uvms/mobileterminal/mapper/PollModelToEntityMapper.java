@@ -41,14 +41,14 @@ public class PollModelToEntityMapper {
         return pollBase;
     }
 
-    public static PollProgram mapToProgramPoll(MobileTerminal terminal, String terminalConnect, String channelGuid, PollRequestType requestType, String username) {
+    public static PollProgram mapToProgramPoll(MobileTerminal terminal, String terminalConnect, String channelGuid, PollRequestType requestType) {
         PollProgram poll = new PollProgram();
         PollBase pollBase = createNewPollBase(terminal, terminalConnect, channelGuid, requestType);
         poll.setPollBase(pollBase);
         poll.setPollState(PollStateEnum.STARTED);
 
         poll.setLatestRun(null);
-        poll.setUpdatedBy(username);
+        poll.setUpdatedBy(requestType.getUserName());
         poll.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
 
         List<PollAttribute> attributes = requestType.getAttributes();

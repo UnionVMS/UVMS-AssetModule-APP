@@ -37,7 +37,6 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.ws.rs.core.Response;
 import java.util.*;
 
 @Stateless
@@ -214,13 +213,12 @@ public class PollServiceBean {
 
     public List<PollResponseType> createPolls(PollRequestType pollRequest) {
         validatePollRequest(pollRequest);
-        String username = pollRequest.getUserName();
         List<PollResponseType> responseList;
         Map<Poll, MobileTerminal> pollMobileTerminalMap;
         switch (pollRequest.getPollType()) {
             case PROGRAM_POLL:
-                Map<PollProgram, MobileTerminal> pollProgramMobileTerminalTypeMap = validateAndMapToProgramPolls(pollRequest, username);
-                responseList = createPollPrograms(pollProgramMobileTerminalTypeMap, username);
+                Map<PollProgram, MobileTerminal> pollProgramMobileTerminalTypeMap = validateAndMapToProgramPolls(pollRequest);
+                responseList = createPollPrograms(pollProgramMobileTerminalTypeMap);
                 break;
             case CONFIGURATION_POLL:
             case MANUAL_POLL:
@@ -248,7 +246,7 @@ public class PollServiceBean {
         }
     }
 
-    private Map<PollProgram, MobileTerminal> validateAndMapToProgramPolls(PollRequestType pollRequest, String username) {
+    private Map<PollProgram, MobileTerminal> validateAndMapToProgramPolls(PollRequestType pollRequest) {
         Map<PollProgram, MobileTerminal> map = new HashMap<>();
 
         for (PollMobileTerminal pollTerminal : pollRequest.getMobileTerminals()) {
@@ -261,7 +259,7 @@ public class PollServiceBean {
                 throw new IllegalStateException("Terminal " + mobileTerminalEntity.getId() + " can not be polled, because it is not linked to asset " + connectId);
             }
             checkPollable(mobileTerminalEntity);
-            PollProgram pollProgram = PollModelToEntityMapper.mapToProgramPoll(mobileTerminalEntity, connectId, pollTerminal.getComChannelId(), pollRequest, username);
+            PollProgram pollProgram = PollModelToEntityMapper.mapToProgramPoll(mobileTerminalEntity, connectId, pollTerminal.getComChannelId(), pollRequest);
             map.put(pollProgram, mobileTerminalEntity);
         }
         return map;
@@ -316,7 +314,7 @@ public class PollServiceBean {
         return false;
     }
 
-    private List<PollResponseType> createPollPrograms (Map<PollProgram, MobileTerminal> map, String username) {
+    private List<PollResponseType> createPollPrograms (Map<PollProgram, MobileTerminal> map) {
         List<PollResponseType> responseList = new ArrayList<>();
         for (Map.Entry<PollProgram, MobileTerminal> next : map.entrySet()) {
             PollProgram pollProgram = next.getKey();
