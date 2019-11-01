@@ -21,7 +21,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollProgram;
-import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollDtoMapper;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -108,7 +108,7 @@ public class PollRestResource {
         LOG.info("Start poll invoked in rest layer:{}",pollId);
         try {
             PollResponseType pollResponse = pollServiceBean.startProgramPoll(pollId, request.getRemoteUser());
-            PollDto poll = PollMapper.mapPoll(pollResponse);
+            PollDto poll = PollDtoMapper.mapPoll(pollResponse);
             return Response.ok(poll).build();
         } catch (Exception ex) {
             LOG.error("[ Error when starting program poll {}] {}", pollId, ex.getStackTrace());
@@ -123,7 +123,7 @@ public class PollRestResource {
         LOG.info("Stop poll invoked in rest layer:{}",pollId);
         try {
             PollResponseType pollResponse = pollServiceBean.stopProgramPoll(pollId, request.getRemoteUser());
-            PollDto poll = PollMapper.mapPoll(pollResponse);
+            PollDto poll = PollDtoMapper.mapPoll(pollResponse);
             return Response.ok(poll).build();
         } catch (Exception ex) {
             LOG.error("[ Error when stopping program poll {} ] {}",pollId, ex.getStackTrace());
@@ -138,7 +138,7 @@ public class PollRestResource {
         LOG.info("Archive poll invoked in rest layer:{}",pollId);
         try {
             PollResponseType pollResponse = pollServiceBean.inactivateProgramPoll(pollId, request.getRemoteUser());
-            PollDto poll = PollMapper.mapPoll(pollResponse);
+            PollDto poll = PollDtoMapper.mapPoll(pollResponse);
             return Response.ok(poll).build();
         } catch (Exception ex) {
             LOG.error("[ Error when inactivating program poll {}] {}",pollId, ex.getStackTrace());

@@ -42,15 +42,6 @@ public class PollSearchMapper {
 		return searchKeyValue;
 	}
 
-    private static PollSearchKeyValue getSearchKeyValue(PollSearchField field, Map<PollSearchField, PollSearchKeyValue> searchKeys) {
-        PollSearchKeyValue searchKeyValue = searchKeys.get(field);
-        if (searchKeyValue == null) {
-            searchKeyValue = new PollSearchKeyValue();
-        }
-        searchKeyValue.setSearchField(field);
-        return searchKeyValue;
-    }
-
 	private static PollSearchField getSearchField(SearchKey key) {
 		switch (key) {
 			case CONNECT_ID:
@@ -66,6 +57,24 @@ public class PollSearchMapper {
 			default:
 				throw new IllegalArgumentException("No searchKey " + key.name());
 		}
+	}
+
+    private static PollSearchKeyValue getSearchKeyValue(PollSearchField field, Map<PollSearchField, PollSearchKeyValue> searchKeys) {
+        PollSearchKeyValue searchKeyValue = searchKeys.get(field);
+        if (searchKeyValue == null) {
+            searchKeyValue = new PollSearchKeyValue();
+        }
+        searchKeyValue.setSearchField(field);
+        return searchKeyValue;
+    }
+
+	public static String createCountSearchSql(List<PollSearchKeyValue> searchKeys, boolean isDynamic) {
+		return "SELECT COUNT (DISTINCT p) FROM Poll p " + createSearchSql(searchKeys, isDynamic);
+	}
+
+	public static String createSelectSearchSql(List<PollSearchKeyValue> searchKeys, boolean isDynamic) {
+		return "SELECT DISTINCT p FROM Poll p " +
+				createSearchSql(searchKeys, isDynamic);
 	}
 
 	private static String createSearchSql(List<PollSearchKeyValue> searchKeys, boolean isDynamic) {
@@ -118,15 +127,6 @@ public class PollSearchMapper {
 			}
 		}
 		return builder.toString();
-	}
-
-	public static String createCountSearchSql(List<PollSearchKeyValue> searchKeys, boolean isDynamic) {
-		return "SELECT COUNT (DISTINCT p) FROM Poll p " + createSearchSql(searchKeys, isDynamic);
-	}
-
-	public static String createSelectSearchSql(List<PollSearchKeyValue> searchKeys, boolean isDynamic) {
-		return "SELECT DISTINCT p FROM Poll p " +
-				createSearchSql(searchKeys, isDynamic);
 	}
 
 	public static String createPollableSearchSql(List<String> idList) {

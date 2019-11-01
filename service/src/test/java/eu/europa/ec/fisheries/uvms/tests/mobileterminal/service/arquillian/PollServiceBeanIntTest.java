@@ -12,7 +12,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollValue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollProgram;
-import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollDtoMapper;
 import eu.europa.ec.fisheries.uvms.tests.TransactionalTests;
 import eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian.AssetTestsHelper;
 import eu.europa.ec.fisheries.uvms.tests.mobileterminal.service.arquillian.helper.TestPollHelper;
@@ -161,7 +161,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         UUID guid = pollProgram.getId();
 
         PollResponseType pollResponse = pollServiceBean.startProgramPoll(guid.toString(), username);
-        PollDto startedProgramPoll = PollMapper.mapPoll(pollResponse);
+        PollDto startedProgramPoll = PollDtoMapper.mapPoll(pollResponse);
         assertNotNull(startedProgramPoll);
 
         List<PollValue> values = startedProgramPoll.getValue();
@@ -215,11 +215,11 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         UUID guid = pollProgram.getId();
 
         PollResponseType pollResponse = pollServiceBean.startProgramPoll(guid.toString(), username);
-        PollDto startedProgramPoll = PollMapper.mapPoll(pollResponse);
+        PollDto startedProgramPoll = PollDtoMapper.mapPoll(pollResponse);
         assertNotNull(startedProgramPoll);
 
         pollResponse = pollServiceBean.stopProgramPoll(String.valueOf(guid), username);
-        PollDto stoppedProgramPoll = PollMapper.mapPoll(pollResponse);
+        PollDto stoppedProgramPoll = PollDtoMapper.mapPoll(pollResponse);
         assertNotNull(stoppedProgramPoll);
 
         List<PollValue> values = stoppedProgramPoll.getValue();
@@ -272,7 +272,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         UUID guid = pollProgram.getId();
 
         PollResponseType pollResponse = pollServiceBean.startProgramPoll(guid.toString(), username);
-        PollDto startedProgramPoll = PollMapper.mapPoll(pollResponse);
+        PollDto startedProgramPoll = PollDtoMapper.mapPoll(pollResponse);
         assertNotNull(startedProgramPoll);
 
         List<PollValue> values = startedProgramPoll.getValue();
@@ -280,7 +280,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         assertTrue(isRunning);
 
         pollResponse = pollServiceBean.inactivateProgramPoll(String.valueOf(guid), username);
-        PollDto inactivatedProgramPoll = PollMapper.mapPoll(pollResponse);
+        PollDto inactivatedProgramPoll = PollDtoMapper.mapPoll(pollResponse);
         assertNotNull(inactivatedProgramPoll);
 
         List<PollValue> values1 = inactivatedProgramPoll.getValue();

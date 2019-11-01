@@ -28,7 +28,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalStatus;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.AuditModuleRequestMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollDtoMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchKeyValue;
 import org.slf4j.Logger;
@@ -317,7 +317,7 @@ public class MobileTerminalServiceBean {
 
         ArrayList<PollChannelDto> pollChannelList = new ArrayList<>();
         for (MobileTerminalType terminalType : response.getMobileTerminal()) {
-            PollChannelDto terminal = PollMapper.mapPollChannel(terminalType);
+            PollChannelDto terminal = PollDtoMapper.mapPollChannel(terminalType);
             pollChannelList.add(terminal);
         }
         channelListDto.setPollableChannels(pollChannelList);
