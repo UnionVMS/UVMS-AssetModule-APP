@@ -44,21 +44,6 @@ public class PollToCommandRequestMapper {
         SERIAL_NUMBER, OCEAN_REGION
     }
 
-    private PollTypeType mapToPollType(eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType pollType) {
-        switch (pollType) {
-            case CONFIGURATION_POLL:
-                return PollTypeType.CONFIG;
-            case SAMPLING_POLL:
-                return PollTypeType.SAMPLING;
-            case MANUAL_POLL:
-            case PROGRAM_POLL:
-            case AUTOMATIC_POLL:
-                return PollTypeType.POLL;
-            default:
-                throw new IllegalArgumentException("Error when mapping PollType to PollTypeType ");
-        }
-    }
-
     public PollType mapToPollType(PollResponseType pollResponse) {
         PollType pollType = new PollType();
 
@@ -79,56 +64,61 @@ public class PollToCommandRequestMapper {
             String mobileTerminalType = mobTerm.getType();
 
             if ("INMARSAT_C".equalsIgnoreCase(mobileTerminalType)) {
-                String connectId = mobTerm.getConnectId();
-                String mobileTerminalId = mobTerm.getMobileTerminalId() == null ? null : mobTerm.getMobileTerminalId().getGuid();
-                Plugin plugin = mobTerm.getPlugin();
-                if (plugin != null) {
-                    pollType.getPollReceiver().add(mapReceiverToKeyValue(PollReceiverInmarsatC.LES_NAME, plugin.getLabelName()));
-                    pollType.getPollReceiver().add(mapReceiverToKeyValue(PollReceiverInmarsatC.LES_SERVICE_NAME, plugin.getServiceName()));
-                }
-                pollType.getPollReceiver().add(mapReceiverToKeyValue(PollReceiverInmarsatC.CONNECT_ID, connectId));
-                pollType.getPollReceiver().add(mapReceiverToKeyValue(PollReceiverInmarsatC.MOBILE_TERMINAL_ID, mobileTerminalId));
+
+                String mobileTerminalId = addMobileTerminalAndConnectIds(pollType, mobTerm,
+                        PollReceiverInmarsatC.MOBILE_TERMINAL_ID, PollReceiverInmarsatC.CONNECT_ID);
+
+                addPluginAttributes(pollType, mobTerm);
 
                 addOceanRegions(pollType, mobileTerminalId);
 
-                List<MobileTerminalAttribute> attributes = mobTerm.getAttributes();
-                for (MobileTerminalAttribute attr : attributes) {
-                    if (PollReceiverInmarsatC.SERIAL_NUMBER.name().equalsIgnoreCase(attr.getType())) {
-                        pollType.getPollReceiver().add(mapReceiverToKeyValue(PollReceiverInmarsatC.SERIAL_NUMBER, attr.getValue()));
-                    }
-                    if (PollReceiverInmarsatC.SATELLITE_NUMBER.name().equalsIgnoreCase(attr.getType())) {
-                        pollType.getPollReceiver().add(mapReceiverToKeyValue(PollReceiverInmarsatC.SATELLITE_NUMBER, attr.getValue()));
-                    }
-                }
+                addMobileTerminalAttributesForInmarsat(pollType, mobTerm.getAttributes());
 
-                for (ComChannelType channel : mobTerm.getChannels()) {
-                    for (ComChannelAttribute attr : channel.getAttributes()) {
-                        if (PollReceiverInmarsatC.DNID.name().equalsIgnoreCase(attr.getType())) {
-                            pollType.getPollReceiver().add(mapReceiverToKeyValue(PollReceiverInmarsatC.DNID, attr.getValue()));
-                        }
-                        if (PollReceiverInmarsatC.MEMBER_NUMBER.name().equalsIgnoreCase(attr.getType())) {
-                            pollType.getPollReceiver().add(mapReceiverToKeyValue(PollReceiverInmarsatC.MEMBER_NUMBER, attr.getValue()));
-                        }
-                    }
-                }
+                addChannelAttributes(pollType, mobTerm);
+
             } else if ("IRIDIUM".equalsIgnoreCase(mobileTerminalType)) {
-                String connectId = mobTerm.getConnectId();
-                String mobileTerminalId = mobTerm.getMobileTerminalId() == null ? null : mobTerm.getMobileTerminalId().getGuid();
-
-                pollType.getPollReceiver().add(mapReceiverToKeyValue(PollReceiverIridium.CONNECT_ID, connectId));
-                pollType.getPollReceiver().add(mapReceiverToKeyValue(PollReceiverIridium.MOBILE_TERMINAL_ID, mobileTerminalId));
+                String mobileTerminalId = addMobileTerminalAndConnectIds(pollType, mobTerm,
+                        PollReceiverIridium.MOBILE_TERMINAL_ID, PollReceiverIridium.CONNECT_ID);
 
                 addOceanRegions(pollType, mobileTerminalId);
 
-                List<MobileTerminalAttribute> attributes = mobTerm.getAttributes();
-                for (MobileTerminalAttribute attr : attributes) {
-                    if (PollReceiverIridium.SERIAL_NUMBER.name().equalsIgnoreCase(attr.getType())) {
-                        pollType.getPollReceiver().add(mapReceiverToKeyValue(PollReceiverIridium.SERIAL_NUMBER, attr.getValue()));
-                    }
-                }
+                addMobileTerminalAttributesForIridium(pollType, mobTerm.getAttributes());
             }
         }
         return pollType;
+    }
+
+    private String addMobileTerminalAndConnectIds(PollType pollType, MobileTerminalType mobTerm,
+                                                  Enum receiverMobTermId, Enum receiverConnectId) {
+        String connectId = mobTerm.getConnectId();
+        String mobileTerminalId = mobTerm.getMobileTerminalId() == null ? null : mobTerm.getMobileTerminalId().getGuid();
+
+        pollType.getPollReceiver().add(mapReceiverToKeyValue(receiverConnectId, connectId));
+        pollType.getPollReceiver().add(mapReceiverToKeyValue(receiverMobTermId, mobileTerminalId));
+        return mobileTerminalId;
+    }
+
+    private void addPluginAttributes(PollType pollType, MobileTerminalType mobTerm) {
+        Plugin plugin = mobTerm.getPlugin();
+        if (plugin != null) {
+            pollType.getPollReceiver().add(mapReceiverToKeyValue(PollReceiverInmarsatC.LES_NAME, plugin.getLabelName()));
+            pollType.getPollReceiver().add(mapReceiverToKeyValue(PollReceiverInmarsatC.LES_SERVICE_NAME, plugin.getServiceName()));
+        }
+    }
+
+    private PollTypeType mapToPollType(eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType pollType) {
+        switch (pollType) {
+            case CONFIGURATION_POLL:
+                return PollTypeType.CONFIG;
+            case SAMPLING_POLL:
+                return PollTypeType.SAMPLING;
+            case MANUAL_POLL:
+            case PROGRAM_POLL:
+            case AUTOMATIC_POLL:
+                return PollTypeType.POLL;
+            default:
+                throw new IllegalArgumentException("Error when mapping PollType to PollTypeType ");
+        }
     }
 
     private void addOceanRegions(PollType pollType, String mobileTerminalId) {
@@ -153,6 +143,38 @@ public class PollToCommandRequestMapper {
         return oceanRegions;
     }
 
+    private void addMobileTerminalAttributesForInmarsat(PollType pollType, List<MobileTerminalAttribute> attributes) {
+        for (MobileTerminalAttribute attr : attributes) {
+            if (PollReceiverInmarsatC.SERIAL_NUMBER.name().equalsIgnoreCase(attr.getType())) {
+                pollType.getPollReceiver().add(mapReceiverToKeyValue(PollReceiverInmarsatC.SERIAL_NUMBER, attr.getValue()));
+            }
+            if (PollReceiverInmarsatC.SATELLITE_NUMBER.name().equalsIgnoreCase(attr.getType())) {
+                pollType.getPollReceiver().add(mapReceiverToKeyValue(PollReceiverInmarsatC.SATELLITE_NUMBER, attr.getValue()));
+            }
+        }
+    }
+
+    private void addMobileTerminalAttributesForIridium(PollType pollType, List<MobileTerminalAttribute> attributes) {
+        for (MobileTerminalAttribute attr : attributes) {
+            if (PollReceiverIridium.SERIAL_NUMBER.name().equalsIgnoreCase(attr.getType())) {
+                pollType.getPollReceiver().add(mapReceiverToKeyValue(PollReceiverIridium.SERIAL_NUMBER, attr.getValue()));
+            }
+        }
+    }
+
+    private void addChannelAttributes(PollType pollType, MobileTerminalType mobTerm) {
+        for (ComChannelType channel : mobTerm.getChannels()) {
+            for (ComChannelAttribute attr : channel.getAttributes()) {
+                if (PollReceiverInmarsatC.DNID.name().equalsIgnoreCase(attr.getType())) {
+                    pollType.getPollReceiver().add(mapReceiverToKeyValue(PollReceiverInmarsatC.DNID, attr.getValue()));
+                }
+                if (PollReceiverInmarsatC.MEMBER_NUMBER.name().equalsIgnoreCase(attr.getType())) {
+                    pollType.getPollReceiver().add(mapReceiverToKeyValue(PollReceiverInmarsatC.MEMBER_NUMBER, attr.getValue()));
+                }
+            }
+        }
+    }
+
     private KeyValueType mapPollAttributeToKeyValue(PollAttributeType key, String value) {
         KeyValueType keyValue = new KeyValueType();
         keyValue.setKey(key.name());
@@ -160,14 +182,7 @@ public class PollToCommandRequestMapper {
         return keyValue;
     }
 
-    private KeyValueType mapReceiverToKeyValue(PollReceiverInmarsatC key, String value) {
-        KeyValueType keyValue = new KeyValueType();
-        keyValue.setKey(key.name());
-        keyValue.setValue(value);
-        return keyValue;
-    }
-
-    private KeyValueType mapReceiverToKeyValue(PollReceiverIridium key, String value) {
+    private KeyValueType mapReceiverToKeyValue(Enum key, String value) {
         KeyValueType keyValue = new KeyValueType();
         keyValue.setKey(key.name());
         keyValue.setValue(value);
