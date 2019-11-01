@@ -860,5 +860,14 @@ public class AssetServiceBean implements AssetService {
 
         return microAssetList;
     }
+
+	@Override
+	public Note getNoteById(UUID id) {
+	        Note note = noteDao.findNote(id);
+	        if (note == null) {
+	            throw new IllegalArgumentException("Could not find any note with id: " + id);
+	        }
+	        return note;
+	}
 }
 
