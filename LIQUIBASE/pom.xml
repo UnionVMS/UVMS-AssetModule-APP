@@ -51,8 +51,8 @@
 				<db.user>asset</db.user>
 				<db.passwd>asset</db.passwd>
 				<db.defaultSchema>asset</db.defaultSchema>
-				<db.changeLogFile>changelog/db-changelog-master.xml</db.changeLogFile>
-				<db.outputFile>changelog/generatedChangelog.xml</db.outputFile>
+				<db.changeLogFile>${project.basedir}/changelog/db-changelog-master.xml</db.changeLogFile>
+				<db.outputFile>${project.basedir}/changelog/generatedChangelog.xml</db.outputFile>
 				<db.diffTypes />
 				<driver.groupId>org.postgresql</driver.groupId>
 				<driver.artifactId>postgresql</driver.artifactId>
@@ -78,7 +78,7 @@
 				<db.driver>oracle.jdbc.driver.OracleDriver</db.driver>
 				<db.user>uvms_asset</db.user>
 				<db.passwd>uvms_asset</db.passwd>
-				<db.changeLogFile>changelog/db-changelog-master.xml</db.changeLogFile>
+				<db.changeLogFile>${project.basedir}/changelog/db-changelog-master.xml</db.changeLogFile>
 				<driver.groupId>com.oracle</driver.groupId>
 				<driver.artifactId>ojdbc7</driver.artifactId>
 				<driver.version>12.1.0.2.0</driver.version>
@@ -152,8 +152,8 @@
 				</plugins>
 			</build>
 			<properties>
-                <db.changeLogFile>changelog/db-changelog-master.xml</db.changeLogFile>
-				<db.docker.url>offline:postgresql?changeLogFile=target/databasechangelog.csv&amp;outputLiquibaseSql=true</db.docker.url>
+
+				<db.docker.url>offline:postgresql?changeLogFile=${project.build.directory}/databasechangelog.csv&amp;outputLiquibaseSql=true</db.docker.url>
 			</properties>
 		</profile>
 	</profiles>
