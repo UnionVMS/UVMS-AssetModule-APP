@@ -52,40 +52,9 @@
 
 		<!-- Java 11 has removed theses from the standard package   -->
 		<dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-			<version>${javax.xml.bind.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-core</artifactId>
-			<version>${javax.xml.bind.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-impl</artifactId>
-			<version>${javax.xml.bind.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.xml.ws</groupId>
-			<artifactId>jaxws-ri</artifactId>
-			<version>2.3.0</version>
+			<groupId>fish.focus.uvms.maven</groupId>
+			<artifactId>uvms-pom-java11-deps</artifactId>
 			<type>pom</type>
-				<exclusions>
-					<exclusion>
-						<groupId>com.sun.xml.ws</groupId>
-						<artifactId>release-documentation</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>com.sun.xml.ws</groupId>
-						<artifactId>samples</artifactId>
-					</exclusion>
-				</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.activation</groupId>
-			<artifactId>javax.activation</artifactId>
-			<version>1.2.0</version>
 		</dependency>
 	</dependencies>
 
