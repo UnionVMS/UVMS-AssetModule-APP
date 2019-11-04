@@ -224,6 +224,14 @@ public interface AssetService {
 
     Asset populateMTListInAsset(Asset asset);
 
+    
+    /**
+     * Get a note with given id
+     *
+     * @param id @description  internal id of note
+     */
+	Note getNoteById(UUID id);
+
 }
 
 
