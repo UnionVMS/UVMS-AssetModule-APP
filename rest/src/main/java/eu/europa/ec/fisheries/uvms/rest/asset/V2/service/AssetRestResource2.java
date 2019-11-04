@@ -408,6 +408,18 @@ public class AssetRestResource2 {
         }
     }
     
+    @GET
+    @ApiOperation(value = "Get a note", notes = "Get a note", response = Note.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Error when getting note"),
+            @ApiResponse(code = 200, message = "Note successfully found") })
+    @Path("/notes/{id}")
+    @RequiresFeature(UnionVMSFeature.manageVessels)
+    public Response getNoteById(@ApiParam(value="Id of note to get", required=true) @PathParam("id") UUID id) {
+        assetService.getNoteById(id);
+        return Response.ok().build();
+    }
+    
     @DELETE
     @ApiOperation(value = "Remove a note", notes = "Remove a note", response = Note.class)
     @ApiResponses(value = {
