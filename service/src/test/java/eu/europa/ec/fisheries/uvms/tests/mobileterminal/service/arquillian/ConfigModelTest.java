@@ -41,7 +41,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-@PowerMockIgnore("javax.management.*")
+@PowerMockIgnore({"javax.management.*","com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "org.w3c.*", "com.sun.org.apache.xalan.*"})		//magic line to fix powermock java 11 issues
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({PluginMapper.class, ConfigServiceBean.class})
 public class ConfigModelTest {

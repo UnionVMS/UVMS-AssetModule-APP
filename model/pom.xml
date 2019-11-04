@@ -23,6 +23,7 @@
 		<binding.xml>binding-date.xml</binding.xml>
 		<jaxb2-basics.version>0.9.5</jaxb2-basics.version>
 		<exchange.model.version>5.0.0-UVMS</exchange.model.version>
+		<javax.xml.bind.version>2.3.0</javax.xml.bind.version>
 	</properties>
 
 	<dependencies>
@@ -48,6 +49,44 @@
 			<version>5.15.9</version>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- Java 11 has removed theses from the standard package   -->
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>${javax.xml.bind.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-core</artifactId>
+			<version>${javax.xml.bind.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>${javax.xml.bind.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.ws</groupId>
+			<artifactId>jaxws-ri</artifactId>
+			<version>2.3.0</version>
+			<type>pom</type>
+				<exclusions>
+					<exclusion>
+						<groupId>com.sun.xml.ws</groupId>
+						<artifactId>release-documentation</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>com.sun.xml.ws</groupId>
+						<artifactId>samples</artifactId>
+					</exclusion>
+				</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.activation</groupId>
+			<artifactId>javax.activation</artifactId>
+			<version>1.2.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -62,7 +101,7 @@
 			<plugin>
 				<groupId>org.apache.cxf</groupId>
 				<artifactId>cxf-codegen-plugin</artifactId>
-				<version>3.3.3</version>
+				<version>3.3.4</version>
 				<executions>
 					<execution>
 						<id>generate-asset-module</id>
