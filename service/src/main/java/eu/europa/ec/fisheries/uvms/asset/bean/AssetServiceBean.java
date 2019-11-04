@@ -123,13 +123,7 @@ public class AssetServiceBean implements AssetService {
             throw new IllegalArgumentException("Cannot get asset list because search values is null.");
         }
 
-        List<Asset> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, searchFields, dynamic, includeInactivated);
-        // force to load children. FetchType.EAGER didn't work.
-        assetEntityList.forEach(asset -> {
-            asset.getMobileTerminals().size();
-        });
-
-        Integer numberOfAssets = assetEntityList.size();
+        Long numberOfAssets = assetDao.getAssetCount(searchFields, dynamic, includeInactivated);
 
         int numberOfPages = 0;
         if (listSize != 0) {
@@ -139,6 +133,11 @@ public class AssetServiceBean implements AssetService {
             }
         }
 
+        List<Asset> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, searchFields, dynamic, includeInactivated);
+        // force to load children. FetchType.EAGER didn't work.
+        assetEntityList.forEach(asset -> {
+            asset.getMobileTerminals().size();
+        });
         AssetListResponse listAssetResponse = new AssetListResponse();
         listAssetResponse.setCurrentPage(page);
         listAssetResponse.setTotalNumberOfPages(numberOfPages);

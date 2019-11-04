@@ -333,10 +333,12 @@ public class AssetRestResourceQueryTest2 extends AbstractAssetRestTest {
         
         Asset asset1 = AssetHelper.createBasicAsset();
         asset1.setFlagStateCode(customFlagState);
+        asset1.setName("Test asset 1");
         Asset createdAsset1 = sendAssetToCreation(asset1);
         
         Asset asset2 = AssetHelper.createBasicAsset();
         asset2.setFlagStateCode(customFlagState);
+        asset2.setName("Test asset 2");
         Asset createdAsset2 = sendAssetToCreation(asset2);
         
         AssetQuery query = new AssetQuery();
