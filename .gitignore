@@ -8,3 +8,4 @@ scripts
 scripts/*
 .DS_Store
 module/C:/
+.flattened-pom.xml
