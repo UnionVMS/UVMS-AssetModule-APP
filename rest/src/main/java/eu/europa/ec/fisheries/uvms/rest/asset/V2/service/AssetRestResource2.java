@@ -416,8 +416,8 @@ public class AssetRestResource2 {
     @Path("/notes/{id}")
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public Response getNoteById(@ApiParam(value="Id of note to get", required=true) @PathParam("id") UUID id) {
-        assetService.getNoteById(id);
-        return Response.ok().build();
+        Note gottenNote = assetService.getNoteById(id);
+        return Response.ok(gottenNote).header("MDC", MDC.get("requestId")).build();
     }
     
     @DELETE

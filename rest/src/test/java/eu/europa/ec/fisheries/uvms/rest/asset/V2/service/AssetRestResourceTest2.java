@@ -813,7 +813,36 @@ public class AssetRestResourceTest2 extends AbstractAssetRestTest {
         assertThat(fetchedNotes.size(), is(1));
         assertThat(fetchedNotes.get(0).getNotes(), is(createdNote.getNotes()));
     }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void getNoteByIdTest() {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = restCreateAsset(asset);
+        
+        Note note = AssetHelper.createBasicNote();
+        note.setAssetId(createdAsset.getId());
 
+        // Create note
+        Note createdNote = getWebTargetExternal()
+                .path("asset2")
+                .path("notes")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(note), Note.class);
+
+        // Get note by id
+        Note aNote = getWebTargetExternal()
+                .path("asset2")
+                .path("notes")
+                .path(createdNote.getId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Note.class);
+        
+        assertEquals(aNote.getId(), createdNote.getId());
+    }
+    
     @Test
     @OperateOnDeployment("normal")
     public void deleteNoteTest() {
