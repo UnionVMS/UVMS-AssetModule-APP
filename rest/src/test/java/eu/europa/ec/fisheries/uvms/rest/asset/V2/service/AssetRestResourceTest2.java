@@ -834,7 +834,7 @@ public class AssetRestResourceTest2 extends AbstractAssetRestTest {
         // Get note by id
         Note aNote = getWebTargetExternal()
                 .path("asset2")
-                .path("notes")
+                .path("note")
                 .path(createdNote.getId().toString())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())

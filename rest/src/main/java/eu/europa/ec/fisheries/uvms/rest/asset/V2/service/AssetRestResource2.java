@@ -413,7 +413,7 @@ public class AssetRestResource2 {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when getting note"),
             @ApiResponse(code = 200, message = "Note successfully found") })
-    @Path("/notes/{id}")
+    @Path("/note/{id}")
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public Response getNoteById(@ApiParam(value="Id of note to get", required=true) @PathParam("id") UUID id) {
         Note gottenNote = assetService.getNoteById(id);
