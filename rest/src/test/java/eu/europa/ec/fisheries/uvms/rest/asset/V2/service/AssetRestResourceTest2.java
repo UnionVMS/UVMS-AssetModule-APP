@@ -26,9 +26,7 @@ import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.hamcrest.CoreMatchers.is;
@@ -1028,8 +1026,8 @@ public class AssetRestResourceTest2 extends AbstractAssetRestTest {
         return asset;
     }
 
-    private List<MobileTerminal> createListOfIdOnlyMTs(List<String> idList){
-        List<MobileTerminal> mtList = new ArrayList<>();
+    private Set<MobileTerminal> createListOfIdOnlyMTs(List<String> idList){
+        Set<MobileTerminal> mtList = new HashSet<>();
         for (String s : idList) {
             MobileTerminal mt = new MobileTerminal();
             mt.setId(UUID.fromString(s));

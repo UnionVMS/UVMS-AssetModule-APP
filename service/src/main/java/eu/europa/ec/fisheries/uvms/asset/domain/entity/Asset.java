@@ -15,9 +15,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.*;
 
@@ -276,7 +274,7 @@ public class Asset implements Serializable {
     @JsonIdentityReference(alwaysAsId = true)
     @JsonProperty("mobileTerminalIds")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "asset", cascade = {CascadeType.REFRESH})
-    private List<MobileTerminal> mobileTerminals;
+    private Set<MobileTerminal> mobileTerminals;
 
     @Transient
     private List<String> mobileTerminalIdList;
@@ -735,13 +733,13 @@ public class Asset implements Serializable {
         this.prodOrgName = prodOrgName;
     }
 
-    public List<MobileTerminal> getMobileTerminals() {
+    public Set<MobileTerminal> getMobileTerminals() {
         if(mobileTerminals == null)
-            mobileTerminals = new ArrayList<>();
+            mobileTerminals = new HashSet<>();
         return mobileTerminals;
     }
 
-    public void setMobileTerminals(List<MobileTerminal> mobileTerminals) {
+    public void setMobileTerminals(Set<MobileTerminal> mobileTerminals) {
         this.mobileTerminals = mobileTerminals;
     }
 

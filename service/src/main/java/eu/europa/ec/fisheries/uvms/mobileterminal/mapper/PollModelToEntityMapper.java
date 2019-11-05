@@ -21,9 +21,7 @@ import org.slf4j.LoggerFactory;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class PollModelToEntityMapper {
     private static Logger LOG = LoggerFactory.getLogger(PollModelToEntityMapper.class);
@@ -110,7 +108,7 @@ public class PollModelToEntityMapper {
         List<PollAttribute> attributes = requestType.getAttributes();
         if (attributes == null || attributes.isEmpty())
         	throw new NullPointerException("No attributes to map to configuration poll");
-        List<PollPayload> payloadList = new ArrayList<>();
+        Set<PollPayload> payloadList = new HashSet<>();
         PollPayload payload = new PollPayload();
         for (PollAttribute attr : attributes) {
         	try {
@@ -146,7 +144,7 @@ public class PollModelToEntityMapper {
         List<PollAttribute> attributes = requestType.getAttributes();
         if (attributes == null || attributes.isEmpty())
         	throw new NullPointerException("No attributes to map to sampling poll");
-        List<PollPayload> payloadList = new ArrayList<>();
+        Set<PollPayload> payloadList = new HashSet<>();
         PollPayload payload = new PollPayload();
         for (PollAttribute attr : attributes) {
         	try {

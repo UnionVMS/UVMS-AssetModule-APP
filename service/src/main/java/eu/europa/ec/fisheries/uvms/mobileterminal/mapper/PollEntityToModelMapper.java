@@ -19,6 +19,7 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class PollEntityToModelMapper {
 
@@ -56,9 +57,9 @@ public class PollEntityToModelMapper {
 
         if (pollType == PollType.CONFIGURATION_POLL) {
             // Add missing attributes for this kind of poll
-            List<PollPayload> payloads = poll.getPayloads();
+            Set<PollPayload> payloads = poll.getPayloads();
             if (payloads != null && payloads.size() > 0) {
-                PollPayload payLoad = payloads.get(0);
+                PollPayload payLoad = payloads.iterator().next();
                 List<PollAttribute> pollAttributes = response.getAttributes();
 
                 if(payLoad.getGracePeriod() != null){

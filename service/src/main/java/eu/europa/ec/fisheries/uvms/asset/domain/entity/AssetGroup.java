@@ -24,6 +24,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.*;
@@ -81,7 +82,7 @@ public class AssetGroup implements Serializable {
     @JsonManagedReference
     @OneToMany(mappedBy="assetGroup", cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
-    private List<AssetGroupField> assetGroupFields;
+    private Set<AssetGroupField> assetGroupFields;
 
 
     public AssetGroup() {}
@@ -150,11 +151,11 @@ public class AssetGroup implements Serializable {
         this.owner = owner;
     }
 
-    public List<AssetGroupField> getAssetGroupFields() {
+    public Set<AssetGroupField> getAssetGroupFields() {
         return assetGroupFields;
     }
 
-    public void setAssetGroupFields(List<AssetGroupField> assetGroupFields) {
+    public void setAssetGroupFields(Set<AssetGroupField> assetGroupFields) {
         this.assetGroupFields = assetGroupFields;
     }
 }

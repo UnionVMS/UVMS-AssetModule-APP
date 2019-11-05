@@ -336,10 +336,10 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
         Asset fetchedAsset = assetService.getAssetById(createdAsset.getId());
         assertNotNull(fetchedAsset);
-        assertTrue(fetchedAsset.getMobileTerminals().get(0).getIndianOceanRegion());
-        assertFalse(fetchedAsset.getMobileTerminals().get(0).getWestAtlanticOceanRegion());
-        assertFalse(fetchedAsset.getMobileTerminals().get(0).getEastAtlanticOceanRegion());
-        assertFalse(fetchedAsset.getMobileTerminals().get(0).getPacificOceanRegion());
+        assertTrue(fetchedAsset.getMobileTerminals().iterator().next().getIndianOceanRegion());
+        assertFalse(fetchedAsset.getMobileTerminals().iterator().next().getWestAtlanticOceanRegion());
+        assertFalse(fetchedAsset.getMobileTerminals().iterator().next().getEastAtlanticOceanRegion());
+        assertFalse(fetchedAsset.getMobileTerminals().iterator().next().getPacificOceanRegion());
     }
 
     private Asset createAndPersistAsset() {

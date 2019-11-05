@@ -27,10 +27,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -213,7 +210,7 @@ public class InternalRestResourceTest2 extends AbstractAssetRestTest {
                 .post(Entity.json(asset), Asset.class);
 
         AssetGroup basicAssetGroup = AssetHelper.createBasicAssetGroup();
-        basicAssetGroup.setAssetGroupFields(new ArrayList<>());
+        basicAssetGroup.setAssetGroupFields(new HashSet<>());
 
         AssetGroupField field = new AssetGroupField();
         field.setKey("GUID");

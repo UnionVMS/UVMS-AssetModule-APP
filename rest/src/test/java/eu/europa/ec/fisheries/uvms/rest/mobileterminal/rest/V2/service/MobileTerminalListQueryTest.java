@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.V2.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MobileTerminalListQuery;
@@ -333,7 +334,7 @@ public class MobileTerminalListQueryTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getMobileTerminalListWithMtIdTest() {
+    public void getMobileTerminalListWithMtIdTest() throws JsonProcessingException {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
         MobileTerminal created = getWebTargetExternal()
@@ -348,6 +349,9 @@ public class MobileTerminalListQueryTest extends AbstractAssetRestTest {
         List<String> inputList = new ArrayList<>();
         inputList.add(created.getId().toString());
         mtQuery.setMobileterminalIds(inputList);
+
+        ObjectMapper om = new ObjectMapper();
+        String json = om.writeValueAsString(mtQuery);
 
         MTListResponse response = getWebTargetExternal()
                 .path("/mobileterminal2/list")
