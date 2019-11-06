@@ -10,6 +10,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalStatus;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.util.DateUtils;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTQuery;
@@ -23,7 +24,9 @@ import org.junit.runner.RunWith;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +36,29 @@ import static org.junit.Assert.*;
 @RunWith(Arquillian.class)
 @RunAsClient
 public class MobileTerminalListQueryTest extends AbstractAssetRestTest {
+
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getMobileTerminalListWithExistingButEmptyInput(){
+        //First, to make sure that we have something in DB, create one MT
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+        assertNotNull(created);
+
+        Response response = getWebTargetExternal()
+                .path("/mobileterminal2/list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json("{\"mobileterminalIds\":[]}"), Response.class);
+
+        assertNotNull(response);
+        assertEquals(200, response.getStatus());
+    }
 
     @Test
     @OperateOnDeployment("normal")
