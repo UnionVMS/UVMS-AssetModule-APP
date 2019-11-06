@@ -174,7 +174,7 @@ public class AssetServiceBean implements AssetService {
 
     @Override
     public Asset archiveAsset(Asset asset, String username, String comment) {
-        List<MobileTerminal> mtList = asset.getMobileTerminals();
+        Set<MobileTerminal> mtList = asset.getMobileTerminals();
         if(mtList != null && !mtList.isEmpty()) {
             mobileTerminalService.inactivateAndUnlink(asset, comment, username);
         }

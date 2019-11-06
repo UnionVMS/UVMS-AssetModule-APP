@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -62,7 +63,7 @@ public class Poll implements Serializable {
 
     @JsonIgnoreProperties(value = {"poll"}, allowSetters = true)
     @OneToMany(mappedBy = "poll", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<PollPayload> payloads;
+    private Set<PollPayload> payloads;
 
     public Poll() {
     }
@@ -107,11 +108,11 @@ public class Poll implements Serializable {
         this.pollBase = pollBase;
     }
 
-    public List<PollPayload> getPayloads() {
+    public Set<PollPayload> getPayloads() {
         return payloads;
     }
 
-    public void setPayloads(List<PollPayload> payloads) {
+    public void setPayloads(Set<PollPayload> payloads) {
         this.payloads = payloads;
     }
 
