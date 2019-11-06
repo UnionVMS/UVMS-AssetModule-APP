@@ -514,7 +514,7 @@ public class MobileTerminalListQueryTest extends AbstractAssetRestTest {
 
         MTQuery mtQuery = new MTQuery();
         mtQuery.setMobileterminalIds(Arrays.asList(created.getId().toString()));
-        mtQuery.setDate(DateUtils.parseOffsetDateTimeToString(now.atOffset(ZoneOffset.UTC)));
+        mtQuery.setDate(now);
 
         MTListResponse response = getWebTargetExternal()
                 .path("/mobileterminal2/list")
