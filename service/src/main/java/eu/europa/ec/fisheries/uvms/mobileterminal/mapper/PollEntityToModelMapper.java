@@ -71,12 +71,6 @@ public class PollEntityToModelMapper {
                 if(payLoad.getReportingFrequency() != null){
                     pollAttributes.add(createPollAttribute(PollAttributeType.REPORT_FREQUENCY, payLoad.getReportingFrequency()));
                 }
-                if(payLoad.getNewDnid() != null){
-                    pollAttributes.add(createPollAttribute(PollAttributeType.DNID, payLoad.getNewDnid()));
-                }
-                if(payLoad.getNewMemberNumber() != null){
-                    pollAttributes.add(createPollAttribute(PollAttributeType.MEMBER_NUMBER, payLoad.getNewMemberNumber()));
-                }
                 if(payLoad.getStartDate() != null){
                     pollAttributes.add(createPollAttribute(PollAttributeType.START_DATE, payLoad.getStartDate()));
                 }
@@ -100,8 +94,6 @@ public class PollEntityToModelMapper {
         pollAttribute.setValue(String.valueOf(value));
         return pollAttribute;
     }
-
-
 
     private static List<PollAttribute> getProgramPollAttributes(PollProgram program) {
         List<PollAttribute> attributes = new ArrayList<>();

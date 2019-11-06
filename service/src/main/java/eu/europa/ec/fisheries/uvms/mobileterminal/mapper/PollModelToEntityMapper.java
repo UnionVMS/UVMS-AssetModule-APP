@@ -122,12 +122,6 @@ public class PollModelToEntityMapper {
                 case IN_PORT_GRACE:
                 	payload.setInPortGrace(Integer.parseInt(attr.getValue()));
                     break;
-                case DNID:
-                	payload.setNewDnid(attr.getValue());
-                    break;
-                case MEMBER_NUMBER:
-                	payload.setNewMemberNumber(attr.getValue());
-                    break;
         		}
         	} catch (UnsupportedOperationException | IllegalArgumentException e) {
         		throw new RuntimeException("Poll attribute [ " + attr.getKey() + " ] could not be parsed");

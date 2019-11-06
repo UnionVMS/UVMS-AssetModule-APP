@@ -18,7 +18,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.util.OffsetDateTimeDeserialize
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -43,14 +42,6 @@ public class PollPayload implements Serializable {
 
     @Column(name = "in_port_grace")
     private Integer inPortGrace;
-
-    @Size(max = 60)
-    @Column(name = "newdnid")
-    private String newDnid;
-
-    @Size(max = 60)
-    @Column(name = "newmemberno")
-    private String newMemberNumber;
 
     @JsonSerialize(using = OffsetDateTimeSerializer.class)
     @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
@@ -101,22 +92,6 @@ public class PollPayload implements Serializable {
         this.inPortGrace = inPortGrace;
     }
 
-    public String getNewDnid() {
-        return newDnid;
-    }
-
-    public void setNewDnid(String newDnid) {
-        this.newDnid = newDnid;
-    }
-
-    public String getNewMemberNumber() {
-        return newMemberNumber;
-    }
-
-    public void setNewMemberNumber(String newMemberNumber) {
-        this.newMemberNumber = newMemberNumber;
-    }
-
     public OffsetDateTime getStartDate() {
         return startDate;
     }
@@ -150,8 +125,6 @@ public class PollPayload implements Serializable {
                 Objects.equals(reportingFrequency, that.reportingFrequency) &&
                 Objects.equals(gracePeriod, that.gracePeriod) &&
                 Objects.equals(inPortGrace, that.inPortGrace) &&
-                Objects.equals(newDnid, that.newDnid) &&
-                Objects.equals(newMemberNumber, that.newMemberNumber) &&
                 Objects.equals(startDate, that.startDate) &&
                 Objects.equals(stopDate, that.stopDate);
                 //Objects.equals(poll, that.poll);
@@ -159,7 +132,6 @@ public class PollPayload implements Serializable {
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(id, reportingFrequency, gracePeriod, inPortGrace, newDnid, newMemberNumber, startDate, stopDate);
+        return Objects.hash(id, reportingFrequency, gracePeriod, inPortGrace, startDate, stopDate);
     }
 }
