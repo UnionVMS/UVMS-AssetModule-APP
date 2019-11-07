@@ -9,3 +9,9 @@ scripts/*
 .DS_Store
 module/C:/
 .flattened-pom.xml
+.project
+.settings/
+.classpath
+
+
+pom.xml.versionsBackup
