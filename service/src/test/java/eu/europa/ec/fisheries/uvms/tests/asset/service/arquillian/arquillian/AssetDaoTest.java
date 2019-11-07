@@ -15,6 +15,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.tests.TransactionalTests;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -29,8 +30,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 public class AssetDaoTest extends TransactionalTests {
@@ -39,6 +39,21 @@ public class AssetDaoTest extends TransactionalTests {
 
     @Inject
     private AssetDao assetDao;
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createMTSettingActiveToNullShouldNotWork(){
+        MobileTerminal mt = new MobileTerminal();
+        assertTrue(mt.getActive());
+        mt.setActive(null);
+        assertNotNull(mt.getActive());
+        assertTrue(mt.getActive());
+        mt.setActive(false);
+        assertFalse(mt.getActive());
+        mt.setActive(null);
+        assertNotNull(mt.getActive());
+        assertFalse(mt.getActive());
+    }
 
     @Test
     @OperateOnDeployment("normal")
