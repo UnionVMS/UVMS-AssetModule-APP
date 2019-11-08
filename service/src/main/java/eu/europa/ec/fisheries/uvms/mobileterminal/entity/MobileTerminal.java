@@ -210,7 +210,7 @@ public class MobileTerminal implements Serializable {
 	}
 
 	public void setActive(Boolean active) {
-		this.active = active;
+		if(active != null){this.active = active;}
 	}
 
 	public TerminalSourceEnum getSource() {
