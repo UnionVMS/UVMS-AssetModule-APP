@@ -1,20 +1,20 @@
 package eu.europa.ec.fisheries.uvms.asset.client.model;
 
-import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Objects;
 import javax.persistence.Embeddable;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 // Embeddable is required by JPA for composite keys
 @Embeddable
-public class CustomCodesPK implements Serializable {
+public class CustomCodesPK {
 
     private String constant;
     private String code;
-
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     private OffsetDateTime validFromDate;
-    
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     private OffsetDateTime validToDate;
 
     public CustomCodesPK() {
