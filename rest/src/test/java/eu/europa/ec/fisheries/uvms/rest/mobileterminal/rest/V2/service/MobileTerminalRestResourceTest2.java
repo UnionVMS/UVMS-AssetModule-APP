@@ -11,18 +11,11 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.V2.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.ListCriteria;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MobileTerminalListQuery;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.SearchKey;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalStatus;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
@@ -790,6 +783,168 @@ public class MobileTerminalRestResourceTest2 extends AbstractAssetRestTest {
         assertEquals(channelId, updated.getChannels().iterator().next().getId());
     }
 
+    @Test
+    @OperateOnDeployment("normal")
+    public void checkIfNonExistantSerialNumberExistsTest() {
+
+        Response response = getWebTargetExternal()
+                .path("mobileterminal2")
+                .path("checkIfExists")
+                .path("serialNr")
+                .path("DoesNotExist")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Response.class);
+
+        assertEquals(200, response.getStatus());
+        String returnString = response.readEntity(String.class);
+        assertTrue(returnString, returnString.contains("false"));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void checkIfNonExistantSerialNumberExistsWithParamToReturnWholeObjectTest() {
+
+        Response response = getWebTargetExternal()
+                .path("mobileterminal2")
+                .path("checkIfExists")
+                .path("serialNr")
+                .path("DoesNotExist")
+                .queryParam("returnWholeObject", true)
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Response.class);
+
+        assertEquals(200, response.getStatus());
+        String returnString = response.readEntity(String.class);
+        assertTrue(returnString, returnString.contains("false"));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void checkIfExistantSerialNumberExistsTest() {
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        Response response = getWebTargetExternal()
+                .path("mobileterminal2")
+                .path("checkIfExists")
+                .path("serialNr")
+                .path(created.getSerialNo())
+                .queryParam("returnWholeObject", false)
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Response.class);
+
+        assertEquals(200, response.getStatus());
+        String returnString = response.readEntity(String.class);
+        assertTrue(returnString, returnString.contains("true"));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void checkIfExistantSerialNumberExistsReturnWholeObjectTest() {
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        Response response = getWebTargetExternal()
+                .path("mobileterminal2")
+                .path("checkIfExists")
+                .path("serialNr")
+                .path(created.getSerialNo())
+                .queryParam("returnWholeObject", true)
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Response.class);
+
+        assertEquals(200, response.getStatus());
+        MobileTerminal returnString = response.readEntity(MobileTerminal.class);
+        assertEquals(created.getId(), returnString.getId());
+    }
+
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void checkIfNonExistantMemberDnidComboNumberExistsTest() {
+
+        Response response = getWebTargetExternal()
+                .path("mobileterminal2")
+                .path("checkIfExists")
+                .path("memberNbr/dnid")
+                .path("DoesNot/Exist")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Response.class);
+
+        assertEquals(200, response.getStatus());
+        String returnString = response.readEntity(String.class);
+        assertTrue(returnString, returnString.contains("false"));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void checkIfHalfExistantSerialNumberExistsTest() {
+
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        Response response = getWebTargetExternal()
+                .path("mobileterminal2")
+                .path("checkIfExists")
+                .path("memberNbr/dnid")
+                .path(created.getChannels().iterator().next().getMemberNumber())
+                .path("DoesNotExist")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Response.class);
+
+        assertEquals(200, response.getStatus());
+        String returnString = response.readEntity(String.class);
+        assertTrue(returnString, returnString.contains("false"));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void checkIfExistantMemberNbrDnidComboExistsTest() {
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        Channel channel = created.getChannels().iterator().next();
+        Response response = getWebTargetExternal()
+                .path("mobileterminal2")
+                .path("checkIfExists")
+                .path("memberNbr/dnid")
+                .path(channel.getMemberNumber())
+                .path(channel.getDNID())
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Response.class);
+
+        assertEquals(200, response.getStatus());
+        String returnString = response.readEntity(String.class);
+        assertTrue(returnString, returnString.contains("true"));
+    }
+    
     private Asset createAndRestBasicAsset() {
         Asset asset = AssetHelper.createBasicAsset();
 
