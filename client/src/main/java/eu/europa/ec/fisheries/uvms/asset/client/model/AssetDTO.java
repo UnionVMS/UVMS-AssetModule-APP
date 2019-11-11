@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
-import javax.json.bind.annotation.JsonbDateFormat;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AssetDTO {
