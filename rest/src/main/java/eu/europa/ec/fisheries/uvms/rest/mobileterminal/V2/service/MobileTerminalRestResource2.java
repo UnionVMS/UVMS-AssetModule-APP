@@ -41,6 +41,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -145,6 +146,44 @@ public class MobileTerminalRestResource2 {
         }
     }
 
+    @GET
+    @Path("checkIfExists/serialNr/{serialNr}")
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public Response checkIfSerialNumberExistsInDB(@PathParam("serialNr") String serialNbr,
+                                                  @DefaultValue("false") @QueryParam("returnWholeObject") Boolean returnWholeObject) {
+        try{
+            MTQuery query = new MTQuery();
+            query.setSerialNumbers(Arrays.asList(serialNbr));
+            List<MTSearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
+            MTListResponse mobileTerminalList = mobileTerminalService.getMobileTerminalList(searchFields, 1, 10, true, true);
+            String returnString = objectMapper().writeValueAsString(returnWholeObject && !mobileTerminalList.getMobileTerminalList().isEmpty() ? mobileTerminalList.getMobileTerminalList().get(0) : !mobileTerminalList.getMobileTerminalList().isEmpty());
+            return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception ex) {
+            LOG.error("[ Error when getting Asset history by mobileTerminalId ] {}", ex);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
+        }
+    }
+
+    @GET
+    @Path("checkIfExists/memberNbr/dnid/{memberNbr}/{dnid}")
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public Response checkIfSerialNumberExistsInDB(@PathParam("memberNbr") String memberNbr,
+                                                  @PathParam("dnid") String dnid,
+                                                  @DefaultValue("false") @QueryParam("returnWholeObject") Boolean returnWholeObject) {
+        try{
+            MTQuery query = new MTQuery();
+            query.setMemberNumbers(Arrays.asList(memberNbr));
+            query.setDnids(Arrays.asList(dnid));
+            List<MTSearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
+            MTListResponse mobileTerminalList = mobileTerminalService.getMobileTerminalList(searchFields, 1, 10, true, true);
+            String returnString = objectMapper().writeValueAsString(returnWholeObject && !mobileTerminalList.getMobileTerminalList().isEmpty() ? mobileTerminalList.getMobileTerminalList().get(0) : !mobileTerminalList.getMobileTerminalList().isEmpty());
+            return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception ex) {
+            LOG.error("[ Error when getting Asset history by mobileTerminalId ] {}", ex);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
+        }
+    }
+
     @PUT
     @Path("/{mtId}/assign/{assetId}")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
@@ -241,6 +280,7 @@ public class MobileTerminalRestResource2 {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
         }
     }
+
 
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
     private ObjectMapper objectMapper(){
