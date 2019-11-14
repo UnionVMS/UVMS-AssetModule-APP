@@ -20,7 +20,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollProgramDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollProgram;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.ProgramPoll;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollDtoMapper;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
@@ -179,7 +179,7 @@ public class PollRestResource {
     @RequiresFeature(UnionVMSFeature.viewMobileTerminalPolls)
     public Response getPollProgram(@PathParam("id") String pollProgramId) {
         try {
-            PollProgram pollProgram = pollProgramDao.getPollProgramByGuid(pollProgramId);
+            ProgramPoll pollProgram = pollProgramDao.getProgramPollByGuid(pollProgramId);
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
             String returnString = objectMapper.writeValueAsString(pollProgram);

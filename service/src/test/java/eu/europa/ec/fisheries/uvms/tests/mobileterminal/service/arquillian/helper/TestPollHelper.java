@@ -38,8 +38,6 @@ public class TestPollHelper {
 
     private String serialNumber;
 
-
-
         public MobileTerminal createBasicMobileTerminal() {
         MobileTerminal mobileTerminal = new MobileTerminal();
         mobileTerminal.setSource(TerminalSourceEnum.INTERNAL);
@@ -111,7 +109,6 @@ public class TestPollHelper {
     }
 
     private PollMobileTerminal createPollMobileTerminal() {
-
         Asset asset = assetDao.createAsset(AssetTestsHelper.createBasicAsset());
 
         MobileTerminal mobileTerminal = createAndPersistMobileTerminal(asset);
@@ -124,14 +121,11 @@ public class TestPollHelper {
     }
 
     public MobileTerminal createAndPersistMobileTerminalOceanRegionSupport(Asset asset,boolean aor_e,boolean aor_w,boolean por,boolean ior)  {
-
-        String serialNo = UUID.randomUUID().toString();
-
         List<MobileTerminalPlugin> plugs = mobileTerminalPluginDao.getPluginList();
         MobileTerminalPlugin mtp = plugs.get(0);
 
         MobileTerminal mt = new MobileTerminal();
-        mt.setSerialNo(serialNo);
+        mt.setSerialNo(UUID.randomUUID().toString());
         mt.setUpdatetime(OffsetDateTime.now(ZoneOffset.UTC));
         mt.setUpdateuser("TEST");
         mt.setSource(TerminalSourceEnum.INTERNAL);
@@ -194,17 +188,12 @@ public class TestPollHelper {
         return mt;
     }
 
-
-
     public MobileTerminal createAndPersistMobileTerminal(Asset asset)  {
-
-        String serialNo = UUID.randomUUID().toString();
-
         List<MobileTerminalPlugin> plugs = mobileTerminalPluginDao.getPluginList();
         MobileTerminalPlugin mtp = plugs.get(0);
 
         MobileTerminal mt = new MobileTerminal();
-        mt.setSerialNo(serialNo);
+        mt.setSerialNo(UUID.randomUUID().toString());
         mt.setUpdatetime(OffsetDateTime.now(ZoneOffset.UTC));
         mt.setUpdateuser("TEST");
         mt.setSource(TerminalSourceEnum.INTERNAL);
@@ -301,9 +290,9 @@ public class TestPollHelper {
         return plugin;
     }
 
-    public PollProgram createPollProgramHelper(String connectId, OffsetDateTime startDate, OffsetDateTime stopDate, OffsetDateTime latestRun) {
+    public ProgramPoll createPollProgramHelper(String connectId, OffsetDateTime startDate, OffsetDateTime stopDate, OffsetDateTime latestRun) {
 
-        PollProgram pp = new PollProgram();
+        ProgramPoll pp = new ProgramPoll();
         // create a valid mobileTerminal
         Asset asset = null;
         if (connectId != null) {
@@ -311,16 +300,14 @@ public class TestPollHelper {
         }
         MobileTerminal mobileTerminal = createAndPersistMobileTerminal(asset);
 
-        PollBase pb = new PollBase();
         String terminalConnect = UUID.randomUUID().toString();
-        pb.setMobileterminal(mobileTerminal);
-        pb.setChannelId(UUID.randomUUID());
-        pb.setTerminalConnect(terminalConnect);
-        pb.setUpdatedBy("TEST");
-        pb.setComment("Comment");
+        pp.setMobileterminal(mobileTerminal);
+        pp.setChannelId(UUID.randomUUID());
+        pp.setTerminalConnect(terminalConnect);
+        pp.setUpdatedBy("TEST");
+        pp.setComment("Comment");
         pp.setFrequency(1);
         pp.setLatestRun(latestRun);
-        pp.setPollBase(pb);
         pp.setPollState(PollStateEnum.STARTED);
         pp.setStartDate(startDate);
         pp.setStopDate(stopDate);

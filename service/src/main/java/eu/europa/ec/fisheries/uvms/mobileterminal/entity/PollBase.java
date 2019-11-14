@@ -21,6 +21,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -30,7 +31,19 @@ import java.util.UUID;
 @Table(name = "pollbase", indexes = { @Index(columnList = "channel_guid", name = "pollbase_channel_FK_INX10", unique = false),
         @Index(columnList = "mobileterminal_id", name = "pollbase_mobterm_FK_INX10", unique = false),})
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Inheritance(strategy = InheritanceType.JOINED)
+@XmlRootElement
+@NamedQueries({
+        @NamedQuery(name = "Poll.findAll", query = "SELECT p FROM PollBase p"),
+        @NamedQuery(name = "Poll.findById", query = "SELECT p FROM PollBase p WHERE p.id = :id"),
+        @NamedQuery(name = "Poll.findByPollId", query = "SELECT p FROM PollBase p WHERE p.id = :pollId"),
+        @NamedQuery(name = "Poll.findByPollComment", query = "SELECT p FROM PollBase p WHERE p.comment = :pollComment"),
+        @NamedQuery(name = "Poll.findByPollCreated", query = "SELECT p FROM PollBase p WHERE p.updateTime = :pollCreated"),
+        @NamedQuery(name = "Poll.findByPollUserCreator", query = "SELECT p FROM PollBase p WHERE p.creator = :pollUserCreator"),
+})
 public class PollBase implements Serializable {
+
+    public static final String POLL_FIND_BY_POLL_ID = "Poll.findByPollId";
 
     @Id
     @GeneratedValue(generator = "POLLBASE_UUID")
@@ -46,7 +59,6 @@ public class PollBase implements Serializable {
     @Column(name = "createuser")
     private String creator;
 
-    //@Size(max = 36)
     @Column(name = "channel_guid")
     @NotNull
     private UUID channelId;

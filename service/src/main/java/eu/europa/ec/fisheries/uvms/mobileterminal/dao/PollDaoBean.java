@@ -12,7 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.dao;
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Poll;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollBase;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.PollSearchKeyValue;
@@ -34,16 +34,16 @@ public class PollDaoBean  {
 	private EntityManager em;
 
 	public void removePollAfterTests(String id){
-		Poll poll = getPollById(UUID.fromString(id));
+		PollBase poll = getPollById(UUID.fromString(id));
 		em.remove(em.contains(poll) ? poll : em.merge(poll));
 	}
-    public void createPoll(Poll poll)  {
+    public <T extends PollBase> void createPoll(T poll)  {
 		em.persist(poll);
     }
 
-    public Poll getPollByPoolId(Long pollId) {
+    public PollBase getPollByPoolId(Long pollId) {
         try {
-            TypedQuery<Poll> query = em.createNamedQuery(MobileTerminalConstants.POLL_FIND_BY_POLL_ID, Poll.class);
+            TypedQuery<PollBase> query = em.createNamedQuery(MobileTerminalConstants.POLL_FIND_BY_POLL_ID, PollBase.class);
             query.setParameter("pollId", pollId);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -51,9 +51,9 @@ public class PollDaoBean  {
         }
     }
 
-	public Poll getPollById(UUID id) {
+	public PollBase getPollById(UUID id) {
 		try {
-			TypedQuery<Poll> query = em.createNamedQuery(MobileTerminalConstants.POLL_FIND_BY_ID, Poll.class);
+			TypedQuery<PollBase> query = em.createNamedQuery(MobileTerminalConstants.POLL_FIND_BY_ID, PollBase.class);
 			query.setParameter("id", id);
 			return query.getSingleResult();
 		} catch (NoResultException e) {
@@ -67,8 +67,8 @@ public class PollDaoBean  {
 		return query.getSingleResult();
 	}
 
-	public List<Poll> getPollListSearchPaginated(Integer pageNumber, Integer pageSize, String sql, List<PollSearchKeyValue> searchKeyValues) {
-		TypedQuery<Poll> query = em.createQuery(sql, Poll.class);
+	public List<PollBase> getPollListSearchPaginated(Integer pageNumber, Integer pageSize, String sql, List<PollSearchKeyValue> searchKeyValues) {
+		TypedQuery<PollBase> query = em.createQuery(sql, PollBase.class);
 
 		queryBuilder(searchKeyValues, query);
 

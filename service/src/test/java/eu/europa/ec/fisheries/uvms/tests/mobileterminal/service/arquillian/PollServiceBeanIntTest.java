@@ -11,7 +11,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollKey;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollValue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollProgram;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.ProgramPoll;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollDtoMapper;
 import eu.europa.ec.fisheries.uvms.tests.TransactionalTests;
 import eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian.AssetTestsHelper;
@@ -106,9 +106,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
 
         int numberOfProgramB4 = pollServiceBean.getRunningProgramPolls().size();
 
-        PollProgram pollProgram = testPollHelper.createPollProgramHelper(null, startDate, stopDate, latestRun);
+        ProgramPoll pollProgram = testPollHelper.createPollProgramHelper(null, startDate, stopDate, latestRun);
 
-        pollProgramDao.createPollProgram(pollProgram);
+        pollProgramDao.createProgramPoll(pollProgram);
 
         List<PollDto> runningProgramPolls = pollServiceBean.getRunningProgramPolls();
         assertNotNull(runningProgramPolls);
@@ -125,9 +125,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         OffsetDateTime latestRun = testPollHelper.getLatestRunDate();
         OffsetDateTime stopDate = testPollHelper.getStopDate();
 
-        PollProgram pollProgram = testPollHelper.createPollProgramHelper(null, startDate, stopDate, latestRun);
+        ProgramPoll pollProgram = testPollHelper.createPollProgramHelper(null, startDate, stopDate, latestRun);
 
-        pollProgramDao.createPollProgram(pollProgram);
+        pollProgramDao.createProgramPoll(pollProgram);
 
         PollResponseType responseType = pollServiceBean.startProgramPoll(pollProgram.getId().toString(), pollProgram.getUpdatedBy());
         List<PollAttribute> attributes = responseType.getAttributes();
@@ -155,9 +155,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         String username = "TEST";
 
         String connectId = UUID.randomUUID().toString();
-        PollProgram pollProgram = testPollHelper.createPollProgramHelper(connectId, startDate, stopDate, latestRun);
+        ProgramPoll pollProgram = testPollHelper.createPollProgramHelper(connectId, startDate, stopDate, latestRun);
 
-        pollProgramDao.createPollProgram(pollProgram);
+        pollProgramDao.createProgramPoll(pollProgram);
         UUID guid = pollProgram.getId();
 
         PollResponseType pollResponse = pollServiceBean.startProgramPoll(guid.toString(), username);
@@ -179,9 +179,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         OffsetDateTime latestRun = testPollHelper.getLatestRunDate();
         OffsetDateTime stopDate = testPollHelper.getStopDate();
 
-        PollProgram pollProgram = testPollHelper.createPollProgramHelper(null, startDate, stopDate, latestRun);
+        ProgramPoll pollProgram = testPollHelper.createPollProgramHelper(null, startDate, stopDate, latestRun);
 
-        pollProgramDao.createPollProgram(pollProgram);
+        pollProgramDao.createProgramPoll(pollProgram);
 
         PollResponseType responseType = pollServiceBean.stopProgramPoll(pollProgram.getId().toString(), pollProgram.getUpdatedBy());
         List<PollAttribute> attributes = responseType.getAttributes();
@@ -209,9 +209,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         String username = "TEST";
 
         String connectId = UUID.randomUUID().toString();
-        PollProgram pollProgram = testPollHelper.createPollProgramHelper(connectId, startDate, stopDate, latestRun);
+        ProgramPoll pollProgram = testPollHelper.createPollProgramHelper(connectId, startDate, stopDate, latestRun);
 
-        pollProgramDao.createPollProgram(pollProgram);
+        pollProgramDao.createProgramPoll(pollProgram);
         UUID guid = pollProgram.getId();
 
         PollResponseType pollResponse = pollServiceBean.startProgramPoll(guid.toString(), username);
@@ -236,9 +236,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         OffsetDateTime latestRun = testPollHelper.getLatestRunDate();
         OffsetDateTime stopDate = testPollHelper.getStopDate();
 
-        PollProgram pollProgram = testPollHelper.createPollProgramHelper(null, startDate, stopDate, latestRun);
+        ProgramPoll pollProgram = testPollHelper.createPollProgramHelper(null, startDate, stopDate, latestRun);
 
-        pollProgramDao.createPollProgram(pollProgram);
+        pollProgramDao.createProgramPoll(pollProgram);
 
         PollResponseType responseType = pollServiceBean.inactivateProgramPoll(pollProgram.getId().toString(), pollProgram.getUpdatedBy());
         List<PollAttribute> attributes = responseType.getAttributes();
@@ -266,9 +266,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         String username = "TEST";
 
         String connectId = UUID.randomUUID().toString();
-        PollProgram pollProgram = testPollHelper.createPollProgramHelper(connectId, startDate, stopDate, latestRun);
+        ProgramPoll pollProgram = testPollHelper.createPollProgramHelper(connectId, startDate, stopDate, latestRun);
 
-        pollProgramDao.createPollProgram(pollProgram);
+        pollProgramDao.createProgramPoll(pollProgram);
         UUID guid = pollProgram.getId();
 
         PollResponseType pollResponse = pollServiceBean.startProgramPoll(guid.toString(), username);
@@ -297,9 +297,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         OffsetDateTime latestRun = testPollHelper.getLatestRunDate();
         OffsetDateTime stopDate = testPollHelper.getStopDate();
 
-        PollProgram pollProgram = testPollHelper.createPollProgramHelper(null, startDate, stopDate, latestRun);
+        ProgramPoll pollProgram = testPollHelper.createPollProgramHelper(null, startDate, stopDate, latestRun);
 
-        pollProgramDao.createPollProgram(pollProgram);
+        pollProgramDao.createProgramPoll(pollProgram);
 
         List<PollResponseType> responseTypeList = pollServiceBean.timer();
 

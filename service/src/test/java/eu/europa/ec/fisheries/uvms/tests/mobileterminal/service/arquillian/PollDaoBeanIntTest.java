@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Poll;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollBase;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.PollSearchField;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.PollSearchKeyValue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.poll.PollSearchMapper;
@@ -41,8 +41,7 @@ public class PollDaoBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void testCreatePoll() {
-
-        Poll poll = createPollHelper();
+        PollBase poll = createPollHelper();
         pollDao.createPoll(poll);
         em.flush();
 
@@ -55,7 +54,7 @@ public class PollDaoBeanIntTest extends TransactionalTests {
 
         thrown.expect(ConstraintViolationException.class);
 
-        Poll poll = createPollHelper();
+        PollBase poll = createPollHelper();
         char [] updatedBy = new char[61];
         Arrays.fill(updatedBy, 'x');
         poll.setUpdatedBy(new String(updatedBy));
@@ -82,7 +81,7 @@ public class PollDaoBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void testCreatePoll_WithDefaultGuidGeneration() {
 
-        Poll poll = createPollHelper();
+        PollBase poll = createPollHelper();
         poll.setId(null);
         pollDao.createPoll(poll);
         em.flush();
@@ -94,11 +93,11 @@ public class PollDaoBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void testGetPollById() {
 
-        Poll poll = createPollHelper();
+        PollBase poll = createPollHelper();
         pollDao.createPoll(poll);
         em.flush();
 
-        Poll found = pollDao.getPollById(poll.getId());
+        PollBase found = pollDao.getPollById(poll.getId());
         assertNotNull(found);
         assertEquals(poll.getId(), found.getId());
     }
@@ -108,7 +107,7 @@ public class PollDaoBeanIntTest extends TransactionalTests {
     public void testGetPollById_willFailWithWrongId() {
 
         UUID uuid = UUID.randomUUID();
-        Poll poll = pollDao.getPollById(uuid);
+        PollBase poll = pollDao.getPollById(uuid);
         assertNull(poll);
     }
 
@@ -116,7 +115,7 @@ public class PollDaoBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void testGetPollById_willFailWithNull() {
 
-        Poll poll = pollDao.getPollById(null);
+        PollBase poll = pollDao.getPollById(null);
         assertNull(poll);
     }
 
@@ -352,7 +351,7 @@ public class PollDaoBeanIntTest extends TransactionalTests {
 
         String selectSearchSql = PollSearchMapper.createSelectSearchSql(listOfPollSearchKeyValue, true);
 
-        List<Poll> pollListSearchPaginated = pollDao.getPollListSearchPaginated(pageNumber, pageSize, selectSearchSql, listOfPollSearchKeyValue);
+        List<PollBase> pollListSearchPaginated = pollDao.getPollListSearchPaginated(pageNumber, pageSize, selectSearchSql, listOfPollSearchKeyValue);
         assertThat(pollListSearchPaginated, CoreMatchers.is(CoreMatchers.notNullValue()));
     }
 
@@ -380,7 +379,7 @@ public class PollDaoBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void testGetPollListSearchPaginated_PollSearchField_POLL_ID() {
 
-    	Poll poll = createPollHelper();
+        PollBase poll = createPollHelper();
     	pollDao.createPoll(poll);
         em.flush();
 
@@ -399,7 +398,7 @@ public class PollDaoBeanIntTest extends TransactionalTests {
 
         String sql = PollSearchMapper.createSelectSearchSql(listOfPollSearchKeyValue, true);
 
-        List<Poll> pollList = pollDao.getPollListSearchPaginated(pageNumber, pageSize, sql, listOfPollSearchKeyValue);
+        List<PollBase> pollList = pollDao.getPollListSearchPaginated(pageNumber, pageSize, sql, listOfPollSearchKeyValue);
 
         assertNotNull(pollList);
     }
@@ -434,7 +433,7 @@ public class PollDaoBeanIntTest extends TransactionalTests {
 
         String sql = PollSearchMapper.createSelectSearchSql(listOfPollSearchKeyValue, true);
 
-        List<Poll> pollList = pollDao.getPollListSearchPaginated(pageNumber, pageSize, sql, listOfPollSearchKeyValue);
+        List<PollBase> pollList = pollDao.getPollListSearchPaginated(pageNumber, pageSize, sql, listOfPollSearchKeyValue);
 
         assertNotNull(pollList);
     }
@@ -464,7 +463,7 @@ public class PollDaoBeanIntTest extends TransactionalTests {
 
         String sql = PollSearchMapper.createSelectSearchSql(listOfPollSearchKeyValues, true);
 
-        List<Poll> pollList = pollDao.getPollListSearchPaginated(pageNumber, pageSize, sql, listOfPollSearchKeyValues);
+        List<PollBase> pollList = pollDao.getPollListSearchPaginated(pageNumber, pageSize, sql, listOfPollSearchKeyValues);
 
         assertNotNull(pollList);
     }
@@ -488,13 +487,13 @@ public class PollDaoBeanIntTest extends TransactionalTests {
 
         String sql = PollSearchMapper.createSelectSearchSql(listOfPollSearchKeyValue, true);
 
-        List<Poll> pollList = pollDao.getPollListSearchPaginated(page, listSize, sql, listOfPollSearchKeyValue);
+        List<PollBase> pollList = pollDao.getPollListSearchPaginated(page, listSize, sql, listOfPollSearchKeyValue);
 
         assertNotNull(pollList);
     }
 
-    private Poll createPollHelper() {
-        Poll poll = new Poll();
+    private PollBase createPollHelper() {
+        PollBase poll = new PollBase();
         poll.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
         poll.setUpdatedBy("testUser");
         return poll;

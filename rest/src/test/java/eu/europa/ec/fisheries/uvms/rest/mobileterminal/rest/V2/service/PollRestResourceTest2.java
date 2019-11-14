@@ -13,7 +13,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollProgram;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.ProgramPoll;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.util.DateUtils;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
@@ -308,7 +308,7 @@ public class PollRestResourceTest2 extends AbstractAssetRestTest {
         assertTrue(retVal.contains(String.valueOf(Response.Status.OK.getStatusCode())));
 
         ObjectMapper objectMapper = new ObjectMapper();
-        PollProgram checkThatThePollIsArchived = objectMapper.readValue(retVal, PollProgram.class);
+        ProgramPoll checkThatThePollIsArchived = objectMapper.readValue(retVal, ProgramPoll.class);
 
         assertEquals(PollStateEnum.ARCHIVED, checkThatThePollIsArchived.getPollState());
     }

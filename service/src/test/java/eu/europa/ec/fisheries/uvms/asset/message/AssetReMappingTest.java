@@ -16,8 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 public class AssetReMappingTest extends TransactionalTests {
@@ -25,8 +24,7 @@ public class AssetReMappingTest extends TransactionalTests {
     private JMSHelper jmsHelper = new JMSHelper();
 
     @Inject
-    AssetDao assetDao;
-
+    private AssetDao assetDao;
 
     @Test
     @OperateOnDeployment("normal")
@@ -62,17 +60,17 @@ public class AssetReMappingTest extends TransactionalTests {
         Thread.sleep(2000);
 
         Asset fetchedAsset = jmsHelper.getAssetById(assetWithsMMSI.getMmsiNo(), AssetIdType.MMSI);
-        assertTrue(fetchedAsset != null);
-        assertTrue(fetchedAsset.getName() != null);
-        assertTrue(fetchedAsset.getName(), fetchedAsset.getName().equals(assetWithsIRCS.getName()));
-        assertTrue(fetchedAsset.getMmsiNo() != null);
-        assertTrue(fetchedAsset.getIrcs() != null);
+        assertNotNull(fetchedAsset);
+        assertNotNull(fetchedAsset.getName());
+        assertEquals(fetchedAsset.getName(), fetchedAsset.getName(), assetWithsIRCS.getName());
+        assertNotNull(fetchedAsset.getMmsiNo());
+        assertNotNull(fetchedAsset.getIrcs());
 
         List<AssetRemapMapping> mappingList = assetDao.getAllAssetRemappings();
         assertTrue(mappingList.stream().anyMatch(mapping -> (mapping.getOldAssetId().equals(mmsiEntityId) && mapping.getNewAssetId().equals(ircsEntity.getId()))));
 
         mmsiEntity = assetDao.getAssetById(mmsiEntityId);
-        assertTrue(mmsiEntity.getComment().length() == 255);
+        assertEquals(255, mmsiEntity.getComment().length());
         assertFalse(mmsiEntity.getActive());
 
         assetDao.deleteAsset(mmsiEntity);
