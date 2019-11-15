@@ -9,17 +9,13 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
+package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.V2.service;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.ListCriteria;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MobileTerminalListQuery;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.SearchKey;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalStatus;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
@@ -41,7 +37,7 @@ import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 @RunAsClient
-public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
+public class MobileTerminalRestResourceTest2 extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
@@ -49,7 +45,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
         MobileTerminal created = getWebTargetExternal()
-                                .path("mobileterminal")
+                                .path("mobileterminal2")
                                 .request(MediaType.APPLICATION_JSON)
                                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                                 .post(Entity.json(mobileTerminal), MobileTerminal.class);
@@ -86,7 +82,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         mobileTerminal.getChannels().add(channel2);
 
         MobileTerminal created = getWebTargetExternal()
-                .path("mobileterminal")
+                .path("mobileterminal2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mobileTerminal), MobileTerminal.class);
@@ -102,7 +98,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         String serialNr = mobileTerminal.getSerialNo();
 
         MobileTerminal created = getWebTargetExternal()
-                .path("mobileterminal")
+                .path("mobileterminal2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mobileTerminal), MobileTerminal.class);
@@ -113,7 +109,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         mobileTerminal.setSerialNo(serialNr);
 
         Response response = getWebTargetExternal()
-                .path("mobileterminal")
+                .path("mobileterminal2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mobileTerminal));
@@ -125,7 +121,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     public void getMobileTerminalByIdTest() {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
         MobileTerminal created = getWebTargetExternal()
-                .path("mobileterminal")
+                .path("mobileterminal2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mobileTerminal), MobileTerminal.class);
@@ -133,7 +129,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertNotNull(created);
 
         MobileTerminal fetched = getWebTargetExternal()
-                .path("mobileterminal/" + created.getId())
+                .path("mobileterminal2/" + created.getId())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get()
@@ -151,7 +147,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         mobileTerminal.setAsset(asset);
 
         MobileTerminal created = getWebTargetExternal()
-                .path("mobileterminal")
+                .path("mobileterminal2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mobileTerminal), MobileTerminal.class);
@@ -160,7 +156,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertNotNull(created);
 
         MobileTerminal fetched = getWebTargetExternal()
-                .path("mobileterminal/" + created.getId())
+                .path("mobileterminal2/" + created.getId())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get()
@@ -174,11 +170,76 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void createSeveralActiveMTOnOneAssetTest() {
+        Asset asset = createAndRestBasicAsset();
+        assertNotNull(asset);
+
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminal.setAsset(asset);
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+
+        assertNotNull(created);
+
+        MobileTerminal mobileTerminal2 = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminal2.setAsset(asset);
+
+        Response failed = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal2), Response.class);
+
+        assertNotNull(failed);
+        assertEquals(500, failed.getStatus());
+        String returnMessage = failed.readEntity(String.class);
+        assertTrue(returnMessage, returnMessage.contains("An asset can not have more then one active MT."));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createActiveAndInactiveMTOnOneAssetTest() {
+        Asset asset = createAndRestBasicAsset();
+        assertNotNull(asset);
+
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminal.setAsset(asset);
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+
+        assertNotNull(created);
+
+        MobileTerminal mobileTerminal2 = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminal2.setActive(false);
+        mobileTerminal2.setAsset(asset);
+
+        MobileTerminal inactiveMT = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal2), MobileTerminal.class);
+
+        assertNotNull(inactiveMT);
+        assertFalse(inactiveMT.getActive());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void updateMobileTerminalTest() {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
         MobileTerminal created = getWebTargetExternal()
-                .path("mobileterminal")
+                .path("mobileterminal2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mobileTerminal), MobileTerminal.class);
@@ -190,7 +251,40 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         created.getChannels().iterator().next().setName("BETTER_VMS");
 
         MobileTerminal updated = getWebTargetExternal()
-                .path("mobileterminal")
+                .path("mobileterminal2")
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(created), MobileTerminal.class);
+
+        assertNotNull(updated);
+        assertEquals(created.getId(), updated.getId());
+        assertEquals(MobileTerminalTypeEnum.IRIDIUM, updated.getMobileTerminalType());
+        assertEquals("BETTER_VMS", updated.getChannels().iterator().next().getName());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void updateActiveMobileTerminalWithAttachedAssetTest() {
+        Asset asset = createAndRestBasicAsset();
+        assertNotNull(asset);
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminal.setAsset(asset);
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        assertNotNull(created);
+        assertNotEquals(MobileTerminalTypeEnum.IRIDIUM, created.getMobileTerminalType());
+
+        created.setMobileTerminalType(MobileTerminalTypeEnum.IRIDIUM);
+        created.getChannels().iterator().next().setName("BETTER_VMS");
+
+        MobileTerminal updated = getWebTargetExternal()
+                .path("mobileterminal2")
                 .queryParam("comment", "NEW_TEST_COMMENT")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -230,7 +324,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         mobileTerminal.getChannels().add(c2);
 
         MobileTerminal created = getWebTargetExternal()
-                .path("mobileterminal")
+                .path("mobileterminal2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mobileTerminal), MobileTerminal.class);
@@ -242,7 +336,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         created.getChannels().remove(c1);
 
         MobileTerminal updated = getWebTargetExternal()
-                .path("mobileterminal")
+                .path("mobileterminal2")
                 .queryParam("comment", "NEW_TEST_COMMENT")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -261,7 +355,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
         MobileTerminal created = getWebTargetExternal()
-                .path("mobileterminal")
+                .path("mobileterminal2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mobileTerminal), MobileTerminal.class);
@@ -272,15 +366,60 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertNotNull(asset);
 
         MobileTerminal response = getWebTargetExternal()
-                .path("/mobileterminal/assign")
+                .path("/mobileterminal2")
+                .path(created.getId().toString())
+                .path("assign")
+                .path(asset.getId().toString())
                 .queryParam("comment", "NEW_TEST_COMMENT")
-                .queryParam("connectId", asset.getId())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(created.getId()), MobileTerminal.class);
+                .put(Entity.json(""), MobileTerminal.class);
 
         assertNotNull(response);
         assertEquals(created.getId(), response.getId());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void assignActiveMobileTerminalToAssetWithAlreadyAnActiveMTTest() {
+        Asset asset = createAndRestBasicAsset();
+        assertNotNull(asset);
+
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mobileTerminal.setAsset(asset);
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        assertNotNull(created);
+
+        MobileTerminal unassignedMT = MobileTerminalTestHelper.createBasicMobileTerminal();
+        unassignedMT = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(unassignedMT), MobileTerminal.class);
+
+        assertNotNull(unassignedMT);
+
+
+        Response response = getWebTargetExternal()
+                .path("/mobileterminal2")
+                .path(unassignedMT.getId().toString())
+                .path("assign")
+                .path(asset.getId().toString())
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(""), Response.class);
+
+        assertNotNull(response);
+        assertEquals(500, response.getStatus());
+        String returnMessage = response.readEntity(String.class);
+        assertTrue(returnMessage, returnMessage.contains("An asset can not have more then one active MT."));
     }
 
     @Test
@@ -289,7 +428,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
         MobileTerminal created = getWebTargetExternal()
-                .path("mobileterminal")
+                .path("mobileterminal2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mobileTerminal), MobileTerminal.class);
@@ -300,24 +439,28 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertNotNull(asset);
 
         MobileTerminal responseAssign = getWebTargetExternal()
-                .path("/mobileterminal/assign")
+                .path("/mobileterminal2")
+                .path(created.getId().toString())
+                .path("assign")
+                .path(asset.getId().toString())
                 .queryParam("comment", "NEW_TEST_COMMENT")
-                .queryParam("connectId", asset.getId())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(created.getId()), MobileTerminal.class);
+                .put(Entity.json(""), MobileTerminal.class);
 
         assertNotNull(responseAssign);
         assertNotNull(responseAssign.getAssetId());
         assertEquals(created.getId(), responseAssign.getId());
 
         MobileTerminal responseUnAssign = getWebTargetExternal()
-                .path("/mobileterminal/unassign")
+                .path("/mobileterminal2")
+                .path(created.getId().toString())
+                .path("unassign")
+                .path(asset.getId().toString())
                 .queryParam("comment", "NEW_TEST_COMMENT")
-                .queryParam("connectId", asset.getId())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(created.getId()), MobileTerminal.class);
+                .put(Entity.json(""), MobileTerminal.class);
 
         assertNotNull(responseUnAssign);
         assertNull(responseUnAssign.getAssetId());
@@ -331,7 +474,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         mt.setAsset(null);
 
         MobileTerminal created = getWebTargetExternal()
-                .path("mobileterminal")
+                .path("mobileterminal2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mt), MobileTerminal.class);
@@ -340,32 +483,38 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertFalse(created.getArchived());
 
         MobileTerminal response = getWebTargetExternal()
-                .path("mobileterminal/status/inactivate")
+                .path("mobileterminal2")
+                .path(created.getId().toString())
+                .path("status")
                 .queryParam("comment", "Test Comment Inactivate")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(created.getId()))
+                .put(Entity.json(MobileTerminalStatus.INACTIVE))
                 .readEntity(MobileTerminal.class);
 
         assertNotNull(response);
         assertFalse(response.getActive());
 
         response = getWebTargetExternal()
-                .path("mobileterminal/status/activate")
+                .path("mobileterminal2")
+                .path(created.getId().toString())
+                .path("status")
                 .queryParam("comment", "Test Comment Activate")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(created.getId()))
+                .put(Entity.json(MobileTerminalStatus.ACTIVE))
                 .readEntity(MobileTerminal.class);
 
         assertTrue(response.getActive());
 
         response = getWebTargetExternal()
-                .path("mobileterminal/status/remove")
+                .path("mobileterminal2")
+                .path(created.getId().toString())
+                .path("status")
                 .queryParam("comment", "Test Comment Remove")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(created.getId()))
+                .put(Entity.json(MobileTerminalStatus.ARCHIVE))
                 .readEntity(MobileTerminal.class);
 
         assertFalse(response.getActive());
@@ -373,7 +522,9 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         //checking the events as well
         Response res = getWebTargetExternal()
-                .path("mobileterminal/history/" + created.getId())
+                .path("mobileterminal2")
+                .path(created.getId().toString())
+                .path("history")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get();
@@ -383,12 +534,57 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void ActivateMTConnectedToAnAssetWithAnAlreadyActiveMT() {
+        Asset asset = createAndRestBasicAsset();
+        assertNotNull(asset);
+
+        MobileTerminal activeMT = MobileTerminalTestHelper.createBasicMobileTerminal();
+        activeMT.setAsset(asset);
+
+        activeMT = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(activeMT), MobileTerminal.class);
+
+        assertTrue(activeMT.getActive());
+
+        MobileTerminal inactiveMT = MobileTerminalTestHelper.createBasicMobileTerminal();
+        inactiveMT.setActive(false);
+        inactiveMT.setAsset(asset);
+
+        inactiveMT = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(inactiveMT), MobileTerminal.class);
+
+        assertFalse(inactiveMT.getActive());
+
+        Response failed = getWebTargetExternal()
+                .path("mobileterminal2")
+                .path(inactiveMT.getId().toString())
+                .path("status")
+                .queryParam("comment", "Test Comment Activate")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(MobileTerminalStatus.ACTIVE), Response.class);
+
+
+        assertNotNull(failed);
+        assertEquals(500, failed.getStatus());
+        String returnMessage = failed.readEntity(String.class);
+        assertTrue(returnMessage, returnMessage.contains("An asset can not have more then one active MT."));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void archiveAndUnarchiveMobileTerminal() {
         MobileTerminal mt = MobileTerminalTestHelper.createBasicMobileTerminal();
         mt.setAsset(null);
 
         MobileTerminal created = getWebTargetExternal()
-                .path("mobileterminal")
+                .path("mobileterminal2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mt), MobileTerminal.class);
@@ -397,29 +593,35 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertFalse(created.getArchived());
 
         MobileTerminal response = getWebTargetExternal()
-                .path("mobileterminal/status/remove")
+                .path("mobileterminal2")
+                .path(created.getId().toString())
+                .path("status")
                 .queryParam("comment", "Test Comment Archive")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(created.getId()))
+                .put(Entity.json(MobileTerminalStatus.ARCHIVE))
                 .readEntity(MobileTerminal.class);
 
         assertNotNull(response);
         assertTrue(response.getArchived());
 
         response = getWebTargetExternal()
-                .path("mobileterminal/status/unarchive")
+                .path("mobileterminal2")
+                .path(created.getId().toString())
+                .path("status")
                 .queryParam("comment", "Test Comment Unarchive")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(created.getId()))
+                .put(Entity.json(MobileTerminalStatus.UNARCHIVE))
                 .readEntity(MobileTerminal.class);
 
         assertFalse(response.getArchived());
 
         //checking the events as well
         Response res = getWebTargetExternal()
-                .path("mobileterminal/history/" + created.getId())
+                .path("mobileterminal2")
+                .path(created.getId().toString())
+                .path("history")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get();
@@ -435,13 +637,13 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         mt2.setActive(false);
 
         MobileTerminal created1 = getWebTargetExternal()
-                .path("mobileterminal")
+                .path("mobileterminal2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mt1), MobileTerminal.class);
 
         MobileTerminal created2 = getWebTargetExternal()
-                .path("mobileterminal")
+                .path("mobileterminal2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mt2), MobileTerminal.class);
@@ -449,31 +651,37 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         Asset asset = createAndRestBasicAsset();
 
         getWebTargetExternal()
-                .path("/mobileterminal/assign")
+                .path("/mobileterminal2")
+                .path(created1.getId().toString())
+                .path("assign")
+                .path(asset.getId().toString())
                 .queryParam("comment", "NEW_TEST_COMMENT")
-                .queryParam("connectId", asset.getId())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(created1.getId()), MobileTerminal.class);
+                .put(Entity.json(""), MobileTerminal.class);
 
         getWebTargetExternal()
-                .path("/mobileterminal/assign")
+                .path("/mobileterminal2")
+                .path(created2.getId().toString())
+                .path("assign")
+                .path(asset.getId().toString())
                 .queryParam("comment", "NEW_TEST_COMMENT")
-                .queryParam("connectId", asset.getId())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(created2.getId()), MobileTerminal.class);
+                .put(Entity.json(""), MobileTerminal.class);
 
         getWebTargetExternal()
-                .path("/mobileterminal/unassign")
+                .path("/mobileterminal2")
+                .path(created2.getId().toString())
+                .path("unassign")
+                .path(asset.getId().toString())
                 .queryParam("comment", "NEW_TEST_COMMENT")
-                .queryParam("connectId", asset.getId())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(created2.getId()), MobileTerminal.class);
+                .put(Entity.json(""), MobileTerminal.class);
 
         List<Map<UUID, List<MobileTerminal>>> mtRevisions = getWebTargetExternal()
-                .path("/mobileterminal/history/asset")
+                .path("/mobileterminal2/history/getMtHistoryForAsset")
                 .path(asset.getId().toString())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -493,7 +701,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
         mobileTerminal = getWebTargetExternal()
-                .path("mobileterminal")
+                .path("mobileterminal2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mobileTerminal), MobileTerminal.class);
@@ -501,32 +709,44 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         Asset asset1 = createAndRestBasicAsset();
         Asset asset2 = createAndRestBasicAsset();
 
-        getWebTargetExternal()
-                .path("/mobileterminal/assign")
+        Response response = getWebTargetExternal()
+                .path("/mobileterminal2")
+                .path(mobileTerminal.getId().toString())
+                .path("assign")
+                .path(asset1.getId().toString())
                 .queryParam("comment", "NEW_TEST_COMMENT")
-                .queryParam("connectId", asset1.getId())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(mobileTerminal.getId()));
+                .put(Entity.json(""));
 
-        getWebTargetExternal()
-                .path("/mobileterminal/unassign")
-                .queryParam("comment", "NEW_TEST_COMMENT")
-                .queryParam("connectId", asset1.getId())
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(mobileTerminal.getId()));
+        assertEquals(200, response.getStatus());
 
-        getWebTargetExternal()
-                .path("/mobileterminal/assign")
+        response = getWebTargetExternal()
+                .path("/mobileterminal2")
+                .path(mobileTerminal.getId().toString())
+                .path("unassign")
+                .path(asset1.getId().toString())
                 .queryParam("comment", "NEW_TEST_COMMENT")
-                .queryParam("connectId", asset2.getId())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(mobileTerminal.getId()));
+                .put(Entity.json(""));
+
+        assertEquals(200, response.getStatus());
+
+        response = getWebTargetExternal()
+                .path("/mobileterminal2")
+                .path(mobileTerminal.getId().toString())
+                .path("assign")
+                .path(asset2.getId().toString())
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(""));
+
+        assertEquals(200, response.getStatus());
 
         List<Asset> assetRevisions = getWebTargetExternal()
-                .path("/mobileterminal/history/mobileterminal")
+                .path("/mobileterminal2/history/getAssetHistoryForMT")
                 .path(mobileTerminal.getId().toString())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -540,7 +760,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
         MobileTerminal created = getWebTargetExternal()
-                .path("mobileterminal")
+                .path("mobileterminal2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mobileTerminal), MobileTerminal.class);
@@ -552,7 +772,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         created.getChannels().iterator().next().setMobileTerminal(null);
 
         MobileTerminal updated = getWebTargetExternal()
-                .path("mobileterminal")
+                .path("mobileterminal2")
                 .queryParam("comment", "NEW_TEST_COMMENT")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -563,11 +783,173 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertEquals(channelId, updated.getChannels().iterator().next().getId());
     }
 
+    @Test
+    @OperateOnDeployment("normal")
+    public void checkIfNonExistantSerialNumberExistsTest() {
+
+        Response response = getWebTargetExternal()
+                .path("mobileterminal2")
+                .path("checkIfExists")
+                .path("serialNr")
+                .path("DoesNotExist")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Response.class);
+
+        assertEquals(200, response.getStatus());
+        String returnString = response.readEntity(String.class);
+        assertTrue(returnString, returnString.contains("false"));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void checkIfNonExistantSerialNumberExistsWithParamToReturnWholeObjectTest() {
+
+        Response response = getWebTargetExternal()
+                .path("mobileterminal2")
+                .path("checkIfExists")
+                .path("serialNr")
+                .path("DoesNotExist")
+                .queryParam("returnWholeObject", true)
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Response.class);
+
+        assertEquals(200, response.getStatus());
+        String returnString = response.readEntity(String.class);
+        assertTrue(returnString, returnString.contains("false"));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void checkIfExistantSerialNumberExistsTest() {
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        Response response = getWebTargetExternal()
+                .path("mobileterminal2")
+                .path("checkIfExists")
+                .path("serialNr")
+                .path(created.getSerialNo())
+                .queryParam("returnWholeObject", false)
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Response.class);
+
+        assertEquals(200, response.getStatus());
+        String returnString = response.readEntity(String.class);
+        assertTrue(returnString, returnString.contains("true"));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void checkIfExistantSerialNumberExistsReturnWholeObjectTest() {
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        Response response = getWebTargetExternal()
+                .path("mobileterminal2")
+                .path("checkIfExists")
+                .path("serialNr")
+                .path(created.getSerialNo())
+                .queryParam("returnWholeObject", true)
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Response.class);
+
+        assertEquals(200, response.getStatus());
+        MobileTerminal returnString = response.readEntity(MobileTerminal.class);
+        assertEquals(created.getId(), returnString.getId());
+    }
+
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void checkIfNonExistantMemberDnidComboNumberExistsTest() {
+
+        Response response = getWebTargetExternal()
+                .path("mobileterminal2")
+                .path("checkIfExists")
+                .path("memberNbr/dnid")
+                .path("DoesNot/Exist")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Response.class);
+
+        assertEquals(200, response.getStatus());
+        String returnString = response.readEntity(String.class);
+        assertTrue(returnString, returnString.contains("false"));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void checkIfHalfExistantSerialNumberExistsTest() {
+
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        Response response = getWebTargetExternal()
+                .path("mobileterminal2")
+                .path("checkIfExists")
+                .path("memberNbr/dnid")
+                .path(created.getChannels().iterator().next().getMemberNumber())
+                .path("DoesNotExist")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Response.class);
+
+        assertEquals(200, response.getStatus());
+        String returnString = response.readEntity(String.class);
+        assertTrue(returnString, returnString.contains("false"));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void checkIfExistantMemberNbrDnidComboExistsTest() {
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal2")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        Channel channel = created.getChannels().iterator().next();
+        Response response = getWebTargetExternal()
+                .path("mobileterminal2")
+                .path("checkIfExists")
+                .path("memberNbr/dnid")
+                .path(channel.getMemberNumber())
+                .path(channel.getDNID())
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Response.class);
+
+        assertEquals(200, response.getStatus());
+        String returnString = response.readEntity(String.class);
+        assertTrue(returnString, returnString.contains("true"));
+    }
+    
     private Asset createAndRestBasicAsset() {
         Asset asset = AssetHelper.createBasicAsset();
 
         Asset createdAsset = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(asset), Asset.class);
@@ -577,11 +959,4 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         return createdAsset;
     }
 
-    private MTListResponse sendMTListQuery(MobileTerminalListQuery mobileTerminalListQuery) {
-        return getWebTargetExternal()
-                .path("/mobileterminal/list")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(mobileTerminalListQuery), MTListResponse.class);
-    }
 }

@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.rest.asset.service;
+package eu.europa.ec.fisheries.uvms.rest.asset.V2.service;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
@@ -25,7 +25,7 @@ import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 @RunAsClient
-public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
+public class AssetGroupRestResourceTest2 extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
@@ -34,7 +34,7 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
         
         Response response = getWebTargetExternal()
-                .path("/group")
+                .path("/group2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(assetGroup));
@@ -48,7 +48,7 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
     public void createAssetGroupTest() {
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
         assetGroup = getWebTargetExternal()
-                .path("/group")
+                .path("/group2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(assetGroup), AssetGroup.class);
@@ -60,7 +60,7 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
     @OperateOnDeployment("normal")
     public void getAssetGroupListByUserNoUserParamTest() {
         Response response = getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -76,7 +76,7 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
     public void getAssetGroupListByUserTest() {
 
         Response responseBefore = getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .path("list")
                 .queryParam("user", "user")
                 .request(MediaType.APPLICATION_JSON)
@@ -86,14 +86,14 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
         List<AssetGroup> groupsBefore = responseBefore.readEntity(new GenericType<List<AssetGroup>>() {});
 
         Response ret = getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(AssetHelper.createBasicAssetGroup()), Response.class);
         assertEquals(200, ret.getStatus());
         
         Response response = getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .path("list")
                 .queryParam("user", "user")
                 .request(MediaType.APPLICATION_JSON)
@@ -111,7 +111,7 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
     public void getAssetGroupListByUserTwoGroupsTest() {
 
         Response responseBefore = getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .path("list")
                 .queryParam("user", "user")
                 .request(MediaType.APPLICATION_JSON)
@@ -121,19 +121,19 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
         List<AssetGroup> groupsBefore = responseBefore.readEntity(new GenericType<List<AssetGroup>>() {});
 
         getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(AssetHelper.createBasicAssetGroup()), AssetGroup.class);
 
         getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(AssetHelper.createBasicAssetGroup()), AssetGroup.class);
         
         Response response = getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .path("list")
                 .queryParam("user", "user")
                 .request(MediaType.APPLICATION_JSON)
@@ -152,13 +152,13 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
 
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
         AssetGroup createdAssetGroup = getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(assetGroup), AssetGroup.class);
         
         AssetGroup fetchedAssetGroup = getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .path(createdAssetGroup.getId().toString())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -175,14 +175,14 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
     public void createAssetGroupFieldTest() {
         Asset asset = AssetHelper.createBasicAsset();
         asset = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(asset), Asset.class);
 
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
         assetGroup = getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(assetGroup), AssetGroup.class);
@@ -192,7 +192,7 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
         field.setValue(asset.getId().toString());
 
         field = getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .path(assetGroup.getId().toString())
                 .path("field")
                 .request(MediaType.APPLICATION_JSON)
@@ -208,14 +208,14 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
     public void retrieveFieldsForGroupTest() {
         Asset asset = AssetHelper.createBasicAsset();
         asset = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(asset), Asset.class);
 
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
         assetGroup = getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(assetGroup), AssetGroup.class);
@@ -225,7 +225,7 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
         field.setValue(asset.getId().toString());
 
         field = getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .path(assetGroup.getId().toString())
                 .path("field")
                 .request(MediaType.APPLICATION_JSON)
@@ -251,7 +251,7 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
 
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
         assetGroup = getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(assetGroup), AssetGroup.class);
@@ -263,7 +263,7 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
         field.setValue(randomUUID.toString());
 
         field = getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .path(assetGroup.getId().toString())
                 .path("field")
                 .request(MediaType.APPLICATION_JSON)
@@ -274,7 +274,7 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
         assertNotNull(field.getId());
 
         field = getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .path("field")
                 .path(field.getId().toString())
                 .request(MediaType.APPLICATION_JSON)
@@ -290,7 +290,7 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
     public void getAssetGroupFieldTest() {
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
         assetGroup = getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(assetGroup), AssetGroup.class);
@@ -302,7 +302,7 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
         field.setValue(randomUUID.toString());
 
         field = getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .path(assetGroup.getId().toString())
                 .path("field")
                 .request(MediaType.APPLICATION_JSON)
@@ -311,7 +311,7 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
                 .readEntity(AssetGroupField.class);
 
         AssetGroupField fetched = getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .path("field")
                 .path(field.getId().toString())
                 .request(MediaType.APPLICATION_JSON)
@@ -326,7 +326,7 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
     public void updateAssetGroupFieldTest() {
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
         assetGroup = getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(assetGroup), AssetGroup.class);
@@ -338,7 +338,7 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
         field.setValue(randomUUID.toString());
 
         field = getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .path(assetGroup.getId().toString())
                 .path("field")
                 .request(MediaType.APPLICATION_JSON)
@@ -352,7 +352,7 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
         field.setValue(newRandomUUID.toString());
 
         AssetGroupField fetchedField = getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .path("field")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -367,14 +367,14 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
     public void getAssetGroupListByAssetId() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(asset), Asset.class);
         
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
         AssetGroup createdAssetGroup = getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(assetGroup), AssetGroup.class);
@@ -384,7 +384,7 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
         field.setValue(createdAsset.getId().toString());
 
         getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .path(createdAssetGroup.getId().toString())
                 .path("field")
                 .request(MediaType.APPLICATION_JSON)
@@ -392,7 +392,7 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
                 .post(Entity.json(field));
         
         Response response = getWebTargetExternal()
-                .path("group")
+                .path("group2")
                 .path("asset")
                 .path(createdAsset.getId().toString())
                 .request(MediaType.APPLICATION_JSON)

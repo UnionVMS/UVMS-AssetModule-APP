@@ -26,9 +26,9 @@ import java.util.List;
 @Api(value = "CustomCodes Service")
 @Consumes(value = {MediaType.APPLICATION_JSON})
 @Produces(value = {MediaType.APPLICATION_JSON})
-public class CustomCodesRestResource {
+public class CustomCodesResource {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CustomCodesRestResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AssetConfigResource.class);
 
     @Inject
     private CustomCodesService customCodesSvc;
@@ -49,8 +49,8 @@ public class CustomCodesRestResource {
         }
     }
 
-    @PUT
-    @ApiOperation(value = "Store latest permutation of a customCode, original is destroyed", notes = "replace", response = CustomCode.class)
+    @POST
+    @ApiOperation(value = "Store latest permutation of a customCode original is destroyed", notes = "replace", response = CustomCode.class)
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when createing custom code"),
             @ApiResponse(code = 200, message = "Success when createing custom code")})
@@ -70,16 +70,16 @@ public class CustomCodesRestResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when retrieving code list for given constants list"),
             @ApiResponse(code = 200, message = "Codes for constants  successfully retrieved")})
-    @Path("/{constant}/{code}")
+    @Path("/{constant}/{code}/{validFromDate}/{validToDate}")
     public Response retrieveCustomCode(
             @ApiParam(value = "constants", required = true) @PathParam("constant") String constant,
             @ApiParam(value = "code", required = true) @PathParam("code") String code,
-            @ApiParam(value = "validFromDate", required = true) @QueryParam(value = "validFromDate")  String   validFromDate,
-            @ApiParam(value = "validToDate", required = true) @QueryParam(value = "validToDate") String validToDate)
+            @ApiParam(value = "validFromDate", required = true) @PathParam(value = "validFromDate")  String   validFromDate,
+            @ApiParam(value = "validToDate", required = true) @PathParam(value = "validToDate") String validToDate)
     {
         try {
-            OffsetDateTime fromDate = (validFromDate == null ? CustomCodesPK.STANDARD_START_DATE : OffsetDateTime.parse(validFromDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-            OffsetDateTime toDate = (validToDate == null ? CustomCodesPK.STANDARD_END_DATE : OffsetDateTime.parse(validToDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+            OffsetDateTime fromDate = OffsetDateTime.parse(validFromDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            OffsetDateTime toDate = OffsetDateTime.parse(validToDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             CustomCode customCode = customCodesSvc.get(constant,code,fromDate,toDate);
             return Response.ok(customCode).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
@@ -93,16 +93,16 @@ public class CustomCodesRestResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when retrieving code list for given constants list"),
             @ApiResponse(code = 200, message = "Codes for constants  successfully retrieved")})
-    @Path("/{constant}/{code}/exists")
+    @Path("/exists/{constant}/{code}/{validFromDate}/{validToDate}")
     public Response exists(@ApiParam(value = "constants", required = true) @PathParam("constant") String constant,
                            @ApiParam(value = "code", required = true) @PathParam("code") String code,
-                           @ApiParam(value = "validFromDate", required = true) @QueryParam(value = "validFromDate") String validFromDate,
-                           @ApiParam(value = "validToDate", required = true) @QueryParam(value = "validToDate") String validToDate)
+                           @ApiParam(value = "validFromDate", required = true) @PathParam(value = "validFromDate") String validFromDate,
+                           @ApiParam(value = "validToDate", required = true) @PathParam(value = "validToDate") String validToDate)
     {
         try {
 
-            OffsetDateTime fromDate = (validFromDate == null ? CustomCodesPK.STANDARD_START_DATE : OffsetDateTime.parse(validFromDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-            OffsetDateTime toDate = (validToDate == null ? CustomCodesPK.STANDARD_END_DATE : OffsetDateTime.parse(validToDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+            OffsetDateTime fromDate = OffsetDateTime.parse(validFromDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            OffsetDateTime toDate = OffsetDateTime.parse(validToDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             CustomCodesPK pk = new CustomCodesPK();
             pk.setConstant(constant);
             pk.setCode(code);
@@ -122,14 +122,14 @@ public class CustomCodesRestResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when processing request"),
             @ApiResponse(code = 200, message = "Successfully proccessed request")})
-    @Path("/{constant}/{code}/getfordate")
+    @Path("/getfordate/{constant}/{code}/{date}")
     public Response getForDate(@ApiParam(value = "constants", required = true) @PathParam("constant") String constant,
                            @ApiParam(value = "code", required = true) @PathParam("code") String code,
-                           @ApiParam(value = "validToDate", required = true) @QueryParam(value = "date") String date)
+                           @ApiParam(value = "validToDate", required = true) @PathParam(value = "date") String date)
     {
         try {
 
-            OffsetDateTime aDate = (date == null ? OffsetDateTime.now() : OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+            OffsetDateTime aDate = OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             List<CustomCode> customCodes = customCodesSvc.getForDate(constant, code,aDate);
 
             return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
@@ -144,14 +144,14 @@ public class CustomCodesRestResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when processing request"),
             @ApiResponse(code = 200, message = "Successfully proccessed request")})
-    @Path("/{constant}/{code}/verify")
+    @Path("/verify/{constant}/{code}/{date}")
     public Response verify(@ApiParam(value = "constants", required = true) @PathParam("constant") String constant,
                                @ApiParam(value = "code", required = true) @PathParam("code") String code,
-                               @ApiParam(value = "validToDate", required = true) @QueryParam(value = "date") String date)
+                               @ApiParam(value = "validToDate", required = true) @PathParam(value = "date") String date)
     {
         try {
 
-            OffsetDateTime aDate = (date == null ? OffsetDateTime.now() : OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+            OffsetDateTime aDate = OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             Boolean exists = customCodesSvc.verify(constant, code, aDate);
 
             return Response.ok(exists).header("MDC", MDC.get("requestId")).build();
@@ -198,16 +198,16 @@ public class CustomCodesRestResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when retrieving code list for given constants list"),
             @ApiResponse(code = 200, message = "Codes for constants  successfully retrieved")})
-    @Path("/{constant}/{code}")
+    @Path("/{constant}/{code}/{validFromDate}/{validToDate}")
     public Response deleteCustomCode(@ApiParam(value = "constants", required = true) @PathParam("constant") String constant,
                                      @ApiParam(value = "code", required = true) @PathParam("code") String code,
-                                     @ApiParam(value = "validFromDate", required = true) @QueryParam(value = "validFromDate") String validFromDate,
-                                     @ApiParam(value = "validToDate", required = true) @QueryParam(value = "validToDate") String validToDate)
+                                     @ApiParam(value = "validFromDate", required = true) @PathParam(value = "validFromDate") String validFromDate,
+                                     @ApiParam(value = "validToDate", required = true) @PathParam(value = "validToDate") String validToDate)
     {
         try {
 
-            OffsetDateTime fromDate = (validFromDate == null ? CustomCodesPK.STANDARD_START_DATE : OffsetDateTime.parse(validFromDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-            OffsetDateTime toDate = (validToDate == null ? CustomCodesPK.STANDARD_END_DATE : OffsetDateTime.parse(validToDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+            OffsetDateTime fromDate = OffsetDateTime.parse(validFromDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            OffsetDateTime toDate = OffsetDateTime.parse(validToDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             customCodesSvc.delete(constant, code,fromDate,toDate);
             return Response.ok().header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
