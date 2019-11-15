@@ -26,7 +26,10 @@ import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.hamcrest.CoreMatchers.is;
@@ -283,8 +286,8 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
 
         Response response = getWebTargetExternal()
                 .path("asset")
-                .path("history/asset")
                 .path(updatedAsset.getId().toString())
+                .path("history")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get();
@@ -338,10 +341,12 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
 
         Asset archivedAsset = getWebTargetExternal()
                 .path("asset")
+                .path(createdAsset.getId().toString())
                 .path("archive")
+                .queryParam("comment", "Archive comment")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(createdAsset), Asset.class);
+                .put(Entity.json(""), Asset.class);
 
         assertNotNull(archivedAsset);
         assertThat(archivedAsset.getActive() , is(false));
@@ -364,12 +369,13 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
 
         MobileTerminal assignedMT = getWebTargetExternal()
                 .path("mobileterminal")
+                .path(createdMT.getId().toString())
                 .path("assign")
+                .path(createdAsset.getId().toString())
                 .queryParam("comment", "assign")
-                .queryParam("connectId", createdAsset.getId())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(createdMT.getId()), MobileTerminal.class);
+                .put(Entity.json(""), MobileTerminal.class);
 
         assertNotNull(assignedMT.getAssetId());
 
@@ -385,10 +391,12 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
 
         Asset archivedAsset = getWebTargetExternal()
                 .path("asset")
+                .path(fetchedAsset.getId().toString())
                 .path("archive")
+                .queryParam("comment", "archive")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(fetchedAsset), Asset.class);
+                .put(Entity.json(""), Asset.class);
 
         assertFalse(archivedAsset.getActive());
 
@@ -411,20 +419,24 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
 
         Asset archivedAsset = getWebTargetExternal()
                 .path("asset")
+                .path(createdAsset.getId().toString())
                 .path("archive")
+                .queryParam("comment", "archive")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(createdAsset), Asset.class);
+                .put(Entity.json(""), Asset.class);
 
         assertNotNull(archivedAsset);
         assertThat(archivedAsset.getActive() , is(false));
 
         Asset unarchivedAsset = getWebTargetExternal()
                 .path("asset")
+                .path(archivedAsset.getId().toString())
                 .path("unarchive")
+                .queryParam("comment", "unarchive")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(archivedAsset.getId()), Asset.class);
+                .put(Entity.json(""), Asset.class);
 
         assertNotNull(unarchivedAsset);
         assertThat(unarchivedAsset.getActive() , is(true));
@@ -463,10 +475,10 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
 
         Asset assetByCfrAndTimestamp1 = getWebTargetExternal()
                 .path("asset")
-                .path("history")
                 .path("cfr")
                 .path(createdAsset.getCfr())
-                .path(firstTimeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+                .path("history")
+                .queryParam("date", firstTimeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(Asset.class);
@@ -475,10 +487,10 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
 
         Asset assetByCfrAndTimestamp2 = getWebTargetExternal()
                 .path("asset")
-                .path("history")
                 .path("cfr")
                 .path(createdAsset.getCfr())
-                .path(secondTimeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+                .path("history")
+                .queryParam("date", secondTimeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(Asset.class);
@@ -495,10 +507,10 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         OffsetDateTime timeStamp = OffsetDateTime.now(ZoneOffset.UTC);
         Asset assetByCfrAndTimestamp1 = getWebTargetExternal()
                 .path("asset")
-                .path("history")
                 .path("cfr")
                 .path(createdAsset.getCfr())
-                .path(timeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+                .path("history")
+                .queryParam("date", timeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(Asset.class);
@@ -521,10 +533,10 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
 
         Asset assetByCfrAndTimestamp1 = getWebTargetExternal()
                 .path("asset")
-                .path("history")
                 .path("cfr")
                 .path(createdAsset.getCfr())
-                .path(timeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+                .path("history")
+                .queryParam("date", timeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(Asset.class);
@@ -569,10 +581,10 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
 
         Asset pastAsset = getWebTargetExternal()
                 .path("asset")
-                .path("history")
                 .path("cfr")
                 .path(createdAsset.getCfr())
-                .path(timeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+                .path("history")
+                .queryParam("date", timeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(Asset.class);
@@ -616,10 +628,10 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
 
         Asset assetByCfrAndTimestamp1 = getWebTargetExternal()
                 .path("asset")
-                .path("history")
                 .path("cfr")
                 .path(createdAsset.getCfr())
-                .path(timeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+                .path("history")
+                .queryParam("date", timeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(Asset.class);
@@ -683,10 +695,10 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         Asset createdAsset = restCreateAsset(asset);
 
         Note note = AssetHelper.createBasicNote();
+        note.setAssetId(createdAsset.getId());
 
         Note createdNote = getWebTargetExternal()
                 .path("asset")
-                .path(createdAsset.getId().toString())
                 .path("notes")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -716,21 +728,22 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         // Assign MobileTerminal
         MobileTerminal assignedMT = getWebTargetExternal()
                 .path("mobileterminal")
+                .path(createdMT.getId().toString())
                 .path("assign")
+                .path(createdAsset.getId().toString())
                 .queryParam("comment", "assign")
-                .queryParam("connectId", createdAsset.getId())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(createdMT.getId()), MobileTerminal.class);
+                .put(Entity.json(""), MobileTerminal.class);
 
         // Verify Updated Asset holds correct MobileTerminal history
         OffsetDateTime firstTimeStamp = OffsetDateTime.now(ZoneOffset.UTC);
         Asset assetHistory1 = getWebTargetExternal()
                 .path("asset")
-                .path("history")
                 .path("cfr")
                 .path(cfr)
-                .path(firstTimeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+                .path("history")
+                .queryParam("date", firstTimeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(Asset.class);
@@ -758,10 +771,10 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         // Verify Updated Asset holds correct MobileTerminal history
         Asset assetHistory2 = getWebTargetExternal()
                 .path("asset")
-                .path("history")
                 .path("cfr")
                 .path(newCfr)
-                .path(secondTimeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+                .path("history")
+                .queryParam("date", secondTimeStamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(Asset.class);
@@ -777,10 +790,10 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         Asset createdAsset = restCreateAsset(asset);
 
         Note note = AssetHelper.createBasicNote();
+        note.setAssetId(createdAsset.getId());
 
         Note createdNote = getWebTargetExternal()
                 .path("asset")
-                .path(createdAsset.getId().toString())
                 .path("notes")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -801,7 +814,36 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         assertThat(fetchedNotes.size(), is(1));
         assertThat(fetchedNotes.get(0).getNotes(), is(createdNote.getNotes()));
     }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void getNoteByIdTest() {
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = restCreateAsset(asset);
+        
+        Note note = AssetHelper.createBasicNote();
+        note.setAssetId(createdAsset.getId());
 
+        // Create note
+        Note createdNote = getWebTargetExternal()
+                .path("asset")
+                .path("notes")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(note), Note.class);
+
+        // Get note by id
+        Note aNote = getWebTargetExternal()
+                .path("asset")
+                .path("note")
+                .path(createdNote.getId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Note.class);
+        
+        assertEquals(aNote.getId(), createdNote.getId());
+    }
+    
     @Test
     @OperateOnDeployment("normal")
     public void deleteNoteTest() {
@@ -809,11 +851,11 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         Asset createdAsset = restCreateAsset(asset);
 
         Note note = AssetHelper.createBasicNote();
+        note.setAssetId(createdAsset.getId());
 
         // Create note
         Note createdNote = getWebTargetExternal()
                 .path("asset")
-                .path(createdAsset.getId().toString())
                 .path("notes")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -862,6 +904,38 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void getContactInfo(){
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = restCreateAsset(asset);
+
+        // CREATE AN CONTACTINFO
+        ContactInfo contactInfo = AssetHelper.createBasicContactInfo();
+        contactInfo.setAssetUpdateTime(asset.getUpdateTime());
+        contactInfo.setAssetId(createdAsset.getId());
+        ContactInfo createdContactInfo = getWebTargetExternal()
+                .path("asset")
+                .path("contacts")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(contactInfo), ContactInfo.class);
+
+        ContactInfo gottenContactInfo = getWebTargetExternal()
+                .path("asset")
+                .path("contact")
+                .path(createdContactInfo.getId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(ContactInfo.class);
+
+        assertNotNull(gottenContactInfo);
+        assertEquals(createdContactInfo.getId(), gottenContactInfo.getId());
+        assertEquals(contactInfo.getName(), gottenContactInfo.getName());
+        assertEquals(contactInfo.getAssetId(), gottenContactInfo.getAssetId());
+        assertEquals(contactInfo.getEmail(), gottenContactInfo.getEmail());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void createAssetAndContactInfoAndCompareHistoryItemsTest() throws InterruptedException {
 
         // CREATE AN ASSET
@@ -871,9 +945,9 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         // CREATE AN CONTACTINFO
         ContactInfo contactInfo = AssetHelper.createBasicContactInfo();
         contactInfo.setAssetUpdateTime(asset.getUpdateTime());
+        contactInfo.setAssetId(createdAsset.getId());
         ContactInfo createdContactInfo = getWebTargetExternal()
                 .path("asset")
-                .path(createdAsset.getId().toString())
                 .path("contacts")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -905,8 +979,8 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         // GET ASSET HISTORY
         Response response = getWebTargetExternal()
                 .path("asset")
-                .path("history/asset")
                 .path(updatedAsset.getId().toString())
+                .path("history")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get();
@@ -921,7 +995,7 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
                 .path("asset")
                 .path(updatedAsset.getId().toString())
                 .path("contacts")
-                .path(updatedAsset.getUpdateTime().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+                .queryParam("date", updatedAsset.getUpdateTime().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get();
