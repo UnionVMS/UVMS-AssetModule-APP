@@ -8,38 +8,38 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.rest.asset.service;
+package eu.europa.ec.fisheries.uvms.rest.asset.V2.service;
 
-import static junit.framework.TestCase.assertNotNull;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.*;
-
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
+import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
+import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
+import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
-import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
-import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
-import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
-import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
+
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+
+import static junit.framework.TestCase.assertNotNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 @RunAsClient
-public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
+public class AssetRestResourceQueryTest2 extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
@@ -51,7 +51,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         query.setCfr(Collections.singletonList(createdAsset.getCfr()));
         
         AssetListResponse listResponse = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -70,7 +70,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         query.setCfr(Collections.singletonList("APA"));
 
         AssetListResponse listResponse = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -96,14 +96,14 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         query2.setCfr(Collections.singletonList(cfrValue.toLowerCase()));
 
         AssetListResponse listResponse1 = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(query), AssetListResponse.class);
 
         AssetListResponse listResponse2 = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -144,7 +144,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         query2.setCfr(Arrays.asList(cfrValue.toLowerCase(), cfrValue2.toLowerCase()));
 
         AssetListResponse listResponse1 = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .queryParam("dynamic","false")
                 .request(MediaType.APPLICATION_JSON)
@@ -152,7 +152,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
                 .post(Entity.json(query), AssetListResponse.class);
 
         AssetListResponse listResponse2 = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .queryParam("dynamic","false")
                 .request(MediaType.APPLICATION_JSON)
@@ -194,7 +194,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         query2.setCfr(Arrays.asList(cfrValue.toLowerCase().substring(5), cfrValue2.toLowerCase().substring(3,8)));
 
         AssetListResponse listResponse1 = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .queryParam("dynamic","false")
                 .request(MediaType.APPLICATION_JSON)
@@ -202,7 +202,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
                 .post(Entity.json(query), AssetListResponse.class);
 
         AssetListResponse listResponse2 = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .queryParam("dynamic","false")
                 .request(MediaType.APPLICATION_JSON)
@@ -242,7 +242,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         AssetQuery query = new AssetQuery();
 
         AssetListResponse listResponse = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .queryParam("size", "1000")
                 .request(MediaType.APPLICATION_JSON)
@@ -268,7 +268,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
 
         // ask for everything since query is empty
         AssetListResponse listResponse = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .queryParam("dynamic","false")
                 .queryParam("size", "1000")
@@ -292,7 +292,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         AssetQuery query = new AssetQuery();
 
         AssetListResponse listResponse = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .queryParam("size","1000")
                 .request(MediaType.APPLICATION_JSON)
@@ -303,17 +303,19 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
 
         // Archive the asset
         Asset archived = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
+                .path(createdAsset.getId().toString())
                 .path("archive")
+                .queryParam("comment", "The best test comment")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(createdAsset), Asset.class);
+                .put(Entity.json(""), Asset.class);
 
         assertFalse(archived.getActive());
 
         // ask for it
         AssetListResponse listResponseAfter = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .queryParam("size","1000")
                 .request(MediaType.APPLICATION_JSON)
@@ -331,17 +333,19 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         
         Asset asset1 = AssetHelper.createBasicAsset();
         asset1.setFlagStateCode(customFlagState);
+        asset1.setName("Test asset 1");
         Asset createdAsset1 = sendAssetToCreation(asset1);
         
         Asset asset2 = AssetHelper.createBasicAsset();
         asset2.setFlagStateCode(customFlagState);
+        asset2.setName("Test asset 2");
         Asset createdAsset2 = sendAssetToCreation(asset2);
         
         AssetQuery query = new AssetQuery();
         query.setFlagState(Collections.singletonList(customFlagState));
         
         AssetListResponse listResponse = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .queryParam("page", 1)
                 .queryParam("size", 1)
@@ -354,7 +358,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         assertThat(listResponse.getAssetList().size(), is(1));
         
         AssetListResponse listResponse2 = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .queryParam("page", 2)
                 .queryParam("size", 1)
@@ -382,7 +386,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         query.setName(Collections.singletonList("shipn*me" + randomNumbers));
         
         AssetListResponse listResponse = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .queryParam("size","1000")
                 .request(MediaType.APPLICATION_JSON)
@@ -405,7 +409,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         
         createdAsset.setName(createdAsset.getName() + "UPDATE");
         Asset updatedAsset = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .put(Entity.json(createdAsset), Asset.class);
@@ -417,7 +421,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         query.setDate(timestamp);
         
         AssetListResponse listResponse = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .queryParam("size","1000")
                 .request(MediaType.APPLICATION_JSON)
@@ -436,7 +440,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         query2.setDate(Instant.now());
         
         AssetListResponse listResponse2 = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .queryParam("size","1000")
                 .request(MediaType.APPLICATION_JSON)
@@ -462,7 +466,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         String updatedName1 = createdAsset.getName() + "UPDATE";
         createdAsset.setName(updatedName1);
         Asset updatedAsset = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .put(Entity.json(createdAsset), Asset.class);
@@ -472,7 +476,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         String updatedName2 = createdAsset.getName() + "UPDATE2";
         updatedAsset.setName(updatedName2);
         Asset updatedAsset2 = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .put(Entity.json(createdAsset), Asset.class);
@@ -483,7 +487,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         query.setDate(timestamp);
         
         AssetListResponse listResponse = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .queryParam("size","1000")
                 .request(MediaType.APPLICATION_JSON)
@@ -502,7 +506,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         query2.setDate(timestamp2);
         
         AssetListResponse listResponse2 = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .queryParam("size","1000")
                 .request(MediaType.APPLICATION_JSON)
@@ -530,7 +534,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         query2.setDate(Instant.now());
         
         AssetListResponse listResponse = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .queryParam("size","1000")
                 .request(MediaType.APPLICATION_JSON)
@@ -559,7 +563,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         String newIrcs = "F" + AssetHelper.getRandomIntegers(7);
         createdAsset.setIrcs(newIrcs);
         Asset updatedAsset = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .put(Entity.json(createdAsset), Asset.class);
@@ -570,7 +574,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         query.setDate(timestamp);
         
         AssetListResponse listResponse = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .queryParam("size","1000")
                 .request(MediaType.APPLICATION_JSON)
@@ -599,7 +603,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         query.setDate(pastDate);
         
         AssetListResponse listResponse = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .queryParam("size","1000")
                 .request(MediaType.APPLICATION_JSON)
@@ -622,7 +626,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         query.setGearType(gearType);
         
         AssetListResponse listResponse = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -645,7 +649,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         Asset asset2 = AssetHelper.createBasicAsset();
         asset2.setGearFishingType(gearType2);
         getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(asset2), Asset.class);
@@ -654,7 +658,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         query.setGearType(gearType1);
         
         AssetListResponse listResponse = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -682,7 +686,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         assetQuery.setFlagState(flagstateList);
 
         AssetListResponse output = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -712,7 +716,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         assetQuery.setFlagState(flagstateList);
 
         AssetListResponse output = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .queryParam("size", 1000)
                 .request(MediaType.APPLICATION_JSON)
@@ -747,7 +751,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         assetQuery.setIrcs(ircsList);
 
         AssetListResponse output = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -782,7 +786,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         assetQuery.setIrcs(ircsList);
 
         AssetListResponse output = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -815,7 +819,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         assetQuery.setName(nameList);
 
         AssetListResponse output = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -854,7 +858,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         assetQuery.setName(nameList);
 
         AssetListResponse output = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -882,14 +886,15 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         mt.setComment("Updated comment");
         mt.setAsset(createdAsset);
         mt = MobileTerminalTestHelper.restMobileTerminalUpdate(getWebTargetExternal(), mt, getTokenExternal());
-
         MobileTerminal responseUnAssign = getWebTargetExternal()
-                .path("/mobileterminal/unassign")
+                .path("/mobileterminal2")
+                .path(mt.getId().toString())
+                .path("unassign")
+                .path(createdAsset.getId().toString())
                 .queryParam("comment", "NEW_TEST_COMMENT")
-                .queryParam("connectId", createdAsset.getId())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(mt.getId()), MobileTerminal.class);
+                .put(Entity.json(""), MobileTerminal.class);
 
 
         AssetQuery assetQuery = new AssetQuery();
@@ -898,7 +903,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         assetQuery.setName(nameList);
 
         AssetListResponse output = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .path("list")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -915,7 +920,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
 
     private Asset sendAssetToCreation(Asset asset) {
         Asset createdAsset = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(asset), Asset.class);
