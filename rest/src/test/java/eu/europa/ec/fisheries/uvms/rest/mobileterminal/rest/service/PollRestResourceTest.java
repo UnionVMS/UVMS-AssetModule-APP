@@ -13,7 +13,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPluginCapability;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollProgram;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.util.DateUtils;
@@ -233,10 +232,12 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         }
 
         PollDto pollDto = getWebTargetExternal()
-                .path("/poll/stop/" + pollGuid)
+                .path("poll")
+                .path(pollGuid)
+                .path("stop")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .get(PollDto.class);
+                .put(Entity.json(""), PollDto.class);
 
         assertNotNull(pollDto);
 
@@ -246,10 +247,12 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         //and starting again
         pollDto = getWebTargetExternal()
-                .path("/poll/start/" + pollGuid)
+                .path("poll")
+                .path(pollGuid)
+                .path("start")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .get(PollDto.class);
+                .put(Entity.json(""), PollDto.class);
 
         assertNotNull(pollDto);
 
@@ -283,10 +286,12 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
             pollGuid = createdPoll.getSentPolls().get(0);
         }
         PollDto pollDto = getWebTargetExternal()
-                .path("/poll/inactivate/" + pollGuid)
+                .path("poll")
+                .path(pollGuid)
+                .path("archive")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .get(PollDto.class);
+                .put(Entity.json(""), PollDto.class);
 
         assertNotNull(pollGuid);
 
@@ -411,7 +416,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         listCriteria.setValue(pollGuid);
         pollSearchCriteria.getCriterias().add(listCriteria);
 
-        listCriteria = new eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.ListCriteria();
+        listCriteria = new ListCriteria();
         listCriteria.setKey(SearchKey.USER);
         listCriteria.setValue("Test User");
         pollSearchCriteria.getCriterias().add(listCriteria);
@@ -557,7 +562,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         input.getConnectIdList().add(asset.getId().toString());
 
         PollChannelListDto pollChannelListDto = getWebTargetExternal()
-                .path("/poll/pollable")
+                .path("/poll/getPollable")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(input), PollChannelListDto.class);

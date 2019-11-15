@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.asset.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
@@ -60,6 +61,9 @@ public class AssetRestResource {
     @Inject
     private AssetService assetService;
 
+    @Inject
+    private AssetDao assetDao;
+
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
     private ObjectMapper objectMapper(){
         ObjectMapperContextResolver omcr = new ObjectMapperContextResolver();
@@ -85,7 +89,7 @@ public class AssetRestResource {
     @Path("list")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetList(@DefaultValue("1") @QueryParam("page") int page,
-                                 @DefaultValue("100") @QueryParam("size") int size,
+                                 @DefaultValue("1000000") @QueryParam("size") int size,
                                  @DefaultValue("true") @QueryParam("dynamic") boolean dynamic,
                                  @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
                                  AssetQuery query) {
@@ -93,7 +97,7 @@ public class AssetRestResource {
             List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
             AssetListResponse assetList = assetService.getAssetList(searchFields, page, size, dynamic, includeInactivated);
             String returnString = objectMapper().writeValueAsString(assetList);
-            return Response.ok(returnString).build();
+            return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset list.", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
@@ -121,7 +125,7 @@ public class AssetRestResource {
         try {
             List<SearchKeyValue> searchValues = SearchFieldMapper.createSearchFields(query);
             Long assetListCount = assetService.getAssetListCount(searchValues, dynamic, includeInactivated);
-            return Response.ok(assetListCount).build();
+            return Response.ok(assetListCount).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset list: {}", query, e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
@@ -205,12 +209,11 @@ public class AssetRestResource {
             @ApiResponse(code = 500, message = "Error when updating asset"),
             @ApiResponse(code = 200, message = "Asset successfully updated") })
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response updateAsset(@ApiParam(value="The asset to update", required=true) final Asset asset,
-                                @ApiParam(value="Update comment", required=true)  @QueryParam("comment") String comment) {
+    public Response updateAsset(@ApiParam(value="The asset to update", required=true) final Asset asset) {
         try {
             String remoteUser = servletRequest.getRemoteUser();
             Asset assetWithMT = assetService.populateMTListInAsset(asset);
-            Asset updatedAsset = assetService.updateAsset(assetWithMT, remoteUser, comment);
+            Asset updatedAsset = assetService.updateAsset(assetWithMT, remoteUser, asset.getComment());
             String returnString = objectMapper().writeValueAsString(updatedAsset);
             return Response.status(200).entity(returnString).type(MediaType.APPLICATION_JSON )
                     .header("MDC", MDC.get("requestId")).build();
@@ -225,19 +228,21 @@ public class AssetRestResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when archiving asset"),
             @ApiResponse(code = 200, message = "Asset successfully archived") })
-    @Path("/archive")
+    @Path("/{assetId}/archive")
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response archiveAsset(@ApiParam(value="The asset to update", required=true)  final Asset asset,
-                                 @ApiParam(value="Archive comment", required=true)
-                                 @QueryParam("comment") String comment) {
+    public Response archiveAsset(@ApiParam(value="The asset to update", required=true)  @PathParam("assetId") UUID assetId,
+                                 @ApiParam(value="Archive comment", required=true) @QueryParam("comment") String comment) {
         try {
+            if(comment == null || comment.isEmpty()){
+                return Response.status(400).entity("Parameter comment is required").build();
+            }
             String remoteUser = servletRequest.getRemoteUser();
-            Asset assetWithMT = assetService.populateMTListInAsset(asset);
-            Asset archivedAsset = assetService.archiveAsset(assetWithMT, remoteUser, comment);
+            Asset asset = assetService.getAssetById(assetId);
+            Asset archivedAsset = assetService.archiveAsset(asset, remoteUser, comment);
             String returnString = objectMapper().writeValueAsString(archivedAsset);
-            return Response.ok(returnString).build();
+            return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            LOG.error("Error when archiving asset. {}",asset, e);
+            LOG.error("Error when archiving asset. {}",assetId, e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
@@ -247,16 +252,19 @@ public class AssetRestResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when unarchiving asset"),
             @ApiResponse(code = 200, message = "Asset successfully unarchived") })
-    @Path("/unarchive")
+    @Path("/{assetId}/unarchive")
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response unarchiveAsset(@ApiParam(value="The asset to update", required=true)  final UUID assetId,
-                                 @ApiParam(value="Unarchive comment", required=true)
-                                 @QueryParam("comment") String comment) {
+    public Response unarchiveAsset(@ApiParam(value="The asset to update", required=true)  @PathParam("assetId") final UUID assetId,
+                                 @ApiParam(value="Unarchive comment", required=true) @QueryParam("comment") String comment) {
+
+        if(comment == null || comment.isEmpty()){
+            return Response.status(400).entity("Parameter comment is required").build();
+        }
         try {
             String remoteUser = servletRequest.getRemoteUser();
             Asset unarchivedAsset = assetService.unarchiveAsset(assetId, remoteUser, comment);
             String returnString = objectMapper().writeValueAsString(unarchivedAsset);
-            return Response.ok(returnString).build();
+            return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when unarchiving Asset with ID: {}", assetId, e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
@@ -276,13 +284,13 @@ public class AssetRestResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when querying the system"),
             @ApiResponse(code = 200, message = "Successful retrieval of resultset") })
-    @Path("/history/asset/{id}")
+    @Path("/{id}/history")
     public Response getAssetHistoryListByAssetId(@ApiParam(value="The assets GUID", required=true)  @PathParam("id") UUID id,
                                                  @ApiParam(value="Max size of resultset") @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
         try {
             List<Asset> assetRevisions = assetService.getRevisionsForAssetLimited(id, maxNbr);
             String returnString = objectMapper().writeValueAsString(assetRevisions);
-            return Response.ok(returnString).build();
+            return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset history list by asset ID. {}]", id, e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
@@ -304,16 +312,17 @@ public class AssetRestResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when querying the system"),
             @ApiResponse(code = 200, message = "Successful retrieval of resultset") })
-    @Path("/history/{type : (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)}/{id}/{date}")
+    @Path("/{type : (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)}/{id}/history/")
     public Response getAssetFromAssetIdAndDate(@ApiParam(value="Type of id", required=true) @PathParam("type") String type,
                                                @ApiParam(value="Value of id", required=true) @PathParam("id") String id,
-                                               @ApiParam(value="Point in time", required=true) @PathParam("date") String date) {
+                                               @ApiParam(value="Point in time", required=true) @QueryParam("date") String date) {
         try {
+
             AssetIdentifier assetId = AssetIdentifier.valueOf(type.toUpperCase());
-            OffsetDateTime offsetDateTime = OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            OffsetDateTime offsetDateTime = (date == null ? OffsetDateTime.now() : OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
             Asset assetRevision = assetService.getAssetFromAssetIdAtDate(assetId, id, offsetDateTime);
             String returnString = objectMapper().writeValueAsString(assetRevision);
-            return Response.ok(returnString).build();
+            return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset. Type: {}, Value: {}, Date: {}", type, id, date, e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
@@ -338,7 +347,7 @@ public class AssetRestResource {
         try {
             Asset asset = assetService.getAssetRevisionForRevisionId(guid);
             String returnString = objectMapper().writeValueAsString(asset);
-            return Response.ok(returnString).build();
+            return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset by asset history guid. {}] ", guid, e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
@@ -354,8 +363,13 @@ public class AssetRestResource {
     @Path("{id}/notes")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getNotesForAsset(@ApiParam(value="The id of asset to retrieve notes", required = true)  @PathParam("id") UUID assetId) {
-        List<Note> notes = assetService.getNotesForAsset(assetId);
-        return Response.ok(notes).build();
+        try {
+            List<Note> notes = assetService.getNotesForAsset(assetId);
+            return Response.ok(notes).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception e) {
+            LOG.error("Error while getting notes for asset {}. {}] ", assetId, e);
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+        }
     }
 
     @POST
@@ -363,13 +377,17 @@ public class AssetRestResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when creating note for asset"),
             @ApiResponse(code = 200, message = "Note successfully created") })
-    @Path("{id}/notes")
+    @Path("/notes")
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response createNoteForAsset(@ApiParam(value="The id of asset for which to create note", required=true)
-                                           @PathParam("id") UUID assetId, @ApiParam(value="The Note to store" , required=true) Note note) {
-        String user = servletRequest.getRemoteUser();
-        Note createdNote = assetService.createNoteForAsset(assetId, note, user);
-        return Response.ok(createdNote).build();
+    public Response createNoteForAsset(@ApiParam(value="The Note to store" , required=true) Note note) {
+        try {
+            String user = servletRequest.getRemoteUser();
+            Note createdNote = assetService.createNoteForAsset(note.getAssetId(), note, user);
+            return Response.ok(createdNote).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception e) {
+            LOG.error("Error while creating notes for asset. {}] ", e);
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+        }
     }
     
     @PUT
@@ -380,9 +398,26 @@ public class AssetRestResource {
     @Path("/notes")
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public Response updateNote(@ApiParam(value="A Note to be updated", required=true)  Note note) {
-        String user = servletRequest.getRemoteUser();
-        Note updatedNote = assetService.updateNote(note, user);
-        return Response.ok(updatedNote).build();
+        try {
+            String user = servletRequest.getRemoteUser();
+            Note updatedNote = assetService.updateNote(note, user);
+            return Response.ok(updatedNote).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception e) {
+            LOG.error("Error updating note. {}] ", e);
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+        }
+    }
+    
+    @GET
+    @ApiOperation(value = "Get a note", notes = "Get a note", response = Note.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Error when getting note"),
+            @ApiResponse(code = 200, message = "Note successfully found") })
+    @Path("/note/{id}")
+    @RequiresFeature(UnionVMSFeature.manageVessels)
+    public Response getNoteById(@ApiParam(value="Id of note to get", required=true) @PathParam("id") UUID id) {
+        Note gottenNote = assetService.getNoteById(id);
+        return Response.ok(gottenNote).header("MDC", MDC.get("requestId")).build();
     }
     
     @DELETE
@@ -393,20 +428,13 @@ public class AssetRestResource {
     @Path("/notes/{id}")
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public Response deleteNote(@ApiParam(value="Id of note to be deleted", required=true) @PathParam("id") UUID id) {
-        assetService.deleteNote(id);
-        return Response.ok().build();
-    }
-    
-    @GET
-    @ApiOperation(value = "Get contactinfo for asset", notes = "Get contactinfo for asset", response = ContactInfo.class,  responseContainer = "List")
-    @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when querying the system"),
-            @ApiResponse(code = 200, message = "Successful processing of query") })
-    @Path("{id}/contacts")
-    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getContactInfoForAsset(@ApiParam(value="Id of asset", required=true)  @PathParam("id") UUID assetId) {
-        List<ContactInfo> contacts = assetService.getContactInfoForAsset(assetId);
-        return Response.ok(contacts).build();
+        try {
+            assetService.deleteNote(id);
+            return Response.ok().header("MDC", MDC.get("requestId")).build();
+        } catch (Exception e) {
+            LOG.error("Error deleteing note. {}] ", e);
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+        }
     }
 
     @GET
@@ -414,14 +442,30 @@ public class AssetRestResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when querying the system"),
             @ApiResponse(code = 200, message = "Successful processing of query") })
-    @Path("{id}/contacts/{updateDate}")
+    @Path("{id}/contacts")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getContactInfoListForAssetHistory(@ApiParam(value="Id of asset", required=true)  @PathParam("id") UUID assetId,
-                                                      @PathParam("updateDate") String updatedDate) {
+                                                      @QueryParam("ofDate") String updatedDate) {
+        try {
+            OffsetDateTime offsetDateTime = (updatedDate == null ? OffsetDateTime.now() : OffsetDateTime.parse(updatedDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+            List<ContactInfo> resultList = assetService.getContactInfoRevisionForAssetHistory(assetId, offsetDateTime);
+            return Response.ok(resultList).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception e) {
+            LOG.error("Error while getting contact info list for asset history. {}] ", e);
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+        }
+    }
 
-        OffsetDateTime offsetDateTime = OffsetDateTime.parse(updatedDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        List<ContactInfo> resultList = assetService.getContactInfoRevisionForAssetHistory(assetId, offsetDateTime);
-        return Response.ok(resultList).build();
+    @GET
+    @Path("contact/{contactId}")
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public Response getContact(@PathParam("contactId") UUID contactId){
+        try{
+            return Response.ok(assetDao.getContactById(contactId)).header("MDC", MDC.get("requestId")).build();
+        }catch (Exception e){
+            LOG.error("Error while getting contact by id {}.  {}", contactId, e);
+            return Response.serverError().entity(ExceptionUtils.getRootCause(e)).build();
+        }
     }
 
     @POST
@@ -429,14 +473,18 @@ public class AssetRestResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when create contact info"),
             @ApiResponse(code = 200, message = "Successful created contactinfo") })
-    @Path("{id}/contacts")
+    @Path("contacts")
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public Response createContactInfoForAsset(
-            @ApiParam(value="Id of asset", required=true) @PathParam("id") UUID assetId,
             @ApiParam(value="Contact info", required=true) ContactInfo contactInfo) {
-        String user = servletRequest.getRemoteUser();
-        ContactInfo createdContactInfo = assetService.createContactInfoForAsset(assetId, contactInfo, user);
-        return Response.ok(createdContactInfo).build();
+        try {
+            String user = servletRequest.getRemoteUser();
+            ContactInfo createdContactInfo = assetService.createContactInfoForAsset(contactInfo.getAssetId(), contactInfo, user);
+            return Response.ok(createdContactInfo).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception e) {
+            LOG.error("Error while creating contact info for asset. {}] ", e);
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+        }
     }
     
     @PUT
@@ -447,9 +495,14 @@ public class AssetRestResource {
     @Path("/contacts")
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public Response udpateContactInfo(@ApiParam(value="Contact info", required=true)  ContactInfo contactInfo) {
-        String username = servletRequest.getRemoteUser();
-        ContactInfo updatedContactInfo = assetService.updateContactInfo(contactInfo, username);
-        return Response.ok(updatedContactInfo).build();
+        try{
+            String username = servletRequest.getRemoteUser();
+            ContactInfo updatedContactInfo = assetService.updateContactInfo(contactInfo, username);
+            return Response.ok(updatedContactInfo).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception e) {
+            LOG.error("Error while updating contact info. {}] ", e);
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+        }
     }
     
     @DELETE
@@ -460,15 +513,25 @@ public class AssetRestResource {
     @Path("/contacts/{id}")
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public Response deleteContactInfo( @ApiParam(value="Id off contact info", required=true)  @PathParam("id") UUID id) {
-        assetService.deleteContactInfo(id);
-        return Response.ok().build();
+        try{
+            assetService.deleteContactInfo(id);
+            return Response.ok().header("MDC", MDC.get("requestId")).build();
+        } catch (Exception e) {
+            LOG.error("Error while deleting contact info. {}] ", e);
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+        }
     }
 
     @POST
     @Path("microAssets")
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public Response getMicroAssets(List<String> assetIdList){
-        List<MicroAsset> assetList = assetService.getInitialDataForRealtime(assetIdList);
-        return Response.ok(assetList).build();
+        try {
+            List<MicroAsset> assetList = assetService.getInitialDataForRealtime(assetIdList);
+            return Response.ok(assetList).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception e) {
+            LOG.error("Error when getting microAssets. {}] ", e);
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+        }
     }
 }
