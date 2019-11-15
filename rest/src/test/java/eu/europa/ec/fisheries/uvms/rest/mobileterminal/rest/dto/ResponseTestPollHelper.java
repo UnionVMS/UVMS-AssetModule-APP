@@ -34,11 +34,11 @@ public class ResponseTestPollHelper {
         mt.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
         mt.setArchived(false);
         mt.setActive(true);
+        mt.setInstalledBy("Mike the not so Great");
 
         Channel pollChannel = new Channel();
         pollChannel.setArchived(false);
         pollChannel.setMobileTerminal(mt);
-        pollChannel.setInstalledBy("Mike the not so Great");
         pollChannel.setDNID("5555");
         pollChannel.setMemberNumber("666");
         pollChannel.setLesDescription("Thrane&Thrane");
@@ -50,7 +50,6 @@ public class ResponseTestPollHelper {
         Channel channel = new Channel();
         channel.setArchived(false);
         channel.setMobileTerminal(mt);
-        channel.setInstalledBy("Mike the not so Great");
         channel.setDNID("555");
         channel.setMemberNumber("666");
         channel.setLesDescription("Thrane&Thrane");

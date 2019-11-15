@@ -147,14 +147,6 @@
         </xsd:complexType>
     </xsd:element>
             
-    <xsd:element name="historyMobileTerminalListResponse">
-        <xsd:complexType>
-            <xsd:sequence>
-                <xsd:element name="history" type="mobterm:MobileTerminalHistory" minOccurs="0" maxOccurs="unbounded"/>
-            </xsd:sequence>
-        </xsd:complexType>
-    </xsd:element>
-
 	<!-- Ping -->
 	<xsd:element name="pingRequest">
 		<xsd:complexType>

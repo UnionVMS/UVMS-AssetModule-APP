@@ -76,7 +76,6 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         channel2.setExpectedFrequencyInPort(Duration.ofSeconds(10400));
         channel2.setLesDescription("Thrane&Thrane");
         channel2.setDNID("1" + MobileTerminalTestHelper.generateARandomStringWithMaxLength(3));
-        channel2.setInstalledBy("Mike Great");
         channel2.setArchived(false);
         channel2.setConfigChannel(true);
         channel2.setDefaultChannel(true);
@@ -220,7 +219,6 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         c2.setExpectedFrequencyInPort(Duration.ofSeconds(10800));
         c2.setLesDescription("Thrane&Thrane");
         c2.setDNID("2222");
-        c2.setInstalledBy("Mike Great");
         c2.setArchived(false);
         c2.setConfigChannel(false);
         c2.setDefaultChannel(false);

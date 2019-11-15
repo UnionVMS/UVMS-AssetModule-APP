@@ -93,10 +93,6 @@
         <part name="body" element="source:historyMobileTerminalListRequest"/>
     </message>
     
-    <message name="HistoryMobileTerminalListResponse">
-        <part name="body" element="source:historyMobileTerminalListResponse"/>
-    </message>
-
     <!-- config -->
     <message name="UpdatedDNIDListRequest">
         <part name="body" element="config:updatedDNIDListRequest"/>
@@ -226,11 +222,6 @@
         <operation name="SetStatusMobileTerminal">
             <input message="msg:SetStatusMobileTerminalRequest"/>
             <output message="msg:SetStatusMobileTerminalResponse"/>
-            <fault name="MobileTerminalFault" message="msg:MobileTerminalFault"/>
-        </operation>
-        <operation name="HistoryMobileTerminalList">
-            <input message="msg:HistoryMobileTerminalListRequest"/>
-            <output message="msg:HistoryMobileTerminalListResponse"/>
             <fault name="MobileTerminalFault" message="msg:MobileTerminalFault"/>
         </operation>
         <operation name="UpdatedDNIDList">
@@ -369,17 +360,6 @@
             </fault>
         </operation>
         <operation name="SetStatusMobileTerminal">
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-            <fault name="MobileTerminalFault">
-                <soap:fault name="MobileTerminalFault" use="literal"/>
-            </fault>
-        </operation>
-        <operation name="HistoryMobileTerminalList">
             <input>
                 <soap:body use="literal"/>
             </input>
