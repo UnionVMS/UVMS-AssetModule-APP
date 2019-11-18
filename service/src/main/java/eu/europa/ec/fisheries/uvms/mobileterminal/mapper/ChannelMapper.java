@@ -58,9 +58,6 @@ public class ChannelMapper {
         attributeList.add(mapAttr("LES_DESCRIPTION", channel.getLesDescription()));
         attributeList.add(mapAttr("FREQUENCY_GRACE_PERIOD", String.valueOf(channel.getFrequencyGracePeriod().getSeconds())));
         attributeList.add(mapAttr("MEMBER_NUMBER", channel.getMemberNumber()));
-        attributeList.add(mapAttr("INSTALLED_BY", channel.getInstalledBy()));
-        attributeList.add(mapAttr("INSTALLED_ON", DateUtils.parseOffsetDateTimeToString(channel.getInstallDate())));
-        attributeList.add(mapAttr("UNINSTALLED_ON", DateUtils.parseOffsetDateTimeToString(channel.getUninstallDate())));
         attributeList.add(mapAttr("START_DATE", DateUtils.parseOffsetDateTimeToString(channel.getStartDate())));
         attributeList.add(mapAttr("END_DATE", DateUtils.parseOffsetDateTimeToString(channel.getEndDate())));
         return attributeList;

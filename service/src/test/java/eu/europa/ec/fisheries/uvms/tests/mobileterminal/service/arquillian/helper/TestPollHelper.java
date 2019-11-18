@@ -61,10 +61,10 @@ public class TestPollHelper {
         mobileTerminal.setTransceiverType("A");
         mobileTerminal.setSoftwareVersion("A");
         mobileTerminal.setSerialNo(serialNumber);
+        mobileTerminal.setInstalledBy("Mike Great");
 
         Channel channel = new Channel();
         channel.setArchived(false);
-        channel.setInstalledBy("Mike Great");
         channel.setMemberNumber(generateARandomStringWithMaxLength(3));
         channel.setExpectedFrequencyInPort(Duration.ofSeconds(60));
         channel.setExpectedFrequency(Duration.ofSeconds(60));
@@ -139,6 +139,7 @@ public class TestPollHelper {
         mt.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
         mt.setArchived(false);
         mt.setActive(true);
+        mt.setInstalledBy("Mike the not so Great");
 
         // only set if true so we can see if code defaults to false
         if(aor_e) mt.setEastAtlanticOceanRegion(aor_e);
@@ -165,7 +166,6 @@ public class TestPollHelper {
         Channel pollChannel = new Channel();
         pollChannel.setArchived(false);
         pollChannel.setMobileTerminal(mt);
-        pollChannel.setInstalledBy("Mike the not so Great");
         pollChannel.setDNID("5555");
         pollChannel.setMemberNumber("" + (int)(Math.random() * 100000));
         pollChannel.setLesDescription("Thrane&Thrane");
@@ -177,7 +177,6 @@ public class TestPollHelper {
         Channel channel = new Channel();
         channel.setArchived(false);
         channel.setMobileTerminal(mt);
-        channel.setInstalledBy("Mike the not so Great");
         channel.setDNID("555");
         channel.setMemberNumber("" + (int)(Math.random() * 100000));
         channel.setLesDescription("Thrane&Thrane");
@@ -212,6 +211,7 @@ public class TestPollHelper {
         mt.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
         mt.setArchived(false);
         mt.setActive(true);
+        mt.setInstalledBy("Mike the not so Great");
 
         Set<MobileTerminalPluginCapability> capabilityList = new HashSet<>();
         MobileTerminalPluginCapability mtpc = new MobileTerminalPluginCapability();
@@ -231,7 +231,7 @@ public class TestPollHelper {
         Channel pollChannel = new Channel();
         pollChannel.setArchived(false);
         pollChannel.setMobileTerminal(mt);
-        pollChannel.setInstalledBy("Mike the not so Great");
+
         pollChannel.setDNID("5555");
         pollChannel.setMemberNumber("" + (int)(Math.random() * 100000));
         pollChannel.setLesDescription("Thrane&Thrane");
@@ -243,7 +243,6 @@ public class TestPollHelper {
         Channel channel = new Channel();
         channel.setArchived(false);
         channel.setMobileTerminal(mt);
-        channel.setInstalledBy("Mike the not so Great");
         channel.setDNID("555");
         channel.setMemberNumber("" + (int)(Math.random() * 100000));
         channel.setLesDescription("Thrane&Thrane");
@@ -267,6 +266,7 @@ public class TestPollHelper {
         mobileTerminal.setArchived(false);
         mobileTerminal.setActive(true);
         mobileTerminal.setAsset(asset);
+        mobileTerminal.setInstalledBy("kanalbolaget");
 
         MobileTerminalPlugin mtp = new MobileTerminalPlugin();
         mtp.setPluginServiceName(UUID.randomUUID().toString());
@@ -279,7 +279,6 @@ public class TestPollHelper {
 
         Channel channel = new Channel();
         channel.setArchived(false);
-        channel.setInstalledBy("kanalbolaget");
         channel.setMemberNumber("MEMBER1234567890");
         channel.setExpectedFrequencyInPort(Duration.ofSeconds(60));
         channel.setExpectedFrequency(Duration.ofSeconds(60));
