@@ -12,12 +12,10 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.*;
-import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.HistoryMobileTerminalListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalListResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.MobileTerminalResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.source.v1.PingResponse;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalFault;
-import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalHistory;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.Plugin;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
@@ -111,17 +109,6 @@ public class MobileTerminalDataSourceResponseMapper {
             throw new AssetException(UNMARSHALLING_ERROR.getMessage() + ComchannelNameResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
         }
 	}
-
-    public static List<MobileTerminalHistory> mapToHistoryList(TextMessage response, String correlationId) throws AssetException {
-        try {
-            validateResponse(response, correlationId);
-            HistoryMobileTerminalListResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, HistoryMobileTerminalListResponse.class);
-            return mappedResponse.getHistory();
-        } catch (AssetException | JMSException e) {
-            LOG.error("[ Error when mapping response to mobile terminal history. ] {}", e);
-            throw new AssetException(UNMARSHALLING_ERROR.getMessage() + HistoryMobileTerminalListResponse.class.getName() , e, UNMARSHALLING_ERROR.getCode());
-        }
-    }
 
     public static List<ConfigList> mapToConfigList(TextMessage response, String correlationId) throws AssetException {
     	try {

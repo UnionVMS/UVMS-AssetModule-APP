@@ -36,6 +36,7 @@ public class MobileTerminalTestHelper {
         mobileTerminal.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
         serialNumber = generateARandomStringWithMaxLength(10);
         mobileTerminal.setSerialNo(serialNumber);
+        mobileTerminal.setInstalledBy("Mike Great");
 
         mobileTerminal.setSatelliteNumber("S" + generateARandomStringWithMaxLength(4));
         mobileTerminal.setAntenna("A");
@@ -67,7 +68,6 @@ public class MobileTerminalTestHelper {
         channel.setExpectedFrequencyInPort(Duration.ofSeconds(10800));
         channel.setLesDescription("Thrane&Thrane");
         channel.setDNID("1" + generateARandomStringWithMaxLength(3));
-        channel.setInstalledBy("Mike Great");
         channel.setArchived(false);
         channel.setConfigChannel(true);
         channel.setDefaultChannel(true);
