@@ -13,8 +13,10 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.mapper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttribute;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,14 +60,6 @@ public class PollModelToEntityMapper {
             }
         }
         return programPoll;
-    }
-
-    public static ManualPoll createManualPoll(MobileTerminal terminal, String channelGuid, PollRequestType requestType) {
-        return createPoll(terminal, channelGuid, requestType, ManualPoll.class);
-    }
-
-    public static AutomaticPoll createAutomaticPoll(MobileTerminal terminal, String channelGuid, PollRequestType requestType) {
-        return createPoll(terminal, channelGuid, requestType, AutomaticPoll.class);
     }
 
     public static ConfigurationPoll mapToConfigurationPoll(MobileTerminal terminal, String channelGuid, PollRequestType requestType) {
@@ -121,8 +115,7 @@ public class PollModelToEntityMapper {
         return samplingPoll;
     }
 
-    private static <T extends PollBase> T createPoll(MobileTerminal terminal, String channelGuid,
-                                                     PollRequestType requestType, Class<T> clazz) {
+    public static <T extends PollBase> T createPoll(MobileTerminal terminal, String channelGuid, PollRequestType requestType, Class<T> clazz) {
         try {
             T poll = clazz.newInstance();
             poll.setChannelId(UUID.fromString(channelGuid));
@@ -131,10 +124,11 @@ public class PollModelToEntityMapper {
             poll.setComment(requestType.getComment());
             poll.setCreator(requestType.getUserName());
             poll.setUpdatedBy(requestType.getUserName());
+            poll.setPollTypeEnum(EnumMapper.getPollTypeFromModel(requestType.getPollType()));
             poll.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
             return poll;
         } catch (InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException("Error while creating Poll instance.", e);
+            throw new RuntimeException("Error when creating Poll instance of type: " + clazz.getTypeName(), e);
         }
     }
 }

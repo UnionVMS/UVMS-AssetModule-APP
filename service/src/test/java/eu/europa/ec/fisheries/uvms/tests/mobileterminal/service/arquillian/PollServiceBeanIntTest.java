@@ -106,7 +106,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
 
         int numberOfProgramB4 = pollServiceBean.getRunningProgramPolls().size();
 
-        ProgramPoll pollProgram = testPollHelper.createPollProgramHelper(null, startDate, stopDate, latestRun);
+        ProgramPoll pollProgram = testPollHelper.createProgramPoll(null, startDate, stopDate, latestRun);
 
         pollProgramDao.createProgramPoll(pollProgram);
 
@@ -125,7 +125,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         OffsetDateTime latestRun = testPollHelper.getLatestRunDate();
         OffsetDateTime stopDate = testPollHelper.getStopDate();
 
-        ProgramPoll pollProgram = testPollHelper.createPollProgramHelper(null, startDate, stopDate, latestRun);
+        ProgramPoll pollProgram = testPollHelper.createProgramPoll(null, startDate, stopDate, latestRun);
 
         pollProgramDao.createProgramPoll(pollProgram);
 
@@ -155,7 +155,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         String username = "TEST";
 
         String connectId = UUID.randomUUID().toString();
-        ProgramPoll pollProgram = testPollHelper.createPollProgramHelper(connectId, startDate, stopDate, latestRun);
+        ProgramPoll pollProgram = testPollHelper.createProgramPoll(connectId, startDate, stopDate, latestRun);
 
         pollProgramDao.createProgramPoll(pollProgram);
         UUID guid = pollProgram.getId();
@@ -179,7 +179,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         OffsetDateTime latestRun = testPollHelper.getLatestRunDate();
         OffsetDateTime stopDate = testPollHelper.getStopDate();
 
-        ProgramPoll pollProgram = testPollHelper.createPollProgramHelper(null, startDate, stopDate, latestRun);
+        ProgramPoll pollProgram = testPollHelper.createProgramPoll(null, startDate, stopDate, latestRun);
 
         pollProgramDao.createProgramPoll(pollProgram);
 
@@ -209,7 +209,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         String username = "TEST";
 
         String connectId = UUID.randomUUID().toString();
-        ProgramPoll pollProgram = testPollHelper.createPollProgramHelper(connectId, startDate, stopDate, latestRun);
+        ProgramPoll pollProgram = testPollHelper.createProgramPoll(connectId, startDate, stopDate, latestRun);
 
         pollProgramDao.createProgramPoll(pollProgram);
         UUID guid = pollProgram.getId();
@@ -236,7 +236,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         OffsetDateTime latestRun = testPollHelper.getLatestRunDate();
         OffsetDateTime stopDate = testPollHelper.getStopDate();
 
-        ProgramPoll pollProgram = testPollHelper.createPollProgramHelper(null, startDate, stopDate, latestRun);
+        ProgramPoll pollProgram = testPollHelper.createProgramPoll(null, startDate, stopDate, latestRun);
 
         pollProgramDao.createProgramPoll(pollProgram);
 
@@ -266,7 +266,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         String username = "TEST";
 
         String connectId = UUID.randomUUID().toString();
-        ProgramPoll pollProgram = testPollHelper.createPollProgramHelper(connectId, startDate, stopDate, latestRun);
+        ProgramPoll pollProgram = testPollHelper.createProgramPoll(connectId, startDate, stopDate, latestRun);
 
         pollProgramDao.createProgramPoll(pollProgram);
         UUID guid = pollProgram.getId();
@@ -297,7 +297,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         OffsetDateTime latestRun = testPollHelper.getLatestRunDate();
         OffsetDateTime stopDate = testPollHelper.getStopDate();
 
-        ProgramPoll pollProgram = testPollHelper.createPollProgramHelper(null, startDate, stopDate, latestRun);
+        ProgramPoll pollProgram = testPollHelper.createProgramPoll(null, startDate, stopDate, latestRun);
 
         pollProgramDao.createProgramPoll(pollProgram);
 

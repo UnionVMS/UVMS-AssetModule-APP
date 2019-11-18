@@ -41,16 +41,6 @@ public class PollDaoBean  {
 		em.persist(poll);
     }
 
-    public PollBase getPollByPoolId(Long pollId) {
-        try {
-            TypedQuery<PollBase> query = em.createNamedQuery(MobileTerminalConstants.POLL_FIND_BY_POLL_ID, PollBase.class);
-            query.setParameter("pollId", pollId);
-            return query.getSingleResult();
-        } catch (NoResultException e) {
-        	return null;
-        }
-    }
-
 	public PollBase getPollById(UUID id) {
 		try {
 			TypedQuery<PollBase> query = em.createNamedQuery(MobileTerminalConstants.POLL_FIND_BY_ID, PollBase.class);

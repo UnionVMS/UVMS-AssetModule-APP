@@ -12,14 +12,11 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.ListCriteria;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MobileTerminalListQuery;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.SearchKey;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
@@ -169,7 +166,6 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertNotNull(fetched);
         assertEquals(created.getId(), fetched.getId());
         assertEquals(created.getAssetId(), fetched.getAssetId());
-
     }
 
     @Test
@@ -207,21 +203,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     public void updateMobileTerminalTest_RemoveOneOfTwoChannels() {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
-        mobileTerminal.getChannels().forEach(channel -> {
-            channel.setMemberNumber("111");
-            channel.setDNID("1111");
-        });
-
-        Channel c2 = new Channel();
-        c2.setName("VMS");
-        c2.setFrequencyGracePeriod(Duration.ofSeconds(54000));
-        c2.setMemberNumber("222");
-        c2.setExpectedFrequency(Duration.ofSeconds(7200));
-        c2.setExpectedFrequencyInPort(Duration.ofSeconds(10800));
-        c2.setLesDescription("Thrane&Thrane");
-        c2.setDNID("2222");
-        c2.setInstalledBy("Mike Great");
-        c2.setArchived(false);
+        Channel c2 = MobileTerminalTestHelper.createBasicChannel();
         c2.setConfigChannel(false);
         c2.setDefaultChannel(false);
         c2.setPollChannel(false);
@@ -252,12 +234,9 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertEquals(1, updated.getChannels().size());
     }
 
-
-
     @Test
     @OperateOnDeployment("normal")
     public void assignMobileTerminalTest() {
-
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
         MobileTerminal created = getWebTargetExternal()

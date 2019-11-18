@@ -12,9 +12,11 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.search.poll;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.ListCriteria;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.SearchKey;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.PollSearchField;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.PollSearchKeyValue;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.SearchKey;
+import eu.europa.ec.fisheries.uvms.mobileterminal.search.SearchTable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,16 +70,34 @@ public class PollSearchMapper {
         return searchKeyValue;
     }
 
-	public static String createCountSearchSql(List<PollSearchKeyValue> searchKeys, boolean isDynamic) {
-		return "SELECT COUNT (DISTINCT p) FROM Poll p " + createSearchSql(searchKeys, isDynamic);
+	public static String createCountSearchSql(List<PollSearchKeyValue> searchKeys, boolean isDynamic, PollTypeEnum pollTypeEnum) {
+        SearchTable searchTable = getPollTable(pollTypeEnum);
+		return "SELECT COUNT (DISTINCT " + searchTable.getTableAlias() + ") FROM " + searchTable.getTableName() + " " + searchTable.getTableAlias() + " " + createSearchSql(searchKeys, isDynamic, searchTable);
 	}
 
-	public static String createSelectSearchSql(List<PollSearchKeyValue> searchKeys, boolean isDynamic) {
-		return "SELECT DISTINCT p FROM Poll p " +
-				createSearchSql(searchKeys, isDynamic);
+	public static String createSelectSearchSql(List<PollSearchKeyValue> searchKeys, boolean isDynamic, PollTypeEnum pollTypeEnum) {
+	    SearchTable searchTable = getPollTable(pollTypeEnum);
+		return "SELECT DISTINCT " + searchTable.getTableAlias() + " FROM " +  searchTable.getTableName() + " " + searchTable.getTableAlias() + " " + createSearchSql(searchKeys, isDynamic, searchTable);
 	}
 
-	private static String createSearchSql(List<PollSearchKeyValue> searchKeys, boolean isDynamic) {
+	private static SearchTable getPollTable(PollTypeEnum pollTypeEnum) {
+		switch (pollTypeEnum) {
+			case PROGRAM_POLL:
+				return SearchTable.PROGRAM_POLL;
+			case SAMPLING_POLL:
+				return SearchTable.SAMPLING_POLL;
+            case BASE_POLL:
+			case MANUAL_POLL:
+			case AUTOMATIC_POLL:
+				return SearchTable.POLL_BASE;
+			case CONFIGURATION_POLL:
+				return SearchTable.CONFIGURATION_POLL;
+			default:
+				throw new RuntimeException("No valid Poll Type");
+		}
+	}
+
+	private static String createSearchSql(List<PollSearchKeyValue> searchKeys, boolean isDynamic, SearchTable searchTable) {
 		StringBuilder builder = new StringBuilder();
 		String OPERATOR = " OR ";
 		if (isDynamic) {
@@ -88,25 +108,30 @@ public class PollSearchMapper {
 
 		for (PollSearchKeyValue keyValue : searchKeys) {
 			PollSearchField pollSearchField = keyValue.getSearchField();
-			String tableName = pollSearchField.getTable().getTableName();
+			String tableName;
+			if(pollSearchField.getTable() != null) {
+				tableName = pollSearchField.getTable().getTableName();
+			} else {
+				tableName = searchTable.getTableName();
+			}
 			if (!searchFields.contains(tableName))
 				searchFields.add(tableName);
 		}
 
-		String userTableName = PollSearchField.USER.getTable().getTableName();
+//		String userTableName = PollSearchField.USER.getTable().getTableName();
 		String terminalTypeTableName = PollSearchField.TERMINAL_TYPE.getTable().getTableName();
 		String connectIdTableName = PollSearchField.CONNECT_ID.getTable().getTableName();
 
-		if(searchFields.contains(userTableName))
-			builder.append(" INNER JOIN p.pollBase pb");
+//		if(searchFields.contains(userTableName))
+//			builder.append(" INNER JOIN p.pollBase pb");
 		if(searchFields.contains(terminalTypeTableName)) {
-			if (!searchFields.contains(userTableName))
-				builder.append(" INNER JOIN p.pollBase pb");
+//			if (!searchFields.contains(userTableName))
+//				builder.append(" INNER JOIN p.pollBase pb");
 			builder.append(" INNER JOIN pb.mobileterminal mt ");
 		}
 		if(searchFields.contains(connectIdTableName)) {
-			if (!searchFields.contains(userTableName))
-				builder.append(" INNER JOIN p.pollBase pb");
+//			if (!searchFields.contains(userTableName))
+//				builder.append(" INNER JOIN p.pollBase pb");
 			if (!searchFields.contains(terminalTypeTableName))
 				builder.append(" INNER JOIN pb.mobileterminal mt ");
 			builder.append(" INNER JOIN mt.asset a ");

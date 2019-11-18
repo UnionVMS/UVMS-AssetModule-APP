@@ -15,6 +15,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
+import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.util.OffsetDateTimeDeserializer;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -34,16 +36,14 @@ import java.util.UUID;
 @Inheritance(strategy = InheritanceType.JOINED)
 @XmlRootElement
 @NamedQueries({
-        @NamedQuery(name = "Poll.findAll", query = "SELECT p FROM PollBase p"),
-        @NamedQuery(name = "Poll.findById", query = "SELECT p FROM PollBase p WHERE p.id = :id"),
-        @NamedQuery(name = "Poll.findByPollId", query = "SELECT p FROM PollBase p WHERE p.id = :pollId"),
-        @NamedQuery(name = "Poll.findByPollComment", query = "SELECT p FROM PollBase p WHERE p.comment = :pollComment"),
-        @NamedQuery(name = "Poll.findByPollCreated", query = "SELECT p FROM PollBase p WHERE p.updateTime = :pollCreated"),
-        @NamedQuery(name = "Poll.findByPollUserCreator", query = "SELECT p FROM PollBase p WHERE p.creator = :pollUserCreator"),
+        @NamedQuery(name = MobileTerminalConstants.POLL_FIND_ALL, query = "SELECT p FROM PollBase p"),
+        @NamedQuery(name = MobileTerminalConstants.POLL_FIND_BY_ID, query = "SELECT p FROM PollBase p WHERE p.id = :id"),
+        @NamedQuery(name = MobileTerminalConstants.POLL_FIND_BY_TYPE, query = "SELECT p FROM PollBase p WHERE p.pollTypeEnum = :pollTypeEnum"),
+        @NamedQuery(name = MobileTerminalConstants.POLL_FIND_BY_COMMENT, query = "SELECT p FROM PollBase p WHERE p.comment = :pollComment"),
+        @NamedQuery(name = MobileTerminalConstants.POLL_FIND_BY_CREATE_DATE, query = "SELECT p FROM PollBase p WHERE p.updateTime = :pollCreated"),
+        @NamedQuery(name = MobileTerminalConstants.POLL_FIND_BY_USER, query = "SELECT p FROM PollBase p WHERE p.creator = :pollUserCreator"),
 })
 public class PollBase implements Serializable {
-
-    public static final String POLL_FIND_BY_POLL_ID = "Poll.findByPollId";
 
     @Id
     @GeneratedValue(generator = "POLLBASE_UUID")
@@ -73,18 +73,22 @@ public class PollBase implements Serializable {
     @NotNull
     private MobileTerminal mobileterminal;
 
+    @Size(max = 60)
     @Column(name = "upuser")
     private String updatedBy;
 
     @Column(name = "connect_id")
     private String terminalConnect;
 
+    @Column(name = "poll_type")
+    @Enumerated(EnumType.STRING)
+    private PollTypeEnum pollTypeEnum;
+
     private static final long serialVersionUID = 1L;
 
     public PollBase() {
         super();
     }
-
 
     public UUID getId() {
         return id;
@@ -150,6 +154,14 @@ public class PollBase implements Serializable {
         this.terminalConnect = terminalConnect;
     }
 
+    public PollTypeEnum getPollTypeEnum() {
+        return pollTypeEnum;
+    }
+
+    public void setPollTypeEnum(PollTypeEnum pollTypeEnum) {
+        this.pollTypeEnum = pollTypeEnum;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -162,12 +174,13 @@ public class PollBase implements Serializable {
                 Objects.equals(updateTime, pollBase.updateTime) &&
                 Objects.equals(mobileterminal, pollBase.mobileterminal) &&
                 Objects.equals(updatedBy, pollBase.updatedBy) &&
-                Objects.equals(terminalConnect, pollBase.terminalConnect);
+                Objects.equals(terminalConnect, pollBase.terminalConnect) &&
+                Objects.equals(pollTypeEnum, pollBase.pollTypeEnum);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, comment, creator, channelId, updateTime, mobileterminal, updatedBy, terminalConnect);
+        return Objects.hash(id, comment, creator, channelId, updateTime, mobileterminal, updatedBy, terminalConnect, pollTypeEnum);
     }
 }

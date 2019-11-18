@@ -25,9 +25,11 @@ public enum SearchTable {
 	IRIDIUM_HISTORY("MobileTerminalIridiumHistory", "mh"),
 	CHANNEL_IRIDIUM("ChannelIridium", "c"),
 	CHANNEL_IRIDIUM_HISTORY("ChannelIridiumHistory", "ch"),
-	
-	POLL("Poll", "p"),
-	POLLBASE("PollBase", "pb");
+
+	CONFIGURATION_POLL("ConfigurationPoll", "cp"),
+	SAMPLING_POLL("SamplingPoll", "sp"),
+	PROGRAM_POLL("ProgramPoll", "pp"),
+	POLL_BASE("PollBase", "pb");
 	
 	private String tableName;
 	private String tableAlias;

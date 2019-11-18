@@ -35,6 +35,7 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 @RunWith(Arquillian.class)
@@ -55,25 +56,24 @@ public class PollTimerTaskTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void runPollTimerTaskPollShouldBeCreated() {
-        
         Asset asset = assetDao.createAsset(AssetTestsHelper.createBasicAsset());
-        ProgramPoll pollProgram = pollHelper.createPollProgramHelper(asset.getId().toString(),
+        ProgramPoll pollProgram = pollHelper.createProgramPoll(asset.getId().toString(),
                 OffsetDateTime.now(ZoneOffset.UTC).minusHours(1), OffsetDateTime.now(ZoneOffset.UTC).plusHours(1), null);
         pollDao.createProgramPoll(pollProgram);
         
         new PollTimerTask(pollService).run();
         
         List<PollResponseType> polls = getAllPolls(asset.getId());
-        
-        assertThat(polls.size(), CoreMatchers.is(1));
+        long autoPollCount = polls.stream().filter(p -> p.getPollType().equals(PollType.AUTOMATIC_POLL)).count();
+
+        assertEquals(1, autoPollCount);
     }
     
     @Test
     @OperateOnDeployment("normal")
     public void runPollTimerTaskTwoPollsShouldBeCreated() {
-        
         Asset asset = assetDao.createAsset(AssetTestsHelper.createBasicAsset());
-        ProgramPoll pollProgram = pollHelper.createPollProgramHelper(asset.getId().toString(),
+        ProgramPoll pollProgram = pollHelper.createProgramPoll(asset.getId().toString(),
                 OffsetDateTime.now(ZoneOffset.UTC).minusHours(1), OffsetDateTime.now(ZoneOffset.UTC).plusHours(1), null);
         pollDao.createProgramPoll(pollProgram);
         
@@ -83,32 +83,31 @@ public class PollTimerTaskTest extends TransactionalTests {
         new PollTimerTask(pollService).run();
         
         List<PollResponseType> polls = getAllPolls(asset.getId());
-        
-        assertThat(polls.size(), CoreMatchers.is(2));
+        long autoPollCount = polls.stream().filter(p -> p.getPollType().equals(PollType.AUTOMATIC_POLL)).count();
+        assertEquals(2, autoPollCount);
     }
     
     @Test
     @OperateOnDeployment("normal")
     public void runPollTimerTaskFutureDateShouldNotCreatePoll() {
-        
         Asset asset = assetDao.createAsset(AssetTestsHelper.createBasicAsset());
-        ProgramPoll pollProgram = pollHelper.createPollProgramHelper(asset.getId().toString(),
+        ProgramPoll pollProgram = pollHelper.createProgramPoll(asset.getId().toString(),
                 OffsetDateTime.now(ZoneOffset.UTC).plusHours(1), OffsetDateTime.now(ZoneOffset.UTC).plusHours(2), null);
         pollDao.createProgramPoll(pollProgram);
         
         new PollTimerTask(pollService).run();
         
         List<PollResponseType> polls = getAllPolls(asset.getId());
-        
-        assertThat(polls.size(), CoreMatchers.is(0));
+        long autoPollCount = polls.stream().filter(p -> p.getPollType().equals(PollType.AUTOMATIC_POLL)).count();
+
+        assertEquals(0, autoPollCount);
     }
     
     @Test
     @OperateOnDeployment("normal")
     public void runPollTimerTaskLastRunShouldBeSet() {
-        
         Asset asset = assetDao.createAsset(AssetTestsHelper.createBasicAsset());
-        ProgramPoll pollProgram = pollHelper.createPollProgramHelper(asset.getId().toString(),
+        ProgramPoll pollProgram = pollHelper.createProgramPoll(asset.getId().toString(),
                 OffsetDateTime.now(ZoneOffset.UTC).minusHours(1), OffsetDateTime.now(ZoneOffset.UTC).plusHours(1), null);
         pollDao.createProgramPoll(pollProgram);
         
@@ -121,9 +120,8 @@ public class PollTimerTaskTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void runPollTimerTaskOldProgramShouldBeArchived() {
-        
         Asset asset = assetDao.createAsset(AssetTestsHelper.createBasicAsset());
-        ProgramPoll pollProgram = pollHelper.createPollProgramHelper(asset.getId().toString(),
+        ProgramPoll pollProgram = pollHelper.createProgramPoll(asset.getId().toString(),
                 OffsetDateTime.now(ZoneOffset.UTC).minusHours(2), OffsetDateTime.now(ZoneOffset.UTC).minusHours(1), null);
         pollDao.createProgramPoll(pollProgram);
         

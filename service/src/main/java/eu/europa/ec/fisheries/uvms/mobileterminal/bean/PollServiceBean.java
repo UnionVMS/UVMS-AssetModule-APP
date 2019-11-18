@@ -24,7 +24,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
@@ -188,7 +187,7 @@ public class PollServiceBean {
         return getPollProgramRunningAndStarted();
     }
 
-    private MobileTerminal mapPollableTerminal(MobileTerminalTypeEnum type, UUID guid) {
+    private MobileTerminal mapPollableTerminal(UUID guid) {
         return terminalDao.getMobileTerminalById(guid);
     }
 
@@ -198,23 +197,20 @@ public class PollServiceBean {
         switch (pollRequest.getPollType()) {
             case PROGRAM_POLL:
                 Map<ProgramPoll, MobileTerminal> programPollMap = validateAndMapToProgramPolls(pollRequest);
-                responseList = createPollPrograms(programPollMap);
+                responseList = createProgramPolls(programPollMap);
                 break;
             case CONFIGURATION_POLL:
                 Map<ConfigurationPoll, MobileTerminal> configurationPollMap = validateAndMapToConfigurationPolls(pollRequest);
-                responseList = createPolls(configurationPollMap, pollRequest.getPollType());
+                responseList = createPolls(configurationPollMap);
                 break;
             case MANUAL_POLL:
-                Map<ManualPoll, MobileTerminal> manualPollMap = validateAndMapToManualPolls(pollRequest);
-                responseList = createPolls(manualPollMap, pollRequest.getPollType());
-                break;
             case AUTOMATIC_POLL:
-                Map<AutomaticPoll, MobileTerminal> automaticPollMap = validateAndMapToAutomaticPolls(pollRequest);
-                responseList = createPolls(automaticPollMap, pollRequest.getPollType());
+                Map<PollBase, MobileTerminal> basePollMap = validateAndMapToBasePolls(pollRequest);
+                responseList = createPolls(basePollMap);
                 break;
             case SAMPLING_POLL:
                 Map<SamplingPoll, MobileTerminal> samplingPollMap = validateAndMapToSamplingPolls(pollRequest);
-                responseList = createPolls(samplingPollMap, pollRequest.getPollType());
+                responseList = createPolls(samplingPollMap);
                 break;
             default:
                 LOG.error("[ Could not decide poll type ] {}", pollRequest.getPollType());
@@ -223,28 +219,16 @@ public class PollServiceBean {
         return responseList;
     }
 
-    private Map<AutomaticPoll, MobileTerminal> validateAndMapToAutomaticPolls(PollRequestType pollRequest) {
-        Map<AutomaticPoll, MobileTerminal> map = new HashMap<>();
+    private Map<PollBase, MobileTerminal> validateAndMapToBasePolls(PollRequestType pollRequest) {
+        Map<PollBase, MobileTerminal> map = new HashMap<>();
         for (PollMobileTerminal pollTerminal : pollRequest.getMobileTerminals()) {
             MobileTerminal mobileTerminalEntity = validateAndGetMobileTerminal(pollTerminal);
             checkPollable(mobileTerminalEntity);
-            AutomaticPoll poll = PollModelToEntityMapper.createAutomaticPoll(mobileTerminalEntity, pollTerminal.getComChannelId(), pollRequest);
+            PollBase poll = PollModelToEntityMapper.createPoll(mobileTerminalEntity, pollTerminal.getComChannelId(), pollRequest, PollBase.class);
             map.put(poll, mobileTerminalEntity);
         }
         return map;
     }
-
-    private Map<ManualPoll, MobileTerminal> validateAndMapToManualPolls(PollRequestType pollRequest) {
-        Map<ManualPoll, MobileTerminal> map = new HashMap<>();
-        for (PollMobileTerminal pollTerminal : pollRequest.getMobileTerminals()) {
-            MobileTerminal mobileTerminalEntity = validateAndGetMobileTerminal(pollTerminal);
-            checkPollable(mobileTerminalEntity);
-            ManualPoll poll = PollModelToEntityMapper.createManualPoll(mobileTerminalEntity, pollTerminal.getComChannelId(), pollRequest);
-            map.put(poll, mobileTerminalEntity);
-        }
-        return map;
-    }
-
 
     private Map<SamplingPoll, MobileTerminal> validateAndMapToSamplingPolls(PollRequestType pollRequest) {
         Map<SamplingPoll, MobileTerminal> map = new HashMap<>();
@@ -354,7 +338,7 @@ public class PollServiceBean {
         return false;
     }
 
-    private List<PollResponseType> createPollPrograms (Map<ProgramPoll, MobileTerminal> map) {
+    private List<PollResponseType> createProgramPolls(Map<ProgramPoll, MobileTerminal> map) {
         List<PollResponseType> responseList = new ArrayList<>();
         for (Map.Entry<ProgramPoll, MobileTerminal> next : map.entrySet()) {
             ProgramPoll pollProgram = next.getKey();
@@ -365,34 +349,29 @@ public class PollServiceBean {
         return responseList;
     }
 
-    private List<PollResponseType> createPolls(Map<? extends PollBase, MobileTerminal> map, PollType pollType) {
+    private List<PollResponseType> createPolls(Map<? extends PollBase, MobileTerminal> map) {
         List<PollResponseType> responseList = new ArrayList<>();
         for (Map.Entry<? extends PollBase, MobileTerminal> next : map.entrySet()) {
             MobileTerminal mobileTerminal = next.getValue();
             PollResponseType pollResponseType;
-            switch (pollType) {
+            switch (next.getKey().getPollTypeEnum()) {
                 case SAMPLING_POLL:
                     SamplingPoll samplingPoll = (SamplingPoll) next.getKey();
                     pollDao.createPoll(samplingPoll);
-                    pollResponseType = PollEntityToModelMapper.mapToPollResponseType(samplingPoll, mobileTerminal, pollType);
+                    pollResponseType = PollEntityToModelMapper.mapToPollResponseType(samplingPoll, mobileTerminal);
                     responseList.add(pollResponseType);
                     break;
                 case MANUAL_POLL:
-                    ManualPoll manualPoll = (ManualPoll) next.getKey();
-                    pollDao.createPoll(manualPoll);
-                    pollResponseType = PollEntityToModelMapper.mapToPollResponseType(manualPoll, mobileTerminal, pollType);
+                case AUTOMATIC_POLL:
+                    PollBase pollBase = next.getKey();
+                    pollDao.createPoll(pollBase);
+                    pollResponseType = PollEntityToModelMapper.mapToPollResponseType(pollBase, mobileTerminal);
                     responseList.add(pollResponseType);
                     break;
                 case CONFIGURATION_POLL:
                     ConfigurationPoll configurationPoll = (ConfigurationPoll) next.getKey();
                     pollDao.createPoll(configurationPoll);
-                    pollResponseType = PollEntityToModelMapper.mapToPollResponseType(configurationPoll, mobileTerminal, pollType);
-                    responseList.add(pollResponseType);
-                    break;
-                case AUTOMATIC_POLL:
-                    AutomaticPoll automaticPoll = (AutomaticPoll) next.getKey();
-                    pollDao.createPoll(automaticPoll);
-                    pollResponseType = PollEntityToModelMapper.mapToPollResponseType(automaticPoll, mobileTerminal, pollType);
+                    pollResponseType = PollEntityToModelMapper.mapToPollResponseType(configurationPoll, mobileTerminal);
                     responseList.add(pollResponseType);
                     break;
                 default:
@@ -412,8 +391,10 @@ public class PollServiceBean {
         boolean isDynamic = query.getPollSearchCriteria().isIsDynamic();
         List<PollSearchKeyValue> searchKeys = PollSearchMapper.createSearchFields(query.getPollSearchCriteria().getCriterias());
 
-        String countSql = PollSearchMapper.createCountSearchSql(searchKeys, isDynamic);
-        String sql = PollSearchMapper.createSelectSearchSql(searchKeys, isDynamic);
+        PollTypeEnum pollTypeEnum = getPollTypeFromQuery(query);
+
+        String countSql = PollSearchMapper.createCountSearchSql(searchKeys, isDynamic, pollTypeEnum);
+        String sql = PollSearchMapper.createSelectSearchSql(searchKeys, isDynamic, pollTypeEnum);
 
         Long numberMatches = pollDao.getPollListSearchCount(countSql, searchKeys);
         List<PollBase> pollList = pollDao.getPollListSearchPaginated(page, listSize, sql, searchKeys);
@@ -421,9 +402,9 @@ public class PollServiceBean {
         for (PollBase poll : pollList) {
             try {
                 MobileTerminal mobileTerminalEntity = poll.getMobileterminal();
-                MobileTerminal mobileTerminal = mapPollableTerminal(mobileTerminalEntity.getMobileTerminalType(), mobileTerminalEntity.getId());
-                PollTypeEnum pollTypeEnum = getPollTypeFromQuery(query);
-                PollResponseType pollType = PollEntityToModelMapper.mapToPollResponseType(poll, mobileTerminal, EnumMapper.getPollModelFromType(pollTypeEnum));
+                MobileTerminal mobileTerminal = mapPollableTerminal(mobileTerminalEntity.getId());
+
+                PollResponseType pollType = PollEntityToModelMapper.mapToPollResponseType(poll, mobileTerminal);
                 pollResponseList.add(pollType);
             } catch (RuntimeException e) {
                 LOG.error("[ Poll " + poll.getId() + "  couldn't map type ]");
@@ -445,7 +426,7 @@ public class PollServiceBean {
     private PollTypeEnum getPollTypeFromQuery(PollListQuery query) {
         Optional<ListCriteria> optional = query.getPollSearchCriteria().getCriterias()
                 .stream().filter(c -> c.getKey().equals(SearchKey.POLL_TYPE)).findAny();
-        return optional.map(listCriteria -> PollTypeEnum.valueOf(listCriteria.getValue())).orElse(null);
+        return optional.map(listCriteria -> PollTypeEnum.valueOf(listCriteria.getValue())).orElse(PollTypeEnum.BASE_POLL);
     }
 
     private void validatePollListQuery(PollListQuery query) {
@@ -475,7 +456,7 @@ public class PollServiceBean {
 
         ProgramPoll program = pollProgramDao.getProgramPollByGuid(id.getGuid());
         MobileTerminal terminal = program.getMobileterminal();
-        MobileTerminal mobileTerminal = mapPollableTerminal(terminal.getMobileTerminalType(), terminal.getId());
+        MobileTerminal mobileTerminal = mapPollableTerminal(terminal.getId());
 
         switch (program.getPollState()) {
             case ARCHIVED:
@@ -550,7 +531,7 @@ public class PollServiceBean {
         List<PollResponseType> responseList = new ArrayList<>();
         for (ProgramPoll pollProgram : pollPrograms) {
                 MobileTerminal terminal = pollProgram.getMobileterminal();
-            MobileTerminal mobileTerminal = mapPollableTerminal(terminal.getMobileTerminalType(), terminal.getId());
+            MobileTerminal mobileTerminal = mapPollableTerminal(terminal.getId());
             responseList.add(PollEntityToModelMapper.mapToPollResponseType(pollProgram, mobileTerminal));
         }
         return responseList;

@@ -17,6 +17,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.ConfigurationPoll;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollBase;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.ProgramPoll;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -38,13 +39,17 @@ public class PollEntityToModelMapper {
         return response;
     }
 
-    public static PollResponseType mapToPollResponseType(PollBase poll, MobileTerminal mobileTerminal, PollType pollType) {
+    public static PollResponseType mapToPollResponseType(PollBase poll, MobileTerminal mobileTerminal) {
         PollResponseType response = mapEntityToPollResponseType(poll, mobileTerminal);
-        response.setPollType(pollType);
+
         PollId pollId = new PollId();
         pollId.setGuid(poll.getId().toString());
         response.setPollId(pollId);
 
+        PollTypeEnum pollTypeEnum = poll.getPollTypeEnum();
+        PollType pollType = EnumMapper.getPollModelFromType(pollTypeEnum);
+
+        response.setPollType(pollType);
         if (pollType == PollType.CONFIGURATION_POLL) {
             List<PollAttribute> pollAttributes = response.getAttributes();
 

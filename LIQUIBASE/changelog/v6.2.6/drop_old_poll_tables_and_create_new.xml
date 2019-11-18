@@ -27,17 +27,6 @@
                    schemaName="asset"
                    tableName="pollprogram"/>
 
-        <createTable tableName="poll_manual">
-            <column name="id" type="UUID">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-        <createTable tableName="poll_automatic">
-            <column name="id" type="UUID">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
         <createTable tableName="poll_program">
             <column name="id" type="UUID">
                 <constraints nullable="false"/>
@@ -69,6 +58,10 @@
             <column name="startdate" type="TIMESTAMP" />
             <column name="stopdate" type="TIMESTAMP" />
         </createTable>
+
+        <addColumn tableName="pollbase">
+            <column name="poll_type" type="VARCHAR(20)"/>
+        </addColumn>
     </changeSet>
 
 </databaseChangeLog>

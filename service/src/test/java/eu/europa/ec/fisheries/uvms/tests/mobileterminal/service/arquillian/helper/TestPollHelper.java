@@ -8,6 +8,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian.AssetTestsHelper;
 
@@ -290,7 +291,7 @@ public class TestPollHelper {
         return plugin;
     }
 
-    public ProgramPoll createPollProgramHelper(String connectId, OffsetDateTime startDate, OffsetDateTime stopDate, OffsetDateTime latestRun) {
+    public ProgramPoll createProgramPoll(String connectId, OffsetDateTime startDate, OffsetDateTime stopDate, OffsetDateTime latestRun) {
 
         ProgramPoll pp = new ProgramPoll();
         // create a valid mobileTerminal
@@ -313,7 +314,7 @@ public class TestPollHelper {
         pp.setStopDate(stopDate);
         pp.setUpdateTime(latestRun);
         pp.setUpdatedBy("TEST");
-
+        pp.setPollTypeEnum(PollTypeEnum.PROGRAM_POLL);
         return pp;
     }
 
