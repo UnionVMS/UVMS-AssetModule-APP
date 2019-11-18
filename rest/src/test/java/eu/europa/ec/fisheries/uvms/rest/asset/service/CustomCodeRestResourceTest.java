@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.rest.asset.V2.service;
+package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -31,7 +31,7 @@ import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 @RunAsClient
-public class CustomCodeRestResourceTest2 extends AbstractAssetRestTest {
+public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
     // TODO also implement tests for embedded json when the need appears
 
     private ObjectMapper MAPPER;
@@ -48,7 +48,7 @@ public class CustomCodeRestResourceTest2 extends AbstractAssetRestTest {
         String txt = UUID.randomUUID().toString().toUpperCase();
         String createdJson = createACustomCodeHelper(txt);
         List<String> constants = getWebTargetExternal()
-                .path("customcodes2")
+                .path("customcodes")
                 .path("listconstants")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -75,7 +75,7 @@ public class CustomCodeRestResourceTest2 extends AbstractAssetRestTest {
 
         // get a list of constants;
         List<String> constants = getWebTargetExternal()
-                .path("customcodes2")
+                .path("customcodes")
                 .path("listconstants")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -85,7 +85,7 @@ public class CustomCodeRestResourceTest2 extends AbstractAssetRestTest {
         Boolean found = false;
         for (String constant : constants) {
             String json = getWebTargetExternal()
-                    .path("customcodes2")
+                    .path("customcodes")
                     .path("listcodesforconstant")
                     .path(constant)
                     .request(MediaType.APPLICATION_JSON)
@@ -363,7 +363,7 @@ public class CustomCodeRestResourceTest2 extends AbstractAssetRestTest {
         String toDate = customCodesPk.getValidToDate().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         String json = getWebTargetExternal()
-                .path("customcodes2")
+                .path("customcodes")
                 .path(customCodesPk.getConstant())
                 .path(customCodesPk.getCode())
                 .queryParam("validFromDate", fromDate)
@@ -390,7 +390,7 @@ public class CustomCodeRestResourceTest2 extends AbstractAssetRestTest {
         String toDate = customCodesPk.getValidToDate().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         Boolean exists = getWebTargetExternal()
-                .path("customcodes2")
+                .path("customcodes")
                 .path(customCodesPk.getConstant())
                 .path(customCodesPk.getCode())
                 .path("exists")
@@ -403,7 +403,7 @@ public class CustomCodeRestResourceTest2 extends AbstractAssetRestTest {
         assertTrue(exists);
 
         Response jsondelete = getWebTargetExternal()
-                .path("customcodes2")
+                .path("customcodes")
                 .path(customCodesPk.getConstant())
                 .path(customCodesPk.getCode())
                 .queryParam("validFromDate", fromDate)
@@ -415,7 +415,7 @@ public class CustomCodeRestResourceTest2 extends AbstractAssetRestTest {
         assertEquals(200, jsondelete.getStatus());
 
         exists = getWebTargetExternal()
-                .path("customcodes2")
+                .path("customcodes")
                 .path(customCodesPk.getConstant())
                 .path(customCodesPk.getCode())
                 .path("exists")
@@ -503,7 +503,7 @@ public class CustomCodeRestResourceTest2 extends AbstractAssetRestTest {
         String dateToTest = dateWithinRange.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         String json = getWebTargetExternal()
-                .path("customcodes2")
+                .path("customcodes")
                 .path(customCodesPk.getConstant())
                 .path(customCodesPk.getCode())
                 .path("getfordate")
@@ -538,7 +538,7 @@ public class CustomCodeRestResourceTest2 extends AbstractAssetRestTest {
         String dateToTest = dateWithoutRange.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         String json = getWebTargetExternal()
-                .path("customcodes2")
+                .path("customcodes")
                 .path(customCodesPk.getConstant())
                 .path(customCodesPk.getCode())
                 .path("getfordate")
@@ -572,7 +572,7 @@ public class CustomCodeRestResourceTest2 extends AbstractAssetRestTest {
         String dateToTest = dateWithinRange.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         Boolean ret = getWebTargetExternal()
-                .path("customcodes2")
+                .path("customcodes")
                 .path(customCodesPk.getConstant())
                 .path(customCodesPk.getCode())
                 .path("verify")
@@ -601,7 +601,7 @@ public class CustomCodeRestResourceTest2 extends AbstractAssetRestTest {
         String dateToTest = dateWithoutRange.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         Boolean ret = getWebTargetExternal()
-                .path("customcodes2")
+                .path("customcodes")
                 .path(customCodesPk.getConstant())
                 .path(customCodesPk.getCode())
                 .path("verify")
@@ -629,7 +629,7 @@ public class CustomCodeRestResourceTest2 extends AbstractAssetRestTest {
         String dateWithin = dateWithinRange.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         String json = getWebTargetExternal()
-                .path("customcodes2")
+                .path("customcodes")
                 .path(customCodesPk.getConstant())
                 .path(customCodesPk.getCode())
                 .path("getfordate")

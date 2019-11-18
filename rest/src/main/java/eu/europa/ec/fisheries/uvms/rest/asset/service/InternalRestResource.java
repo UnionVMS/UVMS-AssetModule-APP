@@ -8,7 +8,7 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.rest.asset.V2.service;
+package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -24,7 +24,6 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.asset.dto.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
@@ -49,13 +48,13 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Path("internal2")
+@Path("internal")
 @Stateless
 @Consumes(value = {MediaType.APPLICATION_JSON})
 @Produces(value = {MediaType.APPLICATION_JSON})
-public class InternalRestResource2 {
+public class InternalRestResource {
 
-    private final static Logger LOG = LoggerFactory.getLogger(InternalRestResource2.class);
+    private final static Logger LOG = LoggerFactory.getLogger(InternalRestResource.class);
 
     @Inject
     private AssetService assetService;
@@ -72,7 +71,7 @@ public class InternalRestResource2 {
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
     private ObjectMapper objectMapper(){
         ObjectMapperContextResolver omcr = new ObjectMapperContextResolver();
-        ObjectMapper objectMapper = omcr.getContext(InternalRestResource2.class);
+        ObjectMapper objectMapper = omcr.getContext(InternalRestResource.class);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .findAndRegisterModules();
         return objectMapper;

@@ -12,9 +12,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.dto;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
+import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mock.MockData;
-import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTResponseDto;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.error.MTResponseCode;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.services.MobileTerminalRestResource;
@@ -24,13 +24,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import javax.ws.rs.core.Response;
-
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.doReturn;
 
 public class ResponseTest {
 
