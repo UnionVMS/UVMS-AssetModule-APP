@@ -220,10 +220,10 @@ public class AssetClient {
     public Boolean isCodeValid(String constant, String code, OffsetDateTime date){
         String theDate = date.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         String response = webTarget
-                .path("verify")
                 .path(constant)
                 .path(code)
-                .path(theDate)
+                .path("verify")
+                .queryParam("date", theDate)
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .get(String.class);
@@ -233,10 +233,10 @@ public class AssetClient {
     public List<CustomCode> getCodeForDate(String constant, String code, OffsetDateTime date) {
         String theDate = date.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         return webTarget
-                .path("getfordate")
                 .path(constant)
                 .path(code)
-                .path(theDate)
+                .path("getfordate")
+                .queryParam("date", theDate)
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .get(new GenericType<List<CustomCode>>() {});

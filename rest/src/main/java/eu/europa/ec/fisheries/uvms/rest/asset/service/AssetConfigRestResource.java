@@ -9,14 +9,13 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.rest.asset.V2.service;
+package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.ConfigList;
 import eu.europa.ec.fisheries.schema.mobileterminal.config.v1.TerminalSystemType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.SearchKey;
 import eu.europa.ec.fisheries.uvms.asset.bean.ConfigServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.ConfigServiceBeanMT;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTMobileTerminalConfig;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
@@ -38,14 +37,14 @@ import javax.ws.rs.core.Response.Status;
 import java.util.List;
 import java.util.Map;
 
-@Path("/config2")
+@Path("/config")
 @Stateless
 @Consumes(value = {MediaType.APPLICATION_JSON})
 @Produces(value = {MediaType.APPLICATION_JSON})
 @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-public class AssetConfigRestResource2 {
+public class AssetConfigRestResource {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AssetConfigRestResource2.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AssetConfigRestResource.class);
 
     @Inject
     private ConfigServiceBean configService;

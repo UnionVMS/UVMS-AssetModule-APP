@@ -10,32 +10,32 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
-import static junit.framework.TestCase.assertNotNull;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.*;
-
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
+import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
+import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
+import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
-import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
-import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
-import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
-import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
+
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+
+import static junit.framework.TestCase.assertNotNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 @RunAsClient
@@ -304,10 +304,12 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         // Archive the asset
         Asset archived = getWebTargetExternal()
                 .path("asset")
+                .path(createdAsset.getId().toString())
                 .path("archive")
+                .queryParam("comment", "The best test comment")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(createdAsset), Asset.class);
+                .put(Entity.json(""), Asset.class);
 
         assertFalse(archived.getActive());
 
@@ -331,10 +333,12 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         
         Asset asset1 = AssetHelper.createBasicAsset();
         asset1.setFlagStateCode(customFlagState);
+        asset1.setName("Test asset 1");
         Asset createdAsset1 = sendAssetToCreation(asset1);
         
         Asset asset2 = AssetHelper.createBasicAsset();
         asset2.setFlagStateCode(customFlagState);
+        asset2.setName("Test asset 2");
         Asset createdAsset2 = sendAssetToCreation(asset2);
         
         AssetQuery query = new AssetQuery();
@@ -883,14 +887,15 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         mt.setComment("Updated comment");
         mt.setAsset(createdAsset);
         mt = MobileTerminalTestHelper.restMobileTerminalUpdate(getWebTargetExternal(), mt, getTokenExternal());
-
         MobileTerminal responseUnAssign = getWebTargetExternal()
-                .path("/mobileterminal/unassign")
+                .path("/mobileterminal")
+                .path(mt.getId().toString())
+                .path("unassign")
+                .path(createdAsset.getId().toString())
                 .queryParam("comment", "NEW_TEST_COMMENT")
-                .queryParam("connectId", createdAsset.getId())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(mt.getId()), MobileTerminal.class);
+                .put(Entity.json(""), MobileTerminal.class);
 
 
         AssetQuery assetQuery = new AssetQuery();
