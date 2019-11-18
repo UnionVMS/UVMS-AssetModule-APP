@@ -16,6 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
+import eu.europa.ec.fisheries.uvms.rest.AppException;
+import eu.europa.ec.fisheries.uvms.rest.AppInfoCodes;
 import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
@@ -51,7 +53,7 @@ public class AssetGroupResource {
     private AssetGroupService assetGroupService;
 
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
-    private ObjectMapper objectMapper(){
+    private ObjectMapper objectMapper() {
         ObjectMapperContextResolver omcr = new ObjectMapperContextResolver();
         ObjectMapper objectMapper = omcr.getContext(AssetGroup.class);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -71,14 +73,15 @@ public class AssetGroupResource {
             @ApiResponse(code = 200, message = "AssetGroup list successfully retrieved")})
     @Path("list")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetGroupListByUser(@ApiParam(value = "user", required = true) @QueryParam(value = "user") String user) {
+    public Response getAssetGroupListByUser(@ApiParam(value = "user", required = true) @QueryParam(value = "user") String user)  {
         try {
             List<AssetGroup> assetGroups = assetGroupService.getAssetGroupList(user);
             String response = objectMapper().writeValueAsString(assetGroups);
             return Response.ok(response).build();
         } catch (Exception e) {
-            LOG.error("Error when getting asset group list by user. {}", user, e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            String msg = String.format(AppInfoCodes.AssetGroupListByUser.getDescription(), user);
+            LOG.error(msg, user, e);
+            throw new AppException(AppInfoCodes.AssetGroupListByUser.getCode(), msg, ExceptionUtils.getRootCause(e));
         }
     }
 
@@ -238,7 +241,7 @@ public class AssetGroupResource {
             @ApiResponse(code = 200, message = "AssetGroupField successfully fetched")})
     @Path("/field/{id}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetGroupField(@ApiParam(value = "AssetgroupField id", required = true) @PathParam(value = "id")  UUID id) {
+    public Response getAssetGroupField(@ApiParam(value = "AssetgroupField id", required = true) @PathParam(value = "id") UUID id) {
 
         try {
             AssetGroupField fetchedAssetGroupField = assetGroupService.getAssetGroupField(id);
@@ -257,7 +260,7 @@ public class AssetGroupResource {
             @ApiResponse(code = 200, message = "AssetGroupField successfully deleted")})
     @Path("/field/{id}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response deleteAssetGroupField(@ApiParam(value = "AssetGroupField id", required = true)   @PathParam(value = "id")  UUID assetGroupFieldId) {
+    public Response deleteAssetGroupField(@ApiParam(value = "AssetGroupField id", required = true) @PathParam(value = "id") UUID assetGroupFieldId) {
 
         try {
             String user = servletRequest.getRemoteUser();
@@ -271,13 +274,13 @@ public class AssetGroupResource {
     }
 
     @GET
-    @ApiOperation(value = "Retrieve Assetgroupfields  by AssetGroupId",  response = AssetGroupField.class, responseContainer = "List")
+    @ApiOperation(value = "Retrieve Assetgroupfields  by AssetGroupId", response = AssetGroupField.class, responseContainer = "List")
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when retrieving Assetgroupfields"),
             @ApiResponse(code = 200, message = "Assetgroupfields successfully retrieved")})
     @Path("/{id}/fieldsForGroup")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response retrieveFieldsForGroup(@ApiParam(value = "AssetGroup id", required = true)  @PathParam(value = "id")  UUID assetGroupId) {
+    public Response retrieveFieldsForGroup(@ApiParam(value = "AssetGroup id", required = true) @PathParam(value = "id") UUID assetGroupId) {
 
         try {
             List<AssetGroupField> fetchedAssetGroupFields = assetGroupService.retrieveFieldsForGroup(assetGroupId);
@@ -291,13 +294,13 @@ public class AssetGroupResource {
     }
 
     @DELETE
-    @ApiOperation(value = "Delete Assetgroupfields  for AssetGroupId",  response = AssetGroupField.class, responseContainer = "List")
+    @ApiOperation(value = "Delete Assetgroupfields  for AssetGroupId", response = AssetGroupField.class, responseContainer = "List")
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when delete Assetgroupfields"),
             @ApiResponse(code = 200, message = "Assetgroupfields successfully deleted")})
     @Path("/{id}/fieldsForGroup")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response deleteFieldsForGroup(@ApiParam(value = "AssetGroup id", required = true)  @PathParam(value = "id")  UUID assetGroupId) {
+    public Response deleteFieldsForGroup(@ApiParam(value = "AssetGroup id", required = true) @PathParam(value = "id") UUID assetGroupId) {
 
         try {
             assetGroupService.removeFieldsForGroup(assetGroupId);

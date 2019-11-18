@@ -60,6 +60,8 @@ public class AssetConfigResource {
             return Response.ok(ConfigSearchField.values()).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
+
+
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }

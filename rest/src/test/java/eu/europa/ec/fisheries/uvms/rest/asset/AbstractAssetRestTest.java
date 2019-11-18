@@ -15,6 +15,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
+import eu.europa.ec.fisheries.uvms.rest.AppException;
+import eu.europa.ec.fisheries.uvms.rest.AppInfoCodes;
+import eu.europa.ec.fisheries.uvms.rest.asset.service.AssetConfigResource;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.ExchangeModuleRestMock;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.UnionVMSMock;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.UserRestMock;
@@ -77,6 +81,8 @@ public abstract class AbstractAssetRestTest {
                 .resolve("eu.europa.ec.fisheries.uvms.asset:asset-service").withTransitivity().asFile());
 
 
+        testWar.addClass(AppException.class);
+        testWar.addClass(AppInfoCodes.class);
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.rest.asset");
         testWar.addPackages(true, "eu.europa.ec.fisheries.uvms.rest.mobileterminal");
 
