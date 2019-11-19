@@ -113,21 +113,14 @@ public class PollSearchMapper {
 				searchFields.add(tableName);
 		}
 
-//		String userTableName = PollSearchField.USER.getTable().getTableName();
 		String terminalTypeTableName = PollSearchField.TERMINAL_TYPE.getTable().getTableName();
 		String connectIdTableName = PollSearchField.CONNECT_ID.getTable().getTableName();
 
-//		if(searchFields.contains(userTableName))
-//			builder.append(" INNER JOIN p.pollBase pb");
 		if(searchFields.contains(terminalTypeTableName)) {
-//			if (!searchFields.contains(userTableName))
-//				builder.append(" INNER JOIN p.pollBase pb");
 			builder.append(" INNER JOIN ").append(searchTable.getTableAlias()).append(".mobileterminal mt ");
 
 		}
 		if(searchFields.contains(connectIdTableName)) {
-//			if (!searchFields.contains(userTableName))
-//				builder.append(" INNER JOIN p.pollBase pb");
 			if (!searchFields.contains(terminalTypeTableName))
 				builder.append(" INNER JOIN ").append(searchTable.getTableAlias()).append(".mobileterminal mt ");
 			builder.append(" INNER JOIN mt.asset a ");
@@ -142,14 +135,15 @@ public class PollSearchMapper {
 				} else {
 					builder.append(OPERATOR);
 				}
-				if(searchTable.equals(SearchTable.POLL_BASE)) {
-					builder.append(keyValue.getSearchField().getTable().getTableAlias())
-							.append(".").append(keyValue.getSearchField().getSqlColumnName());
+				if(keyValue.getSearchField().equals(PollSearchField.TERMINAL_TYPE)) {
+					builder.append("mt.").append(keyValue.getSearchField().getSqlColumnName());
+				} else if(searchTable.equals(SearchTable.CONFIGURATION_POLL)) {
+					builder.append(searchTable.getTableAlias()).append(".").append(keyValue.getSearchField().getSqlColumnName());
 				} else {
-					builder.append(searchTable.getTableAlias())
-							.append(".").append(keyValue.getSearchField().getSqlColumnName());
+					builder.append(keyValue.getSearchField().getTable().getTableAlias()).append(".").append(keyValue.getSearchField().getSqlColumnName());
 				}
 				builder.append(" IN (:").append(keyValue.getSearchField().getSqlReplaceToken()).append(") ");
+
 			}
 		}
 		return builder.toString();
