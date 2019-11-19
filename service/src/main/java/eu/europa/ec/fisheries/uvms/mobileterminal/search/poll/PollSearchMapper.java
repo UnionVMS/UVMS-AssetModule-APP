@@ -108,12 +108,7 @@ public class PollSearchMapper {
 
 		for (PollSearchKeyValue keyValue : searchKeys) {
 			PollSearchField pollSearchField = keyValue.getSearchField();
-			String tableName;
-			if(pollSearchField.getTable() != null) {
-				tableName = pollSearchField.getTable().getTableName();
-			} else {
-				tableName = searchTable.getTableName();
-			}
+			String tableName = pollSearchField.getTable().getTableName();
 			if (!searchFields.contains(tableName))
 				searchFields.add(tableName);
 		}
@@ -127,13 +122,14 @@ public class PollSearchMapper {
 		if(searchFields.contains(terminalTypeTableName)) {
 //			if (!searchFields.contains(userTableName))
 //				builder.append(" INNER JOIN p.pollBase pb");
-			builder.append(" INNER JOIN pb.mobileterminal mt ");
+			builder.append(" INNER JOIN ").append(searchTable.getTableAlias()).append(".mobileterminal mt ");
+
 		}
 		if(searchFields.contains(connectIdTableName)) {
 //			if (!searchFields.contains(userTableName))
 //				builder.append(" INNER JOIN p.pollBase pb");
 			if (!searchFields.contains(terminalTypeTableName))
-				builder.append(" INNER JOIN pb.mobileterminal mt ");
+				builder.append(" INNER JOIN ").append(searchTable.getTableAlias()).append(".mobileterminal mt ");
 			builder.append(" INNER JOIN mt.asset a ");
 		}
 
@@ -146,8 +142,13 @@ public class PollSearchMapper {
 				} else {
 					builder.append(OPERATOR);
 				}
-				builder.append(keyValue.getSearchField().getTable().getTableAlias()).append(".")
-						.append(keyValue.getSearchField().getSqlColumnName());
+				if(searchTable.equals(SearchTable.POLL_BASE)) {
+					builder.append(keyValue.getSearchField().getTable().getTableAlias())
+							.append(".").append(keyValue.getSearchField().getSqlColumnName());
+				} else {
+					builder.append(searchTable.getTableAlias())
+							.append(".").append(keyValue.getSearchField().getSqlColumnName());
+				}
 				builder.append(" IN (:").append(keyValue.getSearchField().getSqlReplaceToken()).append(") ");
 			}
 		}
