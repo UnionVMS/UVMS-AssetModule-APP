@@ -44,7 +44,7 @@ public class InternalResourceTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
                 .get();
         
-        assertThat(response.getStatus(), is(Status.INTERNAL_SERVER_ERROR.getStatusCode()));
+        assertThat(response.getStatus(), is(Status.OK.getStatusCode()));
     }
     
     @Test
