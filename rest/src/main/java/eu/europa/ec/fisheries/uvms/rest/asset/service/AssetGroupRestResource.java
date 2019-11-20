@@ -16,6 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
+import eu.europa.ec.fisheries.uvms.rest.AppException;
+import eu.europa.ec.fisheries.uvms.rest.AppInfoCodes;
 import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
@@ -78,8 +80,9 @@ public class AssetGroupRestResource {
             String response = objectMapper().writeValueAsString(assetGroups);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            LOG.error("Error when getting asset group list by user. {}", user, e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            String msg = String.format(AppInfoCodes.AssetGroupListByUser.getDescription(), user);
+            LOG.error(msg, user, e);
+            throw new AppException(AppInfoCodes.AssetGroupListByUser.getCode(), msg, ExceptionUtils.getRootCause(e));
         }
     }
 
