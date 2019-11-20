@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
@@ -33,6 +34,7 @@ import javax.ws.rs.core.Response;
 import java.time.Duration;
 import java.util.*;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
@@ -112,7 +114,9 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mobileTerminal));
-        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
+        assertEquals(200, response.getStatus());
+        Integer code  = response.readEntity(JsonNode.class).path("code").intValue();
+        assertThat(code, is(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()));
     }
 
     @Test
@@ -195,9 +199,10 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .post(Entity.json(mobileTerminal2), Response.class);
 
         assertNotNull(failed);
-        assertEquals(500, failed.getStatus());
-        String returnMessage = failed.readEntity(String.class);
-        assertTrue(returnMessage, returnMessage.contains("An asset can not have more then one active MT."));
+        assertEquals(200, failed.getStatus());
+        Integer code  = failed.readEntity(JsonNode.class).path("code").intValue();
+        assertThat(code, is(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()));
+
     }
 
     @Test
@@ -415,9 +420,9 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .put(Entity.json(""), Response.class);
 
         assertNotNull(response);
-        assertEquals(500, response.getStatus());
-        String returnMessage = response.readEntity(String.class);
-        assertTrue(returnMessage, returnMessage.contains("An asset can not have more then one active MT."));
+        assertEquals(200, response.getStatus());
+        Integer code  = response.readEntity(JsonNode.class).path("code").intValue();
+        assertThat(code, is(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()));
     }
 
     @Test
@@ -570,9 +575,9 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
 
         assertNotNull(failed);
-        assertEquals(500, failed.getStatus());
-        String returnMessage = failed.readEntity(String.class);
-        assertTrue(returnMessage, returnMessage.contains("An asset can not have more then one active MT."));
+        Integer code  = failed.readEntity(JsonNode.class).path("code").intValue();
+        assertThat(code, is(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()));
+        assertEquals(200, failed.getStatus());
     }
 
     @Test
