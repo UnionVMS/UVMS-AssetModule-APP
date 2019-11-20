@@ -17,7 +17,8 @@ public enum PollTypeEnum {
     SAMPLING_POLL(2),
     MANUAL_POLL(3),
     CONFIGURATION_POLL(4),
-    AUTOMATIC_POLL(5);
+    AUTOMATIC_POLL(5),
+    BASE_POLL(6);
 
     private Integer id;
 

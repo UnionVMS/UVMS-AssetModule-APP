@@ -164,7 +164,6 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertNotNull(fetched);
         assertEquals(created.getId(), fetched.getId());
         assertEquals(created.getAssetId(), fetched.getAssetId());
-
     }
 
     @Test
@@ -300,20 +299,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     public void updateMobileTerminalTest_RemoveOneOfTwoChannels() {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
-        mobileTerminal.getChannels().forEach(channel -> {
-            channel.setMemberNumber("111");
-            channel.setDNID("1111");
-        });
-
-        Channel c2 = new Channel();
-        c2.setName("VMS");
-        c2.setFrequencyGracePeriod(Duration.ofSeconds(54000));
-        c2.setMemberNumber("222");
-        c2.setExpectedFrequency(Duration.ofSeconds(7200));
-        c2.setExpectedFrequencyInPort(Duration.ofSeconds(10800));
-        c2.setLesDescription("Thrane&Thrane");
-        c2.setDNID("2222");
-        c2.setArchived(false);
+        Channel c2 = MobileTerminalTestHelper.createBasicChannel();
         c2.setConfigChannel(false);
         c2.setDefaultChannel(false);
         c2.setPollChannel(false);
@@ -344,12 +330,9 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertEquals(1, updated.getChannels().size());
     }
 
-
-
     @Test
     @OperateOnDeployment("normal")
     public void assignMobileTerminalTest() {
-
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
         MobileTerminal created = getWebTargetExternal()

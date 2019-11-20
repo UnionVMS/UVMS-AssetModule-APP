@@ -9,7 +9,7 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.rest.mobileterminal.services;
+package eu.europa.ec.fisheries.uvms.rest.mobileterminal.V2.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -40,13 +40,13 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.UUID;
 
-@Path("/poll")
+@Path("/poll2")
 @Stateless
 @Consumes(value = { MediaType.APPLICATION_JSON })
 @Produces(value = { MediaType.APPLICATION_JSON })
-public class PollRestResource {
+public class PollRestResource2 {
 
-    private final static Logger LOG = LoggerFactory.getLogger(PollRestResource.class);
+    private final static Logger LOG = LoggerFactory.getLogger(PollRestResource2.class);
 
     @Inject
     private PollServiceBean pollServiceBean;

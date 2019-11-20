@@ -19,9 +19,12 @@ import java.util.UUID;
 public enum PollSearchField {
 	CONNECT_ID(SearchTable.ASSET, "id", "connectionValue", UUID.class),
 	TERMINAL_TYPE(SearchTable.TERMINAL, "mobileTerminalType", "mobileTerminalType", MobileTerminalTypeEnum.class),
-	POLL_ID(SearchTable.POLL, "id", "id", UUID.class),
-	POLL_TYPE(SearchTable.POLL, "pollType", "pollType", PollTypeEnum.class),
-	USER(SearchTable.POLLBASE, "creator", "creator");
+	POLL_ID(SearchTable.POLL_BASE, "id", "id", UUID.class),
+	CONFIGURATION_POLL_ID(SearchTable.CONFIGURATION_POLL, "id", "id", UUID.class),
+	SAMPLING_POLL_ID(SearchTable.SAMPLING_POLL, "id", "id", UUID.class),
+	PROGRAM_POLL_ID(SearchTable.PROGRAM_POLL, "id", "id", UUID.class),
+	POLL_TYPE(SearchTable.POLL_BASE, "pollTypeEnum", "pollTypeEnum", PollTypeEnum.class),
+	USER(SearchTable.POLL_BASE, "creator", "creator");
 
 	
 	private final SearchTable table;

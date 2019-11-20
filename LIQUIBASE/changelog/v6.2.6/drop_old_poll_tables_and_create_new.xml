@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Developed by the European Commission - Directorate General for Maritime Affairs and Fisheries @ European Union, 2015-2016.
+
+  This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can redistribute it
+  and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of
+  the License, or any later version. The IFDM Suite is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+  details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+                   logicalFilePath="changelog/v6.2.6/drop_old_poll_tables_and_create_new.xml">
+
+    <changeSet author="kasim" id="Drop old poll tables and create new ones">
+        <dropTable cascadeConstraints="true"
+                   schemaName="asset"
+                   tableName="poll"/>
+        <dropTable cascadeConstraints="true"
+                   schemaName="asset"
+                   tableName="pollpayload"/>
+        <dropTable cascadeConstraints="true"
+                   schemaName="asset"
+                   tableName="pollprogram"/>
+
+        <createTable tableName="poll_program">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="frequency" type="INTEGER" />
+            <column name="startdate" type="TIMESTAMP" />
+            <column name="stopdate" type="TIMESTAMP" />
+            <column name="latestruntime" type="TIMESTAMP"/>
+            <column name="pollstate" type="VARCHAR(10)" />
+        </createTable>
+
+        <rollback>
+            <dropTable tableName="poll_program" cascadeConstraints="true"/>
+        </rollback>
+
+        <createTable tableName="poll_configuration">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reporting_freq" type="INTEGER" />
+            <column name="grace_period" type="INTEGER" />
+            <column name="in_port_grace" type="INTEGER" />
+        </createTable>
+
+        <createTable tableName="poll_sampling">
+            <column name="id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="startdate" type="TIMESTAMP" />
+            <column name="stopdate" type="TIMESTAMP" />
+        </createTable>
+
+        <addColumn tableName="pollbase">
+            <column name="poll_type" type="VARCHAR(20)"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

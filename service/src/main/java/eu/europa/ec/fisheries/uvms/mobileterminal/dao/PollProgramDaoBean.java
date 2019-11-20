@@ -12,7 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.dao;
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollProgram;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.ProgramPoll;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -32,33 +32,33 @@ public class PollProgramDaoBean {
     @PersistenceContext
     private EntityManager em;
 
-    public void removePollProgrameAfterTests(String id){
-        PollProgram pollProgram = getPollProgramById(UUID.fromString(id));
+    public void removeProgramPollAfterTests(String id){
+        ProgramPoll pollProgram = getProgramPollById(UUID.fromString(id));
         em.remove(em.contains(pollProgram) ? pollProgram : em.merge(pollProgram));
     }
 
-    public void createPollProgram(PollProgram pollProgram) {
+    public void createProgramPoll(ProgramPoll pollProgram) {
         em.persist(pollProgram);
     }
 
-    public PollProgram updatePollProgram(PollProgram pollProgram) {
+    public ProgramPoll updateProgramPoll(ProgramPoll pollProgram) {
         pollProgram = em.merge(pollProgram);
         return pollProgram;
     }
 
-    public List<PollProgram> getProgramPollsAlive()  {
-        TypedQuery<PollProgram> query = em.createNamedQuery(MobileTerminalConstants.POLL_PROGRAM_FIND_ALIVE, PollProgram.class);
+    public List<ProgramPoll> getProgramPollsAlive()  {
+        TypedQuery<ProgramPoll> query = em.createNamedQuery(MobileTerminalConstants.POLL_PROGRAM_FIND_ALIVE, ProgramPoll.class);
         query.setParameter("currentDate", OffsetDateTime.now(ZoneOffset.UTC));
         return query.getResultList();
     }
 
-    public List<PollProgram> getPollProgramRunningAndStarted()  {
-        TypedQuery<PollProgram> query = em.createNamedQuery(MobileTerminalConstants.POLL_PROGRAM_FIND_RUNNING_AND_STARTED, PollProgram.class);
+    public List<ProgramPoll> getProgramPollRunningAndStarted()  {
+        TypedQuery<ProgramPoll> query = em.createNamedQuery(MobileTerminalConstants.POLL_PROGRAM_FIND_RUNNING_AND_STARTED, ProgramPoll.class);
         query.setParameter("currentDate", OffsetDateTime.now(ZoneOffset.UTC));
-        List<PollProgram> pollPrograms = query.getResultList();
-        List<PollProgram> validPollPrograms = new ArrayList<>();
+        List<ProgramPoll> pollPrograms = query.getResultList();
+        List<ProgramPoll> validPollPrograms = new ArrayList<>();
 
-        for (PollProgram pollProgram : pollPrograms) {
+        for (ProgramPoll pollProgram : pollPrograms) {
             OffsetDateTime lastRun = pollProgram.getLatestRun();
             Integer frequency = pollProgram.getFrequency();
             OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
@@ -76,13 +76,13 @@ public class PollProgramDaoBean {
         return validPollPrograms;
     }
 
-    public PollProgram getPollProgramByGuid(String guid) {
-        return getPollProgramById(UUID.fromString(guid));
+    public ProgramPoll getProgramPollByGuid(String guid) {
+        return getProgramPollById(UUID.fromString(guid));
     }
 
-    public PollProgram getPollProgramById(UUID id) {
+    public ProgramPoll getProgramPollById(UUID id) {
         try {
-            TypedQuery<PollProgram> query = em.createNamedQuery(MobileTerminalConstants.POLL_PROGRAM_FIND_BY_ID, PollProgram.class);
+            TypedQuery<ProgramPoll> query = em.createNamedQuery(MobileTerminalConstants.POLL_PROGRAM_FIND_BY_ID, ProgramPoll.class);
             query.setParameter("id", id);
             return query.getSingleResult();
         } catch (NoResultException e) {

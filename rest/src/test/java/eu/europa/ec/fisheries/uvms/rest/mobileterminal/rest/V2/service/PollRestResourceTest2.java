@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
+package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.V2.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
@@ -40,13 +40,13 @@ import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 @RunAsClient
-public class PollRestResourceTest extends AbstractAssetRestTest {
+public class PollRestResourceTest2 extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
     public void getRunningProgramPollsTest() {
         Response response = getWebTargetExternal()
-                .path("/poll/running")
+                .path("/poll2/running")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get();
@@ -73,7 +73,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         input.setUserName("Test User");
 
         CreatePollResultDto createdPoll = getWebTargetExternal()
-                .path("/poll")
+                .path("/poll2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(input), CreatePollResultDto.class);
@@ -89,9 +89,8 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     public void createPollUsingOnlyAssetTest() {
         Asset asset = createAndRestBasicAsset();
         createAndRestMobileTerminal(asset);
-
         CreatePollResultDto createdPoll = getWebTargetExternal()
-                .path("poll")
+                .path("poll2")
                 .path("createPollForAsset")
                 .path(asset.getId().toString())
                 .queryParam("comment", "Test comment")
@@ -109,9 +108,8 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     @OperateOnDeployment("normal")
     public void createPollUsingOnlyAssetWOaMTTest() {
         Asset asset = createAndRestBasicAsset();
-
         Response response = getWebTargetExternal()
-                .path("poll")
+                .path("poll2")
                 .path("createPollForAsset")
                 .path(asset.getId().toString())
                 .queryParam("comment", "Test comment")
@@ -135,7 +133,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         mt.setAsset(asset);
 
         MobileTerminal createdMT = getWebTargetExternal()
-                .path("mobileterminal")
+                .path("mobileterminal2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mt), MobileTerminal.class);
@@ -157,7 +155,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         pluginService.getCapability().add(pollable);
 
         List<MobileTerminalPlugin> pluginList = getWebTargetExternal()
-                .path("plugin")
+                .path("plugin2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(Collections.singletonList(pluginService)),
@@ -190,7 +188,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         pollRequest.setUserName("Test User");
 
         CreatePollResultDto createdPoll = getWebTargetExternal()
-                .path("/poll")
+                .path("/poll2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(pollRequest), CreatePollResultDto.class);
@@ -211,7 +209,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         PollRequestType input = createProgramPoll(createdMT);
 
         CreatePollResultDto createdPoll = getWebTargetExternal()
-                .path("/poll")
+                .path("/poll2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(input), CreatePollResultDto.class);
@@ -227,7 +225,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         }
 
         PollDto pollDto = getWebTargetExternal()
-                .path("poll")
+                .path("poll2")
                 .path(pollGuid)
                 .path("stop")
                 .request(MediaType.APPLICATION_JSON)
@@ -242,7 +240,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         //and starting again
         pollDto = getWebTargetExternal()
-                .path("poll")
+                .path("poll2")
                 .path(pollGuid)
                 .path("start")
                 .request(MediaType.APPLICATION_JSON)
@@ -266,7 +264,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         PollRequestType input = createProgramPoll(createdMT);
 
         CreatePollResultDto createdPoll = getWebTargetExternal()
-                .path("/poll")
+                .path("/poll2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(input), CreatePollResultDto.class);
@@ -281,7 +279,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
             pollGuid = createdPoll.getSentPolls().get(0);
         }
         PollDto pollDto = getWebTargetExternal()
-                .path("poll")
+                .path("poll2")
                 .path(pollGuid)
                 .path("archive")
                 .request(MediaType.APPLICATION_JSON)
@@ -295,7 +293,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         assertEquals("FALSE", pollDto.getValue().get(8).getValue());
 
         String retVal = getWebTargetExternal()
-                .path("/poll/program/" + pollGuid)
+                .path("/poll2/program/" + pollGuid)
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(String.class);
@@ -326,7 +324,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         pollRequestType.setUserName("Test User");
 
         CreatePollResultDto createdPoll = getWebTargetExternal()
-                .path("/poll")
+                .path("/poll2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(pollRequestType), CreatePollResultDto.class);
@@ -355,7 +353,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         input.setPollSearchCriteria(pollSearchCriteria);
 
         PollChannelListDto pollChannelListDto = getWebTargetExternal()
-                .path("/poll/list")
+                .path("/poll2/list")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(input), PollChannelListDto.class);
@@ -384,7 +382,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         pollRequestType.setUserName("Test User");
 
         CreatePollResultDto createdPoll = getWebTargetExternal()
-                .path("/poll")
+                .path("/poll2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(pollRequestType), CreatePollResultDto.class);
@@ -417,9 +415,8 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         pollSearchCriteria.getCriterias().add(listCriteria);
         input.setPollSearchCriteria(pollSearchCriteria);
 
-
         PollChannelListDto pollChannelListDto = getWebTargetExternal()
-                .path("/poll/list")
+                .path("/poll2/list")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(input), PollChannelListDto.class);
@@ -448,7 +445,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         pollRequestType.setUserName("Test User");
 
         CreatePollResultDto createdPoll = getWebTargetExternal()
-                .path("/poll")
+                .path("/poll2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(pollRequestType), CreatePollResultDto.class);
@@ -477,7 +474,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         pollRequestType2.setUserName("Test User");
 
         CreatePollResultDto createdPoll2 = getWebTargetExternal()
-                .path("/poll")
+                .path("/poll2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(pollRequestType2), CreatePollResultDto.class);
@@ -510,9 +507,8 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         pollSearchCriteria.getCriterias().add(listCriteria2);
         input.setPollSearchCriteria(pollSearchCriteria);
 
-
         PollChannelListDto pollChannelListDto = getWebTargetExternal()
-                .path("/poll/list")
+                .path("/poll2/list")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(input), PollChannelListDto.class);
@@ -542,7 +538,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         pollRequestType.setUserName("Test User");
 
         CreatePollResultDto createdPoll = getWebTargetExternal()
-                .path("/poll")
+                .path("/poll2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(pollRequestType), CreatePollResultDto.class);
@@ -557,7 +553,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         input.getConnectIdList().add(asset.getId().toString());
 
         PollChannelListDto pollChannelListDto = getWebTargetExternal()
-                .path("/poll/getPollable")
+                .path("/poll/pollable")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(input), PollChannelListDto.class);
@@ -582,11 +578,13 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
     private Asset createAndRestBasicAsset(){
         Asset asset = AssetHelper.createBasicAsset();
+
         Asset createdAsset = getWebTargetExternal()
-                .path("asset")
+                .path("asset2")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(asset), Asset.class);
+
         assertNotNull(createdAsset);
         return createdAsset;
     }
