@@ -144,6 +144,11 @@ public class AssetDao {
         return query.getResultList();
     }
 
+    public List<String> getAllAvailableVesselTypes(){
+        TypedQuery<String> query = em.createNamedQuery(Asset.ASSET_ALL_AVAILABLE_VESSEL_TYPES, String.class);
+        return query.getResultList();
+    }
+
     public Long getAssetCount(List<SearchKeyValue> searchFields, Boolean isDynamic, boolean includeInactivated) {
         try {
             AuditQuery query = createAuditQuery(searchFields, isDynamic, includeInactivated);

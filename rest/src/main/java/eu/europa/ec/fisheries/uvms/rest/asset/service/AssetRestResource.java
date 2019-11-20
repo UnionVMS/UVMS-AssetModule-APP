@@ -104,6 +104,22 @@ public class AssetRestResource {
         }
     }
 
+
+    @GET
+    @Path("vesselTypes")
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public Response getVesselTypes() {
+        try {
+            List<String> vesselTypes = assetDao.getAllAvailableVesselTypes();
+            String returnString = objectMapper().writeValueAsString(vesselTypes);
+            return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception e) {
+            LOG.error("Error when getting vessel types list.", e);
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+        }
+    }
+
+
     /**
      *
      * @responseMessage 200 Asset list successfully retrieved
