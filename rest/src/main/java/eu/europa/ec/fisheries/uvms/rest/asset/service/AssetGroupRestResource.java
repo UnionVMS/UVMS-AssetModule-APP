@@ -11,13 +11,12 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
-import eu.europa.ec.fisheries.uvms.rest.AppException;
-import eu.europa.ec.fisheries.uvms.rest.AppInfoCodes;
 import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
@@ -74,15 +73,14 @@ public class AssetGroupRestResource {
             @ApiResponse(code = 200, message = "AssetGroup list successfully retrieved")})
     @Path("list")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetGroupListByUser(@ApiParam(value = "user", required = true) @QueryParam(value = "user") String user) {
+    public Response getAssetGroupListByUser(@ApiParam(value = "user", required = true) @QueryParam(value = "user") String user) throws Exception {
         try {
             List<AssetGroup> assetGroups = assetGroupService.getAssetGroupList(user);
             String response = objectMapper().writeValueAsString(assetGroups);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            String msg = String.format(AppInfoCodes.AssetGroupListByUser.getDescription(), user);
-            LOG.error(msg, user, e);
-            throw new AppException(AppInfoCodes.AssetGroupListByUser.getCode(), msg, ExceptionUtils.getRootCause(e));
+            LOG.error("Error when retrieving AssetGroup list {}", user, e);
+            throw e;
         }
     }
 
