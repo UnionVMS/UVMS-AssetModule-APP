@@ -397,6 +397,30 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         assertThat(assetList.size(), is(1));
         assertThat(assetList.get(0).getId(), is(createdAsset.getId()));
     }
+
+    @Test
+    @RunAsClient
+    @OperateOnDeployment("normal")
+    public void getAssetListFromShipType() {
+        Asset asset = AssetHelper.createBasicAsset();
+        String testVesselType = "TestVesselType";
+        asset.setVesselType(testVesselType);
+        Asset createdAsset = sendAssetToCreation(asset);
+
+        AssetQuery query = new AssetQuery();
+        query.setVesselType(Collections.singletonList(testVesselType));
+
+        AssetListResponse listResponse = getWebTargetExternal()
+                .path("asset")
+                .path("list")
+                .queryParam("size","1000")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(query), AssetListResponse.class);
+
+        List<Asset> assetList = listResponse.getAssetList();
+        assertTrue(assetList.stream().anyMatch(a -> a.getId().equals(createdAsset.getId())));
+    }
     
     @Test
     @RunAsClient

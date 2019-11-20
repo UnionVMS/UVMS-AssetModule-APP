@@ -46,6 +46,7 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.*;
           @NamedQuery(name = ASSET_FIND_BY_ALL_IDENTIFIERS, query = "SELECT v FROM Asset v WHERE (v.cfr = :cfr OR v.ircs = :ircs OR v.imo = :imo OR v.mmsi = :mmsi OR v.iccat = :iccat OR v.uvi = :uvi OR v.gfcm = :gfcm) AND v.active = true"),
           @NamedQuery(name = ASSET_FIND_BY_MMSI_OR_IRCS, query = "SELECT a FROM Asset a WHERE (a.ircs = :ircs OR a.mmsi = :mmsi) AND a.active = true"),
           @NamedQuery(name = ASSET_MICRO_ASSET_BY_LIST, query = "SELECT new eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset(a.id, a.flagStateCode, a.name, a.vesselType, a.ircs, a.cfr, a.externalMarking, a.lengthOverAll ) FROM Asset a WHERE a.id in :idList"),
+          @NamedQuery(name = ASSET_ALL_AVAILABLE_VESSEL_TYPES, query = "SELECT DISTINCT a.vesselType FROM Asset a"),
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Asset implements Serializable {
@@ -62,6 +63,7 @@ public class Asset implements Serializable {
     public static final String ASSET_FIND_BY_ALL_IDENTIFIERS = "Asset.findByAllIds";
     public static final String ASSET_MICRO_ASSET_BY_LIST = "Asset.microAssetByList";
     public static final String ASSET_FIND_BY_MMSI_OR_IRCS = "Asset.findByMmsiOrIrcs";
+    public static final String ASSET_ALL_AVAILABLE_VESSEL_TYPES = "Asset.allAvailableVesselTypes";
 
     private static final long serialVersionUID = -320627625723663100L;
 

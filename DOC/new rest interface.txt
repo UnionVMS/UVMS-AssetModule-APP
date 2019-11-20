@@ -1,4 +1,4 @@
-valid as of 15/10/2019
+valid as of 20/11/2019
 
 asset: asset and mt now only sends the id for its connected asset/mt
 ? = get variable
@@ -29,6 +29,7 @@ New:																Old:
 	
 /asset
 	POST list :AssetQuery ?page ?size ?dynamic ?includeInactivated		no change	
+	GET vesselTypes														new
 	POST listcount:AssetQuery ?dynamic ?includeInactivated				no change
 	GET	{assetId}														no change
 	POST :Asset		<- create											no change

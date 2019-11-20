@@ -27,6 +27,7 @@ public enum SearchFields {
     GFCM("gfcm"),
     HOMEPORT("portOfRegistration"),
     LICENSE("licenceType"),
+    VESSEL_TYPE("vesselType"),
     GUID("id", SearchFieldType.ID),
     HIST_GUID("historyId", SearchFieldType.ID),
     GEAR_TYPE("gearFishingType", SearchFieldType.STRING),

@@ -83,6 +83,26 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void getVesselTypeTest() {
+        Asset asset = AssetHelper.createBasicAsset();
+        String vesselType = "VesselTypeTest";
+        asset.setVesselType(vesselType);
+        Asset createdAsset = restCreateAsset(asset);
+
+        List<String> vesselTypes = getWebTargetExternal()
+                .path("asset")
+                .path("vesselTypes")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(new GenericType<List<String>>() {});
+
+        assertNotNull(vesselTypes);
+        assertFalse(vesselTypes.isEmpty());
+        assertTrue(vesselTypes.contains(vesselType));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void getAssetWithAttachedMTTest() throws IOException {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = restCreateAsset(asset);

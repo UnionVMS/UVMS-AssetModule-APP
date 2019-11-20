@@ -94,6 +94,9 @@ public class SearchFieldMapper {
         if (query.getDate() != null) {
             searchValues.add(new SearchKeyValue(SearchFields.DATE, Arrays.asList(query.getDate().toString())));
         }
+        if (query.getVesselType() != null) {
+            searchValues.add(new SearchKeyValue(SearchFields.VESSEL_TYPE, query.getVesselType()));
+        }
         return searchValues;
     }
 
