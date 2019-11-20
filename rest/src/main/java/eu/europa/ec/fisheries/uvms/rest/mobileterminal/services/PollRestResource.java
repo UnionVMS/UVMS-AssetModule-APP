@@ -63,49 +63,49 @@ public class PollRestResource {
     @POST
     @Path("/")
     @RequiresFeature(UnionVMSFeature.managePolls)
-    public Response createPoll(PollRequestType createPoll) {
+    public Response createPoll(PollRequestType createPoll)  throws Exception{
         LOG.info("Create poll invoked in rest layer:{}",createPoll);
         try {
             CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(createPoll);
             return Response.ok(createPollResultDto).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when creating poll {}] {}",createPoll, ex.getStackTrace());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
+            throw ex;
         }
     }
 
     @POST
     @Path("createPollForAsset/{assetId}")
     @RequiresFeature(UnionVMSFeature.managePolls)
-    public Response createPollForAsset(@PathParam("assetId") String assetId, @QueryParam("comment") String comment) {
+    public Response createPollForAsset(@PathParam("assetId") String assetId, @QueryParam("comment") String comment)  throws Exception{
         try {
             UUID asset = UUID.fromString(assetId);
             String username = request.getRemoteUser();
             return Response.ok(pollServiceBean.createPollForAsset(asset, PollType.MANUAL_POLL, username, comment)).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when creating poll for {}] {}",assetId, ex);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
+            throw ex;
         }
     }
 
     @GET
     @Path("/running")
     @RequiresFeature(UnionVMSFeature.viewMobileTerminalPolls)
-    public Response getRunningProgramPolls() {
+    public Response getRunningProgramPolls()  throws Exception{
         LOG.info("Get running program polls invoked in rest layer");
         try {
             List<PollDto> polls = pollServiceBean.getRunningProgramPolls();
             return Response.ok(polls).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting running program polls ] {}", (Object) ex.getStackTrace());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
+            throw ex;
         }
     }
 
     @PUT
     @Path("{pollProgramId}/start/")
     @RequiresFeature(UnionVMSFeature.managePolls)
-    public Response startProgramPoll(@PathParam("pollProgramId") String pollId) {
+    public Response startProgramPoll(@PathParam("pollProgramId") String pollId)  throws Exception{
         LOG.info("Start poll invoked in rest layer:{}",pollId);
         try {
             PollResponseType pollResponse = pollServiceBean.startProgramPoll(pollId, request.getRemoteUser());
@@ -113,14 +113,14 @@ public class PollRestResource {
             return Response.ok(poll).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when starting program poll {}] {}", pollId, ex.getStackTrace());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
+            throw ex;
         }
     }
 
     @PUT
     @Path("{pollProgramId}/stop/")
     @RequiresFeature(UnionVMSFeature.managePolls)
-    public Response stopProgramPoll(@PathParam("pollProgramId") String pollId) {
+    public Response stopProgramPoll(@PathParam("pollProgramId") String pollId)  throws Exception{
         LOG.info("Stop poll invoked in rest layer:{}",pollId);
         try {
             PollResponseType pollResponse = pollServiceBean.stopProgramPoll(pollId, request.getRemoteUser());
@@ -128,14 +128,15 @@ public class PollRestResource {
             return Response.ok(poll).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when stopping program poll {} ] {}",pollId, ex.getStackTrace());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
+            throw ex;
         }
     }
 
     @PUT
     @Path("{pollProgramId}/archive/")
     @RequiresFeature(UnionVMSFeature.managePolls)
-    public Response archiveProgramPoll(@PathParam("pollProgramId") String pollId) { // This gives a poll the status "ARCHIVED"
+    public Response archiveProgramPoll(@PathParam("pollProgramId") String pollId)  throws Exception{
+        // This gives a poll the status "ARCHIVED"
         LOG.info("Archive poll invoked in rest layer:{}",pollId);
         try {
             PollResponseType pollResponse = pollServiceBean.inactivateProgramPoll(pollId, request.getRemoteUser());
@@ -143,42 +144,42 @@ public class PollRestResource {
             return Response.ok(poll).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when inactivating program poll {}] {}",pollId, ex.getStackTrace());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
+            throw ex;
         }
     }
 
     @POST
     @Path("/list")
     @RequiresFeature(UnionVMSFeature.viewMobileTerminalPolls)
-    public Response getPollBySearchCriteria(PollListQuery query) {
+    public Response getPollBySearchCriteria(PollListQuery query)  throws Exception{
         LOG.info("Get poll by search criteria invoked in rest layer:{}",query);
         try {
         	PollChannelListDto pollChannelList = pollServiceBean.getPollBySearchCriteria(query);
             return Response.ok(pollChannelList).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting poll by search criteria {}] {}",query, ex.getStackTrace());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
+            throw ex;
         }
     }
 
     @POST
     @Path("/getPollable")
     @RequiresFeature(UnionVMSFeature.viewMobileTerminalPolls)
-    public Response getPollableChannels(PollableQuery query) {
+    public Response getPollableChannels(PollableQuery query)  throws Exception{
         LOG.info("Get pollables invoked in rest layer:{}",query);
         try {
             PollChannelListDto pollChannelList = mobileTerminalServiceBean.getPollableMobileTerminal(query);
             return Response.ok(pollChannelList).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting poll by search criteria {}] {}", query, ex.getStackTrace());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
+            throw ex;
         }
     }
 
     @GET
     @Path("/program/{pollProgramId}")
     @RequiresFeature(UnionVMSFeature.viewMobileTerminalPolls)
-    public Response getPollProgram(@PathParam("pollProgramId") String pollProgramId) {
+    public Response getPollProgram(@PathParam("pollProgramId") String pollProgramId)  throws Exception{
         try {
             PollProgram pollProgram = pollProgramDao.getPollProgramByGuid(pollProgramId);
             ObjectMapper objectMapper = new ObjectMapper();
@@ -186,7 +187,8 @@ public class PollRestResource {
             String returnString = objectMapper.writeValueAsString(pollProgram);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
+            LOG.error("getPollProgram", ex.getStackTrace());
+            throw ex;
 
         }
     }
