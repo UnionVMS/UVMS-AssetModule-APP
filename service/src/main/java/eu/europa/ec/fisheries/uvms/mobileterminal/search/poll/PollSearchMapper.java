@@ -135,15 +135,16 @@ public class PollSearchMapper {
 				} else {
 					builder.append(OPERATOR);
 				}
-				if(keyValue.getSearchField().equals(PollSearchField.TERMINAL_TYPE)) {
-					builder.append("mt.").append(keyValue.getSearchField().getSqlColumnName());
-				} else if(searchTable.equals(SearchTable.CONFIGURATION_POLL)) {
-					builder.append(searchTable.getTableAlias()).append(".").append(keyValue.getSearchField().getSqlColumnName());
+
+				if(keyValue.getSearchField().equals(PollSearchField.POLL_TYPE) &&
+						(searchTable.equals(SearchTable.CONFIGURATION_POLL) || searchTable.equals(SearchTable.SAMPLING_POLL))) {
+					builder.append(searchTable.getTableAlias()).append(".")
+							.append(keyValue.getSearchField().getSqlColumnName());
 				} else {
-					builder.append(keyValue.getSearchField().getTable().getTableAlias()).append(".").append(keyValue.getSearchField().getSqlColumnName());
+					builder.append(keyValue.getSearchField().getTable().getTableAlias()).append(".")
+							.append(keyValue.getSearchField().getSqlColumnName());
 				}
 				builder.append(" IN (:").append(keyValue.getSearchField().getSqlReplaceToken()).append(") ");
-
 			}
 		}
 		return builder.toString();
