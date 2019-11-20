@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollMobileTerminal;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
@@ -47,7 +48,9 @@ public class InternalRestResourceTest2 extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
                 .get();
         
-        assertThat(response.getStatus(), is(Status.INTERNAL_SERVER_ERROR.getStatusCode()));
+
+        assertThat(response.getStatus(), is(Status.OK.getStatusCode()));
+
     }
     
     @Test
@@ -342,7 +345,7 @@ public class InternalRestResourceTest2 extends AbstractAssetRestTest {
                 .post(Entity.json(input), Response.class);
 
         assertNotNull(response);
-        assertEquals(500, response.getStatus());
+        assertEquals(200, response.getStatus());
     }
 
     @Test

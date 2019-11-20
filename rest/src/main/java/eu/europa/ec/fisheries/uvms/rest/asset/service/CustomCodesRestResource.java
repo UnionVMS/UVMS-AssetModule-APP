@@ -39,13 +39,13 @@ public class CustomCodesRestResource {
             @ApiResponse(code = 500, message = "Error when create custom code"),
             @ApiResponse(code = 200, message = "Success when create custom code")})
     public Response createCustomCode(
-            @ApiParam(value = "customCode", required = true) CustomCode customCode) {
+            @ApiParam(value = "customCode", required = true) CustomCode customCode) throws Exception {
         try {
             CustomCode createdCustomCode = customCodesSvc.create(customCode);
             return Response.ok(createdCustomCode).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
+            throw e;
         }
     }
 
@@ -56,12 +56,12 @@ public class CustomCodesRestResource {
             @ApiResponse(code = 200, message = "Success when createing custom code")})
     @Path("replace")
     public Response replace(
-            @ApiParam(value = "customCode", required = true) CustomCode customCode) {
+            @ApiParam(value = "customCode", required = true) CustomCode customCode)  throws Exception {
         try {
             CustomCode replacedCustomCode = customCodesSvc.replace(customCode);
             return Response.ok(replacedCustomCode).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
+            throw e;
         }
     }
 
@@ -75,7 +75,7 @@ public class CustomCodesRestResource {
             @ApiParam(value = "constants", required = true) @PathParam("constant") String constant,
             @ApiParam(value = "code", required = true) @PathParam("code") String code,
             @ApiParam(value = "validFromDate", required = true) @QueryParam(value = "validFromDate")  String   validFromDate,
-            @ApiParam(value = "validToDate", required = true) @QueryParam(value = "validToDate") String validToDate)
+            @ApiParam(value = "validToDate", required = true) @QueryParam(value = "validToDate") String validToDate)  throws Exception
     {
         try {
             OffsetDateTime fromDate = (validFromDate == null ? CustomCodesPK.STANDARD_START_DATE : OffsetDateTime.parse(validFromDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
@@ -84,7 +84,7 @@ public class CustomCodesRestResource {
             return Response.ok(customCode).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when fetching CustomCode. " + validFromDate + " " +  validToDate);
-            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
+            throw e;
         }
     }
 
@@ -97,7 +97,7 @@ public class CustomCodesRestResource {
     public Response exists(@ApiParam(value = "constants", required = true) @PathParam("constant") String constant,
                            @ApiParam(value = "code", required = true) @PathParam("code") String code,
                            @ApiParam(value = "validFromDate", required = true) @QueryParam(value = "validFromDate") String validFromDate,
-                           @ApiParam(value = "validToDate", required = true) @QueryParam(value = "validToDate") String validToDate)
+                           @ApiParam(value = "validToDate", required = true) @QueryParam(value = "validToDate") String validToDate)  throws Exception
     {
         try {
 
@@ -113,7 +113,7 @@ public class CustomCodesRestResource {
             return Response.status(200).entity(exists).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
+            throw e;
         }
     }
 
@@ -125,7 +125,7 @@ public class CustomCodesRestResource {
     @Path("/{constant}/{code}/getfordate")
     public Response getForDate(@ApiParam(value = "constants", required = true) @PathParam("constant") String constant,
                            @ApiParam(value = "code", required = true) @PathParam("code") String code,
-                           @ApiParam(value = "validToDate", required = true) @QueryParam(value = "date") String date)
+                           @ApiParam(value = "validToDate", required = true) @QueryParam(value = "date") String date)  throws Exception
     {
         try {
 
@@ -135,7 +135,7 @@ public class CustomCodesRestResource {
             return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
+            throw e;
         }
     }
 
@@ -147,7 +147,7 @@ public class CustomCodesRestResource {
     @Path("/{constant}/{code}/verify")
     public Response verify(@ApiParam(value = "constants", required = true) @PathParam("constant") String constant,
                                @ApiParam(value = "code", required = true) @PathParam("code") String code,
-                               @ApiParam(value = "validToDate", required = true) @QueryParam(value = "date") String date)
+                               @ApiParam(value = "validToDate", required = true) @QueryParam(value = "date") String date)  throws Exception
     {
         try {
 
@@ -157,7 +157,7 @@ public class CustomCodesRestResource {
             return Response.ok(exists).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
+            throw e;
         }
     }
 
@@ -167,13 +167,13 @@ public class CustomCodesRestResource {
             @ApiResponse(code = 500, message = "Error when retrieving constants list"),
             @ApiResponse(code = 200, message = "Constants successfully retrieved")})
     @Path("/listconstants")
-    public Response getAllConstants() {
+    public Response getAllConstants()  throws Exception{
         try {
             List<String> constants = customCodesSvc.getAllConstants();
             return Response.ok(constants).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
+            throw e;
         }
     }
 
@@ -183,13 +183,13 @@ public class CustomCodesRestResource {
             @ApiResponse(code = 500, message = "Error when retrieving code list for given constants list"),
             @ApiResponse(code = 200, message = "Codes for constants  successfully retrieved")})
     @Path("/listcodesforconstant/{constant}")
-    public Response getCodesForConstant(@PathParam("constant") String constant) {
+    public Response getCodesForConstant(@PathParam("constant") String constant)   throws Exception{
         try {
             List<CustomCode> customCodes = customCodesSvc.getAllFor(constant);
             return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
+            throw e;
         }
     }
 
@@ -202,7 +202,7 @@ public class CustomCodesRestResource {
     public Response deleteCustomCode(@ApiParam(value = "constants", required = true) @PathParam("constant") String constant,
                                      @ApiParam(value = "code", required = true) @PathParam("code") String code,
                                      @ApiParam(value = "validFromDate", required = true) @QueryParam(value = "validFromDate") String validFromDate,
-                                     @ApiParam(value = "validToDate", required = true) @QueryParam(value = "validToDate") String validToDate)
+                                     @ApiParam(value = "validToDate", required = true) @QueryParam(value = "validToDate") String validToDate)  throws Exception
     {
         try {
 
@@ -212,7 +212,7 @@ public class CustomCodesRestResource {
             return Response.ok().header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
+            throw e;
         }
     }
 }

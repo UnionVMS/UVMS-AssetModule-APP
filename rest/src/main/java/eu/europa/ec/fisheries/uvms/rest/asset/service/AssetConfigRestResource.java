@@ -54,61 +54,61 @@ public class AssetConfigRestResource {
 
     @GET
     @Path("/searchfields")
-    public Response getConfigSearchFields() {
+    public Response getConfigSearchFields() throws Exception  {
         try {
             return Response.ok(ConfigSearchField.values()).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
     
     @GET
     @Path(value = "/parameters")
-    public Response getParameters() {
+    public Response getParameters()  throws Exception {
         try {
         	Map<String, String> parameters = configService.getParameters();
         	return Response.ok(parameters).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting config search fields.");
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
 
     //Stuff copied from MT
     @GET
     @Path("/MT/transponders")
-    public Response getConfigTransponders() {
+    public Response getConfigTransponders()  throws Exception  {
         try {
             LOG.info("Get config transponders invoked in rest layer.");
             List<TerminalSystemType> list = configServiceMT.getTerminalSystems();
             return Response.ok(MTMobileTerminalConfig.mapConfigTransponders(list)).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting configTransponders {} ] {}", ex.getMessage(), ex.getStackTrace());
-            return Response.serverError().entity(ExceptionUtils.getRootCause(ex)).build();
+            throw ex;
         }
     }
     
     @GET
     @Path("/MT/searchfields")
-    public Response getMTConfigSearchFields() {
+    public Response getMTConfigSearchFields()  throws Exception  {
         LOG.info("Get config search fields invoked in rest layer.");
         try {
             return Response.ok(SearchKey.values()).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting config search fields ] {}", ex.getStackTrace());
-            return Response.serverError().entity(ExceptionUtils.getRootCause(ex)).build();
+            throw ex;
         }
     }
 
     @GET
     @Path("/MT/")
-    public Response getMTConfiguration() {
+    public Response getMTConfiguration()  throws Exception  {
         try {
             List<ConfigList> config = configServiceMT.getConfigValues();
             return Response.ok(MTMobileTerminalConfig.mapConfigList(config)).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
-            return Response.serverError().entity(ExceptionUtils.getRootCause(ex)).build();
+            throw ex;
         }
     }
 }
