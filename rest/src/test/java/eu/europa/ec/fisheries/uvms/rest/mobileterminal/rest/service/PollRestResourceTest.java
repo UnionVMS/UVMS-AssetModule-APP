@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListPagination;
@@ -36,6 +37,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
@@ -125,9 +127,11 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
                 .post(Entity.json(""), Response.class);
 
         assertNotNull(response);
-        assertEquals(500, response.getStatus());
-        String jsonResponse = response.readEntity(String.class);
-        assertTrue(jsonResponse, jsonResponse.contains("No active MT for this asset, unable to poll"));
+        assertEquals(200, response.getStatus());
+        Integer code  = response.readEntity(JsonNode.class).path("code").intValue();
+        assertThat(code, is(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()));
+
+
     }
 
     @Test
