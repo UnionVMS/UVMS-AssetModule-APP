@@ -27,27 +27,4 @@
         </createIndex>
     </changeSet>
 
-    <changeSet author="joemat" id="Create gin index on asset name">
-        <createIndex indexName="gin_test_idx"
-                     tableName="asset">
-            <column name="name"/>
-        </createIndex>
-
-        <!-- Unfortunatley Liquibase doesn't allow you to specify index type yet -->
-
-        <!-- http://forum.liquibase.org/topic/create-index-and-order -->
-
-        <modifySql>
-
-            <replace replace="ON asset(" with="ON asset USING gin("/>
-            <replace replace="name" with="name gin_trgm_ops"/>
-
-        </modifySql>
-        <!--modifySql>
-
-            <replace replace="pg_catalog.&quot;default&quot;(" with="pg_catalog.&quot;default&quot; gin_trgm_ops("/>
-
-        </modifySql-->
-    </changeSet>
-
 </databaseChangeLog>
