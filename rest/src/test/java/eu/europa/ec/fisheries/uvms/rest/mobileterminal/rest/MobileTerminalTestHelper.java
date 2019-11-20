@@ -36,6 +36,7 @@ public class MobileTerminalTestHelper {
         mobileTerminal.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
         serialNumber = generateARandomStringWithMaxLength(10);
         mobileTerminal.setSerialNo(serialNumber);
+        mobileTerminal.setInstalledBy("Mike Great");
 
         mobileTerminal.setSatelliteNumber("S" + generateARandomStringWithMaxLength(4));
         mobileTerminal.setAntenna("A");
@@ -67,7 +68,6 @@ public class MobileTerminalTestHelper {
         channel.setExpectedFrequencyInPort(Duration.ofSeconds(10800));
         channel.setLesDescription("Thrane&Thrane");
         channel.setDNID("1" + generateARandomStringWithMaxLength(3));
-        channel.setInstalledBy("Mike Great");
         channel.setArchived(false);
         channel.setConfigChannel(true);
         channel.setDefaultChannel(true);
@@ -119,7 +119,7 @@ public class MobileTerminalTestHelper {
             mt.setAsset(asset);
 
         return webTarget
-                .path("mobileterminal2")
+                .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .post(Entity.json(mt), MobileTerminal.class);
@@ -127,7 +127,7 @@ public class MobileTerminalTestHelper {
 
     public static MobileTerminal restMobileTerminalUpdate(WebTarget webTarget, MobileTerminal mt, String token){
         return webTarget
-                .path("mobileterminal2")
+                .path("mobileterminal")
                 .queryParam("comment", mt.getComment())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, token)

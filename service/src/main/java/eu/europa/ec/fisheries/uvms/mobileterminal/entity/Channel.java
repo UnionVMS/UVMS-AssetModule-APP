@@ -131,19 +131,6 @@ public class Channel implements Serializable {
 	@Column(name="member_number")
 	private String memberNumber;
 
-	@Column(name="installed_by")
-	private String installedBy;
-
-	@JsonSerialize(using = OffsetDateTimeSerializer.class)
-	@JsonDeserialize(using = OffsetDateTimeDeserializer.class)
-	@Column(name="install_date")
-	private OffsetDateTime installDate;
-
-	@JsonSerialize(using = OffsetDateTimeSerializer.class)
-	@JsonDeserialize(using = OffsetDateTimeDeserializer.class)
-	@Column(name="uninstall_date")
-	private OffsetDateTime uninstallDate;
-
 	@JsonSerialize(using = OffsetDateTimeSerializer.class)
 	@JsonDeserialize(using = OffsetDateTimeDeserializer.class)
 	@Column(name="start_date")
@@ -300,30 +287,6 @@ public class Channel implements Serializable {
 		this.memberNumber = memberNumber;
 	}
 
-	public String getInstalledBy() {
-		return installedBy;
-	}
-
-	public void setInstalledBy(String installedBy) {
-		this.installedBy = installedBy;
-	}
-
-	public OffsetDateTime getInstallDate() {
-		return installDate;
-	}
-
-	public void setInstallDate(OffsetDateTime installDate) {
-		this.installDate = installDate;
-	}
-
-	public OffsetDateTime getUninstallDate() {
-		return uninstallDate;
-	}
-
-	public void setUninstallDate(OffsetDateTime uninstallDate) {
-		this.uninstallDate = uninstallDate;
-	}
-
 	public OffsetDateTime getStartDate() {
 		return startDate;
 	}
@@ -361,9 +324,6 @@ public class Channel implements Serializable {
 				Objects.equals(frequencyGracePeriod, channel.frequencyGracePeriod) &&
 				Objects.equals(lesDescription, channel.lesDescription) &&
 				Objects.equals(memberNumber, channel.memberNumber) &&
-				Objects.equals(installedBy, channel.installedBy) &&
-				Objects.equals(installDate, channel.installDate) &&
-				Objects.equals(uninstallDate, channel.uninstallDate) &&
 				Objects.equals(startDate, channel.startDate) &&
 				Objects.equals(endDate, channel.endDate);
 	}
@@ -371,6 +331,6 @@ public class Channel implements Serializable {
 	@Override
 	public int hashCode() {
 
-		return Objects.hash(id, historyId, archived, updateTime, updateUser, mobileTerminal, name, active, defaultChannel, configChannel, pollChannel, DNID, expectedFrequency, expectedFrequencyInPort, frequencyGracePeriod, lesDescription, memberNumber, installedBy, installDate, uninstallDate, startDate, endDate);
+		return Objects.hash(id, historyId, archived, updateTime, updateUser, mobileTerminal, name, active, defaultChannel, configChannel, pollChannel, DNID, expectedFrequency, expectedFrequencyInPort, frequencyGracePeriod, lesDescription, memberNumber, startDate, endDate);
 	}
 }

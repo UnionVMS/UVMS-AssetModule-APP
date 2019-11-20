@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
@@ -23,6 +24,7 @@ import io.swagger.annotations.*;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -40,9 +42,9 @@ import java.util.UUID;
 @Api(value = "Asset Group Service")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class AssetGroupResource {
+public class AssetGroupRestResource {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AssetGroupResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AssetGroupRestResource.class);
 
     @Context
     private HttpServletRequest servletRequest;
@@ -71,14 +73,14 @@ public class AssetGroupResource {
             @ApiResponse(code = 200, message = "AssetGroup list successfully retrieved")})
     @Path("list")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetGroupListByUser(@ApiParam(value = "user", required = true) @QueryParam(value = "user") String user) {
+    public Response getAssetGroupListByUser(@ApiParam(value = "user", required = true) @QueryParam(value = "user") String user) throws Exception {
         try {
             List<AssetGroup> assetGroups = assetGroupService.getAssetGroupList(user);
             String response = objectMapper().writeValueAsString(assetGroups);
-            return Response.ok(response).build();
+            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            LOG.error("Error when getting asset group list by user. {}", user, e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            LOG.error("Error when retrieving AssetGroup list {}", user, e);
+            throw e;
         }
     }
 
@@ -92,13 +94,13 @@ public class AssetGroupResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when retrieving AssetGroup list"),
             @ApiResponse(code = 200, message = "AssetGroup list successfully retrieved")})
-    @Path("/{id}")
+    @Path("/{assetGroupId}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetGroupById(@ApiParam(value = "AssetGroup Id", required = true) @PathParam(value = "id") final UUID id) {
+    public Response getAssetGroupById(@ApiParam(value = "AssetGroup Id", required = true) @PathParam(value = "assetGroupId") final UUID id) {
         try {
             AssetGroup assetGroup = assetGroupService.getAssetGroupById(id);
             String response = objectMapper().writeValueAsString(assetGroup);
-            return Response.ok(response).build();
+            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset by ID. ", id, e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
@@ -120,7 +122,7 @@ public class AssetGroupResource {
         try {
             String user = servletRequest.getRemoteUser();
             AssetGroup createdAssetGroup = assetGroupService.createAssetGroup(assetGroup, user);
-            return Response.ok(createdAssetGroup).build();
+            return Response.ok(createdAssetGroup).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when creating asset group: {}", assetGroup, e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
@@ -143,7 +145,7 @@ public class AssetGroupResource {
             String user = servletRequest.getRemoteUser();
             AssetGroup updatedAssetGroup = assetGroupService.updateAssetGroup(assetGroup, user);
             String response = objectMapper().writeValueAsString(updatedAssetGroup);
-            return Response.ok(response).build();
+            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when updating asset group. {}", assetGroup, e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
@@ -160,13 +162,13 @@ public class AssetGroupResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when delete AssetGroup"),
             @ApiResponse(code = 200, message = "AssetGroup successfully deleted")})
-    @Path("/{id}")
+    @Path("/{assetGroupId}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response deleteAssetGroup(@ApiParam(value = "AssetGroup id", required = true) @PathParam(value = "id") final UUID id) {
+    public Response deleteAssetGroup(@ApiParam(value = "AssetGroup id", required = true) @PathParam(value = "assetGroupId") final UUID id) {
         try {
             String user = servletRequest.getRemoteUser();
             assetGroupService.deleteAssetGroupById(id, user);
-            return Response.ok().build();
+            return Response.ok().header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when deleting asset group by id: {}", id, e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
@@ -178,13 +180,13 @@ public class AssetGroupResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when delete AssetGroup"),
             @ApiResponse(code = 200, message = "AssetGroup successfully deleted")})
-    @Path("/asset/{id}")
+    @Path("/asset/{assetId}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetGroupListByAssetId(@ApiParam(value = "Asset id", required = true) @PathParam(value = "id") UUID assetId) {
+    public Response getAssetGroupListByAssetId(@ApiParam(value = "Asset id", required = true) @PathParam(value = "assetId") UUID assetId) {
         try {
             List<AssetGroup> assetGroups = assetGroupService.getAssetGroupListByAssetId(assetId);
             String response = objectMapper().writeValueAsString(assetGroups);
-            return Response.ok(response).build();
+            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset group list by user. {}", assetId, toString(), e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
@@ -196,15 +198,15 @@ public class AssetGroupResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when create AssetGroupField"),
             @ApiResponse(code = 200, message = "AssetGroupField successfully deleted")})
-    @Path("/{id}/field")
+    @Path("/{assetGroupId}/field")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response createAssetGroupField(@ApiParam(value = "Parent AssetGroup id", required = true) @PathParam(value = "id") UUID parentAssetGroupId,
+    public Response createAssetGroupField(@ApiParam(value = "Parent AssetGroup id", required = true) @PathParam(value = "assetGroupId") UUID parentAssetGroupId,
                                           @ApiParam(value = "The AssetGroupField to be created", required = true) AssetGroupField assetGroupField) {
         try {
             String user = servletRequest.getRemoteUser();
             AssetGroupField createdAssetGroupField = assetGroupService.createAssetGroupField(parentAssetGroupId, assetGroupField, user);
             String response = objectMapper().writeValueAsString(createdAssetGroupField);
-            return Response.ok(response).build();
+            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when creating AssetGroupField. ", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
@@ -224,7 +226,7 @@ public class AssetGroupResource {
             String user = servletRequest.getRemoteUser();
             AssetGroupField updatedAssetGroupField = assetGroupService.updateAssetGroupField(assetGroupField, user);
             String response = objectMapper().writeValueAsString(updatedAssetGroupField);
-            return Response.ok(response).build();
+            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when creating AssetGroupField. ", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
@@ -236,14 +238,14 @@ public class AssetGroupResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when get AssetGroupField"),
             @ApiResponse(code = 200, message = "AssetGroupField successfully fetched")})
-    @Path("/field/{id}")
+    @Path("/field/{assetGroupFieldId}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetGroupField(@ApiParam(value = "AssetgroupField id", required = true) @PathParam(value = "id")  UUID id) {
+    public Response getAssetGroupField(@ApiParam(value = "AssetgroupField id", required = true) @PathParam(value = "assetGroupFieldId")  UUID id) {
 
         try {
             AssetGroupField fetchedAssetGroupField = assetGroupService.getAssetGroupField(id);
             String response = objectMapper().writeValueAsString(fetchedAssetGroupField);
-            return Response.ok(response).build();
+            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when creating AssetGroupField. ", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
@@ -255,15 +257,15 @@ public class AssetGroupResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when delete AssetGroupField"),
             @ApiResponse(code = 200, message = "AssetGroupField successfully deleted")})
-    @Path("/field/{id}")
+    @Path("/field/{assetGroupFieldId}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response deleteAssetGroupField(@ApiParam(value = "AssetGroupField id", required = true)   @PathParam(value = "id")  UUID assetGroupFieldId) {
+    public Response deleteAssetGroupField(@ApiParam(value = "AssetGroupField id", required = true)   @PathParam(value = "assetGroupFieldId")  UUID assetGroupFieldId) {
 
         try {
             String user = servletRequest.getRemoteUser();
             AssetGroupField fetchedAssetGroupField = assetGroupService.deleteAssetGroupField(assetGroupFieldId, user);
             String response = objectMapper().writeValueAsString(fetchedAssetGroupField);
-            return Response.ok(response).build();
+            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when delete AssetGroupField. ", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
@@ -275,14 +277,14 @@ public class AssetGroupResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when retrieving Assetgroupfields"),
             @ApiResponse(code = 200, message = "Assetgroupfields successfully retrieved")})
-    @Path("/{id}/fieldsForGroup")
+    @Path("/{assetGroupId}/fieldsForGroup")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response retrieveFieldsForGroup(@ApiParam(value = "AssetGroup id", required = true)  @PathParam(value = "id")  UUID assetGroupId) {
+    public Response retrieveFieldsForGroup(@ApiParam(value = "AssetGroup id", required = true)  @PathParam(value = "assetGroupId")  UUID assetGroupId) {
 
         try {
             List<AssetGroupField> fetchedAssetGroupFields = assetGroupService.retrieveFieldsForGroup(assetGroupId);
             String response = objectMapper().writeValueAsString(fetchedAssetGroupFields);
-            return Response.ok(response).build();
+            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when fetching AssetGroupFields. ", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
@@ -295,13 +297,13 @@ public class AssetGroupResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when delete Assetgroupfields"),
             @ApiResponse(code = 200, message = "Assetgroupfields successfully deleted")})
-    @Path("/{id}/fieldsForGroup")
+    @Path("/{assetGroupId}/fieldsForGroup")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response deleteFieldsForGroup(@ApiParam(value = "AssetGroup id", required = true)  @PathParam(value = "id")  UUID assetGroupId) {
+    public Response deleteFieldsForGroup(@ApiParam(value = "AssetGroup id", required = true)  @PathParam(value = "assetGroupId")  UUID assetGroupId) {
 
         try {
             assetGroupService.removeFieldsForGroup(assetGroupId);
-            return Response.ok().build();
+            return Response.ok().header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when fetching AssetGroupFields. ", e);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();

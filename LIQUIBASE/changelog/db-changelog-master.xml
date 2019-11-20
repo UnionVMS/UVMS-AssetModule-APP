@@ -29,6 +29,8 @@
 	<include file="v6.2.3/national_endpoint_parameter.xml" relativeToChangelogFile="true"/>
 	<include file="v6.2.6/poll_payload_remove_unused_columns.xml" relativeToChangelogFile="true"/>
 	<include file="v6.2.6/drop_old_poll_tables_and_create_new.xml" relativeToChangelogFile="true"/>
+	<include file="v6.2.7/move_installed_date_from_channel_to_mobileterminal.xml" relativeToChangelogFile="true"/>
+	<include file="v6.3.2/create_index_on_flagstate.xml" relativeToChangelogFile="true"/>
 
 
 </databaseChangeLog>

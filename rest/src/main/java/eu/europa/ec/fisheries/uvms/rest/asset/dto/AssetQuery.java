@@ -31,6 +31,7 @@ public class AssetQuery {
     private List<String> portOfRegistration;
     private List<String> licenseType;
     private List<String> producerName;
+    private List<String> vesselType;
     private String gearType;
     private Double minLength;
     private Double maxLength;
@@ -127,6 +128,13 @@ public class AssetQuery {
     }
     public void setProducerName(List<String> producerName) {
         this.producerName = producerName;
+    }
+    public List<String> getVesselType() {
+        return vesselType;
+    }
+
+    public void setVesselType(List<String> vesselType) {
+        this.vesselType = vesselType;
     }
     public String getGearType() {
         return gearType;

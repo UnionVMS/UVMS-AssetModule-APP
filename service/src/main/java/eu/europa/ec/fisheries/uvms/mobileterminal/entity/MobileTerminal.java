@@ -158,6 +158,19 @@ public class MobileTerminal implements Serializable {
 	@Column(name = "ior")
 	private Boolean indianOceanRegion = false;
 
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
+    @Column(name="install_date")
+    private OffsetDateTime installDate;
+
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
+    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
+    @Column(name="uninstall_date")
+    private OffsetDateTime uninstallDate;
+
+	@Column(name="installed_by")
+	private String installedBy;
+
 	public MobileTerminal() {
 	}
 
@@ -361,6 +374,30 @@ public class MobileTerminal implements Serializable {
 		this.indianOceanRegion = indianOceanRegion;
 	}
 
+    public OffsetDateTime getInstallDate() {
+        return installDate;
+    }
+
+    public void setInstallDate(OffsetDateTime installDate) {
+        this.installDate = installDate;
+    }
+
+    public OffsetDateTime getUninstallDate() {
+        return uninstallDate;
+    }
+
+    public void setUninstallDate(OffsetDateTime uninstallDate) {
+        this.uninstallDate = uninstallDate;
+    }
+
+	public String getInstalledBy() {
+		return installedBy;
+	}
+
+	public void setInstalledBy(String installedBy) {
+		this.installedBy = installedBy;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -368,21 +405,30 @@ public class MobileTerminal implements Serializable {
 		MobileTerminal that = (MobileTerminal) o;
 		return Objects.equals(id, that.id) &&
 				Objects.equals(historyId, that.historyId) &&
+				Objects.equals(plugin, that.plugin) &&
 				Objects.equals(archived, that.archived) &&
 				Objects.equals(active, that.active) &&
 				source == that.source &&
 				mobileTerminalType == that.mobileTerminalType &&
 				Objects.equals(updatetime, that.updatetime) &&
+				Objects.equals(createTime, that.createTime) &&
 				Objects.equals(updateuser, that.updateuser) &&
 				Objects.equals(serialNo, that.serialNo) &&
 				Objects.equals(satelliteNumber, that.satelliteNumber) &&
 				Objects.equals(antenna, that.antenna) &&
 				Objects.equals(transceiverType, that.transceiverType) &&
-				Objects.equals(westAtlanticOceanRegion, that.westAtlanticOceanRegion) &&
+				Objects.equals(softwareVersion, that.softwareVersion) &&
+				Objects.equals(channels, that.channels) &&
+				Objects.equals(asset, that.asset) &&
+				Objects.equals(assetId, that.assetId) &&
+				Objects.equals(comment, that.comment) &&
 				Objects.equals(eastAtlanticOceanRegion, that.eastAtlanticOceanRegion) &&
+				Objects.equals(westAtlanticOceanRegion, that.westAtlanticOceanRegion) &&
 				Objects.equals(pacificOceanRegion, that.pacificOceanRegion) &&
 				Objects.equals(indianOceanRegion, that.indianOceanRegion) &&
-				Objects.equals(softwareVersion, that.softwareVersion);
+				Objects.equals(installDate, that.installDate) &&
+				Objects.equals(uninstallDate, that.uninstallDate) &&
+				Objects.equals(installedBy, that.installedBy);
 	}
 
 	@Override

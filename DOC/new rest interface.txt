@@ -1,19 +1,19 @@
-valid as of 15/10/2019
+valid as of 20/11/2019
 
 asset: asset and mt now only sends the id for its connected asset/mt
 ? = get variable
 : = payload
 
 New:																Old:
-/config2
+/config
 	GET searchfields													no change
 	GET parameters														no change
 	GET MT/transponders													no change
 	GET MT/searchfields 												no change
 	GET MT																no change
-																		GET plugins 		moved to /plugin2
+																		GET plugins 		moved to /plugin
 																	
-/group2
+/group
 	GET list ?user														no change
 	GET {assetGroupId}													no change
 	POST :AssetGroup		<- create									no change
@@ -27,8 +27,9 @@ New:																Old:
 	GET {assetGroupId}/fieldsForGroup									no change
 	DELETE {assetGroupId}/fieldsForGroup								no change
 	
-/asset2
+/asset
 	POST list :AssetQuery ?page ?size ?dynamic ?includeInactivated		no change	
+	GET vesselTypes														new
 	POST listcount:AssetQuery ?dynamic ?includeInactivated				no change
 	GET	{assetId}														no change
 	POST :Asset		<- create											no change
@@ -50,7 +51,7 @@ New:																Old:
 	DELETE contacts/{contactId}											no change
 	POST microAssets :List AssetIds										no change
 	
-/customcodes2
+/customcodes
 	POST :CustomCode		<- create									no change
 	PUT replace :CustomCode			<- update							POST replace :CustomCode
 	GET {constant}/{code} ?validFromDate ?validToDate					GET {constant}/{code}/{validFromDate}/{validToDate}
@@ -61,7 +62,7 @@ New:																Old:
 	GET listcodesforconstant/{constant}									no change
 	DELETE {constant}/{code} ?validFromDate ?validToDate				DELETE {constant}/{code}/{validFromDate}/{validToDate}
 	
-/internal2
+/internal
 	GET asset/{idType : (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)}/{id}	no change
 	POST query :AssetQuery ?page ?size ?dynamic ?includeInactivated		no change
 	GET group/user/{user}												no change
@@ -83,7 +84,7 @@ New:																Old:
 	POST poll															no change
 	POST createPollForAsset/{id}										no change
 	
-/mobileterminal2
+/mobileterminal
 	POST :MobileTerminal	<- create									no change
 	PUT :MobileTerminal		<- update									no change
 	GET {MTId}															no change
@@ -99,11 +100,11 @@ New:																Old:
 	GET history/getMtHistoryForAsset/{assetId} ?maxNbr					GET history/asset/{assetId} ?maxNbr
 	GET history/getAssetHistoryForMT/{mtId}	?maxNbr						GET history/mobileterminal/{mtId} ?maxNbr
 	
-/plugin2
+/plugin
 	POST :List PluginService											no change
 	GET plugins															added from config
 	
-/poll2
+/poll
 	POST :PollRequestType	<- create									no change
 	POST createPollForAsset/{assetId} ?comment							no change
 	GET running															no change

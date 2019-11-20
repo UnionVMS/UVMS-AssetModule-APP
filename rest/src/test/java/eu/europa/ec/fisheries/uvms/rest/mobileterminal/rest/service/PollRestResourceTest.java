@@ -45,7 +45,6 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     @Test
     @OperateOnDeployment("normal")
     public void getRunningProgramPollsTest() {
-
         Response response = getWebTargetExternal()
                 .path("/poll/running")
                 .request(MediaType.APPLICATION_JSON)
@@ -89,9 +88,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     @OperateOnDeployment("normal")
     public void createPollUsingOnlyAssetTest() {
         Asset asset = createAndRestBasicAsset();
-        MobileTerminal createdMT = createAndRestMobileTerminal(asset);
-
-
+        createAndRestMobileTerminal(asset);
 
         CreatePollResultDto createdPoll = getWebTargetExternal()
                 .path("poll")
@@ -112,8 +109,6 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     @OperateOnDeployment("normal")
     public void createPollUsingOnlyAssetWOaMTTest() {
         Asset asset = createAndRestBasicAsset();
-
-
 
         Response response = getWebTargetExternal()
                 .path("poll")
@@ -232,10 +227,12 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         }
 
         PollDto pollDto = getWebTargetExternal()
-                .path("/poll/stop/" + pollGuid)
+                .path("poll")
+                .path(pollGuid)
+                .path("stop")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .get(PollDto.class);
+                .put(Entity.json(""), PollDto.class);
 
         assertNotNull(pollDto);
 
@@ -245,10 +242,12 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         //and starting again
         pollDto = getWebTargetExternal()
-                .path("/poll/start/" + pollGuid)
+                .path("poll")
+                .path(pollGuid)
+                .path("start")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .get(PollDto.class);
+                .put(Entity.json(""), PollDto.class);
 
         assertNotNull(pollDto);
 
@@ -282,10 +281,12 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
             pollGuid = createdPoll.getSentPolls().get(0);
         }
         PollDto pollDto = getWebTargetExternal()
-                .path("/poll/inactivate/" + pollGuid)
+                .path("poll")
+                .path(pollGuid)
+                .path("archive")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .get(PollDto.class);
+                .put(Entity.json(""), PollDto.class);
 
         assertNotNull(pollGuid);
 
@@ -410,7 +411,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         listCriteria.setValue(pollGuid);
         pollSearchCriteria.getCriterias().add(listCriteria);
 
-        listCriteria = new eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.ListCriteria();
+        listCriteria = new ListCriteria();
         listCriteria.setKey(SearchKey.USER);
         listCriteria.setValue("Test User");
         pollSearchCriteria.getCriterias().add(listCriteria);
@@ -556,7 +557,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         input.getConnectIdList().add(asset.getId().toString());
 
         PollChannelListDto pollChannelListDto = getWebTargetExternal()
-                .path("/poll/pollable")
+                .path("/poll/getPollable")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(input), PollChannelListDto.class);
@@ -574,7 +575,6 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     }
 
     private MobileTerminal createAndRestMobileTerminal(Asset asset) {
-
         MobileTerminal response = MobileTerminalTestHelper.createRestMobileTerminal(getWebTargetExternal(), asset, getTokenExternal());
         assertNotNull(response);
         return response;
@@ -582,15 +582,12 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
     private Asset createAndRestBasicAsset(){
         Asset asset = AssetHelper.createBasicAsset();
-
         Asset createdAsset = getWebTargetExternal()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(asset), Asset.class);
-
         assertNotNull(createdAsset);
-
         return createdAsset;
     }
 
@@ -612,7 +609,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         pollRequestType.getAttributes().add(pollAttribute);
 
         pollAttribute = new PollAttribute();
-        pollAttribute.setKey(PollAttributeType.FREQUENCY);          //this is probably in seconds
+        pollAttribute.setKey(PollAttributeType.FREQUENCY);
         pollAttribute.setValue("20");
         pollRequestType.getAttributes().add(pollAttribute);
 
@@ -623,7 +620,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         pollAttribute = new PollAttribute();
         pollAttribute.setKey(PollAttributeType.END_DATE);
-        pollAttribute.setValue(DateUtils.parseOffsetDateTimeToString(OffsetDateTime.now(ZoneId.of("UTC")).plusDays(1))); //one day later
+        pollAttribute.setValue(DateUtils.parseOffsetDateTimeToString(OffsetDateTime.now(ZoneId.of("UTC")).plusDays(1)));
         pollRequestType.getAttributes().add(pollAttribute);
 
         return pollRequestType;

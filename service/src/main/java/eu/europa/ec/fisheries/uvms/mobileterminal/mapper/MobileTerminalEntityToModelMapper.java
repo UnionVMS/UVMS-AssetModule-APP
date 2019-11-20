@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.mapper;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.*;
 import eu.europa.ec.fisheries.uvms.asset.mapper.PollToCommandRequestMapper.PollReceiverInmarsatC;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.util.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +49,10 @@ public class MobileTerminalEntityToModelMapper {
         serialNumber.setType(PollReceiverInmarsatC.SATELLITE_NUMBER.toString());
         serialNumber.setValue(entity.getSatelliteNumber());
         model.getAttributes().add(satelliteNumber);
+
+        model.setInstalledOn(DateUtils.parseOffsetDateTimeToString(entity.getInstallDate()));
+        model.setUninstalledOn(DateUtils.parseOffsetDateTimeToString(entity.getUninstallDate()));
+        model.setInstalledBy(entity.getInstalledBy());
         
         return model;
     }
