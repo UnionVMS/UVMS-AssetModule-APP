@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
@@ -72,14 +73,14 @@ public class AssetGroupRestResource {
             @ApiResponse(code = 200, message = "AssetGroup list successfully retrieved")})
     @Path("list")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetGroupListByUser(@ApiParam(value = "user", required = true) @QueryParam(value = "user") String user) {
+    public Response getAssetGroupListByUser(@ApiParam(value = "user", required = true) @QueryParam(value = "user") String user) throws Exception {
         try {
             List<AssetGroup> assetGroups = assetGroupService.getAssetGroupList(user);
             String response = objectMapper().writeValueAsString(assetGroups);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            LOG.error("Error when getting asset group list by user. {}", user, e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            LOG.error("Error when retrieving AssetGroup list {}", user, e);
+            throw e;
         }
     }
 
