@@ -105,36 +105,4 @@
 		<url-pattern>/rest/sse/*</url-pattern>
 	</filter-mapping>
 
-	<filter-mapping>
-		<filter-name>AuthenticationFilter</filter-name>
-		<url-pattern>/rest/config2/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>AuthenticationFilter</filter-name>
-		<url-pattern>/rest/asset2/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>AuthenticationFilter</filter-name>
-		<url-pattern>/rest/group2/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>AuthenticationFilter</filter-name>
-		<url-pattern>/rest/customcodes2/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>AuthenticationFilter</filter-name>
-		<url-pattern>/rest/mobileterminal2/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>AuthenticationFilter</filter-name>
-		<url-pattern>/rest/poll2/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>AuthenticationFilter</filter-name>
-		<url-pattern>/rest/plugin2/*</url-pattern>
-	</filter-mapping>
-
-
-
-
 </web-app>
