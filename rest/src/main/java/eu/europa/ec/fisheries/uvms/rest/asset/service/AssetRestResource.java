@@ -92,7 +92,7 @@ public class AssetRestResource {
                                  @DefaultValue("1000000") @QueryParam("size") int size,
                                  @DefaultValue("true") @QueryParam("dynamic") boolean dynamic,
                                  @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
-                                 AssetQuery query) {
+                                 AssetQuery query)  throws Exception {
         try {
             List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
             AssetListResponse assetList = assetService.getAssetList(searchFields, page, size, dynamic, includeInactivated);
@@ -100,7 +100,7 @@ public class AssetRestResource {
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset list.", e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
 
@@ -108,14 +108,14 @@ public class AssetRestResource {
     @GET
     @Path("vesselTypes")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getVesselTypes() {
+    public Response getVesselTypes()  throws Exception  {
         try {
             List<String> vesselTypes = assetDao.getAllAvailableVesselTypes();
             String returnString = objectMapper().writeValueAsString(vesselTypes);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting vessel types list.", e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
 
@@ -137,14 +137,14 @@ public class AssetRestResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetListItemCount(@DefaultValue("true") @QueryParam("dynamic") boolean dynamic,
                                           @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
-                                          AssetQuery query) {
+                                          AssetQuery query)  throws Exception  {
         try {
             List<SearchKeyValue> searchValues = SearchFieldMapper.createSearchFields(query);
             Long assetListCount = assetService.getAssetListCount(searchValues, dynamic, includeInactivated);
             return Response.ok(assetListCount).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset list: {}", query, e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
 
@@ -164,7 +164,7 @@ public class AssetRestResource {
             @ApiResponse(code = 200, message = "Asset successfully retrieved") })
     @Path(value = "/{id}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetById(@ApiParam(value="UUID of the asset to retrieve", required=true) @PathParam("id") UUID id) {
+    public Response getAssetById(@ApiParam(value="UUID of the asset to retrieve", required=true) @PathParam("id") UUID id)  throws Exception {
         try {
             Asset asset = assetService.getAssetById(id);
             String returnString = objectMapper().writeValueAsString(asset);
@@ -172,7 +172,7 @@ public class AssetRestResource {
                     .header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset by ID. {}",id,e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
 
@@ -198,7 +198,7 @@ public class AssetRestResource {
             @ApiResponse(code = 500, message = "Error when creating asset"),
             @ApiResponse(code = 200, message = "Asset successfully created") })
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response createAsset(@ApiParam(value="An asset to create", required=true)  final Asset asset)  {
+    public Response createAsset(@ApiParam(value="An asset to create", required=true)  final Asset asset)   throws Exception  {
         try {
             String remoteUser = servletRequest.getRemoteUser();
             Asset createdAssetSE = assetService.createAsset(asset, remoteUser);
@@ -207,7 +207,7 @@ public class AssetRestResource {
                     .header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when creating asset. {}", asset, e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
 
@@ -225,7 +225,7 @@ public class AssetRestResource {
             @ApiResponse(code = 500, message = "Error when updating asset"),
             @ApiResponse(code = 200, message = "Asset successfully updated") })
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response updateAsset(@ApiParam(value="The asset to update", required=true) final Asset asset) {
+    public Response updateAsset(@ApiParam(value="The asset to update", required=true) final Asset asset)  throws Exception {
         try {
             String remoteUser = servletRequest.getRemoteUser();
             Asset assetWithMT = assetService.populateMTListInAsset(asset);
@@ -235,7 +235,7 @@ public class AssetRestResource {
                     .header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when updating asset: {}",asset, e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
 
@@ -247,7 +247,7 @@ public class AssetRestResource {
     @Path("/{assetId}/archive")
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public Response archiveAsset(@ApiParam(value="The asset to update", required=true)  @PathParam("assetId") UUID assetId,
-                                 @ApiParam(value="Archive comment", required=true) @QueryParam("comment") String comment) {
+                                 @ApiParam(value="Archive comment", required=true) @QueryParam("comment") String comment)  throws Exception {
         try {
             if(comment == null || comment.isEmpty()){
                 return Response.status(400).entity("Parameter comment is required").build();
@@ -259,7 +259,7 @@ public class AssetRestResource {
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when archiving asset. {}",assetId, e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
 
@@ -271,7 +271,7 @@ public class AssetRestResource {
     @Path("/{assetId}/unarchive")
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public Response unarchiveAsset(@ApiParam(value="The asset to update", required=true)  @PathParam("assetId") final UUID assetId,
-                                 @ApiParam(value="Unarchive comment", required=true) @QueryParam("comment") String comment) {
+                                 @ApiParam(value="Unarchive comment", required=true) @QueryParam("comment") String comment)  throws Exception {
 
         if(comment == null || comment.isEmpty()){
             return Response.status(400).entity("Parameter comment is required").build();
@@ -283,7 +283,7 @@ public class AssetRestResource {
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when unarchiving Asset with ID: {}", assetId, e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
 
@@ -302,14 +302,14 @@ public class AssetRestResource {
             @ApiResponse(code = 200, message = "Successful retrieval of resultset") })
     @Path("/{id}/history")
     public Response getAssetHistoryListByAssetId(@ApiParam(value="The assets GUID", required=true)  @PathParam("id") UUID id,
-                                                 @ApiParam(value="Max size of resultset") @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
+                                                 @ApiParam(value="Max size of resultset") @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr)  throws Exception {
         try {
             List<Asset> assetRevisions = assetService.getRevisionsForAssetLimited(id, maxNbr);
             String returnString = objectMapper().writeValueAsString(assetRevisions);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset history list by asset ID. {}]", id, e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
 
@@ -331,7 +331,7 @@ public class AssetRestResource {
     @Path("/{type : (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)}/{id}/history/")
     public Response getAssetFromAssetIdAndDate(@ApiParam(value="Type of id", required=true) @PathParam("type") String type,
                                                @ApiParam(value="Value of id", required=true) @PathParam("id") String id,
-                                               @ApiParam(value="Point in time", required=true) @QueryParam("date") String date) {
+                                               @ApiParam(value="Point in time", required=true) @QueryParam("date") String date)  throws Exception {
         try {
 
             AssetIdentifier assetId = AssetIdentifier.valueOf(type.toUpperCase());
@@ -341,7 +341,7 @@ public class AssetRestResource {
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset. Type: {}, Value: {}, Date: {}", type, id, date, e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
 
@@ -359,14 +359,14 @@ public class AssetRestResource {
             @ApiResponse(code = 500, message = "Error when querying the system"),
             @ApiResponse(code = 200, message = "Successful retrieval of resultset") })
     @Path("history/{guid}")
-    public Response getAssetHistoryByAssetHistGuid(@ApiParam(value="Id", required=true) @PathParam("guid") UUID guid) {
+    public Response getAssetHistoryByAssetHistGuid(@ApiParam(value="Id", required=true) @PathParam("guid") UUID guid)  throws Exception {
         try {
             Asset asset = assetService.getAssetRevisionForRevisionId(guid);
             String returnString = objectMapper().writeValueAsString(asset);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset by asset history guid. {}] ", guid, e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
     
@@ -378,13 +378,13 @@ public class AssetRestResource {
             @ApiResponse(code = 200, message = "Notes successfully retrieved") })
     @Path("{id}/notes")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getNotesForAsset(@ApiParam(value="The id of asset to retrieve notes", required = true)  @PathParam("id") UUID assetId) {
+    public Response getNotesForAsset(@ApiParam(value="The id of asset to retrieve notes", required = true)  @PathParam("id") UUID assetId)  throws Exception {
         try {
             List<Note> notes = assetService.getNotesForAsset(assetId);
             return Response.ok(notes).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error while getting notes for asset {}. {}] ", assetId, e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
 
@@ -395,14 +395,14 @@ public class AssetRestResource {
             @ApiResponse(code = 200, message = "Note successfully created") })
     @Path("/notes")
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response createNoteForAsset(@ApiParam(value="The Note to store" , required=true) Note note) {
+    public Response createNoteForAsset(@ApiParam(value="The Note to store" , required=true) Note note)  throws Exception {
         try {
             String user = servletRequest.getRemoteUser();
             Note createdNote = assetService.createNoteForAsset(note.getAssetId(), note, user);
             return Response.ok(createdNote).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error while creating notes for asset. {}] ", e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
     
@@ -413,14 +413,14 @@ public class AssetRestResource {
             @ApiResponse(code = 200, message = "Note successfully updated") })
     @Path("/notes")
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response updateNote(@ApiParam(value="A Note to be updated", required=true)  Note note) {
+    public Response updateNote(@ApiParam(value="A Note to be updated", required=true)  Note note)  throws Exception {
         try {
             String user = servletRequest.getRemoteUser();
             Note updatedNote = assetService.updateNote(note, user);
             return Response.ok(updatedNote).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error updating note. {}] ", e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
     
@@ -431,9 +431,14 @@ public class AssetRestResource {
             @ApiResponse(code = 200, message = "Note successfully found") })
     @Path("/note/{id}")
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response getNoteById(@ApiParam(value="Id of note to get", required=true) @PathParam("id") UUID id) {
+    public Response getNoteById(@ApiParam(value="Id of note to get", required=true) @PathParam("id") UUID id)   throws Exception  {
+        try {
         Note gottenNote = assetService.getNoteById(id);
         return Response.ok(gottenNote).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception e) {
+            LOG.error("Error getNoteById ", e);
+            throw e;
+        }
     }
     
     @DELETE
@@ -443,13 +448,13 @@ public class AssetRestResource {
             @ApiResponse(code = 200, message = "Note successfully deleted") })
     @Path("/notes/{id}")
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response deleteNote(@ApiParam(value="Id of note to be deleted", required=true) @PathParam("id") UUID id) {
+    public Response deleteNote(@ApiParam(value="Id of note to be deleted", required=true) @PathParam("id") UUID id)  throws Exception {
         try {
             assetService.deleteNote(id);
             return Response.ok().header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error deleteing note. {}] ", e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
 
@@ -461,26 +466,26 @@ public class AssetRestResource {
     @Path("{id}/contacts")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getContactInfoListForAssetHistory(@ApiParam(value="Id of asset", required=true)  @PathParam("id") UUID assetId,
-                                                      @QueryParam("ofDate") String updatedDate) {
+                                                      @QueryParam("ofDate") String updatedDate)  throws Exception  {
         try {
             OffsetDateTime offsetDateTime = (updatedDate == null ? OffsetDateTime.now() : OffsetDateTime.parse(updatedDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
             List<ContactInfo> resultList = assetService.getContactInfoRevisionForAssetHistory(assetId, offsetDateTime);
             return Response.ok(resultList).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error while getting contact info list for asset history. {}] ", e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
 
     @GET
     @Path("contact/{contactId}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getContact(@PathParam("contactId") UUID contactId){
+    public Response getContact(@PathParam("contactId") UUID contactId)  throws Exception {
         try{
             return Response.ok(assetDao.getContactById(contactId)).header("MDC", MDC.get("requestId")).build();
         }catch (Exception e){
             LOG.error("Error while getting contact by id {}.  {}", contactId, e);
-            return Response.serverError().entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
 
@@ -491,15 +496,15 @@ public class AssetRestResource {
             @ApiResponse(code = 200, message = "Successful created contactinfo") })
     @Path("contacts")
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response createContactInfoForAsset(
-            @ApiParam(value="Contact info", required=true) ContactInfo contactInfo) {
+    public Response createContactInfoForAsset (
+            @ApiParam(value="Contact info", required=true) ContactInfo contactInfo)  throws Exception  {
         try {
             String user = servletRequest.getRemoteUser();
             ContactInfo createdContactInfo = assetService.createContactInfoForAsset(contactInfo.getAssetId(), contactInfo, user);
             return Response.ok(createdContactInfo).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error while creating contact info for asset. {}] ", e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
     
@@ -510,14 +515,14 @@ public class AssetRestResource {
             @ApiResponse(code = 200, message = "Successful updated contactinfo") })
     @Path("/contacts")
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response udpateContactInfo(@ApiParam(value="Contact info", required=true)  ContactInfo contactInfo) {
+    public Response udpateContactInfo(@ApiParam(value="Contact info", required=true)  ContactInfo contactInfo)  throws Exception {
         try{
             String username = servletRequest.getRemoteUser();
             ContactInfo updatedContactInfo = assetService.updateContactInfo(contactInfo, username);
             return Response.ok(updatedContactInfo).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error while updating contact info. {}] ", e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
     
@@ -528,26 +533,26 @@ public class AssetRestResource {
             @ApiResponse(code = 200, message = "Successful delete contactinfo") })
     @Path("/contacts/{id}")
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response deleteContactInfo( @ApiParam(value="Id off contact info", required=true)  @PathParam("id") UUID id) {
+    public Response deleteContactInfo( @ApiParam(value="Id off contact info", required=true)  @PathParam("id") UUID id)  throws Exception {
         try{
             assetService.deleteContactInfo(id);
             return Response.ok().header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error while deleting contact info. {}] ", e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
 
     @POST
     @Path("microAssets")
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response getMicroAssets(List<String> assetIdList){
+    public Response getMicroAssets(List<String> assetIdList)  throws Exception {
         try {
             List<MicroAsset> assetList = assetService.getInitialDataForRealtime(assetIdList);
             return Response.ok(assetList).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting microAssets. {}] ", e);
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+            throw e;
         }
     }
 }

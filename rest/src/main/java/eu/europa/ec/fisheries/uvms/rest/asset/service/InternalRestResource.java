@@ -69,7 +69,7 @@ public class InternalRestResource {
     private PollServiceBean pollServiceBean;
 
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
-    private ObjectMapper objectMapper(){
+    private ObjectMapper objectMapper() {
         ObjectMapperContextResolver omcr = new ObjectMapperContextResolver();
         ObjectMapper objectMapper = omcr.getContext(InternalRestResource.class);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -80,10 +80,15 @@ public class InternalRestResource {
     @GET
     @Path("asset/{idType : (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)}/{id}")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response getAssetById(@PathParam("idType") String type, @PathParam("id") String id) {
-        AssetIdentifier assetId = AssetIdentifier.valueOf(type.toUpperCase());
-        Asset asset = assetService.getAssetById(assetId, id);
-        return Response.ok(asset).build();
+    public Response getAssetById(@PathParam("idType") String type, @PathParam("id") String id) throws Exception {
+        try {
+            AssetIdentifier assetId = AssetIdentifier.valueOf(type.toUpperCase());
+            Asset asset = assetService.getAssetById(assetId, id);
+            return Response.ok(asset).build();
+        } catch (Exception e) {
+            LOG.error("getAssetById", e);
+            throw e;
+        }
     }
 
     @POST
@@ -93,7 +98,7 @@ public class InternalRestResource {
                                  @DefaultValue("100") @QueryParam("size") int size,
                                  @DefaultValue("true") @QueryParam("dynamic") boolean dynamic,
                                  @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
-                                 AssetQuery query) {
+                                 AssetQuery query) throws Exception {
         try {
             List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
             AssetListResponse assetList = assetService.getAssetList(searchFields, page, size, dynamic, includeInactivated);
@@ -108,36 +113,56 @@ public class InternalRestResource {
     @GET
     @Path("group/user/{user}")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response getAssetGroupByUser(@PathParam("user") String user) {
-        List<AssetGroup> assetGroups = assetGroupService.getAssetGroupList(user);
-        return Response.ok(assetGroups).build();
+    public Response getAssetGroupByUser(@PathParam("user") String user) throws Exception {
+        try {
+            List<AssetGroup> assetGroups = assetGroupService.getAssetGroupList(user);
+            return Response.ok(assetGroups).build();
+        } catch (Exception e) {
+            LOG.error("getAssetById", e);
+            throw e;
+        }
     }
 
     @GET
     @Path("group/asset/{id}")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response getAssetGroupByAssetId(@PathParam("id") UUID assetId) {
-        List<AssetGroup> assetGroups = assetGroupService.getAssetGroupListByAssetId(assetId);
-        return Response.ok(assetGroups).build();
+    public Response getAssetGroupByAssetId(@PathParam("id") UUID assetId) throws Exception {
+        try {
+            List<AssetGroup> assetGroups = assetGroupService.getAssetGroupListByAssetId(assetId);
+            return Response.ok(assetGroups).build();
+        } catch (Exception e) {
+            LOG.error("getAssetGroupByAssetId", e);
+            throw e;
+        }
     }
 
     @POST
     @Path("group/asset")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response getAssetByGroupIds(List<UUID> groupIds) {
-        List<AssetGroup> assetGroups = groupIds.stream()
-                                            .map(assetGroupService::getAssetGroupById)
-                                            .collect(Collectors.toList());
-        List<Asset> assets = assetService.getAssetListByAssetGroups(assetGroups);
-        return Response.ok(assets).build();
+    public Response getAssetByGroupIds(List<UUID> groupIds) throws Exception {
+        try {
+            List<AssetGroup> assetGroups = groupIds.stream()
+                    .map(assetGroupService::getAssetGroupById)
+                    .collect(Collectors.toList());
+            List<Asset> assets = assetService.getAssetListByAssetGroups(assetGroups);
+            return Response.ok(assets).build();
+        } catch (Exception e) {
+            LOG.error("getAssetByGroupIds", e);
+            throw e;
+        }
     }
 
     @GET
     @Path("/history/asset/{id}")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response getAssetHistoryListByAssetId(@PathParam("id") UUID id, @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
-        List<Asset> assetRevisions = assetService.getRevisionsForAssetLimited(id, maxNbr);
-        return Response.ok(assetRevisions).build();
+    public Response getAssetHistoryListByAssetId(@PathParam("id") UUID id, @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) throws Exception {
+        try {
+            List<Asset> assetRevisions = assetService.getRevisionsForAssetLimited(id, maxNbr);
+            return Response.ok(assetRevisions).build();
+        } catch (Exception e) {
+            LOG.error("getAssetHistoryListByAssetId", e);
+            throw e;
+        }
     }
 
     @GET
@@ -145,77 +170,105 @@ public class InternalRestResource {
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response getAssetFromAssetIdAndDate(@PathParam("type") String type,
                                                @PathParam("id") String id,
-                                               @PathParam("date") String date) {
-        AssetIdentifier assetId = AssetIdentifier.valueOf(type.toUpperCase());
-        OffsetDateTime offsetDateTime = OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        Asset assetRevision = assetService.getAssetFromAssetIdAtDate(assetId, id, offsetDateTime);
-        return Response.ok(assetRevision).build();
+                                               @PathParam("date") String date) throws Exception {
+        try {
+            AssetIdentifier assetId = AssetIdentifier.valueOf(type.toUpperCase());
+            OffsetDateTime offsetDateTime = OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            Asset assetRevision = assetService.getAssetFromAssetIdAtDate(assetId, id, offsetDateTime);
+            return Response.ok(assetRevision).build();
+        } catch (Exception e) {
+            LOG.error("getAssetFromAssetIdAndDate", e);
+            throw e;
+        }
     }
 
     @GET
     @Path("history/{guid}")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response getAssetHistoryByAssetHistGuid(@PathParam("guid") UUID guid) {
-        Asset asset = assetService.getAssetRevisionForRevisionId(guid);
-        return Response.ok(asset).build();
+    public Response getAssetHistoryByAssetHistGuid(@PathParam("guid") UUID guid) throws Exception {
+        try {
+            Asset asset = assetService.getAssetRevisionForRevisionId(guid);
+            return Response.ok(asset).build();
+        } catch (Exception e) {
+            LOG.error("getAssetHistoryByAssetHistGuid", e);
+            throw e;
+        }
     }
-    
+
     @POST
     @Path("asset")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response upsertAsset(AssetBO assetBo) {
-        AssetBO upsertedAsset = assetService.upsertAssetBO(assetBo, (assetBo.getAsset().getUpdatedBy() == null ?  "UVMS (REST)" : assetBo.getAsset().getUpdatedBy()));
-        return Response.ok(upsertedAsset).build();
+    public Response upsertAsset(AssetBO assetBo) throws Exception {
+        try {
+            AssetBO upsertedAsset = assetService.upsertAssetBO(assetBo, (assetBo.getAsset().getUpdatedBy() == null ? "UVMS (REST)" : assetBo.getAsset().getUpdatedBy()));
+            return Response.ok(upsertedAsset).build();
+        } catch (Exception e) {
+            LOG.error("upsertAsset", e);
+            throw e;
+        }
     }
 
     @POST
     @Path("microAssets")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response getMicroAssets(List<String> assetIdList){
+    public Response getMicroAssets(List<String> assetIdList) throws Exception {
+        try {
         List<MicroAsset> assetList = assetService.getInitialDataForRealtime(assetIdList);
         return Response.ok(assetList).build();
+        } catch (Exception e) {
+            LOG.error("getMicroAssets", e);
+            throw e;
+        }
     }
-    
+
     @GET
     @Path("ping")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response ping() {
+    public Response ping() throws Exception {
+        try {
         return Response.ok("pong").build();
+        } catch (Exception e) {
+            LOG.error("ping", e);
+            throw e;
+        }
     }
 
     @POST
     @Path("customcode")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response createCustomCode(CustomCode customCode) {
+    public Response createCustomCode(CustomCode customCode) throws Exception {
         try {
             CustomCode customCodes = customCodesService.create(customCode);
             return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
+            LOG.error("create customcode failed", e);
+            throw e;
         }
     }
 
     @GET
     @Path("listconstants")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response getAllConstants() {
+    public Response getAllConstants() throws Exception {
         try {
             List<String> constants = customCodesService.getAllConstants();
             return Response.ok(constants).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
+            LOG.error("getAllConstants failed", e);
+            throw e;
         }
     }
 
     @GET
     @Path("listcodesforconstant/{constant}")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response getCodesForConstant(@PathParam("constant") String constant) {
+    public Response getCodesForConstant(@PathParam("constant") String constant) throws Exception {
         try {
             List<CustomCode> customCodes = customCodesService.getAllFor(constant);
             return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
+            LOG.error("getCodesForConstant failed", e);
+            throw e;
         }
     }
 
@@ -224,15 +277,15 @@ public class InternalRestResource {
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response verify(@ApiParam(value = "constants", required = true) @PathParam("constant") String constant,
                            @ApiParam(value = "code", required = true) @PathParam("code") String code,
-                           @ApiParam(value = "validToDate", required = true) @QueryParam(value = "date") String date)
-    {
+                           @ApiParam(value = "validToDate", required = true) @QueryParam(value = "date") String date) throws Exception {
         try {
             OffsetDateTime aDate = (date == null ? OffsetDateTime.now() : OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
             Boolean exists = customCodesService.verify(constant, code, aDate);
             return Response.ok(exists).header("MDC", MDC.get("requestId")).build();
 
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
+            LOG.error("verify failed", e);
+            throw e;
         }
     }
 
@@ -241,27 +294,28 @@ public class InternalRestResource {
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response getForDate(@PathParam("constant") String constant,
                                @PathParam("code") String code,
-                               @QueryParam(value = "date") String date)
-    {
+                               @QueryParam(value = "date") String date) throws Exception {
         try {
             OffsetDateTime aDate = (date == null ? OffsetDateTime.now() : OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-            List<CustomCode> customCodes = customCodesService.getForDate(constant, code,aDate);
+            List<CustomCode> customCodes = customCodesService.getForDate(constant, code, aDate);
             return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
 
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
+            LOG.error("getForDate failed", e);
+            throw e;
         }
     }
 
     @POST
     @Path("replace")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response replace(CustomCode customCode) {
+    public Response replace(CustomCode customCode) throws Exception {
         try {
             CustomCode customCodes = customCodesService.replace(customCode);
             return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(ExceptionUtils.getRootCause(e)).header("MDC", MDC.get("requestId")).build();
+            LOG.error("replace failed", e);
+            throw e;
         }
     }
 
@@ -273,34 +327,39 @@ public class InternalRestResource {
     @POST
     @Path("collectassetmt")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response enrich( AssetMTEnrichmentRequest request) {
-        AssetMTEnrichmentResponse assetMTEnrichmentResponse = assetService.collectAssetMT(request);
-        return Response.ok(assetMTEnrichmentResponse).header("MDC", MDC.get("requestId")).build();
+    public Response enrich(AssetMTEnrichmentRequest request) throws Exception {
+        try {
+            AssetMTEnrichmentResponse assetMTEnrichmentResponse = assetService.collectAssetMT(request);
+            return Response.ok(assetMTEnrichmentResponse).header("MDC", MDC.get("requestId")).build();
+        }catch (Exception e){
+            LOG.error("enrich failed", e);
+            throw e;
+        }
     }
 
     @POST
     @Path("poll")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response createPoll(PollRequestType createPoll) {
+    public Response createPoll(PollRequestType createPoll) throws Exception {
         try {
             CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(createPoll);
             return Response.ok(createPollResultDto.isUnsentPoll()).build();
         } catch (Exception ex) {
-            LOG.error("[ Error when creating poll {}] {}",createPoll, ex);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
+            LOG.error("[ Error when creating poll {}] {}", createPoll, ex);
+            throw ex;
         }
     }
 
     @POST
     @Path("createPollForAsset/{id}")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response createPollForAsset(@PathParam("id") String assetId, @QueryParam("username") String username, @QueryParam("comment") String comment) {
+    public Response createPollForAsset(@PathParam("id") String assetId, @QueryParam("username") String username, @QueryParam("comment") String comment) throws Exception {
         try {
             UUID asset = UUID.fromString(assetId);
             return Response.ok(pollServiceBean.createPollForAsset(asset, PollType.AUTOMATIC_POLL, username, comment)).build();
         } catch (Exception ex) {
-            LOG.error("[ Error when creating poll for {}] {}",assetId, ex);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
+            LOG.error("[ Error when creating poll for {}] {}", assetId, ex);
+            throw ex;
         }
     }
 }

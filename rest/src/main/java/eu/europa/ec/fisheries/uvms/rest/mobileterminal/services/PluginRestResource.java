@@ -35,25 +35,25 @@ public class PluginRestResource {
     @POST
     @Path("/")
     @RequiresFeature(UnionVMSFeature.mobileTerminalPlugins)
-    public Response upsertPlugins(List<PluginService> pluginServiceList){
+    public Response upsertPlugins(List<PluginService> pluginServiceList) throws Exception {
         try {
             List<MobileTerminalPlugin> pluginList = configServiceMT.upsertPlugins(pluginServiceList, request.getRemoteUser());
             return Response.ok(pluginList).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error while upserting plugins ] {}", ex);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
+            throw ex;
         }
     }
 
     @GET
     @Path("/plugins")
-    public Response getPlugins() {
+    public Response getPlugins() throws Exception {
         try {
             List<MobileTerminalPlugin> list = configServiceMT.getMobileTerminalPlugins();
             return Response.ok(list).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting plugins ] {}", ex);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(ex)).build();
+            throw ex;
         }
     }
 }
