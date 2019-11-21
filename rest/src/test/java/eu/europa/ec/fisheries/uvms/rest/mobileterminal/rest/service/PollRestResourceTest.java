@@ -64,22 +64,13 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         Asset asset = createAndRestBasicAsset();
         MobileTerminal createdMT = createAndRestMobileTerminal(asset);
 
-        PollMobileTerminal pmt = new PollMobileTerminal();
-        pmt.setComChannelId(createdMT.getChannels().iterator().next().getId().toString());
-        pmt.setConnectId(createdMT.getAssetId());
-        pmt.setMobileTerminalId(createdMT.getId().toString());
-        input.getMobileTerminals().add(pmt);
+        constructPollMobileTerminalAndAddToRequest(input, createdMT);
 
         input.setPollType(PollType.MANUAL_POLL);
         input.setComment("Test Comment");
         input.setUserName("Test User");
 
-        CreatePollResultDto createdPoll = getWebTargetExternal()
-                .path("/poll")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(input), CreatePollResultDto.class);
-
+        CreatePollResultDto createdPoll = createPoll(input);
         assertNotNull(createdPoll);
 
         //TODO: Change when we get the message system working in a sane way
@@ -125,8 +116,6 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         assertEquals(200, response.getStatus());
         Integer code  = response.readEntity(JsonNode.class).path("code").intValue();
         assertThat(code, is(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()));
-
-
     }
 
     @Test
@@ -169,11 +158,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         assertNotNull(pluginList);
 
-        PollMobileTerminal pmt = new PollMobileTerminal();
-        pmt.setComChannelId(createdMT.getChannels().iterator().next().getId().toString());
-        pmt.setConnectId(createdMT.getAssetId());
-        pmt.setMobileTerminalId(createdMT.getId().toString());
-        pollRequest.getMobileTerminals().add(pmt);
+        constructPollMobileTerminalAndAddToRequest(pollRequest, createdMT);
 
         PollAttribute attrFrequency = new PollAttribute();
         attrFrequency.setKey(PollAttributeType.REPORT_FREQUENCY);
@@ -193,11 +178,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         pollRequest.setComment("Test Comment");
         pollRequest.setUserName("Test User");
 
-        CreatePollResultDto createdPoll = getWebTargetExternal()
-                .path("/poll")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(pollRequest), CreatePollResultDto.class);
+        CreatePollResultDto createdPoll = createPoll(pollRequest);
 
         assertNotNull(createdPoll);
 
@@ -214,11 +195,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         //Create program poll
         PollRequestType input = createProgramPoll(createdMT);
 
-        CreatePollResultDto createdPoll = getWebTargetExternal()
-                .path("/poll")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(input), CreatePollResultDto.class);
+        CreatePollResultDto createdPoll = createPoll(input);
 
         assertNotNull(createdPoll);
 
@@ -226,7 +203,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         String pollGuid;
         if(createdPoll.isUnsentPoll()){
             pollGuid = createdPoll.getUnsentPolls().get(0);
-        }else{
+        } else {
             pollGuid = createdPoll.getSentPolls().get(0);
         }
 
@@ -269,11 +246,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         //Create program poll
         PollRequestType input = createProgramPoll(createdMT);
 
-        CreatePollResultDto createdPoll = getWebTargetExternal()
-                .path("/poll")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(input), CreatePollResultDto.class);
+        CreatePollResultDto createdPoll = createPoll(input);
 
         assertNotNull(createdPoll);
 
@@ -281,7 +254,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         String pollGuid;
         if(createdPoll.isUnsentPoll()){
             pollGuid = createdPoll.getUnsentPolls().get(0);
-        }else{
+        } else {
             pollGuid = createdPoll.getSentPolls().get(0);
         }
         PollDto pollDto = getWebTargetExternal()
@@ -319,28 +292,20 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         Asset asset = createAndRestBasicAsset();
         MobileTerminal createdMT = createAndRestMobileTerminal(asset);
 
-        PollMobileTerminal pmt = new PollMobileTerminal();
-        pmt.setComChannelId(createdMT.getChannels().iterator().next().getId().toString());
-        pmt.setConnectId(createdMT.getAssetId());
-        pmt.setMobileTerminalId(createdMT.getId().toString());
-        pollRequestType.getMobileTerminals().add(pmt);
+        constructPollMobileTerminalAndAddToRequest(pollRequestType, createdMT);
 
         pollRequestType.setPollType(PollType.MANUAL_POLL);
         pollRequestType.setComment("Test Comment");
         pollRequestType.setUserName("Test User");
 
-        CreatePollResultDto createdPoll = getWebTargetExternal()
-                .path("/poll")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(pollRequestType), CreatePollResultDto.class);
+        CreatePollResultDto createdPoll = createPoll(pollRequestType);
 
         assertNotNull(createdPoll);
 
         String pollGuid;
         if(createdPoll.isUnsentPoll()){
             pollGuid = createdPoll.getUnsentPolls().get(0);
-        }else{
+        } else {
             pollGuid = createdPoll.getSentPolls().get(0);
         }
 
@@ -352,17 +317,13 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         PollSearchCriteria pollSearchCriteria = new PollSearchCriteria();
         pollSearchCriteria.setIsDynamic(true);
-        ListCriteria listCriteria = new ListCriteria();
-        listCriteria.setKey(SearchKey.POLL_ID);
-        listCriteria.setValue(pollGuid);
-        pollSearchCriteria.getCriterias().add(listCriteria);
+
+        ListCriteria pollIdCriteria = createListCriteria(SearchKey.POLL_ID, pollGuid);
+        pollSearchCriteria.getCriterias().add(pollIdCriteria);
+
         input.setPollSearchCriteria(pollSearchCriteria);
 
-        PollChannelListDto pollChannelListDto = getWebTargetExternal()
-                .path("/poll/list")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(input), PollChannelListDto.class);
+        PollChannelListDto pollChannelListDto = getPollList(input);
 
         assertNotNull(pollChannelListDto);
 
@@ -377,28 +338,20 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         Asset asset = createAndRestBasicAsset();
         MobileTerminal createdMT = createAndRestMobileTerminal(asset);
 
-        PollMobileTerminal pmt = new PollMobileTerminal();
-        pmt.setComChannelId(createdMT.getChannels().iterator().next().getId().toString());
-        pmt.setConnectId(createdMT.getAssetId());
-        pmt.setMobileTerminalId(createdMT.getId().toString());
-        pollRequestType.getMobileTerminals().add(pmt);
+        constructPollMobileTerminalAndAddToRequest(pollRequestType, createdMT);
 
         pollRequestType.setPollType(PollType.MANUAL_POLL);
         pollRequestType.setComment("Test Comment");
         pollRequestType.setUserName("Test User");
 
-        CreatePollResultDto createdPoll = getWebTargetExternal()
-                .path("/poll")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(pollRequestType), CreatePollResultDto.class);
+        CreatePollResultDto createdPoll = createPoll(pollRequestType);
 
         assertNotNull(createdPoll);
 
         String pollGuid;
         if(createdPoll.isUnsentPoll()){
             pollGuid = createdPoll.getUnsentPolls().get(0);
-        }else{
+        } else {
             pollGuid = createdPoll.getSentPolls().get(0);
         }
 
@@ -410,23 +363,16 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         PollSearchCriteria pollSearchCriteria = new PollSearchCriteria();
         pollSearchCriteria.setIsDynamic(true);
-        ListCriteria listCriteria = new ListCriteria();
-        listCriteria.setKey(SearchKey.POLL_ID);
-        listCriteria.setValue(pollGuid);
-        pollSearchCriteria.getCriterias().add(listCriteria);
 
-        listCriteria = new ListCriteria();
-        listCriteria.setKey(SearchKey.USER);
-        listCriteria.setValue("Test User");
-        pollSearchCriteria.getCriterias().add(listCriteria);
+        ListCriteria pollIdCriteria = createListCriteria(SearchKey.POLL_ID, pollGuid);
+        pollSearchCriteria.getCriterias().add(pollIdCriteria);
+
+        ListCriteria userCriteria = createListCriteria(SearchKey.USER, "Test User");
+        pollSearchCriteria.getCriterias().add(userCriteria);
+
         input.setPollSearchCriteria(pollSearchCriteria);
 
-
-        PollChannelListDto pollChannelListDto = getWebTargetExternal()
-                .path("/poll/list")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(input), PollChannelListDto.class);
+        PollChannelListDto pollChannelListDto = getPollList(input);
 
         assertNotNull(pollChannelListDto);
 
@@ -441,28 +387,20 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         Asset asset = createAndRestBasicAsset();
         MobileTerminal createdMT = createAndRestMobileTerminal(asset);
 
-        PollMobileTerminal pmt = new PollMobileTerminal();
-        pmt.setComChannelId(createdMT.getChannels().iterator().next().getId().toString());
-        pmt.setConnectId(createdMT.getAssetId());
-        pmt.setMobileTerminalId(createdMT.getId().toString());
-        pollRequestType.getMobileTerminals().add(pmt);
+        constructPollMobileTerminalAndAddToRequest(pollRequestType, createdMT);
 
         pollRequestType.setPollType(PollType.MANUAL_POLL);
         pollRequestType.setComment("Test Comment");
         pollRequestType.setUserName("Test User");
 
-        CreatePollResultDto createdPoll = getWebTargetExternal()
-                .path("/poll")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(pollRequestType), CreatePollResultDto.class);
+        CreatePollResultDto createdPoll = createPoll(pollRequestType);
 
         assertNotNull(createdPoll);
 
         String pollGuid;
         if(createdPoll.isUnsentPoll()){
             pollGuid = createdPoll.getUnsentPolls().get(0);
-        }else{
+        } else {
             pollGuid = createdPoll.getSentPolls().get(0);
         }
 
@@ -470,28 +408,20 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         Asset asset2 = createAndRestBasicAsset();
         MobileTerminal createdMT2 = createAndRestMobileTerminal(asset2);
 
-        PollMobileTerminal pmt2 = new PollMobileTerminal();
-        pmt2.setComChannelId(createdMT2.getChannels().iterator().next().getId().toString());
-        pmt2.setConnectId(createdMT2.getAssetId());
-        pmt2.setMobileTerminalId(createdMT2.getId().toString());
-        pollRequestType2.getMobileTerminals().add(pmt2);
+        constructPollMobileTerminalAndAddToRequest(pollRequestType2, createdMT2);
 
         pollRequestType2.setPollType(PollType.MANUAL_POLL);
         pollRequestType2.setComment("Test Comment");
         pollRequestType2.setUserName("Test User");
 
-        CreatePollResultDto createdPoll2 = getWebTargetExternal()
-                .path("/poll")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(pollRequestType2), CreatePollResultDto.class);
+        CreatePollResultDto createdPoll2 = createPoll(pollRequestType2);
 
         assertNotNull(createdPoll2);
 
         String pollGuid2;
         if(createdPoll2.isUnsentPoll()){
             pollGuid2 = createdPoll2.getUnsentPolls().get(0);
-        }else{
+        } else {
             pollGuid2 = createdPoll2.getSentPolls().get(0);
         }
 
@@ -503,23 +433,16 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         PollSearchCriteria pollSearchCriteria = new PollSearchCriteria();
         pollSearchCriteria.setIsDynamic(true);
-        ListCriteria listCriteria = new ListCriteria();
-        listCriteria.setKey(SearchKey.POLL_ID);
-        listCriteria.setValue(pollGuid);
-        pollSearchCriteria.getCriterias().add(listCriteria);
 
-        ListCriteria listCriteria2 = new ListCriteria();
-        listCriteria2.setKey(SearchKey.POLL_ID);
-        listCriteria2.setValue(pollGuid2);
-        pollSearchCriteria.getCriterias().add(listCriteria2);
+        ListCriteria pollIdCriteria = createListCriteria(SearchKey.POLL_ID, pollGuid);
+        pollSearchCriteria.getCriterias().add(pollIdCriteria);
+
+        ListCriteria pollIdCriteria2 = createListCriteria(SearchKey.POLL_ID, pollGuid2);
+        pollSearchCriteria.getCriterias().add(pollIdCriteria2);
+
         input.setPollSearchCriteria(pollSearchCriteria);
 
-
-        PollChannelListDto pollChannelListDto = getWebTargetExternal()
-                .path("/poll/list")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(input), PollChannelListDto.class);
+        PollChannelListDto pollChannelListDto = getPollList(input);
 
         assertNotNull(pollChannelListDto);
 
@@ -535,21 +458,13 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         MobileTerminal createdMT = createAndRestMobileTerminal(asset);
         PollRequestType pollRequestType = new PollRequestType();
 
-        PollMobileTerminal pmt = new PollMobileTerminal();
-        pmt.setComChannelId(createdMT.getChannels().iterator().next().getId().toString());
-        pmt.setConnectId(createdMT.getAssetId());
-        pmt.setMobileTerminalId(createdMT.getId().toString());
-        pollRequestType.getMobileTerminals().add(pmt);
+        constructPollMobileTerminalAndAddToRequest(pollRequestType, createdMT);
 
         pollRequestType.setPollType(PollType.MANUAL_POLL);
         pollRequestType.setComment("Test Comment");
         pollRequestType.setUserName("Test User");
 
-        CreatePollResultDto createdPoll = getWebTargetExternal()
-                .path("/poll")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(pollRequestType), CreatePollResultDto.class);
+        CreatePollResultDto createdPoll = createPoll(pollRequestType);
 
         assertNotNull(createdPoll);
 
@@ -578,6 +493,29 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         assertTrue(contains);
     }
 
+    private CreatePollResultDto createPoll(PollRequestType request) {
+        return getWebTargetExternal()
+                .path("/poll")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(request), CreatePollResultDto.class);
+    }
+
+    private PollChannelListDto getPollList(PollListQuery query) {
+        return getWebTargetExternal()
+                .path("/poll/list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(query), PollChannelListDto.class);
+    }
+
+    private ListCriteria createListCriteria(SearchKey key, String value) {
+        ListCriteria listCriteria = new ListCriteria();
+        listCriteria.setKey(key);
+        listCriteria.setValue(value);
+        return listCriteria;
+    }
+
     private MobileTerminal createAndRestMobileTerminal(Asset asset) {
         MobileTerminal response = MobileTerminalTestHelper.createRestMobileTerminal(getWebTargetExternal(), asset, getTokenExternal());
         assertNotNull(response);
@@ -597,11 +535,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
     private PollRequestType createProgramPoll(MobileTerminal mobileTerminal){
         PollRequestType pollRequestType = new PollRequestType();
-        PollMobileTerminal pmt = new PollMobileTerminal();
-        pmt.setComChannelId(mobileTerminal.getChannels().iterator().next().getId().toString());
-        pmt.setConnectId(mobileTerminal.getAssetId());
-        pmt.setMobileTerminalId(mobileTerminal.getId().toString());
-        pollRequestType.getMobileTerminals().add(pmt);
+        constructPollMobileTerminalAndAddToRequest(pollRequestType, mobileTerminal);
 
         pollRequestType.setPollType(PollType.PROGRAM_POLL);
         pollRequestType.setComment("Test Comment");
@@ -628,5 +562,13 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         pollRequestType.getAttributes().add(pollAttribute);
 
         return pollRequestType;
+    }
+
+    private void constructPollMobileTerminalAndAddToRequest(PollRequestType request, MobileTerminal terminal) {
+        PollMobileTerminal pmt = new PollMobileTerminal();
+        pmt.setComChannelId(terminal.getChannels().iterator().next().getId().toString());
+        pmt.setConnectId(terminal.getAssetId());
+        pmt.setMobileTerminalId(terminal.getId().toString());
+        request.getMobileTerminals().add(pmt);
     }
 }
