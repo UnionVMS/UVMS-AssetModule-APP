@@ -16,6 +16,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.ProgramPoll;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.util.DateUtils;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
@@ -60,15 +61,11 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     @Test
     @OperateOnDeployment("normal")
     public void createPollTest() {
-        PollRequestType input = new PollRequestType();
+        PollRequestType input = createPollRequestType(PollType.MANUAL_POLL);
         Asset asset = createAndRestBasicAsset();
         MobileTerminal createdMT = createAndRestMobileTerminal(asset);
 
         constructPollMobileTerminalAndAddToRequest(input, createdMT);
-
-        input.setPollType(PollType.MANUAL_POLL);
-        input.setComment("Test Comment");
-        input.setUserName("Test User");
 
         CreatePollResultDto createdPoll = createPoll(input);
         assertNotNull(createdPoll);
@@ -121,62 +118,18 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     @Test
     @OperateOnDeployment("normal")
     public void createConfigurationPollTest() {
-        PollRequestType pollRequest = new PollRequestType();
+        PollRequestType pollRequest = createPollRequestType(PollType.CONFIGURATION_POLL);
+
         Asset asset = createAndRestBasicAsset();
 
         MobileTerminal mt = MobileTerminalTestHelper.createBasicMobileTerminal();
         mt.setAsset(asset);
 
-        MobileTerminal createdMT = getWebTargetExternal()
-                .path("mobileterminal")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(mt), MobileTerminal.class);
-
-        PluginCapability configurable = new PluginCapability();
-        configurable.setName(PluginCapabilityType.CONFIGURABLE);
-        configurable.setValue("TRUE");
-
-        PluginCapability pollable = new PluginCapability();
-        pollable.setName(PluginCapabilityType.POLLABLE);
-        pollable.setValue("TRUE");
-
-        PluginService pluginService = new PluginService();
-        pluginService.setLabelName("Thrane&Thrane");
-        pluginService.setServiceName("eu.europa.ec.fisheries.uvms.plugins.inmarsat");
-        pluginService.setInactive(false);
-        pluginService.setSatelliteType("INMARSAT_C");
-        pluginService.getCapability().add(configurable);
-        pluginService.getCapability().add(pollable);
-
-        List<MobileTerminalPlugin> pluginList = getWebTargetExternal()
-                .path("plugin")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(Collections.singletonList(pluginService)),
-                        new GenericType<List<MobileTerminalPlugin>>() {});
-
-        assertNotNull(pluginList);
+        MobileTerminal createdMT = createMobileTerminalWithPluginAndCapabilities(mt);
 
         constructPollMobileTerminalAndAddToRequest(pollRequest, createdMT);
 
-        PollAttribute attrFrequency = new PollAttribute();
-        attrFrequency.setKey(PollAttributeType.REPORT_FREQUENCY);
-        attrFrequency.setValue("11000");
-
-        PollAttribute attrGracePeriod = new PollAttribute();
-        attrGracePeriod.setKey(PollAttributeType.GRACE_PERIOD);
-        attrGracePeriod.setValue("11020");
-
-        PollAttribute attrInPortGrace = new PollAttribute();
-        attrInPortGrace.setKey(PollAttributeType.IN_PORT_GRACE);
-        attrInPortGrace.setValue("11040");
-
-        pollRequest.getAttributes().addAll(Arrays.asList(attrFrequency, attrGracePeriod, attrInPortGrace));
-
-        pollRequest.setPollType(PollType.CONFIGURATION_POLL);
-        pollRequest.setComment("Test Comment");
-        pollRequest.setUserName("Test User");
+        createPollAttributesForRequest(pollRequest);
 
         CreatePollResultDto createdPoll = createPoll(pollRequest);
 
@@ -184,6 +137,49 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         //TODO: Change when we get the message system working in a sane way
         assertEquals(1, createdPoll.getSentPolls().size() + createdPoll.getUnsentPolls().size());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createConfigurationPoll_ThenGetPollListByMultipleSearchCriteriaTest() {
+        PollRequestType pollRequest = createPollRequestType(PollType.CONFIGURATION_POLL);
+
+        Asset asset = createAndRestBasicAsset();
+
+        MobileTerminal mt = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mt.setAsset(asset);
+
+        MobileTerminal createdMT = createMobileTerminalWithPluginAndCapabilities(mt);
+
+        constructPollMobileTerminalAndAddToRequest(pollRequest, createdMT);
+
+        createPollAttributesForRequest(pollRequest);
+
+        CreatePollResultDto createdPoll = createPoll(pollRequest);
+
+        assertNotNull(createdPoll);
+
+        //TODO: Change when we get the message system working in a sane way
+        assertEquals(1, createdPoll.getSentPolls().size() + createdPoll.getUnsentPolls().size());
+
+        PollListQuery query = createPollListQueryWithPagination();
+        PollSearchCriteria pollSearchCriteria = new PollSearchCriteria();
+        pollSearchCriteria.setIsDynamic(true);
+
+        ListCriteria pollTypeListCriteria = createListCriteria(SearchKey.POLL_TYPE, PollTypeEnum.CONFIGURATION_POLL.name());
+        pollSearchCriteria.getCriterias().add(pollTypeListCriteria);
+
+        ListCriteria connectIdListCriteria = createListCriteria(SearchKey.CONNECT_ID, asset.getId().toString());
+        pollSearchCriteria.getCriterias().add(connectIdListCriteria);
+
+        ListCriteria pollIdListCriteria = createListCriteria(SearchKey.POLL_ID, createdPoll.getSentPolls().get(0));
+        pollSearchCriteria.getCriterias().add(pollIdListCriteria);
+
+        query.setPollSearchCriteria(pollSearchCriteria);
+
+        PollChannelListDto pollChannelListDto = getPollList(query);
+
+        assertNotNull(pollChannelListDto.getPollableChannels());
     }
 
     @Test
@@ -288,15 +284,11 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     @Test
     @OperateOnDeployment("normal")
     public void getPollBySearchCriteria() {
-        PollRequestType pollRequestType = new PollRequestType();
+        PollRequestType pollRequestType = createPollRequestType(PollType.MANUAL_POLL);
         Asset asset = createAndRestBasicAsset();
         MobileTerminal createdMT = createAndRestMobileTerminal(asset);
 
         constructPollMobileTerminalAndAddToRequest(pollRequestType, createdMT);
-
-        pollRequestType.setPollType(PollType.MANUAL_POLL);
-        pollRequestType.setComment("Test Comment");
-        pollRequestType.setUserName("Test User");
 
         CreatePollResultDto createdPoll = createPoll(pollRequestType);
 
@@ -309,11 +301,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
             pollGuid = createdPoll.getSentPolls().get(0);
         }
 
-        PollListQuery input = new PollListQuery();
-        ListPagination pagination = new ListPagination();
-        pagination.setListSize(100);
-        pagination.setPage(1);
-        input.setPagination(pagination);
+        PollListQuery input = createPollListQueryWithPagination();
 
         PollSearchCriteria pollSearchCriteria = new PollSearchCriteria();
         pollSearchCriteria.setIsDynamic(true);
@@ -334,15 +322,11 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     @Test
     @OperateOnDeployment("normal")
     public void getPollByTwoSearchCriteria() {
-        PollRequestType pollRequestType = new PollRequestType();
+        PollRequestType pollRequestType = createPollRequestType(PollType.MANUAL_POLL);
         Asset asset = createAndRestBasicAsset();
         MobileTerminal createdMT = createAndRestMobileTerminal(asset);
 
         constructPollMobileTerminalAndAddToRequest(pollRequestType, createdMT);
-
-        pollRequestType.setPollType(PollType.MANUAL_POLL);
-        pollRequestType.setComment("Test Comment");
-        pollRequestType.setUserName("Test User");
 
         CreatePollResultDto createdPoll = createPoll(pollRequestType);
 
@@ -355,11 +339,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
             pollGuid = createdPoll.getSentPolls().get(0);
         }
 
-        PollListQuery input = new PollListQuery();
-        ListPagination pagination = new ListPagination();
-        pagination.setListSize(100);
-        pagination.setPage(1);
-        input.setPagination(pagination);
+        PollListQuery input = createPollListQueryWithPagination();
 
         PollSearchCriteria pollSearchCriteria = new PollSearchCriteria();
         pollSearchCriteria.setIsDynamic(true);
@@ -383,15 +363,11 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     @Test
     @OperateOnDeployment("normal")
     public void getTwoPollsBySearchCriteria() {
-        PollRequestType pollRequestType = new PollRequestType();
+        PollRequestType pollRequestType = createPollRequestType(PollType.MANUAL_POLL);
         Asset asset = createAndRestBasicAsset();
         MobileTerminal createdMT = createAndRestMobileTerminal(asset);
 
         constructPollMobileTerminalAndAddToRequest(pollRequestType, createdMT);
-
-        pollRequestType.setPollType(PollType.MANUAL_POLL);
-        pollRequestType.setComment("Test Comment");
-        pollRequestType.setUserName("Test User");
 
         CreatePollResultDto createdPoll = createPoll(pollRequestType);
 
@@ -404,15 +380,11 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
             pollGuid = createdPoll.getSentPolls().get(0);
         }
 
-        PollRequestType pollRequestType2 = new PollRequestType();
+        PollRequestType pollRequestType2 = createPollRequestType(PollType.MANUAL_POLL);
         Asset asset2 = createAndRestBasicAsset();
         MobileTerminal createdMT2 = createAndRestMobileTerminal(asset2);
 
         constructPollMobileTerminalAndAddToRequest(pollRequestType2, createdMT2);
-
-        pollRequestType2.setPollType(PollType.MANUAL_POLL);
-        pollRequestType2.setComment("Test Comment");
-        pollRequestType2.setUserName("Test User");
 
         CreatePollResultDto createdPoll2 = createPoll(pollRequestType2);
 
@@ -425,11 +397,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
             pollGuid2 = createdPoll2.getSentPolls().get(0);
         }
 
-        PollListQuery input = new PollListQuery();
-        ListPagination pagination = new ListPagination();
-        pagination.setListSize(100);
-        pagination.setPage(1);
-        input.setPagination(pagination);
+        PollListQuery input = createPollListQueryWithPagination();
 
         PollSearchCriteria pollSearchCriteria = new PollSearchCriteria();
         pollSearchCriteria.setIsDynamic(true);
@@ -456,23 +424,19 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     public void getPollableChannelsTest() {
         Asset asset = createAndRestBasicAsset();
         MobileTerminal createdMT = createAndRestMobileTerminal(asset);
-        PollRequestType pollRequestType = new PollRequestType();
+        PollRequestType pollRequestType = createPollRequestType(PollType.MANUAL_POLL);
 
         constructPollMobileTerminalAndAddToRequest(pollRequestType, createdMT);
-
-        pollRequestType.setPollType(PollType.MANUAL_POLL);
-        pollRequestType.setComment("Test Comment");
-        pollRequestType.setUserName("Test User");
 
         CreatePollResultDto createdPoll = createPoll(pollRequestType);
 
         assertNotNull(createdPoll);
 
         PollableQuery input = new PollableQuery();
-        ListPagination hate = new ListPagination();
-        hate.setPage(1);
-        hate.setListSize(100);
-        input.setPagination(hate);
+        ListPagination pagination = new ListPagination();
+        pagination.setPage(1);
+        pagination.setListSize(100);
+        input.setPagination(pagination);
         input.getConnectIdList().add(asset.getId().toString());
 
         PollChannelListDto pollChannelListDto = getWebTargetExternal()
@@ -509,6 +473,65 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
                 .post(Entity.json(query), PollChannelListDto.class);
     }
 
+    private void createPollAttributesForRequest(PollRequestType pollRequest) {
+        PollAttribute attrFrequency = new PollAttribute();
+        attrFrequency.setKey(PollAttributeType.REPORT_FREQUENCY);
+        attrFrequency.setValue("11000");
+
+        PollAttribute attrGracePeriod = new PollAttribute();
+        attrGracePeriod.setKey(PollAttributeType.GRACE_PERIOD);
+        attrGracePeriod.setValue("11020");
+
+        PollAttribute attrInPortGrace = new PollAttribute();
+        attrInPortGrace.setKey(PollAttributeType.IN_PORT_GRACE);
+        attrInPortGrace.setValue("11040");
+
+        pollRequest.getAttributes().addAll(Arrays.asList(attrFrequency, attrGracePeriod, attrInPortGrace));
+    }
+
+    private MobileTerminal createMobileTerminalWithPluginAndCapabilities(MobileTerminal mt) {
+        MobileTerminal createdMT = getWebTargetExternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mt), MobileTerminal.class);
+
+        PluginCapability configurable = new PluginCapability();
+        configurable.setName(PluginCapabilityType.CONFIGURABLE);
+        configurable.setValue("TRUE");
+
+        PluginCapability pollable = new PluginCapability();
+        pollable.setName(PluginCapabilityType.POLLABLE);
+        pollable.setValue("TRUE");
+
+        PluginService pluginService = new PluginService();
+        pluginService.setLabelName("Thrane&Thrane");
+        pluginService.setServiceName("eu.europa.ec.fisheries.uvms.plugins.inmarsat");
+        pluginService.setInactive(false);
+        pluginService.setSatelliteType("INMARSAT_C");
+        pluginService.getCapability().add(configurable);
+        pluginService.getCapability().add(pollable);
+
+        List<MobileTerminalPlugin> pluginList = getWebTargetExternal()
+                .path("plugin")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(Collections.singletonList(pluginService)),
+                        new GenericType<List<MobileTerminalPlugin>>() {});
+
+        assertNotNull(pluginList);
+        return createdMT;
+    }
+
+    private PollListQuery createPollListQueryWithPagination() {
+        PollListQuery input = new PollListQuery();
+        ListPagination pagination = new ListPagination();
+        pagination.setListSize(100);
+        pagination.setPage(1);
+        input.setPagination(pagination);
+        return input;
+    }
+
     private ListCriteria createListCriteria(SearchKey key, String value) {
         ListCriteria listCriteria = new ListCriteria();
         listCriteria.setKey(key);
@@ -534,12 +557,8 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     }
 
     private PollRequestType createProgramPoll(MobileTerminal mobileTerminal){
-        PollRequestType pollRequestType = new PollRequestType();
+        PollRequestType pollRequestType = createPollRequestType(PollType.PROGRAM_POLL);
         constructPollMobileTerminalAndAddToRequest(pollRequestType, mobileTerminal);
-
-        pollRequestType.setPollType(PollType.PROGRAM_POLL);
-        pollRequestType.setComment("Test Comment");
-        pollRequestType.setUserName("Test User");
 
         PollAttribute pollAttribute = new PollAttribute();
         pollAttribute.setKey(PollAttributeType.USER);
@@ -562,6 +581,14 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         pollRequestType.getAttributes().add(pollAttribute);
 
         return pollRequestType;
+    }
+
+    private PollRequestType createPollRequestType(PollType type) {
+        PollRequestType pollRequest = new PollRequestType();
+        pollRequest.setPollType(type);
+        pollRequest.setComment("Test Comment");
+        pollRequest.setUserName("Test User");
+        return pollRequest;
     }
 
     private void constructPollMobileTerminalAndAddToRequest(PollRequestType request, MobileTerminal terminal) {
