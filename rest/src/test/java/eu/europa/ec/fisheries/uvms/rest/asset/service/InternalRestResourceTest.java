@@ -37,7 +37,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
-public class InternalRestResourceTest2 extends AbstractAssetRestTest {
+public class InternalRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
