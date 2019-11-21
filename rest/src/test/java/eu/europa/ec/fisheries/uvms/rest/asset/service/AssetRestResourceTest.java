@@ -986,7 +986,7 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         createdAsset.setName(newAssetName);
         Asset updatedAsset = restUpdateAsset(createdAsset);
 
-        //assertEquals(newAssetName, updatedAsset.getName());
+        assertEquals(newAssetName, updatedAsset.getName());
         assertEquals(EventCode.MOD.value(), updatedAsset.getEventCode());
 
         // UPDATE THE CONTACTINFO
