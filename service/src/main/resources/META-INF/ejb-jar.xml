@@ -15,7 +15,7 @@
 			<interceptor-class>net.bull.javamelody.MonitoringInterceptor</interceptor-class>
 		</interceptor-binding>
 		<interceptor-binding>
-			<ejb-name>AssetHistoryServiceBean</ejb-name>
+			<ejb-name>AssetConfigHelper</ejb-name>
 			<interceptor-class>net.bull.javamelody.MonitoringInterceptor</interceptor-class>
 		</interceptor-binding>
 		<interceptor-binding>
@@ -23,39 +23,39 @@
 			<interceptor-class>net.bull.javamelody.MonitoringInterceptor</interceptor-class>
 		</interceptor-binding>
 		<interceptor-binding>
-			<ejb-name>FishingGearServiceBean</ejb-name>
+			<ejb-name>AuditServiceBean</ejb-name>
 			<interceptor-class>net.bull.javamelody.MonitoringInterceptor</interceptor-class>
 		</interceptor-binding>
 		<interceptor-binding>
-			<ejb-name>GetAssetEventBean</ejb-name>
+			<ejb-name>ConfigServiceBean</ejb-name>
 			<interceptor-class>net.bull.javamelody.MonitoringInterceptor</interceptor-class>
 		</interceptor-binding>
 		<interceptor-binding>
-			<ejb-name>GetAssetGroupEventBean</ejb-name>
+			<ejb-name>CustomCodesServiceBean</ejb-name>
 			<interceptor-class>net.bull.javamelody.MonitoringInterceptor</interceptor-class>
 		</interceptor-binding>
 		<interceptor-binding>
-			<ejb-name>GetAssetGroupListByAssetGuidEventBean</ejb-name>
+			<ejb-name>ConfigServiceBeanMT</ejb-name>
 			<interceptor-class>net.bull.javamelody.MonitoringInterceptor</interceptor-class>
 		</interceptor-binding>
 		<interceptor-binding>
-			<ejb-name>GetAssetListByAssetGroupEventBean</ejb-name>
+			<ejb-name>MobileTerminalEventServiceBean</ejb-name>
 			<interceptor-class>net.bull.javamelody.MonitoringInterceptor</interceptor-class>
 		</interceptor-binding>
 		<interceptor-binding>
-			<ejb-name>GetAssetListEventBean</ejb-name>
+			<ejb-name>MobileTerminalServiceBean</ejb-name>
 			<interceptor-class>net.bull.javamelody.MonitoringInterceptor</interceptor-class>
 		</interceptor-binding>
 		<interceptor-binding>
-			<ejb-name>PingEventBean</ejb-name>
+			<ejb-name>PluginServiceBean</ejb-name>
 			<interceptor-class>net.bull.javamelody.MonitoringInterceptor</interceptor-class>
 		</interceptor-binding>
 		<interceptor-binding>
-			<ejb-name>UpsertAssetMessageEventBean</ejb-name>
+			<ejb-name>PollServiceBean</ejb-name>
 			<interceptor-class>net.bull.javamelody.MonitoringInterceptor</interceptor-class>
 		</interceptor-binding>
 		<interceptor-binding>
-			<ejb-name>UpsertFishingGearsMessageEventBean</ejb-name>
+			<ejb-name>AssetDao</ejb-name>
 			<interceptor-class>net.bull.javamelody.MonitoringInterceptor</interceptor-class>
 		</interceptor-binding>
 	</assembly-descriptor>
