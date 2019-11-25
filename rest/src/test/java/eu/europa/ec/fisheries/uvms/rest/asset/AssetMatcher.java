@@ -10,6 +10,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
@@ -65,7 +66,8 @@ public class AssetMatcher extends TypeSafeDiagnosingMatcher<Asset> {
             mismatchDescription.appendText(String.format("Flag state is not equal. Expected %s, Actual: %s", asset
                     .getFlagStateCode(), otherAsset.getFlagStateCode()));
         }
-        if (!Objects.equals(asset.getUpdateTime(), otherAsset.getUpdateTime())) {
+        if (!Objects.equals(asset.getUpdateTime().truncatedTo(ChronoUnit.MILLIS),
+                otherAsset.getUpdateTime().truncatedTo(ChronoUnit.MILLIS))) {
             equals = false;
             mismatchDescription.appendText(String.format("Update time is not equal. Expected %s, Actual: %s", asset
                     .getUpdateTime(), otherAsset.getUpdateTime()));

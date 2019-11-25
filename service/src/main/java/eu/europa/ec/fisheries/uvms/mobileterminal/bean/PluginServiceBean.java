@@ -39,6 +39,8 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
 @Stateless
@@ -151,7 +153,7 @@ public class PluginServiceBean {
         SetCommandRequest request = new SetCommandRequest();
         request.setMethod(ExchangeModuleMethod.SET_COMMAND);
         CommandType commandType = new CommandType();
-        commandType.setTimestamp(DateUtils.nowUTC().toDate());
+        commandType.setTimestamp(Date.from(Instant.now()));
         commandType.setCommand(type);
         commandType.setPluginName(pluginName);
         commandType.setFwdRule(fwdRule);
