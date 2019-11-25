@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.asset.client;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import eu.europa.ec.fisheries.uvms.asset.client.model.*;
@@ -19,7 +20,7 @@ public abstract class AssetHelper {
         assetEntity.setExternalMarking("EXT123");
         assetEntity.setFlagStateCode("SWE");
 
-        assetEntity.setCommissionDate(OffsetDateTime.now(ZoneOffset.UTC));
+        assetEntity.setCommissionDate(OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.MILLIS));
         assetEntity.setCfr("CRF" + getRandomIntegers(9));
         assetEntity.setIrcs("F" + getRandomIntegers(7));
         assetEntity.setImo(getRandomIntegers(7));
