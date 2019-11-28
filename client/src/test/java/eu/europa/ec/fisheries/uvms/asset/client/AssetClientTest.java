@@ -1,5 +1,7 @@
 package eu.europa.ec.fisheries.uvms.asset.client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.asset.client.model.*;
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
@@ -183,6 +185,23 @@ public class AssetClientTest extends AbstractClientTest {
         List<AssetDTO> assetList = assetClient.getAssetList(query);
         assertThat(assetList.size(), CoreMatchers.is(1));
         assertThat(assetList.get(0).getHistoryId(), CoreMatchers.is(firstAssetBo.getAsset().getHistoryId()));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetIdByQuery() throws JsonProcessingException {
+        AssetDTO asset = AssetHelper.createBasicAsset();
+        AssetBO assetBo = new AssetBO();
+        assetBo.setAsset(asset);
+        AssetBO firstAssetBo = assetClient.upsertAsset(assetBo);
+
+        AssetQuery query = new AssetQuery();
+        query.setCfr(Arrays.asList(asset.getCfr()));
+        query.setName(Arrays.asList(asset.getName()));
+
+        List<String> assetList = assetClient.getAssetIdList(query, 1, 100000, true, false);
+        assertThat(assetList.size(), CoreMatchers.is(1));
+        assertEquals(assetList.get(0), firstAssetBo.getAsset().getId().toString());
     }
 
     @Test

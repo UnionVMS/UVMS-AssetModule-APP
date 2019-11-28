@@ -97,6 +97,20 @@ public class AssetClient {
 
         return assetResponse.getAssetList();
     }
+
+    public List<String> getAssetIdList(AssetQuery query, int page, int size, boolean dynamic, boolean includeInactivated) {
+        List<String> assetResponse = webTarget
+                .path("queryIdOnly")
+                .queryParam("page", page)
+                .queryParam("size", size)
+                .queryParam("dynamic", dynamic)
+                .queryParam("includeInactivated", includeInactivated)
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
+                .post(Entity.json(query), new GenericType<List<String>>() {});
+
+        return assetResponse;
+    }
     
     public List<AssetDTO> getAssetList(AssetQuery query, boolean dynamic) {
         AssetListResponse assetResponse = webTarget

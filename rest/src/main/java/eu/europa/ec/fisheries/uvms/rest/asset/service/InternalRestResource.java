@@ -19,6 +19,7 @@ import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.CustomCodesService;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
+import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
@@ -68,6 +69,9 @@ public class InternalRestResource {
     @Inject
     private PollServiceBean pollServiceBean;
 
+    @Inject
+    AssetDao assetDao;
+
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
     private ObjectMapper objectMapper() {
         ObjectMapperContextResolver omcr = new ObjectMapperContextResolver();
@@ -103,6 +107,27 @@ public class InternalRestResource {
             List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
             AssetListResponse assetList = assetService.getAssetList(searchFields, page, size, dynamic, includeInactivated);
             String returnString = objectMapper().writeValueAsString(assetList);
+            return Response.ok(returnString).build();
+        } catch (JsonProcessingException e) {
+            LOG.error("Error when getting getAssetList", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
+        }
+    }
+
+
+    @POST
+    @Path("queryIdOnly")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
+    public Response getAssetListIdOnly(@DefaultValue("1") @QueryParam("page") int page,
+                                 @DefaultValue("10000000") @QueryParam("size") int size,
+                                 @DefaultValue("true") @QueryParam("dynamic") boolean dynamic,
+                                 @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
+                                 AssetQuery query) {
+        try {
+            List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
+            List<Asset> assetList = assetDao.getAssetListSearchPaginated( page, size, searchFields, dynamic, includeInactivated);
+            List<UUID> assetIdList = assetList.stream().map(Asset::getId).collect(Collectors.toList());
+            String returnString = objectMapper().writeValueAsString(assetIdList);
             return Response.ok(returnString).build();
         } catch (JsonProcessingException e) {
             LOG.error("Error when getting getAssetList", e);
