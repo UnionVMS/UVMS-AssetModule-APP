@@ -118,9 +118,8 @@ public class AssetTestsHelper {
 
     public static Note createBasicNote() {
         Note note = new Note();
-        note.setActivityCode("Activity");
-        note.setNotes("Notes: " + getRandomIntegers(10));
-        note.setUser("Test");
+        note.setNote("Notes: " + getRandomIntegers(10));
+        note.setCreatedBy("Test");
         return note;
     }
 
@@ -131,26 +130,6 @@ public class AssetTestsHelper {
         contactInfo.setPhoneNumber("" + getRandomIntegers(9));
         contactInfo.setCountry("SWE");
         return contactInfo;
-    }
-
-    public List<Note> createNotesHelper(Asset assetEntity, OffsetDateTime date) {
-
-        List<Note> notes = new ArrayList<>();
-        Note note = new Note();
-        note.setActivityCode("EL3");
-        note.setContact("TESTContact");
-        note.setDate(date);
-        note.setDocument("this is a document text");
-        note.setLicenseHolder("verisign licenseholder");
-        note.setNotes("this is a note in a document");
-        note.setReadyDate(date);
-        note.setSheetNumber("1");
-        note.setSource("INTERNAL");
-        note.setUpdatedBy("TEST");
-        note.setUser("A USER");
-        note.setUpdateTime(date);
-        notes.add(note);
-        return notes;
     }
 
     public static String getRandomIntegers(int length) {

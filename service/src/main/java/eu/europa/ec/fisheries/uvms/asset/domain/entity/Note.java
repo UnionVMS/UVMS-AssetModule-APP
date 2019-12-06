@@ -44,7 +44,7 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "Note", indexes = { @Index(columnList = "assetId", name = "Note_asset_FK_INX10", unique = false),})
+@Table(name = "note", indexes = { @Index(columnList = "asset_Id", name = "Note_asset_FK_INX10", unique = false),})
 @NamedQueries({
     @NamedQuery(name = Note.FIND_BY_ASSET, query = "SELECT n FROM Note n WHERE n.assetId = :assetId"),
 })
@@ -60,45 +60,18 @@ public class Note implements Serializable {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "assetid")
+    @Column(name = "asset_id")
     private UUID assetId;
 
-    @Column(name = "date")
-    private OffsetDateTime date;
+    @Column(name = "created_date")
+    private OffsetDateTime createdOn;
 
-    @Column(name = "activitycode")
-    private String activityCode;
-
-    @Column(name = "noteuser")
-    private String user;
-
-    @Column(name = "readydate")
-    private OffsetDateTime readyDate;
-
-    @Column(name = "licenseholder")
-    private String licenseHolder;
-
-    @Column(name = "contact")
-    private String contact;
-
-    @Column(name = "sheetnumber")
-    private String sheetNumber;
-
-    @Column(name = "notes")
-    private String notes;
-
-    @Column(name = "document")
-    private String document;
-
-    @Column(name = "source")
-    private String source;
-
-    @Column(name = "updatetime")
-    private OffsetDateTime updateTime;
+    @Column(name = "note")
+    private String note;
 
     @Size(max = 60)
-    @Column(name = "updatedby")
-    private String updatedBy;
+    @Column(name = "created_by")
+    private String createdBy;
 
     public Note() {}
 
@@ -118,104 +91,39 @@ public class Note implements Serializable {
         this.assetId = assetId;
     }
 
-    public OffsetDateTime getDate() {
-        return date;
+    public OffsetDateTime getCreatedOn() {
+        return createdOn;
     }
 
-    public void setDate(OffsetDateTime date) {
-        this.date = date;
+    public void setCreatedOn(OffsetDateTime createdOn) {
+        this.createdOn = createdOn;
     }
 
-    public String getActivityCode() {
-        return activityCode;
+    public String getNote() {
+        return note;
     }
 
-    public void setActivityCode(String activityCode) {
-        this.activityCode = activityCode;
+    public void setNote(String note) {
+        this.note = note;
     }
 
-    public String getUser() {
-        return user;
+
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public OffsetDateTime getReadyDate() {
-        return readyDate;
-    }
-
-    public void setReadyDate(OffsetDateTime readyDate) {
-        this.readyDate = readyDate;
-    }
-
-    public String getLicenseHolder() {
-        return licenseHolder;
-    }
-
-    public void setLicenseHolder(String licenseHolder) {
-        this.licenseHolder = licenseHolder;
-    }
-
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
-    public String getSheetNumber() {
-        return sheetNumber;
-    }
-
-    public void setSheetNumber(String sheetNumber) {
-        this.sheetNumber = sheetNumber;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
-    public String getDocument() {
-        return document;
-    }
-
-    public void setDocument(String document) {
-        this.document = document;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    public OffsetDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(OffsetDateTime updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public String getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     @Override
     public String toString() {
-        return "Note [id=" + id + ", activity=" + activityCode + ", user=" + user + ", notes=" + notes + "]";
+        return "Note{" +
+                "id=" + id +
+                ", assetId=" + assetId +
+                ", createdOn=" + createdOn +
+                ", note='" + note + '\'' +
+                ", createdBy='" + createdBy + '\'' +
+                '}';
     }
 }

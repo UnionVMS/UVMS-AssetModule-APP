@@ -731,7 +731,7 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
                 .post(Entity.json(note), Note.class);
 
         assertNotNull(createdNote);
-        assertThat(createdNote.getNotes(), is(note.getNotes()));
+        assertThat(createdNote.getNote(), is(note.getNote()));
     }
 
     @Test
@@ -838,7 +838,7 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
 
         List<Note> fetchedNotes = response.readEntity(new GenericType<List<Note>>() {});
         assertThat(fetchedNotes.size(), is(1));
-        assertThat(fetchedNotes.get(0).getNotes(), is(createdNote.getNotes()));
+        assertThat(fetchedNotes.get(0).getNote(), is(createdNote.getNote()));
     }
     
     @Test
