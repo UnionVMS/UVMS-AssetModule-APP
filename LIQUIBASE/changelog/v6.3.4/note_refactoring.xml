@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Developed by the European Commission - Directorate General for Maritime Affairs and Fisheries @ European Union, 2015-2016.
+
+  This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can redistribute it
+  and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of
+  the License, or any later version. The IFDM Suite is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+  details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+                   logicalFilePath="changelog/v6.3.4/note_refactoring.xml.xml">
+
+    <changeSet author="joemat" id="Note refactoring">
+        <dropTable tableName="note"/>
+
+        <createTable tableName="note">
+            <column name="id" type="UUID"/>
+            <column name="asset_id" type="UUID"/>
+            <column name="note" type="CLOB"/>
+            <column name="created_by" type="CLOB"/>
+            <column name="created_date" type="TIMESTAMP(6) WITH TIME ZONE"/>
+        </createTable>
+
+        <createIndex indexName="note_asset_id_idx"
+                     tableName="note">
+            <column name="asset_id"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

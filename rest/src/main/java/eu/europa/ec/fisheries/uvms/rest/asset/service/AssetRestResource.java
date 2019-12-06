@@ -378,7 +378,7 @@ public class AssetRestResource {
             @ApiResponse(code = 200, message = "Notes successfully retrieved") })
     @Path("{id}/notes")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getNotesForAsset(@ApiParam(value="The id of asset to retrieve notes", required = true)  @PathParam("id") UUID assetId)  throws Exception {
+    public Response getNotesForAsset(@ApiParam(value="The id of asset to retrieve notes", required = true)  @PathParam("id") UUID assetId) {
         try {
             List<Note> notes = assetService.getNotesForAsset(assetId);
             return Response.ok(notes).header("MDC", MDC.get("requestId")).build();
@@ -395,7 +395,7 @@ public class AssetRestResource {
             @ApiResponse(code = 200, message = "Note successfully created") })
     @Path("/notes")
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response createNoteForAsset(@ApiParam(value="The Note to store" , required=true) Note note)  throws Exception {
+    public Response createNoteForAsset(@ApiParam(value="The Note to store" , required=true) Note note) {
         try {
             String user = servletRequest.getRemoteUser();
             Note createdNote = assetService.createNoteForAsset(note.getAssetId(), note, user);
@@ -413,7 +413,7 @@ public class AssetRestResource {
             @ApiResponse(code = 200, message = "Note successfully updated") })
     @Path("/notes")
     @RequiresFeature(UnionVMSFeature.manageVessels)
-    public Response updateNote(@ApiParam(value="A Note to be updated", required=true)  Note note)  throws Exception {
+    public Response updateNote(@ApiParam(value="A Note to be updated", required=true)  Note note) {
         try {
             String user = servletRequest.getRemoteUser();
             Note updatedNote = assetService.updateNote(note, user);

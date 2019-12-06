@@ -124,9 +124,9 @@ public abstract class AssetHelper {
 
     public static Note createBasicNote() {
         Note note = new Note();
-        note.setActivityCode("Activity");
-        note.setNotes("Notes: " + getRandomIntegers(10));
-        note.setUser("Test");
+        note.setNote("Notes: " + getRandomIntegers(10));
+        note.setCreatedBy("Test");
+        note.setCreatedOn(OffsetDateTime.now());
         return note;
     }
     

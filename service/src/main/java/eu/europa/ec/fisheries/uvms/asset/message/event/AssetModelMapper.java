@@ -199,22 +199,10 @@ public class AssetModelMapper {
         for (Note note : notes) {
             AssetNotes assetNote = new AssetNotes();
             assetNote.setId(note.getId().toString());
-            if (note.getDate() != null) {
-                assetNote.setDate(note.getDate().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+            if (note.getCreatedOn() != null) {
+                assetNote.setDate(note.getCreatedOn().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
             }
-            assetNote.setActivity(note.getActivityCode());
-            assetNote.setUser(note.getUser());
-            if (note.getReadyDate() != null) {
-                assetNote.setReadyDate(note.getReadyDate().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-            }
-            assetNote.setLicenseHolder(note.getLicenseHolder());
-            assetNote.setContact(note.getContact());
-            assetNote.setSheetNumber(note.getSheetNumber());
-            assetNote.setNotes(note.getNotes());
-            assetNote.setDocument(note.getDocument());
-            if (note.getSource() != null) {
-                assetNote.setSource(NoteSource.fromValue(note.getSource()));
-            }
+            assetNote.setNotes(note.getNote());
             assetModel.getNotes().add(assetNote);
         }
 
@@ -318,21 +306,9 @@ public class AssetModelMapper {
                 note.setId(UUID.fromString(assetNote.getId()));
             }
             if (assetNote.getDate() != null) {
-                note.setDate(OffsetDateTime.parse(assetNote.getDate(), DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+                note.setCreatedOn(OffsetDateTime.parse(assetNote.getDate(), DateTimeFormatter.ISO_OFFSET_DATE_TIME));
             }
-            note.setActivityCode(assetNote.getActivity());
-            note.setUser(assetNote.getUser());
-            if (assetNote.getReadyDate() != null) {
-                note.setReadyDate(OffsetDateTime.parse(assetNote.getReadyDate(), DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-            }
-            note.setLicenseHolder(assetNote.getLicenseHolder());
-            note.setContact(assetNote.getContact());
-            note.setSheetNumber(assetNote.getSheetNumber());
-            note.setNotes(assetNote.getNotes());
-            note.setDocument(assetNote.getDocument());
-            if (assetNote.getSource() != null) {
-                note.setSource(assetNote.getSource().toString());
-            }
+            note.setNote(assetNote.getNotes());
             notes.add(note);
         }
         return notes;

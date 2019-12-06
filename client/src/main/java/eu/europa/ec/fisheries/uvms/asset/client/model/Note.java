@@ -16,101 +16,52 @@ import java.util.UUID;
 public class Note {
 
     private UUID id;
+
     private UUID assetId;
-    private OffsetDateTime date;
-    private String activityCode;
-    private String user;
-    private OffsetDateTime readyDate;
-    private String licenseHolder;
-    private String contact;
-    private String sheetNumber;
-    private String notes;
-    private String document;
-    private String source;
-    private OffsetDateTime updateTime;
-    private String updatedBy;
+
+    private OffsetDateTime createdOn;
+
+    private String note;
+
+    private String createdBy;
+
     public UUID getId() {
         return id;
     }
+
     public void setId(UUID id) {
         this.id = id;
     }
+
     public UUID getAssetId() {
         return assetId;
     }
+
     public void setAssetId(UUID assetId) {
         this.assetId = assetId;
     }
-    public OffsetDateTime getDate() {
-        return date;
+
+    public OffsetDateTime getCreatedOn() {
+        return createdOn;
     }
-    public void setDate(OffsetDateTime date) {
-        this.date = date;
+
+    public void setCreatedOn(OffsetDateTime createdOn) {
+        this.createdOn = createdOn;
     }
-    public String getActivityCode() {
-        return activityCode;
+
+    public String getNote() {
+        return note;
     }
-    public void setActivityCode(String activityCode) {
-        this.activityCode = activityCode;
+
+    public void setNote(String note) {
+        this.note = note;
     }
-    public String getUser() {
-        return user;
+
+    public String getCreatedBy() {
+        return createdBy;
     }
-    public void setUser(String user) {
-        this.user = user;
-    }
-    public OffsetDateTime getReadyDate() {
-        return readyDate;
-    }
-    public void setReadyDate(OffsetDateTime readyDate) {
-        this.readyDate = readyDate;
-    }
-    public String getLicenseHolder() {
-        return licenseHolder;
-    }
-    public void setLicenseHolder(String licenseHolder) {
-        this.licenseHolder = licenseHolder;
-    }
-    public String getContact() {
-        return contact;
-    }
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-    public String getSheetNumber() {
-        return sheetNumber;
-    }
-    public void setSheetNumber(String sheetNumber) {
-        this.sheetNumber = sheetNumber;
-    }
-    public String getNotes() {
-        return notes;
-    }
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-    public String getDocument() {
-        return document;
-    }
-    public void setDocument(String document) {
-        this.document = document;
-    }
-    public String getSource() {
-        return source;
-    }
-    public void setSource(String source) {
-        this.source = source;
-    }
-    public OffsetDateTime getUpdateTime() {
-        return updateTime;
-    }
-    public void setUpdateTime(OffsetDateTime updateTime) {
-        this.updateTime = updateTime;
-    }
-    public String getUpdatedBy() {
-        return updatedBy;
-    }
-    public void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy;
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }

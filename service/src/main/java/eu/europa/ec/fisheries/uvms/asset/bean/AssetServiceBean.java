@@ -394,15 +394,13 @@ public class AssetServiceBean implements AssetService {
             throw new IllegalArgumentException("Could not find any asset with id: " + assetId);
         }
         note.setAssetId(asset.getId());
-        note.setUpdatedBy(username);
-        note.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        note.setCreatedBy(username);
         return noteDao.createNote(note);
     }
 
     @Override
     public Note updateNote(Note note, String username) {
-        note.setUpdatedBy(username);
-        note.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        note.setCreatedBy(username);
         return noteDao.updateNote(note);
     }
 
