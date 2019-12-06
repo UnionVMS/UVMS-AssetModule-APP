@@ -395,6 +395,7 @@ public class AssetServiceBean implements AssetService {
         }
         note.setAssetId(asset.getId());
         note.setCreatedBy(username);
+        note.setCreatedOn(OffsetDateTime.now());
         return noteDao.createNote(note);
     }
 
