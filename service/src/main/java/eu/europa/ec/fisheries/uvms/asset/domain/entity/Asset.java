@@ -15,7 +15,10 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.*;
 
@@ -412,7 +415,7 @@ public class Asset implements Serializable {
     }
 
     public void setCfr(String cfr) {
-        this.cfr = cfr;
+        this.cfr = (cfr != null && cfr.isEmpty() ? null : cfr);
     }
 
     public String getImo() {
@@ -420,7 +423,7 @@ public class Asset implements Serializable {
     }
 
     public void setImo(String imo) {
-        this.imo = imo;
+        this.imo = (imo != null && imo.isEmpty() ? null : imo);
     }
 
     public String getIrcs() {
@@ -428,7 +431,7 @@ public class Asset implements Serializable {
     }
 
     public void setIrcs(String ircs) {
-        this.ircs = ircs;
+        this.ircs = (ircs != null && ircs.isEmpty() ? null : ircs);
     }
 
     public String getMmsi() {
@@ -436,7 +439,7 @@ public class Asset implements Serializable {
     }
 
     public void setMmsi(String mmsi) {
-        this.mmsi = mmsi;
+        this.mmsi = (mmsi != null && mmsi.isEmpty() ? null : mmsi);
     }
 
     public String getIccat() {
@@ -444,7 +447,7 @@ public class Asset implements Serializable {
     }
 
     public void setIccat(String iccat) {
-        this.iccat = iccat;
+        this.iccat = (iccat != null && iccat.isEmpty() ? null : iccat);
     }
 
     public String getUvi() {
@@ -452,7 +455,7 @@ public class Asset implements Serializable {
     }
 
     public void setUvi(String uvi) {
-        this.uvi = uvi;
+        this.uvi = (uvi != null && uvi.isEmpty() ? null : uvi);
     }
 
     public String getGfcm() {
@@ -460,7 +463,7 @@ public class Asset implements Serializable {
     }
 
     public void setGfcm(String gfcm) {
-        this.gfcm = gfcm;
+        this.gfcm = (gfcm != null && gfcm.isEmpty() ? null : gfcm);
     }
 
     public Boolean getActive() {
@@ -500,7 +503,7 @@ public class Asset implements Serializable {
     }
 
     public void setExternalMarking(String externalMarking) {
-        this.externalMarking = externalMarking;
+        this.externalMarking = (externalMarking != null && externalMarking.isEmpty() ? null : externalMarking);
     }
 
     public Boolean getAgentIsAlsoOwner() {
