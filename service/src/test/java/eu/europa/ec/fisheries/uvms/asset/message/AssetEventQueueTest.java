@@ -416,6 +416,76 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
     }
 
 
+    @Test
+    @RunAsClient
+    public void updateAssetWithEmptyStringIRCS() throws Exception {
+
+        Asset asset = AssetTestHelper.createBasicAsset();
+        asset.setIrcs("");
+        asset.setName("updateAssetWithEmptyStringIRCS");
+        jmsHelper.upsertAsset(asset);
+        Thread.sleep(2000);
+
+        eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset newAsset = new eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset();
+
+        newAsset.setMmsi(AssetTestHelper.getRandomIntegers(9));
+        newAsset.setIrcs(asset.getIrcs());
+        newAsset.setName("shouldNotBeThis");
+        List<eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset> assetList = new ArrayList<>();
+        assetList.add(newAsset);
+        jmsHelper.assetInfo(assetList);
+        Thread.sleep(2000);
+
+        Asset fetchedAsset = jmsHelper.getAssetById(asset.getMmsiNo(), AssetIdType.MMSI);
+        assertTrue(fetchedAsset != null);
+        assertTrue(fetchedAsset.getName() != null);
+        assertTrue(fetchedAsset.getName(), fetchedAsset.getName().equals(asset.getName()));
+        assertTrue(fetchedAsset.getMmsiNo() != null);
+        assertTrue(fetchedAsset.getIrcs() == null);
+    }
+
+
+    @Test
+    @RunAsClient
+    public void createSeveralAssetsWithEmptyStringAndUpdateOneOfThemIRCS() throws Exception {
+
+        Asset asset = AssetTestHelper.createBasicAsset();
+        asset.setIrcs("");
+        asset.setName("createAssetWithEmptyStringIRCS");
+        jmsHelper.upsertAsset(asset);
+
+        Asset asset2 = AssetTestHelper.createBasicAsset();
+        asset2.setIrcs("");
+        asset2.setName("createAssetWithEmptyStringIRCS2");
+        jmsHelper.upsertAsset(asset2);
+        Thread.sleep(2000);
+
+        eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset newAsset = new eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset();
+
+        newAsset.setMmsi(asset2.getMmsiNo());
+        newAsset.setIrcs(asset2.getIrcs());
+        newAsset.setName("createAssetWithEmptyStringIRCS2NewName");
+        List<eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset> assetList = new ArrayList<>();
+        assetList.add(newAsset);
+        jmsHelper.assetInfo(assetList);
+        Thread.sleep(2000);
+
+        Asset fetchedAssetNotUpdated = jmsHelper.getAssetById(asset.getMmsiNo(), AssetIdType.MMSI);
+        assertTrue(fetchedAssetNotUpdated != null);
+        assertTrue(fetchedAssetNotUpdated.getName() != null);
+        assertTrue(fetchedAssetNotUpdated.getName(), fetchedAssetNotUpdated.getName().equals(asset.getName()));
+        assertTrue(fetchedAssetNotUpdated.getMmsiNo() != null);
+        assertTrue(fetchedAssetNotUpdated.getIrcs() == null);
+
+        Asset fetchedAssetUpdated = jmsHelper.getAssetById(asset2.getMmsiNo(), AssetIdType.MMSI);
+        assertTrue(fetchedAssetUpdated != null);
+        assertTrue(fetchedAssetUpdated.getName() != null);
+        assertTrue(fetchedAssetUpdated.getName(), fetchedAssetUpdated.getName().equals(newAsset.getName()));
+        assertTrue(fetchedAssetUpdated.getMmsiNo() != null);
+        assertTrue(fetchedAssetUpdated.getIrcs() == null);
+    }
+
+
 
 
 

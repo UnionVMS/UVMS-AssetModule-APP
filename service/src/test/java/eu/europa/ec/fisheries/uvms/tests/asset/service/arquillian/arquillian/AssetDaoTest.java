@@ -72,6 +72,20 @@ public class AssetDaoTest extends TransactionalTests {
         commit();
     }
 
+    @Test
+    @OperateOnDeployment("normal")
+    public void createSeveralAssetsWithEmptyIrcsTest() {
+        Asset asset1 = AssetTestsHelper.createBiggerAsset();
+        asset1.setIrcs("");
+        asset1 = assetDao.createAsset(asset1);
+        assertThat(asset1.getId(), is(notNullValue()));
+
+        Asset asset2 = AssetTestsHelper.createBiggerAsset();
+        asset2.setIrcs("");
+        asset2 = assetDao.createAsset(asset2);
+        assertThat(asset2.getId(), is(notNullValue()));
+    }
+
     @Test(expected = EJBTransactionRolledbackException.class)
     @OperateOnDeployment("normal")
     public void createAssetNullInputShouldThrowExceptionTest() {
@@ -189,6 +203,24 @@ public class AssetDaoTest extends TransactionalTests {
         assertThat(fetchedAsset.getName(), is(asset.getName()));
         assertThat(fetchedAsset.getGfcm(), is(asset.getGfcm()));
         assertThat(fetchedAsset.getActive(), is(asset.getActive()));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetByMmsiOrIrcsWithSeveralAssetsTest() {
+        Asset asset1 = AssetTestsHelper.createBiggerAsset();
+        asset1.setIrcs("");
+        asset1 = assetDao.createAsset(asset1);
+        assertThat(asset1.getId(), is(notNullValue()));
+
+        Asset asset2 = AssetTestsHelper.createBiggerAsset();
+        asset2.setIrcs("");
+        asset2 = assetDao.createAsset(asset2);
+        assertThat(asset2.getId(), is(notNullValue()));
+
+        List<Asset> fetchedAsset = assetDao.getAssetByMmsiOrIrcs(asset1.getMmsi(), null);
+        assertEquals(1, fetchedAsset.size());
+        assertTrue(fetchedAsset.get(0).getId().equals(asset1.getId()));
     }
 
     @Test
@@ -408,7 +440,7 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey.setSearchValues(Collections.singletonList(asset.getCfr()));
         searchKeyValues.add(searchKey);
         Long count = assetDao.getAssetCount(searchKeyValues, false, false);
-        assertEquals(new Long(1), count);
+        assertEquals(Long.valueOf(1), count);
 
         assetDao.deleteAsset(asset);
         commit();
@@ -431,7 +463,7 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey.setSearchValues(Collections.singletonList(asset.getCfr()));
         searchKeyValues.add(searchKey);
         Long count = assetDao.getAssetCount(searchKeyValues, false, false);
-        assertEquals(new Long(1), count);
+        assertEquals(Long.valueOf(1), count);
 
         assetDao.deleteAsset(asset);
         commit();
@@ -458,7 +490,7 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey.setSearchValues(Collections.singletonList(asset.getCfr()));
         searchKeyValues.add(searchKey);
         Long count = assetDao.getAssetCount(searchKeyValues, false, false);
-        assertEquals(new Long(1), count);
+        assertEquals(Long.valueOf(1), count);
 
         assetDao.deleteAsset(asset);
         assetDao.deleteAsset(asset2);
@@ -478,7 +510,7 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey.setSearchValues(Collections.singletonList("TESTCFR"));
         searchKeyValues.add(searchKey);
         Long count = assetDao.getAssetCount(searchKeyValues, false, false);
-        assertEquals(new Long(0), count);
+        assertEquals(Long.valueOf(0), count);
 
         assetDao.deleteAsset(asset);
         commit();
