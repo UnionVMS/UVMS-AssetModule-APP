@@ -447,7 +447,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
 
     @Test
     @RunAsClient
-    public void createSeveralAssetsWithEmptyStringAndUpdateOneOfThemIRCS() throws Exception {
+    public void createSeveralAssetsWithEmptyStringIRCSAndUpdateOneOfThemTest() throws Exception {
 
         Asset asset = AssetTestHelper.createBasicAsset();
         asset.setIrcs("");
