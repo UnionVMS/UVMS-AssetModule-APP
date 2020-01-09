@@ -13,7 +13,7 @@
     </parent>
 
     <properties>
-        <wildfly.maven.plugin.version>2.0.1.Final</wildfly.maven.plugin.version>
+        <wildfly.maven.plugin.version>2.0.2.Final</wildfly.maven.plugin.version>
         <maven.ear.plugin.version>2.7</maven.ear.plugin.version>
     </properties>
 
