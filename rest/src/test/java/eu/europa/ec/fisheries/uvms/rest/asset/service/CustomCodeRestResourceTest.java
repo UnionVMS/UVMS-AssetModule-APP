@@ -59,6 +59,7 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
         for (String constant : constants) {
             if (constant.toUpperCase().endsWith(txt.toUpperCase())) {
                 found = true;
+                break;
             }
         }
         assertTrue(found);
@@ -67,7 +68,6 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
     @Test
     @OperateOnDeployment("normal")
     public void getCodesPerConstant() throws IOException {
-
         String txt = UUID.randomUUID().toString().toUpperCase();
         createACustomCodeHelperMultipleCodesPerConstant(txt);
 
@@ -91,9 +91,7 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
                     .request(MediaType.APPLICATION_JSON)
                     .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                     .get(String.class);
-            TypeReference typeref = new TypeReference<List<CustomCode>>() {
-            };
-            List<CustomCode> codes = MAPPER.readValue(json, typeref);
+            List<CustomCode> codes = MAPPER.readValue(json, new TypeReference<List<CustomCode>>(){});
         }
     }
 
@@ -293,7 +291,6 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
     }
 
     private String createACustomCodeHelperNoDateLimit(String constant, String code, String descr, List<String> references) throws JsonProcessingException {
-
         CustomCodesPK primaryKey = new CustomCodesPK(constant, code);
         CustomCode customCode = new CustomCode();
         customCode.setPrimaryKey(primaryKey);
@@ -320,7 +317,7 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
 
         String json = MAPPER.writeValueAsString(customCode);
 
-        String created = getWebTargetExternal()
+        getWebTargetExternal()
                 .path("customcodes")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -338,18 +335,16 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
         } else {
             customCode.setDescription(descr);
         }
-        String created = getWebTargetExternal()
+        return getWebTargetExternal()
                 .path("customcodes")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(customCode), String.class);
-        return created;
     }
 
     @Test
     @RunAsClient
     public void getACustomCode() throws IOException {
-
         String txt = UUID.randomUUID().toString().toUpperCase();
 
         String createdJson = createACustomCodeHelper(txt);
@@ -379,9 +374,7 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
     @Test
     @OperateOnDeployment("normal")
     public void deleteCustomCode() throws IOException {
-
         String txt = UUID.randomUUID().toString().toUpperCase();
-
         String createdJson = createACustomCodeHelper(txt);
 
         CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
@@ -429,7 +422,6 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
     }
 
     private String createACustomCodeHelper(String txt) {
-
         OffsetDateTime from = OffsetDateTime.now(Clock.systemUTC());
         from = from.minusDays(5);
         OffsetDateTime to = OffsetDateTime.now(Clock.systemUTC());
@@ -449,24 +441,20 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
         nvp.put("fishskr", "zzzzzzzzz");
         customCode.setNameValue(nvp);
 
-        String created = getWebTargetExternal()
+        return getWebTargetExternal()
                 .path("customcodes")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(customCode), String.class);
-        return created;
     }
 
-
     private void createACustomCodeHelperMultipleCodesPerConstant(String txt) {
-
         OffsetDateTime from = OffsetDateTime.now(Clock.systemUTC());
         from = from.minusDays(5);
         OffsetDateTime to = OffsetDateTime.now(Clock.systemUTC());
         to = from.plusDays(5);
 
         for (int i = 0; i < 5; i++) {
-
             String constant = "CST____" + txt;
             String code = "CODE___" + String.valueOf(i) + "_" + txt;
             String descr = "DESCR__" + txt;
@@ -476,20 +464,17 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
             customCode.setPrimaryKey(primaryKey);
             customCode.setDescription(descr);
 
-            String created = getWebTargetExternal()
+            getWebTargetExternal()
                     .path("customcodes")
                     .request(MediaType.APPLICATION_JSON)
                     .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                     .post(Entity.json(customCode), String.class);
-
         }
     }
-
 
     @Test
     @OperateOnDeployment("normal")
     public void verifyCustomCodeInDateRangePositive() throws IOException {
-
         String txt = UUID.randomUUID().toString().toUpperCase();
         String createdJson = createACustomCodeHelper(txt);
 
@@ -497,9 +482,7 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
 
         OffsetDateTime  date  = customCodesPk.getValidFromDate();
-
         OffsetDateTime  dateWithinRange = date.plusDays(1);
-
         String dateToTest = dateWithinRange.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         String json = getWebTargetExternal()
@@ -512,19 +495,15 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(String.class);
         // record existed alles ok
-        TypeReference typeref = new TypeReference<List<CustomCode>>() {
-        };
-        List<CustomCode> codes = MAPPER.readValue(json, typeref);
+        List<CustomCode> codes = MAPPER.readValue(json, new TypeReference<List<CustomCode>>(){});
 
         assertNotNull(codes);
         assertTrue(codes.size() > 0);
     }
 
-
     @Test
     @OperateOnDeployment("normal")
     public void verifyCustomCodeInDateRangeNegative() throws IOException {
-
         String txt = UUID.randomUUID().toString().toUpperCase();
         String createdJson = createACustomCodeHelper(txt);
 
@@ -532,9 +511,7 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
 
         OffsetDateTime  date  = customCodesPk.getValidFromDate();
-
         OffsetDateTime  dateWithoutRange = date.minusDays(2);
-
         String dateToTest = dateWithoutRange.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         String json = getWebTargetExternal()
@@ -548,9 +525,7 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
                 .get(String.class);
 
         // record existed NOT as expected alles ok
-        TypeReference typeReference = new TypeReference<List<CustomCode>>() {
-        };
-        List<CustomCode> codes = MAPPER.readValue(json, typeReference);
+        List<CustomCode> codes = MAPPER.readValue(json, new TypeReference<List<CustomCode>>(){});
         assertNotNull(codes);
         assertEquals(0, codes.size());
     }
@@ -558,7 +533,6 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
     @Test
     @OperateOnDeployment("normal")
     public void existsCustomCodeInDateRangePositive() throws IOException {
-
         String txt = UUID.randomUUID().toString().toUpperCase();
         String createdJson = createACustomCodeHelper(txt);
 
@@ -566,9 +540,7 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
 
         OffsetDateTime  date  = customCodesPk.getValidFromDate();
-
         OffsetDateTime  dateWithinRange = date.plusDays(1);
-
         String dateToTest = dateWithinRange.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         Boolean ret = getWebTargetExternal()
@@ -587,7 +559,6 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
     @Test
     @OperateOnDeployment("normal")
     public void existsCustomCodeInDateRangeNegative() throws IOException {
-
         String txt = UUID.randomUUID().toString().toUpperCase();
         String createdJson = createACustomCodeHelper(txt);
 
@@ -595,9 +566,7 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
 
         OffsetDateTime  date  = customCodesPk.getValidFromDate();
-
         OffsetDateTime  dateWithoutRange = date.minusDays(2);
-
         String dateToTest = dateWithoutRange.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         Boolean ret = getWebTargetExternal()
@@ -617,15 +586,12 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
     @Test
     @OperateOnDeployment("normal")
     public void getCodeAtDateWithinRange() throws IOException {
-
         String txt = UUID.randomUUID().toString().toUpperCase();
         String createdJson = createACustomCodeHelper(txt);
         CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
         OffsetDateTime  date  = customCodesPk.getValidFromDate();
-
         OffsetDateTime  dateWithinRange = date.plusDays(2);
-
         String dateWithin = dateWithinRange.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         String json = getWebTargetExternal()
@@ -638,9 +604,7 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(String.class);
 
-        TypeReference typeref = new TypeReference<List<CustomCode>>() {
-        };
-        List<CustomCode> codes = MAPPER.readValue(json, typeref);
+        List<CustomCode> codes = MAPPER.readValue(json, new TypeReference<List<CustomCode>>(){});
         assertNotNull(codes);
         assertTrue(codes.size() > 0);
     }
