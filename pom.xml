@@ -11,15 +11,16 @@
         <groupId>fish.focus.uvms.maven</groupId>
         <artifactId>uvms-pom</artifactId>
         <relativePath />
-        <version>2.5</version>
+        <version>2.6</version>
     </parent>
 
     <properties>
     	<asset.api.check.against.version>5.0.0</asset.api.check.against.version>
-        <docker.dev.version>3.40.14.w18</docker.dev.version>
+        <docker.dev.version>3.40.18.w18</docker.dev.version>
     	<docker.liquibase.changeLogFile>LIQUIBASE/changelog/db-changelog-master.xml</docker.liquibase.changeLogFile>
         <docker.liquibase.db.user>asset</docker.liquibase.db.user>
         <docker.liquibase.db.passwd>asset</docker.liquibase.db.passwd>
+        <uvms.pom.version>2.6</uvms.pom.version>
         <usm4uvms.version>4.0.23</usm4uvms.version>
         <uvms.config.version>4.0.5</uvms.config.version>
         <uvms.common.version>4.0.13</uvms.common.version>
@@ -42,37 +43,37 @@
 			<dependency>
 				<groupId>fish.focus.uvms.maven</groupId>
 				<artifactId>uvms-pom-gis-deps</artifactId>
-				<version>2.5</version>
+				<version>${uvms.pom.version}</version>
 				<type>pom</type>
 			</dependency>
 			<dependency>
 				<groupId>fish.focus.uvms.maven</groupId>
 				<artifactId>uvms-pom-logging-deps</artifactId>
-				<version>2.5</version>
+				<version>${uvms.pom.version}</version>
 				<type>pom</type>
 			</dependency>
 			<dependency>
 				<groupId>fish.focus.uvms.maven</groupId>
 				<artifactId>uvms-pom-monitoring-deps</artifactId>
-				<version>2.5</version>
+				<version>${uvms.pom.version}</version>
 				<type>pom</type>
 			</dependency>
 			<dependency>
 				<groupId>fish.focus.uvms.maven</groupId>
 				<artifactId>uvms-pom-test-deps</artifactId>
-				<version>2.5</version>
+				<version>${uvms.pom.version}</version>
 				<type>pom</type>
 			</dependency>
 			<dependency>
 				<groupId>fish.focus.uvms.maven</groupId>
 				<artifactId>uvms-pom-arquillian-deps</artifactId>
-				<version>2.5</version>
+				<version>${uvms.pom.version}</version>
 				<type>pom</type>
 			</dependency>
             <dependency>
                 <groupId>fish.focus.uvms.maven</groupId>
                 <artifactId>uvms-pom-java11-deps</artifactId>
-                <version>2.5</version>
+                <version>${uvms.pom.version}</version>
                 <type>pom</type>
             </dependency>
         </dependencies>
