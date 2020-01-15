@@ -21,9 +21,6 @@
 		<wsdl.contract.name>AssetModuleService</wsdl.contract.name>
 		<wsdl.source.name>AssetDataSourceService</wsdl.source.name>
 		<binding.xml>binding-date.xml</binding.xml>
-		<jaxb2-basics.version>0.9.5</jaxb2-basics.version>
-		<exchange.model.version>5.0.0-UVMS</exchange.model.version>
-		<javax.xml.bind.version>2.3.0</javax.xml.bind.version>
 	</properties>
 
 	<dependencies>
