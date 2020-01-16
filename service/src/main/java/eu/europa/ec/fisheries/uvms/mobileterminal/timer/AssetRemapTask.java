@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.mobileterminal.timer;
 
-import eu.europa.ec.fisheries.uvms.asset.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetRemapMapping;
@@ -19,14 +19,14 @@ import java.util.List;
 public class AssetRemapTask {
 
     @Inject
-    AssetDao assetDao;
+    private AssetDao assetDao;
 
     @Inject
-    AssetService assetService;
+    private AssetServiceBean assetService;
 
     @Inject
     @UpdatedAssetEvent
-    Event<AssetMergeInfo> updatedAssetEvent;
+    private Event<AssetMergeInfo> updatedAssetEvent;
 
     public void remap(){
         List<AssetRemapMapping> mappings = assetDao.getAllAssetRemappings();

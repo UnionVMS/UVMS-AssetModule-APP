@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian;
 
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
-import eu.europa.ec.fisheries.uvms.asset.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
@@ -28,7 +28,7 @@ import static org.junit.Assert.assertNotNull;
 public class AssetGroupServiceBeanIntTest extends TransactionalTests {
 
     @EJB
-    private AssetService assetService;
+    private AssetServiceBean assetService;
 
     @EJB
     private AssetGroupService assetGroupService;
@@ -44,7 +44,6 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void deleteAssetGroupById() {
-
         AssetGroup createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
         UUID guid = createdAssetGroupEntity.getId();
         assetGroupService.deleteAssetGroupById(createdAssetGroupEntity.getId(), createdAssetGroupEntity.getOwner());
@@ -55,7 +54,6 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void getAssetGroupById() throws HeuristicRollbackException, RollbackException, NotSupportedException, HeuristicMixedException, SystemException {
-
         AssetGroup createdAssetGroupEntity = createAndStoreAssetGroupEntity("SERVICE_TEST");
         UUID guid = createdAssetGroupEntity.getId();
         assertEquals(false, createdAssetGroupEntity.getArchived());
@@ -90,7 +88,6 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     @Ignore
     public void getAssetGroupListByAssetGuid() {
-
         Asset asset = AssetTestsHelper.createBiggerAsset();
         Asset createdAsset = assetService.createAsset(asset, "test");
         // commit();
@@ -130,7 +127,6 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void getAssetGroupList() {
-
         String user1 = UUID.randomUUID().toString();
         String user2 = UUID.randomUUID().toString();
         String user3 = UUID.randomUUID().toString();
@@ -157,7 +153,6 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void createAssetGroupField() {
-
         AssetGroupField createdAssetGroupField = createAssetGroupFieldHelper();
         AssetGroupField fetchedAssetGroupField = assetGroupService.getAssetGroupField(createdAssetGroupField.getId());
         assertNotNull(fetchedAssetGroupField);
@@ -166,7 +161,6 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void updateAssetGroupField() {
-
         AssetGroupField createdAssetGroupField = createAssetGroupFieldHelper();
         AssetGroupField fetchedAssetGroupField = assetGroupService.getAssetGroupField(createdAssetGroupField.getId());
 
@@ -189,9 +183,9 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void deleteAssetGroupField() {
         AssetGroupField createdAssetGroupField = createAssetGroupFieldHelper();
-        AssetGroupField fetchedAssetGroupField = assetGroupService.deleteAssetGroupField(createdAssetGroupField.getId(), "TESTER");
-        fetchedAssetGroupField = assetGroupService.getAssetGroupField(createdAssetGroupField.getId());
-        Assert.assertNull(fetchedAssetGroupField);
+        assetGroupService.deleteAssetGroupField(createdAssetGroupField.getId(), "TESTER");
+        AssetGroupField found = assetGroupService.getAssetGroupField(createdAssetGroupField.getId());
+        Assert.assertNull(found);
     }
 
     private AssetGroupField createAssetGroupFieldHelper() {

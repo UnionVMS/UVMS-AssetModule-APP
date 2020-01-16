@@ -2,7 +2,7 @@ package eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian;
 
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
-import eu.europa.ec.fisheries.uvms.asset.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
@@ -37,7 +37,7 @@ import static org.junit.Assert.*;
 public class AssetServiceBeanIntTest extends TransactionalTests {
 
     @Inject
-    private AssetService assetService;
+    private AssetServiceBean assetService;
 
     @Inject
     private TestPollHelper testPollHelper;
@@ -54,7 +54,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void createAssert() {
-
         // this test is to ensure that create actually works
         try {
             // create an Asset
@@ -72,7 +71,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void updateAsset() throws AssetServiceException {
-
         // create an asset
         Asset asset = AssetTestsHelper.createBiggerAsset();
         Asset createdAsset = assetService.createAsset(asset, "test");
@@ -92,7 +90,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void deleteAsset() throws AssetServiceException {
-
         // create an asset
         Asset asset = AssetTestsHelper.createBiggerAsset();
         Asset createdAsset = assetService.createAsset(asset, "test");
@@ -114,7 +111,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void updateAssetThreeTimesAndCheckRevisionsAndValues() throws AssetServiceException {
-
         // create an asset
         Asset asset = AssetTestsHelper.createBiggerAsset();
         Asset createdAsset = assetService.createAsset(asset, "test");
@@ -255,7 +251,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         List<Asset> assets = assetService.getAssetList(searchValues, 1, 100, true, false).getAssetList();
 
-        assertTrue(!assets.isEmpty());
+        assertFalse(assets.isEmpty());
         assertEquals(asset.getCfr(), assets.get(0).getCfr());
         assetService.deleteAsset(AssetIdentifier.GUID, asset.getId().toString());
         commit();
@@ -287,7 +283,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         assetService.createNoteForAsset(asset.getId(), note2, "test");
 
         List<Note> notes = assetService.getNotesForAsset(asset.getId());
-
         assertEquals(2, notes.size());
     }
 
@@ -335,7 +330,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         assetService.createContactInfoForAsset(asset.getId(), contactInfo2, "test");
 
         List<ContactInfo> contacts = assetService.getContactInfoForAsset(asset.getId());
-
         assertEquals(2, contacts.size());
     }
 
@@ -408,7 +402,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void testGetRequiredEnrichmentOnlyMT_InmarsatSpecific() {
-
         // create stuff so we can create a valid rawMovement
         Asset asset = createAsset();
         AssetGroup createdAssetGroup = createAssetGroup(asset);
@@ -447,7 +440,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void testGetRequiredEnrichment_NO_MOBILETERMINAL() {
-
         // create stuff so we can create a valid rawMovement
         Asset asset = createAsset();
         AssetGroup createdAssetGroup = createAssetGroup(asset);
@@ -504,7 +496,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         AssetMTEnrichmentRequest request3 = createRequest(mobileTerminal3);
         AssetMTEnrichmentResponse response3 = assetService.collectAssetMT(request3);
         assertThat(response3.getAssetUUID(), CoreMatchers.is(asset3.getId().toString()));
-
     }
     
     @Test
@@ -559,7 +550,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
     
     private AssetMTEnrichmentRequest createRequest(Asset asset) {
-
         AssetMTEnrichmentRequest request = new AssetMTEnrichmentRequest();
 
         // for mobileTerminal
@@ -586,7 +576,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     }
 
     private AssetGroup createAssetGroup(Asset asset) {
-
         AssetGroup ag = new AssetGroup();
         ag.setUpdatedBy("test");
         ag.setUpdateTime(OffsetDateTime.now(Clock.systemUTC()));
@@ -609,14 +598,12 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
     private Asset createAsset() {
         Asset asset = AssetTestsHelper.createBasicAsset();
-        Asset createdAsset = assetService.createAsset(asset, "TEST");
-        return createdAsset;
+        return assetService.createAsset(asset, "TEST");
     }
 
     private MobileTerminal createMobileTerminal(Asset asset) {
         MobileTerminal mobileTerminal = testPollHelper.createBasicMobileTerminal();
         mobileTerminal.setAsset(asset);
-        MobileTerminal created = mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
-        return created;
+        return mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
     }
 }
