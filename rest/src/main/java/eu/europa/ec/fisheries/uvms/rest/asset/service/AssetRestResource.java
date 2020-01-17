@@ -13,7 +13,7 @@ package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.europa.ec.fisheries.uvms.asset.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
@@ -28,7 +28,6 @@ import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import io.swagger.annotations.*;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -40,7 +39,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -59,7 +57,7 @@ public class AssetRestResource {
     private HttpServletRequest servletRequest;
 
     @Inject
-    private AssetService assetService;
+    private AssetServiceBean assetService;
 
     @Inject
     private AssetDao assetDao;
@@ -104,7 +102,6 @@ public class AssetRestResource {
         }
     }
 
-
     @GET
     @Path("vesselTypes")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
@@ -118,7 +115,6 @@ public class AssetRestResource {
             throw e;
         }
     }
-
 
     /**
      *
@@ -147,7 +143,6 @@ public class AssetRestResource {
             throw e;
         }
     }
-
 
     /**
      *
@@ -369,7 +364,6 @@ public class AssetRestResource {
             throw e;
         }
     }
-    
 
     @GET
     @ApiOperation(value = "Get notes for an asset", notes = "Get notes for an asset", response = Note.class)
@@ -401,7 +395,7 @@ public class AssetRestResource {
             Note createdNote = assetService.createNoteForAsset(note.getAssetId(), note, user);
             return Response.ok(createdNote).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            LOG.error("Error while creating notes for asset. {}] ", e);
+            LOG.error("Error while creating notes for asset.", e);
             throw e;
         }
     }
@@ -419,7 +413,7 @@ public class AssetRestResource {
             Note updatedNote = assetService.updateNote(note, user);
             return Response.ok(updatedNote).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            LOG.error("Error updating note. {}] ", e);
+            LOG.error("Error updating note.", e);
             throw e;
         }
     }
@@ -453,13 +447,13 @@ public class AssetRestResource {
             assetService.deleteNote(id);
             return Response.ok().header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            LOG.error("Error deleteing note. {}] ", e);
+            LOG.error("Error deleting note.", e);
             throw e;
         }
     }
 
     @GET
-    @ApiOperation(value = "Get contactinfo history for asset", notes = "Get contactinfo history for asset", response = ContactInfo.class,  responseContainer = "List")
+    @ApiOperation(value = "Get ContactInfo history for asset", notes = "Get ContactInfo history for asset", response = ContactInfo.class,  responseContainer = "List")
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when querying the system"),
             @ApiResponse(code = 200, message = "Successful processing of query") })
@@ -472,7 +466,7 @@ public class AssetRestResource {
             List<ContactInfo> resultList = assetService.getContactInfoRevisionForAssetHistory(assetId, offsetDateTime);
             return Response.ok(resultList).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            LOG.error("Error while getting contact info list for asset history. {}] ", e);
+            LOG.error("Error while getting contact info list for asset history", e);
             throw e;
         }
     }
@@ -503,7 +497,7 @@ public class AssetRestResource {
             ContactInfo createdContactInfo = assetService.createContactInfoForAsset(contactInfo.getAssetId(), contactInfo, user);
             return Response.ok(createdContactInfo).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            LOG.error("Error while creating contact info for asset. {}] ", e);
+            LOG.error("Error while creating contact info for asset.", e);
             throw e;
         }
     }
@@ -521,7 +515,7 @@ public class AssetRestResource {
             ContactInfo updatedContactInfo = assetService.updateContactInfo(contactInfo, username);
             return Response.ok(updatedContactInfo).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            LOG.error("Error while updating contact info. {}] ", e);
+            LOG.error("Error while updating contact info.", e);
             throw e;
         }
     }
@@ -538,7 +532,7 @@ public class AssetRestResource {
             assetService.deleteContactInfo(id);
             return Response.ok().header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            LOG.error("Error while deleting contact info. {}] ", e);
+            LOG.error("Error while deleting contact info.", e);
             throw e;
         }
     }
@@ -551,7 +545,7 @@ public class AssetRestResource {
             List<MicroAsset> assetList = assetService.getInitialDataForRealtime(assetIdList);
             return Response.ok(assetList).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            LOG.error("Error when getting microAssets. {}] ", e);
+            LOG.error("Error when getting microAssets.", e);
             throw e;
         }
     }

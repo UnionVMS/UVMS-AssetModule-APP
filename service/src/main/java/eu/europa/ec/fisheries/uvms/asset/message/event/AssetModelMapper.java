@@ -10,6 +10,19 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.message.event;
 
+import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
+import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
+import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField;
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
+
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -19,38 +32,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
-import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
-import eu.europa.ec.fisheries.uvms.asset.AssetService;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetContact;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetHistoryId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetNotes;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetProdOrgModel;
-import eu.europa.ec.fisheries.wsdl.asset.types.CarrierSource;
-import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
-import eu.europa.ec.fisheries.wsdl.asset.types.ContactSource;
-import eu.europa.ec.fisheries.wsdl.asset.types.EventCode;
-import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
-import eu.europa.ec.fisheries.wsdl.asset.types.NoteSource;
 
 @Stateless
 public class AssetModelMapper {
 
     @Inject
-    private AssetService assetService;
+    private AssetServiceBean assetService;
     
     @Inject
     private AssetGroupService assetGroupService;
@@ -75,7 +62,7 @@ public class AssetModelMapper {
         asset.setName(assetModel.getName());
         asset.setFlagStateCode(assetModel.getCountryCode());
         asset.setGearFishingType(assetModel.getGearType());
-        asset.setIrcsIndicator(assetModel.getHasIrcs().equals("Y") ? true : false);
+        asset.setIrcsIndicator(assetModel.getHasIrcs().equals("Y"));
         asset.setIrcs(assetModel.getIrcs());
         asset.setExternalMarking(assetModel.getExternalMarking());
         asset.setCfr(assetModel.getCfr());
@@ -167,28 +154,28 @@ public class AssetModelMapper {
         }
         assetModel.setHomePort(assetEntity.getPortOfRegistration());
         if (assetEntity.getLengthOverAll() != null) {
-            assetModel.setLengthOverAll(new BigDecimal(assetEntity.getLengthOverAll()));
+            assetModel.setLengthOverAll(BigDecimal.valueOf(assetEntity.getLengthOverAll()));
         }
         if (assetEntity.getLengthBetweenPerpendiculars() != null) {
-            assetModel.setLengthBetweenPerpendiculars(new BigDecimal(assetEntity.getLengthBetweenPerpendiculars()));
+            assetModel.setLengthBetweenPerpendiculars(BigDecimal.valueOf(assetEntity.getLengthBetweenPerpendiculars()));
         }
         if (assetEntity.getGrossTonnage() != null) {
-            assetModel.setGrossTonnage(new BigDecimal(assetEntity.getGrossTonnage()));
+            assetModel.setGrossTonnage(BigDecimal.valueOf(assetEntity.getGrossTonnage()));
         }
         if (assetEntity.getGrossTonnageUnit() != null) {
             assetModel.setGrossTonnageUnit(assetEntity.getGrossTonnageUnit().toString());
         }
         if (assetEntity.getOtherTonnage() != null) {
-            assetModel.setOtherGrossTonnage(new BigDecimal(assetEntity.getOtherTonnage()));
+            assetModel.setOtherGrossTonnage(BigDecimal.valueOf(assetEntity.getOtherTonnage()));
         }
         if (assetEntity.getSafteyGrossTonnage() != null) {
-            assetModel.setSafetyGrossTonnage(new BigDecimal(assetEntity.getSafteyGrossTonnage()));
+            assetModel.setSafetyGrossTonnage(BigDecimal.valueOf(assetEntity.getSafteyGrossTonnage()));
         }
         if (assetEntity.getPowerOfMainEngine() != null) {
-            assetModel.setPowerMain(new BigDecimal(assetEntity.getPowerOfMainEngine()));
+            assetModel.setPowerMain(BigDecimal.valueOf(assetEntity.getPowerOfMainEngine()));
         }
         if (assetEntity.getPowerOfAuxEngine() != null) {
-            assetModel.setPowerAux(new BigDecimal(assetEntity.getPowerOfAuxEngine()));
+            assetModel.setPowerAux(BigDecimal.valueOf(assetEntity.getPowerOfAuxEngine()));
         }
         AssetProdOrgModel prodOrg = new AssetProdOrgModel();
         prodOrg.setCode(assetEntity.getProdOrgCode());

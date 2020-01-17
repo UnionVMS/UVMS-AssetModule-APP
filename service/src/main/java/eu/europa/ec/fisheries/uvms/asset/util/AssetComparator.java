@@ -18,7 +18,7 @@ public class AssetComparator {
 
     private AssetComparator() {}
     
-    // Compare all attributes except id, historyId, updateTime, updatedBy and eventCode (set by server)
+    // Compare all attributes except id, historyId, updateTime & updatedBy.
     public static boolean assetEquals(Asset asset1, Asset asset2) {
         if (asset1 == null || asset2 == null) {
             return false;

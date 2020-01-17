@@ -16,8 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
-import eu.europa.ec.fisheries.uvms.asset.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.CustomCodesService;
+import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
@@ -58,7 +58,7 @@ public class InternalRestResource {
     private final static Logger LOG = LoggerFactory.getLogger(InternalRestResource.class);
 
     @Inject
-    private AssetService assetService;
+    private AssetServiceBean assetService;
 
     @Inject
     private AssetGroupService assetGroupService;
@@ -113,7 +113,6 @@ public class InternalRestResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
         }
     }
-
 
     @POST
     @Path("queryIdOnly")

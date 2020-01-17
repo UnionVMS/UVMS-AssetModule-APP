@@ -10,18 +10,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.message.event;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import javax.ejb.Stateless;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-import javax.jms.JMSException;
-import javax.jms.TextMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
-import eu.europa.ec.fisheries.uvms.asset.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
@@ -39,6 +29,17 @@ import eu.europa.ec.fisheries.wsdl.asset.module.PingResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ejb.Stateless;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
+import javax.jms.JMSException;
+import javax.jms.TextMessage;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Stateless
 public class AssetMessageEventBean {
@@ -46,7 +47,7 @@ public class AssetMessageEventBean {
     private static final Logger LOG = LoggerFactory.getLogger(AssetMessageEventBean.class);
 
     @Inject
-    private AssetService assetService;
+    private AssetServiceBean assetService;
 
     @Inject
     private AssetGroupService assetGroup;
@@ -70,7 +71,7 @@ public class AssetMessageEventBean {
             AssetIdentifier assetIdentity = assetMapper.mapToAssetIdentity(assetId.getType());
             asset = assetService.getAssetById(assetIdentity, assetId.getValue());
         } catch (Exception e) {
-            LOG.error("Error when getting asset by id", assetId.getValue(), e);
+            LOG.error("Error when getting asset by id {}", assetId.getValue(), e);
             assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting asset by id : " + assetId.getValue() + " Error message: " + e)));
             messageSent = true;
             asset = null;
@@ -94,7 +95,6 @@ public class AssetMessageEventBean {
             int page = query.getPagination().getPage();
             int listSize = query.getPagination().getListSize();
             Boolean dynamic = query.getAssetSearchCriteria().isIsDynamic();
-
 
             AssetListResponse assetList = assetService.getAssetList(searchValues, page, listSize, dynamic, false);
             

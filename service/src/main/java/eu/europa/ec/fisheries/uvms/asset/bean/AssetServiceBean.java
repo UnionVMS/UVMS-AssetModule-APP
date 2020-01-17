@@ -13,7 +13,6 @@ package eu.europa.ec.fisheries.uvms.asset.bean;
 
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
-import eu.europa.ec.fisheries.uvms.asset.AssetService;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.ContactInfoDao;
@@ -56,7 +55,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Stateless
-public class AssetServiceBean implements AssetService {
+public class AssetServiceBean {
 
     private static final String DNID = "DNID";
     private static final String MEMBER_NUMBER = "MEMBER_NUMBER";
@@ -97,12 +96,11 @@ public class AssetServiceBean implements AssetService {
 
     @Inject
     @UpdatedAssetEvent
-    Event<Asset> updatedAssetEvent;
+    private Event<Asset> updatedAssetEvent;
 
     @PersistenceContext
     private EntityManager em;
 
-    @Override
     public Asset createAsset(Asset asset, String username) {
         asset.setUpdatedBy(username);
         asset.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
@@ -117,7 +115,6 @@ public class AssetServiceBean implements AssetService {
         return createdAssetEntity;
     }
 
-    @Override
     public AssetListResponse getAssetList(List<SearchKeyValue> searchFields, int page, int listSize, boolean dynamic, boolean includeInactivated) {
         if (searchFields == null) {
             throw new IllegalArgumentException("Cannot get asset list because search values is null.");
@@ -144,8 +141,7 @@ public class AssetServiceBean implements AssetService {
         listAssetResponse.getAssetList().addAll(assetEntityList);
         return listAssetResponse;
     }
-
-    @Override
+    
     public Long getAssetListCount(List<SearchKeyValue> searchFields, boolean dynamic, boolean includeInactivated) {
         if (searchFields == null || searchFields.isEmpty()) {
             throw new IllegalArgumentException("Cannot get asset list because query is null.");
@@ -153,8 +149,6 @@ public class AssetServiceBean implements AssetService {
         return assetDao.getAssetCount(searchFields, dynamic, includeInactivated);
     }
 
-
-    @Override
     public Asset updateAsset(Asset asset, String username, String comment) {
         Asset updatedAsset = updateAssetInternal(asset, username, comment);
         auditService.logAssetUpdated(updatedAsset, comment, username);
@@ -162,7 +156,6 @@ public class AssetServiceBean implements AssetService {
         return updatedAsset;
     }
 
-    @Override
     public Asset populateMTListInAsset(Asset asset) {
         if(asset.getMobileTerminalIdList() != null && !asset.getMobileTerminalIdList().isEmpty()){
             for (String s : asset.getMobileTerminalIdList()) {
@@ -172,7 +165,6 @@ public class AssetServiceBean implements AssetService {
         return asset;
     }
 
-    @Override
     public Asset archiveAsset(Asset asset, String username, String comment) {
         Set<MobileTerminal> mtList = asset.getMobileTerminals();
         if(mtList != null && !mtList.isEmpty()) {
@@ -184,8 +176,7 @@ public class AssetServiceBean implements AssetService {
         auditService.logAssetArchived(archivedAsset, comment, username);
         return archivedAsset;
     }
-
-    @Override
+    
     public Asset unarchiveAsset(UUID assetId, String username, String comment) {
         Asset asset = assetDao.getAssetById(assetId);
         asset.setActive(true);
@@ -231,8 +222,7 @@ public class AssetServiceBean implements AssetService {
         if (asset.getUvi() == null || asset.getUvi().isEmpty())
             asset.setUvi(null);
     }
-
-    @Override
+    
     public Asset upsertAsset(Asset asset, String username) {
         if (asset == null) {
             throw new IllegalArgumentException("No asset to upsert");
@@ -243,7 +233,6 @@ public class AssetServiceBean implements AssetService {
         return updateAsset(asset, username, asset.getComment());
     }
 
-    @Override
     public AssetBO upsertAssetBO(AssetBO assetBo, String username) {
         if (assetBo == null) {
             throw new IllegalArgumentException("No asset business object to upsert");
@@ -272,8 +261,7 @@ public class AssetServiceBean implements AssetService {
         }
         return assetBo;
     }
-
-    @Override
+    
     public Asset getAssetById(AssetIdentifier assetId, String value) {
 
         if (assetId == null) {
@@ -286,7 +274,6 @@ public class AssetServiceBean implements AssetService {
         return assetDao.getAssetFromAssetId(assetId, value);
     }
 
-    @Override
     public Asset getAssetFromAssetIdAtDate(AssetIdentifier idType, String idValue, OffsetDateTime date) {
 
         if (idType == null) {
@@ -311,15 +298,13 @@ public class AssetServiceBean implements AssetService {
         return asset;
     }
 
-    @Override
     public Asset getAssetById(UUID id) {
         if (id == null) {
             throw new IllegalArgumentException("Id is null");
         }
         return assetDao.getAssetById(id);
     }
-
-    @Override
+    
     public List<Asset> getAssetListByAssetGroups(List<AssetGroup> groups) {
         LOG.debug("Getting asset by ID.");
         if (groups == null || groups.isEmpty()) {
@@ -338,8 +323,7 @@ public class AssetServiceBean implements AssetService {
         }
         return new ArrayList<>(assets);
     }
-
-    @Override
+    
     public void deleteAsset(AssetIdentifier assetId, String value) {
 
         if (assetId == null) {
@@ -349,21 +333,18 @@ public class AssetServiceBean implements AssetService {
         Asset assetEntity = getAssetById(assetId, value);
         assetDao.deleteAsset(assetEntity);
     }
-
-    @Override
+    
     public List<Asset> getRevisionsForAsset(UUID id) {
         return assetDao.getRevisionsForAsset(id);
     }
-
-    @Override
+    
     public Asset getAssetRevisionForRevisionId(UUID historyId) {
         Asset revision = assetDao.getAssetRevisionForHistoryId(historyId);
         if(revision.getMobileTerminals() != null)
             revision.getMobileTerminals().size(); // force to load children. FetchType.EAGER didn't work.
         return revision;
     }
-
-    @Override
+    
     public List<Asset> getRevisionsForAssetLimited(UUID id, Integer maxNbr) {
         List<Asset> revisions = assetDao.getRevisionsForAsset(id);
         // force to load children. FetchType.EAGER didn't work.
@@ -377,8 +358,7 @@ public class AssetServiceBean implements AssetService {
         }
         return revisions;
     }
-
-    @Override
+    
     public List<Note> getNotesForAsset(UUID assetId) {
         Asset asset = assetDao.getAssetById(assetId);
         if (asset == null) {
@@ -386,8 +366,7 @@ public class AssetServiceBean implements AssetService {
         }
         return noteDao.getNotesByAsset(asset);
     }
-
-    @Override
+    
     public Note createNoteForAsset(UUID assetId, Note note, String username) {
         Asset asset = assetDao.getAssetById(assetId);
         if (asset == null) {
@@ -399,13 +378,11 @@ public class AssetServiceBean implements AssetService {
         return noteDao.createNote(note);
     }
 
-    @Override
     public Note updateNote(Note note, String username) {
         note.setCreatedBy(username);
         return noteDao.updateNote(note);
     }
-
-    @Override
+    
     public void deleteNote(UUID id) {
         Note note = noteDao.findNote(id);
         if (note == null) {
@@ -413,8 +390,7 @@ public class AssetServiceBean implements AssetService {
         }
         noteDao.deleteNote(note);
     }
-
-    @Override
+    
     public List<ContactInfo> getContactInfoForAsset(UUID assetId) {
         Asset asset = assetDao.getAssetById(assetId);
         if (asset == null) {
@@ -422,8 +398,7 @@ public class AssetServiceBean implements AssetService {
         }
         return contactDao.getContactInfoByAssetId(asset.getId());
     }
-
-    @Override
+    
     public ContactInfo createContactInfoForAsset(UUID assetId, ContactInfo contactInfo, String username) {
         Asset asset = assetDao.getAssetById(assetId);
         if (asset == null) {
@@ -437,8 +412,7 @@ public class AssetServiceBean implements AssetService {
         contactInfo.setAssetUpdateTime(asset.getUpdateTime());
         return contactDao.createContactInfo(contactInfo);
     }
-
-    @Override
+    
     public ContactInfo updateContactInfo(ContactInfo contactInfo, String username) {
         Asset asset = assetDao.getAssetById(contactInfo.getAssetId());
         if (asset == null) {
@@ -450,8 +424,7 @@ public class AssetServiceBean implements AssetService {
         contactInfo.setAssetUpdateTime(asset.getUpdateTime());
         return contactDao.updateContactInfo(contactInfo);
     }
-
-    @Override
+    
     public void deleteContactInfo(UUID id) {
         ContactInfo contactInfo = contactDao.findContactInfo(id);
         if (contactInfo == null) {
@@ -459,15 +432,12 @@ public class AssetServiceBean implements AssetService {
         }
         contactDao.deleteContactInfo(contactInfo);
     }
-
-    @Override
+    
     public List<ContactInfo> getContactInfoRevisionForAssetHistory(UUID assetId, OffsetDateTime updatedDate) {
         List<ContactInfo> contactInfoListByAssetId = contactDao.getContactInfoByAssetId(assetId);
-        List<ContactInfo> revisionList = contactDao.getContactInfoRevisionForAssetHistory(contactInfoListByAssetId, updatedDate);
-        return revisionList;
+        return contactDao.getContactInfoRevisionForAssetHistory(contactInfoListByAssetId, updatedDate);
     }
-
-    @Override
+    
     public AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request) {
 
         // Get Mobile Terminal if it exists
@@ -665,7 +635,6 @@ public class AssetServiceBean implements AssetService {
         return assetId;
     }
 
-
     private Asset getAssetByCfrIrcs(Map<String, String> assetId) {
         Asset asset = null;
 
@@ -795,7 +764,6 @@ public class AssetServiceBean implements AssetService {
         }
     }
 
-    @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void assetInformation(Asset assetFromAIS, String user) {
 
@@ -848,19 +816,14 @@ public class AssetServiceBean implements AssetService {
         }
     }
 
-    @Override
     public List<MicroAsset> getInitialDataForRealtime(List<String> assetIdList){
         List<UUID> assetUuidList = new ArrayList<>(assetIdList.size());
         for (String s :assetIdList) {
             assetUuidList.add(UUID.fromString(s));
         }
-
-        List<MicroAsset> microAssetList = assetDao.getMicroAssetListByAssetGuids(assetUuidList);
-
-        return microAssetList;
+        return assetDao.getMicroAssetListByAssetGuids(assetUuidList);
     }
-
-	@Override
+	
 	public Note getNoteById(UUID id) {
 	        Note note = noteDao.findNote(id);
 	        if (note == null) {

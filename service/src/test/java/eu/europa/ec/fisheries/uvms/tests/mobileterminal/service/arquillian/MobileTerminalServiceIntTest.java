@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
-import eu.europa.ec.fisheries.uvms.asset.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
@@ -37,7 +37,6 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     // TODO we do test on those transactions that are wrong in construction
     private static final String MESSAGE_PRODUCER_METHODS_FAIL = "MESSAGE_PRODUCER_METHODS_FAIL";
 
-
     @EJB
     private TestPollHelper testPollHelper;
 
@@ -51,7 +50,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     private AssetDao assetDao;
 
     @Inject
-    private AssetService assetService;
+    private AssetServiceBean assetService;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -63,7 +62,6 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void getMobileTerminalById() {
-
         UUID createdMobileTerminalId;
         UUID fetchedMobileTerminalGuid;
 
@@ -101,7 +99,6 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void createMobileTerminalByUpsert() {
-
         MobileTerminal created = testPollHelper.createBasicMobileTerminal();
         MobileTerminalPlugin plugin = pluginDao.getPluginByServiceName(created.getPlugin().getPluginServiceName());
         if (plugin == null) {
@@ -121,7 +118,6 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void updateMobileTerminal() {
-
         MobileTerminal created = testPollHelper.createAndPersistMobileTerminal(null);
         assertNotNull(created);
 
@@ -148,7 +144,6 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void unAssignMobileTerminalFromCarrier() {
-
         MobileTerminal persistMobileTerminal = testPollHelper.createAndPersistMobileTerminal(null);
         Asset persistAsset = createAndPersistAsset();
         assertNotNull(persistMobileTerminal.getId());
@@ -186,7 +181,6 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void createMobileTerminal_WillFail_Null_Plugin() {
-
         thrown.expect(EJBTransactionRolledbackException.class);
 
         MobileTerminal mobileTerminal = testPollHelper.createBasicMobileTerminal();
@@ -197,7 +191,6 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void createMobileTerminal_WillFail_Empty_Channel() {
-
         thrown.expect(EJBTransactionRolledbackException.class);
         //Sadly, on jenkins this method does not exist. Dont know why jenkins picks that library when running the test but it does and at least this way the whole thing works
         /*thrown.expectMessage("ConstraintViolationImpl{interpolatedMessage='must not be null', propertyPath=memberNumber");
@@ -225,7 +218,6 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void upsertMobileTerminal_WillFail_Null_TerminalId() {
-
         MobileTerminal created = testPollHelper.createAndPersistMobileTerminal(null);
         assertNotNull(created);
         created.setId(null);
@@ -240,7 +232,6 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void updateMobileTerminal_WillFail_Null_TerminalId() {
-
         MobileTerminal created = testPollHelper.createAndPersistMobileTerminal(null);
         assertNotNull(created);
 
@@ -355,7 +346,6 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
 
     private MobileTerminal upsertMobileTerminalEntity(MobileTerminal created) {
         created.setMobileTerminalType(MobileTerminalTypeEnum.getType(NEW_MOBILETERMINAL_TYPE));
-        MobileTerminal mobileTerminal = mobileTerminalService.upsertMobileTerminal(created, TerminalSourceEnum.INTERNAL, USERNAME);
-        return mobileTerminal;
+        return mobileTerminalService.upsertMobileTerminal(created, TerminalSourceEnum.INTERNAL, USERNAME);
     }
 }

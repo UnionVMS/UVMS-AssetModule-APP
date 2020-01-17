@@ -14,10 +14,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import eu.europa.ec.fisheries.uvms.asset.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
-import eu.europa.ec.fisheries.uvms.asset.message.MessageConsumerBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,8 +34,7 @@ public class AssetMessageJSONBean {
     private static final Logger LOG = LoggerFactory.getLogger(AssetMessageJSONBean.class);
 
     @Inject
-    AssetService assetService;
-
+    private AssetServiceBean assetService;
     
     public void upsertAsset(TextMessage message) throws IOException, JMSException {
         ObjectMapper mapper = new ObjectMapper();
@@ -48,7 +46,6 @@ public class AssetMessageJSONBean {
     }
 
     public void assetInformation(TextMessage message) throws IOException, JMSException {
-
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
