@@ -15,6 +15,7 @@ import eu.europa.ec.fisheries.uvms.asset.rest.service.AssetGroupResource;
 import eu.europa.ec.fisheries.uvms.asset.rest.service.AssetHistoryResource;
 import eu.europa.ec.fisheries.uvms.asset.rest.service.AssetResource;
 import eu.europa.ec.fisheries.uvms.asset.rest.service.ConfigResource;
+import eu.europa.ec.fisheries.uvms.commons.rest.filter.EncodingResponseFilter;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeatureFilter;
 
 import java.util.HashSet;
@@ -35,6 +36,7 @@ public class AssetActivator extends Application {
         set.add(AssetGroupResource.class);
         set.add(ConfigResource.class);
         set.add(UnionVMSFeatureFilter.class);
+        set.add(EncodingResponseFilter.class);
     }
 
     @Override
