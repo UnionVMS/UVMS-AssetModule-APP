@@ -10,7 +10,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.message.event;
 
-import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
+import eu.europa.ec.fisheries.uvms.asset.bean.AssetGroupServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
@@ -50,7 +50,7 @@ public class AssetMessageEventBean {
     private AssetServiceBean assetService;
 
     @Inject
-    private AssetGroupService assetGroup;
+    private AssetGroupServiceBean assetGroup;
 
     @Inject
     private AssetProducer assetMessageProducer;
