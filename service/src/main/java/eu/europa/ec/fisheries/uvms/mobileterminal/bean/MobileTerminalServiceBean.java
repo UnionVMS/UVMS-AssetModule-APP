@@ -40,8 +40,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.ws.rs.NotFoundException;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -142,7 +141,7 @@ public class MobileTerminalServiceBean {
             updatedTerminal = terminalDao.updateMobileTerminal(mobileTerminal);
             Asset asset = updatedTerminal.getAsset();
             if(asset != null){
-                asset.setUpdateTime(OffsetDateTime.now());
+                asset.setUpdateTime(Instant.now());
             }
 
         } else {
@@ -166,8 +165,8 @@ public class MobileTerminalServiceBean {
     }
 
     public MobileTerminal populateAssetInMT(MobileTerminal mt) {
-        if(mt.getAssetId() != null){
-            Asset asset = assetDao.getAssetById(UUID.fromString(mt.getAssetId()));
+        if(mt.getAssetUUID() != null){
+            Asset asset = assetDao.getAssetById(UUID.fromString(mt.getAssetUUID()));
             checkIfAssetAlreadyHasAnActiveMTBeforeAddingANewOne(asset, mt);
             mt.setAsset(asset);
         }
@@ -387,7 +386,7 @@ public class MobileTerminalServiceBean {
         checkIfAssetAlreadyHasAnActiveMTBeforeAddingANewOne(asset, terminal);
 
         asset.getMobileTerminals().add(terminal);
-        asset.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        asset.setUpdateTime(Instant.now());
         terminal.setAsset(asset);
         terminal.setUpdateuser(username);
         terminal.setComment(comment);
@@ -410,7 +409,7 @@ public class MobileTerminalServiceBean {
         if(!remove) {
             throw new IllegalArgumentException("Terminal " + guid + " is not linked to an asset with ID " + asset.getId());
         }
-        asset.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        asset.setUpdateTime(Instant.now());
         terminal.setAsset(null);
         terminal.setComment(comment);
         return terminalDao.updateMobileTerminal(terminal);
@@ -486,7 +485,7 @@ public class MobileTerminalServiceBean {
             mt.setUpdateuser(username);
             mt.setAsset(null);
             mt.setComment(comment);
-            mt.setUpdatetime(OffsetDateTime.now());
+            mt.setUpdatetime(Instant.now());
             setStatusMobileTerminal(mt.getId(), comment, MobileTerminalStatus.INACTIVE, username);
         });
         asset.getMobileTerminals().clear();

@@ -25,7 +25,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.time.Clock;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,7 +91,7 @@ public class AssetGroupDaoBeanTest {
 		AssetGroup group = new AssetGroup();
 		group.setGlobal(false);
 		group.setName("GROUPNAME");
-		group.setUpdateTime(OffsetDateTime.now(Clock.systemUTC()));
+		group.setUpdateTime(Instant.now(Clock.systemUTC()));
 		group.setUpdatedBy("DAOTEST");
 		group.setOwner(user);
 
@@ -102,7 +102,7 @@ public class AssetGroupDaoBeanTest {
 		filter.setValue("ASSET-NAME");
 
 		filter.setUpdatedBy("DAOTEST");
-		filter.setUpdateTime(OffsetDateTime.now(Clock.systemUTC()));
+		filter.setUpdateTime(Instant.now(Clock.systemUTC()));
 		return group;
 	}
 }

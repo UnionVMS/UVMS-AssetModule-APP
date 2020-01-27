@@ -16,7 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -44,7 +44,7 @@ public class InmarsatCHistoryOceanRegion implements Serializable {
 	private String name;
 
 	@Column(name="updattim")
-	private OffsetDateTime updatetime;
+	private Instant updatetime;
 
 	@Size(max=60)
 	@Column(name="upuser")
@@ -77,11 +77,11 @@ public class InmarsatCHistoryOceanRegion implements Serializable {
 		this.name = name;
 	}
 
-	public OffsetDateTime getUpdatetime() {
+	public Instant getUpdatetime() {
 		return updatetime;
 	}
 
-	public void setUpdatetime(OffsetDateTime updatetime) {
+	public void setUpdatetime(Instant updatetime) {
 		this.updatetime = updatetime;
 	}
 

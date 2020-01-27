@@ -24,7 +24,7 @@ import org.junit.runner.RunWith;
 
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.inject.Inject;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -323,7 +323,7 @@ public class AssetDaoTest extends TransactionalTests {
         asset = assetDao.createAsset(asset);
         commit();
 
-        Asset assetAtDate = assetDao.getAssetAtDate(asset, OffsetDateTime.now(ZoneOffset.UTC));
+        Asset assetAtDate = assetDao.getAssetAtDate(asset, Instant.now());
 
         assertThat(assetAtDate.getId(), is(notNullValue()));
 
@@ -345,7 +345,7 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.updateAsset(asset);
         commit();
 
-        Asset assetAtDate = assetDao.getAssetAtDate(asset, OffsetDateTime.now(ZoneOffset.UTC).minus(1, ChronoUnit.DAYS));
+        Asset assetAtDate = assetDao.getAssetAtDate(asset, Instant.now().minus(1, ChronoUnit.DAYS));
 
         assertThat(assetAtDate.getId(), is(notNullValue()));
 
@@ -370,13 +370,13 @@ public class AssetDaoTest extends TransactionalTests {
         asset1 = assetDao.createAsset(asset1);
         String firstName = asset1.getName();
         commit();
-        OffsetDateTime firstDate = OffsetDateTime.now(ZoneOffset.UTC);
+        Instant firstDate = Instant.now();
 
         String newName = "NewName";
         asset1.setName(newName);
         Asset asset2 = assetDao.updateAsset(asset1);
         commit();
-        OffsetDateTime secondDate = OffsetDateTime.now(ZoneOffset.UTC);
+        Instant secondDate = Instant.now();
 
         Asset assetAtFirstDate = assetDao.getAssetAtDate(asset2, firstDate);
         assertThat(assetAtFirstDate.getName(), is(firstName));

@@ -1,11 +1,10 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
+import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -16,6 +15,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.json.bind.Jsonb;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
@@ -23,8 +23,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.time.Clock;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -34,12 +34,11 @@ import static org.junit.Assert.*;
 public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
     // TODO also implement tests for embedded json when the need appears
 
-    private ObjectMapper MAPPER;
+    private Jsonb jsonb;
 
     @Before
     public void before() {
-        MAPPER = new ObjectMapper();
-        MAPPER.registerModule(new JavaTimeModule());
+        jsonb =  new JsonBConfigurator().getContext(null);
     }
 
     @Test
@@ -91,7 +90,7 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
                     .request(MediaType.APPLICATION_JSON)
                     .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                     .get(String.class);
-            List<CustomCode> codes = MAPPER.readValue(json, new TypeReference<List<CustomCode>>(){});
+            List<CustomCode> codes = jsonb.fromJson(json, new ArrayList<CustomCode>(){}.getClass().getGenericSuperclass());
         }
     }
 
@@ -100,7 +99,7 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
     public void createACustomCode() throws IOException {
         String txt = UUID.randomUUID().toString();
         String createdJson = createACustomCodeHelper(txt);
-        CustomCode customCodes = MAPPER.readValue(createdJson, CustomCode.class);
+        CustomCode customCodes = jsonb.fromJson(createdJson, CustomCode.class);
         assertTrue(customCodes.getPrimaryKey().getConstant().endsWith(txt));
     }
 
@@ -315,7 +314,7 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
         // TODO add code for Map<String,String >   property in CustomCode
         // AND a rest endpoint
 
-        String json = MAPPER.writeValueAsString(customCode);
+        String json = jsonb.toJson(customCode);
 
         getWebTargetExternal()
                 .path("customcodes")
@@ -351,11 +350,11 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
         String constant = "CST____" + txt;
         String code = "CODE___" + txt;
 
-        CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
+        CustomCode customCode = jsonb.fromJson(createdJson, CustomCode.class);
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
 
-        String fromDate = customCodesPk.getValidFromDate().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        String toDate = customCodesPk.getValidToDate().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        String fromDate = DateUtils.dateToEpochMilliseconds(customCodesPk.getValidFromDate());
+        String toDate = DateUtils.dateToEpochMilliseconds(customCodesPk.getValidToDate());
 
         String json = getWebTargetExternal()
                 .path("customcodes")
@@ -366,7 +365,7 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(String.class);
-        CustomCode customCodes = MAPPER.readValue(json, CustomCode.class);
+        CustomCode customCodes = jsonb.fromJson(json, CustomCode.class);
 
         assertTrue(customCodes.getPrimaryKey().getConstant().endsWith(txt));
     }
@@ -377,10 +376,10 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
         String txt = UUID.randomUUID().toString().toUpperCase();
         String createdJson = createACustomCodeHelper(txt);
 
-        CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
+        CustomCode customCode = jsonb.fromJson(createdJson, CustomCode.class);
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
-        String fromDate = customCodesPk.getValidFromDate().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        String toDate = customCodesPk.getValidToDate().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        String fromDate = DateUtils.dateToEpochMilliseconds(customCodesPk.getValidFromDate());
+        String toDate = DateUtils.dateToEpochMilliseconds(customCodesPk.getValidToDate());
 
         Boolean exists = getWebTargetExternal()
                 .path("customcodes")
@@ -422,10 +421,10 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
     }
 
     private String createACustomCodeHelper(String txt) {
-        OffsetDateTime from = OffsetDateTime.now(Clock.systemUTC());
-        from = from.minusDays(5);
-        OffsetDateTime to = OffsetDateTime.now(Clock.systemUTC());
-        to = from.plusDays(5);
+        Instant from = Instant.now(Clock.systemUTC());
+        from = from.minus(5, ChronoUnit.DAYS);
+        Instant to = Instant.now(Clock.systemUTC());
+        to = from.plus(5, ChronoUnit.DAYS);
 
         String constant = "CST____" + txt;
         String code = "CODE___" + txt;
@@ -449,10 +448,10 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
     }
 
     private void createACustomCodeHelperMultipleCodesPerConstant(String txt) {
-        OffsetDateTime from = OffsetDateTime.now(Clock.systemUTC());
-        from = from.minusDays(5);
-        OffsetDateTime to = OffsetDateTime.now(Clock.systemUTC());
-        to = from.plusDays(5);
+        Instant from = Instant.now(Clock.systemUTC());
+        from = from.minus(5, ChronoUnit.DAYS);
+        Instant to = Instant.now();
+        to = from.plus(5, ChronoUnit.DAYS);
 
         for (int i = 0; i < 5; i++) {
             String constant = "CST____" + txt;
@@ -478,12 +477,12 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
         String txt = UUID.randomUUID().toString().toUpperCase();
         String createdJson = createACustomCodeHelper(txt);
 
-        CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
+        CustomCode customCode = jsonb.fromJson(createdJson, CustomCode.class);
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
 
-        OffsetDateTime  date  = customCodesPk.getValidFromDate();
-        OffsetDateTime  dateWithinRange = date.plusDays(1);
-        String dateToTest = dateWithinRange.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        Instant  date  = customCodesPk.getValidFromDate();
+        Instant  dateWithinRange = date.plus(1, ChronoUnit.DAYS);
+        String dateToTest = DateUtils.dateToEpochMilliseconds(dateWithinRange);
 
         String json = getWebTargetExternal()
                 .path("customcodes")
@@ -495,7 +494,7 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(String.class);
         // record existed alles ok
-        List<CustomCode> codes = MAPPER.readValue(json, new TypeReference<List<CustomCode>>(){});
+        List<CustomCode> codes = jsonb.fromJson(json, new ArrayList<CustomCode>(){}.getClass().getGenericSuperclass());
 
         assertNotNull(codes);
         assertTrue(codes.size() > 0);
@@ -507,12 +506,12 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
         String txt = UUID.randomUUID().toString().toUpperCase();
         String createdJson = createACustomCodeHelper(txt);
 
-        CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
+        CustomCode customCode = jsonb.fromJson(createdJson, CustomCode.class);
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
 
-        OffsetDateTime  date  = customCodesPk.getValidFromDate();
-        OffsetDateTime  dateWithoutRange = date.minusDays(2);
-        String dateToTest = dateWithoutRange.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        Instant  date  = customCodesPk.getValidFromDate();
+        Instant  dateWithoutRange = date.minus(2, ChronoUnit.DAYS);
+        String dateToTest = DateUtils.dateToEpochMilliseconds(dateWithoutRange);
 
         String json = getWebTargetExternal()
                 .path("customcodes")
@@ -525,7 +524,7 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
                 .get(String.class);
 
         // record existed NOT as expected alles ok
-        List<CustomCode> codes = MAPPER.readValue(json, new TypeReference<List<CustomCode>>(){});
+        List<CustomCode> codes = jsonb.fromJson(json, new ArrayList<CustomCode>(){}.getClass().getGenericSuperclass());
         assertNotNull(codes);
         assertEquals(0, codes.size());
     }
@@ -536,12 +535,12 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
         String txt = UUID.randomUUID().toString().toUpperCase();
         String createdJson = createACustomCodeHelper(txt);
 
-        CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
+        CustomCode customCode = jsonb.fromJson(createdJson, CustomCode.class);
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
 
-        OffsetDateTime  date  = customCodesPk.getValidFromDate();
-        OffsetDateTime  dateWithinRange = date.plusDays(1);
-        String dateToTest = dateWithinRange.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        Instant  date  = customCodesPk.getValidFromDate();
+        Instant  dateWithinRange = date.plus(1, ChronoUnit.DAYS);
+        String dateToTest = DateUtils.dateToEpochMilliseconds(dateWithinRange);
 
         Boolean ret = getWebTargetExternal()
                 .path("customcodes")
@@ -562,12 +561,12 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
         String txt = UUID.randomUUID().toString().toUpperCase();
         String createdJson = createACustomCodeHelper(txt);
 
-        CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
+        CustomCode customCode = jsonb.fromJson(createdJson, CustomCode.class);
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
 
-        OffsetDateTime  date  = customCodesPk.getValidFromDate();
-        OffsetDateTime  dateWithoutRange = date.minusDays(2);
-        String dateToTest = dateWithoutRange.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        Instant  date  = customCodesPk.getValidFromDate();
+        Instant  dateWithoutRange = date.minus(2, ChronoUnit.DAYS);
+        String dateToTest = DateUtils.dateToEpochMilliseconds(dateWithoutRange);
 
         Boolean ret = getWebTargetExternal()
                 .path("customcodes")
@@ -588,11 +587,11 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
     public void getCodeAtDateWithinRange() throws IOException {
         String txt = UUID.randomUUID().toString().toUpperCase();
         String createdJson = createACustomCodeHelper(txt);
-        CustomCode customCode = MAPPER.readValue(createdJson, CustomCode.class);
+        CustomCode customCode = jsonb.fromJson(createdJson, CustomCode.class);
         CustomCodesPK customCodesPk = customCode.getPrimaryKey();
-        OffsetDateTime  date  = customCodesPk.getValidFromDate();
-        OffsetDateTime  dateWithinRange = date.plusDays(2);
-        String dateWithin = dateWithinRange.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        Instant  date  = customCodesPk.getValidFromDate();
+        Instant  dateWithinRange = date.plus(2,ChronoUnit.DAYS);
+        String dateWithin = DateUtils.dateToEpochMilliseconds(dateWithinRange);
 
         String json = getWebTargetExternal()
                 .path("customcodes")
@@ -604,7 +603,7 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(String.class);
 
-        List<CustomCode> codes = MAPPER.readValue(json, new TypeReference<List<CustomCode>>(){});
+        List<CustomCode> codes = jsonb.fromJson(json, new ArrayList<CustomCode>(){}.getClass().getGenericSuperclass());
         assertNotNull(codes);
         assertTrue(codes.size() > 0);
     }

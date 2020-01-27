@@ -11,19 +11,18 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.bean;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetGroupDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetGroupFieldDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
+
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Stateless
 public class AssetGroupServiceBean implements AssetGroupService {
@@ -44,7 +43,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         }
         assetGroup.setOwner(username);
         assetGroup.setUpdatedBy(username);
-        assetGroup.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        assetGroup.setUpdateTime(Instant.now());
         return assetGroupDao.createAssetGroup(assetGroup);
     }
 
@@ -62,7 +61,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
             throw new NullPointerException("No assetGroup found.");
         }
         assetGroup.setUpdatedBy(username);
-        assetGroup.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        assetGroup.setUpdateTime(Instant.now());
         return assetGroupDao.updateAssetGroup(assetGroup);
     }
 
@@ -95,7 +94,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         }
         groupEntity.setArchived(true);
         groupEntity.setUpdatedBy(username);
-        groupEntity.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        groupEntity.setUpdateTime(Instant.now());
         return groupEntity;
     }
 
@@ -152,7 +151,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
         assetGroupField.setAssetGroup(parentAssetGroup);
         assetGroupField.setUpdatedBy(username);
-        assetGroupField.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        assetGroupField.setUpdateTime(Instant.now());
         return assetGroupFieldDao.create(assetGroupField);
     }
 
@@ -169,7 +168,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
             throw new NullPointerException("AssetGroupField does not exist " + assetGroupField.getId().toString());
         }
         assetGroupField.setUpdatedBy(username);
-        assetGroupField.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        assetGroupField.setUpdateTime(Instant.now());
         return assetGroupFieldDao.update(assetGroupField);
     }
 

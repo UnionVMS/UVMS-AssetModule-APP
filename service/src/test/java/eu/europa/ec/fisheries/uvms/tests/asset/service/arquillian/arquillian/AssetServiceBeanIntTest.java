@@ -28,7 +28,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.*;
 import java.time.Clock;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -578,7 +578,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     private AssetGroup createAssetGroup(Asset asset) {
         AssetGroup ag = new AssetGroup();
         ag.setUpdatedBy("test");
-        ag.setUpdateTime(OffsetDateTime.now(Clock.systemUTC()));
+        ag.setUpdateTime(Instant.now(Clock.systemUTC()));
         ag.setArchived(false);
         ag.setName("The Name");
         ag.setOwner("test");
@@ -590,7 +590,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         assetGroupField.setAssetGroup(createdAssetGroup);
         assetGroupField.setKey("GUID");
         assetGroupField.setValue(asset.getId().toString());
-        assetGroupField.setUpdateTime(OffsetDateTime.now(Clock.systemUTC()));
+        assetGroupField.setUpdateTime(Instant.now(Clock.systemUTC()));
         assetGroupService.createAssetGroupField(createdAssetGroup.getId(), assetGroupField, "TEST");
 
         return createdAssetGroup;

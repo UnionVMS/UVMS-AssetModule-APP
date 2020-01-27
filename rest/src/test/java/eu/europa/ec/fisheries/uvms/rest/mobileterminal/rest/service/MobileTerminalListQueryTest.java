@@ -1,8 +1,8 @@
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MobileTerminalListQuery;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
@@ -20,6 +20,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.json.bind.Jsonb;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -352,7 +353,7 @@ public class MobileTerminalListQueryTest extends AbstractAssetRestTest {
         assertEquals(terminal.getSerialNo(), MobileTerminalTestHelper.getSerialNumber());
         assertEquals(MobileTerminalTypeEnum.INMARSAT_C, terminal.getMobileTerminalType());
         assertEquals(TerminalSourceEnum.INTERNAL, terminal.getSource());
-        assertEquals(asset.getId().toString(), terminal.getAssetId());
+        assertEquals(asset.getId().toString(), terminal.getAssetUUID());
 
     }
 
@@ -374,8 +375,8 @@ public class MobileTerminalListQueryTest extends AbstractAssetRestTest {
         inputList.add(created.getId().toString());
         mtQuery.setMobileterminalIds(inputList);
 
-        ObjectMapper om = new ObjectMapper();
-        String json = om.writeValueAsString(mtQuery);
+        Jsonb jsonb = new JsonBConfigurator().getContext(null);
+        String json = jsonb.toJson(mtQuery);
 
         MTListResponse response = getWebTargetExternal()
                 .path("/mobileterminal/list")

@@ -11,9 +11,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.services;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
+import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollProgramDaoBean;
@@ -29,9 +29,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.json.bind.Jsonb;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -59,6 +61,13 @@ public class PollRestResource {
 
     @Context
     private HttpServletRequest request;
+
+    private Jsonb jsonb;
+
+    @PostConstruct
+    public void init() {
+        jsonb =  new JsonBConfigurator().getContext(null);
+    }
 
     @POST
     @Path("/")
@@ -182,9 +191,7 @@ public class PollRestResource {
     public Response getPollProgram(@PathParam("pollProgramId") String pollProgramId)  throws Exception{
         try {
             ProgramPoll pollProgram = pollProgramDao.getProgramPollByGuid(pollProgramId);
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-            String returnString = objectMapper.writeValueAsString(pollProgram);
+            String returnString = jsonb.toJson(pollProgram);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("getPollProgram", ex.getStackTrace());

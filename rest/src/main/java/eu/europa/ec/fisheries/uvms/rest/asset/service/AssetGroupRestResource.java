@@ -11,12 +11,10 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
-import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
+import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import io.swagger.annotations.*;
@@ -24,8 +22,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.json.bind.Jsonb;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -49,13 +49,12 @@ public class AssetGroupRestResource {
     @Inject
     private AssetGroupService assetGroupService;
 
+    private Jsonb jsonb;
+
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
-    private ObjectMapper objectMapper() {
-        ObjectMapperContextResolver omcr = new ObjectMapperContextResolver();
-        ObjectMapper objectMapper = omcr.getContext(AssetGroup.class);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                .findAndRegisterModules();
-        return objectMapper;
+    @PostConstruct
+    public void init() {
+        jsonb =  new JsonBConfigurator().getContext(null);
     }
 
     /**
@@ -73,7 +72,7 @@ public class AssetGroupRestResource {
     public Response getAssetGroupListByUser(@ApiParam(value = "user", required = true) @QueryParam(value = "user") String user) throws Exception {
         try {
             List<AssetGroup> assetGroups = assetGroupService.getAssetGroupList(user);
-            String response = objectMapper().writeValueAsString(assetGroups);
+            String response = jsonb.toJson(assetGroups);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when retrieving AssetGroup list {}", user, e);
@@ -96,7 +95,7 @@ public class AssetGroupRestResource {
     public Response getAssetGroupById(@ApiParam(value = "AssetGroup Id", required = true) @PathParam(value = "assetGroupId") final UUID id) throws Exception {
         try {
             AssetGroup assetGroup = assetGroupService.getAssetGroupById(id);
-            String response = objectMapper().writeValueAsString(assetGroup);
+            String response = jsonb.toJson(assetGroup);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset by ID. ", id, e);
@@ -118,6 +117,9 @@ public class AssetGroupRestResource {
     public Response createAssetGroup(@ApiParam(value = "AssetGroup", required = true) final AssetGroup assetGroup) throws Exception {
         try {
             String user = servletRequest.getRemoteUser();
+            for (AssetGroupField field: assetGroup.getAssetGroupFields()) {
+                field.setAssetGroup(assetGroup);
+            }
             AssetGroup createdAssetGroup = assetGroupService.createAssetGroup(assetGroup, user);
             return Response.ok(createdAssetGroup).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
@@ -141,7 +143,7 @@ public class AssetGroupRestResource {
         try {
             String user = servletRequest.getRemoteUser();
             AssetGroup updatedAssetGroup = assetGroupService.updateAssetGroup(assetGroup, user);
-            String response = objectMapper().writeValueAsString(updatedAssetGroup);
+            String response = jsonb.toJson(updatedAssetGroup);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when updating asset group. {}", assetGroup, e);
@@ -182,7 +184,7 @@ public class AssetGroupRestResource {
     public Response getAssetGroupListByAssetId(@ApiParam(value = "Asset id", required = true) @PathParam(value = "assetId") UUID assetId) throws Exception {
         try {
             List<AssetGroup> assetGroups = assetGroupService.getAssetGroupListByAssetId(assetId);
-            String response = objectMapper().writeValueAsString(assetGroups);
+            String response = jsonb.toJson(assetGroups);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset group list by user. {}", assetId, toString(), e);
@@ -202,7 +204,7 @@ public class AssetGroupRestResource {
         try {
             String user = servletRequest.getRemoteUser();
             AssetGroupField createdAssetGroupField = assetGroupService.createAssetGroupField(parentAssetGroupId, assetGroupField, user);
-            String response = objectMapper().writeValueAsString(createdAssetGroupField);
+            String response = jsonb.toJson(createdAssetGroupField);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when creating AssetGroupField. ", e);
@@ -222,7 +224,7 @@ public class AssetGroupRestResource {
         try {
             String user = servletRequest.getRemoteUser();
             AssetGroupField updatedAssetGroupField = assetGroupService.updateAssetGroupField(assetGroupField, user);
-            String response = objectMapper().writeValueAsString(updatedAssetGroupField);
+            String response = jsonb.toJson(updatedAssetGroupField);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when creating AssetGroupField. ", e);
@@ -241,7 +243,7 @@ public class AssetGroupRestResource {
 
         try {
             AssetGroupField fetchedAssetGroupField = assetGroupService.getAssetGroupField(id);
-            String response = objectMapper().writeValueAsString(fetchedAssetGroupField);
+            String response = jsonb.toJson(fetchedAssetGroupField);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when creating AssetGroupField. ", e);
@@ -261,7 +263,7 @@ public class AssetGroupRestResource {
         try {
             String user = servletRequest.getRemoteUser();
             AssetGroupField fetchedAssetGroupField = assetGroupService.deleteAssetGroupField(assetGroupFieldId, user);
-            String response = objectMapper().writeValueAsString(fetchedAssetGroupField);
+            String response = jsonb.toJson(fetchedAssetGroupField);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when delete AssetGroupField. ", e);
@@ -280,7 +282,7 @@ public class AssetGroupRestResource {
 
         try {
             List<AssetGroupField> fetchedAssetGroupFields = assetGroupService.retrieveFieldsForGroup(assetGroupId);
-            String response = objectMapper().writeValueAsString(fetchedAssetGroupFields);
+            String response = jsonb.toJson(fetchedAssetGroupFields);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when fetching AssetGroupFields. ", e);

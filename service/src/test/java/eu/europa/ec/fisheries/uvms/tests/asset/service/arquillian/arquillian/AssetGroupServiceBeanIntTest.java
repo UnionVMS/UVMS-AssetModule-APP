@@ -16,7 +16,7 @@ import org.junit.runner.RunWith;
 import javax.ejb.EJB;
 import javax.transaction.*;
 import java.time.Clock;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -107,7 +107,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
         assetGroupField.setAssetGroup(anAssetGroup);
         assetGroupField.setKey("GUID");
         assetGroupField.setValue(assetGuid.toString());
-        assetGroupField.setUpdateTime(OffsetDateTime.now(Clock.systemUTC()));
+        assetGroupField.setUpdateTime(Instant.now(Clock.systemUTC()));
 
         assetGroupService.createAssetGroupField(anAssetGroup.getId(), assetGroupField, "TEST");
 
@@ -194,7 +194,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
         assetGroupField.setAssetGroup(anAssetGroup);
         assetGroupField.setKey("GUID");
         assetGroupField.setValue(UUID.randomUUID().toString());
-        assetGroupField.setUpdateTime(OffsetDateTime.now(Clock.systemUTC()));
+        assetGroupField.setUpdateTime(Instant.now(Clock.systemUTC()));
         return assetGroupService.createAssetGroupField(anAssetGroup.getId(), assetGroupField, "TEST");
     }
 
@@ -210,7 +210,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     private AssetGroup createAssetGroupEntity(String user) {
         AssetGroup ag = new AssetGroup();
         ag.setUpdatedBy("test");
-        ag.setUpdateTime(OffsetDateTime.now(Clock.systemUTC()));
+        ag.setUpdateTime(Instant.now(Clock.systemUTC()));
         ag.setArchived(false);
         ag.setName("The Name");
         ag.setOwner(user);

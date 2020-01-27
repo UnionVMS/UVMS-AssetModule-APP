@@ -41,7 +41,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -242,7 +242,7 @@ public class ConfigServiceBeanMT {
                 DNIDList dnid = new DNIDList();
                 dnid.setDnid(terminalDnid);
                 dnid.setPluginName(pluginName);
-                dnid.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+                dnid.setUpdateTime(Instant.now());
                 dnid.setUpdatedBy(MobileTerminalConstants.UPDATE_USER);
                 dnidListDao.create(dnid);
             }

@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.client;
 
 import eu.europa.ec.fisheries.uvms.asset.client.model.*;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.rest.security.InternalRestTokenHandler;
 
@@ -32,7 +33,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
@@ -174,8 +175,8 @@ public class AssetClient {
                 .get(new GenericType<List<AssetDTO>>() {});
     }
     
-    public AssetDTO getAssetFromAssetIdAndDate(AssetIdentifier type, String value, OffsetDateTime date) {
-        String formattedDate = date.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+    public AssetDTO getAssetFromAssetIdAndDate(AssetIdentifier type, String value, Instant date) {
+        String formattedDate = DateUtils.dateToEpochMilliseconds(date);
         return webTarget
                 .path("history")
                 .path(type.name().toLowerCase())
@@ -245,8 +246,8 @@ public class AssetClient {
                 .get(new GenericType<List<CustomCode>>() {});
     }
 
-    public Boolean isCodeValid(String constant, String code, OffsetDateTime date){
-        String theDate = date.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+    public Boolean isCodeValid(String constant, String code, Instant date){
+        String theDate = DateUtils.dateToEpochMilliseconds(date);
         String response = webTarget
                 .path(constant)
                 .path(code)
@@ -258,8 +259,8 @@ public class AssetClient {
         return Boolean.valueOf(response);
     }
 
-    public List<CustomCode> getCodeForDate(String constant, String code, OffsetDateTime date) {
-        String theDate = date.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+    public List<CustomCode> getCodeForDate(String constant, String code, Instant date) {
+        String theDate = DateUtils.dateToEpochMilliseconds(date);
         return webTarget
                 .path(constant)
                 .path(code)

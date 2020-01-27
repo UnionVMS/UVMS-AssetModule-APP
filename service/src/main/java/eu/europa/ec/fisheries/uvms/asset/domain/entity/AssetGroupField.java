@@ -11,16 +11,14 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField.*;
@@ -33,7 +31,7 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField.*;
 		@NamedQuery(name=ASSETGROUP_FIELD_CLEAR, query="DELETE  FROM AssetGroupField a where a.assetGroup=:assetgroup"),
 		@NamedQuery(name=ASSETGROUP_RETRIEVE_FIELDS_FOR_GROUP, query="SELECT a  FROM AssetGroupField a where a.assetGroup=:assetgroup"),
 })
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class AssetGroupField implements Serializable {
 
     public static final String ASSETGROUP_FIELD_CLEAR = "Assetgroupfield.clear";
@@ -54,7 +52,7 @@ public class AssetGroupField implements Serializable {
     private String key;
 
     @Column(name = "updatetime")
-    private OffsetDateTime updateTime;
+    private Instant updateTime;
 
     @Size(max = 60)
     @Column(name = "updateuser")
@@ -65,7 +63,8 @@ public class AssetGroupField implements Serializable {
     @Column(name = "value")
     private String value;
 
-    @JsonBackReference
+    //@JsonBackReference
+    @JsonbTransient
     @ManyToOne
     @JoinColumn(name = "assetgroup", foreignKey = @ForeignKey(name = "AssetGroupField_AssetGroup_FK"))
     private AssetGroup assetGroup;
@@ -86,11 +85,11 @@ public class AssetGroupField implements Serializable {
         this.key = filterKey;
     }
 
-    public OffsetDateTime getUpdateTime() {
+    public Instant getUpdateTime() {
         return this.updateTime;
     }
 
-    public void setUpdateTime(OffsetDateTime updateTime) {
+    public void setUpdateTime(Instant updateTime) {
         this.updateTime = updateTime;
     }
 

@@ -23,21 +23,16 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.entity;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
-import eu.europa.ec.fisheries.uvms.mobileterminal.util.AssetDurationDeserializer;
-import eu.europa.ec.fisheries.uvms.mobileterminal.util.AssetDurationSerializer;
-import eu.europa.ec.fisheries.uvms.mobileterminal.util.OffsetDateTimeDeserializer;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Duration;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -75,14 +70,13 @@ public class Channel implements Serializable {
 	@Column(name="archived")
 	private Boolean archived;
 
-	@JsonSerialize(using = OffsetDateTimeSerializer.class)
-	@JsonDeserialize(using = OffsetDateTimeDeserializer.class)
 	@Column(name="updattime")
-	private OffsetDateTime updateTime;
+	private Instant updateTime;
 
 	@Column(name="updateuser")
 	private String updateUser;
 
+	@JsonbTransient
 	@ManyToOne
 	@JoinColumn(name="mobterm_id", foreignKey = @ForeignKey(name = "Channel_MobileTerminal_FK"))
 	private MobileTerminal mobileTerminal;
@@ -106,20 +100,14 @@ public class Channel implements Serializable {
 	@Column(name="dnid")
 	private String DNID;
 
-	@JsonSerialize(using = AssetDurationSerializer.class)
-	@JsonDeserialize(using = AssetDurationDeserializer.class)
 	@NotNull
 	@Column(name="expected_frequency")
 	private Duration expectedFrequency;
 
-	@JsonSerialize(using = AssetDurationSerializer.class)
-	@JsonDeserialize(using = AssetDurationDeserializer.class)
 	@NotNull
 	@Column(name="expected_frequency_in_port")
 	private Duration expectedFrequencyInPort;
 
-	@JsonSerialize(using = AssetDurationSerializer.class)
-	@JsonDeserialize(using = AssetDurationDeserializer.class)
 	@NotNull
 	@Column(name="frequency_grace_period")
 	private Duration frequencyGracePeriod;
@@ -131,15 +119,11 @@ public class Channel implements Serializable {
 	@Column(name="member_number")
 	private String memberNumber;
 
-	@JsonSerialize(using = OffsetDateTimeSerializer.class)
-	@JsonDeserialize(using = OffsetDateTimeDeserializer.class)
 	@Column(name="start_date")
-	private OffsetDateTime startDate;
+	private Instant startDate;
 
-	@JsonSerialize(using = OffsetDateTimeSerializer.class)
-	@JsonDeserialize(using = OffsetDateTimeDeserializer.class)
 	@Column(name="end_date")
-	private OffsetDateTime endDate;
+	private Instant endDate;
 
 	public Channel(){
 
@@ -175,11 +159,11 @@ public class Channel implements Serializable {
 		this.archived = archived;
 	}
 
-	public OffsetDateTime getUpdateTime() {
+	public Instant getUpdateTime() {
 		return updateTime;
 	}
 
-	public void setUpdateTime(OffsetDateTime updateTime) {
+	public void setUpdateTime(Instant updateTime) {
 		this.updateTime = updateTime;
 	}
 
@@ -287,19 +271,19 @@ public class Channel implements Serializable {
 		this.memberNumber = memberNumber;
 	}
 
-	public OffsetDateTime getStartDate() {
+	public Instant getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(OffsetDateTime startDate) {
+	public void setStartDate(Instant startDate) {
 		this.startDate = startDate;
 	}
 
-	public OffsetDateTime getEndDate() {
+	public Instant getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(OffsetDateTime endDate) {
+	public void setEndDate(Instant endDate) {
 		this.endDate = endDate;
 	}
 

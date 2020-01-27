@@ -1,12 +1,13 @@
 package eu.europa.ec.fisheries.uvms.asset.client;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-
 import eu.europa.ec.fisheries.uvms.asset.client.model.*;
-import eu.europa.ec.fisheries.uvms.asset.client.model.AssetDTO;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 public abstract class AssetHelper {
 
@@ -20,7 +21,7 @@ public abstract class AssetHelper {
         assetEntity.setExternalMarking("EXT123");
         assetEntity.setFlagStateCode("SWE");
 
-        assetEntity.setCommissionDate(OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.MILLIS));
+        assetEntity.setCommissionDate(Instant.now().truncatedTo(ChronoUnit.MILLIS));
         assetEntity.setCfr("CRF" + getRandomIntegers(9));
         assetEntity.setIrcs("F" + getRandomIntegers(7));
         assetEntity.setImo(getRandomIntegers(7));
@@ -49,7 +50,7 @@ public abstract class AssetHelper {
     public static AssetDTO createBiggerAsset() {
 
         AssetDTO assetEntity = new AssetDTO();
-        OffsetDateTime  now =  OffsetDateTime.now(ZoneOffset.UTC);
+        Instant  now =  Instant.now();
 
 
         assetEntity.setName("Test asset");
@@ -57,7 +58,7 @@ public abstract class AssetHelper {
         assetEntity.setExternalMarking("EXT123");
         assetEntity.setFlagStateCode("SWE");
 
-        assetEntity.setCommissionDate(OffsetDateTime.now(ZoneOffset.UTC));
+        assetEntity.setCommissionDate(Instant.now());
         assetEntity.setCfr("CRF" + getRandomIntegers(9));
         assetEntity.setIrcs("F" + getRandomIntegers(7));
         assetEntity.setImo(getRandomIntegers(7));
@@ -126,7 +127,7 @@ public abstract class AssetHelper {
         Note note = new Note();
         note.setNote("Notes: " + getRandomIntegers(10));
         note.setCreatedBy("Test");
-        note.setCreatedOn(OffsetDateTime.now());
+        note.setCreatedOn(Instant.now());
         return note;
     }
     
@@ -149,8 +150,8 @@ public abstract class AssetHelper {
     public static CustomCode createCustomCode(String constant) {
 
         CustomCode cc = new CustomCode();
-        OffsetDateTime validFrom = OffsetDateTime.now(ZoneOffset.UTC);
-        OffsetDateTime validTo = validFrom.plusDays(30);
+        Instant validFrom = Instant.now();
+        Instant validTo = validFrom.plus(30, ChronoUnit.DAYS);
         CustomCodesPK pk = new CustomCodesPK(constant, "TEST_Code_" + UUID.randomUUID().toString(),validFrom, validTo);
         cc.setPrimaryKey(pk);
         cc.setDescription("This is a description");

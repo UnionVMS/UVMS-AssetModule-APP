@@ -46,6 +46,10 @@
 			<version>5.15.9</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
+			<artifactId>uvms-commons-date</artifactId>
+		</dependency>
 
 		<!-- Java 11 has removed theses from the standard package   -->
 		<dependency>

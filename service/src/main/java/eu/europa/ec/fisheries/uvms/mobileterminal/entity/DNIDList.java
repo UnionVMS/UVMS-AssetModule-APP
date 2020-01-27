@@ -17,7 +17,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -49,7 +49,7 @@ public class DNIDList implements Serializable {
     private String pluginName;
 
     @Column(name = "updattim")
-    private OffsetDateTime updateTime;
+    private Instant updateTime;
 
     @Size(max = 60)
     @Column(name = "upuser")
@@ -83,11 +83,11 @@ public class DNIDList implements Serializable {
         this.pluginName = pluginName;
     }
 
-    public OffsetDateTime getUpdateTime() {
+    public Instant getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(OffsetDateTime updateTime) {
+    public void setUpdateTime(Instant updateTime) {
         this.updateTime = updateTime;
     }
 

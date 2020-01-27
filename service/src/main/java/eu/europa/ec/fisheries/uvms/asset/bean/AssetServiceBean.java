@@ -49,8 +49,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -103,7 +101,7 @@ public class AssetServiceBean {
 
     public Asset createAsset(Asset asset, String username) {
         asset.setUpdatedBy(username);
-        asset.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        asset.setUpdateTime(Instant.now());
         asset.setActive(true);
         asset.setEventCode(EventCode.MOD.value());
         asset.getMobileTerminals(); // instantiate list
@@ -157,8 +155,8 @@ public class AssetServiceBean {
     }
 
     public Asset populateMTListInAsset(Asset asset) {
-        if(asset.getMobileTerminalIdList() != null && !asset.getMobileTerminalIdList().isEmpty()){
-            for (String s : asset.getMobileTerminalIdList()) {
+        if(asset.getMobileTerminalUUIDList() != null && !asset.getMobileTerminalUUIDList().isEmpty()){
+            for (String s : asset.getMobileTerminalUUIDList()) {
                 asset.getMobileTerminals().add(mobileTerminalService.getMobileTerminalEntityById(UUID.fromString(s)));
             }
         }
@@ -195,12 +193,12 @@ public class AssetServiceBean {
         checkIdentifierNullValues(asset);
 
         asset.setUpdatedBy(username);
-        asset.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        asset.setUpdateTime(Instant.now());
         asset.setEventCode(EventCode.MOD.value());
         asset.setComment(comment);
         asset.getMobileTerminals(); // instantiate list
         Asset updatedAsset = assetDao.updateAsset(asset);
-        updatedAsset.getMobileTerminals().stream().forEach(mt -> mt.setUpdatetime(OffsetDateTime.now()));
+        updatedAsset.getMobileTerminals().stream().forEach(mt -> mt.setUpdatetime(Instant.now()));
         return updatedAsset;
     }
 
@@ -274,7 +272,7 @@ public class AssetServiceBean {
         return assetDao.getAssetFromAssetId(assetId, value);
     }
 
-    public Asset getAssetFromAssetIdAtDate(AssetIdentifier idType, String idValue, OffsetDateTime date) {
+    public Asset getAssetFromAssetIdAtDate(AssetIdentifier idType, String idValue, Instant date) {
 
         if (idType == null) {
             throw new IllegalArgumentException("Type is null");
@@ -374,7 +372,7 @@ public class AssetServiceBean {
         }
         note.setAssetId(asset.getId());
         note.setCreatedBy(username);
-        note.setCreatedOn(OffsetDateTime.now());
+        note.setCreatedOn(Instant.now());
         return noteDao.createNote(note);
     }
 
@@ -407,7 +405,7 @@ public class AssetServiceBean {
         contactInfo.setAssetId(asset.getId());
         contactInfo.setUpdatedBy(username);
         if (contactInfo.getId() == null) {
-            contactInfo.setCreateTime(OffsetDateTime.now(ZoneOffset.UTC));
+            contactInfo.setCreateTime(Instant.now());
         }
         contactInfo.setAssetUpdateTime(asset.getUpdateTime());
         return contactDao.createContactInfo(contactInfo);
@@ -433,7 +431,7 @@ public class AssetServiceBean {
         contactDao.deleteContactInfo(contactInfo);
     }
     
-    public List<ContactInfo> getContactInfoRevisionForAssetHistory(UUID assetId, OffsetDateTime updatedDate) {
+    public List<ContactInfo> getContactInfoRevisionForAssetHistory(UUID assetId, Instant updatedDate) {
         List<ContactInfo> contactInfoListByAssetId = contactDao.getContactInfoByAssetId(assetId);
         return contactDao.getContactInfoRevisionForAssetHistory(contactInfoListByAssetId, updatedDate);
     }
@@ -715,7 +713,7 @@ public class AssetServiceBean {
                 // flush is necessary to avoid dumps on MMSI
                 em.flush();
                 fartyg2Asset.setMmsi(nonFartyg2AssetMmsi);
-                fartyg2Asset.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+                fartyg2Asset.setUpdateTime(Instant.now());
                 fartyg2Asset.setUpdatedBy(updatedBy);
                 em.merge(fartyg2Asset);
                 assetDao.createAssetRemapMapping(createAssetRemapMapping(nonFartyg2Asset.getId(), fartyg2Asset.getId()));
@@ -809,7 +807,7 @@ public class AssetServiceBean {
         }
         if (shouldUpdate) {
             assetFromDB.setUpdatedBy(user);
-            assetFromDB.setUpdateTime(OffsetDateTime.now());
+            assetFromDB.setUpdateTime(Instant.now());
             assetFromDB.setSource(CarrierSource.INTERNAL.toString());
             em.merge(assetFromDB);
             updatedAssetEvent.fire(assetFromDB);

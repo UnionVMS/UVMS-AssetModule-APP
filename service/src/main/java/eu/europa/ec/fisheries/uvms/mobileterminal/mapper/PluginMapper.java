@@ -22,7 +22,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTyp
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.OceanRegionEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalCapability;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,7 +47,7 @@ public class PluginMapper {
         entity.setName(model.getLabelName());
         entity.setPluginInactive(model.isInactive());
         entity.setUpdatedBy(MobileTerminalConstants.UPDATE_USER);
-        entity.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        entity.setUpdateTime(Instant.now());
         if (entity.getCapabilities() == null) {
             entity.setCapabilities(new HashSet<>());
         }
@@ -63,7 +63,7 @@ public class PluginMapper {
             entity.setName(capability.getName().name());
             entity.setValue(capability.getValue());
             entity.setUpdatedBy(MobileTerminalConstants.UPDATE_USER);
-            entity.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+            entity.setUpdateTime(Instant.now());
             capabilityList.add(entity);
         }
         return capabilityList;

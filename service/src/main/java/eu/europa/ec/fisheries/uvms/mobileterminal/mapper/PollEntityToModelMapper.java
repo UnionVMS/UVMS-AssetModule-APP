@@ -12,6 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.mapper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.ConfigurationPoll;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
@@ -97,8 +98,8 @@ public class PollEntityToModelMapper {
     private static List<PollAttribute> getProgramPollAttributes(ProgramPoll program) {
         List<PollAttribute> attributes = new ArrayList<>();
         attributes.add(createPollAttribute(PollAttributeType.FREQUENCY, program.getFrequency().toString()));
-        attributes.add(createPollAttribute(PollAttributeType.START_DATE, program.getStartDate().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT))));
-        attributes.add(createPollAttribute(PollAttributeType.END_DATE, program.getStopDate().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT))));
+        attributes.add(createPollAttribute(PollAttributeType.START_DATE, DateUtils.dateToEpochMilliseconds(program.getStartDate())));
+        attributes.add(createPollAttribute(PollAttributeType.END_DATE, DateUtils.dateToEpochMilliseconds(program.getStopDate())));
 
         switch (program.getPollState()) {
             case STARTED:

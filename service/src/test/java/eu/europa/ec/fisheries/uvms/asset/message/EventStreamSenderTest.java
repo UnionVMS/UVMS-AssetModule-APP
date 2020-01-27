@@ -5,14 +5,11 @@
  */
 package eu.europa.ec.fisheries.uvms.asset.message;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetRemapMapping;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMergeInfo;
 import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
+import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.timer.AssetRemapTask;
 import eu.europa.ec.fisheries.uvms.tests.BuildAssetServiceDeployment;
@@ -28,6 +25,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.jms.*;
+import javax.json.bind.Jsonb;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
@@ -57,18 +55,12 @@ public class EventStreamSenderTest extends BuildAssetServiceDeployment {
     Topic eventBus;
     Session session;
 
-    private ObjectMapper mapper = new ObjectMapper();
+    private Jsonb jsonb;
 
-    @PostConstruct
-    public void init() {
-        mapper.registerModule(new JavaTimeModule());
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-
-    }
     @Before
-    public void cleanJMS() {
+    public void init() {
         jmsHelper = new JMSHelper();
+        jsonb =  new JsonBConfigurator().getContext(null);
     }
 
     @Test
@@ -82,7 +74,7 @@ public class EventStreamSenderTest extends BuildAssetServiceDeployment {
 
         assertEquals("Updated Asset", message.getStringProperty(MessageConstants.EVENT_STREAM_EVENT));
         assertNull(message.getStringProperty(MessageConstants.EVENT_STREAM_SUBSCRIBER_LIST));
-        MicroAsset micro = mapper.readValue(message.getText(), MicroAsset.class);
+        MicroAsset micro = jsonb.fromJson(message.getText(), MicroAsset.class);
         assertNotNull(micro);
 
         assertEquals(asset.getIrcs(), micro.getIrcs());
@@ -100,7 +92,7 @@ public class EventStreamSenderTest extends BuildAssetServiceDeployment {
         TextMessage message = (TextMessage)listenOnEventStream(5000l);
         assertNotNull(message);
         assertEquals("Updated Asset", message.getStringProperty(MessageConstants.EVENT_STREAM_EVENT));
-        MicroAsset oldAsset = mapper.readValue(message.getText(), MicroAsset.class);
+        MicroAsset oldAsset = jsonb.fromJson(message.getText(), MicroAsset.class);
 
         eu.europa.ec.fisheries.wsdl.asset.types.Asset asset2 = AssetTestHelper.createBasicAsset();
         jmsHelper.upsertAsset(asset2);
@@ -108,7 +100,7 @@ public class EventStreamSenderTest extends BuildAssetServiceDeployment {
         message = (TextMessage)listenOnEventStream(5000l);
         assertNotNull(message);
         assertEquals("Updated Asset", message.getStringProperty(MessageConstants.EVENT_STREAM_EVENT));
-        MicroAsset newAsset = mapper.readValue(message.getText(), MicroAsset.class);
+        MicroAsset newAsset = jsonb.fromJson(message.getText(), MicroAsset.class);
 
         AssetRemapMapping assetRemapMapping = new AssetRemapMapping();
         assetRemapMapping.setOldAssetId(UUID.fromString(oldAsset.getAssetId()));
@@ -124,7 +116,7 @@ public class EventStreamSenderTest extends BuildAssetServiceDeployment {
         assertNotNull(message);
         assertEquals("Merged Asset", message.getStringProperty(MessageConstants.EVENT_STREAM_EVENT));
 
-        AssetMergeInfo mergeInfo = mapper.readValue(message.getText(), AssetMergeInfo.class);
+        AssetMergeInfo mergeInfo = jsonb.fromJson(message.getText(), AssetMergeInfo.class);
         assertEquals(oldAsset.getAssetId(), mergeInfo.getOldAssetId());
         assertEquals(newAsset.getAssetId(), mergeInfo.getNewAssetId());
 

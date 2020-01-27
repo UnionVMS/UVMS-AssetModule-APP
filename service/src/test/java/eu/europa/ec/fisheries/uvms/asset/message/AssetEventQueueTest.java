@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.UUID;
 import javax.jms.Message;
 
+import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -42,7 +43,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
     private JMSHelper jmsHelper = new JMSHelper();
 
     @Test
-    @RunAsClient
+    @OperateOnDeployment("normal")
     public void pingTest() throws Exception {
         PingRequest request = new PingRequest();
         request.setMethod(AssetModuleMethod.PING);
@@ -53,7 +54,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
     }
     
     @Test
-    @RunAsClient
+    @OperateOnDeployment("normal")
     public void getAssetByCFRTest() throws Exception {
         Asset asset = AssetTestHelper.createBasicAsset();
         jmsHelper.upsertAsset(asset);
@@ -69,7 +70,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
     }
     
     @Test
-    @RunAsClient
+    @OperateOnDeployment("normal")
     public void getAssetByIRCSTest() throws Exception {
         Asset asset = AssetTestHelper.createBasicAsset();
         jmsHelper.upsertAsset(asset);
@@ -87,7 +88,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
     }
     
     @Test
-    @RunAsClient
+    @OperateOnDeployment("normal")
     public void getAssetByMMSITest() throws Exception {
         Asset asset = AssetTestHelper.createBasicAsset();
         jmsHelper.upsertAsset(asset);
@@ -102,7 +103,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
     }
 
     @Test
-    @RunAsClient
+    @OperateOnDeployment("normal")
     public void getAssetListByQueryTest() throws Exception {
         Asset asset = AssetTestHelper.createBasicAsset();
         Asset upserted = jmsHelper.upsertAsset(asset);
@@ -119,7 +120,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
     }
     
     @Test
-    @RunAsClient
+    @OperateOnDeployment("normal")
     public void upsertAssetTest() throws Exception {
         Asset asset = AssetTestHelper.createBasicAsset();
         jmsHelper.upsertAsset(asset);
@@ -140,7 +141,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
     }
     
     @Test
-    @RunAsClient
+    @OperateOnDeployment("normal")
     public void assetSourceTest() throws Exception {
         Asset asset = AssetTestHelper.createBasicAsset();
         asset.setSource(CarrierSource.INTERNAL);
@@ -152,7 +153,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
     }
 
     @Test
-    @RunAsClient
+    @OperateOnDeployment("normal")
     public void assetInformationTest1() throws Exception {
         Asset asset = AssetTestHelper.createBasicAsset();
         asset.setName(null);
@@ -175,7 +176,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
     }
 
     @Test
-    @RunAsClient
+    @OperateOnDeployment("normal")
     public void assetInformationTest2() throws Exception {
 
         Asset assetWithsMMSI = AssetTestHelper.createBasicAsset();
@@ -212,7 +213,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
 
 
     @Test
-    @RunAsClient
+    @OperateOnDeployment("normal")
     public void assetInformationTest3() throws Exception {
 
 
@@ -241,7 +242,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
 
 
     @Test
-    @RunAsClient
+    @OperateOnDeployment("normal")
     public void assetInformationTest4() throws Exception {
 
 
@@ -270,7 +271,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
     }
 
     @Test
-    @RunAsClient
+    @OperateOnDeployment("normal")
     public void assetInformationTest5() throws Exception {
 
 
@@ -298,7 +299,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
     }
 
     @Test
-    @RunAsClient
+    @OperateOnDeployment("normal")
     public void assetInformationTest6() throws Exception {
 
 
@@ -327,7 +328,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
     }
 
     @Test
-    @RunAsClient
+    @OperateOnDeployment("normal")
     public void assetInformationTest6XEUSource() throws Exception {
 
 
@@ -357,7 +358,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
     }
 
     @Test
-    @RunAsClient
+    @OperateOnDeployment("normal")
     public void assetInformationTest7() throws Exception {
 
 
@@ -386,7 +387,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
     }
 
     @Test
-    @RunAsClient
+    @OperateOnDeployment("normal")
     public void assetInformationTest7ThirdCountrySource() throws Exception {
 
 
@@ -417,7 +418,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
 
 
     @Test
-    @RunAsClient
+    @OperateOnDeployment("normal")
     public void updateAssetWithEmptyStringIRCS() throws Exception {
 
         Asset asset = AssetTestHelper.createBasicAsset();
@@ -446,7 +447,7 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
 
 
     @Test
-    @RunAsClient
+    @OperateOnDeployment("normal")
     public void createSeveralAssetsWithEmptyStringIRCSAndUpdateOneOfThemTest() throws Exception {
 
         Asset asset = AssetTestHelper.createBasicAsset();

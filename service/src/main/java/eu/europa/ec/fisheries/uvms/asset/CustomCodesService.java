@@ -14,7 +14,7 @@ package eu.europa.ec.fisheries.uvms.asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.List;
 
 public interface CustomCodesService {
@@ -28,7 +28,7 @@ public interface CustomCodesService {
      * @param description @description human readable description of the code for dropdowns/prints etc
      * @return a CustomCode Object
      */
-    CustomCode create(String constant, String code, OffsetDateTime validFromDate, OffsetDateTime validToDate, String description);
+    CustomCode create(String constant, String code, Instant validFromDate, Instant validToDate, String description);
 
     CustomCode create(CustomCode customCode);
 
@@ -41,7 +41,7 @@ public interface CustomCodesService {
          * @param validToDate @description code is valid to this date inclusive
          * @return a CustomCodes object
          */
-    CustomCode get(String constant, String code , OffsetDateTime validFromDate, OffsetDateTime validToDate);
+    CustomCode get(String constant, String code , Instant validFromDate, Instant validToDate);
 
     CustomCode get(CustomCodesPK customCodesPrimaryKey);
 
@@ -54,7 +54,7 @@ public interface CustomCodesService {
          * @param validToDate @description code is valid to this date inclusive
          * @return a boolean indicating exists or not  used for validation on incoming data
          */
-    Boolean exists(String constant, String code, OffsetDateTime validFromDate, OffsetDateTime validToDate );
+    Boolean exists(String constant, String code, Instant validFromDate, Instant validToDate );
 
 
         /**
@@ -66,7 +66,7 @@ public interface CustomCodesService {
          * @param newValue @description  new description
          * @return a the updated CustomCodes Object
          */
-    CustomCode update(String constant, String code,  OffsetDateTime validFromDate, OffsetDateTime validToDate, String newValue);
+    CustomCode update(String constant, String code,  Instant validFromDate, Instant validToDate, String newValue);
 
     /**
      *
@@ -75,7 +75,7 @@ public interface CustomCodesService {
      * @param validFromDate @description code is valid from this date inclusive
      * @param validToDate @description code is valid to this date inclusive
      */
-    void delete(String constant, String code,  OffsetDateTime validFromDate, OffsetDateTime validToDate);
+    void delete(String constant, String code,  Instant validFromDate, Instant validToDate);
 
 
         /**
@@ -97,9 +97,9 @@ public interface CustomCodesService {
      */
     List<String> getAllConstants();
 
-    List<CustomCode> getForDate(String constant, String code, OffsetDateTime aDate);
+    List<CustomCode> getForDate(String constant, String code, Instant aDate);
 
-    Boolean verify(String constant, String code, OffsetDateTime aDate);
+    Boolean verify(String constant, String code, Instant aDate);
 
     /**
      *

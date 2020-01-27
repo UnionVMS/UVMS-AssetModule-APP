@@ -11,26 +11,23 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.entity;
 
-import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.util.JsonBAssetIdOnlySerializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.util.OffsetDateTimeDeserializer;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
+import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbTransient;
+import javax.json.bind.annotation.JsonbTypeSerializer;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -58,7 +55,7 @@ import java.util.UUID;
             query="SELECT DISTINCT m FROM MobileTerminal m LEFT OUTER JOIN Channel c ON m.id = c.mobileTerminal.id " +
                     "WHERE m.archived = false AND c.archived = false AND c.DNID = :dnid AND c.memberNumber = :memberNumber AND m.mobileTerminalType = :mobileTerminalType")
 })
-@JsonIgnoreProperties(ignoreUnknown = true)
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public class MobileTerminal implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -93,15 +90,11 @@ public class MobileTerminal implements Serializable {
 	@Column(name="type")
 	private MobileTerminalTypeEnum mobileTerminalType;
 
-	@JsonSerialize(using = OffsetDateTimeSerializer.class)
-	@JsonDeserialize(using = OffsetDateTimeDeserializer.class)
 	@Column(name="updatetime")
-	private OffsetDateTime updatetime;
+	private Instant updatetime;
 
-	@JsonSerialize(using = OffsetDateTimeSerializer.class)
-	@JsonDeserialize(using = OffsetDateTimeDeserializer.class)
 	@Column(name="createtime")
-	private OffsetDateTime createTime;
+	private Instant createTime;
 
 	@Size(max = 60)
 	@Column(name="updateuser")
@@ -128,19 +121,21 @@ public class MobileTerminal implements Serializable {
 	@Column(name = "software_version")
 	private String softwareVersion;
 
-	@JsonIgnoreProperties(value = {"mobileTerminal"}, allowSetters = true)
+	//@JsonIgnoreProperties(value = {"mobileTerminal"}, allowSetters = true)
 	@OneToMany(mappedBy = "mobileTerminal", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Channel> channels;
 
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+	/*@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 	@JsonIdentityReference(alwaysAsId = true)
-	@JsonProperty("assetId")
+	@JsonProperty("assetId")*/
+	@JsonbTypeSerializer(JsonBAssetIdOnlySerializer.class)
+	@JsonbProperty("assetId")
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="asset_id", foreignKey = @ForeignKey(name = "MobileTerminal_Asset_FK"))
 	private Asset asset;
 
 	@Transient
-	private String assetId;
+	private String assetUUID;		//renamed to avoid a conflict in yasson
 
 	@Size(max = 255)
 	@Column(name = "comment")
@@ -158,15 +153,11 @@ public class MobileTerminal implements Serializable {
 	@Column(name = "ior")
 	private Boolean indianOceanRegion = false;
 
-    @JsonSerialize(using = OffsetDateTimeSerializer.class)
-    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name="install_date")
-    private OffsetDateTime installDate;
+    private Instant installDate;
 
-    @JsonSerialize(using = OffsetDateTimeSerializer.class)
-    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name="uninstall_date")
-    private OffsetDateTime uninstallDate;
+    private Instant uninstallDate;
 
 	@Column(name="installed_by")
 	private String installedBy;
@@ -177,13 +168,13 @@ public class MobileTerminal implements Serializable {
 	@PrePersist
 	private void atPrePersist() {
 		this.historyId = UUID.randomUUID();
-		this.createTime = OffsetDateTime.now(ZoneOffset.UTC);
+		this.createTime = Instant.now();
 	}
 
 	@PreUpdate
 	private void generateNewHistoryId() {
 		this.historyId = UUID.randomUUID();
-		this.updatetime = OffsetDateTime.now(ZoneOffset.UTC);
+		this.updatetime = Instant.now();
 	}
 
 	public UUID getId() {
@@ -242,11 +233,11 @@ public class MobileTerminal implements Serializable {
 		this.mobileTerminalType = mobileTerminalType;
 	}
 
-	public OffsetDateTime getUpdatetime() {
+	public Instant getUpdatetime() {
 		return updatetime;
 	}
 
-	public void setUpdatetime(OffsetDateTime updatetime) {
+	public void setUpdatetime(Instant updatetime) {
 		this.updatetime = updatetime;
 	}
 
@@ -266,11 +257,11 @@ public class MobileTerminal implements Serializable {
 		this.serialNo = serialNo;
 	}
 
-	public OffsetDateTime getCreateTime() {
+	public Instant getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(OffsetDateTime createTime) {
+	public void setCreateTime(Instant createTime) {
 		this.createTime = createTime;
 	}
 
@@ -284,6 +275,7 @@ public class MobileTerminal implements Serializable {
 		this.channels = channels;
 	}
 
+	//@JsonbProperty("assetId")
 	public Asset getAsset() {
 		return asset;
 	}
@@ -292,14 +284,15 @@ public class MobileTerminal implements Serializable {
 		this.asset = asset;
 	}
 
-	@JsonIgnore
-	public String getAssetId() {
-		return assetId;
+	@JsonbTransient
+	public String getAssetUUID() {
+		return assetUUID;
 	}
 
-	@JsonSetter("assetId")
-	public void setAssetId(String assetId) {
-		this.assetId = assetId;
+	//@JsonSetter("assetId")
+	@JsonbProperty("assetId")
+	public void setAssetUUID(String assetUUID) {
+		this.assetUUID = assetUUID;
 	}
 
 	public String getSatelliteNumber() {
@@ -374,19 +367,19 @@ public class MobileTerminal implements Serializable {
 		this.indianOceanRegion = indianOceanRegion;
 	}
 
-    public OffsetDateTime getInstallDate() {
+    public Instant getInstallDate() {
         return installDate;
     }
 
-    public void setInstallDate(OffsetDateTime installDate) {
+    public void setInstallDate(Instant installDate) {
         this.installDate = installDate;
     }
 
-    public OffsetDateTime getUninstallDate() {
+    public Instant getUninstallDate() {
         return uninstallDate;
     }
 
-    public void setUninstallDate(OffsetDateTime uninstallDate) {
+    public void setUninstallDate(Instant uninstallDate) {
         this.uninstallDate = uninstallDate;
     }
 
@@ -420,7 +413,7 @@ public class MobileTerminal implements Serializable {
 				Objects.equals(softwareVersion, that.softwareVersion) &&
 				Objects.equals(channels, that.channels) &&
 				Objects.equals(asset, that.asset) &&
-				Objects.equals(assetId, that.assetId) &&
+				Objects.equals(assetUUID, that.assetUUID) &&
 				Objects.equals(comment, that.comment) &&
 				Objects.equals(eastAtlanticOceanRegion, that.eastAtlanticOceanRegion) &&
 				Objects.equals(westAtlanticOceanRegion, that.westAtlanticOceanRegion) &&

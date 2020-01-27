@@ -7,8 +7,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTyp
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
 
 import java.time.Duration;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -28,7 +27,7 @@ public class ResponseTestPollHelper {
         String serialNo = UUID.randomUUID().toString();
         MobileTerminal mt = new MobileTerminal();
         mt.setSerialNo(serialNo);
-        mt.setUpdatetime(OffsetDateTime.now(ZoneOffset.UTC));
+        mt.setUpdatetime(Instant.now());
         mt.setUpdateuser("TEST");
         mt.setSource(TerminalSourceEnum.INTERNAL);
         mt.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);

@@ -18,7 +18,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.*;
 
 @Stateless
@@ -50,7 +50,7 @@ public class ContactInfoDao {
         return query.getResultList();
     }
 
-    public List<ContactInfo> getContactInfoRevisionForAssetHistory(List<ContactInfo> contactInfoList, OffsetDateTime updateDate) {
+    public List<ContactInfo> getContactInfoRevisionForAssetHistory(List<ContactInfo> contactInfoList, Instant updateDate) {
         AuditReader auditReader = AuditReaderFactory.get(em);
         List<ContactInfo> resultList = new ArrayList<>();
         for(ContactInfo contactInfo : contactInfoList) { // An Asset can have multiple ContactInfo and each ContactInfo can have multiple History records.
@@ -72,7 +72,7 @@ public class ContactInfoDao {
         return revisionList;
     }
 
-    private void filterOlderRevisionsByAssetUpdatetime(List<ContactInfo> resultList, OffsetDateTime updateDate, List<ContactInfo> revisionList) {
+    private void filterOlderRevisionsByAssetUpdatetime(List<ContactInfo> resultList, Instant updateDate, List<ContactInfo> revisionList) {
         for(ContactInfo ci : revisionList) {
             if(ci.getAssetUpdateTime().equals(updateDate)) {
                 resultList.add(ci);

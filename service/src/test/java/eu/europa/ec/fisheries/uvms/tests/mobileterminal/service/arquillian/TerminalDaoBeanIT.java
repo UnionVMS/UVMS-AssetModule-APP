@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.EJBTransactionRolledbackException;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
@@ -269,7 +269,7 @@ public class TerminalDaoBeanIT extends TransactionalTests {
             plugs = testDaoBean.getPluginList();
             mtp = plugs.get(0);
             mt.setSerialNo(serialNo);
-            mt.setUpdatetime(OffsetDateTime.now(ZoneOffset.UTC));
+            mt.setUpdatetime(Instant.now());
             mt.setUpdateuser("TEST");
             mt.setSource(TerminalSourceEnum.INTERNAL);
             mt.setPlugin(mtp);

@@ -10,7 +10,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.client.model;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 public class AssetGroup {
@@ -20,7 +20,7 @@ public class AssetGroup {
     private Boolean dynamic = true;
     private Boolean global = true;
     private String name;
-    private OffsetDateTime updateTime;
+    private Instant updateTime;
     private String updatedBy;
     private String owner;
     public UUID getId() {
@@ -53,10 +53,10 @@ public class AssetGroup {
     public void setName(String name) {
         this.name = name;
     }
-    public OffsetDateTime getUpdateTime() {
+    public Instant getUpdateTime() {
         return updateTime;
     }
-    public void setUpdateTime(OffsetDateTime updateTime) {
+    public void setUpdateTime(Instant updateTime) {
         this.updateTime = updateTime;
     }
     public String getUpdatedBy() {

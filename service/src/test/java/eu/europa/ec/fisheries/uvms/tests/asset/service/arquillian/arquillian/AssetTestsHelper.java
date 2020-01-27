@@ -4,8 +4,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -23,7 +22,7 @@ public class AssetTestsHelper {
         assetEntity.setFlagStateCode("SWE");
         assetEntity.setGearFishingType("gearFishingType");
 
-        assetEntity.setCommissionDate(OffsetDateTime.now(ZoneOffset.UTC));
+        assetEntity.setCommissionDate(Instant.now());
         assetEntity.setCfr("CRF" + getRandomIntegers(9));
         assetEntity.setIrcs("F" + getRandomIntegers(7));
         assetEntity.setImo(getRandomIntegers(7));
@@ -47,7 +46,7 @@ public class AssetTestsHelper {
     public static Asset createBiggerAsset() {
 
         Asset assetEntity = new Asset();
-        OffsetDateTime  now =  OffsetDateTime.now(ZoneOffset.UTC);
+        Instant  now =  Instant.now();
 
 
         assetEntity.setName("Test asset");
@@ -55,7 +54,7 @@ public class AssetTestsHelper {
         assetEntity.setExternalMarking("EXT123");
         assetEntity.setFlagStateCode("SWE");
 
-        assetEntity.setCommissionDate(OffsetDateTime.now(ZoneOffset.UTC));
+        assetEntity.setCommissionDate(Instant.now());
         assetEntity.setCfr("CRF" + getRandomIntegers(9));
         assetEntity.setIrcs("F" + getRandomIntegers(7));
         assetEntity.setImo(getRandomIntegers(7));
@@ -179,7 +178,7 @@ public class AssetTestsHelper {
         return assetEntity;
     }
 
-    static AssetGroupField createAssetGroupField(AssetGroup assetGroupEntity, String key, String keyFieldValue, OffsetDateTime dt, String user) {
+    static AssetGroupField createAssetGroupField(AssetGroup assetGroupEntity, String key, String keyFieldValue, Instant dt, String user) {
         AssetGroupField ag = new AssetGroupField();
         ag.setAssetGroup(assetGroupEntity);
         ag.setUpdatedBy(user);

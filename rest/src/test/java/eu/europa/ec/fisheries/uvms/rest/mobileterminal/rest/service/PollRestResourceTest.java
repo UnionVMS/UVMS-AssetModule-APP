@@ -1,13 +1,14 @@
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListPagination;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginCapability;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginCapabilityType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
+import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
@@ -17,7 +18,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.ProgramPoll;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.util.DateUtils;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
@@ -27,13 +27,14 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.json.bind.Jsonb;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -275,8 +276,8 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         assertTrue(retVal.contains(String.valueOf(Response.Status.OK.getStatusCode())));
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        ProgramPoll checkThatThePollIsArchived = objectMapper.readValue(retVal, ProgramPoll.class);
+        Jsonb jsonb = new JsonBConfigurator().getContext(null);
+        ProgramPoll checkThatThePollIsArchived = jsonb.fromJson(retVal, ProgramPoll.class);
 
         assertEquals(PollStateEnum.ARCHIVED, checkThatThePollIsArchived.getPollState());
     }
@@ -572,12 +573,12 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         pollAttribute = new PollAttribute();
         pollAttribute.setKey(PollAttributeType.START_DATE);
-        pollAttribute.setValue(DateUtils.parseOffsetDateTimeToString(OffsetDateTime.now(ZoneId.of("UTC"))));
+        pollAttribute.setValue(DateUtils.dateToEpochMilliseconds(Instant.now()));
         pollRequestType.getAttributes().add(pollAttribute);
 
         pollAttribute = new PollAttribute();
         pollAttribute.setKey(PollAttributeType.END_DATE);
-        pollAttribute.setValue(DateUtils.parseOffsetDateTimeToString(OffsetDateTime.now(ZoneId.of("UTC")).plusDays(1)));
+        pollAttribute.setValue(DateUtils.dateToEpochMilliseconds(Instant.now().plus(1, ChronoUnit.DAYS)));
         pollRequestType.getAttributes().add(pollAttribute);
 
         return pollRequestType;
@@ -594,7 +595,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     private void constructPollMobileTerminalAndAddToRequest(PollRequestType request, MobileTerminal terminal) {
         PollMobileTerminal pmt = new PollMobileTerminal();
         pmt.setComChannelId(terminal.getChannels().iterator().next().getId().toString());
-        pmt.setConnectId(terminal.getAssetId());
+        pmt.setConnectId(terminal.getAssetUUID());
         pmt.setMobileTerminalId(terminal.getId().toString());
         request.getMobileTerminals().add(pmt);
     }

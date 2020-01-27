@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 import java.time.Clock;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -177,7 +177,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
     private AssetGroup createAssetGroupEntity(String user, int numberOfGroupFields) {
         AssetGroup ag = new AssetGroup();
 
-        OffsetDateTime dt = OffsetDateTime.now(Clock.systemUTC());
+        Instant dt = Instant.now();
 
         ag.setUpdatedBy("test");
         ag.setUpdateTime(dt);
@@ -191,7 +191,7 @@ public class AssetGroupTestsIT extends TransactionalTests {
         return ag;
     }
 
-    private  List<AssetGroupField> createAssetGroupFields(AssetGroup assetGroupEntity, OffsetDateTime dt, String user, int n) {
+    private  List<AssetGroupField> createAssetGroupFields(AssetGroup assetGroupEntity, Instant dt, String user, int n) {
         List<AssetGroupField> groupFields = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             String uuid = UUID.randomUUID().toString();

@@ -13,16 +13,13 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.mapper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttribute;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,10 +44,10 @@ public class PollModelToEntityMapper {
                         programPoll.setFrequency(Integer.parseInt(attr.getValue()));
                         break;
                     case START_DATE:
-                        programPoll.setStartDate(OffsetDateTime.parse(attr.getValue(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss Z")));
+                        programPoll.setStartDate(DateUtils.stringToDate(attr.getValue()));
                         break;
                     case END_DATE:
-                        programPoll.setStopDate(OffsetDateTime.parse(attr.getValue(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss Z")));
+                        programPoll.setStopDate(DateUtils.stringToDate(attr.getValue()));
                         break;
                     default:
                         LOG.debug("ProgramPoll with attr [ " + attr.getKey() + " ] is non valid to map");
@@ -102,10 +99,10 @@ public class PollModelToEntityMapper {
             try {
                 switch (attr.getKey()) {
                     case START_DATE:
-                        samplingPoll.setStartDate(OffsetDateTime.parse(attr.getValue()));
+                        samplingPoll.setStartDate(DateUtils.stringToDate(attr.getValue()));
                         break;
                     case END_DATE:
-                        samplingPoll.setStopDate(OffsetDateTime.parse(attr.getValue()));
+                        samplingPoll.setStopDate(DateUtils.stringToDate(attr.getValue()));
                         break;
                 }
             } catch (UnsupportedOperationException | IllegalArgumentException e) {
@@ -120,12 +117,12 @@ public class PollModelToEntityMapper {
             T poll = clazz.newInstance();
             poll.setChannelId(UUID.fromString(channelGuid));
             poll.setMobileterminal(terminal);
-            poll.setTerminalConnect(terminal.getAssetId());
+            poll.setTerminalConnect(terminal.getAssetUUID());
             poll.setComment(requestType.getComment());
             poll.setCreator(requestType.getUserName());
             poll.setUpdatedBy(requestType.getUserName());
             poll.setPollTypeEnum(EnumMapper.getPollTypeFromModel(requestType.getPollType()));
-            poll.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+            poll.setUpdateTime(Instant.now());
             return poll;
         } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException("Error when creating Poll instance of type: " + clazz.getTypeName(), e);

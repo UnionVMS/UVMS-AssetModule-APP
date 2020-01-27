@@ -6,6 +6,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
+import eu.europa.ec.fisheries.uvms.rest.asset.filter.AppError;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
@@ -69,7 +70,7 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
 
         // You really could argue that this should be a bad request but the server was returning 400 for everything,
         // if there is only one thing returned for every error it is better if it is a 500
-        Integer code  = response.readEntity(JsonNode.class).path("code").intValue();
+        Integer code  = response.readEntity(AppError.class).code;
         assertThat(code, is(Status.INTERNAL_SERVER_ERROR.getStatusCode()));
         assertThat(response.getStatus(), is(Status.OK.getStatusCode()));
     }
@@ -374,7 +375,9 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(asset), Asset.class);
-        
+        assertNotNull(createdAsset);
+        assertNotNull(createdAsset.getId());
+
         AssetGroup assetGroup = AssetHelper.createBasicAssetGroup();
         AssetGroup createdAssetGroup = getWebTargetExternal()
                 .path("group")

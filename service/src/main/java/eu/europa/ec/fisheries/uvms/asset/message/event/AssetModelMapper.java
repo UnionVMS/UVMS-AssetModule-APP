@@ -18,15 +18,14 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -55,8 +54,8 @@ public class AssetModelMapper {
         }
         if (assetModel.getEventHistory() != null) {
             asset.setHistoryId(UUID.fromString(assetModel.getEventHistory().getEventId()));
-            OffsetDateTime offsetDateTime = assetModel.getEventHistory().getEventDate().toInstant().atOffset(ZoneOffset.UTC);
-            asset.setUpdateTime(offsetDateTime);
+            Instant instant = assetModel.getEventHistory().getEventDate().toInstant();
+            asset.setUpdateTime(instant);
             asset.setEventCode(assetModel.getEventHistory().getEventCode().toString());
         }
         asset.setName(assetModel.getName());
@@ -133,7 +132,7 @@ public class AssetModelMapper {
         AssetHistoryId assetHistory = new AssetHistoryId();
         assetHistory.setEventId(assetEntity.getHistoryId().toString());
         if (assetEntity.getUpdateTime() != null) {
-            Date d = Date.from(assetEntity.getUpdateTime().toInstant());
+            Date d = Date.from(assetEntity.getUpdateTime());
             assetHistory.setEventDate(d);
         }
         if (assetEntity.getEventCode() != null && !assetEntity.getEventCode().isEmpty()) {
@@ -187,7 +186,7 @@ public class AssetModelMapper {
             AssetNotes assetNote = new AssetNotes();
             assetNote.setId(note.getId().toString());
             if (note.getCreatedOn() != null) {
-                assetNote.setDate(note.getCreatedOn().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+                assetNote.setDate(DateUtils.dateToEpochMilliseconds(note.getCreatedOn()));
             }
             assetNote.setNotes(note.getNote());
             assetModel.getNotes().add(assetNote);
@@ -293,7 +292,7 @@ public class AssetModelMapper {
                 note.setId(UUID.fromString(assetNote.getId()));
             }
             if (assetNote.getDate() != null) {
-                note.setCreatedOn(OffsetDateTime.parse(assetNote.getDate(), DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+                note.setCreatedOn(DateUtils.stringToDate(assetNote.getDate()));
             }
             note.setNote(assetNote.getNotes());
             notes.add(note);

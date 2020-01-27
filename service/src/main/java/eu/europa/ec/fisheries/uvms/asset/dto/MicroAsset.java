@@ -1,5 +1,7 @@
 package eu.europa.ec.fisheries.uvms.asset.dto;
 
+import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
+
 import java.util.UUID;
 
 public class MicroAsset {

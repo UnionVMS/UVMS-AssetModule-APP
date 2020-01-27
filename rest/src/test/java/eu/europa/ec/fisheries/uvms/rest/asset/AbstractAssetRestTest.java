@@ -10,11 +10,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.ExchangeModuleRestMock;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.UnionVMSMock;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.UserRestMock;
@@ -42,12 +38,8 @@ public abstract class AbstractAssetRestTest {
     private InternalRestTokenHandler tokenHandler;
 
     protected WebTarget getWebTargetExternal() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         Client client = ClientBuilder.newClient();
-        client.register(new JacksonJaxbJsonProvider(objectMapper, JacksonJaxbJsonProvider.DEFAULT_ANNOTATIONS));
+        client.register(JsonBConfigurator.class);
         return client.target("http://localhost:28080/test/rest");  //external
         //return client.target("http://localhost:8080/test/rest");    //internal
     }
@@ -55,12 +47,8 @@ public abstract class AbstractAssetRestTest {
     //jersey does not like sse so to fix this we need the sse test to reside on the server environment instead of @RunAsClient
     //also, if we switch from jersey to resteasy (like we have in all the other modules) for the client everything stops working with status code 405
     protected WebTarget getWebTargetInternal() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         Client client = ClientBuilder.newClient();
-        client.register(new JacksonJaxbJsonProvider(objectMapper, JacksonJaxbJsonProvider.DEFAULT_ANNOTATIONS));
+        client.register(JsonBConfigurator.class);
         return client.target("http://localhost:8080/test/rest");    //internal
     }
 

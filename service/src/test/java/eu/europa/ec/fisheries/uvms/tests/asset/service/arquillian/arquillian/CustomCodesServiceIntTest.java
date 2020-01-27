@@ -13,7 +13,8 @@ import org.junit.runner.RunWith;
 import javax.ejb.EJB;
 import javax.transaction.*;
 import java.time.Clock;
-import java.time.OffsetDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
 
@@ -32,10 +33,10 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
 
         int n = rnd.nextInt(10);
         int duration = rnd.nextInt(90);
-        OffsetDateTime fromDate = OffsetDateTime.now(Clock.systemUTC());
-        fromDate = fromDate.minusDays(n);
-        OffsetDateTime toDate = OffsetDateTime.now(Clock.systemUTC());
-        toDate = toDate.plusDays(duration);
+        Instant fromDate = Instant.now(Clock.systemUTC());
+        fromDate = fromDate.minus(n, ChronoUnit.DAYS);
+        Instant toDate = Instant.now(Clock.systemUTC());
+        toDate = toDate.plus(duration, ChronoUnit.DAYS);
 
         CustomCode createdCustomCode = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description");
         CustomCode fetchedCustomCode = service.get(CONSTANT, CODE, fromDate, toDate);
@@ -49,10 +50,10 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
 
         int n = rnd.nextInt(10);
         int duration = rnd.nextInt(90);
-        OffsetDateTime fromDate = OffsetDateTime.now(Clock.systemUTC());
-        fromDate = fromDate.minusDays(n);
-        OffsetDateTime toDate = OffsetDateTime.now(Clock.systemUTC());
-        toDate = toDate.plusDays(duration);
+        Instant fromDate = Instant.now(Clock.systemUTC());
+        fromDate = fromDate.minus(n, ChronoUnit.DAYS);
+        Instant toDate = Instant.now(Clock.systemUTC());
+        toDate = toDate.plus(duration, ChronoUnit.DAYS);
 
         CustomCode createdCustomCode1 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description");
         try {
@@ -68,10 +69,10 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
 
         int n = rnd.nextInt(10);
         int duration = rnd.nextInt(90);
-        OffsetDateTime fromDate = OffsetDateTime.now(Clock.systemUTC());
-        fromDate = fromDate.minusDays(n);
-        OffsetDateTime toDate = OffsetDateTime.now(Clock.systemUTC());
-        toDate = toDate.plusDays(duration);
+        Instant fromDate = Instant.now(Clock.systemUTC());
+        fromDate = fromDate.minus(n, ChronoUnit.DAYS);
+        Instant toDate = Instant.now(Clock.systemUTC());
+        toDate = toDate.plus(duration, ChronoUnit.DAYS);
 
         CustomCode createdCustomCode1 = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description");
         Boolean exist = service.exists(CONSTANT, CODE, fromDate, toDate);
@@ -85,10 +86,10 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
 
         int n = rnd.nextInt(10);
         int duration = rnd.nextInt(90);
-        OffsetDateTime fromDate = OffsetDateTime.now(Clock.systemUTC());
-        fromDate = fromDate.minusDays(n);
-        OffsetDateTime toDate = OffsetDateTime.now(Clock.systemUTC());
-        toDate = toDate.plusDays(duration);
+        Instant fromDate = Instant.now(Clock.systemUTC());
+        fromDate = fromDate.minus(n, ChronoUnit.DAYS);
+        Instant toDate = Instant.now(Clock.systemUTC());
+        toDate = toDate.plus(duration, ChronoUnit.DAYS);
 
         for (int i = 0; i < 10; i++) {
             String iStr = String.valueOf(i);
@@ -134,10 +135,10 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
 
         int n = rnd.nextInt(10);
         int duration = rnd.nextInt(90);
-        OffsetDateTime fromDate = OffsetDateTime.now(Clock.systemUTC());
-        fromDate = fromDate.minusDays(n);
-        OffsetDateTime toDate = OffsetDateTime.now(Clock.systemUTC());
-        toDate = toDate.plusDays(duration);
+        Instant fromDate = Instant.now(Clock.systemUTC());
+        fromDate = fromDate.minus(n, ChronoUnit.DAYS);
+        Instant toDate = Instant.now(Clock.systemUTC());
+        toDate = toDate.plus(duration, ChronoUnit.DAYS);
 
         CustomCode created_record = service.create(CONSTANT, CODE, fromDate, toDate, CODE + "Description");
         String createdDescription = created_record.getDescription();
@@ -161,10 +162,10 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
 
         int n = rnd.nextInt(10);
         int duration = rnd.nextInt(90);
-        OffsetDateTime fromDate = OffsetDateTime.now(Clock.systemUTC());
-        fromDate = fromDate.minusDays(n);
-        OffsetDateTime toDate = OffsetDateTime.now(Clock.systemUTC());
-        toDate = toDate.plusDays(duration);
+        Instant fromDate = Instant.now(Clock.systemUTC());
+        fromDate = fromDate.minus(n, ChronoUnit.DAYS);
+        Instant toDate = Instant.now(Clock.systemUTC());
+        toDate = toDate.plus(duration, ChronoUnit.DAYS);
         CustomCodesPK primaryKey = new CustomCodesPK();
         primaryKey.setConstant("TEST_constant_TEST");
         primaryKey.setCode("TEST_code_TEST");

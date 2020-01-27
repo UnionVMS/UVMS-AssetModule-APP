@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +101,7 @@ public class PluginServiceBeanIntTest extends TransactionalTests {
         DNIDList dnidList = new DNIDList();
         dnidList.setDnid("TEST_DN_ID");
         dnidList.setPluginName("TEST_PLUGIN_NAME");
-        dnidList.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        dnidList.setUpdateTime(Instant.now());
         dnidList.setUpdatedBy(USERNAME);
         return dnidList;
     }

@@ -1,14 +1,10 @@
 package eu.europa.ec.fisheries.uvms.mobileterminal.entity;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.util.OffsetDateTimeDeserializer;
 
 import javax.persistence.*;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.Objects;
 
 @Entity
@@ -25,18 +21,14 @@ public class ProgramPoll extends PollBase {
     @Column(name = "frequency")
     private Integer frequency;
 
-    @JsonSerialize(using = OffsetDateTimeSerializer.class)
-    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name = "startdate")
-    private OffsetDateTime startDate;
+    private Instant startDate;
 
-    @JsonSerialize(using = OffsetDateTimeSerializer.class)
-    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name = "stopdate")
-    private OffsetDateTime stopDate;
+    private Instant stopDate;
 
     @Column(name = "latestruntime")
-    private OffsetDateTime latestRun;
+    private Instant latestRun;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "pollstate")
@@ -50,27 +42,27 @@ public class ProgramPoll extends PollBase {
         this.frequency = frequency;
     }
 
-    public OffsetDateTime getStartDate() {
+    public Instant getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(OffsetDateTime startDate) {
+    public void setStartDate(Instant startDate) {
         this.startDate = startDate;
     }
 
-    public OffsetDateTime getStopDate() {
+    public Instant getStopDate() {
         return stopDate;
     }
 
-    public void setStopDate(OffsetDateTime stopDate) {
+    public void setStopDate(Instant stopDate) {
         this.stopDate = stopDate;
     }
 
-    public OffsetDateTime getLatestRun() {
+    public Instant getLatestRun() {
         return latestRun;
     }
 
-    public void setLatestRun(OffsetDateTime latestRun) {
+    public void setLatestRun(Instant latestRun) {
         this.latestRun = latestRun;
     }
 
