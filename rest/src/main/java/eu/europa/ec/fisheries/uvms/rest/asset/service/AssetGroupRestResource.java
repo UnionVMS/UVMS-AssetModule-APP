@@ -13,7 +13,7 @@ package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
+import eu.europa.ec.fisheries.uvms.asset.bean.AssetGroupServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
 import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
@@ -47,7 +47,7 @@ public class AssetGroupRestResource {
     private HttpServletRequest servletRequest;
 
     @Inject
-    private AssetGroupService assetGroupService;
+    private AssetGroupServiceBean assetGroupService;
 
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
     private ObjectMapper objectMapper() {
