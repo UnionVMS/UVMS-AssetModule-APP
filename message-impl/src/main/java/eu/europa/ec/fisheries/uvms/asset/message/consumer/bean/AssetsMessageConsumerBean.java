@@ -107,6 +107,7 @@ public class AssetsMessageConsumerBean implements MessageListener {
                     BatchAssetListModuleRequest batchListRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, BatchAssetListModuleRequest.class);
                     AssetMessageEvent batchListEvent = new AssetMessageEvent(textMessage, batchListRequest.getQueryList());
                     getAssetListEventBean.getAssetListBatch(batchListEvent);
+                    break;
                 case ASSET_GROUP:
                     AssetGroupListByUserRequest groupListRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetGroupListByUserRequest.class);
                     AssetMessageEvent assetGroupListEvent = new AssetMessageEvent(textMessage, groupListRequest);
