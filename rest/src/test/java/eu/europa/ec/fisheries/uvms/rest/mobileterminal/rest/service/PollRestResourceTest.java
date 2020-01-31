@@ -20,6 +20,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
+import eu.europa.ec.fisheries.uvms.rest.asset.filter.AppError;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -112,7 +113,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         assertNotNull(response);
         assertEquals(200, response.getStatus());
-        Integer code  = response.readEntity(JsonNode.class).path("code").intValue();
+        Integer code  = response.readEntity(AppError.class).code;
         assertThat(code, is(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()));
     }
 
@@ -214,9 +215,9 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         assertNotNull(pollDto);
 
-        assertFalse(pollDto.getValue().isEmpty());
-        assertEquals(pollGuid, pollDto.getValue().get(2).getValue());
-        assertEquals("FALSE", pollDto.getValue().get(8).getValue());
+        assertFalse(pollDto.getValues().isEmpty());
+        assertEquals(pollGuid, pollDto.getValues().get(2).getValue());
+        assertEquals("FALSE", pollDto.getValues().get(8).getValue());
 
         //and starting again
         pollDto = getWebTargetExternal()
@@ -229,9 +230,9 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         assertNotNull(pollDto);
 
-        assertFalse(pollDto.getValue().isEmpty());
-        assertEquals(pollGuid, pollDto.getValue().get(2).getValue());
-        assertEquals("TRUE", pollDto.getValue().get(8).getValue());
+        assertFalse(pollDto.getValues().isEmpty());
+        assertEquals(pollGuid, pollDto.getValues().get(2).getValue());
+        assertEquals("TRUE", pollDto.getValues().get(8).getValue());
     }
 
     @Test
@@ -264,22 +265,17 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         assertNotNull(pollGuid);
 
-        assertFalse(pollDto.getValue().isEmpty());
-        assertEquals(pollGuid, pollDto.getValue().get(2).getValue());
-        assertEquals("FALSE", pollDto.getValue().get(8).getValue());
+        assertFalse(pollDto.getValues().isEmpty());
+        assertEquals(pollGuid, pollDto.getValues().get(2).getValue());
+        assertEquals("FALSE", pollDto.getValues().get(8).getValue());
 
-        String retVal = getWebTargetExternal()
+        ProgramPoll retVal = getWebTargetExternal()
                 .path("/poll/program/" + pollGuid)
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .get(String.class);
+                .get(ProgramPoll.class);
 
-        assertTrue(retVal.contains(String.valueOf(Response.Status.OK.getStatusCode())));
-
-        Jsonb jsonb = new JsonBConfigurator().getContext(null);
-        ProgramPoll checkThatThePollIsArchived = jsonb.fromJson(retVal, ProgramPoll.class);
-
-        assertEquals(PollStateEnum.ARCHIVED, checkThatThePollIsArchived.getPollState());
+        assertEquals(PollStateEnum.ARCHIVED, retVal.getPollState());
     }
 
     @Test
@@ -316,7 +312,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         assertNotNull(pollChannelListDto);
 
-        assertEquals(pollGuid, pollChannelListDto.getPollableChannels().get(0).getPoll().getValue().get(2).getValue());
+        assertEquals(pollGuid, pollChannelListDto.getPollableChannels().get(0).getPoll().getValues().get(2).getValue());
         assertEquals(createdMT.getId().toString(), pollChannelListDto.getPollableChannels().get(0).getMobileTerminalId());
     }
 
@@ -357,7 +353,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
 
         assertNotNull(pollChannelListDto);
 
-        assertEquals(pollGuid, pollChannelListDto.getPollableChannels().get(0).getPoll().getValue().get(2).getValue());
+        assertEquals(pollGuid, pollChannelListDto.getPollableChannels().get(0).getPoll().getValues().get(2).getValue());
         assertEquals(createdMT.getId().toString(), pollChannelListDto.getPollableChannels().get(0).getMobileTerminalId());
     }
 
@@ -467,6 +463,15 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     }
 
     private PollChannelListDto getPollList(PollListQuery query) {
+       /* String s = getWebTargetExternal()
+                .path("/poll/list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(query), String.class);
+        System.out.println(s);
+        return new PollChannelListDto();*/
+
+
         return getWebTargetExternal()
                 .path("/poll/list")
                 .request(MediaType.APPLICATION_JSON)

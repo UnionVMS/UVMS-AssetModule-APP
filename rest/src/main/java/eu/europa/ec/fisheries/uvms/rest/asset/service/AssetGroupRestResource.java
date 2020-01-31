@@ -116,7 +116,7 @@ public class AssetGroupRestResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response createAssetGroup(@ApiParam(value = "AssetGroup", required = true) final AssetGroup assetGroup) throws Exception {
         try {
-            String user = servletRequest.getRemoteUser();
+           String user = servletRequest.getRemoteUser();
             for (AssetGroupField field: assetGroup.getAssetGroupFields()) {
                 field.setAssetGroup(assetGroup);
             }

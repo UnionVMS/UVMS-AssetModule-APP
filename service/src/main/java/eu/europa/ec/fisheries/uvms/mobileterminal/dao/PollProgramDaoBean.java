@@ -81,9 +81,7 @@ public class PollProgramDaoBean {
 
     public ProgramPoll getProgramPollById(UUID id) {
         try {
-            TypedQuery<ProgramPoll> query = em.createNamedQuery(MobileTerminalConstants.POLL_PROGRAM_FIND_BY_ID, ProgramPoll.class);
-            query.setParameter("id", id);
-            return query.getSingleResult();
+            return em.find(ProgramPoll.class, id);
         } catch (NoResultException e) {
             return null;
         }

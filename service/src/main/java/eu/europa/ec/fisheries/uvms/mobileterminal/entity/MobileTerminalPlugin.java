@@ -165,4 +165,19 @@ public class MobileTerminalPlugin implements Serializable {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    @Override
+    public String toString() {
+        return "MobileTerminalPlugin{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", name='" + name + '\'' +
+                ", pluginServiceName='" + pluginServiceName + '\'' +
+                ", pluginSatelliteType='" + pluginSatelliteType + '\'' +
+                ", pluginInactive=" + pluginInactive +
+                ", updateTime=" + updateTime +
+                ", updatedBy='" + updatedBy + '\'' +
+                ", capabilities=" + capabilities +
+                '}';
+    }
 }

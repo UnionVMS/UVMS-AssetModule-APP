@@ -60,7 +60,7 @@ public class PollBase implements Serializable {
     @Column(name = "updattim")
     private Instant updateTime;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "mobileterminal_id", foreignKey = @ForeignKey(name = "PollBase_MobileTerminal_FK"))
     @NotNull
     private MobileTerminal mobileterminal;

@@ -16,9 +16,13 @@ import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPluginCapability;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchFields;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchKeyValue;
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.hibernate.Hibernate;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.exception.AuditException;
@@ -33,6 +37,8 @@ import org.hibernate.envers.query.criteria.MatchMode;
 import javax.ejb.Stateless;
 import javax.persistence.*;
 import javax.persistence.criteria.JoinType;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -61,6 +67,10 @@ public class TerminalDaoBean {
         } catch (NoResultException e) {
             return null;
         }
+    }
+
+    private void test(){
+
     }
 
     public void removeMobileTerminalAfterTests(String guid) {
@@ -142,12 +152,22 @@ public class TerminalDaoBean {
             List<Channel> channelList = query.getResultList();
             Map<UUID, MobileTerminal> returnMap = new HashMap<>();
             for (Channel channel : channelList) {
+                // loaderTest(channel.getMobileTerminal());
+                test(channel.getMobileTerminal().getPlugin());
+                for (MobileTerminalPluginCapability capability : channel.getMobileTerminal().getPlugin().getCapabilities()) {
+                    test(capability);
+                }
                 returnMap.put(channel.getMobileTerminal().getId(), channel.getMobileTerminal());
             }
             return new ArrayList<>(returnMap.values());
         } catch (AuditException e) {
             return Collections.emptyList();
         }
+    }
+
+    private void test(Object plugin){
+        String s = plugin.toString();
+        s = s.concat(s);
     }
 
     private AuditQuery createAuditQuery(List<MTSearchKeyValue> searchFields, boolean isDynamic, boolean includeArchived) {

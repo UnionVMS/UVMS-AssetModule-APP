@@ -29,7 +29,6 @@ import javax.ejb.EJBTransactionRolledbackException;
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.ZoneOffset;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
@@ -164,7 +163,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         PollDto startedProgramPoll = PollDtoMapper.mapPoll(pollResponse);
         assertNotNull(startedProgramPoll);
 
-        List<PollValue> values = startedProgramPoll.getValue();
+        List<PollValue> values = startedProgramPoll.getValues();
         boolean found = validatePollKeyValue(values, PollKey.PROGRAM_RUNNING, "true");
         assertTrue(found);
     }
@@ -222,7 +221,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         PollDto stoppedProgramPoll = PollDtoMapper.mapPoll(pollResponse);
         assertNotNull(stoppedProgramPoll);
 
-        List<PollValue> values = stoppedProgramPoll.getValue();
+        List<PollValue> values = stoppedProgramPoll.getValues();
         boolean found = validatePollKeyValue(values, PollKey.PROGRAM_RUNNING, "false");
         assertTrue(found);
     }
@@ -275,7 +274,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         PollDto startedProgramPoll = PollDtoMapper.mapPoll(pollResponse);
         assertNotNull(startedProgramPoll);
 
-        List<PollValue> values = startedProgramPoll.getValue();
+        List<PollValue> values = startedProgramPoll.getValues();
         boolean isRunning = validatePollKeyValue(values, PollKey.PROGRAM_RUNNING, "true");
         assertTrue(isRunning);
 
@@ -283,7 +282,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         PollDto inactivatedProgramPoll = PollDtoMapper.mapPoll(pollResponse);
         assertNotNull(inactivatedProgramPoll);
 
-        List<PollValue> values1 = inactivatedProgramPoll.getValue();
+        List<PollValue> values1 = inactivatedProgramPoll.getValues();
         boolean isStopped = validatePollKeyValue(values1, PollKey.PROGRAM_RUNNING, "false");
         assertTrue(isStopped);
     }
