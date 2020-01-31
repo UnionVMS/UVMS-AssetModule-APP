@@ -11,7 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.bean;
 
-import eu.europa.ec.fisheries.uvms.asset.CustomCodesService;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.CustomCodeDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
@@ -22,272 +21,177 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 @Stateless
-public class CustomCodesServiceBean implements CustomCodesService {
+public class CustomCodesServiceBean {
 
-	@EJB
-	private CustomCodeDao dao;
+    @EJB
+    private CustomCodeDao dao;
 
-	@Override
-	public CustomCode create(String constant, String code, OffsetDateTime validFromDate, OffsetDateTime validToDate, String description){
+    /**
+     * @param constant      @description constants
+     * @param code          @description  the code to be valid for this constants
+     * @param validFromDate @description code is valid from this date inclusive
+     * @param validToDate   @description code is valid to this date inclusive
+     * @param description   @description human readable description of the code for dropdowns/prints etc
+     * @return a CustomCode Object
+     */
+    public CustomCode create(String constant, String code, OffsetDateTime validFromDate, OffsetDateTime validToDate, String description) {
+        validateParameters(constant, code, validFromDate, validToDate);
 
-		if(constant == null){
-			throw new IllegalArgumentException("Constant cannot be null");
-		}
-		if(constant.trim().length() < 1){
-			throw new IllegalArgumentException("Constant cannot be empty");
-		}
-		if(code == null){
-			throw new IllegalArgumentException("Code cannot be null");
-		}
-		if(code.trim().length() < 1){
-			throw new IllegalArgumentException("Code cannot be empty");
-		}
-		if(validFromDate == null){
-			throw new IllegalArgumentException("ValifFromDate cannot be null");
-		}
-		if(validToDate == null){
-			throw new IllegalArgumentException("ValifToDate cannot be null");
-		}
-		// we allow nonvalues in description and extradata since the code can be an existent nonexistent flag
-		// but we avoid nulls for simplicity
-		if(description == null){
-			description = "";
-		}
+        // we allow nonvalues in description and extradata since the code can be an existent nonexistent flag
+        // but we avoid nulls for simplicity
+        if (description == null) {
+            description = "";
+        }
 
-		if(exists(constant, code,validFromDate,validToDate)){
-			throw new IllegalArgumentException("CustomCode already exists");
-		}
+        if (exists(constant, code, validFromDate, validToDate)) {
+            throw new IllegalArgumentException("CustomCode already exists");
+        }
 
-		CustomCode customCode = new CustomCode();
-		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code, validFromDate, validToDate);
-		customCode.setPrimaryKey(primaryKey);
-		customCode.setDescription(description);
-		return dao.create(customCode);
-	}
+        CustomCode customCode = new CustomCode();
+        CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code, validFromDate, validToDate);
+        customCode.setPrimaryKey(primaryKey);
+        customCode.setDescription(description);
+        return dao.create(customCode);
+    }
 
-	@Override
-	public CustomCode create(CustomCode customCode){
+    public CustomCode create(CustomCode customCode) {
+        if (customCode == null) {
+            throw new IllegalArgumentException("CustomCode cannot be null");
+        }
+        return dao.create(customCode);
+    }
 
-		if(customCode == null){
-			throw new IllegalArgumentException("CustomCode cannot be null");
-		}
-		return dao.create(customCode);
-	}
+    /**
+     * @param constant      @description constants
+     * @param code          @description  the code to be valid for this constants
+     * @param validFromDate @description code is valid from this date inclusive
+     * @param validToDate   @description code is valid to this date inclusive
+     * @return a CustomCodes object
+     */
+    public CustomCode get(String constant, String code, OffsetDateTime validFromDate, OffsetDateTime validToDate) {
+        validateParameters(constant, code, validFromDate, validToDate);
+        CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code, validFromDate, validToDate);
+        return dao.get(primaryKey);
+    }
 
-	@Override
-	public CustomCode get(String constant, String code , OffsetDateTime validFromDate, OffsetDateTime validToDate){
+    public CustomCode get(CustomCodesPK primaryKey) {
+        if (primaryKey == null) {
+            throw new IllegalArgumentException("CustomCodesPk cannot be null");
+        }
+        return dao.get(primaryKey);
+    }
 
-		if(constant == null){
-			throw new IllegalArgumentException("Constant cannot be null");
-		}
-		if(constant.trim().length() < 1){
-			throw new IllegalArgumentException("Constant cannot be empty");
-		}
-		if(code == null){
-			throw new IllegalArgumentException("Code cannot be null");
-		}
-		if(code.trim().length() < 1){
-			throw new IllegalArgumentException("Code cannot be empty");
-		}
-		if(validFromDate == null){
-			throw new IllegalArgumentException("ValidFromDate cannot be null");
-		}
-		if(validToDate == null){
-			throw new IllegalArgumentException("ValidToDate cannot be null");
-		}
+    /**
+     * @param constant      @description constants
+     * @param code          @description  the code to be valid for this constants
+     * @param validFromDate @description code is valid from this date inclusive
+     * @param validToDate   @description code is valid to this date inclusive
+     * @return a boolean indicating exists or not  used for validation on incoming data
+     */
+    public Boolean exists(String constant, String code, OffsetDateTime validFromDate, OffsetDateTime validToDate) {
+        validateParameters(constant, code, validFromDate, validToDate);
+        CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code, validFromDate, validToDate);
+        return dao.exists(primaryKey);
+    }
 
-		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code,validFromDate,validToDate);
-		return dao.get(primaryKey);
-	}
+    /**
+     * @param constant      @description constants
+     * @param code          @description  the code to be valid for this constants
+     * @param validFromDate @description code is valid from this date inclusive
+     * @param validToDate   @description code is valid to this date inclusive
+     * @param newValue      @description  new description
+     * @return a the updated CustomCodes Object
+     */
+    public CustomCode update(String constant, String code, OffsetDateTime validFromDate, OffsetDateTime validToDate, String newValue) {
+        validateParameters(constant, code, validFromDate, validToDate);
+        CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code, validFromDate, validToDate);
+        return dao.update(primaryKey, newValue);
+    }
 
-	@Override
-	public CustomCode get(CustomCodesPK primaryKey){
+    /**
+     * @param constant      @description constants
+     * @param code          @description  the code to be valid for this constants
+     * @param validFromDate @description code is valid from this date inclusive
+     * @param validToDate   @description code is valid to this date inclusive
+     */
+    public void delete(String constant, String code, OffsetDateTime validFromDate, OffsetDateTime validToDate) {
+        validateParameters(constant, code, validFromDate, validToDate);
+        CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code, validFromDate, validToDate);
+        dao.delete(primaryKey);
+    }
 
-		if(primaryKey == null){
-			throw new IllegalArgumentException("CustomCodesPk cannot be null");
-		}
-		return dao.get(primaryKey);
-	}
+    public List<CustomCode> getAllFor(String constant) {
+        if (constant == null) {
+            throw new IllegalArgumentException("Constant cannot be null");
+        }
+        if (constant.trim().length() < 1) {
+            throw new IllegalArgumentException("Constant cannot be empty");
+        }
+        return dao.getAllFor(constant.toUpperCase());
+    }
 
-	@Override
-	public Boolean exists(String constant, String code, OffsetDateTime validFromDate, OffsetDateTime validToDate ){
+    public void deleteAllFor(String constant) {
+        if (constant == null) {
+            throw new IllegalArgumentException("Constant cannot be null");
+        }
+        if (constant.trim().length() < 1) {
+            throw new IllegalArgumentException("Constant cannot be empty");
+        }
+        dao.deleteAllFor(constant.toUpperCase());
+    }
 
-		if(constant == null){
-			throw new IllegalArgumentException("Constant cannot be null");
-		}
-		if(constant.trim().length() < 1){
-			throw new IllegalArgumentException("Constant cannot be empty");
-		}
-		if(code == null){
-			throw new IllegalArgumentException("Code cannot be null");
-		}
-		if(code.trim().length() < 1){
-			throw new IllegalArgumentException("Code cannot be empty");
-		}
-		if(validFromDate == null){
-			throw new IllegalArgumentException("ValifFromDate cannot be null");
-		}
-		if(validToDate == null){
-			throw new IllegalArgumentException("ValifToDate cannot be null");
-		}
+    public List<String> getAllConstants() {
+        return dao.getAllConstants();
+    }
 
-		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code,validFromDate,validToDate);
-		return dao.exists(primaryKey);
-	}
+    public List<CustomCode> getForDate(String constant, String code, OffsetDateTime aDate) {
+        validateParameters(constant, code, aDate);
+        return dao.getForDate(constant, code, aDate);
+    }
 
-	@Override
-	public CustomCode update(String constant, String code,  OffsetDateTime validFromDate, OffsetDateTime validToDate, String newValue){
+    public Boolean verify(String constant, String code, OffsetDateTime aDate) {
+        validateParameters(constant, code, aDate);
+        return dao.verify(constant, code, aDate);
+    }
 
-		if(constant == null){
-			throw new IllegalArgumentException("Constant cannot be null");
-		}
-		if(constant.trim().length() < 1){
-			throw new IllegalArgumentException("Constant cannot be empty");
-		}
-		if(code == null){
-			throw new IllegalArgumentException("Code cannot be null");
-		}
-		if(code.trim().length() < 1){
-			throw new IllegalArgumentException("Code cannot be empty");
-		}
-		if(validFromDate == null){
-			throw new IllegalArgumentException("ValifFromDate cannot be null");
-		}
-		if(validToDate == null){
-			throw new IllegalArgumentException("ValifToDate cannot be null");
-		}
+    public CustomCode replace(CustomCode customCode) {
+        if (customCode == null) {
+            throw new IllegalArgumentException("No CustomCode is null");
+        }
+        if (customCode.getPrimaryKey() == null) {
+            throw new IllegalArgumentException("CustomCode primaryKey is null");
+        }
+        CustomCodesPK pk = customCode.getPrimaryKey();
+        String constant = pk.getConstant();
+        String code = pk.getCode();
+        OffsetDateTime validFromDate = pk.getValidFromDate();
+        OffsetDateTime validToDate = pk.getValidToDate();
+        validateParameters(constant, code, validFromDate, validToDate);
+        return dao.replace(customCode);
+    }
 
-		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code,validFromDate,validToDate);
-		return dao.update(primaryKey, newValue);
-	}
+    private void validateParameters(String constant, String code, OffsetDateTime validFromDate, OffsetDateTime validToDate) {
+        validateParameters(constant, code, validFromDate);
+        if (validToDate == null) {
+            throw new IllegalArgumentException("ValidToDate cannot be null");
+        }
+    }
 
-	@Override
-	public void delete(String constant, String code,  OffsetDateTime validFromDate, OffsetDateTime validToDate){
-		if(constant == null){
-			throw new IllegalArgumentException("Constant cannot be null");
-		}
-		if(constant.trim().length() < 1){
-			throw new IllegalArgumentException("Constant cannot be empty");
-		}
-		if(code == null){
-			throw new IllegalArgumentException("Code cannot be null");
-		}
-		if(code.trim().length() < 1){
-			throw new IllegalArgumentException("Code cannot be empty");
-		}
-		if(validFromDate == null){
-			throw new IllegalArgumentException("ValifFromDate cannot be null");
-		}
-		if(validToDate == null){
-			throw new IllegalArgumentException("ValifToDate cannot be null");
-		}
-
-		CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code,validFromDate,validToDate);
-		dao.delete(primaryKey);
-	}
-
-	@Override
-	public List<CustomCode> getAllFor(String constant){
-		if(constant == null){
-			throw new IllegalArgumentException("Constant cannot be null");
-		}
-		if(constant.trim().length() < 1){
-			throw new IllegalArgumentException("Constant cannot be empty");
-		}
-		return dao.getAllFor(constant.toUpperCase());
-	}
-
-	@Override
-	public void deleteAllFor(String constant){
-		if(constant == null){
-			throw new IllegalArgumentException("Constant cannot be null");
-		}
-		if(constant.trim().length() < 1){
-			throw new IllegalArgumentException("Constant cannot be empty");
-		}
-		dao.deleteAllFor(constant.toUpperCase());
-	}
-
-	@Override
-	public List<String> getAllConstants(){
-		return dao.getAllConstants();
-	}
-
-	@Override
-	public List<CustomCode> getForDate(String constant, String code, OffsetDateTime aDate) {
-
-		if(constant == null){
-			throw new IllegalArgumentException("Constant cannot be null");
-		}
-		if(constant.trim().length() < 1){
-			throw new IllegalArgumentException("Constant cannot be empty");
-		}
-		if(code == null){
-			throw new IllegalArgumentException("Code cannot be null");
-		}
-		if(code.trim().length() < 1){
-			throw new IllegalArgumentException("Code cannot be empty");
-		}
-		if(aDate == null){
-			throw new IllegalArgumentException("ValifFromDate cannot be null");
-		}
-		return dao.getForDate(constant,code,aDate);
-	}
-
-	@Override
-	public Boolean verify(String constant, String code, OffsetDateTime aDate) {
-		if(constant == null){
-			throw new IllegalArgumentException("Constant cannot be null");
-		}
-		if(constant.trim().length() < 1){
-			throw new IllegalArgumentException("Constant cannot be empty");
-		}
-		if(code == null){
-			throw new IllegalArgumentException("Code cannot be null");
-		}
-		if(code.trim().length() < 1){
-			throw new IllegalArgumentException("Code cannot be empty");
-		}
-		if(aDate == null){
-			throw new IllegalArgumentException("ValifFromDate cannot be null");
-		}
-		return dao.verify(constant,code,aDate);
-	}
-
-	@Override
-	public CustomCode replace(CustomCode customCode){
-
-		if(customCode == null){
-			throw new IllegalArgumentException("No CustomCode is null");
-		}
-		if(customCode.getPrimaryKey() == null){
-			throw new IllegalArgumentException("CustomCode primaryKey is null");
-		}
-		CustomCodesPK pk = customCode.getPrimaryKey();
-		String constant = pk.getConstant();
-		String code = pk.getCode();
-		OffsetDateTime validFromDate = pk.getValidFromDate();
-		OffsetDateTime validToDate = pk.getValidToDate();
-		if(constant == null){
-			throw new IllegalArgumentException("Constant cannot be null");
-		}
-		if(constant.trim().length() < 1){
-			throw new IllegalArgumentException("Constant cannot be empty");
-		}
-		if(code == null){
-			throw new IllegalArgumentException("Code cannot be null");
-		}
-		if(code.trim().length() < 1){
-			throw new IllegalArgumentException("Code cannot be empty");
-		}
-		if(validFromDate == null){
-			throw new IllegalArgumentException("ValifFromDate cannot be null");
-		}
-		if(validToDate == null){
-			throw new IllegalArgumentException("ValifToDate cannot be null");
-		}
-
-		CustomCode storedCustomCode = dao.replace(customCode);
-		return storedCustomCode;
-	}
+    private void validateParameters(String constant, String code, OffsetDateTime aDate) {
+        if (constant == null) {
+            throw new IllegalArgumentException("Constant cannot be null");
+        }
+        if (constant.trim().length() < 1) {
+            throw new IllegalArgumentException("Constant cannot be empty");
+        }
+        if (code == null) {
+            throw new IllegalArgumentException("Code cannot be null");
+        }
+        if (code.trim().length() < 1) {
+            throw new IllegalArgumentException("Code cannot be empty");
+        }
+        if (aDate == null) {
+            throw new IllegalArgumentException("ValidFromDate cannot be null");
+        }
+    }
 }

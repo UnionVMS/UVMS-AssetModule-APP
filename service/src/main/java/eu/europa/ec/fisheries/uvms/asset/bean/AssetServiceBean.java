@@ -12,7 +12,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.bean;
 
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
-import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.ContactInfoDao;
@@ -77,7 +76,7 @@ public class AssetServiceBean {
     private AuditServiceBean auditService;
 
     @Inject
-    private AssetGroupService assetGroupService;
+    private AssetGroupServiceBean assetGroupService;
 
     @Inject
     private AssetDao assetDao;

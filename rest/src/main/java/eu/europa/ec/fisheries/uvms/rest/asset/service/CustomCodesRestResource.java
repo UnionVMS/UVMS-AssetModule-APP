@@ -1,12 +1,11 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
-import eu.europa.ec.fisheries.uvms.asset.CustomCodesService;
+import eu.europa.ec.fisheries.uvms.asset.bean.CustomCodesServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import io.swagger.annotations.*;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -31,7 +30,7 @@ public class CustomCodesRestResource {
     private static final Logger LOG = LoggerFactory.getLogger(CustomCodesRestResource.class);
 
     @Inject
-    private CustomCodesService customCodesSvc;
+    private CustomCodesServiceBean customCodesSvc;
 
     @POST
     @ApiOperation(value = "Create a record", notes = "Create a custom constants code", response = CustomCode.class)

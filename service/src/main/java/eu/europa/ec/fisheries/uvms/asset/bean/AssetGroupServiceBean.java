@@ -11,22 +11,21 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.bean;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-
-import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetGroupDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetGroupFieldDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
 
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 @Stateless
-public class AssetGroupServiceBean implements AssetGroupService {
+public class AssetGroupServiceBean {
 
     @Inject
     private AssetGroupDao assetGroupDao;
@@ -34,7 +33,6 @@ public class AssetGroupServiceBean implements AssetGroupService {
     @Inject
     private AssetGroupFieldDao assetGroupFieldDao;
 
-    @Override
     public AssetGroup createAssetGroup(AssetGroup assetGroup, String username) {
         if (assetGroup == null) {
             throw new NullPointerException("Cannot create asset group because the group is null.");
@@ -48,7 +46,6 @@ public class AssetGroupServiceBean implements AssetGroupService {
         return assetGroupDao.createAssetGroup(assetGroup);
     }
 
-    @Override
     public AssetGroup updateAssetGroup(AssetGroup assetGroup, String username) {
         if (assetGroup == null || assetGroup.getId() == null) {
             throw new NullPointerException("Cannot update asset group because group or ID is null.");
@@ -66,8 +63,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         return assetGroupDao.updateAssetGroup(assetGroup);
     }
 
-    @Override
-    public AssetGroup getAssetGroupById(UUID guid)  {
+    public AssetGroup getAssetGroupById(UUID guid) {
         if (guid == null) {
             throw new NullPointerException("Cannot get asset group because ID is null.");
         }
@@ -81,8 +77,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
      * @param username
      * @return AssetGroup
      */
-    @Override
-    public AssetGroup deleteAssetGroupById(UUID guid, String username)  {
+    public AssetGroup deleteAssetGroupById(UUID guid, String username) {
         if (guid == null) {
             throw new NullPointerException("Cannot delete asset group because the group ID is null.");
         }
@@ -99,16 +94,14 @@ public class AssetGroupServiceBean implements AssetGroupService {
         return groupEntity;
     }
 
-    @Override
-    public List<AssetGroup> getAssetGroupList(String user)  {
+    public List<AssetGroup> getAssetGroupList(String user) {
         if (user == null || user.trim().isEmpty()) {
             throw new NullPointerException("Invalid user");
         }
         return assetGroupDao.getAssetGroupByUser(user);
     }
 
-    @Override
-    public List<AssetGroup> getAssetGroupListByAssetId(UUID assetId)  {
+    public List<AssetGroup> getAssetGroupListByAssetId(UUID assetId) {
         // TODO maybe this could be done more efficient if search is from the other side and joining . . . .
         if (assetId == null) {
             throw new NullPointerException("Invalid asset");
@@ -134,8 +127,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
      * @param username
      * @return AssetGroupField
      */
-    @Override
-    public AssetGroupField createAssetGroupField(UUID parentAssetGroupId, AssetGroupField assetGroupField, String username)  {
+    public AssetGroupField createAssetGroupField(UUID parentAssetGroupId, AssetGroupField assetGroupField, String username) {
         if (parentAssetGroupId == null) {
             throw new NullPointerException("Cannot create AssetGroupField because the AssetGroup ID is Null");
         }
@@ -156,8 +148,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         return assetGroupFieldDao.create(assetGroupField);
     }
 
-    @Override
-    public AssetGroupField updateAssetGroupField(AssetGroupField assetGroupField, String username)  {
+    public AssetGroupField updateAssetGroupField(AssetGroupField assetGroupField, String username) {
         if (assetGroupField == null) {
             throw new NullPointerException("Cannot update assetGroupField because assetField is invalid.");
         }
@@ -173,7 +164,6 @@ public class AssetGroupServiceBean implements AssetGroupService {
         return assetGroupFieldDao.update(assetGroupField);
     }
 
-    @Override
     public AssetGroupField getAssetGroupField(UUID id) {
         if (id == null) {
             throw new NullPointerException("Cannot get assetGroupField because ID is null.");
@@ -181,8 +171,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         return assetGroupFieldDao.get(id);
     }
 
-    @Override
-    public AssetGroupField deleteAssetGroupField(UUID id, String username)  {
+    public AssetGroupField deleteAssetGroupField(UUID id, String username) {
         if (id == null) {
             throw new NullPointerException("Cannot delete assetGroupId because ID is null.");
         }
@@ -197,8 +186,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         return assetGroupFieldDao.delete(fetchedAssetGroupField);
     }
 
-    @Override
-    public List<AssetGroupField> retrieveFieldsForGroup(UUID assetGroupId)  {
+    public List<AssetGroupField> retrieveFieldsForGroup(UUID assetGroupId) {
         if (assetGroupId == null) {
             throw new NullPointerException("Cannot retrieve list for group because assetGroup is null.");
         }
@@ -209,8 +197,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
         return assetGroupFieldDao.retrieveFieldsForGroup(assetGroup);
     }
 
-    @Override
-    public void removeFieldsForGroup(UUID assetGroupId)  {
+    public void removeFieldsForGroup(UUID assetGroupId) {
         if (assetGroupId == null) {
             throw new NullPointerException("Cannot retrieve list for group because assetGroup is null.");
         }
