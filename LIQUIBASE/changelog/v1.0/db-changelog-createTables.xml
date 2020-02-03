@@ -760,7 +760,7 @@
         <addForeignKeyConstraint baseColumnNames="rev" baseTableName="asset_aud" constraintName="fklq7kauhigk0mdew67qs2l39ci" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-102">
-        <addForeignKeyConstraint baseColumnNames="customcode_code,customcode_constant,customcode_validfromdate,customcode_validtodate" baseTableName="customcode_namevalue" constraintName="customcode_namevalue_customcode_fk" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="code,constant,validfromdate,validtodate" referencedTableName="customcode"/>
+        <addForeignKeyConstraint baseColumnNames="customcode_code,customcode_constant,customcode_validfromdate,customcode_validtodate" baseTableName="customcode_namevalue" constraintName="customcode_namevalue_customcode_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="code,constant,validfromdate,validtodate" referencedTableName="customcode"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-104">
         <addForeignKeyConstraint baseColumnNames="plugin_id" baseTableName="mobileterminal" constraintName="mobileterminal_plugin_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="plugin"/>

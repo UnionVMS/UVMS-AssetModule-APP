@@ -14,23 +14,11 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
-                   logicalFilePath="changelog/v6.3.4/note_refactoring.xml">
+                   logicalFilePath="changelog/v6.3.4/customcode_namevalue_customcode_fk.xml">
 
-    <changeSet author="joemat" id="Note refactoring">
-        <dropTable tableName="note"/>
-
-        <createTable tableName="note">
-            <column name="id" type="UUID"/>
-            <column name="asset_id" type="UUID"/>
-            <column name="note" type="CLOB"/>
-            <column name="created_by" type="CLOB"/>
-            <column name="created_date" type="TIMESTAMP(6) WITH TIME ZONE"/>
-        </createTable>
-
-        <createIndex indexName="note_asset_id_idx"
-                     tableName="note">
-            <column name="asset_id"/>
-        </createIndex>
+    <changeSet author="kasim" id="Cascade CustomRule on Delete">
+        <dropForeignKeyConstraint baseTableName="customcode_namevalue" constraintName="customcode_namevalue_customcode_fk" />
+        <addForeignKeyConstraint baseColumnNames="customcode_code,customcode_constant,customcode_validfromdate,customcode_validtodate" baseTableName="customcode_namevalue" constraintName="customcode_namevalue_customcode_fk" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="code,constant,validfromdate,validtodate" referencedTableName="customcode"/>
     </changeSet>
 
 </databaseChangeLog>
