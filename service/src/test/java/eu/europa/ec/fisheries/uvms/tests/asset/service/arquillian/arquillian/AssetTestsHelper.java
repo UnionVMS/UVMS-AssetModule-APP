@@ -188,4 +188,14 @@ public class AssetTestsHelper {
         ag.setValue(keyFieldValue);
         return ag;
     }
+    
+    static AssetFilterValue createAssetFilterValue(AssetFilter assetFilterEntity, String key, String keyFieldValue, OffsetDateTime dt, String user) {
+    	AssetFilterValue ag = new AssetFilterValue();
+        ag.setAssetFilter(assetFilterEntity);
+        ag.setUpdatedBy(user);
+        ag.setUpdateTime(dt);
+        ag.setKey(key);
+        ag.setValue(keyFieldValue);
+        return ag;
+    }
 }

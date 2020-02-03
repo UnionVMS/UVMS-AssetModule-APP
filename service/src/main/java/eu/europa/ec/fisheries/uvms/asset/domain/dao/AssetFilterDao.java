@@ -23,7 +23,7 @@ public class AssetFilterDao {
     private EntityManager em;
 
 
-    public AssetFilter createAssetGroup(AssetFilter filter) {
+    public AssetFilter createAssetFilter(AssetFilter filter) {
         em.persist(filter);
         return filter;
     }
@@ -59,8 +59,8 @@ public class AssetFilterDao {
         return query.getResultList();
     }
 
-    public List<AssetGroup> getAssetGroupsByGroupGuidList(List<UUID> guidList) {
-        TypedQuery<AssetGroup> query = em.createNamedQuery(ASSETFILTER_GUID_LIST, AssetGroup.class);
+    public List<AssetFilter> getAssetFiltersByValueGuidList(List<UUID> guidList) {
+        TypedQuery<AssetFilter> query = em.createNamedQuery(ASSETFILTER_GUID_LIST, AssetFilter.class);
         query.setParameter("guidList", guidList);
         return query.getResultList();
     }
