@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.rest.asset;
 
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
+import eu.europa.ec.fisheries.uvms.asset.model.constants.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;

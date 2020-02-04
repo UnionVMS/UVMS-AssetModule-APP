@@ -1,295 +1,141 @@
-package eu.europa.ec.fisheries.uvms.asset.domain.entity;
+/*
+﻿Developed with the contribution of the European Commission - Directorate General for Maritime Affairs and Fisheries
+© European Union, 2015-2016.
+This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or any later version. The IFDM Suite is distributed in
+the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
+copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
+ */
+package eu.europa.ec.fisheries.uvms.asset.remote.dto;
+
 
 import eu.europa.ec.fisheries.uvms.asset.model.constants.UnitTonnage;
-import eu.europa.ec.fisheries.uvms.asset.util.JsonBMobileTerminalIdOnlySerializer;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.envers.Audited;
 
 import javax.json.bind.annotation.JsonbProperty;
-import javax.json.bind.annotation.JsonbTransient;
 import javax.json.bind.annotation.JsonbTypeSerializer;
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.time.Instant;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.*;
+public class AssetDto {
 
-@Audited
-@Entity
-@Table(name = "Asset",
-        uniqueConstraints = {@UniqueConstraint(name = "Asset_UC_ cfr", columnNames = "cfr"),
-            @UniqueConstraint(name = "asset_uc_imo", columnNames = "imo"),
-            @UniqueConstraint(name = "asset_uc_ircs" , columnNames = "ircs"),
-            @UniqueConstraint(name = "asset_uc_mmsi" , columnNames = "mmsi"),
-            @UniqueConstraint(name = "asset_uc_iccat" , columnNames = "iccat"),
-            @UniqueConstraint(name = "asset_uc_uvi" , columnNames = "uvi"),
-            @UniqueConstraint(name = "asset_uc_gfcm" , columnNames = "gfcm"),
-            @UniqueConstraint(name = "asset_uc_historyid" , columnNames = "historyid"),
-            @UniqueConstraint(name = "asset_uc_cfr" , columnNames = "cfr"),
-        })
-
-@NamedQueries({
-          @NamedQuery(name = ASSET_FIND_ALL, query = "SELECT v FROM Asset v WHERE v.active = true"),
-          @NamedQuery(name = ASSET_FIND_BY_CFR, query = "SELECT v FROM Asset v WHERE v.cfr = :cfr AND v.active = true"),
-          @NamedQuery(name = ASSET_FIND_BY_IRCS, query = "SELECT v FROM Asset v WHERE v.ircs = :ircs AND v.active = true"),
-          @NamedQuery(name = ASSET_FIND_BY_IMO, query = "SELECT v FROM Asset v WHERE v.imo = :imo AND v.active = true"),
-          @NamedQuery(name = ASSET_FIND_BY_MMSI, query = "SELECT v FROM Asset v WHERE v.mmsi = :mmsi AND v.active = true"),
-          @NamedQuery(name = ASSET_FIND_BY_ICCAT, query = "SELECT v FROM Asset v WHERE v.iccat = :iccat AND v.active = true"),
-          @NamedQuery(name = ASSET_FIND_BY_UVI, query = "SELECT v FROM Asset v WHERE v.uvi = :uvi AND v.active = true"),
-          @NamedQuery(name = ASSET_FIND_BY_GFCM, query = "SELECT v FROM Asset v WHERE v.gfcm = :gfcm AND v.active = true"),
-          @NamedQuery(name = ASSET_FIND_BY_IDS, query = "SELECT v FROM Asset v WHERE v.id in :idList AND v.active = true"),
-          @NamedQuery(name = ASSET_FIND_BY_ALL_IDENTIFIERS, query = "SELECT v FROM Asset v WHERE (v.cfr = :cfr OR v.ircs = :ircs OR v.imo = :imo OR v.mmsi = :mmsi OR v.iccat = :iccat OR v.uvi = :uvi OR v.gfcm = :gfcm) AND v.active = true"),
-          @NamedQuery(name = ASSET_FIND_BY_MMSI_OR_IRCS, query = "SELECT a FROM Asset a WHERE (a.ircs = :ircs OR a.mmsi = :mmsi) AND a.active = true"),
-          @NamedQuery(name = ASSET_MICRO_ASSET_BY_LIST, query = "SELECT new eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset(a.id, a.flagStateCode, a.name, a.vesselType, a.ircs, a.cfr, a.externalMarking, a.lengthOverAll ) FROM Asset a WHERE a.id in :idList"),
-          @NamedQuery(name = ASSET_ALL_AVAILABLE_VESSEL_TYPES, query = "SELECT DISTINCT a.vesselType FROM Asset a"),
-})
-//@JsonIgnoreProperties(ignoreUnknown = true)
-public class Asset implements Serializable {
-
-    public static final String ASSET_FIND_BY_CFR = "Asset.findByCfr";
-    public static final String ASSET_FIND_BY_IRCS = "Asset.findByIrcs";
-    public static final String ASSET_FIND_BY_IMO = "Asset.findByImo";
-    public static final String ASSET_FIND_BY_MMSI = "Asset.findByMMSI";
-    public static final String ASSET_FIND_BY_ICCAT = "Asset.findByIccat";
-    public static final String ASSET_FIND_BY_UVI = "Asset.findByUvi";
-    public static final String ASSET_FIND_BY_GFCM = "Asset.findByGfcm";
-    public static final String ASSET_FIND_ALL = "Asset.findAll";
-    public static final String ASSET_FIND_BY_IDS = "Asset.findByIds";
-    public static final String ASSET_FIND_BY_ALL_IDENTIFIERS = "Asset.findByAllIds";
-    public static final String ASSET_MICRO_ASSET_BY_LIST = "Asset.microAssetByList";
-    public static final String ASSET_FIND_BY_MMSI_OR_IRCS = "Asset.findByMmsiOrIrcs";
-    public static final String ASSET_ALL_AVAILABLE_VESSEL_TYPES = "Asset.allAvailableVesselTypes";
-
-    private static final long serialVersionUID = -320627625723663100L;
-
-    @Id
-    @GeneratedValue(generator = "ASSET_UUID")
-    @GenericGenerator(name = "ASSET_UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id")
     private UUID id;
 
-    @Column(name = "historyid")
     private UUID historyId;
 
-    @Column(name = "ircsindicator")
     private Boolean ircsIndicator;
 
-    @Column(name = "ersindicator")
     private Boolean ersIndicator;
 
-    @Column(name = "aisindicator")
     private Boolean aisIndicator;
 
-    @Column(name = "vmsindicator")
     private Boolean vmsIndicator;
 
-    @Column(name = "hullmaterial")
     private String hullMaterial;
 
-    @Column(name = "commissiondate")
     private Instant commissionDate;
 
-    @Size(min = 4, max = 4)
-    @Column(name = "constructionyear")
     private String constructionYear;
 
-    @Size(max = 100)
-    @Column(name = "constructionplace")
     private String constructionPlace;
 
-    @Column(name = "updatetime")
     private Instant updateTime;
 
-    @Column(name = "source")
     private String source;      //if this is not set then frontend has a hissyfit about formating
 
-    @Size(max = 100)
-    @Column(name = "vesseltype")
     private String vesselType;
 
-    @Column(name = "vesselDateOfEntry")
     private Instant vesselDateOfEntry;
 
-    @Size(max = 12)
-    @Column(name = "cfr")
     private String cfr;
 
-    @Size(max = 7)
-    @Column(name = "imo")
     private String imo;
 
-    @Size(max = 8)
-    @Column(name = "ircs")
     private String ircs;
 
-    @Size(max = 9)
-    @Column(name = "mmsi")
     private String mmsi;
 
-    @Size(max = 50)
-    @Column(name = "iccat")
     private String iccat;
 
-    @Size(max = 50)
-    @Column(name = "uvi")
     private String uvi;
 
-    @Size(max = 50)
-    @Column(name = "gfcm")
     private String gfcm;
 
-    @Column(name = "active")
     private Boolean active;
 
-    @Size(min = 3, max = 3)
-    @Column(name = "flagstatecode")
     private String flagStateCode;
 
-    @Column(name = "eventcode")
     private String eventCode;
 
-    @Size(max = 40)
-    @Column(name = "name")
     private String name;
 
-    @Size(max = 14)
-    @Column(name = "externalmarking")
     private String externalMarking;
 
-    @Column(name = "agentisalsoowner")
     private Boolean agentIsAlsoOwner;
 
-    @Digits(integer = 6, fraction = 2)
-    @Column(name = "lengthoverall")
     private Double lengthOverAll;
 
-    @Digits(integer = 6, fraction = 2)
-    @Column(name = "lengthbetweenperpendiculars")
     private Double lengthBetweenPerpendiculars;
 
-    @Digits(integer = 7, fraction = 2)
-    @Column(name = "safetygrosstonnage")
     private Double safteyGrossTonnage;
 
-    @Digits(integer = 8, fraction = 2)
-    @Column(name = "othertonnage")
     private Double otherTonnage;
 
-    @Digits(integer = 8, fraction = 2)
-    @Column(name = "grosstonnage")
     private Double grossTonnage;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "grosstonnageunit")
     private UnitTonnage grossTonnageUnit = UnitTonnage.LONDON;
 
-    @Size(max = 30)
-    @Column(name = "portofregistration")
     private String portOfRegistration;
 
-    @Digits(integer = 8, fraction = 2)
-    @Column(name = "powerofauxengine")
     private Double powerOfAuxEngine;
 
-    @Digits(integer = 8, fraction = 2)
-    @Column(name = "powerofmainengine")
     private Double powerOfMainEngine;
 
-    @Column(name = "haslicense")
     private Boolean hasLicence;
 
-    @Size(max = 25)
-    @Column(name = "licensetype")
     private String licenceType;
 
-    @Column(name = "mainfishinggearcode")
     private String mainFishingGearCode;
 
-    @Column(name = "subfishinggearcode")
     private String subFishingGearCode;
 
-    @Column(name = "gearfishingtype")
     private String gearFishingType;
 
-    @Size(max = 100)
-    @Column(name = "ownername")
     private String ownerName;
 
-    @Column(name = "hasvms")
     private Boolean hasVms;
 
-    @Size(max = 100)
-    @Column(name = "owneraddress")
     private String ownerAddress;
 
-    @Size(max = 100)
-    @Column(name = "assetagentaddress")
     private String assetAgentAddress;
 
-    @Size(min = 3, max = 3)
-    @Column(name = "countryofimportorexport")
     private String countryOfImportOrExport;
 
-    @Column(name = "typeofexport")
     private String typeOfExport;
 
-    @Column(name = "administrativedecisiondate")
     private Instant administrativeDecisionDate;
 
-    @Column(name = "segment")
     private String segment;
 
-    @Column(name = "segmentofadministrativedecision")
     private String segmentOfAdministrativeDecision;
 
-    @Column(name = "publicaid")
     private String publicAid;
 
-    @Size(max = 14)
-    @Column(name = "registrationnumber")
     private String registrationNumber;
 
-    @Size(max = 60)
-    @Column(name = "updatedby")
     private String updatedBy;
 
-    @Column(name = "prodorgcode")
     private String prodOrgCode;
 
-    @Column(name = "prodorgname")
     private String prodOrgName;
 
-    /*@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    @JsonProperty("mobileTerminalIds")*/
-    @JsonbTypeSerializer(JsonBMobileTerminalIdOnlySerializer.class)
-    @JsonbProperty("mobileTerminalIds")
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "asset", cascade = {CascadeType.REFRESH})
-    private Set<MobileTerminal> mobileTerminals;
-
-    @Transient
-    private List<String> mobileTerminalUUIDList;
-
-    @Size(max = 255)
-    @Column(name = "comment")
     private String comment;
-
-    @PrePersist
-    private void generateNewHistoryId() {
-        this.historyId = UUID.randomUUID();
-    }
-
-    @PreUpdate
-    private void generateNewHistoryIdOnUpdate() {
-        this.historyId = UUID.randomUUID();
-    }
 
     public UUID getId() {
         return id;
@@ -408,7 +254,7 @@ public class Asset implements Serializable {
     }
 
     public void setCfr(String cfr) {
-        this.cfr = (cfr != null && cfr.isEmpty() ? null : cfr);
+        this.cfr = cfr;
     }
 
     public String getImo() {
@@ -416,7 +262,7 @@ public class Asset implements Serializable {
     }
 
     public void setImo(String imo) {
-        this.imo = (imo != null && imo.isEmpty() ? null : imo);
+        this.imo = imo;
     }
 
     public String getIrcs() {
@@ -424,7 +270,7 @@ public class Asset implements Serializable {
     }
 
     public void setIrcs(String ircs) {
-        this.ircs = (ircs != null && ircs.isEmpty() ? null : ircs);
+        this.ircs = ircs;
     }
 
     public String getMmsi() {
@@ -432,7 +278,7 @@ public class Asset implements Serializable {
     }
 
     public void setMmsi(String mmsi) {
-        this.mmsi = (mmsi != null && mmsi.isEmpty() ? null : mmsi);
+        this.mmsi = mmsi;
     }
 
     public String getIccat() {
@@ -440,7 +286,7 @@ public class Asset implements Serializable {
     }
 
     public void setIccat(String iccat) {
-        this.iccat = (iccat != null && iccat.isEmpty() ? null : iccat);
+        this.iccat = iccat;
     }
 
     public String getUvi() {
@@ -448,7 +294,7 @@ public class Asset implements Serializable {
     }
 
     public void setUvi(String uvi) {
-        this.uvi = (uvi != null && uvi.isEmpty() ? null : uvi);
+        this.uvi = uvi;
     }
 
     public String getGfcm() {
@@ -456,7 +302,7 @@ public class Asset implements Serializable {
     }
 
     public void setGfcm(String gfcm) {
-        this.gfcm = (gfcm != null && gfcm.isEmpty() ? null : gfcm);
+        this.gfcm = gfcm;
     }
 
     public Boolean getActive() {
@@ -496,7 +342,7 @@ public class Asset implements Serializable {
     }
 
     public void setExternalMarking(String externalMarking) {
-        this.externalMarking = (externalMarking != null && externalMarking.isEmpty() ? null : externalMarking);
+        this.externalMarking = externalMarking;
     }
 
     public Boolean getAgentIsAlsoOwner() {
@@ -729,28 +575,6 @@ public class Asset implements Serializable {
 
     public void setProdOrgName(String prodOrgName) {
         this.prodOrgName = prodOrgName;
-    }
-
-    public Set<MobileTerminal> getMobileTerminals() {
-        if(mobileTerminals == null)
-            mobileTerminals = new HashSet<>();
-        return mobileTerminals;
-    }
-
-    public void setMobileTerminals(Set<MobileTerminal> mobileTerminals) {
-        this.mobileTerminals = mobileTerminals;
-    }
-
-    //@JsonIgnore
-    @JsonbTransient
-    public List<String> getMobileTerminalUUIDList() {
-        return mobileTerminalUUIDList;
-    }
-
-    //@JsonSetter("mobileTerminalIds")
-    @JsonbProperty("mobileTerminalIds")
-    public void setMobileTerminalUUIDList(List<String> mobileTerminalUUIDList) {
-        this.mobileTerminalUUIDList = mobileTerminalUUIDList;
     }
 
     public String getComment() {

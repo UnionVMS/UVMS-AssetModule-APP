@@ -9,27 +9,15 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.mobileterminal.entity.types;
+package eu.europa.ec.fisheries.uvms.asset.model.constants;
 
-public enum TerminalSourceEnum {
-	INTERNAL(1),
-	NATIONAL(2);
+public enum UnitTonnage {
+	LONDON, OSLO;
 
-    private Integer id;
-
-    TerminalSourceEnum(int id) {
-        this.id = id;
+    public static UnitTonnage getType(String grossTonnageUnit) {
+        if (grossTonnageUnit != null && !grossTonnageUnit.isEmpty()) {
+            return UnitTonnage.valueOf(grossTonnageUnit);
+        }
+        return UnitTonnage.LONDON;
     }
-
-	public Integer getId() {
-		return id;
-	}
-
-	public String value() {
-		return name();
-	}
-
-	public static TerminalSourceEnum fromValue(String v) {
-		return valueOf(v);
-	}
 }

@@ -1,21 +1,20 @@
-package eu.europa.ec.fisheries.uvms.mobileterminal.dto;
+package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.dto;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MTListResponse {
-
-    private List<MobileTerminalDto> mobileTerminalList = new ArrayList<>();
+public class TestMTListResponse {
+    private List<MobileTerminal> mobileTerminalList = new ArrayList<>();
     private Integer totalNumberOfPages = 0;
     private Integer currentPage = 0;
 
-    public List<MobileTerminalDto> getMobileTerminalList() {
+    public List<MobileTerminal> getMobileTerminalList() {
         return mobileTerminalList;
     }
 
-    public void setMobileTerminalList(List<MobileTerminalDto> mobileTerminalList) {
+    public void setMobileTerminalList(List<MobileTerminal> mobileTerminalList) {
         this.mobileTerminalList = mobileTerminalList;
     }
 

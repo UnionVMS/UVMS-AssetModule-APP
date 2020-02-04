@@ -12,15 +12,17 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.services;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.AssetDto;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPluginCapability;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalStatus;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDtoMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSourceEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchKeyValue;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTQuery;
@@ -144,14 +146,6 @@ public class MobileTerminalRestResource {
         try {
             List<MTSearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
             MTListResponse mobileTerminalList = mobileTerminalService.getMobileTerminalList(searchFields, page, size, dynamic, includeArchived);
-            for (MobileTerminal mobileTerminal : mobileTerminalList.getMobileTerminalList()) {
-                //mobileTerminal.getPlugin().getCapabilities().size();
-                for (MobileTerminalPluginCapability capability : mobileTerminal.getPlugin().getCapabilities()) {
-                    UUID test = capability.getPlugin();
-                    test.toString();
-                }
-
-            }
 
             String returnJson = jsonb.toJson(mobileTerminalList);
             LOG.debug(returnJson);
@@ -175,7 +169,7 @@ public class MobileTerminalRestResource {
             String returnString = jsonb.toJson(returnWholeObject && !mobileTerminalList.getMobileTerminalList().isEmpty() ? mobileTerminalList.getMobileTerminalList().get(0) : !mobileTerminalList.getMobileTerminalList().isEmpty());
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
-            LOG.error("[ Error when getting Asset history by mobileTerminalId ] {}", ex);
+            LOG.error("[ Error when checking if serial number already exists ] {}", ex);
             throw ex;
         }
     }
@@ -183,7 +177,7 @@ public class MobileTerminalRestResource {
     @GET
     @Path("checkIfExists/memberNbr/dnid/{memberNbr}/{dnid}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response checkIfSerialNumberExistsInDB(@PathParam("memberNbr") String memberNbr,
+    public Response checkIfMemberNumberDnidComboExistsInDB(@PathParam("memberNbr") String memberNbr,
                                                   @PathParam("dnid") String dnid,
                                                   @DefaultValue("false") @QueryParam("returnWholeObject") Boolean returnWholeObject) {
         try{
@@ -195,7 +189,7 @@ public class MobileTerminalRestResource {
             String returnString = jsonb.toJson(returnWholeObject && !mobileTerminalList.getMobileTerminalList().isEmpty() ? mobileTerminalList.getMobileTerminalList().get(0) : !mobileTerminalList.getMobileTerminalList().isEmpty());
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
-            LOG.error("[ Error when getting Asset history by mobileTerminalId ] {}", ex);
+            LOG.error("[ Error when if a member number dnid combo already exists ] {}", ex);
             throw ex;
         }
     }
@@ -256,7 +250,7 @@ public class MobileTerminalRestResource {
         LOG.info("Get mobile terminal history by mobile terminal id invoked in rest layer.");
         try {
             List<MobileTerminal> mobileTerminalRevisions = mobileTerminalService.getMobileTerminalRevisions(id, maxNbr);
-            String returnString = jsonb.toJson(mobileTerminalRevisions);
+            String returnString = jsonb.toJson(MobileTerminalDtoMapper.mapToMobileTerminalDtos(mobileTerminalRevisions));
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting mobile terminal history by terminalId ] {}", ex);
@@ -271,7 +265,7 @@ public class MobileTerminalRestResource {
                                                       @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr)  {
 
         try {
-            List<Map<UUID, List<MobileTerminal>>> mobileTerminalRevisionMap = mobileTerminalService.getMobileTerminalRevisionsByAssetId(assetId, maxNbr);
+            List<Map<UUID, List<MobileTerminalDto>>> mobileTerminalRevisionMap = mobileTerminalService.getMobileTerminalRevisionsByAssetId(assetId, maxNbr);
             String returnString = jsonb.toJson(mobileTerminalRevisionMap);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
@@ -288,7 +282,7 @@ public class MobileTerminalRestResource {
     public Response getAssetRevisionByMobileTerminalId(@PathParam("mobileTerminalId") UUID mobileTerminalId,
                                                        @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
         try{
-            List<Asset> assetRevisions = mobileTerminalService.getAssetRevisionsByMobileTerminalId(mobileTerminalId);
+            List<AssetDto> assetRevisions = mobileTerminalService.getAssetRevisionsByMobileTerminalId(mobileTerminalId);
             String returnString = jsonb.toJson(assetRevisions);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {

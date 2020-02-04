@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
+import eu.europa.ec.fisheries.uvms.asset.model.constants.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
 
 import java.time.Instant;

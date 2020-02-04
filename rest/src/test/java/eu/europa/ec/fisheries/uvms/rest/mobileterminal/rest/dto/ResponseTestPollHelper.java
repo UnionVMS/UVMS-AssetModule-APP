@@ -3,8 +3,9 @@ package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.dto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDtoMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSourceEnum;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -19,7 +20,7 @@ public class ResponseTestPollHelper {
         response.setCurrentPage(1);
         response.setTotalNumberOfPages(1);
         MobileTerminal created = createMobileTerminal();
-        response.getMobileTerminalList().add(created);
+        response.getMobileTerminalList().add(MobileTerminalDtoMapper.mapToMobileTerminalDto(created));
         return response;
     }
 

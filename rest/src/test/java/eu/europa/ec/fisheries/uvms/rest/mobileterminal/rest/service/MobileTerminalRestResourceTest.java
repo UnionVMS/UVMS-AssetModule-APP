@@ -11,12 +11,11 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalStatus;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.asset.filter.AppError;
@@ -677,9 +676,9 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         assertEquals(2, mtRevisions.size());
         assertEquals(1, mtRevisions.get(0).size());
-        assertEquals(2, mtRevisions.get(0).get(created1.getId()).size());
+        assertEquals(2, mtRevisions.get(0).get(created1.getId().toString()).size());
         assertEquals(1, mtRevisions.get(1).size());
-        assertEquals(3, mtRevisions.get(1).get(created2.getId()).size());
+        assertEquals(3, mtRevisions.get(1).get(created2.getId().toString()).size());
     }
 
     @Test
