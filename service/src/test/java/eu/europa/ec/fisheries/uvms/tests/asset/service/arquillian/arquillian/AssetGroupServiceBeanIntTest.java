@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian;
 
-import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
+import eu.europa.ec.fisheries.uvms.asset.bean.AssetGroupServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
@@ -31,7 +31,7 @@ public class AssetGroupServiceBeanIntTest extends TransactionalTests {
     private AssetServiceBean assetService;
 
     @EJB
-    private AssetGroupService assetGroupService;
+    private AssetGroupServiceBean assetGroupService;
 
     @Test
     @OperateOnDeployment("normal")

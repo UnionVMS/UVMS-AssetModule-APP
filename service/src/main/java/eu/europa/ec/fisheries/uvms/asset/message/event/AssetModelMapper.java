@@ -10,7 +10,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.message.event;
 
-import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
+import eu.europa.ec.fisheries.uvms.asset.bean.AssetGroupServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.model.constants.UnitTonnage;
@@ -39,7 +39,7 @@ public class AssetModelMapper {
     private AssetServiceBean assetService;
     
     @Inject
-    private AssetGroupService assetGroupService;
+    private AssetGroupServiceBean assetGroupService;
     
     public Asset toAssetEntity(eu.europa.ec.fisheries.wsdl.asset.types.Asset assetModel) {
         Asset asset = new Asset();

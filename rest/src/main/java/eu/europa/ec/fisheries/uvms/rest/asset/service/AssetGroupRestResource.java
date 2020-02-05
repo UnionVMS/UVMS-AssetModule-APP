@@ -11,7 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
-import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
+import eu.europa.ec.fisheries.uvms.asset.bean.AssetGroupServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
@@ -47,7 +47,7 @@ public class AssetGroupRestResource {
     private HttpServletRequest servletRequest;
 
     @Inject
-    private AssetGroupService assetGroupService;
+    private AssetGroupServiceBean assetGroupService;
 
     private Jsonb jsonb;
 

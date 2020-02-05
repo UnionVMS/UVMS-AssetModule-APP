@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
-import eu.europa.ec.fisheries.uvms.asset.CustomCodesService;
+import eu.europa.ec.fisheries.uvms.asset.bean.CustomCodesServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
@@ -30,7 +30,7 @@ public class CustomCodesRestResource {
     private static final Logger LOG = LoggerFactory.getLogger(CustomCodesRestResource.class);
 
     @Inject
-    private CustomCodesService customCodesSvc;
+    private CustomCodesServiceBean customCodesSvc;
 
     @POST
     @ApiOperation(value = "Create a record", notes = "Create a custom constants code", response = CustomCode.class)

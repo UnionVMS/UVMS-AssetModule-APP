@@ -14,22 +14,11 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
-                   logicalFilePath="changelog/v6.0.70/rename_inactivated_in_MT_to_active.xml">
+                   logicalFilePath="changelog/v6.3.4/customcode_namevalue_customcode_fk.xml">
 
-    <changeSet author="joemat" id="Rename inactivated in MT to active">
-        <renameColumn tableName="mobileterminal"
-                      oldColumnName="inactivated"
-                      newColumnName="active"
-                      />
-
-        <renameColumn tableName="mobileterminal_aud"
-                      oldColumnName="inactivated"
-                      newColumnName="active"
-        />
-
-        <update tableName="mobileterminal">
-            <column name="active" valueComputed="(select not active from mobileterminal mt where mt.id = mobileterminal.id)"/>
-        </update>
+    <changeSet author="kasim" id="Cascade CustomRule on Delete">
+        <dropForeignKeyConstraint baseTableName="customcode_namevalue" constraintName="customcode_namevalue_customcode_fk" />
+        <addForeignKeyConstraint baseColumnNames="customcode_code,customcode_constant,customcode_validfromdate,customcode_validtodate" baseTableName="customcode_namevalue" constraintName="customcode_namevalue_customcode_fk" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="code,constant,validfromdate,validtodate" referencedTableName="customcode"/>
     </changeSet>
 
 </databaseChangeLog>

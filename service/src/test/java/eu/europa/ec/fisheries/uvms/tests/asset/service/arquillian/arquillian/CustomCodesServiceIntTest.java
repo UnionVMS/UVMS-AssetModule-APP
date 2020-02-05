@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian;
 
-import eu.europa.ec.fisheries.uvms.asset.CustomCodesService;
+import eu.europa.ec.fisheries.uvms.asset.bean.CustomCodesServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 import eu.europa.ec.fisheries.uvms.tests.TransactionalTests;
@@ -25,7 +25,7 @@ public class CustomCodesServiceIntTest extends TransactionalTests {
     private static final String CODE = "testcode";
     private Random rnd = new Random();
     @EJB
-    private CustomCodesService service;
+    private CustomCodesServiceBean service;
 
     @Test
     @OperateOnDeployment("normal")

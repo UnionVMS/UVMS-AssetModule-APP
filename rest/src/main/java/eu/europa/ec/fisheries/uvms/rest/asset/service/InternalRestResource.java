@@ -12,9 +12,9 @@ package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType;
-import eu.europa.ec.fisheries.uvms.asset.AssetGroupService;
-import eu.europa.ec.fisheries.uvms.asset.CustomCodesService;
+import eu.europa.ec.fisheries.uvms.asset.bean.AssetGroupServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
+import eu.europa.ec.fisheries.uvms.asset.bean.CustomCodesServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
@@ -59,10 +59,10 @@ public class InternalRestResource {
     private AssetServiceBean assetService;
 
     @Inject
-    private AssetGroupService assetGroupService;
+    private AssetGroupServiceBean assetGroupService;
 
     @Inject
-    private CustomCodesService customCodesService;
+    private CustomCodesServiceBean customCodesService;
 
     @Inject
     private PollServiceBean pollServiceBean;
