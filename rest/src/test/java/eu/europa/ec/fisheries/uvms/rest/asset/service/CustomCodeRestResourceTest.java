@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
@@ -289,7 +288,7 @@ public class CustomCodeRestResourceTest extends AbstractAssetRestTest {
 // @formatter:on
     }
 
-    private String createACustomCodeHelperNoDateLimit(String constant, String code, String descr, List<String> references) throws JsonProcessingException {
+    private String createACustomCodeHelperNoDateLimit(String constant, String code, String descr, List<String> references) {
         CustomCodesPK primaryKey = new CustomCodesPK(constant, code);
         CustomCode customCode = new CustomCode();
         customCode.setPrimaryKey(primaryKey);

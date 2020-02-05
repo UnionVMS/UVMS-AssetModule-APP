@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.asset.client;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import eu.europa.ec.fisheries.uvms.asset.client.model.*;
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
@@ -188,7 +187,7 @@ public class AssetClientTest extends AbstractClientTest {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetIdByQuery() throws JsonProcessingException {
+    public void getAssetIdByQuery() {
         AssetDTO asset = AssetHelper.createBasicAsset();
         AssetBO assetBo = new AssetBO();
         assetBo.setAsset(asset);
@@ -383,7 +382,7 @@ public class AssetClientTest extends AbstractClientTest {
         String output = assetClient.getMicroAssetList(assetIdList);
 
         assertEquals(51, output.split("assetName").length);
-        assertEquals(9951, output.length());
+        assertEquals(8001, output.length());
     }
 
     @Test

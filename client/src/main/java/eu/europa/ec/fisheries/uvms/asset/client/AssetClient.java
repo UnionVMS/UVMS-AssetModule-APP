@@ -12,6 +12,7 @@ package eu.europa.ec.fisheries.uvms.asset.client;
 
 import eu.europa.ec.fisheries.uvms.asset.client.model.*;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
+import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.rest.security.InternalRestTokenHandler;
 
@@ -62,6 +63,7 @@ public class AssetClient {
         clientBuilder.connectTimeout(30, TimeUnit.SECONDS);
         clientBuilder.readTimeout(30, TimeUnit.SECONDS);
         Client client = clientBuilder.build();
+        client.register(JsonBConfigurator.class);
         webTarget = client.target(assetEndpoint + "/internal");
     }
 

@@ -55,7 +55,6 @@ import java.util.UUID;
             query="SELECT DISTINCT m FROM MobileTerminal m LEFT OUTER JOIN Channel c ON m.id = c.mobileTerminal.id " +
                     "WHERE m.archived = false AND c.archived = false AND c.DNID = :dnid AND c.memberNumber = :memberNumber AND m.mobileTerminalType = :mobileTerminalType")
 })
-//@JsonIgnoreProperties(ignoreUnknown = true)
 public class MobileTerminal implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -121,13 +120,9 @@ public class MobileTerminal implements Serializable {
 	@Column(name = "software_version")
 	private String softwareVersion;
 
-	//@JsonIgnoreProperties(value = {"mobileTerminal"}, allowSetters = true)
 	@OneToMany(mappedBy = "mobileTerminal", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Channel> channels;
 
-	/*@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-	@JsonIdentityReference(alwaysAsId = true)
-	@JsonProperty("assetId")*/
 	@JsonbTypeSerializer(JsonBAssetIdOnlySerializer.class)
 	@JsonbProperty("assetId")
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -275,7 +270,6 @@ public class MobileTerminal implements Serializable {
 		this.channels = channels;
 	}
 
-	//@JsonbProperty("assetId")
 	public Asset getAsset() {
 		return asset;
 	}
@@ -289,7 +283,6 @@ public class MobileTerminal implements Serializable {
 		return assetUUID;
 	}
 
-	//@JsonSetter("assetId")
 	@JsonbProperty("assetId")
 	public void setAssetUUID(String assetUUID) {
 		this.assetUUID = assetUUID;

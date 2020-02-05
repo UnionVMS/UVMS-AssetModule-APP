@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;

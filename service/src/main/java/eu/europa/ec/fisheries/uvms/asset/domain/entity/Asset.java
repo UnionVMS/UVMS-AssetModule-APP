@@ -50,7 +50,6 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.*;
           @NamedQuery(name = ASSET_MICRO_ASSET_BY_LIST, query = "SELECT new eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset(a.id, a.flagStateCode, a.name, a.vesselType, a.ircs, a.cfr, a.externalMarking, a.lengthOverAll ) FROM Asset a WHERE a.id in :idList"),
           @NamedQuery(name = ASSET_ALL_AVAILABLE_VESSEL_TYPES, query = "SELECT DISTINCT a.vesselType FROM Asset a"),
 })
-//@JsonIgnoreProperties(ignoreUnknown = true)
 public class Asset implements Serializable {
 
     public static final String ASSET_FIND_BY_CFR = "Asset.findByCfr";
@@ -266,9 +265,6 @@ public class Asset implements Serializable {
     @Column(name = "prodorgname")
     private String prodOrgName;
 
-    /*@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    @JsonProperty("mobileTerminalIds")*/
     @JsonbTypeSerializer(JsonBMobileTerminalIdOnlySerializer.class)
     @JsonbProperty("mobileTerminalIds")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "asset", cascade = {CascadeType.REFRESH})
@@ -741,13 +737,11 @@ public class Asset implements Serializable {
         this.mobileTerminals = mobileTerminals;
     }
 
-    //@JsonIgnore
     @JsonbTransient
     public List<String> getMobileTerminalUUIDList() {
         return mobileTerminalUUIDList;
     }
 
-    //@JsonSetter("mobileTerminalIds")
     @JsonbProperty("mobileTerminalIds")
     public void setMobileTerminalUUIDList(List<String> mobileTerminalUUIDList) {
         this.mobileTerminalUUIDList = mobileTerminalUUIDList;

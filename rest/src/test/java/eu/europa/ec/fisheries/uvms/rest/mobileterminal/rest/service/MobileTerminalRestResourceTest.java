@@ -676,7 +676,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         assertEquals(2, mtRevisions.size());
         assertEquals(1, mtRevisions.get(0).size());
-        assertEquals(2, mtRevisions.get(0).get(created1.getId().toString()).size());
+        assertEquals(2, mtRevisions.get(0).get(created1.getId().toString()).size());    //Yes, I know it says UUID up there in the rest call, yasson dont agree though
         assertEquals(1, mtRevisions.get(1).size());
         assertEquals(3, mtRevisions.get(1).get(created2.getId().toString()).size());
     }

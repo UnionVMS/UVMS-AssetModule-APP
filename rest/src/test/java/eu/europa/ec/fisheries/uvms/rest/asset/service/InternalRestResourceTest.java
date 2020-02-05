@@ -1,7 +1,5 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollMobileTerminal;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType;
@@ -351,7 +349,7 @@ public class InternalRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
-    public void createPollUsingOnlyAssetTest() throws JsonProcessingException {      //just checking that the endpoint exists, there are better tests for the logic in pollRestResources
+    public void createPollUsingOnlyAssetTest() {      //just checking that the endpoint exists, there are better tests for the logic in pollRestResources
         Asset asset = AssetHelper.createBasicAsset();
         asset = getWebTargetInternal()
                 .path("/asset")

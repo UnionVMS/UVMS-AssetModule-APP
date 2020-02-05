@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
@@ -68,12 +67,6 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
     public void createAssetTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = restCreateAsset(asset);
-
-        /*String createdAsset = getWebTargetInternal()
-                .path("asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
-                .post(Entity.json(asset), String.class);*/
 
         assertNotNull(createdAsset);
         assertNotNull(createdAsset.getId());

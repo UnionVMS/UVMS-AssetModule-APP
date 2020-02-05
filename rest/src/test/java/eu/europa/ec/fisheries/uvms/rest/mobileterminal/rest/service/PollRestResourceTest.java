@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ListPagination;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginCapability;
@@ -8,7 +7,6 @@ import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginCapabilityTyp
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
-import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
@@ -28,7 +26,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.json.bind.Jsonb;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
@@ -463,15 +460,6 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     }
 
     private PollChannelListDto getPollList(PollListQuery query) {
-       /* String s = getWebTargetExternal()
-                .path("/poll/list")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(query), String.class);
-        System.out.println(s);
-        return new PollChannelListDto();*/
-
-
         return getWebTargetExternal()
                 .path("/poll/list")
                 .request(MediaType.APPLICATION_JSON)
