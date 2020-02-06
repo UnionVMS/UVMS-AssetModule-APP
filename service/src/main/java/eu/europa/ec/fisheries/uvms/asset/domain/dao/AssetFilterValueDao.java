@@ -43,7 +43,7 @@ public class AssetFilterValueDao {
 	        return value;
 	    }
 
-	    public List<AssetFilterValue> retrieveFieldsForGroup(AssetFilter assetFilter) {
+	    public List<AssetFilterValue> retrieveValuesForFilter(AssetFilter assetFilter) {
 	        TypedQuery<AssetFilterValue> query = em.createNamedQuery(AssetFilterValue.ASSETFILTER_RETRIEVE_VALUES_FOR_FILTER,
 	        		AssetFilterValue.class);
 	        query.setParameter("assetfilter", assetFilter);

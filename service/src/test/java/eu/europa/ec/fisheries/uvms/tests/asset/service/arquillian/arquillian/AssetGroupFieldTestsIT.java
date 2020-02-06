@@ -15,15 +15,11 @@ import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.Assert.*;
 
@@ -122,9 +118,6 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
         Set<AssetGroupField> convertedSet2 = convertListToSet(createdAssetGroupFields1, convertedSet);
         assetGroup1.setAssetGroupFields(convertedSet2);
         List<AssetGroupField> retrievedAssetGroupFields1 =  assetGroupFieldDaoBean.retrieveFieldsForGroup(assetGroup1);
-        
-      
-        
         
         assertEquals(retrievedAssetGroupFields1.size(), 51);
         assertEquals(retrievedAssetGroupFields1.get(0).getKey(), "SWE, FIN");

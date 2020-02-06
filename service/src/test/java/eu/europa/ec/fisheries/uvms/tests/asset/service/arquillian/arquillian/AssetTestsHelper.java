@@ -189,13 +189,13 @@ public class AssetTestsHelper {
         return ag;
     }
     
-    static AssetFilterValue createAssetFilterValue(AssetFilter assetFilterEntity, String key, String keyFieldValue, OffsetDateTime dt, String user) {
+    static AssetFilterValue createAssetFilterValue(AssetFilter assetFilterEntity, String operator, String value, OffsetDateTime dt, String user) {
     	AssetFilterValue ag = new AssetFilterValue();
         ag.setAssetFilter(assetFilterEntity);
         ag.setUpdatedBy(user);
         ag.setUpdateTime(dt);
-        ag.setKey(key);
-        ag.setValue(keyFieldValue);
+        ag.setOperator(operator);
+        ag.setValue(value);
         return ag;
     }
 }

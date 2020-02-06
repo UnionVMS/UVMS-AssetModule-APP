@@ -28,7 +28,7 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue.A
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue.ASSETFILTER_RETRIEVE_VALUES_FOR_FILTER;
 
 @Entity
-@Table(name = "Assetfiltervalue", indexes = { @Index(columnList = "assetfilter", name="assetfiltervalue_assetfilter_FK_INX12")})
+@Table(name = "Assetfiltervalue", indexes = { @Index(columnList = "assetfilter", name="assetfiltervalue_assetfilter_FK_INX12")}) // get index?
 @NamedQueries({
 		@NamedQuery(name=ASSETFILTER_VALUE_FIND_ALL, query="SELECT a FROM AssetFilterValue a"),
 		@NamedQuery(name=ASSETFILTER_VALUE_GETBYID, query="SELECT a FROM AssetFilterValue a where a.id=:id"),
@@ -41,7 +41,7 @@ public class AssetFilterValue implements Serializable{
 	public static final String ASSETFILTER_VALUE_FIND_ALL ="Assetfiltervalue.findAll";
 	public static final String ASSETFILTER_VALUE_GETBYID = "Assetfiltervalue.getbyid";
 	public static final String ASSETFILTER_VALUE_CLEAR = "Assetfiltervalue.clear";
-	public static final String ASSETFILTER_RETRIEVE_VALUES_FOR_FILTER = "Assetgroupfield.retrievevaluesforfilter";
+	public static final String ASSETFILTER_RETRIEVE_VALUES_FOR_FILTER = "Assetfiltervalue.retrievevaluesforfilter";
 
 	private static final long serialVersionUID = 8898101336225121988L;
 	
@@ -54,17 +54,13 @@ public class AssetFilterValue implements Serializable{
 //    @Column(name = "assetFilterId")
 //    private UUID filterId;
     
-    @Size(max = 60)
-    @Column(name = "key")
-    private String key;
+	@Size(max = 100)
+    @Column(name = "operator")
+    private String operator;
 
     @Size(max = 255)
     @Column(name = "value")
     private String value;
-    
-    @Size(max = 100)
-    @Column(name = "operator")
-    private String operator;
     
     @Size(max = 100)
     @Column(name = "updatedBy")
@@ -84,14 +80,6 @@ public class AssetFilterValue implements Serializable{
 
 	public void setId(UUID id) {
 		this.id = id;
-	}
-
-	public String getKey() {
-		return key;
-	}
-
-	public void setKey(String key) {
-		this.key = key;
 	}
 
 	public String getValue() {

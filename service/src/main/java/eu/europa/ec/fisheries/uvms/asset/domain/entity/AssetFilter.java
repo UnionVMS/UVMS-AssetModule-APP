@@ -13,11 +13,15 @@ package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter.ASSETFILTER_FIND_ALL;
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter.ASSETFILTER_BY_USER;
@@ -26,6 +30,7 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter.ASSETF
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -60,23 +65,32 @@ public class AssetFilter implements Serializable {
     private OffsetDateTime updateTime;
 
     @Size(max = 60)
-    @Column(name = "updateuser")
+    @Column(name = "updatedby")
     private String updatedBy;
 
+    @Size(max = 60)
+    @Column(name = "type")
+    private String type;
+    
     @Column(name = "inverse")
     private boolean inverse;
     
-    @Column(name = "isNumber")
+    @Column(name = "isnumber")
     private boolean isNumber;
     
     @Size(max = 60)
     @Column(name = "owner")
     private String owner;
     
-    @JsonBackReference
-    @ManyToOne
-    @JoinColumn(name = "filterId", foreignKey = @ForeignKey(name = "filterId_FK"))
-    private AssetFilterValue assetFilterValue;
+//    @JsonBackReference
+//    @ManyToOne
+//    @JoinColumn(name = "filterid", foreignKey = @ForeignKey(name = "filterid_FK"))
+//    private AssetFilterValue assetFilterValue;
+    
+    @JsonManagedReference
+    @OneToMany(mappedBy="assetFilter", cascade = CascadeType.ALL)
+    @Fetch(FetchMode.SELECT)
+    private Set<AssetFilterValue> assetFilterValue;
     
 //    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 //    @JoinColumn(name = "asset_filter_Id")
@@ -112,6 +126,14 @@ public class AssetFilter implements Serializable {
 
 	public void setUpdatedBy(String updatedBy) {
 		this.updatedBy = updatedBy;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public boolean isInverse() {

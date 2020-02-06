@@ -30,19 +30,16 @@ public class AssetFilterServiceBean{
 		}
 
 		public List<AssetFilter> getAssetFilterListByAssetId(UUID assetId) {
-			   // TODO maybe this could be done more efficient if search is from the other side and joining . . . .
 	        if (assetId == null) {
 	            throw new NullPointerException("Invalid asset");
 	        }
 	        List<AssetFilter> searchResultList = new ArrayList<>();
 	        List<AssetFilter> filterList = assetFilterDao.getAssetFilterAll();
+	        
 	        for (AssetFilter filter : filterList) {
-	            List<AssetFilterValue> values = assetFilterValueDao.retrieveFieldsForGroup(filter);
-	            for (AssetFilterValue value : values) {
-	                if ("GUID".equals(value.getKey()) && assetId.toString().equals(value.getValue())) {
-	                    searchResultList.add(filter);
-	                }
-	            }
+	        	if(filter.getType().equals("GUID")){
+	        		searchResultList.add(filter);
+	        	}
 	        }
 	        return searchResultList;
 		}
@@ -64,7 +61,7 @@ public class AssetFilterServiceBean{
 	        assetFilter.setOwner(username);
 	        assetFilter.setUpdatedBy(username);
 	        assetFilter.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
-	        return assetFilterDao.createAssetGroup(assetFilter);
+	        return assetFilterDao.createAssetFilter(assetFilter);
 		}
 
 		public AssetFilter updateAssetFilter(AssetFilter assetFilter, String username) {
@@ -171,7 +168,7 @@ public class AssetFilterServiceBean{
 		        if (assetFilter == null) {
 		            throw new NullPointerException("Cannot retrieve list for group because assetGroup does not exist.");
 		        }
-		        return assetFilterValueDao.retrieveFieldsForGroup(assetFilter);
+		        return assetFilterValueDao.retrieveValuesForFilter(assetFilter);
 		}
 
 		public void removeAssetFilterValue(UUID assetFilterId) {

@@ -64,8 +64,8 @@ public class AssetFilterRestResource {
     @GET
     @ApiOperation(value = "GetAssetFilterByAssetId", notes = "This works if field is stored with GUID and value pointing to AssetId", response = AssetFilter.class, responseContainer = "List")
     @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when delete AssetGroup"),
-            @ApiResponse(code = 200, message = "AssetGroup successfully deleted")})
+            @ApiResponse(code = 500, message = "Error when getting AssetFilters"),
+            @ApiResponse(code = 200, message = "AssetFilter success")})
     @Path("/asset/{assetId}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetFilterListByAssetId(@ApiParam(value = "Asset id", required = true) @PathParam(value = "assetId") UUID assetId) throws Exception {
@@ -74,7 +74,7 @@ public class AssetFilterRestResource {
             String response = objectMapper().writeValueAsString(assetFilters);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            LOG.error("Error when getting asset group list by user. {}", assetId, toString(), e);
+            LOG.error("Error when getting asset filter list by user. {}", assetId, toString(), e);
             throw e;
         }
     }
@@ -84,41 +84,41 @@ public class AssetFilterRestResource {
     // public Response getAssetGroupListByUser(@ApiParam(value = "user", required = true) @QueryParam(value = "user") String user) throws Exception {
     
     @POST
-    @ApiOperation(value = "CreateAssetGroupField", notes = "CreateAssetGroupField", response = AssetGroupField.class)
+    @ApiOperation(value = "CreateAssetFilterValue", notes = "CreateAssetFilterValue", response = AssetGroupField.class)
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when create AssetGroupField"),
             @ApiResponse(code = 200, message = "AssetGroupField successfully deleted")})
     @Path("/assetFilter")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response createAssetFilter(@PathParam(value = "assetGroupId")
-                                          @ApiParam(value = "The AssetGroupFieldFilter to be created", required = true) AssetFilter assetFilter) throws Exception {
+    public Response createAssetFilter(@PathParam(value = "assetFId")
+                                          @ApiParam(value = "The AssetFilterValue to be created", required = true) AssetFilter assetFilter) throws Exception {
         try {
             String user = servletRequest.getRemoteUser();
             AssetFilter createdAssetdFilter = assetFilterService.createAssetFilter(assetFilter, user);
             String response = objectMapper().writeValueAsString(createdAssetdFilter);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            LOG.error("Error when creating AssetGroupField. ", e);
+            LOG.error("Error when creating AssetFilterValue. ", e);
             throw e;
         }
     }
 
     @PUT
-    @ApiOperation(value = "UpdateAssetGroupField", notes = "UpdateAssetGroupField", response = AssetGroupField.class)
+    @ApiOperation(value = "UpdateAssetFilterValue", notes = "UpdateAssetFilterValue", response = AssetGroupField.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when update AssetGroupField"),
-            @ApiResponse(code = 200, message = "AssetGroupField successfully update")})
-    @Path("/field")
+            @ApiResponse(code = 500, message = "Error when update AssetFilterValue"),
+            @ApiResponse(code = 200, message = "AssetFilterValue successfully update")})
+    @Path("/value")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response updateAssetGroupField(@ApiParam(value = "Parent AssetgroupField", required = true) AssetFilterValue assetFilterValue) throws Exception {
+    public Response updateAssetGroupField(@ApiParam(value = "Parent AssetFilterValue", required = true) AssetFilterValue assetFilterValue) throws Exception {
 
         try {
             String user = servletRequest.getRemoteUser();
-            AssetFilterValue updatedAssetGroupField = assetFilterService.updateAssetFilterValue(assetFilterValue, user);
-            String response = objectMapper().writeValueAsString(updatedAssetGroupField);
+            AssetFilterValue updatedAssetFilterValue = assetFilterService.updateAssetFilterValue(assetFilterValue, user);
+            String response = objectMapper().writeValueAsString(updatedAssetFilterValue);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            LOG.error("Error when creating AssetGroupField. ", e);
+            LOG.error("Error when creating updatedAssetFilterValue. ", e);
             throw e;
         }
     }
