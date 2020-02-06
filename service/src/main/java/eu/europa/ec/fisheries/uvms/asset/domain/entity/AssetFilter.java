@@ -56,7 +56,7 @@ public class AssetFilter implements Serializable {
     @Column(name = "id")
     private UUID id;
 
-    @Size(max = 80)
+    @Size(max = 255)
     @NotNull
     @Column(name = "name")
     private String name;
@@ -64,11 +64,11 @@ public class AssetFilter implements Serializable {
     @Column(name = "updatetime")
     private OffsetDateTime updateTime;
 
-    @Size(max = 60)
+    @Size(max = 255)
     @Column(name = "updatedby")
     private String updatedBy;
 
-    @Size(max = 60)
+    @Size(max = 255)
     @Column(name = "type")
     private String type;
     
@@ -78,7 +78,7 @@ public class AssetFilter implements Serializable {
     @Column(name = "isnumber")
     private boolean isNumber;
     
-    @Size(max = 60)
+    @Size(max = 255)
     @Column(name = "owner")
     private String owner;
     

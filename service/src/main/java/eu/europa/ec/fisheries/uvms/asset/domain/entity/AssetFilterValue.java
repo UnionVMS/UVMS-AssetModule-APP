@@ -28,7 +28,7 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue.A
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue.ASSETFILTER_RETRIEVE_VALUES_FOR_FILTER;
 
 @Entity
-@Table(name = "Assetfiltervalue", indexes = { @Index(columnList = "assetfilter", name="assetfiltervalue_assetfilter_FK_INX12")}) // get index?
+@Table(name = "assetfiltervalue", indexes = { @Index(columnList = "assetfilter", name="assetfiltervalue_assetfilter_FK_INX12")}) // get index?
 @NamedQueries({
 		@NamedQuery(name=ASSETFILTER_VALUE_FIND_ALL, query="SELECT a FROM AssetFilterValue a"),
 		@NamedQuery(name=ASSETFILTER_VALUE_GETBYID, query="SELECT a FROM AssetFilterValue a where a.id=:id"),
@@ -38,10 +38,10 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue.A
 @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class AssetFilterValue implements Serializable{
 
-	public static final String ASSETFILTER_VALUE_FIND_ALL ="Assetfiltervalue.findAll";
-	public static final String ASSETFILTER_VALUE_GETBYID = "Assetfiltervalue.getbyid";
-	public static final String ASSETFILTER_VALUE_CLEAR = "Assetfiltervalue.clear";
-	public static final String ASSETFILTER_RETRIEVE_VALUES_FOR_FILTER = "Assetfiltervalue.retrievevaluesforfilter";
+	public static final String ASSETFILTER_VALUE_FIND_ALL ="assetfiltervalue.findAll";
+	public static final String ASSETFILTER_VALUE_GETBYID = "assetfiltervalue.getbyid";
+	public static final String ASSETFILTER_VALUE_CLEAR = "assetfiltervalue.clear";
+	public static final String ASSETFILTER_RETRIEVE_VALUES_FOR_FILTER = "assetfiltervalue.retrievevaluesforfilter";
 
 	private static final long serialVersionUID = 8898101336225121988L;
 	
@@ -49,12 +49,8 @@ public class AssetFilterValue implements Serializable{
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private UUID id;
-
-//	@NotNull
-//    @Column(name = "assetFilterId")
-//    private UUID filterId;
-    
-	@Size(max = 100)
+	
+	@Size(max = 255)
     @Column(name = "operator")
     private String operator;
 
@@ -62,8 +58,8 @@ public class AssetFilterValue implements Serializable{
     @Column(name = "value")
     private String value;
     
-    @Size(max = 100)
-    @Column(name = "updatedBy")
+    @Size(max = 255)
+    @Column(name = "updatedby")
     private String updatedBy;
     
     @Column(name = "updatetime")
@@ -71,7 +67,7 @@ public class AssetFilterValue implements Serializable{
     
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "assetfilter", foreignKey = @ForeignKey(name = "AssetFilterValue_AssetFilter_FK"))
+    @JoinColumn(name = "assetfilter", foreignKey = @ForeignKey(name = "assetfiltervalue_assetfilter_fk"))
     private AssetFilter assetFilter;
 
     public UUID getId() {
