@@ -69,7 +69,7 @@ public class MobileTerminalRestResource {
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
     @PostConstruct
     public void init() {
-        jsonb =  new JsonBConfigurator().getContext(null);
+        jsonb = new JsonBConfigurator().getContext(null);
     }
 
 

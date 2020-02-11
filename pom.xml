@@ -23,7 +23,7 @@
         <uvms.pom.version>3.0</uvms.pom.version>
         <usm4uvms.version>4.1.0</usm4uvms.version>
         <uvms.config.version>4.1.0</uvms.config.version>
-        <uvms.common.version>4.1.0</uvms.common.version>
+        <uvms.common.version>4.1.1-SNAPSHOT</uvms.common.version>
         <audit.model.version>4.2.0</audit.model.version>
         <movementrules.version>2.2.0</movementrules.version>
         <exchange.model.version>5.1.0-UVMS</exchange.model.version>
