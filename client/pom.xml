@@ -5,7 +5,7 @@
     <parent>
         <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
         <artifactId>asset</artifactId>
-        <version>6.5.2-SNAPSHOT</version>
+        <version>6.6.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -21,7 +21,7 @@
     <scm>
         <url>https://github.com/unionvns/minimaven</url>
         <connection>scm:git:git://github.com/unionvms/minimaven.git</connection>
-      <tag>HEAD</tag>
+      <tag>asset-6.6.0</tag>
   </scm>
     <dependencies>
         <dependency>
