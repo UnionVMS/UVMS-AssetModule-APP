@@ -11,13 +11,8 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.util.OffsetDateTimeDeserializer;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -25,14 +20,13 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
 @Table(name = "pollbase", indexes = { @Index(columnList = "channel_guid", name = "pollbase_channel_FK_INX10", unique = false),
         @Index(columnList = "mobileterminal_id", name = "pollbase_mobterm_FK_INX10", unique = false),})
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Inheritance(strategy = InheritanceType.JOINED)
 @XmlRootElement
 @NamedQueries({
@@ -63,12 +57,10 @@ public class PollBase implements Serializable {
     @NotNull
     private UUID channelId;
 
-    @JsonSerialize(using = OffsetDateTimeSerializer.class)
-    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name = "updattim")
-    private OffsetDateTime updateTime;
+    private Instant updateTime;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "mobileterminal_id", foreignKey = @ForeignKey(name = "PollBase_MobileTerminal_FK"))
     @NotNull
     private MobileTerminal mobileterminal;
@@ -122,11 +114,11 @@ public class PollBase implements Serializable {
         this.channelId = channelId;
     }
 
-    public OffsetDateTime getUpdateTime() {
+    public Instant getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(OffsetDateTime updateTime) {
+    public void setUpdateTime(Instant updateTime) {
         this.updateTime = updateTime;
     }
 

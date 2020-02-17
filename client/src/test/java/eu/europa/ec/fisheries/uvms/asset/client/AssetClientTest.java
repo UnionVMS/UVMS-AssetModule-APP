@@ -1,7 +1,5 @@
 package eu.europa.ec.fisheries.uvms.asset.client;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.asset.client.model.*;
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
@@ -15,7 +13,7 @@ import javax.inject.Inject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.time.Instant;
-import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -144,7 +142,7 @@ public class AssetClientTest extends AbstractClientTest {
         assetBo.setAsset(asset);
         AssetBO firstAssetBo = assetClient.upsertAsset(assetBo);
         firstAssetBo.getAsset().setName(UUID.randomUUID().toString());
-        OffsetDateTime timestamp = OffsetDateTime.now();
+        Instant timestamp = Instant.now();
         assetClient.upsertAsset(firstAssetBo);
     
         AssetDTO assetHistory = assetClient.getAssetFromAssetIdAndDate(AssetIdentifier.CFR, firstAssetBo.getAsset().getCfr(), timestamp);
@@ -189,7 +187,7 @@ public class AssetClientTest extends AbstractClientTest {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetIdByQuery() throws JsonProcessingException {
+    public void getAssetIdByQuery() {
         AssetDTO asset = AssetHelper.createBasicAsset();
         AssetBO assetBo = new AssetBO();
         assetBo.setAsset(asset);
@@ -240,9 +238,9 @@ public class AssetClientTest extends AbstractClientTest {
 
         String cst = createdCustomCode.getPrimaryKey().getConstant();
         String code = createdCustomCode.getPrimaryKey().getCode();
-        OffsetDateTime validFromDate = createdCustomCode.getPrimaryKey().getValidFromDate();
+        Instant validFromDate = createdCustomCode.getPrimaryKey().getValidFromDate();
 
-        Boolean ok = assetClient.isCodeValid(cst,code,validFromDate.plusDays(5));
+        Boolean ok = assetClient.isCodeValid(cst,code,validFromDate.plus(5, ChronoUnit.DAYS));
         assertTrue(ok);
     }
 
@@ -257,9 +255,9 @@ public class AssetClientTest extends AbstractClientTest {
 
         String cst = createdCustomCode.getPrimaryKey().getConstant();
         String code = createdCustomCode.getPrimaryKey().getCode();
-        OffsetDateTime validToDate = createdCustomCode.getPrimaryKey().getValidToDate();
+        Instant validToDate = createdCustomCode.getPrimaryKey().getValidToDate();
 
-        Boolean ok = assetClient.isCodeValid(cst,code,validToDate.plusDays(5));
+        Boolean ok = assetClient.isCodeValid(cst,code,validToDate.plus(5, ChronoUnit.DAYS));
         Assert.assertFalse(ok);
     }
 
@@ -274,8 +272,8 @@ public class AssetClientTest extends AbstractClientTest {
 
         String cst = createdCustomCode.getPrimaryKey().getConstant();
         String code = createdCustomCode.getPrimaryKey().getCode();
-        OffsetDateTime validFromDate = createdCustomCode.getPrimaryKey().getValidFromDate();
-        OffsetDateTime validToDate = createdCustomCode.getPrimaryKey().getValidToDate();
+        Instant validFromDate = createdCustomCode.getPrimaryKey().getValidFromDate();
+        Instant validToDate = createdCustomCode.getPrimaryKey().getValidToDate();
 
         List<CustomCode> retrievedCustomCode = assetClient.getCodeForDate(cst, code, validToDate);
         assertNotNull(retrievedCustomCode);
@@ -293,10 +291,10 @@ public class AssetClientTest extends AbstractClientTest {
 
         String cst = createdCustomCode.getPrimaryKey().getConstant();
         String code = createdCustomCode.getPrimaryKey().getCode();
-        OffsetDateTime validFromDate = createdCustomCode.getPrimaryKey().getValidFromDate();
-        OffsetDateTime validToDate = createdCustomCode.getPrimaryKey().getValidToDate();
+        Instant validFromDate = createdCustomCode.getPrimaryKey().getValidFromDate();
+        Instant validToDate = createdCustomCode.getPrimaryKey().getValidToDate();
 
-        List<CustomCode> retrievedCustomCode = assetClient.getCodeForDate(cst, code, validToDate.plusDays(5));
+        List<CustomCode> retrievedCustomCode = assetClient.getCodeForDate(cst, code, validToDate.plus(5,ChronoUnit.DAYS));
         assertNotNull(retrievedCustomCode);
         assertEquals(0, retrievedCustomCode.size());
     }
@@ -384,7 +382,7 @@ public class AssetClientTest extends AbstractClientTest {
         String output = assetClient.getMicroAssetList(assetIdList);
 
         assertEquals(51, output.split("assetName").length);
-        assertEquals(9951, output.length());
+        assertEquals(8001, output.length());
     }
 
     @Test

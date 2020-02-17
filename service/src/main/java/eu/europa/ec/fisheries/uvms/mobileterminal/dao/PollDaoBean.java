@@ -13,7 +13,7 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.dao;
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollBase;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.PollSearchKeyValue;
 

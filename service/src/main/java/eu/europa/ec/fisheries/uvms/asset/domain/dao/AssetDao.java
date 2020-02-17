@@ -8,7 +8,6 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchFieldType;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
-import org.hibernate.Session;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.exception.AuditException;
@@ -22,13 +21,8 @@ import org.hibernate.envers.query.criteria.MatchMode;
 
 import javax.ejb.Stateless;
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.math.BigInteger;
 import java.time.Instant;
-import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -330,7 +324,7 @@ public class AssetDao {
         return asset;
     }
 
-    public Asset getAssetFromAssetIdAtDate(AssetIdentifier assetId, String value, OffsetDateTime date) {
+    public Asset getAssetFromAssetIdAtDate(AssetIdentifier assetId, String value, Instant date) {
         Asset asset = getAssetFromAssetId(assetId, value);
         if (asset != null) {
             return getAssetAtDate(asset, date);
@@ -339,8 +333,8 @@ public class AssetDao {
         }
     }
 
-    public Asset getAssetAtDate(Asset asset, OffsetDateTime offsetDateTime) {
-        Date date = Date.from(offsetDateTime.toInstant());
+    public Asset getAssetAtDate(Asset asset, Instant instant) {
+        Date date = Date.from(instant);
         AuditReader auditReader = AuditReaderFactory.get(em);
         try {
             return auditReader.find(Asset.class, asset.getId(), date);

@@ -15,10 +15,10 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.mapper;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ComChannelAttribute;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ComChannelCapability;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.ComChannelType;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
-import eu.europa.ec.fisheries.uvms.mobileterminal.util.DateUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +58,8 @@ public class ChannelMapper {
         attributeList.add(mapAttr("LES_DESCRIPTION", channel.getLesDescription()));
         attributeList.add(mapAttr("FREQUENCY_GRACE_PERIOD", String.valueOf(channel.getFrequencyGracePeriod().getSeconds())));
         attributeList.add(mapAttr("MEMBER_NUMBER", channel.getMemberNumber()));
-        attributeList.add(mapAttr("START_DATE", DateUtils.parseOffsetDateTimeToString(channel.getStartDate())));
-        attributeList.add(mapAttr("END_DATE", DateUtils.parseOffsetDateTimeToString(channel.getEndDate())));
+        attributeList.add(mapAttr("START_DATE", DateUtils.dateToEpochMilliseconds(channel.getStartDate())));
+        attributeList.add(mapAttr("END_DATE", DateUtils.dateToEpochMilliseconds(channel.getEndDate())));
         return attributeList;
     }
 

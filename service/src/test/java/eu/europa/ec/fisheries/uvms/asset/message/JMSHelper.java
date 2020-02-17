@@ -10,30 +10,27 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.message;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.Message;
-import javax.jms.Queue;
-import javax.jms.Session;
-import javax.jms.TextMessage;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
-import org.apache.activemq.artemis.api.core.TransportConfiguration;
-import org.apache.activemq.artemis.api.jms.ActiveMQJMSClient;
-import org.apache.activemq.artemis.api.jms.JMSFactoryType;
-import org.apache.activemq.artemis.core.remoting.impl.netty.NettyConnectorFactory;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
+import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
+import org.apache.activemq.artemis.api.core.TransportConfiguration;
+import org.apache.activemq.artemis.api.jms.ActiveMQJMSClient;
+import org.apache.activemq.artemis.api.jms.JMSFactoryType;
+import org.apache.activemq.artemis.core.remoting.impl.netty.NettyConnectorFactory;
+
+import javax.jms.*;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class JMSHelper {
 
@@ -128,9 +125,10 @@ public class JMSHelper {
 
     public void assetInfo(List<eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset> asset) throws Exception {
 
-        ObjectMapper MAPPER = new ObjectMapper();
+        //Jsonb jsonb = new JsonBConfigurator().getContext(null);
+        Jsonb jsonb = JsonbBuilder.create();
 
-        String json = MAPPER.writeValueAsString(asset);
+        String json = jsonb.toJson(asset);
         sendAssetMessageWithFunction(json, "ASSET_INFORMATION");
     }
 

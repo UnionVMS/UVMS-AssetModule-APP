@@ -10,13 +10,10 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.client.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class AssetDTO {
 
     private UUID id;
@@ -26,16 +23,13 @@ public class AssetDTO {
     private Boolean aisIndicator;
     private Boolean vmsIndicator;
     private String hullMaterial;
-    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
-    private OffsetDateTime commissionDate;
+    private Instant commissionDate;
     private String constructionYear;
     private String constructionPlace;
-    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
-    private OffsetDateTime updateTime;
+    private Instant updateTime;
     private String source;
     private String vesselType;
-    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
-    private OffsetDateTime vesselDateOfEntry;
+    private Instant vesselDateOfEntry;
     private String cfr;
     private String imo;
     private String ircs;
@@ -69,8 +63,7 @@ public class AssetDTO {
     private String assetAgentAddress;
     private String countryOfImportOrExport;
     private String typeOfExport;
-    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
-    private OffsetDateTime administrativeDecisionDate;
+    private Instant administrativeDecisionDate;
     private String segment;
     private String segmentOfAdministrativeDecision;
     private String publicAid;
@@ -122,10 +115,10 @@ public class AssetDTO {
     public void setHullMaterial(String hullMaterial) {
         this.hullMaterial = hullMaterial;
     }
-    public OffsetDateTime getCommissionDate() {
+    public Instant getCommissionDate() {
         return commissionDate;
     }
-    public void setCommissionDate(OffsetDateTime commissionDate) {
+    public void setCommissionDate(Instant commissionDate) {
         this.commissionDate = commissionDate;
     }
     public String getConstructionYear() {
@@ -140,10 +133,10 @@ public class AssetDTO {
     public void setConstructionPlace(String constructionPlace) {
         this.constructionPlace = constructionPlace;
     }
-    public OffsetDateTime getUpdateTime() {
+    public Instant getUpdateTime() {
         return updateTime;
     }
-    public void setUpdateTime(OffsetDateTime updateTime) {
+    public void setUpdateTime(Instant updateTime) {
         this.updateTime = updateTime;
     }
     public String getSource() {
@@ -158,10 +151,10 @@ public class AssetDTO {
     public void setVesselType(String vesselType) {
         this.vesselType = vesselType;
     }
-    public OffsetDateTime getVesselDateOfEntry() {
+    public Instant getVesselDateOfEntry() {
         return vesselDateOfEntry;
     }
-    public void setVesselDateOfEntry(OffsetDateTime vesselDateOfEntry) {
+    public void setVesselDateOfEntry(Instant vesselDateOfEntry) {
         this.vesselDateOfEntry = vesselDateOfEntry;
     }
     public String getCfr() {
@@ -362,10 +355,10 @@ public class AssetDTO {
     public void setTypeOfExport(String typeOfExport) {
         this.typeOfExport = typeOfExport;
     }
-    public OffsetDateTime getAdministrativeDecisionDate() {
+    public Instant getAdministrativeDecisionDate() {
         return administrativeDecisionDate;
     }
-    public void setAdministrativeDecisionDate(OffsetDateTime administrativeDecisionDate) {
+    public void setAdministrativeDecisionDate(Instant administrativeDecisionDate) {
         this.administrativeDecisionDate = administrativeDecisionDate;
     }
     public String getSegment() {

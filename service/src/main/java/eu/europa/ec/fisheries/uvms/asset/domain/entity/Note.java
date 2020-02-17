@@ -40,7 +40,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -64,7 +64,7 @@ public class Note implements Serializable {
     private UUID assetId;
 
     @Column(name = "created_date")
-    private OffsetDateTime createdOn;
+    private Instant createdOn;
 
     @Column(name = "note")
     private String note;
@@ -91,11 +91,11 @@ public class Note implements Serializable {
         this.assetId = assetId;
     }
 
-    public OffsetDateTime getCreatedOn() {
+    public Instant getCreatedOn() {
         return createdOn;
     }
 
-    public void setCreatedOn(OffsetDateTime createdOn) {
+    public void setCreatedOn(Instant createdOn) {
         this.createdOn = createdOn;
     }
 

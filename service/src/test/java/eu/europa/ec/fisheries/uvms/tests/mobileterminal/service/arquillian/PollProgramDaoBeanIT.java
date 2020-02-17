@@ -6,9 +6,9 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.ProgramPoll;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.tests.TransactionalTests;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -20,8 +20,9 @@ import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
 import javax.validation.ConstraintViolationException;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -56,9 +57,9 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void createPollProgram() {
 
-        OffsetDateTime startDate = getStartDate();
-        OffsetDateTime latestRun = getLatestRunDate();
-        OffsetDateTime stopDate = getStopDate();
+        Instant startDate = getStartDate();
+        Instant latestRun = getLatestRunDate();
+        Instant stopDate = getStopDate();
 
         String mobileTerminalSerialNumber = createSerialNumber();
         ProgramPoll pollProgram = createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
@@ -70,9 +71,9 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void getPollProgramByGuid() {
-        OffsetDateTime startDate = getStartDate();
-        OffsetDateTime latestRun = getLatestRunDate();
-        OffsetDateTime stopDate = getStopDate();
+        Instant startDate = getStartDate();
+        Instant latestRun = getLatestRunDate();
+        Instant stopDate = getStopDate();
 
         String mobileTerminalSerialNumber = createSerialNumber();
         ProgramPoll pollProgram = createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
@@ -89,9 +90,9 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
     public void createPollProgram_updateUserConstraintViolation() {
         thrown.expect(ConstraintViolationException.class);
 
-        OffsetDateTime startDate = getStartDate();
-        OffsetDateTime latestRun = getLatestRunDate();
-        OffsetDateTime stopDate = getStopDate();
+        Instant startDate = getStartDate();
+        Instant latestRun = getLatestRunDate();
+        Instant stopDate = getStopDate();
 
         String mobileTerminalSerialNumber = createSerialNumber();
         ProgramPoll pollProgram = createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
@@ -118,9 +119,9 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void updatePollProgram() {
 
-        OffsetDateTime startDate = getStartDate();
-        OffsetDateTime latestRun = getLatestRunDate();
-        OffsetDateTime stopDate = getStopDate();
+        Instant startDate = getStartDate();
+        Instant latestRun = getLatestRunDate();
+        Instant stopDate = getStopDate();
 
         String mobileTerminalSerialNumber = createSerialNumber();
         ProgramPoll pollProgram = createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
@@ -142,9 +143,9 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void updatePollProgram_WithNonePersistedEntityWillFail()  {
 
-        OffsetDateTime startDate = getStartDate();
-        OffsetDateTime latestRun = getLatestRunDate();
-        OffsetDateTime stopDate = getStopDate();
+        Instant startDate = getStartDate();
+        Instant latestRun = getLatestRunDate();
+        Instant stopDate = getStopDate();
 
         String mobileTerminalSerialNumber = createSerialNumber();
         ProgramPoll pollProgram = createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
@@ -157,9 +158,9 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void getProgramPollsAlive() {
 
-        OffsetDateTime startDate = getStartDate();
-        OffsetDateTime latestRun = getLatestRunDate();
-        OffsetDateTime stopDate = getStopDate();
+        Instant startDate = getStartDate();
+        Instant latestRun = getLatestRunDate();
+        Instant stopDate = getStopDate();
 
         String mobileTerminalSerialNumber = createSerialNumber();
         ProgramPoll pollProgram = createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
@@ -177,12 +178,12 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void getProgramPollsAlive_ShouldFailWithCurrentDateBiggerThenStopDate() {
 
-        OffsetDateTime startDate = getStartDate();
-        OffsetDateTime latestRun = getLatestRunDate();
+        Instant startDate = getStartDate();
+        Instant latestRun = getLatestRunDate();
 
         cal.set(Calendar.DAY_OF_MONTH, 28);
         cal.set(Calendar.YEAR, startYear - 1);
-        OffsetDateTime stopDate = OffsetDateTime.now(ZoneOffset.UTC);
+        Instant stopDate = Instant.now();
 
 
         String mobileTerminalSerialNumber = createSerialNumber();
@@ -201,9 +202,9 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void getProgramPollsAlive_ShouldFailWithPollStateArchived() {
 
-        OffsetDateTime startDate = getStartDate();
-        OffsetDateTime latestRun = getLatestRunDate();
-        OffsetDateTime stopDate = getStopDate();
+        Instant startDate = getStartDate();
+        Instant latestRun = getLatestRunDate();
+        Instant stopDate = getStopDate();
 
         String mobileTerminalSerialNumber = createSerialNumber();
         ProgramPoll pollProgram = createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
@@ -222,9 +223,9 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void getPollProgramRunningAndStarted() {
 
-        OffsetDateTime startDate = getStartDate();
-        OffsetDateTime latestRun = getLatestRunDate();
-        OffsetDateTime stopDate = getStopDate();
+        Instant startDate = getStartDate();
+        Instant latestRun = getLatestRunDate();
+        Instant stopDate = getStopDate();
 
         String mobileTerminalSerialNumber = createSerialNumber();
         ProgramPoll pollProgram = createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
@@ -245,13 +246,13 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
         Date now = new Date();
         cal.setTime(now);
 
-        OffsetDateTime startDate = getStartDate();
+        Instant startDate = getStartDate();
 
         cal.set(Calendar.DAY_OF_MONTH, 20);
         cal.set(Calendar.YEAR, latestRunYear + 3);
-        OffsetDateTime latestRun = OffsetDateTime.now(ZoneOffset.UTC);
+        Instant latestRun = Instant.now();
 
-        OffsetDateTime stopDate = getStopDate();
+        Instant stopDate = getStopDate();
 
         String mobileTerminalSerialNumber = createSerialNumber();
         ProgramPoll pollProgram = createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
@@ -272,10 +273,10 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
 
         cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + 1);
-        OffsetDateTime startDate = OffsetDateTime.now(ZoneOffset.UTC).plusYears(1);  //starting the poll one year in the future should mean that it is not running now
+        Instant startDate = ZonedDateTime.now(ZoneOffset.UTC).plusYears(1).toInstant();  //starting the poll one year in the future should mean that it is not running now
 
-        OffsetDateTime latestRun = getLatestRunDate();
-        OffsetDateTime stopDate = getStopDate();
+        Instant latestRun = getLatestRunDate();
+        Instant stopDate = getStopDate();
 
         String mobileTerminalSerialNumber = createSerialNumber();
         ProgramPoll pollProgram = createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
@@ -297,9 +298,9 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
 
         cal.setTime(new Date(System.currentTimeMillis()));
 
-        OffsetDateTime startDate = getStartDate();
-        OffsetDateTime latestRun = getLatestRunDate();
-        OffsetDateTime stopDate = getStopDate();
+        Instant startDate = getStartDate();
+        Instant latestRun = getLatestRunDate();
+        Instant stopDate = getStopDate();
 
         String mobileTerminalSerialNumber = createSerialNumber();
         ProgramPoll pollProgram = createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
@@ -320,9 +321,9 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void getPollProgramByGuid_ShouldFailWithInvalidGuid() {
 
-        OffsetDateTime startDate = getStartDate();
-        OffsetDateTime latestRun = getLatestRunDate();
-        OffsetDateTime stopDate = getStopDate();
+        Instant startDate = getStartDate();
+        Instant latestRun = getLatestRunDate();
+        Instant stopDate = getStopDate();
 
         String mobileTerminalSerialNumber = createSerialNumber();
         ProgramPoll pollProgram = createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
@@ -333,8 +334,8 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
         assertNull(fetchedPollProgram);
     }
 
-    private ProgramPoll createPollProgramHelper(String mobileTerminalSerialNo, OffsetDateTime startDate,
-                                                OffsetDateTime stopDate, OffsetDateTime latestRun) {
+    private ProgramPoll createPollProgramHelper(String mobileTerminalSerialNo, Instant startDate,
+                                                Instant stopDate, Instant latestRun) {
 
         ProgramPoll pp = new ProgramPoll();
         MobileTerminal mobileTerminal = createMobileTerminalHelper(mobileTerminalSerialNo);
@@ -361,7 +362,7 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
         List<MobileTerminalPlugin> plugs = testDaoBean.getPluginList();
         mtp = plugs.get(0);
         mt.setSerialNo(serialNo);
-        mt.setUpdatetime(OffsetDateTime.now(ZoneOffset.UTC));
+        mt.setUpdatetime(Instant.now());
         mt.setUpdateuser("TEST");
         mt.setSource(TerminalSourceEnum.INTERNAL);
         mt.setPlugin(mtp);
@@ -375,22 +376,22 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
     }
 
     // we want to be able to tamper with the dates for proper test coverage
-    private OffsetDateTime getStartDate() {
+    private Instant getStartDate() {
         cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.set(Calendar.YEAR, startYear);
-        return OffsetDateTime.ofInstant(cal.toInstant(), ZoneOffset.UTC);
+        return cal.toInstant();
     }
 
-    private OffsetDateTime getLatestRunDate() {
+    private Instant getLatestRunDate() {
         cal.set(Calendar.DAY_OF_MONTH, 20);
         cal.set(Calendar.YEAR, latestRunYear);
-        return OffsetDateTime.ofInstant(cal.toInstant(), ZoneOffset.UTC);
+        return cal.toInstant();
     }
 
-    private OffsetDateTime getStopDate() {
+    private Instant getStopDate() {
         cal.set(Calendar.DAY_OF_MONTH, 28);
         cal.set(Calendar.YEAR, 2059);
-        return OffsetDateTime.ofInstant(cal.toInstant(), ZoneOffset.UTC);
+        return cal.toInstant();
     }
 
     private String createSerialNumber() {

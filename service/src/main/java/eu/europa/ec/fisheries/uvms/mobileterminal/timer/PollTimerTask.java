@@ -13,14 +13,14 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.timer;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttributeType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.MobileTerminalGenericMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper.PollDataSourceRequestMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.util.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.List;
 
 public class PollTimerTask implements Runnable{
@@ -34,17 +34,17 @@ public class PollTimerTask implements Runnable{
 
     @Override
     public void run() {
-        LOG.debug("PollProgram collected from DB at " + DateUtils.parseOffsetDateTimeToString(OffsetDateTime.now()));
+        LOG.debug("PollProgram collected from DB at " + DateUtils.dateToEpochMilliseconds(Instant.now()));
         try {
             List<PollResponseType> pollPrograms = pollService.timer();
 
             for (PollResponseType pollProgram : pollPrograms) {
                 String guid = pollProgram.getPollId().getGuid();
-                OffsetDateTime endDate = DateUtils.parseStringToOffsetDateTime(MobileTerminalGenericMapper.getPollAttributeTypeValue(
+                Instant endDate = DateUtils.stringToDate(MobileTerminalGenericMapper.getPollAttributeTypeValue(
                         pollProgram.getAttributes(), PollAttributeType.END_DATE));
 
                 // If the program has expired, archive it
-                if (OffsetDateTime.now().isAfter(endDate)) {
+                if (Instant.now().isAfter(endDate)) {
                     pollService.inactivateProgramPoll(guid, "MobileTerminalPollTimer");
                     LOG.info("Poll program {} has expired. Status set to ARCHIVED.", guid);
                 } else {

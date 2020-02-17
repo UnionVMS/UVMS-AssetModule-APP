@@ -1,16 +1,10 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
-import eu.europa.ec.fisheries.uvms.mobileterminal.util.OffsetDateTimeDeserializer;
-
 import javax.persistence.Embeddable;
 import javax.persistence.Transient;
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
+import java.time.OffsetDateTime;    //leave be
 import java.time.ZoneOffset;
 import java.util.Objects;
 
@@ -18,26 +12,22 @@ import java.util.Objects;
 public class CustomCodesPK  implements Serializable {
 
     @Transient
-    public static final OffsetDateTime STANDARD_START_DATE = OffsetDateTime.ofInstant(Instant.EPOCH, ZoneId.of("UTC"));
+    public static final Instant STANDARD_START_DATE = Instant.EPOCH;
     @Transient
-    public static final OffsetDateTime STANDARD_END_DATE = OffsetDateTime.of(3070,01,01,01,1,1,1, ZoneOffset.UTC);
+    public static final Instant STANDARD_END_DATE = OffsetDateTime.of(3070,01,01,01,1,1,1, ZoneOffset.UTC).toInstant();
 
     private String constant;
     private String code;
 
-    @JsonSerialize(using = OffsetDateTimeSerializer.class)
-    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
-    private OffsetDateTime validFromDate = STANDARD_START_DATE;
+    private Instant validFromDate = STANDARD_START_DATE;
 
-    @JsonSerialize(using = OffsetDateTimeSerializer.class)
-    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
-    private OffsetDateTime validToDate = STANDARD_END_DATE;
+    private Instant validToDate = STANDARD_END_DATE;
 
     public CustomCodesPK(){
         // intentionally required by JPA
     }
 
-    public CustomCodesPK(String constant, String code, OffsetDateTime validFromDate, OffsetDateTime validToDate){
+    public CustomCodesPK(String constant, String code, Instant validFromDate, Instant validToDate){
         this.constant = constant;
         this.code = code;
         this.validFromDate = validFromDate;
@@ -65,19 +55,19 @@ public class CustomCodesPK  implements Serializable {
         this.code = code;
     }
 
-    public OffsetDateTime getValidFromDate() {
+    public Instant getValidFromDate() {
         return validFromDate;
     }
 
-    public void setValidFromDate(OffsetDateTime validFromDate) {
+    public void setValidFromDate(Instant validFromDate) {
         this.validFromDate = validFromDate;
     }
 
-    public OffsetDateTime getValidToDate() {
+    public Instant getValidToDate() {
         return validToDate;
     }
 
-    public void setValidToDate(OffsetDateTime validToDate) {
+    public void setValidToDate(Instant validToDate) {
         this.validToDate = validToDate;
     }
 

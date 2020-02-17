@@ -20,7 +20,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.time.Instant;
-import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,28 +47,28 @@ public class PollProgramDaoBean {
 
     public List<ProgramPoll> getProgramPollsAlive()  {
         TypedQuery<ProgramPoll> query = em.createNamedQuery(MobileTerminalConstants.POLL_PROGRAM_FIND_ALIVE, ProgramPoll.class);
-        query.setParameter("currentDate", OffsetDateTime.now(ZoneOffset.UTC));
+        query.setParameter("currentDate", Instant.now());
         return query.getResultList();
     }
 
     public List<ProgramPoll> getProgramPollRunningAndStarted()  {
         TypedQuery<ProgramPoll> query = em.createNamedQuery(MobileTerminalConstants.POLL_PROGRAM_FIND_RUNNING_AND_STARTED, ProgramPoll.class);
-        query.setParameter("currentDate", OffsetDateTime.now(ZoneOffset.UTC));
+        query.setParameter("currentDate", Instant.now());
         List<ProgramPoll> pollPrograms = query.getResultList();
         List<ProgramPoll> validPollPrograms = new ArrayList<>();
 
         for (ProgramPoll pollProgram : pollPrograms) {
-            OffsetDateTime lastRun = pollProgram.getLatestRun();
+            Instant lastRun = pollProgram.getLatestRun();
             Integer frequency = pollProgram.getFrequency();
-            OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+            Instant now = Instant.now();
 
-            long lastRunEpoch = lastRun == null ? 0 : lastRun.toEpochSecond();
-            long nowEpoch = now.toEpochSecond();
+            long lastRunEpoch = lastRun == null ? 0 : lastRun.getEpochSecond();
+            long nowEpoch = now.getEpochSecond();
 
             boolean createPoll = lastRun == null || nowEpoch >= lastRunEpoch + frequency;
 
             if (createPoll) {
-                pollProgram.setLatestRun((lastRunEpoch == 0) ? pollProgram.getStartDate() : Instant.ofEpochSecond(lastRunEpoch + frequency).atOffset(ZoneOffset.UTC));
+                pollProgram.setLatestRun((lastRunEpoch == 0) ? pollProgram.getStartDate() : Instant.ofEpochSecond(lastRunEpoch + frequency));
                 validPollPrograms.add(pollProgram);
             }
         }
@@ -82,9 +81,7 @@ public class PollProgramDaoBean {
 
     public ProgramPoll getProgramPollById(UUID id) {
         try {
-            TypedQuery<ProgramPoll> query = em.createNamedQuery(MobileTerminalConstants.POLL_PROGRAM_FIND_BY_ID, ProgramPoll.class);
-            query.setParameter("id", id);
-            return query.getSingleResult();
+            return em.find(ProgramPoll.class, id);
         } catch (NoResultException e) {
             return null;
         }

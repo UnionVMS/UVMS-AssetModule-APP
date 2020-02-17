@@ -1,43 +1,35 @@
 package eu.europa.ec.fisheries.uvms.mobileterminal.entity;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
-import eu.europa.ec.fisheries.uvms.mobileterminal.util.OffsetDateTimeDeserializer;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.Objects;
 
 @Entity
 @Table(name = "poll_sampling")
 public class SamplingPoll extends PollBase {
 
-    @JsonSerialize(using = OffsetDateTimeSerializer.class)
-    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name = "startdate")
-    private OffsetDateTime startDate;
+    private Instant startDate;
 
-    @JsonSerialize(using = OffsetDateTimeSerializer.class)
-    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name = "stopdate")
-    private OffsetDateTime stopDate;
+    private Instant stopDate;
 
-    public OffsetDateTime getStartDate() {
+    public Instant getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(OffsetDateTime startDate) {
+    public void setStartDate(Instant startDate) {
         this.startDate = startDate;
     }
 
-    public OffsetDateTime getStopDate() {
+    public Instant getStopDate() {
         return stopDate;
     }
 
-    public void setStopDate(OffsetDateTime stopDate) {
+    public void setStopDate(Instant stopDate) {
         this.stopDate = stopDate;
     }
 

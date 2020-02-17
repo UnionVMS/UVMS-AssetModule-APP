@@ -11,9 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
@@ -22,8 +19,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.OffsetDateTime;
-import java.util.List;
+import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -37,7 +34,6 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup.*;
 	@NamedQuery(name=GROUP_ASSET_BY_GUID, query="SELECT a FROM AssetGroup a WHERE a.id = :guid"),
 	@NamedQuery(name=GROUP_ASSET_BY_GUID_LIST, query="SELECT a FROM AssetGroup a WHERE a.archived = false AND a.id IN :guidList")
 })
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class AssetGroup implements Serializable {
 
     public static final String GROUP_ASSET_FIND_ALL = "AssetGroup.findAll";
@@ -68,7 +64,7 @@ public class AssetGroup implements Serializable {
     private String name;
 
     @Column(name = "updattim")
-    private OffsetDateTime updateTime;
+    private Instant updateTime;
 
     @Size(max = 60)
     @Column(name = "upuser")
@@ -79,7 +75,6 @@ public class AssetGroup implements Serializable {
     @Column(name = "user_id")
     private String owner;
 
-    @JsonManagedReference
     @OneToMany(mappedBy="assetGroup", cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
     private Set<AssetGroupField> assetGroupFields;
@@ -127,11 +122,11 @@ public class AssetGroup implements Serializable {
         this.name = name;
     }
 
-    public OffsetDateTime getUpdateTime() {
+    public Instant getUpdateTime() {
         return this.updateTime;
     }
 
-    public void setUpdateTime(OffsetDateTime updateTime) {
+    public void setUpdateTime(Instant updateTime) {
         this.updateTime = updateTime;
     }
 
@@ -152,6 +147,9 @@ public class AssetGroup implements Serializable {
     }
 
     public Set<AssetGroupField> getAssetGroupFields() {
+        if(assetGroupFields == null){
+            assetGroupFields = new HashSet<>();
+        }
         return assetGroupFields;
     }
 

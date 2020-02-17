@@ -11,31 +11,32 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.services;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.AssetDto;
+import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalStatus;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDtoMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSourceEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchKeyValue;
-import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTQuery;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.json.bind.Jsonb;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -63,11 +64,19 @@ public class MobileTerminalRestResource {
     @Context
     private HttpServletRequest request;
 
+    private Jsonb jsonb;
+
+    //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
+    @PostConstruct
+    public void init() {
+        jsonb = new JsonBConfigurator().getContext(null);
+    }
+
 
     @POST
     @Path("/")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
-    public Response createMobileTerminal(MobileTerminal terminal) throws Exception {
+    public Response createMobileTerminal(MobileTerminal terminal) {
         LOG.info("Create mobile terminal invoked in rest layer.");
         LOG.info("MobileTerminalType: SHORT_PREFIX_STYLE", terminal.toString());
         try {
@@ -82,7 +91,7 @@ public class MobileTerminalRestResource {
             terminal = mobileTerminalService.populateAssetInMT(terminal);
 
             MobileTerminal mobileTerminal = mobileTerminalService.createMobileTerminal(terminal, request.getRemoteUser());
-            String returnString = objectMapper().writeValueAsString(mobileTerminal);
+            String returnString = jsonb.toJson(mobileTerminal);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when creating mobile terminal ] {}", ex, ex.getStackTrace());
@@ -93,11 +102,11 @@ public class MobileTerminalRestResource {
     @GET
     @Path("/{id}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getMobileTerminalById(@PathParam("id") UUID guid)  throws Exception {
+    public Response getMobileTerminalById(@PathParam("id") UUID guid) {
         LOG.info("Get mobile terminal by id invoked in rest layer.");
         try {
             MobileTerminal mobileTerminal = mobileTerminalService.getMobileTerminalEntityById(guid);
-            String returnString = objectMapper().writeValueAsString(mobileTerminal);
+            String returnString = jsonb.toJson(mobileTerminal);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when fetching mobile terminal ] {}", ex);
@@ -108,7 +117,7 @@ public class MobileTerminalRestResource {
     @PUT
     @Path("/")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
-    public Response updateMobileTerminal(MobileTerminal terminal)  throws Exception {
+    public Response updateMobileTerminal(MobileTerminal terminal) {
         LOG.info("Update mobile terminal by id invoked in rest layer.");
         try {
             terminal.setSource(TerminalSourceEnum.INTERNAL);
@@ -117,7 +126,7 @@ public class MobileTerminalRestResource {
             terminal = mobileTerminalService.populateAssetInMT(terminal);
 
             MobileTerminal mobileTerminal = mobileTerminalService.updateMobileTerminal(terminal, terminal.getComment(), request.getRemoteUser());
-            String returnString = objectMapper().writeValueAsString(mobileTerminal);
+            String returnString = jsonb.toJson(mobileTerminal);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when updating mobile terminal ] {}", ex);
@@ -132,12 +141,13 @@ public class MobileTerminalRestResource {
                                           @DefaultValue("1") @QueryParam("page") int page,
                                           @DefaultValue("1000000") @QueryParam("size") int size,
                                           @DefaultValue("true") @QueryParam("dynamic") boolean dynamic,
-                                          @DefaultValue("false") @QueryParam("includeArchived") boolean includeArchived)  throws Exception {
+                                          @DefaultValue("false") @QueryParam("includeArchived") boolean includeArchived) {
         LOG.info("Get mobile terminal list invoked in rest layer.");
         try {
             List<MTSearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
             MTListResponse mobileTerminalList = mobileTerminalService.getMobileTerminalList(searchFields, page, size, dynamic, includeArchived);
-            String returnJson = objectMapper().writeValueAsString(mobileTerminalList);
+
+            String returnJson = jsonb.toJson(mobileTerminalList);
             LOG.debug(returnJson);
             return Response.ok(returnJson).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
@@ -150,16 +160,16 @@ public class MobileTerminalRestResource {
     @Path("checkIfExists/serialNr/{serialNr}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response checkIfSerialNumberExistsInDB(@PathParam("serialNr") String serialNbr,
-                                                  @DefaultValue("false") @QueryParam("returnWholeObject") Boolean returnWholeObject)  throws Exception {
+                                                  @DefaultValue("false") @QueryParam("returnWholeObject") Boolean returnWholeObject) {
         try{
             MTQuery query = new MTQuery();
             query.setSerialNumbers(Arrays.asList(serialNbr));
             List<MTSearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
             MTListResponse mobileTerminalList = mobileTerminalService.getMobileTerminalList(searchFields, 1, 10, true, true);
-            String returnString = objectMapper().writeValueAsString(returnWholeObject && !mobileTerminalList.getMobileTerminalList().isEmpty() ? mobileTerminalList.getMobileTerminalList().get(0) : !mobileTerminalList.getMobileTerminalList().isEmpty());
+            String returnString = jsonb.toJson(returnWholeObject && !mobileTerminalList.getMobileTerminalList().isEmpty() ? mobileTerminalList.getMobileTerminalList().get(0) : !mobileTerminalList.getMobileTerminalList().isEmpty());
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
-            LOG.error("[ Error when getting Asset history by mobileTerminalId ] {}", ex);
+            LOG.error("[ Error when checking if serial number already exists ] {}", ex);
             throw ex;
         }
     }
@@ -167,19 +177,19 @@ public class MobileTerminalRestResource {
     @GET
     @Path("checkIfExists/memberNbr/dnid/{memberNbr}/{dnid}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response checkIfSerialNumberExistsInDB(@PathParam("memberNbr") String memberNbr,
+    public Response checkIfMemberNumberDnidComboExistsInDB(@PathParam("memberNbr") String memberNbr,
                                                   @PathParam("dnid") String dnid,
-                                                  @DefaultValue("false") @QueryParam("returnWholeObject") Boolean returnWholeObject)  throws Exception {
+                                                  @DefaultValue("false") @QueryParam("returnWholeObject") Boolean returnWholeObject) {
         try{
             MTQuery query = new MTQuery();
             query.setMemberNumbers(Arrays.asList(memberNbr));
             query.setDnids(Arrays.asList(dnid));
             List<MTSearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
             MTListResponse mobileTerminalList = mobileTerminalService.getMobileTerminalList(searchFields, 1, 10, true, true);
-            String returnString = objectMapper().writeValueAsString(returnWholeObject && !mobileTerminalList.getMobileTerminalList().isEmpty() ? mobileTerminalList.getMobileTerminalList().get(0) : !mobileTerminalList.getMobileTerminalList().isEmpty());
+            String returnString = jsonb.toJson(returnWholeObject && !mobileTerminalList.getMobileTerminalList().isEmpty() ? mobileTerminalList.getMobileTerminalList().get(0) : !mobileTerminalList.getMobileTerminalList().isEmpty());
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
-            LOG.error("[ Error when getting Asset history by mobileTerminalId ] {}", ex);
+            LOG.error("[ Error when if a member number dnid combo already exists ] {}", ex);
             throw ex;
         }
     }
@@ -189,11 +199,11 @@ public class MobileTerminalRestResource {
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
     public Response assignMobileTerminal(@QueryParam("comment") String comment,
                                          @PathParam("assetId") UUID assetId,
-                                         @PathParam("mtId") UUID mobileTerminalId)  throws Exception {
+                                         @PathParam("mtId") UUID mobileTerminalId) {
         LOG.info("Assign mobile terminal invoked in rest layer.");
         try {
             MobileTerminal mobileTerminal = mobileTerminalService.assignMobileTerminal(assetId, mobileTerminalId, comment, request.getRemoteUser());
-            String returnString = objectMapper().writeValueAsString(mobileTerminal);
+            String returnString = jsonb.toJson(mobileTerminal);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when assigning mobile terminal ] {}", ex);
@@ -206,11 +216,11 @@ public class MobileTerminalRestResource {
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
     public Response unAssignMobileTerminal(@QueryParam("comment") String comment,
                                            @PathParam("assetId") UUID assetId,
-                                           @PathParam("mtId") UUID mtId)  throws Exception {
+                                           @PathParam("mtId") UUID mtId) {
         LOG.info("Unassign mobile terminal invoked in rest layer.");
         try {
             MobileTerminal mobileTerminal = mobileTerminalService.unAssignMobileTerminal(assetId, mtId, comment, request.getRemoteUser());
-            String returnString = objectMapper().writeValueAsString(mobileTerminal);
+            String returnString = jsonb.toJson(mobileTerminal);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when unassigning mobile terminal ] {}", ex);
@@ -221,11 +231,11 @@ public class MobileTerminalRestResource {
     @PUT
     @Path("/{mtId}/status")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
-    public Response setStatus(@QueryParam("comment") String comment, @PathParam("mtId") UUID mtId, MobileTerminalStatus status)  throws Exception {
+    public Response setStatus(@QueryParam("comment") String comment, @PathParam("mtId") UUID mtId, MobileTerminalStatus status) {
         LOG.info("Set mobile terminal status active invoked in rest layer.");
         try {
             MobileTerminal mobileTerminal = mobileTerminalService.setStatusMobileTerminal(mtId, comment, status, request.getRemoteUser());
-            String returnString = objectMapper().writeValueAsString(mobileTerminal);
+            String returnString = jsonb.toJson(mobileTerminal);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when activating mobile terminal ] {}", ex);
@@ -236,11 +246,11 @@ public class MobileTerminalRestResource {
     @GET
     @Path("/{mtId}/history/")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getMobileTerminalHistoryListByMobileTerminalId(@PathParam("mtId") UUID id, @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr)  throws Exception {
+    public Response getMobileTerminalHistoryListByMobileTerminalId(@PathParam("mtId") UUID id, @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
         LOG.info("Get mobile terminal history by mobile terminal id invoked in rest layer.");
         try {
             List<MobileTerminal> mobileTerminalRevisions = mobileTerminalService.getMobileTerminalRevisions(id, maxNbr);
-            String returnString = objectMapper().writeValueAsString(mobileTerminalRevisions);
+            String returnString = jsonb.toJson(MobileTerminalDtoMapper.mapToMobileTerminalDtos(mobileTerminalRevisions));
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting mobile terminal history by terminalId ] {}", ex);
@@ -252,11 +262,11 @@ public class MobileTerminalRestResource {
     @Path("/history/getMtHistoryForAsset/{assetId}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getMobileTerminalHistoryByAssetId(@PathParam("assetId") UUID assetId,
-                                                      @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr)  throws Exception  {
+                                                      @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr)  {
 
         try {
-            List<Map<UUID, List<MobileTerminal>>> mobileTerminalRevisionMap = mobileTerminalService.getMobileTerminalRevisionsByAssetId(assetId, maxNbr);
-            String returnString = objectMapper().writeValueAsString(mobileTerminalRevisionMap);
+            List<Map<UUID, List<MobileTerminalDto>>> mobileTerminalRevisionMap = mobileTerminalService.getMobileTerminalRevisionsByAssetId(assetId, maxNbr);
+            String returnString = jsonb.toJson(mobileTerminalRevisionMap);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting mobile terminal history by assetId ] {}", ex);
@@ -270,26 +280,14 @@ public class MobileTerminalRestResource {
     @Path("history/getAssetHistoryForMT/{mobileTerminalId}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetRevisionByMobileTerminalId(@PathParam("mobileTerminalId") UUID mobileTerminalId,
-                                                       @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr)  throws Exception {
+                                                       @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
         try{
-            List<Asset> assetRevisions = mobileTerminalService.getAssetRevisionsByMobileTerminalId(mobileTerminalId);
-            String returnString = objectMapper().writeValueAsString(assetRevisions);
+            List<AssetDto> assetRevisions = mobileTerminalService.getAssetRevisionsByMobileTerminalId(mobileTerminalId);
+            String returnString = jsonb.toJson(assetRevisions);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting Asset history by mobileTerminalId ] {}", ex);
             throw ex;
         }
-    }
-
-
-    //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
-    private ObjectMapper objectMapper(){
-        ObjectMapperContextResolver omcr = new ObjectMapperContextResolver();
-        ObjectMapper objectMapper = omcr.getContext(MobileTerminal.class);
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                .findAndRegisterModules();
-        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-        return objectMapper;
     }
 }

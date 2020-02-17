@@ -17,7 +17,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCodesPK;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Stateless
@@ -34,7 +34,7 @@ public class CustomCodesServiceBean {
      * @param description   @description human readable description of the code for dropdowns/prints etc
      * @return a CustomCode Object
      */
-    public CustomCode create(String constant, String code, OffsetDateTime validFromDate, OffsetDateTime validToDate, String description) {
+    public CustomCode create(String constant, String code, Instant validFromDate, Instant validToDate, String description) {
         validateParameters(constant, code, validFromDate, validToDate);
 
         // we allow nonvalues in description and extradata since the code can be an existent nonexistent flag
@@ -68,7 +68,7 @@ public class CustomCodesServiceBean {
      * @param validToDate   @description code is valid to this date inclusive
      * @return a CustomCodes object
      */
-    public CustomCode get(String constant, String code, OffsetDateTime validFromDate, OffsetDateTime validToDate) {
+    public CustomCode get(String constant, String code, Instant validFromDate, Instant validToDate) {
         validateParameters(constant, code, validFromDate, validToDate);
         CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code, validFromDate, validToDate);
         return dao.get(primaryKey);
@@ -88,7 +88,7 @@ public class CustomCodesServiceBean {
      * @param validToDate   @description code is valid to this date inclusive
      * @return a boolean indicating exists or not  used for validation on incoming data
      */
-    public Boolean exists(String constant, String code, OffsetDateTime validFromDate, OffsetDateTime validToDate) {
+    public Boolean exists(String constant, String code, Instant validFromDate, Instant validToDate) {
         validateParameters(constant, code, validFromDate, validToDate);
         CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code, validFromDate, validToDate);
         return dao.exists(primaryKey);
@@ -102,7 +102,7 @@ public class CustomCodesServiceBean {
      * @param newValue      @description  new description
      * @return a the updated CustomCodes Object
      */
-    public CustomCode update(String constant, String code, OffsetDateTime validFromDate, OffsetDateTime validToDate, String newValue) {
+    public CustomCode update(String constant, String code, Instant validFromDate, Instant validToDate, String newValue) {
         validateParameters(constant, code, validFromDate, validToDate);
         CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code, validFromDate, validToDate);
         return dao.update(primaryKey, newValue);
@@ -114,7 +114,7 @@ public class CustomCodesServiceBean {
      * @param validFromDate @description code is valid from this date inclusive
      * @param validToDate   @description code is valid to this date inclusive
      */
-    public void delete(String constant, String code, OffsetDateTime validFromDate, OffsetDateTime validToDate) {
+    public void delete(String constant, String code, Instant validFromDate, Instant validToDate) {
         validateParameters(constant, code, validFromDate, validToDate);
         CustomCodesPK primaryKey = new CustomCodesPK(constant.toUpperCase(), code, validFromDate, validToDate);
         dao.delete(primaryKey);
@@ -144,12 +144,12 @@ public class CustomCodesServiceBean {
         return dao.getAllConstants();
     }
 
-    public List<CustomCode> getForDate(String constant, String code, OffsetDateTime aDate) {
+    public List<CustomCode> getForDate(String constant, String code, Instant aDate) {
         validateParameters(constant, code, aDate);
         return dao.getForDate(constant, code, aDate);
     }
 
-    public Boolean verify(String constant, String code, OffsetDateTime aDate) {
+    public Boolean verify(String constant, String code, Instant aDate) {
         validateParameters(constant, code, aDate);
         return dao.verify(constant, code, aDate);
     }
@@ -164,20 +164,20 @@ public class CustomCodesServiceBean {
         CustomCodesPK pk = customCode.getPrimaryKey();
         String constant = pk.getConstant();
         String code = pk.getCode();
-        OffsetDateTime validFromDate = pk.getValidFromDate();
-        OffsetDateTime validToDate = pk.getValidToDate();
+        Instant validFromDate = pk.getValidFromDate();
+        Instant validToDate = pk.getValidToDate();
         validateParameters(constant, code, validFromDate, validToDate);
         return dao.replace(customCode);
     }
 
-    private void validateParameters(String constant, String code, OffsetDateTime validFromDate, OffsetDateTime validToDate) {
+    private void validateParameters(String constant, String code, Instant validFromDate, Instant validToDate) {
         validateParameters(constant, code, validFromDate);
         if (validToDate == null) {
             throw new IllegalArgumentException("ValidToDate cannot be null");
         }
     }
 
-    private void validateParameters(String constant, String code, OffsetDateTime aDate) {
+    private void validateParameters(String constant, String code, Instant aDate) {
         if (constant == null) {
             throw new IllegalArgumentException("Constant cannot be null");
         }

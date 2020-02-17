@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<jboss-deployment-structure>
-    <deployment>
-        <dependencies>
-            <module name="com.fasterxml.jackson.datatype.jackson-datatype-jsr310" services="import"/>
-            <module name="com.fasterxml.jackson.datatype.jackson-datatype-jdk8" services="import"/>
-        </dependencies>
-    </deployment>
-</jboss-deployment-structure>

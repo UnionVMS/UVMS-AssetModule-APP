@@ -11,8 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
@@ -22,7 +20,8 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
 import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
-import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
+import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
@@ -32,15 +31,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.json.bind.Jsonb;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -62,13 +62,12 @@ public class AssetRestResource {
     @Inject
     private AssetDao assetDao;
 
+    private Jsonb jsonb;
+
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
-    private ObjectMapper objectMapper(){
-        ObjectMapperContextResolver omcr = new ObjectMapperContextResolver();
-        ObjectMapper objectMapper = omcr.getContext(Asset.class);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                .findAndRegisterModules();
-        return objectMapper;
+    @PostConstruct
+    public void init() {
+        jsonb =  new JsonBConfigurator().getContext(null);
     }
 
     /**
@@ -94,7 +93,7 @@ public class AssetRestResource {
         try {
             List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
             AssetListResponse assetList = assetService.getAssetList(searchFields, page, size, dynamic, includeInactivated);
-            String returnString = objectMapper().writeValueAsString(assetList);
+            String returnString = jsonb.toJson(assetList);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset list.", e);
@@ -108,7 +107,7 @@ public class AssetRestResource {
     public Response getVesselTypes()  throws Exception  {
         try {
             List<String> vesselTypes = assetDao.getAllAvailableVesselTypes();
-            String returnString = objectMapper().writeValueAsString(vesselTypes);
+            String returnString = jsonb.toJson(vesselTypes);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting vessel types list.", e);
@@ -162,7 +161,7 @@ public class AssetRestResource {
     public Response getAssetById(@ApiParam(value="UUID of the asset to retrieve", required=true) @PathParam("id") UUID id)  throws Exception {
         try {
             Asset asset = assetService.getAssetById(id);
-            String returnString = objectMapper().writeValueAsString(asset);
+            String returnString = jsonb.toJson(asset);
             return Response.status(200).entity(returnString).type(MediaType.APPLICATION_JSON)
                     .header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
@@ -197,7 +196,7 @@ public class AssetRestResource {
         try {
             String remoteUser = servletRequest.getRemoteUser();
             Asset createdAssetSE = assetService.createAsset(asset, remoteUser);
-            String returnString = objectMapper().writeValueAsString(createdAssetSE);
+            String returnString = jsonb.toJson(createdAssetSE);
             return Response.status(200).entity(returnString).type(MediaType.APPLICATION_JSON )
                     .header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
@@ -225,7 +224,7 @@ public class AssetRestResource {
             String remoteUser = servletRequest.getRemoteUser();
             Asset assetWithMT = assetService.populateMTListInAsset(asset);
             Asset updatedAsset = assetService.updateAsset(assetWithMT, remoteUser, asset.getComment());
-            String returnString = objectMapper().writeValueAsString(updatedAsset);
+            String returnString = jsonb.toJson(updatedAsset);
             return Response.status(200).entity(returnString).type(MediaType.APPLICATION_JSON )
                     .header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
@@ -250,7 +249,7 @@ public class AssetRestResource {
             String remoteUser = servletRequest.getRemoteUser();
             Asset asset = assetService.getAssetById(assetId);
             Asset archivedAsset = assetService.archiveAsset(asset, remoteUser, comment);
-            String returnString = objectMapper().writeValueAsString(archivedAsset);
+            String returnString = jsonb.toJson(archivedAsset);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when archiving asset. {}",assetId, e);
@@ -274,7 +273,7 @@ public class AssetRestResource {
         try {
             String remoteUser = servletRequest.getRemoteUser();
             Asset unarchivedAsset = assetService.unarchiveAsset(assetId, remoteUser, comment);
-            String returnString = objectMapper().writeValueAsString(unarchivedAsset);
+            String returnString = jsonb.toJson(unarchivedAsset);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when unarchiving Asset with ID: {}", assetId, e);
@@ -300,7 +299,7 @@ public class AssetRestResource {
                                                  @ApiParam(value="Max size of resultset") @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr)  throws Exception {
         try {
             List<Asset> assetRevisions = assetService.getRevisionsForAssetLimited(id, maxNbr);
-            String returnString = objectMapper().writeValueAsString(assetRevisions);
+            String returnString = jsonb.toJson(assetRevisions);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset history list by asset ID. {}]", id, e);
@@ -330,9 +329,9 @@ public class AssetRestResource {
         try {
 
             AssetIdentifier assetId = AssetIdentifier.valueOf(type.toUpperCase());
-            OffsetDateTime offsetDateTime = (date == null ? OffsetDateTime.now() : OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-            Asset assetRevision = assetService.getAssetFromAssetIdAtDate(assetId, id, offsetDateTime);
-            String returnString = objectMapper().writeValueAsString(assetRevision);
+            Instant instant = (date == null ? Instant.now() : DateUtils.stringToDate(date));
+            Asset assetRevision = assetService.getAssetFromAssetIdAtDate(assetId, id, instant);
+            String returnString = jsonb.toJson(assetRevision);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset. Type: {}, Value: {}, Date: {}", type, id, date, e);
@@ -357,7 +356,7 @@ public class AssetRestResource {
     public Response getAssetHistoryByAssetHistGuid(@ApiParam(value="Id", required=true) @PathParam("guid") UUID guid)  throws Exception {
         try {
             Asset asset = assetService.getAssetRevisionForRevisionId(guid);
-            String returnString = objectMapper().writeValueAsString(asset);
+            String returnString = jsonb.toJson(asset);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset by asset history guid. {}] ", guid, e);
@@ -462,8 +461,8 @@ public class AssetRestResource {
     public Response getContactInfoListForAssetHistory(@ApiParam(value="Id of asset", required=true)  @PathParam("id") UUID assetId,
                                                       @QueryParam("ofDate") String updatedDate)  throws Exception  {
         try {
-            OffsetDateTime offsetDateTime = (updatedDate == null ? OffsetDateTime.now() : OffsetDateTime.parse(updatedDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-            List<ContactInfo> resultList = assetService.getContactInfoRevisionForAssetHistory(assetId, offsetDateTime);
+            Instant instant = (updatedDate == null ? Instant.now() : DateUtils.stringToDate(updatedDate));
+            List<ContactInfo> resultList = assetService.getContactInfoRevisionForAssetHistory(assetId, instant);
             return Response.ok(resultList).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error while getting contact info list for asset history", e);

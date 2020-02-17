@@ -10,9 +10,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType;
 import eu.europa.ec.fisheries.uvms.asset.bean.AssetGroupServiceBean;
@@ -25,26 +22,27 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.asset.dto.*;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
+import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
-import eu.europa.ec.fisheries.uvms.rest.asset.ObjectMapperContextResolver;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import io.swagger.annotations.ApiParam;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.json.bind.Jsonb;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -72,13 +70,12 @@ public class InternalRestResource {
     @Inject
     AssetDao assetDao;
 
+    private Jsonb jsonb;
+
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
-    private ObjectMapper objectMapper() {
-        ObjectMapperContextResolver omcr = new ObjectMapperContextResolver();
-        ObjectMapper objectMapper = omcr.getContext(InternalRestResource.class);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                .findAndRegisterModules();
-        return objectMapper;
+    @PostConstruct
+    public void init() {
+        jsonb =  new JsonBConfigurator().getContext(null);
     }
 
     @GET
@@ -103,15 +100,10 @@ public class InternalRestResource {
                                  @DefaultValue("true") @QueryParam("dynamic") boolean dynamic,
                                  @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
                                  AssetQuery query) throws Exception {
-        try {
             List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
             AssetListResponse assetList = assetService.getAssetList(searchFields, page, size, dynamic, includeInactivated);
-            String returnString = objectMapper().writeValueAsString(assetList);
+            String returnString = jsonb.toJson(assetList);
             return Response.ok(returnString).build();
-        } catch (JsonProcessingException e) {
-            LOG.error("Error when getting getAssetList", e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
-        }
     }
 
     @POST
@@ -122,16 +114,11 @@ public class InternalRestResource {
                                  @DefaultValue("true") @QueryParam("dynamic") boolean dynamic,
                                  @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
                                  AssetQuery query) {
-        try {
             List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
             List<Asset> assetList = assetDao.getAssetListSearchPaginated( page, size, searchFields, dynamic, includeInactivated);
             List<UUID> assetIdList = assetList.stream().map(Asset::getId).collect(Collectors.toList());
-            String returnString = objectMapper().writeValueAsString(assetIdList);
+            String returnString = jsonb.toJson(assetIdList);
             return Response.ok(returnString).build();
-        } catch (JsonProcessingException e) {
-            LOG.error("Error when getting getAssetList", e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ExceptionUtils.getRootCause(e)).build();
-        }
     }
 
     @GET
@@ -197,8 +184,8 @@ public class InternalRestResource {
                                                @PathParam("date") String date) throws Exception {
         try {
             AssetIdentifier assetId = AssetIdentifier.valueOf(type.toUpperCase());
-            OffsetDateTime offsetDateTime = OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-            Asset assetRevision = assetService.getAssetFromAssetIdAtDate(assetId, id, offsetDateTime);
+            Instant instant = DateUtils.stringToDate(date);
+            Asset assetRevision = assetService.getAssetFromAssetIdAtDate(assetId, id, instant);
             return Response.ok(assetRevision).build();
         } catch (Exception e) {
             LOG.error("getAssetFromAssetIdAndDate", e);
@@ -286,7 +273,7 @@ public class InternalRestResource {
     @GET
     @Path("listcodesforconstant/{constant}")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response getCodesForConstant(@PathParam("constant") String constant) throws Exception {
+    public Response getCodesForConstant(@PathParam("constant") String constant) {
         try {
             List<CustomCode> customCodes = customCodesService.getAllFor(constant);
             return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
@@ -301,9 +288,9 @@ public class InternalRestResource {
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response verify(@ApiParam(value = "constants", required = true) @PathParam("constant") String constant,
                            @ApiParam(value = "code", required = true) @PathParam("code") String code,
-                           @ApiParam(value = "validToDate", required = true) @QueryParam(value = "date") String date) throws Exception {
+                           @ApiParam(value = "validToDate", required = true) @QueryParam(value = "date") String date) {
         try {
-            OffsetDateTime aDate = (date == null ? OffsetDateTime.now() : OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+            Instant aDate = (date == null ? Instant.now() : DateUtils.stringToDate(date));
             Boolean exists = customCodesService.verify(constant, code, aDate);
             return Response.ok(exists).header("MDC", MDC.get("requestId")).build();
 
@@ -318,9 +305,9 @@ public class InternalRestResource {
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response getForDate(@PathParam("constant") String constant,
                                @PathParam("code") String code,
-                               @QueryParam(value = "date") String date) throws Exception {
+                               @QueryParam(value = "date") String date) {
         try {
-            OffsetDateTime aDate = (date == null ? OffsetDateTime.now() : OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+            Instant aDate = (date == null ? Instant.now() : DateUtils.stringToDate(date));
             List<CustomCode> customCodes = customCodesService.getForDate(constant, code, aDate);
             return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
 
@@ -333,7 +320,7 @@ public class InternalRestResource {
     @POST
     @Path("replace")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response replace(CustomCode customCode) throws Exception {
+    public Response replace(CustomCode customCode) {
         try {
             CustomCode customCodes = customCodesService.replace(customCode);
             return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
@@ -351,7 +338,7 @@ public class InternalRestResource {
     @POST
     @Path("collectassetmt")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response enrich(AssetMTEnrichmentRequest request) throws Exception {
+    public Response enrich(AssetMTEnrichmentRequest request) {
         try {
             AssetMTEnrichmentResponse assetMTEnrichmentResponse = assetService.collectAssetMT(request);
             return Response.ok(assetMTEnrichmentResponse).header("MDC", MDC.get("requestId")).build();
@@ -364,7 +351,7 @@ public class InternalRestResource {
     @POST
     @Path("poll")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response createPoll(PollRequestType createPoll) throws Exception {
+    public Response createPoll(PollRequestType createPoll) {
         try {
             CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(createPoll);
             return Response.ok(createPollResultDto.isUnsentPoll()).build();
@@ -377,7 +364,7 @@ public class InternalRestResource {
     @POST
     @Path("createPollForAsset/{id}")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response createPollForAsset(@PathParam("id") String assetId, @QueryParam("username") String username, @QueryParam("comment") String comment) throws Exception {
+    public Response createPollForAsset(@PathParam("id") String assetId, @QueryParam("username") String username, @QueryParam("comment") String comment) {
         try {
             UUID asset = UUID.fromString(assetId);
             return Response.ok(pollServiceBean.createPollForAsset(asset, PollType.AUTOMATIC_POLL, username, comment)).build();

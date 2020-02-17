@@ -9,7 +9,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.NotFoundException;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Stateless
@@ -86,7 +86,7 @@ public class CustomCodeDao {
         }
     }
 
-    public List<CustomCode> getForDate(String constant, String code, OffsetDateTime aDate) {
+    public List<CustomCode> getForDate(String constant, String code, Instant aDate) {
 
         TypedQuery<CustomCode> query = em.createNamedQuery(CustomCode.CUSTOMCODES_GETCUSTOMCODE_FOR_SPECIFIC_DATE, CustomCode.class);
         query.setParameter("constant", constant);
@@ -96,7 +96,7 @@ public class CustomCodeDao {
         return customCodes;
     }
 
-    public Boolean verify(String constant, String code, OffsetDateTime aDate) {
+    public Boolean verify(String constant, String code, Instant aDate) {
         TypedQuery<CustomCode> query = em.createNamedQuery(CustomCode.CUSTOMCODES_GETCUSTOMCODE_FOR_SPECIFIC_DATE, CustomCode.class);
         query.setParameter("constant", constant);
         query.setParameter("code", code);
