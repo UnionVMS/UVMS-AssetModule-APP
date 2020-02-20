@@ -29,7 +29,7 @@ import org.hibernate.envers.Audited;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Audited
@@ -104,14 +104,14 @@ public class ContactInfo implements Serializable {
     private String country;
 
     @Column(name = "createtime")
-    private OffsetDateTime createTime;
+    private Instant createTime;
 
     @Size(max = 60)
     @Column(name = "updatedby")
     private String updatedBy;
 
     @Column(name = "asset_updatetime")
-    private OffsetDateTime assetUpdateTime;
+    private Instant assetUpdateTime;
 
     @PrePersist
     private void onPrePersist() {
@@ -251,11 +251,11 @@ public class ContactInfo implements Serializable {
         this.country = country;
     }
 
-    public OffsetDateTime getCreateTime() {
+    public Instant getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(OffsetDateTime createTime) {
+    public void setCreateTime(Instant createTime) {
         this.createTime = createTime;
     }
 
@@ -267,11 +267,11 @@ public class ContactInfo implements Serializable {
         this.updatedBy = updatedBy;
     }
 
-    public OffsetDateTime getAssetUpdateTime() {
+    public Instant getAssetUpdateTime() {
         return assetUpdateTime;
     }
 
-    public void setAssetUpdateTime(OffsetDateTime assetUpdateTime) {
+    public void setAssetUpdateTime(Instant assetUpdateTime) {
         this.assetUpdateTime = assetUpdateTime;
     }
 }

@@ -12,13 +12,12 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 import java.time.Clock;
-import java.time.OffsetDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 public class CustomCodesDaoTestIT extends TransactionalTests {
@@ -158,10 +157,10 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
     private CustomCode createHelper(String constant, Boolean active, CustomCodesPK primaryKey) {
         int n = rnd.nextInt(10);
         int duration = rnd.nextInt(90);
-        OffsetDateTime fromDate = OffsetDateTime.now(Clock.systemUTC());
-        fromDate = fromDate.minusDays(n);
-        OffsetDateTime toDate = OffsetDateTime.now(Clock.systemUTC());
-        toDate = toDate.plusDays(duration);
+        Instant fromDate = Instant.now(Clock.systemUTC());
+        fromDate = fromDate.minus(n, ChronoUnit.DAYS);
+        Instant toDate = Instant.now(Clock.systemUTC());
+        toDate = toDate.plus(duration, ChronoUnit.DAYS);
 
         CustomCode record = new CustomCode();
         if (active) {
@@ -185,10 +184,10 @@ public class CustomCodesDaoTestIT extends TransactionalTests {
     private CustomCodesPK createPrimaryKey(String constant, String code) {
         int n = rnd.nextInt(10);
         int duration = rnd.nextInt(90);
-        OffsetDateTime fromDate = OffsetDateTime.now(Clock.systemUTC());
-        fromDate = fromDate.minusDays(n);
-        OffsetDateTime toDate = OffsetDateTime.now(Clock.systemUTC());
-        toDate = toDate.plusDays(duration);
+        Instant fromDate = Instant.now(Clock.systemUTC());
+        fromDate = fromDate.minus(n, ChronoUnit.DAYS);
+        Instant toDate = Instant.now(Clock.systemUTC());
+        toDate = toDate.plus(duration, ChronoUnit.DAYS);
         return new CustomCodesPK(constant, code, fromDate, toDate);
     }
 }

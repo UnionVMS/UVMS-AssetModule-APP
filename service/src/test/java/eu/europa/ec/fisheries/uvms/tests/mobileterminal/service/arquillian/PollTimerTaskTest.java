@@ -30,8 +30,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,7 +59,7 @@ public class PollTimerTaskTest extends TransactionalTests {
     public void runPollTimerTaskPollShouldBeCreated() {
         Asset asset = assetDao.createAsset(AssetTestsHelper.createBasicAsset());
         ProgramPoll pollProgram = pollHelper.createProgramPoll(asset.getId().toString(),
-                OffsetDateTime.now(ZoneOffset.UTC).minusHours(1), OffsetDateTime.now(ZoneOffset.UTC).plusHours(1), null);
+                Instant.now().minus(1, ChronoUnit.HOURS), Instant.now().plus(1, ChronoUnit.HOURS), null);
         pollDao.createProgramPoll(pollProgram);
         
         new PollTimerTask(pollService).run();
@@ -74,11 +75,11 @@ public class PollTimerTaskTest extends TransactionalTests {
     public void runPollTimerTaskTwoPollsShouldBeCreated() {
         Asset asset = assetDao.createAsset(AssetTestsHelper.createBasicAsset());
         ProgramPoll pollProgram = pollHelper.createProgramPoll(asset.getId().toString(),
-                OffsetDateTime.now(ZoneOffset.UTC).minusHours(1), OffsetDateTime.now(ZoneOffset.UTC).plusHours(1), null);
+                Instant.now().minus(1, ChronoUnit.HOURS), Instant.now().plus(1, ChronoUnit.HOURS), null);
         pollDao.createProgramPoll(pollProgram);
         
         new PollTimerTask(pollService).run();
-        pollProgram.setLatestRun(OffsetDateTime.now(ZoneOffset.UTC).minusMinutes(1)); // Frequency is 1s
+        pollProgram.setLatestRun(Instant.now().minus(1, ChronoUnit.MINUTES)); // Frequency is 1s
         pollDao.updateProgramPoll(pollProgram);
         new PollTimerTask(pollService).run();
         
@@ -92,7 +93,7 @@ public class PollTimerTaskTest extends TransactionalTests {
     public void runPollTimerTaskFutureDateShouldNotCreatePoll() {
         Asset asset = assetDao.createAsset(AssetTestsHelper.createBasicAsset());
         ProgramPoll pollProgram = pollHelper.createProgramPoll(asset.getId().toString(),
-                OffsetDateTime.now(ZoneOffset.UTC).plusHours(1), OffsetDateTime.now(ZoneOffset.UTC).plusHours(2), null);
+                Instant.now().plus(1, ChronoUnit.HOURS), Instant.now().plus(2, ChronoUnit.HOURS), null);
         pollDao.createProgramPoll(pollProgram);
         
         new PollTimerTask(pollService).run();
@@ -108,7 +109,7 @@ public class PollTimerTaskTest extends TransactionalTests {
     public void runPollTimerTaskLastRunShouldBeSet() {
         Asset asset = assetDao.createAsset(AssetTestsHelper.createBasicAsset());
         ProgramPoll pollProgram = pollHelper.createProgramPoll(asset.getId().toString(),
-                OffsetDateTime.now(ZoneOffset.UTC).minusHours(1), OffsetDateTime.now(ZoneOffset.UTC).plusHours(1), null);
+                Instant.now().minus(1, ChronoUnit.HOURS), Instant.now().plus(1, ChronoUnit.HOURS), null);
         pollDao.createProgramPoll(pollProgram);
         
         new PollTimerTask(pollService).run();
@@ -122,7 +123,7 @@ public class PollTimerTaskTest extends TransactionalTests {
     public void runPollTimerTaskOldProgramShouldBeArchived() {
         Asset asset = assetDao.createAsset(AssetTestsHelper.createBasicAsset());
         ProgramPoll pollProgram = pollHelper.createProgramPoll(asset.getId().toString(),
-                OffsetDateTime.now(ZoneOffset.UTC).minusHours(2), OffsetDateTime.now(ZoneOffset.UTC).minusHours(1), null);
+                Instant.now().minus(2, ChronoUnit.HOURS), Instant.now().minus(1, ChronoUnit.HOURS), null);
         pollDao.createProgramPoll(pollProgram);
         
         new PollTimerTask(pollService).run();

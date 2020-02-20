@@ -11,11 +11,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
-import java.time.Clock;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -108,7 +105,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
 
         String user = "test";
         String uuid = UUID.randomUUID().toString();
-        OffsetDateTime date = new Date().toInstant().atOffset(ZoneOffset.UTC);
+        Instant date = Instant.now();
         
         AssetGroup assetGroup1 = createAndStoreAssetGroupEntity(user);
         AssetGroupField field = AssetTestsHelper.createAssetGroupField(assetGroup1, "SWE, FIN", uuid, date, user);
@@ -131,7 +128,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     } 
 
     private List<AssetGroupField>  createAndStoreAssetGroupFieldEntityList(AssetGroup assetGroup, int n) {
-        OffsetDateTime dt = OffsetDateTime.now(Clock.systemUTC());
+        Instant dt = Instant.now();
         List<AssetGroupField> groupFields = createAssetGroupFields(assetGroup,dt,assetGroup.getOwner(), n);
         return groupFields;
     }
@@ -143,7 +140,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     }
 
     private AssetGroupField createAndStoreAssetGroupFieldEntity(AssetGroup assetGroup) {
-        OffsetDateTime dt = OffsetDateTime.now(Clock.systemUTC());
+        Instant dt = Instant.now();
         List<AssetGroupField> groupFields = createAssetGroupFields(assetGroup,dt,assetGroup.getOwner(), 1);
         AssetGroupField assetGroupField = groupFields.get(0);
         AssetGroupField createdAssetGroupField = assetGroupFieldDaoBean.create(assetGroupField);
@@ -159,7 +156,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
     private AssetGroup createAssetGroupEntity(String user) {
         AssetGroup ag = new AssetGroup();
 
-        OffsetDateTime dt = OffsetDateTime.now(Clock.systemUTC());
+        Instant dt = Instant.now();
 
         ag.setUpdatedBy("test");
         ag.setUpdateTime(dt);
@@ -171,7 +168,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
         return ag;
     }
 
-    private  List<AssetGroupField> createAssetGroupFields(AssetGroup assetGroupEntity, OffsetDateTime dt, String user, int n) {
+    private  List<AssetGroupField> createAssetGroupFields(AssetGroup assetGroupEntity, Instant dt, String user, int n) {
         List<AssetGroupField> groupFields = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             String uuid = UUID.randomUUID().toString();

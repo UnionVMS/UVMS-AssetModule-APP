@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
 		<artifactId>asset</artifactId>
-		<version>6.5.2-SNAPSHOT</version>
+		<version>6.6.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -45,6 +45,10 @@
 			<artifactId>activemq-client</artifactId>
 			<version>5.15.9</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
+			<artifactId>uvms-commons-date</artifactId>
 		</dependency>
 
 		<!-- Java 11 has removed theses from the standard package   -->

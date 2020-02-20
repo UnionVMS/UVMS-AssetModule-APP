@@ -4,7 +4,7 @@
 
     <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
     <artifactId>asset</artifactId>
-    <version>6.5.2-SNAPSHOT</version>
+    <version>6.6.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <parent>
@@ -16,18 +16,17 @@
 
     <properties>
     	<asset.api.check.against.version>5.0.0</asset.api.check.against.version>
-        <docker.dev.version>3.40.18.w18</docker.dev.version>
+        <docker.dev.version>3.40.19.w18-JsonBOverJackson</docker.dev.version>
     	<docker.liquibase.changeLogFile>LIQUIBASE/changelog/db-changelog-master.xml</docker.liquibase.changeLogFile>
         <docker.liquibase.db.user>asset</docker.liquibase.db.user>
         <docker.liquibase.db.passwd>asset</docker.liquibase.db.passwd>
         <uvms.pom.version>3.0</uvms.pom.version>
         <usm4uvms.version>4.1.0</usm4uvms.version>
         <uvms.config.version>4.1.0</uvms.config.version>
-        <uvms.common.version>4.0.13</uvms.common.version>
-        <audit.model.version>4.2.0</audit.model.version>
-        <movementrules.version>2.2.1</movementrules.version>
-        <jackson.version>2.10.2</jackson.version>
-        <exchange.model.version>5.1.0-UVMS</exchange.model.version>
+        <uvms.common.version>4.1.1</uvms.common.version>
+        <audit.model.version>4.3.0</audit.model.version>
+        <movementrules.version>2.3.0</movementrules.version>
+        <exchange.model.version>5.2.1-UVMS</exchange.model.version>
         <project.scm.id>github</project.scm.id>
         <installAtEnd>false</installAtEnd>
     </properties>
@@ -76,6 +75,17 @@
                 <artifactId>uvms-pom-java11-deps</artifactId>
                 <version>${uvms.pom.version}</version>
                 <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
+                <artifactId>uvms-commons-date</artifactId>
+                <version>${uvms.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>28.2-jre</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

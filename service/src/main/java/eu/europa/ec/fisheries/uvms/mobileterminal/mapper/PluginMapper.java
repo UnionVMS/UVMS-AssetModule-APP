@@ -18,12 +18,11 @@ import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPluginCapability;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.OceanRegionEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalCapability;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -47,7 +46,7 @@ public class PluginMapper {
         entity.setName(model.getLabelName());
         entity.setPluginInactive(model.isInactive());
         entity.setUpdatedBy(MobileTerminalConstants.UPDATE_USER);
-        entity.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        entity.setUpdateTime(Instant.now());
         if (entity.getCapabilities() == null) {
             entity.setCapabilities(new HashSet<>());
         }
@@ -63,7 +62,7 @@ public class PluginMapper {
             entity.setName(capability.getName().name());
             entity.setValue(capability.getValue());
             entity.setUpdatedBy(MobileTerminalConstants.UPDATE_USER);
-            entity.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+            entity.setUpdateTime(Instant.now());
             capabilityList.add(entity);
         }
         return capabilityList;

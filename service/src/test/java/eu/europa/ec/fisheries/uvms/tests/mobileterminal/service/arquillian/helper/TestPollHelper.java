@@ -3,13 +3,14 @@ package eu.europa.ec.fisheries.uvms.tests.mobileterminal.service.arquillian.help
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian.AssetTestsHelper;
 
 import javax.ejb.EJB;
@@ -17,8 +18,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.time.Duration;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.*;
 
 @Stateless
@@ -102,7 +102,7 @@ public class TestPollHelper {
 
         PollAttribute pollAttribute = new PollAttribute();
         pollAttribute.setKey(PollAttributeType.START_DATE);
-        String startDate = OffsetDateTime.now(ZoneOffset.UTC).toString();
+        String startDate = DateUtils.dateToEpochMilliseconds(Instant.now());
         pollAttribute.setValue(startDate);
 
         prt.getAttributes().add(pollAttribute);
@@ -127,7 +127,7 @@ public class TestPollHelper {
 
         MobileTerminal mt = new MobileTerminal();
         mt.setSerialNo(UUID.randomUUID().toString());
-        mt.setUpdatetime(OffsetDateTime.now(ZoneOffset.UTC));
+        mt.setUpdatetime(Instant.now());
         mt.setUpdateuser("TEST");
         mt.setSource(TerminalSourceEnum.INTERNAL);
         mt.setPlugin(mtp);
@@ -149,7 +149,7 @@ public class TestPollHelper {
         mtpc.setName("test");
         mtpc.setValue("test");
         mtpc.setUpdatedBy("TEST_USER");
-        mtpc.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        mtpc.setUpdateTime(Instant.now());
         capabilityList.add(mtpc);
 
         mtp.getCapabilities().addAll(capabilityList);
@@ -194,7 +194,7 @@ public class TestPollHelper {
 
         MobileTerminal mt = new MobileTerminal();
         mt.setSerialNo(UUID.randomUUID().toString());
-        mt.setUpdatetime(OffsetDateTime.now(ZoneOffset.UTC));
+        mt.setUpdatetime(Instant.now());
         mt.setUpdateuser("TEST");
         mt.setSource(TerminalSourceEnum.INTERNAL);
         mt.setPlugin(mtp);
@@ -209,7 +209,7 @@ public class TestPollHelper {
         mtpc.setName("test");
         mtpc.setValue("test");
         mtpc.setUpdatedBy("TEST_USER");
-        mtpc.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        mtpc.setUpdateTime(Instant.now());
         capabilityList.add(mtpc);
 
         mtp.getCapabilities().addAll(capabilityList);
@@ -290,7 +290,7 @@ public class TestPollHelper {
         return plugin;
     }
 
-    public ProgramPoll createProgramPoll(String connectId, OffsetDateTime startDate, OffsetDateTime stopDate, OffsetDateTime latestRun) {
+    public ProgramPoll createProgramPoll(String connectId, Instant startDate, Instant stopDate, Instant latestRun) {
 
         ProgramPoll pp = new ProgramPoll();
         // create a valid mobileTerminal
@@ -317,24 +317,24 @@ public class TestPollHelper {
         return pp;
     }
 
-    public OffsetDateTime getStartDate() {
+    public Instant getStartDate() {
         cal.set(Calendar.DAY_OF_MONTH, 1);
         int startYear = 1999;
         cal.set(Calendar.YEAR, startYear);
-        return OffsetDateTime.ofInstant(cal.toInstant(), ZoneOffset.UTC);
+        return cal.toInstant();
     }
 
-    public OffsetDateTime getLatestRunDate() {
+    public Instant getLatestRunDate() {
         cal.set(Calendar.DAY_OF_MONTH, 20);
         int latestRunYear = 2017;
         cal.set(Calendar.YEAR, latestRunYear);
-        return OffsetDateTime.ofInstant(cal.toInstant(), ZoneOffset.UTC);
+        return cal.toInstant();
     }
 
-    public OffsetDateTime getStopDate() {
+    public Instant getStopDate() {
         cal.set(Calendar.DAY_OF_MONTH, 28);
         cal.set(Calendar.YEAR, 2059);
-        return OffsetDateTime.ofInstant(cal.toInstant(), ZoneOffset.UTC);
+        return cal.toInstant();
     }
 
     public String createSerialNumber() {

@@ -1,20 +1,19 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
-import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer;
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
+import eu.europa.ec.fisheries.uvms.asset.model.constants.UnitTonnage;
+import eu.europa.ec.fisheries.uvms.asset.util.JsonBMobileTerminalIdOnlySerializer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
-import eu.europa.ec.fisheries.uvms.mobileterminal.util.OffsetDateTimeDeserializer;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 
+import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbTransient;
+import javax.json.bind.annotation.JsonbTypeSerializer;
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -51,7 +50,6 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.*;
           @NamedQuery(name = ASSET_MICRO_ASSET_BY_LIST, query = "SELECT new eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset(a.id, a.flagStateCode, a.name, a.vesselType, a.ircs, a.cfr, a.externalMarking, a.lengthOverAll ) FROM Asset a WHERE a.id in :idList"),
           @NamedQuery(name = ASSET_ALL_AVAILABLE_VESSEL_TYPES, query = "SELECT DISTINCT a.vesselType FROM Asset a"),
 })
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Asset implements Serializable {
 
     public static final String ASSET_FIND_BY_CFR = "Asset.findByCfr";
@@ -94,10 +92,8 @@ public class Asset implements Serializable {
     @Column(name = "hullmaterial")
     private String hullMaterial;
 
-    @JsonSerialize(using = OffsetDateTimeSerializer.class)
-    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name = "commissiondate")
-    private OffsetDateTime commissionDate;
+    private Instant commissionDate;
 
     @Size(min = 4, max = 4)
     @Column(name = "constructionyear")
@@ -107,10 +103,8 @@ public class Asset implements Serializable {
     @Column(name = "constructionplace")
     private String constructionPlace;
 
-    @JsonSerialize(using = OffsetDateTimeSerializer.class)
-    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name = "updatetime")
-    private OffsetDateTime updateTime;
+    private Instant updateTime;
 
     @Column(name = "source")
     private String source;      //if this is not set then frontend has a hissyfit about formating
@@ -119,10 +113,8 @@ public class Asset implements Serializable {
     @Column(name = "vesseltype")
     private String vesselType;
 
-    @JsonSerialize(using = OffsetDateTimeSerializer.class)
-    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name = "vesselDateOfEntry")
-    private OffsetDateTime vesselDateOfEntry;
+    private Instant vesselDateOfEntry;
 
     @Size(max = 12)
     @Column(name = "cfr")
@@ -247,10 +239,8 @@ public class Asset implements Serializable {
     @Column(name = "typeofexport")
     private String typeOfExport;
 
-    @JsonSerialize(using = OffsetDateTimeSerializer.class)
-    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
     @Column(name = "administrativedecisiondate")
-    private OffsetDateTime administrativeDecisionDate;
+    private Instant administrativeDecisionDate;
 
     @Column(name = "segment")
     private String segment;
@@ -275,14 +265,13 @@ public class Asset implements Serializable {
     @Column(name = "prodorgname")
     private String prodOrgName;
 
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    @JsonProperty("mobileTerminalIds")
+    @JsonbTypeSerializer(JsonBMobileTerminalIdOnlySerializer.class)
+    @JsonbProperty("mobileTerminalIds")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "asset", cascade = {CascadeType.REFRESH})
     private Set<MobileTerminal> mobileTerminals;
 
     @Transient
-    private List<String> mobileTerminalIdList;
+    private List<String> mobileTerminalUUIDList;
 
     @Size(max = 255)
     @Column(name = "comment")
@@ -354,11 +343,11 @@ public class Asset implements Serializable {
         this.hullMaterial = hullMaterial;
     }
 
-    public OffsetDateTime getCommissionDate() {
+    public Instant getCommissionDate() {
         return commissionDate;
     }
 
-    public void setCommissionDate(OffsetDateTime commissionDate) {
+    public void setCommissionDate(Instant commissionDate) {
         this.commissionDate = commissionDate;
     }
 
@@ -378,11 +367,11 @@ public class Asset implements Serializable {
         this.constructionPlace = constructionPlace;
     }
 
-    public OffsetDateTime getUpdateTime() {
+    public Instant getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(OffsetDateTime updateTime) {
+    public void setUpdateTime(Instant updateTime) {
         this.updateTime = updateTime;
     }
 
@@ -402,11 +391,11 @@ public class Asset implements Serializable {
         this.vesselType = vesselType;
     }
 
-    public OffsetDateTime getVesselDateOfEntry() {
+    public Instant getVesselDateOfEntry() {
         return vesselDateOfEntry;
     }
 
-    public void setVesselDateOfEntry(OffsetDateTime vesselDateOfEntry) {
+    public void setVesselDateOfEntry(Instant vesselDateOfEntry) {
         this.vesselDateOfEntry = vesselDateOfEntry;
     }
 
@@ -674,11 +663,11 @@ public class Asset implements Serializable {
         this.typeOfExport = typeOfExport;
     }
 
-    public OffsetDateTime getAdministrativeDecisionDate() {
+    public Instant getAdministrativeDecisionDate() {
         return administrativeDecisionDate;
     }
 
-    public void setAdministrativeDecisionDate(OffsetDateTime administrativeDecisionDate) {
+    public void setAdministrativeDecisionDate(Instant administrativeDecisionDate) {
         this.administrativeDecisionDate = administrativeDecisionDate;
     }
 
@@ -748,14 +737,14 @@ public class Asset implements Serializable {
         this.mobileTerminals = mobileTerminals;
     }
 
-    @JsonIgnore
-    public List<String> getMobileTerminalIdList() {
-        return mobileTerminalIdList;
+    @JsonbTransient
+    public List<String> getMobileTerminalUUIDList() {
+        return mobileTerminalUUIDList;
     }
 
-    @JsonSetter("mobileTerminalIds")
-    public void setMobileTerminalIdList(List<String> mobileTerminalIdList) {
-        this.mobileTerminalIdList = mobileTerminalIdList;
+    @JsonbProperty("mobileTerminalIds")
+    public void setMobileTerminalUUIDList(List<String> mobileTerminalUUIDList) {
+        this.mobileTerminalUUIDList = mobileTerminalUUIDList;
     }
 
     public String getComment() {

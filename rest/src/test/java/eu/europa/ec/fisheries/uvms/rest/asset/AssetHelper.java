@@ -1,6 +1,6 @@
 package eu.europa.ec.fisheries.uvms.rest.asset;
 
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
+import eu.europa.ec.fisheries.uvms.asset.model.constants.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
@@ -9,8 +9,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.Random;
 
 public abstract class AssetHelper {
@@ -25,7 +24,7 @@ public abstract class AssetHelper {
         assetEntity.setExternalMarking("EXT123");
         assetEntity.setFlagStateCode("SWE");
 
-        assetEntity.setCommissionDate(OffsetDateTime.now(ZoneOffset.UTC));
+        assetEntity.setCommissionDate(Instant.now());
         assetEntity.setCfr("CRF" + getRandomIntegers(9));
         assetEntity.setIrcs("F" + getRandomIntegers(7));
         assetEntity.setImo(getRandomIntegers(7));
@@ -51,14 +50,14 @@ public abstract class AssetHelper {
     public static Asset createBiggerAsset() {
 
         Asset assetEntity = new Asset();
-        OffsetDateTime  now =  OffsetDateTime.now(ZoneOffset.UTC);
+        Instant  now =  Instant.now();
 
         assetEntity.setName("Test asset");
         assetEntity.setActive(true);
         assetEntity.setExternalMarking("EXT123");
         assetEntity.setFlagStateCode("SWE");
 
-        assetEntity.setCommissionDate(OffsetDateTime.now(ZoneOffset.UTC));
+        assetEntity.setCommissionDate(Instant.now());
         assetEntity.setCfr("CRF" + getRandomIntegers(9));
         assetEntity.setIrcs("F" + getRandomIntegers(7));
         assetEntity.setImo(getRandomIntegers(7));
@@ -117,7 +116,7 @@ public abstract class AssetHelper {
         Note note = new Note();
         note.setNote("Notes: " + getRandomIntegers(10));
         note.setCreatedBy("Test");
-        note.setCreatedOn(OffsetDateTime.now());
+        note.setCreatedOn(Instant.now());
         return note;
     }
 

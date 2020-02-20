@@ -19,7 +19,7 @@ public abstract class BuildAssetServiceDeployment {
 
         WebArchive testWar = ShrinkWrap.create(WebArchive.class, "test.war");
 
-        File[] files = Maven.configureResolver().loadPomFromFile("pom.xml").importRuntimeAndTestDependencies().resolve()
+        File[] files = Maven.resolver().loadPomFromFile("pom.xml").importRuntimeAndTestDependencies().resolve()
                 .withTransitivity().asFile();
         testWar.addAsLibraries(files);
 
@@ -36,7 +36,7 @@ public abstract class BuildAssetServiceDeployment {
     public static Archive<?> createExchangeMock(){
 
         WebArchive testWar = ShrinkWrap.create(WebArchive.class, "unionvms.war");
-        File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
+        File[] files = Maven.resolver().loadPomFromFile("pom.xml")
                 .resolve("eu.europa.ec.fisheries.uvms.exchange:exchange-model").withTransitivity().asFile();
 
         testWar.addAsLibraries(files);

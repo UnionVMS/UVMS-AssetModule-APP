@@ -11,14 +11,14 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalStatus;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
+import eu.europa.ec.fisheries.uvms.rest.asset.filter.AppError;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -115,7 +115,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mobileTerminal));
         assertEquals(200, response.getStatus());
-        Integer code  = response.readEntity(JsonNode.class).path("code").intValue();
+        Integer code  = response.readEntity(AppError.class).code;
         assertThat(code, is(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()));
     }
 
@@ -167,7 +167,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         assertNotNull(fetched);
         assertEquals(created.getId(), fetched.getId());
-        assertEquals(created.getAssetId(), fetched.getAssetId());
+        assertEquals(created.getAssetUUID(), fetched.getAssetUUID());
     }
 
     @Test
@@ -199,7 +199,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         assertNotNull(failed);
         assertEquals(200, failed.getStatus());
-        Integer code  = failed.readEntity(JsonNode.class).path("code").intValue();
+        Integer code  = failed.readEntity(AppError.class).code;
         assertThat(code, is(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()));
 
     }
@@ -404,7 +404,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         assertNotNull(response);
         assertEquals(200, response.getStatus());
-        Integer code  = response.readEntity(JsonNode.class).path("code").intValue();
+        Integer code  = response.readEntity(AppError.class).code;
         assertThat(code, is(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()));
     }
 
@@ -435,7 +435,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .put(Entity.json(""), MobileTerminal.class);
 
         assertNotNull(responseAssign);
-        assertNotNull(responseAssign.getAssetId());
+        assertNotNull(responseAssign.getAssetUUID());
         assertEquals(created.getId(), responseAssign.getId());
 
         MobileTerminal responseUnAssign = getWebTargetExternal()
@@ -449,7 +449,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .put(Entity.json(""), MobileTerminal.class);
 
         assertNotNull(responseUnAssign);
-        assertNull(responseUnAssign.getAssetId());
+        assertNull(responseUnAssign.getAssetUUID());
         assertEquals(created.getId(), responseUnAssign.getId());
     }
 
@@ -558,7 +558,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
 
         assertNotNull(failed);
-        Integer code  = failed.readEntity(JsonNode.class).path("code").intValue();
+        Integer code  = failed.readEntity(AppError.class).code;
         assertThat(code, is(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()));
         assertEquals(200, failed.getStatus());
     }
@@ -676,9 +676,9 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         assertEquals(2, mtRevisions.size());
         assertEquals(1, mtRevisions.get(0).size());
-        assertEquals(2, mtRevisions.get(0).get(created1.getId()).size());
+        assertEquals(2, mtRevisions.get(0).get(created1.getId().toString()).size());    //Yes, I know it says UUID up there in the rest call, yasson dont agree though
         assertEquals(1, mtRevisions.get(1).size());
-        assertEquals(3, mtRevisions.get(1).get(created2.getId()).size());
+        assertEquals(3, mtRevisions.get(1).get(created2.getId().toString()).size());
     }
 
     @Test

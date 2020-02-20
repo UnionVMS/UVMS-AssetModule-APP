@@ -17,7 +17,9 @@ import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
+import eu.europa.ec.fisheries.uvms.asset.mapper.AssetDtoMapper;
 import eu.europa.ec.fisheries.uvms.asset.message.AuditProducer;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.AssetDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelDto;
@@ -26,10 +28,12 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalStatus;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.TerminalSourceEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDtoMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.AuditModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollDtoMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchKeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +44,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.ws.rs.NotFoundException;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -142,7 +145,7 @@ public class MobileTerminalServiceBean {
             updatedTerminal = terminalDao.updateMobileTerminal(mobileTerminal);
             Asset asset = updatedTerminal.getAsset();
             if(asset != null){
-                asset.setUpdateTime(OffsetDateTime.now());
+                asset.setUpdateTime(Instant.now());
             }
 
         } else {
@@ -166,8 +169,8 @@ public class MobileTerminalServiceBean {
     }
 
     public MobileTerminal populateAssetInMT(MobileTerminal mt) {
-        if(mt.getAssetId() != null){
-            Asset asset = assetDao.getAssetById(UUID.fromString(mt.getAssetId()));
+        if(mt.getAssetUUID() != null){
+            Asset asset = assetDao.getAssetById(UUID.fromString(mt.getAssetUUID()));
             checkIfAssetAlreadyHasAnActiveMTBeforeAddingANewOne(asset, mt);
             mt.setAsset(asset);
         }
@@ -387,7 +390,7 @@ public class MobileTerminalServiceBean {
         checkIfAssetAlreadyHasAnActiveMTBeforeAddingANewOne(asset, terminal);
 
         asset.getMobileTerminals().add(terminal);
-        asset.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        asset.setUpdateTime(Instant.now());
         terminal.setAsset(asset);
         terminal.setUpdateuser(username);
         terminal.setComment(comment);
@@ -410,7 +413,7 @@ public class MobileTerminalServiceBean {
         if(!remove) {
             throw new IllegalArgumentException("Terminal " + guid + " is not linked to an asset with ID " + asset.getId());
         }
-        asset.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        asset.setUpdateTime(Instant.now());
         terminal.setAsset(null);
         terminal.setComment(comment);
         return terminalDao.updateMobileTerminal(terminal);
@@ -455,14 +458,14 @@ public class MobileTerminalServiceBean {
         if (totalMatches % listSize != 0) {
             numberOfPages += 1;
         }
-        response.setMobileTerminalList(terminals);
+        response.setMobileTerminalList(MobileTerminalDtoMapper.mapToMobileTerminalDtos(terminals));
 
         if ((totalMatches - 1) > 0) {
             if (stopIndex >= totalMatches) {
                 stopIndex = totalMatches;
             }
             LOG.debug("stopIndex: " + stopIndex);
-            response.setMobileTerminalList(new ArrayList<>(terminals.subList(startIndex, stopIndex)));
+            response.setMobileTerminalList(new ArrayList<>(MobileTerminalDtoMapper.mapToMobileTerminalDtos(terminals.subList(startIndex, stopIndex))));
         }
         response.setTotalNumberOfPages(numberOfPages);
         response.setCurrentPage(page);
@@ -486,36 +489,37 @@ public class MobileTerminalServiceBean {
             mt.setUpdateuser(username);
             mt.setAsset(null);
             mt.setComment(comment);
-            mt.setUpdatetime(OffsetDateTime.now());
+            mt.setUpdatetime(Instant.now());
             setStatusMobileTerminal(mt.getId(), comment, MobileTerminalStatus.INACTIVE, username);
         });
         asset.getMobileTerminals().clear();
     }
 
-    public List<Map<UUID, List<MobileTerminal>>> getMobileTerminalRevisionsByAssetId(UUID assetId, int maxNbr) {
-        List<Map<UUID, List<MobileTerminal>>> revisionList = new ArrayList<>();
+    public List<Map<UUID, List<MobileTerminalDto>>> getMobileTerminalRevisionsByAssetId(UUID assetId, int maxNbr) {
+        List<Map<UUID, List<MobileTerminalDto>>> revisionList = new ArrayList<>();
         List<MobileTerminal> mtList = terminalDao.getMobileTerminalRevisionByAssetId(assetId);
 
         mtList.forEach(terminal -> {
-            Map<UUID, List<MobileTerminal>> revisionMap = new HashMap<>();
+            Map<UUID, List<MobileTerminalDto>> revisionMap = new HashMap<>();
             List<MobileTerminal> revisions = terminalDao.getMobileTerminalRevisionById(terminal.getId());
             revisions.sort(Comparator.comparing(MobileTerminal::getCreateTime));
             if (revisions.size() > maxNbr) {
                 revisions = revisions.subList(0, maxNbr);
             }
-            revisionMap.put(terminal.getId(), revisions);
+            revisionMap.put(terminal.getId(), MobileTerminalDtoMapper.mapToMobileTerminalDtos(revisions));
             revisionList.add(revisionMap);
         });
         return revisionList;
     }
 
 
-    public List<Asset> getAssetRevisionsByMobileTerminalId(UUID mobileTerminalId) {
+    public List<AssetDto> getAssetRevisionsByMobileTerminalId(UUID mobileTerminalId) {
         List<MobileTerminal> mtRevisions = terminalDao.getMobileTerminalRevisionById(mobileTerminalId);
 
-        return mtRevisions.stream()
+        return AssetDtoMapper.mapToAssetDtos(
+                mtRevisions.stream()
                 .filter(mt -> mt.getAsset() != null)
                 .map(MobileTerminal::getAsset)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 }

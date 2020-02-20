@@ -11,7 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.UnitTonnage;
+import eu.europa.ec.fisheries.uvms.asset.model.constants.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
@@ -24,8 +24,7 @@ import org.junit.runner.RunWith;
 
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.inject.Inject;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -323,7 +322,7 @@ public class AssetDaoTest extends TransactionalTests {
         asset = assetDao.createAsset(asset);
         commit();
 
-        Asset assetAtDate = assetDao.getAssetAtDate(asset, OffsetDateTime.now(ZoneOffset.UTC));
+        Asset assetAtDate = assetDao.getAssetAtDate(asset, Instant.now());
 
         assertThat(assetAtDate.getId(), is(notNullValue()));
 
@@ -345,7 +344,7 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.updateAsset(asset);
         commit();
 
-        Asset assetAtDate = assetDao.getAssetAtDate(asset, OffsetDateTime.now(ZoneOffset.UTC).minus(1, ChronoUnit.DAYS));
+        Asset assetAtDate = assetDao.getAssetAtDate(asset, Instant.now().minus(1, ChronoUnit.DAYS));
 
         assertThat(assetAtDate.getId(), is(notNullValue()));
 
@@ -370,13 +369,13 @@ public class AssetDaoTest extends TransactionalTests {
         asset1 = assetDao.createAsset(asset1);
         String firstName = asset1.getName();
         commit();
-        OffsetDateTime firstDate = OffsetDateTime.now(ZoneOffset.UTC);
+        Instant firstDate = Instant.now();
 
         String newName = "NewName";
         asset1.setName(newName);
         Asset asset2 = assetDao.updateAsset(asset1);
         commit();
-        OffsetDateTime secondDate = OffsetDateTime.now(ZoneOffset.UTC);
+        Instant secondDate = Instant.now();
 
         Asset assetAtFirstDate = assetDao.getAssetAtDate(asset2, firstDate);
         assertThat(assetAtFirstDate.getName(), is(firstName));

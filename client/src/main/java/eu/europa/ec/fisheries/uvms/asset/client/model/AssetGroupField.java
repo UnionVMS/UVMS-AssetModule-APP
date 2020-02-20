@@ -10,14 +10,14 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.client.model;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 public class AssetGroupField {
 
     private UUID id;
     private String key;
-    private OffsetDateTime updateTime;
+    private Instant updateTime;
     private String updatedBy;
     private String value;
     private AssetGroup assetGroup;
@@ -34,10 +34,10 @@ public class AssetGroupField {
     public void setField(String key) {
         this.key = key;
     }
-    public OffsetDateTime getUpdateTime() {
+    public Instant getUpdateTime() {
         return updateTime;
     }
-    public void setUpdateTime(OffsetDateTime updateTime) {
+    public void setUpdateTime(Instant updateTime) {
         this.updateTime = updateTime;
     }
     public String getUpdatedBy() {

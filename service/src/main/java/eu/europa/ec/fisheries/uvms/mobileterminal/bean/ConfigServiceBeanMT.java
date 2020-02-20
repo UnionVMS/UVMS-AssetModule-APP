@@ -28,7 +28,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBea
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.DNIDList;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPluginCapability;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalTypeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PluginMapper;
 import org.slf4j.Logger;
@@ -41,8 +41,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -242,7 +241,7 @@ public class ConfigServiceBeanMT {
                 DNIDList dnid = new DNIDList();
                 dnid.setDnid(terminalDnid);
                 dnid.setPluginName(pluginName);
-                dnid.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+                dnid.setUpdateTime(Instant.now());
                 dnid.setUpdatedBy(MobileTerminalConstants.UPDATE_USER);
                 dnidListDao.create(dnid);
             }

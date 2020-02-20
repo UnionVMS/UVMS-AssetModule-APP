@@ -1,10 +1,10 @@
 package eu.europa.ec.fisheries.uvms.asset.client.model;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
+import java.time.OffsetDateTime; //leave be
 import java.time.ZoneOffset;
 import java.util.Objects;
 import javax.persistence.Embeddable;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 // Embeddable is required by JPA for composite keys
 @Embeddable
@@ -12,16 +12,14 @@ public class CustomCodesPK {
 
     private String constant;
     private String code;
-    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
-    private OffsetDateTime validFromDate;
-    @JsonDeserialize(using = OffsetDateTimeDeserializer.class)
-    private OffsetDateTime validToDate;
+    private Instant validFromDate;
+    private Instant validToDate;
 
     public CustomCodesPK() {
         // intentionally required by JPA
     }
 
-    public CustomCodesPK(String constant, String code, OffsetDateTime validFromDate, OffsetDateTime validToDate) {
+    public CustomCodesPK(String constant, String code, Instant validFromDate, Instant validToDate) {
         this.constant = constant;
         this.code = code;
         this.validFromDate = validFromDate;
@@ -31,8 +29,8 @@ public class CustomCodesPK {
     public CustomCodesPK(String constant, String code) {
         this.constant = constant;
         this.code = code;
-        this.validFromDate = OffsetDateTime.of(1970,01,01,1,1,1,1, ZoneOffset.UTC);
-        this.validToDate = OffsetDateTime.of(3070,01,01,01,1,1,1, ZoneOffset.UTC);
+        this.validFromDate = OffsetDateTime.of(1970,01,01,1,1,1,1, ZoneOffset.UTC).toInstant();
+        this.validToDate = OffsetDateTime.of(3070,01,01,01,1,1,1, ZoneOffset.UTC).toInstant();
     }
 
     public String getConstant() {
@@ -51,19 +49,19 @@ public class CustomCodesPK {
         this.code = code;
     }
 
-    public OffsetDateTime getValidFromDate() {
+    public Instant getValidFromDate() {
         return validFromDate;
     }
 
-    public void setValidFromDate(OffsetDateTime validFromDate) {
+    public void setValidFromDate(Instant validFromDate) {
         this.validFromDate = validFromDate;
     }
 
-    public OffsetDateTime getValidToDate() {
+    public Instant getValidToDate() {
         return validToDate;
     }
 
-    public void setValidToDate(OffsetDateTime validToDate) {
+    public void setValidToDate(Instant validToDate) {
         this.validToDate = validToDate;
     }
 

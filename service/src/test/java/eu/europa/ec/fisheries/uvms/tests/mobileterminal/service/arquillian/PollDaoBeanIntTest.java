@@ -25,7 +25,7 @@ import javax.ejb.EJB;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.*;
 
@@ -414,7 +414,7 @@ public class PollDaoBeanIntTest extends TransactionalTests {
     private TestPollHelper testPollHelper;
     private PollBase createPollHelper() {
         PollBase poll = new PollBase();
-        poll.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        poll.setUpdateTime(Instant.now());
         poll.setUpdatedBy("testUser");
         poll.setChannelId(UUID.randomUUID());
         poll.setMobileterminal(testPollHelper.createAndPersistMobileTerminal(null));

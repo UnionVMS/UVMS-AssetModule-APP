@@ -28,8 +28,7 @@ import javax.ejb.EJB;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
@@ -100,9 +99,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void getRunningProgramPolls() {
-        OffsetDateTime startDate = testPollHelper.getStartDate();
-        OffsetDateTime latestRun = testPollHelper.getLatestRunDate();
-        OffsetDateTime stopDate = testPollHelper.getStopDate();
+        Instant startDate = testPollHelper.getStartDate();
+        Instant latestRun = testPollHelper.getLatestRunDate();
+        Instant stopDate = testPollHelper.getStopDate();
 
         int numberOfProgramB4 = pollServiceBean.getRunningProgramPolls().size();
 
@@ -121,9 +120,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
 
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
 
-        OffsetDateTime startDate = testPollHelper.getStartDate();
-        OffsetDateTime latestRun = testPollHelper.getLatestRunDate();
-        OffsetDateTime stopDate = testPollHelper.getStopDate();
+        Instant startDate = testPollHelper.getStartDate();
+        Instant latestRun = testPollHelper.getLatestRunDate();
+        Instant stopDate = testPollHelper.getStopDate();
 
         ProgramPoll pollProgram = testPollHelper.createProgramPoll(null, startDate, stopDate, latestRun);
 
@@ -148,9 +147,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     public void startProgramPoll_FromMPSBIT() {
 
         // we want to be able to tamper with the dates for proper test coverage
-        OffsetDateTime startDate = getStartDate();
-        OffsetDateTime latestRun = getLatestRunDate();
-        OffsetDateTime stopDate = getStopDate();
+        Instant startDate = getStartDate();
+        Instant latestRun = getLatestRunDate();
+        Instant stopDate = getStopDate();
 
         String username = "TEST";
 
@@ -164,7 +163,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         PollDto startedProgramPoll = PollDtoMapper.mapPoll(pollResponse);
         assertNotNull(startedProgramPoll);
 
-        List<PollValue> values = startedProgramPoll.getValue();
+        List<PollValue> values = startedProgramPoll.getValues();
         boolean found = validatePollKeyValue(values, PollKey.PROGRAM_RUNNING, "true");
         assertTrue(found);
     }
@@ -175,9 +174,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
 
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
 
-        OffsetDateTime startDate = testPollHelper.getStartDate();
-        OffsetDateTime latestRun = testPollHelper.getLatestRunDate();
-        OffsetDateTime stopDate = testPollHelper.getStopDate();
+        Instant startDate = testPollHelper.getStartDate();
+        Instant latestRun = testPollHelper.getLatestRunDate();
+        Instant stopDate = testPollHelper.getStopDate();
 
         ProgramPoll pollProgram = testPollHelper.createProgramPoll(null, startDate, stopDate, latestRun);
 
@@ -202,9 +201,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     public void stopProgramPoll_FromMPSBIT() {
 
         // we want to be able to tamper with the dates for proper test coverage
-        OffsetDateTime startDate = getStartDate();
-        OffsetDateTime latestRun = getLatestRunDate();
-        OffsetDateTime stopDate = getStopDate();
+        Instant startDate = getStartDate();
+        Instant latestRun = getLatestRunDate();
+        Instant stopDate = getStopDate();
 
         String username = "TEST";
 
@@ -222,7 +221,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         PollDto stoppedProgramPoll = PollDtoMapper.mapPoll(pollResponse);
         assertNotNull(stoppedProgramPoll);
 
-        List<PollValue> values = stoppedProgramPoll.getValue();
+        List<PollValue> values = stoppedProgramPoll.getValues();
         boolean found = validatePollKeyValue(values, PollKey.PROGRAM_RUNNING, "false");
         assertTrue(found);
     }
@@ -232,9 +231,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     public void inactivateProgramPoll() {
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
 
-        OffsetDateTime startDate = testPollHelper.getStartDate();
-        OffsetDateTime latestRun = testPollHelper.getLatestRunDate();
-        OffsetDateTime stopDate = testPollHelper.getStopDate();
+        Instant startDate = testPollHelper.getStartDate();
+        Instant latestRun = testPollHelper.getLatestRunDate();
+        Instant stopDate = testPollHelper.getStopDate();
 
         ProgramPoll pollProgram = testPollHelper.createProgramPoll(null, startDate, stopDate, latestRun);
 
@@ -259,9 +258,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     public void inactivateProgramPoll_FromMPSBIT() {
 
         // we want to be able to tamper with the dates for proper test coverage
-        OffsetDateTime startDate = getStartDate();
-        OffsetDateTime latestRun = getLatestRunDate();
-        OffsetDateTime stopDate = getStopDate();
+        Instant startDate = getStartDate();
+        Instant latestRun = getLatestRunDate();
+        Instant stopDate = getStopDate();
 
         String username = "TEST";
 
@@ -275,7 +274,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         PollDto startedProgramPoll = PollDtoMapper.mapPoll(pollResponse);
         assertNotNull(startedProgramPoll);
 
-        List<PollValue> values = startedProgramPoll.getValue();
+        List<PollValue> values = startedProgramPoll.getValues();
         boolean isRunning = validatePollKeyValue(values, PollKey.PROGRAM_RUNNING, "true");
         assertTrue(isRunning);
 
@@ -283,7 +282,7 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         PollDto inactivatedProgramPoll = PollDtoMapper.mapPoll(pollResponse);
         assertNotNull(inactivatedProgramPoll);
 
-        List<PollValue> values1 = inactivatedProgramPoll.getValue();
+        List<PollValue> values1 = inactivatedProgramPoll.getValues();
         boolean isStopped = validatePollKeyValue(values1, PollKey.PROGRAM_RUNNING, "false");
         assertTrue(isStopped);
     }
@@ -293,9 +292,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
     public void getPollProgramRunningAndStarted() {
         System.setProperty(MESSAGE_PRODUCER_METHODS_FAIL, "false");
 
-        OffsetDateTime startDate = testPollHelper.getStartDate();
-        OffsetDateTime latestRun = testPollHelper.getLatestRunDate();
-        OffsetDateTime stopDate = testPollHelper.getStopDate();
+        Instant startDate = testPollHelper.getStartDate();
+        Instant latestRun = testPollHelper.getLatestRunDate();
+        Instant stopDate = testPollHelper.getStopDate();
 
         ProgramPoll pollProgram = testPollHelper.createProgramPoll(null, startDate, stopDate, latestRun);
 
@@ -400,23 +399,23 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         return false;
     }
 
-    private OffsetDateTime getStartDate() {
+    private Instant getStartDate() {
         cal.set(Calendar.DAY_OF_MONTH, 1);
         int startYear = 1999;
         cal.set(Calendar.YEAR, startYear);
-        return OffsetDateTime.ofInstant(cal.toInstant(), ZoneOffset.UTC);
+        return cal.toInstant();
     }
 
-    private OffsetDateTime getLatestRunDate() {
+    private Instant getLatestRunDate() {
         cal.set(Calendar.DAY_OF_MONTH, 20);
         int latestRunYear = 2017;
         cal.set(Calendar.YEAR, latestRunYear);
-        return OffsetDateTime.ofInstant(cal.toInstant(), ZoneOffset.UTC);
+        return cal.toInstant();
     }
 
-    private OffsetDateTime getStopDate() {
+    private Instant getStopDate() {
         cal.set(Calendar.DAY_OF_MONTH, 28);
         cal.set(Calendar.YEAR, 2019);
-        return OffsetDateTime.ofInstant(cal.toInstant(), ZoneOffset.UTC);
+        return cal.toInstant();
     }
 }

@@ -10,7 +10,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.client.model;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 public class Note {
@@ -19,7 +19,7 @@ public class Note {
 
     private UUID assetId;
 
-    private OffsetDateTime createdOn;
+    private Instant createdOn;
 
     private String note;
 
@@ -41,11 +41,11 @@ public class Note {
         this.assetId = assetId;
     }
 
-    public OffsetDateTime getCreatedOn() {
+    public Instant getCreatedOn() {
         return createdOn;
     }
 
-    public void setCreatedOn(OffsetDateTime createdOn) {
+    public void setCreatedOn(Instant createdOn) {
         this.createdOn = createdOn;
     }
 
