@@ -26,25 +26,33 @@
 			</column>
 			<column name="updatetime" type="TIMESTAMP(6) WITH TIME ZONE"/>
 			<column name="updatedby" type="VARCHAR(255)"/>
-			<column name="type" type="VARCHAR(255)"/>
-			<column name="inverse" type="BOOLEAN"/>
-			<column name="isnumber" type="BOOLEAN"/>
 			<column name="owner" type="VARCHAR(255)"/>
 		</createTable>
 	</changeSet> 
     
+	<changeSet author="johsod" id="assetfilterquery_createTable">
+		<createTable tableName="assetfilterquery">
+			<column name="id" type="UUID">
+				<constraints nullable="false"/>
+			</column>
+			<column name="type" type="VARCHAR(255)"/>
+			<column name="inverse" type="BOOLEAN"/>
+			<column name="isnumber" type="BOOLEAN"/>
+			<column name="assetfilter" type="UUID">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	
 	<changeSet author="johsod" id="assetfiltervalue_createTable">
 		<createTable tableName="assetfiltervalue">
 			<column name="id" type="UUID">
 				<constraints nullable="false"/>
 			</column>
-			<column name="operator" type="VARCHAR(255)"/>
-			<column name="updatetime" type="TIMESTAMP(6) WITH TIME ZONE"/>
-			<column name="updatedby" type="VARCHAR(255)"/>
-			<column name="value" type="VARCHAR(255)">
+			<column name="value" type="VARCHAR(1024)">
 				<constraints nullable="false"/>
 			</column>
-			<column name="assetfilter" type="UUID">
+			<column name="assetfilterquery" type="UUID">
 				<constraints nullable="false"/>
 			</column>
 		</createTable>
@@ -54,15 +62,23 @@
         <addPrimaryKey columnNames="id" constraintName="assetfilter_pkey" tableName="assetfilter"/>
     </changeSet>
     
+      <changeSet author="johsod" id="pk_assetfilterquery">
+        <addPrimaryKey columnNames="id" constraintName="assetfilterquery_pkey" tableName="assetfilterquery"/>
+    </changeSet>
+    
     <changeSet author="johsod" id="pk_assetfiltervalue">
         <addPrimaryKey columnNames="id" constraintName="assetfiltervalue_pkey" tableName="assetfiltervalue"/>
     </changeSet>
     
-    <changeSet author="johsod" id="pk_note">
+	<changeSet author="johsod" id="assetfilterquery_addForeignKeyConstraint_assetfilter">
+		<addForeignKeyConstraint baseColumnNames="assetfilter" baseTableName="assetfilterquery" constraintName="assetfilterquery_assetfilter_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="assetfilter"/>
+	</changeSet>
+	
+	<changeSet author="johsod" id="assetfiltervalue_addForeignKeyConstraint_assetfilterquery">
+		<addForeignKeyConstraint baseColumnNames="assetfilterquery" baseTableName="assetfiltervalue" constraintName="assetfiltervalue_assetfilterquery_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="assetfilterquery"/>
+	</changeSet>
+	
+	 <changeSet author="johsod" id="pk_note">
         <addPrimaryKey columnNames="id" constraintName="note_pkey" tableName="note"/>
     </changeSet>
-
-	<changeSet author="johsod" id="assetfiltervalue_addForeignKeyConstraint_assetfilter">
-		<addForeignKeyConstraint baseColumnNames="assetfilter" baseTableName="assetfiltervalue" constraintName="assetfiltervalue_assetfilter_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="assetfilter"/>
-	</changeSet>
 </databaseChangeLog>

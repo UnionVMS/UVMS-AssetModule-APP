@@ -2,11 +2,13 @@ package eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetFilterDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue;
 import eu.europa.ec.fisheries.uvms.tests.TransactionalTests;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -62,7 +64,7 @@ public class AssetFilterTestsIT extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetGroupByUser() {
+    public void getAssetFilterByUser() {
         String user1 = UUID.randomUUID().toString();
         String user2 = UUID.randomUUID().toString();
         String user3 = UUID.randomUUID().toString();
@@ -90,12 +92,12 @@ public class AssetFilterTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void getAssetFilterByGuid() {
 
-    	AssetFilter createdAssetGroupEntity = createAndStoreAssetFilterEntity("TEST",1);
-        UUID guid = createdAssetGroupEntity.getId();
+    	AssetFilter createdAssetFilterEntity = createAndStoreAssetFilterEntity("TEST",1);
+        UUID guid = createdAssetFilterEntity.getId();
         assertNotNull(guid);
 
-        AssetFilter fetchedAssetGroupEntity = assetFilterDao.getAssetFilterByGuid(guid);
-        assertEquals(guid, fetchedAssetGroupEntity.getId());
+        AssetFilter fetchedAssetFilterEntity = assetFilterDao.getAssetFilterByGuid(guid);
+        assertEquals(guid, fetchedAssetFilterEntity.getId());
     }
 
     @Test
@@ -139,12 +141,13 @@ public class AssetFilterTestsIT extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void updateAssetGroup() {
+    public void updateAssetGroup() throws Exception {
     	AssetFilter assetFilterEntity = createAndStoreAssetFilterEntity("TEST",1);
         UUID uuid = assetFilterEntity.getId();
 
         assetFilterEntity.setOwner("NEW OWNER");
         assetFilterDao.updateAssetFilter(assetFilterEntity);
+        commit();
         em.flush();
 
         AssetFilter fetchedFilter = assetFilterDao.getAssetFilterByGuid(uuid);
@@ -153,18 +156,19 @@ public class AssetFilterTestsIT extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void updateAssetFilterAndValuess() {
+    public void updateAssetFilterAndValues() {
     	AssetFilter assetFilter = createAndStoreAssetFilterEntity("TEST",42);
         UUID uuid = assetFilter.getId();
 
         assetFilter.setOwner("NEW OWNER");
-        List<AssetFilterValue> newLines = createAssetFilterValue( assetFilter,  assetFilter.getUpdateTime(), assetFilter.getOwner(), 17);
-
+       // List<AssetFilterValue> newLines = createAssetFilterValue( assetFilter,  assetFilter.getUpdateTime(), assetFilter.getOwner(), 17);
+        List<AssetFilterQuery> filterQueryss = createAssetFilterQuery(assetFilter, 17);
+        
         assetFilterDao.updateAssetFilter(assetFilter);
         em.flush();
 
-        AssetFilter fetchedGroup = assetFilterDao.getAssetFilterByGuid(uuid);
-        Assert.assertTrue(fetchedGroup.getOwner().equalsIgnoreCase("NEW OWNER"));
+        AssetFilter fetchedFilter = assetFilterDao.getAssetFilterByGuid(uuid);
+        Assert.assertTrue(fetchedFilter.getOwner().equalsIgnoreCase("NEW OWNER"));
     }
 
     private AssetFilter createAndStoreAssetFilterEntity(String user, int numberOfAssetFilterValues) {
@@ -175,26 +179,30 @@ public class AssetFilterTestsIT extends TransactionalTests {
     }
 
     private AssetFilter createAssetFilterEntity(String user, int numberOfGroupFields) {
-    	AssetFilter ag = new AssetFilter();
+    	AssetFilter af = new AssetFilter();
 
         OffsetDateTime dt = OffsetDateTime.now(Clock.systemUTC());
 
-        ag.setUpdatedBy("test");
-        ag.setUpdateTime(dt);
-        ag.setName("The Name");
-        ag.setOwner(user);
+        af.setUpdatedBy("test");
+        af.setUpdateTime(dt);
+        af.setName("The Name");
+        af.setOwner(user);
 
-        List<AssetFilterValue> filterValues = createAssetFilterValue(ag,dt,user, numberOfGroupFields);
-        return ag;
+      //  List<AssetFilterQuery> filterValues = createAssetFilterQuery(af, numberOfGroupFields);
+        return af;
     }
 
-    private  List<AssetFilterValue> createAssetFilterValue(AssetFilter assetFilterEntity, OffsetDateTime dt, String user, int n) {
-        List<AssetFilterValue> groupFields = new ArrayList<>();
+    private  List<AssetFilterQuery> createAssetFilterQuery(AssetFilter assetFilterEntity, int n) {
+        List<AssetFilterQuery> assetFilterQueryList = new ArrayList<>();
         for (int i = 0; i < n; i++) {
-            String uuid = UUID.randomUUID().toString();
-            AssetFilterValue field = AssetTestsHelper.createAssetFilterValue(assetFilterEntity, "GUID", uuid, dt, user);
-            groupFields.add(field);
+            AssetFilterQuery field = AssetTestsHelper.createAssetFilterQuery(assetFilterEntity);
+            assetFilterQueryList.add(field);
         }
-        return groupFields;
+        return assetFilterQueryList;
+    }
+    
+    private void commit() throws Exception {
+        userTransaction.commit();
+        userTransaction.begin();
     }
 }

@@ -166,8 +166,7 @@ public class AssetGroupRestResourceTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(AssetGroup.class);
-
-
+        
         assertNotNull(fetchedAssetGroup);
         assertThat(fetchedAssetGroup.getId(), is(createdAssetGroup.getId()));
         assertThat(fetchedAssetGroup.getName(), is(createdAssetGroup.getName()));

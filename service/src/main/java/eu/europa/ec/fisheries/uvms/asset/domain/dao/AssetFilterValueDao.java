@@ -10,6 +10,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue;
 
 @Stateless
@@ -43,16 +44,11 @@ public class AssetFilterValueDao {
 	        return value;
 	    }
 
-	    public List<AssetFilterValue> retrieveValuesForFilter(AssetFilter assetFilter) {
-	        TypedQuery<AssetFilterValue> query = em.createNamedQuery(AssetFilterValue.ASSETFILTER_RETRIEVE_VALUES_FOR_FILTER,
+	    public List<AssetFilterValue> retrieveValuesForFilterQuery(AssetFilterQuery assetFilterquery) {
+	        TypedQuery<AssetFilterValue> query = em.createNamedQuery(AssetFilterValue.ASSETFILTER_RETRIEVE_VALUES_FOR_QUERY,
 	        		AssetFilterValue.class);
-	        query.setParameter("assetfilter", assetFilter);
+	        query.setParameter("assetFilterquery", assetFilterquery);
 	        return query.getResultList();
 	    }
-
-		public void removeValuesFromFilter(AssetFilter assetFilter) {
-			// TODO Auto-generated method stub
-			
-		}
 
 }
