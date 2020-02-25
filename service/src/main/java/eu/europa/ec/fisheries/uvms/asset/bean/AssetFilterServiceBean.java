@@ -1,7 +1,6 @@
 package eu.europa.ec.fisheries.uvms.asset.bean;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -74,7 +73,7 @@ public class AssetFilterServiceBean{
         }
         assetFilter.setOwner(username);
         assetFilter.setUpdatedBy(username);
-        assetFilter.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        assetFilter.setUpdateTime(Instant.now());
         return assetFilterDao.createAssetFilter(assetFilter);
 	}
 
@@ -91,7 +90,7 @@ public class AssetFilterServiceBean{
             throw new NullPointerException("No assetGroup found.");
         }
         assetFilter.setUpdatedBy(username);
-        assetFilter.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        assetFilter.setUpdateTime(Instant.now());
         return assetFilterDao.updateAssetFilter(assetFilter);
 	}
 
@@ -109,7 +108,7 @@ public class AssetFilterServiceBean{
 	       // TODO remove Dont do soft delete
 	      //  filterEntity.setArchived(true);
 	        filterEntity.setUpdatedBy(username);
-	        filterEntity.setUpdateTime(OffsetDateTime.now(ZoneOffset.UTC));
+	        filterEntity.setUpdateTime(Instant.now());
 	        
 	        return filterEntity;
 	}

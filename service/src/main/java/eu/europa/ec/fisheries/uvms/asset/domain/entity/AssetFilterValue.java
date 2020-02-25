@@ -1,10 +1,11 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
 import java.io.Serializable;
-import java.time.OffsetDateTime;
 import java.util.UUID;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
@@ -17,14 +18,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue.ASSETFILTER_VALUE_FIND_ALL;
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue.ASSETFILTER_VALUE_GETBYID;
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue.ASSETFILTER_VALUE_CLEAR;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery.ASSETFILTER_QUERY_BY_GUID;
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue.ASSETFILTER_RETRIEVE_VALUES_FOR_QUERY;
 
 @Entity
@@ -35,7 +31,6 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue.A
 		@NamedQuery(name=ASSETFILTER_VALUE_CLEAR, query="DELETE  FROM AssetFilterValue a where a.assetFilterQuery=:assetfilter"),
 		@NamedQuery(name=ASSETFILTER_RETRIEVE_VALUES_FOR_QUERY, query="SELECT a  FROM AssetFilterValue a where a.assetFilterQuery=:assetfilterquery"),
 })
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class AssetFilterValue implements Serializable{
 
 	public static final String ASSETFILTER_VALUE_FIND_ALL ="assetfiltervalue.findAll";
@@ -48,13 +43,14 @@ public class AssetFilterValue implements Serializable{
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
+//	@JsonbTransient
     private UUID id;
 
     @Size(max = 255)
     @Column(name = "value")
     private String value;
     
-    @JsonBackReference
+    @JsonbTransient
     @ManyToOne
     @JoinColumn(name = "assetfilterquery", foreignKey = @ForeignKey(name = "assetfiltervalue_assetfilterquery_fk"))
     private AssetFilterQuery assetFilterQuery;

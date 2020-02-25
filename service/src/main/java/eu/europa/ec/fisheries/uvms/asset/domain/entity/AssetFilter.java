@@ -11,17 +11,15 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
@@ -38,7 +36,6 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter.ASSETF
 	@NamedQuery(name=ASSETFILTER_BY_GUID, query="SELECT a FROM AssetFilter a WHERE a.id = :guid"),
 	@NamedQuery(name=ASSETFILTER_GUID_LIST, query="SELECT a FROM AssetFilter a WHERE a.id IN :guidList")
 })
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class AssetFilter implements Serializable {
 
 	private static final long serialVersionUID = -1218306334950687248L;
@@ -51,6 +48,7 @@ public class AssetFilter implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
+   // @JsonbTransient
     private UUID id;
 
     @Size(max = 255)
@@ -59,7 +57,7 @@ public class AssetFilter implements Serializable {
     private String name;
 
     @Column(name = "updatetime")
-    private OffsetDateTime updateTime;
+    private Instant updateTime;
 
     @Size(max = 255)
     @Column(name = "updatedby")
@@ -69,9 +67,9 @@ public class AssetFilter implements Serializable {
     @Column(name = "owner")
     private String owner;
     
-    @JsonManagedReference
     @OneToMany(mappedBy="assetFilter", cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
+    @Column(name="queries")
     private Set<AssetFilterQuery> queries;
 
 	public UUID getId() {
@@ -90,11 +88,11 @@ public class AssetFilter implements Serializable {
 		this.name = name;
 	}
 
-	public OffsetDateTime getUpdateTime() {
+	public Instant getUpdateTime() {
 		return updateTime;
 	}
 
-	public void setUpdateTime(OffsetDateTime updateTime) {
+	public void setUpdateTime(Instant updateTime) {
 		this.updateTime = updateTime;
 	}
 
@@ -114,11 +112,11 @@ public class AssetFilter implements Serializable {
 		this.owner = owner;
 	}
 
-	public Set<AssetFilterQuery> getAssetFilterValues() {
+	public Set<AssetFilterQuery> getQueries() {
         return queries;
     }
 
-    public void setAssetFilterValues(Set<AssetFilterQuery> queries) {
+    public void setQueries(Set<AssetFilterQuery> queries) {
         this.queries = queries;
     }
 

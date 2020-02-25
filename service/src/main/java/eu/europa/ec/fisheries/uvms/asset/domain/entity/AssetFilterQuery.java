@@ -1,18 +1,27 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -21,11 +30,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.hibernate.mapping.List;
 
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery.ASSETFILTER_QUERY_FIND_ALL;
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery.ASSETFILTER_QUERY_GETBYID;
@@ -39,10 +44,9 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery.A
 		@NamedQuery(name=ASSETFILTER_QUERY_FIND_ALL, query="SELECT a FROM AssetFilterQuery a"),
 		@NamedQuery(name=ASSETFILTER_QUERY_GETBYID, query="SELECT a FROM AssetFilterQuery a where a.id=:id"),
 		@NamedQuery(name=ASSETFILTER_QUERY_CLEAR, query="DELETE  FROM AssetFilterQuery a where a.assetFilter=:assetfilter"),
-		@NamedQuery(name=ASSETFILTER_RETRIEVE_QUERYS_FOR_FILTER, query="SELECT a  FROM AssetFilterQuery a where a.assetFilter=:assetfilter"),
+		@NamedQuery(name=ASSETFILTER_RETRIEVE_QUERYS_FOR_FILTER, query="SELECT a FROM AssetFilterQuery a where a.assetFilter=:assetfilter"),
 		@NamedQuery(name=ASSETFILTER_QUERY_BY_GUID, query="SELECT a FROM AssetFilterQuery a WHERE a.id=:guid"),
 })
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class AssetFilterQuery  implements Serializable{
 
 	private static final long serialVersionUID = 5321716442894183305L;
@@ -69,12 +73,16 @@ public class AssetFilterQuery  implements Serializable{
     @Column(name = "isnumber")
     private boolean isNumber;
     
-    @JsonManagedReference
-    @OneToMany(mappedBy="assetFilterQuery", cascade = CascadeType.ALL)
-    @Fetch(FetchMode.SELECT)
-    private Set<AssetFilterValue> values;
+//    @OneToMany(mappedBy="assetFilterQuery", cascade = CascadeType.ALL)
+//    @Fetch(FetchMode.SELECT)
+//    private Set<AssetFilterValue> values;
     
-    @JsonBackReference
+    @ElementCollection
+    @CollectionTable(name="AssetFilterValue", joinColumns=@JoinColumn(name = "assetfilterquery"))
+    @Column(name="value")
+    private Set<String> values;
+    
+    @JsonbTransient
     @ManyToOne
     @JoinColumn(name = "assetfilter", foreignKey = @ForeignKey(name = "assetfilterquery_assetfilter_fk"))
     private AssetFilter assetFilter;
@@ -112,11 +120,11 @@ public class AssetFilterQuery  implements Serializable{
 		this.isNumber = isNumber;
 	}
 	
-	public Set<AssetFilterValue> getValues() {
+	public Set<String> getValues() {
 		return values;
 	}
 
-	public void setValues(Set<AssetFilterValue> values) {
+	public void setValues(Set<String> values) {
 		this.values = values;
 	}
 	

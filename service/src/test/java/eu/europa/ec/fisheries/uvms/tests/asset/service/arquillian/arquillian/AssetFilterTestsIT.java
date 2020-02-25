@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 import java.time.Clock;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -180,15 +181,14 @@ public class AssetFilterTestsIT extends TransactionalTests {
 
     private AssetFilter createAssetFilterEntity(String user, int numberOfGroupFields) {
     	AssetFilter af = new AssetFilter();
-
-        OffsetDateTime dt = OffsetDateTime.now(Clock.systemUTC());
-
+        Instant date = Instant.now();
+        
         af.setUpdatedBy("test");
-        af.setUpdateTime(dt);
+        af.setUpdateTime(date);
         af.setName("The Name");
         af.setOwner(user);
 
-      //  List<AssetFilterQuery> filterValues = createAssetFilterQuery(af, numberOfGroupFields);
+      //  List<AssetFilterQuery> filterValues = createAssetFilterQuery(date, numberOfGroupFields);
         return af;
     }
 

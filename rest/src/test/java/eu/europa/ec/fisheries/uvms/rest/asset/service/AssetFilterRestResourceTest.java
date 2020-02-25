@@ -17,14 +17,13 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
+import eu.europa.ec.fisheries.uvms.rest.asset.filter.AppError;
 
 
 @RunWith(Arquillian.class)
@@ -84,11 +83,11 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
 
         // You really could argue that this should be a bad request but the server was returning 400 for everything,
         // if there is only one thing returned for every error it is better if it is a 500
-        Integer code  = response.readEntity(JsonNode.class).path("code").intValue();
+       // Integer code  = response.readEntity(JsonNode.class).path("code").intValue();
+        Integer code  = response.readEntity(AppError.class).code;
         assertThat(code, is(Status.INTERNAL_SERVER_ERROR.getStatusCode()));
         assertThat(response.getStatus(), is(Status.OK.getStatusCode()));
     }
-    
     
     @Test
     @OperateOnDeployment("normal")
@@ -131,19 +130,7 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
 //        System.out.println(r);
 //        assertNotNull(assetQuery.getId());;
     }
-    
-    
-	@Test
-    @OperateOnDeployment("normal")
-    public void testjson() {
-		String testrespString = "{\"Stora båtar\":[{\"type\":\"lengthOverAll\",\"values\":[{\"operator\":\"greater then\",\"value\":22}],\"inverse\":false,\"isNumber\":true}],\"Små båtar\":[{\"type\":\"lengthOverAll\",\"values\":[{\"operator\":\"less then\",\"value\":22}],\"inverse\":false,\"isNumber\":true}],\"Tomat\":[{\"type\":\"flagstate\",\"values\":[\"tomat\"],\"inverse\":false,\"isNumber\":false}]}";
-		AssetFilter testresp = getWebTargetExternal()
-                .path("/jsontest")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(testrespString))
-                .readEntity(AssetFilter.class);
-    }
+ 
 	
 	@Test
     @OperateOnDeployment("normal")
@@ -179,7 +166,7 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
 	    		.header(HttpHeaders.AUTHORIZATION, getTokenExternal())
 	    		.post(Entity.json(assetFilterValue), AssetFilterValue.class);
 
-		System.out.println("assetFilterValue: " + assetFilterValue.getId().toString() );
+		// System.out.println("assetFilterValue: " + assetFilterValue.getId().toString() );
     	System.out.println("assetFilter: " + assetFilter.getId().toString() );
     	
         String fetchedAssetFilter = getWebTargetExternal()
