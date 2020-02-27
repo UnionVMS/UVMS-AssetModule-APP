@@ -12,7 +12,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.model.mapper;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.*;
-import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import eu.europa.ec.fisheries.wsdl.asset.module.*;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
