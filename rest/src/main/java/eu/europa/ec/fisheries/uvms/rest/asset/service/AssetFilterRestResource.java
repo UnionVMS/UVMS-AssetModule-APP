@@ -27,11 +27,15 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
+import javax.json.bind.JsonbConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,10 +56,11 @@ public class AssetFilterRestResource {
     
     private Jsonb jsonb;
 
-    //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
     @PostConstruct
     public void init() {
-        jsonb =  new JsonBConfigurator().getContext(null);
+    	JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
+        jsonb = JsonbBuilder.create(config);
+       // jsonb =  new JsonBConfigurator().getContext(null);
     }
     
     /**
@@ -72,8 +77,17 @@ public class AssetFilterRestResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetFilterListByUser(@ApiParam(value = "user", required = true) @QueryParam(value = "user") String user) throws Exception {
         try {
-            List<AssetFilter> assetFilter = assetFilterService.getAssetFilterList(user);
-            String response = jsonb.toJson(assetFilter);
+            List<AssetFilter> assetFilterList = assetFilterService.getAssetFilterList(user);
+            
+            List<String> jsonAssetFilterList = new ArrayList<>();
+           // JsonObject adaptToJson
+            for (AssetFilter assetFilter : assetFilterList) 
+            { 
+            	jsonAssetFilterList.add(jsonb.toJson(assetFilter));
+            }
+            Jsonb jsonb2 = new JsonBConfigurator().getContext(null);
+         //   String response = jsonb.toJson(jsonAssetFilterList);
+            String response = jsonb2.toJson(assetFilterList);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when retrieving assetFilter list {}", user, e);
@@ -81,6 +95,8 @@ public class AssetFilterRestResource {
         }
     }
 
+
+    
     /**
      * @responseMessage 200 Success
      * @responseMessage 500 Error
@@ -220,6 +236,7 @@ public class AssetFilterRestResource {
                                           @ApiParam(value = "The AssetFilterValue to be created", required = true) AssetFilterValue assetFilterValue) throws Exception {
         try {
             AssetFilterValue createdAssetFilterValue = assetFilterService.createAssetFilterValue(parentAssetFilterQueryId, assetFilterValue);
+            
             String response = jsonb.toJson(createdAssetFilterValue);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {

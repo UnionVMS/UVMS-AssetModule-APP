@@ -38,6 +38,8 @@
 			<column name="type" type="VARCHAR(255)"/>
 			<column name="inverse" type="BOOLEAN"/>
 			<column name="isnumber" type="BOOLEAN"/>
+			<column name="updatetime" type="TIMESTAMP(6) WITH TIME ZONE"/>
+			<column name="updatedby" type="VARCHAR(255)"/>
 			<column name="assetfilter" type="UUID">
 				<constraints nullable="false"/>
 			</column>
@@ -49,6 +51,7 @@
 			<column name="id" type="UUID">
 				<constraints nullable="false"/>
 			</column>
+			<column name="operator" type="VARCHAR(1024)"/>
 			<column name="value" type="VARCHAR(1024)">
 				<constraints nullable="false"/>
 			</column>

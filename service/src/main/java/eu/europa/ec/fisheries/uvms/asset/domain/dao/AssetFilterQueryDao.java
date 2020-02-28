@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter.ASSETFILTER_BY_GUID;
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery.ASSETFILTER_QUERY_BY_GUID;
 
 import java.util.List;
 import java.util.UUID;
@@ -93,4 +94,14 @@ public class AssetFilterQueryDao {
 	            return null;
 	        }
 	    }
+
+	public AssetFilterQuery getAssetFilterQuery(UUID id) {
+		try {
+			TypedQuery<AssetFilterQuery> query = em.createNamedQuery(ASSETFILTER_QUERY_BY_GUID, AssetFilterQuery.class);
+	            query.setParameter("guid", id);
+	            return query.getSingleResult();
+	        } catch (NoResultException e) {
+	            return null;
+	        }
+	}
 }

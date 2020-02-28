@@ -143,7 +143,7 @@ public abstract class AssetHelper {
     
     public static AssetFilterQuery createBasicAssetFilterQuery(AssetFilter assetFilter) {
     	AssetFilterQuery assetFilterQuery = new AssetFilterQuery();
-    	assetFilterQuery.setIsNumber(false);
+    	assetFilterQuery.setIsNumber(true);
     	assetFilterQuery.setType("TEST");
     	assetFilterQuery.setAssetFilter(assetFilter);
         return assetFilterQuery;
@@ -151,7 +151,9 @@ public abstract class AssetHelper {
 
     public static AssetFilterValue createBasicAssetFilterValue(AssetFilterQuery assetFilterQuery) {
     	AssetFilterValue assetFilterValue = new AssetFilterValue();
+    	assetFilterValue.setOperator("greater then");
     	assetFilterValue.setValue("TEST");
+    	// assetFilterValue.setValue("{\"operator\": \"greater then\",\"value\": 22}");
     	assetFilterValue.setAssetFilterQuery(assetFilterQuery);
         return assetFilterValue;
     }

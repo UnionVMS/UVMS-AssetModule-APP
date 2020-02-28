@@ -1,36 +1,31 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapKeyColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.mapping.List;
 
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery.ASSETFILTER_QUERY_FIND_ALL;
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery.ASSETFILTER_QUERY_GETBYID;
@@ -73,14 +68,21 @@ public class AssetFilterQuery  implements Serializable{
     @Column(name = "isnumber")
     private boolean isNumber;
     
-//    @OneToMany(mappedBy="assetFilterQuery", cascade = CascadeType.ALL)
-//    @Fetch(FetchMode.SELECT)
-//    private Set<AssetFilterValue> values;
+    @Column(name = "updatetime")
+    private Instant updateTime;
+
+    @Size(max = 255)
+    @Column(name = "updatedby")
+    private String updatedBy;
     
-    @ElementCollection
-    @CollectionTable(name="AssetFilterValue", joinColumns=@JoinColumn(name = "assetfilterquery"))
-    @Column(name="value")
-    private Set<String> values;
+    @OneToMany(mappedBy="assetFilterQuery", cascade = CascadeType.ALL)
+    @Fetch(FetchMode.SELECT)
+    private Set<AssetFilterValue> values;
+    
+//    @ElementCollection
+//    @CollectionTable(name="AssetFilterValue", joinColumns=@JoinColumn(name = "assetfilterquery"))
+//    @Column(name="value")
+//    private Set<String> values;
     
     @JsonbTransient
     @ManyToOne
@@ -104,7 +106,7 @@ public class AssetFilterQuery  implements Serializable{
 		this.type = type;
 	}
 
-	public boolean isInverse() {
+	public boolean getInverse() {
 		return inverse;
 	}
 
@@ -120,11 +122,27 @@ public class AssetFilterQuery  implements Serializable{
 		this.isNumber = isNumber;
 	}
 	
-	public Set<String> getValues() {
+	public Instant getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Instant updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public Set<AssetFilterValue> getValues() {
 		return values;
 	}
 
-	public void setValues(Set<String> values) {
+	public void setValues(Set<AssetFilterValue> values) {
 		this.values = values;
 	}
 	

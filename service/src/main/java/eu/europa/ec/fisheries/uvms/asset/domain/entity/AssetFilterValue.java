@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
@@ -50,6 +49,10 @@ public class AssetFilterValue implements Serializable{
     @Column(name = "value")
     private String value;
     
+    @Size(max = 255)
+    @Column(name = "operator")
+    private String operator;
+    
     @JsonbTransient
     @ManyToOne
     @JoinColumn(name = "assetfilterquery", foreignKey = @ForeignKey(name = "assetfiltervalue_assetfilterquery_fk"))
@@ -70,6 +73,14 @@ public class AssetFilterValue implements Serializable{
 	public void setValue(String value) {
 		this.value = value;
 	}
+	
+	public String getOperator() {
+		return operator;
+	}
+	
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
 
 	public AssetFilterQuery getAssetFilterQuery() {
 		return assetFilterQuery;
@@ -80,3 +91,4 @@ public class AssetFilterValue implements Serializable{
 	}
 
 }
+
