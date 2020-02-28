@@ -117,9 +117,11 @@ public class AssetDao {
     }
 
     public List<Asset> getAssetByMmsiOrIrcs(String mmsi, String ircs){
+        String correctedIrcs = (ircs != null && ircs.matches("\\w{3}\\d{4}") ? ircs.substring(0,3) + "-" + ircs.substring(3) : ircs);
+
         TypedQuery<Asset> query = em.createNamedQuery(Asset.ASSET_FIND_BY_MMSI_OR_IRCS, Asset.class);
         query.setParameter("mmsi", mmsi);
-        query.setParameter("ircs", ircs);
+        query.setParameter("ircs", correctedIrcs);
         return query.getResultList();
     }
 

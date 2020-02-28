@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.UUID;
 import javax.jms.Message;
 
+import eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian.AssetTestsHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
@@ -209,6 +210,49 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         assertTrue(fetchedAsset.getName(), fetchedAsset.getName().equals(assetWithsIRCS.getName()));
         assertTrue(fetchedAsset.getMmsiNo() != null);
         assertTrue(fetchedAsset.getIrcs() != null);
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void NationalAssetWithCorrectIrcsAndMmsiAndInternalAssetWithCorrectButFaultyFormatedIrcs() throws Exception {
+
+        String correctIrcs = "SFC-" + AssetTestsHelper.getRandomIntegers(4);
+        String correctMmsi = AssetTestsHelper.getRandomIntegers(9);
+
+        Asset internalAsset = AssetTestHelper.createBasicAsset();
+        internalAsset.setIrcs(correctIrcs.replace("-", ""));
+        internalAsset.setMmsiNo(null);
+        internalAsset.setName("ShouldNotBeThis");
+        jmsHelper.upsertAsset(internalAsset);
+        Thread.sleep(2000);
+
+
+        Asset nationalAsset = AssetTestHelper.createBasicAsset();
+        nationalAsset.setMmsiNo(correctMmsi);
+        nationalAsset.setIrcs(correctIrcs);
+        nationalAsset.setName("namnetestfall2");
+        nationalAsset.setSource(CarrierSource.NATIONAL);
+        jmsHelper.upsertAsset(nationalAsset);
+        Thread.sleep(2000);
+
+
+        eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset newAsset = new eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset();
+        newAsset.setMmsi(correctMmsi);
+        newAsset.setIrcs(internalAsset.getIrcs());
+        newAsset.setName("ShouldNotBeThis");
+        List<eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset> assetList = new ArrayList<>();
+        assetList.add(newAsset);
+        jmsHelper.assetInfo(assetList);
+        Thread.sleep(2000);
+
+        Asset fetchedAsset = jmsHelper.getAssetById(nationalAsset.getMmsiNo(), AssetIdType.MMSI);
+        assertTrue(fetchedAsset != null);
+        assertTrue(fetchedAsset.getName() != null);
+        assertTrue(fetchedAsset.getName(), fetchedAsset.getName().equals(nationalAsset.getName()));
+        assertTrue(fetchedAsset.getMmsiNo() != null);
+        assertEquals(fetchedAsset.getMmsiNo(), correctMmsi);
+        assertTrue(fetchedAsset.getIrcs() != null);
+        assertEquals(fetchedAsset.getIrcs(), correctIrcs);
     }
 
 
