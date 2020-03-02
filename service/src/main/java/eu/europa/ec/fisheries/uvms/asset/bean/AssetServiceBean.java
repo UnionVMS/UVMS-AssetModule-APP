@@ -705,7 +705,7 @@ public class AssetServiceBean {
                 }
             }
             if ((fartyg2Asset != null) && (nonFartyg2Asset != null)) {
-                String nonFartyg2AssetMmsi = nonFartyg2Asset.getMmsi();
+                String nonFartyg2AssetMmsi = mmsi;
                 nonFartyg2Asset.setMmsi(null);
                 nonFartyg2Asset.setActive(false);
                 String comment = "Found to be a duplicate of another asset with IRCS: " + ircs + " " + (nonFartyg2Asset.getComment() != null ? nonFartyg2Asset.getComment() : "");
