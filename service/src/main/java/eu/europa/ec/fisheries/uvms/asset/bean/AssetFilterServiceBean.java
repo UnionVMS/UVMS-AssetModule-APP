@@ -3,6 +3,7 @@ package eu.europa.ec.fisheries.uvms.asset.bean;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.ejb.Stateless;
@@ -143,7 +144,7 @@ public class AssetFilterServiceBean{
 
         assetFilterQuery.setAssetFilter(parentAssetFilter);
         assetFilterQuery.setInverse(false);
-        assetFilterQuery.setIsNumber(true);
+        assetFilterQuery.setIsNumber(false);
         return assetFilterQueryDao.create(assetFilterQuery);
 	}
 	public AssetFilterQuery deleteAssetFilterQuery(UUID id) {
@@ -253,4 +254,72 @@ public class AssetFilterServiceBean{
         query.setUpdateTime(Instant.now());
         return assetFilterQueryDao.update(query);
 	}
+	
+	
+	public AssetFilter updateAllAssetFilterChildren(AssetFilter assetFilter, String username) {
+	     if (assetFilter == null) {
+	    	 throw new NullPointerException("Cannot update assetFilterList because assetFilters is invalid.");
+	     }
+	     if (username == null || username.trim().isEmpty()) {
+	    	 throw new NullPointerException("Username must be provided for selected operation");
+	     }
+    	 Set<AssetFilterQuery> assetFilterQuerySet = assetFilter.getQueries();
+    	 
+    	 for(AssetFilterQuery assetFilterQuery : assetFilterQuerySet) {
+    		 
+    		 Set<AssetFilterValue> assetFilterValueSet = assetFilterQuery.getValues();
+    		 
+    		 deleteAllAssetFilterValueForAssetFilterQueryId(assetFilterQuery);
+    		 for(AssetFilterValue assetFilterValue : assetFilterValueSet) {
+    			 createAssetFilterValue(assetFilterQuery.getId(), assetFilterValue);
+    		 }
+    		 
+    		 updateAssetFilterQuery(assetFilterQuery, username);
+    	 }
+    	 assetFilter.setUpdatedBy(username);
+    	 assetFilter.setUpdateTime(Instant.now());
+    	 assetFilterDao.updateAssetFilter(assetFilter);
+	     return assetFilter;
+	}
+	
+	
+//	public List<AssetFilter> updateAllAssetFilterForUser(List<AssetFilter> assetFilterList, String username) {
+//	     if (assetFilterList == null) {
+//	    	 throw new NullPointerException("Cannot update assetFilterList because assetFilters is invalid.");
+//	     }
+//	     if (username == null || username.trim().isEmpty()) {
+//	    	 throw new NullPointerException("Username must be provided for selected operation");
+//	     }
+//	     for(AssetFilter assetFilter : assetFilterList) {
+//	    	 Set<AssetFilterQuery> assetFilterQuerySet = assetFilter.getQueries();
+//	    	 
+//	    	 for(AssetFilterQuery assetFilterQuery : assetFilterQuerySet) {
+//	    		 
+//	    		 Set<AssetFilterValue> assetFilterValueSet = assetFilterQuery.getValues();
+//	    		 
+//	    		 deleteAllAssetFilterValueForAssetFilterQueryId(assetFilterQuery);
+//	    		 for(AssetFilterValue assetFilterValue : assetFilterValueSet) {
+//	    			 createAssetFilterValue(assetFilterQuery.getId(), assetFilterValue);
+//	    		 }
+//	    		 
+//	    		 updateAssetFilterQuery(assetFilterQuery, username);
+//	    	 }
+//	    	 assetFilter.setUpdatedBy(username);
+//	    	 assetFilter.setUpdateTime(Instant.now());
+//	    	 assetFilterDao.updateAssetFilter(assetFilter);
+//	     }
+//	     return assetFilterList;
+//	}
+//	
+	private void deleteAllAssetFilterValueForAssetFilterQueryId(AssetFilterQuery assetFilterQuery) {
+		if (assetFilterQuery == null) {
+            throw new NullPointerException(" assetFilterQuery is null.");
+        }
+
+        List<AssetFilterValue> assetFilterValueList = assetFilterValueDao.retrieveValuesForFilterQuery(assetFilterQuery);
+        for(AssetFilterValue assetFilterValue : assetFilterValueList) {
+        	assetFilterValueDao.delete(assetFilterValue);
+        }
+	}
+	
 }

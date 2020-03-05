@@ -143,7 +143,7 @@ public abstract class AssetHelper {
     
     public static AssetFilterQuery createBasicAssetFilterQuery(AssetFilter assetFilter) {
     	AssetFilterQuery assetFilterQuery = new AssetFilterQuery();
-    	assetFilterQuery.setIsNumber(true);
+    	assetFilterQuery.setIsNumber(false);
     	assetFilterQuery.setType("TEST");
     	assetFilterQuery.setAssetFilter(assetFilter);
         return assetFilterQuery;

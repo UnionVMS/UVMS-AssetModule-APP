@@ -26,6 +26,9 @@ import org.slf4j.MDC;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObjectBuilder;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbConfig;
@@ -58,9 +61,10 @@ public class AssetFilterRestResource {
 
     @PostConstruct
     public void init() {
-    	JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
-        jsonb = JsonbBuilder.create(config);
-       // jsonb =  new JsonBConfigurator().getContext(null);
+    	
+        jsonb =  new JsonBConfigurator().getContext(null);
+//    	JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
+//        jsonb = JsonbBuilder.create(config);
     }
     
     /**
@@ -76,18 +80,19 @@ public class AssetFilterRestResource {
     @Path("list")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetFilterListByUser(@ApiParam(value = "user", required = true) @QueryParam(value = "user") String user) throws Exception {
+    	JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
+        jsonb = JsonbBuilder.create(config);
         try {
             List<AssetFilter> assetFilterList = assetFilterService.getAssetFilterList(user);
+        //    JsonObjectBuilder returnJsonObjectlist = Json.createObjectBuilder();
+            JsonArrayBuilder returnJsonArraylist = Json.createArrayBuilder();
             
-            List<String> jsonAssetFilterList = new ArrayList<>();
-           // JsonObject adaptToJson
-            for (AssetFilter assetFilter : assetFilterList) 
-            { 
-            	jsonAssetFilterList.add(jsonb.toJson(assetFilter));
+            for(AssetFilter assetFilter : assetFilterList) {
+            	returnJsonArraylist.add(jsonb.toJson(assetFilter));
             }
-            Jsonb jsonb2 = new JsonBConfigurator().getContext(null);
-         //   String response = jsonb.toJson(jsonAssetFilterList);
-            String response = jsonb2.toJson(assetFilterList);
+            
+            jsonb = new JsonBConfigurator().getContext(null);
+            String response =  jsonb.toJson(returnJsonArraylist.build());
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when retrieving assetFilter list {}", user, e);
@@ -111,8 +116,11 @@ public class AssetFilterRestResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetFilterById(@ApiParam(value = "AssetFilter Id", required = true) @PathParam(value = "assetFilterId") final UUID id) throws Exception {
         try {
+        	JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
+            jsonb = JsonbBuilder.create(config);
             AssetFilter assetFilter = assetFilterService.getAssetFilterById(id);
             String response = jsonb.toJson(assetFilter);
+            jsonb = new JsonBConfigurator().getContext(null);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset by ID. ", id, e);
@@ -342,5 +350,56 @@ public class AssetFilterRestResource {
         }
 
     }
+    
+    
+    /**
+     * @responseMessage 200 Success
+     * @responseMessage 500 Error
+     * @summary Get asset filter by ID
+     */
+    @POST
+    @ApiOperation(value = "Get an AssetFilter by its id", notes = "Get a an AssetFilter by its id", response = AssetFilter.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Error when retrieving AssetGroup list"),
+            @ApiResponse(code = 200, message = "AssetFilter list successfully retrieved")})
+    @Path("/{assetFilterId}")
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public Response testUpdateAssetFilter(@ApiParam(value = "AssetFilter Id", required = true) @PathParam(value = "assetFilterId") final UUID id) throws Exception {
+        try {
+        	JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
+            jsonb = JsonbBuilder.create(config);
+            AssetFilter assetFilter = assetFilterService.getAssetFilterById(id);
+            String response = jsonb.toJson(assetFilter);
+            jsonb = new JsonBConfigurator().getContext(null);
+            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception e) {
+            LOG.error("Error when getting asset by ID. ", id, e);
+            throw e;
+        }
+    }
+    
+    @PUT
+    @ApiOperation(value = "UpdateAssetFilterValue", notes = "UpdateAssetFilterValue", response = AssetFilterValue.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Error when update AssetFilterValue"),
+            @ApiResponse(code = 200, message = "AssetFilterValue successfully update")})
+    @Path("/{assetFilterId}/value")
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public Response updateAssetFilterHardRefresh(@ApiParam(value = "jsonAssetFilter", required = true) final String jsonAssetFilter) throws Exception {
 
+        try {
+        	JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
+            jsonb = JsonbBuilder.create(config);
+            AssetFilter mappedAssetFilter = jsonb.fromJson(jsonAssetFilter, AssetFilter.class);
+            String user = servletRequest.getRemoteUser();
+            AssetFilter updatedAssetFilter = assetFilterService.updateAllAssetFilterChildren(mappedAssetFilter, user);
+            String response = jsonb.toJson(updatedAssetFilter);
+            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception e) {
+            LOG.error("Error when creating AssetFilterValue. ", e);
+            throw e;
+        }
+    }  
+    
+    
 }
