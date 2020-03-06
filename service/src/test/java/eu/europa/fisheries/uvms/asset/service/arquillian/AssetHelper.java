@@ -16,8 +16,6 @@ import eu.europa.ec.fisheries.wsdl.asset.types.CarrierSource;
 public abstract class AssetHelper {
 
     public static Asset helper_createAsset(AssetIdType assetIdType, String ircs) {
-
-
         Asset asset = new Asset();
         AssetId assetId = new AssetId();
         assetId.setType(assetIdType);
@@ -48,7 +46,7 @@ public abstract class AssetHelper {
 
         asset.setCfr(cfr.substring(0, 12));
 
-        String imo = generateARandomStringWithMaxLength(2);
+        String imo = generateARandomStringWithMaxLength(5);
         asset.setImo(imo);
         String mmsi = generateARandomStringWithMaxLength(9);
         asset.setMmsiNo(mmsi);
@@ -58,7 +56,6 @@ public abstract class AssetHelper {
         asset.setLengthOverAll(new BigDecimal(15l));
         asset.setLengthBetweenPerpendiculars(new BigDecimal(3l));
         asset.setGrossTonnage(new BigDecimal(200));
-
 
         asset.setGrossTonnageUnit(UnitTonnage.OSLO.name());
         asset.setOtherGrossTonnage(new BigDecimal(200));
@@ -75,26 +72,23 @@ public abstract class AssetHelper {
         asset.getContact();
         asset.getNotes();
 
-
         return asset;
-
-
     }
 
 
     public static Asset helper_createAsset(AssetIdType assetIdType) {
-        String ircs = generateARandomStringWithMaxLength(1);
-        return AssetHelper.helper_createAsset(assetIdType, ircs);
-
+        String ircs = generateARandomStringWithMaxLength(5);
+        return helper_createAsset(assetIdType, ircs);
     }
 
     public static String generateARandomStringWithMaxLength(int len) {
-        String ret = "";
+        Random r = new Random();
+        StringBuilder ret = new StringBuilder();
         for (int i = 0; i < len; i++) {
-            int val = new Random().nextInt(10);
-            ret += String.valueOf(val);
+            int val = r.nextInt(10);
+            ret.append(val);
         }
-        return ret;
+        return ret.toString();
     }
 
     public static AssetGroup create_asset_group(){
@@ -103,10 +97,6 @@ public abstract class AssetHelper {
         ag.setGlobal(true);
         ag.setName("TEST_NAME");
         ag.setUser("TEST");
-
-
         return ag;
-
     }
-
 }
