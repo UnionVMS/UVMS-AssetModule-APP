@@ -6,6 +6,8 @@ import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
+import eu.europa.ec.fisheries.uvms.asset.domain.mapper.A;
+import eu.europa.ec.fisheries.uvms.asset.domain.mapper.Q;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
@@ -222,13 +224,10 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         asset = assetService.createAsset(asset, "test");
         commit();
 
-        List<SearchKeyValue> searchValues = new ArrayList<>();
-        SearchKeyValue searchValue = new SearchKeyValue();
-        searchValue.setSearchField(SearchFields.GUID);
-        searchValue.setSearchValues(Collections.singletonList(asset.getId().toString()));
-        searchValues.add(searchValue);
+        Q trunk = new Q(true);
+        trunk.getFields().add(new A(SearchFields.GUID, asset.getId().toString()));
 
-        List<Asset> assets = assetService.getAssetList(searchValues, 1, 100, true, false).getAssetList();
+        List<Asset> assets = assetService.getAssetListAQ(trunk, 1, 100, false).getAssetList();
 
         assertEquals(1, assets.size());
         assertEquals(asset.getCfr(), assets.get(0).getCfr());
@@ -240,16 +239,14 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void getAssetListTestNameQuery() throws Exception {
         Asset asset = AssetTestsHelper.createBiggerAsset();
+        asset.setName("getAssetListTestNameQueryTest");
         asset = assetService.createAsset(asset, "test");
         commit();
 
-        List<SearchKeyValue> searchValues = new ArrayList<>();
-        SearchKeyValue searchValue = new SearchKeyValue();
-        searchValue.setSearchField(SearchFields.NAME);
-        searchValue.setSearchValues(Collections.singletonList(asset.getName()));
-        searchValues.add(searchValue);
+        Q trunk = new Q(true);
+        trunk.getFields().add(new A(SearchFields.NAME, asset.getName()));
 
-        List<Asset> assets = assetService.getAssetList(searchValues, 1, 100, true, false).getAssetList();
+        List<Asset> assets = assetService.getAssetListAQ(trunk, 1, 100,  false).getAssetList();
 
         assertFalse(assets.isEmpty());
         assertEquals(asset.getCfr(), assets.get(0).getCfr());

@@ -85,11 +85,6 @@ public class MessageConsumerBean implements MessageListener {
                     GetAssetModuleRequest getRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, GetAssetModuleRequest.class);
                     messageEventBean.getAsset(textMessage, getRequest.getId());
                     break;
-                case ASSET_LIST:
-                    AssetListModuleRequest listRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetListModuleRequest.class);
-                    AssetMessageEvent listEvent = new AssetMessageEvent(textMessage, listRequest.getQuery());
-                    messageEventBean.getAssetList(listEvent);
-                    break;
                 case ASSET_GROUP:
                     AssetGroupListByUserRequest groupListRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetGroupListByUserRequest.class);
                     AssetMessageEvent assetGroupListEvent = new AssetMessageEvent(textMessage, groupListRequest);

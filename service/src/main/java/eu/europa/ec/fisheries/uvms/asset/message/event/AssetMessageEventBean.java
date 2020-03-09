@@ -88,23 +88,6 @@ public class AssetMessageEventBean {
         }
     }
     
-    public void getAssetList(AssetMessageEvent message) {
-        try {
-            AssetListQuery query = message.getQuery();
-            List<SearchKeyValue> searchValues = SearchFieldMapper.createSearchFields(query.getAssetSearchCriteria().getCriterias());
-            int page = query.getPagination().getPage();
-            int listSize = query.getPagination().getListSize();
-            Boolean dynamic = query.getAssetSearchCriteria().isIsDynamic();
-
-            AssetListResponse assetList = assetService.getAssetList(searchValues, page, listSize, dynamic, false);
-            
-            ListAssetResponse response = assetMapper.toListAssetResponse(assetList); 
-            assetMessageProducer.sendResponseMessageToSender(message.getMessage(), AssetModuleResponseMapper.mapAssetModuleResponse(response));
-        } catch (AssetException | JMSException e) {
-            assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting assetlist: " + e)));
-        }
-    }
-
     public void getAssetGroupByUserName(AssetMessageEvent message) {
         LOG.info("Get asset group");
         try {

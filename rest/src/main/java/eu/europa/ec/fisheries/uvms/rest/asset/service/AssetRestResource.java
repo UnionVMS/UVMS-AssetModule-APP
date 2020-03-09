@@ -17,13 +17,12 @@ import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.uvms.asset.domain.mapper.Q;
+import eu.europa.ec.fisheries.uvms.asset.util.QDeserializer;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
 import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
-import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
-import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import io.swagger.annotations.*;
@@ -35,6 +34,8 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
+import javax.json.bind.JsonbConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -87,12 +88,12 @@ public class AssetRestResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetList(@DefaultValue("1") @QueryParam("page") int page,
                                  @DefaultValue("1000000") @QueryParam("size") int size,
-                                 @DefaultValue("true") @QueryParam("dynamic") boolean dynamic,
                                  @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
-                                 AssetQuery query)  throws Exception {
+                                 Q query)  throws Exception {
         try {
-            List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
-            AssetListResponse assetList = assetService.getAssetList(searchFields, page, size, dynamic, includeInactivated);
+            //Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withDeserializers(new QDeserializer()));
+            //Q query = jsonb.fromJson(s, Q.class);
+            AssetListResponse assetList = assetService.getAssetListAQ(query, page, size, includeInactivated);
             String returnString = jsonb.toJson(assetList);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
@@ -130,12 +131,10 @@ public class AssetRestResource {
             @ApiResponse(code = 200, message = "Asset list successfully retrieved") })
     @Path("listcount")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetListItemCount(@DefaultValue("true") @QueryParam("dynamic") boolean dynamic,
-                                          @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
-                                          AssetQuery query)  throws Exception  {
+    public Response getAssetListItemCount(@DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
+                                          Q query)  throws Exception  {
         try {
-            List<SearchKeyValue> searchValues = SearchFieldMapper.createSearchFields(query);
-            Long assetListCount = assetService.getAssetListCount(searchValues, dynamic, includeInactivated);
+            Long assetListCount = assetService.getAssetListCountAQ(query, includeInactivated);
             return Response.ok(assetListCount).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset list: {}", query, e);

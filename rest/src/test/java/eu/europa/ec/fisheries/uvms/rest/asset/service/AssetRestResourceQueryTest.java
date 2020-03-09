@@ -10,8 +10,12 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.domain.mapper.A;
+import eu.europa.ec.fisheries.uvms.asset.domain.mapper.Q;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
+import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
@@ -24,6 +28,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.json.bind.Jsonb;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -40,6 +45,49 @@ import static org.junit.Assert.*;
 @RunWith(Arquillian.class)
 @RunAsClient
 public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void newAssetListQueryTest() throws InterruptedException {
+
+        System.out.println("now");
+        //Thread.sleep(1000 * 60 * 5);
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = sendAssetToCreation(asset);
+
+        Q trunk = new Q(true);
+        A leaf = new A(SearchFields.CFR, createdAsset.getCfr());
+        trunk.getFields().add(leaf);
+        leaf = new A(SearchFields.IRCS, createdAsset.getIrcs());
+        trunk.getFields().add(leaf);
+
+        Q branch = new Q(false);
+        A subLeaf = new A(SearchFields.FLAG_STATE, "SWE");
+        branch.getFields().add(subLeaf);
+        subLeaf = new A(SearchFields.FLAG_STATE, "DNK");
+        branch.getFields().add(subLeaf);
+
+        trunk.getFields().add(branch);
+
+        Jsonb jsonb = new JsonBConfigurator().getContext(null);
+        String out = jsonb.toJson(trunk);
+        System.out.println(out);
+
+        AssetQuery query = new AssetQuery();
+        query.setCfr(Collections.singletonList(createdAsset.getCfr()));
+
+        AssetListResponse listResponse = getWebTargetExternal()
+                .path("asset")
+                .path("list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(trunk), AssetListResponse.class);
+
+        assertNotNull(listResponse);
+        assertThat(listResponse.getAssetList().size(), is(1));
+        assertThat(listResponse.getAssetList().get(0), is(AssetMatcher.assetEquals(createdAsset)));
+    }
+
 
     @Test
     @OperateOnDeployment("normal")

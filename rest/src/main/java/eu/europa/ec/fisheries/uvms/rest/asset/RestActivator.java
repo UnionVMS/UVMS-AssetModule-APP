@@ -33,6 +33,7 @@ public class RestActivator extends Application {
     public RestActivator() {
         set.add(AssetRestExceptionMapper.class);
         set.add(UnionVMSFeatureFilter.class);
+        //set.add(JsonBConfiguratorAsset.class);
         set.add(JsonBConfigurator.class);
         set.add(com.github.phillipkruger.apiee.ApieeService.class);
         set.add(SSEResource.class);
