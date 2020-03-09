@@ -61,7 +61,7 @@ public class AssetFilterServiceBeanTest extends TransactionalTests{
         assetFilterQuery.setType("GUID");
         assetFilterQuery.setIsNumber(true);
         assetFilterQuery.setInverse(false);
-        assetFilterQuery.setUpdateTime(Instant.now(Clock.systemUTC()));
+     //   assetFilterQuery.setUpdateTime(Instant.now(Clock.systemUTC()));
         return assetFilterService.createAssetFilterQuery(af.getId(), assetFilterQuery);
     }
 	private AssetFilterValue createAssetFilterValueEntety(UUID parentAssetFilterQueryId) {
@@ -144,7 +144,7 @@ public class AssetFilterServiceBeanTest extends TransactionalTests{
     	AssetFilterQuery createdAssetFilterQuery = assetFilterQuery;
     	AssetFilterQuery fetchedAssetFilterQuery = assetFilterService.getAssetFilterQuery(createdAssetFilterQuery.getId());
     	fetchedAssetFilterQuery.setType("CHANGEDTYPE");
-    	fetchedAssetFilterQuery.setUpdatedBy("Test user updater");
+   // 	fetchedAssetFilterQuery.setUpdatedBy("Test user updater");
         assetFilterService.updateAssetFilterQuery(fetchedAssetFilterQuery, "TEST");
         AssetFilterQuery fetchedAssetFilterQuery2 = assetFilterService.getAssetFilterQuery(createdAssetFilterQuery.getId());
         assertEquals(fetchedAssetFilterQuery2.getType(),  "CHANGEDTYPE");

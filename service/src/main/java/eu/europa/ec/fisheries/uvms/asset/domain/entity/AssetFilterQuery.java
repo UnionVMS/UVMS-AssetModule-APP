@@ -68,13 +68,6 @@ public class AssetFilterQuery  implements Serializable{
     @Column(name = "isnumber")
     private boolean isNumber;
     
-    @Column(name = "updatetime")
-    private Instant updateTime;
-
-    @Size(max = 255)
-    @Column(name = "updatedby")
-    private String updatedBy;
-    
     @OneToMany(mappedBy="assetFilterQuery", cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
     private Set<AssetFilterValue> values;
@@ -120,22 +113,6 @@ public class AssetFilterQuery  implements Serializable{
 
 	public void setIsNumber(boolean isNumber) {
 		this.isNumber = isNumber;
-	}
-	
-	public Instant getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(Instant updateTime) {
-		this.updateTime = updateTime;
-	}
-
-	public String getUpdatedBy() {
-		return updatedBy;
-	}
-
-	public void setUpdatedBy(String updatedBy) {
-		this.updatedBy = updatedBy;
 	}
 
 	public Set<AssetFilterValue> getValues() {

@@ -1,14 +1,14 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
-import java.io.Reader;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
-import javax.json.bind.JsonbBuilder;
 import javax.json.bind.adapter.JsonbAdapter;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery;
@@ -34,7 +34,7 @@ public class AssetFilterRestResponseAdapter implements JsonbAdapter<AssetFilter,
     			else {
     				JsonObject jsonValueObject = Json.createObjectBuilder()
         				.add("operator", assetFilterValue.getOperator())
-        				.add("value", assetFilterValue.getValue())
+        				.add("value", Integer.parseInt(assetFilterValue.getValue()))
         				.build();
     				jsonValueArray
     					.add(jsonValueObject);
@@ -55,22 +55,61 @@ public class AssetFilterRestResponseAdapter implements JsonbAdapter<AssetFilter,
 	        		.add(assetFilter.getName(), jsonArraylistOfQueries.build())
 	        		.build();
     }
-    
-    
 
 	@Override
 	public AssetFilter adaptFromJson(JsonObject adapted) throws Exception {
 		AssetFilter assetFilter = new AssetFilter();
-		assetFilter.setName(adapted.getString("name"));
-		assetFilter.setId(UUID.fromString(adapted.getString("id")));
-//		for(JsonValue array : adapted.asJsonObject().asJsonArray()) {
-//			System.out.println("JsonObject: " + array.getValueType());
-//		}
-		AssetFilterQuery assetFilterQuery = JsonbBuilder.create().fromJson((Reader) adapted.getJsonObject(adapted.getString("name")), AssetFilterQuery.class);
-		System.out.println("assetFilterQuery inverse: " + assetFilterQuery.getInverse());
-	//	AssetFilterQuery assetFilterQuery = new AssetFilterQuery();
-		assetFilterQuery.setAssetFilter(assetFilter);
-		// assetFilterQuery.setInverse(adapted.);
+		assetFilter.setId(UUID.fromString(adapted.getString("assetFilterId")));
+		/**
+		 *  Här kommer en ful och inte helt stabil lösning för att sätta "name" värdet som key på objectet. 
+		 *  Jag kollar om det inte är "assetFilterId", det funkar sålänge det bara är två värden som skickas...
+		 */
+		String nameValue = "";
+		for (String keyStr : adapted.keySet()) {
+	        if(!keyStr.equalsIgnoreCase("assetFilterId") ) {
+	        	nameValue = keyStr;
+	        }
+	    }
+		assetFilter.setName(nameValue);
+		
+		JsonArray queryJsonArray = adapted.getJsonArray(nameValue);
+		Set<AssetFilterQuery> queriesFromJson = new HashSet<AssetFilterQuery>();
+		
+		for(JsonValue jsonQuery : queryJsonArray) {
+			
+			JsonObject jsonQueryObject = jsonQuery.asJsonObject();
+			Set<AssetFilterValue> valuesFromJson = new HashSet<AssetFilterValue>();
+			boolean isNumberValues = jsonQueryObject.getBoolean("isNumber");
+			
+			AssetFilterQuery assetFilterQuery = new AssetFilterQuery();
+			assetFilterQuery.setAssetFilter(assetFilter);
+			assetFilterQuery.setInverse(jsonQueryObject.getBoolean("inverse"));
+			assetFilterQuery.setIsNumber(isNumberValues);
+			assetFilterQuery.setType(jsonQueryObject.getString("type"));
+			
+			JsonArray valuesJsonArray = jsonQueryObject.getJsonArray("values");
+			
+			for(JsonValue jsonValue : valuesJsonArray) {
+				
+				AssetFilterValue assetFilterValue = new AssetFilterValue();
+				if(isNumberValues == false) {
+					assetFilterValue.setValue(jsonValue.toString());
+				}else {
+					JsonObject jsonValueObject = jsonValue.asJsonObject();
+					assetFilterValue.setOperator(jsonValueObject.getString("operator"));
+				    if(jsonValueObject.get("value").getClass().getTypeName().contains("Number")) {
+				    	Integer number = (Integer)jsonValueObject.getInt("value");
+				    	assetFilterValue.setValue(number.toString());
+				    }else{
+				    	assetFilterValue.setValue(jsonValueObject.getString("value"));
+				    }
+				}
+				valuesFromJson.add(assetFilterValue);
+			}
+			assetFilterQuery.setValues(valuesFromJson);
+			queriesFromJson.add(assetFilterQuery);
+		}
+		assetFilter.setQueries(queriesFromJson);
 		return assetFilter;
 	}
 }

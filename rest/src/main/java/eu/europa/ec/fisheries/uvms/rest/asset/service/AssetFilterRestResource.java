@@ -378,28 +378,54 @@ public class AssetFilterRestResource {
         }
     }
     
+//    @PUT
+//    @ApiOperation(value = "UpdateAssetFilter", notes = "UpdateAssetFilter", response = AssetFilter.class)
+//    @ApiResponses(value = {
+//            @ApiResponse(code = 500, message = "Error when update AssetFilterValue"),
+//            @ApiResponse(code = 200, message = "AssetFilterValue successfully update")})
+//    @Path("/{assetFilterId}/updateAssetFilter")
+//    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+//    public Response updateAssetFilterHardRefresh(@ApiParam(value = "jsonAssetFilter", required = true) final String jsonAssetFilter) throws Exception {
+//
+//        try {
+//        	JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
+//            jsonb = JsonbBuilder.create(config);
+//            AssetFilter mappedAssetFilter = jsonb.fromJson(jsonAssetFilter, AssetFilter.class);
+//            String user = servletRequest.getRemoteUser();
+//            AssetFilter updatedAssetFilter = assetFilterService.updateAllAssetFilter(mappedAssetFilter, user);
+//            String response = jsonb.toJson(updatedAssetFilter);
+//            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
+//        } catch (Exception e) {
+//            LOG.error("Error when creating AssetFilterValue. ", e);
+//            throw e;
+//        }
+//    }
+    
     @PUT
-    @ApiOperation(value = "UpdateAssetFilterValue", notes = "UpdateAssetFilterValue", response = AssetFilterValue.class)
+    @ApiOperation(value = "UpdateAssetFilter", notes = "UpdateAssetFilter", response = AssetFilter.class)
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when update AssetFilterValue"),
             @ApiResponse(code = 200, message = "AssetFilterValue successfully update")})
-    @Path("/{assetFilterId}/value")
+    @Path("/updateAssetFilter")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response updateAssetFilterHardRefresh(@ApiParam(value = "jsonAssetFilter", required = true) final String jsonAssetFilter) throws Exception {
+    public Response updateAssetFilterHard2(@ApiParam(value = "jsonAssetFilter", required = true) String jsonAssetFilter) throws Exception {
 
         try {
         	JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
+        		//	.withDeserializers(new AssetFilterDeserializer());
             jsonb = JsonbBuilder.create(config);
             AssetFilter mappedAssetFilter = jsonb.fromJson(jsonAssetFilter, AssetFilter.class);
             String user = servletRequest.getRemoteUser();
-            AssetFilter updatedAssetFilter = assetFilterService.updateAllAssetFilterChildren(mappedAssetFilter, user);
-            String response = jsonb.toJson(updatedAssetFilter);
+            jsonb =  new JsonBConfigurator().getContext(null);
+            String response = jsonb.toJson(mappedAssetFilter);
+          //  AssetFilter updatedAssetFilter = assetFilterService.updateAllAssetFilter(mappedAssetFilter, user);
+          //  String response = jsonb.toJson(updatedAssetFilter);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            LOG.error("Error when creating AssetFilterValue. ", e);
+            LOG.error("Error when updating AssetFilter. ", e);
             throw e;
         }
-    }  
+    } 
     
     
 }
