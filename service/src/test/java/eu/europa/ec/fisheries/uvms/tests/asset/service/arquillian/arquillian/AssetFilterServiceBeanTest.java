@@ -129,26 +129,6 @@ public class AssetFilterServiceBeanTest extends TransactionalTests{
         assertEquals(8, listUser2.size());
         assertEquals(11, listUser3.size());
     }
-
-    @Test
-    @OperateOnDeployment("normal")
-    public void createAssetFilterQuery() {
-    	AssetFilterQuery createdAssetFilterQuery = assetFilterQuery;
-    	AssetFilterQuery fetchedAssetFilterQuery = assetFilterService.getAssetFilterQuery(createdAssetFilterQuery.getId());
-        assertEquals(createdAssetFilterQuery.getId(), fetchedAssetFilterQuery.getId());
-    }
-
-    @Test
-    @OperateOnDeployment("normal")
-    public void updateAssetFilterQuery() {
-    	AssetFilterQuery createdAssetFilterQuery = assetFilterQuery;
-    	AssetFilterQuery fetchedAssetFilterQuery = assetFilterService.getAssetFilterQuery(createdAssetFilterQuery.getId());
-    	fetchedAssetFilterQuery.setType("CHANGEDTYPE");
-   // 	fetchedAssetFilterQuery.setUpdatedBy("Test user updater");
-        assetFilterService.updateAssetFilterQuery(fetchedAssetFilterQuery, "TEST");
-        AssetFilterQuery fetchedAssetFilterQuery2 = assetFilterService.getAssetFilterQuery(createdAssetFilterQuery.getId());
-        assertEquals(fetchedAssetFilterQuery2.getType(),  "CHANGEDTYPE");
-    }
     
     @Test
     @OperateOnDeployment("normal")
@@ -161,13 +141,6 @@ public class AssetFilterServiceBeanTest extends TransactionalTests{
         assetFilterService.updateAssetFilterValue(fetchedAssetFilterValue, "TEST");
         AssetFilterValue fetchedAssetFilterValue2 = assetFilterService.getAssetFilterValue(createdAssetFilterValue.getId());
         assertEquals(fetchedAssetFilterValue2.getValue(), "CHANGEDVALUE");
-    }
-
-    @Test
-    @OperateOnDeployment("normal")
-    public void getAssetFilterQuery() {
-    	AssetFilterQuery fetchedAssetGroupField = assetFilterService.getAssetFilterQuery(assetFilterQuery.getId());
-        assertNotNull(fetchedAssetGroupField);
     }
 
     @Test

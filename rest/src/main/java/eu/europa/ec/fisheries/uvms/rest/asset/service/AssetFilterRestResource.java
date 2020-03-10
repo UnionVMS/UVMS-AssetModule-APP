@@ -61,10 +61,8 @@ public class AssetFilterRestResource {
 
     @PostConstruct
     public void init() {
-    	
-        jsonb =  new JsonBConfigurator().getContext(null);
-//    	JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
-//        jsonb = JsonbBuilder.create(config);
+    	JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
+        jsonb = JsonbBuilder.create(config);
     }
     
     /**
@@ -79,20 +77,22 @@ public class AssetFilterRestResource {
             @ApiResponse(code = 200, message = "AssetFilter list successfully retrieved")})
     @Path("list")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getAssetFilterListByUser(@ApiParam(value = "user", required = true) @QueryParam(value = "user") String user) throws Exception {
-    	JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
-        jsonb = JsonbBuilder.create(config);
+    public Response getAssetFilterListByUser(@ApiParam(value = "user") @QueryParam(value = "user") String user) throws Exception {
         try {
+        	
+        	if(user == null) {
+        		user = servletRequest.getRemoteUser();
+        	}
+        	
             List<AssetFilter> assetFilterList = assetFilterService.getAssetFilterList(user);
-        //    JsonObjectBuilder returnJsonObjectlist = Json.createObjectBuilder();
             JsonArrayBuilder returnJsonArraylist = Json.createArrayBuilder();
-            
             for(AssetFilter assetFilter : assetFilterList) {
             	returnJsonArraylist.add(jsonb.toJson(assetFilter));
-            }
-            
+            } 
             jsonb = new JsonBConfigurator().getContext(null);
             String response =  jsonb.toJson(returnJsonArraylist.build());
+            JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
+            jsonb = JsonbBuilder.create(config);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when retrieving assetFilter list {}", user, e);
@@ -116,11 +116,8 @@ public class AssetFilterRestResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetFilterById(@ApiParam(value = "AssetFilter Id", required = true) @PathParam(value = "assetFilterId") final UUID id) throws Exception {
         try {
-        	JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
-            jsonb = JsonbBuilder.create(config);
             AssetFilter assetFilter = assetFilterService.getAssetFilterById(id);
             String response = jsonb.toJson(assetFilter);
-            jsonb = new JsonBConfigurator().getContext(null);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset by ID. ", id, e);
@@ -145,7 +142,7 @@ public class AssetFilterRestResource {
             AssetFilter createdAssetFilter = assetFilterService.createAssetFilter(assetFilter, user);
             return Response.ok(createdAssetFilter).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            LOG.error("Error when creating asset group: {}", assetFilter, e);
+            LOG.error("Error when creating AssetFilter: {}", assetFilter, e);
             throw e;
         }
     }
@@ -153,7 +150,7 @@ public class AssetFilterRestResource {
     /**
      * @responseMessage 200 Success
      * @responseMessage 500 Error
-     * @summary Update a asset group
+     * @summary Update a asset filter
      */
     @PUT
     @ApiOperation(value = "Update an AssetFilter", notes = "Update an AssetFilter", response = AssetFilter.class)
@@ -165,10 +162,10 @@ public class AssetFilterRestResource {
         try {
             String user = servletRequest.getRemoteUser();
             AssetFilter updatedAssetFilter = assetFilterService.updateAssetFilter(assetFilter, user);
-            String response = jsonb.toJson(assetFilter);
+            String response = jsonb.toJson(updatedAssetFilter);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            LOG.error("Error when updating asset group. {}", assetFilter, e);
+            LOG.error("Error when updating AssetFilter. {}", assetFilter, e);
             throw e;
         }
     }
@@ -311,95 +308,7 @@ public class AssetFilterRestResource {
             throw e;
         }
     }
-
-    @GET
-    @ApiOperation(value = "Retrieve AssetFilterQuerys  by AssetFilterId", response = AssetFilterValue.class, responseContainer = "List")
-    @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when retrieving AssetFilterValues"),
-            @ApiResponse(code = 200, message = "AssetFilterValues successfully retrieved")})
-    @Path("/{assetFilterId}/querysForFilter")
-    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response retrieveValuesForFilters(@ApiParam(value = "AssetFilter id", required = true) @PathParam(value = "assetFilterId") UUID assetFilterId) throws Exception {
-
-        try {
-            List<AssetFilterQuery> fetchedAssetFilterQueries = assetFilterService.retrieveQuerysForFilter(assetFilterId);
-            String response = jsonb.toJson(fetchedAssetFilterQueries);
-            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
-        } catch (Exception e) {
-            LOG.error("Error when fetching AssetFilterValues. ", e);
-            throw e;
-        }
-
-    }
-
-    @DELETE
-    @ApiOperation(value = "Delete AssetFilterValues  for AssetFilterId", response = AssetFilterValue.class, responseContainer = "List")
-    @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when delete AssetFilterValues"),
-            @ApiResponse(code = 200, message = "AssetFilterValues successfully deleted")})
-    @Path("/{assetFilterId}/valuesForFilter")
-    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response deleteQuerysFromFilters(@ApiParam(value = "AssetFilter id", required = true) @PathParam(value = "assetFilterId") UUID assetFilterId) throws Exception {
-
-        try {
-        	assetFilterService.removeQuerysFromFilter(assetFilterId);
-            return Response.ok().header("MDC", MDC.get("requestId")).build();
-        } catch (Exception e) {
-            LOG.error("Error when fetching AssetGroupFields. ", e);
-            throw e;
-        }
-
-    }
     
-    
-    /**
-     * @responseMessage 200 Success
-     * @responseMessage 500 Error
-     * @summary Get asset filter by ID
-     */
-    @POST
-    @ApiOperation(value = "Get an AssetFilter by its id", notes = "Get a an AssetFilter by its id", response = AssetFilter.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when retrieving AssetGroup list"),
-            @ApiResponse(code = 200, message = "AssetFilter list successfully retrieved")})
-    @Path("/{assetFilterId}")
-    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response testUpdateAssetFilter(@ApiParam(value = "AssetFilter Id", required = true) @PathParam(value = "assetFilterId") final UUID id) throws Exception {
-        try {
-        	JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
-            jsonb = JsonbBuilder.create(config);
-            AssetFilter assetFilter = assetFilterService.getAssetFilterById(id);
-            String response = jsonb.toJson(assetFilter);
-            jsonb = new JsonBConfigurator().getContext(null);
-            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
-        } catch (Exception e) {
-            LOG.error("Error when getting asset by ID. ", id, e);
-            throw e;
-        }
-    }
-    
-//    @PUT
-//    @ApiOperation(value = "UpdateAssetFilter", notes = "UpdateAssetFilter", response = AssetFilter.class)
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 500, message = "Error when update AssetFilterValue"),
-//            @ApiResponse(code = 200, message = "AssetFilterValue successfully update")})
-//    @Path("/{assetFilterId}/updateAssetFilter")
-//    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-//    public Response updateAssetFilterHardRefresh(@ApiParam(value = "jsonAssetFilter", required = true) final String jsonAssetFilter) throws Exception {
-//
-//        try {
-//        	JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
-//            jsonb = JsonbBuilder.create(config);
-//            AssetFilter mappedAssetFilter = jsonb.fromJson(jsonAssetFilter, AssetFilter.class);
-//            String user = servletRequest.getRemoteUser();
-//            AssetFilter updatedAssetFilter = assetFilterService.updateAllAssetFilter(mappedAssetFilter, user);
-//            String response = jsonb.toJson(updatedAssetFilter);
-//            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
-//        } catch (Exception e) {
-//            LOG.error("Error when creating AssetFilterValue. ", e);
-//            throw e;
-//        }
-//    }
     
     @PUT
     @ApiOperation(value = "UpdateAssetFilter", notes = "UpdateAssetFilter", response = AssetFilter.class)
@@ -408,18 +317,13 @@ public class AssetFilterRestResource {
             @ApiResponse(code = 200, message = "AssetFilterValue successfully update")})
     @Path("/updateAssetFilter")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response updateAssetFilterHard2(@ApiParam(value = "jsonAssetFilter", required = true) String jsonAssetFilter) throws Exception {
+    public Response updateAssetFilterHard(@ApiParam(value = "jsonAssetFilter", required = true) String jsonAssetFilter) throws Exception {
 
         try {
-        	JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
-        		//	.withDeserializers(new AssetFilterDeserializer());
-            jsonb = JsonbBuilder.create(config);
             AssetFilter mappedAssetFilter = jsonb.fromJson(jsonAssetFilter, AssetFilter.class);
             String user = servletRequest.getRemoteUser();
-            jsonb =  new JsonBConfigurator().getContext(null);
-            String response = jsonb.toJson(mappedAssetFilter);
-          //  AssetFilter updatedAssetFilter = assetFilterService.updateAllAssetFilter(mappedAssetFilter, user);
-          //  String response = jsonb.toJson(updatedAssetFilter);
+            AssetFilter updatedAssetFilter = assetFilterService.updateAllAssetFilter(mappedAssetFilter, user);
+            String response = jsonb.toJson(updatedAssetFilter);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when updating AssetFilter. ", e);

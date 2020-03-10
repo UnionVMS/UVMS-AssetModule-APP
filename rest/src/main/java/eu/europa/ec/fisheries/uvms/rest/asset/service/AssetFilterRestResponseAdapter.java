@@ -51,7 +51,7 @@ public class AssetFilterRestResponseAdapter implements JsonbAdapter<AssetFilter,
     			.add(jsonQueryBuilder);
     	}
         return Json.createObjectBuilder()
-	        		.add("assetFilterId", assetFilter.getId().toString())
+	        		.add("id", assetFilter.getId().toString())
 	        		.add(assetFilter.getName(), jsonArraylistOfQueries.build())
 	        		.build();
     }
@@ -59,7 +59,7 @@ public class AssetFilterRestResponseAdapter implements JsonbAdapter<AssetFilter,
 	@Override
 	public AssetFilter adaptFromJson(JsonObject adapted) throws Exception {
 		AssetFilter assetFilter = new AssetFilter();
-		assetFilter.setId(UUID.fromString(adapted.getString("assetFilterId")));
+		assetFilter.setId(UUID.fromString(adapted.getString("id")));
 		/**
 		 *  Här kommer en ful och inte helt stabil lösning för att sätta "name" värdet som key på objectet. 
 		 *  Jag kollar om det inte är "assetFilterId", det funkar sålänge det bara är två värden som skickas...
@@ -104,6 +104,7 @@ public class AssetFilterRestResponseAdapter implements JsonbAdapter<AssetFilter,
 				    	assetFilterValue.setValue(jsonValueObject.getString("value"));
 				    }
 				}
+				assetFilterValue.setAssetFilterQuery(assetFilterQuery);
 				valuesFromJson.add(assetFilterValue);
 			}
 			assetFilterQuery.setValues(valuesFromJson);
