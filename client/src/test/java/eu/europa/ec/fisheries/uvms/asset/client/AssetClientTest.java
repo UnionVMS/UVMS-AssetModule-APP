@@ -97,8 +97,6 @@ public class AssetClientTest extends AbstractClientTest {
         AssetBO assetBo = new AssetBO();
         assetBo.setAsset(asset);
         AssetBO upsertAssetBo = assetClient.upsertAsset(assetBo);
-        /*AssetQuery assetQuery = new AssetQuery();
-        assetQuery.setFlagState(Collections.singletonList(asset.getFlagStateCode()));*/
 
         SearchBranch trunk = new SearchBranch(true);
         trunk.addNewSearchLeaf(SearchFields.FLAG_STATE, asset.getFlagStateCode());
@@ -183,11 +181,6 @@ public class AssetClientTest extends AbstractClientTest {
         firstAssetBo.getAsset().setName(UUID.randomUUID().toString());
         assetClient.upsertAsset(firstAssetBo);
     
-        /*AssetQuery query = new AssetQuery();
-        query.setCfr(Arrays.asList(asset.getCfr()));
-        query.setName(Arrays.asList(asset.getName()));
-        query.setDate(timestamp);*/
-
         SearchBranch trunk = new SearchBranch(true);
         trunk.addNewSearchLeaf(SearchFields.CFR, asset.getCfr());
         trunk.addNewSearchLeaf(SearchFields.NAME, asset.getName());
@@ -205,10 +198,6 @@ public class AssetClientTest extends AbstractClientTest {
         AssetBO assetBo = new AssetBO();
         assetBo.setAsset(asset);
         AssetBO firstAssetBo = assetClient.upsertAsset(assetBo);
-
-        /*AssetQuery query = new AssetQuery();
-        query.setCfr(Arrays.asList(asset.getCfr()));
-        query.setName(Arrays.asList(asset.getName()));*/
 
         SearchBranch trunk = new SearchBranch(true);
         trunk.addNewSearchLeaf(SearchFields.CFR, asset.getCfr());
