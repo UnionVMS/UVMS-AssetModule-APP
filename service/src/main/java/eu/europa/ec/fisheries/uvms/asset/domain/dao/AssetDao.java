@@ -15,7 +15,6 @@ import org.hibernate.envers.exception.RevisionDoesNotExistException;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
 import org.hibernate.envers.query.criteria.AuditCriterion;
-import org.hibernate.envers.query.criteria.AuditDisjunction;
 import org.hibernate.envers.query.criteria.ExtendableCriterion;
 import org.hibernate.envers.query.criteria.MatchMode;
 
@@ -24,7 +23,6 @@ import javax.persistence.*;
 import java.math.BigInteger;
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Stateless
 public class AssetDao {
@@ -170,7 +168,7 @@ public class AssetDao {
         AuditReader auditReader = AuditReaderFactory.get(em);
 
         AuditQuery query;
-        SearchLeaf dateSearchField = getDateSearchFieldAQ(queryTree);
+        SearchLeaf dateSearchField = getDateSearchField(queryTree);
         if (dateSearchField != null) {
             Instant date = DateUtils.stringToDate(dateSearchField.getSearchValue());
             Number revisionNumberForDate = auditReader.getRevisionNumberForDate(Date.from(date));
@@ -178,7 +176,7 @@ public class AssetDao {
         } else {
             query = auditReader.createQuery().forRevisionsOfEntity(Asset.class, true, true);
 
-            if (!searchRevisionsAQ(queryTree)) {
+            if (!searchRevisions(queryTree)) {
                 query.add(AuditEntity.revisionNumber().maximize().computeAggregationInInstanceContext());
             }
             if(!includeInactivated) {
@@ -243,10 +241,10 @@ public class AssetDao {
         return null;
     }
 
-    private SearchLeaf getDateSearchFieldAQ(SearchBranch searchFields) {
+    private SearchLeaf getDateSearchField(SearchBranch searchFields) {
         for (AssetSearchInterface field : searchFields.getFields()) {
             if(!field.isLeaf()){
-                SearchLeaf leaf = getDateSearchFieldAQ((SearchBranch) field);
+                SearchLeaf leaf = getDateSearchField((SearchBranch) field);
                 if(leaf != null){
                     return leaf;
                 }
@@ -260,10 +258,10 @@ public class AssetDao {
         return null;
     }
 
-    private boolean searchRevisionsAQ(SearchBranch searchFields) {
+    private boolean searchRevisions(SearchBranch searchFields) {
         for (AssetSearchInterface field : searchFields.getFields()) {
             if(!field.isLeaf()){
-                boolean leaf = searchRevisionsAQ((SearchBranch) field);
+                boolean leaf = searchRevisions((SearchBranch) field);
                 if(leaf == true){
                     return true;
                 }
@@ -277,33 +275,6 @@ public class AssetDao {
         return false;
     }
 
-
-    private boolean searchRevisions(List<SearchKeyValue> searchFields) {
-        for (SearchKeyValue searchKeyValue : searchFields) {
-            if (searchKeyValue.getSearchField().equals(SearchFields.HIST_GUID)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private SearchKeyValue getDateSearchField(List<SearchKeyValue> searchFields) {
-        for (SearchKeyValue searchKeyValue : searchFields) {
-            if (searchKeyValue.getSearchField().equals(SearchFields.DATE)) {
-                return searchKeyValue;
-            }
-        }
-        return null;
-    }
-
-    private boolean useLike(SearchKeyValue entry) {
-        for (String searchValue : entry.getSearchValues()) {
-            if (searchValue.contains("*")) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     public List<Asset> getRevisionsForAsset(UUID id) {
         AuditReader auditReader = AuditReaderFactory.get(em);
