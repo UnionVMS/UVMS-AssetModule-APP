@@ -88,7 +88,7 @@ public class AssetRestResource {
                                  @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
                                  SearchBranch query)  throws Exception {
         try {
-            AssetListResponse assetList = assetService.getAssetListAQ(query, page, size, includeInactivated);
+            AssetListResponse assetList = assetService.getAssetList(query, page, size, includeInactivated);
             String returnString = jsonb.toJson(assetList);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
@@ -129,7 +129,7 @@ public class AssetRestResource {
     public Response getAssetListItemCount(@DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
                                           SearchBranch query)  throws Exception  {
         try {
-            Long assetListCount = assetService.getAssetListCountAQ(query, includeInactivated);
+            Long assetListCount = assetService.getAssetListCount(query, includeInactivated);
             return Response.ok(assetListCount).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting asset list: {}", query, e);

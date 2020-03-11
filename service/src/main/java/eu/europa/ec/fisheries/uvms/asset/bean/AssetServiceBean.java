@@ -112,40 +112,13 @@ public class AssetServiceBean {
         return createdAssetEntity;
     }
 
-   /* public AssetListResponse getAssetList(List<SearchKeyValue> searchFields, int page, int listSize, boolean dynamic, boolean includeInactivated) {
-        if (searchFields == null) {
-            throw new IllegalArgumentException("Cannot get asset list because search values is null.");
-        }
-
-        Long numberOfAssets = assetDao.getAssetCount(searchFields, dynamic, includeInactivated);
-
-        int numberOfPages = 0;
-        if (listSize != 0) {
-            numberOfPages = (int) (numberOfAssets / listSize);
-            if (numberOfAssets % listSize != 0) {
-                numberOfPages += 1;
-            }
-        }
-
-        List<Asset> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, searchFields, dynamic, includeInactivated);
-        // force to load children. FetchType.EAGER didn't work.
-        assetEntityList.forEach(asset -> {
-            asset.getMobileTerminals().size();
-        });
-        AssetListResponse listAssetResponse = new AssetListResponse();
-        listAssetResponse.setCurrentPage(page);
-        listAssetResponse.setTotalNumberOfPages(numberOfPages);
-        listAssetResponse.getAssetList().addAll(assetEntityList);
-        return listAssetResponse;
-    }*/
-
-    public AssetListResponse getAssetListAQ(SearchBranch queryTree, int page, int listSize, boolean includeInactivated) {
+    public AssetListResponse getAssetList(SearchBranch queryTree, int page, int listSize, boolean includeInactivated) {
         if (queryTree == null) {
             throw new IllegalArgumentException("Cannot get asset list because search values is null.");
         }
 
 
-        Long numberOfAssets = assetDao.getAssetCountAQ(queryTree, includeInactivated);
+        Long numberOfAssets = assetDao.getAssetCount(queryTree, includeInactivated);
 
         int numberOfPages = 0;
         if (listSize != 0) {
@@ -155,7 +128,7 @@ public class AssetServiceBean {
             }
         }
 
-        List<Asset> assetEntityList = assetDao.getAssetListSearchPaginatedAQ(page, listSize, queryTree, includeInactivated);
+        List<Asset> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, queryTree, includeInactivated);
         // force to load children. FetchType.EAGER didn't work.
         assetEntityList.forEach(asset -> {
             asset.getMobileTerminals().size();
@@ -167,19 +140,12 @@ public class AssetServiceBean {
         return listAssetResponse;
     }
 
-    public Long getAssetListCountAQ(SearchBranch queryTree, boolean includeInactivated) {
+    public Long getAssetListCount(SearchBranch queryTree, boolean includeInactivated) {
         if (queryTree == null || queryTree.getFields().isEmpty()) {
             throw new IllegalArgumentException("Cannot get asset list because query is null.");
         }
-        return assetDao.getAssetCountAQ(queryTree, includeInactivated);
+        return assetDao.getAssetCount(queryTree, includeInactivated);
     }
-
-    /*public Long getAssetListCount(List<SearchKeyValue> searchFields, boolean dynamic, boolean includeInactivated) {
-        if (searchFields == null || searchFields.isEmpty()) {
-            throw new IllegalArgumentException("Cannot get asset list because query is null.");
-        }
-        return assetDao.getAssetCount(searchFields, dynamic, includeInactivated);
-    }*/
 
     public Asset updateAsset(Asset asset, String username, String comment) {
         Asset updatedAsset = updateAssetInternal(asset, username, comment);

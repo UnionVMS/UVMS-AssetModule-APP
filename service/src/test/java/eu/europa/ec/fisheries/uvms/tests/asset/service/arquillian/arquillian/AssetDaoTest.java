@@ -451,7 +451,7 @@ public class AssetDaoTest extends TransactionalTests {
         SearchBranch trunk = new SearchBranch(true);
         trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
 
-        Long count = assetDao.getAssetCountAQ(trunk, false);
+        Long count = assetDao.getAssetCount(trunk, false);
         assertEquals(Long.valueOf(1), count);
 
         assetDao.deleteAsset(asset);
@@ -472,7 +472,7 @@ public class AssetDaoTest extends TransactionalTests {
         SearchBranch trunk = new SearchBranch(false);
         trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
 
-        Long count = assetDao.getAssetCountAQ(trunk, false);
+        Long count = assetDao.getAssetCount(trunk, false);
         assertEquals(Long.valueOf(1), count);
 
         assetDao.deleteAsset(asset);
@@ -497,7 +497,7 @@ public class AssetDaoTest extends TransactionalTests {
         SearchBranch trunk = new SearchBranch(false);
         trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
 
-        Long count = assetDao.getAssetCountAQ(trunk, false);
+        Long count = assetDao.getAssetCount(trunk, false);
         assertEquals(Long.valueOf(1), count);
 
         assetDao.deleteAsset(asset);
@@ -515,7 +515,7 @@ public class AssetDaoTest extends TransactionalTests {
         SearchBranch trunk = new SearchBranch(false);
         trunk.getFields().add(new SearchLeaf(SearchFields.CFR, "TESTCFR"));
 
-        Long count = assetDao.getAssetCountAQ(trunk, false);
+        Long count = assetDao.getAssetCount(trunk, false);
 
         assertEquals(Long.valueOf(0), count);
 
@@ -533,7 +533,7 @@ public class AssetDaoTest extends TransactionalTests {
         SearchBranch trunk = new SearchBranch(true);
         trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
 
-        List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
         assertThat(assets.size(), is(1));
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -557,7 +557,7 @@ public class AssetDaoTest extends TransactionalTests {
         trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
         trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset2.getCfr()));
 
-        List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
         assertEquals(2, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -593,7 +593,7 @@ public class AssetDaoTest extends TransactionalTests {
         trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
         trunk.getFields().add(new SearchLeaf(SearchFields.IRCS, asset2.getIrcs()));
 
-        List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
         assertEquals(2, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -629,12 +629,12 @@ public class AssetDaoTest extends TransactionalTests {
         trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
         trunk.getFields().add(new SearchLeaf(SearchFields.IRCS, asset2.getIrcs()));
 
-        List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 1, trunk, false);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 1, trunk, false);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));
         
-        assets = assetDao.getAssetListSearchPaginatedAQ(2, 1, trunk, false);
+        assets = assetDao.getAssetListSearchPaginated(2, 1, trunk, false);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getId(), is(asset2.getId()));
@@ -657,7 +657,7 @@ public class AssetDaoTest extends TransactionalTests {
         trunk.getFields().add(new SearchLeaf(SearchFields.EXTERNAL_MARKING, asset.getExternalMarking()));
         trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
 
-        List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -677,7 +677,7 @@ public class AssetDaoTest extends TransactionalTests {
         trunk.getFields().add(new SearchLeaf(SearchFields.GUID, asset.getId().toString()));
 
 
-        List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -702,7 +702,7 @@ public class AssetDaoTest extends TransactionalTests {
         SearchBranch trunk = new SearchBranch(true);
         trunk.getFields().add(new SearchLeaf(SearchFields.HIST_GUID, asset.getHistoryId().toString()));
 
-        List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
 
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getHistoryId(), is(asset.getHistoryId()));
@@ -711,7 +711,7 @@ public class AssetDaoTest extends TransactionalTests {
         trunk = new SearchBranch(true);
         trunk.getFields().add(new SearchLeaf(SearchFields.HIST_GUID, updatedAsset.getHistoryId().toString()));
 
-        assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
+        assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getHistoryId(), is(updatedAsset.getHistoryId()));
@@ -731,7 +731,7 @@ public class AssetDaoTest extends TransactionalTests {
         SearchBranch trunk = new SearchBranch(true);
         trunk.getFields().add(new SearchLeaf(SearchFields.MIN_LENGTH, asset.getLengthOverAll().toString()));
 
-        List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
         assertEquals(1, assets.size());
 
@@ -750,7 +750,7 @@ public class AssetDaoTest extends TransactionalTests {
         trunk.getFields().add(new SearchLeaf(SearchFields.GEAR_TYPE, asset.getGearFishingType()));
         trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
 
-        List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
         assertEquals(1, assets.size());
 
@@ -771,7 +771,7 @@ public class AssetDaoTest extends TransactionalTests {
         SearchBranch trunk = new SearchBranch(true);
         trunk.getFields().add(new SearchLeaf(SearchFields.NAME, "*LikeSearch*"));
 
-        List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getName(), is(searchName));
@@ -799,7 +799,7 @@ public class AssetDaoTest extends TransactionalTests {
         SearchBranch trunk = new SearchBranch(true);
         trunk.getFields().add(new SearchLeaf(SearchFields.NAME, "*likeSearch*" + randomNumbers));
 
-        List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getName(), is(searchName));
@@ -834,7 +834,7 @@ public class AssetDaoTest extends TransactionalTests {
 
         trunk.getFields().add(branch);
 
-        List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
 
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -865,7 +865,7 @@ public class AssetDaoTest extends TransactionalTests {
         SearchBranch branch = new SearchBranch(false);
         trunk.getFields().add(branch);
 
-        List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
 
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));

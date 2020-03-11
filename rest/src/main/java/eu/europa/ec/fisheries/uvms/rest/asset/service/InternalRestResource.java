@@ -97,7 +97,7 @@ public class InternalRestResource {
                                  @DefaultValue("100") @QueryParam("size") int size,
                                  @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
                                  SearchBranch query) throws Exception {
-            AssetListResponse assetList = assetService.getAssetListAQ(query, page, size,  includeInactivated);
+            AssetListResponse assetList = assetService.getAssetList(query, page, size,  includeInactivated);
             String returnString = jsonb.toJson(assetList);
             return Response.ok(returnString).build();
     }
@@ -109,7 +109,7 @@ public class InternalRestResource {
                                  @DefaultValue("10000000") @QueryParam("size") int size,
                                  @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
                                  SearchBranch query) {
-            List<Asset> assetList = assetDao.getAssetListSearchPaginatedAQ( page, size, query,  includeInactivated);
+            List<Asset> assetList = assetDao.getAssetListSearchPaginated( page, size, query,  includeInactivated);
             List<UUID> assetIdList = assetList.stream().map(Asset::getId).collect(Collectors.toList());
             String returnString = jsonb.toJson(assetIdList);
             return Response.ok(returnString).build();

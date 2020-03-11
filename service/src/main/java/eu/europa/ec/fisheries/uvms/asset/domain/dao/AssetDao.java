@@ -145,109 +145,18 @@ public class AssetDao {
         return query.getResultList();
     }
 
-    /*public Long getAssetCount(List<SearchKeyValue> searchFields, Boolean isDynamic, boolean includeInactivated) {
+    public Long getAssetCount(SearchBranch queryTree, boolean includeInactivated) {
         try {
-            AuditQuery query = createAuditQuery(searchFields, isDynamic, includeInactivated);
+            AuditQuery query = createAuditQuery(queryTree, includeInactivated);
             return (Long) query.addProjection(AuditEntity.id().count()).getSingleResult();
         } catch (AuditException e) {
             return 0L;
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public List<Asset> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize, List<SearchKeyValue> searchFields,
-                                                   boolean isDynamic, boolean includeInactivated) {
+    public List<Asset> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize, SearchBranch queryTree, boolean includeInactivated) {
         try {
-            AuditQuery query = createAuditQuery(searchFields, isDynamic, includeInactivated);
-            query.setFirstResult(pageSize * (pageNumber - 1));
-            query.setMaxResults(pageSize);
-            return query.getResultList();
-        } catch (AuditException e) {
-            return Collections.emptyList();
-        }
-    }*/
-
-    private AuditQuery createAuditQuery(List<SearchKeyValue> searchFields, boolean isDynamic, boolean includeInactivated) {
-        AuditReader auditReader = AuditReaderFactory.get(em);
-
-        AuditQuery query;
-        SearchKeyValue dateSearchField = getDateSearchField(searchFields);
-        if (dateSearchField != null) {
-            Instant date = Instant.parse(dateSearchField.getSearchValues().get(0));
-            Number revisionNumberForDate = auditReader.getRevisionNumberForDate(Date.from(date));
-            query = auditReader.createQuery().forEntitiesAtRevision(Asset.class, revisionNumberForDate);
-        } else {
-            query = auditReader.createQuery().forRevisionsOfEntity(Asset.class, true, true);
-
-            if (!searchRevisions(searchFields)) {
-                query.add(AuditEntity.revisionNumber().maximize().computeAggregationInInstanceContext());
-            }
-            if(!includeInactivated) {
-                query.add(AuditEntity.property("active").eq(true));
-            }
-        }
-
-        ExtendableCriterion operator;
-        if (isDynamic) {
-            operator = AuditEntity.conjunction();           //and
-        } else {
-            operator = AuditEntity.disjunction();           //or
-        }
-
-        boolean operatorUsed = false;
-        for (SearchKeyValue searchKeyValue : searchFields) {
-            if (useLike(searchKeyValue)) {
-                AuditDisjunction op = AuditEntity.disjunction();
-                for (String value : searchKeyValue.getSearchValues()) {
-                    op.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).ilike(value.replace("*", "%").toLowerCase(), MatchMode.ANYWHERE));
-                }
-                operatorUsed = true;
-                operator.add(op);
-            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.MIN_DECIMAL)) {
-                operatorUsed = true;
-                operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).ge(Double.valueOf(searchKeyValue.getSearchValues().get(0))));
-            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.MAX_DECIMAL)) {
-                operatorUsed = true;
-                operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).le(Double.valueOf(searchKeyValue.getSearchValues().get(0))));
-            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.LIST)) {
-                operatorUsed = true;
-                AuditDisjunction disjunctionOperator = AuditEntity.disjunction();
-                for (String v : searchKeyValue.getSearchValuesAsLowerCase()) {
-                    disjunctionOperator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).ilike(v, MatchMode.ANYWHERE));
-                }
-                operator.add(disjunctionOperator);
-            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.NUMBER)) {
-                List<Integer> intValues = searchKeyValue.getSearchValues().stream().map(Integer::parseInt).collect(Collectors.toList());
-                operatorUsed = true;
-                operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).in(intValues));
-            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.ID)) {
-                List<UUID> ids = searchKeyValue.getSearchValues().stream().map(UUID::fromString).collect(Collectors.toList());
-                operatorUsed = true;
-                operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).in(ids));
-            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.BOOLEAN) ||
-                    searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.STRING)) {
-                operatorUsed = true;
-                operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).eq(searchKeyValue.getSearchValues().get(0)));
-            }
-        }
-        if (operatorUsed) {
-            query.add((AuditCriterion) operator);
-        }
-        return query;
-    }
-
-    public Long getAssetCountAQ(SearchBranch queryTree, boolean includeInactivated) {
-        try {
-            AuditQuery query = createAuditQueryAQ(queryTree, includeInactivated);
-            return (Long) query.addProjection(AuditEntity.id().count()).getSingleResult();
-        } catch (AuditException e) {
-            return 0L;
-        }
-    }
-
-    public List<Asset> getAssetListSearchPaginatedAQ(Integer pageNumber, Integer pageSize, SearchBranch queryTree, boolean includeInactivated) {
-        try {
-            AuditQuery query = createAuditQueryAQ(queryTree, includeInactivated);
+            AuditQuery query = createAuditQuery(queryTree, includeInactivated);
             query.setFirstResult(pageSize * (pageNumber - 1));
             query.setMaxResults(pageSize);
             List<Asset> test = query.getResultList();
@@ -257,7 +166,7 @@ public class AssetDao {
         }
     }
 
-    private AuditQuery createAuditQueryAQ(SearchBranch queryTree, boolean includeInactivated) {
+    private AuditQuery createAuditQuery(SearchBranch queryTree, boolean includeInactivated) {
         AuditReader auditReader = AuditReaderFactory.get(em);
 
         AuditQuery query;

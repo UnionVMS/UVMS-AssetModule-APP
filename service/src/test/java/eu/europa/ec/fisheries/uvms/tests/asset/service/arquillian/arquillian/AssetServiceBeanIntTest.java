@@ -226,7 +226,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         SearchBranch trunk = new SearchBranch(true);
         trunk.getFields().add(new SearchLeaf(SearchFields.GUID, asset.getId().toString()));
 
-        List<Asset> assets = assetService.getAssetListAQ(trunk, 1, 100, false).getAssetList();
+        List<Asset> assets = assetService.getAssetList(trunk, 1, 100, false).getAssetList();
 
         assertEquals(1, assets.size());
         assertEquals(asset.getCfr(), assets.get(0).getCfr());
@@ -245,7 +245,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         SearchBranch trunk = new SearchBranch(true);
         trunk.getFields().add(new SearchLeaf(SearchFields.NAME, asset.getName()));
 
-        List<Asset> assets = assetService.getAssetListAQ(trunk, 1, 100,  false).getAssetList();
+        List<Asset> assets = assetService.getAssetList(trunk, 1, 100,  false).getAssetList();
 
         assertFalse(assets.isEmpty());
         assertEquals(asset.getCfr(), assets.get(0).getCfr());
