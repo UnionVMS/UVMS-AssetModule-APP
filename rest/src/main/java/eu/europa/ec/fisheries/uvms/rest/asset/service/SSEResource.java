@@ -4,6 +4,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
 import eu.europa.ec.fisheries.uvms.asset.message.event.UpdatedAssetEvent;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMergeInfo;
+import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.enterprise.event.TransactionPhase;
+import javax.json.bind.Jsonb;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -32,6 +34,7 @@ public class SSEResource {
     private Sse sse;
     private OutboundSseEvent.Builder eventBuilder;
     private SseBroadcaster sseBroadcaster;
+    private Jsonb jsonb = new JsonBConfigurator().getContext(null);
 
     @Context
     public void setSse(Sse sse) {
@@ -44,11 +47,12 @@ public class SSEResource {
         try {
             if (asset != null) {
                 MicroAsset micro = new MicroAsset(asset.getId(), asset.getFlagStateCode(), asset.getName(), asset.getVesselType(), asset.getIrcs(), asset.getCfr(), asset.getExternalMarking(), asset.getLengthOverAll());
+                String outboundJson = jsonb.toJson(micro);
                 OutboundSseEvent sseEvent = eventBuilder
                         .name("Updated Asset")
                         .id("" + System.currentTimeMillis())
                         .mediaType(MediaType.APPLICATION_JSON_PATCH_JSON_TYPE)
-                        .data(MicroAsset.class, micro)
+                        .data(String.class, outboundJson)
                         //.reconnectDelay(3000) //this one is optional and governs how long the client should wait b4 attempting to reconnect to this server
                         .comment("Updated Asset")
                         .build();
@@ -63,11 +67,12 @@ public class SSEResource {
     public void mergeAsset(@Observes(during = TransactionPhase.AFTER_SUCCESS) @UpdatedAssetEvent AssetMergeInfo mergeInfo){
         try {
             if (mergeInfo != null) {
+                String outboundJson = jsonb.toJson(mergeInfo);
                 OutboundSseEvent sseEvent = eventBuilder
                         .name("Merged Asset")
                         .id("" + System.currentTimeMillis())
                         .mediaType(MediaType.APPLICATION_JSON_PATCH_JSON_TYPE)
-                        .data(AssetMergeInfo.class, mergeInfo)
+                        .data(String.class, outboundJson)
                         //.reconnectDelay(3000) //this one is optional and governs how long the client should wait b4 attempting to reconnect to this server
                         .comment("Merged Asset")
                         .build();
