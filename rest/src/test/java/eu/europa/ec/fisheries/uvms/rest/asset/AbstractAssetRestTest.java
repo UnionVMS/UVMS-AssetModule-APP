@@ -71,7 +71,7 @@ public abstract class AbstractAssetRestTest {
         testWar.delete("/WEB-INF/web.xml");
         testWar.addAsWebInfResource("mock-web.xml", "web.xml");
 
-        testWar.deleteClass(JsonBConfiguratorAsset.class);
+        //testWar.deleteClass(JsonBConfiguratorAsset.class);
 
         return testWar;
     }

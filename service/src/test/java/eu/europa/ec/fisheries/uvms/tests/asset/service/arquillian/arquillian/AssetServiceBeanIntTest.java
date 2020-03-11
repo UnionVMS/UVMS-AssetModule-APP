@@ -4,11 +4,10 @@ import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
 import eu.europa.ec.fisheries.uvms.asset.bean.AssetGroupServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFields;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.A;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.Q;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchLeaf;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
@@ -224,8 +223,8 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         asset = assetService.createAsset(asset, "test");
         commit();
 
-        Q trunk = new Q(true);
-        trunk.getFields().add(new A(SearchFields.GUID, asset.getId().toString()));
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.GUID, asset.getId().toString()));
 
         List<Asset> assets = assetService.getAssetListAQ(trunk, 1, 100, false).getAssetList();
 
@@ -243,8 +242,8 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         asset = assetService.createAsset(asset, "test");
         commit();
 
-        Q trunk = new Q(true);
-        trunk.getFields().add(new A(SearchFields.NAME, asset.getName()));
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.NAME, asset.getName()));
 
         List<Asset> assets = assetService.getAssetListAQ(trunk, 1, 100,  false).getAssetList();
 

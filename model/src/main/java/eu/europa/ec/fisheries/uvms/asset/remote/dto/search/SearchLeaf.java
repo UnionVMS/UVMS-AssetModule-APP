@@ -9,22 +9,20 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.asset.domain.mapper;
-
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
+package eu.europa.ec.fisheries.uvms.asset.remote.dto.search;
 
 import javax.json.bind.annotation.JsonbTransient;
 
-public class A implements AQ {
+public class SearchLeaf implements AssetSearchInterface {
 
 	private SearchFields searchField;
 	private String searchValue;
 
-    public A() {
+    public SearchLeaf() {
         super();
     }
 
-    public A(SearchFields searchField, String searchValue) {
+    public SearchLeaf(SearchFields searchField, String searchValue) {
         this.searchField = searchField;
         this.searchValue = searchValue;
     }

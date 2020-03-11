@@ -20,15 +20,12 @@ import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.Q;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.dto.*;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
-import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
-import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import io.swagger.annotations.ApiParam;
@@ -44,7 +41,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -100,7 +96,7 @@ public class InternalRestResource {
     public Response getAssetList(@DefaultValue("1") @QueryParam("page") int page,
                                  @DefaultValue("100") @QueryParam("size") int size,
                                  @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
-                                 Q query) throws Exception {
+                                 SearchBranch query) throws Exception {
             AssetListResponse assetList = assetService.getAssetListAQ(query, page, size,  includeInactivated);
             String returnString = jsonb.toJson(assetList);
             return Response.ok(returnString).build();
@@ -112,7 +108,7 @@ public class InternalRestResource {
     public Response getAssetListIdOnly(@DefaultValue("1") @QueryParam("page") int page,
                                  @DefaultValue("10000000") @QueryParam("size") int size,
                                  @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
-                                 Q query) {
+                                 SearchBranch query) {
             List<Asset> assetList = assetDao.getAssetListSearchPaginatedAQ( page, size, query,  includeInactivated);
             List<UUID> assetIdList = assetList.stream().map(Asset::getId).collect(Collectors.toList());
             String returnString = jsonb.toJson(assetIdList);

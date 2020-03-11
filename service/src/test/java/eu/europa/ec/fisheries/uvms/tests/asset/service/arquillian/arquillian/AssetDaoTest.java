@@ -10,16 +10,15 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian;
 
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.A;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.Q;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFields;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchLeaf;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.model.constants.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.tests.TransactionalTests;
-import org.hibernate.envers.query.AuditQuery;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -449,8 +448,8 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.createAsset(asset);
         commit();
         
-        Q trunk = new Q(true);
-        trunk.getFields().add(new A(SearchFields.CFR, asset.getCfr()));
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
 
         Long count = assetDao.getAssetCountAQ(trunk, false);
         assertEquals(Long.valueOf(1), count);
@@ -470,8 +469,8 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.updateAsset(asset);
         commit();
         
-        Q trunk = new Q(false);
-        trunk.getFields().add(new A(SearchFields.CFR, asset.getCfr()));
+        SearchBranch trunk = new SearchBranch(false);
+        trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
 
         Long count = assetDao.getAssetCountAQ(trunk, false);
         assertEquals(Long.valueOf(1), count);
@@ -495,8 +494,8 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.createAsset(asset2);
         commit();
 
-        Q trunk = new Q(false);
-        trunk.getFields().add(new A(SearchFields.CFR, asset.getCfr()));
+        SearchBranch trunk = new SearchBranch(false);
+        trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
 
         Long count = assetDao.getAssetCountAQ(trunk, false);
         assertEquals(Long.valueOf(1), count);
@@ -513,8 +512,8 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.createAsset(asset);
         commit();
 
-        Q trunk = new Q(false);
-        trunk.getFields().add(new A(SearchFields.CFR, "TESTCFR"));
+        SearchBranch trunk = new SearchBranch(false);
+        trunk.getFields().add(new SearchLeaf(SearchFields.CFR, "TESTCFR"));
 
         Long count = assetDao.getAssetCountAQ(trunk, false);
 
@@ -531,8 +530,8 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.createAsset(asset);
         commit();
         
-        Q trunk = new Q(true);
-        trunk.getFields().add(new A(SearchFields.CFR, asset.getCfr()));
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
 
         List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
         
@@ -554,9 +553,9 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.createAsset(asset2);
         commit();
 
-        Q trunk = new Q(false);
-        trunk.getFields().add(new A(SearchFields.CFR, asset.getCfr()));
-        trunk.getFields().add(new A(SearchFields.CFR, asset2.getCfr()));
+        SearchBranch trunk = new SearchBranch(false);
+        trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
+        trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset2.getCfr()));
 
         List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
         
@@ -590,9 +589,9 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey2.setSearchValues(Collections.singletonList(asset2.getIrcs()));
         searchKeyValues.add(searchKey2);
 
-        Q trunk = new Q(false);
-        trunk.getFields().add(new A(SearchFields.CFR, asset.getCfr()));
-        trunk.getFields().add(new A(SearchFields.IRCS, asset2.getIrcs()));
+        SearchBranch trunk = new SearchBranch(false);
+        trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
+        trunk.getFields().add(new SearchLeaf(SearchFields.IRCS, asset2.getIrcs()));
 
         List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
         
@@ -626,9 +625,9 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey2.setSearchValues(Collections.singletonList(asset2.getIrcs()));
         searchKeyValues.add(searchKey2);
 
-        Q trunk = new Q(false);
-        trunk.getFields().add(new A(SearchFields.CFR, asset.getCfr()));
-        trunk.getFields().add(new A(SearchFields.IRCS, asset2.getIrcs()));
+        SearchBranch trunk = new SearchBranch(false);
+        trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
+        trunk.getFields().add(new SearchLeaf(SearchFields.IRCS, asset2.getIrcs()));
 
         List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 1, trunk, false);
         
@@ -653,10 +652,10 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.createAsset(asset);
         commit();
         
-        Q trunk = new Q(true);
-        trunk.getFields().add(new A(SearchFields.FLAG_STATE, asset.getFlagStateCode()));
-        trunk.getFields().add(new A(SearchFields.EXTERNAL_MARKING, asset.getExternalMarking()));
-        trunk.getFields().add(new A(SearchFields.CFR, asset.getCfr()));
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.FLAG_STATE, asset.getFlagStateCode()));
+        trunk.getFields().add(new SearchLeaf(SearchFields.EXTERNAL_MARKING, asset.getExternalMarking()));
+        trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
 
         List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
         
@@ -674,8 +673,8 @@ public class AssetDaoTest extends TransactionalTests {
         asset = assetDao.createAsset(asset);
         commit();
         
-        Q trunk = new Q(true);
-        trunk.getFields().add(new A(SearchFields.GUID, asset.getId().toString()));
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.GUID, asset.getId().toString()));
 
 
         List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
@@ -700,8 +699,8 @@ public class AssetDaoTest extends TransactionalTests {
         Asset updatedAsset = assetDao.updateAsset(fetchedAsset);
         commit();
         
-        Q trunk = new Q(true);
-        trunk.getFields().add(new A(SearchFields.HIST_GUID, asset.getHistoryId().toString()));
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.HIST_GUID, asset.getHistoryId().toString()));
 
         List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
 
@@ -709,8 +708,8 @@ public class AssetDaoTest extends TransactionalTests {
         assertThat(assets.get(0).getHistoryId(), is(asset.getHistoryId()));
         assertThat(assets.get(0).getName(), is(asset.getName()));
         
-        trunk = new Q(true);
-        trunk.getFields().add(new A(SearchFields.HIST_GUID, updatedAsset.getHistoryId().toString()));
+        trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.HIST_GUID, updatedAsset.getHistoryId().toString()));
 
         assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
         
@@ -729,8 +728,8 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.createAsset(asset);
         commit();
         
-        Q trunk = new Q(true);
-        trunk.getFields().add(new A(SearchFields.MIN_LENGTH, asset.getLengthOverAll().toString()));
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.MIN_LENGTH, asset.getLengthOverAll().toString()));
 
         List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
         
@@ -747,9 +746,9 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.createAsset(asset);
         commit();
         
-        Q trunk = new Q(true);
-        trunk.getFields().add(new A(SearchFields.GEAR_TYPE, asset.getGearFishingType()));
-        trunk.getFields().add(new A(SearchFields.CFR, asset.getCfr()));
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.GEAR_TYPE, asset.getGearFishingType()));
+        trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
 
         List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
         
@@ -769,8 +768,8 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.createAsset(asset);
         commit();
 
-        Q trunk = new Q(true);
-        trunk.getFields().add(new A(SearchFields.NAME, "*LikeSearch*"));
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.NAME, "*LikeSearch*"));
 
         List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
         
@@ -797,8 +796,8 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey.setSearchValues(Collections.singletonList("*likeSearch*" + randomNumbers));
         searchKeyValues.add(searchKey);
 
-        Q trunk = new Q(true);
-        trunk.getFields().add(new A(SearchFields.NAME, "*likeSearch*" + randomNumbers));
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.NAME, "*likeSearch*" + randomNumbers));
 
         List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);
         
@@ -821,16 +820,16 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.createAsset(asset2);
         commit();
 
-        Q trunk = new Q(true);
-        A leaf = new A(SearchFields.CFR, asset.getCfr());
+        SearchBranch trunk = new SearchBranch(true);
+        SearchLeaf leaf = new SearchLeaf(SearchFields.CFR, asset.getCfr());
         trunk.getFields().add(leaf);
-        leaf = new A(SearchFields.IRCS, asset.getIrcs());
+        leaf = new SearchLeaf(SearchFields.IRCS, asset.getIrcs());
         trunk.getFields().add(leaf);
 
-        Q branch = new Q(false);
-        A subLeaf = new A(SearchFields.FLAG_STATE, "SWE");
+        SearchBranch branch = new SearchBranch(false);
+        SearchLeaf subLeaf = new SearchLeaf(SearchFields.FLAG_STATE, "SWE");
         branch.getFields().add(subLeaf);
-        subLeaf = new A(SearchFields.FLAG_STATE, "DNK");
+        subLeaf = new SearchLeaf(SearchFields.FLAG_STATE, "DNK");
         branch.getFields().add(subLeaf);
 
         trunk.getFields().add(branch);
@@ -857,13 +856,13 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.createAsset(asset2);
         commit();
 
-        Q trunk = new Q(true);
-        A leaf = new A(SearchFields.CFR, asset.getCfr());
+        SearchBranch trunk = new SearchBranch(true);
+        SearchLeaf leaf = new SearchLeaf(SearchFields.CFR, asset.getCfr());
         trunk.getFields().add(leaf);
-        leaf = new A(SearchFields.IRCS, asset.getIrcs());
+        leaf = new SearchLeaf(SearchFields.IRCS, asset.getIrcs());
         trunk.getFields().add(leaf);
 
-        Q branch = new Q(false);
+        SearchBranch branch = new SearchBranch(false);
         trunk.getFields().add(branch);
 
         List<Asset> assets = assetDao.getAssetListSearchPaginatedAQ(1, 10, trunk, false);

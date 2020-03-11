@@ -1,8 +1,8 @@
 package eu.europa.ec.fisheries.uvms.asset.util;
 
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.A;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.Q;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFields;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchLeaf;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,20 +14,20 @@ import javax.json.bind.serializer.JsonbDeserializer;
 import javax.json.stream.JsonParser;
 import java.lang.reflect.Type;
 
-public class QDeserializer implements JsonbDeserializer<Q> {
+public class SearchBranchDeserializer implements JsonbDeserializer<SearchBranch> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(QDeserializer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SearchBranchDeserializer.class);
 
         @Override
-        public Q deserialize(JsonParser parser, DeserializationContext ctx, Type rtType) {
+        public SearchBranch deserialize(JsonParser parser, DeserializationContext ctx, Type rtType) {
 
             JsonObject object = parser.getObject();
             return recurse(object);
         }
 
-        private Q recurse(JsonObject object){
+        private SearchBranch recurse(JsonObject object){
             try {
-                Q trunk = new Q();
+                SearchBranch trunk = new SearchBranch();
                 trunk.setLogicalAnd(object.getBoolean("logicalAnd",true));
                 JsonArray fields = object.getJsonArray("fields");
                 for (JsonValue jsonValue : fields) {
@@ -39,9 +39,9 @@ public class QDeserializer implements JsonbDeserializer<Q> {
                         //JsonParser parser = Json.createParser(new StringReader(jsonValue.toString()));
                         //trunk.getFields().add(ctx.deserialize(A.class, parser));
 
-                        SearchFields key = SearchFields.valueOf(jsonValue.asJsonObject().getString("searchField"));
-                        String value = jsonValue.asJsonObject().get("searchValue").toString();
-                        trunk.getFields().add(new A(key, value));
+                        SearchFields key = SearchFields.valueOf(jsonValue.asJsonObject().getJsonString("searchField").getString());//String("searchField"));
+                        String value = jsonValue.asJsonObject().getJsonString("searchValue").getString();
+                        trunk.getFields().add(new SearchLeaf(key, value));
                     }
 
                 }

@@ -17,8 +17,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.Q;
-import eu.europa.ec.fisheries.uvms.asset.util.QDeserializer;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
 import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
@@ -34,8 +33,6 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
-import javax.json.bind.JsonbConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -89,10 +86,8 @@ public class AssetRestResource {
     public Response getAssetList(@DefaultValue("1") @QueryParam("page") int page,
                                  @DefaultValue("1000000") @QueryParam("size") int size,
                                  @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
-                                 Q query)  throws Exception {
+                                 SearchBranch query)  throws Exception {
         try {
-            //Jsonb jsonb = JsonbBuilder.create(new JsonbConfig().withDeserializers(new QDeserializer()));
-            //Q query = jsonb.fromJson(s, Q.class);
             AssetListResponse assetList = assetService.getAssetListAQ(query, page, size, includeInactivated);
             String returnString = jsonb.toJson(assetList);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
@@ -132,7 +127,7 @@ public class AssetRestResource {
     @Path("listcount")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetListItemCount(@DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
-                                          Q query)  throws Exception  {
+                                          SearchBranch query)  throws Exception  {
         try {
             Long assetListCount = assetService.getAssetListCountAQ(query, includeInactivated);
             return Response.ok(assetListCount).header("MDC", MDC.get("requestId")).build();

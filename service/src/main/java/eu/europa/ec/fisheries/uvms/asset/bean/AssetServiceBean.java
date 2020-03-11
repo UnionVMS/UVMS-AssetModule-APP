@@ -17,8 +17,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.ContactInfoDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.NoteDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.Q;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.dto.*;
 import eu.europa.ec.fisheries.uvms.asset.message.event.UpdatedAssetEvent;
 import eu.europa.ec.fisheries.uvms.asset.util.AssetComparator;
@@ -30,7 +29,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminal
 import eu.europa.ec.fisheries.uvms.rest.security.InternalRestTokenHandler;
 import eu.europa.ec.fisheries.wsdl.asset.types.CarrierSource;
 import eu.europa.ec.fisheries.wsdl.asset.types.EventCode;
-import org.hibernate.envers.query.AuditQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -141,7 +139,7 @@ public class AssetServiceBean {
         return listAssetResponse;
     }*/
 
-    public AssetListResponse getAssetListAQ(Q queryTree, int page, int listSize, boolean includeInactivated) {
+    public AssetListResponse getAssetListAQ(SearchBranch queryTree, int page, int listSize, boolean includeInactivated) {
         if (queryTree == null) {
             throw new IllegalArgumentException("Cannot get asset list because search values is null.");
         }
@@ -169,7 +167,7 @@ public class AssetServiceBean {
         return listAssetResponse;
     }
 
-    public Long getAssetListCountAQ(Q queryTree, boolean includeInactivated) {
+    public Long getAssetListCountAQ(SearchBranch queryTree, boolean includeInactivated) {
         if (queryTree == null || queryTree.getFields().isEmpty()) {
             throw new IllegalArgumentException("Cannot get asset list because query is null.");
         }

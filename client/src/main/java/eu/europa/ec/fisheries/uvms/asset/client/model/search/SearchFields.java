@@ -9,46 +9,51 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.mobileterminal.search;
+package eu.europa.ec.fisheries.uvms.asset.client.model.search;
 
-import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFieldType;
+public enum SearchFields {
 
-public enum MTSearchFields {
-    ASSET_ID("asset"),
-    TERMINAL_TYPE("mobileTerminalType"),
-    SERIAL_NUMBER("serialNo"),
-	MEMBER_NUMBER("memberNumber", SearchFieldType.CHILD),  //  <-channel
-	DNID("DNID", SearchFieldType.CHILD),   // <- channel
-	SATELLITE_NUMBER("satelliteNumber"),
-    SOFTWARE_VERSION("softwareVersion"),
-    TRANSCEIVER_TYPE("transceiverType"),
-    TRANSPONDER_TYPE("transceiverType"),
-    ANTENNA("antenna"),
-    MOBILETERMINAL_ID("id", SearchFieldType.ID),
+    FLAG_STATE("flagStateCode"),
+    EXTERNAL_MARKING("externalMarking"),
+    NAME("name"),
+    IRCS("ircs"),
+    CFR("cfr"),
+    MMSI("mmsi"),
+    IMO("imo"),
+    ICCAT("iccat"),
+    UVI("uvi"),
+    GFCM("gfcm"),
+    HOMEPORT("portOfRegistration"),
+    LICENSE("licenceType"),
+    VESSEL_TYPE("vesselType"),
+    GUID("id", SearchFieldType.ID),
     HIST_GUID("historyId", SearchFieldType.ID),
+    GEAR_TYPE("gearFishingType", SearchFieldType.STRING),
+    MAX_LENGTH("lengthOverAll", SearchFieldType.MAX_DECIMAL),
+    MIN_LENGTH("lengthOverAll", SearchFieldType.MIN_DECIMAL),
+    MAX_POWER("powerOfMainEngine", SearchFieldType.MAX_DECIMAL),
+    MIN_POWER("powerOfMainEngine", SearchFieldType.MIN_DECIMAL),
+    PRODUCER_NAME("producerName"),
     DATE(null, SearchFieldType.DATE);
-
-
 
     private String fieldName;
     private SearchFieldType fieldType;
-
-    private MTSearchFields(String fieldName) {
+    
+    private SearchFields(String fieldName) {
         this.fieldName = fieldName;
         this.fieldType = SearchFieldType.LIST;
     }
 
-    private MTSearchFields(String fieldName, SearchFieldType fieldType) {
+    private SearchFields(String fieldName, SearchFieldType fieldType) {
         this.fieldName = fieldName;
         this.fieldType = fieldType;
     }
-
+    
     public String getFieldName() {
         return fieldName;
     }
 
     public SearchFieldType getFieldType() {
-        return fieldType;
+    	return fieldType;
     }
-    
 }

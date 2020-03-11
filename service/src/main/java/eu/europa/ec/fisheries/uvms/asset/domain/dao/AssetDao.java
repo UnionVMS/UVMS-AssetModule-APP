@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.*;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetRemapMapping;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
@@ -236,7 +236,7 @@ public class AssetDao {
         return query;
     }
 
-    public Long getAssetCountAQ(Q queryTree, boolean includeInactivated) {
+    public Long getAssetCountAQ(SearchBranch queryTree, boolean includeInactivated) {
         try {
             AuditQuery query = createAuditQueryAQ(queryTree, includeInactivated);
             return (Long) query.addProjection(AuditEntity.id().count()).getSingleResult();
@@ -245,7 +245,7 @@ public class AssetDao {
         }
     }
 
-    public List<Asset> getAssetListSearchPaginatedAQ(Integer pageNumber, Integer pageSize, Q queryTree, boolean includeInactivated) {
+    public List<Asset> getAssetListSearchPaginatedAQ(Integer pageNumber, Integer pageSize, SearchBranch queryTree, boolean includeInactivated) {
         try {
             AuditQuery query = createAuditQueryAQ(queryTree, includeInactivated);
             query.setFirstResult(pageSize * (pageNumber - 1));
@@ -257,11 +257,11 @@ public class AssetDao {
         }
     }
 
-    private AuditQuery createAuditQueryAQ(Q queryTree, boolean includeInactivated) {
+    private AuditQuery createAuditQueryAQ(SearchBranch queryTree, boolean includeInactivated) {
         AuditReader auditReader = AuditReaderFactory.get(em);
 
         AuditQuery query;
-        A dateSearchField = getDateSearchFieldAQ(queryTree);
+        SearchLeaf dateSearchField = getDateSearchFieldAQ(queryTree);
         if (dateSearchField != null) {
             Instant date = DateUtils.stringToDate(dateSearchField.getSearchValue());
             Number revisionNumberForDate = auditReader.getRevisionNumberForDate(Date.from(date));
@@ -284,7 +284,7 @@ public class AssetDao {
         return query;
     }
 
-    private AuditCriterion queryBuilder(Q query){
+    private AuditCriterion queryBuilder(SearchBranch query){
         ExtendableCriterion operator;
         boolean operatorUsed = false;
         if(query.isLogicalAnd()){
@@ -292,15 +292,15 @@ public class AssetDao {
         }else{
             operator = AuditEntity.disjunction();           //or
         }
-        for (AQ field : query.getFields()) {
+        for (AssetSearchInterface field : query.getFields()) {
             if(!field.isLeaf()){
-                AuditCriterion auditCriterion = queryBuilder((Q) field);
+                AuditCriterion auditCriterion = queryBuilder((SearchBranch) field);
                 if(auditCriterion != null){
                     operator.add(auditCriterion);
                     operatorUsed = true;
                 }
             }else{
-                A leaf = (A) field;
+                SearchLeaf leaf = (SearchLeaf) field;
                 if (leaf.getSearchValue().contains("*")) {
                     operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ilike(leaf.getSearchValue().replace("*", "%").toLowerCase(), MatchMode.ANYWHERE));
                     operatorUsed = true;
@@ -334,15 +334,15 @@ public class AssetDao {
         return null;
     }
 
-    private A getDateSearchFieldAQ(Q searchFields) {
-        for (AQ field : searchFields.getFields()) {
+    private SearchLeaf getDateSearchFieldAQ(SearchBranch searchFields) {
+        for (AssetSearchInterface field : searchFields.getFields()) {
             if(!field.isLeaf()){
-                A leaf = getDateSearchFieldAQ((Q) field);
+                SearchLeaf leaf = getDateSearchFieldAQ((SearchBranch) field);
                 if(leaf != null){
                     return leaf;
                 }
             }else {
-                A leaf = (A) field;
+                SearchLeaf leaf = (SearchLeaf) field;
                 if (leaf.getSearchField().equals(SearchFields.DATE)) {
                     return leaf;
                 }
@@ -351,15 +351,15 @@ public class AssetDao {
         return null;
     }
 
-    private boolean searchRevisionsAQ(Q searchFields) {
-        for (AQ field : searchFields.getFields()) {
+    private boolean searchRevisionsAQ(SearchBranch searchFields) {
+        for (AssetSearchInterface field : searchFields.getFields()) {
             if(!field.isLeaf()){
-                boolean leaf = searchRevisionsAQ((Q) field);
+                boolean leaf = searchRevisionsAQ((SearchBranch) field);
                 if(leaf == true){
                     return true;
                 }
             }else {
-                A leaf = (A) field;
+                SearchLeaf leaf = (SearchLeaf) field;
                 if (leaf.getSearchField().equals(SearchFields.HIST_GUID)) {
                     return true;
                 }

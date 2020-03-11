@@ -1,6 +1,9 @@
 package eu.europa.ec.fisheries.uvms.asset.client;
 
 import eu.europa.ec.fisheries.uvms.asset.client.model.*;
+import eu.europa.ec.fisheries.uvms.asset.client.model.search.SearchBranch;
+import eu.europa.ec.fisheries.uvms.asset.client.model.search.SearchFields;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -94,9 +97,13 @@ public class AssetClientTest extends AbstractClientTest {
         AssetBO assetBo = new AssetBO();
         assetBo.setAsset(asset);
         AssetBO upsertAssetBo = assetClient.upsertAsset(assetBo);
-        AssetQuery assetQuery = new AssetQuery();
-        assetQuery.setFlagState(Collections.singletonList(asset.getFlagStateCode()));
-        List<AssetDTO> assets = assetClient.getAssetList(assetQuery, 1, 1000, true);
+        /*AssetQuery assetQuery = new AssetQuery();
+        assetQuery.setFlagState(Collections.singletonList(asset.getFlagStateCode()));*/
+
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.addNewSearchLeaf(SearchFields.FLAG_STATE, asset.getFlagStateCode());
+
+        List<AssetDTO> assets = assetClient.getAssetList(trunk, 1, 1000);
         assertEquals(1, assets.stream()
                 .filter(a -> a.getId().equals(upsertAssetBo.getAsset().getId()))
                 .count());
@@ -176,11 +183,17 @@ public class AssetClientTest extends AbstractClientTest {
         firstAssetBo.getAsset().setName(UUID.randomUUID().toString());
         assetClient.upsertAsset(firstAssetBo);
     
-        AssetQuery query = new AssetQuery();
+        /*AssetQuery query = new AssetQuery();
         query.setCfr(Arrays.asList(asset.getCfr()));
         query.setName(Arrays.asList(asset.getName()));
-        query.setDate(timestamp);
-        List<AssetDTO> assetList = assetClient.getAssetList(query);
+        query.setDate(timestamp);*/
+
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.addNewSearchLeaf(SearchFields.CFR, asset.getCfr());
+        trunk.addNewSearchLeaf(SearchFields.NAME, asset.getName());
+        trunk.addNewSearchLeaf(SearchFields.DATE, DateUtils.dateToEpochMilliseconds(timestamp));
+
+        List<AssetDTO> assetList = assetClient.getAssetList(trunk);
         assertThat(assetList.size(), CoreMatchers.is(1));
         assertThat(assetList.get(0).getHistoryId(), CoreMatchers.is(firstAssetBo.getAsset().getHistoryId()));
     }
@@ -193,11 +206,15 @@ public class AssetClientTest extends AbstractClientTest {
         assetBo.setAsset(asset);
         AssetBO firstAssetBo = assetClient.upsertAsset(assetBo);
 
-        AssetQuery query = new AssetQuery();
+        /*AssetQuery query = new AssetQuery();
         query.setCfr(Arrays.asList(asset.getCfr()));
-        query.setName(Arrays.asList(asset.getName()));
+        query.setName(Arrays.asList(asset.getName()));*/
 
-        List<String> assetList = assetClient.getAssetIdList(query, 1, 100000, true, false);
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.addNewSearchLeaf(SearchFields.CFR, asset.getCfr());
+        trunk.addNewSearchLeaf(SearchFields.NAME, asset.getName());
+
+        List<String> assetList = assetClient.getAssetIdList(trunk, 1, 100000, false);
         assertThat(assetList.size(), CoreMatchers.is(1));
         assertEquals(assetList.get(0), firstAssetBo.getAsset().getId().toString());
     }

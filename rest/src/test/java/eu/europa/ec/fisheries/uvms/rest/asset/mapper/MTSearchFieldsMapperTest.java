@@ -11,7 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset.mapper;
 
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFields;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.junit.Test;

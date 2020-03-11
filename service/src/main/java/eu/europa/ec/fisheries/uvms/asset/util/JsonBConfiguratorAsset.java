@@ -6,6 +6,6 @@ public class JsonBConfiguratorAsset extends JsonBConfigurator {
 
     public JsonBConfiguratorAsset() {
         super();
-        config.withDeserializers(new QDeserializer());
+        config.withDeserializers(new SearchBranchDeserializer());
     }
 }
