@@ -34,7 +34,7 @@
 				<db.outputFile>changelog/generatedChangelog.xml</db.outputFile>
 				<driver.groupId>org.postgresql</driver.groupId>
 				<driver.artifactId>postgresql</driver.artifactId>
-				<driver.version>42.2.10</driver.version>
+				<driver.version>42.2.11</driver.version>
 			</properties>
 			<dependencies>
 		        <dependency>
@@ -101,7 +101,7 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>build-helper-maven-plugin</artifactId>
-						<version>3.0.0</version>
+						<version>3.1.0</version>
 						<executions>
 							<execution>
 								<id>attach-artifacts</id>
