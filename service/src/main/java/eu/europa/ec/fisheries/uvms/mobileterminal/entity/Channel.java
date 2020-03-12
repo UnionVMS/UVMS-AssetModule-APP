@@ -23,7 +23,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.entity;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 
@@ -50,10 +49,6 @@ import java.util.UUID;
 			@UniqueConstraint(name = "channel_uc_historyid" , columnNames = "historyid"),
 			@UniqueConstraint(name = "channel_uc_dnid_member_number" , columnNames = {"dnid", "member_number"})
 		})
-@NamedQueries({
-		@NamedQuery(name = MobileTerminalConstants.CHANNEL_FIND_ACTIVE_DNID,
-				query = "SELECT c.DNID FROM Channel c INNER JOIN c.mobileTerminal mt INNER JOIN mt.plugin p WHERE c.active = true AND mt.archived = false AND p.pluginInactive = false AND p.pluginServiceName = :pluginName")
-})
 @Audited
 public class Channel implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -117,7 +112,7 @@ public class Channel implements Serializable {
 
 	@NotNull
 	@Column(name="member_number")
-	private String memberNumber;
+	private Integer memberNumber;
 
 	@Column(name="start_date")
 	private Instant startDate;
@@ -263,11 +258,11 @@ public class Channel implements Serializable {
 		this.lesDescription = lesDescription;
 	}
 
-	public String getMemberNumber() {
+	public Integer getMemberNumber() {
 		return memberNumber;
 	}
 
-	public void setMemberNumber(String memberNumber) {
+	public void setMemberNumber(Integer memberNumber) {
 		this.memberNumber = memberNumber;
 	}
 

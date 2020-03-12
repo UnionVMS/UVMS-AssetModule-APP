@@ -7,9 +7,9 @@ import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian.AssetTestsHelper;
 
@@ -64,13 +64,13 @@ public class TestPollHelper {
 
         Channel channel = new Channel();
         channel.setArchived(false);
-        channel.setMemberNumber(generateARandomStringWithMaxLength(3));
+        channel.setMemberNumber(Integer.parseInt(generateARandomStringWithMaxLength(3)));
         channel.setExpectedFrequencyInPort(Duration.ofSeconds(60));
         channel.setExpectedFrequency(Duration.ofSeconds(60));
         channel.setFrequencyGracePeriod(Duration.ofSeconds(60));
         channel.setLesDescription("Thrane&Thrane");
         channel.setMobileTerminal(mobileTerminal);
-        channel.setDnid("1" + generateARandomStringWithMaxLength(3));
+        channel.setDnid(Integer.parseInt("1" + generateARandomStringWithMaxLength(3)));
         channel.setName("VMS");
         channel.setConfigChannel(true);
         channel.setDefaultChannel(true);
@@ -161,8 +161,8 @@ public class TestPollHelper {
         Channel pollChannel = new Channel();
         pollChannel.setArchived(false);
         pollChannel.setMobileTerminal(mt);
-        pollChannel.setDnid("5555");
-        pollChannel.setMemberNumber("" + (int)(Math.random() * 100000));
+        pollChannel.setDnid(5555);
+        pollChannel.setMemberNumber( (int)(Math.random() * 100000));
         pollChannel.setLesDescription("Thrane&Thrane");
         pollChannel.setExpectedFrequency(Duration.ofSeconds(60));
         pollChannel.setFrequencyGracePeriod(Duration.ofSeconds(60));
@@ -172,8 +172,8 @@ public class TestPollHelper {
         Channel channel = new Channel();
         channel.setArchived(false);
         channel.setMobileTerminal(mt);
-        channel.setDnid("555");
-        channel.setMemberNumber("" + (int)(Math.random() * 100000));
+        channel.setDnid(555);
+        channel.setMemberNumber((int)(Math.random() * 100000));
         channel.setLesDescription("Thrane&Thrane");
         channel.setExpectedFrequency(Duration.ofSeconds(60));
         channel.setFrequencyGracePeriod(Duration.ofSeconds(60));
@@ -222,8 +222,8 @@ public class TestPollHelper {
         pollChannel.setArchived(false);
         pollChannel.setMobileTerminal(mt);
 
-        pollChannel.setDnid("5555");
-        pollChannel.setMemberNumber("" + (int)(Math.random() * 100000));
+        pollChannel.setDnid(5555);
+        pollChannel.setMemberNumber((int)(Math.random() * 100000));
         pollChannel.setLesDescription("Thrane&Thrane");
         pollChannel.setExpectedFrequency(Duration.ofSeconds(60));
         pollChannel.setFrequencyGracePeriod(Duration.ofSeconds(60));
@@ -233,8 +233,8 @@ public class TestPollHelper {
         Channel channel = new Channel();
         channel.setArchived(false);
         channel.setMobileTerminal(mt);
-        channel.setDnid("555");
-        channel.setMemberNumber("" + (int)(Math.random() * 100000));
+        channel.setDnid(555);
+        channel.setMemberNumber((int)(Math.random() * 100000));
         channel.setLesDescription("Thrane&Thrane");
         channel.setExpectedFrequency(Duration.ofSeconds(60));
         channel.setFrequencyGracePeriod(Duration.ofSeconds(60));
@@ -269,13 +269,13 @@ public class TestPollHelper {
 
         Channel channel = new Channel();
         channel.setArchived(false);
-        channel.setMemberNumber("MEMBER1234567890");
+        channel.setMemberNumber(1234567890);
         channel.setExpectedFrequencyInPort(Duration.ofSeconds(60));
         channel.setExpectedFrequency(Duration.ofSeconds(60));
         channel.setFrequencyGracePeriod(Duration.ofSeconds(60));
         channel.setLesDescription("LESDESCRIPTION");
         channel.setMobileTerminal(mobileTerminal);
-        channel.setDnid("DNID1234567890");
+        channel.setDnid(1234567890);
         mobileTerminal.getChannels().clear();
         mobileTerminal.getChannels().add(channel);
         return mobileTerminal;

@@ -531,8 +531,8 @@ public class AssetServiceBean {
                     continue;
                 }
 
-                resp.setDNID(channel.getDnid());
-                resp.setMemberNumber(channel.getMemberNumber());
+                resp.setDNID(String.valueOf(channel.getDnid()));
+                resp.setMemberNumber(String.valueOf(channel.getMemberNumber()));
             }
         }
 
@@ -562,8 +562,8 @@ public class AssetServiceBean {
         boolean correctMemberNumber = false;
         Set<Channel> channels = mobileTerminal.getChannels();
         for (Channel channel : channels) {
-            correctDnid = channel.getDnid().equalsIgnoreCase(dnid);
-            correctMemberNumber = channel.getMemberNumber().equalsIgnoreCase(memberNumber);
+            correctDnid = channel.getDnid().equals(dnid);
+            correctMemberNumber = channel.getMemberNumber().equals(memberNumber);
 
             if (correctDnid && correctMemberNumber) {
                 channelGuid = channel.getId().toString();

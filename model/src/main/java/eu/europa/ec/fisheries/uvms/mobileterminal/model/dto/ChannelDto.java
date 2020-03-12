@@ -27,7 +27,7 @@ public class ChannelDto {
 
     private boolean pollChannel;
 
-    private String DNID;
+    private Integer dnid;
 
     private Duration expectedFrequency;
 
@@ -37,7 +37,7 @@ public class ChannelDto {
 
     private String lesDescription;
 
-    private String memberNumber;
+    private Integer memberNumber;
 
     private Instant startDate;
 
@@ -131,12 +131,12 @@ public class ChannelDto {
         this.pollChannel = pollChannel;
     }
 
-    public String getDNID() {
-        return DNID;
+    public Integer getDnid() {
+        return dnid;
     }
 
-    public void setDNID(String DNID) {
-        this.DNID = DNID;
+    public void setDnid(Integer dnid) {
+        this.dnid = dnid;
     }
 
     public Duration getExpectedFrequency() {
@@ -171,11 +171,11 @@ public class ChannelDto {
         this.lesDescription = lesDescription;
     }
 
-    public String getMemberNumber() {
+    public Integer getMemberNumber() {
         return memberNumber;
     }
 
-    public void setMemberNumber(String memberNumber) {
+    public void setMemberNumber(Integer memberNumber) {
         this.memberNumber = memberNumber;
     }
 

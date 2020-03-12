@@ -417,8 +417,8 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         Set<Channel> channels = mobileTerminal.getChannels();
         Channel channel = channels.iterator().next();
-        String dnid = channel.getDnid();
-        String memberNumber = channel.getMemberNumber();
+        String dnid = String.valueOf(channel.getDnid());
+        String memberNumber = String.valueOf(channel.getMemberNumber());
 
         request.setMemberNumberValue(memberNumber);
         request.setDnidValue(dnid);
@@ -466,7 +466,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         
         Asset asset1 = createAsset();
         MobileTerminal mobileTerminal1 = testPollHelper.createBasicMobileTerminal();
-        mobileTerminal1.getChannels().iterator().next().setDnid(dnid);
+        mobileTerminal1.getChannels().iterator().next().setDnid(Integer.parseInt(dnid));
         mobileTerminal1.setAsset(asset1);
         mobileTerminal1 = mobileTerminalService.createMobileTerminal(mobileTerminal1, "TEST");
         MobileTerminalPlugin plugin = mobileTerminal1.getPlugin();
@@ -474,14 +474,14 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Asset asset2 = createAsset();
         MobileTerminal mobileTerminal2 = testPollHelper.createBasicMobileTerminal();
         mobileTerminal2.setPlugin(plugin);
-        mobileTerminal2.getChannels().iterator().next().setDnid(dnid);
+        mobileTerminal2.getChannels().iterator().next().setDnid(Integer.parseInt(dnid));
         mobileTerminal2.setAsset(asset2);
         mobileTerminal2 = mobileTerminalService.createMobileTerminal(mobileTerminal2, "TEST");
         
         Asset asset3 = createAsset();
         MobileTerminal mobileTerminal3 = testPollHelper.createBasicMobileTerminal();
         mobileTerminal3.setPlugin(plugin);
-        mobileTerminal3.getChannels().iterator().next().setDnid(dnid);
+        mobileTerminal3.getChannels().iterator().next().setDnid(Integer.parseInt(dnid));
         mobileTerminal3.setAsset(asset3);
         mobileTerminal3 = mobileTerminalService.createMobileTerminal(mobileTerminal3, "TEST");
 
@@ -542,8 +542,8 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Channel channel = mobileTerminal.getChannels().iterator().next();
         
         // for mobileTerminal
-        request.setMemberNumberValue(channel.getMemberNumber());
-        request.setDnidValue(channel.getDnid());
+        request.setMemberNumberValue(String.valueOf(channel.getMemberNumber()));
+        request.setDnidValue(String.valueOf(channel.getDnid()));
         request.setTranspondertypeValue(mobileTerminal.getMobileTerminalType().toString());
         
         return request;
@@ -553,9 +553,9 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         AssetMTEnrichmentRequest request = new AssetMTEnrichmentRequest();
 
         // for mobileTerminal
-        request.setMemberNumberValue("MEMBER1234567890");
+        request.setMemberNumberValue("1234567890");
         request.setSerialNumberValue("SN1234567890");
-        request.setDnidValue("DNID1234567890");
+        request.setDnidValue("1234567890");
         request.setLesValue("LES1234567890");
 
         // for asset

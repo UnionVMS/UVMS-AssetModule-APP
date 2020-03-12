@@ -69,11 +69,11 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         Channel channel2 = new Channel();
         channel2.setName("VMS");
         channel2.setFrequencyGracePeriod(Duration.ofSeconds(53000));
-        channel2.setMemberNumber(MobileTerminalTestHelper.generateARandomStringWithMaxLength(3));
+        channel2.setMemberNumber(Integer.parseInt(MobileTerminalTestHelper.generateARandomStringWithMaxLength(3)));
         channel2.setExpectedFrequency(Duration.ofSeconds(7100));
         channel2.setExpectedFrequencyInPort(Duration.ofSeconds(10400));
         channel2.setLesDescription("Thrane&Thrane");
-        channel2.setDnid("1" + MobileTerminalTestHelper.generateARandomStringWithMaxLength(3));
+        channel2.setDnid(Integer.parseInt("1" + MobileTerminalTestHelper.generateARandomStringWithMaxLength(3)));
         channel2.setArchived(false);
         channel2.setConfigChannel(true);
         channel2.setDefaultChannel(true);
@@ -893,7 +893,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .path("mobileterminal")
                 .path("checkIfExists")
                 .path("memberNbr/dnid")
-                .path(created.getChannels().iterator().next().getMemberNumber())
+                .path(String.valueOf(created.getChannels().iterator().next().getMemberNumber()))
                 .path("DoesNotExist")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
@@ -920,8 +920,8 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .path("mobileterminal")
                 .path("checkIfExists")
                 .path("memberNbr/dnid")
-                .path(channel.getMemberNumber())
-                .path(channel.getDnid())
+                .path(String.valueOf(channel.getMemberNumber()))
+                .path(String.valueOf(channel.getDnid()))
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(Response.class);

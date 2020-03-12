@@ -14,19 +14,31 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
-                   logicalFilePath="changelog/v6.6.3/dnid_to_integer.xml">
+                   logicalFilePath="changelog/v6.6.3/dnid_and_member_number_to_integer.xml">
 
-    <changeSet author="joemat" id="Make dnid into an int instead of a string">
-        <dropColumn tableName="channel" columnName="dnid" />
+    <changeSet author="joemat" id="Make dnid and member number into ints instead of strings">
 
-        <addColumn tableName="channel">
-            <column name="dnid" type="INTEGER" value="0"/>
-        </addColumn>
+        <modifyDataType columnName="dnid"
+                        newDataType="INTEGER"
+                        tableName="channel"/>
 
-        <!--update tableName="channel">
-            <column name="address" />
-            <where>name='Bob'</where>
-        </update-->
+        <modifyDataType columnName="dnid"
+                        newDataType="INTEGER"
+                        tableName="channel_aud"/>
+
+
+        <modifyDataType columnName="member_number"
+                        newDataType="INTEGER"
+                        tableName="channel"/>
+
+        <modifyDataType columnName="member_number"
+                        newDataType="INTEGER"
+                        tableName="channel_aud"/>
+
+    </changeSet>
+
+    <changeSet author="joemat" id="Drop dnid_list">
+        <dropTable tableName="dnid_list"/>
 
     </changeSet>
 

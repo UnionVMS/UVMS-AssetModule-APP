@@ -3,8 +3,6 @@ package eu.europa.ec.fisheries.uvms.tests.mobileterminal.service.arquillian;
 import eu.europa.ec.fisheries.schema.exchange.common.v1.AcknowledgeTypeType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PluginServiceBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dao.DNIDListDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.DNIDList;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalEntityToModelMapper;
 import eu.europa.ec.fisheries.uvms.tests.TransactionalTests;
@@ -16,7 +14,6 @@ import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
 import java.time.Instant;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -31,8 +28,6 @@ public class PluginServiceBeanIntTest extends TransactionalTests {
     private PluginServiceBean pluginService;
     @EJB
     private TestPollHelper testPollHelper;
-    @EJB
-    private DNIDListDaoBean dnidListDao;
 
     private final String USERNAME = "TEST_USERNAME";
 
@@ -50,23 +45,6 @@ public class PluginServiceBeanIntTest extends TransactionalTests {
           by this test. Thus ignore until we have changed the mocker class.
         */
         //assertEquals(AcknowledgeTypeType.OK, ack);
-    }
-
-    @Test
-    @OperateOnDeployment("normal")
-    public void processUpdatedDNIDList() {
-
-        try {
-            DNIDList dnidList = createDnidList();
-            String pluginName = dnidList.getPluginName();
-
-            dnidList = dnidListDao.create(dnidList);
-            assertNotNull(dnidList.getId());
-
-            pluginService.processUpdatedDNIDList(pluginName);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
     }
 
     private PollResponseType createPollResponseType() {
@@ -95,14 +73,5 @@ public class PluginServiceBeanIntTest extends TransactionalTests {
         pollResponseType.getAttributes().addAll(attributes);
 
         return pollResponseType;
-    }
-
-    private DNIDList createDnidList() {
-        DNIDList dnidList = new DNIDList();
-        dnidList.setDnid("TEST_DN_ID");
-        dnidList.setPluginName("TEST_PLUGIN_NAME");
-        dnidList.setUpdateTime(Instant.now());
-        dnidList.setUpdatedBy(USERNAME);
-        return dnidList;
     }
 }
