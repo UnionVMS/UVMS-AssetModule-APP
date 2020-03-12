@@ -98,7 +98,7 @@ public class Channel implements Serializable {
 
 	@NotNull
 	@Column(name="dnid")
-	private String DNID;
+	private Integer dnid;
 
 	@NotNull
 	@Column(name="expected_frequency")
@@ -223,12 +223,12 @@ public class Channel implements Serializable {
 		this.pollChannel = pollChannel;
 	}
 
-	public String getDNID() {
-		return DNID;
+	public Integer getDnid() {
+		return dnid;
 	}
 
-	public void setDNID(String DNID) {
-		this.DNID = DNID;
+	public void setDnid(Integer dnid) {
+		this.dnid = dnid;
 	}
 
 	public Duration getExpectedFrequency() {
@@ -302,7 +302,7 @@ public class Channel implements Serializable {
 				Objects.equals(updateTime, channel.updateTime) &&
 				Objects.equals(updateUser, channel.updateUser) &&
 				Objects.equals(name, channel.name) &&
-				Objects.equals(DNID, channel.DNID) &&
+				Objects.equals(dnid, channel.dnid) &&
 				Objects.equals(expectedFrequency, channel.expectedFrequency) &&
 				Objects.equals(expectedFrequencyInPort, channel.expectedFrequencyInPort) &&
 				Objects.equals(frequencyGracePeriod, channel.frequencyGracePeriod) &&
@@ -315,6 +315,6 @@ public class Channel implements Serializable {
 	@Override
 	public int hashCode() {
 
-		return Objects.hash(id, historyId, archived, updateTime, updateUser, mobileTerminal, name, active, defaultChannel, configChannel, pollChannel, DNID, expectedFrequency, expectedFrequencyInPort, frequencyGracePeriod, lesDescription, memberNumber, startDate, endDate);
+		return Objects.hash(id, historyId, archived, updateTime, updateUser, mobileTerminal, name, active, defaultChannel, configChannel, pollChannel, dnid, expectedFrequency, expectedFrequencyInPort, frequencyGracePeriod, lesDescription, memberNumber, startDate, endDate);
 	}
 }

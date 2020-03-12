@@ -73,7 +73,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         channel2.setExpectedFrequency(Duration.ofSeconds(7100));
         channel2.setExpectedFrequencyInPort(Duration.ofSeconds(10400));
         channel2.setLesDescription("Thrane&Thrane");
-        channel2.setDNID("1" + MobileTerminalTestHelper.generateARandomStringWithMaxLength(3));
+        channel2.setDnid("1" + MobileTerminalTestHelper.generateARandomStringWithMaxLength(3));
         channel2.setArchived(false);
         channel2.setConfigChannel(true);
         channel2.setDefaultChannel(true);
@@ -921,7 +921,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .path("checkIfExists")
                 .path("memberNbr/dnid")
                 .path(channel.getMemberNumber())
-                .path(channel.getDNID())
+                .path(channel.getDnid())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(Response.class);

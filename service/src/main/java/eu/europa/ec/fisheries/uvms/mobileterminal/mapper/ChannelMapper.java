@@ -52,7 +52,7 @@ public class ChannelMapper {
 
     private static List<ComChannelAttribute> mapAttributes(Channel channel) {
         List<ComChannelAttribute> attributeList = new ArrayList<>();
-        attributeList.add(mapAttr("DNID", channel.getDNID()));
+        attributeList.add(mapAttr("DNID", channel.getDnid()));
         attributeList.add(mapAttr("FREQUENCY_EXPECTED", String.valueOf(channel.getExpectedFrequency().getSeconds())));
         attributeList.add(mapAttr("FREQUENCY_IN_PORT", String.valueOf(channel.getExpectedFrequencyInPort().getSeconds())));
         attributeList.add(mapAttr("LES_DESCRIPTION", channel.getLesDescription()));

@@ -417,7 +417,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         Set<Channel> channels = mobileTerminal.getChannels();
         Channel channel = channels.iterator().next();
-        String dnid = channel.getDNID();
+        String dnid = channel.getDnid();
         String memberNumber = channel.getMemberNumber();
 
         request.setMemberNumberValue(memberNumber);
@@ -466,7 +466,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         
         Asset asset1 = createAsset();
         MobileTerminal mobileTerminal1 = testPollHelper.createBasicMobileTerminal();
-        mobileTerminal1.getChannels().iterator().next().setDNID(dnid);
+        mobileTerminal1.getChannels().iterator().next().setDnid(dnid);
         mobileTerminal1.setAsset(asset1);
         mobileTerminal1 = mobileTerminalService.createMobileTerminal(mobileTerminal1, "TEST");
         MobileTerminalPlugin plugin = mobileTerminal1.getPlugin();
@@ -474,14 +474,14 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Asset asset2 = createAsset();
         MobileTerminal mobileTerminal2 = testPollHelper.createBasicMobileTerminal();
         mobileTerminal2.setPlugin(plugin);
-        mobileTerminal2.getChannels().iterator().next().setDNID(dnid);
+        mobileTerminal2.getChannels().iterator().next().setDnid(dnid);
         mobileTerminal2.setAsset(asset2);
         mobileTerminal2 = mobileTerminalService.createMobileTerminal(mobileTerminal2, "TEST");
         
         Asset asset3 = createAsset();
         MobileTerminal mobileTerminal3 = testPollHelper.createBasicMobileTerminal();
         mobileTerminal3.setPlugin(plugin);
-        mobileTerminal3.getChannels().iterator().next().setDNID(dnid);
+        mobileTerminal3.getChannels().iterator().next().setDnid(dnid);
         mobileTerminal3.setAsset(asset3);
         mobileTerminal3 = mobileTerminalService.createMobileTerminal(mobileTerminal3, "TEST");
 
@@ -543,7 +543,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         
         // for mobileTerminal
         request.setMemberNumberValue(channel.getMemberNumber());
-        request.setDnidValue(channel.getDNID());
+        request.setDnidValue(channel.getDnid());
         request.setTranspondertypeValue(mobileTerminal.getMobileTerminalType().toString());
         
         return request;

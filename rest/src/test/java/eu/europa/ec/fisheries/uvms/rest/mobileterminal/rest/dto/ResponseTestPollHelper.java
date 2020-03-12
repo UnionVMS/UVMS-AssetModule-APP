@@ -39,7 +39,7 @@ public class ResponseTestPollHelper {
         Channel pollChannel = new Channel();
         pollChannel.setArchived(false);
         pollChannel.setMobileTerminal(mt);
-        pollChannel.setDNID("5555");
+        pollChannel.setDnid("5555");
         pollChannel.setMemberNumber("666");
         pollChannel.setLesDescription("Thrane&Thrane");
         pollChannel.setExpectedFrequency(Duration.ofSeconds(60));
@@ -50,7 +50,7 @@ public class ResponseTestPollHelper {
         Channel channel = new Channel();
         channel.setArchived(false);
         channel.setMobileTerminal(mt);
-        channel.setDNID("555");
+        channel.setDnid("555");
         channel.setMemberNumber("666");
         channel.setLesDescription("Thrane&Thrane");
         channel.setExpectedFrequency(Duration.ofSeconds(60));

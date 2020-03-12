@@ -70,7 +70,7 @@ public class TestPollHelper {
         channel.setFrequencyGracePeriod(Duration.ofSeconds(60));
         channel.setLesDescription("Thrane&Thrane");
         channel.setMobileTerminal(mobileTerminal);
-        channel.setDNID("1" + generateARandomStringWithMaxLength(3));
+        channel.setDnid("1" + generateARandomStringWithMaxLength(3));
         channel.setName("VMS");
         channel.setConfigChannel(true);
         channel.setDefaultChannel(true);
@@ -161,7 +161,7 @@ public class TestPollHelper {
         Channel pollChannel = new Channel();
         pollChannel.setArchived(false);
         pollChannel.setMobileTerminal(mt);
-        pollChannel.setDNID("5555");
+        pollChannel.setDnid("5555");
         pollChannel.setMemberNumber("" + (int)(Math.random() * 100000));
         pollChannel.setLesDescription("Thrane&Thrane");
         pollChannel.setExpectedFrequency(Duration.ofSeconds(60));
@@ -172,7 +172,7 @@ public class TestPollHelper {
         Channel channel = new Channel();
         channel.setArchived(false);
         channel.setMobileTerminal(mt);
-        channel.setDNID("555");
+        channel.setDnid("555");
         channel.setMemberNumber("" + (int)(Math.random() * 100000));
         channel.setLesDescription("Thrane&Thrane");
         channel.setExpectedFrequency(Duration.ofSeconds(60));
@@ -222,7 +222,7 @@ public class TestPollHelper {
         pollChannel.setArchived(false);
         pollChannel.setMobileTerminal(mt);
 
-        pollChannel.setDNID("5555");
+        pollChannel.setDnid("5555");
         pollChannel.setMemberNumber("" + (int)(Math.random() * 100000));
         pollChannel.setLesDescription("Thrane&Thrane");
         pollChannel.setExpectedFrequency(Duration.ofSeconds(60));
@@ -233,7 +233,7 @@ public class TestPollHelper {
         Channel channel = new Channel();
         channel.setArchived(false);
         channel.setMobileTerminal(mt);
-        channel.setDNID("555");
+        channel.setDnid("555");
         channel.setMemberNumber("" + (int)(Math.random() * 100000));
         channel.setLesDescription("Thrane&Thrane");
         channel.setExpectedFrequency(Duration.ofSeconds(60));
@@ -275,7 +275,7 @@ public class TestPollHelper {
         channel.setFrequencyGracePeriod(Duration.ofSeconds(60));
         channel.setLesDescription("LESDESCRIPTION");
         channel.setMobileTerminal(mobileTerminal);
-        channel.setDNID("DNID1234567890");
+        channel.setDnid("DNID1234567890");
         mobileTerminal.getChannels().clear();
         mobileTerminal.getChannels().add(channel);
         return mobileTerminal;

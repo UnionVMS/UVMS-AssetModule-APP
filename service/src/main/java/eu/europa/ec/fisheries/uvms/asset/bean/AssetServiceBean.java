@@ -531,7 +531,7 @@ public class AssetServiceBean {
                     continue;
                 }
 
-                resp.setDNID(channel.getDNID());
+                resp.setDNID(channel.getDnid());
                 resp.setMemberNumber(channel.getMemberNumber());
             }
         }
@@ -562,7 +562,7 @@ public class AssetServiceBean {
         boolean correctMemberNumber = false;
         Set<Channel> channels = mobileTerminal.getChannels();
         for (Channel channel : channels) {
-            correctDnid = channel.getDNID().equalsIgnoreCase(dnid);
+            correctDnid = channel.getDnid().equalsIgnoreCase(dnid);
             correctMemberNumber = channel.getMemberNumber().equalsIgnoreCase(memberNumber);
 
             if (correctDnid && correctMemberNumber) {
