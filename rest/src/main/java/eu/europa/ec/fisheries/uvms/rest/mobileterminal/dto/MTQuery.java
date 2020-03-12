@@ -7,8 +7,8 @@ public class MTQuery {
     private List<String> assetIds;
     private List<String> mobileterminalTypes;
     private List<String> serialNumbers;
-    private List<String> memberNumbers;
-    private List<String> dnids;
+    private List<Integer> memberNumbers;
+    private List<Integer> dnids;
     private List<String> sateliteNumbers;
     private List<String> softwareVersions;
     private List<String> tranceiverTypes;
@@ -42,19 +42,19 @@ public class MTQuery {
         this.serialNumbers = serialNumbers;
     }
 
-    public List<String> getMemberNumbers() {
+    public List<Integer> getMemberNumbers() {
         return memberNumbers;
     }
 
-    public void setMemberNumbers(List<String> memberNumbers) {
+    public void setMemberNumbers(List<Integer> memberNumbers) {
         this.memberNumbers = memberNumbers;
     }
 
-    public List<String> getDnids() {
+    public List<Integer> getDnids() {
         return dnids;
     }
 
-    public void setDnids(List<String> dnids) {
+    public void setDnids(List<Integer> dnids) {
         this.dnids = dnids;
     }
 

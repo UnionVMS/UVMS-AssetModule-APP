@@ -867,7 +867,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .path("mobileterminal")
                 .path("checkIfExists")
                 .path("memberNbr/dnid")
-                .path("DoesNot/Exist")
+                .path("5555/5555")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(Response.class);
@@ -894,7 +894,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .path("checkIfExists")
                 .path("memberNbr/dnid")
                 .path(String.valueOf(created.getChannels().iterator().next().getMemberNumber()))
-                .path("DoesNotExist")
+                .path("5555")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get(Response.class);
