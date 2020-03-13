@@ -112,13 +112,13 @@ public class SearchFieldMapper {
             searchValues.add(new MTSearchKeyValue(MTSearchFields.DATE, Arrays.asList(query.getDate().toString())));
         }
         if(query.getDnids() != null && !query.getDnids().isEmpty()){
-            searchValues.add(new MTSearchKeyValue(MTSearchFields.DNID, query.getDnids()));
+            searchValues.add(new MTSearchKeyValue(MTSearchFields.DNID, query.getDnids().stream().map(String::valueOf).collect(Collectors.toList())));
         }
         if(query.getHistoryIds() != null && !query.getHistoryIds().isEmpty()){
             searchValues.add(new MTSearchKeyValue(MTSearchFields.HIST_GUID, query.getHistoryIds()));
         }
         if(query.getMemberNumbers() != null && !query.getMemberNumbers().isEmpty()){
-            searchValues.add(new MTSearchKeyValue(MTSearchFields.MEMBER_NUMBER, query.getMemberNumbers()));
+            searchValues.add(new MTSearchKeyValue(MTSearchFields.MEMBER_NUMBER, query.getMemberNumbers().stream().map(String::valueOf).collect(Collectors.toList())));
         }
         if(query.getMobileterminalIds() != null && !query.getMobileterminalIds().isEmpty()){
             searchValues.add(new MTSearchKeyValue(MTSearchFields.MOBILETERMINAL_ID, query.getMobileterminalIds()));

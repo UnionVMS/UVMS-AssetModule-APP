@@ -274,7 +274,11 @@ public class TerminalDaoBean {
                 channelOperatorUsed = true;
                 AuditDisjunction disjunctionOperator = AuditEntity.disjunction();
                 for (String v : channelSearchValue.getSearchValuesAsLowerCase()) {
-                    disjunctionOperator.add(AuditEntity.property(channelSearchValue.getSearchField().getFieldName()).ilike(v, MatchMode.ANYWHERE));
+                    if(channelSearchValue.getSearchField().equals(MTSearchFields.DNID) || channelSearchValue.getSearchField().equals(MTSearchFields.MEMBER_NUMBER)){
+                        disjunctionOperator.add(AuditEntity.property(channelSearchValue.getSearchField().getFieldName()).eq(Integer.valueOf(v)));
+                    }else {
+                        disjunctionOperator.add(AuditEntity.property(channelSearchValue.getSearchField().getFieldName()).ilike(v, MatchMode.ANYWHERE));
+                    }
                 }
                 operatorChannel.add(disjunctionOperator);
             }
