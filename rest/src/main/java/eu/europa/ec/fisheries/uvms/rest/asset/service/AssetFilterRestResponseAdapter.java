@@ -59,15 +59,17 @@ public class AssetFilterRestResponseAdapter implements JsonbAdapter<AssetFilter,
 	@Override
 	public AssetFilter adaptFromJson(JsonObject adapted) throws Exception {
 		AssetFilter assetFilter = new AssetFilter();
-		assetFilter.setId(UUID.fromString(adapted.getString("id")));
+		
 		/**
 		 *  Här kommer en ful och inte helt stabil lösning för att sätta "name" värdet som key på objectet. 
 		 *  Jag kollar om det inte är "assetFilterId", det funkar sålänge det bara är två värden som skickas...
 		 */
 		String nameValue = "";
 		for (String keyStr : adapted.keySet()) {
-	        if(!keyStr.equalsIgnoreCase("assetFilterId") ) {
+	        if(!keyStr.equalsIgnoreCase("id") ) {
 	        	nameValue = keyStr;
+	        }if(keyStr.equalsIgnoreCase("id") ) {
+	        	assetFilter.setId(UUID.fromString(adapted.getString("id")));
 	        }
 	    }
 		assetFilter.setName(nameValue);

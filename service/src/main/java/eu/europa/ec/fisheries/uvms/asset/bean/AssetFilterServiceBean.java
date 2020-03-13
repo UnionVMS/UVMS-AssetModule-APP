@@ -3,7 +3,6 @@ package eu.europa.ec.fisheries.uvms.asset.bean;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.ejb.Stateless;
@@ -67,7 +66,7 @@ public class AssetFilterServiceBean{
 
 	public AssetFilter createAssetFilter(AssetFilter assetFilter, String username) {
 		if (assetFilter == null) {
-            throw new NullPointerException("Cannot create asset group because the group is null.");
+            throw new NullPointerException("Cannot create asset filter because the assetFilter is null.");
         }
         if (username == null || username.trim().isEmpty()) {
             throw new NullPointerException("Username must be provided for selected operation");

@@ -13,6 +13,7 @@ package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
 import eu.europa.ec.fisheries.uvms.asset.bean.AssetFilterServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterList;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
@@ -28,7 +29,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
-import javax.json.JsonObjectBuilder;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbConfig;
@@ -63,6 +63,9 @@ public class AssetFilterRestResource {
     public void init() {
     	JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
         jsonb = JsonbBuilder.create(config);
+//    	jsonb = new JsonBConfigurator().getContext(null);
+//    	JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter(), new AssetFilterListRestResourceAdapter());
+//        jsonb = JsonbBuilder.create(config);
     }
     
     /**
@@ -79,28 +82,25 @@ public class AssetFilterRestResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetFilterListByUser(@ApiParam(value = "user") @QueryParam(value = "user") String user) throws Exception {
         try {
-        	
         	if(user == null) {
         		user = servletRequest.getRemoteUser();
         	}
-        	
             List<AssetFilter> assetFilterList = assetFilterService.getAssetFilterList(user);
-            JsonArrayBuilder returnJsonArraylist = Json.createArrayBuilder();
-            for(AssetFilter assetFilter : assetFilterList) {
-            	returnJsonArraylist.add(jsonb.toJson(assetFilter));
-            } 
-            jsonb = new JsonBConfigurator().getContext(null);
-            String response =  jsonb.toJson(returnJsonArraylist.build());
-            JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
-            jsonb = JsonbBuilder.create(config);
+            String response =  jsonb.toJson(assetFilterList);
+//            JsonArrayBuilder returnJsonArraylist = Json.createArrayBuilder();
+//            for(AssetFilter assetFilter : assetFilterList) {
+//            	returnJsonArraylist.add(jsonb.toJson(assetFilter));
+//            } 
+//            jsonb = new JsonBConfigurator().getContext(null);
+//            String response =  jsonb.toJson(returnJsonArraylist.build());
+//            JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
+//            jsonb = JsonbBuilder.create(config);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when retrieving assetFilter list {}", user, e);
             throw e;
         }
     }
-
-
     
     /**
      * @responseMessage 200 Success
@@ -309,6 +309,30 @@ public class AssetFilterRestResource {
         }
     }
     
+    /**
+     * @responseMessage 200 Success
+     * @responseMessage 500 Error
+     * @summary Create a asset filter
+     */
+    @POST
+    @ApiOperation(value = "Create an AssetFilter", notes = "Create an AssetFilter", response = AssetFilter.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Error when creating AssetFilter"),
+            @ApiResponse(code = 200, message = "AssetFilter successfully created")})
+    @Path("/createFilter")
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public Response createAssetFilterForReal(@ApiParam(value = "jsonAssetFilter", required = true) String jsonAssetFilter) throws Exception {
+        try {
+            String user = servletRequest.getRemoteUser();
+            AssetFilter assetFilter = jsonb.fromJson(jsonAssetFilter, AssetFilter.class);
+            AssetFilter createdAssetFilter = assetFilterService.createAssetFilter(assetFilter, user);
+            String resp = jsonb.toJson(createdAssetFilter);
+            return Response.ok(resp).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception e) {
+            LOG.error("Error when creating AssetFilter from json: {}", jsonAssetFilter, e);
+            throw e;
+        }
+    }
     
     @PUT
     @ApiOperation(value = "UpdateAssetFilter", notes = "UpdateAssetFilter", response = AssetFilter.class)
@@ -329,7 +353,41 @@ public class AssetFilterRestResource {
             LOG.error("Error when updating AssetFilter. ", e);
             throw e;
         }
-    } 
+    }
+    
+    /**
+     * @responseMessage 200 Success
+     * @responseMessage 500 Error
+     * @summary Get asset Filter list by user
+     */
+    @GET
+    @ApiOperation(value = "Get a list of Assetfilters for user", notes = "Get a list of Assetfilters for user", response = AssetFilter.class, responseContainer = "List")
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Error when retrieving AssetFilter list"),
+            @ApiResponse(code = 200, message = "AssetFilter list successfully retrieved")})
+    @Path("/listAssetFiltersByUser")
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public Response getListOfAssetFilterByUser() throws Exception {
+        try {
+//        	jsonb = new JsonBConfigurator().getContext(null);
+//        	JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterListRestResourceAdapter());
+//            jsonb = JsonbBuilder.create(config);
+            
+        	String user = servletRequest.getRemoteUser();
+        	List<AssetFilter> assetFilterList = assetFilterService.getAssetFilterList(user);
+        	AssetFilterList assetFilterListresp = new AssetFilterList();
+        	assetFilterListresp.setAssetFilterList(assetFilterList);
+            String response =  jsonb.toJson(assetFilterListresp);
+            
+//            config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter(), new AssetFilterListRestResourceAdapter());
+//            jsonb = JsonbBuilder.create(config);
+            
+            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception e) {
+            LOG.error("Error when retrieving assetFilter list {}", e);
+            throw e;
+        }
+    }
     
     
 }

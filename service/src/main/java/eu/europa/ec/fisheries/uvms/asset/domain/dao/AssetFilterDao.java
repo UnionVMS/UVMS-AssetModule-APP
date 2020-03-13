@@ -15,7 +15,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery;
 
 @Stateless
 public class AssetFilterDao {
