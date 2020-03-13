@@ -9,6 +9,8 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
+import eu.europa.ec.fisheries.uvms.rest.asset.dto.ChangeHistoryItem;
+import eu.europa.ec.fisheries.uvms.rest.asset.dto.ChangeHistoryRow;
 import eu.europa.ec.fisheries.uvms.rest.asset.filter.AppError;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
 import eu.europa.ec.fisheries.wsdl.asset.types.EventCode;
@@ -1037,6 +1039,117 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         assertNotNull(contactInfoRevisions);
         assertEquals(1, contactInfoRevisions.size());
     }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void updateAssetsSeveralTimesAndCheckAssetChangeHistoryTest() throws InterruptedException {
+
+        // CREATE AN ASSET
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = restCreateAsset(asset);
+
+        // UPDATE THE ASSET
+        String updatedName = "NewAssetName";
+        createdAsset.setName(updatedName);
+        Asset updatedAsset = restUpdateAsset(createdAsset);
+
+
+        String updatedName2 = "NewerAssetName";
+        String updateOwner = "new owner";
+        updatedAsset.setName(updatedName2);
+        updatedAsset.setOwnerName(updateOwner);
+        Asset updatedAsset2 = restUpdateAsset(updatedAsset);
+
+
+        // GET ASSET HISTORY
+        Response response = getWebTargetExternal()
+                .path("asset")
+                .path(updatedAsset.getId().toString())
+                .path("changeHistory")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get();
+
+        List<ChangeHistoryRow> assetChanges = response.readEntity(new GenericType<List<ChangeHistoryRow>>() {});
+
+        assertNotNull(assetChanges);
+        assertEquals(2, assetChanges.size());
+
+        assertEquals("user", assetChanges.get(0).getUpdatedBy());
+        assertEquals(2, assetChanges.get(0).getChanges().size());
+
+        assertEquals("user", assetChanges.get(1).getUpdatedBy());
+        assertEquals(3, assetChanges.get(1).getChanges().size());
+        assertTrue(assetChanges.get(1).getChanges().stream().anyMatch(item -> item.getNewValue().equals(updateOwner)));
+        assertTrue(assetChanges.get(1).getChanges().stream().anyMatch(item -> item.getOldValue().equals(updatedName)));
+        assertTrue(assetChanges.get(1).getChanges().stream().anyMatch(item -> item.getNewValue().equals(updatedName2)));
+
+    }
+
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void updateAssetsSeveralTimesAndAddAnMTAndCheckAssetChangeHistoryTest() throws InterruptedException {
+
+        // CREATE AN ASSET
+        Asset asset = AssetHelper.createBasicAsset();
+        Asset createdAsset = restCreateAsset(asset);
+
+        // UPDATE THE ASSET
+        String updatedName = "NewAssetName";
+        createdAsset.setName(updatedName);
+        Asset updatedAsset = restUpdateAsset(createdAsset);
+
+
+        // Create MobileTerminal
+        MobileTerminal terminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        MobileTerminal createdMT = getWebTargetExternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(terminal), MobileTerminal.class);
+        assertNotNull(createdMT.getId());
+
+        // Assign MobileTerminal
+        MobileTerminal assignedMT = getWebTargetExternal()
+                .path("mobileterminal")
+                .path(createdMT.getId().toString())
+                .path("assign")
+                .path(createdAsset.getId().toString())
+                .queryParam("comment", "assign")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(""), MobileTerminal.class);
+
+
+        String updatedName2 = "NewerAssetName";
+        updatedAsset.setName(updatedName2);
+        Asset updatedAsset2 = restUpdateAsset(updatedAsset);
+
+
+        // GET ASSET HISTORY
+        Response response = getWebTargetExternal()
+                .path("asset")
+                .path(updatedAsset.getId().toString())
+                .path("changeHistory")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get();
+
+        List<ChangeHistoryRow> assetChanges = response.readEntity(new GenericType<List<ChangeHistoryRow>>() {});
+
+        assertNotNull(assetChanges);
+        assertEquals(3, assetChanges.size());
+
+        assertEquals("user", assetChanges.get(0).getUpdatedBy());
+        assertEquals(2, assetChanges.get(0).getChanges().size());
+
+        assertEquals("user", assetChanges.get(2).getUpdatedBy());
+        assertEquals(2, assetChanges.get(2).getChanges().size());
+        assertTrue(assetChanges.get(2).getChanges().stream().anyMatch(item -> item.getNewValue().equals(updatedName2)));
+
+    }
+
     private Asset restCreateAsset(Asset asset){
         Asset createdAsset = getWebTargetExternal()
                 .path("asset")
