@@ -269,13 +269,13 @@ public class TestPollHelper {
 
         Channel channel = new Channel();
         channel.setArchived(false);
-        channel.setMemberNumber(1234567890);
+        channel.setMemberNumber((int) Math.random() * 1000000000);
         channel.setExpectedFrequencyInPort(Duration.ofSeconds(60));
         channel.setExpectedFrequency(Duration.ofSeconds(60));
         channel.setFrequencyGracePeriod(Duration.ofSeconds(60));
         channel.setLesDescription("LESDESCRIPTION");
         channel.setMobileTerminal(mobileTerminal);
-        channel.setDnid(1234567890);
+        channel.setDnid((int) Math.random() * 1000000000);
         mobileTerminal.getChannels().clear();
         mobileTerminal.getChannels().add(channel);
         return mobileTerminal;
