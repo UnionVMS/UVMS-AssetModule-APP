@@ -23,7 +23,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.entity;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 
@@ -50,10 +49,6 @@ import java.util.UUID;
 			@UniqueConstraint(name = "channel_uc_historyid" , columnNames = "historyid"),
 			@UniqueConstraint(name = "channel_uc_dnid_member_number" , columnNames = {"dnid", "member_number"})
 		})
-@NamedQueries({
-		@NamedQuery(name = MobileTerminalConstants.CHANNEL_FIND_ACTIVE_DNID,
-				query = "SELECT c.DNID FROM Channel c INNER JOIN c.mobileTerminal mt INNER JOIN mt.plugin p WHERE c.active = true AND mt.archived = false AND p.pluginInactive = false AND p.pluginServiceName = :pluginName")
-})
 @Audited
 public class Channel implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -98,7 +93,7 @@ public class Channel implements Serializable {
 
 	@NotNull
 	@Column(name="dnid")
-	private String DNID;
+	private Integer dnid;
 
 	@NotNull
 	@Column(name="expected_frequency")
@@ -117,7 +112,7 @@ public class Channel implements Serializable {
 
 	@NotNull
 	@Column(name="member_number")
-	private String memberNumber;
+	private Integer memberNumber;
 
 	@Column(name="start_date")
 	private Instant startDate;
@@ -223,12 +218,12 @@ public class Channel implements Serializable {
 		this.pollChannel = pollChannel;
 	}
 
-	public String getDNID() {
-		return DNID;
+	public Integer getDnid() {
+		return dnid;
 	}
 
-	public void setDNID(String DNID) {
-		this.DNID = DNID;
+	public void setDnid(Integer dnid) {
+		this.dnid = dnid;
 	}
 
 	public Duration getExpectedFrequency() {
@@ -263,11 +258,11 @@ public class Channel implements Serializable {
 		this.lesDescription = lesDescription;
 	}
 
-	public String getMemberNumber() {
+	public Integer getMemberNumber() {
 		return memberNumber;
 	}
 
-	public void setMemberNumber(String memberNumber) {
+	public void setMemberNumber(Integer memberNumber) {
 		this.memberNumber = memberNumber;
 	}
 
@@ -302,7 +297,7 @@ public class Channel implements Serializable {
 				Objects.equals(updateTime, channel.updateTime) &&
 				Objects.equals(updateUser, channel.updateUser) &&
 				Objects.equals(name, channel.name) &&
-				Objects.equals(DNID, channel.DNID) &&
+				Objects.equals(dnid, channel.dnid) &&
 				Objects.equals(expectedFrequency, channel.expectedFrequency) &&
 				Objects.equals(expectedFrequencyInPort, channel.expectedFrequencyInPort) &&
 				Objects.equals(frequencyGracePeriod, channel.frequencyGracePeriod) &&
@@ -315,6 +310,6 @@ public class Channel implements Serializable {
 	@Override
 	public int hashCode() {
 
-		return Objects.hash(id, historyId, archived, updateTime, updateUser, mobileTerminal, name, active, defaultChannel, configChannel, pollChannel, DNID, expectedFrequency, expectedFrequencyInPort, frequencyGracePeriod, lesDescription, memberNumber, startDate, endDate);
+		return Objects.hash(id, historyId, archived, updateTime, updateUser, mobileTerminal, name, active, defaultChannel, configChannel, pollChannel, dnid, expectedFrequency, expectedFrequencyInPort, frequencyGracePeriod, lesDescription, memberNumber, startDate, endDate);
 	}
 }

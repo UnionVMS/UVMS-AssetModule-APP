@@ -28,10 +28,10 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalStatus;
-import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDtoMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.AuditModuleRequestMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDtoMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollDtoMapper;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchKeyValue;
@@ -80,7 +80,6 @@ public class MobileTerminalServiceBean {
         channels.forEach(channel -> channel.setMobileTerminal(mobileTerminal));
         MobileTerminal createdMobileTerminal = terminalDao.createMobileTerminal(mobileTerminal);
         String pluginServiceName = createdMobileTerminal.getPlugin().getPluginServiceName();
-        boolean dnidUpdated = configModel.checkDNIDListChange(pluginServiceName);
 
         //send stuff to audit
         try {
@@ -88,9 +87,6 @@ public class MobileTerminalServiceBean {
             auditProducer.sendModuleMessage(auditData);
         } catch (JMSException e) {
             LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was created", createdMobileTerminal.getId().toString());
-        }
-        if (dnidUpdated) {
-            pluginService.processUpdatedDNIDList(pluginServiceName);
         }
         return createdMobileTerminal;
     }
@@ -107,10 +103,6 @@ public class MobileTerminalServiceBean {
         data.setSource(source);
         MobileTerminal terminalUpserted = upsertMobileTerminal(data, username);
 
-        boolean dnidUpdated = configModel.checkDNIDListChange(terminalUpserted.getPlugin().getPluginServiceName());
-        if (dnidUpdated) {
-            pluginService.processUpdatedDNIDList(data.getPlugin().getPluginServiceName());
-        }
         return terminalUpserted;
     }
 
@@ -158,11 +150,6 @@ public class MobileTerminalServiceBean {
             auditProducer.sendModuleMessage(auditData);
         } catch (JMSException e) {
             LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was updated", updatedTerminal.getId().toString());
-        }
-
-        boolean dnidUpdated = configModel.checkDNIDListChange(updatedTerminal.getPlugin().getName());
-        if (dnidUpdated) {
-            pluginService.processUpdatedDNIDList(updatedTerminal.getPlugin().getName());
         }
 
         return updatedTerminal;
@@ -234,11 +221,6 @@ public class MobileTerminalServiceBean {
             auditProducer.sendModuleMessage(auditData);
         } catch ( JMSException e) {
             LOG.error("Failed to send audit log message! Mobile Terminal with guid {} was set to status {}", terminalStatus.getId().toString(), status);
-        }
-
-        boolean dnidUpdated = configModel.checkDNIDListChange(terminalStatus.getPlugin().getName());
-        if (dnidUpdated) {
-            pluginService.processUpdatedDNIDList(terminalStatus.getPlugin().getName());
         }
 
         return terminalStatus;

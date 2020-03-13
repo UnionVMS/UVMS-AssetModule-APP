@@ -23,9 +23,7 @@ import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConfigType;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.ChannelDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dao.DNIDListDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.DNIDList;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPluginCapability;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
@@ -55,9 +53,6 @@ public class ConfigServiceBeanMT {
 
     @EJB
     private ChannelDaoBean channelDao;
-
-    @EJB
-    private DNIDListDaoBean dnidListDao;
 
     @Resource(name = "java:global/exchange_endpoint")
     private String exchangeEndpoint;
@@ -231,58 +226,6 @@ public class ConfigServiceBeanMT {
         }
     }
 
-    public boolean checkDNIDListChange(String pluginName) {
-        //TODO fix sql query:
-        List<String> activeDnidList = channelDao.getActiveDNID(pluginName);
-        List<DNIDList> dnidList = dnidListDao.getDNIDList(pluginName);
-        if (changed(activeDnidList, dnidList)) {
-            dnidListDao.removeByPluginName(pluginName);
-            for (String terminalDnid : activeDnidList) {
-                DNIDList dnid = new DNIDList();
-                dnid.setDnid(terminalDnid);
-                dnid.setPluginName(pluginName);
-                dnid.setUpdateTime(Instant.now());
-                dnid.setUpdatedBy(MobileTerminalConstants.UPDATE_USER);
-                dnidListDao.create(dnid);
-            }
-            return true;
-        }
-        return false;
-    }
-
-    private boolean changed(List<String> activeDnidList, List<DNIDList> existingDNIDList) {
-        if (activeDnidList.isEmpty() && existingDNIDList.isEmpty()) {
-            return false;
-        }
-        Set<String> activeDnidSet = new HashSet<>(activeDnidList);
-        Set<String> entityDnidSet = new HashSet<>();
-        for (DNIDList entity : existingDNIDList) {
-            entityDnidSet.add(entity.getDnid());
-        }
-        if (activeDnidSet.size() != entityDnidSet.size()) return true;
-
-        for (String activeDnid : activeDnidSet) {
-            if (!entityDnidSet.contains(activeDnid)) {
-                return true;
-            }
-        }
-        for (String entityDnid : entityDnidSet) {
-            if (!activeDnidSet.contains(entityDnid)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public List<String> updatedDNIDList(String pluginName) {
-        List<String> dnids = new ArrayList<>();
-        List<DNIDList> dnidList = dnidListDao.getDNIDList(pluginName);
-        for (DNIDList entity : dnidList) {
-            dnids.add(entity.getDnid());
-        }
-        return dnids;
-    }
-    
     public List<MobileTerminalPlugin> getMobileTerminalPlugins() {
         return mobileTerminalPluginDao.getPluginList();
     }
