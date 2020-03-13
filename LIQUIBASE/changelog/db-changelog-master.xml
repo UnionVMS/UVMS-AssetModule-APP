@@ -33,6 +33,7 @@
 	<include file="v6.3.2/create_index_on_flagstate.xml" relativeToChangelogFile="true"/>
 	<include file="v6.3.4/note_refactoring.xml" relativeToChangelogFile="true"/>
 	<include file="v6.4.2/customcode_namevalue_customcode_fk.xml" relativeToChangelogFile="true"/>
+	<include file="v6.6.3/dnid_and_member_number_to_integer.xml" relativeToChangelogFile="true"/>
 
 
 </databaseChangeLog>

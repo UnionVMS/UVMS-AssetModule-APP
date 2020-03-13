@@ -222,7 +222,7 @@ public class MobileTerminalListQueryTest extends AbstractAssetRestTest {
         List<Channel> channelList = new ArrayList<>(mobileTerminal.getChannels());
 
         MTQuery mtQuery = new MTQuery();
-        mtQuery.setDnids(Arrays.asList(channelList.get(0).getDNID()));
+        mtQuery.setDnids(Arrays.asList(channelList.get(0).getDnid()));
 
         TestMTListResponse response = getWebTargetExternal()
                 .path("/mobileterminal/list")
@@ -297,7 +297,7 @@ public class MobileTerminalListQueryTest extends AbstractAssetRestTest {
 
         MTQuery mtQuery = new MTQuery();
         mtQuery.setSateliteNumbers(Arrays.asList(mobileTerminal.getSatelliteNumber()));
-        mtQuery.setDnids(Arrays.asList(channelList.get(0).getDNID()));
+        mtQuery.setDnids(Arrays.asList(channelList.get(0).getDnid()));
 
         TestMTListResponse response = getWebTargetExternal()
                 .path("/mobileterminal/list")
