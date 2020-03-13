@@ -24,6 +24,7 @@ import org.junit.runner.RunWith;
 import javax.ejb.EJB;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.inject.Inject;
+import javax.validation.ConstraintViolationException;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -191,7 +192,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void createMobileTerminal_WillFail_Empty_Channel() {
-        thrown.expect(EJBTransactionRolledbackException.class);
+        thrown.expect(ConstraintViolationException.class);
         //Sadly, on jenkins this method does not exist. Dont know why jenkins picks that library when running the test but it does and at least this way the whole thing works
         /*thrown.expectMessage("ConstraintViolationImpl{interpolatedMessage='must not be null', propertyPath=memberNumber");
         thrown.expectMessage("ConstraintViolationImpl{interpolatedMessage='must not be null', propertyPath=expectedFrequencyInPort");
@@ -203,16 +204,20 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
         Channel emptyChannel = new Channel();
         mobileTerminal.getChannels().add(emptyChannel);
         mobileTerminalService.createMobileTerminal(mobileTerminal, USERNAME);
+
+        em.flush();
     }
 
     @Test
     @OperateOnDeployment("normal")
     public void createMobileTerminal_WillFail_Null_SerialNumber() {
-        thrown.expect(EJBTransactionRolledbackException.class);
+        thrown.expect(ConstraintViolationException.class);
 
         MobileTerminal mobileTerminal = testPollHelper.createBasicMobileTerminal();
         mobileTerminal.setSerialNo(null);
         mobileTerminalService.createMobileTerminal(mobileTerminal, USERNAME);
+
+        em.flush();
     }
 
     @Test
