@@ -15,7 +15,7 @@
     </parent>
 
     <properties>
-        <maven.javadoc.plugin.version>3.1.1</maven.javadoc.plugin.version>
+        <maven.javadoc.plugin.version>3.2.0</maven.javadoc.plugin.version>
     </properties>
 
     <dependencies>
