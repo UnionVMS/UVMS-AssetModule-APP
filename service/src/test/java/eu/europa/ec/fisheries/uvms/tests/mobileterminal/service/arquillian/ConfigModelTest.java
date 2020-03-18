@@ -17,9 +17,7 @@ import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
 import eu.europa.ec.fisheries.uvms.asset.bean.ConfigServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.ConfigServiceBeanMT;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.ChannelDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dao.DNIDListDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.DNIDList;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PluginMapper;
 import org.junit.Assert;
@@ -60,9 +58,6 @@ public class ConfigModelTest {
 
 	@Mock
 	private ChannelDaoBean channelDao;
-
-	@Mock
-	private DNIDListDaoBean dnidListDao;
 
 	@InjectMocks
     private ConfigServiceBeanMT testModelBean;
@@ -254,34 +249,4 @@ public class ConfigModelTest {
 		assertEquals(0, resEntityList.size());
 	}
 
-	@Test
-	public void testCheckDNIDListChangeNotChanged() {
-		String serviceName = "serviceName";
-		List<String> activeDnidList = new ArrayList<>();
-		List<DNIDList> dnidLists = new ArrayList<>();
-
-		when(channelDao.getActiveDNID(serviceName)).thenReturn(activeDnidList);
-		when(dnidListDao.getDNIDList(serviceName)).thenReturn(dnidLists);
-
-		boolean isChanged = testModelBean.checkDNIDListChange(serviceName);
-		assertFalse(isChanged);
-	}
-
-	@Test
-	public void testCheckDNIDListChangeChanged() {
-		String serviceName = "serviceName";
-		List<String> activeDnidList = Collections.singletonList("TEST");
-		List<DNIDList> dnidLists = new ArrayList<>();
-		DNIDList dnidList = new DNIDList();
-
-		when(channelDao.getActiveDNID(serviceName)).thenReturn(activeDnidList);
-		when(dnidListDao.getDNIDList(serviceName)).thenReturn(dnidLists);
-
-		doNothing().when(dnidListDao).removeByPluginName(serviceName);
-
-		when(dnidListDao.create(dnidList)).thenReturn(new DNIDList());
-
-		boolean isChanged = testModelBean.checkDNIDListChange(serviceName);
-		assertTrue(isChanged);
-	}
 }

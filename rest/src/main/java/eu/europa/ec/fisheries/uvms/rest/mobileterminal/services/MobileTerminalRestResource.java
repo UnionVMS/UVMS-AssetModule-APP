@@ -177,8 +177,8 @@ public class MobileTerminalRestResource {
     @GET
     @Path("checkIfExists/memberNbr/dnid/{memberNbr}/{dnid}")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response checkIfMemberNumberDnidComboExistsInDB(@PathParam("memberNbr") String memberNbr,
-                                                  @PathParam("dnid") String dnid,
+    public Response checkIfMemberNumberDnidComboExistsInDB(@PathParam("memberNbr") Integer memberNbr,
+                                                  @PathParam("dnid") Integer dnid,
                                                   @DefaultValue("false") @QueryParam("returnWholeObject") Boolean returnWholeObject) {
         try{
             MTQuery query = new MTQuery();

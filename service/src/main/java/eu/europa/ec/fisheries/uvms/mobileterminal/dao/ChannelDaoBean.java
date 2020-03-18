@@ -46,9 +46,4 @@ public class ChannelDaoBean  {
         return query.getResultList();
     }
 
-    public List<String> getActiveDNID(String pluginName) {
-        TypedQuery<String> query = em.createNamedQuery(MobileTerminalConstants.CHANNEL_FIND_ACTIVE_DNID, String.class);
-        query.setParameter("pluginName", pluginName);
-        return query.getResultList();
-    }
 }

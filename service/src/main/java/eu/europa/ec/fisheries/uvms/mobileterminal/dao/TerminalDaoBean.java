@@ -64,7 +64,7 @@ public class TerminalDaoBean {
         }
     }
 
-    private void test(){
+    private void forceLoad(){
 
     }
 
@@ -126,8 +126,8 @@ public class TerminalDaoBean {
     public MobileTerminal getMobileTerminalByRequest(AssetMTEnrichmentRequest request) {
         try {
             return em.createNamedQuery(MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_DNID_AND_MEMBER_NR_AND_TYPE, MobileTerminal.class)
-                    .setParameter("dnid", request.getDnidValue())
-                    .setParameter("memberNumber", request.getMemberNumberValue())
+                    .setParameter("dnid", Integer.parseInt(request.getDnidValue()))
+                    .setParameter("memberNumber", Integer.parseInt(request.getMemberNumberValue()))
                     .setParameter("mobileTerminalType", MobileTerminalTypeEnum.valueOf(request.getTranspondertypeValue()))
                     .getSingleResult();
         } catch (NoResultException nre) {
@@ -148,9 +148,9 @@ public class TerminalDaoBean {
             Map<UUID, MobileTerminal> returnMap = new HashMap<>();
             for (Channel channel : channelList) {
                 // loaderTest(channel.getMobileTerminal());
-                test(channel.getMobileTerminal().getPlugin());
+                forceLoad(channel.getMobileTerminal().getPlugin());
                 for (MobileTerminalPluginCapability capability : channel.getMobileTerminal().getPlugin().getCapabilities()) {
-                    test(capability);
+                    forceLoad(capability);
                 }
                 returnMap.put(channel.getMobileTerminal().getId(), channel.getMobileTerminal());
             }
@@ -160,7 +160,7 @@ public class TerminalDaoBean {
         }
     }
 
-    private void test(Object plugin){
+    private void forceLoad(Object plugin){
         String s = plugin.toString();
         s = s.concat(s);
     }
@@ -274,7 +274,11 @@ public class TerminalDaoBean {
                 channelOperatorUsed = true;
                 AuditDisjunction disjunctionOperator = AuditEntity.disjunction();
                 for (String v : channelSearchValue.getSearchValuesAsLowerCase()) {
-                    disjunctionOperator.add(AuditEntity.property(channelSearchValue.getSearchField().getFieldName()).ilike(v, MatchMode.ANYWHERE));
+                    if(channelSearchValue.getSearchField().equals(MTSearchFields.DNID) || channelSearchValue.getSearchField().equals(MTSearchFields.MEMBER_NUMBER)){
+                        disjunctionOperator.add(AuditEntity.property(channelSearchValue.getSearchField().getFieldName()).eq(Integer.valueOf(v)));
+                    }else {
+                        disjunctionOperator.add(AuditEntity.property(channelSearchValue.getSearchField().getFieldName()).ilike(v, MatchMode.ANYWHERE));
+                    }
                 }
                 operatorChannel.add(disjunctionOperator);
             }

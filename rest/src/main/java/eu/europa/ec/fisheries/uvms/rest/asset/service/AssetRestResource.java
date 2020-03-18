@@ -17,11 +17,13 @@ import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
-import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
 import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
+import eu.europa.ec.fisheries.uvms.rest.asset.dto.ChangeHistoryRow;
+import eu.europa.ec.fisheries.uvms.rest.asset.mapper.HistoryMapper;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import io.swagger.annotations.*;
@@ -290,7 +292,7 @@ public class AssetRestResource {
             @ApiResponse(code = 200, message = "Successful retrieval of resultset") })
     @Path("/{id}/history")
     public Response getAssetHistoryListByAssetId(@ApiParam(value="The assets GUID", required=true)  @PathParam("id") UUID id,
-                                                 @ApiParam(value="Max size of resultset") @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr)  throws Exception {
+                                                 @ApiParam(value="Max size of resultset") @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) throws Exception {
         try {
             List<Asset> assetRevisions = assetService.getRevisionsForAssetLimited(id, maxNbr);
             String returnString = jsonb.toJson(assetRevisions);
@@ -300,6 +302,35 @@ public class AssetRestResource {
             throw e;
         }
     }
+
+    /**
+     *
+     * @responseMessage 200 Success
+     * @responseMessage 500 Error
+     *
+     * @summary Gets a list of all revisions for a specific asset
+     *
+     */
+    @GET
+    @ApiOperation(value = "Get an assethistorylist by asset id", notes = "The ID is the internal UUID", response = Asset.class, responseContainer = "List")
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Error when querying the system"),
+            @ApiResponse(code = 200, message = "Successful retrieval of resultset") })
+    @Path("/{id}/changeHistory")
+    public Response getAssetHistoryChangesListByAssetId(@ApiParam(value="The assets GUID", required=true)  @PathParam("id") UUID id,
+                                                 @ApiParam(value="Max size of resultset") @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr)  throws Exception {
+        try {
+            List<Asset> assetRevisions = assetService.getRevisionsForAssetLimited(id, maxNbr);
+            List<ChangeHistoryRow> changeHistory = HistoryMapper.mapHistory(assetRevisions, "updatedBy", "updateTime", "mobileTerminals");
+            String returnString = jsonb.toJson(changeHistory);
+
+            return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception e) {
+            LOG.error("Error when getting asset history list by asset ID. {}]", id, e);
+            throw e;
+        }
+    }
+
 
     /**
      * @summary Get a specific asset by identifier (guid|cfr|ircs|imo|mmsi|iccat|uvi|gfcm)

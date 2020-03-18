@@ -18,7 +18,7 @@ public enum MTSearchFields {
     TERMINAL_TYPE("mobileTerminalType"),
     SERIAL_NUMBER("serialNo"),
 	MEMBER_NUMBER("memberNumber", SearchFieldType.CHILD),  //  <-channel
-	DNID("DNID", SearchFieldType.CHILD),   // <- channel
+	DNID("dnid", SearchFieldType.CHILD),   // <- channel
 	SATELLITE_NUMBER("satelliteNumber"),
     SOFTWARE_VERSION("softwareVersion"),
     TRANSCEIVER_TYPE("transceiverType"),
