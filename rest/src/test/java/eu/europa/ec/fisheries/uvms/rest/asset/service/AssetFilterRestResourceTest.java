@@ -1,9 +1,7 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import javax.json.bind.Jsonb;
@@ -56,8 +54,6 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
     @After
     public void tearDown() {
     	deleteAssetFilter(assetFilter);
-    	deleteAssetFilterQuery(assetFilterQuery);
-    	deleteAssetFilterValue(assetFilterValue);
     }
 	
 	@Test
@@ -73,7 +69,6 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
             .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
             .post(Entity.json(afjson), String.class);
         
-        System.out.println("assetFilterCreateResp: " + assetFilterCreateResp);
 		AssetFilter assetFilter2 = jsonb.fromJson(assetFilterCreateResp, AssetFilter.class);
         
 		assertNotNull(assetFilter2.getId().toString());
@@ -85,7 +80,7 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
 	        .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
 	        .delete();
         
-        assertThat(deleteresp.getStatus(), is(Status.OK.getStatusCode()));
+        assertTrue(deleteresp.getStatus() == Status.OK.getStatusCode() );
     }
 	
 	@Test
@@ -106,8 +101,7 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
 	        .request(MediaType.APPLICATION_JSON)
 	        .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
 	        .delete();
-        
-        assertThat(deleteresp.getStatus(), is(Status.OK.getStatusCode()));
+        assertTrue(deleteresp.getStatus() == Status.OK.getStatusCode() );
     }
 	
 	@Test
@@ -125,8 +119,8 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
     	AssetFilter fetchedAssetFilterJsonAdapter = jsonb.fromJson(fetchedAssetFilter, AssetFilter.class);
         assertEquals(fetchedAssetFilterJsonAdapter.getName(), testName);
         assertNotNull(fetchedAssetFilter);
-        assertThat(fetchedAssetFilterJsonAdapter.getId(), is(assetFilter.getId()));
-        assertThat(fetchedAssetFilterJsonAdapter.getName(), is(assetFilter.getName()));
+        assertEquals(fetchedAssetFilterJsonAdapter.getId(), assetFilter.getId());
+        assertEquals(fetchedAssetFilterJsonAdapter.getName(), assetFilter.getName());
     }
     
     @Test
@@ -138,22 +132,20 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
             .request(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
             .get();
-        assertThat(response.getStatus(), is(Status.OK.getStatusCode()));
+        assertTrue(response.getStatus() == Status.OK.getStatusCode() );
     }
     
     
     @Test
     @OperateOnDeployment("normal")
     public void getAssetFilterListByUserNoUserParamTest2() {
-        String response = getWebTargetExternal()
+    	Response response = getWebTargetExternal()
             .path("filter")
             .path("list")
             .request(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-            .get(String.class);
-      //  assertThat(response.getStatus(), is(Status.OK.getStatusCode()));
-        
-        System.out.println("response List2: " + response);
+            .get(Response.class);
+    	assertTrue(response.getStatus() == Status.OK.getStatusCode() );
     }
     
     
@@ -161,27 +153,17 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
     @OperateOnDeployment("normal")
     public void getAssetFilterListByUserTest() {
         
-//        Response response = getWebTargetExternal()
-//            .path("filter")
-//            .path("listAssetFiltersByUser")
-//            .queryParam("user", assetFilter.getOwner())
-//            .request(MediaType.APPLICATION_JSON)
-//            .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-//            .get(Response.class);
+        Response response = getWebTargetExternal()
+            .path("filter")
+            .path("listAssetFiltersByUser")
+            .queryParam("user", assetFilter.getOwner())
+            .request(MediaType.APPLICATION_JSON)
+            .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+            .get(Response.class);
         
-        String responseString = getWebTargetExternal()
-                .path("filter")
-                .path("listAssetFiltersByUser")
-                .queryParam("user", assetFilter.getOwner())
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .get(String.class);
-        
-        System.out.println("response List: " + responseString);
-        
- //       assertNotNull(response);
-//        assertThat(response.getStatus(), is(Status.OK.getStatusCode()));
-//        assertTrue(response.getEntity().toString().length() > 1);
+        assertNotNull(response);
+        assertTrue(response.getStatus() == Status.OK.getStatusCode());
+        assertTrue(response.getEntity().toString().length() > 1);
     }
     
     @Test
@@ -239,7 +221,6 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
 		
 		getWebTargetExternal()
             .path("filter")
-            .path("updateAssetFilter")
             .request(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
             .put(Entity.json(afjson), String.class);
@@ -290,28 +271,11 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
 	 private void deleteAssetFilter(AssetFilter assetFilter) {
 		getWebTargetExternal()
             .path("filter")
+            .path(assetFilter.getId().toString())
             .request(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
             .delete();
 	}
 	 
-	 private void deleteAssetFilterQuery(AssetFilterQuery assetFilterQuery) {
-		getWebTargetExternal()
-            .path("filter")
-            .path(assetFilterQuery.getId().toString())
-            .path("query")
-            .request(MediaType.APPLICATION_JSON)
-            .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-            .delete();
-	 }
-	 
-	 private void deleteAssetFilterValue(AssetFilterValue assetFilterValue) {
-		getWebTargetExternal()
-            .path("filter")
-            .path(assetFilterValue.getId().toString())
-            .path("value")
-            .request(MediaType.APPLICATION_JSON)
-            .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-            .delete();
-	 }
+	
 }

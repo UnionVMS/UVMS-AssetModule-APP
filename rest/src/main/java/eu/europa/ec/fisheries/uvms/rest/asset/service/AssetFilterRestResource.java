@@ -71,7 +71,7 @@ public class AssetFilterRestResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when retrieving AssetFilter list"),
             @ApiResponse(code = 200, message = "AssetFilter list successfully retrieved")})
-    @Path("list")
+    @Path("/listbyuser")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getAssetFilterListByUser(@ApiParam(value = "user") @QueryParam(value = "user") String user) throws Exception {
         try {
@@ -128,29 +128,6 @@ public class AssetFilterRestResource {
             return Response.ok(createdAssetFilter).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when creating AssetFilter: {}", assetFilter, e);
-            throw e;
-        }
-    }
-
-    /**
-     * @responseMessage 200 Success
-     * @responseMessage 500 Error
-     * @summary Update a asset filter
-     */
-    @PUT
-    @ApiOperation(value = "Update an AssetFilter", notes = "Update an AssetFilter", response = AssetFilter.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Error when update AssetGroup"),
-            @ApiResponse(code = 200, message = "AssetGroup successfully updated")})
-    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response updateAssetFilter(@ApiParam(value = "AssetFilter", required = true) final AssetFilter assetFilter) throws Exception {
-        try {
-            String user = servletRequest.getRemoteUser();
-            AssetFilter updatedAssetFilter = assetFilterService.updateAssetFilter(assetFilter, user);
-            String response = jsonb.toJson(updatedAssetFilter);
-            return Response.ok(response).header("MDC", MDC.get("requestId")).build();
-        } catch (Exception e) {
-            LOG.error("Error when updating AssetFilter. {}", assetFilter, e);
             throw e;
         }
     }
@@ -324,7 +301,6 @@ public class AssetFilterRestResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when update AssetFilterValue"),
             @ApiResponse(code = 200, message = "AssetFilterValue successfully update")})
-    @Path("/updateAssetFilter")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response updateAssetFilterHard(@ApiParam(value = "jsonAssetFilter", required = true) String jsonAssetFilter) throws Exception {
 
@@ -350,7 +326,7 @@ public class AssetFilterRestResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when retrieving AssetFilter list"),
             @ApiResponse(code = 200, message = "AssetFilter list successfully retrieved")})
-    @Path("/listAssetFiltersByUser")
+    @Path("/list")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getListOfAssetFilterByUser() throws Exception {
         try {
