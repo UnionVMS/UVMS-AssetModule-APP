@@ -50,9 +50,8 @@
 				<constraints nullable="false"/>
 			</column>
 			<column name="operator" type="VARCHAR(1024)"/>
-			<column name="value" type="VARCHAR(1024)">
-				<constraints nullable="false"/>
-			</column>
+			<column name="valuestring" type="VARCHAR(1024)"/>
+			<column name="valuenumber" type="DOUBLE PRECISION"/>
 			<column name="assetfilterquery" type="UUID">
 				<constraints nullable="false"/>
 			</column>

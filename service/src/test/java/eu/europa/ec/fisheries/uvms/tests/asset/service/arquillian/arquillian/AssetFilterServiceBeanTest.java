@@ -66,7 +66,7 @@ public class AssetFilterServiceBeanTest extends TransactionalTests{
     }
 	private AssetFilterValue createAssetFilterValueEntety(UUID parentAssetFilterQueryId) {
 	    AssetFilterValue afv = new AssetFilterValue();
-	    afv.setValue("test value");
+	    afv.setValueString("test value");
 	    return assetFilterService.createAssetFilterValue(parentAssetFilterQueryId, afv);
 	}
 	@Test
@@ -137,10 +137,10 @@ public class AssetFilterServiceBeanTest extends TransactionalTests{
     	System.out.println("createdAssetFilterValue: " + createdAssetFilterValue);
     	AssetFilterValue fetchedAssetFilterValue = assetFilterService.getAssetFilterValue(createdAssetFilterValue.getId());
     	System.out.println("fetchedAssetFilterValue: " + fetchedAssetFilterValue);
-    	fetchedAssetFilterValue.setValue("CHANGEDVALUE");
+    	fetchedAssetFilterValue.setValueString("CHANGEDVALUE");
         assetFilterService.updateAssetFilterValue(fetchedAssetFilterValue, "TEST");
         AssetFilterValue fetchedAssetFilterValue2 = assetFilterService.getAssetFilterValue(createdAssetFilterValue.getId());
-        assertEquals(fetchedAssetFilterValue2.getValue(), "CHANGEDVALUE");
+        assertEquals(fetchedAssetFilterValue2.getValueString(), "CHANGEDVALUE");
     }
 
     @Test

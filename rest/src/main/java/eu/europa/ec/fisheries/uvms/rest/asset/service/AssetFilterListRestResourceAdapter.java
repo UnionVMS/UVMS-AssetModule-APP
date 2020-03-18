@@ -34,12 +34,12 @@ public class AssetFilterListRestResourceAdapter implements JsonbAdapter<AssetFil
 	    		for(AssetFilterValue assetFilterValue : assetFilterValues) {
 	    			if( assetFilterQuery.getIsNumber() == false) {
 	    				jsonValueArray
-	    					.add(assetFilterValue.getValue());
+	    					.add(assetFilterValue.getValueString());
 	        		}
 	    			else {
 	    				JsonObject jsonValueObject = Json.createObjectBuilder()
 	        				.add("operator", assetFilterValue.getOperator())
-	        				.add("value", Integer.parseInt(assetFilterValue.getValue()))
+	        				.add("value", assetFilterValue.getValueNumber().doubleValue())
 	        				.build();
 	    				jsonValueArray
 	    					.add(jsonValueObject);
@@ -59,8 +59,6 @@ public class AssetFilterListRestResourceAdapter implements JsonbAdapter<AssetFil
 	    		jsonObjectOfFilters.add(assetFilter.getId().toString(), jsonFilter);
 	    	}
 		}
-		jsonObjectOfFilters
-			.add("scasc", "dsdascsdv");
 		return Json.createObjectBuilder()
 				.add("savedFilters", jsonObjectOfFilters.build())
 				.build();
@@ -68,13 +66,7 @@ public class AssetFilterListRestResourceAdapter implements JsonbAdapter<AssetFil
 
 	@Override
 	public AssetFilterList adaptFromJson(JsonObject adapted) throws Exception {
-		List<AssetFilter> list = new ArrayList<AssetFilter>();
-		AssetFilter af = new AssetFilter();
-		af.setName("iwjdokok");
-		list.add(af);
-		AssetFilterList afl = new AssetFilterList();
-		afl.setAssetFilterList(list);
-		return afl;
+		return null;
 	}
 }
 

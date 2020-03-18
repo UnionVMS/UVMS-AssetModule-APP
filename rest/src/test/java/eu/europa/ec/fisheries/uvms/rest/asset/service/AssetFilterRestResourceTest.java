@@ -38,6 +38,7 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
 	private AssetFilter assetFilter;
 	private AssetFilterQuery assetFilterQuery;
 	private AssetFilterValue assetFilterValue;
+	private Jsonb jsonb;
 	
    @Before
     public void setup() {
@@ -48,6 +49,8 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
 	   assetFilterValue = AssetHelper.createBasicAssetFilterValue(assetFilterQuery);
 	   assetFilterQuery = createAssetFilterQuery(assetFilter);
 	   assetFilterValue = createAssetFilterValue(assetFilterQuery);
+	   JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter(), new AssetFilterListRestResourceAdapter());
+       jsonb = JsonbBuilder.create(config);
     }
  
     @After
@@ -61,7 +64,7 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
     @OperateOnDeployment("normal")
     public void createAssetFilterFromJsonTest() {
 		
-		String afjson = "{\"fromJsonName\": [{\"values\":[{\"value\":23, \"operator\":\"operator 2 test\"}],\"type\": \"dsad\", \"inverse\": false,\"isNumber\": true}] }";
+		String afjson = "{\"name\":\"båtar\",\"filter\": [{\"values\":[{\"value\":23, \"operator\":\"operator 2 test\"}],\"type\": \"dsad\", \"inverse\": false,\"isNumber\": true}] }";
 		
         String assetFilterCreateResp = getWebTargetExternal()
             .path("filter")
@@ -71,8 +74,6 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
             .post(Entity.json(afjson), String.class);
         
         System.out.println("assetFilterCreateResp: " + assetFilterCreateResp);
-        JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
-		Jsonb jsonb = JsonbBuilder.create(config);
 		AssetFilter assetFilter2 = jsonb.fromJson(assetFilterCreateResp, AssetFilter.class);
         
 		assertNotNull(assetFilter2.getId().toString());
@@ -113,8 +114,6 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
     @OperateOnDeployment("normal")
     public void getAssetFilterTest() throws InterruptedException {
 	   
-		JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
-		Jsonb jsonb = JsonbBuilder.create(config);
     	
     	String fetchedAssetFilter = getWebTargetExternal()
             .path("filter")
@@ -225,9 +224,6 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
             .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
             .get(String.class);
 		
-		JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
-		Jsonb jsonb = JsonbBuilder.create(config);
-		
 		AssetFilter fetchedAssetFilter = jsonb.fromJson(fetchedAssetFilterJsonString, AssetFilter.class);
 		
 		assertEquals("Test name",  fetchedAssetFilter.getName());
@@ -239,7 +235,7 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
     public void updateAssetFilterFromJson() {
 		
 		String afId = assetFilter.getId().toString();
-		String afjson = "{\"id\":\""+afId+"\", \"fromJsonName\": [{\"values\":[{\"value\":23, \"operator\":\"this is a operator\"}],\"type\": \"dsad\", \"inverse\": false,\"isNumber\": true}] }";
+		String afjson = "{\"id\":\""+afId+"\",\"name\":\"Nya Båtar och Test\", \"filter\": [{\"values\":[{\"value\":23, \"operator\":\"this is a operator\"}],\"type\": \"dsad\", \"inverse\": false,\"isNumber\": true}] }";
 		
 		getWebTargetExternal()
             .path("filter")
@@ -255,11 +251,9 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
     		.header(HttpHeaders.AUTHORIZATION, getTokenExternal())
     		.get(String.class);
 		
-		 JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
-		 Jsonb jsonb = JsonbBuilder.create(config);
 		 assetFilter = jsonb.fromJson(assetFilterResp, AssetFilter.class);
 		 assertNotNull(assetFilter.getId());
-		 assertEquals("fromJsonName", assetFilter.getName());
+		 assertEquals("Nya Båtar och Test", assetFilter.getName());
 		 assertTrue(assetFilterResp.contains(afId));
 	 }
 	

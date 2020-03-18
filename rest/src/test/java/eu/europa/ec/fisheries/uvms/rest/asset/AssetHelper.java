@@ -153,7 +153,7 @@ public abstract class AssetHelper {
     public static AssetFilterValue createBasicAssetFilterValue(AssetFilterQuery assetFilterQuery) {
     	AssetFilterValue assetFilterValue = new AssetFilterValue();
     	assetFilterValue.setOperator("greater then");
-    	assetFilterValue.setValue("23");
+    	assetFilterValue.setValueNumber((double) 42);
     	assetFilterValue.setAssetFilterQuery(assetFilterQuery);
         return assetFilterValue;
     }

@@ -29,12 +29,12 @@ public class AssetFilterRestResponseAdapter implements JsonbAdapter<AssetFilter,
     		for(AssetFilterValue assetFilterValue : assetFilterValues) {
     			if( assetFilterQuery.getIsNumber() == false) {
     				jsonValueArray
-    					.add(assetFilterValue.getValue());
+    					.add(assetFilterValue.getValueString());
         		}
     			else {
     				JsonObject jsonValueObject = Json.createObjectBuilder()
         				.add("operator", assetFilterValue.getOperator())
-        				.add("value", Integer.parseInt(assetFilterValue.getValue()))
+        				.add("value", assetFilterValue.getValueNumber())
         				.build();
     				jsonValueArray
     					.add(jsonValueObject);
@@ -52,7 +52,8 @@ public class AssetFilterRestResponseAdapter implements JsonbAdapter<AssetFilter,
     	}
         return Json.createObjectBuilder()
 	        		.add("id", assetFilter.getId().toString())
-	        		.add(assetFilter.getName(), jsonArraylistOfQueries.build())
+	        		.add("name", assetFilter.getName())
+	        		.add("filter", jsonArraylistOfQueries.build())
 	        		.build();
     }
 
@@ -60,21 +61,14 @@ public class AssetFilterRestResponseAdapter implements JsonbAdapter<AssetFilter,
 	public AssetFilter adaptFromJson(JsonObject adapted) throws Exception {
 		AssetFilter assetFilter = new AssetFilter();
 		
-		/**
-		 *  Här kommer en ful och inte helt stabil lösning för att sätta "name" värdet som key på objectet. 
-		 *  Jag kollar om det inte är "assetFilterId", det funkar sålänge det bara är två värden som skickas...
-		 */
-		String nameValue = "";
 		for (String keyStr : adapted.keySet()) {
-	        if(!keyStr.equalsIgnoreCase("id") ) {
-	        	nameValue = keyStr;
-	        }if(keyStr.equalsIgnoreCase("id") ) {
+			if(keyStr.equalsIgnoreCase("id") ) {
 	        	assetFilter.setId(UUID.fromString(adapted.getString("id")));
 	        }
 	    }
-		assetFilter.setName(nameValue);
+		assetFilter.setName(adapted.getString("name"));
 		
-		JsonArray queryJsonArray = adapted.getJsonArray(nameValue);
+		JsonArray queryJsonArray = adapted.getJsonArray("filter");
 		Set<AssetFilterQuery> queriesFromJson = new HashSet<AssetFilterQuery>();
 		
 		for(JsonValue jsonQuery : queryJsonArray) {
@@ -95,15 +89,14 @@ public class AssetFilterRestResponseAdapter implements JsonbAdapter<AssetFilter,
 				
 				AssetFilterValue assetFilterValue = new AssetFilterValue();
 				if(isNumberValues == false) {
-					assetFilterValue.setValue(jsonValue.toString());
+					assetFilterValue.setValueString(jsonValue.toString());
 				}else {
 					JsonObject jsonValueObject = jsonValue.asJsonObject();
 					assetFilterValue.setOperator(jsonValueObject.getString("operator"));
 				    if(jsonValueObject.get("value").getClass().getTypeName().contains("Number")) {
-				    	Integer number = (Integer)jsonValueObject.getInt("value");
-				    	assetFilterValue.setValue(number.toString());
+				    	assetFilterValue.setValueNumber(jsonValueObject.getJsonNumber("value").doubleValue());
 				    }else{
-				    	assetFilterValue.setValue(jsonValueObject.getString("value"));
+				    	assetFilterValue.setValueString(jsonValueObject.getString("value"));
 				    }
 				}
 				assetFilterValue.setAssetFilterQuery(assetFilterQuery);

@@ -192,7 +192,7 @@ public class AssetTestsHelper {
     	AssetFilterQuery afq = new AssetFilterQuery();
     	afq.setAssetFilter(assetFilterEntity);
     	afq.setType("GUID");
-    	afq.setIsNumber(false);
+    	afq.setIsNumber(true);
     	afq.setInverse(true);
         return afq;
     }

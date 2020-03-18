@@ -47,7 +47,7 @@ public class AssetFilterServiceBean{
         		if ("GUID".equals(assetFilterQuery.getType())) {
         			List<AssetFilterValue> values = assetFilterValueDao.retrieveValuesForFilterQuery(assetFilterQuery);
         			for (AssetFilterValue value : values) {
-        				if (assetId.toString().equals(value.getValue())) {
+        				if (assetId.toString().equals(value.getValueString())) {
         					searchResultList.add(assetFilter);
 			            }
 			        }
@@ -142,8 +142,6 @@ public class AssetFilterServiceBean{
         }
 
         assetFilterQuery.setAssetFilter(parentAssetFilter);
-        assetFilterQuery.setInverse(false);
-        assetFilterQuery.setIsNumber(false);
         return assetFilterQueryDao.create(assetFilterQuery);
 	}
 	public AssetFilterQuery deleteAssetFilterQuery(UUID id) {

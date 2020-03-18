@@ -45,9 +45,12 @@ public class AssetFilterValue implements Serializable{
 //	@JsonbTransient
     private UUID id;
 
+    @Column(name = "valuenumber")
+    private Double valueNumber;
+    
     @Size(max = 255)
-    @Column(name = "value")
-    private String value;
+    @Column(name = "valuestring")
+    private String valueString;
     
     @Size(max = 255)
     @Column(name = "operator")
@@ -66,14 +69,22 @@ public class AssetFilterValue implements Serializable{
 		this.id = id;
 	}
 	
-	public String getValue() {
-		return value;
+	public Double getValueNumber() {
+		return valueNumber;
 	}
-	
-	public void setValue(String value) {
-		this.value = value;
+
+	public void setValueNumber(Double valueNumber) {
+		this.valueNumber = valueNumber;
 	}
-	
+
+	public String getValueString() {
+		return valueString;
+	}
+
+	public void setValueString(String valueString) {
+		this.valueString = valueString;
+	}
+
 	public String getOperator() {
 		return operator;
 	}
