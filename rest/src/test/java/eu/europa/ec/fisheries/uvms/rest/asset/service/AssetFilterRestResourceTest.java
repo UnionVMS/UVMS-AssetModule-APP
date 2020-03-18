@@ -27,7 +27,6 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 
-
 @RunWith(Arquillian.class)
 @RunAsClient
 public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
@@ -35,7 +34,6 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
 	private String testName;
 	private AssetFilter assetFilter;
 	private AssetFilterQuery assetFilterQuery;
-	private AssetFilterValue assetFilterValue;
 	private Jsonb jsonb;
 	
    @Before
@@ -44,9 +42,9 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
 	   assetFilter = AssetHelper.createBasicAssetFilter(testName);
 	   assetFilter = createAssetFilter(assetFilter);
 	   assetFilterQuery = AssetHelper.createBasicAssetFilterQuery(assetFilter);
-	   assetFilterValue = AssetHelper.createBasicAssetFilterValue(assetFilterQuery);
+	   AssetHelper.createBasicAssetFilterValue(assetFilterQuery);
 	   assetFilterQuery = createAssetFilterQuery(assetFilter);
-	   assetFilterValue = createAssetFilterValue(assetFilterQuery);
+	   createAssetFilterValue(assetFilterQuery);
 	   JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter(), new AssetFilterListRestResourceAdapter());
        jsonb = JsonbBuilder.create(config);
     }
@@ -64,7 +62,6 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
 		
         String assetFilterCreateResp = getWebTargetExternal()
             .path("filter")
-            .path("createFilter")
             .request(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
             .post(Entity.json(afjson), String.class);
@@ -108,7 +105,6 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
     @OperateOnDeployment("normal")
     public void getAssetFilterTest() throws InterruptedException {
 	   
-    	
     	String fetchedAssetFilter = getWebTargetExternal()
             .path("filter")
             .path(assetFilter.getId().toString())
@@ -121,30 +117,19 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
         assertNotNull(fetchedAssetFilter);
         assertEquals(fetchedAssetFilterJsonAdapter.getId(), assetFilter.getId());
         assertEquals(fetchedAssetFilterJsonAdapter.getName(), assetFilter.getName());
-    }
+    }  
     
     @Test
     @OperateOnDeployment("normal")
     public void getAssetFilterListByUserNoUserParamTest() {
-        Response response = getWebTargetExternal()
-            .path("filter")
-            .path("listAssetFiltersByUser")
-            .request(MediaType.APPLICATION_JSON)
-            .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-            .get();
-        assertTrue(response.getStatus() == Status.OK.getStatusCode() );
-    }
-    
-    
-    @Test
-    @OperateOnDeployment("normal")
-    public void getAssetFilterListByUserNoUserParamTest2() {
+    	
     	Response response = getWebTargetExternal()
             .path("filter")
             .path("list")
             .request(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
             .get(Response.class);
+    	
     	assertTrue(response.getStatus() == Status.OK.getStatusCode() );
     }
     
@@ -193,7 +178,6 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
         .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
         .delete();
     }
- 
 	
 	@Test
     @OperateOnDeployment("normal")
@@ -242,6 +226,7 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
 	 private AssetFilter createAssetFilter(AssetFilter assetFilter) {
 		 return getWebTargetExternal()
 		            .path("filter")
+		            .path("createFilter")
 		            .request(MediaType.APPLICATION_JSON)
 		            .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
 		            .post(Entity.json(assetFilter), AssetFilter.class);

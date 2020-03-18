@@ -9,8 +9,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetFilterDao;
-import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetFilterQueryDao;
-import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetFilterValueDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue;
@@ -20,13 +18,6 @@ public class AssetFilterServiceBean{
 
     @Inject
     private AssetFilterDao assetFilterDao;
-
-    @Inject
-    private AssetFilterValueDao assetFilterValueDao;
-    
-    @Inject
-    private AssetFilterQueryDao assetFilterQueryDao;
-
     
 	public List<AssetFilter> getAssetFilterList(String user) {
 		if (user == null || user.trim().isEmpty()) {
@@ -42,10 +33,10 @@ public class AssetFilterServiceBean{
         List<AssetFilter> searchResultList = new ArrayList<>();
         List<AssetFilter> filterList = assetFilterDao.getAssetFilterAll();
         for (AssetFilter assetFilter : filterList) {
-        	List<AssetFilterQuery> filterQueryList = assetFilterQueryDao.retrieveFilterQuerysForAssetFilter(assetFilter);
+        	List<AssetFilterQuery> filterQueryList = assetFilterDao.retrieveFilterQuerysForAssetFilter(assetFilter);
         	for (AssetFilterQuery assetFilterQuery  : filterQueryList) {
         		if ("GUID".equals(assetFilterQuery.getType())) {
-        			List<AssetFilterValue> values = assetFilterValueDao.retrieveValuesForFilterQuery(assetFilterQuery);
+        			List<AssetFilterValue> values = assetFilterDao.retrieveValuesForFilterQuery(assetFilterQuery);
         			for (AssetFilterValue value : values) {
         				if (assetId.toString().equals(value.getValueString())) {
         					searchResultList.add(assetFilter);
@@ -103,13 +94,9 @@ public class AssetFilterServiceBean{
         }
         AssetFilter filterEntity = assetFilterDao.getAssetFilterByGuid(guid);
         if (filterEntity == null) {
-            throw new NullPointerException("No assetgroup found.");
+            throw new NullPointerException("No assetfilter found.");
         }
-       // TODO remove Dont do soft delete
-      //  filterEntity.setArchived(true);
-        filterEntity.setUpdatedBy(username);
-        filterEntity.setUpdateTime(Instant.now());
-        
+        assetFilterDao.deleteAssetFilter(filterEntity);
         return filterEntity;
 	}
 	
@@ -120,13 +107,13 @@ public class AssetFilterServiceBean{
         if (assetFilterValue == null) {
             throw new NullPointerException("Cannot create assetFilterValue because the assetFilterValue is Null");
         }
-        AssetFilterQuery parentAssetFilterQuery = assetFilterQueryDao.getAssetFilterQueryByGuid(parentAssetFilterQueryId);
+        AssetFilterQuery parentAssetFilterQuery = assetFilterDao.getAssetFilterQuery(parentAssetFilterQueryId);
         if (parentAssetFilterQuery == null) {
-            throw new NullPointerException("AssetGroup with ID: " + parentAssetFilterQueryId + " does not exist");
+            throw new NullPointerException("AssetFilter with ID: " + parentAssetFilterQueryId + " does not exist");
         }
 
         assetFilterValue.setAssetFilterQuery(parentAssetFilterQuery);
-        return assetFilterValueDao.create(assetFilterValue);
+        return assetFilterDao.create(assetFilterValue);
 	}
 	
 	public AssetFilterQuery createAssetFilterQuery(UUID parentAssetFilterId, AssetFilterQuery assetFilterQuery) {
@@ -142,17 +129,17 @@ public class AssetFilterServiceBean{
         }
 
         assetFilterQuery.setAssetFilter(parentAssetFilter);
-        return assetFilterQueryDao.create(assetFilterQuery);
+        return assetFilterDao.create(assetFilterQuery);
 	}
 	public AssetFilterQuery deleteAssetFilterQuery(UUID id) {
 		if (id == null) {
             throw new NullPointerException("AssetFilterValueId fail because ID is null.");
         }
-		AssetFilterQuery assetFilterQuery = assetFilterQueryDao.get(id);
+		AssetFilterQuery assetFilterQuery = assetFilterDao.getAssetFilterQuery(id);
         if (assetFilterQuery == null) {
             return null;
         }
-        return assetFilterQueryDao.delete(assetFilterQuery);
+        return assetFilterDao.delete(assetFilterQuery);
 	}
 
 	public AssetFilterValue updateAssetFilterValue(AssetFilterValue assetFilterValue, String username) {
@@ -162,18 +149,18 @@ public class AssetFilterServiceBean{
 	     if (username == null || username.trim().isEmpty()) {
 	    	 throw new NullPointerException("Username must be provided for selected operation");
 	     }
-	     AssetFilterValue fetchedValue = assetFilterValueDao.get(assetFilterValue.getId());
+	     AssetFilterValue fetchedValue = assetFilterDao.get(assetFilterValue.getId());
 	     if (fetchedValue == null) {
 	    	 throw new NullPointerException("AssetGroupField does not exist " + assetFilterValue.getId().toString());
 	     }
-	     return assetFilterValueDao.update(assetFilterValue);
+	     return assetFilterDao.update(assetFilterValue);
 	}
 	
 	public AssetFilterValue getAssetFilterValue(UUID id) {
 		if (id == null) {
 			throw new NullPointerException("Cannot get AssetFilterValue because ID is null.");
         }
-        return assetFilterValueDao.get(id);
+        return assetFilterDao.get(id);
 	}
 
 	public AssetFilterValue deleteAssetFilterValue(UUID id, String username) {
@@ -184,11 +171,11 @@ public class AssetFilterServiceBean{
             throw new NullPointerException("Username must be provided for selected operation");
         }
 
-        AssetFilterValue assetFilterValue = assetFilterValueDao.get(id);
+        AssetFilterValue assetFilterValue = assetFilterDao.get(id);
         if (assetFilterValue == null) {
             return null;
         }
-        return assetFilterValueDao.delete(assetFilterValue);
+        return assetFilterDao.delete(assetFilterValue);
 	}
 	
 	
@@ -206,17 +193,17 @@ public class AssetFilterServiceBean{
 	     // delete all assetfilter children for assetfileterId
 	     for(AssetFilterQuery assetFilterQuery: oldAssetFilter.getQueries()) {
 	    	 for(AssetFilterValue assetFilterValue : assetFilterQuery.getValues()) {
-	    		 assetFilterValueDao.delete(assetFilterValue);
+	    		 assetFilterDao.delete(assetFilterValue);
 	    	 }
-	    	 assetFilterQueryDao.delete(assetFilterQuery);
+	    	 assetFilterDao.delete(assetFilterQuery);
 	     }
 	     // create new assetfilter children
     	 for(AssetFilterQuery assetFilterQuery : assetFilter.getQueries()) {
     		 assetFilterQuery.setAssetFilter(assetFilter);
-    		 assetFilterQueryDao.create(assetFilterQuery);
+    		 assetFilterDao.create(assetFilterQuery);
     		 for(AssetFilterValue assetFilterValue : assetFilterQuery.getValues()) {
     			 assetFilterValue.setAssetFilterQuery(assetFilterQuery);
-    			 assetFilterValueDao.create(assetFilterValue);
+    			 assetFilterDao.create(assetFilterValue);
     		 }
     	 }
     	 assetFilter.setUpdatedBy(username);

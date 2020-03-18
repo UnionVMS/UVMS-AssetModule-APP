@@ -14,7 +14,6 @@ package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -48,7 +47,6 @@ public class AssetFilter implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-   // @JsonbTransient
     private UUID id;
 
     @Size(max = 255)

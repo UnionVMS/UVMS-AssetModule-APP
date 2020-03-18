@@ -1,17 +1,11 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.json.Json;
-import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import javax.json.JsonValue;
 import javax.json.bind.adapter.JsonbAdapter;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterList;

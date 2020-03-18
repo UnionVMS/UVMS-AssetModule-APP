@@ -1,19 +1,15 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
@@ -31,16 +27,14 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery.A
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery.ASSETFILTER_QUERY_GETBYID;
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery.ASSETFILTER_QUERY_CLEAR;
 import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery.ASSETFILTER_RETRIEVE_QUERYS_FOR_FILTER;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery.ASSETFILTER_QUERY_BY_GUID;
 
 @Entity
-@Table(name = "assetfilterquery") // get index?
+@Table(name = "assetfilterquery")
 @NamedQueries({
 		@NamedQuery(name=ASSETFILTER_QUERY_FIND_ALL, query="SELECT a FROM AssetFilterQuery a"),
 		@NamedQuery(name=ASSETFILTER_QUERY_GETBYID, query="SELECT a FROM AssetFilterQuery a where a.id=:id"),
 		@NamedQuery(name=ASSETFILTER_QUERY_CLEAR, query="DELETE  FROM AssetFilterQuery a where a.assetFilter=:assetfilter"),
-		@NamedQuery(name=ASSETFILTER_RETRIEVE_QUERYS_FOR_FILTER, query="SELECT a FROM AssetFilterQuery a where a.assetFilter=:assetfilter"),
-		@NamedQuery(name=ASSETFILTER_QUERY_BY_GUID, query="SELECT a FROM AssetFilterQuery a WHERE a.id=:guid"),
+		@NamedQuery(name=ASSETFILTER_RETRIEVE_QUERYS_FOR_FILTER, query="SELECT a FROM AssetFilterQuery a where a.assetFilter=:assetfilter")
 })
 public class AssetFilterQuery  implements Serializable{
 
@@ -50,8 +44,6 @@ public class AssetFilterQuery  implements Serializable{
 	public static final String ASSETFILTER_QUERY_GETBYID = "assetfilterquery.getbyid";
 	public static final String ASSETFILTER_QUERY_CLEAR = "assetfilterquery.clear";
 	public static final String ASSETFILTER_RETRIEVE_QUERYS_FOR_FILTER = "assetfilterquery.retrievequerysforfilter";
-	public static final String ASSETFILTER_QUERY_BY_GUID = "assetfilterquery.findByGuid";
-
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -71,11 +63,6 @@ public class AssetFilterQuery  implements Serializable{
     @OneToMany(mappedBy="assetFilterQuery", cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
     private Set<AssetFilterValue> values;
-    
-//    @ElementCollection
-//    @CollectionTable(name="AssetFilterValue", joinColumns=@JoinColumn(name = "assetfilterquery"))
-//    @Column(name="value")
-//    private Set<String> values;
     
     @JsonbTransient
     @ManyToOne

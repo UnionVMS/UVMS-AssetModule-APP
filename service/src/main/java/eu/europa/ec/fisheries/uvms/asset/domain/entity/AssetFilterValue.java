@@ -42,7 +42,6 @@ public class AssetFilterValue implements Serializable{
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-//	@JsonbTransient
     private UUID id;
 
     @Column(name = "valuenumber")

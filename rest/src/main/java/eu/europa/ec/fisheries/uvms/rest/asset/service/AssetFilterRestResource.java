@@ -120,6 +120,7 @@ public class AssetFilterRestResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when creating AssetFilter"),
             @ApiResponse(code = 200, message = "AssetFilter successfully created")})
+    @Path("/createFilter")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response createAssetFilter(@ApiParam(value = "AssetFilter", required = true) final AssetFilter assetFilter) throws Exception {
         try {
@@ -281,7 +282,6 @@ public class AssetFilterRestResource {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Error when creating AssetFilter"),
             @ApiResponse(code = 200, message = "AssetFilter successfully created")})
-    @Path("/createFilter")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response createAssetFilterForReal(@ApiParam(value = "jsonAssetFilter", required = true) String jsonAssetFilter) throws Exception {
         try {

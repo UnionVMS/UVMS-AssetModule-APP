@@ -61,7 +61,6 @@ public class AssetFilterServiceBeanTest extends TransactionalTests{
         assetFilterQuery.setType("GUID");
         assetFilterQuery.setIsNumber(true);
         assetFilterQuery.setInverse(false);
-     //   assetFilterQuery.setUpdateTime(Instant.now(Clock.systemUTC()));
         return assetFilterService.createAssetFilterQuery(af.getId(), assetFilterQuery);
     }
 	private AssetFilterValue createAssetFilterValueEntety(UUID parentAssetFilterQueryId) {
@@ -76,7 +75,8 @@ public class AssetFilterServiceBeanTest extends TransactionalTests{
         UUID guid = createdAssetFilterEntity.getId();
         assetFilterService.deleteAssetFilterById(createdAssetFilterEntity.getId(), createdAssetFilterEntity.getOwner());
         AssetFilter fetchedAssetFilterEntity = assetFilterService.getAssetFilterById(guid);
-        assertNotNull(fetchedAssetFilterEntity);
+        assertNull(fetchedAssetFilterEntity);
+        // assertNotNull(fetchedAssetFilterEntity);
     }
 
     @Test
