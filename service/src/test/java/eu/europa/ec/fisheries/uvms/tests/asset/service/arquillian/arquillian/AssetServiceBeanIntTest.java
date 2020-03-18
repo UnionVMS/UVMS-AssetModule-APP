@@ -4,9 +4,10 @@ import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
 import eu.europa.ec.fisheries.uvms.asset.bean.AssetGroupServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFields;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchLeaf;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
@@ -222,13 +223,10 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         asset = assetService.createAsset(asset, "test");
         commit();
 
-        List<SearchKeyValue> searchValues = new ArrayList<>();
-        SearchKeyValue searchValue = new SearchKeyValue();
-        searchValue.setSearchField(SearchFields.GUID);
-        searchValue.setSearchValues(Collections.singletonList(asset.getId().toString()));
-        searchValues.add(searchValue);
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.GUID, asset.getId().toString()));
 
-        List<Asset> assets = assetService.getAssetList(searchValues, 1, 100, true, false).getAssetList();
+        List<Asset> assets = assetService.getAssetList(trunk, 1, 100, false).getAssetList();
 
         assertEquals(1, assets.size());
         assertEquals(asset.getCfr(), assets.get(0).getCfr());
@@ -240,16 +238,14 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void getAssetListTestNameQuery() throws Exception {
         Asset asset = AssetTestsHelper.createBiggerAsset();
+        asset.setName("getAssetListTestNameQueryTest");
         asset = assetService.createAsset(asset, "test");
         commit();
 
-        List<SearchKeyValue> searchValues = new ArrayList<>();
-        SearchKeyValue searchValue = new SearchKeyValue();
-        searchValue.setSearchField(SearchFields.NAME);
-        searchValue.setSearchValues(Collections.singletonList(asset.getName()));
-        searchValues.add(searchValue);
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.NAME, asset.getName()));
 
-        List<Asset> assets = assetService.getAssetList(searchValues, 1, 100, true, false).getAssetList();
+        List<Asset> assets = assetService.getAssetList(trunk, 1, 100,  false).getAssetList();
 
         assertFalse(assets.isEmpty());
         assertEquals(asset.getCfr(), assets.get(0).getCfr());

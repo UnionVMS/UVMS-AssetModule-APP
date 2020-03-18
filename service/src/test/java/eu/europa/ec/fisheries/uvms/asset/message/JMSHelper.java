@@ -52,14 +52,6 @@ public class JMSHelper {
         return assetModuleResponse.getAsset();
     }
 
-    public List<Asset> getAssetByAssetListQuery(AssetListQuery assetListQuery) throws Exception {
-        String msg = AssetModuleRequestMapper.createAssetListModuleRequest(assetListQuery);
-        String correlationId = sendAssetMessage(msg);
-        Message response = listenForResponse(correlationId);
-        ListAssetResponse assetModuleResponse = JAXBMarshaller.unmarshallTextMessage((TextMessage) response, ListAssetResponse.class);
-        return assetModuleResponse.getAsset();
-    }
-    
     public String sendAssetMessage(String text) throws Exception {
         Connection connection = getConnectionFactory().createConnection("test", "test");
         connection.setClientID(UUID.randomUUID().toString());

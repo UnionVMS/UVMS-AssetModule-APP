@@ -9,9 +9,45 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.asset.domain.mapper;
+package eu.europa.ec.fisheries.uvms.asset.remote.dto.search;
 
-public enum SearchFieldType {
+import javax.json.bind.annotation.JsonbTransient;
 
-	LIST, NUMBER, MIN_DECIMAL, MAX_DECIMAL, BOOLEAN, ID, DATE, STRING, CHILD;
+public class SearchLeaf implements AssetSearchInterface {
+
+	private SearchFields searchField;
+	private String searchValue;
+
+    public SearchLeaf() {
+        super();
+    }
+
+    public SearchLeaf(SearchFields searchField, String searchValue) {
+        this.searchField = searchField;
+        this.searchValue = searchValue;
+    }
+
+	@Override
+	@JsonbTransient
+	public boolean isLeaf() {
+		return true;
+	}
+
+    public SearchFields getSearchField() {
+		return searchField;
+	}
+    
+	public void setSearchField(SearchFields searchField) {
+		this.searchField = searchField;
+	}
+
+	public String getSearchValue() {
+		return searchValue;
+	}
+
+	public void setSearchValue(String searchValue) {
+		this.searchValue = searchValue;
+	}
+
+
 }

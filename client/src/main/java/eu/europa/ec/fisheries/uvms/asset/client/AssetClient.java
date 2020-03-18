@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.client;
 
 import eu.europa.ec.fisheries.uvms.asset.client.model.*;
+import eu.europa.ec.fisheries.uvms.asset.client.model.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
@@ -77,7 +78,7 @@ public class AssetClient {
                 .get(AssetDTO.class);
     }
     
-    public List<AssetDTO> getAssetList(AssetQuery query) {
+    public List<AssetDTO> getAssetList(SearchBranch query) {
         AssetListResponse assetResponse = webTarget
                 .path("query")
                 .request(MediaType.APPLICATION_JSON)
@@ -87,12 +88,11 @@ public class AssetClient {
         return assetResponse.getAssetList();
     }
 
-    public List<AssetDTO> getAssetList(String query, int page, int size, boolean dynamic, boolean includeInactivated) {
+    public List<AssetDTO> getAssetList(String query, int page, int size, boolean includeInactivated) {
         AssetListResponse assetResponse = webTarget
                 .path("query")
                 .queryParam("page", page)
                 .queryParam("size", size)
-                .queryParam("dynamic", dynamic)
                 .queryParam("includeInactivated", includeInactivated)
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
@@ -101,12 +101,11 @@ public class AssetClient {
         return assetResponse.getAssetList();
     }
 
-    public List<String> getAssetIdList(AssetQuery query, int page, int size, boolean dynamic, boolean includeInactivated) {
+    public List<String> getAssetIdList(SearchBranch query, int page, int size, boolean includeInactivated) {
         List<String> assetResponse = webTarget
                 .path("queryIdOnly")
                 .queryParam("page", page)
                 .queryParam("size", size)
-                .queryParam("dynamic", dynamic)
                 .queryParam("includeInactivated", includeInactivated)
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
@@ -115,23 +114,11 @@ public class AssetClient {
         return assetResponse;
     }
     
-    public List<AssetDTO> getAssetList(AssetQuery query, boolean dynamic) {
-        AssetListResponse assetResponse = webTarget
-                .path("query")
-                .queryParam("dynamic", dynamic)
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .post(Entity.json(query), AssetListResponse.class);
-    
-        return assetResponse.getAssetList();
-    }
-    
-    public List<AssetDTO> getAssetList(AssetQuery query, int page, int size, boolean dynamic) {
+    public List<AssetDTO> getAssetList(SearchBranch query, int page, int size) {
         AssetListResponse assetResponse = webTarget
                     .path("query")
                     .queryParam("page", page)
                     .queryParam("size", size)
-                    .queryParam("dynamic", dynamic)
                     .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                     .post(Entity.json(query), AssetListResponse.class);

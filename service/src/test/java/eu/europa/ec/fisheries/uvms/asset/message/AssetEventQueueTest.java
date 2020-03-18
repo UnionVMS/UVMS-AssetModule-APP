@@ -105,23 +105,6 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
 
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetListByQueryTest() throws Exception {
-        Asset asset = AssetTestHelper.createBasicAsset();
-        Asset upserted = jmsHelper.upsertAsset(asset);
-        Thread.sleep(2000);
-
-        AssetListQuery assetListQuery = AssetTestHelper.createBasicAssetQuery();
-        AssetListCriteriaPair assetListCriteriaPair = new AssetListCriteriaPair();
-        assetListCriteriaPair.setKey(ConfigSearchField.FLAG_STATE);
-        assetListCriteriaPair.setValue(asset.getCountryCode());
-        assetListQuery.getAssetSearchCriteria().getCriterias().add(assetListCriteriaPair);
-
-        List<Asset> assets = jmsHelper.getAssetByAssetListQuery(assetListQuery);
-        assertTrue(assets.stream().anyMatch(a -> upserted.getCfr().equals(a.getCfr())));
-    }
-    
-    @Test
-    @OperateOnDeployment("normal")
     public void upsertAssetTest() throws Exception {
         Asset asset = AssetTestHelper.createBasicAsset();
         jmsHelper.upsertAsset(asset);

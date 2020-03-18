@@ -1,13 +1,13 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.*;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetRemapMapping;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchFieldType;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.uvms.asset.domain.mapper.*;
 import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
+import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.exception.AuditException;
@@ -15,7 +15,6 @@ import org.hibernate.envers.exception.RevisionDoesNotExistException;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
 import org.hibernate.envers.query.criteria.AuditCriterion;
-import org.hibernate.envers.query.criteria.AuditDisjunction;
 import org.hibernate.envers.query.criteria.ExtendableCriterion;
 import org.hibernate.envers.query.criteria.MatchMode;
 
@@ -24,7 +23,6 @@ import javax.persistence.*;
 import java.math.BigInteger;
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Stateless
 public class AssetDao {
@@ -145,41 +143,40 @@ public class AssetDao {
         return query.getResultList();
     }
 
-    public Long getAssetCount(List<SearchKeyValue> searchFields, Boolean isDynamic, boolean includeInactivated) {
+    public Long getAssetCount(SearchBranch queryTree, boolean includeInactivated) {
         try {
-            AuditQuery query = createAuditQuery(searchFields, isDynamic, includeInactivated);
+            AuditQuery query = createAuditQuery(queryTree, includeInactivated);
             return (Long) query.addProjection(AuditEntity.id().count()).getSingleResult();
         } catch (AuditException e) {
             return 0L;
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public List<Asset> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize, List<SearchKeyValue> searchFields,
-                                                   boolean isDynamic, boolean includeInactivated) {
+    public List<Asset> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize, SearchBranch queryTree, boolean includeInactivated) {
         try {
-            AuditQuery query = createAuditQuery(searchFields, isDynamic, includeInactivated);
+            AuditQuery query = createAuditQuery(queryTree, includeInactivated);
             query.setFirstResult(pageSize * (pageNumber - 1));
             query.setMaxResults(pageSize);
-            return query.getResultList();
+            List<Asset> test = query.getResultList();
+            return test;
         } catch (AuditException e) {
             return Collections.emptyList();
         }
     }
 
-    private AuditQuery createAuditQuery(List<SearchKeyValue> searchFields, boolean isDynamic, boolean includeInactivated) {
+    private AuditQuery createAuditQuery(SearchBranch queryTree, boolean includeInactivated) {
         AuditReader auditReader = AuditReaderFactory.get(em);
 
         AuditQuery query;
-        SearchKeyValue dateSearchField = getDateSearchField(searchFields);
+        SearchLeaf dateSearchField = getDateSearchField(queryTree);
         if (dateSearchField != null) {
-            Instant date = Instant.parse(dateSearchField.getSearchValues().get(0));
+            Instant date = DateUtils.stringToDate(dateSearchField.getSearchValue());
             Number revisionNumberForDate = auditReader.getRevisionNumberForDate(Date.from(date));
             query = auditReader.createQuery().forEntitiesAtRevision(Asset.class, revisionNumberForDate);
         } else {
             query = auditReader.createQuery().forRevisionsOfEntity(Asset.class, true, true);
 
-            if (!searchRevisions(searchFields)) {
+            if (!searchRevisions(queryTree)) {
                 query.add(AuditEntity.revisionNumber().maximize().computeAggregationInInstanceContext());
             }
             if(!includeInactivated) {
@@ -187,81 +184,97 @@ public class AssetDao {
             }
         }
 
-        ExtendableCriterion operator;
-        if (isDynamic) {
-            operator = AuditEntity.conjunction();
-        } else {
-            operator = AuditEntity.disjunction();
-        }
-
-        boolean operatorUsed = false;
-        for (SearchKeyValue searchKeyValue : searchFields) {
-            if (useLike(searchKeyValue)) {
-                AuditDisjunction op = AuditEntity.disjunction();
-                for (String value : searchKeyValue.getSearchValues()) {
-                    op.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).ilike(value.replace("*", "%").toLowerCase(), MatchMode.ANYWHERE));
-                }
-                operatorUsed = true;
-                operator.add(op);
-            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.MIN_DECIMAL)) {
-                operatorUsed = true;
-                operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).ge(Double.valueOf(searchKeyValue.getSearchValues().get(0))));
-            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.MAX_DECIMAL)) {
-                operatorUsed = true;
-                operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).le(Double.valueOf(searchKeyValue.getSearchValues().get(0))));
-            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.LIST)) {
-                operatorUsed = true;
-                AuditDisjunction disjunctionOperator = AuditEntity.disjunction();
-                for (String v : searchKeyValue.getSearchValuesAsLowerCase()) {
-                    disjunctionOperator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).ilike(v, MatchMode.ANYWHERE));
-                }
-                operator.add(disjunctionOperator);
-            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.NUMBER)) {
-                List<Integer> intValues = searchKeyValue.getSearchValues().stream().map(Integer::parseInt).collect(Collectors.toList());
-                operatorUsed = true;
-                operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).in(intValues));
-            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.ID)) {
-                List<UUID> ids = searchKeyValue.getSearchValues().stream().map(UUID::fromString).collect(Collectors.toList());
-                operatorUsed = true;
-                operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).in(ids));
-            } else if (searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.BOOLEAN) ||
-                    searchKeyValue.getSearchField().getFieldType().equals(SearchFieldType.STRING)) {
-                operatorUsed = true;
-                operator.add(AuditEntity.property(searchKeyValue.getSearchField().getFieldName()).eq(searchKeyValue.getSearchValues().get(0)));
-            }
-        }
-        if (operatorUsed) {
-            query.add((AuditCriterion) operator);
+        AuditCriterion auditCriterion = queryBuilder(queryTree);
+        if(auditCriterion != null) {
+            query.add(auditCriterion);
         }
         return query;
     }
 
-    private boolean searchRevisions(List<SearchKeyValue> searchFields) {
-        for (SearchKeyValue searchKeyValue : searchFields) {
-            if (searchKeyValue.getSearchField().equals(SearchFields.HIST_GUID)) {
-                return true;
+    private AuditCriterion queryBuilder(SearchBranch query){
+        ExtendableCriterion operator;
+        boolean operatorUsed = false;
+        if(query.isLogicalAnd()){
+            operator = AuditEntity.conjunction();           //and
+        }else{
+            operator = AuditEntity.disjunction();           //or
+        }
+        for (AssetSearchInterface field : query.getFields()) {
+            if(!field.isLeaf()){
+                AuditCriterion auditCriterion = queryBuilder((SearchBranch) field);
+                if(auditCriterion != null){
+                    operator.add(auditCriterion);
+                    operatorUsed = true;
+                }
+            }else{
+                SearchLeaf leaf = (SearchLeaf) field;
+                if (leaf.getSearchValue().contains("*")) {
+                    operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ilike(leaf.getSearchValue().replace("*", "%").toLowerCase(), MatchMode.ANYWHERE));
+                    operatorUsed = true;
+                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.MIN_DECIMAL)) {
+                    operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ge(Double.valueOf(leaf.getSearchValue())));
+                    operatorUsed = true;
+                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.MAX_DECIMAL)) {
+                    operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).le(Double.valueOf(leaf.getSearchValue())));
+                    operatorUsed = true;
+                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.LIST)) {
+                    operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ilike(leaf.getSearchValue(), MatchMode.ANYWHERE));
+                    operatorUsed = true;
+                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.NUMBER)) {
+                    Integer intValue = Integer.parseInt(leaf.getSearchValue());
+                    operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).eq(intValue));
+                    operatorUsed = true;
+                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.ID)) {
+                    UUID id = UUID.fromString(leaf.getSearchValue());
+                    operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).eq(id));
+                    operatorUsed = true;
+                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.BOOLEAN) ||
+                        leaf.getSearchField().getFieldType().equals(SearchFieldType.STRING)) {
+                    operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).eq(leaf.getSearchValue()));
+                    operatorUsed = true;
+                }
             }
         }
-        return false;
+        if(operatorUsed) {
+            return (AuditCriterion) operator;
+        }
+        return null;
     }
 
-    private SearchKeyValue getDateSearchField(List<SearchKeyValue> searchFields) {
-        for (SearchKeyValue searchKeyValue : searchFields) {
-            if (searchKeyValue.getSearchField().equals(SearchFields.DATE)) {
-                return searchKeyValue;
+    private SearchLeaf getDateSearchField(SearchBranch searchFields) {
+        for (AssetSearchInterface field : searchFields.getFields()) {
+            if(!field.isLeaf()){
+                SearchLeaf leaf = getDateSearchField((SearchBranch) field);
+                if(leaf != null){
+                    return leaf;
+                }
+            }else {
+                SearchLeaf leaf = (SearchLeaf) field;
+                if (leaf.getSearchField().equals(SearchFields.DATE)) {
+                    return leaf;
+                }
             }
         }
         return null;
     }
 
-    private boolean useLike(SearchKeyValue entry) {
-        for (String searchValue : entry.getSearchValues()) {
-            if (searchValue.contains("*")) {
-                return true;
+    private boolean searchRevisions(SearchBranch searchFields) {
+        for (AssetSearchInterface field : searchFields.getFields()) {
+            if(!field.isLeaf()){
+                boolean leaf = searchRevisions((SearchBranch) field);
+                if(leaf == true){
+                    return true;
+                }
+            }else {
+                SearchLeaf leaf = (SearchLeaf) field;
+                if (leaf.getSearchField().equals(SearchFields.HIST_GUID)) {
+                    return true;
+                }
             }
         }
         return false;
     }
+
 
     public List<Asset> getRevisionsForAsset(UUID id) {
         AuditReader auditReader = AuditReaderFactory.get(em);
