@@ -45,18 +45,16 @@ import static org.junit.Assert.*;
 @RunWith(Arquillian.class)
 //@RunAsClient
 public class SSEResourceTest extends AbstractAssetRestTest {
-    
     private final static Logger LOG = LoggerFactory.getLogger(SSEResourceTest.class);
     
     private static String dataString = "";
     private static String errorString = "";
 
+    @Inject
+    private AssetDao assetDao;
 
     @Inject
-    AssetDao assetDao;
-
-    @Inject
-    AssetRemapTask assetRemapTask;
+    private AssetRemapTask assetRemapTask;
 
     @Before
     public void clearStrings(){
@@ -67,7 +65,6 @@ public class SSEResourceTest extends AbstractAssetRestTest {
     @Test
     @OperateOnDeployment("normal")
     public void SSEBroadcastTest() throws Exception{
-
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target("http://localhost:8080/test/rest/sse/subscribe");
         AuthorizationHeaderWebTarget jwtTarget = new AuthorizationHeaderWebTarget(target, getTokenInternal());
@@ -76,7 +73,6 @@ public class SSEResourceTest extends AbstractAssetRestTest {
             source.register(onEvent, onError, onComplete);
             source.open();
             assertTrue(source.isOpen());
-
 
             Asset asset = createAndRestBasicAsset();
 
@@ -89,7 +85,7 @@ public class SSEResourceTest extends AbstractAssetRestTest {
             asset.setLengthOverAll(42d);
             asset = updateAsset(asset);
 
-            Thread.sleep(1000 * 1 * 1);
+            Thread.sleep(1000);
             assertTrue(source.isOpen());
             assertTrue(errorString,errorString.isEmpty());
             assertEquals(dataString,4 ,dataString.split("\\}\\{").length);
@@ -97,14 +93,11 @@ public class SSEResourceTest extends AbstractAssetRestTest {
             assertTrue(dataString, dataString.contains("UNK"));
             assertTrue(dataString, dataString.contains("42"));
         }
-
     }
-
 
     @Test
     @OperateOnDeployment("normal")
     public void checkThatMergeMessageComesOnSSEStreamTest() throws Exception{
-
         Asset oldAsset = createAndRestBasicAsset();
         Asset newAsset = createAndRestBasicAsset();
         AssetRemapMapping assetRemapMapping = new AssetRemapMapping();
@@ -125,14 +118,12 @@ public class SSEResourceTest extends AbstractAssetRestTest {
 
             assetRemapTask.remap();
 
-            Thread.sleep(1000 * 1 * 1);
+            Thread.sleep(1000);
             assertTrue(source.isOpen());
             assertTrue(errorString,errorString.isEmpty());
             assertTrue(dataString, dataString.contains(assetRemapMapping.getOldAssetId().toString()));
             assertTrue(dataString, dataString.contains(assetRemapMapping.getNewAssetId().toString()));
         }
-
-
     }
 
     private static Consumer<InboundSseEvent> onEvent = (inboundSseEvent) -> {
@@ -150,8 +141,7 @@ public class SSEResourceTest extends AbstractAssetRestTest {
     private static Runnable onComplete = () -> {
         System.out.println("Done!");
     };
-    
-    
+
     private Asset createAndRestBasicAsset(){
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = getWebTargetInternal()
@@ -165,13 +155,11 @@ public class SSEResourceTest extends AbstractAssetRestTest {
     }
 
     private Asset updateAsset(Asset asset){
-        Asset updatedAsset = getWebTargetInternal()
+        return getWebTargetInternal()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .put(Entity.json(asset), Asset.class);
-
-        return updatedAsset;
     }
     
 }

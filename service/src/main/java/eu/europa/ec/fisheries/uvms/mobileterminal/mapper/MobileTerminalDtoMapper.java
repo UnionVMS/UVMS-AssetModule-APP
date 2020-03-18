@@ -74,7 +74,7 @@ public class MobileTerminalDtoMapper {
         dto.setArchived(channel.getArchived());
         dto.setConfigChannel(channel.isConfigChannel());
         dto.setDefaultChannel(channel.isDefaultChannel());
-        dto.setDNID(channel.getDNID());
+        dto.setDnid(channel.getDnid());
         dto.setEndDate(channel.getEndDate());
         dto.setExpectedFrequency(channel.getExpectedFrequency());
         dto.setExpectedFrequencyInPort(channel.getExpectedFrequencyInPort());

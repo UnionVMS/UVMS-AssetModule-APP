@@ -52,12 +52,12 @@ public class ChannelMapper {
 
     private static List<ComChannelAttribute> mapAttributes(Channel channel) {
         List<ComChannelAttribute> attributeList = new ArrayList<>();
-        attributeList.add(mapAttr("DNID", channel.getDNID()));
+        attributeList.add(mapAttr("DNID", String.valueOf(channel.getDnid())));
         attributeList.add(mapAttr("FREQUENCY_EXPECTED", String.valueOf(channel.getExpectedFrequency().getSeconds())));
         attributeList.add(mapAttr("FREQUENCY_IN_PORT", String.valueOf(channel.getExpectedFrequencyInPort().getSeconds())));
         attributeList.add(mapAttr("LES_DESCRIPTION", channel.getLesDescription()));
         attributeList.add(mapAttr("FREQUENCY_GRACE_PERIOD", String.valueOf(channel.getFrequencyGracePeriod().getSeconds())));
-        attributeList.add(mapAttr("MEMBER_NUMBER", channel.getMemberNumber()));
+        attributeList.add(mapAttr("MEMBER_NUMBER", String.valueOf(channel.getMemberNumber())));
         attributeList.add(mapAttr("START_DATE", DateUtils.dateToEpochMilliseconds(channel.getStartDate())));
         attributeList.add(mapAttr("END_DATE", DateUtils.dateToEpochMilliseconds(channel.getEndDate())));
         return attributeList;

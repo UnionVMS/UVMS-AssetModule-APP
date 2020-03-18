@@ -76,24 +76,4 @@ public class ChannelDaoIntTest extends TransactionalTests {
         assertNotNull(channels);
         assertEquals(0, channels.size());
     }
-
-    @Test
-    @OperateOnDeployment("normal")
-    public void testGetActiveDNID() {
-        String pluginName = "test_getActiveDNID";
-
-        List<String> dnidList = channelDao.getActiveDNID(pluginName);
-
-        assertNotNull(dnidList);
-    }
-
-    @Test
-    @OperateOnDeployment("normal")
-    public void testGetActiveDNID_emptyList() {
-        String pluginName = null;
-
-        List<String> dnidList = channelDao.getActiveDNID(pluginName);
-
-        assertThat(dnidList.size(), is(0));
-    }
 }
