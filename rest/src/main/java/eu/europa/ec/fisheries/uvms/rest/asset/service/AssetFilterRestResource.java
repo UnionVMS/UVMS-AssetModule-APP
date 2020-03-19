@@ -122,7 +122,7 @@ public class AssetFilterRestResource {
             @ApiResponse(code = 200, message = "AssetFilter successfully created")})
     @Path("/createFilter")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response createAssetFilter(@ApiParam(value = "AssetFilter", required = true) final AssetFilter assetFilter) throws Exception {
+    public Response createAssetFilterIn(@ApiParam(value = "AssetFilter", required = true) final AssetFilter assetFilter) throws Exception {
         try {
             String user = servletRequest.getRemoteUser();
             AssetFilter createdAssetFilter = assetFilterService.createAssetFilter(assetFilter, user);
@@ -283,7 +283,7 @@ public class AssetFilterRestResource {
             @ApiResponse(code = 500, message = "Error when creating AssetFilter"),
             @ApiResponse(code = 200, message = "AssetFilter successfully created")})
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response createAssetFilterForReal(@ApiParam(value = "jsonAssetFilter", required = true) String jsonAssetFilter) throws Exception {
+    public Response createAssetFilter(@ApiParam(value = "jsonAssetFilter", required = true) String jsonAssetFilter) throws Exception {
         try {
             String user = servletRequest.getRemoteUser();
             AssetFilter assetFilter = jsonb.fromJson(jsonAssetFilter, AssetFilter.class);
@@ -302,7 +302,7 @@ public class AssetFilterRestResource {
             @ApiResponse(code = 500, message = "Error when update AssetFilterValue"),
             @ApiResponse(code = 200, message = "AssetFilterValue successfully update")})
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response updateAssetFilterHard(@ApiParam(value = "jsonAssetFilter", required = true) String jsonAssetFilter) throws Exception {
+    public Response updateAssetFilter(@ApiParam(value = "jsonAssetFilter", required = true) String jsonAssetFilter) throws Exception {
 
         try {
             AssetFilter mappedAssetFilter = jsonb.fromJson(jsonAssetFilter, AssetFilter.class);

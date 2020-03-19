@@ -39,14 +39,14 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
    @Before
     public void setup() {
 	   testName = "Test name";
+	   JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter(), new AssetFilterListRestResourceAdapter());
+       jsonb = JsonbBuilder.create(config);
 	   assetFilter = AssetHelper.createBasicAssetFilter(testName);
 	   assetFilter = createAssetFilter(assetFilter);
 	   assetFilterQuery = AssetHelper.createBasicAssetFilterQuery(assetFilter);
 	   AssetHelper.createBasicAssetFilterValue(assetFilterQuery);
 	   assetFilterQuery = createAssetFilterQuery(assetFilter);
 	   createAssetFilterValue(assetFilterQuery);
-	   JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter(), new AssetFilterListRestResourceAdapter());
-       jsonb = JsonbBuilder.create(config);
     }
  
     @After
@@ -85,11 +85,7 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
     public void createAssetFilterTest() {
 		
 		AssetFilter testAssetFilter = new AssetFilter();
-		testAssetFilter.setName("Mr Wirde");
-		
 		testAssetFilter = createAssetFilter(testAssetFilter);
-		
-        assertEquals(testAssetFilter.getName(),"Mr Wirde");
         assertNotNull(testAssetFilter.getId());
         
         Response deleteresp = getWebTargetExternal()
@@ -113,7 +109,7 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
             .get(String.class);
 
     	AssetFilter fetchedAssetFilterJsonAdapter = jsonb.fromJson(fetchedAssetFilter, AssetFilter.class);
-        assertEquals(fetchedAssetFilterJsonAdapter.getName(), testName);
+        assertEquals(fetchedAssetFilterJsonAdapter.getName(), assetFilter.getName());
         assertNotNull(fetchedAssetFilter);
         assertEquals(fetchedAssetFilterJsonAdapter.getId(), assetFilter.getId());
         assertEquals(fetchedAssetFilterJsonAdapter.getName(), assetFilter.getName());
@@ -192,7 +188,7 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
 		
 		AssetFilter fetchedAssetFilter = jsonb.fromJson(fetchedAssetFilterJsonString, AssetFilter.class);
 		
-		assertEquals("Test name",  fetchedAssetFilter.getName());
+		assertEquals(assetFilter.getName(),  fetchedAssetFilter.getName());
 		assertEquals(assetFilter.getId(),  fetchedAssetFilter.getId());
 	 }
 	
@@ -223,13 +219,16 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
 	 }
 	
 	
-	 private AssetFilter createAssetFilter(AssetFilter assetFilter) {
-		 return getWebTargetExternal()
+	 private AssetFilter createAssetFilter(AssetFilter assetFilterToCreate) {
+		 String assetFilterString = "{\"name\":\"båtar\",\"filter\": [{\"values\":[{\"value\":23, \"operator\":\"operator 2 test\"}],\"type\": \"dsad\", \"inverse\": false,\"isNumber\": true}] }";
+		 assetFilterToCreate = jsonb.fromJson(assetFilterString, AssetFilter.class);
+		String assetFilterJson =  getWebTargetExternal()
 		            .path("filter")
-		            .path("createFilter")
 		            .request(MediaType.APPLICATION_JSON)
 		            .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-		            .post(Entity.json(assetFilter), AssetFilter.class);
+		            .post(Entity.json(assetFilterString), String.class);
+		 assetFilterToCreate = jsonb.fromJson(assetFilterJson, AssetFilter.class);
+		 return assetFilterToCreate;
 	}
 	 
 	 private AssetFilterQuery createAssetFilterQuery(AssetFilter assetFilterforQuery) {
