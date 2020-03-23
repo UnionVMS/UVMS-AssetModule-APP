@@ -309,6 +309,10 @@ public class MobileTerminalServiceBean {
         return terminalDao.getMobileTerminalById(id);
     }
 
+    public List<MobileTerminal> getMobileTerminalListNotConnectedToAsset() {
+        return terminalDao.getMobileTerminalListWithNoActiveAsset();
+    }
+
     public MobileTerminal getMobileTerminalEntityBySerialNo(String serialNo) {
         if (serialNo == null || serialNo.isEmpty())
             throw new NullPointerException("Non valid serial no");

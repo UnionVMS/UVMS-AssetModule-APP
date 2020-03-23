@@ -12,6 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalStatus;
@@ -34,6 +35,7 @@ import javax.ws.rs.core.Response;
 import java.time.Duration;
 import java.util.*;
 
+import static javax.ws.rs.core.Response.Status.OK;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -47,10 +49,10 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
         MobileTerminal created = getWebTargetExternal()
-                                .path("mobileterminal")
-                                .request(MediaType.APPLICATION_JSON)
-                                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
 
         assertNotNull(created);
         Set<Channel> channels = created.getChannels();
@@ -115,7 +117,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mobileTerminal));
         assertEquals(200, response.getStatus());
-        Integer code  = response.readEntity(AppError.class).code;
+        Integer code = response.readEntity(AppError.class).code;
         assertThat(code, is(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()));
     }
 
@@ -756,7 +758,8 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .path(mobileTerminal.getId().toString())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .get(new GenericType<List<Asset>>() {});
+                .get(new GenericType<List<Asset>>() {
+                });
 
         assertEquals(2, assetRevisions.size());
     }
@@ -950,7 +953,36 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         String returnString = response.readEntity(String.class);
         assertTrue(returnString, returnString.contains("true"));
     }
-    
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getMobileTerminalListWithAssetIdAsNullTest() {
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        assertNotNull(created);
+
+        Response response = getWebTargetExternal()
+                .path("mobileterminal")
+                .path("notConnectedToAssetList")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get();
+        assertEquals(OK.getStatusCode(), response.getStatus());
+
+        String returnValue = response.readEntity(String.class);
+        List<MobileTerminal> ret = new JsonBConfigurator().getContext(null)
+                .fromJson(returnValue, new ArrayList<MobileTerminal>(){}.getClass().getGenericSuperclass());
+        assertNotNull(ret);
+        assertFalse(ret.isEmpty());
+        assertTrue(ret.stream().anyMatch(mt -> mt.getId().equals(created.getId())));
+        assertTrue(ret.stream().allMatch(mt -> mt.getAsset() == null));
+    }
+
     private Asset createAndRestBasicAsset() {
         Asset asset = AssetHelper.createBasicAsset();
 

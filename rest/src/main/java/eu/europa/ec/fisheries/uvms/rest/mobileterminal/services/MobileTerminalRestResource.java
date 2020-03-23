@@ -114,6 +114,21 @@ public class MobileTerminalRestResource {
         }
     }
 
+    @GET
+    @Path("/notConnectedToAssetList")
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public Response getNotConnectedToAssetList() {
+        LOG.info("Get mobile terminal list of not connected to an Asset");
+        try {
+            List<MobileTerminal> mtList = mobileTerminalService.getMobileTerminalListNotConnectedToAsset();
+            String returnString = jsonb.toJson(mtList);
+            return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception ex) {
+            LOG.error("[ Error when fetching mobile terminal list] {}", ex.getMessage(), ex);
+            throw ex;
+        }
+    }
+
     @PUT
     @Path("/")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
