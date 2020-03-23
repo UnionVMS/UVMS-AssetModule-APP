@@ -408,4 +408,23 @@ public class AssetClientTest extends AbstractClientTest {
         AssetBO upsertAsset = assetClient.upsertAsset(assetBo);
         return upsertAsset.getAsset().getId().toString();
     }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetListByQueryTest() {
+        AssetDTO asset = AssetHelper.createBasicAsset();
+        AssetBO assetBo = new AssetBO();
+        assetBo.setAsset(asset);
+        AssetBO firstAssetBo = assetClient.upsertAsset(assetBo);
+
+        SearchBranch query = new SearchBranch(true);
+        query.addNewSearchLeaf(SearchFields.IRCS, asset.getIrcs());
+        
+        System.out.println("asset.getIrcs(): " + asset.getIrcs());
+        
+        List<AssetDTO> assetList = assetClient.getAssetList(query);
+        assertNotNull(assetList.size());
+        assertEquals(assetList.size(), 1);
+        
+    }
 }

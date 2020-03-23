@@ -23,6 +23,8 @@ import javax.persistence.*;
 import java.math.BigInteger;
 import java.time.Instant;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Stateless
 public class AssetDao {
@@ -200,14 +202,22 @@ public class AssetDao {
             operator = AuditEntity.disjunction();           //or
         }
         for (AssetSearchInterface field : query.getFields()) {
+        	if(field.isLeaf()) {
+        		SearchLeaf leaf = (SearchLeaf) field;
+        		
+        		
+        	}
             if(!field.isLeaf()){
                 AuditCriterion auditCriterion = queryBuilder((SearchBranch) field);
                 if(auditCriterion != null){
                     operator.add(auditCriterion);
                     operatorUsed = true;
                 }
-            }else{
+            }
+            
+            else{
                 SearchLeaf leaf = (SearchLeaf) field;
+                
                 if (leaf.getSearchValue().contains("*")) {
                     operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ilike(leaf.getSearchValue().replace("*", "%").toLowerCase(), MatchMode.ANYWHERE));
                     operatorUsed = true;
@@ -232,7 +242,27 @@ public class AssetDao {
                         leaf.getSearchField().getFieldType().equals(SearchFieldType.STRING)) {
                     operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).eq(leaf.getSearchValue()));
                     operatorUsed = true;
-                }
+                } if (leaf.getSearchField().getFieldName().equalsIgnoreCase("ircs")) {
+        			String valueString = leaf.getSearchValue();
+        			valueString = valueString.trim();
+        			// regex Start with word (char) optional - end with numbers : tree parts
+        			Matcher matcher = Pattern.compile("^([a-zA-Z]+)(-?)(\\d+)").matcher(valueString);
+        			String firstpart = "";
+        			String secondPart = "";
+        			String  thirdPart = "";
+        			
+        			if (matcher.find()) {
+        			    firstpart = matcher.group(1);
+        			    secondPart = matcher.group(2);
+        			    thirdPart = matcher.group(3);
+        			}
+        			String serachTSring = firstpart+"%" + thirdPart;
+        			System.out.println("firstpart: "+firstpart);
+        			System.out.println("secondPart: "+secondPart);
+        			System.out.println("thirdPart: "+thirdPart);
+        			System.out.println("serachTSring: "+serachTSring);
+        			leaf.setSearchValue(serachTSring);
+        		}
             }
         }
         if(operatorUsed) {
