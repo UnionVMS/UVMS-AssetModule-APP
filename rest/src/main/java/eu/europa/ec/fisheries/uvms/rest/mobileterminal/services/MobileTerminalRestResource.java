@@ -129,7 +129,6 @@ public class MobileTerminalRestResource {
         }
     }
 
-
     @PUT
     @Path("/")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
