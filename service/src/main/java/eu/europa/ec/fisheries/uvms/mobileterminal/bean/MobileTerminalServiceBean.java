@@ -158,16 +158,9 @@ public class MobileTerminalServiceBean {
     public MobileTerminal populateAssetInMT(MobileTerminal mt) {
         if(mt.getAssetUUID() != null){
             Asset asset = assetDao.getAssetById(UUID.fromString(mt.getAssetUUID()));
-            checkIfAssetAlreadyHasAnActiveMTBeforeAddingANewOne(asset, mt);
             mt.setAsset(asset);
         }
         return mt;
-    }
-
-    private void checkIfAssetAlreadyHasAnActiveMTBeforeAddingANewOne(Asset asset, MobileTerminal mt){
-        if(mt.getActive() && asset != null && asset.getMobileTerminals().stream().anyMatch(m -> m.getActive() && !m.getId().equals(mt.getId()))){
-            throw new IllegalArgumentException("An asset can not have more then one active MT. Asset " + asset.getName() + " already has at least one active MT");
-        }
     }
 
     public MobileTerminal assignMobileTerminal(UUID connectId, UUID mobileTerminalId, String comment, String username) {
@@ -237,7 +230,6 @@ public class MobileTerminalServiceBean {
         switch (status) {
             case ACTIVE:
                 mobileTerminal.setActive(true);
-                checkIfAssetAlreadyHasAnActiveMTBeforeAddingANewOne(mobileTerminal.getAsset(), mobileTerminal);
                 break;
             case INACTIVE:
                 mobileTerminal.setActive(false);
@@ -373,7 +365,6 @@ public class MobileTerminalServiceBean {
         if(terminal.getAsset() != null) {
             throw new IllegalArgumentException("Terminal " + mobileTerminalId + " is already linked to an asset with guid " + connectId);
         }
-        checkIfAssetAlreadyHasAnActiveMTBeforeAddingANewOne(asset, terminal);
 
         asset.getMobileTerminals().add(terminal);
         asset.setUpdateTime(Instant.now());
