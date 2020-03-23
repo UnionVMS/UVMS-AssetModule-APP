@@ -191,17 +191,23 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         MobileTerminal mobileTerminal2 = MobileTerminalTestHelper.createBasicMobileTerminal();
         mobileTerminal2.setAsset(asset);
 
-        Response failed = getWebTargetExternal()
+        Response response = getWebTargetExternal()
                 .path("mobileterminal")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mobileTerminal2), Response.class);
 
-        assertNotNull(failed);
-        assertEquals(200, failed.getStatus());
-        Integer code  = failed.readEntity(AppError.class).code;
-        assertThat(code, is(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()));
+        assertNotNull(response);
+        assertEquals(200, response.getStatus());
 
+        Asset fetchedAsset = getWebTargetExternal()
+                .path("asset")
+                .path(asset.getId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Asset.class);
+        
+        assertEquals(2, fetchedAsset.getMobileTerminalUUIDList().size());
     }
 
     @Test
@@ -404,8 +410,15 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         assertNotNull(response);
         assertEquals(200, response.getStatus());
-        Integer code  = response.readEntity(AppError.class).code;
-        assertThat(code, is(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()));
+        
+        Asset fetchedAsset = getWebTargetExternal()
+                .path("asset")
+                .path(asset.getId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Asset.class);
+        
+        assertEquals(2, fetchedAsset.getMobileTerminalUUIDList().size());
     }
 
     @Test
@@ -520,7 +533,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
-    public void ActivateMTConnectedToAnAssetWithAnAlreadyActiveMT() {
+    public void activateMTConnectedToAnAssetWithAnAlreadyActiveMT() {
         Asset asset = createAndRestBasicAsset();
         assertNotNull(asset);
 
@@ -547,7 +560,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         assertFalse(inactiveMT.getActive());
 
-        Response failed = getWebTargetExternal()
+        Response response = getWebTargetExternal()
                 .path("mobileterminal")
                 .path(inactiveMT.getId().toString())
                 .path("status")
@@ -557,10 +570,17 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .put(Entity.json(MobileTerminalStatus.ACTIVE), Response.class);
 
 
-        assertNotNull(failed);
-        Integer code  = failed.readEntity(AppError.class).code;
-        assertThat(code, is(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()));
-        assertEquals(200, failed.getStatus());
+        assertNotNull(response);
+        assertEquals(200, response.getStatus());
+        
+        Asset fetchedAsset = getWebTargetExternal()
+                .path("asset")
+                .path(asset.getId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Asset.class);
+        
+        assertEquals(2, fetchedAsset.getMobileTerminalUUIDList().size());
     }
 
     @Test
