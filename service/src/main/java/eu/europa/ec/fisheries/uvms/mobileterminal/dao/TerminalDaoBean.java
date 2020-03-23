@@ -97,6 +97,11 @@ public class TerminalDaoBean {
         return null;
     }
 
+    public List<MobileTerminal> getMobileTerminalListWithNoActiveAsset() {
+        return em.createQuery("SELECT m FROM MobileTerminal m WHERE m.asset IS NULL")
+                .getResultList();
+    }
+
     @SuppressWarnings("unchecked")
     public List<MobileTerminal> getMobileTerminalRevisionByHistoryId(UUID historyId) {
         AuditReader auditReader = AuditReaderFactory.get(em);
@@ -317,6 +322,5 @@ public class TerminalDaoBean {
         }
         return null;
     }
-
 
 }
