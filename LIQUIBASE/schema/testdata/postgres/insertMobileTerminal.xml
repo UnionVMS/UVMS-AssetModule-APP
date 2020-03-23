@@ -34,6 +34,10 @@
         <insert tableName="channel">
             <column name="id" value="00000000-0000-0000-0000-000000000001"/>
             <column name="updattime" valueDate="${now}"/>
+            <column name="active" valueDate="false"/>
+            <column name="chan_def" valueDate="false"/>
+            <column name="chan_conf" valueDate="false"/>
+            <column name="chan_poll" valueDate="false"/>
             <column name="updateuser" value="osdjup"/>
             <column name="mobterm_id" value="00000000-0000-0000-0000-000000000001"/>
             <column name="dnid" value="1234567890"/>
@@ -63,6 +67,10 @@
         <insert tableName="channel">
             <column name="id" value="00000000-0000-0000-0000-000000000002"/>
             <column name="updattime" valueDate="${now}"/>
+            <column name="active" valueDate="false"/>
+            <column name="chan_def" valueDate="false"/>
+            <column name="chan_conf" valueDate="false"/>
+            <column name="chan_poll" valueDate="false"/>
             <column name="updateuser" value="osdjup"/>
             <column name="mobterm_id" value="00000000-0000-0000-0000-000000000002"/>
             <column name="dnid" value="0987654321"/>
