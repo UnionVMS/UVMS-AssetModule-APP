@@ -514,9 +514,11 @@ public class MobileTerminalServiceBean {
     }
 
     private void sortChannels(MobileTerminal mt) {
-        Set<Channel> sorted = new TreeSet<>(Comparator.comparing(Channel::getDnid));
-        sorted.addAll(mt.getChannels());
-        mt.getChannels().clear();
-        mt.getChannels().addAll(sorted);
+        if(mt.getChannels() != null && !mt.getChannels().isEmpty()) {
+            Set<Channel> sorted = new TreeSet<>(Comparator.comparing(Channel::getDnid));
+            sorted.addAll(mt.getChannels());
+            mt.getChannels().clear();
+            mt.getChannels().addAll(sorted);
+        }
     }
 }
