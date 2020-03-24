@@ -50,7 +50,7 @@ public class AssetSearchTest extends AbstractClientTest {
         AssetBO firstAssetBo = assetClient.upsertAsset(assetBo);
         AssetDTO nAsset = firstAssetBo.getAsset();
         SearchBranch query = new SearchBranch(true);
-        query.addNewSearchLeaf(SearchFields.IRCS, "  F777777 ");
+        query.addNewSearchLeaf(SearchFields.IRCS, " 34 F -777777 ");
         
         System.out.println("asset.getIrcs(): " + asset.getIrcs());
         System.out.println("query: " + query);

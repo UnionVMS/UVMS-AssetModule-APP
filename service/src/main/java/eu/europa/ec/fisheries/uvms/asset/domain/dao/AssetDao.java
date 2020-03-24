@@ -244,24 +244,22 @@ public class AssetDao {
                     operatorUsed = true;
                 } if (leaf.getSearchField().getFieldName().equalsIgnoreCase("ircs")) {
         			String valueString = leaf.getSearchValue();
-        			valueString = valueString.trim();
+        			valueString = valueString.replaceAll("-", "").replaceAll("\\s", "").replaceAll("^(\\d+)", "");
+        			System.out.println("valueString: "+valueString);
         			// regex Start with word (char) optional - end with numbers : tree parts
-        			Matcher matcher = Pattern.compile("^([a-zA-Z]+)(-?)(\\d+)").matcher(valueString);
-        			String firstpart = "";
-        			String secondPart = "";
-        			String  thirdPart = "";
+        			Matcher matcher = Pattern.compile("^([a-zA-Z]+)(\\d+)").matcher(valueString);
+        			String charpart = "";
+        			String numberPart = "";
         			
         			if (matcher.find()) {
-        			    firstpart = matcher.group(1);
-        			    secondPart = matcher.group(2);
-        			    thirdPart = matcher.group(3);
+        				charpart = matcher.group(1);
+        				numberPart = matcher.group(2);
         			}
-        			String serachTSring = firstpart+"%" + thirdPart;
-        			System.out.println("firstpart: "+firstpart);
-        			System.out.println("secondPart: "+secondPart);
-        			System.out.println("thirdPart: "+thirdPart);
-        			System.out.println("serachTSring: "+serachTSring);
-        			leaf.setSearchValue(serachTSring);
+        			String searchString = charpart+"%" + numberPart;
+        			System.out.println("charpart: "+charpart);
+        			System.out.println("numberPart: "+numberPart);
+        			System.out.println("searchString: "+searchString);
+        			leaf.setSearchValue(searchString);
         		}
             }
         }
