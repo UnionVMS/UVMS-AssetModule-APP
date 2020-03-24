@@ -17,14 +17,20 @@ public class SearchLeaf implements AssetSearchInterface {
 
 	private SearchFields searchField;
 	private String searchValue;
+	private String operator;
 
     public SearchLeaf() {
         super();
     }
-
     public SearchLeaf(SearchFields searchField, String searchValue) {
         this.searchField = searchField;
         this.searchValue = searchValue;
+        this.operator = "equals";
+    }
+    public SearchLeaf(SearchFields searchField, String searchValue, String operator) {
+        this.searchField = searchField;
+        this.searchValue = searchValue;
+        this.operator = operator;
     }
 
 	@Override
@@ -47,6 +53,14 @@ public class SearchLeaf implements AssetSearchInterface {
 
 	public void setSearchValue(String searchValue) {
 		this.searchValue = searchValue;
+	}
+
+	public String getOperator() {
+		return operator;
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
 	}
 
 
