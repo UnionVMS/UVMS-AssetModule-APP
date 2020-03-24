@@ -11,7 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.services;
 
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.AssetDto;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
@@ -72,13 +71,12 @@ public class MobileTerminalRestResource {
         jsonb = new JsonBConfigurator().getContext(null);
     }
 
-
     @POST
     @Path("/")
     @RequiresFeature(UnionVMSFeature.manageMobileTerminals)
     public Response createMobileTerminal(MobileTerminal terminal) {
         LOG.info("Create mobile terminal invoked in rest layer.");
-        LOG.info("MobileTerminalType: SHORT_PREFIX_STYLE", terminal.toString());
+        LOG.info("MobileTerminalType: SHORT_PREFIX_STYLE {}", terminal.toString());
         try {
             if(terminal.getId() != null) {
                 return Response.status(Response.Status.BAD_REQUEST).entity("Given MobileTerminal is already persisted in DB.").build();
@@ -94,7 +92,7 @@ public class MobileTerminalRestResource {
             String returnString = jsonb.toJson(mobileTerminal);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
-            LOG.error("[ Error when creating mobile terminal ] {}", ex, ex.getStackTrace());
+            LOG.error("[ Error when creating mobile terminal ] {}", ex.getMessage(), ex);
             throw ex;
         }
     }
@@ -109,7 +107,7 @@ public class MobileTerminalRestResource {
             String returnString = jsonb.toJson(mobileTerminal);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
-            LOG.error("[ Error when fetching mobile terminal ] {}", ex);
+            LOG.error("[ Error when fetching mobile terminal ] {}", ex.getMessage(), ex);
             throw ex;
         }
     }
@@ -144,7 +142,7 @@ public class MobileTerminalRestResource {
             String returnString = jsonb.toJson(mobileTerminal);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
-            LOG.error("[ Error when updating mobile terminal ] {}", ex);
+            LOG.error("[ Error when updating mobile terminal ] {}", ex.getMessage(), ex);
             throw ex;
         }
     }
@@ -166,7 +164,7 @@ public class MobileTerminalRestResource {
             LOG.debug(returnJson);
             return Response.ok(returnJson).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
-            LOG.error("[ Error when getting mobile terminal list ] {}", ex);
+            LOG.error("[ Error when getting mobile terminal list ] {}", ex.getMessage(), ex);
             throw ex;
         }
     }
@@ -181,10 +179,11 @@ public class MobileTerminalRestResource {
             query.setSerialNumbers(Arrays.asList(serialNbr));
             List<MTSearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
             MTListResponse mobileTerminalList = mobileTerminalService.getMobileTerminalList(searchFields, 1, 10, true, true);
-            String returnString = jsonb.toJson(returnWholeObject && !mobileTerminalList.getMobileTerminalList().isEmpty() ? mobileTerminalList.getMobileTerminalList().get(0) : !mobileTerminalList.getMobileTerminalList().isEmpty());
+            String returnString = jsonb.toJson(returnWholeObject && !mobileTerminalList.getMobileTerminalList().isEmpty() ?
+                    mobileTerminalList.getMobileTerminalList().get(0) : !mobileTerminalList.getMobileTerminalList().isEmpty());
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
-            LOG.error("[ Error when checking if serial number already exists ] {}", ex);
+            LOG.error("[ Error when checking if serial number already exists ] {}", ex.getMessage(), ex);
             throw ex;
         }
     }
@@ -201,10 +200,11 @@ public class MobileTerminalRestResource {
             query.setDnids(Arrays.asList(dnid));
             List<MTSearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
             MTListResponse mobileTerminalList = mobileTerminalService.getMobileTerminalList(searchFields, 1, 10, true, true);
-            String returnString = jsonb.toJson(returnWholeObject && !mobileTerminalList.getMobileTerminalList().isEmpty() ? mobileTerminalList.getMobileTerminalList().get(0) : !mobileTerminalList.getMobileTerminalList().isEmpty());
+            String returnString = jsonb.toJson(returnWholeObject && !mobileTerminalList.getMobileTerminalList().isEmpty() ?
+                    mobileTerminalList.getMobileTerminalList().get(0) : !mobileTerminalList.getMobileTerminalList().isEmpty());
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
-            LOG.error("[ Error when if a member number dnid combo already exists ] {}", ex);
+            LOG.error("[ Error when if a member number dnid combo already exists ] {}", ex.getMessage(), ex);
             throw ex;
         }
     }
@@ -221,7 +221,7 @@ public class MobileTerminalRestResource {
             String returnString = jsonb.toJson(mobileTerminal);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
-            LOG.error("[ Error when assigning mobile terminal ] {}", ex);
+            LOG.error("[ Error when assigning mobile terminal ] {}", ex.getMessage(), ex);
             throw ex;
         }
     }
@@ -238,7 +238,7 @@ public class MobileTerminalRestResource {
             String returnString = jsonb.toJson(mobileTerminal);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
-            LOG.error("[ Error when unassigning mobile terminal ] {}", ex);
+            LOG.error("[ Error when unassigning mobile terminal ] {}", ex.getMessage(), ex);
             throw ex;
         }
     }
@@ -253,7 +253,7 @@ public class MobileTerminalRestResource {
             String returnString = jsonb.toJson(mobileTerminal);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
-            LOG.error("[ Error when activating mobile terminal ] {}", ex);
+            LOG.error("[ Error when activating mobile terminal ] {}", ex.getMessage(), ex);
             throw ex;
         }
     }
@@ -261,14 +261,16 @@ public class MobileTerminalRestResource {
     @GET
     @Path("/{mtId}/history/")
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
-    public Response getMobileTerminalHistoryListByMobileTerminalId(@PathParam("mtId") UUID id, @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr) {
+    public Response getMobileTerminalHistoryListByMobileTerminalId(@PathParam("mtId") UUID id,
+                                                                   @DefaultValue("100")
+                                                                   @QueryParam("maxNbr") Integer maxNbr) {
         LOG.info("Get mobile terminal history by mobile terminal id invoked in rest layer.");
         try {
             List<MobileTerminal> mobileTerminalRevisions = mobileTerminalService.getMobileTerminalRevisions(id, maxNbr);
             String returnString = jsonb.toJson(MobileTerminalDtoMapper.mapToMobileTerminalDtos(mobileTerminalRevisions));
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
-            LOG.error("[ Error when getting mobile terminal history by terminalId ] {}", ex);
+            LOG.error("[ Error when getting mobile terminal history by terminalId ] {}", ex.getMessage(), ex);
             throw ex;
         }
     }
@@ -278,18 +280,16 @@ public class MobileTerminalRestResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getMobileTerminalHistoryByAssetId(@PathParam("assetId") UUID assetId,
                                                       @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr)  {
-
         try {
-            List<Map<UUID, List<MobileTerminalDto>>> mobileTerminalRevisionMap = mobileTerminalService.getMobileTerminalRevisionsByAssetId(assetId, maxNbr);
+            List<Map<UUID, List<MobileTerminalDto>>> mobileTerminalRevisionMap =
+                    mobileTerminalService.getMobileTerminalRevisionsByAssetId(assetId, maxNbr);
             String returnString = jsonb.toJson(mobileTerminalRevisionMap);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
-            LOG.error("[ Error when getting mobile terminal history by assetId ] {}", ex);
+            LOG.error("[ Error when getting mobile terminal history by assetId ] {}", ex.getMessage(), ex);
             throw ex;
         }
     }
-
-
 
     @GET
     @Path("history/getAssetHistoryForMT/{mobileTerminalId}")
@@ -301,7 +301,7 @@ public class MobileTerminalRestResource {
             String returnString = jsonb.toJson(assetRevisions);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
-            LOG.error("[ Error when getting Asset history by mobileTerminalId ] {}", ex);
+            LOG.error("[ Error when getting Asset history by mobileTerminalId ] {}", ex.getMessage(), ex);
             throw ex;
         }
     }
