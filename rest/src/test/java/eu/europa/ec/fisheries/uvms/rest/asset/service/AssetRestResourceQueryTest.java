@@ -27,7 +27,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.json.bind.JsonbBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -76,6 +75,23 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         assertNotNull(listResponse);
         assertThat(listResponse.getAssetList().size(), is(1));
         assertThat(listResponse.getAssetList().get(0), is(AssetMatcher.assetEquals(createdAsset)));
+    }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void assetListQueryWithMappedSearchFieldsTest() {
+         
+        String jsonTest = "{\"fields\":[{\"searchField\":\"flagstate\",\"searchValue\":\"SWE\"},{\"fields\":[{\"searchField\":\"name\",\"searchValue\":\"SFC-7071\"},{\"searchField\":\"externalmarking\",\"searchValue\":\"SFC-7071\"},{\"searchField\":\"CFR\",\"searchValue\":\"SFC-7071\"},{\"searchField\":\"IRCS\",\"searchValue\":\"SFC-7071\"}],\"logicalAnd\":false}],\"logicalAnd\":true}"; 
+             
+        String listResponse = getWebTargetExternal()
+                .path("asset")
+                .path("list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(jsonTest), String.class);
+
+        assertNotNull(listResponse);
+        assertTrue(listResponse, listResponse.length() > 1);
     }
 
 
@@ -163,7 +179,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
 
         assertEquals(asset1.getCfr(), asset2.getCfr());
     }
-
+    
     @Test
     @RunAsClient
     @OperateOnDeployment("normal")
@@ -280,7 +296,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         }
         assertTrue(found);
     }
-
+    
     @Test
     @RunAsClient
     @OperateOnDeployment("normal")

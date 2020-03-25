@@ -13,6 +13,9 @@ import javax.json.bind.serializer.DeserializationContext;
 import javax.json.bind.serializer.JsonbDeserializer;
 import javax.json.stream.JsonParser;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class SearchBranchDeserializer implements JsonbDeserializer<SearchBranch> {
 
@@ -35,13 +38,27 @@ public class SearchBranchDeserializer implements JsonbDeserializer<SearchBranch>
                         trunk.getFields().add(recurse(jsonValue.asJsonObject()));
 
                     } else {
-                        //This part does not work bc it picks up the wrong jsonB implementation library in the tests, since we for some reason have two different   ;(
-                        //JsonParser parser = Json.createParser(new StringReader(jsonValue.toString()));
-                        //trunk.getFields().add(ctx.deserialize(A.class, parser));
-
-                        SearchFields key = SearchFields.valueOf(jsonValue.asJsonObject().getJsonString("searchField").getString());//String("searchField"));
+                    	String jsonSerachFieldValue = jsonValue.asJsonObject().getJsonString("searchField").getString();
+                    	if(jsonSerachFieldValue.equalsIgnoreCase("flagState")) {
+                    		jsonSerachFieldValue = "FLAG_STATE";
+                        }else if(jsonSerachFieldValue.equalsIgnoreCase("name")) {
+                    		jsonSerachFieldValue = "NAME";
+                        }else if(jsonSerachFieldValue.equalsIgnoreCase("externalMarking")) {
+                    		jsonSerachFieldValue = "EXTERNAL_MARKING";
+                        }else if(jsonSerachFieldValue.equalsIgnoreCase("ircs")) {
+                    		jsonSerachFieldValue = "IRCS";
+                        }else if(jsonSerachFieldValue.equalsIgnoreCase("cfr")) {
+                    		jsonSerachFieldValue = "CFR";
+                        }
+                    	SearchFields key = SearchFields.valueOf(jsonSerachFieldValue);
                         String value = jsonValue.asJsonObject().getJsonString("searchValue").getString();
-                        trunk.getFields().add(new SearchLeaf(key, value));
+                        List<String> operatorWhiteList = new ArrayList<String>(Arrays.asList(">=", "<=", "!=", "="));
+                        String operator = null;
+                        if (jsonValue.asJsonObject().containsKey("operator")) {
+                        	String operatorFromJson = jsonValue.asJsonObject().getJsonString("operator").getString();
+                            operator = operatorWhiteList.contains(operatorFromJson) ? operatorFromJson : "=";
+                        }
+                        trunk.getFields().add(new SearchLeaf(key, value, operator));
                     }
 
                 }

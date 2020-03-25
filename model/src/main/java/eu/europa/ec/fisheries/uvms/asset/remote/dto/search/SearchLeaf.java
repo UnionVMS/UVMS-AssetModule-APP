@@ -12,11 +12,12 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.remote.dto.search;
 
 import javax.json.bind.annotation.JsonbTransient;
-
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFields;
 public class SearchLeaf implements AssetSearchInterface {
 
 	private SearchFields searchField;
 	private String searchValue;
+	private String operator;
 
     public SearchLeaf() {
         super();
@@ -25,6 +26,17 @@ public class SearchLeaf implements AssetSearchInterface {
     public SearchLeaf(SearchFields searchField, String searchValue) {
         this.searchField = searchField;
         this.searchValue = searchValue;
+        this.operator = "=";
+    }
+    
+    public SearchLeaf(SearchFields searchField, String searchValue, String operator) {
+        this.searchField = searchField;
+        this.searchValue = searchValue;
+        if(operator != null) {
+        	this.operator = operator;
+        }else {
+        	this.operator = "=";
+        }
     }
 
 	@Override
@@ -47,6 +59,14 @@ public class SearchLeaf implements AssetSearchInterface {
 
 	public void setSearchValue(String searchValue) {
 		this.searchValue = searchValue;
+	}
+
+	public String getOperator() {
+		return operator;
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
 	}
 
 

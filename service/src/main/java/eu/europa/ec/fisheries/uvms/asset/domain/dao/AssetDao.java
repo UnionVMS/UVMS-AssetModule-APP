@@ -208,6 +208,7 @@ public class AssetDao {
                 }
             }else{
                 SearchLeaf leaf = (SearchLeaf) field;
+             //   leaf.getOperator().equalsIgnoreCase(">=");
                 if (leaf.getSearchValue().contains("*")) {
                     operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ilike(leaf.getSearchValue().replace("*", "%").toLowerCase(), MatchMode.ANYWHERE));
                     operatorUsed = true;
