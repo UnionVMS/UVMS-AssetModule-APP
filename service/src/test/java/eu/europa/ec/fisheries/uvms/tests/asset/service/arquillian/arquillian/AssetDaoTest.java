@@ -19,6 +19,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.tests.TransactionalTests;
+
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -725,12 +726,14 @@ public class AssetDaoTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTestMinLength() throws Exception {
         Asset asset = AssetTestsHelper.createBiggerAsset();
+        asset.setLengthOverAll(1d);
         assetDao.createAsset(asset);
         commit();
         
         SearchBranch trunk = new SearchBranch(true);
-        trunk.getFields().add(new SearchLeaf(SearchFields.MIN_LENGTH, asset.getLengthOverAll().toString()));
-
+        SearchLeaf sLeaf = new SearchLeaf(SearchFields.LENGTH_OVER_ALL, asset.getLengthOverAll().toString());
+        sLeaf.setOperator("<=");
+        trunk.getFields().add(sLeaf);
         List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
         assertEquals(1, assets.size());

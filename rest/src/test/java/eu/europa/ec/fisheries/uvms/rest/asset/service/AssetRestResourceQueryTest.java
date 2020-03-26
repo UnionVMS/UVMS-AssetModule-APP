@@ -81,7 +81,29 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
     @OperateOnDeployment("normal")
     public void assetListQueryWithMappedSearchFieldsTest() {
          
-        String jsonTest = "{\"fields\":[{\"searchField\":\"flagstate\",\"searchValue\":\"SWE\"},{\"fields\":[{\"searchField\":\"name\",\"searchValue\":\"SFC-7071\"},{\"searchField\":\"externalmarking\",\"searchValue\":\"SFC-7071\"},{\"searchField\":\"CFR\",\"searchValue\":\"SFC-7071\"},{\"searchField\":\"IRCS\",\"searchValue\":\"SFC-7071\"}],\"logicalAnd\":false}],\"logicalAnd\":true}"; 
+    	String jsonTest = "{\"fields\":[{\"searchField\":\"flagstate\",\"searchValue\":\"SWE\"},{\"fields\":[{\"searchField\":\"name\",\"searchValue\":\"SFC-7071\"},{\"searchField\":\"externalmarking\",\"searchValue\":\"SFC-7071\"},{\"searchField\":\"CFR\",\"searchValue\":\"SFC-7071\"},{\"searchField\":\"ircs\",\"searchValue\":\"F1*\"}],\"logicalAnd\":false}],\"logicalAnd\":true}"; 
+    	      
+        String listResponse = getWebTargetExternal()
+                .path("asset")
+                .path("list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(jsonTest), String.class);
+        System.out.println("listResponse2: "+listResponse);
+        assertNotNull(listResponse);
+        assertTrue(listResponse, listResponse.length() > 1);
+    }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetListQueryWithOperatorTest() {
+    	Asset asset = AssetHelper.createBasicAsset();
+    	asset.setLengthOverAll(220d);
+    	asset.setFlagStateCode("SWE");
+        Asset createdAsset = sendAssetToCreation(asset);
+        System.out.println("createdAsset: "+createdAsset.getLengthOverAll().doubleValue());
+        // String jsonTest = "{\"fields\":[{\"searchField\":\"flagState\",\"searchValue\":\"SWE\"},{\"fields\":[{\"searchField\":\"lengthOverAll\",\"searchValue\":200,\"operator\":\">=\"},{\"searchField\":\"ircs\",\"searchValue\":\"F*\"}],\"logicalAnd\":false}],\"logicalAnd\":true}"; 
+        String jsonTest = "{\"fields\":[{\"searchField\":\"flagState\",\"searchValue\":\"SWE\"},{\"fields\":[{\"searchField\":\"lengthOverAll\",\"searchValue\":200,\"operator\":\">=\"}],\"logicalAnd\":true}],\"logicalAnd\":true}"; 
              
         String listResponse = getWebTargetExternal()
                 .path("asset")
@@ -89,9 +111,11 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(jsonTest), String.class);
-
+        System.out.println("listResponse: "+listResponse);
+        
+        //assertEquals(createdAsset.getId().toString(), listResponse.);
         assertNotNull(listResponse);
-        assertTrue(listResponse, listResponse.length() > 1);
+        assertTrue(listResponse.length() > 1);
     }
 
 

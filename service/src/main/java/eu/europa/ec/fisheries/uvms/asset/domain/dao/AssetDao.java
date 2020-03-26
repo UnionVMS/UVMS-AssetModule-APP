@@ -207,16 +207,24 @@ public class AssetDao {
                     operatorUsed = true;
                 }
             }else{
-                SearchLeaf leaf = (SearchLeaf) field;
-             //   leaf.getOperator().equalsIgnoreCase(">=");
+            	SearchLeaf leaf = (SearchLeaf) field;
                 if (leaf.getSearchValue().contains("*")) {
                     operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ilike(leaf.getSearchValue().replace("*", "%").toLowerCase(), MatchMode.ANYWHERE));
                     operatorUsed = true;
-                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.MIN_DECIMAL)) {
-                    operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ge(Double.valueOf(leaf.getSearchValue())));
+                } else if (leaf.getOperator().equalsIgnoreCase(">=")) {// && leaf.getSearchField().getFieldType().equals(SearchFieldType.NUMBER)) {   //(leaf.getSearchField().getFieldType().equals(SearchFieldType.MIN_DECIMAL)) {
+                    System.out.println("leaf.getOperator(): "+leaf.getOperator());
+                    Double doubleValue = Double.parseDouble(leaf.getSearchValue());
+                	operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ge(doubleValue));
                     operatorUsed = true;
-                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.MAX_DECIMAL)) {
-                    operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).le(Double.valueOf(leaf.getSearchValue())));
+                } else if  (leaf.getOperator().equalsIgnoreCase("<=") ) { //&& leaf.getSearchField().getFieldType().equals(SearchFieldType.NUMBER)) { //(leaf.getSearchField().getFieldType().equals(SearchFieldType.MAX_DECIMAL)) {
+                	System.out.println("leaf.getOperator(): "+leaf.getOperator());
+                	operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).le(Double.valueOf(leaf.getSearchValue())));
+                    operatorUsed = true;
+                } else if  (leaf.getOperator().equalsIgnoreCase("!=") && leaf.getSearchField().getFieldType().equals(SearchFieldType.STRING)) { 
+                    operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ne(String.valueOf(leaf.getSearchValue())));
+                    operatorUsed = true;
+                } else if  (leaf.getOperator().equalsIgnoreCase("!=") && leaf.getSearchField().getFieldType().equals(SearchFieldType.NUMBER)) { 
+                    operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ne(Double.valueOf(leaf.getSearchValue())));
                     operatorUsed = true;
                 } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.LIST)) {
                     operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ilike(leaf.getSearchValue(), MatchMode.ANYWHERE));
@@ -234,6 +242,7 @@ public class AssetDao {
                     operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).eq(leaf.getSearchValue()));
                     operatorUsed = true;
                 }
+                System.out.println("operator321: "+ operator.toString());
             }
         }
         if(operatorUsed) {

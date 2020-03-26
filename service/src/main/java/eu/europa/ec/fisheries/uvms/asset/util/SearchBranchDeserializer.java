@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
+import javax.json.JsonValue.ValueType;
 import javax.json.bind.serializer.DeserializationContext;
 import javax.json.bind.serializer.JsonbDeserializer;
 import javax.json.stream.JsonParser;
@@ -49,9 +50,44 @@ public class SearchBranchDeserializer implements JsonbDeserializer<SearchBranch>
                     		jsonSerachFieldValue = "IRCS";
                         }else if(jsonSerachFieldValue.equalsIgnoreCase("cfr")) {
                     		jsonSerachFieldValue = "CFR";
+                        }else if(jsonSerachFieldValue.equalsIgnoreCase("mmsi")) {
+                    		jsonSerachFieldValue = "MMSI";
+                        }else if(jsonSerachFieldValue.equalsIgnoreCase("imo")) {
+                    		jsonSerachFieldValue = "IMO";
+                        }else if(jsonSerachFieldValue.equalsIgnoreCase("iccat")) {
+                    		jsonSerachFieldValue = "ICCAT";
+                        }else if(jsonSerachFieldValue.equalsIgnoreCase("uvi")) {
+                    		jsonSerachFieldValue = "UVI";
+                        }else if(jsonSerachFieldValue.equalsIgnoreCase("gfcm")) {
+                    		jsonSerachFieldValue = "GFCM";
+                        }else if(jsonSerachFieldValue.equalsIgnoreCase("portOfRegistration")) {
+                    		jsonSerachFieldValue = "HOMEPORT";
+                        }else if(jsonSerachFieldValue.equalsIgnoreCase("licenceType")) {
+                    		jsonSerachFieldValue = "LICENSE";
+                        }else if(jsonSerachFieldValue.equalsIgnoreCase("vesselType")) {
+                    		jsonSerachFieldValue = "VESSEL_TYPE";
+                        }else if(jsonSerachFieldValue.equalsIgnoreCase("id")) {
+                    		jsonSerachFieldValue = "GUID";
+                        }else if(jsonSerachFieldValue.equalsIgnoreCase("historyId")) {
+                    		jsonSerachFieldValue = "HIST_GUID";
+                        }else if(jsonSerachFieldValue.equalsIgnoreCase("gearFishingType")) {
+                    		jsonSerachFieldValue = "GEAR_TYPE";
+                        }else if(jsonSerachFieldValue.equalsIgnoreCase("lengthOverAll")) {
+                        	//jsonSerachFieldValue = "MAX_LENGTH";
+                    		 jsonSerachFieldValue = "LENGTH_OVER_ALL";
+                        }else if(jsonSerachFieldValue.equalsIgnoreCase("powerOfMainEngine")) {
+                        	//jsonSerachFieldValue = "MAX_POWER";
+                    		jsonSerachFieldValue = "ENGINE_POWER";
+                        }else if(jsonSerachFieldValue.equalsIgnoreCase("producerName")) {
+                    		jsonSerachFieldValue = "PRODUCER_NAME";
                         }
                     	SearchFields key = SearchFields.valueOf(jsonSerachFieldValue);
-                        String value = jsonValue.asJsonObject().getJsonString("searchValue").getString();
+                    	String value;
+                        if (jsonValue.asJsonObject().get("searchValue").getValueType() == ValueType.STRING) {
+                            value = jsonValue.asJsonObject().getJsonString("searchValue").getString();
+                        } else {
+                        	value = jsonValue.asJsonObject().get("searchValue").toString();
+                        }
                         List<String> operatorWhiteList = new ArrayList<String>(Arrays.asList(">=", "<=", "!=", "="));
                         String operator = null;
                         if (jsonValue.asJsonObject().containsKey("operator")) {

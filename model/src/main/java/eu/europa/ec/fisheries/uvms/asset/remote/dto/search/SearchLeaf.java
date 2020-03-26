@@ -26,7 +26,7 @@ public class SearchLeaf implements AssetSearchInterface {
     public SearchLeaf(SearchFields searchField, String searchValue) {
         this.searchField = searchField;
         this.searchValue = searchValue;
-        this.operator = "=";
+        this.operator = "";
     }
     
     public SearchLeaf(SearchFields searchField, String searchValue, String operator) {

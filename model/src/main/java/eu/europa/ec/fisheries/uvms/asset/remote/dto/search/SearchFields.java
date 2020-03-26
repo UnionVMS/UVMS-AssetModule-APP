@@ -13,28 +13,26 @@ package eu.europa.ec.fisheries.uvms.asset.remote.dto.search;
 
 public enum SearchFields {
 
-    FLAG_STATE("flagStateCode"),
-    EXTERNAL_MARKING("externalMarking"),
-    NAME("name"),
-    IRCS("ircs"),
-    CFR("cfr"),
-    MMSI("mmsi"),
-    IMO("imo"),
-    ICCAT("iccat"),
-    UVI("uvi"),
-    GFCM("gfcm"),
-    HOMEPORT("portOfRegistration"),
-    LICENSE("licenceType"),
-    VESSEL_TYPE("vesselType"),
-    GUID("id", SearchFieldType.ID),
-    HIST_GUID("historyId", SearchFieldType.ID),
-    GEAR_TYPE("gearFishingType", SearchFieldType.STRING),
-    MAX_LENGTH("lengthOverAll", SearchFieldType.MAX_DECIMAL),
-    MIN_LENGTH("lengthOverAll", SearchFieldType.MIN_DECIMAL),
-    MAX_POWER("powerOfMainEngine", SearchFieldType.MAX_DECIMAL),
-    MIN_POWER("powerOfMainEngine", SearchFieldType.MIN_DECIMAL),
-    PRODUCER_NAME("producerName"),
-    DATE(null, SearchFieldType.DATE);
+	   	FLAG_STATE("flagStateCode"),
+	    EXTERNAL_MARKING("externalMarking"),
+	    NAME("name"),
+	    IRCS("ircs"),
+	    CFR("cfr"),
+	    MMSI("mmsi"),
+	    IMO("imo"),
+	    ICCAT("iccat"),
+	    UVI("uvi"),
+	    GFCM("gfcm"),
+	    HOMEPORT("portOfRegistration"),
+	    LICENSE("licenceType"),
+	    VESSEL_TYPE("vesselType"),
+	    GUID("id", SearchFieldType.ID),
+	    HIST_GUID("historyId", SearchFieldType.ID),
+	    GEAR_TYPE("gearFishingType", SearchFieldType.STRING),
+	    LENGTH_OVER_ALL("lengthOverAll", SearchFieldType.DECIMAL),
+	    ENGINE_POWER("powerOfMainEngine", SearchFieldType.DECIMAL),
+	    PRODUCER_NAME("producerName"),
+	    DATE(null, SearchFieldType.DATE);
 
     private String fieldName;
     private SearchFieldType fieldType;
