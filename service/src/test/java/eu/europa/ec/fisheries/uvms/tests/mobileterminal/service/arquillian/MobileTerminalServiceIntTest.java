@@ -192,7 +192,7 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void createMobileTerminal_WillFail_Empty_Channel() {
-        thrown.expect(ConstraintViolationException.class);
+        thrown.expect(EJBTransactionRolledbackException.class);
         //Sadly, on jenkins this method does not exist. Dont know why jenkins picks that library when running the test but it does and at least this way the whole thing works
         /*thrown.expectMessage("ConstraintViolationImpl{interpolatedMessage='must not be null', propertyPath=memberNumber");
         thrown.expectMessage("ConstraintViolationImpl{interpolatedMessage='must not be null', propertyPath=expectedFrequencyInPort");
