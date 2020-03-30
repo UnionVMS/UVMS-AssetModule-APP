@@ -11,16 +11,16 @@
         <groupId>fish.focus.uvms.maven</groupId>
         <artifactId>uvms-pom</artifactId>
         <relativePath />
-        <version>3.0</version>
+        <version>3.1</version>
     </parent>
 
     <properties>
     	<asset.api.check.against.version>5.0.0</asset.api.check.against.version>
-        <docker.dev.version>3.40.19.w18-JsonBOverJackson</docker.dev.version>
+        <docker.dev.version>3.43.0</docker.dev.version>
     	<docker.liquibase.changeLogFile>LIQUIBASE/changelog/db-changelog-master.xml</docker.liquibase.changeLogFile>
         <docker.liquibase.db.user>asset</docker.liquibase.db.user>
         <docker.liquibase.db.passwd>asset</docker.liquibase.db.passwd>
-        <uvms.pom.version>3.0</uvms.pom.version>
+        <uvms.pom.version>3.1</uvms.pom.version>
         <usm4uvms.version>4.1.0</usm4uvms.version>
         <uvms.config.version>4.1.1</uvms.config.version>
         <uvms.common.version>4.1.6</uvms.common.version>
