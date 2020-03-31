@@ -223,19 +223,7 @@ public class AssetDao {
                         operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).eq(doubleValue));
                     }
                     operatorUsed = true;
-                }else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.STRING)) {
-                	String stringValue = String.valueOf(leaf.getSearchValue());
-                	if (leaf.getOperator().equalsIgnoreCase(">=")) {
-                    	operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ge(stringValue));
-                    } else if  (leaf.getOperator().equalsIgnoreCase("<=")) {
-                    	operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).le(stringValue));
-                    } else if  (leaf.getOperator().equalsIgnoreCase("!=")) { 
-                        operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ne(stringValue));
-                    } else { 
-                        operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).eq(stringValue));
-                    }
-                    operatorUsed = true;
-                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.LIST)) {
+                }else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.LIST)) {
                     operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ilike(leaf.getSearchValue(), MatchMode.ANYWHERE));
                     operatorUsed = true;
                 } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.ID)) {

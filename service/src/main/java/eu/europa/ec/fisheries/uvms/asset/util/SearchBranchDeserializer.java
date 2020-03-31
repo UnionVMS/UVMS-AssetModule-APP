@@ -34,53 +34,14 @@ public class SearchBranchDeserializer implements JsonbDeserializer<SearchBranch>
                 SearchBranch trunk = new SearchBranch();
                 trunk.setLogicalAnd(object.getBoolean("logicalAnd",true));
                 JsonArray fields = object.getJsonArray("fields");
+                List<String> operatorWhiteList = new ArrayList<String>(Arrays.asList(">=", "<=", "!=", "="));
                 for (JsonValue jsonValue : fields) {
                     if (jsonValue.asJsonObject().containsKey("fields")) {
                         trunk.getFields().add(recurse(jsonValue.asJsonObject()));
 
                     } else {
                     	String jsonSerachFieldValue = jsonValue.asJsonObject().getJsonString("searchField").getString();
-                    	if(jsonSerachFieldValue.equalsIgnoreCase("flagState")) {
-                    		jsonSerachFieldValue = "FLAG_STATE";
-                        }else if(jsonSerachFieldValue.equalsIgnoreCase("name")) {
-                    		jsonSerachFieldValue = "NAME";
-                        }else if(jsonSerachFieldValue.equalsIgnoreCase("externalMarking")) {
-                    		jsonSerachFieldValue = "EXTERNAL_MARKING";
-                        }else if(jsonSerachFieldValue.equalsIgnoreCase("ircs")) {
-                    		jsonSerachFieldValue = "IRCS";
-                        }else if(jsonSerachFieldValue.equalsIgnoreCase("cfr")) {
-                    		jsonSerachFieldValue = "CFR";
-                        }else if(jsonSerachFieldValue.equalsIgnoreCase("mmsi")) {
-                    		jsonSerachFieldValue = "MMSI";
-                        }else if(jsonSerachFieldValue.equalsIgnoreCase("imo")) {
-                    		jsonSerachFieldValue = "IMO";
-                        }else if(jsonSerachFieldValue.equalsIgnoreCase("iccat")) {
-                    		jsonSerachFieldValue = "ICCAT";
-                        }else if(jsonSerachFieldValue.equalsIgnoreCase("uvi")) {
-                    		jsonSerachFieldValue = "UVI";
-                        }else if(jsonSerachFieldValue.equalsIgnoreCase("gfcm")) {
-                    		jsonSerachFieldValue = "GFCM";
-                        }else if(jsonSerachFieldValue.equalsIgnoreCase("portOfRegistration")) {
-                    		jsonSerachFieldValue = "HOMEPORT";
-                        }else if(jsonSerachFieldValue.equalsIgnoreCase("licenceType")) {
-                    		jsonSerachFieldValue = "LICENSE";
-                        }else if(jsonSerachFieldValue.equalsIgnoreCase("vesselType")) {
-                    		jsonSerachFieldValue = "VESSEL_TYPE";
-                        }else if(jsonSerachFieldValue.equalsIgnoreCase("id")) {
-                    		jsonSerachFieldValue = "GUID";
-                        }else if(jsonSerachFieldValue.equalsIgnoreCase("historyId")) {
-                    		jsonSerachFieldValue = "HIST_GUID";
-                        }else if(jsonSerachFieldValue.equalsIgnoreCase("gearFishingType")) {
-                    		jsonSerachFieldValue = "GEAR_TYPE";
-                        }else if(jsonSerachFieldValue.equalsIgnoreCase("lengthOverAll")) {
-                        	//jsonSerachFieldValue = "MAX_LENGTH";
-                    		 jsonSerachFieldValue = "LENGTH_OVER_ALL";
-                        }else if(jsonSerachFieldValue.equalsIgnoreCase("powerOfMainEngine")) {
-                        	//jsonSerachFieldValue = "MAX_POWER";
-                    		jsonSerachFieldValue = "ENGINE_POWER";
-                        }else if(jsonSerachFieldValue.equalsIgnoreCase("producerName")) {
-                    		jsonSerachFieldValue = "PRODUCER_NAME";
-                        }
+                    	jsonSerachFieldValue = SearchFields.fieldHashMapper(jsonSerachFieldValue);
                     	SearchFields key = SearchFields.valueOf(jsonSerachFieldValue);
                     	String value;
                         if (jsonValue.asJsonObject().get("searchValue").getValueType() == ValueType.STRING) {
@@ -88,7 +49,7 @@ public class SearchBranchDeserializer implements JsonbDeserializer<SearchBranch>
                         } else {
                         	value = jsonValue.asJsonObject().get("searchValue").toString();
                         }
-                        List<String> operatorWhiteList = new ArrayList<String>(Arrays.asList(">=", "<=", "!=", "="));
+                        
                         String operator = null;
                         if (jsonValue.asJsonObject().containsKey("operator")) {
                         	String operatorFromJson = jsonValue.asJsonObject().getJsonString("operator").getString();

@@ -11,6 +11,11 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.remote.dto.search;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.collections.map.HashedMap;
+
 public enum SearchFields {
 
 	   	FLAG_STATE("flagStateCode"),
@@ -54,4 +59,25 @@ public enum SearchFields {
     public SearchFieldType getFieldType() {
     	return fieldType;
     }
+    
+    public static String fieldHashMapper(String inputString) {
+    	inputString = inputString.toLowerCase();
+    	HashMap<String, String> mapOfEnums = new HashMap<String, String>();
+    	mapOfEnums.put("flagstate", "FLAG_STATE");
+    	mapOfEnums.put("flagstatecode", "FLAG_STATE");
+    	mapOfEnums.put("externalmarking", "EXTERNAL_MARKING");
+    	mapOfEnums.put("portofregistration", "HOMEPORT");
+    	mapOfEnums.put("lengthoverall", "LENGTH_OVER_ALL");
+    	mapOfEnums.put("vesseltype", "VESSEL_TYPE");
+    	mapOfEnums.put("name", "NAME");
+    	mapOfEnums.put("powerofmainengine", "ENGINE_POWER");
+    	mapOfEnums.put("historyid", "HIST_GUID");
+    	mapOfEnums.put("producername", "PRODUCER_NAME");
+    	mapOfEnums.put("id", "GUID");
+    	String mapString = mapOfEnums.get(inputString); 
+    	inputString = mapString != null ? mapString : inputString.toUpperCase();
+    	return inputString;
+    }
+
+    
 }
