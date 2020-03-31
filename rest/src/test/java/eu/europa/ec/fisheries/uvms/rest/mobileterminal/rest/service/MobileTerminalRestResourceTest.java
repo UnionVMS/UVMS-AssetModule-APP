@@ -303,6 +303,43 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void updateMobileTerminal_TwoChannelsWithSameDnidTest() {
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        assertNotNull(created.getId());
+        assertEquals(1, created.getChannels().size());
+
+
+        int firstChannelDNID = mobileTerminal.getChannels().iterator().next().getDnid();
+        Channel c2 = MobileTerminalTestHelper.createBasicChannel();
+        c2.setDnid(firstChannelDNID);
+        c2.setConfigChannel(false);
+        c2.setDefaultChannel(false);
+        c2.setPollChannel(false);
+        c2.setMobileTerminal(mobileTerminal);
+
+        created.getChannels().add(c2);
+
+        MobileTerminal updated = getWebTargetExternal()
+                .path("mobileterminal")
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(created), MobileTerminal.class);
+
+        assertNotNull(updated.getId());
+        assertEquals(2, updated.getChannels().size());
+    }
+
+
+    @Test
+    @OperateOnDeployment("normal")
     public void updateMobileTerminalTest_RemoveOneOfTwoChannels() {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
@@ -745,7 +782,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
     @Test
-    public void updateMobileTerminal_ChannelHasNoMobileTerminalTTest() {
+    public void updateMobileTerminal_ChannelHasNoMobileTerminalTest() {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
         MobileTerminal created = getWebTargetExternal()
