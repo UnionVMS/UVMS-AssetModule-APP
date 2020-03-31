@@ -524,7 +524,7 @@ public class MobileTerminalServiceBean {
 
     private void sortChannels(MobileTerminal mt) {
         if(mt.getChannels() != null && !mt.getChannels().isEmpty()) {
-            Set<Channel> sorted = new TreeSet<>(Comparator.comparing(Channel::getDnid));
+            Set<Channel> sorted = new TreeSet<>(Comparator.comparing(Channel::getId));
             sorted.addAll(mt.getChannels());
             mt.getChannels().clear();
             mt.getChannels().addAll(sorted);
