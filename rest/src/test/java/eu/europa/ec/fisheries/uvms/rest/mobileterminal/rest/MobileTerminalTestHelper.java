@@ -67,7 +67,7 @@ public class MobileTerminalTestHelper {
         channel.setExpectedFrequency(Duration.ofSeconds(7200));
         channel.setExpectedFrequencyInPort(Duration.ofSeconds(10800));
         channel.setLesDescription("Thrane&Thrane");
-        channel.setDnid(Integer.parseInt("1" + generateARandomStringWithMaxLength(3)));
+        channel.setDnid(Integer.parseInt("1" + generateARandomStringWithMaxLength(4)));
         channel.setArchived(false);
         channel.setConfigChannel(true);
         channel.setDefaultChannel(true);
