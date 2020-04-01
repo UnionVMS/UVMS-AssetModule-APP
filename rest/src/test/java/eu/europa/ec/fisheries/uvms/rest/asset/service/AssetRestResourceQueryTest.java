@@ -81,7 +81,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
     @OperateOnDeployment("normal")
     public void assetListQueryWithMappedSearchFieldsTest() {
          
-    	String jsonTest = "{\"fields\":[{\"searchField\":\"flagstate\",\"searchValue\":\"SWE\"},{\"fields\":[{\"searchField\":\"name\",\"searchValue\":\"*\"},{\"searchField\":\"externalmarking\",\"searchValue\":\"*\"},{\"searchField\":\"CFR\",\"searchValue\":\"*\"},{\"searchField\":\"ircs\",\"searchValue\":\"*\"}],\"logicalAnd\":false}],\"logicalAnd\":true}"; 
+    	String jsonTest = "{\"fields\":[{\"searchField\":\"flagState\",\"searchValue\":\"SWE\"},{\"fields\":[{\"searchField\":\"name\",\"searchValue\":\"*\"},{\"searchField\":\"externalMarking\",\"searchValue\":\"*\"},{\"searchField\":\"CFR\",\"searchValue\":\"*\"},{\"searchField\":\"ircs\",\"searchValue\":\"*\"}],\"logicalAnd\":false}],\"logicalAnd\":true}"; 
     	      
         String listResponse = getWebTargetExternal()
                 .path("asset")
@@ -90,6 +90,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(jsonTest), String.class);
         
+        System.out.println("listResponse: " +listResponse);
         assertNotNull(listResponse);
         assertTrue(listResponse, listResponse.length() > 1);
         assertTrue(listResponse.contains("assetList"));
@@ -110,7 +111,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(jsonTest), String.class);
-        
+        System.out.println("listResponse2: " +listResponse);
         assertNotNull(listResponse);
         assertTrue(listResponse.length() > 1);
         assertTrue(listResponse.contains("220"));

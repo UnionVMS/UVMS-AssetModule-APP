@@ -17,52 +17,55 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class SearchBranchDeserializer implements JsonbDeserializer<SearchBranch> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SearchBranchDeserializer.class);
+    private static final List<String> operatorWhiteList = new ArrayList<String>(Arrays.asList(">=", "<=", "!=", "="));
+    private static final Map<String,SearchFields> mapOfSearchFields = SearchFields.getMapOfEnums();
+    
+    @Override
+    public SearchBranch deserialize(JsonParser parser, DeserializationContext ctx, Type rtType) {
 
-        @Override
-        public SearchBranch deserialize(JsonParser parser, DeserializationContext ctx, Type rtType) {
+        JsonObject object = parser.getObject();
+        return recurse(object);
+    }
 
-            JsonObject object = parser.getObject();
-            return recurse(object);
-        }
+    private SearchBranch recurse(JsonObject object){
+        try {
+            SearchBranch trunk = new SearchBranch();
+            trunk.setLogicalAnd(object.getBoolean("logicalAnd",true));
+            JsonArray fields = object.getJsonArray("fields");
+            
+            for (JsonValue jsonValue : fields) {
+                if (jsonValue.asJsonObject().containsKey("fields")) {
+                    trunk.getFields().add(recurse(jsonValue.asJsonObject()));
 
-        private SearchBranch recurse(JsonObject object){
-            try {
-                SearchBranch trunk = new SearchBranch();
-                trunk.setLogicalAnd(object.getBoolean("logicalAnd",true));
-                JsonArray fields = object.getJsonArray("fields");
-                List<String> operatorWhiteList = new ArrayList<String>(Arrays.asList(">=", "<=", "!=", "="));
-                for (JsonValue jsonValue : fields) {
-                    if (jsonValue.asJsonObject().containsKey("fields")) {
-                        trunk.getFields().add(recurse(jsonValue.asJsonObject()));
-
+                } else {
+                	String jsonSerachFieldValue = jsonValue.asJsonObject().getJsonString("searchField").getString();
+                	SearchFields mappedValue = mapOfSearchFields.get(jsonSerachFieldValue.toLowerCase());
+                	jsonSerachFieldValue = mappedValue != null ? mappedValue.toString() : jsonSerachFieldValue;
+                	SearchFields key = SearchFields.valueOf(jsonSerachFieldValue);
+                	String value;
+                    if (jsonValue.asJsonObject().get("searchValue").getValueType() == ValueType.STRING) {
+                        value = jsonValue.asJsonObject().getJsonString("searchValue").getString();
                     } else {
-                    	String jsonSerachFieldValue = jsonValue.asJsonObject().getJsonString("searchField").getString();
-                    	jsonSerachFieldValue = SearchFields.fieldHashMapper(jsonSerachFieldValue);
-                    	SearchFields key = SearchFields.valueOf(jsonSerachFieldValue);
-                    	String value;
-                        if (jsonValue.asJsonObject().get("searchValue").getValueType() == ValueType.STRING) {
-                            value = jsonValue.asJsonObject().getJsonString("searchValue").getString();
-                        } else {
-                        	value = jsonValue.asJsonObject().get("searchValue").toString();
-                        }
-                        
-                        String operator = null;
-                        if (jsonValue.asJsonObject().containsKey("operator")) {
-                        	String operatorFromJson = jsonValue.asJsonObject().getJsonString("operator").getString();
-                            operator = operatorWhiteList.contains(operatorFromJson) ? operatorFromJson : "=";
-                        }
-                        trunk.getFields().add(new SearchLeaf(key, value, operator));
+                    	value = jsonValue.asJsonObject().get("searchValue").toString();
                     }
-
+                    
+                    String operator = null;
+                    if (jsonValue.asJsonObject().containsKey("operator")) {
+                    	String operatorFromJson = jsonValue.asJsonObject().getJsonString("operator").getString();
+                        operator = operatorWhiteList.contains(operatorFromJson) ? operatorFromJson : "=";
+                    }
+                    trunk.getFields().add(new SearchLeaf(key, value, operator));
                 }
-                return trunk;
-            }catch (Exception e){
-                LOG.error("Unparsable input string for asset list: {}", object.toString());
-                throw new RuntimeException("Unparsable input string for asset list: " + object.toString(), e);
             }
+            return trunk;
+        }catch (Exception e){
+            LOG.error("Unparsable input string for asset list: {}", object.toString());
+            throw new RuntimeException("Unparsable input string for asset list: " + object.toString(), e);
         }
+    }
 }

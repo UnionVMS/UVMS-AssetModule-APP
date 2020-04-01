@@ -11,6 +11,9 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.client.model.search;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum SearchFields {
 
 	FLAG_STATE("flagStateCode"),
@@ -53,5 +56,17 @@ public enum SearchFields {
 
     public SearchFieldType getFieldType() {
     	return fieldType;
+    }
+    
+    public static Map<String,SearchFields> getMapOfEnums() {
+        Map<String,SearchFields> returnMap = new HashMap<>();
+         for (SearchFields value : SearchFields.values()) {
+            if(value != SearchFields.DATE) {
+         	   returnMap.put(value.fieldName.toLowerCase(), value);
+            }
+         }
+         returnMap.put("assetid", SearchFields.GUID);
+         returnMap.put("flagstate", SearchFields.FLAG_STATE);
+			return returnMap;
     }
 }
