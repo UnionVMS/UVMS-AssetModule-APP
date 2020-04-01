@@ -11,9 +11,12 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.client.model.search;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum SearchFields {
 
-    FLAG_STATE("flagStateCode"),
+	FLAG_STATE("flagStateCode"),
     EXTERNAL_MARKING("externalMarking"),
     NAME("name"),
     IRCS("ircs"),
@@ -29,10 +32,8 @@ public enum SearchFields {
     GUID("id", SearchFieldType.ID),
     HIST_GUID("historyId", SearchFieldType.ID),
     GEAR_TYPE("gearFishingType", SearchFieldType.STRING),
-    MAX_LENGTH("lengthOverAll", SearchFieldType.MAX_DECIMAL),
-    MIN_LENGTH("lengthOverAll", SearchFieldType.MIN_DECIMAL),
-    MAX_POWER("powerOfMainEngine", SearchFieldType.MAX_DECIMAL),
-    MIN_POWER("powerOfMainEngine", SearchFieldType.MIN_DECIMAL),
+    LENGTH_OVER_ALL("lengthOverAll", SearchFieldType.DECIMAL),
+    ENGINE_POWER("powerOfMainEngine", SearchFieldType.DECIMAL),
     PRODUCER_NAME("producerName"),
     DATE(null, SearchFieldType.DATE);
 
@@ -55,5 +56,15 @@ public enum SearchFields {
 
     public SearchFieldType getFieldType() {
     	return fieldType;
+    }
+    
+    public static Map<String,SearchFields> getMapOfEnums() {
+        Map<String,SearchFields> returnMap = new HashMap<>();
+        for (SearchFields value : SearchFields.values()) {
+        	if(value != SearchFields.DATE) {
+         	   returnMap.put(value.fieldName.toLowerCase(), value);
+            }
+        }
+		return returnMap;
     }
 }

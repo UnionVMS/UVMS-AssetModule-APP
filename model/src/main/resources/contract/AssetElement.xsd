@@ -181,10 +181,8 @@
             <xsd:enumeration value="PRODUCER_NAME"/>
             <xsd:enumeration value="IMO"/>
             <xsd:enumeration value="GEAR_TYPE"/> <!-- fishing gear type -->
-            <xsd:enumeration value="MIN_LENGTH"/> <!-- LOA decimal meter -->
-            <xsd:enumeration value="MAX_LENGTH"/> <!-- LOA decimal meter -->
-            <xsd:enumeration value="MIN_POWER"/> <!-- main engine decimal kW -->
-            <xsd:enumeration value="MAX_POWER"/> <!-- main engine decimal kW -->
+            <xsd:enumeration value="LENGTH_OVER_ALL"/> <!-- LOA decimal meter -->
+            <xsd:enumeration value="ENGINE_POWER"/> <!-- main engine decimal kW -->
         </xsd:restriction>
     </xsd:simpleType>
 

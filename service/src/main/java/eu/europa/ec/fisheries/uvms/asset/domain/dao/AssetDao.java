@@ -207,22 +207,24 @@ public class AssetDao {
                     operatorUsed = true;
                 }
             }else{
-                SearchLeaf leaf = (SearchLeaf) field;
+            	SearchLeaf leaf = (SearchLeaf) field;
                 if (leaf.getSearchValue().contains("*")) {
                     operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ilike(leaf.getSearchValue().replace("*", "%").toLowerCase(), MatchMode.ANYWHERE));
                     operatorUsed = true;
-                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.MIN_DECIMAL)) {
-                    operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ge(Double.valueOf(leaf.getSearchValue())));
+                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.DECIMAL)) {
+                	Double doubleValue = Double.parseDouble(leaf.getSearchValue());
+                	if (leaf.getOperator().equalsIgnoreCase(">=")) {
+                    	operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ge(doubleValue));
+                    } else if  (leaf.getOperator().equalsIgnoreCase("<=")) {
+                    	operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).le(doubleValue));
+                    } else if  (leaf.getOperator().equalsIgnoreCase("!=")) { 
+                        operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ne(doubleValue));
+                    } else { 
+                        operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).eq(doubleValue));
+                    }
                     operatorUsed = true;
-                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.MAX_DECIMAL)) {
-                    operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).le(Double.valueOf(leaf.getSearchValue())));
-                    operatorUsed = true;
-                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.LIST)) {
+                }else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.LIST)) {
                     operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ilike(leaf.getSearchValue(), MatchMode.ANYWHERE));
-                    operatorUsed = true;
-                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.NUMBER)) {
-                    Integer intValue = Integer.parseInt(leaf.getSearchValue());
-                    operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).eq(intValue));
                     operatorUsed = true;
                 } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.ID)) {
                     UUID id = UUID.fromString(leaf.getSearchValue());

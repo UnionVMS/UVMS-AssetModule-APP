@@ -20,8 +20,8 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
 import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
+import eu.europa.ec.fisheries.uvms.asset.util.JsonBConfiguratorAsset;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
-import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.ChangeHistoryRow;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.HistoryMapper;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
@@ -67,7 +67,7 @@ public class AssetRestResource {
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
     @PostConstruct
     public void init() {
-        jsonb =  new JsonBConfigurator().getContext(null);
+    	jsonb = new JsonBConfiguratorAsset().getContext(null);
     }
 
     /**

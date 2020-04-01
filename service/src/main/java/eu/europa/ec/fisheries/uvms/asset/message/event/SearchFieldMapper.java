@@ -65,14 +65,10 @@ public class SearchFieldMapper {
             	return SearchFields.HIST_GUID;
             case IMO:
                 return SearchFields.IMO;
-            case MAX_LENGTH:
-                return SearchFields.MAX_LENGTH;
-            case MAX_POWER:
-                return SearchFields.MAX_POWER;
-            case MIN_POWER:
-                return SearchFields.MIN_POWER;
-            case MIN_LENGTH:
-                return SearchFields.MIN_LENGTH;
+            case LENGTH_OVER_ALL:
+                return SearchFields.LENGTH_OVER_ALL;
+            case ENGINE_POWER:
+                return SearchFields.ENGINE_POWER;
             case PRODUCER_NAME:
             	return SearchFields.PRODUCER_NAME;
             case ASSET_TYPE:
