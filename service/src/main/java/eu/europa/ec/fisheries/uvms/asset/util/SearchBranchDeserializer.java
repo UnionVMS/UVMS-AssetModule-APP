@@ -22,8 +22,8 @@ import java.util.Map;
 public class SearchBranchDeserializer implements JsonbDeserializer<SearchBranch> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SearchBranchDeserializer.class);
-    private static final List<String> operatorWhiteList = new ArrayList<String>(Arrays.asList(">=", "<=", "!=", "="));
-    private static final Map<String,SearchFields> mapOfSearchFields = SearchFields.getMapOfEnums();
+    private static final List<String> OPERATOR_WHITE_LIST = new ArrayList<String>(Arrays.asList(">=", "<=", "!=", "="));
+    private static final Map<String,SearchFields> MAP_OF_SEARCH_FIELDS = SearchFields.getMapOfEnums();
     
     @Override
     public SearchBranch deserialize(JsonParser parser, DeserializationContext ctx, Type rtType) {
@@ -41,12 +41,11 @@ public class SearchBranchDeserializer implements JsonbDeserializer<SearchBranch>
             for (JsonValue jsonValue : fields) {
                 if (jsonValue.asJsonObject().containsKey("fields")) {
                     trunk.getFields().add(recurse(jsonValue.asJsonObject()));
-
                 } else {
+                	
                 	String jsonSerachFieldValue = jsonValue.asJsonObject().getJsonString("searchField").getString();
-                	SearchFields mappedValue = mapOfSearchFields.get(jsonSerachFieldValue.toLowerCase());
-                	jsonSerachFieldValue = mappedValue != null ? mappedValue.toString() : jsonSerachFieldValue;
-                	SearchFields key = SearchFields.valueOf(jsonSerachFieldValue);
+                	SearchFields mappedValue = MAP_OF_SEARCH_FIELDS.get(jsonSerachFieldValue.toLowerCase());
+                	SearchFields key =  mappedValue != null ? mappedValue : SearchFields.valueOf(jsonSerachFieldValue);  	
                 	String value;
                     if (jsonValue.asJsonObject().get("searchValue").getValueType() == ValueType.STRING) {
                         value = jsonValue.asJsonObject().getJsonString("searchValue").getString();
@@ -57,7 +56,7 @@ public class SearchBranchDeserializer implements JsonbDeserializer<SearchBranch>
                     String operator = null;
                     if (jsonValue.asJsonObject().containsKey("operator")) {
                     	String operatorFromJson = jsonValue.asJsonObject().getJsonString("operator").getString();
-                        operator = operatorWhiteList.contains(operatorFromJson) ? operatorFromJson : "=";
+                        operator = OPERATOR_WHITE_LIST.contains(operatorFromJson) ? operatorFromJson : "=";
                     }
                     trunk.getFields().add(new SearchLeaf(key, value, operator));
                 }

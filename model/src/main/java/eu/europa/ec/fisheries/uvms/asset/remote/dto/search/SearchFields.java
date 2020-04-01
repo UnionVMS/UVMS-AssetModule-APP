@@ -59,14 +59,12 @@ public enum SearchFields {
     }
     
     public static Map<String,SearchFields> getMapOfEnums() {
-           Map<String,SearchFields> returnMap = new HashMap<>();
-            for (SearchFields value : SearchFields.values()) {
-               if(value != SearchFields.DATE) {
-            	   returnMap.put(value.fieldName.toLowerCase(), value);
-               }
-            }
-            returnMap.put("assetid", SearchFields.GUID);
-            returnMap.put("flagstate", SearchFields.FLAG_STATE);
-			return returnMap;
+       Map<String,SearchFields> returnMap = new HashMap<>();
+        for (SearchFields value : SearchFields.values()) {
+           if(value != SearchFields.DATE) {
+        	   returnMap.put(value.fieldName.toLowerCase(), value);
+           }
+        }
+		return returnMap;
     }
 }
