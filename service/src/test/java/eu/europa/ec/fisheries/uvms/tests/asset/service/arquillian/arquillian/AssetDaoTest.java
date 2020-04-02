@@ -843,7 +843,46 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.deleteAsset(asset2);
         commit();
     }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetListSearchCriteriaQueryTest() throws Exception {
+        Asset asset = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset);
+        commit();
 
+        Asset asset2 = AssetTestsHelper.createBasicAsset();
+        asset2.setFlagStateCode("DNK");
+        assetDao.createAsset(asset2);
+        commit();
+
+        SearchBranch trunk = new SearchBranch(true);
+        SearchLeaf leaf = new SearchLeaf(SearchFields.CFR, asset.getCfr());
+        trunk.getFields().add(leaf);
+        leaf = new SearchLeaf(SearchFields.IRCS, asset.getIrcs());
+        trunk.getFields().add(leaf);
+        System.out.println("asset.getIrcs(): " + asset.getIrcs());
+
+        SearchBranch branch = new SearchBranch(false);
+        SearchLeaf subLeaf = new SearchLeaf(SearchFields.FLAG_STATE, "SWE");
+        branch.getFields().add(subLeaf);
+        subLeaf = new SearchLeaf(SearchFields.FLAG_STATE, "DNK");
+        branch.getFields().add(subLeaf);
+
+        trunk.getFields().add(branch);
+
+        List<Asset> assets = assetDao.getAssetListSearchPaginatedCriteriaBuilder(1, 10, trunk, false);
+
+        System.out.println("assets: " + assets);
+        
+        assertEquals(1, assets.size());
+        assertThat(assets.get(0).getId(), is(asset.getId()));
+
+        assetDao.deleteAsset(asset);
+        assetDao.deleteAsset(asset2);
+        commit();
+    }
+    
     @Test
     @OperateOnDeployment("normal")
     public void getAssetListSearchEmptyDepthQuery() throws Exception {

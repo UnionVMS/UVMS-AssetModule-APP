@@ -8,6 +8,8 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.*;
 import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
+import net.sf.ehcache.hibernate.HibernateUtil;
+
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.exception.AuditException;
@@ -20,6 +22,13 @@ import org.hibernate.envers.query.criteria.MatchMode;
 
 import javax.ejb.Stateless;
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaBuilder.In;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import java.math.BigInteger;
 import java.time.Instant;
 import java.util.*;
@@ -161,6 +170,91 @@ public class AssetDao {
             return test;
         } catch (AuditException e) {
             return Collections.emptyList();
+        }
+    }
+    
+    public List<Asset> getAssetListSearchPaginatedCriteriaBuilder(Integer pageNumber, Integer pageSize, SearchBranch queryTree, boolean includeInactivated) {
+    	CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+    	CriteriaQuery<Asset> cq = criteriaBuilder.createQuery(Asset.class);
+    	Root<Asset> asset = cq.from(Asset.class);
+    	if(!queryTree.getFields().isEmpty()) {
+    		Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset);
+            cq.where(predicateQuery);
+    	}else {
+    		cq.select(asset);
+    	}
+    	// check historyId &&  for direct to new or historical search 
+    	// TODO  count call
+    	TypedQuery<Asset> query = em.createQuery(cq);
+    	query.setFirstResult(pageSize * (pageNumber - 1)) // offset
+         	.setMaxResults(pageSize) // limit
+         	.getResultList();
+    	return query.getResultList();
+    }
+    
+    private Predicate queryBuilderPredicate(SearchBranch query, CriteriaBuilder criteriaBuilder, Root<Asset> asset){
+        
+        List<Predicate> predicates = new ArrayList<>();
+        
+        for (AssetSearchInterface field : query.getFields()) {
+            if(!field.isLeaf()){
+                if(criteriaBuilder != null){
+                	predicates.add(queryBuilderPredicate((SearchBranch) field, criteriaBuilder, asset));
+                }
+            }else{
+                SearchLeaf leaf = (SearchLeaf) field;
+//                if (leaf.getSearchValue().contains("*")) {
+//                	predicates.add(criteriaBuilder.like(asset.get(leaf.getSearchField().getFieldName()), "%" + leaf.getSearchValue().replace("*", "%").toLowerCase() + "%")); // TODO case sensitive
+//                    operatorUsed = true;
+//                }
+                if (leaf.getSearchValue().contains("*")) {
+                	criteriaBuilder.like(
+            			criteriaBuilder.lower(
+            					asset.get(
+            						leaf.getSearchField().getFieldName()
+            	                )
+            	            ), "%" + leaf.getSearchValue().replace("*", "%").toLowerCase() + "%"
+            	        );
+                } else if (leaf.getSearchField().isFuzzySearch()) {
+                	predicates.add(criteriaBuilder.like(
+                			criteriaBuilder.lower(
+                					criteriaBuilder.function("REPLACE"
+                			                 , String.class
+                			                 , criteriaBuilder.function ("REPLACE"
+                			                		 , String.class
+                			                		 , asset.get(leaf.getSearchField().getFieldName())
+                			                		 , criteriaBuilder.literal("-")
+                			                		 , criteriaBuilder.literal("")
+                			                		 )
+                			                 , criteriaBuilder.literal(" ")
+                			                 , criteriaBuilder.literal("")
+                					)
+                			) 
+                			, "%" + leaf.getSearchValue().toLowerCase().replace(" ", "").replace("-", "") + "%"
+            	        ));
+                	System.out.println("leaf.getSearchField().REPL: "+ criteriaBuilder);
+                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.MIN_DECIMAL)) {
+                	predicates.add(criteriaBuilder.greaterThan(asset.get(leaf.getSearchField().getFieldName()), Double.valueOf(leaf.getSearchValue())));
+                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.MAX_DECIMAL)) {
+                	predicates.add(criteriaBuilder.lessThan(asset.get(leaf.getSearchField().getFieldName()), Double.valueOf(leaf.getSearchValue())));
+                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.LIST)) {
+                	predicates.add(criteriaBuilder.like(asset.get(leaf.getSearchField().getFieldName()), "%" + leaf.getSearchValue() + "%")); // TODO case sensitive
+                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.NUMBER)) {
+                    Integer intValue = Integer.parseInt(leaf.getSearchValue());
+                    predicates.add(criteriaBuilder.equal(asset.get(leaf.getSearchField().getFieldName()), intValue));
+                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.ID)) {
+                    UUID id = UUID.fromString(leaf.getSearchValue());
+                    predicates.add(criteriaBuilder.equal(asset.get(leaf.getSearchField().getFieldName()), id));
+                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.BOOLEAN) ||
+                        leaf.getSearchField().getFieldType().equals(SearchFieldType.STRING)) {
+                    predicates.add(criteriaBuilder.equal(asset.get(leaf.getSearchField().getFieldName()), leaf.getSearchValue()));
+                }
+            }
+        }
+        if (query.isLogicalAnd()) {
+        	return criteriaBuilder.and(predicates.stream().toArray(Predicate[]::new));
+        } else {
+        	return criteriaBuilder.or(predicates.stream().toArray(Predicate[]::new));
         }
     }
 
