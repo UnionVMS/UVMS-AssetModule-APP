@@ -69,11 +69,11 @@ public class PollServiceBean {
         MobileTerminal mt = mobileTerminalServiceBean.getActiveMTForAsset(assetId);
 
         if(mt == null) {
-            throw new IllegalArgumentException("No active MT for this asset, unable to poll");
+            throw new IllegalArgumentException("No active MT for asset: " + assetId + " , unable to poll");
         }
         Channel channel = mobileTerminalServiceBean.getPollableChannel(mt);
         if(channel == null) {
-            throw new IllegalArgumentException("No pollable channel for this active MT, unable to poll");
+            throw new IllegalArgumentException("No pollable channel for this active MT: " + mt.getId() + " , unable to poll");
         }
 
         PollRequestType prt = buildPollRequest(assetId, pollType, username, comment, mt, channel);
