@@ -152,16 +152,40 @@ public class AssetDao {
         return query.getResultList();
     }
 
+//    public Long getAssetCount(SearchBranch queryTree, boolean includeInactivated) {
+//        return isHistoricSearch(queryTree) == true ? 
+//        		getAssetCountHistoric(queryTree, includeInactivated) : 
+//        			getAssetCountCB(queryTree, includeInactivated);
+//    }
+    
     public Long getAssetCount(SearchBranch queryTree, boolean includeInactivated) {
-        try {
-            AuditQuery query = createAuditQuery(queryTree, includeInactivated);
-            return (Long) query.addProjection(AuditEntity.id().count()).getSingleResult();
-        } catch (AuditException e) {
-            return 0L;
-        }
+		 try {
+	            AuditQuery query = createAuditQuery(queryTree, includeInactivated);
+	            return (Long) query.addProjection(AuditEntity.id().count()).getSingleResult();
+	        } catch (AuditException e) {
+	            return 0L;
+	        }
+    }
+    public Long getAssetCountCB(SearchBranch queryTree, boolean includeInactivated) {
+    	CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+    	CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
+    	Root<Asset> asset = cq.from(Asset.class);
+    	Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset);
+    	cq.select(criteriaBuilder.count(asset)); 
+    	cq.where(predicateQuery);
+    	return em.createQuery(cq).getSingleResult();
     }
 
     public List<Asset> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize, SearchBranch queryTree, boolean includeInactivated) {
+    	if(isHistoricSearch(queryTree)) {
+    		System.out.println("*** historic ***");
+    		return getAssetListSearchPaginatedHistoric(pageNumber, pageSize, queryTree, includeInactivated);	
+    	}
+    	System.out.println("*** NON historic ***");
+    	return getAssetListSearchPaginatedCriteriaBuilder(pageNumber, pageSize, queryTree, includeInactivated);
+    }
+    
+    private List<Asset> getAssetListSearchPaginatedHistoric(Integer pageNumber, Integer pageSize, SearchBranch queryTree, boolean includeInactivated) {
         try {
             AuditQuery query = createAuditQuery(queryTree, includeInactivated);
             query.setFirstResult(pageSize * (pageNumber - 1));
@@ -173,18 +197,26 @@ public class AssetDao {
         }
     }
     
-    public List<Asset> getAssetListSearchPaginatedCriteriaBuilder(Integer pageNumber, Integer pageSize, SearchBranch queryTree, boolean includeInactivated) {
+    private boolean isHistoricSearch(SearchBranch queryTree) {
+    	SearchLeaf dateSearchField = getDateSearchField(queryTree);
+    	SearchLeaf historySearchField = getHistoryIdSearchField(queryTree);
+        if (dateSearchField != null || historySearchField != null) {
+        	return true;
+        }
+    	return false;
+    }
+    
+    private List<Asset> getAssetListSearchPaginatedCriteriaBuilder(Integer pageNumber, Integer pageSize, SearchBranch queryTree, boolean includeInactivated) {
     	CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
     	CriteriaQuery<Asset> cq = criteriaBuilder.createQuery(Asset.class);
     	Root<Asset> asset = cq.from(Asset.class);
     	if(!queryTree.getFields().isEmpty()) {
     		Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset);
             cq.where(predicateQuery);
-    	}else {
+    	}
+    	else {
     		cq.select(asset);
     	}
-    	// check historyId &&  for direct to new or historical search 
-    	// TODO  count call
     	TypedQuery<Asset> query = em.createQuery(cq);
     	query.setFirstResult(pageSize * (pageNumber - 1)) // offset
          	.setMaxResults(pageSize) // limit
@@ -198,24 +230,21 @@ public class AssetDao {
         
         for (AssetSearchInterface field : query.getFields()) {
             if(!field.isLeaf()){
-                if(criteriaBuilder != null){
+                if( !((SearchBranch)field).getFields().isEmpty()){
                 	predicates.add(queryBuilderPredicate((SearchBranch) field, criteriaBuilder, asset));
                 }
             }else{
                 SearchLeaf leaf = (SearchLeaf) field;
-//                if (leaf.getSearchValue().contains("*")) {
-//                	predicates.add(criteriaBuilder.like(asset.get(leaf.getSearchField().getFieldName()), "%" + leaf.getSearchValue().replace("*", "%").toLowerCase() + "%")); // TODO case sensitive
-//                    operatorUsed = true;
-//                }
                 if (leaf.getSearchValue().contains("*")) {
-                	criteriaBuilder.like(
+                	predicates.add(criteriaBuilder.like(
             			criteriaBuilder.lower(
             					asset.get(
             						leaf.getSearchField().getFieldName()
             	                )
             	            ), "%" + leaf.getSearchValue().replace("*", "%").toLowerCase() + "%"
-            	        );
-                } else if (leaf.getSearchField().isFuzzySearch()) {
+            	        )
+                	);
+                }else if (leaf.getSearchField().isFuzzySearch()) {
                 	predicates.add(criteriaBuilder.like(
                 			criteriaBuilder.lower(
                 					criteriaBuilder.function("REPLACE"
@@ -232,13 +261,18 @@ public class AssetDao {
                 			) 
                 			, "%" + leaf.getSearchValue().toLowerCase().replace(" ", "").replace("-", "") + "%"
             	        ));
-                	System.out.println("leaf.getSearchField().REPL: "+ criteriaBuilder);
                 } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.MIN_DECIMAL)) {
-                	predicates.add(criteriaBuilder.greaterThan(asset.get(leaf.getSearchField().getFieldName()), Double.valueOf(leaf.getSearchValue())));
+                	predicates.add(criteriaBuilder.ge(asset.get(leaf.getSearchField().getFieldName()), Double.valueOf(leaf.getSearchValue())));
                 } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.MAX_DECIMAL)) {
-                	predicates.add(criteriaBuilder.lessThan(asset.get(leaf.getSearchField().getFieldName()), Double.valueOf(leaf.getSearchValue())));
+                	predicates.add(criteriaBuilder.le(asset.get(leaf.getSearchField().getFieldName()), Double.valueOf(leaf.getSearchValue())));
                 } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.LIST)) {
-                	predicates.add(criteriaBuilder.like(asset.get(leaf.getSearchField().getFieldName()), "%" + leaf.getSearchValue() + "%")); // TODO case sensitive
+                	predicates.add(criteriaBuilder.like(
+                			criteriaBuilder.lower(
+                					asset.get(
+                							leaf.getSearchField().getFieldName()
+                							)
+                					), 
+                			"%" + leaf.getSearchValue().toLowerCase() + "%"));
                 } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.NUMBER)) {
                     Integer intValue = Integer.parseInt(leaf.getSearchValue());
                     predicates.add(criteriaBuilder.equal(asset.get(leaf.getSearchField().getFieldName()), intValue));
@@ -345,6 +379,23 @@ public class AssetDao {
             }else {
                 SearchLeaf leaf = (SearchLeaf) field;
                 if (leaf.getSearchField().equals(SearchFields.DATE)) {
+                    return leaf;
+                }
+            }
+        }
+        return null;
+    }
+    
+    private SearchLeaf getHistoryIdSearchField(SearchBranch searchFields) {
+        for (AssetSearchInterface field : searchFields.getFields()) {
+            if(!field.isLeaf()){
+                SearchLeaf leaf = getHistoryIdSearchField((SearchBranch) field);
+                if(leaf != null){
+                    return leaf;
+                }
+            }else {
+                SearchLeaf leaf = (SearchLeaf) field;
+                if (leaf.getSearchField().equals(SearchFields.HIST_GUID)) {
                     return leaf;
                 }
             }

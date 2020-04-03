@@ -117,7 +117,6 @@ public class AssetServiceBean {
             throw new IllegalArgumentException("Cannot get asset list because search values is null.");
         }
 
-
         Long numberOfAssets = assetDao.getAssetCount(queryTree, includeInactivated);
 
         int numberOfPages = 0;
@@ -127,8 +126,8 @@ public class AssetServiceBean {
                 numberOfPages += 1;
             }
         }
-
         List<Asset> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, queryTree, includeInactivated);
+      
         // force to load children. FetchType.EAGER didn't work.
         assetEntityList.forEach(asset -> {
             asset.getMobileTerminals().size();
