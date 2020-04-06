@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
 
     <changeSet author="andtho" id="comchannelnametype-01">
         <createTable tableName="comchannelnametype" remarks="Table with user defined valid names of Channels">
@@ -14,18 +15,18 @@
             <column name="updattim" type="TIMESTAMP"/>
             <column name="upuser" type="VARCHAR(60)"/>
         </createTable>
-        
+
         <createIndex tableName="comchannelnametype" indexName="comchannametype_inx" unique="true">
-			<column name="name"></column>
-		</createIndex>
-        
+            <column name="name"></column>
+        </createIndex>
+
         <rollback>
             <dropTable cascadeConstraints="true" tableName="comchannelnametype"/>
         </rollback>
-	</changeSet>
+    </changeSet>
 
     <changeSet author="osdjup" id="drop table">
         <dropTable cascadeConstraints="true" tableName="comchannelnametype"/>
     </changeSet>
-	
+
 </databaseChangeLog>

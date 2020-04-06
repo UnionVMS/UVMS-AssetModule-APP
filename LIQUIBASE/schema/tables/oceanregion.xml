@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
 
     <changeSet author="johlyn" id="oceanregion - config table">
         <createTable tableName="oceanregion" remarks="OceanRegion codes valid for InmarsatC">
@@ -14,13 +15,13 @@
             <column name="updattim" type="TIMESTAMP"/>
             <column name="upuser" type="VARCHAR(60)"/>
         </createTable>
-        
+
         <createIndex tableName="oceanregion" indexName="oceanreg_inx" unique="true">
-			<column name="code"></column>
-		</createIndex>
-        
+            <column name="code"></column>
+        </createIndex>
+
         <rollback>
             <dropTable tableName="oceanregion" cascadeConstraints="true"/>
         </rollback>
-	</changeSet>
+    </changeSet>
 </databaseChangeLog>

@@ -13,13 +13,13 @@
   -->
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
-         logicalFilePath="changelog/v0.4/db-changelog-insertTestdata-postgres_0.4.xml">
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd"
+                   logicalFilePath="changelog/v0.4/db-changelog-insertTestdata-postgres_0.4.xml">
 
-        <include file="..\..\schema\testdata\insertPlugin.xml" relativeToChangelogFile="true"/>
-        
-        <include file="..\..\schema\testdata\postgres\insertMobileTerminal.xml" relativeToChangelogFile="true"/>
+    <include file="..\..\schema\testdata\insertPlugin.xml" relativeToChangelogFile="true"/>
+
+    <include file="..\..\schema\testdata\postgres\insertMobileTerminal.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

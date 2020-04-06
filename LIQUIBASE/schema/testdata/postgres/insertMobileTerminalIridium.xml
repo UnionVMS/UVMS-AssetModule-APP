@@ -12,9 +12,9 @@
   -->
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
-
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
 
     <changeSet author="johlyn" id="insert testdata iridium">
         <insert tableName="mobileterminal">
@@ -29,7 +29,6 @@
             <column name="mobterm_updateuser" value="johlyn"/>
         </insert>
 
-
         <insert tableName="mobileterminal_iridium">
             <column name="id" value="1"/>
             <column name="serial_number" value="1122334455"/>
@@ -42,21 +41,8 @@
         </insert>
 
 
-
         <insert tableName="mobileterminal_iridium_history">
             <column name="hist_id" value="1"/>
-            <!--<column name="hist_attribute_value" value="testdata_iridium_attribute_value"/>-->
-            <!--
-            <column name="hist_installed_by" value="testdata_iridium_installed_by"/>
-            <column name="hist_started_on" valueDate="${now}"/>
-            <column name="hist_installed_on" valueDate="${now}"/>
-            <column name="hist_uninstalled_on" value="NULL"/>
-            <column name="hist_frequency_expected" value="10"/>
-            <column name="hist_frequency_grace_period" value="10"/>
-            <column name="hist_frequency_in_port" value="10"/>
-            <column name="hist_start_date" valueDate="${now}"/>
-            <column name="hist_end_date" value="NULL"/>
-            -->
             <column name="hist_active" valueBoolean="1"/>
             <column name="hist_updatetime" valueDate="${now}"/>
             <column name="hist_updateuser" value="johlyn"/>
@@ -94,7 +80,6 @@
             <column name="channel_hist_freq_grace_per" value="10"/>
             <column name="channel_hist_freq_in_port" value="10"/>
         </insert>
-
 
     </changeSet>
 
