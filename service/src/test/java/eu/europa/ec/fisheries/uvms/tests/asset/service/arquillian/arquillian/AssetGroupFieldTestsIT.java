@@ -11,10 +11,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
-import java.time.Clock;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -97,6 +98,34 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
         assertEquals(retrievedAssetGroupFields1.size(), 0);
         assertEquals(retrievedAssetGroupFields2.size(), 25);
     }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void testNewFieldsForGroup() {
+
+        String user = "test";
+        String uuid = UUID.randomUUID().toString();
+        Instant date = Instant.now();
+        
+        AssetGroup assetGroup1 = createAndStoreAssetGroupEntity(user);
+        AssetGroupField field = AssetTestsHelper.createAssetGroupField(assetGroup1, "SWE, FIN", uuid, date, user);
+        List<AssetGroupField> createdAssetGroupFields1 = createAndStoreAssetGroupFieldEntityList(assetGroup1, 50);
+        Set<AssetGroupField> convertedSet  = new HashSet<>(); 
+        convertedSet.add(field);
+        Set<AssetGroupField> convertedSet2 = convertListToSet(createdAssetGroupFields1, convertedSet);
+        assetGroup1.setAssetGroupFields(convertedSet2);
+        List<AssetGroupField> retrievedAssetGroupFields1 =  assetGroupFieldDaoBean.retrieveFieldsForGroup(assetGroup1);
+        
+        assertEquals(retrievedAssetGroupFields1.size(), 51);
+        assertEquals(retrievedAssetGroupFields1.get(0).getKey(), "SWE, FIN");
+      //  assertEquals(retrievedAssetGroupFields1.get(0).getValue(), "2d46b735-8948-425d-a1c8-18f41b16d7f1");
+    }
+    public static <T> Set<T> convertListToSet(List<T> list, Set<T> set) 
+    { 
+        for (T t : list) 
+            set.add(t); 
+        return set; 
+    } 
 
     private List<AssetGroupField>  createAndStoreAssetGroupFieldEntityList(AssetGroup assetGroup, int n) {
         Instant dt = Instant.now();
@@ -104,6 +133,7 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
         return groupFields;
     }
 
+    
     private AssetGroupField getField(UUID id) {
         AssetGroupField assetGroupField =  assetGroupFieldDaoBean.get(id);
         return assetGroupField;
@@ -148,4 +178,5 @@ public class AssetGroupFieldTestsIT extends TransactionalTests {
         }
         return groupFields;
     }
+ 
 }
