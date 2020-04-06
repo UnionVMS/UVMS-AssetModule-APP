@@ -79,6 +79,7 @@ public class MobileTerminalServiceBean {
         Set<Channel> channels = mobileTerminal.getChannels();
         channels.forEach(channel -> channel.setMobileTerminal(mobileTerminal));
         MobileTerminal createdMobileTerminal = terminalDao.createMobileTerminal(mobileTerminal);
+        sortChannels(createdMobileTerminal);
         String pluginServiceName = createdMobileTerminal.getPlugin().getPluginServiceName();
 
         //send stuff to audit
@@ -135,6 +136,7 @@ public class MobileTerminalServiceBean {
         MobileTerminal updatedTerminal;
         if (oldTerminal.getMobileTerminalType() != null) {
             updatedTerminal = terminalDao.updateMobileTerminal(mobileTerminal);
+            sortChannels(updatedTerminal);
             Asset asset = updatedTerminal.getAsset();
             if(asset != null){
                 asset.setUpdateTime(Instant.now());
@@ -256,12 +258,15 @@ public class MobileTerminalServiceBean {
         }
         mobileTerminal.setUpdateuser(username);
         mobileTerminal.setComment(comment);
-        return terminalDao.updateMobileTerminal(mobileTerminal);
+        mobileTerminal = terminalDao.updateMobileTerminal(mobileTerminal);
+        sortChannels(mobileTerminal);
+        return mobileTerminal;
     }
 
     public List<MobileTerminal> getMobileTerminalRevisions(UUID mobileTerminalId, int maxNbr) {
         List<MobileTerminal> revisions = terminalDao.getMobileTerminalRevisionById(mobileTerminalId);
         revisions.sort(Comparator.comparing(MobileTerminal::getCreateTime));
+        revisions.forEach(this::sortChannels);
         if (revisions.size() > maxNbr) {
             return revisions.subList(0, maxNbr);
         }
@@ -314,7 +319,15 @@ public class MobileTerminalServiceBean {
     public MobileTerminal getMobileTerminalEntityById(UUID id) {
         if (id == null)
             throw new IllegalArgumentException("Non valid MobileTerminal ID: NULL");
-        return terminalDao.getMobileTerminalById(id);
+        MobileTerminal mt = terminalDao.getMobileTerminalById(id);
+        sortChannels(mt);
+        return mt;
+    }
+
+    public List<MobileTerminal> getMobileTerminalListNotConnectedToAsset() {
+        List<MobileTerminal> mtList = terminalDao.getMobileTerminalListWithNoActiveAsset();
+        mtList.forEach(this::sortChannels);
+        return mtList;
     }
 
     public MobileTerminal getMobileTerminalEntityBySerialNo(String serialNo) {
@@ -377,6 +390,7 @@ public class MobileTerminalServiceBean {
         terminal.setUpdateuser(username);
         terminal.setComment(comment);
         terminal = terminalDao.updateMobileTerminal(terminal);
+        sortChannels(terminal);
         return terminal;
     }
 
@@ -398,7 +412,9 @@ public class MobileTerminalServiceBean {
         asset.setUpdateTime(Instant.now());
         terminal.setAsset(null);
         terminal.setComment(comment);
-        return terminalDao.updateMobileTerminal(terminal);
+        terminal = terminalDao.updateMobileTerminal(terminal);
+        sortChannels(terminal);
+        return terminal;
     }
 
     public MobileTerminal upsertMobileTerminal(MobileTerminal mobileTerminal, String username) {
@@ -432,6 +448,7 @@ public class MobileTerminalServiceBean {
         List<MobileTerminal> terminals = terminalDao.getMTListSearchPaginated(page, listSize, searchFields, isDynamic, includeArchived);
 
         terminals.sort(Comparator.comparing(MobileTerminal::getId));
+        terminals.forEach(this::sortChannels);
 
         int totalMatches = terminals.size();
         LOG.debug("totalMatches: " + totalMatches);
@@ -485,6 +502,7 @@ public class MobileTerminalServiceBean {
             Map<UUID, List<MobileTerminalDto>> revisionMap = new HashMap<>();
             List<MobileTerminal> revisions = terminalDao.getMobileTerminalRevisionById(terminal.getId());
             revisions.sort(Comparator.comparing(MobileTerminal::getCreateTime));
+            revisions.forEach(this::sortChannels);
             if (revisions.size() > maxNbr) {
                 revisions = revisions.subList(0, maxNbr);
             }
@@ -494,7 +512,6 @@ public class MobileTerminalServiceBean {
         return revisionList;
     }
 
-
     public List<AssetDto> getAssetRevisionsByMobileTerminalId(UUID mobileTerminalId) {
         List<MobileTerminal> mtRevisions = terminalDao.getMobileTerminalRevisionById(mobileTerminalId);
 
@@ -503,5 +520,14 @@ public class MobileTerminalServiceBean {
                 .filter(mt -> mt.getAsset() != null)
                 .map(MobileTerminal::getAsset)
                 .collect(Collectors.toList()));
+    }
+
+    private void sortChannels(MobileTerminal mt) {
+        if(mt.getChannels() != null && !mt.getChannels().isEmpty()) {
+            Set<Channel> sorted = new TreeSet<>(Comparator.comparing(Channel::getId));
+            sorted.addAll(mt.getChannels());
+            mt.getChannels().clear();
+            mt.getChannels().addAll(sorted);
+        }
     }
 }

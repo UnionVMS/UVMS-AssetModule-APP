@@ -17,7 +17,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.ContactInfoDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.NoteDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.dto.*;
 import eu.europa.ec.fisheries.uvms.asset.message.event.UpdatedAssetEvent;
 import eu.europa.ec.fisheries.uvms.asset.util.AssetComparator;
@@ -113,12 +113,13 @@ public class AssetServiceBean {
         return createdAssetEntity;
     }
 
-    public AssetListResponse getAssetList(List<SearchKeyValue> searchFields, int page, int listSize, boolean dynamic, boolean includeInactivated) {
-        if (searchFields == null) {
+    public AssetListResponse getAssetList(SearchBranch queryTree, int page, int listSize, boolean includeInactivated) {
+        if (queryTree == null) {
             throw new IllegalArgumentException("Cannot get asset list because search values is null.");
         }
 
-        Long numberOfAssets = assetDao.getAssetCount(searchFields, dynamic, includeInactivated);
+
+        Long numberOfAssets = assetDao.getAssetCount(queryTree, includeInactivated);
 
         int numberOfPages = 0;
         if (listSize != 0) {
@@ -128,7 +129,7 @@ public class AssetServiceBean {
             }
         }
 
-        List<Asset> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, searchFields, dynamic, includeInactivated);
+        List<Asset> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, queryTree, includeInactivated);
         // force to load children. FetchType.EAGER didn't work.
         assetEntityList.forEach(asset -> {
             asset.getMobileTerminals().size();
@@ -139,12 +140,12 @@ public class AssetServiceBean {
         listAssetResponse.getAssetList().addAll(assetEntityList);
         return listAssetResponse;
     }
-    
-    public Long getAssetListCount(List<SearchKeyValue> searchFields, boolean dynamic, boolean includeInactivated) {
-        if (searchFields == null || searchFields.isEmpty()) {
+
+    public Long getAssetListCount(SearchBranch queryTree, boolean includeInactivated) {
+        if (queryTree == null || queryTree.getFields().isEmpty()) {
             throw new IllegalArgumentException("Cannot get asset list because query is null.");
         }
-        return assetDao.getAssetCount(searchFields, dynamic, includeInactivated);
+        return assetDao.getAssetCount(queryTree, includeInactivated);
     }
 
     public Asset updateAsset(Asset asset, String username, String comment) {

@@ -9,26 +9,42 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.asset.domain.mapper;
+package eu.europa.ec.fisheries.uvms.asset.remote.dto.search;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.json.bind.annotation.JsonbTransient;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFields;
+public class SearchLeaf implements AssetSearchInterface {
 
-public class SearchKeyValue {
-	
 	private SearchFields searchField;
-	private List<String> searchValues = new ArrayList<>();
+	private String searchValue;
+	private String operator;
 
-    public SearchKeyValue() {
+    public SearchLeaf() {
         super();
     }
 
-    public SearchKeyValue(SearchFields searchField, List<String> searchValues) {
+    public SearchLeaf(SearchFields searchField, String searchValue) {
         this.searchField = searchField;
-        this.searchValues = searchValues;
+        this.searchValue = searchValue;
+        this.operator = "";
     }
     
+    public SearchLeaf(SearchFields searchField, String searchValue, String operator) {
+        this.searchField = searchField;
+        this.searchValue = searchValue;
+        if(operator != null) {
+        	this.operator = operator;
+        }else {
+        	this.operator = "=";
+        }
+    }
+
+	@Override
+	@JsonbTransient
+	public boolean isLeaf() {
+		return true;
+	}
+
     public SearchFields getSearchField() {
 		return searchField;
 	}
@@ -37,22 +53,21 @@ public class SearchKeyValue {
 		this.searchField = searchField;
 	}
 
-	public List<String> getSearchValues() {
-		if(searchValues == null) searchValues = new ArrayList<>();
-		return searchValues;
+	public String getSearchValue() {
+		return searchValue;
 	}
 
-	public List<String> getSearchValuesAsLowerCase() {
-		if(searchValues == null) searchValues = new ArrayList<>();
-		List<String> returnList = new ArrayList<>();
-		for (String s : searchValues) {
-			returnList.add(s.toLowerCase());
-		}
-		//searchValues.replaceAll(String::toLowerCase);   //this stopped working for some reason
-		return returnList;
+	public void setSearchValue(String searchValue) {
+		this.searchValue = searchValue;
 	}
 
-	public void setSearchValues(List<String> searchValues) {
-		this.searchValues = searchValues;
+	public String getOperator() {
+		return operator;
 	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
+
+
 }

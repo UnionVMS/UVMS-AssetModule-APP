@@ -10,13 +10,16 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian;
 
-import eu.europa.ec.fisheries.uvms.asset.domain.constant.SearchFields;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFields;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchLeaf;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.model.constants.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.tests.TransactionalTests;
+
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -446,12 +449,10 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.createAsset(asset);
         commit();
         
-        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
-        SearchKeyValue searchKey = new SearchKeyValue();
-        searchKey.setSearchField(SearchFields.CFR);
-        searchKey.setSearchValues(Collections.singletonList(asset.getCfr()));
-        searchKeyValues.add(searchKey);
-        Long count = assetDao.getAssetCount(searchKeyValues, false, false);
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
+
+        Long count = assetDao.getAssetCount(trunk, false);
         assertEquals(Long.valueOf(1), count);
 
         assetDao.deleteAsset(asset);
@@ -469,12 +470,10 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.updateAsset(asset);
         commit();
         
-        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
-        SearchKeyValue searchKey = new SearchKeyValue();
-        searchKey.setSearchField(SearchFields.CFR);
-        searchKey.setSearchValues(Collections.singletonList(asset.getCfr()));
-        searchKeyValues.add(searchKey);
-        Long count = assetDao.getAssetCount(searchKeyValues, false, false);
+        SearchBranch trunk = new SearchBranch(false);
+        trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
+
+        Long count = assetDao.getAssetCount(trunk, false);
         assertEquals(Long.valueOf(1), count);
 
         assetDao.deleteAsset(asset);
@@ -496,38 +495,35 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.createAsset(asset2);
         commit();
 
-        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
-        SearchKeyValue searchKey = new SearchKeyValue();
-        searchKey.setSearchField(SearchFields.CFR);
-        searchKey.setSearchValues(Collections.singletonList(asset.getCfr()));
-        searchKeyValues.add(searchKey);
-        Long count = assetDao.getAssetCount(searchKeyValues, false, false);
+        SearchBranch trunk = new SearchBranch(false);
+        trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
+
+        Long count = assetDao.getAssetCount(trunk, false);
         assertEquals(Long.valueOf(1), count);
 
         assetDao.deleteAsset(asset);
         assetDao.deleteAsset(asset2);
         commit();
     }
-    
+
     @Test
     @OperateOnDeployment("normal")
     public void getAssetCountShouldNotFindAssetTest() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset);
         commit();
-        
-        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
-        SearchKeyValue searchKey = new SearchKeyValue();
-        searchKey.setSearchField(SearchFields.CFR);
-        searchKey.setSearchValues(Collections.singletonList("TESTCFR"));
-        searchKeyValues.add(searchKey);
-        Long count = assetDao.getAssetCount(searchKeyValues, false, false);
+
+        SearchBranch trunk = new SearchBranch(false);
+        trunk.getFields().add(new SearchLeaf(SearchFields.CFR, "TESTCFR"));
+
+        Long count = assetDao.getAssetCount(trunk, false);
+
         assertEquals(Long.valueOf(0), count);
 
         assetDao.deleteAsset(asset);
         commit();
     }
-    
+
     @Test
     @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTest() throws Exception {
@@ -535,12 +531,10 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.createAsset(asset);
         commit();
         
-        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
-        SearchKeyValue searchKey = new SearchKeyValue();
-        searchKey.setSearchField(SearchFields.CFR);
-        searchKey.setSearchValues(Collections.singletonList(asset.getCfr()));
-        searchKeyValues.add(searchKey);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true, false);
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
+
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
         assertThat(assets.size(), is(1));
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -548,7 +542,7 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.deleteAsset(asset);
         commit();
     }
-    
+
     @Test
     @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTestTwoAssets() throws Exception {
@@ -559,13 +553,12 @@ public class AssetDaoTest extends TransactionalTests {
         Asset asset2 = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset2);
         commit();
-        
-        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
-        SearchKeyValue searchKey = new SearchKeyValue();
-        searchKey.setSearchField(SearchFields.CFR);
-        searchKey.setSearchValues(Arrays.asList(asset.getCfr(), asset2.getCfr()));
-        searchKeyValues.add(searchKey);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, false, false);
+
+        SearchBranch trunk = new SearchBranch(false);
+        trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
+        trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset2.getCfr()));
+
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
         assertEquals(2, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -575,10 +568,10 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.deleteAsset(asset2);
         commit();
     }
-    
+
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetListSearchPaginatedTestTwoAssetsNotDynamic() throws Exception {
+    public void getAssetListSearchPaginatedTestTwoAssetsLogicalOr() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset);
         commit();
@@ -596,7 +589,12 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey2.setSearchField(SearchFields.IRCS);
         searchKey2.setSearchValues(Collections.singletonList(asset2.getIrcs()));
         searchKeyValues.add(searchKey2);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, false, false);
+
+        SearchBranch trunk = new SearchBranch(false);
+        trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
+        trunk.getFields().add(new SearchLeaf(SearchFields.IRCS, asset2.getIrcs()));
+
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
         assertEquals(2, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -606,7 +604,7 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.deleteAsset(asset2);
         commit();
     }
-    
+
     @Test
     @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTestTwoAssestPageSizeOne() throws Exception {
@@ -627,12 +625,17 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey2.setSearchField(SearchFields.IRCS);
         searchKey2.setSearchValues(Collections.singletonList(asset2.getIrcs()));
         searchKeyValues.add(searchKey2);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 1, searchKeyValues, false, false);
+
+        SearchBranch trunk = new SearchBranch(false);
+        trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
+        trunk.getFields().add(new SearchLeaf(SearchFields.IRCS, asset2.getIrcs()));
+
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 1, trunk, false);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));
         
-        assets = assetDao.getAssetListSearchPaginated(2, 1, searchKeyValues, false, false);
+        assets = assetDao.getAssetListSearchPaginated(2, 1, trunk, false);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getId(), is(asset2.getId()));
@@ -642,6 +645,7 @@ public class AssetDaoTest extends TransactionalTests {
         commit();
     }
 
+
     @Test
     @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTestFlagStateAndExtMarking() throws Exception {
@@ -649,20 +653,12 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.createAsset(asset);
         commit();
         
-        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
-        SearchKeyValue searchKey = new SearchKeyValue();
-        searchKey.setSearchField(SearchFields.FLAG_STATE);
-        searchKey.setSearchValues(Collections.singletonList(asset.getFlagStateCode()));
-        searchKeyValues.add(searchKey);
-        SearchKeyValue searchKey2 = new SearchKeyValue();
-        searchKey2.setSearchField(SearchFields.EXTERNAL_MARKING);
-        searchKey2.setSearchValues(Collections.singletonList(asset.getExternalMarking()));
-        searchKeyValues.add(searchKey2);
-        SearchKeyValue searchKey3 = new SearchKeyValue();
-        searchKey3.setSearchField(SearchFields.CFR);
-        searchKey3.setSearchValues(Collections.singletonList(asset.getCfr()));
-        searchKeyValues.add(searchKey3);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true, false);
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.FLAG_STATE, asset.getFlagStateCode()));
+        trunk.getFields().add(new SearchLeaf(SearchFields.EXTERNAL_MARKING, asset.getExternalMarking()));
+        trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
+
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -670,7 +666,7 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.deleteAsset(asset);
         commit();
     }
-    
+
     @Test
     @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTestGuid() throws Exception {
@@ -678,12 +674,11 @@ public class AssetDaoTest extends TransactionalTests {
         asset = assetDao.createAsset(asset);
         commit();
         
-        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
-        SearchKeyValue searchKey = new SearchKeyValue();
-        searchKey.setSearchField(SearchFields.GUID);
-        searchKey.setSearchValues(Collections.singletonList(asset.getId().toString()));
-        searchKeyValues.add(searchKey);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true, false);
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.GUID, asset.getId().toString()));
+
+
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -691,7 +686,7 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.deleteAsset(asset);
         commit();
     }
-    
+
     @Test
     @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTestHistoryGuid() throws Exception {
@@ -705,19 +700,19 @@ public class AssetDaoTest extends TransactionalTests {
         Asset updatedAsset = assetDao.updateAsset(fetchedAsset);
         commit();
         
-        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
-        SearchKeyValue searchKey = new SearchKeyValue();
-        searchKey.setSearchField(SearchFields.HIST_GUID);
-        searchKey.setSearchValues(Collections.singletonList(asset.getHistoryId().toString()));
-        searchKeyValues.add(searchKey);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true, false);
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.HIST_GUID, asset.getHistoryId().toString()));
+
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
 
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getHistoryId(), is(asset.getHistoryId()));
         assertThat(assets.get(0).getName(), is(asset.getName()));
         
-        searchKey.setSearchValues(Collections.singletonList(updatedAsset.getHistoryId().toString()));
-        assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true, false);
+        trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.HIST_GUID, updatedAsset.getHistoryId().toString()));
+
+        assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getHistoryId(), is(updatedAsset.getHistoryId()));
@@ -726,27 +721,27 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.deleteAsset(fetchedAsset);
         commit();
     }
-    
+
     @Test
     @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTestMinLength() throws Exception {
         Asset asset = AssetTestsHelper.createBiggerAsset();
+        asset.setLengthOverAll(1d);
         assetDao.createAsset(asset);
         commit();
         
-        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
-        SearchKeyValue searchKey = new SearchKeyValue();
-        searchKey.setSearchField(SearchFields.MIN_LENGTH);
-        searchKey.setSearchValues(Collections.singletonList((asset.getLengthOverAll().toString())));
-        searchKeyValues.add(searchKey);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true, false);
+        SearchBranch trunk = new SearchBranch(true);
+        SearchLeaf sLeaf = new SearchLeaf(SearchFields.LENGTH_OVER_ALL, asset.getLengthOverAll().toString());
+        sLeaf.setOperator("<=");
+        trunk.getFields().add(sLeaf);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
         assertEquals(1, assets.size());
 
         assetDao.deleteAsset(asset);
         commit();
     }
-    
+
     @Test
     @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTestNumber() throws Exception {
@@ -754,23 +749,18 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.createAsset(asset);
         commit();
         
-        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
-        SearchKeyValue searchKey = new SearchKeyValue();
-        searchKey.setSearchField(SearchFields.GEAR_TYPE);
-        searchKey.setSearchValues(Collections.singletonList(asset.getGearFishingType()));
-        searchKeyValues.add(searchKey);
-        SearchKeyValue searchKey2 = new SearchKeyValue();
-        searchKey2.setSearchField(SearchFields.CFR);
-        searchKey2.setSearchValues(Collections.singletonList((asset.getCfr())));
-        searchKeyValues.add(searchKey2);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true, false);
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.GEAR_TYPE, asset.getGearFishingType()));
+        trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
+
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
         assertEquals(1, assets.size());
 
         assetDao.deleteAsset(asset);
         commit();
     }
-    
+
     @Test
     @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTestWildcardSearch() throws Exception {
@@ -780,18 +770,19 @@ public class AssetDaoTest extends TransactionalTests {
         asset.setName(searchName);
         assetDao.createAsset(asset);
         commit();
-        
-        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
-        SearchKeyValue searchKey = new SearchKeyValue();
-        searchKey.setSearchField(SearchFields.NAME);
-        searchKey.setSearchValues(Collections.singletonList("*LikeSearch*" + randomNumbers));
-        searchKeyValues.add(searchKey);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true, false);
+
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.NAME, "*LikeSearch*"));
+
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getName(), is(searchName));
+
+        assetDao.deleteAsset(asset);
+        commit();
     }
-    
+
     @Test
     @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTestWildcardSearchCaseInsensitive() throws Exception {
@@ -807,7 +798,11 @@ public class AssetDaoTest extends TransactionalTests {
         searchKey.setSearchField(SearchFields.NAME);
         searchKey.setSearchValues(Collections.singletonList("*likeSearch*" + randomNumbers));
         searchKeyValues.add(searchKey);
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, searchKeyValues, true, false);
+
+        SearchBranch trunk = new SearchBranch(true);
+        trunk.getFields().add(new SearchLeaf(SearchFields.NAME, "*likeSearch*" + randomNumbers));
+
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getName(), is(searchName));
@@ -815,6 +810,74 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.deleteAsset(asset);
         commit();
     }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetListSearchDeeperQueryTest() throws Exception {
+        Asset asset = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset);
+        commit();
+
+        Asset asset2 = AssetTestsHelper.createBasicAsset();
+        asset2.setFlagStateCode("DNK");
+        assetDao.createAsset(asset2);
+        commit();
+
+        SearchBranch trunk = new SearchBranch(true);
+        SearchLeaf leaf = new SearchLeaf(SearchFields.CFR, asset.getCfr());
+        trunk.getFields().add(leaf);
+        leaf = new SearchLeaf(SearchFields.IRCS, asset.getIrcs());
+        trunk.getFields().add(leaf);
+
+        SearchBranch branch = new SearchBranch(false);
+        SearchLeaf subLeaf = new SearchLeaf(SearchFields.FLAG_STATE, "SWE");
+        branch.getFields().add(subLeaf);
+        subLeaf = new SearchLeaf(SearchFields.FLAG_STATE, "DNK");
+        branch.getFields().add(subLeaf);
+
+        trunk.getFields().add(branch);
+
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
+
+        assertEquals(1, assets.size());
+        assertThat(assets.get(0).getId(), is(asset.getId()));
+
+        assetDao.deleteAsset(asset);
+        assetDao.deleteAsset(asset2);
+        commit();
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetListSearchEmptyDepthQuery() throws Exception {
+        Asset asset = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset);
+        commit();
+
+        Asset asset2 = AssetTestsHelper.createBasicAsset();
+        asset2.setFlagStateCode("DNK");
+        assetDao.createAsset(asset2);
+        commit();
+
+        SearchBranch trunk = new SearchBranch(true);
+        SearchLeaf leaf = new SearchLeaf(SearchFields.CFR, asset.getCfr());
+        trunk.getFields().add(leaf);
+        leaf = new SearchLeaf(SearchFields.IRCS, asset.getIrcs());
+        trunk.getFields().add(leaf);
+
+        SearchBranch branch = new SearchBranch(false);
+        trunk.getFields().add(branch);
+
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
+
+        assertEquals(1, assets.size());
+        assertThat(assets.get(0).getId(), is(asset.getId()));
+
+        assetDao.deleteAsset(asset);
+        assetDao.deleteAsset(asset2);
+        commit();
+    }
+
 
     private void commit() throws Exception {
         userTransaction.commit();

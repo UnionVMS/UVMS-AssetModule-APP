@@ -20,14 +20,12 @@ import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.dto.*;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
-import eu.europa.ec.fisheries.uvms.rest.asset.dto.AssetQuery;
-import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import io.swagger.annotations.ApiParam;
@@ -97,11 +95,9 @@ public class InternalRestResource {
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response getAssetList(@DefaultValue("1") @QueryParam("page") int page,
                                  @DefaultValue("100") @QueryParam("size") int size,
-                                 @DefaultValue("true") @QueryParam("dynamic") boolean dynamic,
                                  @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
-                                 AssetQuery query) throws Exception {
-            List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
-            AssetListResponse assetList = assetService.getAssetList(searchFields, page, size, dynamic, includeInactivated);
+                                 SearchBranch query) throws Exception {
+            AssetListResponse assetList = assetService.getAssetList(query, page, size,  includeInactivated);
             String returnString = jsonb.toJson(assetList);
             return Response.ok(returnString).build();
     }
@@ -111,11 +107,9 @@ public class InternalRestResource {
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response getAssetListIdOnly(@DefaultValue("1") @QueryParam("page") int page,
                                  @DefaultValue("10000000") @QueryParam("size") int size,
-                                 @DefaultValue("true") @QueryParam("dynamic") boolean dynamic,
                                  @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
-                                 AssetQuery query) {
-            List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query);
-            List<Asset> assetList = assetDao.getAssetListSearchPaginated( page, size, searchFields, dynamic, includeInactivated);
+                                 SearchBranch query) {
+            List<Asset> assetList = assetDao.getAssetListSearchPaginated( page, size, query,  includeInactivated);
             List<UUID> assetIdList = assetList.stream().map(Asset::getId).collect(Collectors.toList());
             String returnString = jsonb.toJson(assetIdList);
             return Response.ok(returnString).build();

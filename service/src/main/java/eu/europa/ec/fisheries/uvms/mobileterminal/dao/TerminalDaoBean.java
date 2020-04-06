@@ -11,7 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.dao;
 
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchFieldType;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFieldType;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
@@ -38,6 +38,8 @@ import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants.*;
+
 @Stateless
 public class TerminalDaoBean {
 
@@ -46,7 +48,7 @@ public class TerminalDaoBean {
 
     public MobileTerminal getMobileTerminalById(UUID id) {
         try {
-            TypedQuery<MobileTerminal> query = em.createNamedQuery(MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_ID, MobileTerminal.class);
+            TypedQuery<MobileTerminal> query = em.createNamedQuery(MOBILE_TERMINAL_FIND_BY_ID, MobileTerminal.class);
             query.setParameter("id", id);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -56,7 +58,7 @@ public class TerminalDaoBean {
 
     public MobileTerminal getMobileTerminalBySerialNo(String serialNo) {
         try {
-            TypedQuery<MobileTerminal> query = em.createNamedQuery(MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_SERIAL_NO, MobileTerminal.class);
+            TypedQuery<MobileTerminal> query = em.createNamedQuery(MOBILE_TERMINAL_FIND_BY_SERIAL_NO, MobileTerminal.class);
             query.setParameter("serialNo", serialNo);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -91,10 +93,15 @@ public class TerminalDaoBean {
     }
 
     public MobileTerminal findMobileTerminalByAsset(UUID assetId) {
-        List<MobileTerminal> ret = em.createNamedQuery(MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_ASSET_ID, MobileTerminal.class)
+        List<MobileTerminal> ret = em.createNamedQuery(MOBILE_TERMINAL_FIND_BY_ASSET_ID, MobileTerminal.class)
                 .setParameter("assetId", assetId).getResultList();
         if (ret.size() > 0) return ret.get(0);
         return null;
+    }
+
+    public List<MobileTerminal> getMobileTerminalListWithNoActiveAsset() {
+        return em.createNamedQuery(MOBILE_TERMINAL_FIND_BY_UNASSIGNED, MobileTerminal.class)
+                .getResultList();
     }
 
     @SuppressWarnings("unchecked")
@@ -125,7 +132,7 @@ public class TerminalDaoBean {
 
     public MobileTerminal getMobileTerminalByRequest(AssetMTEnrichmentRequest request) {
         try {
-            return em.createNamedQuery(MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_DNID_AND_MEMBER_NR_AND_TYPE, MobileTerminal.class)
+            return em.createNamedQuery(MOBILE_TERMINAL_FIND_BY_DNID_AND_MEMBER_NR_AND_TYPE, MobileTerminal.class)
                     .setParameter("dnid", Integer.parseInt(request.getDnidValue()))
                     .setParameter("memberNumber", Integer.parseInt(request.getMemberNumberValue()))
                     .setParameter("mobileTerminalType", MobileTerminalTypeEnum.valueOf(request.getTranspondertypeValue()))
@@ -317,6 +324,5 @@ public class TerminalDaoBean {
         }
         return null;
     }
-
 
 }

@@ -9,13 +9,14 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.asset.domain.constant;
+package eu.europa.ec.fisheries.uvms.asset.client.model.search;
 
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchFieldType;
+import java.util.HashMap;
+import java.util.Map;
 
 public enum SearchFields {
 
-    FLAG_STATE("flagStateCode"),
+	FLAG_STATE("flagStateCode"),
     EXTERNAL_MARKING("externalMarking"),
     NAME("name"),
     IRCS("ircs"),
@@ -31,10 +32,8 @@ public enum SearchFields {
     GUID("id", SearchFieldType.ID),
     HIST_GUID("historyId", SearchFieldType.ID),
     GEAR_TYPE("gearFishingType", SearchFieldType.STRING),
-    MAX_LENGTH("lengthOverAll", SearchFieldType.MAX_DECIMAL),
-    MIN_LENGTH("lengthOverAll", SearchFieldType.MIN_DECIMAL),
-    MAX_POWER("powerOfMainEngine", SearchFieldType.MAX_DECIMAL),
-    MIN_POWER("powerOfMainEngine", SearchFieldType.MIN_DECIMAL),
+    LENGTH_OVER_ALL("lengthOverAll", SearchFieldType.DECIMAL),
+    ENGINE_POWER("powerOfMainEngine", SearchFieldType.DECIMAL),
     PRODUCER_NAME("producerName"),
     DATE(null, SearchFieldType.DATE);
 
@@ -57,5 +56,15 @@ public enum SearchFields {
 
     public SearchFieldType getFieldType() {
     	return fieldType;
+    }
+    
+    public static Map<String,SearchFields> getMapOfEnums() {
+        Map<String,SearchFields> returnMap = new HashMap<>();
+        for (SearchFields value : SearchFields.values()) {
+        	if(value != SearchFields.DATE) {
+         	   returnMap.put(value.fieldName.toLowerCase(), value);
+            }
+        }
+		return returnMap;
     }
 }
