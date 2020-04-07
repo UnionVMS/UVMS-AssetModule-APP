@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
 
     <changeSet author="johlyn" id="insert INRMARSAT-C values">
         <insert tableName="terminalvaluetype">
@@ -54,13 +55,13 @@
         </insert>
         <rollback>
             <delete tableName="terminalvaluetype">
-				<where>
-					termvaltype_id in (1, 2, 3, 4, 5, 6)
-				</where>
-			</delete>
+                <where>
+                    termvaltype_id in (1, 2, 3, 4, 5, 6)
+                </where>
+            </delete>
         </rollback>
-	</changeSet>
-    
+    </changeSet>
+
     <changeSet author="johlyn" id="insert INMARSAT-C values">
         <insert tableName="terminalvaluetype">
             <column name="termvaltype_id" value="7"/>
@@ -104,10 +105,10 @@
         </insert>
         <rollback>
             <delete tableName="terminalvaluetype">
-				<where>
-					termvaltype_id in (7, 8, 9, 10, 11)
-				</where>
-			</delete>
+                <where>
+                    termvaltype_id in (7, 8, 9, 10, 11)
+                </where>
+            </delete>
         </rollback>
     </changeSet>
 
@@ -138,13 +139,13 @@
         </insert>
         <rollback>
             <delete tableName="terminalvaluetype">
-				<where>
-					termvaltype_id in (12, 13, 14)
-				</where>
-			</delete>
+                <where>
+                    termvaltype_id in (12, 13, 14)
+                </where>
+            </delete>
         </rollback>
     </changeSet>
-    
+
     <changeSet author="johlyn" id="insert INMARSAT-C values, ocean regions">
         <insert tableName="terminalvaluetype">
             <column name="termvaltype_id" value="15"/>
@@ -156,13 +157,13 @@
         </insert>
         <rollback>
             <delete tableName="terminalvaluetype">
-				<where>
-					termvaltype_id in (15)
-				</where>
-			</delete>
+                <where>
+                    termvaltype_id in (15)
+                </where>
+            </delete>
         </rollback>
     </changeSet>
-    
+
     <changeSet author="johlyn" id="insert INMARSAT-C values, les">
         <insert tableName="terminalvaluetype">
             <column name="termvaltype_id" value="16"/>
@@ -174,13 +175,13 @@
         </insert>
         <rollback>
             <delete tableName="terminalvaluetype">
-				<where>
-					termvaltype_id in (16)
-				</where>
-			</delete>
+                <where>
+                    termvaltype_id in (16)
+                </where>
+            </delete>
         </rollback>
     </changeSet>
-    
+
     <changeSet author="johlyn" id="edit INMARSAT-C values, rename to multiple ocean">
         <update tableName="terminalvaluetype">
             <column name="termvaltype_name" value="MULTIPLE_OCEAN"/>
@@ -189,13 +190,13 @@
             </where>
         </update>
         <rollback>
-        <update tableName="terminalvaluetype">
-            <column name="termvaltype_name" value="OCEAN_REGIONS"/>
-            <where>
-                termvaltype_id = 15
-            </where>
-        </update>
+            <update tableName="terminalvaluetype">
+                <column name="termvaltype_name" value="OCEAN_REGIONS"/>
+                <where>
+                    termvaltype_id = 15
+                </where>
+            </update>
         </rollback>
     </changeSet>
-    
+
 </databaseChangeLog>

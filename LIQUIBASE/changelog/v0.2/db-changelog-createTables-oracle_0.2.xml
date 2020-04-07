@@ -13,40 +13,40 @@
   -->
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
 
-        <include file="\schema\tables\parameter.xml"/>
-         
-        <include file="\schema\tables\comchannelnametype.xml"/>
-        <include file="\schema\tables\oceanregion.xml"/>
-        <include file="\schema\tables\plugin.xml"/>
-        <include file="\schema\tables\plugin_capability.xml"/>
-        
-     	<include file="\schema\tables\mobileterminal.xml"/>
-     	<include file="\schema\tables\mobileterminal_inmarsatc.xml"/>
-        <include file="\schema\tables\mobileterminal_inmarsatc_history.xml"/>
-        <include file="\schema\tables\inmarsatc_oceanregion.xml"/>
-        
-        <include file="\schema\tables\mobileterminal_skeleton.xml"/>
-        
-        <include file="\schema\tables\channel_inmarsatc.xml"/>
-        <include file="\schema\tables\oracle\channel_inmarsatc_history.xml"/>
-        
-        <include file="\schema\tables\mobileterminal_iridium.xml"/>
-        <include file="\schema\tables\mobileterminal_iridium_history.xml"/>
-        <include file="\schema\tables\channel_iridium.xml"/>
-        <include file="\schema\tables\oracle\channel_iridium_history.xml"/>
-        
-        <include file="\schema\tables\mobileterminalconnect.xml"/>
-        <include file="\schema\tables\mobileterminalevent.xml"/>
-        
-        <include file="\schema\tables\pollbase.xml"/>
-        <include file="\schema\tables\pollprogram.xml"/>
-        <include file="\schema\tables\poll.xml"/>
-        <include file="\schema\tables\pollpayload.xml"/>
-        
-        <include file="\schema\tables\dnid_list.xml"/>
-        
+    <include file="\schema\tables\parameter.xml"/>
+
+    <include file="\schema\tables\comchannelnametype.xml"/>
+    <include file="\schema\tables\oceanregion.xml"/>
+    <include file="\schema\tables\plugin.xml"/>
+    <include file="\schema\tables\plugin_capability.xml"/>
+
+    <include file="\schema\tables\mobileterminal.xml"/>
+    <include file="\schema\tables\mobileterminal_inmarsatc.xml"/>
+    <include file="\schema\tables\mobileterminal_inmarsatc_history.xml"/>
+    <include file="\schema\tables\inmarsatc_oceanregion.xml"/>
+
+    <include file="\schema\tables\mobileterminal_skeleton.xml"/>
+
+    <include file="\schema\tables\channel_inmarsatc.xml"/>
+    <include file="\schema\tables\oracle\channel_inmarsatc_history.xml"/>
+
+    <include file="\schema\tables\mobileterminal_iridium.xml"/>
+    <include file="\schema\tables\mobileterminal_iridium_history.xml"/>
+    <include file="\schema\tables\channel_iridium.xml"/>
+    <include file="\schema\tables\oracle\channel_iridium_history.xml"/>
+
+    <include file="\schema\tables\mobileterminalconnect.xml"/>
+    <include file="\schema\tables\mobileterminalevent.xml"/>
+
+    <include file="\schema\tables\pollbase.xml"/>
+    <include file="\schema\tables\pollprogram.xml"/>
+    <include file="\schema\tables\poll.xml"/>
+    <include file="\schema\tables\pollpayload.xml"/>
+
+    <include file="\schema\tables\dnid_list.xml"/>
+
 </databaseChangeLog>

@@ -13,7 +13,7 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd"
                    logicalFilePath="changelog/v6.2.6/drop_old_poll_tables_and_create_new.xml">
 
     <changeSet author="kasim" id="Drop old poll tables and create new ones">
@@ -31,11 +31,11 @@
             <column name="id" type="UUID">
                 <constraints nullable="false"/>
             </column>
-            <column name="frequency" type="INTEGER" />
-            <column name="startdate" type="TIMESTAMP" />
-            <column name="stopdate" type="TIMESTAMP" />
+            <column name="frequency" type="INTEGER"/>
+            <column name="startdate" type="TIMESTAMP"/>
+            <column name="stopdate" type="TIMESTAMP"/>
             <column name="latestruntime" type="TIMESTAMP"/>
-            <column name="pollstate" type="VARCHAR(10)" />
+            <column name="pollstate" type="VARCHAR(10)"/>
         </createTable>
 
         <rollback>
@@ -46,17 +46,17 @@
             <column name="id" type="UUID">
                 <constraints nullable="false"/>
             </column>
-            <column name="reporting_freq" type="INTEGER" />
-            <column name="grace_period" type="INTEGER" />
-            <column name="in_port_grace" type="INTEGER" />
+            <column name="reporting_freq" type="INTEGER"/>
+            <column name="grace_period" type="INTEGER"/>
+            <column name="in_port_grace" type="INTEGER"/>
         </createTable>
 
         <createTable tableName="poll_sampling">
             <column name="id" type="UUID">
                 <constraints nullable="false"/>
             </column>
-            <column name="startdate" type="TIMESTAMP" />
-            <column name="stopdate" type="TIMESTAMP" />
+            <column name="startdate" type="TIMESTAMP"/>
+            <column name="stopdate" type="TIMESTAMP"/>
         </createTable>
 
         <addColumn tableName="pollbase">

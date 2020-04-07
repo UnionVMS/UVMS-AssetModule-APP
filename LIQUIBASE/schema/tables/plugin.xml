@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
 
     <changeSet author="johlyn" id="plugin (les for inmarsat-c) - table">
         <createTable tableName="plugin" remarks="LandEarthStation plugins valid for InmarsatC">
@@ -11,20 +12,20 @@
             <column name="name" type="VARCHAR(100)"/>
 
             <column name="service_name" type="VARCHAR(500)"/>
-			<column name="satellite_type" type="VARCHAR(50)"/>
+            <column name="satellite_type" type="VARCHAR(50)"/>
             <column name="inactive" type="BOOLEAN" defaultValueBoolean="false"/>
             <column name="description" type="VARCHAR(80)"/>
             <column name="updattim" type="TIMESTAMP"/>
             <column name="upuser" type="VARCHAR(60)"/>
         </createTable>
-        
+
         <createIndex tableName="plugin" indexName="plugin_name_lnx">
-			<column name="name"></column>
-		</createIndex>
-        
+            <column name="name"></column>
+        </createIndex>
+
         <rollback>
             <dropTable tableName="plugin" cascadeConstraints="true"/>
         </rollback>
-	</changeSet>
-	
+    </changeSet>
+
 </databaseChangeLog>

@@ -12,8 +12,9 @@
   -->
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
 
     <changeSet author="johlyn" id="comchannel">
         <createTable tableName="channel_history">
@@ -24,21 +25,21 @@
             <column name="active" type="BOOLEAN"/>
 
             <column name="attributes" type="VARCHAR(1000)"/>
-            
+
             <column name="updattime" type="TIMESTAMP"/>
             <column name="updateuser" type="VARCHAR(60)"/>
             <column name="channel_id" type="BIGINT"/>
             <column name="eventtype" type="VARCHAR(40)"/>
             <column name="mobterm_event_id" type="BIGINT"/>
         </createTable>
-        
+
         <addForeignKeyConstraint
-			constraintName="mobterm_fk"
-			baseTableName="channel_history"
-			baseColumnNames="channel_id"
-			referencedTableName="channel"
-			referencedColumnNames="id"
-		/>
+                constraintName="mobterm_fk"
+                baseTableName="channel_history"
+                baseColumnNames="channel_id"
+                referencedTableName="channel"
+                referencedColumnNames="id"
+        />
 
         <addForeignKeyConstraint
                 constraintName="mobterm_event_fk"
@@ -47,11 +48,11 @@
                 referencedTableName="mobileterminalevent"
                 referencedColumnNames="id"
         />
-        
-	</changeSet>
+
+    </changeSet>
 
     <changeSet author="osdjup" id="channel spec">
-        <addColumn tableName="channel_history" >
+        <addColumn tableName="channel_history">
             <column name="chan_def" type="BOOLEAN" defaultValueBoolean="false"/>
             <column name="chan_conf" type="BOOLEAN" defaultValueBoolean="false"/>
             <column name="chan_poll" type="BOOLEAN" defaultValueBoolean="false"/>

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
 
     <changeSet author="johlyn" id="insert INRMARSAT-C values">
         <insert tableName="comchannelvaluetype">
@@ -34,13 +35,13 @@
         </insert>
         <rollback>
             <delete tableName="comchannelvaluetype">
-				<where>
-					comchanvaltyp_name in ('DNID', 'MEMBER_NUMBER', 'START_DATE', 'END_DATE')
-				</where>
-			</delete>
+                <where>
+                    comchanvaltyp_name in ('DNID', 'MEMBER_NUMBER', 'START_DATE', 'END_DATE')
+                </where>
+            </delete>
         </rollback>
-	</changeSet>
-    
+    </changeSet>
+
     <changeSet author="johlyn" id="insert INMARSAT-C Capability values">
         <insert tableName="comchannelvaluetype">
             <column name="comchanvaltyp_name" value="POLLING"/>
@@ -78,7 +79,7 @@
             </delete>
         </rollback>
     </changeSet>
-    
+
     <changeSet author="johlyn" id="insert INMARSAT-C LES values">
         <insert tableName="comchannelvaluetype">
             <column name="comchanvaltyp_name" value="LES_DESCRIPTION"/>
@@ -93,7 +94,7 @@
             </delete>
         </rollback>
     </changeSet>
-    
+
     <changeSet author="johlyn" id="update INMARSAT-C capability values">
         <update tableName="comchannelvaluetype">
             <column name="comchanvaltyp_name" value="POLLABLE"/>
