@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         		   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
 
-     	<include file="changelog\v0.1\inmarsatC\insertTerminaltype.xml"/>
-     	<include file="changelog\v0.1\inmarsatC\insertTerminalvaluetype.xml"/>
-        <include file="changelog\v0.1\inmarsatC\insertComchannelvaluetype.xml"/>
-        <include file="changelog\v0.1\inmarsatC\insertComchannelnametype.xml"/>
-        <include file="changelog\v0.1\inmarsatC\insertCapabilityvalue.xml"/>
-     	<include file="changelog\v0.1\inmarsatC\insertOceanregion.xml"/>
-        <include file="changelog\v0.1\inmarsatC\insertLandearthstation.xml"/>
+    <include file="changelog\v0.1\inmarsatC\insertTerminaltype.xml"/>
+    <include file="changelog\v0.1\inmarsatC\insertTerminalvaluetype.xml"/>
+    <include file="changelog\v0.1\inmarsatC\insertComchannelvaluetype.xml"/>
+    <include file="changelog\v0.1\inmarsatC\insertComchannelnametype.xml"/>
+    <include file="changelog\v0.1\inmarsatC\insertCapabilityvalue.xml"/>
+    <include file="changelog\v0.1\inmarsatC\insertOceanregion.xml"/>
+    <include file="changelog\v0.1\inmarsatC\insertLandearthstation.xml"/>
 </databaseChangeLog>

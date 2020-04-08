@@ -5,6 +5,9 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue;
 
 import java.time.Instant;
 import java.util.Random;
@@ -130,6 +133,29 @@ public abstract class AssetHelper {
         assetGroup.setName("Group: " + getRandomIntegers(5));
         assetGroup.setArchived(false);
         return assetGroup;
+    }
+    
+    public static AssetFilter createBasicAssetFilter(String name) {
+    	AssetFilter assetFilter = new AssetFilter();
+    	assetFilter.setName(name);
+    	assetFilter.setOwner(name);
+        return assetFilter;
+    }
+    
+    public static AssetFilterQuery createBasicAssetFilterQuery(AssetFilter assetFilter) {
+    	AssetFilterQuery assetFilterQuery = new AssetFilterQuery();
+    	assetFilterQuery.setIsNumber(true);
+    	assetFilterQuery.setType("TEST_TYPE");
+    	assetFilterQuery.setAssetFilter(assetFilter);
+        return assetFilterQuery;
+    }
+
+    public static AssetFilterValue createBasicAssetFilterValue(AssetFilterQuery assetFilterQuery) {
+    	AssetFilterValue assetFilterValue = new AssetFilterValue();
+    	assetFilterValue.setOperator("greater then");
+    	assetFilterValue.setValueNumber((double) 42);
+    	assetFilterValue.setAssetFilterQuery(assetFilterQuery);
+        return assetFilterValue;
     }
 
     public static String getRandomIntegers(int length) {

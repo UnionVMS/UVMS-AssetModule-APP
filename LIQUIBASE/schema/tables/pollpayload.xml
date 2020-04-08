@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+				   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
 
-	<changeSet author="andtho" id="pollpayload-01">
-		<createTable tableName="POLLPAYLOAD">
-			<column name="id" type="BIGINT" autoIncrement="true">
-				<constraints primaryKey="true" primaryKeyName="pollpayload_pk" />
-			</column>
-			<column name="reporting_freq" type="INTEGER" />
-			<column name="grace_period" type="INTEGER" />
-			<column name="in_port_grace" type="INTEGER" />
-			<column name="newdnid" type="VARCHAR(60)" />
-			<column name="newmemberno" type="VARCHAR(60)" />
-			<column name="startdate" type="TIMESTAMP" />
-			<column name="stopdate" type="TIMESTAMP" />
-			<column name="poll_id" type="BIGINT" />
-		</createTable>
+    <changeSet author="andtho" id="pollpayload-01">
+        <createTable tableName="POLLPAYLOAD">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pollpayload_pk"/>
+            </column>
+            <column name="reporting_freq" type="INTEGER"/>
+            <column name="grace_period" type="INTEGER"/>
+            <column name="in_port_grace" type="INTEGER"/>
+            <column name="newdnid" type="VARCHAR(60)"/>
+            <column name="newmemberno" type="VARCHAR(60)"/>
+            <column name="startdate" type="TIMESTAMP"/>
+            <column name="stopdate" type="TIMESTAMP"/>
+            <column name="poll_id" type="BIGINT"/>
+        </createTable>
 
-		<addForeignKeyConstraint 
-            constraintName="poll_polltype_fk"
-            baseTableName="POLLPAYLOAD"
-		    baseColumnNames="poll_id"
-            referencedTableName="POLL"
-            referencedColumnNames="id"
-		/>
-	</changeSet>
+        <addForeignKeyConstraint
+                constraintName="poll_polltype_fk"
+                baseTableName="POLLPAYLOAD"
+                baseColumnNames="poll_id"
+                referencedTableName="POLL"
+                referencedColumnNames="id"
+        />
+    </changeSet>
 
 </databaseChangeLog>

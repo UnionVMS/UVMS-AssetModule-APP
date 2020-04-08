@@ -27,7 +27,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.json.bind.JsonbBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -76,6 +75,65 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         assertNotNull(listResponse);
         assertThat(listResponse.getAssetList().size(), is(1));
         assertThat(listResponse.getAssetList().get(0), is(AssetMatcher.assetEquals(createdAsset)));
+    }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void assetListQueryWithMappedSearchFieldsTest() {
+         
+    	String jsonTest = "{\"fields\":[{\"searchField\":\"flagStateCode\",\"searchValue\":\"SWE\"},{\"fields\":[{\"searchField\":\"name\",\"searchValue\":\"*\"},{\"searchField\":\"externalMarking\",\"searchValue\":\"*\"},{\"searchField\":\"CFR\",\"searchValue\":\"*\"},{\"searchField\":\"ircs\",\"searchValue\":\"*\"}],\"logicalAnd\":false}],\"logicalAnd\":true}"; 
+    	      
+        String listResponse = getWebTargetExternal()
+                .path("asset")
+                .path("list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(jsonTest), String.class);
+        
+        assertNotNull(listResponse);
+        assertTrue(listResponse, listResponse.length() > 1);
+        assertTrue(listResponse.contains("assetList"));
+    }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetListQueryWithGreaterOperatorTest() {
+    	Asset asset = AssetHelper.createBasicAsset();
+    	asset.setLengthOverAll(220d);
+    	asset.setFlagStateCode("SWE");
+        sendAssetToCreation(asset);
+        String jsonTest = "{\"fields\":[{\"searchField\":\"flagStateCode\",\"searchValue\":\"SWE\"},{\"fields\":[{\"searchField\":\"lengthOverAll\",\"searchValue\":200,\"operator\":\">=\"}],\"logicalAnd\":true}],\"logicalAnd\":true}"; 
+             
+        String listResponse = getWebTargetExternal()
+                .path("asset")
+                .path("list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(jsonTest), String.class);
+        
+        assertNotNull(listResponse);
+        assertTrue(listResponse.length() > 1);
+        assertTrue(listResponse.contains("220"));
+    }
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetListQueryWithLessOperatorTest() {
+    	Asset asset = AssetHelper.createBasicAsset();
+    	asset.setLengthOverAll(190d);
+    	asset.setFlagStateCode("SWE");
+        sendAssetToCreation(asset);
+        String jsonTest = "{\"fields\":[{\"searchField\":\"flagStateCode\",\"searchValue\":\"SWE\"},{\"fields\":[{\"searchField\":\"lengthOverAll\",\"searchValue\":1,\"operator\":\"<=\"}],\"logicalAnd\":true}],\"logicalAnd\":true}"; 
+             
+        String listResponse = getWebTargetExternal()
+                .path("asset")
+                .path("list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(jsonTest), String.class);
+        
+        assertNotNull(listResponse);
+        assertTrue(listResponse.length() > 1);
+        assertFalse(listResponse.contains("190"));
     }
 
 
@@ -129,7 +187,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         String cfrValue = UUID.randomUUID().toString().substring(0,11).toUpperCase();
         Asset asset = AssetHelper.createBasicAsset();
         asset.setCfr(cfrValue);
-        Asset createdAsset = sendAssetToCreation(asset);
+        sendAssetToCreation(asset);
 
         SearchBranch trunk = new SearchBranch(true);
         SearchLeaf leaf = new SearchLeaf(SearchFields.CFR, cfrValue);
@@ -163,7 +221,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
 
         assertEquals(asset1.getCfr(), asset2.getCfr());
     }
-
+    
     @Test
     @RunAsClient
     @OperateOnDeployment("normal")
@@ -175,11 +233,11 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
 
         Asset asset1 = AssetHelper.createBasicAsset();
         asset1.setCfr(cfrValue);
-        Asset createdAsset1 = sendAssetToCreation(asset1);
+        sendAssetToCreation(asset1);
 
         Asset asset2 = AssetHelper.createBasicAsset();
         asset2.setCfr(cfrValue2);
-        Asset createdAsset2 = sendAssetToCreation(asset2);
+        sendAssetToCreation(asset2);
 
         SearchBranch trunk = new SearchBranch(true);
         SearchLeaf leaf = new SearchLeaf(SearchFields.CFR, cfrValue);
@@ -228,11 +286,11 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
 
         Asset asset1 = AssetHelper.createBasicAsset();
         asset1.setCfr(cfrValue);
-        Asset createdAsset1 = sendAssetToCreation(asset1);
+        sendAssetToCreation(asset1);
 
         Asset asset2 = AssetHelper.createBasicAsset();
         asset2.setCfr(cfrValue2);
-        Asset createdAsset2 = sendAssetToCreation(asset2);
+        sendAssetToCreation(asset2);
 
         SearchBranch trunk = new SearchBranch(true);
         SearchLeaf leaf = new SearchLeaf(SearchFields.CFR, cfrValue);
@@ -280,7 +338,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         }
         assertTrue(found);
     }
-
+    
     @Test
     @RunAsClient
     @OperateOnDeployment("normal")
@@ -382,12 +440,12 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         Asset asset1 = AssetHelper.createBasicAsset();
         asset1.setFlagStateCode(customFlagState);
         asset1.setName("Test asset 1");
-        Asset createdAsset1 = sendAssetToCreation(asset1);
+        sendAssetToCreation(asset1);
         
         Asset asset2 = AssetHelper.createBasicAsset();
         asset2.setFlagStateCode(customFlagState);
         asset2.setName("Test asset 2");
-        Asset createdAsset2 = sendAssetToCreation(asset2);
+        sendAssetToCreation(asset2);
         
         SearchBranch trunk = new SearchBranch(true);
         SearchLeaf leaf = new SearchLeaf(SearchFields.FLAG_STATE, customFlagState);
@@ -640,7 +698,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         Asset createdAsset = sendAssetToCreation(asset);
         
         Asset asset2 = AssetHelper.createBasicAsset();
-        Asset createdAsset2 = sendAssetToCreation(asset2);
+        sendAssetToCreation(asset2);
         
         Instant timestamp = Instant.now();
         

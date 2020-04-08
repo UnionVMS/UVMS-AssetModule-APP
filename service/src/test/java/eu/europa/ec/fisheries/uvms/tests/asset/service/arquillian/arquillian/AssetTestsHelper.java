@@ -187,4 +187,13 @@ public class AssetTestsHelper {
         ag.setValue(keyFieldValue);
         return ag;
     }
+    
+    static AssetFilterQuery createAssetFilterQuery(AssetFilter assetFilterEntity) {
+    	AssetFilterQuery afq = new AssetFilterQuery();
+    	afq.setAssetFilter(assetFilterEntity);
+    	afq.setType("GUID");
+    	afq.setIsNumber(true);
+    	afq.setInverse(true);
+        return afq;
+    }
 }

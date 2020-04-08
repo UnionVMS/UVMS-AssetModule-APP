@@ -54,8 +54,6 @@ import java.util.stream.Collectors;
 @Stateless
 public class AssetServiceBean {
 
-    private static final String DNID = "DNID";
-    private static final String MEMBER_NUMBER = "MEMBER_NUMBER";
     private static final String GUID = "GUID";
     private static final String IMO = "IMO";
     private static final String IRCS = "IRCS";
@@ -75,6 +73,9 @@ public class AssetServiceBean {
 
     @Inject
     private AssetGroupServiceBean assetGroupService;
+    
+    @Inject
+    private AssetFilterServiceBean assetFilterService;
 
     @Inject
     private AssetDao assetDao;

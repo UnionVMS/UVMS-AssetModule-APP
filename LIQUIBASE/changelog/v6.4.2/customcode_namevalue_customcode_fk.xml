@@ -13,12 +13,17 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd"
                    logicalFilePath="changelog/v6.3.4/customcode_namevalue_customcode_fk.xml">
 
     <changeSet author="kasim" id="Cascade CustomRule on Delete">
-        <dropForeignKeyConstraint baseTableName="customcode_namevalue" constraintName="customcode_namevalue_customcode_fk" />
-        <addForeignKeyConstraint baseColumnNames="customcode_code,customcode_constant,customcode_validfromdate,customcode_validtodate" baseTableName="customcode_namevalue" constraintName="customcode_namevalue_customcode_fk" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="code,constant,validfromdate,validtodate" referencedTableName="customcode"/>
+        <dropForeignKeyConstraint baseTableName="customcode_namevalue"
+                                  constraintName="customcode_namevalue_customcode_fk"/>
+        <addForeignKeyConstraint
+                baseColumnNames="customcode_code,customcode_constant,customcode_validfromdate,customcode_validtodate"
+                baseTableName="customcode_namevalue" constraintName="customcode_namevalue_customcode_fk"
+                deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE"
+                referencedColumnNames="code,constant,validfromdate,validtodate" referencedTableName="customcode"/>
     </changeSet>
 
 </databaseChangeLog>

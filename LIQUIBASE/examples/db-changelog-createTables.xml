@@ -1,5 +1,9 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
+
     <changeSet author="thofan (generated)" id="1523875639713-1">
         <createSequence sequenceName="assetpo_id_seq"/>
     </changeSet>
@@ -269,10 +273,13 @@
         <addPrimaryKey columnNames="id" constraintName="contactinfo_pkey" tableName="contactinfo"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1523875639713-17">
-        <addPrimaryKey columnNames="customcode_code, customcode_constant, customcode_validfromdate, customcode_validtodate, key" constraintName="customcode_namevalue_pkey" tableName="customcode_namevalue"/>
+        <addPrimaryKey
+                columnNames="customcode_code, customcode_constant, customcode_validfromdate, customcode_validtodate, key"
+                constraintName="customcode_namevalue_pkey" tableName="customcode_namevalue"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1523875639713-18">
-        <addPrimaryKey columnNames="code, constant, validfromdate, validtodate" constraintName="customcodes_pkey" tableName="customcodes"/>
+        <addPrimaryKey columnNames="code, constant, validfromdate, validtodate" constraintName="customcodes_pkey"
+                       tableName="customcodes"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1523875639713-19">
         <addPrimaryKey columnNames="id" constraintName="note_pkey" tableName="note"/>
@@ -305,9 +312,16 @@
         <addUniqueConstraint columnNames="uvi" constraintName="uk_tl73p92isumeko0qnpic22xjm" tableName="asset"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1523875639713-29">
-        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="asset_aud" constraintName="fklq7kauhigk0mdew67qs2l39ci" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="asset_aud"
+                                 constraintName="fklq7kauhigk0mdew67qs2l39ci" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="rev" referencedTableName="revinfo"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1523875639713-30">
-        <addForeignKeyConstraint baseColumnNames="customcode_code,customcode_constant,customcode_validfromdate,customcode_validtodate" baseTableName="customcode_namevalue" constraintName="fkuo2aknb32aq3ctvt8ns9mtv7" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="code,constant,validfromdate,validtodate" referencedTableName="customcodes"/>
+        <addForeignKeyConstraint
+                baseColumnNames="customcode_code,customcode_constant,customcode_validfromdate,customcode_validtodate"
+                baseTableName="customcode_namevalue" constraintName="fkuo2aknb32aq3ctvt8ns9mtv7" deferrable="false"
+                initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                referencedColumnNames="code,constant,validfromdate,validtodate" referencedTableName="customcodes"/>
     </changeSet>
 </databaseChangeLog>

@@ -13,5 +13,5 @@ package eu.europa.ec.fisheries.uvms.asset.remote.dto.search;
 
 public enum SearchFieldType {
 
-	LIST, NUMBER, MIN_DECIMAL, MAX_DECIMAL, BOOLEAN, ID, DATE, STRING, CHILD;
+	LIST, NUMBER, DECIMAL, MIN_DECIMAL, MAX_DECIMAL, BOOLEAN, ID, DATE, STRING, CHILD;
 }

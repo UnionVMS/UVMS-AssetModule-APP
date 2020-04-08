@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd"
-	logicalFilePath="changelog/v1.0/db-changelog-createTables.xml">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd"
+                   logicalFilePath="changelog/v1.0/db-changelog-createTables.xml">
+
     <changeSet author="thofan (generated)" id="1535445328879-1">
         <createSequence sequenceName="next_unknown_ship_seq"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-2">
         <createSequence sequenceName="hibernate_sequence"/>
     </changeSet>
-	<changeSet author="thofan (generated)" id="1530775362228-20">
+    <changeSet author="thofan (generated)" id="1530775362228-20">
         <createTable remarks="OceanRegion codes valid for InmarsatC" tableName="oceanregion">
             <column name="id" type="UUID">
                 <constraints nullable="false"/>
@@ -19,10 +23,10 @@
             <column name="upuser" type="VARCHAR(60)"/>
         </createTable>
     </changeSet>
-	<changeSet author="thofan (generated)" id="1530775362228-47">
+    <changeSet author="thofan (generated)" id="1530775362228-47">
         <addPrimaryKey columnNames="id" constraintName="oceanregion_pk" tableName="oceanregion"/>
     </changeSet>
-	<changeSet author="thofan (generated)" id="1530775362228-68">
+    <changeSet author="thofan (generated)" id="1530775362228-68">
         <createIndex indexName="oceanreg_inx" tableName="oceanregion" unique="true">
             <column name="code"/>
         </createIndex>
@@ -578,10 +582,13 @@
         <addPrimaryKey columnNames="id, rev" constraintName="contactinfo_aud_pkey" tableName="contactinfo_aud"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-39">
-        <addPrimaryKey columnNames="customcode_code, customcode_constant, customcode_validfromdate, customcode_validtodate, key" constraintName="customcode_namevalue_pkey" tableName="customcode_namevalue"/>
+        <addPrimaryKey
+                columnNames="customcode_code, customcode_constant, customcode_validfromdate, customcode_validtodate, key"
+                constraintName="customcode_namevalue_pkey" tableName="customcode_namevalue"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-40">
-        <addPrimaryKey columnNames="code, constant, validfromdate, validtodate" constraintName="customcode_pkey" tableName="customcode"/>
+        <addPrimaryKey columnNames="code, constant, validfromdate, validtodate" constraintName="customcode_pkey"
+                       tableName="customcode"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-42">
         <addPrimaryKey columnNames="id" constraintName="dnid_list_pkey" tableName="dnid_list"/>
@@ -650,16 +657,19 @@
         <addUniqueConstraint columnNames="historyid" constraintName="channel_uc_historyid" tableName="channel"/>
     </changeSet>
     <changeSet author="joemat" id="4535445328880-100">
-        <addUniqueConstraint columnNames="dnid, member_number" constraintName="channel_uc_dnid_member_number" tableName="channel"/>
+        <addUniqueConstraint columnNames="dnid, member_number" constraintName="channel_uc_dnid_member_number"
+                             tableName="channel"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-69">
-        <addUniqueConstraint columnNames="historyid" constraintName="mobileterminal_uc_historyid" tableName="mobileterminal"/>
+        <addUniqueConstraint columnNames="historyid" constraintName="mobileterminal_uc_historyid"
+                             tableName="mobileterminal"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-70">
         <addUniqueConstraint columnNames="service_name" constraintName="plugin_uc_service_name" tableName="plugin"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="4535445328880-99">
-        <addUniqueConstraint columnNames="serial_no" constraintName="mobileterminal_uc_serialnumber" tableName="mobileterminal"/>
+        <addUniqueConstraint columnNames="serial_no" constraintName="mobileterminal_uc_serialnumber"
+                             tableName="mobileterminal"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-71">
         <createIndex indexName="assetgroupfield_assetgroup_fk_inx10" tableName="assetgroupfield">
@@ -742,45 +752,87 @@
         </createIndex>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-92">
-        <addForeignKeyConstraint baseColumnNames="assetgroup" baseTableName="assetgroupfield" constraintName="assetgroupfield_assetgroup_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="assetgroup"/>
+        <addForeignKeyConstraint baseColumnNames="assetgroup" baseTableName="assetgroupfield"
+                                 constraintName="assetgroupfield_assetgroup_fk" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="assetgroup"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-93">
-        <addForeignKeyConstraint baseColumnNames="mobterm_id" baseTableName="channel" constraintName="channel_mobileterminal_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="mobileterminal"/>
+        <addForeignKeyConstraint baseColumnNames="mobterm_id" baseTableName="channel"
+                                 constraintName="channel_mobileterminal_fk" deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+                                 referencedTableName="mobileterminal"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-95">
-        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="mobileterminal_aud" constraintName="fk3r4svjbsvkxgvfguo50khajk2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="mobileterminal_aud"
+                                 constraintName="fk3r4svjbsvkxgvfguo50khajk2" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="rev" referencedTableName="revinfo"/>
     </changeSet>
     <changeSet author="kasgul (generated)" id="1535445328879-118">
-        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="contactinfo_aud" constraintName="fk7nb5ms3cc7s1ccd4248lrvq90" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="contactinfo_aud"
+                                 constraintName="fk7nb5ms3cc7s1ccd4248lrvq90" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="rev" referencedTableName="revinfo"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-99">
-        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="channel_aud" constraintName="fkjcnf5hokby2hgv1gaeed8d0o8" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="channel_aud"
+                                 constraintName="fkjcnf5hokby2hgv1gaeed8d0o8" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="rev" referencedTableName="revinfo"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-101">
-        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="asset_aud" constraintName="fklq7kauhigk0mdew67qs2l39ci" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="rev" referencedTableName="revinfo"/>
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="asset_aud"
+                                 constraintName="fklq7kauhigk0mdew67qs2l39ci" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="rev" referencedTableName="revinfo"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-102">
-        <addForeignKeyConstraint baseColumnNames="customcode_code,customcode_constant,customcode_validfromdate,customcode_validtodate" baseTableName="customcode_namevalue" constraintName="customcode_namevalue_customcode_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="code,constant,validfromdate,validtodate" referencedTableName="customcode"/>
+        <addForeignKeyConstraint
+                baseColumnNames="customcode_code,customcode_constant,customcode_validfromdate,customcode_validtodate"
+                baseTableName="customcode_namevalue" constraintName="customcode_namevalue_customcode_fk"
+                deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                referencedColumnNames="code,constant,validfromdate,validtodate" referencedTableName="customcode"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-104">
-        <addForeignKeyConstraint baseColumnNames="plugin_id" baseTableName="mobileterminal" constraintName="mobileterminal_plugin_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="plugin"/>
+        <addForeignKeyConstraint baseColumnNames="plugin_id" baseTableName="mobileterminal"
+                                 constraintName="mobileterminal_plugin_fk" deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+                                 referencedTableName="plugin"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-106">
-        <addForeignKeyConstraint baseColumnNames="asset_id" baseTableName="mobileterminal" constraintName="mobileterminal_asset_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="asset"/>
+        <addForeignKeyConstraint baseColumnNames="asset_id" baseTableName="mobileterminal"
+                                 constraintName="mobileterminal_asset_fk" deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+                                 referencedTableName="asset"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-111">
-        <addForeignKeyConstraint baseColumnNames="plugin_id" baseTableName="plugin_capability" constraintName="plugin_capability_plugin_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="plugin"/>
+        <addForeignKeyConstraint baseColumnNames="plugin_id" baseTableName="plugin_capability"
+                                 constraintName="plugin_capability_plugin_fk" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="plugin"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-112">
-        <addForeignKeyConstraint baseColumnNames="pollbase_id" baseTableName="poll" constraintName="poll_pollbase_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="pollbase"/>
+        <addForeignKeyConstraint baseColumnNames="pollbase_id" baseTableName="poll" constraintName="poll_pollbase_fk"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="pollbase"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-113">
-        <addForeignKeyConstraint baseColumnNames="mobileterminal_id" baseTableName="pollbase" constraintName="pollbase_mobileterminal_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="mobileterminal"/>
+        <addForeignKeyConstraint baseColumnNames="mobileterminal_id" baseTableName="pollbase"
+                                 constraintName="pollbase_mobileterminal_fk" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="mobileterminal"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-114">
-        <addForeignKeyConstraint baseColumnNames="poll_id" baseTableName="pollpayload" constraintName="pollpayload_poll_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="poll"/>
+        <addForeignKeyConstraint baseColumnNames="poll_id" baseTableName="pollpayload"
+                                 constraintName="pollpayload_poll_fk" deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+                                 referencedTableName="poll"/>
     </changeSet>
     <changeSet author="thofan (generated)" id="1535445328879-115">
-        <addForeignKeyConstraint baseColumnNames="pollbase_id" baseTableName="pollprogram" constraintName="pollprograme_pollbase_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="pollbase"/>
+        <addForeignKeyConstraint baseColumnNames="pollbase_id" baseTableName="pollprogram"
+                                 constraintName="pollprograme_pollbase_fk" deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+                                 referencedTableName="pollbase"/>
     </changeSet>
 </databaseChangeLog>

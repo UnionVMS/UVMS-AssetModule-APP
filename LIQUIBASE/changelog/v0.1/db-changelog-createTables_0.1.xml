@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         		   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
 
-     	<include file="\schema\tables\terminalsource.xml"/>
-     	<include file="\schema\tables\terminaltype.xml"/>
-     	<include file="\schema\tables\terminalvaluetype.xml"/>
-     	<include file="\schema\tables\terminal.xml"/>
-     	<include file="\schema\tables\terminalvalue.xml"/>
-     	<include file="\schema\tables\comchannelnametype.xml"/>
-     	<include file="\schema\tables\comchannel.xml"/>
-     	<include file="\schema\tables\comchannelvaluetype.xml"/>
-     	<include file="\schema\tables\comchannelvalue.xml"/>
-     	<include file="\schema\tables\terminaleventtype.xml"/>
-     	<include file="\schema\tables\terminalevent.xml"/>
-        <include file="\schema\tables\terminalconnect.xml"/>
-		
-     	<include file="\schema\tables\pollstate.xml"/>
-     	<include file="\schema\tables\polltype.xml"/>
-        <include file="\schema\tables\pollbase.xml"/>
-     	<include file="\schema\tables\pollprogram.xml"/>
-     	<include file="\schema\tables\poll.xml"/>
-     	<include file="\schema\tables\pollpayload.xml"/>
-        
-        <include file="\schema\tables\capabilityvaluetype.xml"/>
-        <include file="\schema\tables\capabilityvalue.xml"/>
-        
-        <include file="\schema\tables\oceanregion.xml"/>
-        <include file="\schema\tables\landearthstation.xml"/>
-        
-        <include file="\schema\tables\parameter.xml"/>
-        
-	<!--<changeSet id="createTables" author="emtudorsm" runOnChange="true" runAlways="true" runInTransaction="true" failOnError="true">
-		<preConditions onFail="MARK_RAN">
-				<or>
-					<not>
-						<changeSetExecuted changeLogFile="changelog/db-changelog-dropAllObjects.xml" author="emtudorsm" id="dropTableEndPoint"/>
-					</not>
-					<and>
-						<changeSetExecuted changeLogFile="changelog/db-changelog-dropAllObjects.xml" author="emtudorsm" id="dropTableEndPoint"/>
-						<not>
-							<tableExists tableName="organisation_t"/>
-						</not>
-					</and>
-				</or>
-		</preConditions>
-	</changeSet>-->
-	
+    <include file="\schema\tables\terminalsource.xml"/>
+    <include file="\schema\tables\terminaltype.xml"/>
+    <include file="\schema\tables\terminalvaluetype.xml"/>
+    <include file="\schema\tables\terminal.xml"/>
+    <include file="\schema\tables\terminalvalue.xml"/>
+    <include file="\schema\tables\comchannelnametype.xml"/>
+    <include file="\schema\tables\comchannel.xml"/>
+    <include file="\schema\tables\comchannelvaluetype.xml"/>
+    <include file="\schema\tables\comchannelvalue.xml"/>
+    <include file="\schema\tables\terminaleventtype.xml"/>
+    <include file="\schema\tables\terminalevent.xml"/>
+    <include file="\schema\tables\terminalconnect.xml"/>
+
+    <include file="\schema\tables\pollstate.xml"/>
+    <include file="\schema\tables\polltype.xml"/>
+    <include file="\schema\tables\pollbase.xml"/>
+    <include file="\schema\tables\pollprogram.xml"/>
+    <include file="\schema\tables\poll.xml"/>
+    <include file="\schema\tables\pollpayload.xml"/>
+
+    <include file="\schema\tables\capabilityvaluetype.xml"/>
+    <include file="\schema\tables\capabilityvalue.xml"/>
+
+    <include file="\schema\tables\oceanregion.xml"/>
+    <include file="\schema\tables\landearthstation.xml"/>
+
+    <include file="\schema\tables\parameter.xml"/>
+
+    <!--<changeSet id="createTables" author="emtudorsm" runOnChange="true" runAlways="true" runInTransaction="true" failOnError="true">
+        <preConditions onFail="MARK_RAN">
+                <or>
+                    <not>
+                        <changeSetExecuted changeLogFile="changelog/db-changelog-dropAllObjects.xml" author="emtudorsm" id="dropTableEndPoint"/>
+                    </not>
+                    <and>
+                        <changeSetExecuted changeLogFile="changelog/db-changelog-dropAllObjects.xml" author="emtudorsm" id="dropTableEndPoint"/>
+                        <not>
+                            <tableExists tableName="organisation_t"/>
+                        </not>
+                    </and>
+                </or>
+        </preConditions>
+    </changeSet>-->
+
 </databaseChangeLog>

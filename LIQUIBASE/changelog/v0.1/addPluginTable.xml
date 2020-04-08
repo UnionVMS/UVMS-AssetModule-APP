@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
 
     <changeSet author="andtho" id="plugin-01">
         <createTable tableName="plugin">
@@ -17,9 +18,9 @@
     </changeSet>
 
     <changeSet id="pluginpk-01" author="andtho">
-    	<createIndex tableName="plugin" indexName="plugin_pk_inx" unique="true">
-    		<column name="plugin_id"></column>
-    	</createIndex>
+        <createIndex tableName="plugin" indexName="plugin_pk_inx" unique="true">
+            <column name="plugin_id"></column>
+        </createIndex>
     </changeSet>
 
     <changeSet author="andtho" id="add reference to plugin table">
@@ -28,12 +29,12 @@
         </addColumn>
 
         <addForeignKeyConstraint
-			constraintName="term_plugin_fk"
-			baseTableName="terminal"
-			baseColumnNames="term_plugin_id"
-			referencedTableName="plugin"
-			referencedColumnNames="plugin_id"
-		/>
-	</changeSet>
+                constraintName="term_plugin_fk"
+                baseTableName="terminal"
+                baseColumnNames="term_plugin_id"
+                referencedTableName="plugin"
+                referencedColumnNames="plugin_id"
+        />
+    </changeSet>
 
 </databaseChangeLog>

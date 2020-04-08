@@ -12,10 +12,10 @@
   -->
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
 
-    
     <changeSet author="johlyn" id="insert testdata iridium">
         <insert tableName="mobileterminal">
             <column name="mobterm_id" value="2"/>
@@ -28,8 +28,8 @@
             <column name="mobterm_updatetime" valueDate="${now}"/>
             <column name="mobterm_updateuser" value="johlyn"/>
         </insert>
-        
-        
+
+
         <insert tableName="mobileterminal_iridium">
             <column name="id" value="1"/>
             <column name="serial_number" value="1122334455"/>
@@ -40,8 +40,7 @@
             <column name="updateuser" value="johlyn"/>
             <column name="mobileterminal_id" value="2"/>
         </insert>
-        
-        
+
 
         <insert tableName="mobileterminal_iridium_history">
             <column name="hist_id" value="1"/>
@@ -62,7 +61,7 @@
             <column name="hist_updateuser" value="johlyn"/>
             <column name="hist_mobileterminal_id" value="1"/>
         </insert>
-        
+
         <insert tableName="channel_iridium">
             <column name="channel_id" value="1"/>
             <column name="channel_guid" value="testdata_channel_iridium"/>
@@ -74,7 +73,7 @@
             <column name="channel_iridium_id" value="1"/>
         </insert>
 
-        
+
         <insert tableName="channel_iridium_history">
             <column name="channel_hist_id" value="1"/>
             <column name="channel_hist_comchanname" value="VMS"/>
@@ -94,19 +93,19 @@
             <column name="channel_hist_freq_grace_per" value="10"/>
             <column name="channel_hist_freq_in_port" value="10"/>
         </insert>
-        
-        
+
+
         <rollback>
             <delete tableName="mobileterminal">
-				<where>
-					mobterm_id in (2)
-				</where>
-			</delete>
+                <where>
+                    mobterm_id in (2)
+                </where>
+            </delete>
             <delete tableName="mobileterminal_iridium">
-				<where>
-					id in (1)
-				</where>
-			</delete>
+                <where>
+                    id in (1)
+                </where>
+            </delete>
             <delete tableName="channel_iridium">
                 <where>
                     channel_id in (1)
@@ -118,6 +117,6 @@
                 </where>
             </delete>
         </rollback>
-	</changeSet>
+    </changeSet>
 
 </databaseChangeLog>
