@@ -1,39 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
-         logicalFilePath="changelog/db-changelog-master.xml">
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+				   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd"
+                   logicalFilePath="changelog/db-changelog-master.xml">
 
-	<changeSet author="thofan" id="asset-version-1.0">
-    	<tagDatabase tag="asset-version-1.0"/>
-	</changeSet>
+    <changeSet author="thofan" id="asset-version-1.0">
+        <tagDatabase tag="asset-version-1.0"/>
+    </changeSet>
 
     <include file="properties.xml" relativeToChangelogFile="true"/>
     <include file="v1.0\db-changelog-createTables.xml" relativeToChangelogFile="true"/>
-	<include file="v1.0\insertCustomCodes.xml" relativeToChangelogFile="true"/>
-	<include file="v1.0\insertParameter.xml" relativeToChangelogFile="true"/>
-	<include file="v6.0.44\db-changelog_1.xml" relativeToChangelogFile="true"/>
-	<include file="v6.0.58/added_asset_remap_table.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0\insertCustomCodes.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0\insertParameter.xml" relativeToChangelogFile="true"/>
+    <include file="v6.0.44\db-changelog_1.xml" relativeToChangelogFile="true"/>
+    <include file="v6.0.58/added_asset_remap_table.xml" relativeToChangelogFile="true"/>
 
 
-	<include file="properties.xml" relativeToChangelogFile="true"/>
-	<!--include file="changelog\v0.4\hibernatesequence.xml"/-->
-	<!--include file="changelog\v0.4\db-changelog-createTables-postgres_0.4.xml"/-->
-	<include file="v0.4\db-changelog-insertStaticValues_0.4.xml" relativeToChangelogFile="true"/>
-	<include file="v0.4\db-changelog-insertTestdata-postgres_0.4.xml" relativeToChangelogFile="true"/>
-	<include file="v6.0.65\drop_ocean_region_table.xml" relativeToChangelogFile="true"/>
-	<include file="v6.0.65\mt_add_ocean_region_columns.xml" relativeToChangelogFile="true"/>
-	<include file="v6.0.67\drop_inmarsatc_oceanregion_table.xml" relativeToChangelogFile="true"/>
-	<include file="v6.0.70\rename_inactivated_in_MT_to_active.xml" relativeToChangelogFile="true"/>
-	<include file="v6.2.3/national_endpoint_parameter.xml" relativeToChangelogFile="true"/>
-	<include file="v6.2.6/poll_payload_remove_unused_columns.xml" relativeToChangelogFile="true"/>
-	<include file="v6.2.6/drop_old_poll_tables_and_create_new.xml" relativeToChangelogFile="true"/>
-	<include file="v6.2.7/move_installed_date_from_channel_to_mobileterminal.xml" relativeToChangelogFile="true"/>
-	<include file="v6.3.2/create_index_on_flagstate.xml" relativeToChangelogFile="true"/>
-	<include file="v6.3.4/note_refactoring.xml" relativeToChangelogFile="true"/>
-	<include file="v6.4.2/customcode_namevalue_customcode_fk.xml" relativeToChangelogFile="true"/>
-	<include file="v6.6.3/dnid_and_member_number_to_integer.xml" relativeToChangelogFile="true"/>
-	<include file="v6.7.1/create_assetfilter_and_assetfiltervalue_tables.xml" relativeToChangelogFile="true"/>
+    <include file="properties.xml" relativeToChangelogFile="true"/>
+    <!--include file="changelog\v0.4\hibernatesequence.xml"/-->
+    <!--include file="changelog\v0.4\db-changelog-createTables-postgres_0.4.xml"/-->
+    <include file="v0.4\db-changelog-insertStaticValues_0.4.xml" relativeToChangelogFile="true"/>
+    <include file="v0.4\db-changelog-insertTestdata-postgres_0.4.xml" relativeToChangelogFile="true"/>
+    <include file="v6.0.65\drop_ocean_region_table.xml" relativeToChangelogFile="true"/>
+    <include file="v6.0.65\mt_add_ocean_region_columns.xml" relativeToChangelogFile="true"/>
+    <include file="v6.0.67\drop_inmarsatc_oceanregion_table.xml" relativeToChangelogFile="true"/>
+    <include file="v6.0.70\rename_inactivated_in_MT_to_active.xml" relativeToChangelogFile="true"/>
+    <include file="v6.2.3/national_endpoint_parameter.xml" relativeToChangelogFile="true"/>
+    <include file="v6.2.6/poll_payload_remove_unused_columns.xml" relativeToChangelogFile="true"/>
+    <include file="v6.2.6/drop_old_poll_tables_and_create_new.xml" relativeToChangelogFile="true"/>
+    <include file="v6.2.7/move_installed_date_from_channel_to_mobileterminal.xml" relativeToChangelogFile="true"/>
+    <include file="v6.3.2/create_index_on_flagstate.xml" relativeToChangelogFile="true"/>
+    <include file="v6.3.4/note_refactoring.xml" relativeToChangelogFile="true"/>
+    <include file="v6.4.2/customcode_namevalue_customcode_fk.xml" relativeToChangelogFile="true"/>
+    <include file="v6.6.3/dnid_and_member_number_to_integer.xml" relativeToChangelogFile="true"/>
+    <include file="v6.7.1/create_assetfilter_and_assetfiltervalue_tables.xml" relativeToChangelogFile="true"/>
+    <include file="v6.7.3/db-changelog-new-index-on-asset-active.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

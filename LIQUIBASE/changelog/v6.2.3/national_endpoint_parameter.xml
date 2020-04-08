@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd"
                    logicalFilePath="changelog/v6.2.3/national_endpoint_parameter.xml">
 
     <changeSet author="peerik" id="use_single_national_base_endpoint">
-        
+
         <delete tableName="parameter">
-        	<where>
-        		param_id in ('NATIONAL_EQUIPMENT_SERVICE_ENDPOINT','NATIONAL_GENERAL_NOTIFICATION_SERVICE_ENDPOINT','NATIONAL_SERVICE_ENDPOINT','NATIONAL_VESSEL_COMP_SERVICE_ENDPOINT')
-        	</where>
+            <where>
+                param_id in
+                ('NATIONAL_EQUIPMENT_SERVICE_ENDPOINT','NATIONAL_GENERAL_NOTIFICATION_SERVICE_ENDPOINT','NATIONAL_SERVICE_ENDPOINT','NATIONAL_VESSEL_COMP_SERVICE_ENDPOINT')
+            </where>
         </delete>
 
         <insert tableName='parameter'>
@@ -17,6 +19,6 @@
             <column name='param_id' value='NATIONAL_SERVICE_ENDPOINT'/>
             <column name='param_value' value='http://osbtest.havochvatten.se:8011'/>
         </insert>
-        
+
     </changeSet>
 </databaseChangeLog>

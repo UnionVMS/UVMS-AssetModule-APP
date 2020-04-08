@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
-	logicalFilePath="schema/testdata/insertPlugin.xml">
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd"
+                   logicalFilePath="schema/testdata/insertPlugin.xml">
 
-    
     <changeSet author="johlyn" id="insert plugin landearthstation INMARSAT-C values">
         <insert tableName="plugin">
             <column name="id" value="00000000-0000-0000-0000-000000000001"/>
@@ -33,7 +33,7 @@
             <column name="updattim" valueDate="${now}"/>
             <column name="upuser" value="johlyn"/>
         </insert>
-        
+
         <insert tableName="plugin_capability">
             <column name="id" value="00000000-0000-0000-0000-000000000001"/>
             <column name="plugin_id" value="00000000-0000-0000-0000-000000000001"/>
@@ -42,7 +42,7 @@
             <column name="updattim" valueDate="${now}"/>
             <column name="upuser" value="johlyn"/>
         </insert>
-        
+
         <insert tableName="plugin_capability">
             <column name="id" value="00000000-0000-0000-0000-000000000002"/>
             <column name="plugin_id" value="00000000-0000-0000-0000-000000000001"/>
@@ -51,7 +51,7 @@
             <column name="updattim" valueDate="${now}"/>
             <column name="upuser" value="johlyn"/>
         </insert>
-        
+
         <insert tableName="plugin_capability">
             <column name="id" value="00000000-0000-0000-0000-000000000003"/>
             <column name="plugin_id" value="00000000-0000-0000-0000-000000000002"/>
@@ -60,7 +60,7 @@
             <column name="updattim" valueDate="${now}"/>
             <column name="upuser" value="johlyn"/>
         </insert>
-        
+
         <insert tableName="plugin_capability">
             <column name="id" value="00000000-0000-0000-0000-000000000004"/>
             <column name="plugin_id" value="00000000-0000-0000-0000-000000000003"/>
@@ -69,8 +69,8 @@
             <column name="updattim" valueDate="${now}"/>
             <column name="upuser" value="johlyn"/>
         </insert>
-        
 
-	</changeSet>
+
+    </changeSet>
 
 </databaseChangeLog>

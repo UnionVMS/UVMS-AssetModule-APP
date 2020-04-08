@@ -13,16 +13,16 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd"
                    logicalFilePath="changelog/v6.2.7/move_installed_date_from_channel_to_mobileterminal.xml">
 
     <changeSet author="joemat" id="Move installed date from channel to mobileterminal">
-        <dropColumn tableName="channel" columnName="install_date" />
-        <dropColumn tableName="channel" columnName="uninstall_date" />
-        <dropColumn tableName="channel" columnName="installed_by" />
-        <dropColumn tableName="channel_aud" columnName="install_date" />
-        <dropColumn tableName="channel_aud" columnName="uninstall_date" />
-        <dropColumn tableName="channel_aud" columnName="installed_by" />
+        <dropColumn tableName="channel" columnName="install_date"/>
+        <dropColumn tableName="channel" columnName="uninstall_date"/>
+        <dropColumn tableName="channel" columnName="installed_by"/>
+        <dropColumn tableName="channel_aud" columnName="install_date"/>
+        <dropColumn tableName="channel_aud" columnName="uninstall_date"/>
+        <dropColumn tableName="channel_aud" columnName="installed_by"/>
 
         <addColumn tableName="mobileterminal">
             <column name="install_date" type="TIMESTAMP(6) WITH TIME ZONE"/>
