@@ -69,7 +69,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
 
         Channel channel2 = new Channel();
-        channel2.setName("VMS");
+        channel2.setName("VMS2");
         channel2.setFrequencyGracePeriod(Duration.ofSeconds(53000));
         channel2.setMemberNumber(Integer.parseInt(MobileTerminalTestHelper.generateARandomStringWithMaxLength(3)));
         channel2.setExpectedFrequency(Duration.ofSeconds(7100));
