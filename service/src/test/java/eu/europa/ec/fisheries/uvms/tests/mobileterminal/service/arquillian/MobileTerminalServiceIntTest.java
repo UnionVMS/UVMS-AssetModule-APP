@@ -25,6 +25,9 @@ import javax.ejb.EJB;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -82,6 +85,35 @@ public class MobileTerminalServiceIntTest extends TransactionalTests {
     public void createMobileTerminal() {
         MobileTerminal created = testPollHelper.createAndPersistMobileTerminal(null);
         assertNotNull(created);
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createMobileTerminalWithMultipleChannel_ThenVerifyChannelOrder() {
+        MobileTerminal terminal = testPollHelper.createBasicMobileTerminal();
+        Channel c2 = testPollHelper.createChannel("VMS2", false, false, false);
+        Channel c3 = testPollHelper.createChannel("VMS3", false, false, false);
+        Channel c4 = testPollHelper.createChannel("VMS4", false, false, false);
+        terminal.getChannels().addAll(Arrays.asList(c2, c3, c4));
+
+        MobileTerminal created = mobileTerminalService.createMobileTerminal(terminal, "Test_User");
+        assertNotNull(created);
+
+        for(int i = 0; i < 10; i++) {
+            MobileTerminal fetched = mobileTerminalService.getMobileTerminalEntityById(created.getId());
+            List<String> nameList1 = new ArrayList<>();
+            for (Channel c : fetched.getChannels()) {
+                nameList1.add(c.getName());
+            }
+
+            MobileTerminal fetched2 = mobileTerminalService.getMobileTerminalEntityById(created.getId());
+            List<String> nameList2 = new ArrayList<>();
+            for (Channel c : fetched2.getChannels()) {
+                nameList2.add(c.getName());
+            }
+
+            assertEquals(nameList1, nameList2);
+        }
     }
 
     @Test
