@@ -22,7 +22,7 @@
         <docker.liquibase.db.passwd>asset</docker.liquibase.db.passwd>
         <uvms.pom.version>3.2</uvms.pom.version>
         <usm4uvms.version>4.1.0</usm4uvms.version>
-        <uvms.config.version>4.1.1</uvms.config.version>
+        <uvms.config.version>4.1.2</uvms.config.version>
         <uvms.common.version>4.1.6</uvms.common.version>
         <audit.model.version>4.3.3</audit.model.version>
         <movementrules.version>2.3.4</movementrules.version>
