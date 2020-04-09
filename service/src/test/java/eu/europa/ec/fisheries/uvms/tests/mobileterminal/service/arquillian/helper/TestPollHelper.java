@@ -39,7 +39,7 @@ public class TestPollHelper {
 
     private String serialNumber;
 
-        public MobileTerminal createBasicMobileTerminal() {
+    public MobileTerminal createBasicMobileTerminal() {
         MobileTerminal mobileTerminal = new MobileTerminal();
         mobileTerminal.setSource(TerminalSourceEnum.INTERNAL);
         mobileTerminal.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
@@ -62,20 +62,8 @@ public class TestPollHelper {
         mobileTerminal.setSerialNo(serialNumber);
         mobileTerminal.setInstalledBy("Mike Great");
 
-        Channel channel = new Channel();
-        channel.setArchived(false);
-        channel.setMemberNumber(Integer.parseInt(generateARandomStringWithMaxLength(3)));
-        channel.setExpectedFrequencyInPort(Duration.ofSeconds(60));
-        channel.setExpectedFrequency(Duration.ofSeconds(60));
-        channel.setFrequencyGracePeriod(Duration.ofSeconds(60));
-        channel.setLesDescription("Thrane&Thrane");
+        Channel channel = createChannel("VMS", true, true, true);
         channel.setMobileTerminal(mobileTerminal);
-        channel.setDnid(Integer.parseInt("1" + generateARandomStringWithMaxLength(3)));
-        channel.setName("VMS");
-        channel.setConfigChannel(true);
-        channel.setDefaultChannel(true);
-        channel.setPollChannel(true);
-
         mobileTerminal.getChannels().clear();
         mobileTerminal.getChannels().add(channel);
 
@@ -121,7 +109,7 @@ public class TestPollHelper {
         return pmt;
     }
 
-    public MobileTerminal createAndPersistMobileTerminalOceanRegionSupport(Asset asset,boolean aor_e,boolean aor_w,boolean por,boolean ior)  {
+    public MobileTerminal createAndPersistMobileTerminalOceanRegionSupport(Asset asset, boolean aor_e, boolean aor_w, boolean por, boolean ior) {
         List<MobileTerminalPlugin> plugs = mobileTerminalPluginDao.getPluginList();
         MobileTerminalPlugin mtp = plugs.get(0);
 
@@ -137,10 +125,10 @@ public class TestPollHelper {
         mt.setInstalledBy("Mike the not so Great");
 
         // only set if true so we can see if code defaults to false
-        if(aor_e) mt.setEastAtlanticOceanRegion(aor_e);
-        if(aor_w) mt.setWestAtlanticOceanRegion(aor_w);
-        if(por) mt.setPacificOceanRegion(por);
-        if(ior) mt.setIndianOceanRegion(ior);
+        if (aor_e) mt.setEastAtlanticOceanRegion(aor_e);
+        if (aor_w) mt.setWestAtlanticOceanRegion(aor_w);
+        if (por) mt.setPacificOceanRegion(por);
+        if (ior) mt.setIndianOceanRegion(ior);
 
 
         Set<MobileTerminalPluginCapability> capabilityList = new HashSet<>();
@@ -154,30 +142,15 @@ public class TestPollHelper {
 
         mtp.getCapabilities().addAll(capabilityList);
 
-        if(asset != null) {
+        if (asset != null) {
             mt.setAsset(asset);
         }
 
-        Channel pollChannel = new Channel();
-        pollChannel.setArchived(false);
+        Channel pollChannel = createChannel("VMS-POLL", false, false, true);
         pollChannel.setMobileTerminal(mt);
-        pollChannel.setDnid(5555);
-        pollChannel.setMemberNumber( (int)(Math.random() * 100000));
-        pollChannel.setLesDescription("Thrane&Thrane");
-        pollChannel.setExpectedFrequency(Duration.ofSeconds(60));
-        pollChannel.setFrequencyGracePeriod(Duration.ofSeconds(60));
-        pollChannel.setExpectedFrequencyInPort(Duration.ofSeconds(60));
-        pollChannel.setPollChannel(true);
 
-        Channel channel = new Channel();
-        channel.setArchived(false);
+        Channel channel = createChannel("VMS", false, false, false);
         channel.setMobileTerminal(mt);
-        channel.setDnid(555);
-        channel.setMemberNumber((int)(Math.random() * 100000));
-        channel.setLesDescription("Thrane&Thrane");
-        channel.setExpectedFrequency(Duration.ofSeconds(60));
-        channel.setFrequencyGracePeriod(Duration.ofSeconds(60));
-        channel.setExpectedFrequencyInPort(Duration.ofSeconds(60));
 
         Set<Channel> channels = new HashSet<>();
         channels.add(channel);
@@ -188,7 +161,7 @@ public class TestPollHelper {
         return mt;
     }
 
-    public MobileTerminal createAndPersistMobileTerminal(Asset asset)  {
+    public MobileTerminal createAndPersistMobileTerminal(Asset asset) {
         List<MobileTerminalPlugin> plugs = mobileTerminalPluginDao.getPluginList();
         MobileTerminalPlugin mtp = plugs.get(0);
 
@@ -214,31 +187,15 @@ public class TestPollHelper {
 
         mtp.getCapabilities().addAll(capabilityList);
 
-        if(asset != null) {
+        if (asset != null) {
             mt.setAsset(asset);
         }
 
-        Channel pollChannel = new Channel();
-        pollChannel.setArchived(false);
+        Channel pollChannel = createChannel("VMS-POLL", false, false, true);
         pollChannel.setMobileTerminal(mt);
 
-        pollChannel.setDnid(5555);
-        pollChannel.setMemberNumber((int)(Math.random() * 100000));
-        pollChannel.setLesDescription("Thrane&Thrane");
-        pollChannel.setExpectedFrequency(Duration.ofSeconds(60));
-        pollChannel.setFrequencyGracePeriod(Duration.ofSeconds(60));
-        pollChannel.setExpectedFrequencyInPort(Duration.ofSeconds(60));
-        pollChannel.setPollChannel(true);
-
-        Channel channel = new Channel();
-        channel.setArchived(false);
+        Channel channel = createChannel("VMS", false, false, false);
         channel.setMobileTerminal(mt);
-        channel.setDnid(555);
-        channel.setMemberNumber((int)(Math.random() * 100000));
-        channel.setLesDescription("Thrane&Thrane");
-        channel.setExpectedFrequency(Duration.ofSeconds(60));
-        channel.setFrequencyGracePeriod(Duration.ofSeconds(60));
-        channel.setExpectedFrequencyInPort(Duration.ofSeconds(60));
 
         Set<Channel> channels = new HashSet<>();
         channels.add(channel);
@@ -249,7 +206,7 @@ public class TestPollHelper {
         return mt;
     }
 
-    public MobileTerminal createBasicMobileTerminal2(Asset  asset){
+    public MobileTerminal createBasicMobileTerminal2(Asset asset) {
         MobileTerminal mobileTerminal = new MobileTerminal();
         mobileTerminal.setSource(TerminalSourceEnum.INTERNAL);
         mobileTerminal.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);
@@ -267,18 +224,28 @@ public class TestPollHelper {
         mobileTerminal.setTransceiverType("TRANSPONDERTYP_100");
         mobileTerminal.setSerialNo("SN1234567890");
 
-        Channel channel = new Channel();
-        channel.setArchived(false);
-        channel.setMemberNumber((int) Math.random() * 1000000000);
-        channel.setExpectedFrequencyInPort(Duration.ofSeconds(60));
-        channel.setExpectedFrequency(Duration.ofSeconds(60));
-        channel.setFrequencyGracePeriod(Duration.ofSeconds(60));
-        channel.setLesDescription("LESDESCRIPTION");
+        Channel channel = createChannel("VMS", false, false, false);
         channel.setMobileTerminal(mobileTerminal);
-        channel.setDnid((int) Math.random() * 1000000000);
         mobileTerminal.getChannels().clear();
         mobileTerminal.getChannels().add(channel);
         return mobileTerminal;
+    }
+
+    public Channel createChannel(String name, boolean defaultChannel, boolean configChannel, boolean pollChannel) {
+        Channel channel = new Channel();
+        channel.setArchived(false);
+        channel.setMemberNumber(Integer.parseInt(generateARandomStringWithMaxLength(3)));
+        channel.setExpectedFrequencyInPort(Duration.ofSeconds(60));
+        channel.setExpectedFrequency(Duration.ofSeconds(60));
+        channel.setFrequencyGracePeriod(Duration.ofSeconds(60));
+        channel.setLesDescription("Thrane&Thrane");
+
+        channel.setDnid(Integer.parseInt("1" + generateARandomStringWithMaxLength(3)));
+        channel.setName(name);
+        channel.setDefaultChannel(defaultChannel);
+        channel.setConfigChannel(configChannel);
+        channel.setPollChannel(pollChannel);
+        return channel;
     }
 
     public MobileTerminalPlugin createMobileTerminalPlugin() {
@@ -291,7 +258,6 @@ public class TestPollHelper {
     }
 
     public ProgramPoll createProgramPoll(String connectId, Instant startDate, Instant stopDate, Instant latestRun) {
-
         ProgramPoll pp = new ProgramPoll();
         // create a valid mobileTerminal
         Asset asset = null;
