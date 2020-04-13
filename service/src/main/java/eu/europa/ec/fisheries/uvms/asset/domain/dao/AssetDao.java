@@ -5,10 +5,8 @@ import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.*;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetRemapMapping;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
-import eu.europa.ec.fisheries.uvms.asset.domain.mapper.*;
 import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
-import net.sf.ehcache.hibernate.HibernateUtil;
 
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
@@ -23,9 +21,7 @@ import org.hibernate.envers.query.criteria.MatchMode;
 import javax.ejb.Stateless;
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaBuilder.In;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -179,10 +175,8 @@ public class AssetDao {
 
     public List<Asset> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize, SearchBranch queryTree, boolean includeInactivated) {
     	if(isHistoricSearch(queryTree)) {
-    		System.out.println("*** historic ***");
     		return getAssetListSearchPaginatedHistoric(pageNumber, pageSize, queryTree, includeInactivated);	
     	}
-    	System.out.println("*** NON historic ***");
     	return getAssetListSearchPaginatedCriteriaBuilder(pageNumber, pageSize, queryTree, includeInactivated);
     }
     
@@ -201,7 +195,6 @@ public class AssetDao {
     private boolean isHistoricSearch(SearchBranch queryTree) {
     	SearchLeaf dateSearchField = getDateSearchField(queryTree);
     	SearchLeaf historySearchField = getHistoryIdSearchField(queryTree);
-    	System.out.println("dateSearchField: "+dateSearchField);
         if (dateSearchField != null || historySearchField != null) {
         	return true;
         }

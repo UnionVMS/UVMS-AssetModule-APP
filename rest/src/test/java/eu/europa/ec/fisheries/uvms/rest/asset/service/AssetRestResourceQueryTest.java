@@ -708,28 +708,27 @@ newAssetListQueryTes
     @RunAsClient
     @OperateOnDeployment("normal")
     public void getAssetsAtDateAndIrcsAndFs() {
+        Instant timestamp = Instant.now();
+       
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = sendAssetToCreation(asset);
-        
-        Asset asset2 = AssetHelper.createBasicAsset();
-        sendAssetToCreation(asset2);
-        
-        Instant timestamp = Instant.now();
-        
-        String newIrcs = "F" + AssetHelper.getRandomIntegers(7);
-        createdAsset.setIrcs(newIrcs);
-        Asset updatedAsset = getWebTargetExternal()
+
+        createdAsset = getWebTargetExternal()
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .put(Entity.json(createdAsset), Asset.class);
         
-        SearchBranch trunk = new SearchBranch(false);
-        SearchLeaf leaf = new SearchLeaf(SearchFields.IRCS, asset.getIrcs());
+        SearchBranch trunk = new SearchBranch(true);
+        SearchLeaf leaf = new SearchLeaf(SearchFields.FLAG_STATE, createdAsset.getFlagStateCode());
         trunk.getFields().add(leaf);
-        leaf = new SearchLeaf(SearchFields.FLAG_STATE, asset.getFlagStateCode());
-        trunk.getFields().add(leaf);
+        
+        SearchBranch branch = new SearchBranch(false);
         leaf = new SearchLeaf(SearchFields.DATE, DateUtils.dateToEpochMilliseconds(timestamp));
+        branch.getFields().add(leaf);
+        leaf = new SearchLeaf(SearchFields.IRCS, createdAsset.getIrcs());
+        branch.getFields().add(branch);
+        
         trunk.getFields().add(leaf);
         AssetListResponse listResponse = getWebTargetExternal()
                 .path("asset")
@@ -738,7 +737,7 @@ newAssetListQueryTes
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(trunk), AssetListResponse.class);
-
+      
         List<Asset> assetList = listResponse.getAssetList();
         assertThat(assetList.size(), is(1));
         assertThat(assetList.get(0).getId(), is(createdAsset.getId()));

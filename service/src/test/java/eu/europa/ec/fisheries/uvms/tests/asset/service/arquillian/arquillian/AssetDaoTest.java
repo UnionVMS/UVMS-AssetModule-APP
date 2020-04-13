@@ -912,7 +912,6 @@ public class AssetDaoTest extends TransactionalTests {
         trunk.getFields().add(leaf);
         leaf = new SearchLeaf(SearchFields.IRCS, asset.getIrcs());
         trunk.getFields().add(leaf);
-        System.out.println("asset.getIrcs(): " + asset.getIrcs());
 
         SearchBranch branch = new SearchBranch(false);
         SearchLeaf subLeaf = new SearchLeaf(SearchFields.FLAG_STATE, "SWE");
@@ -923,8 +922,6 @@ public class AssetDaoTest extends TransactionalTests {
         trunk.getFields().add(branch);
 
         List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
-
-        System.out.println("assets: " + assets);
         
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));
@@ -954,8 +951,6 @@ public class AssetDaoTest extends TransactionalTests {
 
         SearchBranch branch = new SearchBranch(false);
         trunk.getFields().add(branch);
-
-        System.out.println("trunk_list: " +trunk.getFields().toString());
         
         List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
 

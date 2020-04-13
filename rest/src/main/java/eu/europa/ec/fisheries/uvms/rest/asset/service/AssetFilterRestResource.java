@@ -307,7 +307,7 @@ public class AssetFilterRestResource {
         try {
             AssetFilter mappedAssetFilter = jsonb.fromJson(jsonAssetFilter, AssetFilter.class);
             String user = servletRequest.getRemoteUser();
-            AssetFilter updatedAssetFilter = assetFilterService.updateAllAssetFilter(mappedAssetFilter, user);
+            AssetFilter updatedAssetFilter = assetFilterService.updateAllAssetFilter(mappedAssetFilter, user); //assetFilterService.updateAssetFilter(mappedAssetFilter, user);
             String response = jsonb.toJson(updatedAssetFilter);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
