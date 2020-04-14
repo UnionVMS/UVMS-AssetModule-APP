@@ -20,6 +20,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminal
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.asset.filter.AppError;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTQuery;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -998,6 +999,71 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertFalse(ret.isEmpty());
         assertTrue(ret.stream().anyMatch(mt -> mt.getId().equals(created.getId())));
         assertTrue(ret.stream().allMatch(mt -> mt.getAsset() == null));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createMobileTerminalWithMultipleChannels_ThenVerifyChannelOrder() {
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        // Setup
+        Channel vms2 = MobileTerminalTestHelper.createBasicChannel();
+        vms2.setName("VMS2");
+        vms2.setDefaultChannel(false);
+        vms2.setPollChannel(false);
+        vms2.setConfigChannel(false);
+
+        Channel vms3 = MobileTerminalTestHelper.createBasicChannel();
+        vms3.setName("VMS3");
+        vms3.setDefaultChannel(false);
+        vms3.setPollChannel(false);
+        vms3.setConfigChannel(false);
+
+        Channel vms4 = MobileTerminalTestHelper.createBasicChannel();
+        vms4.setName("VMS4");
+        vms4.setDefaultChannel(false);
+        vms4.setPollChannel(false);
+        vms4.setConfigChannel(false);
+
+        mobileTerminal.getChannels().addAll(Arrays.asList(vms2, vms3, vms4));
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+        assertNotNull(created);
+
+        // Fetch MobileTerminal
+        MTQuery query = new MTQuery();
+        query.setMobileterminalIds(Collections.singletonList(created.getId().toString()));
+
+        MobileTerminal fetched = getWebTargetExternal()
+                .path("mobileterminal")
+                .path("list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(query), MobileTerminal.class);
+
+        List<String> nameList1 = new ArrayList<>();
+        for (Channel c : fetched.getChannels()) {
+            nameList1.add(c.getName());
+        }
+
+        // Verify Channels order
+        for(int i = 0; i < 10; i++) {
+            MobileTerminal fetched2 = getWebTargetExternal()
+                    .path("mobileterminal")
+                    .path("list")
+                    .request(MediaType.APPLICATION_JSON)
+                    .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                    .post(Entity.json(query), MobileTerminal.class);
+
+            List<String> nameList2 = new ArrayList<>();
+            for (Channel c : fetched2.getChannels()) {
+                nameList2.add(c.getName());
+            }
+            assertEquals(nameList1, nameList2);
+        }
     }
 
     private Asset createAndRestBasicAsset() {
