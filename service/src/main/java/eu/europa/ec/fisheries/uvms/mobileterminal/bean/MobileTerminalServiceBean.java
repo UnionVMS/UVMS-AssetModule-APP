@@ -517,18 +517,18 @@ public class MobileTerminalServiceBean {
 
         return AssetDtoMapper.mapToAssetDtos(
                 mtRevisions.stream()
-                .filter(mt -> mt.getAsset() != null)
-                .map(MobileTerminal::getAsset)
-                .collect(Collectors.toList()));
+                        .filter(mt -> mt.getAsset() != null)
+                        .map(MobileTerminal::getAsset)
+                        .collect(Collectors.toList()));
     }
 
     private void sortChannels(MobileTerminal mt) {
         if(mt.getChannels() != null && !mt.getChannels().isEmpty()) {
             List<Channel> asList = new ArrayList<>(mt.getChannels());
-            TreeSet<Channel> sorted = new TreeSet<>(Comparator.comparing(Channel::getId));
-            sorted.addAll(asList);
+            asList.sort(Comparator.comparing(Channel::getId));
+            Set<Channel> sorted = new LinkedHashSet<>(asList);
             mt.getChannels().clear();
-            mt.getChannels().addAll(sorted);
+            mt.setChannels(sorted);
         }
     }
 }

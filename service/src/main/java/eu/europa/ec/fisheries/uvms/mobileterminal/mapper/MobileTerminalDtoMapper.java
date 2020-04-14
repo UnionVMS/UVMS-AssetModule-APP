@@ -9,10 +9,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalPluginCapabilityDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalPluginDto;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class MobileTerminalDtoMapper {
 
@@ -61,7 +58,7 @@ public class MobileTerminalDtoMapper {
     }
 
     public static Set<ChannelDto> mapToChannelDtos(Set<Channel> channels){
-        Set<ChannelDto> dtoSet = new HashSet<>(channels.size());
+        Set<ChannelDto> dtoSet = new LinkedHashSet<>(channels.size());
         for (Channel channel : channels) {
             dtoSet.add(mapToChannelDto(channel));
         }
