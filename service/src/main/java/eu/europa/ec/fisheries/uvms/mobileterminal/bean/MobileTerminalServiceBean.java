@@ -528,7 +528,7 @@ public class MobileTerminalServiceBean {
             asList.sort(Comparator.comparing(Channel::getId));
             Set<Channel> sorted = new LinkedHashSet<>(asList);
             mt.getChannels().clear();
-            mt.setChannels(sorted);
+            mt.getChannels().addAll(sorted);
         }
     }
 }
