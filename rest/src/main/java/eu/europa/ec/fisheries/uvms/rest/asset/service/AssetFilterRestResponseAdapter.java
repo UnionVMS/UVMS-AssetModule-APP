@@ -27,7 +27,7 @@ public class AssetFilterRestResponseAdapter implements JsonbAdapter<AssetFilter,
     			if(!assetFilterQuery.getIsNumber()) {
 					JsonReader jsonReader = Json.createReader(new StringReader(assetFilterValue.getValueString()));
 					JsonValue object = jsonReader.readValue();
-    				jsonValueArray.add(object);
+					jsonValueArray.add(object);
 					jsonReader.close();
         		}
     			else {
