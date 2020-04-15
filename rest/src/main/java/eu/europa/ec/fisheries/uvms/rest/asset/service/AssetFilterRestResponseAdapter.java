@@ -1,14 +1,11 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
+import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonValue;
+import javax.json.*;
 import javax.json.bind.adapter.JsonbAdapter;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery;
@@ -28,7 +25,10 @@ public class AssetFilterRestResponseAdapter implements JsonbAdapter<AssetFilter,
 
     		for(AssetFilterValue assetFilterValue : assetFilterValues) {
     			if(!assetFilterQuery.getIsNumber()) {
-    				jsonValueArray.add(assetFilterValue.getValueString());
+					JsonReader jsonReader = Json.createReader(new StringReader(assetFilterValue.getValueString()));
+					JsonValue object = jsonReader.readValue();
+    				jsonValueArray.add(object);
+					jsonReader.close();
         		}
     			else {
     				JsonObject jsonValueObject = Json.createObjectBuilder()
@@ -43,7 +43,7 @@ public class AssetFilterRestResponseAdapter implements JsonbAdapter<AssetFilter,
     			.add("inverse", assetFilterQuery.getInverse())
     			.add("isNumber", assetFilterQuery.getIsNumber())
     			.add("type", assetFilterQuery.getType())
-    			.add("values",jsonValueArray.build())
+    			.add("values", jsonValueArray.build())
     			.build();
 
     		jsonArrayListOfQueries.add(jsonQueryBuilder);
