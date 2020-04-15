@@ -26,14 +26,14 @@ public class AssetFilterListRestResourceAdapter implements JsonbAdapter<AssetFil
 	    		Set<AssetFilterValue> assetFilterValues = assetFilterQuery.getValues();
 	    		
 	    		for(AssetFilterValue assetFilterValue : assetFilterValues) {
-	    			if( assetFilterQuery.getIsNumber() == false) {
+	    			if(!assetFilterQuery.getIsNumber()) {
 	    				jsonValueArray
 	    					.add(assetFilterValue.getValueString());
 	        		}
 	    			else {
 	    				JsonObject jsonValueObject = Json.createObjectBuilder()
 	        				.add("operator", assetFilterValue.getOperator())
-	        				.add("value", assetFilterValue.getValueNumber().doubleValue())
+	        				.add("value", assetFilterValue.getValueNumber())
 	        				.build();
 	    				jsonValueArray
 	    					.add(jsonValueObject);
@@ -43,12 +43,12 @@ public class AssetFilterListRestResourceAdapter implements JsonbAdapter<AssetFil
 	    			.add("inverse", assetFilterQuery.getInverse())
 	    			.add("isNumber", assetFilterQuery.getIsNumber())
 	    			.add("type", assetFilterQuery.getType())
-	    			.add("values",jsonValueArray.build())
+	    			.add("values", jsonValueArray.build())
 	    			.build();
 	    		JsonObject jsonFilter = Json.createObjectBuilder()
 	    			.add("id", assetFilter.getId().toString())
 	    			.add("name", assetFilter.getName())
-	    			.add("filter", jsonQueryBuilder)
+	    			.add("filter", jsonValueArray.add(jsonQueryBuilder))
 	    			.build();
 	    		jsonObjectOfFilters.add(assetFilter.getId().toString(), jsonFilter);
 	    	}
