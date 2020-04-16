@@ -194,7 +194,8 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
     public void updateAssetFilterFromJson() {
 		
 		String afId = assetFilter.getId().toString();
-		String afjson = "{\"id\":\""+afId+"\",\"name\":\"Nya Båtar och Test\", \"filter\": [{\"values\":[{\"value\":23, \"operator\":\"this is a operator\"}],\"type\": \"dsad\", \"inverse\": false,\"isNumber\": true}] }";
+		String owner = assetFilter.getOwner();
+		String afjson = "{\"id\":\""+afId+"\",\"name\":\"Nya Båtar och Update Test\", \"filter\": [{\"values\":[{\"value\":23, \"operator\":\"this is a operator\"}],\"type\": \"dsad\", \"inverse\": false,\"isNumber\": true}] }";
 		
 		getWebTargetExternal()
             .path("filter")
@@ -211,7 +212,8 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
 		
 		 assetFilter = jsonb.fromJson(assetFilterResp, AssetFilter.class);
 		 assertNotNull(assetFilter.getId());
-		 assertEquals("Nya Båtar och Test", assetFilter.getName());
+		 assertEquals(assetFilter.getOwner(), owner);
+		 assertEquals("Nya Båtar och Update Test", assetFilter.getName());
 		 assertTrue(assetFilterResp.contains(afId));
 	 }
 	

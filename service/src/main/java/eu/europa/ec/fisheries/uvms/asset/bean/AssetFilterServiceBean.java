@@ -206,6 +206,7 @@ public class AssetFilterServiceBean{
     			 assetFilterDao.create(assetFilterValue);
     		 }
     	 }
+    	 assetFilter.setOwner(oldAssetFilter.getOwner());
     	 assetFilter.setUpdatedBy(username);
     	 assetFilter.setUpdateTime(Instant.now());
 	     return assetFilterDao.updateAssetFilter(assetFilter);
