@@ -1,11 +1,9 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
+import java.io.StringReader;
 import java.util.Set;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import javax.json.*;
 import javax.json.bind.adapter.JsonbAdapter;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterList;
@@ -26,29 +24,30 @@ public class AssetFilterListRestResourceAdapter implements JsonbAdapter<AssetFil
 	    		Set<AssetFilterValue> assetFilterValues = assetFilterQuery.getValues();
 	    		
 	    		for(AssetFilterValue assetFilterValue : assetFilterValues) {
-	    			if( assetFilterQuery.getIsNumber() == false) {
-	    				jsonValueArray
-	    					.add(assetFilterValue.getValueString());
+	    			if(!assetFilterQuery.getIsNumber()) {
+						JsonReader jsonReader = Json.createReader(new StringReader(assetFilterValue.getValueString()));
+						JsonValue object = jsonReader.readValue();
+						jsonValueArray.add(object);
+						jsonReader.close();
 	        		}
 	    			else {
 	    				JsonObject jsonValueObject = Json.createObjectBuilder()
 	        				.add("operator", assetFilterValue.getOperator())
-	        				.add("value", assetFilterValue.getValueNumber().doubleValue())
+	        				.add("value", assetFilterValue.getValueNumber())
 	        				.build();
-	    				jsonValueArray
-	    					.add(jsonValueObject);
+	    				jsonValueArray.add(jsonValueObject);
 	        		}
 	    		}
 	    		JsonObject jsonQueryBuilder =  Json.createObjectBuilder()
 	    			.add("inverse", assetFilterQuery.getInverse())
 	    			.add("isNumber", assetFilterQuery.getIsNumber())
 	    			.add("type", assetFilterQuery.getType())
-	    			.add("values",jsonValueArray.build())
+	    			.add("values", jsonValueArray.build())
 	    			.build();
 	    		JsonObject jsonFilter = Json.createObjectBuilder()
 	    			.add("id", assetFilter.getId().toString())
 	    			.add("name", assetFilter.getName())
-	    			.add("filter", jsonQueryBuilder)
+	    			.add("filter", jsonValueArray.add(jsonQueryBuilder))
 	    			.build();
 	    		jsonObjectOfFilters.add(assetFilter.getId().toString(), jsonFilter);
 	    	}

@@ -74,8 +74,6 @@ public class PluginMapper {
     }
 
     public static boolean equals(MobileTerminalPlugin entity, PluginService plugin) {
-
-
         if (!entity.getName().equalsIgnoreCase(plugin.getLabelName())) {
             return false;
         }
@@ -177,17 +175,16 @@ public class PluginMapper {
     private static List<? extends CapabilityOption> mapCapabilityOption(TerminalCapability capabilityValue, List<OceanRegionEnum> oceanRegionList, List<MobileTerminalPlugin> lesList) {
         switch (capabilityValue) {
             case SUPPORT_SINGLE_OCEAN:
-                return mapOceanRegions(oceanRegionList);
             case SUPPORT_MULTIPLE_OCEAN:
                 return mapOceanRegions(oceanRegionList);
             case PLUGIN:
-                return mapLandearthstation(lesList);
+                return mapLandEarthStation(lesList);
             default:
                 return null;
         }
     }
 
-    private static List<? extends CapabilityOption> mapLandearthstation(List<MobileTerminalPlugin> lesList) {
+    private static List<? extends CapabilityOption> mapLandEarthStation(List<MobileTerminalPlugin> lesList) {
         List<LandEarthStationType> landEarthStations = new ArrayList<>();
         if (lesList != null) {
             for (MobileTerminalPlugin les : lesList) {

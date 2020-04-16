@@ -4,7 +4,7 @@
 
     <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
     <artifactId>asset</artifactId>
-    <version>6.7.5-SNAPSHOT</version>
+    <version>6.7.6-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <parent>
@@ -84,7 +84,7 @@
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>28.2-jre</version>
+                <version>29.0-jre</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
