@@ -1,11 +1,9 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
+import java.io.StringReader;
 import java.util.Set;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import javax.json.*;
 import javax.json.bind.adapter.JsonbAdapter;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterList;
@@ -27,16 +25,17 @@ public class AssetFilterListRestResourceAdapter implements JsonbAdapter<AssetFil
 	    		
 	    		for(AssetFilterValue assetFilterValue : assetFilterValues) {
 	    			if(!assetFilterQuery.getIsNumber()) {
-	    				jsonValueArray
-	    					.add(assetFilterValue.getValueString());
+						JsonReader jsonReader = Json.createReader(new StringReader(assetFilterValue.getValueString()));
+						JsonValue object = jsonReader.readValue();
+						jsonValueArray.add(object);
+						jsonReader.close();
 	        		}
 	    			else {
 	    				JsonObject jsonValueObject = Json.createObjectBuilder()
 	        				.add("operator", assetFilterValue.getOperator())
 	        				.add("value", assetFilterValue.getValueNumber())
 	        				.build();
-	    				jsonValueArray
-	    					.add(jsonValueObject);
+	    				jsonValueArray.add(jsonValueObject);
 	        		}
 	    		}
 	    		JsonObject jsonQueryBuilder =  Json.createObjectBuilder()
