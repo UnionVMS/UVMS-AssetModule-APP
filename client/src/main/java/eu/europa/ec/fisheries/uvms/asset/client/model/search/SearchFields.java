@@ -55,6 +55,7 @@ public enum SearchFields {
     
     private SearchFields(String fieldName, boolean fuzzySearch) {
         this.fieldName = fieldName;
+        this.fieldType = SearchFieldType.LIST;
         this.fuzzySearch = fuzzySearch;
     }
     

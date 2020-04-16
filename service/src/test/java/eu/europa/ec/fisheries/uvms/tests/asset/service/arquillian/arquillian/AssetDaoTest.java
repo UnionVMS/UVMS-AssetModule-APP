@@ -753,8 +753,8 @@ public class AssetDaoTest extends TransactionalTests {
         trunk.getFields().add(sLeaf);
         List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
-        assertTrue(1 <= assets.size());
-
+        assertEquals(1, assets.size());
+        
         assetDao.deleteAsset(asset);
         commit();
     }
@@ -789,11 +789,13 @@ public class AssetDaoTest extends TransactionalTests {
         commit();
 
         SearchBranch trunk = new SearchBranch(true);
-        trunk.getFields().add(new SearchLeaf(SearchFields.NAME, "*"+searchName.substring(2, searchName.length()-2)+"*"));
+        trunk.getFields().add(new SearchLeaf(SearchFields.NAME, "*LikeSearch*"));
+      //  trunk.getFields().add(new SearchLeaf(SearchFields.NAME, "*"+searchName.substring(2, searchName.length()-2)+"*"));
 
         List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
-        assertTrue(1 <= assets.size());
+       // assertTrue(1 <= assets.size());
+        assertEquals(1, assets.size());
         assertThat(assets.get(0).getName(), is(searchName));
 
         assetDao.deleteAsset(asset);

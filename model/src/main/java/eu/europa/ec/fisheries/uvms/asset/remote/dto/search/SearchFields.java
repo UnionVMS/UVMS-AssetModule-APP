@@ -55,6 +55,7 @@ public enum SearchFields {
     
     private SearchFields(String fieldName, boolean fuzzySearch) {
         this.fieldName = fieldName;
+        this.fieldType = SearchFieldType.LIST;
         this.fuzzySearch = fuzzySearch;
     }
     
@@ -74,6 +75,7 @@ public enum SearchFields {
        Map<String,SearchFields> returnMap = new HashMap<>();
         for (SearchFields value : SearchFields.values()) {
            if(value != SearchFields.DATE) {
+        	   
         	   returnMap.put(value.fieldName.toLowerCase(), value);
            }
         }
