@@ -210,7 +210,7 @@ public class AssetDao {
             cq.where(predicateQuery);
     	} else {
     		if(!includeInactivated) {
-    			Predicate predicateIncludeInactive = criteriaBuilder.equal(asset.get("active"), true); 
+    			Predicate predicateIncludeInactive = criteriaBuilder.equal(asset.get("active"), Boolean.TRUE); 
         		cq.where(predicateIncludeInactive);
     		}
     	}
@@ -291,16 +291,18 @@ public class AssetDao {
         if (query.isLogicalAnd() ) { // AND + AND only active
         	if(!includeInactivated) {
         		Predicate allPredicateAnd = criteriaBuilder.and(predicates.stream().toArray(Predicate[]::new));
-         	    Predicate onlyActiveAssets = criteriaBuilder.equal(asset.get("active"), true);
-         	    return criteriaBuilder.and(allPredicateAnd, onlyActiveAssets);
+         	    Predicate onlyActiveAssets = criteriaBuilder.equal(asset.get("active"), Boolean.TRUE);
+         	    Predicate returnPredicate = criteriaBuilder.and(allPredicateAnd, onlyActiveAssets);
+         	    return returnPredicate;
      	    }
         	return criteriaBuilder.and(predicates.stream().toArray(Predicate[]::new));
         	
         } else { //OR + AND only active
         	if(!includeInactivated) {
         		Predicate allPredicateOr = criteriaBuilder.or(predicates.stream().toArray(Predicate[]::new));
-         	    Predicate onlyActiveAssets = criteriaBuilder.equal(asset.get("active"), true);
-         	    return criteriaBuilder.and(allPredicateOr, onlyActiveAssets);
+         	    Predicate onlyActiveAssets = criteriaBuilder.equal(asset.get("active"), Boolean.TRUE);
+         	    Predicate returnPredicate = criteriaBuilder.and( onlyActiveAssets, allPredicateOr);
+         	    return returnPredicate;
      	    }
         	return criteriaBuilder.or(predicates.stream().toArray(Predicate[]::new));
         }
