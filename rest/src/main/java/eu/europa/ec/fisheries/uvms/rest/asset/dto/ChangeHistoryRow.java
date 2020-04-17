@@ -6,12 +6,16 @@ import java.util.List;
 
 public class ChangeHistoryRow {
 
+    private String className;
     private String updatedBy;
     private Instant updateTime;
 
+    private List<ChangeHistoryRow> subclasses = new ArrayList<>();
+
     private List<ChangeHistoryItem> changes = new ArrayList<>();
 
-    public ChangeHistoryRow(String updatedBy, Instant updateTime) {
+    public ChangeHistoryRow(String className, String updatedBy, Instant updateTime) {
+        this.className = className;
         this.updatedBy = updatedBy;
         this.updateTime = updateTime;
     }
@@ -49,4 +53,19 @@ public class ChangeHistoryRow {
         this.changes = changes;
     }
 
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public List<ChangeHistoryRow> getSubclasses() {
+        return subclasses;
+    }
+
+    public void setSubclasses(List<ChangeHistoryRow> subclasses) {
+        this.subclasses = subclasses;
+    }
 }

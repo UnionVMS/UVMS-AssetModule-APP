@@ -1,50 +1,103 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.mapper;
 
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ChannelDto;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.ChangeHistoryRow;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class HistoryMapper {
 
-    public static List<ChangeHistoryRow> mapHistory(List<?> histories, String updaterField, String updateTimeField, String ...ignoredFields) throws IllegalAccessException {
-        List<Field> fields = listMembers(histories.get(0));
-        List<ChangeHistoryRow> returnList = new ArrayList<>(histories.size());
-        List<String> ignoredList = new ArrayList<>();
-        ignoredList.addAll(Arrays.asList(ignoredFields));
-        ignoredList.add(updaterField);
-        ignoredList.add(updateTimeField);
+    public static List<ChangeHistoryRow> mapHistory(List<?> histories, HistoryMappingSpecialCase updaterField, HistoryMappingSpecialCase updateTimeField, HistoryMappingSpecialCase ...specialCases) {
+        try {
+            String className = histories.get(0).getClass().getSimpleName();
+            List<Field> fields = listMembers(histories.get(0));
+            List<ChangeHistoryRow> returnList = new ArrayList<>(histories.size());
+            List<HistoryMappingSpecialCase> specialCaseList = new ArrayList<>();
+            specialCaseList.addAll(Arrays.asList(specialCases));
+            specialCaseList.add(updaterField);
+            specialCaseList.add(updateTimeField);
 
 
-        Object previousObject = null;
-        for (Object object : histories) {
-            if(previousObject == null){
-                previousObject = object;
-                continue;
-            }
-            String updater = "" + FieldUtils.readDeclaredField(object, updaterField, true);
-            Instant updateTime = (Instant)FieldUtils.readDeclaredField(object, updateTimeField, true);
-            ChangeHistoryRow row = new ChangeHistoryRow(updater, updateTime);
-            for (Field field : fields) {
-                if(ignoredList.stream().anyMatch(s -> s.equals(field.getName()))){
+            Object previousObject = null;
+            for (Object object : histories) {
+                if (previousObject == null) {
+                    previousObject = object;
                     continue;
                 }
-                Object oldValue = FieldUtils.readDeclaredField(previousObject, field.getName(), true);
-                Object newValue = FieldUtils.readDeclaredField(object, field.getName(), true);
-                if(!Objects.equals(oldValue, newValue)){
-                    row.addNewItem(field.getName(), oldValue, newValue);
-                }
-            }
-            returnList.add(row);
-            previousObject = object;
-        }
+                String updater = "" + FieldUtils.readDeclaredField(object, updaterField.getFieldName(), true);
+                Instant updateTime = (Instant) FieldUtils.readDeclaredField(object, updateTimeField.getFieldName(), true);
+                ChangeHistoryRow row = new ChangeHistoryRow(className, updater, updateTime);
+                for (Field field : fields) {
+                    Object oldValue;
+                    Object newValue;
+                    Optional<HistoryMappingSpecialCase> specialCase = specialCaseList.stream().filter(s -> s.getFieldName().equals(field.getName())).findAny();
+                    if (specialCase.isPresent()) {
+                        if (specialCase.get().shouldContinue()) {
+                            continue;
+                        }
+                        oldValue = specialCase.get().specialCase(FieldUtils.readDeclaredField(previousObject, field.getName(), true));
+                        newValue = specialCase.get().specialCase(FieldUtils.readDeclaredField(object, field.getName(), true));
+                    } else {
+                        oldValue = FieldUtils.readDeclaredField(previousObject, field.getName(), true);
+                        newValue = FieldUtils.readDeclaredField(object, field.getName(), true);
+                    }
+                    if (!Objects.equals(oldValue, newValue)) {
+                        if (specialCase.isPresent() && specialCase.get().checkSubclass()) {
 
+                            List<ChangeHistoryRow> recursive = specialCase.get().recursive(oldValue, newValue);
+                            row.getSubclasses().addAll(recursive);
+
+                        } else {
+                            row.addNewItem(field.getName(), oldValue, newValue);
+                        }
+
+                    }
+                }
+                returnList.add(row);
+                previousObject = object;
+            }
+
+            return returnList;
+        }catch (IllegalAccessException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static List<ChangeHistoryRow> checkDifferencesBetweenChannels(Set<ChannelDto> oldInputSet, Set<ChannelDto> newInputSet){
+        List<ChangeHistoryRow> returnList = new ArrayList<>();
+        Set<ChannelDto> workingNewSet = new HashSet<>(newInputSet);
+
+        for (ChannelDto channelDto : oldInputSet) { //for every channel in the old group, check if it exists in the new group
+            Optional<ChannelDto> sameChannelInNewSet = workingNewSet.stream().filter(c -> c.getId().equals(channelDto.getId())).findAny();
+            List<ChangeHistoryRow> changeHistoryRows = new ArrayList<>();
+            if(sameChannelInNewSet.isPresent()) {
+                if(!channelDto.getHistoryId().equals(sameChannelInNewSet.get().getHistoryId())) {
+                    changeHistoryRows = HistoryMapper.mapHistory(Arrays.asList(channelDto, sameChannelInNewSet.get()), HistoryMappingSpecialCase.CHANNEL_UPDATED_BY,
+                            HistoryMappingSpecialCase.CHANNEL_UPDATED_TIME, HistoryMappingSpecialCase.CHANNEL_MOBILE_TERMINAL);
+                }
+
+            }else{  //if the old channel is not among the new channels
+                ChannelDto creatorAndTimeChannel = new ChannelDto();
+                creatorAndTimeChannel.setUpdateUser(channelDto.getUpdateUser());
+                creatorAndTimeChannel.setUpdateTime(channelDto.getUpdateTime());
+                changeHistoryRows = HistoryMapper.mapHistory(Arrays.asList(channelDto, creatorAndTimeChannel), HistoryMappingSpecialCase.CHANNEL_UPDATED_BY,
+                        HistoryMappingSpecialCase.CHANNEL_UPDATED_TIME, HistoryMappingSpecialCase.CHANNEL_MOBILE_TERMINAL);
+
+            }
+            if (!changeHistoryRows.isEmpty() && !changeHistoryRows.get(0).getChanges().isEmpty()) {
+                returnList.add(changeHistoryRows.get(0));
+            }
+            workingNewSet.remove(sameChannelInNewSet.get());
+
+        }
+        for (ChannelDto channelDto : workingNewSet) {   // new channels that where not in the old set
+            returnList.addAll(HistoryMapper.mapHistory(Arrays.asList(new ChannelDto(), channelDto), HistoryMappingSpecialCase.CHANNEL_UPDATED_BY,
+                    HistoryMappingSpecialCase.CHANNEL_UPDATED_TIME, HistoryMappingSpecialCase.CHANNEL_MOBILE_TERMINAL));
+        }
         return returnList;
     }
 

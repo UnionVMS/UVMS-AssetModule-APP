@@ -24,6 +24,7 @@ import eu.europa.ec.fisheries.uvms.asset.util.JsonBConfiguratorAsset;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.ChangeHistoryRow;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.HistoryMapper;
+import eu.europa.ec.fisheries.uvms.rest.asset.mapper.HistoryMappingSpecialCase;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import io.swagger.annotations.*;
@@ -321,7 +322,8 @@ public class AssetRestResource {
                                                  @ApiParam(value="Max size of resultset") @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr)  throws Exception {
         try {
             List<Asset> assetRevisions = assetService.getRevisionsForAssetLimited(id, maxNbr);
-            List<ChangeHistoryRow> changeHistory = HistoryMapper.mapHistory(assetRevisions, "updatedBy", "updateTime", "mobileTerminals");
+            List<ChangeHistoryRow> changeHistory = HistoryMapper.mapHistory(assetRevisions, HistoryMappingSpecialCase.ASSET_UPDATED_BY,
+                    HistoryMappingSpecialCase.ASSET_UPDATED_TIME, HistoryMappingSpecialCase.ASSET_MOBILE_TERMINAL);
             String returnString = jsonb.toJson(changeHistory);
 
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();

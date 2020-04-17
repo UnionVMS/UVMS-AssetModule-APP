@@ -19,6 +19,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalSta
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
+import eu.europa.ec.fisheries.uvms.rest.asset.dto.ChangeHistoryRow;
 import eu.europa.ec.fisheries.uvms.rest.asset.filter.AppError;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTQuery;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
@@ -37,6 +38,7 @@ import java.time.Duration;
 import java.util.*;
 
 import static javax.ws.rs.core.Response.Status.OK;
+import static junit.framework.TestCase.assertNotNull;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -1065,6 +1067,134 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
             assertEquals(nameList1, nameList2);
         }
     }
+
+
+    /*@Test
+    @OperateOnDeployment("normal")
+    public void archiveAndUnarchiveMobileTerminal() {
+        MobileTerminal mt = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mt.setAsset(null);
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mt), MobileTerminal.class);
+
+        assertTrue(created.getActive());
+        assertFalse(created.getArchived());
+
+        MobileTerminal response = getWebTargetExternal()
+                .path("mobileterminal")
+                .path(created.getId().toString())
+                .path("status")
+                .queryParam("comment", "Test Comment Archive")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(MobileTerminalStatus.ARCHIVE))
+                .readEntity(MobileTerminal.class);
+
+        assertNotNull(response);
+        assertTrue(response.getArchived());
+
+        response = getWebTargetExternal()
+                .path("mobileterminal")
+                .path(created.getId().toString())
+                .path("status")
+                .queryParam("comment", "Test Comment Unarchive")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(MobileTerminalStatus.UNARCHIVE))
+                .readEntity(MobileTerminal.class);
+
+        assertFalse(response.getArchived());
+
+        //checking the events as well
+        Response res = getWebTargetExternal()
+                .path("mobileterminal")
+                .path(created.getId().toString())
+                .path("history")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get();
+
+        assertEquals(200, res.getStatus());
+    }*/
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getMobileTerminalChangeHistoryWithMultipleAssets() {
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        mobileTerminal = getWebTargetExternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        Asset asset1 = createAndRestBasicAsset();
+        Asset asset2 = createAndRestBasicAsset();
+
+        Response response = getWebTargetExternal()
+                .path("/mobileterminal")
+                .path(mobileTerminal.getId().toString())
+                .path("assign")
+                .path(asset1.getId().toString())
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(""));
+
+        assertEquals(200, response.getStatus());
+
+        response = getWebTargetExternal()
+                .path("/mobileterminal")
+                .path(mobileTerminal.getId().toString())
+                .path("unassign")
+                .path(asset1.getId().toString())
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(""));
+
+        assertEquals(200, response.getStatus());
+
+        response = getWebTargetExternal()
+                .path("/mobileterminal")
+                .path(mobileTerminal.getId().toString())
+                .path("assign")
+                .path(asset2.getId().toString())
+                .queryParam("comment", "NEW_TEST_COMMENT")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(""));
+
+        assertEquals(200, response.getStatus());
+
+        Response mTChangesResponse = getWebTargetExternal()
+                .path("mobileterminal")
+                .path(mobileTerminal.getId().toString())
+                .path("changeHistory")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get();
+
+        assertEquals(200, mTChangesResponse.getStatus());
+        System.out.println(mTChangesResponse.readEntity(String.class));
+        /*List<ChangeHistoryRow> mtChanges = response.readEntity(new GenericType<List<ChangeHistoryRow>>() {});
+
+        assertNotNull(mtChanges);
+        assertEquals(3, mtChanges.size());
+
+        assertEquals("user", mtChanges.get(0).getUpdatedBy());
+        assertEquals(3, mtChanges.get(0).getChanges().size());
+
+        assertEquals("user", mtChanges.get(2).getUpdatedBy());
+        assertEquals(2, mtChanges.get(2).getChanges().size());
+        assertTrue(mtChanges.get(2).getChanges().stream().anyMatch(item -> item.getNewValue().equals(asset2.getId().toString())));*/
+    }
+
+
 
     private Asset createAndRestBasicAsset() {
         Asset asset = AssetHelper.createBasicAsset();
