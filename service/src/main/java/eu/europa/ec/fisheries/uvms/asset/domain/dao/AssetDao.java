@@ -168,8 +168,7 @@ public class AssetDao {
     	CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
     	Root<Asset> asset = cq.from(Asset.class);
     	Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset, includeInactivated);
-    	cq.select(criteriaBuilder.count(asset)); 
-    	cq.where(predicateQuery);
+    	cq.select(criteriaBuilder.count(asset)).where(predicateQuery);
     	return em.createQuery(cq).getSingleResult();
     }
 
@@ -209,17 +208,16 @@ public class AssetDao {
     	if(!queryTree.getFields().isEmpty()) {
     		Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset, includeInactivated);
             cq.where(predicateQuery);
-
     	} else {
     		if(!includeInactivated) {
     			Predicate predicateIncludeInactive = criteriaBuilder.equal(asset.get("active"), true); 
         		cq.where(predicateIncludeInactive);
     		}
     	}
+    	
     	TypedQuery<Asset> query = em.createQuery(cq);
     	query.setFirstResult(pageSize * (pageNumber - 1)) // offset
-         	.setMaxResults(pageSize) // limit
-         	.getResultList();
+         	.setMaxResults(pageSize); // limit
     	return query.getResultList();
     }
     
@@ -227,16 +225,13 @@ public class AssetDao {
    
         List<Predicate> predicates = new ArrayList<>();
         
-        if(!includeInactivated) {
-        	predicates.add(criteriaBuilder.equal(asset.get("active"), true));
-        }
-        
         for (AssetSearchInterface field : query.getFields()) {
             if(!field.isLeaf()){
                 if( !((SearchBranch)field).getFields().isEmpty()){
                 	predicates.add(queryBuilderPredicate((SearchBranch) field, criteriaBuilder, asset, includeInactivated));
                 }
             }else{
+            	
                 SearchLeaf leaf = (SearchLeaf) field;
                 if (leaf.getSearchValue().contains("*")) {
                 	predicates.add(criteriaBuilder.like(
@@ -294,9 +289,20 @@ public class AssetDao {
                 }
             }
         }
-        if (query.isLogicalAnd() || query.getFields().size() <=1) {
+        if (query.isLogicalAnd() ) { // AND + AND only active
+        	 if(!includeInactivated) {
+        		Predicate allPredicateAnd = criteriaBuilder.and(predicates.stream().toArray(Predicate[]::new));
+         	    Predicate onlyActiveAssets = criteriaBuilder.equal(asset.get("active"), true);
+         	    return criteriaBuilder.and(allPredicateAnd, onlyActiveAssets);
+     	    }
+        	
         	return criteriaBuilder.and(predicates.stream().toArray(Predicate[]::new));
-        } else {
+        } else { //OR + AND only active
+        	 if(!includeInactivated) {
+        		Predicate allPredicateOr = criteriaBuilder.or(predicates.stream().toArray(Predicate[]::new));
+         	    Predicate onlyActiveAssets = criteriaBuilder.equal(asset.get("active"), true);
+         	    return criteriaBuilder.and(allPredicateOr, onlyActiveAssets);
+     	    }
         	return criteriaBuilder.or(predicates.stream().toArray(Predicate[]::new));
         }
     }
@@ -391,7 +397,6 @@ public class AssetDao {
             }else {
                 SearchLeaf leaf = (SearchLeaf) field;
                 if (leaf.getSearchField().equals(SearchFields.DATE)) {
-                	 System.out.println("dategetSearchValue: "+ leaf.getSearchValue());
                     return leaf;
                 }
             }

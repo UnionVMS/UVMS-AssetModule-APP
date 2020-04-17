@@ -964,7 +964,39 @@ public class AssetDaoTest extends TransactionalTests {
         commit();
     }
 
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetListSearchPaginatedTestNoInactivatedAssets() throws Exception {
+        Asset asset = AssetTestsHelper.createBasicAsset();
+        asset.setActive(true);
+        assetDao.createAsset(asset);
+        commit();
+        
+        Asset assetInactivated = AssetTestsHelper.createBasicAsset();
+        assetInactivated.setActive(false);
+        assetDao.createAsset(assetInactivated);
+        commit();
 
+        SearchBranch trunk = new SearchBranch(false);
+        trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
+        trunk.getFields().add(new SearchLeaf(SearchFields.IRCS, assetInactivated.getIrcs()));
+
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
+        
+        assertEquals(1, assets.size());
+        assertThat(assets.get(0).getId(), is(asset.getId()));
+
+        assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, true);
+        
+        assertEquals(2, assets.size());
+        assertThat(assets.get(0).getId(), is(asset.getId()));
+        assertThat(assets.get(1).getId(), is(assetInactivated.getId()));
+        
+        assetDao.deleteAsset(asset);
+        assetDao.deleteAsset(assetInactivated);
+        commit();
+    }
+ 
     private void commit() throws Exception {
         userTransaction.commit();
         userTransaction.begin();

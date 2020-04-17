@@ -418,8 +418,9 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
                 .put(Entity.json(""), Asset.class);
 
         assertFalse(archived.getActive());
-
-        // ask for it
+        System.out.println("createdAsset.getId().toString(): "+ createdAsset.getId().toString());
+        System.out.println("archived.getId().toString(): "+ archived.getId().toString());
+        // List of all except inactivated
         AssetListResponse listResponseAfter = getWebTargetExternal()
                 .path("asset")
                 .path("list")
@@ -428,7 +429,36 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(trunk), AssetListResponse.class);
 
-        assertEquals(sizeBefore - 1, listResponseAfter.getAssetList().size());
+      assertEquals(sizeBefore - 1, listResponseAfter.getAssetList().size());
+        
+      trunk = new SearchBranch(false);
+      SearchLeaf leaf = new SearchLeaf(SearchFields.CFR, createdAsset.getCfr());
+      trunk.getFields().add(leaf);
+      leaf = new SearchLeaf(SearchFields.IRCS, createdAsset.getIrcs());
+      trunk.getFields().add(leaf);
+      
+      System.out.println("createdAsset.getIrcs(): "+createdAsset.getIrcs());
+      // Should return List of none
+      AssetListResponse listResponseOfNone = getWebTargetExternal()
+              .path("asset")
+              .path("list")
+              .request(MediaType.APPLICATION_JSON)
+              .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+              .post(Entity.json(trunk), AssetListResponse.class);
+
+      assertEquals(0, listResponseOfNone.getAssetList().size());
+      
+   // Should return List of one inactiveted asset
+      AssetListResponse listResponseOfInactivated = getWebTargetExternal()
+              .path("asset")
+              .path("list")
+              .queryParam("includeInactivated","true")
+              .request(MediaType.APPLICATION_JSON)
+              .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+              .post(Entity.json(trunk), AssetListResponse.class);
+
+      assertNotNull(listResponseOfInactivated);
+      assertEquals(listResponse.getAssetList().get(0).getActive(), false);
     }
     
     @Test
