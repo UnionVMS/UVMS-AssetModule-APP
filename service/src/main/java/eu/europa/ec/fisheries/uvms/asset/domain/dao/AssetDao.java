@@ -231,7 +231,6 @@ public class AssetDao {
                 	predicates.add(queryBuilderPredicate((SearchBranch) field, criteriaBuilder, asset, includeInactivated));
                 }
             }else{
-            	
                 SearchLeaf leaf = (SearchLeaf) field;
                 if (leaf.getSearchValue().contains("*")) {
                 	predicates.add(criteriaBuilder.like(
@@ -290,15 +289,15 @@ public class AssetDao {
             }
         }
         if (query.isLogicalAnd() ) { // AND + AND only active
-        	 if(!includeInactivated) {
+        	if(!includeInactivated) {
         		Predicate allPredicateAnd = criteriaBuilder.and(predicates.stream().toArray(Predicate[]::new));
          	    Predicate onlyActiveAssets = criteriaBuilder.equal(asset.get("active"), true);
          	    return criteriaBuilder.and(allPredicateAnd, onlyActiveAssets);
      	    }
-        	
         	return criteriaBuilder.and(predicates.stream().toArray(Predicate[]::new));
+        	
         } else { //OR + AND only active
-        	 if(!includeInactivated) {
+        	if(!includeInactivated) {
         		Predicate allPredicateOr = criteriaBuilder.or(predicates.stream().toArray(Predicate[]::new));
          	    Predicate onlyActiveAssets = criteriaBuilder.equal(asset.get("active"), true);
          	    return criteriaBuilder.and(allPredicateOr, onlyActiveAssets);

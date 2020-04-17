@@ -596,16 +596,6 @@ public class AssetDaoTest extends TransactionalTests {
         Asset asset2 = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset2);
         commit();
-        
-        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
-        SearchKeyValue searchKey = new SearchKeyValue();
-        searchKey.setSearchField(SearchFields.CFR);
-        searchKey.setSearchValues(Collections.singletonList(asset.getCfr()));
-        searchKeyValues.add(searchKey);
-        SearchKeyValue searchKey2 = new SearchKeyValue();
-        searchKey2.setSearchField(SearchFields.IRCS);
-        searchKey2.setSearchValues(Collections.singletonList(asset2.getIrcs()));
-        searchKeyValues.add(searchKey2);
 
         SearchBranch trunk = new SearchBranch(false);
         trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
@@ -632,16 +622,6 @@ public class AssetDaoTest extends TransactionalTests {
         Asset asset2 = AssetTestsHelper.createBasicAsset();
         assetDao.createAsset(asset2);
         commit();
-        
-        List<SearchKeyValue> searchKeyValues = new ArrayList<>();
-        SearchKeyValue searchKey = new SearchKeyValue();
-        searchKey.setSearchField(SearchFields.CFR);
-        searchKey.setSearchValues(Collections.singletonList(asset.getCfr()));
-        searchKeyValues.add(searchKey);
-        SearchKeyValue searchKey2 = new SearchKeyValue();
-        searchKey2.setSearchField(SearchFields.IRCS);
-        searchKey2.setSearchValues(Collections.singletonList(asset2.getIrcs()));
-        searchKeyValues.add(searchKey2);
 
         SearchBranch trunk = new SearchBranch(false);
         trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
@@ -790,11 +770,8 @@ public class AssetDaoTest extends TransactionalTests {
 
         SearchBranch trunk = new SearchBranch(true);
         trunk.getFields().add(new SearchLeaf(SearchFields.NAME, "*LikeSearch*"));
-      //  trunk.getFields().add(new SearchLeaf(SearchFields.NAME, "*"+searchName.substring(2, searchName.length()-2)+"*"));
-
         List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
-       // assertTrue(1 <= assets.size());
         assertEquals(1, assets.size());
         assertThat(assets.get(0).getName(), is(searchName));
 
@@ -830,8 +807,6 @@ public class AssetDaoTest extends TransactionalTests {
         commit();
     }
     
-    
-    // CriteriaBuilderTest
     @Test
     @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTestWildcardSearchCaseInsensitiveCB() throws Exception {
@@ -896,7 +871,6 @@ public class AssetDaoTest extends TransactionalTests {
         commit();
     }
     
-    // CriteriaBuilderTest
     @Test
     @OperateOnDeployment("normal")
     public void getAssetListSearchQueryTestCB() throws Exception {

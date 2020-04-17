@@ -418,8 +418,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
                 .put(Entity.json(""), Asset.class);
 
         assertFalse(archived.getActive());
-        System.out.println("createdAsset.getId().toString(): "+ createdAsset.getId().toString());
-        System.out.println("archived.getId().toString(): "+ archived.getId().toString());
+        
         // List of all except inactivated
         AssetListResponse listResponseAfter = getWebTargetExternal()
                 .path("asset")
@@ -437,7 +436,6 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
       leaf = new SearchLeaf(SearchFields.IRCS, createdAsset.getIrcs());
       trunk.getFields().add(leaf);
       
-      System.out.println("createdAsset.getIrcs(): "+createdAsset.getIrcs());
       // Should return List of none
       AssetListResponse listResponseOfNone = getWebTargetExternal()
               .path("asset")
@@ -448,7 +446,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
 
       assertEquals(0, listResponseOfNone.getAssetList().size());
       
-   // Should return List of one inactiveted asset
+      // Should return List of one inactiveted asset
       AssetListResponse listResponseOfInactivated = getWebTargetExternal()
               .path("asset")
               .path("list")
