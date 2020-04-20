@@ -601,7 +601,7 @@ public class AssetDaoTest extends TransactionalTests {
         trunk.getFields().add(new SearchLeaf(SearchFields.CFR, asset.getCfr()));
         trunk.getFields().add(new SearchLeaf(SearchFields.IRCS, asset2.getIrcs()));
 
-        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, true);
         
         assertEquals(2, assets.size());
         assertThat(assets.get(0).getId(), is(asset.getId()));

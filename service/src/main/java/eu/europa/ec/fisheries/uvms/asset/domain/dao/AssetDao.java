@@ -168,7 +168,14 @@ public class AssetDao {
     	CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
     	Root<Asset> asset = cq.from(Asset.class);
     	Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset, includeInactivated);
-    	cq.select(criteriaBuilder.count(asset)).where(predicateQuery);
+    	Predicate returnPredicate;
+		if(!includeInactivated) {
+			Predicate onlyActiveAssets = criteriaBuilder.equal(asset.get("active"), Boolean.TRUE);
+     	    returnPredicate = criteriaBuilder.and(predicateQuery, onlyActiveAssets);
+		}else {
+			returnPredicate = predicateQuery;
+		}
+    	cq.select(criteriaBuilder.count(asset)).where(returnPredicate);
     	return em.createQuery(cq).getSingleResult();
     }
 
@@ -204,10 +211,22 @@ public class AssetDao {
     	CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
     	CriteriaQuery<Asset> cq = criteriaBuilder.createQuery(Asset.class);
     	Root<Asset> asset = cq.from(Asset.class);
-    	
+//    	if(!includeInactivated) {
+//			Predicate predicateIncludeInactive = criteriaBuilder.isTrue(asset.get("active")); 
+//    		cq.where(predicateIncludeInactive);
+//		}
     	if(!queryTree.getFields().isEmpty()) {
+    		
     		Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset, includeInactivated);
-            cq.where(predicateQuery);
+    		Predicate finalPredicate;
+//    		if(!includeInactivated) {
+//    			Predicate predicateIncludeInactive = criteriaBuilder.isTrue(asset.get("active"));
+//    			finalPredicate = criteriaBuilder.and( predicateIncludeInactive, predicateQuery);
+//    		}else {
+//    			finalPredicate = predicateQuery;
+//    		}
+    		
+			cq.where(predicateQuery);
     	} else {
     		if(!includeInactivated) {
     			Predicate predicateIncludeInactive = criteriaBuilder.equal(asset.get("active"), Boolean.TRUE); 
@@ -290,19 +309,23 @@ public class AssetDao {
         }
         if (query.isLogicalAnd() ) { // AND + AND only active
         	if(!includeInactivated) {
-        		Predicate allPredicateAnd = criteriaBuilder.and(predicates.stream().toArray(Predicate[]::new));
-         	    Predicate onlyActiveAssets = criteriaBuilder.equal(asset.get("active"), Boolean.TRUE);
-         	    Predicate returnPredicate = criteriaBuilder.and(allPredicateAnd, onlyActiveAssets);
-         	    return returnPredicate;
+//        		Predicate allPredicateAnd = criteriaBuilder.and(predicates.stream().toArray(Predicate[]::new));
+//         	    Predicate onlyActiveAssets = criteriaBuilder.equal(asset.get("active"), Boolean.TRUE);
+//         	    Predicate returnPredicate = criteriaBuilder.and(allPredicateAnd, onlyActiveAssets);
+//         	    return returnPredicate;
+        		predicates.add(criteriaBuilder.equal(asset.get("active"), true));
      	    }
         	return criteriaBuilder.and(predicates.stream().toArray(Predicate[]::new));
         	
         } else { //OR + AND only active
         	if(!includeInactivated) {
-        		Predicate allPredicateOr = criteriaBuilder.or(predicates.stream().toArray(Predicate[]::new));
-         	    Predicate onlyActiveAssets = criteriaBuilder.equal(asset.get("active"), Boolean.TRUE);
-         	    Predicate returnPredicate = criteriaBuilder.and( onlyActiveAssets, allPredicateOr);
-         	    return returnPredicate;
+//        		Predicate allPredicateOr = criteriaBuilder.or(predicates.stream().toArray(Predicate[]::new));
+//         	    Predicate onlyActiveAssets = criteriaBuilder.equal(asset.get("active"), Boolean.TRUE);
+//         	    Predicate returnPredicate = criteriaBuilder.and( onlyActiveAssets, allPredicateOr);
+  //       	    return returnPredicate;
+        		// predicates.add(criteriaBuilder.equal(asset.get("active"), true));
+        		Predicate orAssets = criteriaBuilder.or(predicates.stream().toArray(Predicate[]::new));
+            	return criteriaBuilder.and(criteriaBuilder.isTrue(asset.get("active")), orAssets );
      	    }
         	return criteriaBuilder.or(predicates.stream().toArray(Predicate[]::new));
         }
