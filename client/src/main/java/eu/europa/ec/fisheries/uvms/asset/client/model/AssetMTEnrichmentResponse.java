@@ -17,6 +17,7 @@ public class AssetMTEnrichmentResponse implements Serializable {
     private String assetUUID = null;
     private String assetHistoryId = null;
     private String flagstate = null;
+    private String vesselType = null;
 
     private String externalMarking = null;
     private String gearType = null;
@@ -63,6 +64,14 @@ public class AssetMTEnrichmentResponse implements Serializable {
 
     public void setFlagstate(String flagstate) {
         this.flagstate = flagstate;
+    }
+
+    public String getVesselType() {
+        return vesselType;
+    }
+
+    public void setVesselType(String vesselType) {
+        this.vesselType = vesselType;
     }
 
     public String getMobileTerminalConnectId() {

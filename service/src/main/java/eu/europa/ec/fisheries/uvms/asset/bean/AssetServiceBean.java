@@ -512,6 +512,7 @@ public class AssetServiceBean {
         resp.setIrcs(asset.getIrcs());
         resp.setMmsi(asset.getMmsi());
         resp.setImo(asset.getImo());
+        resp.setVesselType(asset.getVesselType());
         return resp;
     }
 
