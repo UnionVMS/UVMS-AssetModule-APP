@@ -24,6 +24,7 @@ public class AssetMTEnrichmentResponse implements Serializable {
     private String ircs = null;
     private String assetStatus = null;
     private String mmsi = null;
+    private String imo = null;
     private String dnid = null;
     private String mobileTerminalGuid = null;
     private String memberNumber = null;
@@ -153,6 +154,13 @@ public class AssetMTEnrichmentResponse implements Serializable {
         this.mmsi = mmsi;
     }
 
+    public String getImo() {
+        return imo;
+    }
+
+    public void setImo(String imo) {
+        this.imo = imo;
+    }
     public String getMobileTerminalGuid() {
         return mobileTerminalGuid;
     }
