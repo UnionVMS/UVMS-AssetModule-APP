@@ -190,6 +190,7 @@ public class AssetFilterServiceBean{
     	 
 	     UUID assetfileterId =  assetFilter.getId();
 	     AssetFilter oldAssetFilter = assetFilterDao.getAssetFilterByGuid(assetfileterId);
+	     
 	     // delete all assetfilter children for assetfileterId
 	     for(AssetFilterQuery assetFilterQuery: oldAssetFilter.getQueries()) {
 	    	 for(AssetFilterValue assetFilterValue : assetFilterQuery.getValues()) {
@@ -200,16 +201,16 @@ public class AssetFilterServiceBean{
 	     // create new assetfilter children
     	 for(AssetFilterQuery assetFilterQuery : assetFilter.getQueries()) {
     		 assetFilterQuery.setAssetFilter(assetFilter);
-    		 assetFilterDao.create(assetFilterQuery);
+    		 assetFilterQuery = assetFilterDao.create(assetFilterQuery);
     		 for(AssetFilterValue assetFilterValue : assetFilterQuery.getValues()) {
     			 assetFilterValue.setAssetFilterQuery(assetFilterQuery);
-    			 assetFilterDao.create(assetFilterValue);
+    			 assetFilterValue = assetFilterDao.create(assetFilterValue);
     		 }
-    	 }
-    	 assetFilter.setOwner(oldAssetFilter.getOwner());
+    	 };
+    	 assetFilter.setOwner(username);
     	 assetFilter.setUpdatedBy(username);
     	 assetFilter.setUpdateTime(Instant.now());
-	     return assetFilterDao.updateAssetFilter(assetFilter);
+    	 return assetFilterDao.updateAssetFilter(assetFilter);
 	}
 
 	

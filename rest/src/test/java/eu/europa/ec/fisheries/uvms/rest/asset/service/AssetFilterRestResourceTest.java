@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
+
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbConfig;
@@ -126,7 +128,6 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
     	assertTrue(response.getStatus() == Status.OK.getStatusCode() );
     }
     
-    
     @Test
     @OperateOnDeployment("normal")
     public void getAssetFilterListByUserTest() {
@@ -193,35 +194,45 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
     @OperateOnDeployment("normal")
     public void updateAssetFilterFromJson() {
 		
-		String afId = assetFilter.getId().toString();
-		String owner = assetFilter.getOwner();
-		String afjson = "{\"id\":\""+afId+"\",\"name\":\"Nya Båtar och Update Test\", \"filter\": [{\"values\":[{\"value\":23, \"operator\":\"this is a operator\"}],\"type\": \"dsad\", \"inverse\": false,\"isNumber\": true}] }";
+		String afId = assetFilter.getId().toString(); 
+		String afjson = "{\"id\":\""+afId+"\",\"name\":\"Nya Båtar och Update Test\", \"filter\": [{\"values\":[{\"value\":23, \"operator\":\"Not an Operator\"}, {\"value\":10100, \"operator\":\"bla bla bla\"}],\"type\": \"lapad\", \"inverse\": false,\"isNumber\": true}] }";
 		
-		getWebTargetExternal()
+		String assetFilterResp = getWebTargetExternal()
             .path("filter")
             .request(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-            .put(Entity.json(afjson), String.class);
-		 
-		String assetFilterResp = getWebTargetExternal()
+            .put(Entity.json(afjson), String.class);	 
+		
+		AssetFilter assetFilterRespString = getWebTargetExternal()
 			.path("filter")
 			.path(afId)
     		.request(MediaType.APPLICATION_JSON)
     		.header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-    		.get(String.class);
+    		.get(AssetFilter.class);
 		
 		 assetFilter = jsonb.fromJson(assetFilterResp, AssetFilter.class);
 		 assertNotNull(assetFilter.getId());
-		 assertEquals(assetFilter.getOwner(), owner);
-		 assertEquals("Nya Båtar och Update Test", assetFilter.getName());
+		 assertTrue(new ArrayList<AssetFilterQuery>(assetFilter.getQueries()).get(0).getValues().size() == 2);
 		 assertTrue(assetFilterResp.contains(afId));
+		 assertEquals(assetFilterRespString.getName(), assetFilter.getName());
+		 assertEquals(assetFilterRespString.getOwner(), assetFilter.getOwner());
+		 
+		 String assetFilterList = getWebTargetExternal()
+					.path("filter")
+					.path("list")
+		    		.request(MediaType.APPLICATION_JSON)
+		    		.header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+		    		.get(String.class);
+
+		 assertTrue(assetFilterList.contains(assetFilter.getId().toString()));
+		 assertTrue(assetFilterList.contains("Not an Operator"));
 	 }
 	
 	
 	 private AssetFilter createAssetFilter(AssetFilter assetFilterToCreate) {
 		 String assetFilterString = "{\"name\":\"båtar\",\"filter\": [{\"values\":[{\"value\":23, \"operator\":\"operator 2 test\"}],\"type\": \"dsad\", \"inverse\": false,\"isNumber\": true}] }";
 		 assetFilterToCreate = jsonb.fromJson(assetFilterString, AssetFilter.class);
-		String assetFilterJson =  getWebTargetExternal()
+		 String assetFilterJson =  getWebTargetExternal()
 		            .path("filter")
 		            .request(MediaType.APPLICATION_JSON)
 		            .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
