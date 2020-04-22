@@ -1069,9 +1069,9 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
     }
 
 
-    /*@Test
+    @Test
     @OperateOnDeployment("normal")
-    public void archiveAndUnarchiveMobileTerminal() {
+    public void updateMobileTerminalAndChannelAndGetChangeHistory() {
         MobileTerminal mt = MobileTerminalTestHelper.createBasicMobileTerminal();
         mt.setAsset(null);
 
@@ -1081,45 +1081,112 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(mt), MobileTerminal.class);
 
-        assertTrue(created.getActive());
-        assertFalse(created.getArchived());
+        Channel vms2 = MobileTerminalTestHelper.createBasicChannel();
+        vms2.setName("VMS2");
+        vms2.setDefaultChannel(false);
+        vms2.setPollChannel(false);
+        vms2.setConfigChannel(false);
+        created.getChannels().add(vms2);
+        created.setComment("NEW TEST COMMENT 1");
 
-        MobileTerminal response = getWebTargetExternal()
+        Response updatedResponse = getWebTargetExternal()
                 .path("mobileterminal")
-                .path(created.getId().toString())
-                .path("status")
-                .queryParam("comment", "Test Comment Archive")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(MobileTerminalStatus.ARCHIVE))
-                .readEntity(MobileTerminal.class);
+                .put(Entity.json(created), Response.class);
+        assertEquals(200, updatedResponse.getStatus());
 
-        assertNotNull(response);
-        assertTrue(response.getArchived());
+        MobileTerminal updated = updatedResponse.readEntity(MobileTerminal.class);
 
-        response = getWebTargetExternal()
+        updated.setMobileTerminalType(MobileTerminalTypeEnum.IRIDIUM);
+        updated.getChannels().iterator().next().setName("BETTER_VMS");
+        updated.setComment("NEW TEST COMMENT 2");
+
+        updatedResponse = getWebTargetExternal()
                 .path("mobileterminal")
-                .path(created.getId().toString())
-                .path("status")
-                .queryParam("comment", "Test Comment Unarchive")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .put(Entity.json(MobileTerminalStatus.UNARCHIVE))
-                .readEntity(MobileTerminal.class);
+                .put(Entity.json(updated), Response.class);
+        assertEquals(200, updatedResponse.getStatus());
 
-        assertFalse(response.getArchived());
 
-        //checking the events as well
-        Response res = getWebTargetExternal()
+        Response mTChangesResponse = getWebTargetExternal()
                 .path("mobileterminal")
                 .path(created.getId().toString())
-                .path("history")
+                .path("changeHistory")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .get();
 
-        assertEquals(200, res.getStatus());
-    }*/
+        assertEquals(200, mTChangesResponse.getStatus());
+        List<ChangeHistoryRow> mtChanges = mTChangesResponse.readEntity(new GenericType<List<ChangeHistoryRow>>() {});
+
+        assertEquals(2, mtChanges.size());
+        assertEquals(2, mtChanges.get(0).getSubclasses().size());
+        assertEquals("ChannelDto", mtChanges.get(0).getSubclasses().get(0).getClassName());
+        assertEquals(1, mtChanges.get(0).getSubclasses().get(0).getChanges().size());
+        assertEquals("historyId", mtChanges.get(0).getSubclasses().get(0).getChanges().get(0).getField());
+
+        assertEquals(10, mtChanges.get(0).getSubclasses().get(1).getChanges().size());
+        assertTrue(mtChanges.get(0).getSubclasses().get(1).getChanges().stream().allMatch(item ->item.getOldValue() == null));
+        assertTrue(mtChanges.get(0).getSubclasses().get(1).getChanges().stream().allMatch(item ->item.getNewValue() != null));
+
+        assertEquals(3, mtChanges.get(1).getChanges().size());
+        assertEquals(2, mtChanges.get(1).getSubclasses().size());
+    }
+
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void updateMobileTerminalRemoveChannelAndGetChangeHistory() {
+        MobileTerminal mt = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mt.setAsset(null);
+
+        Channel vms2 = MobileTerminalTestHelper.createBasicChannel();
+        vms2.setName("VMS2");
+        vms2.setDefaultChannel(false);
+        vms2.setPollChannel(false);
+        vms2.setConfigChannel(false);
+        mt.getChannels().add(vms2);
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mt), MobileTerminal.class);
+
+        created.setComment("NEW TEST COMMENT 1");
+        created.getChannels().removeIf(channel -> !channel.isDefaultChannel());
+
+        Response updatedResponse = getWebTargetExternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(created), Response.class);
+        assertEquals(200, updatedResponse.getStatus());
+
+
+        Response mTChangesResponse = getWebTargetExternal()
+                .path("mobileterminal")
+                .path(created.getId().toString())
+                .path("changeHistory")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get();
+
+        assertEquals(200, mTChangesResponse.getStatus());
+        List<ChangeHistoryRow> mtChanges = mTChangesResponse.readEntity(new GenericType<List<ChangeHistoryRow>>() {});
+
+        assertEquals(1, mtChanges.size());
+        assertEquals(2, mtChanges.get(0).getSubclasses().size());
+        assertEquals("ChannelDto", mtChanges.get(0).getSubclasses().get(0).getClassName());
+        assertEquals(1, mtChanges.get(0).getSubclasses().get(0).getChanges().size());
+        assertEquals("historyId", mtChanges.get(0).getSubclasses().get(0).getChanges().get(0).getField());
+
+        assertEquals(10, mtChanges.get(0).getSubclasses().get(1).getChanges().size());
+        assertTrue(mtChanges.get(0).getSubclasses().get(1).getChanges().stream().allMatch(item ->item.getOldValue() != null));
+        assertTrue(mtChanges.get(0).getSubclasses().get(1).getChanges().stream().allMatch(item ->item.getNewValue() == null));
+    }
 
     @Test
     @OperateOnDeployment("normal")
@@ -1180,8 +1247,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .get();
 
         assertEquals(200, mTChangesResponse.getStatus());
-        System.out.println(mTChangesResponse.readEntity(String.class));
-        /*List<ChangeHistoryRow> mtChanges = response.readEntity(new GenericType<List<ChangeHistoryRow>>() {});
+        List<ChangeHistoryRow> mtChanges = mTChangesResponse.readEntity(new GenericType<List<ChangeHistoryRow>>() {});
 
         assertNotNull(mtChanges);
         assertEquals(3, mtChanges.size());
@@ -1191,7 +1257,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         assertEquals("user", mtChanges.get(2).getUpdatedBy());
         assertEquals(2, mtChanges.get(2).getChanges().size());
-        assertTrue(mtChanges.get(2).getChanges().stream().anyMatch(item -> item.getNewValue().equals(asset2.getId().toString())));*/
+        assertTrue(mtChanges.get(2).getChanges().stream().anyMatch(item -> item.getNewValue().equals(asset2.getId().toString())));
     }
 
 

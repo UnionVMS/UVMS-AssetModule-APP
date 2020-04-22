@@ -80,6 +80,8 @@ public class HistoryMapper {
                             HistoryMappingSpecialCase.CHANNEL_UPDATED_TIME, HistoryMappingSpecialCase.CHANNEL_MOBILE_TERMINAL);
                 }
 
+                workingNewSet.remove(sameChannelInNewSet.get());
+
             }else{  //if the old channel is not among the new channels
                 ChannelDto creatorAndTimeChannel = new ChannelDto();
                 creatorAndTimeChannel.setUpdateUser(channelDto.getUpdateUser());
@@ -91,7 +93,6 @@ public class HistoryMapper {
             if (!changeHistoryRows.isEmpty() && !changeHistoryRows.get(0).getChanges().isEmpty()) {
                 returnList.add(changeHistoryRows.get(0));
             }
-            workingNewSet.remove(sameChannelInNewSet.get());
 
         }
         for (ChannelDto channelDto : workingNewSet) {   // new channels that where not in the old set

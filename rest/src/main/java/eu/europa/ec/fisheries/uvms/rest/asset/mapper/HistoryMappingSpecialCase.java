@@ -26,6 +26,11 @@ public enum HistoryMappingSpecialCase {
     },
     MOBILE_TERMINAL_DTO_CHANNEL("channels", false, true){
         @Override
+        public Object specialCase(Object input) {
+            return input;
+        }
+
+        @Override
         public List<ChangeHistoryRow> recursive(Object oldInput, Object newInput) {
             Set<ChannelDto> oldChannelSet = oldInput != null ? (Set<ChannelDto>) oldInput : new HashSet<>();
             Set<ChannelDto> newChannelSet = newInput != null ? (Set<ChannelDto>) newInput : new HashSet<>();

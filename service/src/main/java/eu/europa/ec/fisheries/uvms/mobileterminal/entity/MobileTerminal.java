@@ -28,6 +28,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -164,7 +165,8 @@ public class MobileTerminal implements Serializable {
 	@PrePersist
 	private void atPrePersist() {
 		this.historyId = UUID.randomUUID();
-		this.createTime = Instant.now();
+		this.createTime = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+		this.updatetime = Instant.now();
 	}
 
 	@PreUpdate
