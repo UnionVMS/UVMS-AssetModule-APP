@@ -21,7 +21,9 @@ import org.hibernate.envers.query.criteria.MatchMode;
 import javax.ejb.Stateless;
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaBuilder.Trimspec;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -167,15 +169,22 @@ public class AssetDao {
     	CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
     	CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
     	Root<Asset> asset = cq.from(Asset.class);
-    	Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset, includeInactivated);
-    	Predicate returnPredicate;
+
+		cq.select(criteriaBuilder.count(asset));
+		Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset, includeInactivated);
+		
 		if(!includeInactivated) {
-			Predicate onlyActiveAssets = criteriaBuilder.equal(asset.get("active"), Boolean.TRUE);
-     	    returnPredicate = criteriaBuilder.and(predicateQuery, onlyActiveAssets);
-		}else {
-			returnPredicate = predicateQuery;
+        	Predicate predicateOnlyActive = criteriaBuilder.equal(asset.get("active"), true);
+            if(predicateQuery != null) {
+            	cq.where(criteriaBuilder.and(predicateOnlyActive, predicateQuery));
+    		}else {
+    			cq.where(predicateOnlyActive);
+    		}
+        }else {
+        	if(predicateQuery != null) {
+        		cq.where(predicateQuery);
+    		}
 		}
-    	cq.select(criteriaBuilder.count(asset)).where(returnPredicate);
     	return em.createQuery(cq).getSingleResult();
     }
 
@@ -191,8 +200,7 @@ public class AssetDao {
             AuditQuery query = createAuditQuery(queryTree, includeInactivated);
             query.setFirstResult(pageSize * (pageNumber - 1));
             query.setMaxResults(pageSize);
-            List<Asset> test = query.getResultList();
-            return test;
+            return query.getResultList();
         } catch (AuditException e) {
             return Collections.emptyList();
         }
@@ -206,44 +214,35 @@ public class AssetDao {
         }
     	return false;
     }
-    
     private List<Asset> getAssetListSearchPaginatedCriteriaBuilder(Integer pageNumber, Integer pageSize, SearchBranch queryTree, boolean includeInactivated) {
     	CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
     	CriteriaQuery<Asset> cq = criteriaBuilder.createQuery(Asset.class);
     	Root<Asset> asset = cq.from(Asset.class);
-//    	if(!includeInactivated) {
-//			Predicate predicateIncludeInactive = criteriaBuilder.isTrue(asset.get("active")); 
-//    		cq.where(predicateIncludeInactive);
-//		}
-    	if(!queryTree.getFields().isEmpty()) {
-    		
-    		Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset, includeInactivated);
-    		Predicate finalPredicate;
-//    		if(!includeInactivated) {
-//    			Predicate predicateIncludeInactive = criteriaBuilder.isTrue(asset.get("active"));
-//    			finalPredicate = criteriaBuilder.and( predicateIncludeInactive, predicateQuery);
-//    		}else {
-//    			finalPredicate = predicateQuery;
-//    		}
-    		
-			cq.where(predicateQuery);
-    	} else {
-    		if(!includeInactivated) {
-    			Predicate predicateIncludeInactive = criteriaBuilder.equal(asset.get("active"), Boolean.TRUE); 
-        		cq.where(predicateIncludeInactive);
-    		}
-    	}
-    	
+
+		Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset, includeInactivated);
+     
+    	if(!includeInactivated) {
+          Predicate predicateOnlyActive = criteriaBuilder.equal(asset.get("active"), true);
+            if(predicateQuery != null) {
+            	cq.where(criteriaBuilder.and(predicateOnlyActive, predicateQuery));
+      		}else {
+      			cq.where(predicateOnlyActive);
+      		}
+          }else {
+        	  cq.where(predicateQuery);
+  		}
     	TypedQuery<Asset> query = em.createQuery(cq);
-    	query.setFirstResult(pageSize * (pageNumber - 1)) // offset
-         	.setMaxResults(pageSize); // limit
+    	query.setFirstResult(pageSize * (pageNumber - 1)); // offset
+    	query.setMaxResults(pageSize); // limit
     	return query.getResultList();
     }
     
     private Predicate queryBuilderPredicate(SearchBranch query, CriteriaBuilder criteriaBuilder, Root<Asset> asset, boolean includeInactivated){  
-   
+        if( query.getFields() == null || query.getFields().isEmpty() || query.getFields().size() < 1 ) {
+        	return null;
+        }
         List<Predicate> predicates = new ArrayList<>();
-        
+ 
         for (AssetSearchInterface field : query.getFields()) {
             if(!field.isLeaf()){
                 if( !((SearchBranch)field).getFields().isEmpty()){
@@ -265,7 +264,7 @@ public class AssetDao {
                 			criteriaBuilder.lower(
                 					criteriaBuilder.function("REPLACE"
                 			                 , String.class
-                			                 , criteriaBuilder.function ("REPLACE"
+                			                 , criteriaBuilder.function("REPLACE"
                 			                		 , String.class
                 			                		 , asset.get(leaf.getSearchField().getFieldName())
                 			                		 , criteriaBuilder.literal("-")
@@ -275,7 +274,7 @@ public class AssetDao {
                 			                 , criteriaBuilder.literal("")
                 					)
                 			) 
-                			, "%" + leaf.getSearchValue().toLowerCase().replace(" ", "").replace("-", "") + "%"
+                			, "%" + leaf.getSearchValue().replace(" ", "").replace("-", "").toLowerCase() + "%"
             	        ));
                 } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.DECIMAL)) {
                 	if (leaf.getOperator().equalsIgnoreCase(">=")) {
@@ -307,26 +306,10 @@ public class AssetDao {
                 }
             }
         }
-        if (query.isLogicalAnd() ) { // AND + AND only active
-        	if(!includeInactivated) {
-//        		Predicate allPredicateAnd = criteriaBuilder.and(predicates.stream().toArray(Predicate[]::new));
-//         	    Predicate onlyActiveAssets = criteriaBuilder.equal(asset.get("active"), Boolean.TRUE);
-//         	    Predicate returnPredicate = criteriaBuilder.and(allPredicateAnd, onlyActiveAssets);
-//         	    return returnPredicate;
-        		predicates.add(criteriaBuilder.equal(asset.get("active"), true));
-     	    }
+        if (query.isLogicalAnd() ) { 
         	return criteriaBuilder.and(predicates.stream().toArray(Predicate[]::new));
-        	
-        } else { //OR + AND only active
-        	if(!includeInactivated) {
-//        		Predicate allPredicateOr = criteriaBuilder.or(predicates.stream().toArray(Predicate[]::new));
-//         	    Predicate onlyActiveAssets = criteriaBuilder.equal(asset.get("active"), Boolean.TRUE);
-//         	    Predicate returnPredicate = criteriaBuilder.and( onlyActiveAssets, allPredicateOr);
-  //       	    return returnPredicate;
-        		// predicates.add(criteriaBuilder.equal(asset.get("active"), true));
-        		Predicate orAssets = criteriaBuilder.or(predicates.stream().toArray(Predicate[]::new));
-            	return criteriaBuilder.and(criteriaBuilder.isTrue(asset.get("active")), orAssets );
-     	    }
+        } 
+        else { 
         	return criteriaBuilder.or(predicates.stream().toArray(Predicate[]::new));
         }
     }

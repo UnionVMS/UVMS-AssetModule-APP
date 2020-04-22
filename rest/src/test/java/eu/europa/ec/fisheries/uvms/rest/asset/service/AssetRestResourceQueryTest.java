@@ -242,13 +242,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         SearchBranch trunk = new SearchBranch(true);
         SearchLeaf leaf = new SearchLeaf(SearchFields.CFR, cfrValue);
         trunk.getFields().add(leaf);
-
-        SearchBranch trunk2 = new SearchBranch(false);
-        SearchLeaf leaf2 = new SearchLeaf(SearchFields.CFR, cfrValue.toLowerCase());
-        trunk2.getFields().add(leaf2);
-        leaf2 = new SearchLeaf(SearchFields.CFR, cfrValue2.toLowerCase());
-        trunk2.getFields().add(leaf2);
-
+        
         AssetListResponse listResponse1 = getWebTargetExternal()
                 .path("asset")
                 .path("list")
@@ -256,6 +250,15 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(trunk), AssetListResponse.class);
 
+        assertNotNull(listResponse1);
+        assertEquals(1, listResponse1.getAssetList().size());
+        
+        SearchBranch trunk2 = new SearchBranch(false);
+        SearchLeaf leaf2 = new SearchLeaf(SearchFields.CFR, cfrValue.toLowerCase());
+        trunk2.getFields().add(leaf2);
+        leaf2 = new SearchLeaf(SearchFields.CFR, cfrValue2.toLowerCase());
+        trunk2.getFields().add(leaf2);
+        
         AssetListResponse listResponse2 = getWebTargetExternal()
                 .path("asset")
                 .path("list")
@@ -263,11 +266,8 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(trunk2), AssetListResponse.class);
 
-        assertNotNull(listResponse1);
         assertNotNull(listResponse2);
-        assertEquals(1, listResponse1.getAssetList().size());
         assertEquals(2, listResponse2.getAssetList().size());
-
 
         Asset fetched_asset1 = listResponse1.getAssetList().get(0);
         Asset fetched_asset2 = listResponse2.getAssetList().get(0);
@@ -418,8 +418,8 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
                 .put(Entity.json(""), Asset.class);
 
         assertFalse(archived.getActive());
-        
-        // List of all except inactivated
+
+        // ask for it
         AssetListResponse listResponseAfter = getWebTargetExternal()
                 .path("asset")
                 .path("list")
@@ -428,35 +428,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(trunk), AssetListResponse.class);
 
-      assertEquals(sizeBefore - 1, listResponseAfter.getAssetList().size());
-        
-      trunk = new SearchBranch(false);
-      SearchLeaf leaf = new SearchLeaf(SearchFields.CFR, createdAsset.getCfr());
-      trunk.getFields().add(leaf);
-      leaf = new SearchLeaf(SearchFields.IRCS, createdAsset.getIrcs());
-      trunk.getFields().add(leaf);
-      
-      // Should return List of none
-      AssetListResponse listResponseOfNone = getWebTargetExternal()
-              .path("asset")
-              .path("list")
-              .request(MediaType.APPLICATION_JSON)
-              .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-              .post(Entity.json(trunk), AssetListResponse.class);
-
-      assertEquals(0, listResponseOfNone.getAssetList().size());
-      
-      // Should return List of one inactiveted asset
-      AssetListResponse listResponseOfInactivated = getWebTargetExternal()
-              .path("asset")
-              .path("list")
-              .queryParam("includeInactivated","true")
-              .request(MediaType.APPLICATION_JSON)
-              .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-              .post(Entity.json(trunk), AssetListResponse.class);
-
-      assertNotNull(listResponseOfInactivated);
-      assertEquals(listResponse.getAssetList().get(0).getActive(), false);
+        assertEquals(sizeBefore - 1, listResponseAfter.getAssetList().size());
     }
     
     @Test
