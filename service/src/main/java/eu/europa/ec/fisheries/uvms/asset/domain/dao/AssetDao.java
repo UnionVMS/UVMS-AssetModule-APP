@@ -200,7 +200,8 @@ public class AssetDao {
             AuditQuery query = createAuditQuery(queryTree, includeInactivated);
             query.setFirstResult(pageSize * (pageNumber - 1));
             query.setMaxResults(pageSize);
-            return query.getResultList();
+            List<Asset> test = query.getResultList();
+            return test;
         } catch (AuditException e) {
             return Collections.emptyList();
         }

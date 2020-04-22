@@ -578,8 +578,12 @@ public class AssetDaoTest extends TransactionalTests {
         List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
         assertEquals(2, assets.size());
-        assertThat(assets.get(1).getId(), is(asset.getId()));
-        assertThat(assets.get(0).getId(), is(asset2.getId()));
+        assertTrue(assets.stream()
+                .anyMatch(fetchedAsset -> fetchedAsset.getId().equals(asset.getId())));
+        assertTrue(assets.stream()
+                .anyMatch(fetchedAsset -> fetchedAsset.getId().equals(asset.getId())));
+//        assertThat(assets.get(1).getId(), is(asset.getId()));
+//        assertThat(assets.get(0).getId(), is(asset2.getId()));
 
         assetDao.deleteAsset(asset);
         assetDao.deleteAsset(asset2);
@@ -628,6 +632,7 @@ public class AssetDaoTest extends TransactionalTests {
 
         List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 1, trunk, false);
         assertEquals(1, assets.size());
+        
         assertThat(assets.get(0).getId(), is(asset2.getId()));
         
         assets = assetDao.getAssetListSearchPaginated(2, 1, trunk, false);
@@ -1163,7 +1168,7 @@ public class AssetDaoTest extends TransactionalTests {
 
         List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
         
-        assertEquals(2, assets.size());
+        assertEquals(1, assets.size());
         assertTrue(assets.stream()
                 .anyMatch(fetchedAsset -> fetchedAsset.getId().equals(asset.getId())));
         

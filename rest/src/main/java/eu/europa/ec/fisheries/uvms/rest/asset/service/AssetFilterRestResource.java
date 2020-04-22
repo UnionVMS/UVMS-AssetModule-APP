@@ -330,9 +330,7 @@ public class AssetFilterRestResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getListOfAssetFilterByUser() throws Exception {
         try {
-            
         	String user = servletRequest.getRemoteUser();
-        	System.out.println("user:  " + user);
         	List<AssetFilter> assetFilterList = assetFilterService.getAssetFilterList(user);
         	AssetFilterList assetFilterListresp = new AssetFilterList();
         	assetFilterListresp.setAssetFilterList(assetFilterList);
@@ -344,6 +342,4 @@ public class AssetFilterRestResource {
             throw e;
         }
     }
-    
-    
 }
