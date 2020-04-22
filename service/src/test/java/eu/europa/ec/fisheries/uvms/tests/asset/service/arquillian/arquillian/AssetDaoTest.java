@@ -582,8 +582,6 @@ public class AssetDaoTest extends TransactionalTests {
                 .anyMatch(fetchedAsset -> fetchedAsset.getId().equals(asset.getId())));
         assertTrue(assets.stream()
                 .anyMatch(fetchedAsset -> fetchedAsset.getId().equals(asset.getId())));
-//        assertThat(assets.get(1).getId(), is(asset.getId()));
-//        assertThat(assets.get(0).getId(), is(asset2.getId()));
 
         assetDao.deleteAsset(asset);
         assetDao.deleteAsset(asset2);
@@ -619,7 +617,7 @@ public class AssetDaoTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void getAssetListSearchPaginatedTestTwoAssestPageSizeOne() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
-        asset = assetDao.createAsset(asset);
+        assetDao.createAsset(asset);
         commit();
         
         Asset asset2 = AssetTestsHelper.createBasicAsset();
@@ -633,12 +631,17 @@ public class AssetDaoTest extends TransactionalTests {
         List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 1, trunk, false);
         assertEquals(1, assets.size());
         
-        assertThat(assets.get(0).getId(), is(asset2.getId()));
+        assertTrue(assets.stream()
+                .anyMatch(fetchedAsset -> fetchedAsset.getId().equals(asset.getId()) || 
+                		fetchedAsset.getId().equals(asset2.getId())   ));
         
         assets = assetDao.getAssetListSearchPaginated(2, 1, trunk, false);
         
         assertEquals(1, assets.size());
-        assertThat(assets.get(0).getId(), is(asset.getId()));
+        
+        assertTrue(assets.stream()
+                .anyMatch(fetchedAsset -> fetchedAsset.getId().equals(asset.getId()) || 
+                		fetchedAsset.getId().equals(asset2.getId())   ));
 
         assetDao.deleteAsset(asset);
         assetDao.deleteAsset(asset2);
