@@ -222,16 +222,28 @@ public class AssetDao {
 
 		Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset, includeInactivated);
      
+//    	if(!includeInactivated) {
+//    		Predicate predicateOnlyActive = criteriaBuilder.equal(asset.get("active"), true);
+//	        if(predicateQuery != null) {
+//	        	cq.where(criteriaBuilder.and(predicateOnlyActive, predicateQuery));
+//	  		}else {
+//	  			cq.where(predicateOnlyActive);
+//	  		}
+//        }else if(includeInactivated && predicateQuery != null ){
+//        	cq.where(predicateQuery);
+//  		}
     	if(!includeInactivated) {
-          Predicate predicateOnlyActive = criteriaBuilder.equal(asset.get("active"), true);
+        	Predicate predicateOnlyActive = criteriaBuilder.equal(asset.get("active"), true);
             if(predicateQuery != null) {
             	cq.where(criteriaBuilder.and(predicateOnlyActive, predicateQuery));
-      		}else {
-      			cq.where(predicateOnlyActive);
-      		}
-          }else {
-        	  cq.where(predicateQuery);
-  		}
+    		}else {
+    			cq.where(predicateOnlyActive);
+    		}
+        }else {
+        	if(predicateQuery != null) {
+        		cq.where(predicateQuery);
+    		}
+		}
     	TypedQuery<Asset> query = em.createQuery(cq);
     	query.setFirstResult(pageSize * (pageNumber - 1)); // offset
     	query.setMaxResults(pageSize); // limit

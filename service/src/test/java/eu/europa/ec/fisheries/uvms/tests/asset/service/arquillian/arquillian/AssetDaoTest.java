@@ -1211,6 +1211,57 @@ public class AssetDaoTest extends TransactionalTests {
         commit();
     }
     
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetListFuzzySearchEmptyNoInactivated() throws Exception {
+        
+        Asset asset1 = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset1);
+        Asset asset2 = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset2);
+        Asset asset3 = AssetTestsHelper.createBasicAsset();
+        asset3.setActive(false);
+        assetDao.createAsset(asset3);
+        commit();
+        
+        SearchBranch trunk = new SearchBranch(false);
+
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
+        assertTrue(assets.size() >= 2 );
+        assertFalse(assets.contains(asset3));
+        
+        assetDao.deleteAsset(asset1);
+        assetDao.deleteAsset(asset2);
+        assetDao.deleteAsset(asset3);
+        commit();
+    }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetListFuzzySearchEmptyWithInactivated() throws Exception {
+        
+        Asset asset1 = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset1);
+        Asset asset2 = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset2);
+        Asset asset3 = AssetTestsHelper.createBasicAsset();
+        asset3.setActive(false);
+        assetDao.createAsset(asset3);
+        commit();
+        
+        SearchBranch trunk = new SearchBranch(false);
+
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 100, trunk, true);
+        assertTrue(assets.size() >= 3 );
+        assertTrue(assets.stream()
+                .anyMatch(fetchedAsset -> fetchedAsset.getId().equals(asset3.getId())));
+        
+        assetDao.deleteAsset(asset1);
+        assetDao.deleteAsset(asset2);
+        assetDao.deleteAsset(asset3);
+        commit();
+    }
+    
     private void commit() throws Exception {
         userTransaction.commit();
         userTransaction.begin();
