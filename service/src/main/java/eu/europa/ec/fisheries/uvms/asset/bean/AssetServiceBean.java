@@ -194,7 +194,9 @@ public class AssetServiceBean {
 
         asset.setUpdatedBy(username);
         asset.setUpdateTime(Instant.now());
-        asset.setEventCode(EventCode.MOD.value());
+        if (asset.getEventCode() == null) {
+            asset.setEventCode(EventCode.MOD.value());
+        }
         asset.setComment(comment);
         asset.getMobileTerminals(); // instantiate list
         Asset updatedAsset = assetDao.updateAsset(asset);
