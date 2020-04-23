@@ -1180,12 +1180,16 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertEquals(1, mtChanges.size());
         assertEquals(2, mtChanges.get(0).getSubclasses().size());
         assertEquals("ChannelDto", mtChanges.get(0).getSubclasses().get(0).getClassName());
-        assertEquals(1, mtChanges.get(0).getSubclasses().get(0).getChanges().size());
-        assertEquals("historyId", mtChanges.get(0).getSubclasses().get(0).getChanges().get(0).getField());
+        //one subclass should have 1 change
+        Optional<ChangeHistoryRow> oneChangeRow = mtChanges.get(0).getSubclasses().stream().filter(row -> row.getChanges().size() == 1).findFirst();
+        assertTrue(oneChangeRow.isPresent());
+        assertEquals("historyId", oneChangeRow.get().getChanges().get(0).getField());
 
-        assertEquals(10, mtChanges.get(0).getSubclasses().get(1).getChanges().size());
-        assertTrue(mtChanges.get(0).getSubclasses().get(1).getChanges().stream().allMatch(item ->item.getOldValue() != null));
-        assertTrue(mtChanges.get(0).getSubclasses().get(1).getChanges().stream().allMatch(item ->item.getNewValue() == null));
+        //one subclass should have 10 changes
+        Optional<ChangeHistoryRow> tenChangeRow = mtChanges.get(0).getSubclasses().stream().filter(row -> row.getChanges().size() == 10).findFirst();
+        assertTrue(tenChangeRow.isPresent());
+        assertTrue(tenChangeRow.get().getChanges().stream().allMatch(item ->item.getOldValue() != null));
+        assertTrue(tenChangeRow.get().getChanges().stream().allMatch(item ->item.getNewValue() == null));
     }
 
     @Test
