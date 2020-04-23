@@ -1,11 +1,11 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.*;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetRemapMapping;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.*;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 
 import org.hibernate.envers.AuditReader;
@@ -121,8 +121,8 @@ public class AssetDao {
         }
     }
 
-    public List<Asset> getAssetByMmsiOrIrcs(String mmsi, String ircs){
-        String correctedIrcs = (ircs != null && ircs.matches("\\w{3}\\d{4}") ? ircs.substring(0,3) + "-" + ircs.substring(3) : ircs);
+    public List<Asset> getAssetByMmsiOrIrcs(String mmsi, String ircs) {
+        String correctedIrcs = (ircs != null && ircs.matches("\\w{3}\\d{4}") ? ircs.substring(0, 3) + "-" + ircs.substring(3) : ircs);
 
         TypedQuery<Asset> query = em.createNamedQuery(Asset.ASSET_FIND_BY_MMSI_OR_IRCS, Asset.class);
         query.setParameter("mmsi", mmsi);
@@ -145,158 +145,159 @@ public class AssetDao {
         return query.getResultList();
     }
 
-    public List<String> getAllAvailableVesselTypes(){
+    public List<String> getAllAvailableVesselTypes() {
         TypedQuery<String> query = em.createNamedQuery(Asset.ASSET_ALL_AVAILABLE_VESSEL_TYPES, String.class);
         return query.getResultList();
     }
 
     public Long getAssetCount(SearchBranch queryTree, boolean includeInactivated) {
-    	if (isHistoricSearch(queryTree) == true) {
-    		return getAssetCountHistoric(queryTree, includeInactivated);
-    	}
-    	return getAssetCountCB(queryTree, includeInactivated);
+        if (isHistoricSearch(queryTree) == true) {
+            return getAssetCountHistoric(queryTree, includeInactivated);
+        }
+        return getAssetCountCB(queryTree, includeInactivated);
     }
-    
-    public Long getAssetCountHistoric(SearchBranch queryTree, boolean includeInactivated) {
-		 try {
-	            AuditQuery query = createAuditQuery(queryTree, includeInactivated);
-	            return (Long) query.addProjection(AuditEntity.id().count()).getSingleResult();
-	        } catch (AuditException e) {
-	            return 0L;
-	        }
-    }
-    public Long getAssetCountCB(SearchBranch queryTree, boolean includeInactivated) {
-    	CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-    	CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
-    	Root<Asset> asset = cq.from(Asset.class);
 
-		cq.select(criteriaBuilder.count(asset));
-		Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset);
-		
-		if(!includeInactivated) {
-        	Predicate predicateOnlyActive = criteriaBuilder.equal(asset.get("active"), true);
-            if(predicateQuery != null) {
-            	cq.where(criteriaBuilder.and(predicateOnlyActive, predicateQuery));
-    		}else {
-    			cq.where(predicateOnlyActive);
-    		}
-        }else {
-        	if(predicateQuery != null) {
-        		cq.where(predicateQuery);
-    		}
-		}
-    	return em.createQuery(cq).getSingleResult();
+    public Long getAssetCountHistoric(SearchBranch queryTree, boolean includeInactivated) {
+        try {
+            AuditQuery query = createAuditQuery(queryTree, includeInactivated);
+            return (Long) query.addProjection(AuditEntity.id().count()).getSingleResult();
+        } catch (AuditException e) {
+            return 0L;
+        }
+    }
+
+    public Long getAssetCountCB(SearchBranch queryTree, boolean includeInactivated) {
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = criteriaBuilder.createQuery(Long.class);
+        Root<Asset> asset = cq.from(Asset.class);
+
+        cq.select(criteriaBuilder.count(asset));
+        Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset);
+
+        if (!includeInactivated) {
+            Predicate predicateOnlyActive = criteriaBuilder.equal(asset.get("active"), true);
+            if (predicateQuery != null) {
+                cq.where(criteriaBuilder.and(predicateOnlyActive, predicateQuery));
+            } else {
+                cq.where(predicateOnlyActive);
+            }
+        } else {
+            if (predicateQuery != null) {
+                cq.where(predicateQuery);
+            }
+        }
+        return em.createQuery(cq).getSingleResult();
     }
 
     public List<Asset> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize, SearchBranch queryTree, boolean includeInactivated) {
-    	if(isHistoricSearch(queryTree)) {
-    		return getAssetListSearchPaginatedHistoric(pageNumber, pageSize, queryTree, includeInactivated);	
-    	}
-    	return getAssetListSearchPaginatedCriteriaBuilder(pageNumber, pageSize, queryTree, includeInactivated);
+        if (isHistoricSearch(queryTree)) {
+            return getAssetListSearchPaginatedHistoric(pageNumber, pageSize, queryTree, includeInactivated);
+        }
+        return getAssetListSearchPaginatedCriteriaBuilder(pageNumber, pageSize, queryTree, includeInactivated);
     }
-    
+
     private List<Asset> getAssetListSearchPaginatedHistoric(Integer pageNumber, Integer pageSize, SearchBranch queryTree, boolean includeInactivated) {
         try {
             AuditQuery query = createAuditQuery(queryTree, includeInactivated);
             query.setFirstResult(pageSize * (pageNumber - 1));
             query.setMaxResults(pageSize);
-            List<Asset> test = query.getResultList();
-            return test;
+            return (List<Asset>) query.getResultList();
         } catch (AuditException e) {
             return Collections.emptyList();
         }
     }
-    
-    private boolean isHistoricSearch(SearchBranch queryTree) {
-    	SearchLeaf dateSearchField = getDateSearchField(queryTree);
-    	SearchLeaf historySearchField = getHistoryIdSearchField(queryTree);
-        if (dateSearchField != null || historySearchField != null) {
-        	return true;
-        }
-    	return false;
-    }
-    private List<Asset> getAssetListSearchPaginatedCriteriaBuilder(Integer pageNumber, Integer pageSize, SearchBranch queryTree, boolean includeInactivated) {
-    	CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-    	CriteriaQuery<Asset> cq = criteriaBuilder.createQuery(Asset.class);
-    	Root<Asset> asset = cq.from(Asset.class);
 
-		Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset);
-     
-    	if(!includeInactivated) {
-        	Predicate predicateOnlyActive = criteriaBuilder.equal(asset.get("active"), true);
-            if(predicateQuery != null) {
-            	cq.where(criteriaBuilder.and(predicateOnlyActive, predicateQuery));
-    		}else {
-    			cq.where(predicateOnlyActive);
-    		}
-        }else {
-        	if(predicateQuery != null) {
-        		cq.where(predicateQuery);
-    		}
-		}
-    	TypedQuery<Asset> query = em.createQuery(cq);
-    	query.setFirstResult(pageSize * (pageNumber - 1)); // offset
-    	query.setMaxResults(pageSize); // limit
-    	return query.getResultList();
+    private boolean isHistoricSearch(SearchBranch queryTree) {
+        SearchLeaf dateSearchField = getDateSearchField(queryTree);
+        SearchLeaf historySearchField = getHistoryIdSearchField(queryTree);
+        if (dateSearchField != null || historySearchField != null) {
+            return true;
+        }
+        return false;
     }
-    
-    private Predicate queryBuilderPredicate(SearchBranch query, CriteriaBuilder criteriaBuilder, Root<Asset> asset){  
-        if( query.getFields() == null || query.getFields().isEmpty() || query.getFields().size() < 1 ) {
-        	return null;
+
+    private List<Asset> getAssetListSearchPaginatedCriteriaBuilder(Integer pageNumber, Integer pageSize, SearchBranch queryTree, boolean includeInactivated) {
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<Asset> cq = criteriaBuilder.createQuery(Asset.class);
+        Root<Asset> asset = cq.from(Asset.class);
+
+        Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset);
+
+        if (!includeInactivated) {
+            Predicate predicateOnlyActive = criteriaBuilder.equal(asset.get("active"), true);
+            if (predicateQuery != null) {
+                cq.where(criteriaBuilder.and(predicateOnlyActive, predicateQuery));
+            } else {
+                cq.where(predicateOnlyActive);
+            }
+        } else {
+            if (predicateQuery != null) {
+                cq.where(predicateQuery);
+            }
+        }
+        TypedQuery<Asset> query = em.createQuery(cq);
+        query.setFirstResult(pageSize * (pageNumber - 1)); // offset
+        query.setMaxResults(pageSize); // limit
+        return query.getResultList();
+    }
+
+    private Predicate queryBuilderPredicate(SearchBranch query, CriteriaBuilder criteriaBuilder, Root<Asset> asset) {
+        if (query.getFields() == null || query.getFields().isEmpty() || query.getFields().size() < 1) {
+            return null;
         }
         List<Predicate> predicates = new ArrayList<>();
- 
+
         for (AssetSearchInterface field : query.getFields()) {
-            if(!field.isLeaf()){
-                if( !((SearchBranch)field).getFields().isEmpty()){
-                	predicates.add(queryBuilderPredicate((SearchBranch) field, criteriaBuilder, asset));
+            if (!field.isLeaf()) {
+                if (!((SearchBranch) field).getFields().isEmpty()) {
+                    predicates.add(queryBuilderPredicate((SearchBranch) field, criteriaBuilder, asset));
                 }
-            }else{
+            } else {
                 SearchLeaf leaf = (SearchLeaf) field;
                 if (leaf.getSearchValue().contains("*")) {
-                	predicates.add(criteriaBuilder.like(
-            			criteriaBuilder.lower(
-            					asset.get(
-            						leaf.getSearchField().getFieldName()
-            	                )
-            	            ), "%" + leaf.getSearchValue().replace("*", "%").toLowerCase() + "%"
-            	        )
-                	);
-                }else if (leaf.getSearchField().isFuzzySearch()) {
-                	predicates.add(criteriaBuilder.like(
-                			criteriaBuilder.lower(
-                					criteriaBuilder.function("REPLACE"
-                			                 , String.class
-                			                 , criteriaBuilder.function("REPLACE"
-                			                		 , String.class
-                			                		 , asset.get(leaf.getSearchField().getFieldName())
-                			                		 , criteriaBuilder.literal("-")
-                			                		 , criteriaBuilder.literal("")
-                			                		 )
-                			                 , criteriaBuilder.literal(" ")
-                			                 , criteriaBuilder.literal("")
-                					)
-                			) 
-                			, "%" + leaf.getSearchValue().replace(" ", "").replace("-", "").toLowerCase() + "%"
-            	        ));
+                    predicates.add(criteriaBuilder.like(
+                            criteriaBuilder.lower(
+                                    asset.get(
+                                            leaf.getSearchField().getFieldName()
+                                    )
+                            ), "%" + leaf.getSearchValue().replace("*", "%").toLowerCase() + "%"
+                            )
+                    );
+                } else if (leaf.getSearchField().isFuzzySearch()) {
+                    predicates.add(criteriaBuilder.like(
+                            criteriaBuilder.lower(
+                                    criteriaBuilder.function("REPLACE"
+                                            , String.class
+                                            , criteriaBuilder.function("REPLACE"
+                                                    , String.class
+                                                    , asset.get(leaf.getSearchField().getFieldName())
+                                                    , criteriaBuilder.literal("-")
+                                                    , criteriaBuilder.literal("")
+                                            )
+                                            , criteriaBuilder.literal(" ")
+                                            , criteriaBuilder.literal("")
+                                    )
+                            )
+                            , "%" + leaf.getSearchValue().replace(" ", "").replace("-", "").toLowerCase() + "%"
+                    ));
                 } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.DECIMAL)) {
-                	if (leaf.getOperator().equalsIgnoreCase(">=")) {
-                		predicates.add(criteriaBuilder.ge(asset.get(leaf.getSearchField().getFieldName()), Double.valueOf(leaf.getSearchValue())));
-                    } else if  (leaf.getOperator().equalsIgnoreCase("<=")) {
-                    	predicates.add(criteriaBuilder.le(asset.get(leaf.getSearchField().getFieldName()), Double.valueOf(leaf.getSearchValue())));
-                    } else if  (leaf.getOperator().equalsIgnoreCase("!=")) { 
-                    	predicates.add(criteriaBuilder.notEqual(asset.get(leaf.getSearchField().getFieldName()), Double.valueOf(leaf.getSearchValue())));
-                    } else { 
-                    	predicates.add(criteriaBuilder.equal(asset.get(leaf.getSearchField().getFieldName()), Double.valueOf(leaf.getSearchValue())));
+                    if (leaf.getOperator().equalsIgnoreCase(">=")) {
+                        predicates.add(criteriaBuilder.ge(asset.get(leaf.getSearchField().getFieldName()), Double.valueOf(leaf.getSearchValue())));
+                    } else if (leaf.getOperator().equalsIgnoreCase("<=")) {
+                        predicates.add(criteriaBuilder.le(asset.get(leaf.getSearchField().getFieldName()), Double.valueOf(leaf.getSearchValue())));
+                    } else if (leaf.getOperator().equalsIgnoreCase("!=")) {
+                        predicates.add(criteriaBuilder.notEqual(asset.get(leaf.getSearchField().getFieldName()), Double.valueOf(leaf.getSearchValue())));
+                    } else {
+                        predicates.add(criteriaBuilder.equal(asset.get(leaf.getSearchField().getFieldName()), Double.valueOf(leaf.getSearchValue())));
                     }
                 } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.LIST)) {
-                	predicates.add(criteriaBuilder.like(
-                			criteriaBuilder.lower(
-                					asset.get(
-                							leaf.getSearchField().getFieldName()
-                							)
-                					), 
-                			"%" + leaf.getSearchValue().toLowerCase() + "%"));
+                    predicates.add(criteriaBuilder.like(
+                            criteriaBuilder.lower(
+                                    asset.get(
+                                            leaf.getSearchField().getFieldName()
+                                    )
+                            ),
+                            "%" + leaf.getSearchValue().toLowerCase() + "%"));
                 } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.NUMBER)) {
                     Integer intValue = Integer.parseInt(leaf.getSearchValue());
                     predicates.add(criteriaBuilder.equal(asset.get(leaf.getSearchField().getFieldName()), intValue));
@@ -309,11 +310,10 @@ public class AssetDao {
                 }
             }
         }
-        if (query.isLogicalAnd() ) { 
-        	return criteriaBuilder.and(predicates.stream().toArray(Predicate[]::new));
-        } 
-        else { 
-        	return criteriaBuilder.or(predicates.stream().toArray(Predicate[]::new));
+        if (query.isLogicalAnd()) {
+            return criteriaBuilder.and(predicates.stream().toArray(Predicate[]::new));
+        } else {
+            return criteriaBuilder.or(predicates.stream().toArray(Predicate[]::new));
         }
     }
 
@@ -332,47 +332,47 @@ public class AssetDao {
             if (!searchRevisions(queryTree)) {
                 query.add(AuditEntity.revisionNumber().maximize().computeAggregationInInstanceContext());
             }
-            if(!includeInactivated) {
+            if (!includeInactivated) {
                 query.add(AuditEntity.property("active").eq(true));
             }
         }
 
         AuditCriterion auditCriterion = queryBuilder(queryTree);
-        if(auditCriterion != null) {
+        if (auditCriterion != null) {
             query.add(auditCriterion);
         }
         return query;
     }
 
-    private AuditCriterion queryBuilder(SearchBranch query){
+    private AuditCriterion queryBuilder(SearchBranch query) {
         ExtendableCriterion operator;
         boolean operatorUsed = false;
-        if(query.isLogicalAnd()){
+        if (query.isLogicalAnd()) {
             operator = AuditEntity.conjunction();           //and
-        }else{
+        } else {
             operator = AuditEntity.disjunction();           //or
         }
         for (AssetSearchInterface field : query.getFields()) {
-            if(!field.isLeaf()){
+            if (!field.isLeaf()) {
                 AuditCriterion auditCriterion = queryBuilder((SearchBranch) field);
-                if(auditCriterion != null){
+                if (auditCriterion != null) {
                     operator.add(auditCriterion);
                     operatorUsed = true;
                 }
-            }else{
-            	SearchLeaf leaf = (SearchLeaf) field;
+            } else {
+                SearchLeaf leaf = (SearchLeaf) field;
                 if (leaf.getSearchValue().contains("*")) {
                     operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ilike(leaf.getSearchValue().replace("*", "%").toLowerCase(), MatchMode.ANYWHERE));
                     operatorUsed = true;
                 } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.DECIMAL)) {
-                	Double doubleValue = Double.parseDouble(leaf.getSearchValue());
-                	if (leaf.getOperator().equalsIgnoreCase(">=")) {
-                    	operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ge(doubleValue));
-                    } else if  (leaf.getOperator().equalsIgnoreCase("<=")) {
-                    	operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).le(doubleValue));
-                    } else if  (leaf.getOperator().equalsIgnoreCase("!=")) { 
+                    Double doubleValue = Double.parseDouble(leaf.getSearchValue());
+                    if (leaf.getOperator().equalsIgnoreCase(">=")) {
+                        operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ge(doubleValue));
+                    } else if (leaf.getOperator().equalsIgnoreCase("<=")) {
+                        operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).le(doubleValue));
+                    } else if (leaf.getOperator().equalsIgnoreCase("!=")) {
                         operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).ne(doubleValue));
-                    } else { 
+                    } else {
                         operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).eq(doubleValue));
                     }
                     operatorUsed = true;
@@ -390,7 +390,7 @@ public class AssetDao {
                 }
             }
         }
-        if(operatorUsed) {
+        if (operatorUsed) {
             return (AuditCriterion) operator;
         }
         return null;
@@ -398,13 +398,13 @@ public class AssetDao {
 
     private SearchLeaf getDateSearchField(SearchBranch searchFields) {
         for (AssetSearchInterface field : searchFields.getFields()) {
-            if(!field.isLeaf()){
+            if (!field.isLeaf()) {
                 SearchLeaf leaf = getDateSearchField((SearchBranch) field);
-               
-                if(leaf != null){
+
+                if (leaf != null) {
                     return leaf;
                 }
-            }else {
+            } else {
                 SearchLeaf leaf = (SearchLeaf) field;
                 if (leaf.getSearchField().equals(SearchFields.DATE)) {
                     return leaf;
@@ -413,15 +413,15 @@ public class AssetDao {
         }
         return null;
     }
-    
+
     private SearchLeaf getHistoryIdSearchField(SearchBranch searchFields) {
         for (AssetSearchInterface field : searchFields.getFields()) {
-            if(!field.isLeaf()){
+            if (!field.isLeaf()) {
                 SearchLeaf leaf = getHistoryIdSearchField((SearchBranch) field);
-                if(leaf != null){
+                if (leaf != null) {
                     return leaf;
                 }
-            }else {
+            } else {
                 SearchLeaf leaf = (SearchLeaf) field;
                 if (leaf.getSearchField().equals(SearchFields.HIST_GUID)) {
                     return leaf;
@@ -433,12 +433,12 @@ public class AssetDao {
 
     private boolean searchRevisions(SearchBranch searchFields) {
         for (AssetSearchInterface field : searchFields.getFields()) {
-            if(!field.isLeaf()){
+            if (!field.isLeaf()) {
                 boolean leaf = searchRevisions((SearchBranch) field);
-                if(leaf == true){
+                if (leaf) {
                     return true;
                 }
-            }else {
+            } else {
                 SearchLeaf leaf = (SearchLeaf) field;
                 if (leaf.getSearchField().equals(SearchFields.HIST_GUID)) {
                     return true;
@@ -447,7 +447,6 @@ public class AssetDao {
         }
         return false;
     }
-
 
     public List<Asset> getRevisionsForAsset(UUID id) {
         AuditReader auditReader = AuditReaderFactory.get(em);
@@ -462,7 +461,7 @@ public class AssetDao {
     }
 
     public List<Asset> getAssetListByAssetGuids(List<UUID> idList) {
-        if(idList.isEmpty()){
+        if (idList.isEmpty()) {
             return new ArrayList<>();
         }
         TypedQuery<Asset> query = em.createNamedQuery(Asset.ASSET_FIND_BY_IDS, Asset.class);
@@ -471,7 +470,7 @@ public class AssetDao {
     }
 
     public List<MicroAsset> getMicroAssetListByAssetGuids(List<UUID> idList) {
-        if(idList.isEmpty()){
+        if (idList.isEmpty()) {
             return new ArrayList<>();
         }
         TypedQuery<MicroAsset> query = em.createNamedQuery(Asset.ASSET_MICRO_ASSET_BY_LIST, MicroAsset.class);
@@ -542,17 +541,18 @@ public class AssetDao {
 
     public Asset getAssetRevisionForHistoryId(UUID historyId) {
         AuditReader auditReader = AuditReaderFactory.get(em);
-        return (Asset) auditReader.createQuery().forRevisionsOfEntity(Asset.class, true, true)
+        return (Asset) auditReader.createQuery()
+                .forRevisionsOfEntity(Asset.class, true, true)
                 .add(AuditEntity.property("historyId").eq(historyId))
                 .getSingleResult();
     }
 
-    public AssetRemapMapping createAssetRemapMapping(AssetRemapMapping mapping){
-         em.persist(mapping);
-         return mapping;
+    public AssetRemapMapping createAssetRemapMapping(AssetRemapMapping mapping) {
+        em.persist(mapping);
+        return mapping;
     }
 
-    public List<AssetRemapMapping> getAllAssetRemappings(){
+    public List<AssetRemapMapping> getAllAssetRemappings() {
         Query query = em.createQuery("from AssetRemapMapping", AssetRemapMapping.class);
         return query.getResultList();
     }
@@ -561,7 +561,7 @@ public class AssetDao {
         em.remove(em.contains(mapping) ? mapping : em.merge(mapping));
     }
 
-    public ContactInfo getContactById(UUID contactId){
+    public ContactInfo getContactById(UUID contactId) {
         return em.find(ContactInfo.class, contactId);
     }
 }
