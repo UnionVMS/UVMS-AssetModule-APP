@@ -277,8 +277,8 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
 										
         assertEquals(fetched_asset1.getCfr(), cfrToCompaire);
         assertEquals((listResponse2.getAssetList().get(0).getCfr().equals(fetched_asset2.getCfr()) ?
-        								listResponse2.getAssetList().get(1).getCfr() :
-        								listResponse2.getAssetList().get(2).getCfr())
+        								listResponse2.getAssetList().get(0).getCfr() :
+        								listResponse2.getAssetList().get(1).getCfr())
         								, cfrValue2);
     }
 
