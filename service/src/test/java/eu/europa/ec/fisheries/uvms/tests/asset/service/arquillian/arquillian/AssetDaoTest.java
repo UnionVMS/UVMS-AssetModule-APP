@@ -1065,6 +1065,29 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.deleteAsset(asset);
         commit();
     }
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetListFuzzySearchExternalMarkingWithInactivated() throws Exception {
+
+        String randomIntegersGen = AssetTestsHelper.getRandomIntegers(5);
+        
+        String eMarking = "E Marking"+randomIntegersGen;
+        Asset asset = AssetTestsHelper.createBasicAsset();
+		asset.setExternalMarking(eMarking);
+		asset.setActive(false);
+        asset = assetDao.createAsset(asset);
+        commit();
+        
+        SearchBranch trunk = new SearchBranch(false);
+        trunk.getFields().add(new SearchLeaf(SearchFields.EXTERNAL_MARKING, "E-MaR-king-"+randomIntegersGen));
+
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, true);
+        assertEquals(1, assets.size());
+        assertEquals(asset.getExternalMarking(), eMarking);
+        
+        assetDao.deleteAsset(asset);
+        commit();
+    }
     
     @Test
     @OperateOnDeployment("normal")
@@ -1100,6 +1123,44 @@ public class AssetDaoTest extends TransactionalTests {
         
         assertEquals(assetEM.getExternalMarking(), eMarkingString);
         assertEquals(assetIrcs.getIrcs(), ircsString);
+        
+        assetDao.deleteAsset(assetEM);
+        assetDao.deleteAsset(assetIrcs);
+        commit();
+    }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetListFuzzySearchExternalMarkingOrIrcsNoInactiveated() throws Exception {
+
+        String randomIntegersGen = AssetTestsHelper.getRandomIntegers(5);
+        
+        String eMarkingString = "E Marking"+randomIntegersGen;
+        String ircsString = "IQ-"+randomIntegersGen;
+        
+        Asset assetEM = AssetTestsHelper.createBasicAsset();
+        assetEM.setExternalMarking(eMarkingString);
+        assetDao.createAsset(assetEM);
+        commit();
+        
+        Asset assetIrcs = AssetTestsHelper.createBasicAsset();
+        assetIrcs.setIrcs(ircsString);
+        assetIrcs.setActive(false);
+        assetDao.createAsset(assetIrcs);
+        commit();
+        
+        
+        SearchBranch trunk = new SearchBranch(false);
+        trunk.getFields().add(new SearchLeaf(SearchFields.EXTERNAL_MARKING, "E-MaR-king-"+randomIntegersGen));
+        trunk.getFields().add(new SearchLeaf(SearchFields.IRCS, "I -Q-"+randomIntegersGen));
+
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, false);
+        
+        assertEquals(1, assets.size());
+        assertTrue(assets.stream()
+                .anyMatch(fetchedAsset -> fetchedAsset.getId().equals(assetEM.getId())));
+        
+        assertEquals(assetEM.getExternalMarking(), eMarkingString);
         
         assetDao.deleteAsset(assetEM);
         assetDao.deleteAsset(assetIrcs);
