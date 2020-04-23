@@ -276,7 +276,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
 										listResponse2.getAssetList().get(1).getCfr();
 										
         assertEquals(fetched_asset1.getCfr(), cfrToCompaire);
-        assertEquals((listResponse2.getAssetList().get(0).getCfr() == fetched_asset2.getCfr() ?
+        assertEquals((listResponse2.getAssetList().get(0).getCfr().equals(fetched_asset2.getCfr()) ?
         								listResponse2.getAssetList().get(1).getCfr() :
         								listResponse2.getAssetList().get(2).getCfr())
         								, cfrValue2);
@@ -392,7 +392,6 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         assertTrue(listResponse.getAssetList().stream()
                 .anyMatch(fetchedAsset -> fetchedAsset.getId().equals(createdAsset.getId())));
     }
-
     @Test
     @RunAsClient
     @OperateOnDeployment("normal")
