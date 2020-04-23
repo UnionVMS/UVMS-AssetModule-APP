@@ -271,9 +271,15 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
 
         Asset fetched_asset1 = listResponse1.getAssetList().get(0);
         Asset fetched_asset2 = listResponse2.getAssetList().get(0);
-
-        assertEquals(fetched_asset1.getCfr(), fetched_asset2.getCfr());
-        assertEquals(listResponse2.getAssetList().get(1).getCfr(), cfrValue2);
+        String cfrToCompaire = fetched_asset1.getId().equals(fetched_asset2.getId()) ?
+										listResponse2.getAssetList().get(0).getCfr() :
+										listResponse2.getAssetList().get(1).getCfr();
+										
+        assertEquals(fetched_asset1.getCfr(), cfrToCompaire);
+        assertEquals((listResponse2.getAssetList().get(0).getCfr() == fetched_asset2.getCfr() ?
+        								listResponse2.getAssetList().get(1).getCfr() :
+        								listResponse2.getAssetList().get(2).getCfr())
+        								, cfrValue2);
     }
 
     @Test
@@ -966,12 +972,14 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         asset1.setName(name);
         Asset createdAsset1 = sendAssetToCreation(asset1);
         MobileTerminal mt1 = MobileTerminalTestHelper.createRestMobileTerminal(getWebTargetExternal(), createdAsset1, getTokenExternal());
-
+    
+        
         Asset asset2 = AssetHelper.createBasicAsset();
         asset2.setName(name);
         Asset createdAsset2 = sendAssetToCreation(asset2);
         MobileTerminal mt2 = MobileTerminalTestHelper.createRestMobileTerminal(getWebTargetExternal(), createdAsset2, getTokenExternal());
 
+        
         SearchBranch trunk = new SearchBranch(true);
         trunk.addNewSearchLeaf(SearchFields.NAME, name);
 
@@ -989,9 +997,19 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         assertTrue(output.getAssetList().stream().anyMatch(a -> a.getId().equals(createdAsset2.getId())));
 
         assertEquals(1, output.getAssetList().get(0).getMobileTerminalUUIDList().size());
-        assertEquals(mt1.getId(), UUID.fromString(output.getAssetList().get(0).getMobileTerminalUUIDList().get(0)));
+        
+        UUID assetFromOutputId1 = output.getAssetList().get(0).getId();
+        
+        assertEquals(mt1.getId(), createdAsset1.getId().equals(assetFromOutputId1) ?
+        			UUID.fromString(output.getAssetList().get(0).getMobileTerminalUUIDList().get(0) ) :
+        			UUID.fromString(output.getAssetList().get(1).getMobileTerminalUUIDList().get(0) ) );	
+        		
         assertEquals(1, output.getAssetList().get(1).getMobileTerminalUUIDList().size());
-        assertEquals(mt2.getId(), UUID.fromString(output.getAssetList().get(1).getMobileTerminalUUIDList().get(0)));
+       
+        UUID assetFromOutputId2 = output.getAssetList().get(0).getId();
+        assertEquals(mt2.getId(), createdAsset2.getId().equals(assetFromOutputId2) ?
+        			UUID.fromString(output.getAssetList().get(0).getMobileTerminalUUIDList().get(0))  :
+        			UUID.fromString(output.getAssetList().get(1).getMobileTerminalUUIDList().get(0)) );	
     }
 
     @Test
