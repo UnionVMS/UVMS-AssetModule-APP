@@ -171,7 +171,7 @@ public class AssetDao {
     	Root<Asset> asset = cq.from(Asset.class);
 
 		cq.select(criteriaBuilder.count(asset));
-		Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset, includeInactivated);
+		Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset);
 		
 		if(!includeInactivated) {
         	Predicate predicateOnlyActive = criteriaBuilder.equal(asset.get("active"), true);
@@ -220,18 +220,8 @@ public class AssetDao {
     	CriteriaQuery<Asset> cq = criteriaBuilder.createQuery(Asset.class);
     	Root<Asset> asset = cq.from(Asset.class);
 
-		Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset, includeInactivated);
+		Predicate predicateQuery = queryBuilderPredicate(queryTree, criteriaBuilder, asset);
      
-//    	if(!includeInactivated) {
-//    		Predicate predicateOnlyActive = criteriaBuilder.equal(asset.get("active"), true);
-//	        if(predicateQuery != null) {
-//	        	cq.where(criteriaBuilder.and(predicateOnlyActive, predicateQuery));
-//	  		}else {
-//	  			cq.where(predicateOnlyActive);
-//	  		}
-//        }else if(includeInactivated && predicateQuery != null ){
-//        	cq.where(predicateQuery);
-//  		}
     	if(!includeInactivated) {
         	Predicate predicateOnlyActive = criteriaBuilder.equal(asset.get("active"), true);
             if(predicateQuery != null) {
@@ -250,7 +240,7 @@ public class AssetDao {
     	return query.getResultList();
     }
     
-    private Predicate queryBuilderPredicate(SearchBranch query, CriteriaBuilder criteriaBuilder, Root<Asset> asset, boolean includeInactivated){  
+    private Predicate queryBuilderPredicate(SearchBranch query, CriteriaBuilder criteriaBuilder, Root<Asset> asset){  
         if( query.getFields() == null || query.getFields().isEmpty() || query.getFields().size() < 1 ) {
         	return null;
         }
@@ -259,7 +249,7 @@ public class AssetDao {
         for (AssetSearchInterface field : query.getFields()) {
             if(!field.isLeaf()){
                 if( !((SearchBranch)field).getFields().isEmpty()){
-                	predicates.add(queryBuilderPredicate((SearchBranch) field, criteriaBuilder, asset, includeInactivated));
+                	predicates.add(queryBuilderPredicate((SearchBranch) field, criteriaBuilder, asset));
                 }
             }else{
                 SearchLeaf leaf = (SearchLeaf) field;
