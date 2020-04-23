@@ -16,38 +16,47 @@ import java.util.Map;
 
 public enum SearchFields {
 
-	   	FLAG_STATE("flagStateCode"),
-	    EXTERNAL_MARKING("externalMarking"),
-	    NAME("name"),
-	    IRCS("ircs"),
-	    CFR("cfr"),
-	    MMSI("mmsi"),
-	    IMO("imo"),
-	    ICCAT("iccat"),
-	    UVI("uvi"),
-	    GFCM("gfcm"),
-	    HOMEPORT("portOfRegistration"),
-	    LICENSE("licenceType"),
-	    VESSEL_TYPE("vesselType"),
-	    GUID("id", SearchFieldType.ID),
-	    HIST_GUID("historyId", SearchFieldType.ID),
-	    GEAR_TYPE("gearFishingType", SearchFieldType.STRING),
-	    LENGTH_OVER_ALL("lengthOverAll", SearchFieldType.DECIMAL),
-	    ENGINE_POWER("powerOfMainEngine", SearchFieldType.DECIMAL),
-	    PRODUCER_NAME("producerName"),
-	    DATE(null, SearchFieldType.DATE);
+	FLAG_STATE("flagStateCode"),
+    EXTERNAL_MARKING("externalMarking", true),
+    NAME("name"),
+    IRCS("ircs", true),
+    CFR("cfr"),
+    MMSI("mmsi"),
+    IMO("imo"),
+    ICCAT("iccat"),
+    UVI("uvi"),
+    GFCM("gfcm"),
+    HOMEPORT("portOfRegistration"),
+    LICENSE("licenceType"),
+    VESSEL_TYPE("vesselType"),
+    GUID("id", SearchFieldType.ID),
+    HIST_GUID("historyId", SearchFieldType.ID),
+    GEAR_TYPE("gearFishingType", SearchFieldType.STRING),
+    LENGTH_OVER_ALL("lengthOverAll", SearchFieldType.DECIMAL),
+    ENGINE_POWER("powerOfMainEngine", SearchFieldType.DECIMAL),
+    PRODUCER_NAME("producerName"),
+    DATE(null, SearchFieldType.DATE);
 
     private String fieldName;
     private SearchFieldType fieldType;
+    private boolean fuzzySearch;
     
     private SearchFields(String fieldName) {
         this.fieldName = fieldName;
         this.fieldType = SearchFieldType.LIST;
+        this.fuzzySearch = false;
     }
 
     private SearchFields(String fieldName, SearchFieldType fieldType) {
         this.fieldName = fieldName;
         this.fieldType = fieldType;
+        this.fuzzySearch = false;
+    }
+    
+    private SearchFields(String fieldName, boolean fuzzySearch) {
+        this.fieldName = fieldName;
+        this.fieldType = SearchFieldType.LIST;
+        this.fuzzySearch = fuzzySearch;
     }
     
     public String getFieldName() {
@@ -57,11 +66,16 @@ public enum SearchFields {
     public SearchFieldType getFieldType() {
     	return fieldType;
     }
+
+	public boolean isFuzzySearch() {
+		return fuzzySearch;
+	}
     
     public static Map<String,SearchFields> getMapOfEnums() {
        Map<String,SearchFields> returnMap = new HashMap<>();
         for (SearchFields value : SearchFields.values()) {
            if(value != SearchFields.DATE) {
+        	   
         	   returnMap.put(value.fieldName.toLowerCase(), value);
            }
         }

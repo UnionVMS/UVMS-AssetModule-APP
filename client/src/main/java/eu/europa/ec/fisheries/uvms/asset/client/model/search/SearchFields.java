@@ -17,9 +17,9 @@ import java.util.Map;
 public enum SearchFields {
 
 	FLAG_STATE("flagStateCode"),
-    EXTERNAL_MARKING("externalMarking"),
+    EXTERNAL_MARKING("externalMarking", true),
     NAME("name"),
-    IRCS("ircs"),
+    IRCS("ircs", true),
     CFR("cfr"),
     MMSI("mmsi"),
     IMO("imo"),
@@ -39,15 +39,24 @@ public enum SearchFields {
 
     private String fieldName;
     private SearchFieldType fieldType;
+    private boolean fuzzySearch;
     
     private SearchFields(String fieldName) {
         this.fieldName = fieldName;
         this.fieldType = SearchFieldType.LIST;
+        this.fuzzySearch = false;
     }
 
     private SearchFields(String fieldName, SearchFieldType fieldType) {
         this.fieldName = fieldName;
         this.fieldType = fieldType;
+        this.fuzzySearch = false;
+    }
+    
+    private SearchFields(String fieldName, boolean fuzzySearch) {
+        this.fieldName = fieldName;
+        this.fieldType = SearchFieldType.LIST;
+        this.fuzzySearch = fuzzySearch;
     }
     
     public String getFieldName() {
@@ -57,13 +66,17 @@ public enum SearchFields {
     public SearchFieldType getFieldType() {
     	return fieldType;
     }
+
+	public boolean isFuzzySearch() {
+		return fuzzySearch;
+	}
     
     public static Map<String,SearchFields> getMapOfEnums() {
-        Map<String,SearchFields> returnMap = new HashMap<>();
+       Map<String,SearchFields> returnMap = new HashMap<>();
         for (SearchFields value : SearchFields.values()) {
-        	if(value != SearchFields.DATE) {
-         	   returnMap.put(value.fieldName.toLowerCase(), value);
-            }
+           if(value != SearchFields.DATE) {
+        	   returnMap.put(value.fieldName.toLowerCase(), value);
+           }
         }
 		return returnMap;
     }

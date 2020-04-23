@@ -70,7 +70,7 @@ public class AssetFilterServiceBean{
 
 	public AssetFilter updateAssetFilter(AssetFilter assetFilter, String username) {
 	   if (assetFilter == null || assetFilter.getId() == null) {
-            throw new NullPointerException("Cannot update asset group because group or ID is null.");
+            throw new NullPointerException("Cannot update assetfilter because group or ID is null.");
         }
         if (username == null || username.trim().isEmpty()) {
             throw new NullPointerException("Username must be provided for selected operation");
@@ -78,7 +78,7 @@ public class AssetFilterServiceBean{
 
         AssetFilter fetchedassetFilter = assetFilterDao.getAssetFilterByGuid(assetFilter.getId());
         if (fetchedassetFilter == null) {
-            throw new NullPointerException("No assetGroup found.");
+            throw new NullPointerException("No assetfilter found.");
         }
         assetFilter.setUpdatedBy(username);
         assetFilter.setUpdateTime(Instant.now());

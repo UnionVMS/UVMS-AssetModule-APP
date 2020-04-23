@@ -242,13 +242,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         SearchBranch trunk = new SearchBranch(true);
         SearchLeaf leaf = new SearchLeaf(SearchFields.CFR, cfrValue);
         trunk.getFields().add(leaf);
-
-        SearchBranch trunk2 = new SearchBranch(false);
-        SearchLeaf leaf2 = new SearchLeaf(SearchFields.CFR, cfrValue.toLowerCase());
-        trunk2.getFields().add(leaf2);
-        leaf2 = new SearchLeaf(SearchFields.CFR, cfrValue2.toLowerCase());
-        trunk2.getFields().add(leaf2);
-
+        
         AssetListResponse listResponse1 = getWebTargetExternal()
                 .path("asset")
                 .path("list")
@@ -256,6 +250,15 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(trunk), AssetListResponse.class);
 
+        assertNotNull(listResponse1);
+        assertEquals(1, listResponse1.getAssetList().size());
+        
+        SearchBranch trunk2 = new SearchBranch(false);
+        SearchLeaf leaf2 = new SearchLeaf(SearchFields.CFR, cfrValue.toLowerCase());
+        trunk2.getFields().add(leaf2);
+        leaf2 = new SearchLeaf(SearchFields.CFR, cfrValue2.toLowerCase());
+        trunk2.getFields().add(leaf2);
+        
         AssetListResponse listResponse2 = getWebTargetExternal()
                 .path("asset")
                 .path("list")
@@ -263,11 +266,8 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(trunk2), AssetListResponse.class);
 
-        assertNotNull(listResponse1);
         assertNotNull(listResponse2);
-        assertEquals(1, listResponse1.getAssetList().size());
         assertEquals(2, listResponse2.getAssetList().size());
-
 
         Asset fetched_asset1 = listResponse1.getAssetList().get(0);
         Asset fetched_asset2 = listResponse2.getAssetList().get(0);
@@ -684,6 +684,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
                 .post(Entity.json(trunk), AssetListResponse.class);
         
         List<Asset> assetList2 = listResponse.getAssetList();
+
         assertTrue(listResponse.getAssetList().stream()
                 .anyMatch(fetchedAsset -> fetchedAsset.getId().equals(createdAsset.getId())));
         assertTrue(listResponse.getAssetList().stream()
@@ -694,7 +695,8 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
     @RunAsClient
     @OperateOnDeployment("normal")
     public void getAssetsAtDateAndIrcsAndFs() {
-        Asset asset = AssetHelper.createBasicAsset();
+       
+    	Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = sendAssetToCreation(asset);
         
         Asset asset2 = AssetHelper.createBasicAsset();
@@ -730,7 +732,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
         assertThat(assetList.size(), is(1));
         assertThat(assetList.get(0).getId(), is(createdAsset.getId()));
         assertThat(assetList.get(0).getHistoryId(), is(createdAsset.getHistoryId()));
-        assertThat(assetList.get(0).getIrcs(), is(asset.getIrcs()));
+        assertThat(assetList.get(0).getIrcs(), is(asset.getIrcs()));  
     }
     
     @Test
