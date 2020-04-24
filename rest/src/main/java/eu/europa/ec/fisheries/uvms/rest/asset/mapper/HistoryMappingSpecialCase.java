@@ -1,10 +1,9 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.mapper;
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ChannelDto;
-import eu.europa.ec.fisheries.uvms.rest.asset.dto.ChangeHistoryRow;
 
-import java.util.*;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public enum HistoryMappingSpecialCase {
@@ -28,13 +27,6 @@ public enum HistoryMappingSpecialCase {
         @Override
         public Object specialCase(Object input) {
             return input;
-        }
-
-        @Override
-        public List<ChangeHistoryRow> recursive(Object oldInput, Object newInput) {
-            Set<ChannelDto> oldChannelSet = oldInput != null ? (Set<ChannelDto>) oldInput : new HashSet<>();
-            Set<ChannelDto> newChannelSet = newInput != null ? (Set<ChannelDto>) newInput : new HashSet<>();
-            return HistoryMapper.checkDifferencesBetweenChannels(oldChannelSet, newChannelSet);
         }
     };
 
@@ -73,10 +65,6 @@ public enum HistoryMappingSpecialCase {
     }
 
     public Object specialCase(Object input){
-        return null;
-    }
-
-    public List<ChangeHistoryRow> recursive(Object oldInput, Object newInput){
         return null;
     }
 }

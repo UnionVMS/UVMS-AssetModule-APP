@@ -46,10 +46,13 @@ public class HistoryMapper {
                         newValue = FieldUtils.readDeclaredField(object, field.getName(), true);
                     }
                     if (!Objects.equals(oldValue, newValue)) {
-                        if (specialCase.isPresent() && specialCase.get().checkSubclass()) {
+                        if (specialCase.isPresent() && specialCase.get().equals(HistoryMappingSpecialCase.MOBILE_TERMINAL_DTO_CHANNEL)) {
 
-                            List<ChangeHistoryRow> recursive = specialCase.get().recursive(oldValue, newValue);
-                            row.getSubclasses().addAll(recursive);
+                            Set<ChannelDto> oldChannelSet = oldValue != null ? (Set<ChannelDto>) oldValue : new HashSet<>();
+                            Set<ChannelDto> newChannelSet = newValue != null ? (Set<ChannelDto>) newValue : new HashSet<>();
+                            List<ChangeHistoryRow> channelHistoryRows = HistoryMapper.checkDifferencesBetweenChannels(oldChannelSet, newChannelSet);
+
+                            row.getSubclasses().addAll(channelHistoryRows);
 
                         } else {
                             row.addNewItem(field.getName(), oldValue, newValue);
