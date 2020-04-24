@@ -1,5 +1,7 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.mapper;
 
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ChannelDto;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.ChangeHistoryRow;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -8,6 +10,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class HistoryMapper {
 
@@ -121,5 +124,55 @@ public class HistoryMapper {
         }
         return fields;
     }
+
+
+
+
+
+
+    public static List<ChangeHistoryRow> test(List<Asset> histories) {
+        try {
+            String className = histories.get(0).getClass().getSimpleName();
+            List<Field> fields = listMembers(histories.get(0));
+            List<ChangeHistoryRow> returnList = new ArrayList<>(histories.size());
+
+            Asset previousAsset = null;
+            for (Asset asset : histories) {
+                if (previousAsset == null) {
+                    previousAsset = asset;
+                    continue;
+                }
+                String updater = asset.getUpdatedBy();
+                Instant updateTime = asset.getUpdateTime();
+                ChangeHistoryRow row = new ChangeHistoryRow(className, updater, updateTime);
+                for (Field field : fields) {
+                    Object oldValue;
+                    Object newValue;
+                    if (field.getName().equals("updatedBy") || field.getName().equals("updateTime") || field.getName().equals("mobileTerminals")) {
+                        if(!field.getName().equals("mobileTerminals")) {
+                            continue;
+                        }
+                        oldValue = previousAsset.getMobileTerminals().stream().map(MobileTerminal::getId).collect(Collectors.toSet());
+                        newValue = asset.getMobileTerminals().stream().map(MobileTerminal::getId).collect(Collectors.toSet());
+
+                    } else {
+                        oldValue = FieldUtils.readDeclaredField(previousAsset, field.getName(), true);
+                        newValue = FieldUtils.readDeclaredField(asset, field.getName(), true);
+                    }
+                    if (!Objects.equals(oldValue, newValue)) {
+                        row.addNewItem(field.getName(), oldValue, newValue);
+                    }
+                }
+                returnList.add(row);
+                previousAsset = asset;
+            }
+
+            return returnList;
+        }catch (IllegalAccessException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+
 
 }

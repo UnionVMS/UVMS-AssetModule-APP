@@ -23,7 +23,7 @@ public enum HistoryMappingSpecialCase {
             return returnSet;
         }
     },
-    MOBILE_TERMINAL_DTO_CHANNEL("channels", false, true){
+    MOBILE_TERMINAL_DTO_CHANNEL("channels", false){
         @Override
         public Object specialCase(Object input) {
             return input;
@@ -35,8 +35,6 @@ public enum HistoryMappingSpecialCase {
 
     private boolean shouldContinue = true;
 
-    private boolean checkSubclass = false;
-
     HistoryMappingSpecialCase(String fieldName) {
         this.fieldName = fieldName;
     }
@@ -46,22 +44,12 @@ public enum HistoryMappingSpecialCase {
         this.shouldContinue = shouldContinue;
     }
 
-    HistoryMappingSpecialCase(String fieldName, boolean shouldContinue, boolean checkSubclass) {
-        this.fieldName = fieldName;
-        this.shouldContinue = shouldContinue;
-        this.checkSubclass = checkSubclass;
-    }
-
     public String getFieldName() {
         return fieldName;
     }
 
     public boolean shouldContinue() {
         return shouldContinue;
-    }
-
-    public boolean checkSubclass() {
-        return checkSubclass;
     }
 
     public Object specialCase(Object input){
