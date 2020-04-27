@@ -1328,13 +1328,13 @@ public class AssetDaoTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void orderByAscTestEmptySearch() throws Exception {
         
-        Asset asset1 = AssetTestsHelper.createBasicAsset();
+        Asset asset1 = AssetTestsHelper.createBiggerAsset();
         assetDao.createAsset(asset1);
         commit();
-        Asset asset2 = AssetTestsHelper.createBasicAsset();
+        Asset asset2 = AssetTestsHelper.createBiggerAsset();
         assetDao.createAsset(asset2);
         commit();
-        Asset asset3 = AssetTestsHelper.createBasicAsset();
+        Asset asset3 = AssetTestsHelper.createBiggerAsset();
         assetDao.createAsset(asset3);
         commit();
         
@@ -1360,13 +1360,13 @@ public class AssetDaoTest extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void orderByAscTestWithIrcs() throws Exception {
         
-        Asset asset1 = AssetTestsHelper.createBasicAsset();
+        Asset asset1 = AssetTestsHelper.createBiggerAsset();
         assetDao.createAsset(asset1);
         commit();
-        Asset asset2 = AssetTestsHelper.createBasicAsset();
+        Asset asset2 = AssetTestsHelper.createBiggerAsset();
         assetDao.createAsset(asset2);
         commit();
-        Asset asset3 = AssetTestsHelper.createBasicAsset();
+        Asset asset3 = AssetTestsHelper.createBiggerAsset();
         assetDao.createAsset(asset3);
         commit();
         
