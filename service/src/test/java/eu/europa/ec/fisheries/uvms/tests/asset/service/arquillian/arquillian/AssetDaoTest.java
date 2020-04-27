@@ -30,6 +30,7 @@ import javax.inject.Inject;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -1316,6 +1317,71 @@ public class AssetDaoTest extends TransactionalTests {
         assertTrue(assets.size() >= 3 );
         assertTrue(assets.stream()
                 .anyMatch(fetchedAsset -> fetchedAsset.getId().equals(asset3.getId())));
+        
+        assetDao.deleteAsset(asset1);
+        assetDao.deleteAsset(asset2);
+        assetDao.deleteAsset(asset3);
+        commit();
+    }
+    
+    @Test
+    @OperateOnDeployment("normal")
+    public void orderByAscTestEmptySearch() throws Exception {
+        
+        Asset asset1 = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset1);
+        commit();
+        Asset asset2 = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset2);
+        commit();
+        Asset asset3 = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset3);
+        commit();
+        
+        SearchBranch trunk = new SearchBranch(false);
+
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 100, trunk, true);
+        assertTrue(assets.size() >= 3 );
+        
+        List<UUID> idList  = assets.stream()
+        	.map(a -> a.getId())
+        	.collect(Collectors.toList());
+        
+        assertTrue(idList.indexOf(asset1.getId()) < idList.indexOf(asset2.getId()) );
+        assertTrue(idList.indexOf(asset2.getId()) < idList.indexOf(asset3.getId()) );
+        
+        assetDao.deleteAsset(asset1);
+        assetDao.deleteAsset(asset2);
+        assetDao.deleteAsset(asset3);
+        commit();
+    }
+   
+    @Test
+    @OperateOnDeployment("normal")
+    public void orderByAscTestWithIrcs() throws Exception {
+        
+        Asset asset1 = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset1);
+        commit();
+        Asset asset2 = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset2);
+        commit();
+        Asset asset3 = AssetTestsHelper.createBasicAsset();
+        assetDao.createAsset(asset3);
+        commit();
+        
+        SearchBranch trunk = new SearchBranch(false);
+        trunk.getFields().add(new SearchLeaf(SearchFields.IRCS, "F*"));
+
+        List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 100, trunk, false);
+        assertTrue(assets.size() >= 3 );
+        
+        List<UUID> idList  = assets.stream()
+        	.map(a -> a.getId())
+        	.collect(Collectors.toList());
+        
+        assertTrue(idList.indexOf(asset1.getId()) < idList.indexOf(asset2.getId()) );
+        assertTrue(idList.indexOf(asset2.getId()) < idList.indexOf(asset3.getId()) );
         
         assetDao.deleteAsset(asset1);
         assetDao.deleteAsset(asset2);

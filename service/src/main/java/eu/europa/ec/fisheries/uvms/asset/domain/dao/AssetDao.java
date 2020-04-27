@@ -24,6 +24,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaBuilder.Trimspec;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -235,12 +236,15 @@ public class AssetDao {
                 cq.where(predicateQuery);
             }
         }
+        if(asset.get("updateTime") != null) {
+        	cq.orderBy(criteriaBuilder.asc(asset.get("updateTime")));
+        }
         TypedQuery<Asset> query = em.createQuery(cq);
         query.setFirstResult(pageSize * (pageNumber - 1)); // offset
         query.setMaxResults(pageSize); // limit
         return query.getResultList();
     }
-
+    
     private Predicate queryBuilderPredicate(SearchBranch query, CriteriaBuilder criteriaBuilder, Root<Asset> asset) {
         if (query.getFields() == null || query.getFields().isEmpty() || query.getFields().size() < 1) {
             return null;
