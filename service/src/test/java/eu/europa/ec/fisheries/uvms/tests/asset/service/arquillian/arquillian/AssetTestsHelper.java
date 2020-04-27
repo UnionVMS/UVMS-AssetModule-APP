@@ -40,6 +40,9 @@ public class AssetTestsHelper {
         assetEntity.setProdOrgCode("ORGCODE");
         assetEntity.setProdOrgName("ORGNAME");
         
+        assetEntity.setUpdateTime(Instant.now());
+        assetEntity.setUpdatedBy("TEST");
+        
         return assetEntity;
     }
 
