@@ -236,9 +236,7 @@ public class AssetDao {
                 cq.where(predicateQuery);
             }
         }
-        if(asset.get("updateTime") != null) {
-        	cq.orderBy(criteriaBuilder.asc(asset.get("updateTime")));
-        }
+        cq.orderBy(criteriaBuilder.asc(asset.get("updateTime")));
         TypedQuery<Asset> query = em.createQuery(cq);
         query.setFirstResult(pageSize * (pageNumber - 1)); // offset
         query.setMaxResults(pageSize); // limit
