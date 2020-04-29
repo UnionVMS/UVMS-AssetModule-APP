@@ -25,7 +25,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchKeyValue;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.ChangeHistoryRow;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.HistoryMapper;
-import eu.europa.ec.fisheries.uvms.rest.asset.mapper.HistoryMappingSpecialCase;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTQuery;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
@@ -319,8 +318,7 @@ public class MobileTerminalRestResource {
         try {
             List<MobileTerminal> mobileTerminalRevisions = mobileTerminalService.getMobileTerminalRevisions(id, maxNbr);
             List<MobileTerminalDto> dtos = MobileTerminalDtoMapper.mapToMobileTerminalDtos(mobileTerminalRevisions);
-            List<ChangeHistoryRow> changeHistory = HistoryMapper.mapHistory(dtos, HistoryMappingSpecialCase.MOBILE_TERMINAL_UPDATED_BY,
-                    HistoryMappingSpecialCase.MOBILE_TERMINAL_UPDATED_TIME, HistoryMappingSpecialCase.MOBILE_TERMINAL_DTO_CHANNEL, HistoryMappingSpecialCase.MOBILE_TERMINAL_PLUGIN);
+            List<ChangeHistoryRow> changeHistory = HistoryMapper.mobileTerminalChangeHistory(dtos);
             String returnString = jsonb.toJson(changeHistory);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {

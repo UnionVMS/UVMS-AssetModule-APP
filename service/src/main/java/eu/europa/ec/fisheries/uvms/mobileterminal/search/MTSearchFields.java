@@ -16,14 +16,20 @@ import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFieldType;
 public enum MTSearchFields {
     ASSET_ID("asset"),
     TERMINAL_TYPE("mobileTerminalType"),
+    UPDATE_USER("updateuser"),
+    UPDATE_TIME("updatetime"),
     SERIAL_NUMBER("serialNo"),
 	MEMBER_NUMBER("memberNumber", SearchFieldType.CHILD),  //  <-channel
 	DNID("dnid", SearchFieldType.CHILD),   // <- channel
+    CHANNEL_UPDATE_USER("updateUser", SearchFieldType.CHILD),   // <- channel
+    CHANNEL_UPDATE_TIME("updateTime", SearchFieldType.CHILD),   // <- channel
+    CHANNEL_MOBILE_TERMINAL("mobileTerminal", SearchFieldType.CHILD),   // <- channel
 	SATELLITE_NUMBER("satelliteNumber"),
     SOFTWARE_VERSION("softwareVersion"),
     TRANSCEIVER_TYPE("transceiverType"),
     TRANSPONDER_TYPE("transceiverType"),
     ANTENNA("antenna"),
+    PLUGIN("plugin"),
     MOBILETERMINAL_ID("id", SearchFieldType.ID),
     HIST_GUID("historyId", SearchFieldType.ID),
     DATE(null, SearchFieldType.DATE);
