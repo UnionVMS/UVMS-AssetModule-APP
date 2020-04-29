@@ -30,7 +30,7 @@ public enum SearchFields {
 	    LICENSE("licenceType"),
 	    VESSEL_TYPE("vesselType"),
 		UPDATED_BY("updatedBy"),
-		UPDATED_TIME("updatedTime"),
+		UPDATED_TIME("updateTime"),
 		MOBILE_TERMINAL("mobileTerminals", SearchFieldType.CHILD),
 	    GUID("id", SearchFieldType.ID),
 	    HIST_GUID("historyId", SearchFieldType.ID),

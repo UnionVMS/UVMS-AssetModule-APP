@@ -1089,7 +1089,7 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
-    public void updateAssetsSeveralTimesAndAddAnMTAndCheckAssetChangeHistoryTest() throws InterruptedException {
+    public void updateAssetsSeveralTimesAndAddAnMTAndCheckAssetChangeHistoryTest() {
 
         // CREATE AN ASSET
         Asset asset = AssetHelper.createBasicAsset();
