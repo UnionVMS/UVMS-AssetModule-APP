@@ -22,10 +22,7 @@ import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter.ASSETFILTER_FIND_ALL;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter.ASSETFILTER_BY_USER;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter.ASSETFILTER_BY_GUID;
-import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter.ASSETFILTER_GUID_LIST;
+import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter.*;
 
 @Entity
 @Table(name = "assetfilter")
@@ -33,7 +30,8 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter.ASSETF
 	@NamedQuery(name=ASSETFILTER_FIND_ALL, query="SELECT a FROM AssetFilter a"),
 	@NamedQuery(name=ASSETFILTER_BY_USER, query="SELECT a FROM AssetFilter a WHERE a.owner = :owner"),
 	@NamedQuery(name=ASSETFILTER_BY_GUID, query="SELECT a FROM AssetFilter a WHERE a.id = :guid"),
-	@NamedQuery(name=ASSETFILTER_GUID_LIST, query="SELECT a FROM AssetFilter a WHERE a.id IN :guidList")
+	@NamedQuery(name=ASSETFILTER_GUID_LIST, query="SELECT a FROM AssetFilter a WHERE a.id IN :guidList"),
+	@NamedQuery(name=ASSETFILTER_BY_ASSET_GUID, query="SELECT af FROM AssetFilter af JOIN af.queries afq JOIN afq.values afv WHERE afq.type = 'GUID' AND afv.valueString = :assetId"),
 })
 public class AssetFilter implements Serializable {
 
@@ -43,6 +41,7 @@ public class AssetFilter implements Serializable {
     public static final String ASSETFILTER_BY_USER = "AssetFilter.findByUser";
     public static final String ASSETFILTER_BY_GUID = "AssetFilter.findByGuid";
     public static final String ASSETFILTER_GUID_LIST = "AssetFilter.findByGuidList";
+    public static final String ASSETFILTER_BY_ASSET_GUID = "AssetFilter.findByAssetGuid";
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

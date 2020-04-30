@@ -32,7 +32,7 @@ public class AssetFilterDao {
 
     public AssetFilter getAssetFilterByGuid(UUID filterId) {
         try {
-            TypedQuery<AssetFilter> query = em.createNamedQuery(ASSETFILTER_BY_GUID, AssetFilter.class);
+            TypedQuery<AssetFilter> query = em.createNamedQuery(AssetFilter.ASSETFILTER_BY_GUID, AssetFilter.class);
             query.setParameter("guid", filterId);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -51,19 +51,25 @@ public class AssetFilterDao {
     }
 
     public List<AssetFilter> getAssetFilterAll() {
-        TypedQuery<AssetFilter> query = em.createNamedQuery(ASSETFILTER_FIND_ALL, AssetFilter.class);
+        TypedQuery<AssetFilter> query = em.createNamedQuery(AssetFilter.ASSETFILTER_FIND_ALL, AssetFilter.class);
         return query.getResultList();
     }
 
     public List<AssetFilter> getAssetFilterByUser(String user) {
-        TypedQuery<AssetFilter> query = em.createNamedQuery(ASSETFILTER_BY_USER, AssetFilter.class);
+        TypedQuery<AssetFilter> query = em.createNamedQuery(AssetFilter.ASSETFILTER_BY_USER, AssetFilter.class);
         query.setParameter("owner", user);
         return query.getResultList();
     }
 
     public List<AssetFilter> getAssetFiltersByValueGuidList(List<UUID> guidList) {
-        TypedQuery<AssetFilter> query = em.createNamedQuery(ASSETFILTER_GUID_LIST, AssetFilter.class);
+        TypedQuery<AssetFilter> query = em.createNamedQuery(AssetFilter.ASSETFILTER_GUID_LIST, AssetFilter.class);
         query.setParameter("guidList", guidList);
+        return query.getResultList();
+    }
+
+    public List<AssetFilter> getAssetFiltersContainingAssetId(String assetId) {
+        TypedQuery<AssetFilter> query = em.createNamedQuery(AssetFilter.ASSETFILTER_BY_ASSET_GUID, AssetFilter.class);
+        query.setParameter("assetId", assetId);
         return query.getResultList();
     }
     
