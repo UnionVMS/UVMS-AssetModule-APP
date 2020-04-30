@@ -128,6 +128,10 @@ public class Channel implements Serializable {
 	@PreUpdate
 	private void generateNewHistoryId() {
 		this.historyId = UUID.randomUUID();
+		this.updateTime = Instant.now();
+		if(this.mobileTerminal != null){
+			this.updateUser = mobileTerminal.getUpdateuser();
+		}
 	}
 
 	public UUID getId() {

@@ -71,6 +71,7 @@ public class MobileTerminalServiceBean {
         }
         Set<Channel> channels = mobileTerminal.getChannels();
         channels.forEach(channel -> channel.setMobileTerminal(mobileTerminal));
+        mobileTerminal.setUpdateuser(username);
         MobileTerminal createdMobileTerminal = terminalDao.createMobileTerminal(mobileTerminal);
         sortChannels(createdMobileTerminal);
         String pluginServiceName = createdMobileTerminal.getPlugin().getPluginServiceName();
@@ -110,14 +111,15 @@ public class MobileTerminalServiceBean {
             updatedPlugin = oldTerminal.getPlugin();
         }
 
+        mobileTerminal.setUpdateuser(username);
         mobileTerminal.setComment(comment);
         mobileTerminal.setPlugin(updatedPlugin);
 
-        mobileTerminal.getChannels().forEach(channel -> channel.setMobileTerminal(mobileTerminal));
+        mobileTerminal.getChannels().forEach(channel -> channel.setMobileTerminal(mobileTerminal));     //this is here to take care of the back reference since jsonb does not do that automatically
 
         //TODO check type
         MobileTerminal updatedTerminal;
-        if (oldTerminal.getMobileTerminalType() != null) {
+        if (mobileTerminal.getMobileTerminalType() != null) {
             updatedTerminal = terminalDao.updateMobileTerminal(mobileTerminal);
             sortChannels(updatedTerminal);
             Asset asset = updatedTerminal.getAsset();
@@ -241,7 +243,7 @@ public class MobileTerminalServiceBean {
 
     public List<MobileTerminal> getMobileTerminalRevisions(UUID mobileTerminalId, int maxNbr) {
         List<MobileTerminal> revisions = terminalDao.getMobileTerminalRevisionById(mobileTerminalId);
-        revisions.sort(Comparator.comparing(MobileTerminal::getCreateTime));
+        revisions.sort(Comparator.comparing(MobileTerminal::getUpdatetime));
         revisions.forEach(this::sortChannels);
         if (revisions.size() > maxNbr) {
             return revisions.subList(0, maxNbr);

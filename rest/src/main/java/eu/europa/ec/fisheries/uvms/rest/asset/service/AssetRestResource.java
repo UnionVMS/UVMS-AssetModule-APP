@@ -321,7 +321,7 @@ public class AssetRestResource {
                                                  @ApiParam(value="Max size of resultset") @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr)  throws Exception {
         try {
             List<Asset> assetRevisions = assetService.getRevisionsForAssetLimited(id, maxNbr);
-            List<ChangeHistoryRow> changeHistory = HistoryMapper.mapHistory(assetRevisions, "updatedBy", "updateTime", "mobileTerminals");
+            List<ChangeHistoryRow> changeHistory = HistoryMapper.assetChangeHistory(assetRevisions);
             String returnString = jsonb.toJson(changeHistory);
 
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
