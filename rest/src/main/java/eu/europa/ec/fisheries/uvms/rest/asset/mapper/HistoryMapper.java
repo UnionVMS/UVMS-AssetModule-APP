@@ -1,11 +1,9 @@
 package eu.europa.ec.fisheries.uvms.rest.asset.mapper;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFields;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchFields;
 import eu.europa.ec.fisheries.uvms.rest.asset.dto.ChangeHistoryRow;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -17,6 +15,19 @@ import java.util.stream.Collectors;
 
 public class HistoryMapper {
 
+
+    public static final String ASSET_UPDATER_FIELD = "updatedBy";
+    public static final String ASSET_UPDATE_TIME_FIELD = "updateTime";
+    public static final String ASSET_MOBILE_TERMINALS_FIELD = "mobileTerminals";
+
+    public static final String MOBILE_TERMINAL_UPDATER_FIELD = "updateuser";
+    public static final String MOBILE_TERMINAL_UPDATE_TIME_FIELD = "updatetime";
+    public static final String MOBILE_TERMINAL_PLUGIN_FIELD = "plugin";
+    public static final String MOBILE_TERMINAL_CHANNEL_FIELD = "channels";
+
+    public static final String CHANNEL_UPDATER_FIELD = "updateUser";
+    public static final String CHANNEL_UPDATE_TIME_FIELD = "updateTime";
+    public static final String CHANNEL_MOBILE_TERMINAL_FIELD = "mobileTerminal";
 
     public static List<ChangeHistoryRow> assetChangeHistory(List<Asset> histories) {
         try {
@@ -36,9 +47,9 @@ public class HistoryMapper {
                 for (Field field : fields) {
                     Object oldValue;
                     Object newValue;
-                    if (field.getName().equals(SearchFields.UPDATED_BY.getFieldName()) || field.getName().equals(SearchFields.UPDATED_TIME.getFieldName())
-                            || field.getName().equals(SearchFields.MOBILE_TERMINAL.getFieldName())) {
-                        if(!field.getName().equals(SearchFields.MOBILE_TERMINAL.getFieldName())) {
+                    if (field.getName().equals(ASSET_UPDATER_FIELD) || field.getName().equals(ASSET_UPDATE_TIME_FIELD)
+                            || field.getName().equals(ASSET_MOBILE_TERMINALS_FIELD)) {
+                        if(!field.getName().equals(ASSET_MOBILE_TERMINALS_FIELD)) {
                             continue;
                         }
                         oldValue = previousAsset.getMobileTerminals().stream().map(MobileTerminal::getId).collect(Collectors.toSet());
@@ -63,6 +74,7 @@ public class HistoryMapper {
     }
 
 
+
     public static List<ChangeHistoryRow> mobileTerminalChangeHistory(List<MobileTerminalDto> histories) {
         try {
             String className = histories.get(0).getClass().getSimpleName();
@@ -81,15 +93,15 @@ public class HistoryMapper {
                 for (Field field : fields) {
                     Object oldValue;
                     Object newValue;
-                    if (field.getName().equals(MTSearchFields.UPDATE_USER.getFieldName()) || field.getName().equals(MTSearchFields.UPDATE_TIME.getFieldName())
-                        || field.getName().equals(MTSearchFields.PLUGIN.getFieldName())) {
+                    if (field.getName().equals(MOBILE_TERMINAL_UPDATER_FIELD) || field.getName().equals(MOBILE_TERMINAL_UPDATE_TIME_FIELD)
+                        || field.getName().equals(MOBILE_TERMINAL_PLUGIN_FIELD)) {
                         continue;
                     }else {
                         oldValue = FieldUtils.readDeclaredField(previousMt, field.getName(), true);
                         newValue = FieldUtils.readDeclaredField(mt, field.getName(), true);
                     }
                     if (!Objects.equals(oldValue, newValue)) {
-                        if(field.getName().equals("channels")){
+                        if(field.getName().equals(MOBILE_TERMINAL_CHANNEL_FIELD)){
                             List<ChangeHistoryRow> channelChangeHistoryRows = checkDifferencesBetweenChannels(previousMt.getChannels(), mt.getChannels());
                             row.setSubclasses(channelChangeHistoryRows);
                         }else {
@@ -157,8 +169,8 @@ public class HistoryMapper {
                 for (Field field : fields) {
                     Object oldValue;
                     Object newValue;
-                    if (field.getName().equals(MTSearchFields.CHANNEL_UPDATE_USER.getFieldName()) || field.getName().equals(MTSearchFields.CHANNEL_UPDATE_TIME.getFieldName())
-                            || field.getName().equals(MTSearchFields.CHANNEL_MOBILE_TERMINAL.getFieldName())) {
+                    if (field.getName().equals(CHANNEL_UPDATER_FIELD) || field.getName().equals(CHANNEL_UPDATE_TIME_FIELD)
+                            || field.getName().equals(CHANNEL_MOBILE_TERMINAL_FIELD)) {
                             continue;
                     } else {
                         oldValue = FieldUtils.readDeclaredField(previousChannel, field.getName(), true);
