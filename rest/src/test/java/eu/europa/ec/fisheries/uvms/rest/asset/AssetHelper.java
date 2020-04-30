@@ -2,7 +2,6 @@ package eu.europa.ec.fisheries.uvms.rest.asset;
 
 import eu.europa.ec.fisheries.uvms.asset.model.constants.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter;
@@ -131,13 +130,7 @@ public abstract class AssetHelper {
         return contactInfo;
     }
     
-    public static AssetGroup createBasicAssetGroup() {
-        AssetGroup assetGroup = new AssetGroup();
-        assetGroup.setName("Group: " + getRandomIntegers(5));
-        assetGroup.setArchived(false);
-        return assetGroup;
-    }
-    
+
     public static AssetFilter createBasicAssetFilter(String name) {
     	AssetFilter assetFilter = new AssetFilter();
     	assetFilter.setName(name);

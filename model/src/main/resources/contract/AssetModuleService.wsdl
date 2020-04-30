@@ -2,7 +2,6 @@
              targetNamespace="module.asset.wsdl.fisheries.ec.europa.eu"
              xmlns:v="module.asset.wsdl.fisheries.ec.europa.eu"
              xmlns:tv="types.asset.wsdl.fisheries.ec.europa.eu"
-             xmlns:group="group.asset.wsdl.fisheries.ec.europa.eu"
              xmlns:fg="fishinggear.asset.wsdl.fisheries.ec.europa.eu"
              xmlns:xsd="http://www.w3.org/2001/XMLSchema"
              xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
@@ -12,7 +11,6 @@
         <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="module.asset.wsdl.fisheries.ec.europa.eu">
             
             <xsd:import namespace="types.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetElement.xsd"/>
-            <xsd:import namespace="group.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetGroup.xsd"/>
             <xsd:import namespace="fishinggear.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="FishingGear.xsd"/>
             
             <xsd:simpleType name="AssetModuleMethod">
@@ -74,21 +72,6 @@
                     </xsd:complexContent>
                 </xsd:complexType>
             </xsd:element>
-
-            <xsd:element name="GetAssetListByAssetGroupsRequest">
-                <xsd:complexType>
-                    <xsd:complexContent>
-                        <xsd:extension base="v:AssetModuleRequest">
-                            <xsd:sequence>
-                                <xsd:element name="groups" type="group:AssetGroup" minOccurs="0" maxOccurs="unbounded"/>
-                            </xsd:sequence>
-                        </xsd:extension>
-                    </xsd:complexContent>
-                </xsd:complexType>
-            </xsd:element>
-
-
-
 
             <xsd:element name="AssetGroupListByUserRequest">
                 <xsd:complexType>
@@ -160,14 +143,6 @@
                             </xsd:sequence>
                         </xsd:extension>
                     </xsd:complexContent>
-                </xsd:complexType>
-            </xsd:element>
-
-            <xsd:element name="GetAssetGroupListByAssetGuidResponse">
-                <xsd:complexType>
-                    <xsd:sequence>
-                        <xsd:element name="groups" type="group:AssetGroup" minOccurs="0" maxOccurs="unbounded"/>
-                    </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
 
@@ -261,13 +236,7 @@
         <part name="body" element="v:AssetGroupListByUserRequest"/>
     </message>
 
-    <message name="AssetGroupListResponse">
-        <part name="body" element="group:ListAssetGroupResponse"/>
-    </message>
-    
-    <message name="AssetListByGroupRequest">
-        <part name="body" element="v:GetAssetListByAssetGroupsRequest"/>
-    </message>
+
 
     <message name="PingRequest">
         <part name="body" element="v:pingRequest"/>
@@ -280,17 +249,11 @@
     <message name="GetAssetGroupListByAssetGuidRequest">
         <part name="body" element="v:GetAssetGroupListByAssetGuidRequest"/>
     </message>
-    <message name="GetAssetGroupListByAssetGuidResponse">
-        <part name="body" element="v:GetAssetGroupListByAssetGuidResponse"/>
-    </message>
 
     <message name="AssetListGroupByFlagStateRequest">
         <part name="body" element="v:AssetListGroupByFlagStateRequest"/>
     </message>
 
-    <message name="AssetListGroupByFlagStateResponse">
-        <part name="body" element="tv:AssetListGroupByFlagStateResponse"/>
-    </message>
 
     <message name="UpsertFishingGearModuleRequest">
         <part name="body" element="v:UpsertFishingGearModuleRequest"/>
@@ -306,33 +269,14 @@
             <output message="v:AssetModuleResponse"/>
             <fault name="AssetModuleFaultException" message="v:AssetModuleFaultException"/>
         </operation>
-        <operation name="AssetListByGroup">
-            <input message="v:AssetListByGroupRequest"/>
-            <output message="v:AssetListModuleResponse"/>
-            <fault name="AssetModuleFaultException" message="v:AssetModuleFaultException"/>
-        </operation>
         <operation name="AssetList">
             <input message="v:AssetListModuleRequest"/>
             <output message="v:AssetListModuleResponse"/>
             <fault name="AssetModuleFaultException" message="v:AssetModuleFaultException"/>
         </operation>
-        <operation name="AssetGroupList">
-            <input message="v:AssetGroupByUserRequest"/>
-            <output message="v:AssetGroupListResponse"/>
-            <fault name="AssetModuleFaultException" message="v:AssetModuleFaultException"/>
-        </operation>
         <operation name="Ping">
             <input message="v:PingRequest"/>
             <output message="v:PingResponse"/>
-        </operation>
-        <operation name="GetAssetGroupListByAssetGuid">
-            <input message="v:GetAssetGroupListByAssetGuidRequest"/>
-            <output message="v:GetAssetGroupListByAssetGuidResponse"/>
-        </operation>
-        <operation name="AssetListGroupByFlagState">
-            <input message="v:AssetListGroupByFlagStateRequest"/>
-            <output message="v:AssetListGroupByFlagStateResponse"/>
-            <fault name="AssetModuleFaultException" message="v:AssetModuleFaultException"/>
         </operation>
         <operation name="UpsertFishingGear">
             <input message="v:UpsertFishingGearModuleRequest"/>
@@ -367,30 +311,6 @@
                 <soap:fault name="AssetModuleFaultException" use="literal"/>
             </fault>
         </operation>
-        <operation name="AssetGroupList">
-            <!-- <soap:operation soapAction="http://www.snowboard-info.com/EndorsementSearch"/> -->
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-            <fault name="AssetModuleFaultException">
-                <soap:fault name="AssetModuleFaultException" use="literal"/>
-            </fault>
-        </operation>
-        <operation name="AssetListByGroup">
-            <!-- <soap:operation soapAction="http://www.snowboard-info.com/EndorsementSearch"/> -->
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-            <fault name="AssetModuleFaultException">
-                <soap:fault name="AssetModuleFaultException" use="literal"/>
-            </fault>
-        </operation>
         <operation name="Ping">
             <input>
                 <soap:body use="literal"/>
@@ -398,25 +318,6 @@
             <output>
                 <soap:body use="literal"/>
             </output>
-        </operation>
-        <operation name="GetAssetGroupListByAssetGuid">
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-        </operation>
-        <operation name="AssetListGroupByFlagState">
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-            <fault name="AssetModuleFaultException">
-                <soap:fault name="AssetModuleFaultException" use="literal"/>
-            </fault>
         </operation>
         <operation name="UpsertFishingGear">
             <input>

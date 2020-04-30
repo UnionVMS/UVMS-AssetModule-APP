@@ -36,5 +36,6 @@
     <include file="v6.6.3/dnid_and_member_number_to_integer.xml" relativeToChangelogFile="true"/>
     <include file="v6.7.1/create_assetfilter_and_assetfiltervalue_tables.xml" relativeToChangelogFile="true"/>
     <include file="v6.7.3/db-changelog-new-index-on-asset-active.xml" relativeToChangelogFile="true"/>
+    <include file="v6.7.8/db-changelog-remove-asset-group.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

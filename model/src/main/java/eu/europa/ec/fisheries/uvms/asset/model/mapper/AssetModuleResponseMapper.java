@@ -12,10 +12,11 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.model.mapper;
 
 import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
-import eu.europa.ec.fisheries.uvms.asset.model.exception.*;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
-import eu.europa.ec.fisheries.wsdl.asset.group.ListAssetGroupResponse;
-import eu.europa.ec.fisheries.wsdl.asset.module.*;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.ErrorCode;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleResponse;
+import eu.europa.ec.fisheries.wsdl.asset.module.UpsertAssetModuleResponse;
+import eu.europa.ec.fisheries.wsdl.asset.module.UpsertFishingGearModuleResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,16 +74,6 @@ public class AssetModuleResponseMapper {
         }
     }
 
-    public static List<AssetGroup> mapToAssetGroupListFromResponse(TextMessage response, String correlationId) throws AssetException {
-        try {
-            validateResponse(response, correlationId);
-            ListAssetGroupResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, ListAssetGroupResponse.class);
-            return mappedResponse.getAssetGroup();
-        } catch (AssetException | JMSException ex) {
-            LOG.error("[ Error when mapping response to list asset response. ] {}", ex);
-            throw new AssetException(ErrorCode.ASSET_GROUP_LIST_MAPPING_ERROR.getMessage(), ex, ErrorCode.ASSET_GROUP_LIST_MAPPING_ERROR.getCode());
-        }
-    }
 
     public static String mapToAssetListByAssetGroupResponse(List<Asset> assets) throws AssetException {
         ListAssetResponse response = new ListAssetResponse();
@@ -90,11 +81,6 @@ public class AssetModuleResponseMapper {
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 
-    public static String mapToAssetGroupListResponse(List<AssetGroup> assetGrup) throws AssetException {
-        ListAssetGroupResponse response = new ListAssetGroupResponse();
-        response.getAssetGroup().addAll(assetGrup);
-        return JAXBMarshaller.marshallJaxBObjectToString(response);
-    }
 
     public static String mapAssetModuleResponse(Asset asset) throws AssetException {
         GetAssetModuleResponse response = createGetAssetModuleResponse(asset);

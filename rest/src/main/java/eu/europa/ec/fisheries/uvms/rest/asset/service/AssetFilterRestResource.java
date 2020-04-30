@@ -16,6 +16,8 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterList;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue;
+import eu.europa.ec.fisheries.uvms.rest.asset.util.AssetFilterListRestResourceAdapter;
+import eu.europa.ec.fisheries.uvms.rest.asset.util.AssetFilterRestResponseAdapter;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import io.swagger.annotations.*;

@@ -40,7 +40,6 @@ public class RestActivator extends Application {
 
         //V2
         set.add(AssetConfigRestResource.class);
-        set.add(AssetGroupRestResource.class);
         set.add(AssetRestResource.class);
         set.add(CustomCodesRestResource.class);
         set.add(InternalRestResource.class);

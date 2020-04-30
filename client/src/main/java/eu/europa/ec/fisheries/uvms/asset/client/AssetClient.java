@@ -126,35 +126,6 @@ public class AssetClient {
         return assetResponse.getAssetList();
     }
     
-    public List<AssetGroup> getAssetGroupsByUser(String user) {
-        return webTarget
-                .path("group")
-                .path("user")
-                .path(user)
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .get(new GenericType<List<AssetGroup>>() {});
-    }
-    
-    public List<AssetGroup> getAssetGroupByAssetId(UUID assetId) {
-        return webTarget
-                .path("group")
-                .path("asset")
-                .path(assetId.toString())
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .get(new GenericType<List<AssetGroup>>() {});
-    }
-
-    public List<AssetDTO> getAssetsByGroupIds(List<UUID> groupIds) {
-        return webTarget
-                .path("group")
-                .path("asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .post(Entity.json(groupIds), new GenericType<List<AssetDTO>>(){});
-    }
-    
     public List<AssetDTO> getAssetHistoryListByAssetId(UUID id) {
         return webTarget
                 .path("history/asset")

@@ -13,7 +13,6 @@ package eu.europa.ec.fisheries.uvms.asset.message.event;
 
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetFromAssetIdAndDateRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetFlagStateByGuidAndDateRequest;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -29,7 +28,6 @@ public class AssetMessageEvent {
     private AssetId assetId;
     private AssetListQuery query;
     private AssetGroupListByUserRequest request;
-    private GetAssetListByAssetGroupsRequest assetListByGroup;
     private AssetFault fault;
     private String assetGuid;
     private Asset asset;
@@ -43,10 +41,6 @@ public class AssetMessageEvent {
         this.message = message;
     }
 
-    public AssetMessageEvent(TextMessage message, GetAssetListByAssetGroupsRequest assetId) {
-        this.message = message;
-        this.assetListByGroup = assetId;
-    }
 
     public AssetMessageEvent(TextMessage message, AssetId assetId) {
         this.message = message;
@@ -127,13 +121,6 @@ public class AssetMessageEvent {
         this.request = request;
     }
 
-    public GetAssetListByAssetGroupsRequest getAssetListByGroup() {
-        return assetListByGroup;
-    }
-
-    public void setAssetListByGroup(GetAssetListByAssetGroupsRequest assetListByGroup) {
-        this.assetListByGroup = assetListByGroup;
-    }
 
     public String getAssetGuid() {
         return assetGuid;
