@@ -28,7 +28,7 @@ public abstract class AssetHelper {
         assetEntity.setCfr("CRF" + getRandomIntegers(9));
         assetEntity.setIrcs("F" + getRandomIntegers(7));
         assetEntity.setImo(getRandomIntegers(7));
-        assetEntity.setMmsi("MMSI" + getRandomIntegers(5));
+        assetEntity.setMmsi("M" + getRandomIntegers(8)); 
         assetEntity.setIccat("ICCAT" + getRandomIntegers(20));
         assetEntity.setUvi("UVI" + getRandomIntegers(20));
         assetEntity.setGfcm("GFCM" + getRandomIntegers(20));
@@ -43,6 +43,9 @@ public abstract class AssetHelper {
 
         assetEntity.setProdOrgCode("ORGCODE");
         assetEntity.setProdOrgName("ORGNAME");
+        
+        assetEntity.setUpdateTime(Instant.now());
+        assetEntity.setUpdatedBy("TEST");
 
         return assetEntity;
     }
@@ -61,7 +64,7 @@ public abstract class AssetHelper {
         assetEntity.setCfr("CRF" + getRandomIntegers(9));
         assetEntity.setIrcs("F" + getRandomIntegers(7));
         assetEntity.setImo(getRandomIntegers(7));
-        assetEntity.setMmsi("MMSI" + getRandomIntegers(5));
+        assetEntity.setMmsi("M" + getRandomIntegers(8));
         assetEntity.setIccat("ICCAT" + getRandomIntegers(20));
         assetEntity.setUvi("UVI" + getRandomIntegers(20));
         assetEntity.setGfcm("GFCM" + getRandomIntegers(20));

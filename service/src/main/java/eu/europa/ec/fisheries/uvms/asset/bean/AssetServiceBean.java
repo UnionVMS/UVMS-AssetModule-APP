@@ -17,9 +17,9 @@ import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.ContactInfoDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.NoteDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
-import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.dto.*;
 import eu.europa.ec.fisheries.uvms.asset.message.event.UpdatedAssetEvent;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.util.AssetComparator;
 import eu.europa.ec.fisheries.uvms.asset.util.AssetUtil;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
@@ -73,7 +73,7 @@ public class AssetServiceBean {
 
     @Inject
     private AssetGroupServiceBean assetGroupService;
-    
+
     @Inject
     private AssetFilterServiceBean assetFilterService;
 
@@ -114,13 +114,8 @@ public class AssetServiceBean {
     }
 
     public AssetListResponse getAssetList(SearchBranch queryTree, int page, int listSize, boolean includeInactivated) {
-        if (queryTree == null) {
-            throw new IllegalArgumentException("Cannot get asset list because search values is null.");
-        }
-
-
+        nullValidation(queryTree, "Cannot get asset list because search values is null.");
         Long numberOfAssets = assetDao.getAssetCount(queryTree, includeInactivated);
-
         int numberOfPages = 0;
         if (listSize != 0) {
             numberOfPages = (int) (numberOfAssets / listSize);
@@ -128,12 +123,10 @@ public class AssetServiceBean {
                 numberOfPages += 1;
             }
         }
-
         List<Asset> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, queryTree, includeInactivated);
+      
         // force to load children. FetchType.EAGER didn't work.
-        assetEntityList.forEach(asset -> {
-            asset.getMobileTerminals().size();
-        });
+        assetEntityList.forEach(asset -> asset.getMobileTerminals().size());
         AssetListResponse listAssetResponse = new AssetListResponse();
         listAssetResponse.setCurrentPage(page);
         listAssetResponse.setTotalNumberOfPages(numberOfPages);
@@ -156,7 +149,7 @@ public class AssetServiceBean {
     }
 
     public Asset populateMTListInAsset(Asset asset) {
-        if(asset.getMobileTerminalUUIDList() != null && !asset.getMobileTerminalUUIDList().isEmpty()){
+        if (asset.getMobileTerminalUUIDList() != null && !asset.getMobileTerminalUUIDList().isEmpty()) {
             for (String s : asset.getMobileTerminalUUIDList()) {
                 asset.getMobileTerminals().add(mobileTerminalService.getMobileTerminalEntityById(UUID.fromString(s)));
             }
@@ -166,7 +159,7 @@ public class AssetServiceBean {
 
     public Asset archiveAsset(Asset asset, String username, String comment) {
         Set<MobileTerminal> mtList = asset.getMobileTerminals();
-        if(mtList != null && !mtList.isEmpty()) {
+        if (mtList != null && !mtList.isEmpty()) {
             mobileTerminalService.inactivateAndUnlink(asset, comment, username);
         }
         asset.setActive(false);
@@ -175,7 +168,7 @@ public class AssetServiceBean {
         auditService.logAssetArchived(archivedAsset, comment, username);
         return archivedAsset;
     }
-    
+
     public Asset unarchiveAsset(UUID assetId, String username, String comment) {
         Asset asset = assetDao.getAssetById(assetId);
         asset.setActive(true);
@@ -185,21 +178,19 @@ public class AssetServiceBean {
     }
 
     private Asset updateAssetInternal(Asset asset, String username, String comment) {
-        if (asset == null) {
-            throw new IllegalArgumentException("No asset to update");
-        }
-        if (asset.getId() == null) {
-            throw new IllegalArgumentException("No id on asset to update");
-        }
+        nullValidation(asset, "No asset to update");
+        nullValidation(asset.getId(), "No id on asset to update");
         checkIdentifierNullValues(asset);
 
         asset.setUpdatedBy(username);
         asset.setUpdateTime(Instant.now());
-        asset.setEventCode(EventCode.MOD.value());
+        if (asset.getEventCode() == null) {
+            asset.setEventCode(EventCode.MOD.value());
+        }
         asset.setComment(comment);
         asset.getMobileTerminals(); // instantiate list
         Asset updatedAsset = assetDao.updateAsset(asset);
-        updatedAsset.getMobileTerminals().stream().forEach(mt -> mt.setUpdatetime(Instant.now()));
+        updatedAsset.getMobileTerminals().forEach(mt -> mt.setUpdatetime(Instant.now()));
         return updatedAsset;
     }
 
@@ -221,11 +212,9 @@ public class AssetServiceBean {
         if (asset.getUvi() == null || asset.getUvi().isEmpty())
             asset.setUvi(null);
     }
-    
+
     public Asset upsertAsset(Asset asset, String username) {
-        if (asset == null) {
-            throw new IllegalArgumentException("No asset to upsert");
-        }
+        nullValidation(asset, "No asset to upsert");
         if (asset.getId() == null) {
             return createAsset(asset, username);
         }
@@ -233,10 +222,7 @@ public class AssetServiceBean {
     }
 
     public AssetBO upsertAssetBO(AssetBO assetBo, String username) {
-        if (assetBo == null) {
-            throw new IllegalArgumentException("No asset business object to upsert");
-        }
-
+        nullValidation(assetBo, "No asset business object to upsert");
         Asset asset = assetBo.getAsset();
         Asset existingAsset = getAssetByCfrIrcs(createAssetId(asset));
         if (existingAsset != null) {
@@ -260,50 +246,35 @@ public class AssetServiceBean {
         }
         return assetBo;
     }
-    
+
     public Asset getAssetById(AssetIdentifier assetId, String value) {
-
-        if (assetId == null) {
-            throw new IllegalArgumentException("AssetIdentity object is null");
-        }
-
-        if (value == null) {
-            throw new IllegalArgumentException("AssetIdentity value is null");
-        }
+        nullValidation(assetId, "AssetIdentity object is null");
+        nullValidation(value, "AssetIdentity value is null");
         return assetDao.getAssetFromAssetId(assetId, value);
     }
 
     public Asset getAssetFromAssetIdAtDate(AssetIdentifier idType, String idValue, Instant date) {
-
-        if (idType == null) {
-            throw new IllegalArgumentException("Type is null");
-        }
-        if (idValue == null) {
-            throw new IllegalArgumentException("Value is null");
-        }
-        if (date == null) {
-            throw new IllegalArgumentException("Date is null");
-        }
+        nullValidation(idType, "Type is null");
+        nullValidation(idValue, "Value is null");
+        nullValidation(date, "Date is null");
         if (idType == AssetIdentifier.GUID) {
             try {
-                UUID fromString = UUID.fromString(idValue); // Result is ignored?
+                UUID.fromString(idValue); // Just to verify incoming UUID is valid.
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException("Not a valid UUID");
             }
         }
         Asset asset = assetDao.getAssetFromAssetIdAtDate(idType, idValue, date);
-        if(asset != null && asset.getMobileTerminals() != null)
+        if (asset != null && asset.getMobileTerminals() != null)
             asset.getMobileTerminals().size(); // force to load children. FetchType.EAGER didn't work.
         return asset;
     }
 
     public Asset getAssetById(UUID id) {
-        if (id == null) {
-            throw new IllegalArgumentException("Id is null");
-        }
+        nullValidation(id, "Id is null");
         return assetDao.getAssetById(id);
     }
-    
+
     public List<Asset> getAssetListByAssetGroups(List<AssetGroup> groups) {
         LOG.debug("Getting asset by ID.");
         if (groups == null || groups.isEmpty()) {
@@ -322,33 +293,29 @@ public class AssetServiceBean {
         }
         return new ArrayList<>(assets);
     }
-    
+
     public void deleteAsset(AssetIdentifier assetId, String value) {
-
-        if (assetId == null) {
-            throw new IllegalArgumentException("AssetId is null");
-        }
-
+        nullValidation(assetId, "AssetId is null");
         Asset assetEntity = getAssetById(assetId, value);
         assetDao.deleteAsset(assetEntity);
     }
-    
+
     public List<Asset> getRevisionsForAsset(UUID id) {
         return assetDao.getRevisionsForAsset(id);
     }
-    
+
     public Asset getAssetRevisionForRevisionId(UUID historyId) {
         Asset revision = assetDao.getAssetRevisionForHistoryId(historyId);
-        if(revision.getMobileTerminals() != null)
+        if (revision.getMobileTerminals() != null)
             revision.getMobileTerminals().size(); // force to load children. FetchType.EAGER didn't work.
         return revision;
     }
-    
+
     public List<Asset> getRevisionsForAssetLimited(UUID id, Integer maxNbr) {
         List<Asset> revisions = assetDao.getRevisionsForAsset(id);
         // force to load children. FetchType.EAGER didn't work.
         revisions.forEach(asset -> {
-            if(asset.getMobileTerminals() != null)
+            if (asset.getMobileTerminals() != null)
                 asset.getMobileTerminals().size();
         });
         revisions.sort(Comparator.comparing(Asset::getUpdateTime));
@@ -357,20 +324,16 @@ public class AssetServiceBean {
         }
         return revisions;
     }
-    
+
     public List<Note> getNotesForAsset(UUID assetId) {
         Asset asset = assetDao.getAssetById(assetId);
-        if (asset == null) {
-            throw new IllegalArgumentException("Could not find any asset with id: " + assetId);
-        }
+        nullValidation(asset, "Could not find any asset with id: " + assetId);
         return noteDao.getNotesByAsset(asset);
     }
-    
+
     public Note createNoteForAsset(UUID assetId, Note note, String username) {
         Asset asset = assetDao.getAssetById(assetId);
-        if (asset == null) {
-            throw new IllegalArgumentException("Could not find any asset with id: " + assetId);
-        }
+        nullValidation(asset, "Could not find any asset with id: " + assetId);
         note.setAssetId(asset.getId());
         note.setCreatedBy(username);
         note.setCreatedOn(Instant.now());
@@ -381,28 +344,22 @@ public class AssetServiceBean {
         note.setCreatedBy(username);
         return noteDao.updateNote(note);
     }
-    
+
     public void deleteNote(UUID id) {
         Note note = noteDao.findNote(id);
-        if (note == null) {
-            throw new IllegalArgumentException("Could not find any note with id: " + id);
-        }
+        nullValidation(note, "Could not find any note with id: " + id);
         noteDao.deleteNote(note);
     }
-    
+
     public List<ContactInfo> getContactInfoForAsset(UUID assetId) {
         Asset asset = assetDao.getAssetById(assetId);
-        if (asset == null) {
-            throw new IllegalArgumentException("Could not find any asset with id: " + assetId);
-        }
+        nullValidation(asset, "Could not find any asset with id: " + assetId);
         return contactDao.getContactInfoByAssetId(asset.getId());
     }
-    
+
     public ContactInfo createContactInfoForAsset(UUID assetId, ContactInfo contactInfo, String username) {
         Asset asset = assetDao.getAssetById(assetId);
-        if (asset == null) {
-            throw new IllegalArgumentException("Could not find any asset with id: " + assetId);
-        }
+        nullValidation(asset, "Could not find any asset with id: " + assetId);
         contactInfo.setAssetId(asset.getId());
         contactInfo.setUpdatedBy(username);
         if (contactInfo.getId() == null) {
@@ -411,32 +368,28 @@ public class AssetServiceBean {
         contactInfo.setAssetUpdateTime(asset.getUpdateTime());
         return contactDao.createContactInfo(contactInfo);
     }
-    
+
     public ContactInfo updateContactInfo(ContactInfo contactInfo, String username) {
         Asset asset = assetDao.getAssetById(contactInfo.getAssetId());
-        if (asset == null) {
-            throw new IllegalArgumentException("Could not find any asset with id: " + contactInfo.getAssetId());
-        }
+        nullValidation(asset, "Could not find any asset with id: " + contactInfo.getAssetId());
         ContactInfo old = contactDao.findContactInfo(contactInfo.getId());
         contactInfo.setCreateTime(old.getCreateTime());
         contactInfo.setUpdatedBy(username);
         contactInfo.setAssetUpdateTime(asset.getUpdateTime());
         return contactDao.updateContactInfo(contactInfo);
     }
-    
+
     public void deleteContactInfo(UUID id) {
         ContactInfo contactInfo = contactDao.findContactInfo(id);
-        if (contactInfo == null) {
-            throw new IllegalArgumentException("Could not find any contact info with id: " + id);
-        }
+        nullValidation(contactInfo, "Could not find any contact info with id: " + id);
         contactDao.deleteContactInfo(contactInfo);
     }
-    
+
     public List<ContactInfo> getContactInfoRevisionForAssetHistory(UUID assetId, Instant updatedDate) {
         List<ContactInfo> contactInfoListByAssetId = contactDao.getContactInfoByAssetId(assetId);
         return contactDao.getContactInfoRevisionForAssetHistory(contactInfoListByAssetId, updatedDate);
     }
-    
+
     public AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request) {
 
         // Get Mobile Terminal if it exists
@@ -511,6 +464,8 @@ public class AssetServiceBean {
         resp.setCfr(asset.getCfr());
         resp.setIrcs(asset.getIrcs());
         resp.setMmsi(asset.getMmsi());
+        resp.setImo(asset.getImo());
+        resp.setVesselType(asset.getVesselType());
         return resp;
     }
 
@@ -726,7 +681,7 @@ public class AssetServiceBean {
         return null;
     }
 
-    private AssetRemapMapping createAssetRemapMapping(UUID oldAssetId, UUID newAssetId){
+    private AssetRemapMapping createAssetRemapMapping(UUID oldAssetId, UUID newAssetId) {
         AssetRemapMapping mapping = new AssetRemapMapping();
         mapping.setOldAssetId(oldAssetId);
         mapping.setNewAssetId(newAssetId);
@@ -735,7 +690,7 @@ public class AssetServiceBean {
         return mapping;
     }
 
-    public void remapAssetsInMovement(String oldAssetId, String newAssetId){
+    public void remapAssetsInMovement(String oldAssetId, String newAssetId) {
         Client client = ClientBuilder.newClient();
         Response remapResponse = client.target(movementEndpoint)
                 .path("internal/remapMovementConnectInMovement")
@@ -745,12 +700,12 @@ public class AssetServiceBean {
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .put(Entity.json(""), Response.class);
 
-        if(remapResponse.getStatus() != 200){ //do we want this?
+        if (remapResponse.getStatus() != 200) { //do we want this?
             throw new RuntimeException("Response from remapping from old asset to new asset was not 200. Return status: " + remapResponse.getStatus() + " Return error: " + remapResponse.getEntity());
         }
     }
 
-    public void removeMovementConnectInMovement(String assetId){
+    public void removeMovementConnectInMovement(String assetId) {
         Client client = ClientBuilder.newClient();
         Response remapResponse = client.target(movementEndpoint)
                 .path("internal/removeMovementConnect")
@@ -758,7 +713,7 @@ public class AssetServiceBean {
                 .request(MediaType.APPLICATION_JSON)
                 .delete(Response.class);
 
-        if(remapResponse.getStatus() != 200){ //do we want this?
+        if (remapResponse.getStatus() != 200) { //do we want this?
             throw new RuntimeException("Response from remapping from old asset to new asset was not 200. Return status: " + remapResponse.getStatus() + " Return error: " + remapResponse.getEntity());
         }
     }
@@ -774,35 +729,34 @@ public class AssetServiceBean {
 
         boolean shouldUpdate = false;
 
-
         if (assetFromDB == null || CarrierSource.NATIONAL.toString().equals(assetFromDB.getSource())) {    //if we have data from fartyg 2 then we should not update with data from ais
             return;
         }
 
-        if ( (assetFromDB.getMmsi() == null || !assetFromDB.getMmsi().equals(assetFromAIS.getMmsi())) && (assetFromAIS.getMmsi() != null)) {
+        if ((assetFromDB.getMmsi() == null || !assetFromDB.getMmsi().equals(assetFromAIS.getMmsi())) && (assetFromAIS.getMmsi() != null)) {
             shouldUpdate = true;
             assetFromDB.setMmsi(assetFromAIS.getMmsi());
         }
-        if ( (assetFromDB.getIrcs() == null || !assetFromDB.getIrcs().equals(assetFromAIS.getIrcs()) )&& (assetFromAIS.getIrcs() != null)) {
+        if ((assetFromDB.getIrcs() == null || !assetFromDB.getIrcs().equals(assetFromAIS.getIrcs())) && (assetFromAIS.getIrcs() != null)) {
             shouldUpdate = true;
             assetFromDB.setIrcs(assetFromAIS.getIrcs());
         }
-        if ( (assetFromDB.getVesselType() == null ||  !assetFromDB.getVesselType().equals(assetFromAIS.getVesselType())) && (assetFromAIS.getVesselType() != null) ) {
+        if ((assetFromDB.getVesselType() == null || !assetFromDB.getVesselType().equals(assetFromAIS.getVesselType())) && (assetFromAIS.getVesselType() != null)) {
             shouldUpdate = true;
             assetFromDB.setVesselType(assetFromAIS.getVesselType());
         }
-        if ( (assetFromDB.getImo() == null || !assetFromDB.getImo().equals(assetFromAIS.getImo())) && (assetFromAIS.getImo() != null) ) {
+        if ((assetFromDB.getImo() == null || !assetFromDB.getImo().equals(assetFromAIS.getImo())) && (assetFromAIS.getImo() != null)) {
             shouldUpdate = true;
             assetFromDB.setImo(assetFromAIS.getImo());
         }
 
-        if ( (assetFromDB.getName() == null || assetFromDB.getName().startsWith("Unknown") || !assetFromDB.getName().equals(assetFromAIS.getName())) && (assetFromAIS.getName() != null)) {
+        if ((assetFromDB.getName() == null || assetFromDB.getName().startsWith("Unknown") || !assetFromDB.getName().equals(assetFromAIS.getName())) && (assetFromAIS.getName() != null)) {
             if (!assetFromAIS.getName().isEmpty()) {
                 shouldUpdate = true;
                 assetFromDB.setName(assetFromAIS.getName());
             }
         }
-        if ( (assetFromDB.getFlagStateCode() == null || assetFromDB.getFlagStateCode().startsWith("UNK") || !assetFromDB.getFlagStateCode().equals(assetFromAIS.getFlagStateCode()) ) && (assetFromAIS.getFlagStateCode() != null))  {
+        if ((assetFromDB.getFlagStateCode() == null || assetFromDB.getFlagStateCode().startsWith("UNK") || !assetFromDB.getFlagStateCode().equals(assetFromAIS.getFlagStateCode())) && (assetFromAIS.getFlagStateCode() != null)) {
             shouldUpdate = true;
             assetFromDB.setFlagStateCode(assetFromAIS.getFlagStateCode());
         }
@@ -815,20 +769,21 @@ public class AssetServiceBean {
         }
     }
 
-    public List<MicroAsset> getInitialDataForRealtime(List<String> assetIdList){
+    public List<MicroAsset> getInitialDataForRealtime(List<String> assetIdList) {
         List<UUID> assetUuidList = new ArrayList<>(assetIdList.size());
-        for (String s :assetIdList) {
+        for (String s : assetIdList) {
             assetUuidList.add(UUID.fromString(s));
         }
         return assetDao.getMicroAssetListByAssetGuids(assetUuidList);
     }
-	
-	public Note getNoteById(UUID id) {
-	        Note note = noteDao.findNote(id);
-	        if (note == null) {
-	            throw new IllegalArgumentException("Could not find any note with id: " + id);
-	        }
-	        return note;
-	}
-}
 
+    public Note getNoteById(UUID id) {
+        Note note = noteDao.findNote(id);
+        nullValidation(note, "Could not find any note with id: " + id);
+        return note;
+    }
+
+    private void nullValidation(Object obj, String message) {
+        if (obj == null) throw new IllegalArgumentException(message);
+    }
+}

@@ -134,9 +134,7 @@ public class AssetFilterServiceBeanTest extends TransactionalTests{
     @OperateOnDeployment("normal")
     public void updateAssetFilterValue() {
     	AssetFilterValue createdAssetFilterValue = assetFilterValue;
-    	System.out.println("createdAssetFilterValue: " + createdAssetFilterValue);
     	AssetFilterValue fetchedAssetFilterValue = assetFilterService.getAssetFilterValue(createdAssetFilterValue.getId());
-    	System.out.println("fetchedAssetFilterValue: " + fetchedAssetFilterValue);
     	fetchedAssetFilterValue.setValueString("CHANGEDVALUE");
         assetFilterService.updateAssetFilterValue(fetchedAssetFilterValue, "TEST");
         AssetFilterValue fetchedAssetFilterValue2 = assetFilterService.getAssetFilterValue(createdAssetFilterValue.getId());

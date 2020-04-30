@@ -4,7 +4,7 @@
 
     <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
     <artifactId>asset</artifactId>
-    <version>6.7.6-SNAPSHOT</version>
+    <version>6.7.8-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <parent>
@@ -25,8 +25,8 @@
         <uvms.common.version>4.1.7</uvms.common.version>
         <uvms.config.version>4.1.2</uvms.config.version>
         <audit.model.version>4.3.3</audit.model.version>
-        <movementrules.version>2.3.4</movementrules.version>
-        <exchange.model.version>5.2.5-UVMS</exchange.model.version>
+        <movementrules.version>2.3.6</movementrules.version>
+        <exchange.model.version>5.2.7-UVMS</exchange.model.version>
         <project.scm.id>github</project.scm.id>
         <installAtEnd>false</installAtEnd>
     </properties>

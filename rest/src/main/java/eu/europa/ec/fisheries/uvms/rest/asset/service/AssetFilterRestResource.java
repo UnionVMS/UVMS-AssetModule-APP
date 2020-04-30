@@ -307,7 +307,7 @@ public class AssetFilterRestResource {
         try {
             AssetFilter mappedAssetFilter = jsonb.fromJson(jsonAssetFilter, AssetFilter.class);
             String user = servletRequest.getRemoteUser();
-            AssetFilter updatedAssetFilter = assetFilterService.updateAllAssetFilter(mappedAssetFilter, user);
+            AssetFilter updatedAssetFilter = assetFilterService.updateAllAssetFilter(mappedAssetFilter, user); 
             String response = jsonb.toJson(updatedAssetFilter);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
@@ -330,7 +330,6 @@ public class AssetFilterRestResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getListOfAssetFilterByUser() throws Exception {
         try {
-            
         	String user = servletRequest.getRemoteUser();
         	List<AssetFilter> assetFilterList = assetFilterService.getAssetFilterList(user);
         	AssetFilterList assetFilterListresp = new AssetFilterList();
@@ -343,6 +342,4 @@ public class AssetFilterRestResource {
             throw e;
         }
     }
-    
-    
 }
