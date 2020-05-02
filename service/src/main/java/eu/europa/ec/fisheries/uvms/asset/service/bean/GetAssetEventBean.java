@@ -89,25 +89,18 @@ public class GetAssetEventBean {
             if (AssetIdType.GUID.equals(assetId.getType())) {
                 return AssetDataSourceQueue.INTERNAL;
             }
-            Boolean xeu = parameters.getBooleanValue(ParameterKey.EU_USE.getKey());
             Boolean national = parameters.getBooleanValue(ParameterKey.NATIONAL_USE.getKey());
-            LOG.debug("Settings for dataflow are: XEU: {0} NATIONAL: {1}", new Object[]{xeu, national});
-            if (xeu && national) {
-                return AssetDataSourceQueue.NATIONAL;
-            }
             if (national) {
                 return AssetDataSourceQueue.NATIONAL;
-            } else if (xeu) {
-                return AssetDataSourceQueue.XEU;
-            } else {
-                return AssetDataSourceQueue.INTERNAL;
             }
+            Boolean xeu = parameters.getBooleanValue(ParameterKey.EU_USE.getKey());
+            if (xeu) {
+                return AssetDataSourceQueue.XEU;
+            }
+            return AssetDataSourceQueue.INTERNAL;
         } catch (ConfigServiceException e) {
             LOG.error("[ Error when deciding data flow. ] ");
             throw new AssetServiceException(e.getMessage());
         }
-
     }
-
-
 }
