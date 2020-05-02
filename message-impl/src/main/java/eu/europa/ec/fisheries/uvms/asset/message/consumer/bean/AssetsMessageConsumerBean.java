@@ -128,31 +128,31 @@ public class AssetsMessageConsumerBean implements MessageListener {
             LOG.info("Message received in AssetModule with assetsMethod : [ {} ]", assetsMethod);
             switch (assetsMethod) {
                 case GET_ASSET:
-                    GetAssetModuleRequest getRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, GetAssetModuleRequest.class);
-                    getAssetEventBean.getAsset(textMessage, getRequest.getId());
+                    GetAssetModuleRequest getRequest = (GetAssetModuleRequest) request;
+                    getAssetEventBean.getAsset(textMessage, getRequest.getId()); // the textMessage is used only for error handling, so letting it pass through for now
                     break;
                 case ASSET_LIST:
-                    AssetListModuleRequest listRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetListModuleRequest.class);
+                    AssetListModuleRequest listRequest = (AssetListModuleRequest) request;
                     AssetMessageEvent listEvent = new AssetMessageEvent(textMessage, listRequest.getQuery());
                     getAssetListEventBean.getAssetList(listEvent);
                     break;
                 case BATCH_ASSET_LIST:
-                    BatchAssetListModuleRequest batchListRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, BatchAssetListModuleRequest.class);
+                    BatchAssetListModuleRequest batchListRequest = (BatchAssetListModuleRequest) request;
                     AssetMessageEvent batchListEvent = new AssetMessageEvent(textMessage, batchListRequest.getQueryList());
                     getAssetListEventBean.getAssetListBatch(batchListEvent);
                     break;
                 case ASSET_GROUP:
-                    AssetGroupListByUserRequest groupListRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetGroupListByUserRequest.class);
+                    AssetGroupListByUserRequest groupListRequest = (AssetGroupListByUserRequest) request;
                     AssetMessageEvent assetGroupListEvent = new AssetMessageEvent(textMessage, groupListRequest);
                     getAssetGroupEventBean.getAssetGroupByUserName(assetGroupListEvent);
                     break;
                 case ASSET_GROUP_LIST_BY_ASSET_GUID:
-                    GetAssetGroupListByAssetGuidRequest getAssetGroupListByAssetGuidRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, GetAssetGroupListByAssetGuidRequest.class);
+                    GetAssetGroupListByAssetGuidRequest getAssetGroupListByAssetGuidRequest = (GetAssetGroupListByAssetGuidRequest) request;
                     AssetMessageEvent assetMessageEvent = new AssetMessageEvent(textMessage, getAssetGroupListByAssetGuidRequest.getAssetGuid());
                     getAssetGroupListByAssetGuidEventBean.getAssetGroupListByAssetEvent(assetMessageEvent);
                     break;
                 case ASSET_LIST_BY_GROUP:
-                    GetAssetListByAssetGroupsRequest assetListByGroupListRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, GetAssetListByAssetGroupsRequest.class);
+                    GetAssetListByAssetGroupsRequest assetListByGroupListRequest = (GetAssetListByAssetGroupsRequest) request;
                     AssetMessageEvent assetListByGroupListEvent = new AssetMessageEvent(textMessage, assetListByGroupListRequest);
                     getAssetListByAssetGroupEventBean.getAssetListByAssetGroups(assetListByGroupListEvent);
                     break;
@@ -160,34 +160,34 @@ public class AssetsMessageConsumerBean implements MessageListener {
                     pingEventBean.ping(new AssetMessageEvent(textMessage));
                     break;
                 case UPSERT_ASSET:
-                    UpsertAssetModuleRequest upsertRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, UpsertAssetModuleRequest.class);
+                    UpsertAssetModuleRequest upsertRequest = (UpsertAssetModuleRequest) request;
                     AssetMessageEvent upsertAssetMessageEvent = new AssetMessageEvent(textMessage, upsertRequest.getAsset(), upsertRequest.getUserName());
                     upsertAssetMessageEventBean.upsertAsset(upsertAssetMessageEvent);
                     break;
                 case FISHING_GEAR_UPSERT:
-                    UpsertFishingGearModuleRequest upsertFishingGearListModuleRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, UpsertFishingGearModuleRequest.class);
+                    UpsertFishingGearModuleRequest upsertFishingGearListModuleRequest = (UpsertFishingGearModuleRequest) request;
                     AssetMessageEvent fishingGearMessageEvent = new AssetMessageEvent(textMessage, upsertFishingGearListModuleRequest.getFishingGear(), upsertFishingGearListModuleRequest.getUsername());
                     upsertFishingGearsMessageEventBean.upsertFishingGears(fishingGearMessageEvent);
                     break;
                     /**TODO: remove if not used **/
                 case FIND_ASSET_HISTORIES_BY_CFR:
-                    FindAssetHistoriesByCfrModuleRequest findAssetByCfrModuleRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, FindAssetHistoriesByCfrModuleRequest.class);
+                    FindAssetHistoriesByCfrModuleRequest findAssetByCfrModuleRequest = (FindAssetHistoriesByCfrModuleRequest) request;
                     findAssetByCfrBean.findAssetByCfr(findAssetByCfrModuleRequest, textMessage);
                     break;
                 case FIND_VESSEL_IDS_BY_ASSET_HIST_GUID:
-                    FindVesselIdsByAssetHistGuidRequest vesselIdentifiersRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, FindVesselIdsByAssetHistGuidRequest.class);
+                    FindVesselIdsByAssetHistGuidRequest vesselIdentifiersRequest = (FindVesselIdsByAssetHistGuidRequest) request;
                     findVesselIdsByAssetHistGuidBean.findIdentifiers(textMessage, vesselIdentifiersRequest);
                     break;
                 case FIND_VESSEL_IDS_BY_MULTIPLE_ASSET_HIST_GUID:
-                    FindVesselIdsByMultipleAssetHistGuidsRequest multipleVesselIdentifiersRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, FindVesselIdsByMultipleAssetHistGuidsRequest.class);
+                    FindVesselIdsByMultipleAssetHistGuidsRequest multipleVesselIdentifiersRequest = (FindVesselIdsByMultipleAssetHistGuidsRequest) request;
                     findVesselIdsByMultipleAssetHistGuidBean.findIdentifiers(textMessage, multipleVesselIdentifiersRequest);
                     break;
                 case FIND_ASSET_HIST_GUID_BY_ASSET_GUID_AND_OCCURRENCE_DATE:
-                    FindAssetHistGuidByAssetGuidAndOccurrenceDateRequest findAssetHistRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, FindAssetHistGuidByAssetGuidAndOccurrenceDateRequest.class);
+                    FindAssetHistGuidByAssetGuidAndOccurrenceDateRequest findAssetHistRequest = (FindAssetHistGuidByAssetGuidAndOccurrenceDateRequest) request;
                     findAssetHistGuidByAssetGuidAndOccurrenceDateBean.findAssetHistGuid(textMessage, findAssetHistRequest);
                     break;
                 case ASSET_GROUPS_FOR_ASSET:
-                    AssetGroupsForAssetRequest assetGroupsForAssetRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetGroupsForAssetRequest.class);
+                    AssetGroupsForAssetRequest assetGroupsForAssetRequest = (AssetGroupsForAssetRequest) request;
                     AssetMessageEvent assetGroupsForAssetEvent = new AssetMessageEvent(textMessage, assetGroupsForAssetRequest);
                     assetGroupsForAssetEventBean.getAssetGroupsFromAssets(assetGroupsForAssetEvent);
                     break;
