@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.rest.asset.service;
+package eu.europa.ec.fisheries.uvms.rest.asset.util;
 
 import java.io.StringReader;
 import java.util.HashSet;

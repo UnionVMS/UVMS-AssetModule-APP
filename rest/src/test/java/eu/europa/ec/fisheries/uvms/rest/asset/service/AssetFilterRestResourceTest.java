@@ -15,6 +15,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import eu.europa.ec.fisheries.uvms.rest.asset.util.AssetFilterListRestResourceAdapter;
+import eu.europa.ec.fisheries.uvms.rest.asset.util.AssetFilterRestResponseAdapter;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;

@@ -37,7 +37,7 @@ public class AssetFilterTestsIT extends TransactionalTests {
         List<UUID> fetchedList = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
-            AssetFilter createdAssetFilterEntity = createAndStoreAssetFilterEntity("TEST",1);
+            AssetFilter createdAssetFilterEntity = createAndStoreAssetFilterEntity("TEST");
             createdList.add(createdAssetFilterEntity.getId());
         }
         List<AssetFilter> rs = assetFilterDao.getAssetFilterAll();
@@ -59,7 +59,7 @@ public class AssetFilterTestsIT extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void createAssetGroup() {
-    	AssetFilter createdAssetGroupEntity1 = createAndStoreAssetFilterEntity("TEST",1);
+    	AssetFilter createdAssetGroupEntity1 = createAndStoreAssetFilterEntity("TEST");
         assertNotNull(createdAssetGroupEntity1);
     }
 
@@ -71,13 +71,13 @@ public class AssetFilterTestsIT extends TransactionalTests {
         String user3 = UUID.randomUUID().toString();
 
         for (int i = 0; i < 3; i++) {
-            createAndStoreAssetFilterEntity(user1,1);
+            createAndStoreAssetFilterEntity(user1);
         }
         for (int i = 0; i < 8; i++) {
-            createAndStoreAssetFilterEntity(user2,1);
+            createAndStoreAssetFilterEntity(user2);
         }
         for (int i = 0; i < 11; i++) {
-            createAndStoreAssetFilterEntity(user3,1);
+            createAndStoreAssetFilterEntity(user3);
         }
 
         List<AssetFilter> listUser1 = assetFilterDao.getAssetFilterByUser(user1);
@@ -93,7 +93,7 @@ public class AssetFilterTestsIT extends TransactionalTests {
     @OperateOnDeployment("normal")
     public void getAssetFilterByGuid() {
 
-    	AssetFilter createdAssetFilterEntity = createAndStoreAssetFilterEntity("TEST",1);
+    	AssetFilter createdAssetFilterEntity = createAndStoreAssetFilterEntity("TEST");
         UUID guid = createdAssetFilterEntity.getId();
         assertNotNull(guid);
 
@@ -109,7 +109,7 @@ public class AssetFilterTestsIT extends TransactionalTests {
         List<UUID> fetchedList = new ArrayList<>();
         List<AssetFilter> fetchedEntityList;
         for (int i = 0; i < 5; i++) {
-        	AssetFilter createdAssetGroupEntity = createAndStoreAssetFilterEntity("TEST",1);
+        	AssetFilter createdAssetGroupEntity = createAndStoreAssetFilterEntity("TEST");
             createdList.add(createdAssetGroupEntity.getId());
         }
 
@@ -132,7 +132,7 @@ public class AssetFilterTestsIT extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void deleteAssetFilter() {
-    	AssetFilter assetFilterEntity = createAndStoreAssetFilterEntity("TEST",1);
+    	AssetFilter assetFilterEntity = createAndStoreAssetFilterEntity("TEST");
         UUID uuid = assetFilterEntity.getId();
         assetFilterDao.deleteAssetFilter(assetFilterEntity);
 
@@ -143,7 +143,7 @@ public class AssetFilterTestsIT extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void updateAssetGroup() throws Exception {
-    	AssetFilter assetFilterEntity = createAndStoreAssetFilterEntity("TEST",1);
+    	AssetFilter assetFilterEntity = createAndStoreAssetFilterEntity("TEST");
         UUID uuid = assetFilterEntity.getId();
 
         assetFilterEntity.setOwner("NEW OWNER");
@@ -158,7 +158,7 @@ public class AssetFilterTestsIT extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void updateAssetFilterAndValues() {
-    	AssetFilter assetFilter = createAndStoreAssetFilterEntity("TEST",42);
+    	AssetFilter assetFilter = createAndStoreAssetFilterEntity("TEST");
         UUID uuid = assetFilter.getId();
 
         assetFilter.setOwner("NEW OWNER");
@@ -172,14 +172,14 @@ public class AssetFilterTestsIT extends TransactionalTests {
         Assert.assertTrue(fetchedFilter.getOwner().equalsIgnoreCase("NEW OWNER"));
     }
 
-    private AssetFilter createAndStoreAssetFilterEntity(String user, int numberOfAssetFilterValues) {
+    private AssetFilter createAndStoreAssetFilterEntity(String user) {
 
-    	AssetFilter assetFilterEntity = createAssetFilterEntity(user,numberOfAssetFilterValues);
+    	AssetFilter assetFilterEntity = createAssetFilterEntity(user);
     	AssetFilter createAssetFilterEntity = assetFilterDao.createAssetFilter(assetFilterEntity);
         return createAssetFilterEntity;
     }
 
-    private AssetFilter createAssetFilterEntity(String user, int numberOfGroupFields) {
+    private AssetFilter createAssetFilterEntity(String user) {
     	AssetFilter af = new AssetFilter();
         Instant date = Instant.now();
         
@@ -188,7 +188,6 @@ public class AssetFilterTestsIT extends TransactionalTests {
         af.setName("The Name");
         af.setOwner(user);
 
-      //  List<AssetFilterQuery> filterValues = createAssetFilterQuery(date, numberOfGroupFields);
         return af;
     }
 

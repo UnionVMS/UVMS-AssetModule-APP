@@ -4,8 +4,6 @@ import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollMobileTermi
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroupField;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
@@ -204,47 +202,6 @@ public class InternalRestResourceTest extends AbstractAssetRestTest {
         assertThat(fetchedAsset, is(AssetMatcher.assetEquals(createdAsset)));
     }
 
-    @Test
-    @OperateOnDeployment("normal")
-    public void getAssetByGroupIds() {
-        Asset asset = AssetHelper.createBasicAsset();
-        Asset createdAsset = getWebTargetInternal()
-                .path("/asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
-                .post(Entity.json(asset), Asset.class);
-
-        AssetGroup basicAssetGroup = AssetHelper.createBasicAssetGroup();
-        basicAssetGroup.setAssetGroupFields(new HashSet<>());
-
-        AssetGroupField field = new AssetGroupField();
-        field.setKey("GUID");
-        field.setValue(createdAsset.getId().toString());
-
-        basicAssetGroup.getAssetGroupFields().add(field);
-
-        AssetGroup createdAssetGroup = getWebTargetInternal()
-                .path("/group")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
-                .post(Entity.json(basicAssetGroup), AssetGroup.class);
-
-        List<UUID> groupIds = Collections.singletonList(createdAssetGroup.getId());
-
-        Response response = getWebTargetInternal()
-                .path("internal")
-                .path("/group/asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
-                .post(Entity.json(groupIds));
-
-        assertEquals(Status.OK.getStatusCode(), response.getStatus());
-
-        List<Asset> groupList = response.readEntity(new GenericType<List<Asset>>(){});
-        assertEquals(1, groupList.size());
-        assertEquals(createdAsset.getId(), groupList.get(0).getId());
-    }
-    
     @Test
     @OperateOnDeployment("normal")
     public void upsertAssetTest() {

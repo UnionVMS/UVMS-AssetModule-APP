@@ -4,7 +4,6 @@
              xmlns:s="source.asset.wsdl.fisheries.ec.europa.eu"
              xmlns:t="types.asset.wsdl.fisheries.ec.europa.eu"
              xmlns:h="history.asset.wsdl.fisheries.ec.europa.eu"
-             xmlns:g="group.asset.wsdl.fisheries.ec.europa.eu"
              xmlns:config="config.asset.wsdl.fisheries.ec.europa.eu"
              xmlns:f="fishinggear.asset.wsdl.fisheries.ec.europa.eu"
              xmlns:xsd="http://www.w3.org/2001/XMLSchema"
@@ -18,7 +17,6 @@
             <xsd:import namespace="types.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetElement.xsd"/>
             <xsd:import namespace="source.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="Asset.xsd"/>
             <xsd:import namespace="history.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetHistory.xsd"/>
-            <xsd:import namespace="group.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetGroup.xsd"/>
             <xsd:import namespace="config.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetConfig.xsd"/>
             <xsd:import namespace="fishinggear.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="FishingGear.xsd"/>
         </xsd:schema>
@@ -104,60 +102,8 @@
     <message name="AssetHistoryListResponse">
         <part name="body" element="t:ListAssetResponse"/>
     </message>
-    
-    <!-- Asset group requests -->
-    <message name="GetAssetGroupRequest">
-        <part name="body" element="g:GetAssetGroupRequest"/>
-    </message>
-    
-    <message name="CreateAssetGroupRequest">
-        <part name="body" element="g:CreateAssetGroupRequest"/>
-    </message>
-    
-    <message name="UpdateAssetGroupRequest">
-        <part name="body" element="g:UpdateAssetGroupRequest"/>
-    </message>
 
-    <message name="AssetGroupListRequest">
-        <part name="body" element="g:AssetGroupListByUserRequest"/>
-    </message>
-
-    <message name="GetAssetGroupListByAssetGuidRequest">
-        <part name="body" element="g:GetAssetGroupListByAssetGuidRequest"/>
-    </message>
-
-    <message name="DeleteAssetGroupRequest">
-        <part name="body" element="g:DeleteAssetGroupRequest"/>
-    </message>
-    
-    <!-- Asset history responses -->
-    <message name="GetAssetGroupResponse">
-        <part name="body" element="g:SingleAssetGroupResponse"/>
-    </message>
-
-    <message name="CreateAssetGroupResponse">
-        <part name="body" element="g:SingleAssetGroupResponse"/>
-    </message>
-    
-    <message name="UpdateAssetGroupResponse">
-        <part name="body" element="g:SingleAssetGroupResponse"/>
-    </message>
-    
-    <message name="AssetGroupListResponse">
-        <part name="body" element="g:ListAssetGroupResponse"/>
-    </message>
-    
-    <message name="DeleteAssetGroupResponse">
-        <part name="body" element="g:SingleAssetGroupResponse"/>
-    </message>
-    
     <!-- Move theese 2 to the right spot -->
-    <message name="AssetListByGroupRequest">
-        <part name="body" element="s:AssetListByAssetGroupRequest"/>
-    </message>
-    <message name="AssetListByGroupResponse">
-        <part name="body" element="t:ListAssetResponse"/>
-    </message>
 
 	<message name="PingRequest">
 		<part name="body" element="s:pingRequest"/>
@@ -176,9 +122,6 @@
 
     <message name="AssetListGroupByFlagStateRequest">
         <part name="body" element="s:AssetListGroupByFlagStateRequest"/>
-    </message>
-    <message name="AssetListGroupByFlagStateResponse">
-        <part name="body" element="s:AssetListGroupByFlagStateResponse"/>
     </message>
 
     <!-- Fishing gear -->
@@ -209,11 +152,6 @@
 
 
     <portType name="AssetDataSourcePortType">
-        <operation name="GetAssetListByAssetGroup">
-            <input message="v:AssetListByGroupRequest"/>
-            <output message="v:AssetListByGroupResponse"/>
-            <fault name="GetAssetFaultException" message="v:AssetFaultException"/>
-        </operation>
         <operation name="GetAsset">
             <input message="v:GetAssetRequest"/>
             <output message="v:GetAssetResponse"/>
@@ -254,36 +192,6 @@
             <output message="v:AssetHistoryListResponse"/>
             <fault name="AssetHistoryListFaultException" message="v:AssetHistoryFaultException"/>
         </operation>
-        <operation name="GetAssetGroup">
-            <input message="v:GetAssetGroupRequest"/>
-            <output message="v:GetAssetGroupResponse"/>
-            <fault name="GetAssetGroupFaultException" message="v:AssetGroupFaultException"/>
-        </operation>
-        <operation name="CreateAssetGroup">
-            <input message="v:CreateAssetGroupRequest"/>
-            <output message="v:CreateAssetGroupResponse"/>
-            <fault name="CreateAssetGroupFaultException" message="v:AssetGroupFaultException"/>
-        </operation>
-        <operation name="UpdateAssetGroup">
-            <input message="v:UpdateAssetGroupRequest"/>
-            <output message="v:UpdateAssetGroupResponse"/>
-            <fault name="UpdateAssetGroupFaultException" message="v:AssetGroupFaultException"/>
-        </operation>
-        <operation name="AssetGroupList">
-            <input message="v:AssetGroupListRequest"/>
-            <output message="v:AssetGroupListResponse"/>
-            <fault name="AssetGroupListFaultException" message="v:AssetGroupFaultException"/>
-        </operation>
-        <operation name="GetAssetGroupListByAssetGuid">
-            <input message="v:GetAssetGroupListByAssetGuidRequest"/>
-            <output message="v:AssetGroupListResponse"/>
-            <fault name="AssetGroupListFaultException" message="v:AssetGroupFaultException"/>
-        </operation>
-        <operation name="DeleteAssetGroup">
-            <input message="v:DeleteAssetGroupRequest"/>
-            <output message="v:DeleteAssetGroupResponse"/>
-            <fault name="AssetGroupListFaultException" message="v:AssetGroupFaultException"/>
-        </operation>
 		<operation name="Ping">
 			<input message="v:PingRequest"/>
 			<output message="v:PingResponse"/>
@@ -292,11 +200,6 @@
             <input message="v:ConfigRequest"/>
             <output message="v:ConfigResponse"/>
             <fault name="ConfigFaultException" message="v:AssetFaultException"/>
-        </operation>
-        <operation name="AssetListGroupByFlagState">
-            <input message="v:AssetListGroupByFlagStateRequest"/>
-            <output message="v:AssetListGroupByFlagStateResponse"/>
-            <fault name="AssetListFaultException" message="v:AssetFaultException"/>
         </operation>
 
         <!-- Fishing gear -->
@@ -415,72 +318,6 @@
                 <soap:fault name="AssetHistoryListFaultException" use="literal"/>
             </fault>
         </operation>
-        <operation name="GetAssetGroup">
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-            <fault name="GetAssetGroupFaultException">
-                <soap:fault name="GetAssetGroupFaultException" use="literal"/>
-            </fault>
-        </operation>
-        <operation name="CreateAssetGroup">
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-            <fault name="CreateAssetGroupFaultException">
-                <soap:fault name="CreateAssetGroupFaultException" use="literal"/>
-            </fault>
-        </operation>
-        <operation name="UpdateAssetGroup">
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-            <fault name="UpdateAssetGroupFaultException">
-                <soap:fault name="UpdateAssetGroupFaultException" use="literal"/>
-            </fault>
-        </operation>
-        <operation name="AssetGroupList">
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-            <fault name="AssetGroupListFaultException">
-                <soap:fault name="AssetGroupListFaultException" use="literal"/>
-            </fault>
-        </operation>
-        <operation name="GetAssetGroupListByAssetGuid">
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-            <fault name="AssetGroupListFaultException">
-                <soap:fault name="AssetGroupListFaultException" use="literal"/>
-            </fault>
-        </operation>
-        <operation name="DeleteAssetGroup">
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-            <fault name="AssetGroupListFaultException">
-                <soap:fault name="AssetGroupListFaultException" use="literal"/>
-            </fault>
-        </operation>
 		<operation name="Ping">
 			<input>
 				<soap:body use="literal"/>
@@ -496,17 +333,6 @@
             <output>
                 <soap:body use="literal"/>
             </output>
-        </operation>
-        <operation name="AssetListGroupByFlagState">
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-            <fault name="AssetListFaultException">
-                <soap:fault name="AssetListFaultException" use="literal"/>
-            </fault>
         </operation>
         <operation name="FishingGearList">
             <input>

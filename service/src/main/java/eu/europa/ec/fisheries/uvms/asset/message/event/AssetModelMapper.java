@@ -10,16 +10,15 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.message.event;
 
-import eu.europa.ec.fisheries.uvms.asset.bean.AssetGroupServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
-import eu.europa.ec.fisheries.uvms.asset.model.constants.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
+import eu.europa.ec.fisheries.uvms.asset.model.constants.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
 
 import javax.ejb.Stateless;
@@ -37,9 +36,6 @@ public class AssetModelMapper {
 
     @Inject
     private AssetServiceBean assetService;
-    
-    @Inject
-    private AssetGroupServiceBean assetGroupService;
     
     public Asset toAssetEntity(eu.europa.ec.fisheries.wsdl.asset.types.Asset assetModel) {
         Asset asset = new Asset();
@@ -222,35 +218,7 @@ public class AssetModelMapper {
         }
     }
     
-    public AssetGroup toAssetGroupEntity(eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup assetGroupModel) {
-        AssetGroup assetGroup = new AssetGroup();
-        assetGroup.setId(UUID.fromString(assetGroupModel.getGuid()));
-        assetGroup.setName(assetGroupModel.getName());
-        assetGroup.setOwner(assetGroupModel.getUser());
-        assetGroup.setDynamic(assetGroupModel.isDynamic());
-        assetGroup.setGlobal(assetGroupModel.isGlobal());
-        return assetGroup;
-    }
-    
-    public eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup toAssetGroupModel(AssetGroup assetGroupEntity) {
-        eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup assetGroupModel = new eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup();
-        assetGroupModel.setGuid(assetGroupEntity.getId().toString());
-        assetGroupModel.setName(assetGroupEntity.getName());
-        assetGroupModel.setUser(assetGroupEntity.getOwner());
-        assetGroupModel.setDynamic(assetGroupEntity.getDynamic());
-        assetGroupModel.setGlobal(assetGroupEntity.getGlobal());
 
-        List<AssetGroupField> fields = assetGroupService.retrieveFieldsForGroup(assetGroupEntity.getId());
-        for (AssetGroupField assetGroupField : fields) {
-            AssetGroupSearchField field = new AssetGroupSearchField();
-            field.setKey(ConfigSearchField.fromValue(assetGroupField.getKey()));
-            field.setValue(assetGroupField.getValue());
-            assetGroupModel.getSearchFields().add(field);
-        }
-        
-        return assetGroupModel;
-    }
-    
     public AssetIdentifier mapToAssetIdentity(AssetIdType assetIdType) {
         switch (assetIdType) {
             case CFR:

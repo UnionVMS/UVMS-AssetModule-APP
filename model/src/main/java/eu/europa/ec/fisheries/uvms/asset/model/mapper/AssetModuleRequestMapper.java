@@ -11,8 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.model.mapper;
 
-import eu.europa.ec.fisheries.uvms.asset.model.exception.*;
-import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.wsdl.asset.module.*;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
@@ -21,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 public class AssetModuleRequestMapper {
 
@@ -51,22 +49,6 @@ public class AssetModuleRequestMapper {
         AssetListModuleRequest request = new AssetListModuleRequest();
         request.setMethod(AssetModuleMethod.ASSET_LIST);
         request.setQuery(query);
-        return JAXBMarshaller.marshallJaxBObjectToString(request);
-    }
-
-    /**
-     *
-     * Creates a request to the module with a list of assetgroups that is used
-     * to query for a asset list based on the search criterias
-     *
-     * @param assetGroups
-     * @return
-     * @throws AssetException
-     */
-    public static String createAssetListModuleRequest(List<AssetGroup> assetGroups) throws AssetException {
-        GetAssetListByAssetGroupsRequest request = new GetAssetListByAssetGroupsRequest();
-        request.setMethod(AssetModuleMethod.ASSET_LIST_BY_GROUP);
-        request.getGroups().addAll(assetGroups);
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
 

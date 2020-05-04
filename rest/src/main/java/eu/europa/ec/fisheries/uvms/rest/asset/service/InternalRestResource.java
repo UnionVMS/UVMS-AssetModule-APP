@@ -12,13 +12,11 @@ package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType;
-import eu.europa.ec.fisheries.uvms.asset.bean.AssetGroupServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.bean.CustomCodesServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetGroup;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.dto.*;
@@ -55,9 +53,6 @@ public class InternalRestResource {
 
     @Inject
     private AssetServiceBean assetService;
-
-    @Inject
-    private AssetGroupServiceBean assetGroupService;
 
     @Inject
     private CustomCodesServiceBean customCodesService;
@@ -115,47 +110,6 @@ public class InternalRestResource {
             return Response.ok(returnString).build();
     }
 
-    @GET
-    @Path("group/user/{user}")
-    @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response getAssetGroupByUser(@PathParam("user") String user) throws Exception {
-        try {
-            List<AssetGroup> assetGroups = assetGroupService.getAssetGroupList(user);
-            return Response.ok(assetGroups).build();
-        } catch (Exception e) {
-            LOG.error("getAssetById", e);
-            throw e;
-        }
-    }
-
-    @GET
-    @Path("group/asset/{id}")
-    @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response getAssetGroupByAssetId(@PathParam("id") UUID assetId) throws Exception {
-        try {
-            List<AssetGroup> assetGroups = assetGroupService.getAssetGroupListByAssetId(assetId);
-            return Response.ok(assetGroups).build();
-        } catch (Exception e) {
-            LOG.error("getAssetGroupByAssetId", e);
-            throw e;
-        }
-    }
-
-    @POST
-    @Path("group/asset")
-    @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response getAssetByGroupIds(List<UUID> groupIds) throws Exception {
-        try {
-            List<AssetGroup> assetGroups = groupIds.stream()
-                    .map(assetGroupService::getAssetGroupById)
-                    .collect(Collectors.toList());
-            List<Asset> assets = assetService.getAssetListByAssetGroups(assetGroups);
-            return Response.ok(assets).build();
-        } catch (Exception e) {
-            LOG.error("getAssetByGroupIds", e);
-            throw e;
-        }
-    }
 
     @GET
     @Path("/history/asset/{id}")

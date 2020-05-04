@@ -1,7 +1,7 @@
 package eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian;
 
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
-import eu.europa.ec.fisheries.uvms.asset.bean.AssetGroupServiceBean;
+import eu.europa.ec.fisheries.uvms.asset.bean.AssetFilterServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFields;
@@ -44,10 +44,10 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     private TestPollHelper testPollHelper;
 
     @Inject
-    private MobileTerminalServiceBean mobileTerminalService;
+    private AssetFilterServiceBean assetFilterServiceBean;
 
     @Inject
-    private AssetGroupServiceBean assetGroupService;
+    private MobileTerminalServiceBean mobileTerminalService;
 
     @PersistenceContext
     private EntityManager em;
@@ -375,8 +375,8 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     public void testGetRequiredEnrichment() {
         // create stuff so we can create a valid rawMovement
         Asset asset = createAsset();
-        AssetGroup createdAssetGroup = createAssetGroup(asset);
-        UUID createdAssetGroupId = createdAssetGroup.getId();
+        AssetFilter createdAssetFilter = createAssetGroup(asset);
+        UUID createdAssetGroupId = createdAssetFilter.getId();
         MobileTerminal mobileTerminal = testPollHelper.createBasicMobileTerminal2(asset);
 
         mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
@@ -388,7 +388,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         String assetUUID = response.getAssetUUID();
         assertEquals(asset.getId(), UUID.fromString(assetUUID));
 
-        List<String> fetchedAssetGroups = response.getAssetGroupList();
+        List<String> fetchedAssetGroups = response.getAssetFilterList();
         assertNotNull(fetchedAssetGroups);
         assertTrue(fetchedAssetGroups.size() > 0);
         assertTrue(fetchedAssetGroups.contains(createdAssetGroupId.toString()));
@@ -400,8 +400,8 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     public void testGetRequiredEnrichmentOnlyMT_InmarsatSpecific() {
         // create stuff so we can create a valid rawMovement
         Asset asset = createAsset();
-        AssetGroup createdAssetGroup = createAssetGroup(asset);
-        UUID createdAssetGroupId = createdAssetGroup.getId();
+        AssetFilter createdAssetFilter = createAssetGroup(asset);
+        UUID createdAssetGroupId = createdAssetFilter.getId();
         MobileTerminal mobileTerminal = createMobileTerminal(asset);
         mobileTerminal.setArchived(false);
 
@@ -427,7 +427,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         String assetUUID = response.getAssetUUID();
         assertEquals(asset.getId(), UUID.fromString(assetUUID));
 
-        List<String> fetchedAssetGroups = response.getAssetGroupList();
+        List<String> fetchedAssetGroups = response.getAssetFilterList();
         assertNotNull(fetchedAssetGroups);
         assertTrue(fetchedAssetGroups.size() > 0);
         assertTrue(fetchedAssetGroups.contains(createdAssetGroupId.toString()));
@@ -438,8 +438,8 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
     public void testGetRequiredEnrichment_NO_MOBILETERMINAL() {
         // create stuff so we can create a valid rawMovement
         Asset asset = createAsset();
-        AssetGroup createdAssetGroup = createAssetGroup(asset);
-        UUID createdAssetGroupId = createdAssetGroup.getId();
+        AssetFilter createdAssetFilter = createAssetGroup(asset);
+        UUID createdAssetGroupId = createdAssetFilter.getId();
 
         em.flush();
 
@@ -449,7 +449,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         String assetUUID = response.getAssetUUID();
         assertEquals(asset.getId(), UUID.fromString(assetUUID));
 
-        List<String> fetchedAssetGroups = response.getAssetGroupList();
+        List<String> fetchedAssetGroups = response.getAssetFilterList();
         assertNotNull(fetchedAssetGroups);
         assertTrue(fetchedAssetGroups.size() > 0);
         assertTrue(fetchedAssetGroups.contains(createdAssetGroupId.toString()));
@@ -571,23 +571,25 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         return request;
     }
 
-    private AssetGroup createAssetGroup(Asset asset) {
-        AssetGroup ag = new AssetGroup();
-        ag.setUpdatedBy("test");
-        ag.setUpdateTime(Instant.now(Clock.systemUTC()));
-        ag.setArchived(false);
-        ag.setName("The Name");
-        ag.setOwner("test");
-        ag.setDynamic(false);
-        ag.setGlobal(true);
+    private AssetFilter createAssetGroup(Asset asset) {
+        AssetFilter filter = new AssetFilter();
+        filter.setUpdatedBy("test");
+        filter.setUpdateTime(Instant.now(Clock.systemUTC()));
+        filter.setName("The Name");
+        filter.setOwner("test");
 
-        AssetGroup createdAssetGroup = assetGroupService.createAssetGroup(ag, "test");
-        AssetGroupField assetGroupField = new AssetGroupField();
-        assetGroupField.setAssetGroup(createdAssetGroup);
-        assetGroupField.setKey("GUID");
-        assetGroupField.setValue(asset.getId().toString());
-        assetGroupField.setUpdateTime(Instant.now(Clock.systemUTC()));
-        assetGroupService.createAssetGroupField(createdAssetGroup.getId(), assetGroupField, "TEST");
+        AssetFilter createdAssetGroup = assetFilterServiceBean.createAssetFilter(filter, "test");
+        AssetFilterQuery assetFilterQuery = new AssetFilterQuery();
+        assetFilterQuery.setAssetFilter(createdAssetGroup);
+
+        AssetFilterValue assetFilterValue = new AssetFilterValue();
+        assetFilterValue.setAssetFilterQuery(assetFilterQuery);
+        assetFilterValue.setValueString(asset.getId().toString());
+
+        assetFilterQuery.setType("GUID");
+        assetFilterQuery.setIsNumber(false);
+        assetFilterQuery.setValues(new HashSet(Arrays.asList(assetFilterValue)));
+        assetFilterServiceBean.createAssetFilterQuery(filter.getId(), assetFilterQuery);
 
         return createdAssetGroup;
     }

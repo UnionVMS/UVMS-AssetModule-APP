@@ -30,22 +30,7 @@ public class AssetFilterServiceBean{
         if (assetId == null) {
             throw new NullPointerException("Invalid asset");
         }
-        List<AssetFilter> searchResultList = new ArrayList<>();
-        List<AssetFilter> filterList = assetFilterDao.getAssetFilterAll();
-        for (AssetFilter assetFilter : filterList) {
-        	List<AssetFilterQuery> filterQueryList = assetFilterDao.retrieveFilterQuerysForAssetFilter(assetFilter);
-        	for (AssetFilterQuery assetFilterQuery  : filterQueryList) {
-        		if ("GUID".equals(assetFilterQuery.getType())) {
-        			List<AssetFilterValue> values = assetFilterDao.retrieveValuesForFilterQuery(assetFilterQuery);
-        			for (AssetFilterValue value : values) {
-        				if (assetId.toString().equals(value.getValueString())) {
-        					searchResultList.add(assetFilter);
-			            }
-			        }
-	            }
-		    }
-        }
-        return searchResultList;
+        return assetFilterDao.getAssetFiltersContainingAssetId(assetId.toString());
     }
 	
 	public AssetFilter getAssetFilterById(UUID guid) {

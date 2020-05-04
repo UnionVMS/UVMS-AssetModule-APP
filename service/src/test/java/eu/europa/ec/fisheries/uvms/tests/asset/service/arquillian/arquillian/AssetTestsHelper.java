@@ -181,16 +181,6 @@ public class AssetTestsHelper {
         return assetEntity;
     }
 
-    static AssetGroupField createAssetGroupField(AssetGroup assetGroupEntity, String key, String keyFieldValue, Instant dt, String user) {
-        AssetGroupField ag = new AssetGroupField();
-        ag.setAssetGroup(assetGroupEntity);
-        ag.setUpdatedBy(user);
-        ag.setUpdateTime(dt);
-        ag.setKey(key);
-        ag.setValue(keyFieldValue);
-        return ag;
-    }
-    
     static AssetFilterQuery createAssetFilterQuery(AssetFilter assetFilterEntity) {
     	AssetFilterQuery afq = new AssetFilterQuery();
     	afq.setAssetFilter(assetFilterEntity);

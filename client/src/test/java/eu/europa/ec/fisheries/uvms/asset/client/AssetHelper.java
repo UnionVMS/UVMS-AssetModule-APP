@@ -131,13 +131,6 @@ public abstract class AssetHelper {
         return note;
     }
     
-    public static AssetGroup createBasicAssetGroup() {
-        AssetGroup assetGroup = new AssetGroup();
-        assetGroup.setName("Group: " + getRandomIntegers(5));
-        assetGroup.setArchived(false);
-        return assetGroup;
-    }
-
     public static String getRandomIntegers(int length) {
         return new Random()
                 .ints(0,9)

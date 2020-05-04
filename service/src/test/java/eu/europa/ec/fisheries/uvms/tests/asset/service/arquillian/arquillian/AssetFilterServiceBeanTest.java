@@ -2,17 +2,11 @@ package eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian;
 
 import static org.junit.Assert.*;
 
-import java.time.Clock;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
 import javax.ejb.EJB;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
 
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -44,13 +38,13 @@ public class AssetFilterServiceBeanTest extends TransactionalTests{
     public void initAssets() {
     	assetFilter = createAssetFilterEntity("Test Testblom");
     	assetFilterQuery = createAssetFilterQueryEntity(assetFilter);
-    	assetFilterValue = createAssetFilterValueEntety(assetFilterQuery.getId());
+    	assetFilterValue = createAssetFilterValueEntity(assetFilterQuery.getId(),"test value");
     }
     
     private AssetFilter createAssetFilterEntity(String user) {
     	AssetFilter af = new AssetFilter();
     	af.setUpdatedBy("test");
-    	af.setUpdateTime(Instant.now(Clock.systemUTC()));
+    	af.setUpdateTime(Instant.now());
     	af.setName("The Name");
     	af.setOwner(user);
         return assetFilterService.createAssetFilter(af, user);
@@ -63,9 +57,9 @@ public class AssetFilterServiceBeanTest extends TransactionalTests{
         assetFilterQuery.setInverse(false);
         return assetFilterService.createAssetFilterQuery(af.getId(), assetFilterQuery);
     }
-	private AssetFilterValue createAssetFilterValueEntety(UUID parentAssetFilterQueryId) {
+	private AssetFilterValue createAssetFilterValueEntity(UUID parentAssetFilterQueryId, String testValue) {
 	    AssetFilterValue afv = new AssetFilterValue();
-	    afv.setValueString("test value");
+	    afv.setValueString(testValue);
 	    return assetFilterService.createAssetFilterValue(parentAssetFilterQueryId, afv);
 	}
 	@Test
@@ -81,11 +75,40 @@ public class AssetFilterServiceBeanTest extends TransactionalTests{
 
     @Test
     @OperateOnDeployment("normal")
-    public void getAssetFilterById() throws HeuristicRollbackException, RollbackException, NotSupportedException, HeuristicMixedException, SystemException {
+    public void getAssetFilterById()  {
     	AssetFilter createdAssetFilterEntity = assetFilter;
         UUID guid = createdAssetFilterEntity.getId();
         AssetFilter fetchedAssetFilterEntity = assetFilterService.getAssetFilterById(guid);
         assertEquals(fetchedAssetFilterEntity.getId(), guid);
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetFilterByAssetId()  {
+        UUID assetId = UUID.randomUUID();
+
+        AssetFilter createdAssetFilterEntity = assetFilter;
+
+        AssetFilterValue assetFilterValue = createAssetFilterValueEntity(assetFilterQuery.getId(), assetId.toString());
+
+        List<AssetFilter> fetchedAssetFilterEntity = assetFilterService.getAssetFilterListByAssetId(assetId);
+
+        assertTrue(fetchedAssetFilterEntity.stream().anyMatch(filter -> filter.getId().equals(createdAssetFilterEntity.getId())));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetFilterByAssetId_TwoAssetFilters()  {    //Since you create one in the init
+        UUID assetId = UUID.randomUUID();
+
+        AssetFilter createdAssetFilter = createAssetFilterEntity("Filter Tester");
+        AssetFilterQuery createdAssetFilterQuery = createAssetFilterQueryEntity(createdAssetFilter);
+        AssetFilterValue assetFilterValue = createAssetFilterValueEntity(createdAssetFilterQuery.getId(), assetId.toString());
+
+        List<AssetFilter> fetchedAssetFilterEntity = assetFilterService.getAssetFilterListByAssetId(assetId);
+
+        assertTrue(fetchedAssetFilterEntity.stream().anyMatch(filter -> filter.getId().equals(createdAssetFilter.getId())));
+        assertFalse(fetchedAssetFilterEntity.stream().anyMatch(filter -> filter.getId().equals(assetFilter.getId())));
     }
 
     @Test

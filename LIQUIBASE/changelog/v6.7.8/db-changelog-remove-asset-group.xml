@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd"
+                   logicalFilePath="changelog/v6.7.8/db-changelog-remove-asset-group.xml">
+
+    <changeSet id="Removeing asset group and everything related to it" author="joemat">
+
+        <dropTable tableName="assetgroupfield"/>
+
+        <dropTable tableName="assetgroup"/>
+
+    </changeSet>
+
+</databaseChangeLog>

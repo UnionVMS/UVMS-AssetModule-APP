@@ -186,12 +186,6 @@
         </xsd:restriction>
     </xsd:simpleType>
 
-    <xsd:complexType name="NumberOfAssetsGroupByFlagState">
-        <xsd:sequence>
-            <xsd:element name="flagState" type="xsd:string"/>
-            <xsd:element name="numberOfAssets" type="xsd:int"/>
-        </xsd:sequence>
-    </xsd:complexType>
 
     <xsd:complexType name="AssetListQuery">
         <xsd:sequence>
@@ -254,14 +248,6 @@
                 <xsd:element name="totalNumberOfPages" type="xsd:int" minOccurs="1" maxOccurs="1"/>
                 <xsd:element name="currentPage" type="xsd:int" minOccurs="1" maxOccurs="1"/>
                 <xsd:element name="asset" type="Asset" minOccurs="0" maxOccurs="unbounded"/>
-            </xsd:sequence>
-        </xsd:complexType>
-    </xsd:element>
-
-    <xsd:element name="AssetListGroupByFlagStateResponse">
-        <xsd:complexType>
-            <xsd:sequence>
-                <xsd:element name="numberOfAssetsGroupByFlagState" type="NumberOfAssetsGroupByFlagState" minOccurs="0" maxOccurs="unbounded"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>

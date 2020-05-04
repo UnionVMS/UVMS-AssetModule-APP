@@ -49,7 +49,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Stateless
 public class AssetServiceBean {
@@ -70,9 +69,6 @@ public class AssetServiceBean {
 
     @Inject
     private AuditServiceBean auditService;
-
-    @Inject
-    private AssetGroupServiceBean assetGroupService;
 
     @Inject
     private AssetFilterServiceBean assetFilterService;
@@ -275,24 +271,6 @@ public class AssetServiceBean {
         return assetDao.getAssetById(id);
     }
 
-    public List<Asset> getAssetListByAssetGroups(List<AssetGroup> groups) {
-        LOG.debug("Getting asset by ID.");
-        if (groups == null || groups.isEmpty()) {
-            throw new IllegalArgumentException("No groups in query");
-        }
-        List<AssetGroupField> groupFields = groups.stream()
-                .map(g -> assetGroupService.retrieveFieldsForGroup(g.getId()))
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
-
-        Set<Asset> assets = new HashSet<>();
-        for (AssetGroupField groupField : groupFields) {
-            if ("GUID".equals(groupField.getKey())) {
-                assets.add(getAssetById(UUID.fromString(groupField.getValue())));
-            }
-        }
-        return new ArrayList<>(assets);
-    }
 
     public void deleteAsset(AssetIdentifier assetId, String value) {
         nullValidation(assetId, "AssetId is null");
@@ -435,12 +413,12 @@ public class AssetServiceBean {
     private void enrichAssetGroup(AssetMTEnrichmentResponse assetMTEnrichmentResponse, Asset asset) {
         if (asset != null) {
             List<String> assetGroupList = new ArrayList<>();
-            List<AssetGroup> list = assetGroupService.getAssetGroupListByAssetId(asset.getId());
-            for (AssetGroup assetGroup : list) {
-                UUID assetGroupId = assetGroup.getId();
-                assetGroupList.add(assetGroupId.toString());
+            List<AssetFilter> assetFilters = assetFilterService.getAssetFilterListByAssetId(asset.getId());
+            for (AssetFilter filter : assetFilters) {
+                UUID assetFilterId = filter.getId();
+                assetGroupList.add(assetFilterId.toString());
             }
-            assetMTEnrichmentResponse.setAssetGroupList(assetGroupList);
+            assetMTEnrichmentResponse.setAssetFilterList(assetGroupList);
         }
     }
 
