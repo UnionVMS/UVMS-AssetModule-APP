@@ -430,6 +430,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         AssetMTEnrichmentRequest request = createRequest(asset);
         AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
+        assertNotNull(response.getAssetUUID());
         assertNotNull(response.getMobileTerminalType());
         String assetUUID = response.getAssetUUID();
         assertEquals(asset.getId(), UUID.fromString(assetUUID));
@@ -468,6 +469,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         request.setTranspondertypeValue(mobileTerminal.getMobileTerminalType().toString());
 
         AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
+        assertNotNull(response.getAssetUUID());
         assertNotNull(response.getMobileTerminalType());
         String assetUUID = response.getAssetUUID();
         assertEquals(asset.getId(), UUID.fromString(assetUUID));
@@ -490,6 +492,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         AssetMTEnrichmentRequest request = createRequest(asset);
         AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
+        assertNotNull(response.getAssetUUID());
         String assetUUID = response.getAssetUUID();
         assertEquals(asset.getId(), UUID.fromString(assetUUID));
 
