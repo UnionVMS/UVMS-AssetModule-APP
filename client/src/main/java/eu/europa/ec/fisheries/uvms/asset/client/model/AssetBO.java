@@ -17,6 +17,7 @@ public class AssetBO {
     private AssetDTO asset;
     private List<ContactInfo> contacts;
     private List<Note> notes;
+    private AssetIdentifier defaultIdentifier = AssetIdentifier.CFR;
     
     public AssetDTO getAsset() {
         return asset;
@@ -35,5 +36,11 @@ public class AssetBO {
     }
     public void setNotes(List<Note> notes) {
         this.notes = notes;
+    }
+    public AssetIdentifier getDefaultIdentifier() {
+        return defaultIdentifier;
+    }
+    public void setDefaultIdentifier(AssetIdentifier defaultIdentifier) {
+        this.defaultIdentifier = defaultIdentifier;
     }
 }

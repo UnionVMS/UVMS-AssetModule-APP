@@ -2,7 +2,6 @@ package eu.europa.ec.fisheries.uvms.asset.dto;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 public class AssetMTEnrichmentResponse implements Serializable {
 
@@ -11,7 +10,6 @@ public class AssetMTEnrichmentResponse implements Serializable {
     private String channelGuid = null;
 
     private String assetName;
-    private Map<String,String > assetId = null;
     private List<String> assetFilterList = null;
     private String assetUUID = null;
     private String assetHistoryId = null;
@@ -39,14 +37,6 @@ public class AssetMTEnrichmentResponse implements Serializable {
 
     public void setAssetName(String assetName) {
         this.assetName = assetName;
-    }
-
-    public Map<String, String> getAssetId() {
-        return assetId;
-    }
-
-    public void setAssetId(Map<String, String> assetId) {
-        this.assetId = assetId;
     }
 
     public List<String> getAssetFilterList() {

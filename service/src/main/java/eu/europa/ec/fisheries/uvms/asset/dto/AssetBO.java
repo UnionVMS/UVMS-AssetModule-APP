@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.dto;
 
 import java.util.List;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
@@ -20,6 +21,7 @@ public class AssetBO {
     private Asset asset;
     private List<ContactInfo> contacts;
     private List<Note> notes;
+    private AssetIdentifier defaultIdentifier = AssetIdentifier.CFR;
     
     public Asset getAsset() {
         return asset;
@@ -38,5 +40,11 @@ public class AssetBO {
     }
     public void setNotes(List<Note> notes) {
         this.notes = notes;
+    }
+    public AssetIdentifier getDefaultIdentifier() {
+        return defaultIdentifier;
+    }
+    public void setDefaultIdentifier(AssetIdentifier defaultIdentifier) {
+        this.defaultIdentifier = defaultIdentifier;
     }
 }
