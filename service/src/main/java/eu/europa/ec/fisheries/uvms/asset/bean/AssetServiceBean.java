@@ -298,7 +298,7 @@ public class AssetServiceBean {
         });
         revisions.sort(Comparator.comparing(Asset::getUpdateTime));
         if (revisions.size() > maxNbr) {
-            return revisions.subList(0, maxNbr);
+            return revisions.subList(revisions.size() - maxNbr, revisions.size());  //we should get the latest ones right?
         }
         return revisions;
     }
