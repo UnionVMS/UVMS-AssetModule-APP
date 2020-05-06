@@ -395,7 +395,7 @@ public class AssetServiceBean {
 
         AssetMTEnrichmentResponse assetMTEnrichmentResponse = new AssetMTEnrichmentResponse();
         enrichAssetAndMobileTerminal(request, assetMTEnrichmentResponse, terminal, asset);
-        enrichAssetGroup(assetMTEnrichmentResponse, asset);
+        enrichAssetFilter(assetMTEnrichmentResponse, asset);
 
         return assetMTEnrichmentResponse;
     }
@@ -410,7 +410,7 @@ public class AssetServiceBean {
         }
     }
 
-    private void enrichAssetGroup(AssetMTEnrichmentResponse assetMTEnrichmentResponse, Asset asset) {
+    private void enrichAssetFilter(AssetMTEnrichmentResponse assetMTEnrichmentResponse, Asset asset) {
         if (asset != null) {
             List<String> assetGroupList = new ArrayList<>();
             List<AssetFilter> assetFilters = assetFilterService.getAssetFilterListByAssetId(asset.getId());
@@ -452,6 +452,7 @@ public class AssetServiceBean {
         // here we put into response data about mobiletreminal / channels etc etc
         String channelGuid = getChannelGuid(mobTerm, req);
         resp.setChannelGuid(channelGuid);
+        resp.setSerialNumber(mobTerm.getSerialNo());
         resp.setMobileTerminalConnectId(mobTerm.getAsset() == null ? null : mobTerm.getAsset().getId().toString());
         resp.setMobileTerminalType(mobTerm.getMobileTerminalType().name());
         if (mobTerm.getId() != null) {
@@ -468,17 +469,6 @@ public class AssetServiceBean {
 
                 resp.setDNID(String.valueOf(channel.getDnid()));
                 resp.setMemberNumber(String.valueOf(channel.getMemberNumber()));
-            }
-        }
-
-        if (mobTerm.getId() != null) {
-            try {
-                MobileTerminal mobileTerminal = mobileTerminalService.getMobileTerminalEntityById(mobTerm.getId());
-                if (mobileTerminal != null) {
-                    resp.setSerialNumber(mobileTerminal.getSerialNo());
-                }
-            } catch (IllegalArgumentException IllegalSoWeSkipTryingToFetchIt) {
-                // DON'T CARE
             }
         }
         return resp;
