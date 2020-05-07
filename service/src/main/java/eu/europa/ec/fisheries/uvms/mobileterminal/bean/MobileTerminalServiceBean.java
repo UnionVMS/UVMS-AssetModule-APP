@@ -246,7 +246,7 @@ public class MobileTerminalServiceBean {
         revisions.sort(Comparator.comparing(MobileTerminal::getUpdatetime));
         revisions.forEach(this::sortChannels);
         if (revisions.size() > maxNbr) {
-            return revisions.subList(0, maxNbr);
+            return revisions.subList(revisions.size() - maxNbr, revisions.size());  //we should get the latest ones right?
         }
         return revisions;
     }
