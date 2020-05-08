@@ -61,6 +61,7 @@ public class AssetServiceBean {
     private static final String GFCM = "GFCM";
     private static final String UVI = "UVI";
     private static final String ICCAT = "ICCAT";
+    private static final String NATIONAL = "NATIONAL";
 
     private static final Logger LOG = LoggerFactory.getLogger(AssetServiceBean.class);
 
@@ -220,7 +221,7 @@ public class AssetServiceBean {
     public AssetBO upsertAssetBO(AssetBO assetBo, String username) {
         nullValidation(assetBo, "No asset business object to upsert");
         Asset asset = assetBo.getAsset();
-        Asset existingAsset = getAssetByCfrIrcs(createAssetId(asset));
+        Asset existingAsset = getAssetByNationalCfrIrcsOrMmsi(createAssetId(asset));
         if (existingAsset != null) {
             asset.setId(existingAsset.getId());
 
@@ -257,7 +258,7 @@ public class AssetServiceBean {
             try {
                 UUID.fromString(idValue); // Just to verify incoming UUID is valid.
             } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("Not a valid UUID");
+                throw new IllegalArgumentException("Not a valid UUID: " + idValue);
             }
         }
         Asset asset = assetDao.getAssetFromAssetIdAtDate(idType, idValue, date);
@@ -376,7 +377,7 @@ public class AssetServiceBean {
         Asset asset = terminal == null ? null : terminal.getAsset();
 
         if (asset == null) {
-            asset = getAssetByCfrIrcs(createAssetId(request));
+            asset = getAssetByNationalCfrIrcsOrMmsi(createAssetId(request));
         }
 
         if (isPluginTypeWithoutMobileTerminal(request.getPluginType()) && asset != null) {
@@ -524,6 +525,9 @@ public class AssetServiceBean {
         if (asset.getIccat() != null && asset.getIccat().length() > 0) {
             assetId.put(ICCAT, asset.getIccat());
         }
+        if (asset.getNationalId() != null ) {
+            assetId.put(NATIONAL, asset.getNationalId().toString());
+        }
         return assetId;
     }
 
@@ -557,7 +561,7 @@ public class AssetServiceBean {
         return assetId;
     }
 
-    private Asset getAssetByCfrIrcs(Map<String, String> assetId) {
+    private Asset getAssetByNationalCfrIrcsOrMmsi(Map<String, String> assetId) {
         Asset asset = null;
 
         // If no asset information exists, don't look for one
@@ -567,11 +571,17 @@ public class AssetServiceBean {
         }
 
         // Get possible search parameters
+        String national = assetId.getOrDefault(NATIONAL, null);
         String cfr = assetId.getOrDefault(CFR, null);
         String ircs = assetId.getOrDefault(IRCS, null);
         String mmsi = assetId.getOrDefault(MMSI, null);
 
-        if (cfr != null) {
+
+        if (national != null) {
+            asset = getAssetById(AssetIdentifier.NATIONAL, national);
+        }
+
+        if (asset == null && cfr != null) {
             asset = getAssetById(AssetIdentifier.CFR, cfr);
         }
 

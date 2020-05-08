@@ -10,15 +10,14 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.message;
 
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
-import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
+import eu.europa.ec.fisheries.uvms.asset.util.JsonBConfiguratorAsset;
 import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
 import org.apache.activemq.artemis.api.core.TransportConfiguration;
 import org.apache.activemq.artemis.api.jms.ActiveMQJMSClient;
 import org.apache.activemq.artemis.api.jms.JMSFactoryType;
@@ -73,6 +72,10 @@ public class JMSHelper {
     }
 
     public String sendAssetMessageWithFunction(String text, String function) throws Exception {
+        return sendAssetMessage(text, MessageConstants.JMS_FUNCTION_PROPERTY, function);
+    }
+
+    public String sendAssetMessage(String text, String jmsStringProperty, String jmsStringPropertyValue) throws Exception {
         Connection connection = getConnectionFactory().createConnection("test", "test");
         connection.setClientID(UUID.randomUUID().toString());
         try {
@@ -82,7 +85,7 @@ public class JMSHelper {
 
             TextMessage message = session.createTextMessage();
             message.setJMSReplyTo(responseQueue);
-            message.setStringProperty(MessageConstants.JMS_FUNCTION_PROPERTY, function);
+            message.setStringProperty(jmsStringProperty, jmsStringPropertyValue);
             message.setText(text);
 
             session.createProducer(assetQueue).send(message);
@@ -122,6 +125,17 @@ public class JMSHelper {
 
         String json = jsonb.toJson(asset);
         sendAssetMessageWithFunction(json, "ASSET_INFORMATION");
+    }
+
+    public void upsertAssetUsingMethod(eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset asset) throws Exception {
+
+        AssetBO abo = new AssetBO();
+        abo.setAsset(asset);
+
+        Jsonb jsonb = new JsonBConfiguratorAsset().getContext(null);
+        String json = jsonb.toJson(abo);
+
+        sendAssetMessage(json,"METHOD" ,"UPSERT_ASSET");
     }
 
 

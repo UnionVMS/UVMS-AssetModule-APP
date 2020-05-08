@@ -72,6 +72,7 @@ public class AssetDTO {
     private String prodOrgCode;
     private String prodOrgName;
     private String comment;
+    private Long nationalId;
 
     public UUID getId() {
         return id;
@@ -408,5 +409,13 @@ public class AssetDTO {
     }
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Long getNationalId() {
+        return nationalId;
+    }
+
+    public void setNationalId(Long nationalId) {
+        this.nationalId = nationalId;
     }
 }

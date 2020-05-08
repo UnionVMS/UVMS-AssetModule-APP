@@ -122,6 +122,16 @@ public class AssetDao {
         }
     }
 
+    public Asset getAssetByNational(Long national) {
+        try {
+            TypedQuery<Asset> query = em.createNamedQuery(Asset.ASSET_FIND_BY_NATIONAL_ID, Asset.class);
+            query.setParameter("nationalId", national);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
     public List<Asset> getAssetByMmsiOrIrcs(String mmsi, String ircs) {
         String correctedIrcs = (ircs != null && ircs.matches("\\w{3}\\d{4}") ? ircs.substring(0, 3) + "-" + ircs.substring(3) : ircs);
 
@@ -506,6 +516,9 @@ public class AssetDao {
                 break;
             case GFCM:
                 asset = getAssetByGfcm(value);
+                break;
+            case NATIONAL:
+                asset = getAssetByNational(Long.parseLong(value));
                 break;
             default:
                 throw new IllegalArgumentException("Could not create query. Check your code AssetIdType is invalid");
