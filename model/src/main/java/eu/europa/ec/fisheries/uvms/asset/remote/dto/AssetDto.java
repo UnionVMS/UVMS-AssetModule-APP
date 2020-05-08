@@ -137,6 +137,8 @@ public class AssetDto {
 
     private String comment;
 
+    private Long nationalId;
+
     public UUID getId() {
         return id;
     }
@@ -583,5 +585,13 @@ public class AssetDto {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Long getNationalId() {
+        return nationalId;
+    }
+
+    public void setNationalId(Long nationalId) {
+        this.nationalId = nationalId;
     }
 }

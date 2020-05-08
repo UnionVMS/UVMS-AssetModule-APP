@@ -17,10 +17,15 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import javax.inject.Inject;
 import javax.jms.Message;
 
+import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
+import eu.europa.ec.fisheries.uvms.asset.message.event.AssetModelMapper;
 import eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian.AssetTestsHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -42,6 +47,12 @@ import eu.europa.ec.fisheries.uvms.tests.BuildAssetServiceDeployment;
 public class AssetEventQueueTest extends BuildAssetServiceDeployment {
 
     private JMSHelper jmsHelper = new JMSHelper();
+
+    @Inject
+    AssetModelMapper assetModelMapper;
+
+    @Inject
+    AssetServiceBean assetServiceBean;
 
     @Test
     @OperateOnDeployment("normal")
@@ -513,13 +524,23 @@ public class AssetEventQueueTest extends BuildAssetServiceDeployment {
         assertTrue(fetchedAssetUpdated.getIrcs() == null);
     }
 
+    @Test
+    @OperateOnDeployment("normal")
+    public void createAssetWithNationalId() throws Exception {
+        Asset assetType = AssetTestHelper.createBasicAsset();
+        eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset asset = assetModelMapper.toAssetEntity(assetType);
+        asset.setName("Create with national id");
+        Long nationalId = (long)(Math.random() * 10000000d);
+        asset.setNationalId(nationalId);
 
+        jmsHelper.upsertAssetUsingMethod(asset);
+        Thread.sleep(1000);
 
+        eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset assetById = assetServiceBean.getAssetById(AssetIdentifier.NATIONAL, nationalId.toString());
+        assertEquals(nationalId, assetById.getNationalId());
+        assertEquals(asset.getName(), assetById.getName());
 
-
-
-
-
+    }
 
 
 
