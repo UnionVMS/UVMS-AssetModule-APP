@@ -76,6 +76,7 @@ public class Channel implements Serializable {
 	@JoinColumn(name="mobterm_id", foreignKey = @ForeignKey(name = "Channel_MobileTerminal_FK"))
 	private MobileTerminal mobileTerminal;
 
+	@NotNull
 	@Column(name="com_channel_name")
 	private String name;
 

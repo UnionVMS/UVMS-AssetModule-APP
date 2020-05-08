@@ -44,6 +44,7 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.*;
           @NamedQuery(name = ASSET_FIND_BY_ICCAT, query = "SELECT v FROM Asset v WHERE v.iccat = :iccat AND v.active = true"),
           @NamedQuery(name = ASSET_FIND_BY_UVI, query = "SELECT v FROM Asset v WHERE v.uvi = :uvi AND v.active = true"),
           @NamedQuery(name = ASSET_FIND_BY_GFCM, query = "SELECT v FROM Asset v WHERE v.gfcm = :gfcm AND v.active = true"),
+          @NamedQuery(name = ASSET_FIND_BY_NATIONAL_ID, query = "SELECT v FROM Asset v WHERE v.nationalId = :nationalId AND v.active = true"),
           @NamedQuery(name = ASSET_FIND_BY_IDS, query = "SELECT v FROM Asset v WHERE v.id in :idList AND v.active = true"),
           @NamedQuery(name = ASSET_FIND_BY_ALL_IDENTIFIERS, query = "SELECT v FROM Asset v WHERE (v.cfr = :cfr OR v.ircs = :ircs OR v.imo = :imo OR v.mmsi = :mmsi OR v.iccat = :iccat OR v.uvi = :uvi OR v.gfcm = :gfcm) AND v.active = true"),
           @NamedQuery(name = ASSET_FIND_BY_MMSI_OR_IRCS, query = "SELECT a FROM Asset a WHERE (a.ircs = :ircs OR a.mmsi = :mmsi) AND a.active = true"),
@@ -59,6 +60,7 @@ public class Asset implements Serializable {
     public static final String ASSET_FIND_BY_ICCAT = "Asset.findByIccat";
     public static final String ASSET_FIND_BY_UVI = "Asset.findByUvi";
     public static final String ASSET_FIND_BY_GFCM = "Asset.findByGfcm";
+    public static final String ASSET_FIND_BY_NATIONAL_ID = "Asset.findByNationalId";
     public static final String ASSET_FIND_ALL = "Asset.findAll";
     public static final String ASSET_FIND_BY_IDS = "Asset.findByIds";
     public static final String ASSET_FIND_BY_ALL_IDENTIFIERS = "Asset.findByAllIds";
@@ -276,6 +278,9 @@ public class Asset implements Serializable {
     @Size(max = 255)
     @Column(name = "comment")
     private String comment;
+
+    @Column(name = "national_id")
+    private Long nationalId;
 
     @PrePersist
     private void generateNewHistoryId() {
@@ -753,5 +758,13 @@ public class Asset implements Serializable {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Long getNationalId() {
+        return nationalId;
+    }
+
+    public void setNationalId(Long nationalId) {
+        this.nationalId = nationalId;
     }
 }

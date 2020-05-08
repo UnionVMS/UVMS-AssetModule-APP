@@ -19,6 +19,7 @@ public enum AssetIdentifier {
     MMSI,
     ICCAT,
     UVI,
-    GFCM;
+    GFCM,
+    NATIONAL;
 
 }

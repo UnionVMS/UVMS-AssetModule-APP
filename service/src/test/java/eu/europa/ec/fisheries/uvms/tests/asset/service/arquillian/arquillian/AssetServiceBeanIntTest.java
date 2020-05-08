@@ -4,6 +4,7 @@ import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
 import eu.europa.ec.fisheries.uvms.asset.bean.AssetFilterServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFields;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchLeaf;
@@ -68,6 +69,53 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         } catch (AssetServiceException e) {
             fail();
         }
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void upsertAssert() {
+        Asset asset = AssetTestsHelper.createBiggerAsset();
+        Long nationalId = (long)(Math.random() * 10000000d);
+        asset.setNationalId(nationalId);
+        AssetBO abo = new AssetBO();
+        abo.setAsset(asset);
+
+        AssetBO createdAssetBo = assetService.upsertAssetBO(abo, "national id test");
+        assertNotNull(createdAssetBo);
+        assertNotNull(createdAssetBo.getAsset());
+
+        Asset assetById = assetService.getAssetById(AssetIdentifier.NATIONAL, nationalId.toString());
+        assertNotNull(assetById);
+        assertEquals(nationalId, assetById.getNationalId());
+        assertEquals("national id test", assetById.getUpdatedBy());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void upsertAssertUsingCfrId() {
+        Asset asset = AssetTestsHelper.createBiggerAsset();
+        String cfr = asset.getCfr();
+        AssetBO abo = new AssetBO();
+        abo.setAsset(asset);
+
+        AssetBO createdAssetBo = assetService.upsertAssetBO(abo, "upsert asset test");
+        assertNotNull(createdAssetBo);
+        assertNotNull(createdAssetBo.getAsset());
+        String oldIrcs = createdAssetBo.getAsset().getIrcs();
+
+        Asset asset2 = AssetTestsHelper.createBiggerAsset();
+        asset2.setCfr(cfr);
+        abo.setAsset(asset2);
+        createdAssetBo = assetService.upsertAssetBO(abo, "upsert asset test update");
+        assertNotNull(createdAssetBo);
+        assertNotNull(createdAssetBo.getAsset());
+
+        Asset assetByIrcs = assetService.getAssetById(AssetIdentifier.IRCS, oldIrcs);
+        assertNull(assetByIrcs);
+
+        Asset assetById = assetService.getAssetById(AssetIdentifier.CFR, cfr);
+        assertEquals(createdAssetBo.getAsset().getId(), assetById.getId());
+        assertEquals(asset2.getName(), assetById.getName());
     }
 
     @Test

@@ -213,7 +213,7 @@ public class AssetServiceBean {
         nullValidation(assetBo, "No asset business object to upsert");
         Asset asset = assetBo.getAsset();
         Map<AssetIdentifier, String> assetIds = createAssetId(asset);
-        Asset existingAsset = getAssetById(assetBo.getDefaultIdentifier(), assetIds.get(assetBo.getDefaultIdentifier()));
+        Asset existingAsset = getAssetByCfrIrcsOrMmsi(assetBo.getDefaultIdentifier(), assetIds.get(assetBo.getDefaultIdentifier()));
         if (existingAsset == null) {
             existingAsset = getAssetByCfrIrcs(assetIds);
         }
@@ -253,7 +253,7 @@ public class AssetServiceBean {
             try {
                 UUID.fromString(idValue); // Just to verify incoming UUID is valid.
             } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("Not a valid UUID");
+                throw new IllegalArgumentException("Not a valid UUID: " + idValue);
             }
         }
         Asset asset = assetDao.getAssetFromAssetIdAtDate(idType, idValue, date);
@@ -294,7 +294,7 @@ public class AssetServiceBean {
         });
         revisions.sort(Comparator.comparing(Asset::getUpdateTime));
         if (revisions.size() > maxNbr) {
-            return revisions.subList(0, maxNbr);
+            return revisions.subList(revisions.size() - maxNbr, revisions.size());  //we should get the latest ones right?
         }
         return revisions;
     }
@@ -372,7 +372,7 @@ public class AssetServiceBean {
         Asset asset = terminal == null ? null : terminal.getAsset();
 
         if (asset == null) {
-            asset = getAssetByCfrIrcs(createAssetId(request));
+            asset = getAssetByCfrIrcsOrMmsi(createAssetId(request));
         }
 
         if (isPluginTypeWithoutMobileTerminal(request.getPluginType()) && asset != null) {
@@ -391,7 +391,7 @@ public class AssetServiceBean {
 
         AssetMTEnrichmentResponse assetMTEnrichmentResponse = new AssetMTEnrichmentResponse();
         enrichAssetAndMobileTerminal(request, assetMTEnrichmentResponse, terminal, asset);
-        enrichAssetGroup(assetMTEnrichmentResponse, asset);
+        enrichAssetFilter(assetMTEnrichmentResponse, asset);
 
         return assetMTEnrichmentResponse;
     }
@@ -406,7 +406,7 @@ public class AssetServiceBean {
         }
     }
 
-    private void enrichAssetGroup(AssetMTEnrichmentResponse assetMTEnrichmentResponse, Asset asset) {
+    private void enrichAssetFilter(AssetMTEnrichmentResponse assetMTEnrichmentResponse, Asset asset) {
         if (asset != null) {
             List<String> assetGroupList = new ArrayList<>();
             List<AssetFilter> assetFilters = assetFilterService.getAssetFilterListByAssetId(asset.getId());
@@ -446,6 +446,7 @@ public class AssetServiceBean {
         // here we put into response data about mobiletreminal / channels etc etc
         String channelGuid = getChannelGuid(mobTerm, req);
         resp.setChannelGuid(channelGuid);
+        resp.setSerialNumber(mobTerm.getSerialNo());
         resp.setMobileTerminalConnectId(mobTerm.getAsset() == null ? null : mobTerm.getAsset().getId().toString());
         resp.setMobileTerminalType(mobTerm.getMobileTerminalType().name());
         if (mobTerm.getId() != null) {
@@ -528,6 +529,9 @@ public class AssetServiceBean {
         if (asset.getIccat() != null && asset.getIccat().length() > 0) {
             assetId.put(AssetIdentifier.ICCAT, asset.getIccat());
         }
+        if (asset.getNationalId() != null ) {
+            assetId.put(NATIONAL, asset.getNationalId().toString());
+        }
         return assetId;
     }
 
@@ -561,7 +565,7 @@ public class AssetServiceBean {
         return assetId;
     }
 
-    private Asset getAssetByCfrIrcs(Map<AssetIdentifier, String> assetId) {
+    private Asset getAssetByCfrIrcsOrMmsi(Map<String, String> assetId) {
         Asset asset = null;
 
         // If no asset information exists, don't look for one
@@ -574,6 +578,7 @@ public class AssetServiceBean {
         String cfr = assetId.getOrDefault(AssetIdentifier.CFR, null);
         String ircs = assetId.getOrDefault(AssetIdentifier.IRCS, null);
         String mmsi = assetId.getOrDefault(AssetIdentifier.MMSI, null);
+
 
         if (cfr != null) {
             asset = getAssetById(AssetIdentifier.CFR, cfr);
