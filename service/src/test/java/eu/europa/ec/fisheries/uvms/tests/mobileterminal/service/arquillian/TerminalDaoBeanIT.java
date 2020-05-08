@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
@@ -19,6 +20,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.ejb.EJB;
 import javax.ejb.EJBTransactionRolledbackException;
+import javax.transaction.*;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
@@ -56,6 +59,38 @@ public class TerminalDaoBeanIT extends TransactionalTests {
 
         assertNotNull(created.getId());
         assertEquals(serialNo, created.getSerialNo());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createChannelWoName() throws SystemException, NotSupportedException {
+        String serialNo = createSerialNumber();
+        MobileTerminal mobileTerminal = createMobileTerminalHelper(serialNo);
+        Channel channel = new Channel();
+        channel.setMobileTerminal(mobileTerminal);
+        channel.setConfigChannel(true);
+        channel.setPollChannel(true);
+        channel.setDefaultChannel(true);
+        channel.setDnid(555);
+        channel.setLesDescription("description");
+        channel.setArchived(false);
+        channel.setMemberNumber(5555);
+        channel.setUpdateUser("tester");
+        channel.setExpectedFrequency(Duration.ZERO);
+        channel.setFrequencyGracePeriod(Duration.ZERO);
+        channel.setExpectedFrequencyInPort(Duration.ZERO);
+
+        channel.setName(null);
+
+        mobileTerminal.getChannels().add(channel);
+        MobileTerminal created = terminalDaoBean.createMobileTerminal(mobileTerminal);
+        try {
+            userTransaction.commit();
+            fail("There should be a not null constraint on name");
+        }catch (Exception e){
+            assertTrue(true); //should be here
+        }
+        userTransaction.begin();
     }
 
     @Test
