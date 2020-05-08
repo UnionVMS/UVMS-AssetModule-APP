@@ -213,9 +213,9 @@ public class AssetServiceBean {
         nullValidation(assetBo, "No asset business object to upsert");
         Asset asset = assetBo.getAsset();
         Map<AssetIdentifier, String> assetIds = createAssetId(asset);
-        Asset existingAsset = getAssetByCfrIrcsOrMmsi(assetBo.getDefaultIdentifier(), assetIds.get(assetBo.getDefaultIdentifier()));
+        Asset existingAsset = getAssetById(assetBo.getDefaultIdentifier(), assetIds.get(assetBo.getDefaultIdentifier()));
         if (existingAsset == null) {
-            existingAsset = getAssetByCfrIrcs(assetIds);
+            existingAsset = getAssetByCfrIrcsOrMmsi(assetIds);
         }
         if (existingAsset != null) {
             asset.setId(existingAsset.getId());
@@ -530,7 +530,7 @@ public class AssetServiceBean {
             assetId.put(AssetIdentifier.ICCAT, asset.getIccat());
         }
         if (asset.getNationalId() != null ) {
-            assetId.put(NATIONAL, asset.getNationalId().toString());
+            assetId.put(AssetIdentifier.NATIONAL, asset.getNationalId().toString());
         }
         return assetId;
     }
@@ -565,7 +565,7 @@ public class AssetServiceBean {
         return assetId;
     }
 
-    private Asset getAssetByCfrIrcsOrMmsi(Map<String, String> assetId) {
+    private Asset getAssetByCfrIrcsOrMmsi(Map<AssetIdentifier, String> assetId) {
         Asset asset = null;
 
         // If no asset information exists, don't look for one
