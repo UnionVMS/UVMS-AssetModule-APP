@@ -13,7 +13,7 @@ public class AssetMTEnrichmentResponse implements Serializable {
 
     private String assetName;
     private Map<String,String > assetId = null;
-    private List<String> assetGroupList = null;
+    private List<String> assetFilterList = null;
     private String assetUUID = null;
     private String assetHistoryId = null;
     private String flagstate = null;
@@ -50,12 +50,12 @@ public class AssetMTEnrichmentResponse implements Serializable {
         this.assetId = assetId;
     }
 
-    public List<String> getAssetGroupList() {
-        return assetGroupList;
+    public List<String> getAssetFilterList() {
+        return assetFilterList;
     }
 
-    public void setAssetGroupList(List<String> assetGroupList) {
-        this.assetGroupList = assetGroupList;
+    public void setAssetFilterList(List<String> assetFilterList) {
+        this.assetFilterList = assetFilterList;
     }
 
     public String getFlagstate() {
