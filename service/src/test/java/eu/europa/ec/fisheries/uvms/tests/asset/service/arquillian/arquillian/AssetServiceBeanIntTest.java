@@ -91,6 +91,35 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
+    public void upsertAssertUsingNationalId() {
+        Asset asset = AssetTestsHelper.createBiggerAsset();
+        Long nationalId = (long)(Math.random() * 10000000d);
+        asset.setNationalId(nationalId);
+        AssetBO abo = new AssetBO();
+        abo.setAsset(asset);
+
+        AssetBO createdAssetBo = assetService.upsertAssetBO(abo, "national id test");
+        assertNotNull(createdAssetBo);
+        assertNotNull(createdAssetBo.getAsset());
+        String oldIrcs = createdAssetBo.getAsset().getIrcs();
+
+        Asset asset2 = AssetTestsHelper.createBiggerAsset();
+        asset2.setNationalId(nationalId);
+        abo.setAsset(asset2);
+        createdAssetBo = assetService.upsertAssetBO(abo, "national id test update");
+        assertNotNull(createdAssetBo);
+        assertNotNull(createdAssetBo.getAsset());
+
+        Asset assetByIrcs = assetService.getAssetById(AssetIdentifier.IRCS, oldIrcs);
+        assertNull(assetByIrcs);
+
+        Asset assetById = assetService.getAssetById(AssetIdentifier.NATIONAL, nationalId.toString());
+        assertEquals(createdAssetBo.getAsset().getId(), assetById.getId());
+        assertEquals(asset2.getName(), assetById.getName());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void updateAsset() throws AssetServiceException {
         // create an asset
         Asset asset = AssetTestsHelper.createBiggerAsset();

@@ -11,6 +11,14 @@
             <column name = "national_id" type = "INT"/>
         </addColumn>
 
+        <addColumn tableName = "asset_aud">
+            <column name = "national_id" type = "INT"/>
+        </addColumn>
+
+        <addUniqueConstraint columnNames="national_id"
+                             constraintName="asset_uc_national_id"
+                             tableName="asset"/>
+
     </changeSet>
 
 </databaseChangeLog>
