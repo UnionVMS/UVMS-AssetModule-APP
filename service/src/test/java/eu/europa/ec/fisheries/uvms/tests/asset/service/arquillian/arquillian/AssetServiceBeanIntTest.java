@@ -91,29 +91,28 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void upsertAssertUsingNationalId() {
+    public void upsertAssertUsingCfrId() {
         Asset asset = AssetTestsHelper.createBiggerAsset();
-        Long nationalId = (long)(Math.random() * 10000000d);
-        asset.setNationalId(nationalId);
+        String cfr = asset.getCfr();
         AssetBO abo = new AssetBO();
         abo.setAsset(asset);
 
-        AssetBO createdAssetBo = assetService.upsertAssetBO(abo, "national id test");
+        AssetBO createdAssetBo = assetService.upsertAssetBO(abo, "upsert asset test");
         assertNotNull(createdAssetBo);
         assertNotNull(createdAssetBo.getAsset());
         String oldIrcs = createdAssetBo.getAsset().getIrcs();
 
         Asset asset2 = AssetTestsHelper.createBiggerAsset();
-        asset2.setNationalId(nationalId);
+        asset2.setCfr(cfr);
         abo.setAsset(asset2);
-        createdAssetBo = assetService.upsertAssetBO(abo, "national id test update");
+        createdAssetBo = assetService.upsertAssetBO(abo, "upsert asset test update");
         assertNotNull(createdAssetBo);
         assertNotNull(createdAssetBo.getAsset());
 
         Asset assetByIrcs = assetService.getAssetById(AssetIdentifier.IRCS, oldIrcs);
         assertNull(assetByIrcs);
 
-        Asset assetById = assetService.getAssetById(AssetIdentifier.NATIONAL, nationalId.toString());
+        Asset assetById = assetService.getAssetById(AssetIdentifier.CFR, cfr);
         assertEquals(createdAssetBo.getAsset().getId(), assetById.getId());
         assertEquals(asset2.getName(), assetById.getName());
     }

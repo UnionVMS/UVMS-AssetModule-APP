@@ -221,7 +221,7 @@ public class AssetServiceBean {
     public AssetBO upsertAssetBO(AssetBO assetBo, String username) {
         nullValidation(assetBo, "No asset business object to upsert");
         Asset asset = assetBo.getAsset();
-        Asset existingAsset = getAssetByNationalCfrIrcsOrMmsi(createAssetId(asset));
+        Asset existingAsset = getAssetByCfrIrcsOrMmsi(createAssetId(asset));
         if (existingAsset != null) {
             asset.setId(existingAsset.getId());
 
@@ -377,7 +377,7 @@ public class AssetServiceBean {
         Asset asset = terminal == null ? null : terminal.getAsset();
 
         if (asset == null) {
-            asset = getAssetByNationalCfrIrcsOrMmsi(createAssetId(request));
+            asset = getAssetByCfrIrcsOrMmsi(createAssetId(request));
         }
 
         if (isPluginTypeWithoutMobileTerminal(request.getPluginType()) && asset != null) {
@@ -561,7 +561,7 @@ public class AssetServiceBean {
         return assetId;
     }
 
-    private Asset getAssetByNationalCfrIrcsOrMmsi(Map<String, String> assetId) {
+    private Asset getAssetByCfrIrcsOrMmsi(Map<String, String> assetId) {
         Asset asset = null;
 
         // If no asset information exists, don't look for one
@@ -571,17 +571,12 @@ public class AssetServiceBean {
         }
 
         // Get possible search parameters
-        String national = assetId.getOrDefault(NATIONAL, null);
         String cfr = assetId.getOrDefault(CFR, null);
         String ircs = assetId.getOrDefault(IRCS, null);
         String mmsi = assetId.getOrDefault(MMSI, null);
 
 
-        if (national != null) {
-            asset = getAssetById(AssetIdentifier.NATIONAL, national);
-        }
-
-        if (asset == null && cfr != null) {
+        if (cfr != null) {
             asset = getAssetById(AssetIdentifier.CFR, cfr);
         }
 
