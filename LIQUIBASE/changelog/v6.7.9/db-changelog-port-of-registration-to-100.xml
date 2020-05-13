@@ -9,6 +9,10 @@
         <modifyDataType columnName="portofregistration"
                         newDataType="VARCHAR(100)"
                         tableName="asset"/>
+
+        <modifyDataType columnName="portofregistration"
+                        newDataType="VARCHAR(100)"
+                        tableName="asset_aud"/>
     </changeSet>
 
 </databaseChangeLog>
