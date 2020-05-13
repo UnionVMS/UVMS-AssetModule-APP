@@ -191,7 +191,7 @@ public class Asset implements Serializable {
     @Column(name = "grosstonnageunit")
     private UnitTonnage grossTonnageUnit = UnitTonnage.LONDON;
 
-    @Size(max = 30)
+    @Size(max = 100)
     @Column(name = "portofregistration")
     private String portOfRegistration;
 
