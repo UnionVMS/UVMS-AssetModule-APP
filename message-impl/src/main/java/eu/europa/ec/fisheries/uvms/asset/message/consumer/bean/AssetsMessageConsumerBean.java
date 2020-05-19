@@ -14,8 +14,6 @@ package eu.europa.ec.fisheries.uvms.asset.message.consumer.bean;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.jms.Message;
@@ -30,6 +28,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallExcep
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.FindAssetByCfrBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.FindVesselIdsByAssetHistGuidBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetEventBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetGroupEventBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetGroupListByAssetGuidEventBean;
@@ -38,7 +37,18 @@ import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetListEventBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.PingEventBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.UpsertAssetMessageEventBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.UpsertFishingGearsMessageEventBean;
-import eu.europa.ec.fisheries.wsdl.asset.module.*;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetListModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetModuleMethod;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.BatchAssetListModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistoriesByCfrModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByAssetHistGuidRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetGroupListByAssetGuidRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.UpsertAssetModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.UpsertFishingGearModuleRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,6 +87,8 @@ public class AssetsMessageConsumerBean implements MessageListener {
     @EJB
     private FindAssetByCfrBean findAssetByCfrBean;
 
+    @Inject
+    private FindVesselIdsByAssetHistGuidBean findVesselIdsByAssetHistGuidBean;
 
     @EJB
     private PingEventBean pingEventBean;
@@ -141,6 +153,9 @@ public class AssetsMessageConsumerBean implements MessageListener {
                     FindAssetHistoriesByCfrModuleRequest findAssetByCfrModuleRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, FindAssetHistoriesByCfrModuleRequest.class);
                     findAssetByCfrBean.findAssetByCfr(findAssetByCfrModuleRequest, textMessage);
                     break;
+                case FIND_VESSEL_IDS_BY_ASSET_HIST_GUID:
+                    FindVesselIdsByAssetHistGuidRequest vesselIdentifiersRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, FindVesselIdsByAssetHistGuidRequest.class);
+                    findVesselIdsByAssetHistGuidBean.findIdentifiers(textMessage, vesselIdentifiersRequest);
                 default:
                     LOG.error("[ Not implemented assetsMethod consumed: {} ]", assetsMethod);
                     assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Method not implemented")));
