@@ -21,6 +21,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.ProgramPoll;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollDtoMapper;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTPollDto;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import org.slf4j.Logger;
@@ -70,7 +71,7 @@ public class PollRestResource {
     @POST
     @Path("/")
     @RequiresFeature(UnionVMSFeature.managePolls)
-    public Response createPoll(PollRequestType createPoll)  throws Exception{
+    public Response createPoll(PollRequestType createPoll)  throws Exception {
         LOG.info("Create poll invoked in rest layer:{}",createPoll);
         try {
             CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(createPoll);
@@ -84,11 +85,11 @@ public class PollRestResource {
     @POST
     @Path("createPollForAsset/{assetId}")
     @RequiresFeature(UnionVMSFeature.managePolls)
-    public Response createPollForAsset(@PathParam("assetId") String assetId, @QueryParam("comment") String comment)  throws Exception{
+    public Response createPollForAsset(@PathParam("assetId") String assetId, MTPollDto pollDto)  throws Exception {
         try {
             UUID asset = UUID.fromString(assetId);
             String username = request.getRemoteUser();
-            return Response.ok(pollServiceBean.createPollForAsset(asset, PollType.MANUAL_POLL, username, comment)).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(pollServiceBean.createPollForAsset(asset, PollType.MANUAL_POLL, username, pollDto.getComment())).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when creating poll for {}] {}",assetId, ex);
             throw ex;
