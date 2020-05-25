@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd"
+                   logicalFilePath="changelog/v6.7.10/db-changelog-add-fishinglicence.xml">
+
+    <changeSet id="Add fishing licence table" author="peerik">
+        <createTable tableName="fishinglicence">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false" unique="true" primaryKeyName="fishinglicence_pk"/>
+            </column>
+            <column name="asset_id" type="UUID"/>
+            <column name="licence_number" type="BIGINT"/>
+            <column name="civic_number" type="VARCHAR(60)"/>
+            <column name="from_date" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="to_date" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="decision_date" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="constraints" type="VARCHAR(255)"/>
+            <column name="created_date" type="TIMESTAMP WITH TIME ZONE"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian;
 
+import static org.hamcrest.CoreMatchers.is;
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
 import eu.europa.ec.fisheries.uvms.asset.bean.AssetFilterServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
@@ -115,6 +116,94 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Asset assetById = assetService.getAssetById(AssetIdentifier.CFR, cfr);
         assertEquals(createdAssetBo.getAsset().getId(), assetById.getId());
         assertEquals(asset2.getName(), assetById.getName());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void upsertAssetFishingLicence() {
+        Asset asset = AssetTestsHelper.createBiggerAsset();
+        AssetBO abo = new AssetBO();
+        abo.setAsset(asset);
+        FishingLicence licence = AssetTestsHelper.createFishingLicence();
+        abo.setFishingLicence(licence);
+
+        AssetBO createdAssetBo = assetService.upsertAssetBO(abo, "upsert asset test");
+        assertNotNull(createdAssetBo);
+        assertNotNull(createdAssetBo.getAsset());
+
+        FishingLicence createdFishingLicence = assetService.getFishingLicenceByAssetId(createdAssetBo.getAsset().getId());
+
+        assertThat(createdFishingLicence.getLicenceNumber(), is(licence.getLicenceNumber()));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void upsertAssetFishingLicenceTwice() {
+        Asset asset = AssetTestsHelper.createBiggerAsset();
+        AssetBO abo = new AssetBO();
+        abo.setAsset(asset);
+        FishingLicence licence = AssetTestsHelper.createFishingLicence();
+        abo.setFishingLicence(licence);
+
+        AssetBO createdAssetBo = assetService.upsertAssetBO(abo, "upsert asset test");
+        assertNotNull(createdAssetBo);
+        assertNotNull(createdAssetBo.getAsset());
+        UUID firstId = createdAssetBo.getFishingLicence().getId();
+        AssetBO createdAssetBo2 = assetService.upsertAssetBO(abo, "upsert asset test");
+        assertNotNull(createdAssetBo2);
+        assertNotNull(createdAssetBo2.getAsset());
+
+        FishingLicence createdFishingLicence = assetService.getFishingLicenceByAssetId(createdAssetBo2.getAsset().getId());
+
+        assertThat(createdFishingLicence.getId(), is(firstId));
+        assertThat(createdFishingLicence.getLicenceNumber(), is(licence.getLicenceNumber()));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void upsertAssetFishingLicenceNewLicence() {
+        Asset asset = AssetTestsHelper.createBiggerAsset();
+        AssetBO abo = new AssetBO();
+        abo.setAsset(asset);
+        FishingLicence licence = AssetTestsHelper.createFishingLicence();
+        abo.setFishingLicence(licence);
+
+        AssetBO createdAssetBo = assetService.upsertAssetBO(abo, "upsert asset test");
+        assertNotNull(createdAssetBo);
+        assertNotNull(createdAssetBo.getAsset());
+
+        FishingLicence newLicence = AssetTestsHelper.createFishingLicence();
+        abo.setFishingLicence(newLicence);
+
+        AssetBO createdAssetBo2 = assetService.upsertAssetBO(abo, "upsert asset test");
+
+        FishingLicence createdFishingLicence = assetService.getFishingLicenceByAssetId(createdAssetBo2.getAsset().getId());
+
+        assertThat(createdFishingLicence.getLicenceNumber(), is(newLicence.getLicenceNumber()));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void upsertAssetFishingLicenceRemoveLicence() {
+        Asset asset = AssetTestsHelper.createBiggerAsset();
+        AssetBO abo = new AssetBO();
+        abo.setAsset(asset);
+        FishingLicence licence = AssetTestsHelper.createFishingLicence();
+        abo.setFishingLicence(licence);
+
+        AssetBO createdAssetBo = assetService.upsertAssetBO(abo, "upsert asset test");
+        assertNotNull(createdAssetBo);
+        assertNotNull(createdAssetBo.getAsset());
+
+        FishingLicence createdFishingLicence = assetService.getFishingLicenceByAssetId(createdAssetBo.getAsset().getId());
+        assertThat(createdFishingLicence.getLicenceNumber(), is(licence.getLicenceNumber()));
+
+        abo.setFishingLicence(null);
+
+        AssetBO createdAssetBo2 = assetService.upsertAssetBO(abo, "upsert asset test");
+        FishingLicence createdFishingLicence2 = assetService.getFishingLicenceByAssetId(createdAssetBo2.getAsset().getId());
+
+        assertThat(createdFishingLicence2, is(CoreMatchers.nullValue()));
     }
 
     @Test
