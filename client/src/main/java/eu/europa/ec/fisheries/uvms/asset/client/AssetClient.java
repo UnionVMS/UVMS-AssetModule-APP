@@ -14,7 +14,6 @@ import eu.europa.ec.fisheries.uvms.asset.client.model.*;
 import eu.europa.ec.fisheries.uvms.asset.client.model.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.rest.security.InternalRestTokenHandler;
 
 import javax.annotation.PostConstruct;
@@ -36,7 +35,6 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import java.time.Instant;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -52,7 +50,7 @@ public class AssetClient {
     @Inject
     private JMSContext context;
     
-    @Resource(mappedName = "java:/" + MessageConstants.QUEUE_ASSET_EVENT)
+    @Resource(mappedName = "java:/jms/queue/UVMSAssetEvent")
     private Destination destination;
 
     @EJB

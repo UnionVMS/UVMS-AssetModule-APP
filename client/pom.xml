@@ -18,18 +18,7 @@
 		<docker.dev.prestop.phase>install</docker.dev.prestop.phase>
 	</properties>
 
-    <scm>
-        <url>https://github.com/unionvns/minimaven</url>
-        <connection>scm:git:git://github.com/unionvms/minimaven.git</connection>
-      <tag>HEAD</tag>
-  </scm>
     <dependencies>
-        <dependency>
-            <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
-            <artifactId>uvms-commons-message</artifactId>
-            <version>${uvms.common.version}</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-date</artifactId>
