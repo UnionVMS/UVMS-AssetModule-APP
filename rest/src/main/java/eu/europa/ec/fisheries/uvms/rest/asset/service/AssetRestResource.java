@@ -16,6 +16,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.FishingLicence;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetListResponse;
 import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
@@ -563,13 +564,26 @@ public class AssetRestResource {
 
     @POST
     @Path("microAssets")
-    @RequiresFeature(UnionVMSFeature.manageVessels)
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getMicroAssets(List<String> assetIdList)  throws Exception {
         try {
             List<MicroAsset> assetList = assetService.getInitialDataForRealtime(assetIdList);
             return Response.ok(assetList).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error when getting microAssets.", e);
+            throw e;
+        }
+    }
+
+    @GET
+    @Path("{id}/licence")
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public Response getFishingLicenceForAsset(@PathParam("id") UUID assetId) {
+        try {
+            FishingLicence licence = assetService.getFishingLicenceByAssetId(assetId);
+            return Response.ok(licence).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception e) {
+            LOG.error("Error while getting fishing licence for asset {}.", assetId, e);
             throw e;
         }
     }

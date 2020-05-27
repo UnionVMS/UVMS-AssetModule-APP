@@ -40,6 +40,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -238,9 +239,9 @@ public class AssetServiceBean {
             assetBo.getContacts().forEach(c -> createContactInfoForAsset(assetId, c, username));
         }
         if (assetBo.getNotes() != null) {
-            getNotesForAsset(assetId).forEach(n -> deleteNote(n.getId()));
             assetBo.getNotes().forEach(c -> createNoteForAsset(assetId, c, username));
         }
+        addLicenceToAsset(assetId, assetBo.getFishingLicence());
         return assetBo;
     }
 
@@ -754,6 +755,47 @@ public class AssetServiceBean {
         Note note = noteDao.findNote(id);
         nullValidation(note, "Could not find any note with id: " + id);
         return note;
+    }
+
+    public void addLicenceToAsset(UUID assetId, FishingLicence fishingLicence) {
+        FishingLicence existingLicence = getFishingLicenceByAssetId(assetId);
+        if (fishingLicence == null && existingLicence != null) {
+            deleteFishingLicense(existingLicence);
+            return;
+        }
+        if (fishingLicence == null) {
+            return;
+        }
+        if (existingLicence == null) {
+            existingLicence = new FishingLicence();
+        }
+        existingLicence.setAssetId(assetId);
+        existingLicence.setLicenceNumber(fishingLicence.getLicenceNumber());
+        existingLicence.setCivicNumber(fishingLicence.getCivicNumber());
+        existingLicence.setFromDate(fishingLicence.getFromDate());
+        existingLicence.setToDate(fishingLicence.getToDate());
+        existingLicence.setDecisionDate(fishingLicence.getDecisionDate());
+        existingLicence.setConstraints(fishingLicence.getConstraints());
+        em.persist(existingLicence);
+    }
+
+    public FishingLicence createFishingLicence(FishingLicence licence) {
+        em.persist(licence);
+        return licence;
+    }
+
+    public void deleteFishingLicense(FishingLicence licence) {
+        em.remove(licence);
+    }
+
+    public FishingLicence getFishingLicenceByAssetId(UUID assetId) {
+        try {
+            return em.createNamedQuery(FishingLicence.FIND_BY_ASSET, FishingLicence.class)
+                    .setParameter("assetId", assetId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     private void nullValidation(Object obj, String message) {
