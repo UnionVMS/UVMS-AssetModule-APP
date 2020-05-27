@@ -28,6 +28,7 @@ import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
+import javax.json.bind.JsonbConfig;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -165,7 +166,7 @@ public class AssetClient {
     }
     
     public void upsertAssetAsync(AssetBO asset) throws JMSException {
-        Jsonb jsonb = JsonbBuilder.create();
+        Jsonb jsonb = new JsonBConfigurator().getContext(AssetBO.class);
 
         TextMessage message = context.createTextMessage(jsonb.toJson(asset));
         message.setStringProperty("METHOD", "UPSERT_ASSET");

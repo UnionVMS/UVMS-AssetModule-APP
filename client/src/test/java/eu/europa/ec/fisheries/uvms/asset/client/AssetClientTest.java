@@ -92,19 +92,6 @@ public class AssetClientTest extends AbstractClientTest {
 
     @Test
     @OperateOnDeployment("normal")
-    public void upsertAssetWithLicence() {
-        AssetBO assetBo = new AssetBO();
-        assetBo.setAsset(AssetHelper.createBasicAsset());
-        FishingLicence licence = new FishingLicence();
-        licence.setLicenceNumber(Long.valueOf(AssetHelper.getRandomIntegers(10)));
-        assetBo.setFishingLicence(licence);
-        AssetBO upsertAssetBo = assetClient.upsertAsset(assetBo);
-
-        assertThat(upsertAssetBo.getFishingLicence().getAssetId(), CoreMatchers.is(upsertAssetBo.getAsset().getId()));
-    }
-
-    @Test
-    @OperateOnDeployment("normal")
     public void queryAssetsTest() {
         AssetDTO asset = AssetHelper.createBasicAsset();
         AssetBO assetBo = new AssetBO();
