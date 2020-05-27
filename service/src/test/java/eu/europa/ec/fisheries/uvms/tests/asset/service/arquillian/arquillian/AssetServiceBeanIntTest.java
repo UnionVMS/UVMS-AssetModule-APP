@@ -148,15 +148,16 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         AssetBO createdAssetBo = assetService.upsertAssetBO(abo, "upsert asset test");
         assertNotNull(createdAssetBo);
         assertNotNull(createdAssetBo.getAsset());
-        UUID firstId = createdAssetBo.getFishingLicence().getId();
+        FishingLicence createdFishingLicence = assetService.getFishingLicenceByAssetId(createdAssetBo.getAsset().getId());
+        UUID firstId = createdFishingLicence.getId();
         AssetBO createdAssetBo2 = assetService.upsertAssetBO(abo, "upsert asset test");
         assertNotNull(createdAssetBo2);
         assertNotNull(createdAssetBo2.getAsset());
 
-        FishingLicence createdFishingLicence = assetService.getFishingLicenceByAssetId(createdAssetBo2.getAsset().getId());
+        FishingLicence createdFishingLicence2 = assetService.getFishingLicenceByAssetId(createdAssetBo2.getAsset().getId());
 
-        assertThat(createdFishingLicence.getId(), is(firstId));
-        assertThat(createdFishingLicence.getLicenceNumber(), is(licence.getLicenceNumber()));
+        assertThat(createdFishingLicence2.getId(), is(firstId));
+        assertThat(createdFishingLicence2.getLicenceNumber(), is(licence.getLicenceNumber()));
     }
 
     @Test

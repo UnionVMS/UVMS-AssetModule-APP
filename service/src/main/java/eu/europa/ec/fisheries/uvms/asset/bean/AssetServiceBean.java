@@ -764,13 +764,20 @@ public class AssetServiceBean {
             deleteFishingLicense(existingLicence);
             return;
         }
-        if (fishingLicence != null) {
-            if (existingLicence != null && !existingLicence.getLicenceNumber().equals(fishingLicence.getLicenceNumber())) {
-                deleteFishingLicense(existingLicence);
-            }
-            fishingLicence.setAssetId(assetId);
-            createFishingLicence(fishingLicence);
+        if (fishingLicence == null) {
+            return;
         }
+        if (existingLicence == null) {
+            existingLicence = new FishingLicence();
+        }
+        existingLicence.setAssetId(assetId);
+        existingLicence.setLicenceNumber(fishingLicence.getLicenceNumber());
+        existingLicence.setCivicNumber(fishingLicence.getCivicNumber());
+        existingLicence.setFromDate(fishingLicence.getFromDate());
+        existingLicence.setToDate(fishingLicence.getToDate());
+        existingLicence.setDecisionDate(fishingLicence.getDecisionDate());
+        existingLicence.setConstraints(fishingLicence.getConstraints());
+        em.persist(existingLicence);
     }
 
     public FishingLicence createFishingLicence(FishingLicence licence) {
