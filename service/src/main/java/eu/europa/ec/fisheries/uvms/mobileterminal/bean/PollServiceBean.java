@@ -271,10 +271,13 @@ public class PollServiceBean {
 
     private void validatePollRequest(PollRequestType pollRequest) {
         if (pollRequest == null || pollRequest.getPollType() == null) {
-            throw new NullPointerException("No polls to create");
+            throw new IllegalArgumentException("No polls to create");
         }
-        if (pollRequest.getComment() == null || pollRequest.getUserName() == null) {
-            throw new NullPointerException("Cannot create without comment and user");
+        if (pollRequest.getUserName() == null || pollRequest.getUserName().isEmpty()) {
+            throw new IllegalArgumentException("Cannot create poll without a user");
+        }
+        if (pollRequest.getComment() == null || pollRequest.getComment().isEmpty()) {
+            throw new IllegalArgumentException("Cannot create poll without a comment");
         }
         if (pollRequest.getMobileTerminals().isEmpty()) {
             throw new IllegalArgumentException("No mobile terminals for " + pollRequest.getPollType());
