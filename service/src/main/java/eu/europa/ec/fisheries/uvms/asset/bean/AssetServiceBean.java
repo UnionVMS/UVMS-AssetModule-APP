@@ -239,7 +239,6 @@ public class AssetServiceBean {
             assetBo.getContacts().forEach(c -> createContactInfoForAsset(assetId, c, username));
         }
         if (assetBo.getNotes() != null) {
-            // getNotesForAsset(assetId).forEach(n -> deleteNote(n.getId()));
             assetBo.getNotes().forEach(c -> createNoteForAsset(assetId, c, username));
         }
         addLicenceToAsset(assetId, assetBo.getFishingLicence());
