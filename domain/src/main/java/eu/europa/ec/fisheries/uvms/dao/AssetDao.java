@@ -129,7 +129,17 @@ public interface AssetDao {
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
      */
+
     AssetHistory getAssetHistoryByGuid(String guid) throws AssetDaoException;
+
+    /**
+     * Get assetHistories by multiple vesselHistoryIds - guids
+     *
+     * @param guids
+     * @return assetHistories
+     * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
+     */
+    List<AssetHistory> getAssetHistoriesByGuids(List<String> guids) throws AssetDaoException;
 
     /**
      * Get count of search in sql countSql must be count(*)

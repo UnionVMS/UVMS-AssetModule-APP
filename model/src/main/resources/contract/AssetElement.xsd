@@ -341,4 +341,21 @@
     </xsd:complexType>
 
 
+
+    <xsd:complexType name="VesselIdentifiersHolder">
+        <xsd:sequence>
+            <xsd:element name="cfr" type="xsd:string"/>
+            <xsd:element name="ircs" type="xsd:string"/>
+            <xsd:element name="iccat" type="xsd:string"/>
+            <xsd:element name="ext_mark" type="xsd:string"/>
+            <xsd:element name="uvi" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="AssetHistGuidIdWithVesselIdentifiers">
+        <xsd:sequence>
+            <xsd:element name="assetHistGuid" type="xsd:string"/>
+            <xsd:element name="identifiers" type="VesselIdentifiersHolder"/>
+        </xsd:sequence>
+    </xsd:complexType>
 </xsd:schema>

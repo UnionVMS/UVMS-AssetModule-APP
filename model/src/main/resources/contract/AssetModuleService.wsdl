@@ -33,6 +33,7 @@
                     <xsd:enumeration value="GET_ASSET_FROMASSETID_AND_DATE"/>
                     <xsd:enumeration value="FIND_ASSET_HISTORIES_BY_CFR"/>
                     <xsd:enumeration value="FIND_VESSEL_IDS_BY_ASSET_HIST_GUID"/>
+                    <xsd:enumeration value="FIND_VESSEL_IDS_BY_MULTIPLE_ASSET_HIST_GUID"/>
                 </xsd:restriction>
             </xsd:simpleType>
             
@@ -287,7 +288,7 @@
                     </xsd:complexContent>
                 </xsd:complexType>
             </xsd:element>
-            
+
             <xsd:element name="FindVesselIdsByAssetHistGuidRequest">
                 <xsd:complexType>
                     <xsd:complexContent>
@@ -305,20 +306,37 @@
                     <xsd:complexContent>
                         <xsd:extension base="v:AssetModuleRequest">
                             <xsd:sequence>
-                                <xsd:element name="cfr" type="xsd:string"/>
-                                <xsd:element name="ircs" type="xsd:string"/>
-                                <xsd:element name="iccat" type="xsd:string"/>
-                                <xsd:element name="ext_mark" type="xsd:string"/>
-                                <xsd:element name="uvi" type="xsd:string"/>
+                                <xsd:element name="identifiers" type="tv:VesselIdentifiersHolder"/>
                             </xsd:sequence>
                         </xsd:extension>
                     </xsd:complexContent>
                 </xsd:complexType>
             </xsd:element>
 
+            <xsd:element name="FindVesselIdsByMultipleAssetHistGuidsRequest">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest">
+                            <xsd:sequence>
+                                <xsd:element name="assetHistoryGuids" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="FindVesselIdsByMultipleAssetHistGuidsResponse">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest">
+                            <xsd:sequence>
+                                <xsd:element name="identifiers" type="tv:AssetHistGuidIdWithVesselIdentifiers" minOccurs="0" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
         </xsd:schema>
-
-
     </types>
     
     <message name="AssetModuleFaultException">

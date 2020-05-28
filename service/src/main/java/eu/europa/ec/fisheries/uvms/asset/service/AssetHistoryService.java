@@ -28,6 +28,8 @@ public interface AssetHistoryService {
 
     Asset getAssetHistoryByAssetHistGuid(String assetHistId) throws AssetException;
 
+    List<Asset> getAssetHistoriesByAssetHistGuids(List<String> assetHistIds) throws AssetException;
+
     FlagStateType getFlagStateByIdAndDate(String assetGuid, Date date) throws AssetException;
 
     Asset getAssetByIdAndDate(String type, String value, Date date) throws AssetException ;
