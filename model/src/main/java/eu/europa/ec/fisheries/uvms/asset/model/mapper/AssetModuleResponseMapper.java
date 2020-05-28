@@ -14,6 +14,7 @@ package eu.europa.ec.fisheries.uvms.asset.model.mapper;
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
@@ -22,10 +23,20 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationExc
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import eu.europa.ec.fisheries.wsdl.asset.group.ListAssetGroupResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByAssetHistGuidResponse;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByMultipleAssetHistGuidsResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.UpsertAssetModuleResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.UpsertFishingGearModuleResponse;
-import eu.europa.ec.fisheries.wsdl.asset.types.*;
+import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetFault;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetHistGuidIdWithVesselIdentifiers;
+import eu.europa.ec.fisheries.wsdl.asset.types.BatchAssetListResponse;
+import eu.europa.ec.fisheries.wsdl.asset.types.BatchAssetListResponseElement;
+import eu.europa.ec.fisheries.wsdl.asset.types.FishingGear;
+import eu.europa.ec.fisheries.wsdl.asset.types.FlagStateResponse;
+import eu.europa.ec.fisheries.wsdl.asset.types.FlagStateType;
+import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
+import eu.europa.ec.fisheries.wsdl.asset.types.VesselIdentifiersHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -167,12 +178,32 @@ public class AssetModuleResponseMapper {
 
     public static String createFindVesselIdsByAssetHistGuidResponse(Asset asset) throws AssetModelMarshallException {
         FindVesselIdsByAssetHistGuidResponse response = new FindVesselIdsByAssetHistGuidResponse();
-        if(asset!=null){
-            response.setIccat(asset.getIccat());
-            response.setIrcs(asset.getIrcs());
-            response.setExtMark(asset.getExternalMarking());
-            response.setUvi(asset.getUvi());
-        }
+        VesselIdentifiersHolder identifiersHolder = assetToVesselIdentifierHolder(asset);
+        response.setIdentifiers(identifiersHolder);
         return JAXBMarshaller.marshallJaxBObjectToString(response);
+    }
+
+    public static String createFindVesselIdsByAssetHistGuidResponse(List<Asset> assets) throws AssetModelMarshallException {
+        FindVesselIdsByMultipleAssetHistGuidsResponse response = new FindVesselIdsByMultipleAssetHistGuidsResponse();
+        List<AssetHistGuidIdWithVesselIdentifiers> identifiers = assets.stream().map(asset -> {
+           AssetHistGuidIdWithVesselIdentifiers guidWithIds = new AssetHistGuidIdWithVesselIdentifiers();
+           guidWithIds.setAssetHistGuid(asset.getEventHistory().getEventId());
+           guidWithIds.setIdentifiers(assetToVesselIdentifierHolder(asset));
+           return guidWithIds;
+        }).collect(Collectors.toList());
+        response.getIdentifiers().addAll(identifiers);
+        return JAXBMarshaller.marshallJaxBObjectToString(response);
+    }
+
+    private static VesselIdentifiersHolder assetToVesselIdentifierHolder(Asset asset) {
+        VesselIdentifiersHolder identifiersHolder = new VesselIdentifiersHolder();
+        if(asset!=null){
+            identifiersHolder.setCfr(asset.getCfr());
+            identifiersHolder.setIrcs(asset.getIrcs());
+            identifiersHolder.setIccat(asset.getIccat());
+            identifiersHolder.setExtMark(asset.getExternalMarking());
+            identifiersHolder.setUvi(asset.getUvi());
+        }
+        return identifiersHolder;
     }
 }

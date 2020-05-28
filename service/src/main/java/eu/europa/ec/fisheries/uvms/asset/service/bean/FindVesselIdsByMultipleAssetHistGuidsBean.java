@@ -17,6 +17,8 @@ import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
 
+import java.util.List;
+
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageErrorEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.event.AssetMessageEvent;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
@@ -24,7 +26,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
-import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByAssetHistGuidRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByMultipleAssetHistGuidsRequest;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -32,9 +34,9 @@ import org.slf4j.LoggerFactory;
 
 @ApplicationScoped
 @Slf4j
-public class FindVesselIdsByAssetHistGuidBean {
+public class FindVesselIdsByMultipleAssetHistGuidsBean {
 
-    private final static Logger LOG = LoggerFactory.getLogger(FindVesselIdsByAssetHistGuidBean.class);
+    private final static Logger LOG = LoggerFactory.getLogger(FindVesselIdsByMultipleAssetHistGuidsBean.class);
 
     @Inject
     private AssetMessageProducer messageProducer;
@@ -46,10 +48,10 @@ public class FindVesselIdsByAssetHistGuidBean {
     @AssetMessageErrorEvent
     private Event<AssetMessageEvent> assetErrorEvent;
 
-    public void findIdentifiers(TextMessage jmsMessage, FindVesselIdsByAssetHistGuidRequest request) {
+    public void findIdentifiers(TextMessage jmsMessage, FindVesselIdsByMultipleAssetHistGuidsRequest request) {
         try {
-            Asset asset = service.getAssetHistoryByAssetHistGuid(request.getAssetHistoryGuid());
-            String response = AssetModuleResponseMapper.createFindVesselIdsByAssetHistGuidResponse(asset);
+            List<Asset> assets = service.getAssetHistoriesByAssetHistGuids(request.getAssetHistoryGuids());
+            String response = AssetModuleResponseMapper.createFindVesselIdsByAssetHistGuidResponse(assets);
             messageProducer.sendModuleResponseMessageOv(jmsMessage, response);
             log.info("Response sent back to requestor on queue [ {} ]", jmsMessage!= null ? jmsMessage.getJMSReplyTo() : "Null!!!");
         } catch (AssetException | JMSException e) {

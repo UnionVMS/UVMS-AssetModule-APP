@@ -253,6 +253,15 @@ public class AssetDomainModelBean {
         return EntityToModelMapper.toAssetFromAssetHistory(assetHistory);
     }
 
+    public List<Asset> getAssetHistories(List<String> guids) throws AssetModelException {
+        if (guids == null || guids.isEmpty()) {
+            throw new InputArgumentException("Cannot get asset histories because no asset history guids were provided");
+        }
+
+        List<AssetHistory> assetHistory = assetDao.getAssetHistoriesByGuids(guids);
+        return EntityToModelMapper.toAssetFromAssetHistory(assetHistory);
+    }
+
     public List<NumberOfAssetsGroupByFlagState> getAssetListGroupByFlagState(List<String> assetIds) throws AssetDaoException {
         List<AssetHistory> assetListByAssetGuids = assetDao.getAssetListByAssetGuids(assetIds);
         return EntityToModelMapper.mapEntityToNumberOfAssetsGroupByFlagState(assetListByAssetGuids);

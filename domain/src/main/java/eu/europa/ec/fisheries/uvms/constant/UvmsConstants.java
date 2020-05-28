@@ -26,6 +26,7 @@ public class UvmsConstants {
     public static final String ASSET_FIND_BY_GFCM = "Asset.findByGfcm";
 
     public static final String ASSETHISTORY_FIND_BY_GUID = "Assethistory.findByGuid";
+    public static final String ASSETHISTORY_FIND_BY_MULTIPLE_GUIDS = "Assethistory.batchFindMultipleByGuid";
     public static final String ASSETHISTORY_FIND_BY_CRITERIA = "Assethistory.findByCriteria";
 
     public static final String GROUP_ASSET_FIND_ALL = "AssetGroup.findAll";

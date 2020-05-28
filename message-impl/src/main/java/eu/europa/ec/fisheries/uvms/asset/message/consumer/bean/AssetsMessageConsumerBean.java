@@ -29,6 +29,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.FindAssetByCfrBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.FindVesselIdsByAssetHistGuidBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.FindVesselIdsByMultipleAssetHistGuidsBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetEventBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetGroupEventBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetGroupListByAssetGuidEventBean;
@@ -44,6 +45,8 @@ import eu.europa.ec.fisheries.wsdl.asset.module.AssetModuleRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.BatchAssetListModuleRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistoriesByCfrModuleRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByAssetHistGuidRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByMultipleAssetHistGuidsRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByMultipleAssetHistGuidsResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetGroupListByAssetGuidRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleRequest;
@@ -89,6 +92,9 @@ public class AssetsMessageConsumerBean implements MessageListener {
 
     @Inject
     private FindVesselIdsByAssetHistGuidBean findVesselIdsByAssetHistGuidBean;
+
+    @Inject
+    private FindVesselIdsByMultipleAssetHistGuidsBean findVesselIdsByMultipleAssetHistGuidBean;
 
     @EJB
     private PingEventBean pingEventBean;
@@ -156,6 +162,11 @@ public class AssetsMessageConsumerBean implements MessageListener {
                 case FIND_VESSEL_IDS_BY_ASSET_HIST_GUID:
                     FindVesselIdsByAssetHistGuidRequest vesselIdentifiersRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, FindVesselIdsByAssetHistGuidRequest.class);
                     findVesselIdsByAssetHistGuidBean.findIdentifiers(textMessage, vesselIdentifiersRequest);
+                    break;
+                case FIND_VESSEL_IDS_BY_MULTIPLE_ASSET_HIST_GUID:
+                    FindVesselIdsByMultipleAssetHistGuidsRequest multipleVesselIdentifiersRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, FindVesselIdsByMultipleAssetHistGuidsRequest.class);
+                    findVesselIdsByMultipleAssetHistGuidBean.findIdentifiers(textMessage, multipleVesselIdentifiersRequest);
+                    break;
                 default:
                     LOG.error("[ Not implemented assetsMethod consumed: {} ]", assetsMethod);
                     assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Method not implemented")));

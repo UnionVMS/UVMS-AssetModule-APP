@@ -67,6 +67,14 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
 
 
     @Override
+    public List<Asset> getAssetHistoriesByAssetHistGuids(List<String> assetHistIds) throws AssetException {
+        LOG.info("Getting AssetHistories by multiple assetHistoryGuids");
+        List<Asset> assets = assetDomainModel.getAssetHistories(assetHistIds);
+        return assets;
+    }
+
+
+    @Override
     public FlagStateType getFlagStateByIdAndDate(String assetGuid, Date date) throws AssetException {
         FlagState flagState = assetDomainModel.getFlagStateByIdAndDate(assetGuid, date);
         FlagStateType flagStateType = new FlagStateType();

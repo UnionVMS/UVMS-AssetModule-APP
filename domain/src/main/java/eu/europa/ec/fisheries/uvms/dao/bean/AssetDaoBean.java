@@ -173,6 +173,17 @@ public class AssetDaoBean extends Dao implements AssetDao {
     }
 
     @Override
+    public List<AssetHistory> getAssetHistoriesByGuids(List<String> guids) throws AssetDaoException {
+        try {
+            TypedQuery<AssetHistory> query = em.createNamedQuery(UvmsConstants.ASSETHISTORY_FIND_BY_MULTIPLE_GUIDS, AssetHistory.class);
+            query.setParameter("guids", guids);
+            return query.getResultList();
+        } catch (NoResultException e) {
+            throw new NoAssetEntityFoundException("No asset history found for " + guids);
+        }
+    }
+
+    @Override
     public List<AssetHistory> getAssetHistoryByCriteria(List<AssetListCriteriaPair> criteriaPairs, Integer maxResult) {
         List<AssetHistory> resultList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(criteriaPairs)){
