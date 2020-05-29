@@ -42,17 +42,18 @@ import org.hibernate.annotations.FetchMode;
     @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_GUID, query = "SELECT v FROM AssetHistory v WHERE v.guid = :guid"),
     @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_MULTIPLE_GUIDS, query = "SELECT v FROM AssetHistory v WHERE v.guid IN :guids"),
     @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_GUIDS, query = " SELECT DISTINCT vh FROM AssetHistory vh  INNER JOIN FETCH vh.asset v INNER JOIN FETCH v.carrier c WHERE c.active = '1' AND vh.active = '1' AND v.guid  IN :guids"),
-        @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_CRITERIA, query = "SELECT vh FROM AssetHistory vh WHERE " +
-                "((:EXTERNAL_MARKING is NULL) OR vh.externalMarking = :EXTERNAL_MARKING) AND " +
-                "((:CFR is NULL) OR vh.cfr = :CFR) AND" +
-                "((:IRCS is NULL) OR vh.ircs = :IRCS) AND" +
-                "((:GFCM is NULL) OR vh.gfcm = :GFCM) AND" +
-                "((:ICCAT is NULL) OR vh.iccat = :ICCAT) AND" +
-                "((:IMO is NULL) OR vh.imo = :IMO) AND" +
-                "((:UVI is NULL) OR vh.uvi = :UVI) AND " +
-                "((:FLAG_STATE is NULL) OR vh.countryOfRegistration = :FLAG_STATE) AND " +
-                "((:DATE is NULL) OR vh.dateOfEvent <= cast(:DATE as timestamp))" +
-                "ORDER BY dateOfEvent")
+    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_CRITERIA, query = "SELECT vh FROM AssetHistory vh WHERE " +
+        "((:EXTERNAL_MARKING is NULL) OR vh.externalMarking = :EXTERNAL_MARKING) AND " +
+        "((:CFR is NULL) OR vh.cfr = :CFR) AND" +
+        "((:IRCS is NULL) OR vh.ircs = :IRCS) AND" +
+        "((:GFCM is NULL) OR vh.gfcm = :GFCM) AND" +
+        "((:ICCAT is NULL) OR vh.iccat = :ICCAT) AND" +
+        "((:IMO is NULL) OR vh.imo = :IMO) AND" +
+        "((:UVI is NULL) OR vh.uvi = :UVI) AND " +
+        "((:FLAG_STATE is NULL) OR vh.countryOfRegistration = :FLAG_STATE) AND " +
+        "((:DATE is NULL) OR vh.dateOfEvent <= cast(:DATE as timestamp))" +
+        "ORDER BY dateOfEvent"),
+    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_ASSET_GUID_AND_OCCURRENCE_DATE, query = "SELECT result FROM AssetHistory result WHERE result.asset.guid =: assetGuid AND result.dateOfEvent <= :occurrenceDate ORDER BY result.dateOfEvent DESC")
 })
 public class AssetHistory implements Serializable {
 

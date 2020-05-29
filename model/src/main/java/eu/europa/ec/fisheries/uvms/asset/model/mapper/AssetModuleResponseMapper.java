@@ -22,6 +22,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallExcep
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import eu.europa.ec.fisheries.wsdl.asset.group.ListAssetGroupResponse;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByAssetHistGuidResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByMultipleAssetHistGuidsResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleResponse;
@@ -192,6 +193,14 @@ public class AssetModuleResponseMapper {
            return guidWithIds;
         }).collect(Collectors.toList());
         response.getIdentifiers().addAll(identifiers);
+        return JAXBMarshaller.marshallJaxBObjectToString(response);
+    }
+
+    public static String createFindAssetHistGuidByAssetGuidAndOccurrenceDateResponse(Asset asset) throws AssetModelMarshallException {
+        FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse response = new FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse();
+        if(asset != null) {
+            response.setAssetHistGuid(asset.getEventHistory().getEventId());
+        }
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 

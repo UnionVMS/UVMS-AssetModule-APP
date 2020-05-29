@@ -34,6 +34,7 @@
                     <xsd:enumeration value="FIND_ASSET_HISTORIES_BY_CFR"/>
                     <xsd:enumeration value="FIND_VESSEL_IDS_BY_ASSET_HIST_GUID"/>
                     <xsd:enumeration value="FIND_VESSEL_IDS_BY_MULTIPLE_ASSET_HIST_GUID"/>
+                    <xsd:enumeration value="FIND_ASSET_HIST_GUID_BY_ASSET_GUID_AND_OCCURRENCE_DATE"/>
                 </xsd:restriction>
             </xsd:simpleType>
             
@@ -331,6 +332,31 @@
                         <xsd:extension base="v:AssetModuleRequest">
                             <xsd:sequence>
                                 <xsd:element name="identifiers" type="tv:AssetHistGuidIdWithVesselIdentifiers" minOccurs="0" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="FindAssetHistGuidByAssetGuidAndOccurrenceDateRequest">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest">
+                            <xsd:sequence>
+                                <xsd:element name="assetGuid" type="xsd:string"/>
+                                <xsd:element name="occurrenceDate" type="xsd:date"/>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest">
+                            <xsd:sequence>
+                                <xsd:element name="assetHistGuid" type="xsd:string"/>
                             </xsd:sequence>
                         </xsd:extension>
                     </xsd:complexContent>

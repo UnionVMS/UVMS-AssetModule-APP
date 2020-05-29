@@ -28,6 +28,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallExcep
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.FindAssetByCfrBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.FindAssetHistGuidByAssetGuidAndOccurrenceDateBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.FindVesselIdsByAssetHistGuidBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.FindVesselIdsByMultipleAssetHistGuidsBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetEventBean;
@@ -43,10 +44,10 @@ import eu.europa.ec.fisheries.wsdl.asset.module.AssetListModuleRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetModuleMethod;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetModuleRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.BatchAssetListModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistGuidByAssetGuidAndOccurrenceDateRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistoriesByCfrModuleRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByAssetHistGuidRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByMultipleAssetHistGuidsRequest;
-import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByMultipleAssetHistGuidsResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetGroupListByAssetGuidRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleRequest;
@@ -95,6 +96,9 @@ public class AssetsMessageConsumerBean implements MessageListener {
 
     @Inject
     private FindVesselIdsByMultipleAssetHistGuidsBean findVesselIdsByMultipleAssetHistGuidBean;
+
+    @Inject
+    private FindAssetHistGuidByAssetGuidAndOccurrenceDateBean findAssetHistGuidByAssetGuidAndOccurrenceDateBean;
 
     @EJB
     private PingEventBean pingEventBean;
@@ -166,6 +170,10 @@ public class AssetsMessageConsumerBean implements MessageListener {
                 case FIND_VESSEL_IDS_BY_MULTIPLE_ASSET_HIST_GUID:
                     FindVesselIdsByMultipleAssetHistGuidsRequest multipleVesselIdentifiersRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, FindVesselIdsByMultipleAssetHistGuidsRequest.class);
                     findVesselIdsByMultipleAssetHistGuidBean.findIdentifiers(textMessage, multipleVesselIdentifiersRequest);
+                    break;
+                case FIND_ASSET_HIST_GUID_BY_ASSET_GUID_AND_OCCURRENCE_DATE:
+                    FindAssetHistGuidByAssetGuidAndOccurrenceDateRequest findAssetHistRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, FindAssetHistGuidByAssetGuidAndOccurrenceDateRequest.class);
+                    findAssetHistGuidByAssetGuidAndOccurrenceDateBean.findAssetHistGuid(textMessage, findAssetHistRequest);
                     break;
                 default:
                     LOG.error("[ Not implemented assetsMethod consumed: {} ]", assetsMethod);

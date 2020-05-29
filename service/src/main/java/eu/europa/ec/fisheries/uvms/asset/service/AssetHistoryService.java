@@ -34,4 +34,6 @@ public interface AssetHistoryService {
 
     Asset getAssetByIdAndDate(String type, String value, Date date) throws AssetException ;
 
+    Asset getAssetHistoryByAssetIdAndOccurrenceDate(String assetGuid, Date occurrenceDate) throws AssetException ;
+
 }
