@@ -486,5 +486,15 @@ public class AssetDaoBean extends Dao implements AssetDao {
         }
     }
 
-
+    @Override
+    public AssetHistory getAssetHistoryFromAssetGuidAndOccurrenceDate(String assetGuid, Date occurrenceDate) throws AssetDaoException {
+        try {
+            TypedQuery<AssetHistory> query = em.createNamedQuery(UvmsConstants.ASSETHISTORY_FIND_BY_ASSET_GUID_AND_OCCURRENCE_DATE, AssetHistory.class);
+            query.setParameter("assetGuid", assetGuid);
+            query.setParameter("occurrenceDate", occurrenceDate);
+            return query.getResultList().stream().findFirst().orElse(null);
+        } catch (NoResultException e) {
+            throw new NoAssetEntityFoundException("No asset history found for asset guid: " + assetGuid + " and occurrence date: " + occurrenceDate);
+        }
+    }
 }

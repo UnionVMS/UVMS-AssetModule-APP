@@ -365,4 +365,14 @@ public class AssetDomainModelBean {
             throw new AssetModelException(e.toString());
         }
     }
+
+    public Asset getAssetHistoryByAssetGuidAndOccurrenceDate(String assetGuid, Date occurrenceDate) throws AssetModelException {
+        try {
+            AssetHistory assetHistory = assetDao.getAssetHistoryFromAssetGuidAndOccurrenceDate(assetGuid, occurrenceDate);
+            return assetHistory != null ? EntityToModelMapper.toAssetFromAssetHistory(assetHistory) : null;
+        } catch (AssetDaoException e) {
+            throw new AssetModelException(e.toString());
+        }
+    }
+
 }

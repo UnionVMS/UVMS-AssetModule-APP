@@ -19,6 +19,7 @@ import java.util.List;
 import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
 import eu.europa.ec.fisheries.uvms.bean.AssetDomainModelBean;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
@@ -114,4 +115,8 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
         return asset;
     }
 
+    @Override
+    public Asset getAssetHistoryByAssetIdAndOccurrenceDate(String assetGuid, Date occurrenceDate) throws AssetModelException {
+        return assetDomainModel.getAssetHistoryByAssetGuidAndOccurrenceDate(assetGuid, occurrenceDate);
+    }
 }

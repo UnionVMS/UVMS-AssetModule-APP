@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
+import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.uvms.entity.model.FlagState;
@@ -200,4 +201,14 @@ public interface AssetDao {
 
     AssetEntity getAssetFromAssetIdAndDate(AssetId assetId, Date date) throws AssetDaoException;
 
-    }
+    /**
+     *
+     * Get asset history of asset by asset guid and occurrence date
+     *
+     * @param assetGuid guid of asset
+     * @param occurrenceDate occurrence date for asset history
+     * @return AssetHistory entity
+     */
+    AssetHistory getAssetHistoryFromAssetGuidAndOccurrenceDate(String assetGuid, Date occurrenceDate) throws AssetDaoException;
+
+}
