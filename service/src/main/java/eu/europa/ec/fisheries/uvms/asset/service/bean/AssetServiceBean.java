@@ -85,6 +85,25 @@ public class AssetServiceBean implements AssetService {
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
      */
     @Override
+    public ZeroBasedIndexListAssetResponse getZeroBasedAssetList(AssetListQuery requestQuery) throws AssetException {
+        LOG.debug("Getting AssetList.");
+        GetAssetListResponseDto assetList = assetDomainModel.getAssetList(requestQuery);
+        ZeroBasedIndexListAssetResponse zeroBasedIndexListAssetResponse = new ZeroBasedIndexListAssetResponse();
+        zeroBasedIndexListAssetResponse.setCurrentPage(assetList.getCurrentPage());
+        zeroBasedIndexListAssetResponse.setTotalResults(assetList.getTotalCount());
+        zeroBasedIndexListAssetResponse.setTotalNumberOfPages(assetList.getTotalNumberOfPages());
+        zeroBasedIndexListAssetResponse.getAsset().addAll(assetList.getAssetList());
+        return zeroBasedIndexListAssetResponse;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param requestQuery
+     * @return
+     * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
+     */
+    @Override
     public ListAssetResponse getAssetList(AssetListQuery requestQuery) throws AssetException {
         LOG.debug("Getting AssetList.");
         GetAssetListResponseDto assetList = assetDomainModel.getAssetList(requestQuery);

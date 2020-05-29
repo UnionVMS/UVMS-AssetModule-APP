@@ -105,7 +105,32 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
             return query.getResultList();
         } catch (Exception e) {
             LOG.error("[ Error when getting asset groups by user. ] {}", e.getMessage());
-            throw new AssetGroupDaoException("[ get asset groups, by user: " + user + " ] " + e.getMessage());
+            throw new AssetGroupDaoException("[ get asset groups, by user: " + user + " ] " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<AssetGroup> getAssetGroupByUserPaginated(String user, Integer pageNumber, Integer pageSize) throws AssetGroupDaoException {
+        try {
+            TypedQuery<AssetGroup> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_USER, AssetGroup.class);
+            query.setParameter("owner", user);
+            query.setFirstResult(pageSize * (pageNumber - 1));
+            query.setMaxResults(pageSize);
+            return query.getResultList();
+        } catch (Exception e) {
+            LOG.error("[ Error when getting asset groups by user. ] {}", e.getMessage());
+            throw new AssetGroupDaoException("[ get asset groups, by user: " + user + " ] " + e.getMessage(), e);
+        }
+    }
+
+    public Long getAssetGroupByUserCount(String user) throws AssetGroupDaoException {
+        try {
+            TypedQuery<Long> query = em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_USER_COUNT, Long.class);
+            query.setParameter("owner", user);
+            return query.getSingleResult();
+        } catch (Exception e) {
+            LOG.error("[ Error when getting asset groups by user. ] {}", e.getMessage());
+            throw new AssetGroupDaoException("[ get asset groups, by user: " + user + " ] " + e.getMessage(), e);
         }
     }
 

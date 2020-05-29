@@ -21,6 +21,7 @@ public class GetAssetListResponseDto implements Serializable{
     List<Asset> assetList;
     Integer totalNumberOfPages;
     Integer currentPage;
+    Long totalCount;
 
     public List<Asset> getAssetList() {
         return assetList;
@@ -46,4 +47,11 @@ public class GetAssetListResponseDto implements Serializable{
         this.currentPage = currentPage;
     }
 
+    public Long getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(Long totalCount) {
+        this.totalCount = totalCount;
+    }
 }

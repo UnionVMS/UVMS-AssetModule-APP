@@ -16,7 +16,6 @@ import javax.ejb.Stateless;
 import java.util.List;
 
 import eu.europa.ec.fisheries.uvms.asset.message.ModuleQueue;
-import eu.europa.ec.fisheries.uvms.asset.message.consumer.AssetQueueConsumer;
 import eu.europa.ec.fisheries.uvms.asset.message.mapper.AuditModuleRequestMapper;
 import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
@@ -25,6 +24,8 @@ import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
 import eu.europa.ec.fisheries.uvms.bean.AssetGroupDomainModelBean;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
+import eu.europa.ec.fisheries.wsdl.asset.group.ZeroBasedIndexListAssetGroupResponse;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,9 +36,6 @@ public class AssetGroupServiceBean implements AssetGroupService {
 
     @EJB
     private AssetMessageProducer messageProducer;
-
-    @EJB
-    private AssetQueueConsumer receiver;
 
     @EJB
     private AssetGroupDomainModelBean assetGroupDomainModel;
@@ -51,8 +49,17 @@ public class AssetGroupServiceBean implements AssetGroupService {
             throw new InputArgumentException("Invalid user");
         }
 
-        List<AssetGroup> assetGroupList = assetGroupDomainModel.getAssetGroupListByUser(user);
-        return assetGroupList;
+        return assetGroupDomainModel.getAssetGroupListByUser(user);
+    }
+
+    @Override
+    public ZeroBasedIndexListAssetGroupResponse getAssetGroupList(String user, AssetListQuery assetQuery) throws AssetException {
+        LOG.info("Getting asset group list by user: {}.", user);
+        if (user == null || user.isEmpty()) {
+            throw new InputArgumentException("Invalid user");
+        }
+
+        return assetGroupDomainModel.getZeroBasedAssetGroupListByUser(user,assetQuery);
     }
 
     @Override

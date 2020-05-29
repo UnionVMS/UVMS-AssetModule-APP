@@ -229,7 +229,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
 
 
     @Override
-    public Long getAssetCount(String sql, List<SearchKeyValue> searchFields, boolean isDynamic) {
+    public Long getAssetCount(String sql, List<SearchKeyValue> searchFields) {
         TypedQuery<Long> query = em.createQuery(sql, Long.class);
 
         for (SearchKeyValue field : searchFields) {
@@ -261,19 +261,19 @@ public class AssetDaoBean extends Dao implements AssetDao {
     }
 
     @Override
-    public List<AssetHistory> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize, String sql, List<SearchKeyValue> searchFields, boolean isDynamic) throws AssetDaoException {
-        TypedQuery<AssetHistory> query = getVesselHistoryQuery(sql, searchFields, isDynamic);
+    public List<AssetHistory> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize, String sql, List<SearchKeyValue> searchFields) throws AssetDaoException {
+        TypedQuery<AssetHistory> query = getVesselHistoryQuery(sql, searchFields);
         query.setFirstResult(pageSize * (pageNumber - 1));
         query.setMaxResults(pageSize);
         return query.getResultList();
     }
 
     @Override
-    public List<AssetHistory> getAssetListSearchNotPaginated(String sql, List<SearchKeyValue> searchFields, boolean isDynamic) throws AssetDaoException {
-        return getVesselHistoryQuery(sql, searchFields, isDynamic).getResultList();
+    public List<AssetHistory> getAssetListSearchNotPaginated(String sql, List<SearchKeyValue> searchFields) throws AssetDaoException {
+        return getVesselHistoryQuery(sql, searchFields).getResultList();
     }
 
-    private TypedQuery<AssetHistory> getVesselHistoryQuery(String sql, List<SearchKeyValue> searchFields, boolean isDynamic) {
+    private TypedQuery<AssetHistory> getVesselHistoryQuery(String sql, List<SearchKeyValue> searchFields) {
         TypedQuery<AssetHistory> query = em.createQuery(sql, AssetHistory.class);
 
         for (SearchKeyValue field : searchFields) {

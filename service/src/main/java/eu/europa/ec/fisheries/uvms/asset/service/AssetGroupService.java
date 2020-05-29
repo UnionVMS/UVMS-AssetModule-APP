@@ -16,11 +16,13 @@ import java.util.List;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
+import eu.europa.ec.fisheries.wsdl.asset.group.ZeroBasedIndexListAssetGroupResponse;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
 
 @Local
 public interface AssetGroupService {
 
-	List<AssetGroup> getAssetGroupList(String user) throws AssetException;
+	ZeroBasedIndexListAssetGroupResponse getAssetGroupList(String user, AssetListQuery assetQuery) throws AssetException;
 
 	List<AssetGroup> getAssetGroupListByAssetGuid(String assetGuid) throws AssetException;
 
@@ -32,5 +34,5 @@ public interface AssetGroupService {
 
 	AssetGroup deleteAssetGroupById(String guid, String username) throws AssetException;
 
-
+    List<AssetGroup> getAssetGroupList(String user) throws AssetException;
 }

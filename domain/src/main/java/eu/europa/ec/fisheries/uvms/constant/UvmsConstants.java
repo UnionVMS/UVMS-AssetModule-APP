@@ -31,6 +31,7 @@ public class UvmsConstants {
     public static final String ASSETHISTORY_FIND_BY_ASSET_GUID_AND_OCCURRENCE_DATE = "Assethistory.findByAssetGuidAndOccurrenceDate";
 
     public static final String GROUP_ASSET_FIND_ALL = "AssetGroup.findAll";
+    public static final String GROUP_ASSET_BY_USER_COUNT = "AssetGroup.findByUserCount";
     public static final String GROUP_ASSET_BY_USER = "AssetGroup.findByUser";
     public static final String GROUP_ASSET_BY_GUID = "AssetGroup.findByGuid";
     public static final String GROUP_ASSET_BY_GUID_LIST = "AssetGroup.findByGuidList";
