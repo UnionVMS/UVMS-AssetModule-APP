@@ -46,6 +46,7 @@ import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
 @Table(name="Assetgroup")
 @NamedQueries({
 	@NamedQuery(name=UvmsConstants.GROUP_ASSET_FIND_ALL, query="SELECT a FROM AssetGroup a WHERE a.archived = false"),
+	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_USER_COUNT, query="SELECT COUNT(a) FROM AssetGroup a WHERE a.archived = false AND a.owner = :owner"),
 	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_USER, query="SELECT a FROM AssetGroup a WHERE a.archived = false AND a.owner = :owner"),
 	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_GUID, query="SELECT a FROM AssetGroup a WHERE a.guid = :guid"),
 	@NamedQuery(name=UvmsConstants.GROUP_ASSET_BY_GUID_LIST, query="SELECT a FROM AssetGroup a WHERE a.archived = false AND a.guid IN :guidList")

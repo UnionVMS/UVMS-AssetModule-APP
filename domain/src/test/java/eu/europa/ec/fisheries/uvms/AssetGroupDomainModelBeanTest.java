@@ -21,6 +21,8 @@ import java.util.List;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.bean.AssetGroupDomainModelBean;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
+import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField;
+import eu.europa.ec.fisheries.wsdl.asset.group.ListAssetGroupResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +33,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
 import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroup;
-import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AssetGroupDomainModelBeanTest {
@@ -54,12 +55,12 @@ public class AssetGroupDomainModelBeanTest {
         String id = "1";
         AssetGroup entity = new AssetGroup();
         entity.setGuid(id);
-        entity.getFields().addAll(new ArrayList<AssetGroupField>());
+        entity.getFields().addAll(new ArrayList<>());
         
         when(dao.getAssetGroupByGuid(id)).thenReturn(entity);
 
         eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup result = model.getAssetGroup(id);
-        assertEquals(id.toString(), result.getGuid());
+        assertEquals(id, result.getGuid());
     }
     
     @Test
@@ -75,7 +76,6 @@ public class AssetGroupDomainModelBeanTest {
         when(dao.createAssetGroup(groupEntity)).thenReturn(groupEntity);
 
         eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup result = model.createAssetGroup(group, TEST_USER);
-        //assertEquals(id.toString(), result.getId().toString());
         assertEquals(group.getName(), result.getName());
     }
     
@@ -83,16 +83,16 @@ public class AssetGroupDomainModelBeanTest {
     public void testVesselGroupListByUser() throws AssetGroupDaoException, AssetModelException {
     	String id = "1";
         
-        List<AssetGroup> filterList = new ArrayList<AssetGroup>();
+        List<AssetGroup> filterList = new ArrayList<>();
         when(dao.getAssetGroupByUser(TEST_USER)).thenReturn(filterList);
 
         List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup> groupList = model.getAssetGroupListByUser(TEST_USER);
         assertSame(filterList.size(), groupList.size());
 
-        filterList = new ArrayList<AssetGroup>();
+        filterList = new ArrayList<>();
         AssetGroup filtergroup = new AssetGroup();
         filtergroup.setGuid(id);
-        filtergroup.getFields().addAll(new ArrayList<AssetGroupField>());
+        filtergroup.getFields().addAll(new ArrayList<>());
         filterList.add(filtergroup);
         
         when(dao.getAssetGroupByUser(TEST_USER)).thenReturn(filterList);
@@ -100,6 +100,6 @@ public class AssetGroupDomainModelBeanTest {
         groupList = model.getAssetGroupListByUser(TEST_USER);
         assertSame(filterList.size(), groupList.size());
         String resultGroupId = groupList.get(0).getGuid();
-        assertEquals(id.toString(), resultGroupId);
+        assertEquals(id, resultGroupId);
     }
 }

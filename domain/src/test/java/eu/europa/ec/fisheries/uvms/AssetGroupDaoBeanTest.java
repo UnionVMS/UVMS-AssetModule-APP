@@ -91,12 +91,7 @@ public class AssetGroupDaoBeanTest {
 		verify(em).merge(group);
 		assertSame(id, resultEntity.getGuid());
 	}
-	
-	@Test
-	public void testDeleteVesselGroup() throws AssetGroupDaoException {
-		//em.remove(arg0);
-	}
-	
+
 	@Test
 	public void testVesselGroupList() throws AssetGroupDaoException {
 		TypedQuery<AssetGroup> query = mock(TypedQuery.class);

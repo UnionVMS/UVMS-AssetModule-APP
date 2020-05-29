@@ -33,6 +33,8 @@ import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
+import eu.europa.ec.fisheries.wsdl.asset.group.ZeroBasedIndexListAssetGroupResponse;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +49,32 @@ public class AssetGroupResource {
     private HttpServletRequest servletRequest;
 
     final static Logger LOG = LoggerFactory.getLogger(AssetGroupResource.class);
+
+    /**
+     *
+     * @responseMessage 200 Success
+     * @responseMessage 500 Error
+     *
+     * @summary Get asset group list by user
+     *
+     */
+    @POST
+    @Consumes(value = { MediaType.APPLICATION_JSON })
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Path("/zeroBased/list")
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public ResponseDto getAssetGroupListByUserPaginated(@QueryParam(value = "user") String user,final AssetListQuery assetQuery) {
+        try {
+            LOG.info("Getting asset group list by user {}",user);
+            assetQuery.getPagination().setPage(assetQuery.getPagination().getPage() + 1);
+            ZeroBasedIndexListAssetGroupResponse assetGroupList = assetGroupService.getAssetGroupList(user, assetQuery);
+            assetGroupList.setCurrentPage( assetGroupList.getCurrentPage() -1);
+            return new ResponseDto(assetGroupList, ResponseCodeConstant.OK);
+        } catch (Exception e) {
+            LOG.error("[ Error when getting asset group list by user. ] {}", e.getMessage(), e.getStackTrace());
+            return ErrorHandler.getFault(e);
+        }
+    }
 
     /**
      *

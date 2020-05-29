@@ -26,7 +26,7 @@ public interface AssetGroupDao {
 	 * @return
 	 */
 	AssetGroup createAssetGroup(AssetGroup group) throws AssetGroupDaoException;
-	
+
 	/**
 	 * Get asset group by guid
 	 * @param guid
@@ -63,6 +63,16 @@ public interface AssetGroupDao {
      * @throws eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException
 	 */
 	List<AssetGroup> getAssetGroupByUser(String user) throws AssetGroupDaoException;
+
+	/**
+	 * Get asset groups by user
+	 * @param user
+	 * @param pageNumber
+	 * @param pageSize
+	 * @return
+	 * @throws eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException
+	 */
+	List<AssetGroup> getAssetGroupByUserPaginated(String user, Integer pageNumber, Integer pageSize) throws AssetGroupDaoException;
 	
 	/**
 	 * Get asset groups by guidList
@@ -71,4 +81,6 @@ public interface AssetGroupDao {
 	 * @throws eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException
 	 */
 	List<AssetGroup> getAssetGroupsByGroupGuidList(List<String> guidList) throws AssetGroupDaoException;
+
+	Long getAssetGroupByUserCount(String user) throws AssetGroupDaoException;
 }

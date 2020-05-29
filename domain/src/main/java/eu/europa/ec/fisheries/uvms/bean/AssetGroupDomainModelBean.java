@@ -16,6 +16,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.InputArgumentException;
@@ -26,6 +27,8 @@ import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
 import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroup;
 import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField;
 import eu.europa.ec.fisheries.uvms.mapper.AssetGroupMapper;
+import eu.europa.ec.fisheries.wsdl.asset.group.ZeroBasedIndexListAssetGroupResponse;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -115,13 +118,41 @@ public class AssetGroupDomainModelBean  {
         }
     }
 
+    public ZeroBasedIndexListAssetGroupResponse getZeroBasedAssetGroupListByUser(String user, AssetListQuery assetQuery) throws AssetGroupDaoException, InputArgumentException {
+        if (user == null) {
+            throw new InputArgumentException("Cannot get asset group list because the user is null.");
+        }
+
+        int page = assetQuery.getPagination().getPage();
+        int listSize = assetQuery.getPagination().getListSize();
+        List<AssetGroup> filterGroupList = assetGroupDao.getAssetGroupByUserPaginated(user,page,listSize);
+        Long numberOfAssets = assetGroupDao.getAssetGroupByUserCount(user);
+        int numberOfPages = 0;
+        if (listSize != 0) {
+            numberOfPages = (int)(numberOfAssets / listSize);
+            if (numberOfAssets % listSize != 0) {
+                numberOfPages += 1;
+            }
+        }
+        ZeroBasedIndexListAssetGroupResponse assetGroupResponse = new ZeroBasedIndexListAssetGroupResponse();
+        assetGroupResponse.setTotalNumberOfPages(numberOfPages);
+        assetGroupResponse.setCurrentPage(page);
+        assetGroupResponse.setTotalResults(numberOfAssets);
+
+        filterGroupList.stream()
+                .map(AssetGroupMapper::toAssetGroup)
+                .forEach(assetGroupResponse.getAssetGroup()::add);
+
+        return assetGroupResponse;
+    }
+
     public List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup> getAssetGroupListByUser(String user) throws AssetModelException {
         if (user == null) {
             throw new InputArgumentException("Cannot get asset group list because the user is null.");
         }
 
         try {
-            List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup> assetGroupList = new ArrayList<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup>();
+            List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup> assetGroupList = new ArrayList<>();
             List<AssetGroup> filterGroupList = assetGroupDao.getAssetGroupByUser(user);
             for (AssetGroup group : filterGroupList) {
                 assetGroupList.add(AssetGroupMapper.toAssetGroup(group));

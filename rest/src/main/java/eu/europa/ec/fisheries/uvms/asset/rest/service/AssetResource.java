@@ -29,7 +29,6 @@ import java.util.List;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseCodeConstant;
 import eu.europa.ec.fisheries.uvms.asset.rest.dto.ResponseDto;
 import eu.europa.ec.fisheries.uvms.asset.rest.error.ErrorHandler;
-import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
@@ -38,6 +37,7 @@ import eu.europa.ec.fisheries.wsdl.asset.types.AssetListGroupByFlagStateResponse
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.NoteActivityCode;
+import eu.europa.ec.fisheries.wsdl.asset.types.ZeroBasedIndexListAssetResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,13 +48,34 @@ public class AssetResource {
     @EJB
     private AssetService assetService;
 
-    @EJB
-    private AssetHistoryService assetHistoryService;
-
     @Context
     private HttpServletRequest servletRequest;
 
     final static Logger LOG = LoggerFactory.getLogger(AssetResource.class);
+
+
+    /**
+     *
+     * @param assetQuery
+     * @return
+     */
+    @POST
+    @Consumes(value = { MediaType.APPLICATION_JSON })
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Path("/zeroBased/list")
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public ResponseDto getZeroBasedAssetList(final AssetListQuery assetQuery) {
+        try {
+            LOG.info("Getting asset list:{}",assetQuery);
+            assetQuery.getPagination().setPage(assetQuery.getPagination().getPage() + 1);
+            ZeroBasedIndexListAssetResponse assetList = assetService.getZeroBasedAssetList(assetQuery);
+            assetList.setCurrentPage(assetList.getCurrentPage() - 1);
+            return new ResponseDto(assetList, ResponseCodeConstant.OK);
+        } catch (Exception e) {
+            LOG.error("[ Error when getting asset list. ] ");
+            return ErrorHandler.getFault(e);
+        }
+    }
 
     /**
      *

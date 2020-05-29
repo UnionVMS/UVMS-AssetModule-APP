@@ -20,4 +20,8 @@ public class AssetModelException extends AssetException {
         super(message);
     }
 
+    public AssetModelException(String message, Throwable cause) {
+        super(message,cause);
+    }
+
 }

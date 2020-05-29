@@ -261,6 +261,17 @@
         </xsd:complexType>
     </xsd:element>
 
+    <xsd:element name="ZeroBasedIndexListAssetResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="totalNumberOfPages" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+                <xsd:element name="totalResults" type="xsd:long" minOccurs="1" maxOccurs="1"/>
+                <xsd:element name="currentPage" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+                <xsd:element name="asset" type="Asset" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
     <xsd:element name="ListAssetResponse">
         <xsd:complexType>
             <xsd:sequence>

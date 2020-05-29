@@ -136,4 +136,12 @@ public interface AssetService {
     List<Asset> getAssetHistoryListByAssetId(AssetId assetId, Integer maxResults) throws AssetModelException;
 
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param requestQuery
+     * @return
+     * @throws AssetException
+     */
+    ZeroBasedIndexListAssetResponse getZeroBasedAssetList(AssetListQuery requestQuery) throws AssetException;
 }

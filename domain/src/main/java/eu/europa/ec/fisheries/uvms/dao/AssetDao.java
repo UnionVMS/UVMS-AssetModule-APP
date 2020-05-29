@@ -147,11 +147,10 @@ public interface AssetDao {
      *
      * @param countSql
      * @param searchFields
-     * @param isDynamic
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
      */
-    Long getAssetCount(String countSql, List<SearchKeyValue> searchFields, boolean isDynamic) throws AssetDaoException;
+    Long getAssetCount(String countSql, List<SearchKeyValue> searchFields) throws AssetDaoException;
 
     /**
      * Get a page of the list with assets matching the search in sql. This
@@ -161,11 +160,10 @@ public interface AssetDao {
      * @param pageSize
      * @param sql
      * @param searchFields
-     * @param isDynamic
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
      */
-    List<AssetHistory> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize, String sql, List<SearchKeyValue> searchFields, boolean isDynamic) throws AssetDaoException;
+    List<AssetHistory> getAssetListSearchPaginated(Integer pageNumber, Integer pageSize, String sql, List<SearchKeyValue> searchFields) throws AssetDaoException;
 
     /**
      * Get a page of the list with assets matching the search in sql. This
@@ -173,11 +171,10 @@ public interface AssetDao {
      *
      * @param sql
      * @param searchFields
-     * @param isDynamic
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException
      */
-    List<AssetHistory> getAssetListSearchNotPaginated(String sql, List<SearchKeyValue> searchFields, boolean isDynamic) throws AssetDaoException;
+    List<AssetHistory> getAssetListSearchNotPaginated(String sql, List<SearchKeyValue> searchFields) throws AssetDaoException;
 
     List<AssetHistory> getAssetListByAssetGuids(List<String> assetGuids) throws AssetDaoException;
 

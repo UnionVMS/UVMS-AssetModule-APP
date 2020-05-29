@@ -143,7 +143,7 @@ public class AssetDomainModelBean {
         for (AssetGroup group : dbAssetGroups) {
             List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFieldsFromGroupCriterias(group.getSearchFields());
             String sql = SearchFieldMapper.createSelectSearchSql(searchFields, group.isDynamic());
-            List<AssetHistory> tmp = assetDao.getAssetListSearchNotPaginated(sql, searchFields, group.isDynamic());
+            List<AssetHistory> tmp = assetDao.getAssetListSearchNotPaginated(sql, searchFields);
             assetHistories.addAll(tmp);
         }
         List<Asset> arrayList = new ArrayList<>();
@@ -186,7 +186,7 @@ public class AssetDomainModelBean {
         String sql = SearchFieldMapper.createSelectSearchSql(searchFields, isDynamic);
 
         String countSql = SearchFieldMapper.createCountSearchSql(searchFields, isDynamic);
-        Long numberOfAssets = assetDao.getAssetCount(countSql, searchFields, isDynamic);
+        Long numberOfAssets = assetDao.getAssetCount(countSql, searchFields);
 
         int numberOfPages = 0;
         if (listSize != 0) {
@@ -196,12 +196,13 @@ public class AssetDomainModelBean {
             }
         }
 
-        List<AssetHistory> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, sql, searchFields, isDynamic);
+        List<AssetHistory> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, sql, searchFields);
 
         for (AssetHistory entity : assetEntityList) {
             arrayList.add(EntityToModelMapper.toAssetFromAssetHistory(entity));
         }
 
+        response.setTotalCount(numberOfAssets);
         response.setTotalNumberOfPages(numberOfPages);
         response.setCurrentPage(page);
         response.setAssetList(arrayList);
@@ -225,7 +226,7 @@ public class AssetDomainModelBean {
         boolean isDynamic = query.getAssetSearchCriteria().isIsDynamic();
         List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query.getAssetSearchCriteria().getCriterias());
         String countSql = SearchFieldMapper.createCountSearchSql(searchFields, isDynamic);
-        return assetDao.getAssetCount(countSql, searchFields, isDynamic);
+        return assetDao.getAssetCount(countSql, searchFields);
 
     }
 
