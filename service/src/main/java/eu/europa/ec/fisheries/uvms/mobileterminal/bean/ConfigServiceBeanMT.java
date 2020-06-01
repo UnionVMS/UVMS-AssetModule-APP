@@ -75,7 +75,7 @@ public class ConfigServiceBeanMT {
             clientBuilder.connectTimeout(30, TimeUnit.SECONDS);
             clientBuilder.readTimeout(30, TimeUnit.SECONDS);
             Client client = clientBuilder.build();
-            GetServiceListResponse response = client.target(exchangeEndpoint + "/api/serviceList")
+            GetServiceListResponse response = client.target(exchangeEndpoint + "/unsecured/api/serviceList")
                     .request(MediaType.APPLICATION_JSON)
                     .post(Entity.json(request), GetServiceListResponse.class);
 
