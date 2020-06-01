@@ -31,7 +31,7 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-@Path("exchange/unsecured/rest/api")
+@Path("exchange/rest/unsecured/api")
 @Stateless
 public class ExchangeModuleRestMock {
     private static final Logger LOG = LoggerFactory.getLogger(ExchangeModuleRestMock.class);
