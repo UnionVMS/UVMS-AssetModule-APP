@@ -162,7 +162,24 @@ public class AssetClient {
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .post(Entity.json(asset), AssetBO.class);
     }
-    
+
+    public String createPollForAsset(UUID assetId, String username, String comment) {
+        CreatePollResultDto createdPollResponse = webTarget
+                .path("createPollForAsset")
+                .path(assetId.toString())
+                .queryParam("username", username)
+                .queryParam("comment", comment)
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
+                .post(Entity.json(""), CreatePollResultDto.class);
+
+        if(createdPollResponse.isUnsentPoll()){
+            return createdPollResponse.getUnsentPolls().get(0);
+        }else{
+            return createdPollResponse.getSentPolls().get(0);
+        }
+    }
+
     public void upsertAssetAsync(AssetBO asset) throws JMSException {
         Jsonb jsonb = new JsonBConfigurator().getContext(AssetBO.class);
 

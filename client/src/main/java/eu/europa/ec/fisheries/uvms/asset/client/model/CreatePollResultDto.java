@@ -9,17 +9,41 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto;
+package eu.europa.ec.fisheries.uvms.asset.client.model;
 
-public class CommentDto {
+import java.util.ArrayList;
+import java.util.List;
 
-    private String comment;
+public class CreatePollResultDto {
 
-    public String getComment() {
-        return comment;
-    }
+	private boolean unsentPoll;
+	private List<String> sentPolls = new ArrayList<>();
+	private List<String> unsentPolls = new ArrayList<>();
+	
+	public CreatePollResultDto() {
+	}
 
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
+	public List<String> getSentPolls() {
+		return sentPolls;
+	}
+
+	public void setSentPolls(List<String> sentPolls) {
+		this.sentPolls = sentPolls;
+	}
+
+	public List<String> getUnsentPolls() {
+		return unsentPolls;
+	}
+
+	public void setUnsentPolls(List<String> unsentPolls) {
+		this.unsentPolls = unsentPolls;
+	}
+
+	public boolean isUnsentPoll() {
+		return unsentPoll;
+	}
+
+	public void setUnsentPoll(boolean unsentPoll) {
+		this.unsentPoll = unsentPoll;
+	}	
 }
