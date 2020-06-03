@@ -5,7 +5,7 @@
     <persistence-unit name="assetPU" transaction-type="JTA">
         <jta-data-source>jdbc/uvms_asset</jta-data-source>
         <properties>
-            <property name="hibernate.dialect" value="${hibernate.dialect}"/>
+            <property name="hibernate.dialect" value="eu.europa.ec.fisheries.uvms.util.PostgreSQL94CCustomDialect"/>
             <property name="hibernate.show_sql" value="false"/>
             <property name="hibernate.format_sql" value="false"/>
 
