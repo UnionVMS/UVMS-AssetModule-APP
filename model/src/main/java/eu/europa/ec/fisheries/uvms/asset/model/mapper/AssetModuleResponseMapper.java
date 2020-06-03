@@ -11,7 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.model.mapper;
 
-import javax.ejb.EJB;
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import java.util.List;
@@ -31,6 +30,7 @@ import eu.europa.ec.fisheries.wsdl.asset.module.UpsertAssetModuleResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.UpsertFishingGearModuleResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetFault;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetGroupsForAssetResponseElement;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetHistGuidIdWithVesselIdentifiers;
 import eu.europa.ec.fisheries.wsdl.asset.types.BatchAssetListResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.BatchAssetListResponseElement;
@@ -40,8 +40,6 @@ import eu.europa.ec.fisheries.wsdl.asset.types.FlagStateType;
 import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.VesselIdentifiersHolder;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupsForAssetResponse;
-import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleResponse;
-import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,6 +1,6 @@
 /*
 ﻿Developed with the contribution of the European Commission - Directorate General for Maritime Affairs and Fisheries
-© European Union, 2015-2016.
+© European Union, 2015-2020.
 
 This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can
 redistribute it and/or modify it under the terms of the GNU General Public License as published by the
@@ -12,51 +12,73 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 
 package eu.europa.ec.fisheries.uvms.dao.bean;
 
+import static eu.europa.ec.fisheries.uvms.constant.SearchFields.CFR;
+import static eu.europa.ec.fisheries.uvms.constant.SearchFields.EXTERNAL_MARKING;
+import static eu.europa.ec.fisheries.uvms.constant.SearchFields.FLAG_STATE;
+import static eu.europa.ec.fisheries.uvms.constant.SearchFields.GEAR_TYPE;
+import static eu.europa.ec.fisheries.uvms.constant.SearchFields.GFCM;
+import static eu.europa.ec.fisheries.uvms.constant.SearchFields.GUID;
+import static eu.europa.ec.fisheries.uvms.constant.SearchFields.HIST_GUID;
+import static eu.europa.ec.fisheries.uvms.constant.SearchFields.HOMEPORT;
+import static eu.europa.ec.fisheries.uvms.constant.SearchFields.ICCAT;
+import static eu.europa.ec.fisheries.uvms.constant.SearchFields.IMO;
+import static eu.europa.ec.fisheries.uvms.constant.SearchFields.IRCS;
+import static eu.europa.ec.fisheries.uvms.constant.SearchFields.LICENSE;
+import static eu.europa.ec.fisheries.uvms.constant.SearchFields.MAX_LENGTH;
+import static eu.europa.ec.fisheries.uvms.constant.SearchFields.MAX_POWER;
+import static eu.europa.ec.fisheries.uvms.constant.SearchFields.MIN_LENGTH;
+import static eu.europa.ec.fisheries.uvms.constant.SearchFields.MIN_POWER;
+import static eu.europa.ec.fisheries.uvms.constant.SearchFields.MMSI;
+import static eu.europa.ec.fisheries.uvms.constant.SearchFields.NAME;
+import static eu.europa.ec.fisheries.uvms.constant.SearchFields.UVI;
+
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.constant.SearchTables;
 import eu.europa.ec.fisheries.uvms.dao.DynamicQueryGenerator;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 
-import javax.enterprise.context.ApplicationScoped;
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static eu.europa.ec.fisheries.uvms.constant.SearchFields.*;
-import static eu.europa.ec.fisheries.uvms.mapper.SearchFieldType.LIST;
-
 @ApplicationScoped
 public class DynamicQueryGeneratorBean  implements DynamicQueryGenerator {
-    public String findAssetGroupByAssetAndHistory() {
-        String listElements = Stream.of(SearchFields.values())
-                .filter(t -> LIST.equals(t.getFieldType()))
-                .map(f -> "(NOT EXISTS (SELECT ff FROM a.fields ff  WHERE ff.field = '"+f.toString()+"' AND ff.value = :"+f.getFieldName()+"))")
-                .collect(Collectors.joining(" AND "));
 
-        String otherElements = Stream.of(SearchFields.values())
-                .filter(t -> !LIST.equals(t.getFieldType()))
+    private String query;
+
+    @PostConstruct
+    void init() {
+        query = Arrays.stream(SearchFields.values())
                 .map(f -> {
                     if (f == GEAR_TYPE) {
-                        return "(f.field = '" + f.toString() + "' AND f.value <> :" + f.getFieldName() + ")";
-                    } else {
-                        switch (f.getFieldType()) {
-                            case NUMBER:
-                                return "(f.field = '" + f.toString() + "' AND CAST(f.value as integer) <> :" + f.getFieldName() + ")";
-                            case MAX_DECIMAL:
-                                return "(f.field = '" + f.toString() + "' AND CAST(f.value as double) < :" + f.getFieldName() + " )";
-                            case MIN_DECIMAL:
-                                return "(f.field = '" + f.toString() + "' AND CAST(f.value as double) > :" + f.getFieldName() + " )";
-                            default:
-                                throw new IllegalArgumentException("Unmapped FieldType " + f.getFieldType());
-                        }
+                        return "(f.field = '" + f.toString() + "' AND f.value <> :" + f.getValueName() + ")";
+                    }
+                    switch (f.getFieldType()) {
+                        case LIST:
+                            return "(f.field = '" + f.toString() + "' AND NOT EXISTS (SELECT ff.id FROM a.fields ff  WHERE ff.field = '" + f.toString() + "' AND ff.value = :" + f.getValueName() + "))";
+                        case NUMBER:
+                            return "(f.field = '" + f.toString() + "' AND CAST(f.value as integer) <> :" + f.getValueName() + ")";
+                        case MAX_DECIMAL:
+                            return "(f.field = '" + f.toString() + "' AND CAST(REPLACE_(f.value, ',', '.') as double) < :" + f.getValueName() + ")";
+                        case MIN_DECIMAL:
+                            return "(f.field = '" + f.toString() + "' AND CAST(f.value as double) > :" + f.getValueName() + ")";
+                        case BOOLEAN:
+                        default:
+                            throw new IllegalArgumentException("Unmapped FieldType " + f.getFieldType());
                     }
                 })
-                .collect(Collectors.joining(" OR "));
+                .collect(Collectors.joining(" OR ", "SELECT distinct a.guid FROM AssetGroup a WHERE NOT EXISTS (SELECT f.id FROM a.fields f WHERE ", ")"));
+    }
 
-        return "SELECT distinct a.guid FROM AssetGroup a WHERE NOT EXISTS (SELECT f.assetgroup FROM a.fields f WHERE " + listElements + " OR "+ otherElements + ")";
+    @Override
+    public String findAssetGroupByAssetAndHistory() {
+        return query;
     }
 
     public Map<SearchFields,String> searchFieldValueMapper(AssetEntity asset, AssetHistory assetHistory) {

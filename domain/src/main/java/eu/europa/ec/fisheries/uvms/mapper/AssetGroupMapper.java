@@ -11,15 +11,12 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mapper;
 
-import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetDaoMappingException;
-import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
 import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroup;
 import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroupField;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField;
 import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
-import net.bull.javamelody.internal.common.LOG;
 
 import java.util.ArrayList;
 import java.util.List;

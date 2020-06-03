@@ -162,26 +162,23 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
         String jpql = dynamicQueryGenerator.findAssetGroupByAssetAndHistory();
         TypedQuery<String> query = em.createQuery(jpql, String.class);
         Map<SearchFields, String> searchFieldsStringMap = dynamicQueryGenerator.searchFieldValueMapper(asset, assetHistory);
-        searchFieldsStringMap.entrySet().forEach(f-> {
-
-            if (f.getKey() == GEAR_TYPE) {
-                query.setParameter(f.getKey().getFieldName(),f.getValue());
+        searchFieldsStringMap.forEach((key, value) -> {
+            if (key == GEAR_TYPE) {
+                query.setParameter(key.getValueName(), value);
                 return;
             }
-
-            switch(f.getKey().getFieldType()){
-                    case NUMBER:
-                        query.setParameter(f.getKey().getFieldName(),Integer.valueOf(f.getValue()));
-                        break;
-                    case MAX_DECIMAL:
-                    case MIN_DECIMAL:
-                        query.setParameter(f.getKey().getFieldName(),Double.valueOf(f.getValue()));
-                        break;
-                    default:
-                        query.setParameter(f.getKey().getFieldName(),f.getValue());
-                 }
+            switch (key.getFieldType()) {
+                case NUMBER:
+                    query.setParameter(key.getValueName(), Integer.valueOf(value));
+                    break;
+                case MAX_DECIMAL:
+                case MIN_DECIMAL:
+                    query.setParameter(key.getValueName(), Double.valueOf(value));
+                    break;
+                default:
+                    query.setParameter(key.getValueName(), value);
+            }
         });
         return query.getResultList();
     }
-
 }
