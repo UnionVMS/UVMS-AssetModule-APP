@@ -21,7 +21,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.ProgramPoll;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollDtoMapper;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.CommentDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CommentDto;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import org.slf4j.Logger;
