@@ -34,7 +34,7 @@ public enum SearchFields {
     MIN_LENGTH("lengthOverAll", SearchTables.ASSET_HIST, "minLength", SearchFieldType.MIN_DECIMAL),
     MAX_POWER("powerOfMainEngine", SearchTables.ASSET_HIST, "maxPower", SearchFieldType.MAX_DECIMAL),
     MIN_POWER("powerOfMainEngine", SearchTables.ASSET_HIST, "minPower", SearchFieldType.MIN_DECIMAL),
-    PRODUCER_NAME("producerName", SearchTables.ASSET_HIST, "producerName"),
+//    PRODUCER_NAME("producerName", SearchTables.ASSET_HIST, "producerName"),
 
     // maybe in history instead history should be renamed to version
     ICCAT("iccat", SearchTables.ASSET, "iccat"),

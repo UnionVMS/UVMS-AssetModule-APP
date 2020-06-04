@@ -13,6 +13,8 @@ package eu.europa.ec.fisheries.uvms.dao;
 
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
 import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroup;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -82,5 +84,8 @@ public interface AssetGroupDao {
 	 */
 	List<AssetGroup> getAssetGroupsByGroupGuidList(List<String> guidList) throws AssetGroupDaoException;
 
+
 	Long getAssetGroupByUserCount(String user) throws AssetGroupDaoException;
+
+	List<String> getAssetGroupForAssetAndHistory(AssetEntity asset, AssetHistory assetHistory);
 }

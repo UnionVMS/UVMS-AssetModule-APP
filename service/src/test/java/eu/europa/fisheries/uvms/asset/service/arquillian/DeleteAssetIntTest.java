@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
-import java.util.Random;
 
 /**
  * Created by thofan on 2017-06-08.
@@ -72,6 +71,4 @@ public class DeleteAssetIntTest extends TransactionalTests {
             Assert.assertTrue(true);
         }
     }
-
-
 }

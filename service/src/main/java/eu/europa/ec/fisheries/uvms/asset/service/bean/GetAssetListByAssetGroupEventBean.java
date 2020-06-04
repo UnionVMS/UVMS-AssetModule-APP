@@ -25,7 +25,7 @@ import java.util.List;
 @LocalBean
 public class GetAssetListByAssetGroupEventBean {
 
-    private final static Logger LOG = LoggerFactory.getLogger(GetAssetGroupEventBean.class);
+    private final static Logger LOG = LoggerFactory.getLogger(GetAssetListByAssetGroupEventBean.class);
 
     @EJB
     AssetMessageProducer messageProducer;

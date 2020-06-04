@@ -35,6 +35,7 @@
                     <xsd:enumeration value="FIND_VESSEL_IDS_BY_ASSET_HIST_GUID"/>
                     <xsd:enumeration value="FIND_VESSEL_IDS_BY_MULTIPLE_ASSET_HIST_GUID"/>
                     <xsd:enumeration value="FIND_ASSET_HIST_GUID_BY_ASSET_GUID_AND_OCCURRENCE_DATE"/>
+                    <xsd:enumeration value="ASSET_GROUPS_FOR_ASSET"/>
                 </xsd:restriction>
             </xsd:simpleType>
             
@@ -238,6 +239,26 @@
                 <xsd:complexType>
                     <xsd:sequence>
                         <xsd:element name="fishingGear" type="tv:FishingGear" minOccurs="0" maxOccurs="1"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="AssetGroupsForAssetRequest">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest">
+                            <xsd:sequence>
+                                <xsd:element name="assetGroupsForAssetQueryElement" type="tv:AssetGroupsForAssetQueryElement" minOccurs="0" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="AssetGroupsForAssetResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="assetGroupsForAssetResponseElementList" type="tv:AssetGroupsForAssetResponseElement" minOccurs="0" maxOccurs="unbounded"/>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>

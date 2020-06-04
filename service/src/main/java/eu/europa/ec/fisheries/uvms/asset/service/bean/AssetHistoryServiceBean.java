@@ -39,12 +39,6 @@ public class AssetHistoryServiceBean implements AssetHistoryService {
     private final static Logger LOG = LoggerFactory.getLogger(AssetHistoryServiceBean.class);
 
     @EJB
-    private AssetMessageProducer messageProducer;
-
-    @EJB
-    private AssetQueueConsumer reciever;
-
-    @EJB
     private AssetDomainModelBean assetDomainModel;
 
     @Override

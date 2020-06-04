@@ -11,15 +11,24 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.bean.AssetDomainModelBean;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetGroupsForAssetQueryElement;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
+import org.apache.commons.lang3.time.DateUtils;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -149,5 +158,91 @@ public class AssetDomainModelBeanTest {
         Vessel result = model.getAssetById(assetId);
         String id = result.getVesselId().getValue();
         assertEquals(cfr, id);*/
+    }
+
+    @Test(expected = InputArgumentException.class)
+    public void findAssetGroupsForAssetsShouldThrowAnExceptionForNULLRefUuid() throws AssetException {
+
+        List<AssetGroupsForAssetQueryElement> assetGroupsForAssetQueryElementList = new ArrayList<>();
+        AssetGroupsForAssetQueryElement element = new AssetGroupsForAssetQueryElement();
+        element.setConnectId("ABC");
+        AssetId assetId = new AssetId();
+        assetId.setValue("Test");
+        element.getAssetId().add(assetId);
+        assetGroupsForAssetQueryElementList.add(element);
+        model.findAssetGroupsForAssets(assetGroupsForAssetQueryElementList);
+    }
+
+    @Test(expected = InputArgumentException.class)
+    public void findAssetGroupsForAssetsShouldThrowAnExceptionForNULLAssets() throws AssetException {
+
+        List<AssetGroupsForAssetQueryElement> assetGroupsForAssetQueryElementList = new ArrayList<>();
+        AssetGroupsForAssetQueryElement element = new AssetGroupsForAssetQueryElement();
+        element.setRefUuid("ABC");
+        assetGroupsForAssetQueryElementList.add(element);
+        model.findAssetGroupsForAssets(assetGroupsForAssetQueryElementList);
+    }
+
+    @Test
+    public void findHighestFromLowestDateShouldReturnTheFirstLowestDateFromOccurrence() throws AssetException {
+
+        List<AssetHistory> assetHistories = new ArrayList<>();
+        Date occurrenceDate = new Date();
+        AssetHistory historyBeforeOccurrence1 = addHoursToDate(assetHistories,occurrenceDate,-1);
+        addHoursToDate(assetHistories,occurrenceDate,-2);
+        addHoursToDate(assetHistories,occurrenceDate,-3);
+        addHoursToDate(assetHistories,occurrenceDate,+1);
+        addHoursToDate(assetHistories,occurrenceDate,+2);
+
+        AssetHistory highestFromLowestDate = model.findHighestFromLowestDate(occurrenceDate, assetHistories);
+        Assert.assertTrue(highestFromLowestDate.getDateOfEvent().equals(historyBeforeOccurrence1.getDateOfEvent()));
+    }
+
+    @Test(expected = AssetException.class)
+    public void findHighestFromLowestDateShouldThrowExceptionIfNoHistoryLowerThanOccurrenceIsFound() throws AssetException {
+
+        List<AssetHistory> assetHistories = new ArrayList<>();
+        Date occurrenceDate = new Date();
+
+        addHoursToDate(assetHistories,occurrenceDate,+1);
+        addHoursToDate(assetHistories,occurrenceDate,+2);
+
+        model.findHighestFromLowestDate(occurrenceDate, assetHistories);
+    }
+
+    @Test(expected = AssetException.class)
+    public void findHighestFromLowestDateShouldThrowExceptionIfOccurrenceDateIsNUll() throws AssetException {
+
+        List<AssetHistory> assetHistories = new ArrayList<>();
+        Date occurrenceDate = null;
+        model.findHighestFromLowestDate(occurrenceDate, assetHistories);
+    }
+
+    @Test(expected = AssetException.class)
+    public void findHighestFromLowestDateShouldThrowExceptionIfOnlyOneHistoryHigherThanOccurrenceIsFound() throws AssetException {
+
+        List<AssetHistory> assetHistories = new ArrayList<>();
+        Date occurrenceDate = new Date();
+
+        addHoursToDate(assetHistories,occurrenceDate,+1);
+
+        model.findHighestFromLowestDate(occurrenceDate, assetHistories);
+    }
+
+    @Test
+    public void findHighestFromLowestDateShouldReturnTheFirstLowestDateFromOccurrenceForListSizeOne() throws AssetException {
+
+        List<AssetHistory> assetHistories = new ArrayList<>();
+        Date occurrenceDate = new Date();
+        AssetHistory historyBeforeOccurrence = addHoursToDate(assetHistories,occurrenceDate,-1);
+        AssetHistory highestFromLowestDate = model.findHighestFromLowestDate(occurrenceDate, assetHistories);
+        Assert.assertTrue(highestFromLowestDate.getDateOfEvent().equals(historyBeforeOccurrence.getDateOfEvent()));
+    }
+
+    private AssetHistory addHoursToDate(List<AssetHistory> assetHistories,Date occurrenceDate,int hoursToAdd){
+        AssetHistory history = new AssetHistory();
+        history.setDateOfEvent(DateUtils.addHours(new Date(occurrenceDate.getTime()), hoursToAdd));
+        assetHistories.add(history);
+        return history;
     }
 }

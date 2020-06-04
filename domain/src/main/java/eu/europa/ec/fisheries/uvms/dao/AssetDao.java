@@ -14,6 +14,7 @@ package eu.europa.ec.fisheries.uvms.dao;
 import javax.ejb.Local;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
@@ -208,4 +209,5 @@ public interface AssetDao {
      */
     AssetHistory getAssetHistoryFromAssetGuidAndOccurrenceDate(String assetGuid, Date occurrenceDate) throws AssetDaoException;
 
+    Optional<AssetEntity> getAssetByAssetIdList(List<AssetId> idList);
 }

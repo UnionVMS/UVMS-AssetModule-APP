@@ -27,6 +27,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.constants.FaultCode;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.AssetGroupsForAssetEventBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.FindAssetByCfrBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.FindAssetHistGuidByAssetGuidAndOccurrenceDateBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.FindVesselIdsByAssetHistGuidBean;
@@ -40,6 +41,7 @@ import eu.europa.ec.fisheries.uvms.asset.service.bean.PingEventBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.UpsertAssetMessageEventBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.UpsertFishingGearsMessageEventBean;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupsForAssetRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetListModuleRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetModuleMethod;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetModuleRequest;
@@ -99,6 +101,9 @@ public class AssetsMessageConsumerBean implements MessageListener {
 
     @Inject
     private FindAssetHistGuidByAssetGuidAndOccurrenceDateBean findAssetHistGuidByAssetGuidAndOccurrenceDateBean;
+
+    @EJB
+    private AssetGroupsForAssetEventBean assetGroupsForAssetEventBean;
 
     @EJB
     private PingEventBean pingEventBean;
@@ -174,6 +179,11 @@ public class AssetsMessageConsumerBean implements MessageListener {
                 case FIND_ASSET_HIST_GUID_BY_ASSET_GUID_AND_OCCURRENCE_DATE:
                     FindAssetHistGuidByAssetGuidAndOccurrenceDateRequest findAssetHistRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, FindAssetHistGuidByAssetGuidAndOccurrenceDateRequest.class);
                     findAssetHistGuidByAssetGuidAndOccurrenceDateBean.findAssetHistGuid(textMessage, findAssetHistRequest);
+                    break;
+                case ASSET_GROUPS_FOR_ASSET:
+                    AssetGroupsForAssetRequest assetGroupsForAssetRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetGroupsForAssetRequest.class);
+                    AssetMessageEvent assetGroupsForAssetEvent = new AssetMessageEvent(textMessage, assetGroupsForAssetRequest);
+                    assetGroupsForAssetEventBean.getAssetGroupsFromAssets(assetGroupsForAssetEvent);
                     break;
                 default:
                     LOG.error("[ Not implemented assetsMethod consumed: {} ]", assetsMethod);

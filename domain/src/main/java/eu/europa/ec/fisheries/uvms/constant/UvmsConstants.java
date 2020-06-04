@@ -35,12 +35,12 @@ public class UvmsConstants {
     public static final String GROUP_ASSET_BY_USER = "AssetGroup.findByUser";
     public static final String GROUP_ASSET_BY_GUID = "AssetGroup.findByGuid";
     public static final String GROUP_ASSET_BY_GUID_LIST = "AssetGroup.findByGuidList";
-    
+
     public static final String LICENSE_TYPE_LIST = "LicenseType.findAll";
 	public static final String FLAG_STATE_LIST = "FlagState.findAll";
 	public static final String SETTING_LIST = "Setting.findAll";
 	public static final String SETTING_BY_FIELD = "Setting.findByField";
-    
+
     public static final String QUEUE_DOMAIN_MODEL = "jms/queue/UVMSAssetModel";
     public static final String QUEUE_NAME_DOMAIN_MODEL = "UVMSAssetModel";
 
@@ -57,7 +57,7 @@ public class UvmsConstants {
     public static final String SPACE = " ";
     public static final String TRUE = "TRUE";
     public static final String FALSE = "FALSE";
-    
+
 	public static final String UPDATE_USER = "JPA";
 
     public static final String FISHING_GEAR_TYPE_FIND_ALL="FishingGearType.findAll";

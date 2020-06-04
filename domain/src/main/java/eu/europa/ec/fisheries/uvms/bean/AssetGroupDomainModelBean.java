@@ -16,7 +16,6 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.InputArgumentException;
@@ -100,12 +99,11 @@ public class AssetGroupDomainModelBean  {
         }
 
         try {
-            List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup> vesselGroupList = new ArrayList<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup>();
+            List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup> vesselGroupList = new ArrayList<>();
             List<AssetGroup> filterGroupList = assetGroupDao.getAssetGroupAll();
             for (AssetGroup group : filterGroupList) {
                 List<AssetGroupField> fields = group.getFields();
                 for (AssetGroupField field : fields) {
-                    String x = field.getField();
                     if ("GUID".equals(field.getField()) && assetGuid.equals(field.getValue())) {
                         vesselGroupList.add(AssetGroupMapper.toAssetGroup(group));
                     }

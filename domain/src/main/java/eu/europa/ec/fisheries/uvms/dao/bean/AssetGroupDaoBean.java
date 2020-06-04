@@ -12,22 +12,33 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.dao.bean;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
 import javax.persistence.NoResultException;
 import javax.persistence.TransactionRequiredException;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Map;
 
+import eu.europa.ec.fisheries.uvms.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
 import eu.europa.ec.fisheries.uvms.dao.Dao;
+import eu.europa.ec.fisheries.uvms.dao.DynamicQueryGenerator;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetGroupDaoException;
 import eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroup;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static eu.europa.ec.fisheries.uvms.constant.SearchFields.GEAR_TYPE;
+
 @Stateless
 public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
+
+    @Inject
+    DynamicQueryGenerator dynamicQueryGenerator;
 
     private static final Logger LOG = LoggerFactory.getLogger(AssetGroupDaoBean.class);
 
@@ -145,5 +156,32 @@ public class AssetGroupDaoBean extends Dao implements AssetGroupDao {
             throw new AssetGroupDaoException("[ get asset groups by idlist ] " + e.getMessage());
         }
 	}
+
+    @Override
+    public List<String> getAssetGroupForAssetAndHistory(AssetEntity asset, AssetHistory assetHistory){
+        String jpql = dynamicQueryGenerator.findAssetGroupByAssetAndHistory();
+        TypedQuery<String> query = em.createQuery(jpql, String.class);
+        Map<SearchFields, String> searchFieldsStringMap = dynamicQueryGenerator.searchFieldValueMapper(asset, assetHistory);
+        searchFieldsStringMap.entrySet().forEach(f-> {
+
+            if (f.getKey() == GEAR_TYPE) {
+                query.setParameter(f.getKey().getFieldName(),f.getValue());
+                return;
+            }
+
+            switch(f.getKey().getFieldType()){
+                    case NUMBER:
+                        query.setParameter(f.getKey().getFieldName(),Integer.valueOf(f.getValue()));
+                        break;
+                    case MAX_DECIMAL:
+                    case MIN_DECIMAL:
+                        query.setParameter(f.getKey().getFieldName(),Double.valueOf(f.getValue()));
+                        break;
+                    default:
+                        query.setParameter(f.getKey().getFieldName(),f.getValue());
+                 }
+        });
+        return query.getResultList();
+    }
 
 }
