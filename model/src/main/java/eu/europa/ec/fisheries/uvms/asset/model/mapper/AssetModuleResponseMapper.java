@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.model.mapper;
 
+import javax.ejb.EJB;
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import java.util.List;
@@ -38,6 +39,9 @@ import eu.europa.ec.fisheries.wsdl.asset.types.FlagStateResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.FlagStateType;
 import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.VesselIdentifiersHolder;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupsForAssetResponse;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleResponse;
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,9 +123,15 @@ public class AssetModuleResponseMapper {
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 
-    public static String mapToAssetGroupListResponse(List<AssetGroup> assetGrup) throws AssetModelMarshallException {
+    public static String mapToAssetGroupsForAssetResponse(List<AssetGroupsForAssetResponseElement> assetGroupList)  throws AssetModelMarshallException {
+        AssetGroupsForAssetResponse response = new AssetGroupsForAssetResponse();
+        response.getAssetGroupsForAssetResponseElementList().addAll(assetGroupList);
+        return JAXBMarshaller.marshallJaxBObjectToString(response);
+    }
+
+    public static String mapToAssetGroupListResponse(List<AssetGroup> assetGroup) throws AssetModelMarshallException {
         ListAssetGroupResponse response = new ListAssetGroupResponse();
-        response.getAssetGroup().addAll(assetGrup);
+        response.getAssetGroup().addAll(assetGroup);
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 
@@ -158,6 +168,7 @@ public class AssetModuleResponseMapper {
         fault.setFault(message);
         return fault;
     }
+
 
     public static UpsertAssetModuleResponse createUpsertAssetModuleResponse(Asset asset){
         UpsertAssetModuleResponse response = new UpsertAssetModuleResponse();

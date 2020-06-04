@@ -14,13 +14,18 @@ package eu.europa.ec.fisheries.uvms.dao.bean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
@@ -40,6 +45,8 @@ import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteriaPair;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType.*;
 
 /**
  **/
@@ -497,4 +504,52 @@ public class AssetDaoBean extends Dao implements AssetDao {
             throw new NoAssetEntityFoundException("No asset history found for asset guid: " + assetGuid + " and occurrence date: " + occurrenceDate);
         }
     }
+    public Optional<AssetEntity> getAssetByAssetIdList(List<AssetId> idList){
+
+        String jpqlHead = "SELECT a from AssetEntity a WHERE ";
+        Map<AssetIdType,String> jpqlParams = new HashMap<>();
+        String jpqlBody = idList.stream().filter(assetId -> assetId.getValue() != null).map(assetId -> {
+            switch (assetId.getType()) {
+                case CFR:
+                    jpqlParams.put(CFR,assetId.getValue());
+                    return " a.cfr = :CFR ";
+                case IRCS:
+                    jpqlParams.put(IRCS,assetId.getValue());
+                    return " a.ircs = :IRCS ";
+                case INTERNAL_ID:
+                    jpqlParams.put(INTERNAL_ID,assetId.getValue());
+                    return " a.id = :INTERNAL_ID ";
+                case GUID:
+                    jpqlParams.put(GUID,assetId.getValue());
+                    return " a.guid = :GUID ";
+                case IMO:
+                    jpqlParams.put(IMO,assetId.getValue());
+                    return " a.imo = :IMO ";
+                case MMSI:
+                    jpqlParams.put(MMSI,assetId.getValue());
+                    return " a.mmsi = :MMSI ";
+                case ICCAT:
+                    jpqlParams.put(ICCAT,assetId.getValue());
+                    return " a.iccat = :ICCAT ";
+                case UVI:
+                    jpqlParams.put(UVI,assetId.getValue());
+                    return " a.uvi = :UVI ";
+                case GFCM:
+                    jpqlParams.put(GFCM,assetId.getValue());
+                    return " a.gfcm = :GFCM ";
+                default:
+                    throw new IllegalArgumentException("Non valid asset id type");
+            }
+        }).collect(Collectors.joining(" AND "));
+
+        TypedQuery<AssetEntity> q = em.createQuery(jpqlHead + jpqlBody, AssetEntity.class);
+        jpqlParams.forEach((key, value) -> q.setParameter(key.toString(), value));
+
+        try {
+            return Optional.of(q.getSingleResult());
+        } catch (NoResultException | NonUniqueResultException ex) {
+            return Optional.empty();
+        }
+    }
+
 }

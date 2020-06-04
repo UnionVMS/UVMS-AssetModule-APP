@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 @LocalBean
 public class UpsertAssetMessageEventBean {
 
-    private final static Logger LOG = LoggerFactory.getLogger(GetAssetGroupListByAssetGuidEventBean.class);
+    private final static Logger LOG = LoggerFactory.getLogger(UpsertAssetMessageEventBean.class);
 
     @Inject
     @AssetMessageErrorEvent

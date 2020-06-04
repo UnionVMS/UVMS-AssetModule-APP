@@ -49,7 +49,7 @@ public class AssetServiceBean implements AssetService {
     private AssetMessageProducer messageProducer;
 
     @EJB
-    private AssetQueueConsumer reciever;
+    private AssetQueueConsumer receiver;
 
     @EJB
     private AssetDomainModelBean assetDomainModel;
@@ -254,7 +254,7 @@ public class AssetServiceBean implements AssetService {
             default:
                 String data = AssetDataSourceRequestMapper.mapGetAssetById(assetId.getValue(), assetId.getType());
                 String messageId = messageProducer.sendDataSourceMessage(data, source);
-                TextMessage response = reciever.getMessageOv(messageId, TextMessage.class);
+                TextMessage response = receiver.getMessageOv(messageId, TextMessage.class);
                 assetById = AssetDataSourceResponseMapper.mapToAssetFromResponse(response, messageId);
                 break;
         }
@@ -325,4 +325,11 @@ public class AssetServiceBean implements AssetService {
             return Lists.newArrayList();
         }
     }
+
+
+    @Override
+    public List<AssetGroupsForAssetResponseElement> findAssetGroupsForAssets(List<AssetGroupsForAssetQueryElement> assetGroupsForAssetQueryElementList) throws AssetException {
+        return assetDomainModel.findAssetGroupsForAssets(assetGroupsForAssetQueryElementList);
+    }
+
 }

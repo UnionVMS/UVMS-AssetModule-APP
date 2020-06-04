@@ -12,10 +12,12 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.bean;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.GetAssetListResponseDto;
 import eu.europa.ec.fisheries.uvms.dao.AssetDao;
+import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
 import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
@@ -44,6 +46,9 @@ public class AssetDomainModelBean {
 
     @EJB
     private AssetGroupDomainModelBean assetGroupModel;
+
+    @EJB
+    private AssetGroupDao assetGroupDaoBean;
 
     private static final Logger LOG = LoggerFactory.getLogger(AssetDomainModelBean.class);
 
@@ -248,11 +253,10 @@ public class AssetDomainModelBean {
         if (historyId == null || historyId.getEventId() == null) {
             throw new InputArgumentException("Cannot get asset history because asset history ID is null.");
         }
-
-        AssetHistory assetHistory = assetDao.getAssetHistoryByGuid(historyId
-                .getEventId());
+        AssetHistory assetHistory = getAssetHistory(historyId.getEventId());
         return EntityToModelMapper.toAssetFromAssetHistory(assetHistory);
     }
+
 
     public List<Asset> getAssetHistories(List<String> guids) throws AssetModelException {
         if (guids == null || guids.isEmpty()) {
@@ -261,6 +265,15 @@ public class AssetDomainModelBean {
 
         List<AssetHistory> assetHistory = assetDao.getAssetHistoriesByGuids(guids);
         return EntityToModelMapper.toAssetFromAssetHistory(assetHistory);
+    }
+
+    private AssetHistory getAssetHistory(String guid) throws AssetModelException {
+
+        if(guid == null){
+            throw new InputArgumentException("Cannot get asset history because guid is null");
+        }
+
+        return assetDao.getAssetHistoryByGuid(guid);
     }
 
     public List<NumberOfAssetsGroupByFlagState> getAssetListGroupByFlagState(List<String> assetIds) throws AssetDaoException {
@@ -376,4 +389,94 @@ public class AssetDomainModelBean {
         }
     }
 
+    public List<AssetGroupsForAssetResponseElement> findAssetGroupsForAssets(List<AssetGroupsForAssetQueryElement> assetGroupsForAssetQueryElementList) throws AssetException {
+        List<AssetGroupsForAssetResponseElement> assetGroupList = new ArrayList<>();
+
+        for(AssetGroupsForAssetQueryElement assetGroupsForAssetQueryElement: assetGroupsForAssetQueryElementList) {
+            String refUuid = assetGroupsForAssetQueryElement.getRefUuid();
+            String connectId = assetGroupsForAssetQueryElement.getConnectId();
+            List<AssetId> assetIdList = assetGroupsForAssetQueryElement.getAssetId();
+            List<String> uuidList;
+
+            if (refUuid == null || (connectId == null && (assetIdList == null || assetIdList.isEmpty()))) {
+                throw new InputArgumentException("Empty arguments in request. Value for connectId: " + connectId + " refUuid: " + refUuid + " and asset:" + assetIdList);
+            }
+
+            if (connectId != null) { //search in asset history
+                uuidList = findUuidsForAssetHistory(connectId);
+                addAssetGroupToList(uuidList,refUuid,assetGroupList);
+            }
+            else { //search in assets
+                uuidList = findUuidsForAsset(assetGroupsForAssetQueryElement);
+                addAssetGroupToList(uuidList,refUuid,assetGroupList);
+            }
+        }
+        return assetGroupList;
+    }
+
+    private List<String> findUuidsForAssetHistory(String connectId) throws AssetModelException {
+        AssetHistory assetHistory = getAssetHistory(connectId);
+        return assetGroupDaoBean.getAssetGroupForAssetAndHistory(assetHistory.getAsset(),assetHistory);
+    }
+
+    private List<String> findUuidsForAsset( AssetGroupsForAssetQueryElement assetGroupsForAssetQueryElement) {
+        AssetEntity asset;
+        AssetHistory assetHistory;
+        List<AssetId> assetIdList = assetGroupsForAssetQueryElement.getAssetId();
+        //used getAssetEntityById which takes advantage of most db indexes
+        if(assetIdList.size() == 1){
+            try {
+                asset = getAssetEntityById(assetIdList.get(0));
+            } catch (AssetDaoException | InputArgumentException e) {
+                LOG.warn(e.toString(), e);
+                return new ArrayList<>();
+            }
+        }
+        else{
+            Optional<AssetEntity> assetByAssetIdList = assetDao.getAssetByAssetIdList(assetIdList);
+            if(!assetByAssetIdList.isPresent()){
+                LOG.warn("AssetEntity was not found for the specified criteria");
+                return new ArrayList<>();
+            }
+            asset = assetByAssetIdList.get();
+        }
+
+        try {
+            assetHistory = findHighestFromLowestDate(assetGroupsForAssetQueryElement.getOccurrenceDate(),asset.getHistories());
+        } catch (AssetException e) {
+            LOG.warn(e.toString(), e);
+            return new ArrayList<>();
+        }
+
+        return assetGroupDaoBean.getAssetGroupForAssetAndHistory(asset,assetHistory);
+    }
+
+    public AssetHistory findHighestFromLowestDate(Date occurrenceDate,List<AssetHistory>  assetHistoryList) throws AssetException {
+        if(occurrenceDate == null){
+            throw new AssetException("Occurrence date is null");
+        }
+
+        if(assetHistoryList.size() == 1 ){
+            if(assetHistoryList.get(0).getDateOfEvent().before(occurrenceDate)) {
+                return assetHistoryList.get(0);
+            }
+            else {
+                throw new AssetException("Found only one date and is after occurrence date");
+            }
+        }
+
+        try {
+            return assetHistoryList.stream().sorted(Comparator.comparing(AssetHistory::getDateOfEvent).reversed()).filter(history -> history.getDateOfEvent().before(occurrenceDate)).findFirst().get();
+        }
+        catch(NoSuchElementException ex){
+            throw new AssetException("Found only dates after occurrence date", ex);
+        }
+    }
+
+    private void addAssetGroupToList(List<String> groupUuidList,String refUuid,List<AssetGroupsForAssetResponseElement> assetGroupsForAssetResponseElementList){
+        AssetGroupsForAssetResponseElement assetGroup = new AssetGroupsForAssetResponseElement();
+        assetGroup.setRefUuid(refUuid);
+        assetGroup.getGroupUuid().addAll(groupUuidList);
+        assetGroupsForAssetResponseElementList.add(assetGroup);
+    }
 }

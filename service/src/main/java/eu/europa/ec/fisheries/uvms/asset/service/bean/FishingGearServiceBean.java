@@ -33,15 +33,14 @@ public class FishingGearServiceBean implements FishingGearService {
     private AssetMessageProducer messageProducer;
 
     @EJB
-    private AssetQueueConsumer reciever;
+    private AssetQueueConsumer receiver;
 
     @Override
     public FishingGearResponse upsertFishingGears(FishingGear fishingGear, String username) throws AssetMessageException, AssetModelMapperException {
         String request = AssetDataSourceRequestMapper.mapUpsertFishingGearRequest(fishingGear, username);
         String messageId = messageProducer.sendDataSourceMessage(request, AssetDataSourceQueue.INTERNAL);
-        TextMessage response = reciever.getMessageOv(messageId, TextMessage.class);
+        TextMessage response = receiver.getMessageOv(messageId, TextMessage.class);
         FishingGearResponse fishingGearResponse = AssetDataSourceResponseMapper.mapToUpsertFishingGearResponse(response, messageId);
-        //FishingGearListResponse fishingGearListResponse = AssetDataSourceResponseMapper.mapToFishingGearResponse(response, messageId);
         return fishingGearResponse;
     }
 }

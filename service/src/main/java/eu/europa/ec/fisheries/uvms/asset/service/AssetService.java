@@ -144,4 +144,6 @@ public interface AssetService {
      * @throws AssetException
      */
     ZeroBasedIndexListAssetResponse getZeroBasedAssetList(AssetListQuery requestQuery) throws AssetException;
+
+    List<AssetGroupsForAssetResponseElement> findAssetGroupsForAssets(List<AssetGroupsForAssetQueryElement> assetIdentificationList) throws AssetException;
 }

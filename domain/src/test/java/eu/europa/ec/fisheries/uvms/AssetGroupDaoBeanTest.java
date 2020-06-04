@@ -97,7 +97,7 @@ public class AssetGroupDaoBeanTest {
 		TypedQuery<AssetGroup> query = mock(TypedQuery.class);
 		when(em.createNamedQuery(UvmsConstants.GROUP_ASSET_FIND_ALL, AssetGroup.class)).thenReturn(query);
 		
-		List<AssetGroup> dummyResult = new ArrayList<AssetGroup>();
+		List<AssetGroup> dummyResult = new ArrayList<>();
 		when(query.getResultList()).thenReturn(dummyResult);
 		List<AssetGroup> result = dao.getAssetGroupAll();
 		
@@ -111,7 +111,7 @@ public class AssetGroupDaoBeanTest {
 		TypedQuery<AssetGroup> query = mock(TypedQuery.class);
 		when(em.createNamedQuery(UvmsConstants.GROUP_ASSET_BY_USER, AssetGroup.class)).thenReturn(query);
 		
-		List<AssetGroup> dummyResult = new ArrayList<AssetGroup>();
+		List<AssetGroup> dummyResult = new ArrayList<>();
 		when(query.getResultList()).thenReturn(dummyResult);
 		
 		List<AssetGroup> result = dao.getAssetGroupByUser(TEST_USER);

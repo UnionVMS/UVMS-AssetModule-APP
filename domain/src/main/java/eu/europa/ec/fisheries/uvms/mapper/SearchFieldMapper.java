@@ -83,8 +83,8 @@ public class SearchFieldMapper {
                 return SearchFields.MIN_POWER;
             case MIN_LENGTH:
                 return SearchFields.MIN_LENGTH;
-            case PRODUCER_NAME:
-            	return SearchFields.PRODUCER_NAME;
+//            case PRODUCER_NAME:
+//            	return SearchFields.PRODUCER_NAME;
             case ASSET_TYPE:
             default:
                 throw new AssetSearchMapperException("No field found: " + field.name());

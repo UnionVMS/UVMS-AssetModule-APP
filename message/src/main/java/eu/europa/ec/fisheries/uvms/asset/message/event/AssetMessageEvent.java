@@ -12,6 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.message.event;
 
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupsForAssetRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetFromAssetIdAndDateRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetFlagStateByGuidAndDateRequest;
@@ -39,6 +40,7 @@ public class AssetMessageEvent {
     private FishingGear fishingGear;
     private GetFlagStateByGuidAndDateRequest getFlagStateByGuidAndDateRequest;
     private GetAssetFromAssetIdAndDateRequest getAssetFromAssetIdAndDateRequest;
+    private AssetGroupsForAssetRequest assetGroupsForAssetRequest;
 
 
     public AssetMessageEvent(TextMessage message) {
@@ -48,6 +50,11 @@ public class AssetMessageEvent {
     public AssetMessageEvent(TextMessage message, GetAssetListByAssetGroupsRequest assetId) {
         this.message = message;
         this.assetListByGroup = assetId;
+    }
+
+    public AssetMessageEvent(TextMessage message, AssetGroupsForAssetRequest assetGroupsForAssetRequest) {
+        this.message = message;
+        this.assetGroupsForAssetRequest = assetGroupsForAssetRequest;
     }
 
     public AssetMessageEvent(TextMessage message, List<AssetListQuery> batchQuery) {
@@ -173,7 +180,16 @@ public class AssetMessageEvent {
     public void setFishingGear(FishingGear fishingGear) {
         this.fishingGear = fishingGear;
     }
-    
+
+    public AssetGroupsForAssetRequest getAssetGroupsForAssetRequest() {
+        return assetGroupsForAssetRequest;
+    }
+
+    public void setAssetGroupsForAssetRequest(AssetGroupsForAssetRequest assetGroupsForAssetRequest) {
+        this.assetGroupsForAssetRequest = assetGroupsForAssetRequest;
+    }
+
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
