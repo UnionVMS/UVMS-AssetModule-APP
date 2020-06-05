@@ -606,8 +606,8 @@ public class AssetDaoTest extends TransactionalTests {
 
         List<Asset> assets = assetDao.getAssetListSearchPaginated(1, 10, trunk, true);
         assertEquals(2, assets.size());
-        assertThat(assets.get(0).getId(), is(asset.getId()));
-        assertThat(assets.get(1).getId(), is(asset2.getId()));
+        assertTrue(assets.stream().anyMatch(a -> a.getId().equals(asset.getId())));
+        assertTrue(assets.stream().anyMatch(a -> a.getId().equals(asset2.getId())));
 
         assetDao.deleteAsset(asset);
         assetDao.deleteAsset(asset2);
@@ -969,9 +969,9 @@ public class AssetDaoTest extends TransactionalTests {
         List<Asset> assetListWithInactivated = assetDao.getAssetListSearchPaginated(1, 10, trunk, true);
         
         assertEquals(2, assetListWithInactivated.size());
-        assertThat(assetListWithInactivated.get(0).getId(), is(asset.getId()));
-        assertThat(assetListWithInactivated.get(1).getId(), is(assetInactivated.getId()));
-        
+        assertTrue(assetListWithInactivated.stream().anyMatch(a -> a.getId().equals(asset.getId())));
+        assertTrue(assetListWithInactivated.stream().anyMatch(a -> a.getId().equals(assetInactivated.getId())));
+
         assetDao.deleteAsset(asset);
         assetDao.deleteAsset(assetInactivated);
         commit();
@@ -1326,7 +1326,7 @@ public class AssetDaoTest extends TransactionalTests {
     
     @Test
     @OperateOnDeployment("normal")
-    public void orderByAscTestEmptySearch() throws Exception {
+    public void orderByDescTestEmptySearch() throws Exception {
         
         Asset asset1 = AssetTestsHelper.createBiggerAsset();
         assetDao.createAsset(asset1);
@@ -1347,8 +1347,8 @@ public class AssetDaoTest extends TransactionalTests {
         	.map(a -> a.getId())
         	.collect(Collectors.toList());
         
-        assertTrue(idList.indexOf(asset1.getId()) < idList.indexOf(asset2.getId()) );
-        assertTrue(idList.indexOf(asset2.getId()) < idList.indexOf(asset3.getId()) );
+        assertTrue(idList.indexOf(asset1.getId()) > idList.indexOf(asset2.getId()) );
+        assertTrue(idList.indexOf(asset2.getId()) > idList.indexOf(asset3.getId()) );
         
         assetDao.deleteAsset(asset1);
         assetDao.deleteAsset(asset2);
@@ -1358,7 +1358,7 @@ public class AssetDaoTest extends TransactionalTests {
    
     @Test
     @OperateOnDeployment("normal")
-    public void orderByAscTestWithIrcs() throws Exception {
+    public void orderByDescTestWithIrcs() throws Exception {
         
         Asset asset1 = AssetTestsHelper.createBiggerAsset();
         assetDao.createAsset(asset1);
@@ -1380,8 +1380,8 @@ public class AssetDaoTest extends TransactionalTests {
         	.map(a -> a.getId())
         	.collect(Collectors.toList());
         
-        assertTrue(idList.indexOf(asset1.getId()) < idList.indexOf(asset2.getId()) );
-        assertTrue(idList.indexOf(asset2.getId()) < idList.indexOf(asset3.getId()) );
+        assertTrue(idList.indexOf(asset1.getId()) > idList.indexOf(asset2.getId()) );
+        assertTrue(idList.indexOf(asset2.getId()) > idList.indexOf(asset3.getId()) );
         
         assetDao.deleteAsset(asset1);
         assetDao.deleteAsset(asset2);
