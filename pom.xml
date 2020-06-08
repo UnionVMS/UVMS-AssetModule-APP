@@ -26,7 +26,7 @@
         <uvms.config.version>4.1.2</uvms.config.version>
         <audit.model.version>4.3.5</audit.model.version>
         <movementrules.version>2.3.9</movementrules.version>
-        <exchange.model.version>5.2.10-UVMS</exchange.model.version>
+        <exchange.model.version>5.2.11-UVMS</exchange.model.version>
         <project.scm.id>github</project.scm.id>
         <installAtEnd>false</installAtEnd>
     </properties>
