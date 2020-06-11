@@ -720,15 +720,18 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         String json = response.readEntity(String.class);
         System.out.println(json);
-        List<Map<UUID, List<MobileTerminal>>> mtRevisions = new JsonBConfiguratorAsset().getContext(null)
+        List<Map<UUID, MobileTerminalRevisionsDto>> mtRevisions = new JsonBConfiguratorAsset().getContext(null)
                 //.fromJson(json, new GenericType<List<Map<UUID, MobileTerminalRevisionsDto>>>() {});
-                .fromJson(json, new ArrayList<List<Map<UUID, MobileTerminalRevisionsDto>>>(){}.getClass().getGenericSuperclass());
+                .fromJson(json, new ArrayList<Map<UUID, MobileTerminalRevisionsDto>>(){}.getClass().getGenericSuperclass());
 
         assertEquals(2, mtRevisions.size());
         assertEquals(1, mtRevisions.get(0).size());
-        assertEquals(2, mtRevisions.get(0).get(created1.getId().toString()).size());    //Yes, I know it says UUID up there in the rest call, yasson dont agree though
+        assertEquals(2, mtRevisions.get(0).get(created1.getId().toString()).getMobileTerminalVersions().size());    //Yes, I know it says UUID up there in the rest call, yasson dont agree though
+        assertEquals(1, mtRevisions.get(0).get(created1.getId().toString()).getChanges().size());
+
         assertEquals(1, mtRevisions.get(1).size());
-        assertEquals(3, mtRevisions.get(1).get(created2.getId().toString()).size());
+        assertEquals(3, mtRevisions.get(1).get(created2.getId().toString()).getMobileTerminalVersions().size());
+        assertEquals(2, mtRevisions.get(1).get(created2.getId().toString()).getChanges().size());
     }
 
     @Test
