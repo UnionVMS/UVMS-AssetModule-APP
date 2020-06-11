@@ -34,6 +34,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollDtoMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalRevisionsDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchKeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -444,19 +445,19 @@ public class MobileTerminalServiceBean {
         asset.getMobileTerminals().clear();
     }
 
-    public List<Map<UUID, List<MobileTerminalDto>>> getMobileTerminalRevisionsByAssetId(UUID assetId, int maxNbr) {
-        List<Map<UUID, List<MobileTerminalDto>>> revisionList = new ArrayList<>();
+    public List<Map<UUID, MobileTerminalRevisionsDto>> getMobileTerminalRevisionsByAssetId(UUID assetId, int maxNbr) {
+        List<Map<UUID, MobileTerminalRevisionsDto>> revisionList = new ArrayList<>();
         List<MobileTerminal> mtList = terminalDao.getMobileTerminalRevisionByAssetId(assetId);
 
         mtList.forEach(terminal -> {
-            Map<UUID, List<MobileTerminalDto>> revisionMap = new HashMap<>();
+            Map<UUID, MobileTerminalRevisionsDto> revisionMap = new HashMap<>();
             List<MobileTerminal> revisions = terminalDao.getMobileTerminalRevisionById(terminal.getId());
             revisions.sort(Comparator.comparing(MobileTerminal::getCreateTime));
             revisions.forEach(this::sortChannels);
             if (revisions.size() > maxNbr) {
                 revisions = revisions.subList(0, maxNbr);
             }
-            revisionMap.put(terminal.getId(), MobileTerminalDtoMapper.mapToMobileTerminalDtos(revisions));
+            revisionMap.put(terminal.getId(), MobileTerminalDtoMapper.mapToMobileTerminalRevisionsDto(revisions));
             revisionList.add(revisionMap);
         });
         return revisionList;

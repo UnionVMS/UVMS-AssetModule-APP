@@ -1,10 +1,10 @@
-package eu.europa.ec.fisheries.uvms.rest.asset.mapper;
+package eu.europa.ec.fisheries.uvms.asset.mapper;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
-import eu.europa.ec.fisheries.uvms.rest.asset.dto.ChangeHistoryRow;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeHistoryRow;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 import java.lang.reflect.Field;

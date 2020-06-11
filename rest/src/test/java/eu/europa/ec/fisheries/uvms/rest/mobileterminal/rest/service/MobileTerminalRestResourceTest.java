@@ -12,14 +12,17 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
+import eu.europa.ec.fisheries.uvms.asset.util.JsonBConfiguratorAsset;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalStatus;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalRevisionsDto;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
-import eu.europa.ec.fisheries.uvms.rest.asset.dto.ChangeHistoryRow;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeHistoryRow;
 import eu.europa.ec.fisheries.uvms.rest.asset.filter.AppError;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTQuery;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
@@ -708,13 +711,18 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .put(Entity.json(""), MobileTerminal.class);
 
-        List<Map<UUID, List<MobileTerminal>>> mtRevisions = getWebTargetExternal()
+        Response response = getWebTargetExternal()
                 .path("/mobileterminal/history/getMtHistoryForAsset")
                 .path(asset.getId().toString())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .get(new GenericType<List<Map<UUID, List<MobileTerminal>>>>() {
-                });
+                .get(Response.class);
+
+        String json = response.readEntity(String.class);
+        System.out.println(json);
+        List<Map<UUID, List<MobileTerminal>>> mtRevisions = new JsonBConfiguratorAsset().getContext(null)
+                //.fromJson(json, new GenericType<List<Map<UUID, MobileTerminalRevisionsDto>>>() {});
+                .fromJson(json, new ArrayList<List<Map<UUID, MobileTerminalRevisionsDto>>>(){}.getClass().getGenericSuperclass());
 
         assertEquals(2, mtRevisions.size());
         assertEquals(1, mtRevisions.get(0).size());

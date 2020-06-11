@@ -1,17 +1,36 @@
 package eu.europa.ec.fisheries.uvms.mobileterminal.mapper;
 
+import eu.europa.ec.fisheries.uvms.asset.mapper.HistoryMapper;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeHistoryRow;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPluginCapability;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ChannelDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalPluginCapabilityDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalPluginDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.*;
 
 import java.util.*;
 
 public class MobileTerminalDtoMapper {
+
+    public static MobileTerminalRevisionsDto mapToMobileTerminalRevisionsDto(List<MobileTerminal> mts) {
+        MobileTerminalRevisionsDto mobileTerminalRevisionsDto = new MobileTerminalRevisionsDto();
+        List<MobileTerminalDto> mobileTerminalDtos = mapToMobileTerminalDtos(mts);
+
+        Map<UUID, ChangeHistoryRow> changes = new HashMap<>(mts.size());
+        MobileTerminalDto previousMT = null;
+        for (MobileTerminalDto mobileTerminal : mobileTerminalDtos) {
+            if(previousMT == null) {
+                previousMT = mobileTerminal;
+                continue;
+            }
+            ChangeHistoryRow changeHistoryRow = HistoryMapper.mobileTerminalChangeHistory(Arrays.asList(previousMT, mobileTerminal)).get(0);
+            changes.put(mobileTerminal.getHistoryId(), changeHistoryRow);
+        }
+
+        mobileTerminalRevisionsDto.setMobileTerminalVersions(mobileTerminalDtos);
+        mobileTerminalRevisionsDto.setChanges(changes);
+        return mobileTerminalRevisionsDto;
+    }
 
     public static List<MobileTerminalDto> mapToMobileTerminalDtos(List<MobileTerminal> mts) {
         List<MobileTerminalDto> dtos = new ArrayList<>(mts.size());

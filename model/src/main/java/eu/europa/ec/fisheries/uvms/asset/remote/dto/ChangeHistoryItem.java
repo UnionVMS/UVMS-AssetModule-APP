@@ -1,4 +1,4 @@
-package eu.europa.ec.fisheries.uvms.rest.asset.dto;
+package eu.europa.ec.fisheries.uvms.asset.remote.dto;
 
 public class ChangeHistoryItem {
     private String field;

@@ -22,9 +22,10 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalSta
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDtoMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalRevisionsDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchKeyValue;
-import eu.europa.ec.fisheries.uvms.rest.asset.dto.ChangeHistoryRow;
-import eu.europa.ec.fisheries.uvms.rest.asset.mapper.HistoryMapper;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeHistoryRow;
+import eu.europa.ec.fisheries.uvms.asset.mapper.HistoryMapper;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.SearchFieldMapper;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTQuery;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
@@ -283,7 +284,7 @@ public class MobileTerminalRestResource {
     public Response getMobileTerminalHistoryByAssetId(@PathParam("assetId") UUID assetId,
                                                       @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr)  {
         try {
-            List<Map<UUID, List<MobileTerminalDto>>> mobileTerminalRevisionMap =
+            List<Map<UUID, MobileTerminalRevisionsDto>> mobileTerminalRevisionMap =
                     mobileTerminalService.getMobileTerminalRevisionsByAssetId(assetId, maxNbr);
             String returnString = jsonb.toJson(mobileTerminalRevisionMap);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
