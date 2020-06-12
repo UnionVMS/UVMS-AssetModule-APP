@@ -12,8 +12,8 @@ import java.util.*;
 
 public class MobileTerminalDtoMapper {
 
-    public static MobileTerminalRevisionsDto mapToMobileTerminalRevisionsDto(List<MobileTerminal> mts) {
-        MobileTerminalRevisionsDto mobileTerminalRevisionsDto = new MobileTerminalRevisionsDto();
+
+    public static Map<UUID, ChangeHistoryRow> mapToMobileTerminalRevisionsMap(List<MobileTerminal> mts) {
         List<MobileTerminalDto> mobileTerminalDtos = mapToMobileTerminalDtos(mts);
 
         Map<UUID, ChangeHistoryRow> changes = new HashMap<>(mts.size());
@@ -25,11 +25,10 @@ public class MobileTerminalDtoMapper {
             }
             ChangeHistoryRow changeHistoryRow = HistoryMapper.mobileTerminalChangeHistory(Arrays.asList(previousMT, mobileTerminal)).get(0);
             changes.put(mobileTerminal.getHistoryId(), changeHistoryRow);
+            previousMT = mobileTerminal;
         }
 
-        mobileTerminalRevisionsDto.setMobileTerminalVersions(mobileTerminalDtos);
-        mobileTerminalRevisionsDto.setChanges(changes);
-        return mobileTerminalRevisionsDto;
+        return changes;
     }
 
     public static List<MobileTerminalDto> mapToMobileTerminalDtos(List<MobileTerminal> mts) {

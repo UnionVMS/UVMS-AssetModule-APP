@@ -284,7 +284,7 @@ public class MobileTerminalRestResource {
     public Response getMobileTerminalHistoryByAssetId(@PathParam("assetId") UUID assetId,
                                                       @DefaultValue("100") @QueryParam("maxNbr") Integer maxNbr)  {
         try {
-            List<Map<UUID, MobileTerminalRevisionsDto>> mobileTerminalRevisionMap =
+            Map<UUID, ChangeHistoryRow> mobileTerminalRevisionMap =
                     mobileTerminalService.getMobileTerminalRevisionsByAssetId(assetId, maxNbr);
             String returnString = jsonb.toJson(mobileTerminalRevisionMap);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();

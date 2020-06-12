@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.asset.mapper;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeHistoryItem;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
@@ -31,7 +32,6 @@ public class HistoryMapper {
 
     public static List<ChangeHistoryRow> assetChangeHistory(List<Asset> histories) {
         try {
-            String className = histories.get(0).getClass().getSimpleName();
             List<Field> fields = listMembers(histories.get(0));
             List<ChangeHistoryRow> returnList = new ArrayList<>(histories.size());
 
@@ -43,7 +43,7 @@ public class HistoryMapper {
                 }
                 String updater = asset.getUpdatedBy();
                 Instant updateTime = asset.getUpdateTime();
-                ChangeHistoryRow row = new ChangeHistoryRow(className, updater, updateTime);
+                ChangeHistoryRow row = new ChangeHistoryRow(updater, updateTime);
                 for (Field field : fields) {
                     Object oldValue;
                     Object newValue;
@@ -77,7 +77,6 @@ public class HistoryMapper {
 
     public static List<ChangeHistoryRow> mobileTerminalChangeHistory(List<MobileTerminalDto> histories) {
         try {
-            String className = histories.get(0).getClass().getSimpleName();
             List<Field> fields = listMembers(histories.get(0));
             List<ChangeHistoryRow> returnList = new ArrayList<>(histories.size());
 
@@ -89,7 +88,7 @@ public class HistoryMapper {
                 }
                 String updater = mt.getUpdateuser();
                 Instant updateTime = mt.getUpdatetime();
-                ChangeHistoryRow row = new ChangeHistoryRow(className, updater, updateTime);
+                ChangeHistoryRow row = new ChangeHistoryRow(updater, updateTime);
                 for (Field field : fields) {
                     Object oldValue;
                     Object newValue;
@@ -102,13 +101,14 @@ public class HistoryMapper {
                     }
                     if (!Objects.equals(oldValue, newValue)) {
                         if(field.getName().equals(MOBILE_TERMINAL_CHANNEL_FIELD)){
-                            List<ChangeHistoryRow> channelChangeHistoryRows = checkDifferencesBetweenChannels(previousMt.getChannels(), mt.getChannels());
-                            row.setSubclasses(channelChangeHistoryRows);
+                            Map<UUID, List<ChangeHistoryItem>> channelChangeHistoryRows = checkDifferencesBetweenChannels(previousMt.getChannels(), mt.getChannels());
+                            row.setChannelChanges(channelChangeHistoryRows);
                         }else {
                             row.addNewItem(field.getName(), oldValue, newValue);
                         }
                     }
                 }
+                row.setSnapshot(mt);
                 returnList.add(row);
                 previousMt = mt;
             }
@@ -119,8 +119,8 @@ public class HistoryMapper {
         }
     }
 
-    private static List<ChangeHistoryRow> checkDifferencesBetweenChannels(Set<ChannelDto> oldInputSet, Set<ChannelDto> newInputSet){
-        List<ChangeHistoryRow> returnList = new ArrayList<>();
+    private static Map<UUID, List<ChangeHistoryItem>> checkDifferencesBetweenChannels(Set<ChannelDto> oldInputSet, Set<ChannelDto> newInputSet){
+        Map<UUID, List<ChangeHistoryItem>> returnMap = new HashMap<>();
         Set<ChannelDto> workingNewSet = new HashSet<>(newInputSet);
 
         for (ChannelDto channelDto : oldInputSet) { //for every channel in the old group, check if it exists in the new group
@@ -141,19 +141,19 @@ public class HistoryMapper {
 
             }
             if (!changeHistoryRows.isEmpty() && !changeHistoryRows.get(0).getChanges().isEmpty()) {
-                returnList.add(changeHistoryRows.get(0));
+                returnMap.put(channelDto.getId(), changeHistoryRows.get(0).getChanges());
             }
 
         }
         for (ChannelDto channelDto : workingNewSet) {   // new channels that where not in the old set
-            returnList.addAll(channelChangeHistory(Arrays.asList(new ChannelDto(), channelDto)));
+            List<ChangeHistoryRow> newChannelAddition = channelChangeHistory(Arrays.asList(new ChannelDto(), channelDto));
+            returnMap.put(channelDto.getId(), newChannelAddition.get(0).getChanges());
         }
-        return returnList;
+        return returnMap;
     }
 
     public static List<ChangeHistoryRow> channelChangeHistory(List<ChannelDto> histories) {
         try {
-            String className = histories.get(0).getClass().getSimpleName();
             List<Field> fields = listMembers(histories.get(0));
             List<ChangeHistoryRow> returnList = new ArrayList<>(histories.size());
 
@@ -165,7 +165,7 @@ public class HistoryMapper {
                 }
                 String updater = channel.getUpdateUser();
                 Instant updateTime = channel.getUpdateTime();
-                ChangeHistoryRow row = new ChangeHistoryRow(className, updater, updateTime);
+                ChangeHistoryRow row = new ChangeHistoryRow(updater, updateTime);
                 for (Field field : fields) {
                     Object oldValue;
                     Object newValue;

@@ -1,21 +1,20 @@
 package eu.europa.ec.fisheries.uvms.asset.remote.dto;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ChangeHistoryRow {
 
-    private String className;
     private String updatedBy;
     private Instant updateTime;
 
-    private List<ChangeHistoryRow> subclasses = new ArrayList<>();
+    private Map<UUID, List<ChangeHistoryItem>> channelChanges = new HashMap<>();
 
     private List<ChangeHistoryItem> changes = new ArrayList<>();
 
-    public ChangeHistoryRow(String className, String updatedBy, Instant updateTime) {
-        this.className = className;
+    private Object snapshot;
+
+    public ChangeHistoryRow(String updatedBy, Instant updateTime) {
         this.updatedBy = updatedBy;
         this.updateTime = updateTime;
     }
@@ -26,7 +25,6 @@ public class ChangeHistoryRow {
     public void addNewItem(String field, Object oldValue, Object newValue){
         changes.add(new ChangeHistoryItem(field, oldValue, newValue));
     }
-
 
 
     public String getUpdatedBy() {
@@ -53,19 +51,19 @@ public class ChangeHistoryRow {
         this.changes = changes;
     }
 
-    public String getClassName() {
-        return className;
+    public Map<UUID, List<ChangeHistoryItem>> getChannelChanges() {
+        return channelChanges;
     }
 
-    public void setClassName(String className) {
-        this.className = className;
+    public void setChannelChanges(Map<UUID, List<ChangeHistoryItem>> channelChanges) {
+        this.channelChanges = channelChanges;
     }
 
-    public List<ChangeHistoryRow> getSubclasses() {
-        return subclasses;
+    public Object getSnapshot() {
+        return snapshot;
     }
 
-    public void setSubclasses(List<ChangeHistoryRow> subclasses) {
-        this.subclasses = subclasses;
+    public void setSnapshot(Object snapshot) {
+        this.snapshot = snapshot;
     }
 }
