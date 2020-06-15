@@ -28,7 +28,9 @@ import eu.europa.ec.fisheries.uvms.asset.remote.dto.GetAssetListResponseDto;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
 import eu.europa.ec.fisheries.uvms.bean.AssetDomainModelBean;
+import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import org.slf4j.Logger;
@@ -38,7 +40,11 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.jms.TextMessage;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import static eu.europa.ec.fisheries.uvms.mapper.AssetGroupMapper.generateSearchFields;
+import static eu.europa.ec.fisheries.uvms.mapper.SearchFieldMapper.createSearchFieldsFromGroupCriterias;
 
 @Stateless
 public class AssetServiceBean implements AssetService {
@@ -53,6 +59,9 @@ public class AssetServiceBean implements AssetService {
 
     @EJB
     private AssetDomainModelBean assetDomainModel;
+
+    @EJB
+    private AssetDao assetDao;
 
     /**
      * {@inheritDoc}
@@ -330,6 +339,11 @@ public class AssetServiceBean implements AssetService {
     @Override
     public List<AssetGroupsForAssetResponseElement> findAssetGroupsForAssets(List<AssetGroupsForAssetQueryElement> assetGroupsForAssetQueryElementList) throws AssetException {
         return assetDomainModel.findAssetGroupsForAssets(assetGroupsForAssetQueryElementList);
+    }
+
+    @Override
+    public List<AssetHistory> findAssetHistoriesByGuidAndOccurrenceDate(String guid, Date occurrenceDate, int page, int listSize) throws AssetException {
+        return assetDomainModel.getAssetListSearchPaginated(guid,occurrenceDate,page,listSize);
     }
 
 }

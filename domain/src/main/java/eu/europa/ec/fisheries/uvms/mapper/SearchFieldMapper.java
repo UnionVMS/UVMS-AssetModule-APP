@@ -11,22 +11,24 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mapper;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
 import eu.europa.ec.fisheries.uvms.constant.SearchFields;
 import eu.europa.ec.fisheries.uvms.constant.SearchTables;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetDaoMappingException;
 import eu.europa.ec.fisheries.uvms.dao.exception.AssetSearchMapperException;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory_;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteriaPair;
 import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  **/
@@ -157,7 +159,6 @@ public class SearchFieldMapper {
     }
 
     public enum JoinType {
-
         INNER,
         LEFT;
     }
@@ -183,7 +184,7 @@ public class SearchFieldMapper {
         return builder.toString();
     }
 
-    public static String createSearchSql(List<SearchKeyValue> criterias, boolean dynamic, boolean fetch) {
+    private static String createSearchSql(List<SearchKeyValue> criterias, boolean dynamic, boolean fetch, Date dateOfEvent) {
 
         String OPERATOR = " OR ";
         if (dynamic) {
@@ -191,10 +192,11 @@ public class SearchFieldMapper {
         }
 
         StringBuilder builder = new StringBuilder();
-        builder.append(getJoin(fetch, JoinType.INNER)).append(SearchTables.ASSET_HIST.getTableAlias()).append(".asset ").append(SearchTables.ASSET.getTableAlias());
-        builder.append(getJoin(fetch, JoinType.INNER)).append(SearchTables.ASSET.getTableAlias()).append(".carrier ").append(SearchTables.CARRIER.getTableAlias());
+        builder.append(" FROM AssetHistory {asset_history_alias} ");
+        builder.append(getJoin(fetch, JoinType.INNER)).append("{asset_history_alias}.asset {asset_alias}");
+        builder.append(getJoin(fetch, JoinType.INNER)).append("{asset_alias}.carrier {carrier_alias}");
 
-        builder.append(" WHERE ").append(SearchTables.ASSET_HIST.getTableAlias()).append(".active IN (").append(getHistoryCriterias(criterias)).append(") ");
+        builder.append(" WHERE {asset_history_alias}.active IN (").append(getHistoryCriterias(criterias)).append(") ");
 
         if (!criterias.isEmpty()) {
 
@@ -208,61 +210,96 @@ public class SearchFieldMapper {
                 } else {
                     builder.append(OPERATOR);
                 }
-                if(entry.getSearchField().getFieldType()== SearchFieldType.LIST){
+                SearchFields entrySF = entry.getSearchField();
+
+                if(entrySF.getFieldType()== SearchFieldType.LIST){
                     builder.append(" UPPER(REPLACE(");
-                    builder.append(entry.getSearchField().getSearchTable().getTableAlias()).append(".").append(entry.getSearchField().getFieldName());
+                    builder.append(entrySF.getSearchTable().getTableAlias()).append(".").append(entrySF.getFieldName());
                     builder.append(",'-','')) ");
                 }else{
-                    builder.append(entry.getSearchField().getSearchTable().getTableAlias()).append(".").append(entry.getSearchField().getFieldName());
+                    builder.append(entrySF.getSearchTable().getTableAlias()).append(".").append(entrySF.getFieldName());
                 }
 
                 if (useLike(entry)) {
-                    int containsCount = 0;
-                    boolean containsFirst = true;
-                    for (String searchValue : entry.getSearchValues()) {
-                        containsCount++;
-                        if (containsFirst) {
-                            containsFirst = false;
-                        } else {
+
+                    builder.append(" LIKE :").append(entrySF.getValueName()).append(1);
+
+                    if(entry.getSearchValues().size() > 1) {
+                        for (int i = 1; i < entry.getSearchValues().size() ; i++) {
                             builder.append(" OR ");
                             builder.append(" UPPER(REPLACE(");
-                            builder.append(entry.getSearchField().getSearchTable().getTableAlias()).append(".").append(entry.getSearchField().getFieldName());
+                            builder.append(entrySF.getSearchTable().getTableAlias()).append(".").append(entrySF.getFieldName());
                             builder.append(",'-','')) ");
+                            builder.append(" LIKE :").append(entrySF.getValueName()).append(i+1);
                         }
-                        builder.append(" LIKE :").append(entry.getSearchField().getValueName()).append(containsCount);
                     }
-                } else if (entry.getSearchField().getFieldType().equals(SearchFieldType.MIN_DECIMAL)) {
-                    builder.append(" >= :").append(entry.getSearchField().getValueName());
-                } else if (entry.getSearchField().getFieldType().equals(SearchFieldType.MAX_DECIMAL)) {
-                    builder.append(" <= :").append(entry.getSearchField().getValueName());
-                } else if (entry.getSearchField().getFieldType().equals(SearchFieldType.BOOLEAN)) {
-                	builder.append(" = :").append(entry.getSearchField().getValueName());
+
+                } else if (entrySF.getFieldType().equals(SearchFieldType.MIN_DECIMAL)) {
+                    builder.append(" >= :").append(entrySF.getValueName());
+                } else if (entrySF.getFieldType().equals(SearchFieldType.MAX_DECIMAL)) {
+                    builder.append(" <= :").append(entrySF.getValueName());
+                } else if (entrySF.getFieldType().equals(SearchFieldType.BOOLEAN)) {
+                	builder.append(" = :").append(entrySF.getValueName());
                 } else {
-                    builder.append(" IN (:").append(entry.getSearchField().getValueName()).append(") ");
+                    builder.append(" IN (:").append(entrySF.getValueName()).append(") ");
                 }
             }
-
             builder.append(" ) ");
-
         }
 
+        if(dateOfEvent != null) {
+            builder.append(" AND {asset_history_alias}.{date_of_event} =");
+            builder.append(" (SELECT MAX(ah2.{date_of_event}) FROM AssetHistory ah2");
+            builder.append(" WHERE ah2.asset.id = {asset_alias}.id AND ah2.{date_of_event} <= '").append(dateOfEvent).append("')");
+        }
         return builder.toString();
     }
 
     public static String createSelectSearchSql(List<SearchKeyValue> searchFields, boolean isDynamic) {
+        return createSelectSearchSql(searchFields,isDynamic, null);
+    }
+
+    /**
+     * Create JPQL query for distinct AssetHistory entities
+     * @param searchFields List of SearchKeyValue
+     * @param isDynamic if true appends 'AND' operator between where criteria generated from SearchKeyValue entries
+     * @param dateOfEvent if exists appends where criteria for first AssetHistory with dateOfEvent occurred before that time
+     * @return
+     */
+    public static String createSelectSearchSql(List<SearchKeyValue> searchFields, boolean isDynamic, Date dateOfEvent) {
         StringBuilder buffer = new StringBuilder();
-        buffer.append("SELECT DISTINCT vh FROM AssetHistory vh ");
-        buffer.append(createSearchSql(searchFields, isDynamic, true));
-        LOG.debug("Primary SQL full: {}", buffer.toString());
-        return buffer.toString();
+        buffer.append("SELECT DISTINCT {asset_history_alias}");
+        buffer.append(createSearchSql(searchFields, isDynamic, true, dateOfEvent));
+        buffer.append(" ORDER BY {asset_history_alias}.").append(AssetHistory_.ID).append(" DESC");
+        String query = replaceParams(buffer);
+        LOG.debug("Primary SQL full: {}",query);
+        return query;
     }
 
     public static String createCountSearchSql(List<SearchKeyValue> searchFields, boolean isDynamic) {
+        return createCountSearchSql(searchFields,isDynamic,null);
+    }
+    /**
+     * Create JPQL query for count distinct Asset GUID
+     * @param searchFields List of SearchKeyValue
+     * @param isDynamic if true appends 'AND' operator between where criteria generated from SearchKeyValue entries
+     * @param dateOfEvent if exists appends where criteria for first AssetHistory with dateOfEvent occurred before that time
+     * @return
+     */
+    public static String createCountSearchSql(List<SearchKeyValue> searchFields, boolean isDynamic, Date dateOfEvent) {
         StringBuilder buffer = new StringBuilder();
-        buffer.append("SELECT COUNT( DISTINCT v.guid ) FROM AssetHistory vh ");
-        buffer.append(createSearchSql(searchFields, isDynamic, false));
-        LOG.debug("Count SQL full: {}", buffer.toString());
-        return buffer.toString();
+        buffer.append("SELECT COUNT( DISTINCT {asset_alias}.guid )");
+        buffer.append(createSearchSql(searchFields, isDynamic, false , dateOfEvent));
+        String query = replaceParams(buffer);
+        LOG.debug("Count SQL full: {}", query);
+        return query;
     }
 
+    private static String replaceParams(StringBuilder builder) {
+        return builder.toString()
+                .replace("{asset_history_alias}", SearchTables.ASSET_HIST.getTableAlias())
+                .replace("{asset_alias}"        , SearchTables.ASSET.getTableAlias())
+                .replace("{carrier_alias}"      , SearchTables.CARRIER.getTableAlias())
+                .replace("{date_of_event}"      , AssetHistory_.DATE_OF_EVENT);
+    }
 }

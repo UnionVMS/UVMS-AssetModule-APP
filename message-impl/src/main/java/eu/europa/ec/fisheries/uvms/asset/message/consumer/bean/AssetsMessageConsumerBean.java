@@ -28,6 +28,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallExcep
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.AssetGroupsForAssetEventBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.AssetIdsForGroupGuidEventBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.FindAssetByCfrBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.FindAssetHistGuidByAssetGuidAndOccurrenceDateBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.FindVesselIdsByAssetHistGuidBean;
@@ -55,6 +56,7 @@ import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.UpsertAssetModuleRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.UpsertFishingGearModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdsForGroupGuidQueryElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,6 +109,9 @@ public class AssetsMessageConsumerBean implements MessageListener {
 
     @EJB
     private PingEventBean pingEventBean;
+
+    @EJB
+    private AssetIdsForGroupGuidEventBean assetIdsForGroupGuidEventBean;
 
     @Inject
     @AssetMessageErrorEvent
@@ -184,6 +189,10 @@ public class AssetsMessageConsumerBean implements MessageListener {
                     AssetGroupsForAssetRequest assetGroupsForAssetRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetGroupsForAssetRequest.class);
                     AssetMessageEvent assetGroupsForAssetEvent = new AssetMessageEvent(textMessage, assetGroupsForAssetRequest);
                     assetGroupsForAssetEventBean.getAssetGroupsFromAssets(assetGroupsForAssetEvent);
+                    break;
+                case ASSET_IDS_FOR_GROUP_GUID:
+                    AssetIdsForGroupGuidQueryElement queryElement = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetIdsForGroupGuidQueryElement.class);
+                    assetIdsForGroupGuidEventBean.findAndSendAssetIdsForGroupGuid(new AssetMessageEvent(textMessage,queryElement));
                     break;
                 default:
                     LOG.error("[ Not implemented assetsMethod consumed: {} ]", assetsMethod);

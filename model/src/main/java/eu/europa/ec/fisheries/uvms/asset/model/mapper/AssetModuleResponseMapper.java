@@ -22,6 +22,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallExcep
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import eu.europa.ec.fisheries.wsdl.asset.group.ListAssetGroupResponse;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupsForAssetResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByAssetHistGuidResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByMultipleAssetHistGuidsResponse;
@@ -32,6 +33,7 @@ import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetFault;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetGroupsForAssetResponseElement;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetHistGuidIdWithVesselIdentifiers;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdsForGroupGuidResponseElement;
 import eu.europa.ec.fisheries.wsdl.asset.types.BatchAssetListResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.BatchAssetListResponseElement;
 import eu.europa.ec.fisheries.wsdl.asset.types.FishingGear;
@@ -39,7 +41,7 @@ import eu.europa.ec.fisheries.wsdl.asset.types.FlagStateResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.FlagStateType;
 import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.VesselIdentifiersHolder;
-import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupsForAssetResponse;
+import eu.europa.ec.fisheries.wsdl.asset.types.VesselIdentifiersWithConnectIdHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -113,6 +115,12 @@ public class AssetModuleResponseMapper {
             LOG.error("[ Error when mapping response to list asset response. ] {}", e.getMessage());
             throw new AssetModelMapperException("Error when returning assetList from response in ResponseMapper: " + e.getMessage());
         }
+    }
+
+    public static String mapToAssetIdsForGroupGuidResponse(List<VesselIdentifiersWithConnectIdHolder> assetHistoryList) throws AssetModelMarshallException {
+        AssetIdsForGroupGuidResponseElement responseElement = new AssetIdsForGroupGuidResponseElement();
+        responseElement.getVesselIdentifiers().addAll(assetHistoryList);
+        return JAXBMarshaller.marshallJaxBObjectToString(responseElement);
     }
 
     public static String mapToAssetListByAssetGroupResponse(List<Asset> assets) throws AssetModelMarshallException {
@@ -224,4 +232,5 @@ public class AssetModuleResponseMapper {
         }
         return identifiersHolder;
     }
+
 }

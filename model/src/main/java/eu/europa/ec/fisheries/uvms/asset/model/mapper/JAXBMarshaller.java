@@ -79,7 +79,7 @@ public class JAXBMarshaller {
      * @throws
      * eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException
      */
-    public static <R> R unmarshallTextMessage(TextMessage textMessage, Class clazz) throws AssetModelMarshallException {
+    public static <R> R unmarshallTextMessage(TextMessage textMessage, Class<R> clazz) throws AssetModelMarshallException {
         try {
             JAXBContext jc = contexts.get(clazz.getName());
             if (jc == null) {
