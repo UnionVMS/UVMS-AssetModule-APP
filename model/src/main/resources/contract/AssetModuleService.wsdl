@@ -13,7 +13,7 @@
             <xsd:import namespace="types.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetElement.xsd"/>
             <xsd:import namespace="group.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="AssetGroup.xsd"/>
             <xsd:import namespace="fishinggear.asset.wsdl.fisheries.ec.europa.eu" schemaLocation="FishingGear.xsd"/>
-            
+
             <xsd:simpleType name="AssetModuleMethod">
                 <xsd:restriction base="xsd:string">
                     <xsd:enumeration value="GET_ASSET"/>
@@ -36,6 +36,7 @@
                     <xsd:enumeration value="FIND_VESSEL_IDS_BY_MULTIPLE_ASSET_HIST_GUID"/>
                     <xsd:enumeration value="FIND_ASSET_HIST_GUID_BY_ASSET_GUID_AND_OCCURRENCE_DATE"/>
                     <xsd:enumeration value="ASSET_GROUPS_FOR_ASSET"/>
+                    <xsd:enumeration value="ASSET_IDS_FOR_GROUP_GUID"/>
                 </xsd:restriction>
             </xsd:simpleType>
             

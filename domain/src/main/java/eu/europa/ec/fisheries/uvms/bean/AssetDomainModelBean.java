@@ -34,6 +34,9 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import java.util.*;
 
+import static eu.europa.ec.fisheries.uvms.mapper.AssetGroupMapper.generateSearchFields;
+import static eu.europa.ec.fisheries.uvms.mapper.SearchFieldMapper.createSearchFieldsFromGroupCriterias;
+
 @Stateless
 @LocalBean
 public class AssetDomainModelBean {
@@ -214,6 +217,14 @@ public class AssetDomainModelBean {
 
         return response;
 
+    }
+
+    public List<AssetHistory> getAssetListSearchPaginated(String guid, Date occurrenceDate, int page, int listSize) throws AssetException{
+        eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroup group = assetGroupDaoBean.getAssetGroupByGuid(guid);
+        List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField> assetGroupSearchFields = generateSearchFields(group);
+        List<SearchKeyValue> searchKeyValues = createSearchFieldsFromGroupCriterias(assetGroupSearchFields );
+        String sql = SearchFieldMapper.createSelectSearchSql(searchKeyValues, Boolean.TRUE.equals(group.getDynamic()) , occurrenceDate);
+        return assetDao.getAssetListSearchPaginated(page,listSize,sql,searchKeyValues);
     }
 
     public Long getAssetListCount(AssetListQuery query) throws AssetModelException {

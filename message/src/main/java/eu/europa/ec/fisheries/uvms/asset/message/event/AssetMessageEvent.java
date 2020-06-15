@@ -41,7 +41,7 @@ public class AssetMessageEvent {
     private GetFlagStateByGuidAndDateRequest getFlagStateByGuidAndDateRequest;
     private GetAssetFromAssetIdAndDateRequest getAssetFromAssetIdAndDateRequest;
     private AssetGroupsForAssetRequest assetGroupsForAssetRequest;
-
+    private AssetIdsForGroupGuidQueryElement assetIdsForGroupGuidQueryElement;
 
     public AssetMessageEvent(TextMessage message) {
         this.message = message;
@@ -111,6 +111,11 @@ public class AssetMessageEvent {
     public AssetMessageEvent(TextMessage message, GetAssetFromAssetIdAndDateRequest getAssetFromAssetIdAndDateRequest){
         this.message = message;
         this.getAssetFromAssetIdAndDateRequest = getAssetFromAssetIdAndDateRequest;
+    }
+
+    public AssetMessageEvent(TextMessage message,AssetIdsForGroupGuidQueryElement assetIdsForGroupGuidQueryElement) {
+        this.message = message;
+        this.assetIdsForGroupGuidQueryElement = assetIdsForGroupGuidQueryElement;
     }
 
     public void setMessage(TextMessage message) {
@@ -220,6 +225,13 @@ public class AssetMessageEvent {
 
     public void setGetAssetFromAssetIdAndDateRequest(GetAssetFromAssetIdAndDateRequest getAssetFromAssetIdAndDateRequest) {
         this.getAssetFromAssetIdAndDateRequest = getAssetFromAssetIdAndDateRequest;
+    }
+
+    public AssetIdsForGroupGuidQueryElement getAssetIdsForGroupGuidQueryElement() {
+        return assetIdsForGroupGuidQueryElement;
+    }
+    public void setAssetIdsForGroupGuidQueryElement(AssetIdsForGroupGuidQueryElement assetIdsForGroupGuidQueryElement){
+        this.assetIdsForGroupGuidQueryElement = assetIdsForGroupGuidQueryElement;
     }
 
     public List<AssetListQuery> getBatchQuery() {

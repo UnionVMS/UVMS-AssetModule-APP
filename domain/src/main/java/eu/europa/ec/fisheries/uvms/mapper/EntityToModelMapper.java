@@ -32,6 +32,7 @@ import eu.europa.ec.fisheries.wsdl.asset.types.AssetContact;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetHistoryId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdsForGroupGuidResponseElement;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetNotes;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetProdOrgModel;
 import eu.europa.ec.fisheries.wsdl.asset.types.CarrierSource;
@@ -42,6 +43,7 @@ import eu.europa.ec.fisheries.wsdl.asset.types.FishingGearType;
 import eu.europa.ec.fisheries.wsdl.asset.types.NoteActivityCode;
 import eu.europa.ec.fisheries.wsdl.asset.types.NoteSource;
 import eu.europa.ec.fisheries.wsdl.asset.types.NumberOfAssetsGroupByFlagState;
+import eu.europa.ec.fisheries.wsdl.asset.types.VesselIdentifiersWithConnectIdHolder;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -318,4 +320,22 @@ public class EntityToModelMapper {
         return codes;
     }
 
+    public static AssetIdsForGroupGuidResponseElement toAssetIdsForGroupGuidResponseElement(List<AssetHistory> assetHistoryList,String connectId) {
+        AssetIdsForGroupGuidResponseElement assetIdsForGroupGuidResponseElement = new AssetIdsForGroupGuidResponseElement();
+        assetIdsForGroupGuidResponseElement.getVesselIdentifiers();
+        assetHistoryList.stream().map(ah -> toVesselIdentifier(ah , connectId)).forEach(assetIdsForGroupGuidResponseElement.getVesselIdentifiers()::add);
+        return assetIdsForGroupGuidResponseElement;
+    }
+
+    private static VesselIdentifiersWithConnectIdHolder toVesselIdentifier(AssetHistory assetHistory,String connectId) {
+
+        VesselIdentifiersWithConnectIdHolder vesselIdentifier = new VesselIdentifiersWithConnectIdHolder();
+        vesselIdentifier.setConnectId(connectId);
+        vesselIdentifier.setExtMark(assetHistory.getExternalMarking());
+        vesselIdentifier.setCfr(assetHistory.getCfr());
+        vesselIdentifier.setIccat(assetHistory.getIccat());
+        vesselIdentifier.setIrcs(assetHistory.getIrcs());
+        vesselIdentifier.setUvi(assetHistory.getUvi());
+        return vesselIdentifier;
+    }
 }

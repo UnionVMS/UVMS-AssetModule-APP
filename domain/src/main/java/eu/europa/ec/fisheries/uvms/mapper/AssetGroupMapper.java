@@ -20,6 +20,7 @@ import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AssetGroupMapper {
 
@@ -54,6 +55,10 @@ public class AssetGroupMapper {
             group.getSearchFields().add(searchField);
         }
         return group;
+    }
+
+    public static List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField> generateSearchFields(AssetGroup groupEntity){
+        return groupEntity.getFields().stream().map(f -> toSearchField(f)).collect(Collectors.toList());
     }
 
     private static eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField toSearchField(AssetGroupField field) {
