@@ -722,11 +722,10 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         String json = response.readEntity(String.class);
         //System.out.println(json);
         Map<UUID, ChangeHistoryRow> mtRevisions = new JsonBConfiguratorAsset().getContext(null)
-                //.fromJson(json, new GenericType<List<Map<UUID, MobileTerminalRevisionsDto>>>() {});
                 .fromJson(json, new HashMap<UUID, ChangeHistoryRow>(){}.getClass().getGenericSuperclass());
 
-        assertEquals(3, mtRevisions.size());
-        assertTrue(mtRevisions.values().stream().allMatch(row -> row.getChanges().size() == 3));
+        assertEquals(1, mtRevisions.size());
+        assertTrue(mtRevisions.values().stream().allMatch(row -> row.getChanges().size() == 2));
 
 
     }
@@ -1264,10 +1263,10 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertEquals(3, mtChanges.size());
 
         assertEquals("user", mtChanges.get(0).getUpdatedBy());
-        assertEquals(3, mtChanges.get(0).getChanges().size());
+        assertEquals(2, mtChanges.get(0).getChanges().size());
 
         assertEquals("user", mtChanges.get(2).getUpdatedBy());
-        assertEquals(2, mtChanges.get(2).getChanges().size());
+        assertEquals(1, mtChanges.get(2).getChanges().size());
         assertTrue(mtChanges.get(2).getChanges().stream().anyMatch(item -> item.getNewValue().equals(asset2.getId().toString())));
     }
 
