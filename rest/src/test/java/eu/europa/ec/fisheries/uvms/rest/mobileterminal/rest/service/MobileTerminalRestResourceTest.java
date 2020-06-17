@@ -13,6 +13,7 @@ package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeHistoryItem;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChannelChangeHistory;
 import eu.europa.ec.fisheries.uvms.asset.util.JsonBConfiguratorAsset;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
@@ -1130,20 +1131,17 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         List<ChangeHistoryRow> mtChanges = mTChangesResponse.readEntity(new GenericType<List<ChangeHistoryRow>>() {});
 
         assertEquals(2, mtChanges.size());
-        assertEquals(2, mtChanges.get(0).getChannelChanges().size());
-        Optional<List<ChangeHistoryItem>> sizeOneList = mtChanges.get(0).getChannelChanges().values().stream()
-                .filter(list -> list.size() == 1).findAny();
-        assertTrue(sizeOneList.isPresent());
-        assertEquals("historyId", sizeOneList.get().get(0).getField());
+        assertEquals(1, mtChanges.get(0).getChannelChanges().size());
 
-        Optional<List<ChangeHistoryItem>> sizeTenList = mtChanges.get(0).getChannelChanges().values().stream()
-                .filter(list -> list.size() == 10).findAny();
-        assertTrue(sizeTenList.isPresent());
-        assertTrue(sizeTenList.get().stream().allMatch(item ->item.getOldValue() == null));
-        assertTrue(sizeTenList.get().stream().allMatch(item ->item.getNewValue() != null));
+        Optional<ChannelChangeHistory> nineChangesChannel = mtChanges.get(0).getChannelChanges().values().stream()
+                .filter(list -> list.getChanges().size() == 9).findAny();
+        assertTrue(nineChangesChannel.isPresent());
+        assertTrue(nineChangesChannel.get().getChangeType().equals("CREATED"));
+        assertTrue(nineChangesChannel.get().getChanges().stream().allMatch(item ->item.getOldValue() == null));
+        assertTrue(nineChangesChannel.get().getChanges().stream().allMatch(item ->item.getNewValue() != null));
 
-        assertEquals(3, mtChanges.get(1).getChanges().size());
-        assertEquals(2, mtChanges.get(1).getChannelChanges().size());
+        assertEquals(2, mtChanges.get(1).getChanges().size());
+        assertEquals(1, mtChanges.get(1).getChannelChanges().size());
     }
 
 
@@ -1190,19 +1188,15 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         List<ChangeHistoryRow> mtChanges = mTChangesResponse.readEntity(new GenericType<List<ChangeHistoryRow>>() {});
 
         assertEquals(1, mtChanges.size());
-        assertEquals(2, mtChanges.get(0).getChannelChanges().size());
-        //one subclass should have 1 change
-        Optional<List<ChangeHistoryItem>> sizeOneList = mtChanges.get(0).getChannelChanges().values().stream()
-                .filter(list -> list.size() == 1).findAny();
-        assertTrue(sizeOneList.isPresent());
-        assertEquals("historyId", sizeOneList.get().get(0).getField());
+        assertEquals(1, mtChanges.get(0).getChannelChanges().size());
 
-        //one subclass should have 10 changes
-        Optional<List<ChangeHistoryItem>> tenChangeRow = mtChanges.get(0).getChannelChanges().values().stream()
-                .filter(list -> list.size() == 10).findAny();
-        assertTrue(tenChangeRow.isPresent());
-        assertTrue(tenChangeRow.get().stream().allMatch(item ->item.getOldValue() != null));
-        assertTrue(tenChangeRow.get().stream().allMatch(item ->item.getNewValue() == null));
+        //one subclass should have 9 changes
+        Optional<ChannelChangeHistory> nineChangesChannel = mtChanges.get(0).getChannelChanges().values().stream()
+                .filter(list -> list.getChanges().size() == 9).findAny();
+        assertTrue(nineChangesChannel.isPresent());
+        assertTrue(nineChangesChannel.get().getChangeType().equals("REMOVED"));
+        assertTrue(nineChangesChannel.get().getChanges().stream().allMatch(item ->item.getOldValue() != null));
+        assertTrue(nineChangesChannel.get().getChanges().stream().allMatch(item ->item.getNewValue() == null));
     }
 
     @Test

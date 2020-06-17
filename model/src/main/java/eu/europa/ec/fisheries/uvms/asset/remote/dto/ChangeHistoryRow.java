@@ -8,7 +8,7 @@ public class ChangeHistoryRow {
     private String updatedBy;
     private Instant updateTime;
 
-    private Map<UUID, List<ChangeHistoryItem>> channelChanges = new HashMap<>();
+    private Map<UUID, ChannelChangeHistory> channelChanges = new HashMap<>();
 
     private List<ChangeHistoryItem> changes = new ArrayList<>();
 
@@ -51,11 +51,11 @@ public class ChangeHistoryRow {
         this.changes = changes;
     }
 
-    public Map<UUID, List<ChangeHistoryItem>> getChannelChanges() {
+    public Map<UUID, ChannelChangeHistory> getChannelChanges() {
         return channelChanges;
     }
 
-    public void setChannelChanges(Map<UUID, List<ChangeHistoryItem>> channelChanges) {
+    public void setChannelChanges(Map<UUID, ChannelChangeHistory> channelChanges) {
         this.channelChanges = channelChanges;
     }
 

@@ -1,11 +1,11 @@
 package eu.europa.ec.fisheries.uvms.asset.mapper;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeHistoryItem;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeHistoryRow;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChannelChangeHistory;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
-import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeHistoryRow;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 import java.lang.reflect.Field;
@@ -25,10 +25,12 @@ public class HistoryMapper {
     public static final String MOBILE_TERMINAL_UPDATE_TIME_FIELD = "updatetime";
     public static final String MOBILE_TERMINAL_PLUGIN_FIELD = "plugin";
     public static final String MOBILE_TERMINAL_CHANNEL_FIELD = "channels";
+    public static final String MOBILE_TERMINAL_HISTORY_ID = "historyId";
 
     public static final String CHANNEL_UPDATER_FIELD = "updateUser";
     public static final String CHANNEL_UPDATE_TIME_FIELD = "updateTime";
     public static final String CHANNEL_MOBILE_TERMINAL_FIELD = "mobileTerminal";
+    public static final String CHANNEL_HISTORY_ID = "historyId";
 
     public static List<ChangeHistoryRow> assetChangeHistory(List<Asset> histories) {
         try {
@@ -92,8 +94,10 @@ public class HistoryMapper {
                 for (Field field : fields) {
                     Object oldValue;
                     Object newValue;
-                    if (field.getName().equals(MOBILE_TERMINAL_UPDATER_FIELD) || field.getName().equals(MOBILE_TERMINAL_UPDATE_TIME_FIELD)
-                        || field.getName().equals(MOBILE_TERMINAL_PLUGIN_FIELD)) {
+                    if (field.getName().equals(MOBILE_TERMINAL_UPDATER_FIELD)
+                            || field.getName().equals(MOBILE_TERMINAL_UPDATE_TIME_FIELD)
+                            || field.getName().equals(MOBILE_TERMINAL_PLUGIN_FIELD)
+                            || field.getName().equals(MOBILE_TERMINAL_HISTORY_ID)) {
                         continue;
                     }else {
                         oldValue = FieldUtils.readDeclaredField(previousMt, field.getName(), true);
@@ -101,7 +105,7 @@ public class HistoryMapper {
                     }
                     if (!Objects.equals(oldValue, newValue)) {
                         if(field.getName().equals(MOBILE_TERMINAL_CHANNEL_FIELD)){
-                            Map<UUID, List<ChangeHistoryItem>> channelChangeHistoryRows = checkDifferencesBetweenChannels(previousMt.getChannels(), mt.getChannels());
+                            Map<UUID, ChannelChangeHistory> channelChangeHistoryRows = checkDifferencesBetweenChannels(previousMt.getChannels(), mt.getChannels());
                             row.setChannelChanges(channelChangeHistoryRows);
                         }else {
                             row.addNewItem(field.getName(), oldValue, newValue);
@@ -119,16 +123,17 @@ public class HistoryMapper {
         }
     }
 
-    private static Map<UUID, List<ChangeHistoryItem>> checkDifferencesBetweenChannels(Set<ChannelDto> oldInputSet, Set<ChannelDto> newInputSet){
-        Map<UUID, List<ChangeHistoryItem>> returnMap = new HashMap<>();
+    private static Map<UUID, ChannelChangeHistory> checkDifferencesBetweenChannels(Set<ChannelDto> oldInputSet, Set<ChannelDto> newInputSet){
+        Map<UUID, ChannelChangeHistory> returnMap = new HashMap<>();
         Set<ChannelDto> workingNewSet = new HashSet<>(newInputSet);
 
         for (ChannelDto channelDto : oldInputSet) { //for every channel in the old group, check if it exists in the new group
             Optional<ChannelDto> sameChannelInNewSet = workingNewSet.stream().filter(c -> c.getId().equals(channelDto.getId())).findAny();
-            List<ChangeHistoryRow> changeHistoryRows = new ArrayList<>();
+            ChannelChangeHistory channelChangeHistory = new ChannelChangeHistory();
             if(sameChannelInNewSet.isPresent()) {
                 if(!channelDto.getHistoryId().equals(sameChannelInNewSet.get().getHistoryId())) {
-                    changeHistoryRows = channelChangeHistory(Arrays.asList(channelDto, sameChannelInNewSet.get()));
+                    channelChangeHistory.setChanges(channelChangeHistory(Arrays.asList(channelDto, sameChannelInNewSet.get())).get(0).getChanges());
+                    channelChangeHistory.setChangeType("UPDATED");
                 }
 
                 workingNewSet.remove(sameChannelInNewSet.get());
@@ -137,17 +142,21 @@ public class HistoryMapper {
                 ChannelDto creatorAndTimeChannel = new ChannelDto();
                 creatorAndTimeChannel.setUpdateUser(channelDto.getUpdateUser());
                 creatorAndTimeChannel.setUpdateTime(channelDto.getUpdateTime());
-                changeHistoryRows = channelChangeHistory(Arrays.asList(channelDto, creatorAndTimeChannel));
+                channelChangeHistory.setChanges(channelChangeHistory(Arrays.asList(channelDto, creatorAndTimeChannel)).get(0).getChanges());
+                channelChangeHistory.setChangeType("REMOVED");
 
             }
-            if (!changeHistoryRows.isEmpty() && !changeHistoryRows.get(0).getChanges().isEmpty()) {
-                returnMap.put(channelDto.getId(), changeHistoryRows.get(0).getChanges());
+            if (channelChangeHistory.getChanges() != null && !channelChangeHistory.getChanges().isEmpty()) {
+                returnMap.put(channelDto.getId(), channelChangeHistory);
             }
 
         }
         for (ChannelDto channelDto : workingNewSet) {   // new channels that where not in the old set
-            List<ChangeHistoryRow> newChannelAddition = channelChangeHistory(Arrays.asList(new ChannelDto(), channelDto));
-            returnMap.put(channelDto.getId(), newChannelAddition.get(0).getChanges());
+            ChannelChangeHistory newChannelAddition = new ChannelChangeHistory();
+            newChannelAddition.setChanges(channelChangeHistory(Arrays.asList(new ChannelDto(), channelDto)).get(0).getChanges());
+            newChannelAddition.setChangeType("CREATED");
+
+            returnMap.put(channelDto.getId(), newChannelAddition);
         }
         return returnMap;
     }
@@ -169,8 +178,10 @@ public class HistoryMapper {
                 for (Field field : fields) {
                     Object oldValue;
                     Object newValue;
-                    if (field.getName().equals(CHANNEL_UPDATER_FIELD) || field.getName().equals(CHANNEL_UPDATE_TIME_FIELD)
-                            || field.getName().equals(CHANNEL_MOBILE_TERMINAL_FIELD)) {
+                    if (field.getName().equals(CHANNEL_UPDATER_FIELD)
+                            || field.getName().equals(CHANNEL_UPDATE_TIME_FIELD)
+                            || field.getName().equals(CHANNEL_MOBILE_TERMINAL_FIELD)
+                            || field.getName().equals(CHANNEL_HISTORY_ID)) {
                             continue;
                     } else {
                         oldValue = FieldUtils.readDeclaredField(previousChannel, field.getName(), true);
