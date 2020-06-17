@@ -18,12 +18,20 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -297,7 +305,7 @@ public class InternalRestResourceTest extends AbstractAssetRestTest {
                 .post(Entity.json(input), Response.class);
 
         assertNotNull(response);
-        assertEquals(200, response.getStatus());
+        assertEquals(500, response.getStatus());
     }
 
     @Test
@@ -333,5 +341,26 @@ public class InternalRestResourceTest extends AbstractAssetRestTest {
                 .post(Entity.json(""), CreatePollResultDto.class);
 
         assertNotNull(response);
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createPollNonexistantAssetTest() {
+        UUID assetId = UUID.randomUUID();
+
+
+        Response response = getWebTargetInternal()
+                .path("/internal")
+                .path("createPollForAsset")
+                .path(assetId.toString())
+                .queryParam("username", "Test User")
+                .queryParam("comment", "Error test comment")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
+                .post(Entity.json(""), Response.class);
+
+        assertEquals(500, response.getStatus());
+        String s = response.readEntity(String.class);
+        assertTrue(s.contains("Null"));
     }
 }
