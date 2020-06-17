@@ -305,7 +305,7 @@ public class InternalRestResourceTest extends AbstractAssetRestTest {
                 .post(Entity.json(input), Response.class);
 
         assertNotNull(response);
-        assertEquals(200, response.getStatus());
+        assertEquals(500, response.getStatus());
     }
 
     @Test
