@@ -27,6 +27,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -81,7 +82,7 @@ public class InternalRestResource {
             return Response.ok(asset).build();
         } catch (Exception e) {
             LOG.error("getAssetById", e);
-            throw e;
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -92,9 +93,14 @@ public class InternalRestResource {
                                  @DefaultValue("100") @QueryParam("size") int size,
                                  @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
                                  SearchBranch query) throws Exception {
-            AssetListResponse assetList = assetService.getAssetList(query, page, size,  includeInactivated);
+        try {
+            AssetListResponse assetList = assetService.getAssetList(query, page, size, includeInactivated);
             String returnString = jsonb.toJson(assetList);
             return Response.ok(returnString).build();
+        }catch (Exception e) {
+            LOG.error("getAssetList", e);
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
+        }
     }
 
     @POST
@@ -104,10 +110,15 @@ public class InternalRestResource {
                                  @DefaultValue("10000000") @QueryParam("size") int size,
                                  @DefaultValue("false") @QueryParam("includeInactivated") boolean includeInactivated,
                                  SearchBranch query) {
-            List<Asset> assetList = assetDao.getAssetListSearchPaginated( page, size, query,  includeInactivated);
+        try {
+            List<Asset> assetList = assetDao.getAssetListSearchPaginated(page, size, query, includeInactivated);
             List<UUID> assetIdList = assetList.stream().map(Asset::getId).collect(Collectors.toList());
             String returnString = jsonb.toJson(assetIdList);
             return Response.ok(returnString).build();
+        }catch (Exception e) {
+            LOG.error("getAssetListIdOnly", e);
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
+        }
     }
 
 
@@ -120,7 +131,7 @@ public class InternalRestResource {
             return Response.ok(assetRevisions).build();
         } catch (Exception e) {
             LOG.error("getAssetHistoryListByAssetId", e);
-            throw e;
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -129,7 +140,7 @@ public class InternalRestResource {
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
     public Response getAssetFromAssetIdAndDate(@PathParam("type") String type,
                                                @PathParam("id") String id,
-                                               @PathParam("date") String date) throws Exception {
+                                               @PathParam("date") String date) {
         try {
             AssetIdentifier assetId = AssetIdentifier.valueOf(type.toUpperCase());
             Instant instant = DateUtils.stringToDate(date);
@@ -137,7 +148,7 @@ public class InternalRestResource {
             return Response.ok(assetRevision).build();
         } catch (Exception e) {
             LOG.error("getAssetFromAssetIdAndDate", e);
-            throw e;
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -150,7 +161,7 @@ public class InternalRestResource {
             return Response.ok(asset).build();
         } catch (Exception e) {
             LOG.error("getAssetHistoryByAssetHistGuid", e);
-            throw e;
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -163,58 +174,58 @@ public class InternalRestResource {
             return Response.ok(upsertedAsset).build();
         } catch (Exception e) {
             LOG.error("upsertAsset", e);
-            throw e;
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
 
     @POST
     @Path("microAssets")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response getMicroAssets(List<String> assetIdList) throws Exception {
+    public Response getMicroAssets(List<String> assetIdList) {
         try {
         List<MicroAsset> assetList = assetService.getInitialDataForRealtime(assetIdList);
         return Response.ok(assetList).build();
         } catch (Exception e) {
             LOG.error("getMicroAssets", e);
-            throw e;
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
 
     @GET
     @Path("ping")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response ping() throws Exception {
+    public Response ping() {
         try {
         return Response.ok("pong").build();
         } catch (Exception e) {
             LOG.error("ping", e);
-            throw e;
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
 
     @POST
     @Path("customcode")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response createCustomCode(CustomCode customCode) throws Exception {
+    public Response createCustomCode(CustomCode customCode) {
         try {
             CustomCode customCodes = customCodesService.create(customCode);
             return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("create customcode failed", e);
-            throw e;
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
 
     @GET
     @Path("listconstants")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response getAllConstants() throws Exception {
+    public Response getAllConstants() {
         try {
             List<String> constants = customCodesService.getAllConstants();
             return Response.ok(constants).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("getAllConstants failed", e);
-            throw e;
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -227,7 +238,7 @@ public class InternalRestResource {
             return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("getCodesForConstant failed", e);
-            throw e;
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -244,7 +255,7 @@ public class InternalRestResource {
 
         } catch (Exception e) {
             LOG.error("verify failed", e);
-            throw e;
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -261,7 +272,7 @@ public class InternalRestResource {
 
         } catch (Exception e) {
             LOG.error("getForDate failed", e);
-            throw e;
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -274,7 +285,7 @@ public class InternalRestResource {
             return Response.ok(customCodes).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("replace failed", e);
-            throw e;
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -292,7 +303,7 @@ public class InternalRestResource {
             return Response.ok(assetMTEnrichmentResponse).header("MDC", MDC.get("requestId")).build();
         }catch (Exception e){
             LOG.error("enrich failed", e);
-            throw e;
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -305,7 +316,7 @@ public class InternalRestResource {
             return Response.ok(createPollResultDto.isUnsentPoll()).build();
         } catch (Exception ex) {
             LOG.error("[ Error when creating poll {}] {}", createPoll, ex);
-            throw ex;
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();
         }
     }
 
@@ -318,7 +329,7 @@ public class InternalRestResource {
             return Response.ok(pollServiceBean.createPollForAsset(asset, PollType.AUTOMATIC_POLL, username, comment)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when creating poll for {}] {}", assetId, ex);
-            throw ex;
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();
         }
     }
 }
