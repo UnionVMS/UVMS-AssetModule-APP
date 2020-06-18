@@ -521,7 +521,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         AssetMTEnrichmentRequest request = createRequest(asset);
         AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
-        assertNotNull(response.getAssetId());
         assertNotNull(response.getMobileTerminalType());
         String assetUUID = response.getAssetUUID();
         assertEquals(asset.getId(), UUID.fromString(assetUUID));
@@ -560,7 +559,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         request.setTranspondertypeValue(mobileTerminal.getMobileTerminalType().toString());
 
         AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
-        assertNotNull(response.getAssetId());
         assertNotNull(response.getMobileTerminalType());
         String assetUUID = response.getAssetUUID();
         assertEquals(asset.getId(), UUID.fromString(assetUUID));
@@ -583,7 +581,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         AssetMTEnrichmentRequest request = createRequest(asset);
         AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
-        assertNotNull(response.getAssetId());
         String assetUUID = response.getAssetUUID();
         assertEquals(asset.getId(), UUID.fromString(assetUUID));
 
@@ -653,7 +650,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         
         AssetMTEnrichmentRequest request = createRequest(mobileTerminalNonExisting);
         AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
-        assertThat(response.getAssetId(), CoreMatchers.is(CoreMatchers.nullValue()));
         assertThat(response.getAssetName(), CoreMatchers.is(CoreMatchers.nullValue()));
     }
 
@@ -665,7 +661,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         AssetMTEnrichmentRequest request = createRequest(mobileTerminalUnlinked);
         AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
-        assertThat(response.getAssetId(), CoreMatchers.is(CoreMatchers.nullValue()));
         assertThat(response.getAssetName(), CoreMatchers.is(CoreMatchers.nullValue()));
     }
 
