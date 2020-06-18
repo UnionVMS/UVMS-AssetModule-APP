@@ -11,12 +11,12 @@ public class AssetMTEnrichmentResponse implements Serializable {
     private String channelGuid = null;
 
     private String assetName;
-    private Map<String,String > assetId = null;
     private List<String> assetFilterList = null;
     private String assetUUID = null;
     private String assetHistoryId = null;
     private String flagstate = null;
     private String vesselType = null;
+    private boolean longTermParked;
 
     private String externalMarking = null;
     private String gearType = null;
@@ -39,14 +39,6 @@ public class AssetMTEnrichmentResponse implements Serializable {
 
     public void setAssetName(String assetName) {
         this.assetName = assetName;
-    }
-
-    public Map<String, String> getAssetId() {
-        return assetId;
-    }
-
-    public void setAssetId(Map<String, String> assetId) {
-        this.assetId = assetId;
     }
 
     public List<String> getAssetFilterList() {
@@ -207,5 +199,13 @@ public class AssetMTEnrichmentResponse implements Serializable {
 
     public void setMobileTerminalIsInactive(Boolean mobileTerminalIsInactive) {
         this.mobileTerminalIsInactive = mobileTerminalIsInactive;
+    }
+
+    public boolean isLongTermParked() {
+        return longTermParked;
+    }
+
+    public void setLongTermParked(boolean longTermParked) {
+        this.longTermParked = longTermParked;
     }
 }

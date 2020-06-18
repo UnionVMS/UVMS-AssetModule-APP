@@ -47,7 +47,7 @@ public class AssetDto {
 
     private Instant updateTime;
 
-    private String source;      //if this is not set then frontend has a hissyfit about formating
+    private String source;
 
     private String vesselType;
 
@@ -138,6 +138,8 @@ public class AssetDto {
     private String comment;
 
     private Long nationalId;
+
+    private boolean longTermParked;
 
     public UUID getId() {
         return id;
@@ -593,5 +595,13 @@ public class AssetDto {
 
     public void setNationalId(Long nationalId) {
         this.nationalId = nationalId;
+    }
+
+    public boolean isLongTermParked() {
+        return longTermParked;
+    }
+
+    public void setLongTermParked(boolean longTermParked) {
+        this.longTermParked = longTermParked;
     }
 }

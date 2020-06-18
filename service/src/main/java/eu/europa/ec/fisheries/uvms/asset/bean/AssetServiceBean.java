@@ -228,6 +228,7 @@ public class AssetServiceBean {
 
             asset.setMmsi(asset.getMmsi() == null ? existingAsset.getMmsi() : asset.getMmsi());                     //to save values we already have and dont get from the external source
             asset.setComment(asset.getComment() == null ? existingAsset.getComment() : asset.getComment());
+            asset.setLongTermParked(existingAsset.getLongTermParked());
         }
         if (!AssetComparator.assetEquals(asset, existingAsset)) {
             asset = upsertAsset(asset, username);
@@ -433,8 +434,6 @@ public class AssetServiceBean {
     }
 
     private AssetMTEnrichmentResponse enrichementHelper(AssetMTEnrichmentResponse resp, Asset asset) {
-        Map<String, String> assetId = createAssetId(asset);
-        resp.setAssetId(assetId);
         resp.setAssetUUID(asset.getId() == null ? null : asset.getId().toString());
         resp.setAssetName(asset.getName());
         resp.setAssetHistoryId(asset.getHistoryId() == null ? null : asset.getHistoryId().toString());
@@ -446,6 +445,7 @@ public class AssetServiceBean {
         resp.setMmsi(asset.getMmsi());
         resp.setImo(asset.getImo());
         resp.setVesselType(asset.getVesselType());
+        resp.setLongTermParked(asset.getLongTermParked());
         return resp;
     }
 

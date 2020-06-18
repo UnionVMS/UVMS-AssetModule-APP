@@ -40,5 +40,6 @@
     <include file="v6.7.8/db-changelog-add-national-id.xml" relativeToChangelogFile="true"/>
     <include file="v6.7.9/db-changelog-port-of-registration-to-100.xml" relativeToChangelogFile="true"/>
     <include file="v6.7.10/db-changelog-add-fishinglicence.xml" relativeToChangelogFile="true"/>
+    <include file="v6.7.14/db-changelog-add-long-term-parked.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
