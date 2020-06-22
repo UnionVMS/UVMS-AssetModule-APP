@@ -47,6 +47,17 @@ public class GetAssetListEventBean {
             assetErrorEvent.fire(new AssetMessageEvent(jmsMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting assetlist [ " + e.getMessage())));
         }
     }
+    
+    public void getAssetListReporting(AssetMessageEvent message) {
+    	TextMessage jmsMessage = message.getMessage();
+    	try {
+    		ListAssetResponse response = service.getAssetListReporting(message.getQuery());
+    		messageProducer.sendModuleResponseMessageOv(jmsMessage, AssetModuleResponseMapper.mapAssetModuleResponse(response));
+    		LOG.info("Response sent back to requestor on queue [ {} ]", jmsMessage!= null ? jmsMessage.getJMSReplyTo() : "Null!!!");
+    	} catch (AssetException | JMSException e) {
+    		assetErrorEvent.fire(new AssetMessageEvent(jmsMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting assetlist [ " + e.getMessage())));
+    	}
+    }
 
     public void getAssetListBatch(AssetMessageEvent message) {
         TextMessage jmsMessage = message.getMessage();

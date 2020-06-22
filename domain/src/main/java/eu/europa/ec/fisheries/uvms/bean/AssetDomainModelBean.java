@@ -16,6 +16,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.InputArgumentException;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.GetAssetListResponseDto;
+import eu.europa.ec.fisheries.uvms.commons.service.interceptor.SimpleTracingInterceptor;
 import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.AssetGroupDao;
 import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
@@ -32,6 +33,8 @@ import org.slf4j.LoggerFactory;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
+
 import java.util.*;
 
 import static eu.europa.ec.fisheries.uvms.mapper.AssetGroupMapper.generateSearchFields;
@@ -139,8 +142,36 @@ public class AssetDomainModelBean {
             throw new AssetModelException(e.getMessage());
         }
     }
-
+    
     public List<Asset> getAssetListByAssetGroup(List<AssetGroup> groups) throws AssetModelException {
+    	if (groups == null || groups.isEmpty()) {
+    		throw new InputArgumentException("Cannot get asset list because criteria are null.");
+    	}
+    	
+    	List<AssetGroup> dbAssetGroups = assetGroupModel.getAssetGroupsByGroupList(groups);
+    	
+    	Set<AssetHistory> assetHistories = new HashSet<>();
+    	LOG.info("loop over {} asset groups", dbAssetGroups.size());
+    	for (AssetGroup group : dbAssetGroups) {
+    		List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFieldsFromGroupCriterias(group.getSearchFields());
+    		String sql = SearchFieldMapper.createSelectSearchSql(searchFields, group.isDynamic());
+    		List<AssetHistory> tmp = assetDao.getAssetListSearchNotPaginated(sql, searchFields);
+    		assetHistories.addAll(tmp);
+    	}
+    	LOG.info("retrieved number of assetHistories: {}", assetHistories.size());
+    	
+    	List<Asset> arrayList = new ArrayList<>();
+    	
+    	for (AssetHistory entity : assetHistories) {
+    		arrayList.add(EntityToModelMapper.toAssetFromAssetHistory(entity));
+    	}
+    	
+    	return arrayList;
+    	
+    }
+    
+    @Interceptors(SimpleTracingInterceptor.class)
+    public List<Asset> getAssetListByAssetGroupReporting(List<AssetGroup> groups) throws AssetModelException {
         if (groups == null || groups.isEmpty()) {
             throw new InputArgumentException("Cannot get asset list because criteria are null.");
         }
@@ -148,16 +179,19 @@ public class AssetDomainModelBean {
         List<AssetGroup> dbAssetGroups = assetGroupModel.getAssetGroupsByGroupList(groups);
 
         Set<AssetHistory> assetHistories = new HashSet<>();
+        LOG.info("loop over {} asset groups", dbAssetGroups.size());
         for (AssetGroup group : dbAssetGroups) {
             List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFieldsFromGroupCriterias(group.getSearchFields());
             String sql = SearchFieldMapper.createSelectSearchSql(searchFields, group.isDynamic());
             List<AssetHistory> tmp = assetDao.getAssetListSearchNotPaginated(sql, searchFields);
             assetHistories.addAll(tmp);
         }
+        LOG.info("retrieved number of assetHistories: {}", assetHistories.size());
+        
         List<Asset> arrayList = new ArrayList<>();
 
         for (AssetHistory entity : assetHistories) {
-            arrayList.add(EntityToModelMapper.toAssetFromAssetHistory(entity));
+            arrayList.add(EntityToModelMapper.toAssetFromAssetHistoryNoNotes(entity));
         }
 
         return arrayList;
@@ -217,6 +251,60 @@ public class AssetDomainModelBean {
 
         return response;
 
+    }
+    
+    public GetAssetListResponseDto getAssetListReporting(AssetListQuery query)
+    		throws AssetModelException {
+    	if (query == null) {
+    		throw new InputArgumentException("Cannot get asset list because query is null.");
+    	}
+    	
+    	if (query.getAssetSearchCriteria() == null
+    			|| query.getAssetSearchCriteria().isIsDynamic() == null
+    			|| query.getAssetSearchCriteria().getCriterias() == null) {
+    		throw new InputArgumentException(
+    				"Cannot get asset list because criteria are null.");
+    	}
+    	
+    	if (query.getPagination() == null) {
+    		throw new InputArgumentException(
+    				"Cannot get asset list because criteria pagination is null.");
+    	}
+    	
+    	GetAssetListResponseDto response = new GetAssetListResponseDto();
+    	List<Asset> arrayList = new ArrayList<>();
+    	
+    	int page = query.getPagination().getPage();
+    	int listSize = query.getPagination().getListSize();
+    	
+    	boolean isDynamic = query.getAssetSearchCriteria().isIsDynamic();
+    	
+    	List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query.getAssetSearchCriteria().getCriterias());
+    	String sql = SearchFieldMapper.createSelectSearchSql(searchFields, isDynamic);
+    	
+    	String countSql = SearchFieldMapper.createCountSearchSql(searchFields, isDynamic);
+    	Long numberOfAssets = assetDao.getAssetCount(countSql, searchFields);
+    	
+    	int numberOfPages = 0;
+    	if (listSize != 0) {
+    		numberOfPages = (int) (numberOfAssets / listSize);
+    		if (numberOfAssets % listSize != 0) {
+    			numberOfPages += 1;
+    		}
+    	}
+    	
+    	List<AssetHistory> assetEntityList = assetDao.getAssetListSearchPaginated(page, listSize, sql, searchFields);
+    	
+    	for (AssetHistory entity : assetEntityList) {
+    		arrayList.add(EntityToModelMapper.toAssetFromAssetHistoryNoNotes(entity));
+    	}
+    	
+    	response.setTotalNumberOfPages(numberOfPages);
+    	response.setCurrentPage(page);
+    	response.setAssetList(arrayList);
+    	
+    	return response;
+    	
     }
 
     public List<AssetHistory> getAssetListSearchPaginated(String guid, Date occurrenceDate, int page, int listSize) throws AssetException{

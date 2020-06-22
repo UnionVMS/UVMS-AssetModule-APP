@@ -121,6 +121,17 @@ public interface AssetService {
      * @throws AssetException
      */
     List<Asset> getAssetListByAssetGroups(List<AssetGroup> groups) throws AssetException;
+    
+    /**
+     *
+     * Returns a list of assets based on the searh criterias in the
+     * assetgroups for reporting
+     *
+     * @param groups
+     * @return
+     * @throws AssetException
+     */
+    List<Asset> getAssetListByAssetGroupsReporting(List<AssetGroup> groups) throws AssetException;
 
     AssetListGroupByFlagStateResponse getAssetListGroupByFlagState(List assetIds) throws AssetException;
 
@@ -137,6 +148,15 @@ public interface AssetService {
     void deleteAsset(AssetId assetId) throws AssetException;
 
     List<Asset> getAssetHistoryListByAssetId(AssetId assetId, Integer maxResults) throws AssetModelException;
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @param requestQuery
+	 * @return
+	 * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
+	 */
+	ListAssetResponse getAssetListReporting(AssetListQuery requestQuery) throws AssetException;
 
 
     /**

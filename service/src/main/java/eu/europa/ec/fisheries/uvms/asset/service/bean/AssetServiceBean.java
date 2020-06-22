@@ -119,6 +119,24 @@ public class AssetServiceBean implements AssetService {
         listAssetResponse.getAsset().addAll(assetList.getAssetList());
         return listAssetResponse;
     }
+    
+    /**
+     * {@inheritDoc}
+     *
+     * @param requestQuery
+     * @return
+     * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
+     */
+    @Override
+    public ListAssetResponse getAssetListReporting(AssetListQuery requestQuery) throws AssetException {
+    	LOG.debug("Getting AssetList.");
+    	GetAssetListResponseDto assetList = assetDomainModel.getAssetListReporting(requestQuery);
+    	ListAssetResponse listAssetResponse = new ListAssetResponse();
+    	listAssetResponse.setCurrentPage(assetList.getCurrentPage());
+    	listAssetResponse.setTotalNumberOfPages(assetList.getTotalNumberOfPages());
+    	listAssetResponse.getAsset().addAll(assetList.getAssetList());
+    	return listAssetResponse;
+    }
 
     /**
      * {@inheritDoc}
@@ -301,6 +319,22 @@ public class AssetServiceBean implements AssetService {
         }
 
         return assetDomainModel.getAssetListByAssetGroup(groups);
+    }
+    
+    /**
+     *
+     * @param groups
+     * @return
+     * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
+     */
+    @Override
+    public List<Asset> getAssetListByAssetGroupsReporting(List<AssetGroup> groups) throws AssetException {
+    	LOG.debug("Getting asset by ID.");
+    	if (groups == null || groups.isEmpty()) {
+    		throw new InputArgumentException("No groups in query");
+    	}
+    	
+    	return assetDomainModel.getAssetListByAssetGroupReporting(groups);
     }
 
     @Override

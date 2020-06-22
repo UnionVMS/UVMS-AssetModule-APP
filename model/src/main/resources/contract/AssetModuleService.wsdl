@@ -18,9 +18,11 @@
                 <xsd:restriction base="xsd:string">
                     <xsd:enumeration value="GET_ASSET"/>
                     <xsd:enumeration value="ASSET_LIST"/>
+                    <xsd:enumeration value="ASSET_LIST_RPT"/>
                     <xsd:enumeration value="BATCH_ASSET_LIST"/>
                     <xsd:enumeration value="ASSET_GROUP"/>
                     <xsd:enumeration value="ASSET_LIST_BY_GROUP"/>
+                    <xsd:enumeration value="ASSET_LIST_BY_GROUP_RPT"/>
                     <xsd:enumeration value="PING"/>
                     <xsd:enumeration value="ASSET_GROUP_LIST_BY_ASSET_GUID"/>
                     <xsd:enumeration value="ASSET_LIST_GROUP_BY_FLAGSTATE"/>

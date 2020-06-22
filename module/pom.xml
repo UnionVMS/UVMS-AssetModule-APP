@@ -12,8 +12,7 @@
     </parent>
 
     <properties>
-        <wildfly.maven.plugin.version>1.0.2.Final</wildfly.maven.plugin.version>
-        <maven.ear.plugin.version>2.7</maven.ear.plugin.version>
+        <wildfly.maven.plugin.version>2.1.0.Beta1</wildfly.maven.plugin.version>
     </properties>
 
     <build>
@@ -120,6 +119,27 @@
                         <groupId>org.wildfly.plugins</groupId>
                         <artifactId>wildfly-maven-plugin</artifactId>
                         <version>${wildfly.maven.plugin.version}</version>
+						<executions>
+							<!-- Undeploy the application on clean 
+							<execution>
+								<id>undeploy</id>
+								<phase>clean</phase>
+								<goals>
+									<goal>undeploy</goal>
+								</goals>
+								<configuration>
+									<ignoreMissingDeployment>true</ignoreMissingDeployment>
+								</configuration>
+							</execution>
+							-->
+							<execution>
+								<id>deploy</id>
+								<phase>install</phase>
+								<goals>
+									<goal>deploy</goal>
+								</goals>
+							</execution>
+						</executions>
                         <configuration>
                             <filename>${project.build.finalName}.${project.packaging}</filename>
                             <targetDir>${project.build.directory}</targetDir>

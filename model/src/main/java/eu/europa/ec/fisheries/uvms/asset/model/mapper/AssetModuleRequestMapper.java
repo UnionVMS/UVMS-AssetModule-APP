@@ -76,6 +76,13 @@ public class AssetModuleRequestMapper {
         request.setQuery(query);
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
+    
+    public static String createAssetListModuleRequestReporting(AssetListQuery query) throws AssetModelMapperException {
+    	AssetListModuleRequest request = new AssetListModuleRequest();
+    	request.setMethod(AssetModuleMethod.ASSET_LIST_RPT);
+    	request.setQuery(query);
+    	return JAXBMarshaller.marshallJaxBObjectToString(request);
+    }
 
     public static String createBatchAssetListModuleRequest(List<AssetListQuery> query) throws AssetModelMapperException {
         BatchAssetListModuleRequest request = new BatchAssetListModuleRequest();
@@ -98,6 +105,21 @@ public class AssetModuleRequestMapper {
         request.setMethod(AssetModuleMethod.ASSET_LIST_BY_GROUP);
         request.getGroups().addAll(assetGroups);
         return JAXBMarshaller.marshallJaxBObjectToString(request);
+    }
+    /**
+     * 
+     * Creates a request to the module with a list of assetgroups that is used
+     * to query for a asset list based on the search criteria specifically for reporting
+     *
+     * @param assetGroups
+     * @return
+     * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException
+     */
+    public static String createAssetListModuleRequestReporting(List<AssetGroup> assetGroups) throws AssetModelMapperException {
+    	GetAssetListByAssetGroupsRequest request = new GetAssetListByAssetGroupsRequest();
+    	request.setMethod(AssetModuleMethod.ASSET_LIST_BY_GROUP_RPT);
+    	request.getGroups().addAll(assetGroups);
+    	return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
 
     /**

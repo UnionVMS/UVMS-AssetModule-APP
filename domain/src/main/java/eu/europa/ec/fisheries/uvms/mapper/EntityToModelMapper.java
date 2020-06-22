@@ -114,8 +114,129 @@ public class EntityToModelMapper {
 
         return asset;
     }
-
+    private static Asset toAssetFromAssetEntityNoNotes(Asset asset, AssetEntity entity) {
+    	
+    	if (asset == null) {
+    		asset = new Asset();
+    	}
+    	
+    	AssetId assetId = new AssetId();
+    	assetId.setValue(entity.getGuid());
+    	assetId.setType(AssetIdType.GUID);
+    	assetId.setGuid(entity.getGuid());
+    	asset.setAssetId(assetId);
+    	
+    	asset.setActive(entity.getCarrier().getActive());
+    	
+    	switch (entity.getCarrier().getSource()) {
+    	case NATIONAL:
+    		asset.setSource(CarrierSource.NATIONAL);
+    		break;
+    	case XEU:
+    		asset.setSource(CarrierSource.XEU);
+    		break;
+    	case THIRD_COUNTRY:
+    		asset.setSource(CarrierSource.THIRD_COUNTRY);
+    		break;
+    	case INTERNAL:
+    	default:
+    		asset.setSource(CarrierSource.INTERNAL);
+    		break;
+    	}
+    	
+    	asset.setCfr(entity.getCFR());
+    	asset.setMmsiNo(entity.getMMSI());
+    	asset.setHasIrcs(entity.getIrcsIndicator());
+    	asset.setImo(entity.getIMO());
+    	asset.setIrcs(entity.getIRCS());
+    	asset.setIccat(entity.getIccat());
+    	asset.setUvi(entity.getUvi());
+    	asset.setGfcm(entity.getGfcm());
+    	    	
+    	return asset;
+    }
+    
+    
+    
     private static void toAssetFromAssetHistory(Asset asset, AssetHistory historyEntity) {
+    	
+    	if (historyEntity != null) {
+    		AssetHistoryId assetHistoryId = new AssetHistoryId();
+    		
+    		EventCode eventCode = EventCodeEnum.getModel(historyEntity.getEventCode());
+    		assetHistoryId.setEventCode(eventCode);
+    		assetHistoryId.setEventDate(historyEntity.getDateOfEvent());
+    		
+    		
+    		if (historyEntity.getGuid() != null) {
+    			assetHistoryId.setEventId(historyEntity.getGuid());
+    		}
+    		
+    		asset.setEventHistory(assetHistoryId);
+    		
+    		asset.setCountryCode(historyEntity.getCountryOfRegistration());
+    		asset.setExternalMarking(historyEntity.getExternalMarking());
+    		asset.setHasLicense(historyEntity.getHasLicence());
+    		asset.setName(historyEntity.getName());
+    		asset.setHomePort(historyEntity.getPortOfRegistration());
+    		asset.setGrossTonnage(historyEntity.getGrossTonnage());
+    		asset.setGrossTonnageUnit(historyEntity.getGrossTonnageUnit().name());
+    		asset.setLengthBetweenPerpendiculars(historyEntity.getLengthBetweenPerpendiculars());
+    		asset.setLengthOverAll(historyEntity.getLengthOverAll());
+    		asset.setOtherGrossTonnage(historyEntity.getOtherTonnage());
+    		asset.setPowerAux(historyEntity.getPowerOfAuxEngine());
+    		asset.setPowerMain(historyEntity.getPowerOfMainEngine());
+    		asset.setSafetyGrossTonnage(historyEntity.getSafteyGrossTonnage());
+    		asset.setIrcs(historyEntity.getIrcs());
+    		asset.setCfr(historyEntity.getCfr());
+    		asset.setMmsiNo(historyEntity.getMmsi());
+    		asset.setImo(historyEntity.getImo());
+    		asset.setIccat(historyEntity.getIccat());
+    		asset.setUvi(historyEntity.getUvi());
+    		asset.setGfcm(historyEntity.getGfcm());
+    		
+    		
+    		if (historyEntity.getContactInfo() == null) {
+    			historyEntity.setContactInfo(new ArrayList<ContactInfo>());
+    		}
+    		for (ContactInfo contactInfo : historyEntity.getContactInfo()) {
+    			AssetContact contact = new AssetContact();
+    			
+    			contact.setName(contactInfo.getName());
+    			contact.setNumber(contactInfo.getPhoneNumber());
+    			contact.setEmail(contactInfo.getEmail());
+    			contact.setOwner(contactInfo.getOwner());
+    			
+    			if (contactInfo.getSource() != null) {
+    				contact.setSource(ContactSource.valueOf(contactInfo.getSource().toString()));
+    			} else {
+    				contact.setSource(ContactSource.NATIONAL);
+    			}
+    			asset.getContact().add(contact);
+    		}
+    		
+    		asset.setLicenseType(historyEntity.getLicenceType());
+    		if (historyEntity.getType() != null) {
+    			asset.setGearType(historyEntity.getType().name());
+    		}
+    		
+    		if(historyEntity.getAssetProdOrg() != null) {
+    			AssetProdOrgModel assetProdOrgModel = new AssetProdOrgModel();
+    			assetProdOrgModel.setId(historyEntity.getAssetProdOrg().getId());
+    			assetProdOrgModel.setCode(historyEntity.getAssetProdOrg().getCode());
+    			assetProdOrgModel.setName(historyEntity.getAssetProdOrg().getName());
+    			assetProdOrgModel.setAddress(historyEntity.getAssetProdOrg().getAddress());
+    			assetProdOrgModel.setCity(historyEntity.getAssetProdOrg().getCity());
+    			assetProdOrgModel.setZipcode(historyEntity.getAssetProdOrg().getZipCode());
+    			assetProdOrgModel.setPhone(historyEntity.getAssetProdOrg().getPhone());
+    			assetProdOrgModel.setMobile(historyEntity.getAssetProdOrg().getMobile());
+    			assetProdOrgModel.setFax(historyEntity.getAssetProdOrg().getFax());
+    			asset.setProducer(assetProdOrgModel);
+    		}
+    	}
+    }
+
+    private static void toAssetFromAssetHistoryNoContact(Asset asset, AssetHistory historyEntity) {
 
         if (historyEntity != null) {
             AssetHistoryId assetHistoryId = new AssetHistoryId();
@@ -152,25 +273,6 @@ public class EntityToModelMapper {
             asset.setUvi(historyEntity.getUvi());
             asset.setGfcm(historyEntity.getGfcm());
 
-
-            if (historyEntity.getContactInfo() == null) {
-                historyEntity.setContactInfo(new ArrayList<ContactInfo>());
-            }
-            for (ContactInfo contactInfo : historyEntity.getContactInfo()) {
-                AssetContact contact = new AssetContact();
-
-                contact.setName(contactInfo.getName());
-                contact.setNumber(contactInfo.getPhoneNumber());
-                contact.setEmail(contactInfo.getEmail());
-                contact.setOwner(contactInfo.getOwner());
-
-                if (contactInfo.getSource() != null) {
-                    contact.setSource(ContactSource.valueOf(contactInfo.getSource().toString()));
-                } else {
-                    contact.setSource(ContactSource.NATIONAL);
-                }
-                asset.getContact().add(contact);
-            }
 
             asset.setLicenseType(historyEntity.getLicenceType());
             if (historyEntity.getType() != null) {
@@ -255,6 +357,11 @@ public class EntityToModelMapper {
         Asset asset = toAssetFromAssetAndEntity(null, assetHistory.getAsset());
         toAssetFromAssetHistory(asset, assetHistory);
         return asset;
+    }
+    public static Asset toAssetFromAssetHistoryNoNotes(AssetHistory assetHistory) {
+    	Asset asset = toAssetFromAssetEntityNoNotes(null, assetHistory.getAsset());
+    	toAssetFromAssetHistoryNoContact(asset, assetHistory);
+    	return asset;
     }
 
     public static List<Asset> toAssetFromAssetHistory(List<AssetHistory> assetHistory) {

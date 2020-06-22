@@ -136,6 +136,12 @@ public class AssetsMessageConsumerBean implements MessageListener {
                     AssetMessageEvent listEvent = new AssetMessageEvent(textMessage, listRequest.getQuery());
                     getAssetListEventBean.getAssetList(listEvent);
                     break;
+                // for reporting
+                case ASSET_LIST_RPT:
+                	AssetListModuleRequest listRequestRpt = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetListModuleRequest.class);
+                	AssetMessageEvent listEventRpt = new AssetMessageEvent(textMessage, listRequestRpt.getQuery());
+                	getAssetListEventBean.getAssetListReporting(listEventRpt);
+                	break;
                 case BATCH_ASSET_LIST:
                     BatchAssetListModuleRequest batchListRequest = (BatchAssetListModuleRequest) request;
                     AssetMessageEvent batchListEvent = new AssetMessageEvent(textMessage, batchListRequest.getQueryList());
@@ -156,6 +162,12 @@ public class AssetsMessageConsumerBean implements MessageListener {
                     AssetMessageEvent assetListByGroupListEvent = new AssetMessageEvent(textMessage, assetListByGroupListRequest);
                     getAssetListByAssetGroupEventBean.getAssetListByAssetGroups(assetListByGroupListEvent);
                     break;
+                // for reporting
+                case ASSET_LIST_BY_GROUP_RPT:
+                	GetAssetListByAssetGroupsRequest assetListByGroupRptListRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, GetAssetListByAssetGroupsRequest.class);
+                	AssetMessageEvent assetListByGroupRptListEvent = new AssetMessageEvent(textMessage, assetListByGroupRptListRequest);
+                	getAssetListByAssetGroupEventBean.getAssetListByAssetGroupsRpt(assetListByGroupRptListEvent);
+                	break;
                 case PING:
                     pingEventBean.ping(new AssetMessageEvent(textMessage));
                     break;
