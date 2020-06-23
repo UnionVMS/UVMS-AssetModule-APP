@@ -320,17 +320,17 @@ public class EntityToModelMapper {
         return codes;
     }
 
-    public static AssetIdsForGroupGuidResponseElement toAssetIdsForGroupGuidResponseElement(List<AssetHistory> assetHistoryList,String connectId) {
+    public static AssetIdsForGroupGuidResponseElement toAssetIdsForGroupGuidResponseElement(List<AssetHistory> assetHistoryList) {
         AssetIdsForGroupGuidResponseElement assetIdsForGroupGuidResponseElement = new AssetIdsForGroupGuidResponseElement();
         assetIdsForGroupGuidResponseElement.getVesselIdentifiers();
-        assetHistoryList.stream().map(ah -> toVesselIdentifier(ah , connectId)).forEach(assetIdsForGroupGuidResponseElement.getVesselIdentifiers()::add);
+        assetHistoryList.stream().map(EntityToModelMapper::toVesselIdentifier).forEach(assetIdsForGroupGuidResponseElement.getVesselIdentifiers()::add);
         return assetIdsForGroupGuidResponseElement;
     }
 
-    private static VesselIdentifiersWithConnectIdHolder toVesselIdentifier(AssetHistory assetHistory,String connectId) {
+    private static VesselIdentifiersWithConnectIdHolder toVesselIdentifier(AssetHistory assetHistory) {
 
         VesselIdentifiersWithConnectIdHolder vesselIdentifier = new VesselIdentifiersWithConnectIdHolder();
-        vesselIdentifier.setConnectId(connectId);
+        vesselIdentifier.setConnectId(assetHistory.getGuid());
         vesselIdentifier.setExtMark(assetHistory.getExternalMarking());
         vesselIdentifier.setCfr(assetHistory.getCfr());
         vesselIdentifier.setIccat(assetHistory.getIccat());

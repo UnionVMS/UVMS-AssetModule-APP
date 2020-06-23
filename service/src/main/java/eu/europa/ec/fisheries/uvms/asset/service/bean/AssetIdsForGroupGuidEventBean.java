@@ -21,6 +21,8 @@ import static eu.europa.ec.fisheries.uvms.mapper.EntityToModelMapper.toAssetIdsF
 
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetIdsForGroupRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetIdsForGroupResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdsForGroupGuidQueryElement;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdsForGroupGuidResponseElement;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListPagination;
@@ -55,19 +57,24 @@ public class AssetIdsForGroupGuidEventBean {
     public void findAndSendAssetIdsForGroupGuid(AssetMessageEvent assetMessageEvent) {
 
         try {
-            AssetIdsForGroupGuidQueryElement queryElement = assetMessageEvent.getAssetIdsForGroupGuidQueryElement();
+            AssetIdsForGroupRequest requestElement = assetMessageEvent.getAssetIdsForGroupRequest();
             TextMessage message = assetMessageEvent.getMessage();
 
-            if (queryElement == null || StringUtils.isEmpty(queryElement.getAssetGuid())) {
+            if (requestElement == null || requestElement.getAssetIdsForGroupGuidQueryElement() == null
+                    || StringUtils.isEmpty(requestElement.getAssetIdsForGroupGuidQueryElement().getAssetGuid())) {
                 assetErrorEvent.fire(new AssetMessageEvent(message, createFaultMessage(FaultCode.ASSET_MESSAGE, "Error fetching asset ids [ queryElement or assetGuid is null ]")));
                 return;
             }
 
+            AssetIdsForGroupGuidQueryElement queryElement = requestElement.getAssetIdsForGroupGuidQueryElement();
+
             AssetListPagination pagination = queryElement.getPagination();
             AssetIdsForGroupGuidResponseElement responseElement = toAssetIdsForGroupGuidResponseElement(
-                    service.findAssetHistoriesByGuidAndOccurrenceDate(queryElement.getAssetGuid(),queryElement.getOccurrenceDate(),pagination.getPage(),pagination.getListSize()),
-                    queryElement.getAssetGuid());
-            messageProducer.sendModuleResponseMessageOv(message, JAXBMarshaller.marshallJaxBObjectToString(responseElement));
+                    service.findAssetHistoriesByGuidAndOccurrenceDate(queryElement.getAssetGuid(),queryElement.getOccurrenceDate(),pagination.getPage(),pagination.getListSize()));
+            AssetIdsForGroupResponse wrapperResponse = new AssetIdsForGroupResponse();
+            wrapperResponse.setAssetIdsForGroupGuidResponseElement(responseElement);
+            LOG.info(JAXBMarshaller.marshallJaxBObjectToString(wrapperResponse));
+            messageProducer.sendModuleResponseMessageOv(message, JAXBMarshaller.marshallJaxBObjectToString(wrapperResponse));
             LOG.info("Response sent back to requestor on queue [ {} ]", message!= null ? message.getJMSReplyTo() : "Null!!!");
         } catch (AssetException  | JMSException e) {
             LOG.error("[ Error when getting assetGroupList from source. ] ");

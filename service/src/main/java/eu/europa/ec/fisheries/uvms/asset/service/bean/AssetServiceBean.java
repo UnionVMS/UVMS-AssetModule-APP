@@ -43,9 +43,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static eu.europa.ec.fisheries.uvms.mapper.AssetGroupMapper.generateSearchFields;
-import static eu.europa.ec.fisheries.uvms.mapper.SearchFieldMapper.createSearchFieldsFromGroupCriterias;
-
 @Stateless
 public class AssetServiceBean implements AssetService {
 

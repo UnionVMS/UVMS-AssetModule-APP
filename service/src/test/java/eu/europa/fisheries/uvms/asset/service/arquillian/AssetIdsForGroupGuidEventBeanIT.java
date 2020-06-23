@@ -28,6 +28,7 @@ import eu.europa.ec.fisheries.uvms.entity.model.Carrier;
 import eu.europa.ec.fisheries.uvms.entity.model.ContactInfo;
 import eu.europa.ec.fisheries.uvms.entity.model.Notes;
 import eu.europa.ec.fisheries.uvms.entity.model.NotesActivityCode;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetIdsForGroupRequest;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdsForGroupGuidQueryElement;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListPagination;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
@@ -107,17 +108,52 @@ public class AssetIdsForGroupGuidEventBeanIT extends TransactionalTests {
         AssetIdsForGroupGuidQueryElement assetIdsForGroupGuidQueryElement = new AssetIdsForGroupGuidQueryElement();
         assetIdsForGroupGuidQueryElement.setAssetGuid(gStaticGroupA.getGuid());
         assetIdsForGroupGuidQueryElement.setOccurrenceDate(tomorrow);
-
+        AssetIdsForGroupRequest request = new AssetIdsForGroupRequest();
+        request.setAssetIdsForGroupGuidQueryElement(assetIdsForGroupGuidQueryElement);
         AssetListPagination assetListPagination = new AssetListPagination();
         assetListPagination.setListSize(15);
         assetListPagination.setPage(1);
         assetIdsForGroupGuidQueryElement.setPagination(assetListPagination);
 
-        assetIdsForGroupGuidEventBean.findAndSendAssetIdsForGroupGuid(new AssetMessageEvent(null,assetIdsForGroupGuidQueryElement));
-
+        assetIdsForGroupGuidEventBean.findAndSendAssetIdsForGroupGuid(new AssetMessageEvent(null,request));
         Assert.assertFalse(interceptorForTests.isFailed());
-        String message = interceptorForTests.getSuccessfulTestEvent().getMessage();
-        Assert.assertTrue(message,message.contains(gStaticGroupA.getGuid()));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void testFindAndSendAssetIdsForGroupGuidWithInvalidPage() throws AssetException {
+
+
+        AssetHistory ah1 = makeLongAsset( "GRC", DERMERSAL) ;
+        AssetHistory ah2 = makeShortAsset("GRC", DERMERSAL);
+
+        AssetEntity assetEntity = makeAsset();
+        List<AssetHistory> assetHistoryList = new ArrayList<>();
+        assetHistoryList.add(ah1);
+        assetHistoryList.add(ah2);
+        assetEntity.setHistories(assetHistoryList);
+        ah1.setAsset(assetEntity);
+        ah2.setAsset(assetEntity);
+
+        assetEntity = assetDao.createAsset(assetEntity);
+        Assert.assertNotNull(assetEntity);
+
+        eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroup gStaticGroupA = makeAssetGroup(false, "StaticGroupA");
+        addField(gStaticGroupA, "GUID", assetEntity.getGuid());
+        assetGroupDao.createAssetGroup(gStaticGroupA);
+
+        AssetIdsForGroupGuidQueryElement assetIdsForGroupGuidQueryElement = new AssetIdsForGroupGuidQueryElement();
+        assetIdsForGroupGuidQueryElement.setAssetGuid(gStaticGroupA.getGuid());
+        assetIdsForGroupGuidQueryElement.setOccurrenceDate(tomorrow);
+        AssetIdsForGroupRequest request = new AssetIdsForGroupRequest();
+        request.setAssetIdsForGroupGuidQueryElement(assetIdsForGroupGuidQueryElement);
+        AssetListPagination assetListPagination = new AssetListPagination();
+        assetListPagination.setListSize(15);
+        assetListPagination.setPage(0);
+        assetIdsForGroupGuidQueryElement.setPagination(assetListPagination);
+
+        assetIdsForGroupGuidEventBean.findAndSendAssetIdsForGroupGuid(new AssetMessageEvent(null,request));
+        Assert.assertTrue(interceptorForTests.isFailed());
     }
 
     private eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroup makeAssetGroup(boolean isDynamic, String name) {

@@ -404,12 +404,10 @@
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:element name="AssetIdsForGroupGuidResponseElement">
-        <xsd:complexType>
-            <xsd:sequence>
-                <xsd:element name="vesselIdentifiers" type="VesselIdentifiersWithConnectIdHolder" minOccurs="0" maxOccurs="unbounded"/>
-            </xsd:sequence>
-        </xsd:complexType>
-    </xsd:element>
+    <xsd:complexType name="AssetIdsForGroupGuidResponseElement">
+        <xsd:sequence>
+            <xsd:element name="vesselIdentifiers" type="VesselIdentifiersWithConnectIdHolder" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
 
 </xsd:schema>
