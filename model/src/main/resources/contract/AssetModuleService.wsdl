@@ -93,8 +93,25 @@
                 </xsd:complexType>
             </xsd:element>
 
+            <xsd:element name="AssetIdsForGroupRequest">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest">
+                            <xsd:sequence>
+                                <xsd:element name="AssetIdsForGroupGuidQueryElement" type="tv:AssetIdsForGroupGuidQueryElement" />
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
 
-
+            <xsd:element name="AssetIdsForGroupResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="AssetIdsForGroupGuidResponseElement" type="tv:AssetIdsForGroupGuidResponseElement" />
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
 
             <xsd:element name="AssetGroupListByUserRequest">
                 <xsd:complexType>

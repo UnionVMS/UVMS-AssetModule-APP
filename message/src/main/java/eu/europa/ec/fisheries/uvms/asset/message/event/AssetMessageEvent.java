@@ -13,6 +13,7 @@ package eu.europa.ec.fisheries.uvms.asset.message.event;
 
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupsForAssetRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetIdsForGroupRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetFromAssetIdAndDateRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetFlagStateByGuidAndDateRequest;
@@ -41,7 +42,7 @@ public class AssetMessageEvent {
     private GetFlagStateByGuidAndDateRequest getFlagStateByGuidAndDateRequest;
     private GetAssetFromAssetIdAndDateRequest getAssetFromAssetIdAndDateRequest;
     private AssetGroupsForAssetRequest assetGroupsForAssetRequest;
-    private AssetIdsForGroupGuidQueryElement assetIdsForGroupGuidQueryElement;
+    private AssetIdsForGroupRequest assetIdsForGroupRequest;
 
     public AssetMessageEvent(TextMessage message) {
         this.message = message;
@@ -113,9 +114,9 @@ public class AssetMessageEvent {
         this.getAssetFromAssetIdAndDateRequest = getAssetFromAssetIdAndDateRequest;
     }
 
-    public AssetMessageEvent(TextMessage message,AssetIdsForGroupGuidQueryElement assetIdsForGroupGuidQueryElement) {
+    public AssetMessageEvent(TextMessage message, AssetIdsForGroupRequest assetIdsForGroupRequest) {
         this.message = message;
-        this.assetIdsForGroupGuidQueryElement = assetIdsForGroupGuidQueryElement;
+        this.assetIdsForGroupRequest = assetIdsForGroupRequest;
     }
 
     public void setMessage(TextMessage message) {
@@ -227,14 +228,15 @@ public class AssetMessageEvent {
         this.getAssetFromAssetIdAndDateRequest = getAssetFromAssetIdAndDateRequest;
     }
 
-    public AssetIdsForGroupGuidQueryElement getAssetIdsForGroupGuidQueryElement() {
-        return assetIdsForGroupGuidQueryElement;
-    }
-    public void setAssetIdsForGroupGuidQueryElement(AssetIdsForGroupGuidQueryElement assetIdsForGroupGuidQueryElement){
-        this.assetIdsForGroupGuidQueryElement = assetIdsForGroupGuidQueryElement;
-    }
-
     public List<AssetListQuery> getBatchQuery() {
         return batchQuery;
+    }
+
+    public AssetIdsForGroupRequest getAssetIdsForGroupRequest() {
+        return assetIdsForGroupRequest;
+    }
+
+    public void setAssetIdsForGroupRequest(AssetIdsForGroupRequest assetIdsForGroupRequest) {
+        this.assetIdsForGroupRequest = assetIdsForGroupRequest;
     }
 }

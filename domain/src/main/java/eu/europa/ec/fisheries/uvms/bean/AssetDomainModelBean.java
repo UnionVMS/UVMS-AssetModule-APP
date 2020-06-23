@@ -220,6 +220,9 @@ public class AssetDomainModelBean {
     }
 
     public List<AssetHistory> getAssetListSearchPaginated(String guid, Date occurrenceDate, int page, int listSize) throws AssetException{
+        if (page < 1) {
+            throw new InputArgumentException("Cannot get asset history list, page must be greater than 0.");
+        }
         eu.europa.ec.fisheries.uvms.entity.assetgroup.AssetGroup group = assetGroupDaoBean.getAssetGroupByGuid(guid);
         List<eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField> assetGroupSearchFields = generateSearchFields(group);
         List<SearchKeyValue> searchKeyValues = createSearchFieldsFromGroupCriterias(assetGroupSearchFields );

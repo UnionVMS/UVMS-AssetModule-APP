@@ -43,6 +43,7 @@ import eu.europa.ec.fisheries.uvms.asset.service.bean.UpsertAssetMessageEventBea
 import eu.europa.ec.fisheries.uvms.asset.service.bean.UpsertFishingGearsMessageEventBean;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupsForAssetRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetIdsForGroupRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetListModuleRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetModuleMethod;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetModuleRequest;
@@ -191,7 +192,7 @@ public class AssetsMessageConsumerBean implements MessageListener {
                     assetGroupsForAssetEventBean.getAssetGroupsFromAssets(assetGroupsForAssetEvent);
                     break;
                 case ASSET_IDS_FOR_GROUP_GUID:
-                    AssetIdsForGroupGuidQueryElement queryElement = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetIdsForGroupGuidQueryElement.class);
+                    AssetIdsForGroupRequest queryElement = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetIdsForGroupRequest.class);
                     assetIdsForGroupGuidEventBean.findAndSendAssetIdsForGroupGuid(new AssetMessageEvent(textMessage,queryElement));
                     break;
                 default:
