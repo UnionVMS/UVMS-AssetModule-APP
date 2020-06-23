@@ -195,6 +195,7 @@ public class AssetTestsHelper {
         FishingLicence licence = new FishingLicence();
         licence.setLicenceNumber(rnd.nextLong());
         licence.setCivicNumber(getRandomIntegers(10));
+        licence.setName(getRandomIntegers(20));
         licence.setDecisionDate(Instant.now().minus(1,ChronoUnit.DAYS));
         licence.setFromDate(Instant.now().minus(1,ChronoUnit.DAYS));
         licence.setToDate(Instant.now().plus(1,ChronoUnit.DAYS));
