@@ -134,6 +134,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         FishingLicence createdFishingLicence = assetService.getFishingLicenceByAssetId(createdAssetBo.getAsset().getId());
 
         assertThat(createdFishingLicence.getLicenceNumber(), is(licence.getLicenceNumber()));
+        assertThat(createdFishingLicence.getName(), is(licence.getName()));
     }
 
     @Test

@@ -39,6 +39,9 @@ public class FishingLicence {
     @Column(name = "licence_number")
     private Long licenceNumber;
     
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "civic_number")
     private String civicNumber;
 
@@ -92,6 +95,14 @@ public class FishingLicence {
 
     public void setCivicNumber(String civicNumber) {
         this.civicNumber = civicNumber;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Instant getFromDate() {

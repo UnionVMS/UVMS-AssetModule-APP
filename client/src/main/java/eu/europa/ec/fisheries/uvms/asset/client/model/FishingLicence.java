@@ -20,6 +20,7 @@ public class FishingLicence {
     private UUID assetId;
     private Long licenceNumber;
     private String civicNumber;
+    private String name;
     private Instant fromDate;
     private Instant toDate;
     private Instant decisionDate;
@@ -49,6 +50,12 @@ public class FishingLicence {
     }
     public void setCivicNumber(String civicNumber) {
         this.civicNumber = civicNumber;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
     }
     public Instant getFromDate() {
         return fromDate;

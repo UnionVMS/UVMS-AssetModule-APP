@@ -772,6 +772,7 @@ public class AssetServiceBean {
         existingLicence.setAssetId(assetId);
         existingLicence.setLicenceNumber(fishingLicence.getLicenceNumber());
         existingLicence.setCivicNumber(fishingLicence.getCivicNumber());
+        existingLicence.setName(fishingLicence.getName());
         existingLicence.setFromDate(fishingLicence.getFromDate());
         existingLicence.setToDate(fishingLicence.getToDate());
         existingLicence.setDecisionDate(fishingLicence.getDecisionDate());
