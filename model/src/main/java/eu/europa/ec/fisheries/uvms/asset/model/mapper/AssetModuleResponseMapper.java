@@ -233,4 +233,8 @@ public class AssetModuleResponseMapper {
         return identifiersHolder;
     }
 
+    public static String unmarshalFindAssetHistGuidByAssetGuidAndOccurrenceDateResponse(TextMessage message) throws AssetModelMarshallException {
+        FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse response = JAXBMarshaller.unmarshallTextMessage(message, FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse.class);
+        return response.getAssetHistGuid();
+    }
 }
