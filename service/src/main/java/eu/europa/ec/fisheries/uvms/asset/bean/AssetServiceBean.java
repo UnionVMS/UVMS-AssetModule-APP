@@ -470,17 +470,6 @@ public class AssetServiceBean {
                 resp.setMemberNumber(String.valueOf(channel.getMemberNumber()));
             }
         }
-
-        if (mobTerm.getId() != null) {
-            try {
-                MobileTerminal mobileTerminal = mobileTerminalService.getMobileTerminalEntityById(mobTerm.getId());
-                if (mobileTerminal != null) {
-                    resp.setSerialNumber(mobileTerminal.getSerialNo());
-                }
-            } catch (IllegalArgumentException illegalSoWeSkipTryingToFetchIt) {
-                // DON'T CARE
-            }
-        }
         return resp;
     }
 

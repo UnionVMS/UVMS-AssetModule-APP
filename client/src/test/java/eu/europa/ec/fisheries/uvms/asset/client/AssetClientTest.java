@@ -376,6 +376,30 @@ public class AssetClientTest extends AbstractClientTest {
         assertEquals("987654321", response.getMmsi());
     }
 
+    @Test
+    @OperateOnDeployment("normal")
+    public void collectAssetMtTest(){
+        AssetBO assetBo = new AssetBO();
+        assetBo.setAsset(AssetHelper.createBasicAsset());
+        assetBo.getAsset().setLongTermParked(true);
+
+        AssetBO upsertAssetBo = assetClient.upsertAsset(assetBo);
+
+        AssetMTEnrichmentRequest request = new AssetMTEnrichmentRequest();
+        request.setMmsiValue(upsertAssetBo.getAsset().getMmsi());
+        request.setAssetName(upsertAssetBo.getAsset().getName());
+        request.setFlagState(upsertAssetBo.getAsset().getFlagStateCode());
+        AssetMTEnrichmentResponse response = assetClient.collectAssetMT(request);
+
+        assertNotNull(response);
+        assertNotNull(response.getAssetHistoryId());
+        assertNotNull(response.getAssetUUID());
+        assertTrue(response.getAssetName(), response.getAssetName().equals(upsertAssetBo.getAsset().getName()));
+        assertTrue(response.getFlagstate().equals(upsertAssetBo.getAsset().getFlagStateCode()));
+        assertEquals(upsertAssetBo.getAsset().getMmsi(), response.getMmsi());
+
+        assertTrue(response.getLongTermParked());
+    }
 
     @Test
     @OperateOnDeployment("normal")
