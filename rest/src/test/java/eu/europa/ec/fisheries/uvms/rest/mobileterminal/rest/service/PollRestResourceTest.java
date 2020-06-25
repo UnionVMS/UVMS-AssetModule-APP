@@ -7,7 +7,7 @@ import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginCapabilityTyp
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginService;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.CreatePollResultDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollDto;
@@ -19,6 +19,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.asset.filter.AppError;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CommentDto;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -79,14 +80,16 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         Asset asset = createAndRestBasicAsset();
         createAndRestMobileTerminal(asset);
 
+        CommentDto pollDto = new CommentDto();
+        pollDto.setComment("Test comment");
+
         CreatePollResultDto createdPoll = getWebTargetExternal()
                 .path("poll")
                 .path("createPollForAsset")
                 .path(asset.getId().toString())
-                .queryParam("comment", "Test comment")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .post(Entity.json(""), CreatePollResultDto.class);
+                .post(Entity.json(pollDto), CreatePollResultDto.class);
 
         assertNotNull(createdPoll);
 

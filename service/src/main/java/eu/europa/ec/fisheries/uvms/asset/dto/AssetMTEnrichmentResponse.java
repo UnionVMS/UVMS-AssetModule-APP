@@ -15,6 +15,7 @@ public class AssetMTEnrichmentResponse implements Serializable {
     private String assetHistoryId = null;
     private String flagstate = null;
     private String vesselType = null;
+    private boolean longTermParked;
 
     private String externalMarking = null;
     private String gearType = null;
@@ -197,5 +198,13 @@ public class AssetMTEnrichmentResponse implements Serializable {
 
     public void setMobileTerminalIsInactive(Boolean mobileTerminalIsInactive) {
         this.mobileTerminalIsInactive = mobileTerminalIsInactive;
+    }
+
+    public boolean isLongTermParked() {
+        return longTermParked;
+    }
+
+    public void setLongTermParked(boolean longTermParked) {
+        this.longTermParked = longTermParked;
     }
 }

@@ -14,6 +14,7 @@ import java.util.List;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.FishingLicence;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 
 public class AssetBO {
@@ -21,6 +22,7 @@ public class AssetBO {
     private Asset asset;
     private List<ContactInfo> contacts;
     private List<Note> notes;
+    private FishingLicence fishingLicence;
     private AssetIdentifier defaultIdentifier = AssetIdentifier.CFR;
     
     public Asset getAsset() {
@@ -40,6 +42,12 @@ public class AssetBO {
     }
     public void setNotes(List<Note> notes) {
         this.notes = notes;
+    }
+    public FishingLicence getFishingLicence() {
+        return fishingLicence;
+    }
+    public void setFishingLicence(FishingLicence fishingLicence) {
+        this.fishingLicence = fishingLicence;
     }
     public AssetIdentifier getDefaultIdentifier() {
         return defaultIdentifier;

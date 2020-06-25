@@ -5,7 +5,7 @@
     <parent>
         <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
         <artifactId>asset</artifactId>
-        <version>6.7.8-SNAPSHOT</version>
+        <version>6.7.15-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -18,18 +18,7 @@
 		<docker.dev.prestop.phase>install</docker.dev.prestop.phase>
 	</properties>
 
-    <scm>
-        <url>https://github.com/unionvns/minimaven</url>
-        <connection>scm:git:git://github.com/unionvms/minimaven.git</connection>
-      <tag>HEAD</tag>
-  </scm>
     <dependencies>
-        <dependency>
-            <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
-            <artifactId>uvms-commons-message</artifactId>
-            <version>${uvms.common.version}</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-date</artifactId>
@@ -80,7 +69,7 @@
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-client</artifactId>
-            <version>4.5.3.Final</version>
+            <version>4.5.5.Final</version>
             <scope>test</scope>
         </dependency>
         <dependency>

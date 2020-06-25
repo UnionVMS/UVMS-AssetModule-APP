@@ -123,6 +123,24 @@ public class TerminalDaoBean {
         return resultList;
     }
 
+    public List<MobileTerminal> getMobileTerminalRevisionsRelevantToAsset(UUID mobileTerminalId, UUID assetId) {
+        AuditReader auditReader = AuditReaderFactory.get(em);
+        List<MobileTerminal> resultList = new ArrayList<>();
+
+        List<Number> revisionNumbers = auditReader.getRevisions(MobileTerminal.class, mobileTerminalId);
+        MobileTerminal previous = null;
+        for (Number rev : revisionNumbers) {
+            MobileTerminal audited = auditReader.find(MobileTerminal.class, mobileTerminalId, rev);
+            if((audited.getAsset() != null && assetId.equals(audited.getAsset().getId()) )
+                    || (previous != null && assetId.equals(previous.getAsset().getId()))) {
+
+                resultList.add(audited);
+                previous = audited;
+            }
+        }
+        return resultList;
+    }
+
     @SuppressWarnings("unchecked")
     public List<MobileTerminal> getMobileTerminalRevisionByAssetId(UUID assetId) {
         AuditReader auditReader = AuditReaderFactory.get(em);

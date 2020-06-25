@@ -5,6 +5,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.constants.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -188,5 +189,17 @@ public class AssetTestsHelper {
     	afq.setIsNumber(true);
     	afq.setInverse(true);
         return afq;
+    }
+
+    public static FishingLicence createFishingLicence() {
+        FishingLicence licence = new FishingLicence();
+        licence.setLicenceNumber(rnd.nextLong());
+        licence.setCivicNumber(getRandomIntegers(10));
+        licence.setName(getRandomIntegers(20));
+        licence.setDecisionDate(Instant.now().minus(1,ChronoUnit.DAYS));
+        licence.setFromDate(Instant.now().minus(1,ChronoUnit.DAYS));
+        licence.setToDate(Instant.now().plus(1,ChronoUnit.DAYS));
+        licence.setConstraints("Test");
+        return licence;
     }
 }

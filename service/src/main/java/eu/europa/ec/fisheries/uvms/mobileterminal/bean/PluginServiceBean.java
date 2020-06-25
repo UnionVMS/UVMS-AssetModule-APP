@@ -63,7 +63,7 @@ public class PluginServiceBean {
             request.getCommand().setPoll(pollType);
 
             Client client = ClientBuilder.newClient();
-            Response response = client.target(exchangeEndpoint + "/api/pluginCommand")
+            Response response = client.target(exchangeEndpoint + "/unsecured/api/pluginCommand")
                     .request(MediaType.APPLICATION_JSON)
                     .post(Entity.json(request), Response.class);
 

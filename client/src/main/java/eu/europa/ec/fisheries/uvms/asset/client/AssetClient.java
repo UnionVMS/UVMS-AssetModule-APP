@@ -14,7 +14,6 @@ import eu.europa.ec.fisheries.uvms.asset.client.model.*;
 import eu.europa.ec.fisheries.uvms.asset.client.model.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
-import eu.europa.ec.fisheries.uvms.commons.message.api.MessageConstants;
 import eu.europa.ec.fisheries.uvms.rest.security.InternalRestTokenHandler;
 
 import javax.annotation.PostConstruct;
@@ -28,6 +27,7 @@ import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
+import javax.json.bind.JsonbConfig;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -36,7 +36,6 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import java.time.Instant;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -52,7 +51,7 @@ public class AssetClient {
     @Inject
     private JMSContext context;
     
-    @Resource(mappedName = "java:/" + MessageConstants.QUEUE_ASSET_EVENT)
+    @Resource(mappedName = "java:/jms/queue/UVMSAssetEvent")
     private Destination destination;
 
     @EJB
@@ -163,9 +162,26 @@ public class AssetClient {
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
                 .post(Entity.json(asset), AssetBO.class);
     }
-    
+
+    public String createPollForAsset(UUID assetId, String username, String comment) {
+        CreatePollResultDto createdPollResponse = webTarget
+                .path("createPollForAsset")
+                .path(assetId.toString())
+                .queryParam("username", username)
+                .queryParam("comment", comment)
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
+                .post(Entity.json(""), CreatePollResultDto.class);
+
+        if(createdPollResponse.isUnsentPoll()){
+            return createdPollResponse.getUnsentPolls().get(0);
+        }else{
+            return createdPollResponse.getSentPolls().get(0);
+        }
+    }
+
     public void upsertAssetAsync(AssetBO asset) throws JMSException {
-        Jsonb jsonb = JsonbBuilder.create();
+        Jsonb jsonb = new JsonBConfigurator().getContext(AssetBO.class);
 
         TextMessage message = context.createTextMessage(jsonb.toJson(asset));
         message.setStringProperty("METHOD", "UPSERT_ASSET");

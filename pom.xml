@@ -4,7 +4,7 @@
 
     <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
     <artifactId>asset</artifactId>
-    <version>6.7.8-SNAPSHOT</version>
+    <version>6.7.15-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <parent>
@@ -16,7 +16,7 @@
 
     <properties>
     	<asset.api.check.against.version>5.0.0</asset.api.check.against.version>
-        <docker.dev.version>3.43.0</docker.dev.version>
+        <docker.dev.version>3.44.0</docker.dev.version>
     	<docker.liquibase.changeLogFile>LIQUIBASE/changelog/db-changelog-master.xml</docker.liquibase.changeLogFile>
         <docker.liquibase.db.user>asset</docker.liquibase.db.user>
         <docker.liquibase.db.passwd>asset</docker.liquibase.db.passwd>
@@ -24,9 +24,9 @@
         <usm4uvms.version>4.1.0</usm4uvms.version>
         <uvms.common.version>4.1.7</uvms.common.version>
         <uvms.config.version>4.1.2</uvms.config.version>
-        <audit.model.version>4.3.4</audit.model.version>
-        <movementrules.version>2.3.6</movementrules.version>
-        <exchange.model.version>5.2.7-UVMS</exchange.model.version>
+        <audit.model.version>4.3.5</audit.model.version>
+        <movementrules.version>2.3.12</movementrules.version>
+        <exchange.model.version>5.2.12-UVMS</exchange.model.version>
         <project.scm.id>github</project.scm.id>
         <installAtEnd>false</installAtEnd>
     </properties>

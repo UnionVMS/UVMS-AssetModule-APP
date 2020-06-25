@@ -109,7 +109,7 @@ public class Asset implements Serializable {
     private Instant updateTime;
 
     @Column(name = "source")
-    private String source;      //if this is not set then frontend has a hissyfit about formating
+    private String source;
 
     @Size(max = 100)
     @Column(name = "vesseltype")
@@ -191,7 +191,7 @@ public class Asset implements Serializable {
     @Column(name = "grosstonnageunit")
     private UnitTonnage grossTonnageUnit = UnitTonnage.LONDON;
 
-    @Size(max = 30)
+    @Size(max = 100)
     @Column(name = "portofregistration")
     private String portOfRegistration;
 
@@ -281,6 +281,9 @@ public class Asset implements Serializable {
 
     @Column(name = "national_id")
     private Long nationalId;
+
+    @Column(name = "long_term_parked")
+    private boolean longTermParked;
 
     @PrePersist
     private void generateNewHistoryId() {
@@ -766,5 +769,13 @@ public class Asset implements Serializable {
 
     public void setNationalId(Long nationalId) {
         this.nationalId = nationalId;
+    }
+
+    public boolean getLongTermParked() {
+        return longTermParked;
+    }
+
+    public void setLongTermParked(boolean longTermParked) {
+        this.longTermParked = longTermParked;
     }
 }

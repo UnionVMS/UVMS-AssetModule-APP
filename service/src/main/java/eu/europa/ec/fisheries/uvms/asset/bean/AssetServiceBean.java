@@ -40,6 +40,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -49,7 +50,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Stateless
 public class AssetServiceBean {
@@ -213,7 +213,10 @@ public class AssetServiceBean {
         nullValidation(assetBo, "No asset business object to upsert");
         Asset asset = assetBo.getAsset();
         Map<AssetIdentifier, String> assetIds = createAssetId(asset);
-        Asset existingAsset = getAssetById(assetBo.getDefaultIdentifier(), assetIds.get(assetBo.getDefaultIdentifier()));
+        Asset existingAsset = null;
+        if (assetIds.get(assetBo.getDefaultIdentifier()) != null) {
+            existingAsset = getAssetById(assetBo.getDefaultIdentifier(), assetIds.get(assetBo.getDefaultIdentifier()));
+        }
         if (existingAsset == null) {
             existingAsset = getAssetByCfrIrcsOrMmsi(assetIds);
         }
@@ -222,6 +225,7 @@ public class AssetServiceBean {
 
             asset.setMmsi(asset.getMmsi() == null ? existingAsset.getMmsi() : asset.getMmsi());                     //to save values we already have and dont get from the external source
             asset.setComment(asset.getComment() == null ? existingAsset.getComment() : asset.getComment());
+            asset.setLongTermParked(existingAsset.getLongTermParked());
         }
         if (!AssetComparator.assetEquals(asset, existingAsset)) {
             asset = upsertAsset(asset, username);
@@ -233,9 +237,9 @@ public class AssetServiceBean {
             assetBo.getContacts().forEach(c -> createContactInfoForAsset(assetId, c, username));
         }
         if (assetBo.getNotes() != null) {
-            getNotesForAsset(assetId).forEach(n -> deleteNote(n.getId()));
             assetBo.getNotes().forEach(c -> createNoteForAsset(assetId, c, username));
         }
+        addLicenceToAsset(assetId, assetBo.getFishingLicence());
         return assetBo;
     }
 
@@ -438,6 +442,7 @@ public class AssetServiceBean {
         resp.setMmsi(asset.getMmsi());
         resp.setImo(asset.getImo());
         resp.setVesselType(asset.getVesselType());
+        resp.setLongTermParked(asset.getLongTermParked());
         return resp;
     }
 
@@ -758,6 +763,48 @@ public class AssetServiceBean {
         Note note = noteDao.findNote(id);
         nullValidation(note, "Could not find any note with id: " + id);
         return note;
+    }
+
+    public void addLicenceToAsset(UUID assetId, FishingLicence fishingLicence) {
+        FishingLicence existingLicence = getFishingLicenceByAssetId(assetId);
+        if (fishingLicence == null && existingLicence != null) {
+            deleteFishingLicense(existingLicence);
+            return;
+        }
+        if (fishingLicence == null) {
+            return;
+        }
+        if (existingLicence == null) {
+            existingLicence = new FishingLicence();
+        }
+        existingLicence.setAssetId(assetId);
+        existingLicence.setLicenceNumber(fishingLicence.getLicenceNumber());
+        existingLicence.setCivicNumber(fishingLicence.getCivicNumber());
+        existingLicence.setName(fishingLicence.getName());
+        existingLicence.setFromDate(fishingLicence.getFromDate());
+        existingLicence.setToDate(fishingLicence.getToDate());
+        existingLicence.setDecisionDate(fishingLicence.getDecisionDate());
+        existingLicence.setConstraints(fishingLicence.getConstraints());
+        em.persist(existingLicence);
+    }
+
+    public FishingLicence createFishingLicence(FishingLicence licence) {
+        em.persist(licence);
+        return licence;
+    }
+
+    public void deleteFishingLicense(FishingLicence licence) {
+        em.remove(licence);
+    }
+
+    public FishingLicence getFishingLicenceByAssetId(UUID assetId) {
+        try {
+            return em.createNamedQuery(FishingLicence.FIND_BY_ASSET, FishingLicence.class)
+                    .setParameter("assetId", assetId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     private void nullValidation(Object obj, String message) {
