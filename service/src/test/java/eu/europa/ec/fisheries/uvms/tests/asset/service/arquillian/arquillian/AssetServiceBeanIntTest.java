@@ -333,6 +333,30 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
+    public void updateAssetBOWithIdentifierNullCFR() throws AssetServiceException {
+        Asset asset = AssetTestsHelper.createBasicAsset();
+        Asset createdAsset = assetService.createAsset(asset, "Test");
+
+        Asset assetUpdates = AssetTestsHelper.createBasicAsset();
+        assetUpdates.setCfr(null);
+        assetUpdates.setIrcs(createdAsset.getIrcs());
+
+        AssetBO assetBO = new AssetBO();
+        assetBO.setAsset(assetUpdates);
+        assetBO.setDefaultIdentifier(AssetIdentifier.CFR);
+
+        assetService.upsertAssetBO(assetBO, "Test");
+
+        Asset updatedAsset = assetService.getAssetById(createdAsset.getId());
+
+        assertThat(updatedAsset.getIrcs(), CoreMatchers.is(createdAsset.getIrcs()));
+        assertThat(updatedAsset.getCfr(), CoreMatchers.is(assetUpdates.getCfr()));
+        assertThat(updatedAsset.getMmsi(), CoreMatchers.is(assetUpdates.getMmsi()));
+        assertThat(updatedAsset.getName(), CoreMatchers.is(assetUpdates.getName()));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void getRevisionsForAssetLimitedTest() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
         Asset createdAsset = assetService.createAsset(asset, "test");
