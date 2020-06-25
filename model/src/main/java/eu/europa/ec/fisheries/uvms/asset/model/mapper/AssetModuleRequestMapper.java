@@ -12,17 +12,29 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.model.mapper;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMapperException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelValidationException;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
-import eu.europa.ec.fisheries.wsdl.asset.module.*;
+import eu.europa.ec.fisheries.wsdl.asset.module.ActivityRulesAssetModuleResponse;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupListByUserRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetListModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetModuleMethod;
+import eu.europa.ec.fisheries.wsdl.asset.module.BatchAssetListModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistGuidByAssetGuidAndOccurrenceDateRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistoriesByCfrModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistoriesByCfrModuleResponse;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetGroupListByAssetGuidRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.UpsertAssetModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.UpsertFishingGearModuleRequest;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteria;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteriaPair;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
@@ -148,6 +160,14 @@ public class AssetModuleRequestMapper {
         ActivityRulesAssetModuleResponse response = new ActivityRulesAssetModuleResponse();
         response.getAssetHistories().addAll(assets);
         return JAXBMarshaller.marshallJaxBObjectToString(response);
+    }
+
+    public static String createFindAssetHistGuidByAssetGuidAndOccurrenceDateRequest(String assetGuid, Date occurrenceDate) throws AssetModelMarshallException {
+        FindAssetHistGuidByAssetGuidAndOccurrenceDateRequest request = new FindAssetHistGuidByAssetGuidAndOccurrenceDateRequest();
+        request.setMethod(AssetModuleMethod.FIND_ASSET_HIST_GUID_BY_ASSET_GUID_AND_OCCURRENCE_DATE);
+        request.setAssetGuid(assetGuid);
+        request.setOccurrenceDate(occurrenceDate);
+        return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
 
 }
