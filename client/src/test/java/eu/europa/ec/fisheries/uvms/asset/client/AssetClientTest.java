@@ -401,7 +401,6 @@ public class AssetClientTest extends AbstractClientTest {
         assertTrue(response.getLongTermParked());
     }
 
-
     @Test
     @OperateOnDeployment("normal")
     public void getMicroAssetInformation(){

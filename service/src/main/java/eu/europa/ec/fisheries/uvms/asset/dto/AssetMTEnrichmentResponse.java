@@ -2,7 +2,6 @@ package eu.europa.ec.fisheries.uvms.asset.dto;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 public class AssetMTEnrichmentResponse implements Serializable {
 

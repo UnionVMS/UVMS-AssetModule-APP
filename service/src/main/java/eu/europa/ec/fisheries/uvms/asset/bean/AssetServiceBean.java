@@ -54,16 +54,6 @@ import java.util.*;
 @Stateless
 public class AssetServiceBean {
 
-    private static final String GUID = "GUID";
-    private static final String IMO = "IMO";
-    private static final String IRCS = "IRCS";
-    private static final String MMSI = "MMSI";
-    private static final String CFR = "CFR";
-    private static final String GFCM = "GFCM";
-    private static final String UVI = "UVI";
-    private static final String ICCAT = "ICCAT";
-    private static final String NATIONAL = "NATIONAL";
-
     private static final Logger LOG = LoggerFactory.getLogger(AssetServiceBean.class);
 
     @Resource(name = "java:global/movement_endpoint")
@@ -222,7 +212,14 @@ public class AssetServiceBean {
     public AssetBO upsertAssetBO(AssetBO assetBo, String username) {
         nullValidation(assetBo, "No asset business object to upsert");
         Asset asset = assetBo.getAsset();
-        Asset existingAsset = getAssetByCfrIrcsOrMmsi(createAssetId(asset));
+        Map<AssetIdentifier, String> assetIds = createAssetId(asset);
+        Asset existingAsset = null;
+        if (assetIds.get(assetBo.getDefaultIdentifier()) != null) {
+            existingAsset = getAssetById(assetBo.getDefaultIdentifier(), assetIds.get(assetBo.getDefaultIdentifier()));
+        }
+        if (existingAsset == null) {
+            existingAsset = getAssetByCfrIrcsOrMmsi(assetIds);
+        }
         if (existingAsset != null) {
             asset.setId(existingAsset.getId());
 
@@ -406,10 +403,10 @@ public class AssetServiceBean {
     private void enrichAssetAndMobileTerminal(AssetMTEnrichmentRequest request,
                                               AssetMTEnrichmentResponse assetMTEnrichmentResponse, MobileTerminal terminal, Asset asset) {
         if (asset != null) {
-            enrichementHelper(assetMTEnrichmentResponse, asset);
+            enrichmentHelper(assetMTEnrichmentResponse, asset);
         }
         if (terminal != null) {
-            enrichementHelper(request, assetMTEnrichmentResponse, terminal);
+            enrichmentHelper(request, assetMTEnrichmentResponse, terminal);
         }
     }
 
@@ -433,7 +430,7 @@ public class AssetServiceBean {
         }
     }
 
-    private AssetMTEnrichmentResponse enrichementHelper(AssetMTEnrichmentResponse resp, Asset asset) {
+    private AssetMTEnrichmentResponse enrichmentHelper(AssetMTEnrichmentResponse resp, Asset asset) {
         resp.setAssetUUID(asset.getId() == null ? null : asset.getId().toString());
         resp.setAssetName(asset.getName());
         resp.setAssetHistoryId(asset.getHistoryId() == null ? null : asset.getHistoryId().toString());
@@ -449,7 +446,7 @@ public class AssetServiceBean {
         return resp;
     }
 
-    private AssetMTEnrichmentResponse enrichementHelper(AssetMTEnrichmentRequest req, AssetMTEnrichmentResponse resp, MobileTerminal mobTerm) {
+    private AssetMTEnrichmentResponse enrichmentHelper(AssetMTEnrichmentRequest req, AssetMTEnrichmentResponse resp, MobileTerminal mobTerm) {
 
         // here we put into response data about mobiletreminal / channels etc etc
         String channelGuid = getChannelGuid(mobTerm, req);
@@ -499,70 +496,70 @@ public class AssetServiceBean {
         return channelGuid;
     }
 
-    private Map<String, String> createAssetId(Asset asset) {
-        Map<String, String> assetId = new HashMap<>();
+    private Map<AssetIdentifier, String> createAssetId(Asset asset) {
+        Map<AssetIdentifier, String> assetId = new HashMap<>();
 
         if (asset.getCfr() != null && asset.getCfr().length() > 0) {
-            assetId.put(CFR, asset.getCfr());
+            assetId.put(AssetIdentifier.CFR, asset.getCfr());
         }
         if (asset.getId() != null) {
-            assetId.put(GUID, asset.getId().toString());
+            assetId.put(AssetIdentifier.GUID, asset.getId().toString());
         }
         if (asset.getImo() != null && asset.getImo().length() > 0) {
-            assetId.put(IMO, asset.getImo());
+            assetId.put(AssetIdentifier.IMO, asset.getImo());
         }
         if (asset.getIrcs() != null && asset.getIrcs().length() > 0) {
-            assetId.put(IRCS, asset.getIrcs());
+            assetId.put(AssetIdentifier.IRCS, asset.getIrcs());
         }
         if (asset.getMmsi() != null && asset.getMmsi().length() > 0) {
-            assetId.put(MMSI, asset.getMmsi());
+            assetId.put(AssetIdentifier.MMSI, asset.getMmsi());
         }
         if (asset.getGfcm() != null && asset.getGfcm().length() > 0) {
-            assetId.put(GFCM, asset.getGfcm());
+            assetId.put(AssetIdentifier.GFCM, asset.getGfcm());
         }
         if (asset.getUvi() != null && asset.getUvi().length() > 0) {
-            assetId.put(UVI, asset.getUvi());
+            assetId.put(AssetIdentifier.UVI, asset.getUvi());
         }
         if (asset.getIccat() != null && asset.getIccat().length() > 0) {
-            assetId.put(ICCAT, asset.getIccat());
+            assetId.put(AssetIdentifier.ICCAT, asset.getIccat());
         }
         if (asset.getNationalId() != null ) {
-            assetId.put(NATIONAL, asset.getNationalId().toString());
+            assetId.put(AssetIdentifier.NATIONAL, asset.getNationalId().toString());
         }
         return assetId;
     }
 
-    private Map<String, String> createAssetId(AssetMTEnrichmentRequest request) {
-        Map<String, String> assetId = new HashMap<>();
+    private Map<AssetIdentifier, String> createAssetId(AssetMTEnrichmentRequest request) {
+        Map<AssetIdentifier, String> assetId = new HashMap<>();
 
         if (request.getCfrValue() != null && request.getCfrValue().length() > 0) {
-            assetId.put(CFR, request.getCfrValue());
+            assetId.put(AssetIdentifier.CFR, request.getCfrValue());
         }
         if (request.getIdValue() != null) {
-            assetId.put(GUID, request.getIdValue().toString());
+            assetId.put(AssetIdentifier.GUID, request.getIdValue().toString());
         }
         if (request.getImoValue() != null && request.getImoValue().length() > 0) {
-            assetId.put(IMO, request.getImoValue());
+            assetId.put(AssetIdentifier.IMO, request.getImoValue());
         }
         if (request.getIrcsValue() != null && request.getIrcsValue().length() > 0) {
-            assetId.put(IRCS, request.getIrcsValue());
+            assetId.put(AssetIdentifier.IRCS, request.getIrcsValue());
         }
         if (request.getMmsiValue() != null && request.getMmsiValue().length() > 0) {
-            assetId.put(MMSI, request.getMmsiValue());
+            assetId.put(AssetIdentifier.MMSI, request.getMmsiValue());
         }
         if (request.getGfcmValue() != null && request.getGfcmValue().length() > 0) {
-            assetId.put(GFCM, request.getGfcmValue());
+            assetId.put(AssetIdentifier.GFCM, request.getGfcmValue());
         }
         if (request.getUviValue() != null && request.getUviValue().length() > 0) {
-            assetId.put(UVI, request.getUviValue());
+            assetId.put(AssetIdentifier.UVI, request.getUviValue());
         }
         if (request.getIccatValue() != null && request.getIccatValue().length() > 0) {
-            assetId.put(ICCAT, request.getIccatValue());
+            assetId.put(AssetIdentifier.ICCAT, request.getIccatValue());
         }
         return assetId;
     }
 
-    private Asset getAssetByCfrIrcsOrMmsi(Map<String, String> assetId) {
+    private Asset getAssetByCfrIrcsOrMmsi(Map<AssetIdentifier, String> assetId) {
         Asset asset = null;
 
         // If no asset information exists, don't look for one
@@ -572,9 +569,9 @@ public class AssetServiceBean {
         }
 
         // Get possible search parameters
-        String cfr = assetId.getOrDefault(CFR, null);
-        String ircs = assetId.getOrDefault(IRCS, null);
-        String mmsi = assetId.getOrDefault(MMSI, null);
+        String cfr = assetId.getOrDefault(AssetIdentifier.CFR, null);
+        String ircs = assetId.getOrDefault(AssetIdentifier.IRCS, null);
+        String mmsi = assetId.getOrDefault(AssetIdentifier.MMSI, null);
 
 
         if (cfr != null) {

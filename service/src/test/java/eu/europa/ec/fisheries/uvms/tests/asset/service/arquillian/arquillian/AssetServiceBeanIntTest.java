@@ -10,6 +10,7 @@ import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFields;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchLeaf;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
+import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
@@ -282,6 +283,76 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
         assetService.deleteAsset(AssetIdentifier.GUID, createdAsset.getId().toString());
         commit();
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void updateAssetBOWithIdentifierCFR() throws AssetServiceException {
+        Asset asset = AssetTestsHelper.createBasicAsset();
+        Asset createdAsset = assetService.createAsset(asset, "Test");
+
+        Asset assetUpdates = AssetTestsHelper.createBasicAsset();
+        assetUpdates.setCfr(createdAsset.getCfr());
+
+        AssetBO assetBO = new AssetBO();
+        assetBO.setAsset(assetUpdates);
+        assetBO.setDefaultIdentifier(AssetIdentifier.CFR);
+
+        assetService.upsertAssetBO(assetBO, "Test");
+
+        Asset updatedAsset = assetService.getAssetById(createdAsset.getId());
+
+        assertThat(updatedAsset.getCfr(), CoreMatchers.is(createdAsset.getCfr()));
+        assertThat(updatedAsset.getIrcs(), CoreMatchers.is(assetUpdates.getIrcs()));
+        assertThat(updatedAsset.getMmsi(), CoreMatchers.is(assetUpdates.getMmsi()));
+        assertThat(updatedAsset.getName(), CoreMatchers.is(assetUpdates.getName()));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void updateAssetBOWithIdentifierIRCS() throws AssetServiceException {
+        Asset asset = AssetTestsHelper.createBasicAsset();
+        Asset createdAsset = assetService.createAsset(asset, "Test");
+
+        Asset assetUpdates = AssetTestsHelper.createBasicAsset();
+        assetUpdates.setIrcs(createdAsset.getIrcs());
+
+        AssetBO assetBO = new AssetBO();
+        assetBO.setAsset(assetUpdates);
+        assetBO.setDefaultIdentifier(AssetIdentifier.IRCS);
+
+        assetService.upsertAssetBO(assetBO, "Test");
+
+        Asset updatedAsset = assetService.getAssetById(createdAsset.getId());
+
+        assertThat(updatedAsset.getIrcs(), CoreMatchers.is(createdAsset.getIrcs()));
+        assertThat(updatedAsset.getCfr(), CoreMatchers.is(assetUpdates.getCfr()));
+        assertThat(updatedAsset.getMmsi(), CoreMatchers.is(assetUpdates.getMmsi()));
+        assertThat(updatedAsset.getName(), CoreMatchers.is(assetUpdates.getName()));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void updateAssetBOWithIdentifierNullCFR() throws AssetServiceException {
+        Asset asset = AssetTestsHelper.createBasicAsset();
+        Asset createdAsset = assetService.createAsset(asset, "Test");
+
+        Asset assetUpdates = AssetTestsHelper.createBasicAsset();
+        assetUpdates.setCfr(null);
+        assetUpdates.setIrcs(createdAsset.getIrcs());
+
+        AssetBO assetBO = new AssetBO();
+        assetBO.setAsset(assetUpdates);
+        assetBO.setDefaultIdentifier(AssetIdentifier.CFR);
+
+        assetService.upsertAssetBO(assetBO, "Test");
+
+        Asset updatedAsset = assetService.getAssetById(createdAsset.getId());
+
+        assertThat(updatedAsset.getIrcs(), CoreMatchers.is(createdAsset.getIrcs()));
+        assertThat(updatedAsset.getCfr(), CoreMatchers.is(assetUpdates.getCfr()));
+        assertThat(updatedAsset.getMmsi(), CoreMatchers.is(assetUpdates.getMmsi()));
+        assertThat(updatedAsset.getName(), CoreMatchers.is(assetUpdates.getName()));
     }
 
     @Test
