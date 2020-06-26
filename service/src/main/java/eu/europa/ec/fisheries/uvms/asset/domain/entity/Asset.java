@@ -283,7 +283,7 @@ public class Asset implements Serializable {
     private Long nationalId;
 
     @Column(name = "long_term_parked")
-    private Boolean longTermParked;
+    private Boolean longTermParked = false;
 
     @PrePersist
     private void generateNewHistoryId() {
