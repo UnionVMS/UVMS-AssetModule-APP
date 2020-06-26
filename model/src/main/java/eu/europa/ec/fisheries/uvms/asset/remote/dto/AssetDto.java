@@ -139,7 +139,7 @@ public class AssetDto {
 
     private Long nationalId;
 
-    private boolean longTermParked;
+    private Boolean longTermParked;
 
     public UUID getId() {
         return id;
@@ -597,11 +597,11 @@ public class AssetDto {
         this.nationalId = nationalId;
     }
 
-    public boolean isLongTermParked() {
+    public Boolean isLongTermParked() {
         return longTermParked;
     }
 
-    public void setLongTermParked(boolean longTermParked) {
+    public void setLongTermParked(Boolean longTermParked) {
         this.longTermParked = longTermParked;
     }
 }
