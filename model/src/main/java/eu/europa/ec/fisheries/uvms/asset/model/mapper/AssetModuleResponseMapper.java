@@ -229,6 +229,7 @@ public class AssetModuleResponseMapper {
             identifiersHolder.setIccat(asset.getIccat());
             identifiersHolder.setExtMark(asset.getExternalMarking());
             identifiersHolder.setUvi(asset.getUvi());
+            identifiersHolder.setCountryCode(asset.getCountryCode());
         }
         return identifiersHolder;
     }
