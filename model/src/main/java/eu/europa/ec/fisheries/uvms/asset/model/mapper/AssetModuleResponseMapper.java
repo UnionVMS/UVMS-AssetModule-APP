@@ -230,6 +230,7 @@ public class AssetModuleResponseMapper {
             identifiersHolder.setExtMark(asset.getExternalMarking());
             identifiersHolder.setUvi(asset.getUvi());
             identifiersHolder.setCountryCode(asset.getCountryCode());
+            identifiersHolder.setAssetGuid(asset.getAssetId().getGuid());
         }
         return identifiersHolder;
     }

@@ -377,6 +377,7 @@
             <xsd:element name="ext_mark" type="xsd:string"/>
             <xsd:element name="uvi" type="xsd:string"/>
             <xsd:element name="countryCode" type="xsd:string"/>
+            <xsd:element name="assetGuid" type="xsd:string"/>
         </xsd:sequence>
     </xsd:complexType>
 
