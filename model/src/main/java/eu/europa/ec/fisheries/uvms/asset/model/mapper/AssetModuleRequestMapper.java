@@ -27,6 +27,7 @@ import eu.europa.ec.fisheries.wsdl.asset.module.BatchAssetListModuleRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistGuidByAssetGuidAndOccurrenceDateRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistoriesByCfrModuleRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistoriesByCfrModuleResponse;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByAssetHistGuidRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetGroupListByAssetGuidRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleRequest;
@@ -167,6 +168,13 @@ public class AssetModuleRequestMapper {
         request.setMethod(AssetModuleMethod.FIND_ASSET_HIST_GUID_BY_ASSET_GUID_AND_OCCURRENCE_DATE);
         request.setAssetGuid(assetGuid);
         request.setOccurrenceDate(occurrenceDate);
+        return JAXBMarshaller.marshallJaxBObjectToString(request);
+    }
+
+    public static String createFindVesselIdsByAssetHistGuidRequest(String assetHistoryGuid) throws AssetModelMapperException {
+        FindVesselIdsByAssetHistGuidRequest request = new FindVesselIdsByAssetHistGuidRequest();
+        request.setMethod(AssetModuleMethod.FIND_VESSEL_IDS_BY_ASSET_HIST_GUID);
+        request.setAssetHistoryGuid(assetHistoryGuid);
         return JAXBMarshaller.marshallJaxBObjectToString(request);
     }
 
