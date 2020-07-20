@@ -51,7 +51,7 @@ public class SearchFieldMapperTest {
 
         searchFields.add(searchValue);
 
-        String createSelectSearchSql = SearchFieldMapper.createSelectSearchSql(searchFields, true);
+        String createSelectSearchSql = SearchFieldMapper.createSelectSearchSql(searchFields);
         String expected = "active IN (true,false)";
         assertThat(createSelectSearchSql, containsString(expected));
     }
@@ -66,7 +66,7 @@ public class SearchFieldMapperTest {
 
         searchFields.add(searchValue);
 
-        String createSelectSearchSql = SearchFieldMapper.createSelectSearchSql(searchFields, true);
+        String createSelectSearchSql = SearchFieldMapper.createSelectSearchSql(searchFields);
         String expected = "active IN (true)";
         assertThat(createSelectSearchSql, containsString(expected));
     }
