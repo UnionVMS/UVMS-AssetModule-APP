@@ -37,6 +37,8 @@
                     <xsd:enumeration value="FIND_ASSET_HIST_GUID_BY_ASSET_GUID_AND_OCCURRENCE_DATE"/>
                     <xsd:enumeration value="ASSET_GROUPS_FOR_ASSET"/>
                     <xsd:enumeration value="ASSET_IDS_FOR_GROUP_GUID"/>
+                    <xsd:enumeration value="FIND_HISTORY_OF_ASSET_BY_CFR_FACADE"/>
+                    <xsd:enumeration value="FIND_HISTORY_OF_ASSET_FACADE"/>
                 </xsd:restriction>
             </xsd:simpleType>
             
@@ -396,6 +398,42 @@
                         <xsd:extension base="v:AssetModuleRequest">
                             <xsd:sequence>
                                 <xsd:element name="assetHistGuid" type="xsd:string"/>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+            
+            <xsd:element name="FindHistoryOfAssetByCfrFacadeRequest">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest">
+                            <xsd:sequence>
+                                <xsd:element name="cfrIds" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="FindHistoryOfAssetFacadeResponse">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest">
+                            <xsd:sequence>
+                                <xsd:element name="results" type="tv:FindHistoryOfAssetFacadeResponseElement" minOccurs="0" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="FindHistoryOfAssetFacadeRequest">
+                <xsd:complexType>
+                    <xsd:complexContent>
+                        <xsd:extension base="v:AssetModuleRequest">
+                            <xsd:sequence>
+                                <xsd:element name="criteria" type="tv:FindHistoryOfAssetFacadeRequestElement" minOccurs="0" maxOccurs="unbounded"/>
                             </xsd:sequence>
                         </xsd:extension>
                     </xsd:complexContent>

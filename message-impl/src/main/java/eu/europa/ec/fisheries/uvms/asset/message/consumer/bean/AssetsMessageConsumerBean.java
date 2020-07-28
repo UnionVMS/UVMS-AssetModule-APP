@@ -30,6 +30,7 @@ import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.AssetGroupsForAssetEventBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.AssetIdsForGroupGuidEventBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.FindAssetByCfrBean;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.FindAssetsByFacadeEventBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.FindAssetHistGuidByAssetGuidAndOccurrenceDateBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.FindVesselIdsByAssetHistGuidBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.FindVesselIdsByMultipleAssetHistGuidsBean;
@@ -50,6 +51,9 @@ import eu.europa.ec.fisheries.wsdl.asset.module.AssetModuleRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.BatchAssetListModuleRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistGuidByAssetGuidAndOccurrenceDateRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistoriesByCfrModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindHistoryOfAssetByCfrFacadeRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindHistoryOfAssetFacadeRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindHistoryOfAssetFacadeResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByAssetHistGuidRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByMultipleAssetHistGuidsRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetGroupListByAssetGuidRequest;
@@ -57,7 +61,6 @@ import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.UpsertAssetModuleRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.UpsertFishingGearModuleRequest;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdsForGroupGuidQueryElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,6 +107,9 @@ public class AssetsMessageConsumerBean implements MessageListener {
 
     @Inject
     private FindAssetHistGuidByAssetGuidAndOccurrenceDateBean findAssetHistGuidByAssetGuidAndOccurrenceDateBean;
+
+    @Inject
+    private FindAssetsByFacadeEventBean findAssetsByFacadeEventBean;
 
     @EJB
     private AssetGroupsForAssetEventBean assetGroupsForAssetEventBean;
@@ -195,6 +201,13 @@ public class AssetsMessageConsumerBean implements MessageListener {
                     AssetIdsForGroupRequest queryElement = JAXBMarshaller.unmarshallTextMessage(textMessage, AssetIdsForGroupRequest.class);
                     assetIdsForGroupGuidEventBean.findAndSendAssetIdsForGroupGuid(new AssetMessageEvent(textMessage,queryElement));
                     break;
+                case FIND_HISTORY_OF_ASSET_BY_CFR_FACADE:
+                    FindHistoryOfAssetByCfrFacadeRequest findHistoryOfAssetByCfrFacadeRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, FindHistoryOfAssetByCfrFacadeRequest.class);
+                    findAssetsByFacadeEventBean.findHistoryOfAssetByCfr(textMessage, findHistoryOfAssetByCfrFacadeRequest);
+                    break;
+                case FIND_HISTORY_OF_ASSET_FACADE:
+                    FindHistoryOfAssetFacadeRequest findHistoryOfAssetFacadeRequest = JAXBMarshaller.unmarshallTextMessage(textMessage, FindHistoryOfAssetFacadeRequest.class);
+                    findAssetsByFacadeEventBean.findHistoryOfAsset(textMessage, findHistoryOfAssetFacadeRequest);
                 default:
                     LOG.error("[ Not implemented assetsMethod consumed: {} ]", assetsMethod);
                     assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Method not implemented")));

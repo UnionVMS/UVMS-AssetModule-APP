@@ -21,7 +21,6 @@ import java.util.List;
 
 @Slf4j
 @Stateless
-@Remote(IAssetFacade.class)
 public class AssetFacade implements IAssetFacade {
 
     @EJB

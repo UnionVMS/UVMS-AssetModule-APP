@@ -325,6 +325,31 @@
         </xsd:sequence>
     </xsd:complexType>
 
+    <xsd:complexType name="FindHistoryOfAssetFacadeResponseElement">
+        <xsd:sequence>
+            <xsd:element name="identifier" type="xsd:string"/>
+            <xsd:element name="assets" type="Asset" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="FindHistoryOfAssetFacadeCriteria">
+        <xsd:sequence>
+            <xsd:element name="reportDate" type="xsd:string"/>
+            <xsd:element name="cfr" type="xsd:string"/>
+            <xsd:element name="regCountry" type="xsd:string"/>
+            <xsd:element name="ircs" type="xsd:string"/>
+            <xsd:element name="extMark" type="xsd:string"/>
+            <xsd:element name="iccat" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="FindHistoryOfAssetFacadeRequestElement">
+        <xsd:sequence>
+            <xsd:element name="id" type="xsd:string"/>
+            <xsd:element name="criteria" type="FindHistoryOfAssetFacadeCriteria"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
     <xsd:complexType name="FishingGearType">
         <xsd:sequence>
             <xsd:element name="id" type="xsd:long"/>

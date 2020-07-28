@@ -24,6 +24,7 @@ import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import eu.europa.ec.fisheries.wsdl.asset.group.ListAssetGroupResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupsForAssetResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindHistoryOfAssetFacadeResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByAssetHistGuidResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByMultipleAssetHistGuidsResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleResponse;
@@ -36,6 +37,7 @@ import eu.europa.ec.fisheries.wsdl.asset.types.AssetHistGuidIdWithVesselIdentifi
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdsForGroupGuidResponseElement;
 import eu.europa.ec.fisheries.wsdl.asset.types.BatchAssetListResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.BatchAssetListResponseElement;
+import eu.europa.ec.fisheries.wsdl.asset.types.FindHistoryOfAssetFacadeResponseElement;
 import eu.europa.ec.fisheries.wsdl.asset.types.FishingGear;
 import eu.europa.ec.fisheries.wsdl.asset.types.FlagStateResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.FlagStateType;
@@ -238,5 +240,11 @@ public class AssetModuleResponseMapper {
     public static String unmarshalFindAssetHistGuidByAssetGuidAndOccurrenceDateResponse(TextMessage message) throws AssetModelMarshallException {
         FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse response = JAXBMarshaller.unmarshallTextMessage(message, FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse.class);
         return response.getAssetHistGuid();
+    }
+
+    public static String createFindHistoryOfAssetByCfrFacadeResponse(List<FindHistoryOfAssetFacadeResponseElement> history) throws AssetModelMarshallException {
+        FindHistoryOfAssetFacadeResponse response = new FindHistoryOfAssetFacadeResponse();
+        response.getResults().addAll(history);
+        return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 }
