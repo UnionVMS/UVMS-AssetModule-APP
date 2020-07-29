@@ -48,7 +48,12 @@
 			<version>${javaee.version}</version>
 			<scope>provided</scope>
 		</dependency>
-	</dependencies>
+		<dependency>
+			<groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
+			<artifactId>uvms-commons-xml</artifactId>
+			<version>${uvms.commons.version}</version>
+		</dependency>
+    </dependencies>
 
 	<build>
 		<plugins>
