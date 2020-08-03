@@ -132,7 +132,7 @@ public class TerminalDaoBean {
         for (Number rev : revisionNumbers) {
             MobileTerminal audited = auditReader.find(MobileTerminal.class, mobileTerminalId, rev);
             if((audited.getAsset() != null && assetId.equals(audited.getAsset().getId()) )
-                    || (previous != null && assetId.equals(previous.getAsset().getId()))) {
+                    || (previous != null && previous.getAsset() != null && assetId.equals(previous.getAsset().getId()))) {
 
                 resultList.add(audited);
                 previous = audited;
