@@ -11,7 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.entity;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -29,11 +28,14 @@ import java.util.UUID;
 @Table(name = "plugin", indexes = {@Index(columnList = "service_name", name = "plugin_INX10", unique = false),},
         uniqueConstraints = @UniqueConstraint(name = "plugin_uc_service_name", columnNames = "service_name"))
 @NamedQueries({
-        @NamedQuery(name = MobileTerminalConstants.PLUGIN_FIND_ALL, query = "SELECT p FROM MobileTerminalPlugin p WHERE p.pluginInactive = false"),
-        @NamedQuery(name = MobileTerminalConstants.PLUGIN_FIND_BY_SERVICE_NAME, query = "SELECT p FROM MobileTerminalPlugin p WHERE p.pluginServiceName = :serviceName")
+        @NamedQuery(name = MobileTerminalPlugin.FIND_ALL, query = "SELECT p FROM MobileTerminalPlugin p WHERE p.pluginInactive = false"),
+        @NamedQuery(name = MobileTerminalPlugin.FIND_BY_SERVICE_NAME, query = "SELECT p FROM MobileTerminalPlugin p WHERE p.pluginServiceName = :serviceName")
 })
 public class MobileTerminalPlugin implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    public static final String FIND_ALL = "Plugin.findAll";
+    public static final String FIND_BY_SERVICE_NAME = "Plugin.findByServiceName";
 
     @Id
     @GeneratedValue(generator = "MOBILETERMINALPLUGIN_UUID")

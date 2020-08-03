@@ -11,7 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.dao;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 
 import javax.ejb.Stateless;
@@ -28,7 +27,7 @@ public class MobileTerminalPluginDaoBean  {
 	private EntityManager em;
 
 	public List<MobileTerminalPlugin> getPluginList()  {
-            TypedQuery<MobileTerminalPlugin> query = em.createNamedQuery(MobileTerminalConstants.PLUGIN_FIND_ALL, MobileTerminalPlugin.class);
+            TypedQuery<MobileTerminalPlugin> query = em.createNamedQuery(MobileTerminalPlugin.FIND_ALL, MobileTerminalPlugin.class);
             return query.getResultList();
 	}
 
@@ -39,7 +38,7 @@ public class MobileTerminalPluginDaoBean  {
 
 	public MobileTerminalPlugin getPluginByServiceName(String serviceName)  {
 		try {
-            TypedQuery<MobileTerminalPlugin> query = em.createNamedQuery(MobileTerminalConstants.PLUGIN_FIND_BY_SERVICE_NAME, MobileTerminalPlugin.class);
+            TypedQuery<MobileTerminalPlugin> query = em.createNamedQuery(MobileTerminalPlugin.FIND_BY_SERVICE_NAME, MobileTerminalPlugin.class);
             query.setParameter("serviceName", serviceName);
 			MobileTerminalPlugin result = query.getSingleResult();
 			return result;

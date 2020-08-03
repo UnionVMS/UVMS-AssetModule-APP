@@ -14,6 +14,7 @@ package eu.europa.ec.fisheries.uvms.rest.mobileterminal.services;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.AssetDto;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dao.ChannelDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.MTListResponse;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
@@ -324,6 +325,22 @@ public class MobileTerminalRestResource {
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting mobile terminal history by terminalId ] {}", ex.getMessage(), ex);
+            throw ex;
+        }
+    }
+
+    @Inject
+    ChannelDaoBean channelDao;
+
+    @GET
+    @Path("/lowestFreeMemberNumberForDnid/{dnid}/")
+    @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
+    public Response getLowestFreeMemberNumberForDnid(@PathParam("dnid") Integer dnid){
+        try {
+            Integer lowestFreeMemberNumberForDnid = channelDao.getLowestFreeMemberNumberForDnid(dnid);
+            return Response.ok(lowestFreeMemberNumberForDnid).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception ex) {
+            LOG.error("[ Error while searching for the lowest unused member number for a dnid ] {}", ex.getMessage(), ex);
             throw ex;
         }
     }

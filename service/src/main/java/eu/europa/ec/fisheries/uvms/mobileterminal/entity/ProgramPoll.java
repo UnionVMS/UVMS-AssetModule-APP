@@ -1,6 +1,5 @@
 package eu.europa.ec.fisheries.uvms.mobileterminal.entity;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum;
 
 import javax.persistence.*;
@@ -10,13 +9,18 @@ import java.util.Objects;
 @Entity
 @Table(name = "poll_program")
 @NamedQueries({
-        @NamedQuery(name = "PollProgram.findAll", query = "SELECT p FROM ProgramPoll p"),
-        @NamedQuery(name = MobileTerminalConstants.POLL_PROGRAM_FIND_BY_ID, query = "SELECT p FROM ProgramPoll p WHERE p.id = :id"),
-        @NamedQuery(name = MobileTerminalConstants.POLL_PROGRAM_FIND_ALIVE, query = "SELECT p FROM ProgramPoll  p WHERE p.stopDate > :currentDate " +
+        @NamedQuery(name = ProgramPoll.PROGRAM_FIND_ALL, query = "SELECT p FROM ProgramPoll p"),
+        @NamedQuery(name = ProgramPoll.PROGRAM_FIND_BY_ID, query = "SELECT p FROM ProgramPoll p WHERE p.id = :id"),
+        @NamedQuery(name = ProgramPoll.PROGRAM_FIND_ALIVE, query = "SELECT p FROM ProgramPoll  p WHERE p.stopDate > :currentDate " +
                 "AND p.pollState <> eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum.ARCHIVED"),
-        @NamedQuery(name = MobileTerminalConstants.POLL_PROGRAM_FIND_RUNNING_AND_STARTED,
+        @NamedQuery(name = ProgramPoll.PROGRAM_FIND_RUNNING_AND_STARTED,
                 query = "SELECT p FROM ProgramPoll  p WHERE p.startDate < :currentDate AND p.pollState = eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum.STARTED") })
 public class ProgramPoll extends PollBase {
+
+    public static final String PROGRAM_FIND_ALL = "PollProgram.findAll";
+    public static final String PROGRAM_FIND_BY_ID = "PollProgram.findById";
+    public static final String PROGRAM_FIND_ALIVE = "PollProgram.findAlive";
+    public static final String PROGRAM_FIND_RUNNING_AND_STARTED = "PollProgram.findRunningAndStarted";
 
     @Column(name = "frequency")
     private Integer frequency;

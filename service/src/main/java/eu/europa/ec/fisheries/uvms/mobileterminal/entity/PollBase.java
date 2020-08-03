@@ -11,7 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.entity;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -30,14 +29,21 @@ import java.util.UUID;
 @Inheritance(strategy = InheritanceType.JOINED)
 @XmlRootElement
 @NamedQueries({
-        @NamedQuery(name = MobileTerminalConstants.POLL_FIND_ALL, query = "SELECT p FROM PollBase p"),
-        @NamedQuery(name = MobileTerminalConstants.POLL_FIND_BY_ID, query = "SELECT p FROM PollBase p WHERE p.id = :id"),
-        @NamedQuery(name = MobileTerminalConstants.POLL_FIND_BY_TYPE, query = "SELECT p FROM PollBase p WHERE p.pollTypeEnum = :pollTypeEnum"),
-        @NamedQuery(name = MobileTerminalConstants.POLL_FIND_BY_COMMENT, query = "SELECT p FROM PollBase p WHERE p.comment = :pollComment"),
-        @NamedQuery(name = MobileTerminalConstants.POLL_FIND_BY_CREATE_DATE, query = "SELECT p FROM PollBase p WHERE p.updateTime = :pollCreated"),
-        @NamedQuery(name = MobileTerminalConstants.POLL_FIND_BY_USER, query = "SELECT p FROM PollBase p WHERE p.creator = :pollUserCreator"),
+        @NamedQuery(name = PollBase.FIND_ALL, query = "SELECT p FROM PollBase p"),
+        @NamedQuery(name = PollBase.FIND_BY_ID, query = "SELECT p FROM PollBase p WHERE p.id = :id"),
+        @NamedQuery(name = PollBase.FIND_BY_TYPE, query = "SELECT p FROM PollBase p WHERE p.pollTypeEnum = :pollTypeEnum"),
+        @NamedQuery(name = PollBase.FIND_BY_COMMENT, query = "SELECT p FROM PollBase p WHERE p.comment = :pollComment"),
+        @NamedQuery(name = PollBase.FIND_BY_CREATE_DATE, query = "SELECT p FROM PollBase p WHERE p.updateTime = :pollCreated"),
+        @NamedQuery(name = PollBase.FIND_BY_USER, query = "SELECT p FROM PollBase p WHERE p.creator = :pollUserCreator"),
 })
 public class PollBase implements Serializable {
+
+    public static final String FIND_ALL = "Poll.findAll";
+    public static final String FIND_BY_ID = "Poll.findById";
+    public static final String FIND_BY_TYPE = "Poll.findByPollType";
+    public static final String FIND_BY_COMMENT = "Poll.findByPollComment";
+    public static final String FIND_BY_CREATE_DATE = "Poll.findByPollCreated";
+    public static final String FIND_BY_USER = "Poll.findByPollUserCreator";
 
     @Id
     @GeneratedValue(generator = "POLLBASE_UUID")
