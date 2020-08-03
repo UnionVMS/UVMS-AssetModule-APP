@@ -46,11 +46,6 @@ public class TestPollHelper {
         mobileTerminal.setArchived(false);
         mobileTerminal.setActive(true);
 
-        /*MobileTerminalPlugin mtp = new MobileTerminalPlugin();
-        mtp.setPluginServiceName("eu.europa.ec.fisheries.uvms.plugins.inmarsat");
-        mtp.setName("Thrane&Thrane");
-        mtp.setPluginSatelliteType("INMARSAT_C");
-        mtp.setPluginInactive(false);*/
         List<MobileTerminalPlugin> plugs = mobileTerminalPluginDao.getPluginList();
         MobileTerminalPlugin mtp = plugs.get(0);
         mobileTerminal.setPlugin(mtp);
