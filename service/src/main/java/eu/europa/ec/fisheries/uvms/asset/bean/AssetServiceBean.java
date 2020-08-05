@@ -50,6 +50,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Stateless
 public class AssetServiceBean {
@@ -662,7 +663,11 @@ public class AssetServiceBean {
     }
 
     public void remapAssetsInMovement(String oldAssetId, String newAssetId) {
-        Client client = ClientBuilder.newClient();
+        Client client = ClientBuilder.newBuilder()
+                .connectTimeout(30, TimeUnit.SECONDS)
+                //.readTimeout(30, TimeUnit.MINUTES) //what should this number be
+                .newClient();
+
         Response remapResponse = client.target(movementEndpoint)
                 .path("internal/remapMovementConnectInMovement")
                 .queryParam("MovementConnectFrom", oldAssetId)
@@ -677,7 +682,11 @@ public class AssetServiceBean {
     }
 
     public void removeMovementConnectInMovement(String assetId) {
-        Client client = ClientBuilder.newClient();
+        Client client = ClientBuilder.newBuilder()
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .newClient();
+
         Response remapResponse = client.target(movementEndpoint)
                 .path("internal/removeMovementConnect")
                 .queryParam("MovementConnectId", assetId)

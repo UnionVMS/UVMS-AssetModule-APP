@@ -34,7 +34,9 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Stateless
 @LocalBean
@@ -62,7 +64,10 @@ public class PluginServiceBean {
             SetCommandRequest request = createSetCommandRequest(pluginServiceName, CommandTypeType.POLL, username, null);
             request.getCommand().setPoll(pollType);
 
-            Client client = ClientBuilder.newClient();
+            Client client = ClientBuilder.newBuilder()
+                    .connectTimeout(30, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .newClient();
             Response response = client.target(exchangeEndpoint + "/unsecured/api/pluginCommand")
                     .request(MediaType.APPLICATION_JSON)
                     .post(Entity.json(request), Response.class);
