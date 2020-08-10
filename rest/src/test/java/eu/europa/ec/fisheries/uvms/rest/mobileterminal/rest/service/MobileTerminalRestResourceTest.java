@@ -727,6 +727,64 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertEquals(1, mtRevisions.size());
         assertTrue(mtRevisions.values().stream().allMatch(row -> row.getChanges().size() == 2));
 
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getMobileTerminalRevisionsByAssetIdMTIsUnassaignedAndUpdated() {
+        MobileTerminal mt1 = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        MobileTerminal created1 = getWebTargetExternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mt1), MobileTerminal.class);
+
+        Asset asset = createAndRestBasicAsset();
+
+        getWebTargetExternal()
+                .path("/mobileterminal")
+                .path(created1.getId().toString())
+                .path("assign")
+                .path(asset.getId().toString())
+                .queryParam("comment", "assignTerminal1")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(""), MobileTerminal.class);
+
+
+        getWebTargetExternal()
+                .path("/mobileterminal")
+                .path(created1.getId().toString())
+                .path("unassign")
+                .path(asset.getId().toString())
+                .queryParam("comment", "unassignTerminal1")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(""), MobileTerminal.class);
+
+        created1.setComment("new comment");
+        Response updatedResponse = getWebTargetExternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(created1), Response.class);
+        assertEquals(200, updatedResponse.getStatus());
+
+        Response response = getWebTargetExternal()
+                .path("/mobileterminal/history/getMtHistoryForAsset")
+                .path(asset.getId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Response.class);
+
+        String json = response.readEntity(String.class);
+        //System.out.println(json);
+        Map<UUID, ChangeHistoryRow> mtRevisions = new JsonBConfiguratorAsset().getContext(null)
+                .fromJson(json, new HashMap<UUID, ChangeHistoryRow>(){}.getClass().getGenericSuperclass());
+
+        assertEquals(1, mtRevisions.size());
+        assertTrue(mtRevisions.values().stream().allMatch(row -> row.getChanges().size() == 2));
 
     }
 
