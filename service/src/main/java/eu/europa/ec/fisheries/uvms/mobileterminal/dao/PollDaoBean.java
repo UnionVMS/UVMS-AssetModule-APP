@@ -11,7 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.dao;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollBase;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
@@ -43,7 +42,7 @@ public class PollDaoBean  {
 
 	public PollBase getPollById(UUID id) {
 		try {
-			TypedQuery<PollBase> query = em.createNamedQuery(MobileTerminalConstants.POLL_FIND_BY_ID, PollBase.class);
+			TypedQuery<PollBase> query = em.createNamedQuery(PollBase.FIND_BY_ID, PollBase.class);
 			query.setParameter("id", id);
 			return query.getSingleResult();
 		} catch (NoResultException e) {

@@ -46,11 +46,8 @@ public class TestPollHelper {
         mobileTerminal.setArchived(false);
         mobileTerminal.setActive(true);
 
-        MobileTerminalPlugin mtp = new MobileTerminalPlugin();
-        mtp.setPluginServiceName("eu.europa.ec.fisheries.uvms.plugins.inmarsat");
-        mtp.setName("Thrane&Thrane");
-        mtp.setPluginSatelliteType("INMARSAT_C");
-        mtp.setPluginInactive(false);
+        List<MobileTerminalPlugin> plugs = mobileTerminalPluginDao.getPluginList();
+        MobileTerminalPlugin mtp = plugs.get(0);
         mobileTerminal.setPlugin(mtp);
 
         serialNumber = generateARandomStringWithMaxLength(10);
@@ -70,7 +67,7 @@ public class TestPollHelper {
         return mobileTerminal;
     }
 
-    private String generateARandomStringWithMaxLength(int len) {
+    public String generateARandomStringWithMaxLength(int len) {
         Random random = new Random();
         StringBuilder ret = new StringBuilder();
         for (int i = 0; i < len; i++) {
@@ -206,7 +203,7 @@ public class TestPollHelper {
         return mt;
     }
 
-    public MobileTerminal createBasicMobileTerminal2(Asset asset) {
+    public MobileTerminal createBasicMobileTerminalWithAsset(Asset asset) {
         MobileTerminal mobileTerminal = new MobileTerminal();
         mobileTerminal.setSource(TerminalSourceEnum.INTERNAL);
         mobileTerminal.setMobileTerminalType(MobileTerminalTypeEnum.INMARSAT_C);

@@ -12,34 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.mobileterminal.constants;
 
 public class MobileTerminalConstants {
-	public static final String POLL_FIND_ALL = "Poll.findAll";
-	public static final String POLL_FIND_BY_ID = "Poll.findById";
-	public static final String POLL_FIND_BY_TYPE = "Poll.findByPollType";
-	public static final String POLL_FIND_BY_COMMENT = "Poll.findByPollComment";
-	public static final String POLL_FIND_BY_CREATE_DATE = "Poll.findByPollCreated";
-	public static final String POLL_FIND_BY_USER = "Poll.findByPollUserCreator";
 
-	public static final String POLL_PROGRAM_FIND_BY_ID = "PollProgram.findById";
-    public static final String POLL_PROGRAM_FIND_ALIVE = "PollProgram.findAlive";
-    public static final String POLL_PROGRAM_FIND_RUNNING_AND_STARTED = "PollProgram.findRunningAndStarted";
-
-	public static final String MOBILE_TERMINAL_FIND_ALL = "Mobileterminal.findAll";
-	public static final String MOBILE_TERMINAL_FIND_BY_ID = "Mobileterminal.findById";
-	public static final String MOBILE_TERMINAL_FIND_BY_SERIAL_NO = "Mobileterminal.findBySerialNo";
-	public static final String MOBILE_TERMINAL_FIND_BY_UNASSIGNED = "Mobileterminal.findByUnassigned";
-	public static final String MOBILE_TERMINAL_FIND_BY_ASSET_ID = "Mobileterminal.findByAssetId";
-	public static final String MOBILE_TERMINAL_FIND_BY_DNID_AND_MEMBER_NR_AND_TYPE = "Mobileterminal.findByDnidAndMemberNumberAndType";
-
-	public static final String CHANNEL_FIND_ACTIVE_DNID = "Channel.findByActiveDNID";
-
-	public static final String PLUGIN_FIND_ALL = "Plugin.findAll";
-	public static final String PLUGIN_FIND_BY_SERVICE_NAME = "Plugin.findByServiceName";
-	
-	public static final String DNID_LIST = "DNIDList.findAll";
-	public static final String DNID_LIST_BY_PLUGIN = "DNIDList.findByPlugin";
-	
-	public static final String OCEAN_REGIONS = "OceanRegion.findAll";
-	
     public static final String CREATE_COMMENT = "Automatic create comment";
 
     public static final String UPDATE_USER = "UVMS";

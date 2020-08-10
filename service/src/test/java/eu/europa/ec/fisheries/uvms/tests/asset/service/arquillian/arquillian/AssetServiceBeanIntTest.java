@@ -10,7 +10,6 @@ import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFields;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.*;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchLeaf;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentResponse;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
@@ -587,7 +586,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Asset asset = createAsset();
         AssetFilter createdAssetFilter = createAssetGroup(asset);
         UUID createdAssetGroupId = createdAssetFilter.getId();
-        MobileTerminal mobileTerminal = testPollHelper.createBasicMobileTerminal2(asset);
+        MobileTerminal mobileTerminal = testPollHelper.createBasicMobileTerminalWithAsset(asset);
 
         mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
 

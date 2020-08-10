@@ -23,6 +23,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.entity;
 
+import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 
@@ -50,8 +51,16 @@ import java.util.UUID;
 			@UniqueConstraint(name = "channel_uc_dnid_member_number" , columnNames = {"dnid", "member_number"})
 		})
 @Audited
+@NamedNativeQueries({
+		@NamedNativeQuery(name=Channel.LOWEST_UNUSED_MEMBER_NUMBER_FOR_DNID_NATIV_SQL, query = "SELECT MIN(a.member_number) + 1 AS firstFree \n" +
+				"FROM (SELECT member_number FROM asset.channel where dnid = :dnid UNION SELECT 0) a\n" +
+				"LEFT JOIN asset.channel b ON b.dnid = :dnid AND b.member_number = a.member_number + 1\n" +
+				"WHERE b.member_number IS NULL AND a.member_number < 255"),
+})
 public class Channel implements Serializable {
 	private static final long serialVersionUID = 1L;
+
+	public static final String LOWEST_UNUSED_MEMBER_NUMBER_FOR_DNID_NATIV_SQL = "Channel.LowestUnusedMemberNumberForDnidNativeSql";
 
 	@Id
 	@GeneratedValue(generator = "CHANNEL_UUID")

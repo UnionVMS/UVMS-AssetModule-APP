@@ -11,7 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.dao;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.ProgramPoll;
 
 import javax.ejb.Stateless;
@@ -20,7 +19,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.time.Instant;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -46,13 +44,13 @@ public class PollProgramDaoBean {
     }
 
     public List<ProgramPoll> getProgramPollsAlive()  {
-        TypedQuery<ProgramPoll> query = em.createNamedQuery(MobileTerminalConstants.POLL_PROGRAM_FIND_ALIVE, ProgramPoll.class);
+        TypedQuery<ProgramPoll> query = em.createNamedQuery(ProgramPoll.PROGRAM_FIND_ALIVE, ProgramPoll.class);
         query.setParameter("currentDate", Instant.now());
         return query.getResultList();
     }
 
     public List<ProgramPoll> getProgramPollRunningAndStarted()  {
-        TypedQuery<ProgramPoll> query = em.createNamedQuery(MobileTerminalConstants.POLL_PROGRAM_FIND_RUNNING_AND_STARTED, ProgramPoll.class);
+        TypedQuery<ProgramPoll> query = em.createNamedQuery(ProgramPoll.PROGRAM_FIND_RUNNING_AND_STARTED, ProgramPoll.class);
         query.setParameter("currentDate", Instant.now());
         List<ProgramPoll> pollPrograms = query.getResultList();
         List<ProgramPoll> validPollPrograms = new ArrayList<>();

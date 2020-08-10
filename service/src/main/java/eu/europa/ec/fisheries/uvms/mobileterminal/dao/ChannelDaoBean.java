@@ -12,13 +12,13 @@
 
 package eu.europa.ec.fisheries.uvms.mobileterminal.dao;
 
-import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.poll.PollSearchMapper;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +44,12 @@ public class ChannelDaoBean  {
             query.setParameter("idList", uuidList);
         }
         return query.getResultList();
+    }
+
+    public Integer getLowestFreeMemberNumberForDnid(Integer dnid){
+        Query q = em.createNamedQuery(Channel.LOWEST_UNUSED_MEMBER_NUMBER_FOR_DNID_NATIV_SQL);
+        q.setParameter("dnid", dnid);
+        return (Integer) q.getSingleResult();
     }
 
 }

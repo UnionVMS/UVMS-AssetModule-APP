@@ -1328,7 +1328,24 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertTrue(mtChanges.get(2).getChanges().stream().anyMatch(item -> item.getNewValue().equals(asset2.getId().toString())));
     }
 
+    @Test
+    @OperateOnDeployment("normal")
+    public void getLowestFreeMemberNumberForDnidTest() {
 
+        Response response = getWebTargetExternal()
+                .path("/mobileterminal")
+                .path("lowestFreeMemberNumberForDnid")
+                .path("20745")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get();
+
+        assertEquals(200, response.getStatus());
+        Integer lowestMemberNumber = response.readEntity(Integer.class);
+        assertNotNull(lowestMemberNumber);
+        assertEquals(1, lowestMemberNumber.intValue());
+
+    }
 
     private Asset createAndRestBasicAsset() {
         Asset asset = AssetHelper.createBasicAsset();

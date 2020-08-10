@@ -13,7 +13,6 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.entity;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.util.JsonBAssetIdOnlySerializer;
-import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSourceEnum;
 import org.hibernate.annotations.GenericGenerator;
@@ -48,17 +47,25 @@ import java.util.UUID;
 		uniqueConstraints = {@UniqueConstraint(name = "mobileterminal_uc_historyid" , columnNames = "historyid"),
 				             @UniqueConstraint(name = "mobileterminal_uc_serialnumber" , columnNames = "serial_no")})
 @NamedQueries({
-	@NamedQuery(name= MobileTerminalConstants.MOBILE_TERMINAL_FIND_ALL, query = "SELECT m FROM MobileTerminal m"),
-	@NamedQuery(name=MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_ID, query="SELECT m FROM MobileTerminal m WHERE m.id = :id"),
-	@NamedQuery(name=MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_SERIAL_NO, query="SELECT m FROM MobileTerminal m WHERE m.serialNo = :serialNo"),
-	@NamedQuery(name=MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_ASSET_ID, query="SELECT m FROM MobileTerminal m WHERE m.asset.id = :assetId"),
-	@NamedQuery(name=MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_UNASSIGNED, query="SELECT m FROM MobileTerminal m WHERE m.asset IS NULL"),
-	@NamedQuery(name=MobileTerminalConstants.MOBILE_TERMINAL_FIND_BY_DNID_AND_MEMBER_NR_AND_TYPE,
+	@NamedQuery(name= MobileTerminal.FIND_ALL, query = "SELECT m FROM MobileTerminal m"),
+	@NamedQuery(name=MobileTerminal.FIND_BY_ID, query="SELECT m FROM MobileTerminal m WHERE m.id = :id"),
+	@NamedQuery(name=MobileTerminal.FIND_BY_SERIAL_NO, query="SELECT m FROM MobileTerminal m WHERE m.serialNo = :serialNo"),
+	@NamedQuery(name=MobileTerminal.FIND_BY_ASSET_ID, query="SELECT m FROM MobileTerminal m WHERE m.asset.id = :assetId"),
+	@NamedQuery(name=MobileTerminal.FIND_BY_UNASSIGNED, query="SELECT m FROM MobileTerminal m WHERE m.asset IS NULL"),
+	@NamedQuery(name=MobileTerminal.FIND_BY_DNID_AND_MEMBER_NR_AND_TYPE,
             query="SELECT DISTINCT m FROM MobileTerminal m LEFT OUTER JOIN Channel c ON m.id = c.mobileTerminal.id " +
                     "WHERE m.archived = false AND c.archived = false AND c.dnid = :dnid AND c.memberNumber = :memberNumber AND m.mobileTerminalType = :mobileTerminalType")
 })
 public class MobileTerminal implements Serializable {
 	private static final long serialVersionUID = 1L;
+
+	public static final String FIND_ALL = "Mobileterminal.findAll";
+	public static final String FIND_BY_ID = "Mobileterminal.findById";
+	public static final String FIND_BY_SERIAL_NO = "Mobileterminal.findBySerialNo";
+	public static final String FIND_BY_UNASSIGNED = "Mobileterminal.findByUnassigned";
+	public static final String FIND_BY_ASSET_ID = "Mobileterminal.findByAssetId";
+	public static final String FIND_BY_DNID_AND_MEMBER_NR_AND_TYPE = "Mobileterminal.findByDnidAndMemberNumberAndType";
+
 
 	@Id
 	@GeneratedValue(generator = "MOBILETERMINAL_UUID")
