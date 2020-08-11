@@ -46,6 +46,8 @@ public class HistoryMapper {
                 String updater = asset.getUpdatedBy();
                 Instant updateTime = asset.getUpdateTime();
                 ChangeHistoryRow row = new ChangeHistoryRow(updater, updateTime);
+                row.setHistoryId(asset.getHistoryId());
+                row.setId(asset.getId());
                 for (Field field : fields) {
                     Object oldValue;
                     Object newValue;
@@ -91,6 +93,8 @@ public class HistoryMapper {
                 String updater = mt.getUpdateuser();
                 Instant updateTime = mt.getUpdatetime();
                 ChangeHistoryRow row = new ChangeHistoryRow(updater, updateTime);
+                row.setHistoryId(mt.getHistoryId());
+                row.setId(mt.getId());
                 for (Field field : fields) {
                     Object oldValue;
                     Object newValue;
@@ -130,6 +134,8 @@ public class HistoryMapper {
         for (ChannelDto channelDto : oldInputSet) { //for every channel in the old group, check if it exists in the new group
             Optional<ChannelDto> sameChannelInNewSet = workingNewSet.stream().filter(c -> c.getId().equals(channelDto.getId())).findAny();
             ChannelChangeHistory channelChangeHistory = new ChannelChangeHistory();
+            channelChangeHistory.setHistoryId(channelDto.getHistoryId());
+            channelChangeHistory.setId(channelDto.getId());
             if(sameChannelInNewSet.isPresent()) {
                 if(!channelDto.getHistoryId().equals(sameChannelInNewSet.get().getHistoryId())) {
                     channelChangeHistory.setChanges(channelChangeHistory(Arrays.asList(channelDto, sameChannelInNewSet.get())).get(0).getChanges());
@@ -175,6 +181,8 @@ public class HistoryMapper {
                 String updater = channel.getUpdateUser();
                 Instant updateTime = channel.getUpdateTime();
                 ChangeHistoryRow row = new ChangeHistoryRow(updater, updateTime);
+                row.setId(channel.getId());
+                row.setHistoryId(channel.getHistoryId());
                 for (Field field : fields) {
                     Object oldValue;
                     Object newValue;

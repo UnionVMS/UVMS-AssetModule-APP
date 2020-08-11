@@ -724,8 +724,12 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         Map<UUID, ChangeHistoryRow> mtRevisions = new JsonBConfiguratorAsset().getContext(null)
                 .fromJson(json, new HashMap<UUID, ChangeHistoryRow>(){}.getClass().getGenericSuperclass());
 
-        assertEquals(1, mtRevisions.size());
+        assertEquals(3, mtRevisions.size());
         assertTrue(mtRevisions.values().stream().allMatch(row -> row.getChanges().size() == 2));
+        assertTrue(mtRevisions.values().stream().allMatch((row -> row.getHistoryId() != null)));
+
+        assertTrue(mtRevisions.values().stream().anyMatch((row -> row.getId().equals(created1.getId()))));
+        assertTrue(mtRevisions.values().stream().anyMatch((row -> row.getId().equals(created2.getId()))));
 
     }
 
@@ -783,7 +787,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         Map<UUID, ChangeHistoryRow> mtRevisions = new JsonBConfiguratorAsset().getContext(null)
                 .fromJson(json, new HashMap<UUID, ChangeHistoryRow>(){}.getClass().getGenericSuperclass());
 
-        assertEquals(1, mtRevisions.size());
+        assertEquals(2, mtRevisions.size());
         assertTrue(mtRevisions.values().stream().allMatch(row -> row.getChanges().size() == 2));
 
     }
@@ -1322,9 +1326,13 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         assertEquals("user", mtChanges.get(0).getUpdatedBy());
         assertEquals(2, mtChanges.get(0).getChanges().size());
+        assertEquals(mobileTerminal.getId(), mtChanges.get(0).getId());
+        assertNotNull(mtChanges.get(0).getHistoryId());
 
         assertEquals("user", mtChanges.get(2).getUpdatedBy());
         assertEquals(1, mtChanges.get(2).getChanges().size());
+        assertEquals(mobileTerminal.getId(), mtChanges.get(2).getId());
+        assertNotNull(mtChanges.get(2).getHistoryId());
         assertTrue(mtChanges.get(2).getChanges().stream().anyMatch(item -> item.getNewValue().equals(asset2.getId().toString())));
     }
 

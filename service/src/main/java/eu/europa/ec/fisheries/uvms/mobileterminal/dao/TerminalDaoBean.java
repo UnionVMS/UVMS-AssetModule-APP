@@ -127,14 +127,21 @@ public class TerminalDaoBean {
 
         List<Number> revisionNumbers = auditReader.getRevisions(MobileTerminal.class, mobileTerminalId);
         MobileTerminal previous = null;
+        MobileTerminal previousMatch = null;
+
         for (Number rev : revisionNumbers) {
             MobileTerminal audited = auditReader.find(MobileTerminal.class, mobileTerminalId, rev);
             if((audited.getAsset() != null && assetId.equals(audited.getAsset().getId()) )
-                    || (previous != null && previous.getAsset() != null && assetId.equals(previous.getAsset().getId()))) {
+                    || (previousMatch != null && previousMatch.getAsset() != null && assetId.equals(previousMatch.getAsset().getId()))) {
 
+                if(previous != previousMatch){
+                    resultList.add(previous);
+                }
                 resultList.add(audited);
-                previous = audited;
+
+                previousMatch = audited;
             }
+            previous = audited;
         }
         return resultList;
     }

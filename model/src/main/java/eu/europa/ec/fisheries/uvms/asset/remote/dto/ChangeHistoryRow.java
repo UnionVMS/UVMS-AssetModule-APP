@@ -7,6 +7,8 @@ public class ChangeHistoryRow {
 
     private String updatedBy;
     private Instant updateTime;
+    private UUID id;
+    private UUID historyId;
 
     private Map<UUID, ChannelChangeHistory> channelChanges = new HashMap<>();
 
@@ -65,5 +67,21 @@ public class ChangeHistoryRow {
 
     public void setSnapshot(Object snapshot) {
         this.snapshot = snapshot;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public UUID getHistoryId() {
+        return historyId;
+    }
+
+    public void setHistoryId(UUID historyId) {
+        this.historyId = historyId;
     }
 }
