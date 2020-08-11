@@ -1041,7 +1041,7 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
-    public void updateAssetsSeveralTimesAndCheckAssetChangeHistoryTest() throws InterruptedException {
+    public void updateAssetsSeveralTimesAndCheckAssetChangeHistoryTest() {
 
         // CREATE AN ASSET
         Asset asset = AssetHelper.createBasicAsset();
@@ -1076,9 +1076,13 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
 
         assertEquals("user", assetChanges.get(0).getUpdatedBy());
         assertEquals(2, assetChanges.get(0).getChanges().size());
+        assertEquals(updatedAsset.getId(), assetChanges.get(0).getId());
+        assertNotNull(assetChanges.get(0).getHistoryId());
 
         assertEquals("user", assetChanges.get(1).getUpdatedBy());
         assertEquals(3, assetChanges.get(1).getChanges().size());
+        assertEquals(updatedAsset.getId(), assetChanges.get(1).getId());
+        assertNotNull(assetChanges.get(1).getHistoryId());
         assertTrue(assetChanges.get(1).getChanges().stream().anyMatch(item -> item.getNewValue().equals(updateOwner)));
         assertTrue(assetChanges.get(1).getChanges().stream().anyMatch(item -> item.getOldValue().equals(updatedName)));
         assertTrue(assetChanges.get(1).getChanges().stream().anyMatch(item -> item.getNewValue().equals(updatedName2)));
