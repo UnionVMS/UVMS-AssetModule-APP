@@ -344,6 +344,22 @@ public class AssetClientTest extends AbstractClientTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void mmsiLongerThen9CharactersTest(){
+        AssetMTEnrichmentRequest request = new AssetMTEnrichmentRequest();
+        request.setMmsiValue("1024307102");
+        request.setFlagState("ERR");
+        request.setTranspondertypeValue("AIS");
+        request.setPluginType("OTHER");
+        request.setUser("OTHER");
+        AssetMTEnrichmentResponse response = assetClient.collectAssetMT(request);
+
+        assertNotNull(response);
+        assertNull(response.getAssetHistoryId());
+        assertNull(response.getAssetUUID());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void createNewAssetOnUnknownWithVeryLongIRCS(){
         AssetMTEnrichmentRequest request = new AssetMTEnrichmentRequest();
         request.setMmsiValue("123456789");

@@ -26,8 +26,6 @@ import javax.jms.JMSContext;
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
-import javax.json.bind.JsonbConfig;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -35,6 +33,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -68,110 +67,135 @@ public class AssetClient {
     }
 
     public AssetDTO getAssetById(AssetIdentifier type, String value) {
-        return webTarget
+        Response response = webTarget
                 .path("asset")
                 .path(type.toString().toLowerCase())
                 .path(value)
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .get(AssetDTO.class);
+                .get(Response.class);
+
+        checkForErrorResponse(response);
+        return response.readEntity(AssetDTO.class);
     }
     
     public List<AssetDTO> getAssetList(SearchBranch query) {
-        AssetListResponse assetResponse = webTarget
+        Response response = webTarget
                 .path("query")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .post(Entity.json(query), AssetListResponse.class);
-    
+                .post(Entity.json(query), Response.class);
+
+        checkForErrorResponse(response);
+        AssetListResponse assetResponse = response.readEntity(AssetListResponse.class);
         return assetResponse.getAssetList();
     }
 
     public List<AssetDTO> getAssetList(String query, int page, int size, boolean includeInactivated) {
-        AssetListResponse assetResponse = webTarget
+        Response response = webTarget
                 .path("query")
                 .queryParam("page", page)
                 .queryParam("size", size)
                 .queryParam("includeInactivated", includeInactivated)
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .post(Entity.json(query), AssetListResponse.class);
+                .post(Entity.json(query), Response.class);
 
+        checkForErrorResponse(response);
+        AssetListResponse assetResponse = response.readEntity(AssetListResponse.class);
         return assetResponse.getAssetList();
     }
 
     public List<String> getAssetIdList(SearchBranch query, int page, int size, boolean includeInactivated) {
-        List<String> assetResponse = webTarget
+        Response response = webTarget
                 .path("queryIdOnly")
                 .queryParam("page", page)
                 .queryParam("size", size)
                 .queryParam("includeInactivated", includeInactivated)
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .post(Entity.json(query), new GenericType<List<String>>() {});
+                .post(Entity.json(query), Response.class);
 
-        return assetResponse;
+        checkForErrorResponse(response);
+        return response.readEntity(new GenericType<List<String>>() {});
     }
     
     public List<AssetDTO> getAssetList(SearchBranch query, int page, int size) {
-        AssetListResponse assetResponse = webTarget
+        Response response = webTarget
                     .path("query")
                     .queryParam("page", page)
                     .queryParam("size", size)
                     .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                    .post(Entity.json(query), AssetListResponse.class);
-        
+                    .post(Entity.json(query), Response.class);
+
+        checkForErrorResponse(response);
+        AssetListResponse assetResponse = response.readEntity(AssetListResponse.class);
         return assetResponse.getAssetList();
     }
     
     public List<AssetDTO> getAssetHistoryListByAssetId(UUID id) {
-        return webTarget
+        Response response = webTarget
                 .path("history/asset")
                 .path(id.toString())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .get(new GenericType<List<AssetDTO>>() {});
+                .get(Response.class);
+
+        checkForErrorResponse(response);
+        return response.readEntity(new GenericType<List<AssetDTO>>() {});
     }
     
     public AssetDTO getAssetFromAssetIdAndDate(AssetIdentifier type, String value, Instant date) {
         String formattedDate = DateUtils.dateToEpochMilliseconds(date);
-        return webTarget
+        Response response = webTarget
                 .path("history")
                 .path(type.name().toLowerCase())
                 .path(value)
                 .path(formattedDate)
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .get(AssetDTO.class);
+                .get(Response.class);
+
+        checkForErrorResponse(response);
+        return response.readEntity(AssetDTO.class);
     }
 
     public AssetDTO getAssetHistoryByAssetHistGuid(UUID historyId) {
-        return webTarget
+        Response response = webTarget
                 .path("history")
                 .path(historyId.toString())
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .get(AssetDTO.class);
+                .get(Response.class);
+
+        checkForErrorResponse(response);
+        return response.readEntity(AssetDTO.class);
     }
     
     public AssetBO upsertAsset(AssetBO asset) {
-        return webTarget
+        Response response = webTarget
                 .path("asset")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .post(Entity.json(asset), AssetBO.class);
+                .post(Entity.json(asset), Response.class);
+
+        checkForErrorResponse(response);
+        return response.readEntity(AssetBO.class);
     }
 
     public String createPollForAsset(UUID assetId, String username, String comment) {
-        CreatePollResultDto createdPollResponse = webTarget
+        Response response = webTarget
                 .path("createPollForAsset")
                 .path(assetId.toString())
                 .queryParam("username", username)
                 .queryParam("comment", comment)
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .post(Entity.json(""), CreatePollResultDto.class);
+                .post(Entity.json(""), Response.class);
+
+        checkForErrorResponse(response);
+        CreatePollResultDto createdPollResponse = response.readEntity(CreatePollResultDto.class);
 
         if(createdPollResponse.isUnsentPoll()){
             return createdPollResponse.getUnsentPolls().get(0);
@@ -189,87 +213,120 @@ public class AssetClient {
     }
 
     public String ping() {
-        return webTarget
+        Response response = webTarget
                 .path("ping")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .get(String.class);
+                .get(Response.class);
+
+        checkForErrorResponse(response);
+        return response.readEntity(String.class);
     }
 
     public CustomCode createCustomCode(CustomCode customCode) {
-        return webTarget
+        Response response = webTarget
                 .path("customcode")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .post(Entity.json(customCode), CustomCode.class);
+                .post(Entity.json(customCode), Response.class);
+
+        checkForErrorResponse(response);
+        return response.readEntity(CustomCode.class);
     }
 
     public List<String> getConstants() {
-        return webTarget
+        Response response = webTarget
                 .path("listconstants")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .get(new GenericType<List<String>>() {});
+                .get(Response.class);
+
+        checkForErrorResponse(response);
+        return response.readEntity(new GenericType<List<String>>() {});
         
     }
 
     public List<CustomCode> getCodesForConstant(String constant) {
-        return webTarget
+        Response response = webTarget
                 .path("listcodesforconstant")
                 .path(constant)
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .get(new GenericType<List<CustomCode>>() {});
+                .get(Response.class);
+
+        checkForErrorResponse(response);
+        return response.readEntity(new GenericType<List<CustomCode>>() {});
     }
 
     public Boolean isCodeValid(String constant, String code, Instant date){
         String theDate = DateUtils.dateToEpochMilliseconds(date);
-        String response = webTarget
+        Response response = webTarget
                 .path(constant)
                 .path(code)
                 .path("verify")
                 .queryParam("date", theDate)
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .get(String.class);
-        return Boolean.valueOf(response);
+                .get(Response.class);
+
+        checkForErrorResponse(response);
+        String boolResponse = response.readEntity(String.class);
+        return Boolean.valueOf(boolResponse);
     }
 
     public List<CustomCode> getCodeForDate(String constant, String code, Instant date) {
         String theDate = DateUtils.dateToEpochMilliseconds(date);
-        return webTarget
+        Response response = webTarget
                 .path(constant)
                 .path(code)
                 .path("getfordate")
                 .queryParam("date", theDate)
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .get(new GenericType<List<CustomCode>>() {});
+                .get(Response.class);
+
+        checkForErrorResponse(response);
+        return response.readEntity(new GenericType<List<CustomCode>>() {});
     }
 
     public CustomCode replace(CustomCode customCode) {
-        return webTarget
+        Response response = webTarget
                 .path("replace")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .post(Entity.json(customCode), CustomCode.class);
+                .post(Entity.json(customCode), Response.class);
+
+        checkForErrorResponse(response);
+        return response.readEntity(CustomCode.class);
     }
 
     public AssetMTEnrichmentResponse collectAssetMT(AssetMTEnrichmentRequest request) {
-        return webTarget
+        Response response = webTarget
                 .path("collectassetmt")
                 .request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .post(Entity.json(request), AssetMTEnrichmentResponse.class);
+                .post(Entity.json(request), Response.class);
+
+        checkForErrorResponse(response);
+        return response.readEntity(AssetMTEnrichmentResponse.class);
     }
 
     public String getMicroAssetList(List<String> assetIdList){
-        return webTarget
+        Response response = webTarget
                 .path("microAssets")
                 .request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .post(Entity.json(assetIdList), String.class);
+                .post(Entity.json(assetIdList), Response.class);
+
+        checkForErrorResponse(response);
+        return response.readEntity(String.class);
+    }
+
+    private void checkForErrorResponse(Response response){
+        if(response.getStatus() != 200){
+            throw new RuntimeException("Statuscode from asset was: " + response.getStatus() + " with payload " + response.readEntity(String.class));
+        }
     }
 }
