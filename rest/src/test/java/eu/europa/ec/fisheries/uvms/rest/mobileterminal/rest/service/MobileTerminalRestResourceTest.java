@@ -12,7 +12,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
-import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeHistoryItem;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeHistoryRow;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChannelChangeHistory;
 import eu.europa.ec.fisheries.uvms.asset.util.JsonBConfiguratorAsset;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
@@ -20,10 +20,8 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalStatus;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalRevisionsDto;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
-import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeHistoryRow;
 import eu.europa.ec.fisheries.uvms.rest.asset.filter.AppError;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.dto.MTQuery;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
@@ -69,6 +67,26 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         assertTrue(first.isPresent());
         assertEquals(mobileTerminal.getChannels().iterator().next().getName(), first.get().getName());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createMobileTerminalWithLongCommentTest() {
+        MobileTerminal mobileTerminal = MobileTerminalTestHelper.createBasicMobileTerminal();
+        String comment = "This comment is longer then 255 characters. This comment is longer then 255 characters. " +
+                "This comment is longer then 255 characters. This comment is longer then 255 characters. " +
+                "This comment is longer then 255 characters. This comment is longer then 255 characters. " +
+                "This comment is longer then 255 characters. This comment is longer then 255 characters.";
+        mobileTerminal.setComment(comment);
+
+        MobileTerminal created = getWebTargetExternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mobileTerminal), MobileTerminal.class);
+
+        assertNotNull(created);
+        assertEquals(comment, created.getComment());
     }
 
     @Test

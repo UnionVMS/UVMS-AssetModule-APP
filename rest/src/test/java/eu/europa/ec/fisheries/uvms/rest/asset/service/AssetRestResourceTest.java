@@ -65,6 +65,25 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void createAssetWithLongCommentTest() {
+        Asset asset = AssetHelper.createBasicAsset();
+        String comment = "This comment is longer then 255 characters. This comment is longer then 255 characters. " +
+                "This comment is longer then 255 characters. This comment is longer then 255 characters. " +
+                "This comment is longer then 255 characters. This comment is longer then 255 characters. " +
+                "This comment is longer then 255 characters. This comment is longer then 255 characters.";
+        asset.setComment(comment);
+        Asset response = getWebTargetExternal()
+                .path("asset")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(asset), Asset.class);
+
+        assertNotNull(response);
+        assertEquals(comment, response.getComment());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void createAssetTest() {
         Asset asset = AssetHelper.createBasicAsset();
         Asset createdAsset = restCreateAsset(asset);

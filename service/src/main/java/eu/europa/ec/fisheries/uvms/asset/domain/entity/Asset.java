@@ -275,7 +275,6 @@ public class Asset implements Serializable {
     @Transient
     private List<String> mobileTerminalUUIDList;
 
-    @Size(max = 255)
     @Column(name = "comment")
     private String comment;
 

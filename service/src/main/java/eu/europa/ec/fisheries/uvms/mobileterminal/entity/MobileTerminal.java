@@ -141,7 +141,6 @@ public class MobileTerminal implements Serializable {
 	@Transient
 	private String assetUUID;		//renamed to avoid a conflict in yasson
 
-	@Size(max = 255)
 	@Column(name = "comment")
 	private String comment;
 
