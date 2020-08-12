@@ -15,7 +15,7 @@ public class MovementMock {
     @Path("/remapMovementConnectInMovement")
     public Response remapMovementConnectInMovement(@QueryParam(value = "MovementConnectFrom") String movementConnectFrom, @QueryParam(value = "MovementConnectTo") String movementConnectTo) {
 
-        return Response.ok().build();
+        return Response.ok(55).build();
     }
 
     @DELETE

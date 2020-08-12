@@ -43,7 +43,9 @@ public class AssetRemapTest extends TransactionalTests {
 
         String id = assetRemapMapping.getId().toString();
 
+        System.setProperty("MovementsRemapped", "0");
         assetRemapTask.remap();
+        System.clearProperty("MovementsRemapped");
 
         assertFalse(assetDao.getAllAssetRemappings().isEmpty());
 
@@ -70,7 +72,9 @@ public class AssetRemapTest extends TransactionalTests {
 
         String id = assetRemapMapping.getId().toString();
 
+        System.setProperty("MovementsRemapped", "0");
         assetRemapTask.remap();
+        System.clearProperty("MovementsRemapped");
 
         List<AssetRemapMapping> mappingList = assetDao.getAllAssetRemappings();
         assertFalse(mappingList.stream().anyMatch(mapping -> mapping.getId().toString().equals(id)));
@@ -81,6 +85,37 @@ public class AssetRemapTest extends TransactionalTests {
         assertNotNull(newAsset);
 
     }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void assetRemapWithOldAssetThatStillHasMovementsMappingTest() {
+        Asset oldAsset = AssetTestsHelper.createBasicAsset();
+        oldAsset = assetDao.createAsset(oldAsset);
+        Asset newAsset = AssetTestsHelper.createBasicAsset();
+        newAsset = assetDao.createAsset(newAsset);
+        AssetRemapMapping assetRemapMapping = new AssetRemapMapping();
+        assetRemapMapping.setOldAssetId(oldAsset.getId());
+        assetRemapMapping.setNewAssetId(newAsset.getId());
+        assetRemapMapping.setCreatedDate(Instant.now().minus(4, ChronoUnit.HOURS));
+
+        assetRemapMapping = assetDao.createAssetRemapMapping(assetRemapMapping);
+
+        String id = assetRemapMapping.getId().toString();
+
+        System.setProperty("MovementsRemapped", "777");
+        assetRemapTask.remap();
+        System.clearProperty("MovementsRemapped");
+
+        List<AssetRemapMapping> mappingList = assetDao.getAllAssetRemappings();
+        assertTrue(mappingList.stream().anyMatch(mapping -> mapping.getId().toString().equals(id)));
+
+        oldAsset = assetDao.getAssetById(oldAsset.getId());
+        assertNotNull(oldAsset);
+        newAsset = assetDao.getAssetById(newAsset.getId());
+        assertNotNull(newAsset);
+
+    }
+
 
     @Test
     @OperateOnDeployment("normal")
@@ -96,7 +131,9 @@ public class AssetRemapTest extends TransactionalTests {
 
         String id = assetRemapMapping.getId().toString();
 
+        System.setProperty("MovementsRemapped", "0");
         assetRemapTask.remap();
+        System.clearProperty("MovementsRemapped");
 
         List<AssetRemapMapping> mappingList = assetDao.getAllAssetRemappings();
         assertFalse(mappingList.stream().anyMatch(mapping -> mapping.getId().toString().equals(id)));

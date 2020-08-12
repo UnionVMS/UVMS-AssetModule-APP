@@ -662,7 +662,7 @@ public class AssetServiceBean {
         return mapping;
     }
 
-    public void remapAssetsInMovement(String oldAssetId, String newAssetId) {
+    public int remapAssetsInMovement(String oldAssetId, String newAssetId) {
         Client client = ClientBuilder.newBuilder()
                 .connectTimeout(30, TimeUnit.SECONDS)
                 //.readTimeout(30, TimeUnit.MINUTES) //what should this number be
@@ -677,8 +677,10 @@ public class AssetServiceBean {
                 .put(Entity.json(""), Response.class);
 
         if (remapResponse.getStatus() != 200) { //do we want this?
-            throw new RuntimeException("Response from remapping from old asset to new asset was not 200. Return status: " + remapResponse.getStatus() + " Return error: " + remapResponse.getEntity());
+            throw new RuntimeException("Response from remapping from old asset to new asset was not 200. Return status: " + remapResponse.getStatus() + " Return error: " + remapResponse.readEntity(String.class));
         }
+
+        return Integer.parseInt(remapResponse.readEntity(String.class));
     }
 
     public void removeMovementConnectInMovement(String assetId) {
