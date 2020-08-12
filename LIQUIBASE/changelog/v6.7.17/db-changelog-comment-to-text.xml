@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd"
+                   logicalFilePath="changelog/v6.7.17/db-changelog-comment-to-text.xml">
+
+    <changeSet id="change comment from max 255 to text" author="joemat">
+        <modifyDataType columnName="comment"
+                        newDataType="clob"
+                        tableName="asset"/>
+
+        <modifyDataType columnName="comment"
+                        newDataType="clob"
+                        tableName="asset_aud"/>
+
+        <modifyDataType columnName="comment"
+                        newDataType="clob"
+                        tableName="mobileterminal"/>
+
+        <modifyDataType columnName="comment"
+                        newDataType="clob"
+                        tableName="mobileterminal_aud"/>
+
+        <modifyDataType columnName="comment"
+                        newDataType="clob"
+                        tableName="pollbase"/>
+    </changeSet>
+
+</databaseChangeLog>
