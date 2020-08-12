@@ -116,7 +116,9 @@ public class SSEResourceTest extends AbstractAssetRestTest {
             source.open();
             assertTrue(source.isOpen());
 
+            System.setProperty("MovementsRemapped", "0");
             assetRemapTask.remap();
+            System.clearProperty("MovementsRemapped");
 
             Thread.sleep(1000);
             assertTrue(source.isOpen());
