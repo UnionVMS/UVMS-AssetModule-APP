@@ -388,8 +388,7 @@ public class AssetServiceBean {
         }
 
         MobileTerminalTypeEnum transponderType = getTransponderType(request);
-        if (asset == null &&
-                (transponderType == null || !transponderType.equals(MobileTerminalTypeEnum.INMARSAT_C))) {
+        if (shouldANewShipBeCreated(request,asset, transponderType)) {
             asset = AssetUtil.createNewAssetFromRequest(request, assetDao.getNextUnknownShipNumber());
             createAsset(asset, asset.getUpdatedBy());
         }
@@ -399,6 +398,14 @@ public class AssetServiceBean {
         enrichAssetFilter(assetMTEnrichmentResponse, asset);
 
         return assetMTEnrichmentResponse;
+    }
+
+    private static final int MMSI_MAX_LENGHT = 9;
+
+    private boolean shouldANewShipBeCreated(AssetMTEnrichmentRequest request, Asset asset, MobileTerminalTypeEnum transponderType){
+        return asset == null &&
+                (request.getMmsiValue() != null && request.getMmsiValue().length() <= MMSI_MAX_LENGHT) &&
+                (transponderType == null || !transponderType.equals(MobileTerminalTypeEnum.INMARSAT_C));
     }
 
     private void enrichAssetAndMobileTerminal(AssetMTEnrichmentRequest request,
