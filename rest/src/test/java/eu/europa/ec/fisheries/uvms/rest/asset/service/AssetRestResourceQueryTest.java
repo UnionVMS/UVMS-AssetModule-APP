@@ -160,6 +160,33 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
     }
 
     @Test
+    @OperateOnDeployment("normal")
+    public void getAllAssetsThatAreLongTermParkedTest() {
+        Asset asset = AssetHelper.createBasicAsset();
+        asset.setLongTermParked(true);
+        Asset createdParkedAsset = sendAssetToCreation(asset);
+
+        asset = AssetHelper.createBasicAsset();
+        Asset createdActiveAsset = sendAssetToCreation(asset);
+
+        SearchBranch trunk = new SearchBranch(true);
+        SearchLeaf leaf = new SearchLeaf(SearchFields.LONG_TERM_PARKED, "true");
+        trunk.getFields().add(leaf);
+
+        AssetListResponse listResponse = getWebTargetExternal()
+                .path("asset")
+                .path("list")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(trunk), AssetListResponse.class);
+
+        assertNotNull(listResponse);
+        assertFalse(listResponse.getAssetList().isEmpty());
+        assertTrue(listResponse.getAssetList().stream().anyMatch(a -> a.getId().equals(createdParkedAsset.getId())));
+        assertFalse(listResponse.getAssetList().stream().anyMatch(a -> a.getId().equals(createdActiveAsset.getId())));
+    }
+
+    @Test
     @RunAsClient
     @OperateOnDeployment("normal")
     public void getAssetListQueryTestEmptyResult() {

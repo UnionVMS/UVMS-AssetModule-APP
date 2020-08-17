@@ -316,8 +316,9 @@ public class AssetDao {
                 } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.ID)) {
                     UUID id = UUID.fromString(leaf.getSearchValue());
                     predicates.add(criteriaBuilder.equal(asset.get(leaf.getSearchField().getFieldName()), id));
-                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.BOOLEAN) ||
-                        leaf.getSearchField().getFieldType().equals(SearchFieldType.STRING)) {
+                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.BOOLEAN)) {
+                    predicates.add(criteriaBuilder.equal(asset.get(leaf.getSearchField().getFieldName()), Boolean.valueOf(leaf.getSearchValue())));
+                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.STRING)){
                     predicates.add(criteriaBuilder.equal(asset.get(leaf.getSearchField().getFieldName()), leaf.getSearchValue()));
                 }
             }
@@ -395,11 +396,14 @@ public class AssetDao {
                     UUID id = UUID.fromString(leaf.getSearchValue());
                     operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).eq(id));
                     operatorUsed = true;
-                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.BOOLEAN) ||
-                        leaf.getSearchField().getFieldType().equals(SearchFieldType.STRING)) {
+                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.BOOLEAN)) {
+                    operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).eq(Boolean.valueOf(leaf.getSearchValue())));
+                    operatorUsed = true;
+                } else if (leaf.getSearchField().getFieldType().equals(SearchFieldType.STRING)){
                     operator.add(AuditEntity.property(leaf.getSearchField().getFieldName()).eq(leaf.getSearchValue()));
                     operatorUsed = true;
                 }
+
             }
         }
         if (operatorUsed) {
