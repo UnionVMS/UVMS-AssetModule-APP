@@ -40,8 +40,7 @@ public class AssetQueueConsumerBean extends AbstractConsumer implements AssetQue
         try {
             return getMessage(correlationId, type, TIMEOUT);
         } catch (Exception e) {
-            LOG.error("[ Error when retrieving message. ] {}", e.getMessage());
-            throw new AssetMessageException("Error when retrieving message: " + e.getMessage());
+            throw new AssetMessageException("Error when retrieving message: " + e.getMessage(),e);
         }
     }
 

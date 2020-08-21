@@ -23,4 +23,8 @@ public class AssetMessageException extends AssetException {
         super(message);
     }
 
+    public AssetMessageException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
 }

@@ -70,6 +70,7 @@ public class AssetFacade implements IAssetFacade {
             log.info("[ASSET_LIST END] Response sent back..");
             return listAssetResponse;
         } catch (AssetException e) {
+            log.info("no ListAssetResponse was found for the given query",e);
             return new ListAssetResponse();
         }
     }
@@ -81,6 +82,7 @@ public class AssetFacade implements IAssetFacade {
             log.info("[INFO] Finding ASSET_GROUP..");
             return assetDomainModel.getAssetListByAssetGroup(assetGroupQuery);
         } catch (AssetException e) {
+            log.info("no asset list was found for the given query",e);
             return new ArrayList();
         }
     }

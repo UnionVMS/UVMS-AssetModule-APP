@@ -71,7 +71,7 @@ public class AssetGroupResource {
             assetGroupList.setCurrentPage( assetGroupList.getCurrentPage() -1);
             return new ResponseDto(assetGroupList, ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset group list by user. ] {}", e.getMessage(), e.getStackTrace());
+            LOG.error("Error when getting asset group list by user. " + e.getMessage(), e);
             return ErrorHandler.getFault(e);
         }
     }
@@ -117,7 +117,7 @@ public class AssetGroupResource {
             LOG.info("Getting asset group by ID {}",id);
             return new ResponseDto(assetGroupService.getAssetGroupById(id), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset by ID. ] {}", e.getMessage(), e.getStackTrace());
+            LOG.error("Error when getting asset by ID." + e.getMessage(), e);
             return ErrorHandler.getFault(e);
         }
     }
@@ -139,7 +139,7 @@ public class AssetGroupResource {
             LOG.info("Creating asset group: {}",assetGroup);
             return new ResponseDto(assetGroupService.createAssetGroup(assetGroup, servletRequest.getRemoteUser()), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when creating asset group: {} ] {}",assetGroup, e.getMessage());
+            LOG.error("Error when creating asset group: " + assetGroup, e);
             return ErrorHandler.getFault(e);
         }
     }
@@ -161,7 +161,7 @@ public class AssetGroupResource {
             LOG.info("Updating asset group:{}",assetGroup);
             return new ResponseDto(assetGroupService.updateAssetGroup(assetGroup, servletRequest.getRemoteUser()), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when updating asset group. ] {}", e.getMessage(), e.getStackTrace());
+            LOG.error("Error when updating asset group." + e.getMessage(), e);
             return ErrorHandler.getFault(e);
         }
     }
@@ -183,7 +183,7 @@ public class AssetGroupResource {
             LOG.info("Deleting asset group: {}",id);
             return new ResponseDto(assetGroupService.deleteAssetGroupById(id, servletRequest.getRemoteUser()), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when deleting asset group. ] {}", e.getMessage(), e.getStackTrace());
+            LOG.error("Error when deleting asset group." + e.getMessage(), e);
             return ErrorHandler.getFault(e);
         }
     }

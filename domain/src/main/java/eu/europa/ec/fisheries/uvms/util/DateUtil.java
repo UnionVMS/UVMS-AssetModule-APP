@@ -30,7 +30,6 @@ public class DateUtil {
     final static String FORMAT = "yyyy-MM-dd HH:mm:ss Z";
 
     public static Date parseToUTCDate(String dateString) throws IllegalArgumentException {
-        try {
             if (dateString != null) {
                 DateTimeFormatter formatter = DateTimeFormat.forPattern(FORMAT).withOffsetParsed();
                 DateTime dateTime = formatter.withZoneUTC().parseDateTime(dateString);
@@ -39,10 +38,6 @@ public class DateUtil {
             } else {
                 return null;
             }
-        } catch (IllegalArgumentException e) {
-            LOG.error(e.getMessage());
-            throw new IllegalArgumentException(e);
-        }
     }
 
     public static String parseUTCDateToString(Date date) {

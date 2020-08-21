@@ -40,7 +40,7 @@ public enum GearFishingTypeEnum {
 			try {
 				return GearFishingTypeEnum.valueOf(fishingType);
 			} catch (IllegalArgumentException e) {
-				throw new AssetModelValidationException("Invalid fishing gear type");
+				throw new AssetModelValidationException("Invalid fishing gear type" ,e);
 			}
 		}
 		//return GearFishingTypeEnum.UNKNOWN;

@@ -75,9 +75,9 @@ public class AssetServiceBean implements AssetService {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetCreated(createdAsset.getAssetId().getGuid(), username);
             messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AssetMessageException e) {
-            LOG.warn("Failed to send audit log message! Asset with guid {} was created ", createdAsset.getAssetId().getGuid());
+            LOG.warn("Failed to send audit log message! Asset with guid " + createdAsset.getAssetId().getGuid()  + " was created ", e);
         } catch (AuditModelMarshallException e) {
-            LOG.error("Failed to send audit log message! Asset with guid {} was created ", createdAsset.getAssetId().getGuid());
+            LOG.error("Failed to send audit log message! Asset with guid " + createdAsset.getAssetId().getGuid() + " was created ", e);
         }
 
         return createdAsset;
@@ -183,7 +183,7 @@ public class AssetServiceBean implements AssetService {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetUpdated(asset.getAssetId().getGuid(), comment, username);
             messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException e) {
-            LOG.error("Failed to send audit log message! Asset with guid {} was updated ", asset.getAssetId().getGuid());
+            LOG.error("Failed to send audit log message! Asset with guid " + asset.getAssetId().getGuid() + " was updated ",e );
         }
     }
 
@@ -192,7 +192,7 @@ public class AssetServiceBean implements AssetService {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetArchived(asset.getAssetId().getGuid(), comment, username);
             messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException e) {
-            LOG.error("Failed to send audit log message! Asset with guid {} was archived ", asset.getAssetId().getGuid());
+            LOG.error("Failed to send audit log message! Asset with guid " + asset.getAssetId().getGuid() + " was archived ", e);
         }
     }
 
@@ -328,6 +328,7 @@ public class AssetServiceBean implements AssetService {
         try {
             return assetDomainModel.getAssetHistoryListByAssetId(assetId, maxResults);
         } catch (NoAssetEntityFoundException e) {
+            LOG.info("No asset found for the given assetId: " + assetId + " returning empty list",e);
             return Lists.newArrayList();
         }
     }

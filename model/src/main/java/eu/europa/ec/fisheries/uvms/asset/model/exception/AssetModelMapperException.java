@@ -20,4 +20,8 @@ public class AssetModelMapperException extends AssetModelException {
         super(message);
     }
 
+    public AssetModelMapperException(String message, Throwable cause) {
+        super(message,cause);
+    }
+
 }

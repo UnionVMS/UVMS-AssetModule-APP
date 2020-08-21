@@ -34,7 +34,7 @@ public class PingEventBean {
             pingResponse.setResponse("pong");
             messageProducer.sendModuleResponseMessageOv(message.getMessage(), JAXBMarshaller.marshallJaxBObjectToString(pingResponse));
         } catch (AssetModelMarshallException e) {
-            LOG.error("[ Error when marshalling ping response ]");
+            LOG.error("Error when marshalling ping response",e);
         }
     }
 }

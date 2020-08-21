@@ -17,4 +17,8 @@ public class ConfigModelException extends AssetModelException {
     public ConfigModelException(String message) {
         super(message);
     }
+
+    public ConfigModelException(String message, Throwable cause) {
+        super(message,cause);
+    }
 }

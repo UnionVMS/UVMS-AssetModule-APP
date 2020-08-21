@@ -72,7 +72,7 @@ public class AssetResource {
             assetList.setCurrentPage(assetList.getCurrentPage() - 1);
             return new ResponseDto(assetList, ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset list. ] ");
+            LOG.error("Error when getting asset list. ",e );
             return ErrorHandler.getFault(e);
         }
     }
@@ -96,7 +96,7 @@ public class AssetResource {
             ListAssetResponse assetList = assetService.getAssetList(assetQuery);
             return new ResponseDto(assetList, ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset list. ] ");
+            LOG.error("Error when getting asset list.",e);
             return ErrorHandler.getFault(e);
         }
     }
@@ -120,7 +120,7 @@ public class AssetResource {
             Long assetListCount = assetService.getAssetListCount(assetQuery);
             return new ResponseDto(assetListCount, ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset list: {} ] {}",assetQuery,e);
+            LOG.error("Error when getting asset list: " + assetQuery,e);
             return ErrorHandler.getFault(e);
         }
     }
@@ -143,7 +143,7 @@ public class AssetResource {
             NoteActivityCode activityCodes = assetService.getNoteActivityCodes();
             return new ResponseDto(activityCodes, ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ getNoteActivityCodes error. ] ",e);
+            LOG.error("getNoteActivityCodes error.",e);
             return ErrorHandler.getFault(e);
         }
     }
@@ -166,7 +166,7 @@ public class AssetResource {
             LOG.info("Getting asset by ID: {}",id);
             return new ResponseDto(assetService.getAssetByGuid(id), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset by ID. {}] {} ",id,e);
+            LOG.error("Error when getting asset by ID with ID: " + id,e);
             return ErrorHandler.getFault(e);
         }
     }
@@ -197,7 +197,7 @@ public class AssetResource {
             String remoteUser = servletRequest.getRemoteUser();
             return new ResponseDto(assetService.createAsset(asset, remoteUser), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when creating asset. {}] {}",asset, e.getMessage());
+            LOG.error("Error when creating asset for asset: " + asset, e);
             return ErrorHandler.getFault(e);
         }
     }
@@ -220,7 +220,7 @@ public class AssetResource {
             String remoteUser = servletRequest.getRemoteUser();
             return new ResponseDto(assetService.updateAsset(asset, remoteUser, comment), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when updating asset. {}] {}",asset, e.getMessage());
+            LOG.error("Error when updating asset for asset: " + asset, e);
             return ErrorHandler.getFault(e);
         }
     }
@@ -236,7 +236,7 @@ public class AssetResource {
             Asset archivedAsset = assetService.archiveAsset(asset, remoteUser, comment);
             return new ResponseDto(archivedAsset, ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when archiving asset. {}] {}",asset, e.getMessage());
+            LOG.error("Error when archiving asset." + asset, e);
             return ErrorHandler.getFault(e);
         }
     }
@@ -252,7 +252,7 @@ public class AssetResource {
             AssetListGroupByFlagStateResponse assetListGroupByFlagState = assetService.getAssetListGroupByFlagState(assetIds);
             return new ResponseDto(assetListGroupByFlagState, ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset list:{} ] {}",assetIds,e);
+            LOG.error("Error when getting asset list: " + assetIds,e);
             return ErrorHandler.getFault(e);
         }
     }

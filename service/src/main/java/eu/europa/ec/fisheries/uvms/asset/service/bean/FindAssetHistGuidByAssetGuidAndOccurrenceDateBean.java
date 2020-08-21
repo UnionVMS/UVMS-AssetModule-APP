@@ -53,7 +53,7 @@ public class FindAssetHistGuidByAssetGuidAndOccurrenceDateBean {
             messageProducer.sendModuleResponseMessageOv(jmsMessage, response);
             log.info("Response sent back to requester on queue [ {} ]", jmsMessage!= null ? jmsMessage.getJMSReplyTo() : "Null!!!");
         } catch (AssetException | JMSException e) {
-            LOG.error("[ Error when getting vessel identifiers by asset history guid. ] ");
+            LOG.error("Error when getting vessel identifiers by asset history guid.",e);
             assetErrorEvent.fire(new AssetMessageEvent(jmsMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting asset history by asset guid and occurrence date [ " + e.getMessage())));
         }
     }

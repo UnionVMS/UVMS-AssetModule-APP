@@ -61,8 +61,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             em.persist(asset);
             return asset;
         } catch (Exception e) {
-            LOG.error("[ Error when creating asset. ] ");
-            throw new AssetDaoException("[ Error when creating asset ] " + e.getMessage());
+            throw new AssetDaoException("Error when creating asset " + e.getMessage(),e);
         }
     }
 
@@ -71,7 +70,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
         try {
             return em.find(AssetEntity.class, id);
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No asset found for " + id);
+            throw new NoAssetEntityFoundException("No asset found for " + id ,e);
         }
     }
 
@@ -82,8 +81,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             em.flush();
             return asset;
         } catch (Exception e) {
-            LOG.error("[ Error when updating asset. ] ");
-            throw new AssetDaoException("[ update asset, id: " + asset.getId() + " ] " + e.getMessage());
+            throw new AssetDaoException(" update asset, id: " + asset.getId() ,e);
         }
     }
 
@@ -103,8 +101,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_ALL, AssetEntity.class);
             return query.getResultList();
         } catch (IllegalArgumentException e) {
-            LOG.error("[ Error when getting asset list. ] ");
-            throw new AssetDaoException("[ get all asset ] " + e.getMessage());
+            throw new AssetDaoException("Error when getting asset list " + e.getMessage(),e);
         }
     }
     @Override
@@ -115,7 +112,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No asset found for " + cfr);
+            throw new NoAssetEntityFoundException("No asset found for cfr: " + cfr + e.getMessage(),e);
         }
     }
 
@@ -127,7 +124,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No asset found for " + ircs);
+            throw new NoAssetEntityFoundException("No asset found for ircs: " + ircs,e);
         }
     }
 
@@ -139,7 +136,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No asset found for " + guid);
+            throw new NoAssetEntityFoundException("No asset found for guid: " + guid ,e);
         }
     }
 
@@ -151,7 +148,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No asset found for " + imo);
+            throw new NoAssetEntityFoundException("No asset found for imo: " + imo,e);
         }
     }
 
@@ -163,7 +160,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No asset found for " + mmsi);
+            throw new NoAssetEntityFoundException("No asset found for mmsi: " + mmsi,e);
         }
     }
 
@@ -175,7 +172,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             AssetHistory singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No asset history found for " + guid);
+            throw new NoAssetEntityFoundException("No asset history found for guid: " + guid,e);
         }
     }
 
@@ -186,7 +183,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             query.setParameter("guids", guids);
             return query.getResultList();
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No asset history found for " + guids);
+            throw new NoAssetEntityFoundException("No asset history found for guids: " + guids,e);
         }
     }
 
@@ -229,6 +226,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             resultList = query.getResultList();
         }
         catch (EntityNotFoundException e){
+            LOG.info("OK");
             // nothing to do
         }
         return resultList;
@@ -317,19 +315,19 @@ public class AssetDaoBean extends Dao implements AssetDao {
             query.setParameter("guids", assetGuids);
             return query.getResultList();
         } catch (IllegalArgumentException e) {
-            throw new AssetDaoException("[ get all asset ] " + e.getMessage());
+            throw new AssetDaoException(" get all asset " + e.getMessage(),e);
         }
     }
 
     @Override
-    public AssetEntity getAssetByCfrExcludeArchived(String cfr) throws NoAssetEntityFoundException, AssetDaoException {
+    public AssetEntity getAssetByCfrExcludeArchived(String cfr) throws AssetDaoException {
         try {
             TypedQuery<AssetEntity> query = em.createNamedQuery(UvmsConstants.ASSET_FIND_BY_CFR_EXCLUDE_ARCHIVED, AssetEntity.class);
             query.setParameter("cfr", cfr);
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No asset found for " + cfr);
+            throw new NoAssetEntityFoundException("No asset found for cfr: " + cfr ,e);
         }
     }
 
@@ -341,7 +339,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No asset found for " + ircs);
+            throw new NoAssetEntityFoundException("No asset found for ircs: " + ircs,e);
         }
     }
 
@@ -353,7 +351,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No asset found for " + imo);
+            throw new NoAssetEntityFoundException("No asset found for imo: " + imo,e);
         }
     }
 
@@ -365,7 +363,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             AssetEntity singleResult = query.getSingleResult();
             return singleResult;
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No asset found for " + mmsi);
+            throw new NoAssetEntityFoundException("No asset found for mmsi: " + mmsi ,e);
         }
     }
 
@@ -382,7 +380,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             query.setParameter("iccat", iccat);
             return query.getSingleResult();
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No asset found for " + iccat);
+            throw new NoAssetEntityFoundException("No asset found for iccat: " + iccat,e);
         }
     }
 
@@ -393,7 +391,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             query.setParameter("uvi", uvi);
             return query.getSingleResult();
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No asset found for " + uvi);
+            throw new NoAssetEntityFoundException("No asset found for uvi: " + uvi ,e);
         }
     }
 
@@ -404,7 +402,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             query.setParameter("gfcm", gfcm);
             return query.getSingleResult();
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No asset found for " + gfcm);
+            throw new NoAssetEntityFoundException("No asset found for gfcm: " + gfcm ,e);
         }
     }
 
@@ -434,8 +432,8 @@ public class AssetDaoBean extends Dao implements AssetDao {
             return flagState;
         } catch (NoResultException ex) {
             // Throw user exception
-            String msg = "This code was not found in database. Check your setup";
-            throw new AssetDaoException(msg);
+            String msg = "This code was not found in database. Check your setup ";
+            throw new AssetDaoException(msg + ex.getMessage(),ex);
         }
     }
 
@@ -489,7 +487,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
                 throw new AssetDaoException("Nothing in resultset for query " + hql);
             }
         } catch (NoResultException ex) {
-            throw new AssetDaoException(ex.toString());
+            throw new AssetDaoException(ex.toString(),ex);
         }
     }
 
@@ -501,7 +499,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             query.setParameter("occurrenceDate", occurrenceDate);
             return query.getResultList().stream().findFirst().orElse(null);
         } catch (NoResultException e) {
-            throw new NoAssetEntityFoundException("No asset history found for asset guid: " + assetGuid + " and occurrence date: " + occurrenceDate);
+            throw new NoAssetEntityFoundException("No asset history found for asset guid: " + assetGuid + " and occurrence date: " + occurrenceDate,e);
         }
     }
     public Optional<AssetEntity> getAssetByAssetIdList(List<AssetId> idList){
@@ -548,6 +546,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
         try {
             return Optional.of(q.getSingleResult());
         } catch (NoResultException | NonUniqueResultException ex) {
+            LOG.info("No single result found ");
             return Optional.empty();
         }
     }

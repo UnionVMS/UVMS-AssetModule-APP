@@ -16,4 +16,8 @@ public class AssetDaoException extends AssetModelException {
     public AssetDaoException(String message) {
         super(message);
     }
+
+    public AssetDaoException(String message, Throwable cause) {
+        super(message,cause);
+    }
 }

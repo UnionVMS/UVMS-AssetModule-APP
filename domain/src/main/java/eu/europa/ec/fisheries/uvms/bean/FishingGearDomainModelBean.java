@@ -75,7 +75,7 @@ public class FishingGearDomainModelBean  {
                 fishingGearBean.update(fishingGearByExternalIdEntity);
             }
         } catch (Exception e) {
-            LOG.error("Could not creae or update the fishing gear with external id: " + fishingGear.getExternalId());
+            LOG.error("Could not create or update the fishing gear with external id: " + fishingGear.getExternalId(),e);
         }
 
         return fishingGearByExternalIdEntity;

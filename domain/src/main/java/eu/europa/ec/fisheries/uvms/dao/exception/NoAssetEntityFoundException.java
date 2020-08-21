@@ -19,4 +19,8 @@ public class NoAssetEntityFoundException extends AssetDaoException {
 	public NoAssetEntityFoundException(String message) {
 		super(message);
 	}
+
+	public NoAssetEntityFoundException(String message, Throwable cause) {
+		super(message,cause);
+	}
 }

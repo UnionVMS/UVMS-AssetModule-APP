@@ -23,4 +23,7 @@ public class AssetServiceException extends AssetException {
         super(message);
     }
 
+    public AssetServiceException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

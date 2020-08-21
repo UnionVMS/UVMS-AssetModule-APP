@@ -94,7 +94,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetGroupCreated(createdAssetGroup.getGuid(), username, GROUP_QUALIFIER_PREFIX + createdAssetGroup.getName());
             messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException e) {
-            LOG.error("Failed to send audit log message! Asset Group with id {} was created", createdAssetGroup.getGuid());
+            LOG.error("Failed to send audit log message! Asset Group with id: " + createdAssetGroup.getGuid() + "was created", e);
         }
         return createdAssetGroup;
     }
@@ -112,7 +112,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetGroupUpdated(updatedAssetGroup.getGuid(), username, GROUP_QUALIFIER_PREFIX + updatedAssetGroup.getName());
             messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException e) {
-            LOG.error("Failed to send audit log message! Asset Group with id {} was updated", updatedAssetGroup.getGuid());
+            LOG.error("Failed to send audit log message! Asset Group with id "+ updatedAssetGroup.getGuid() +" was updated",e );
         }
 
         return updatedAssetGroup;
@@ -130,7 +130,7 @@ public class AssetGroupServiceBean implements AssetGroupService {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetGroupDeleted(deletedAssetGroup.getGuid(),  username, GROUP_QUALIFIER_PREFIX  + deletedAssetGroup.getName() );
             messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException e) {
-            LOG.error("Failed to send audit log message! Asset Group with id {} was deleted", deletedAssetGroup.getGuid());
+            LOG.error("Failed to send audit log message! Asset Group with id " + deletedAssetGroup.getGuid() + " was deleted", e );
         }
         return deletedAssetGroup;
     }

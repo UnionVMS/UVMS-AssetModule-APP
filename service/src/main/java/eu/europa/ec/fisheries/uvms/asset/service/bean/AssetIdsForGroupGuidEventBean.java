@@ -77,7 +77,7 @@ public class AssetIdsForGroupGuidEventBean {
             messageProducer.sendModuleResponseMessageOv(message, JAXBMarshaller.marshallJaxBObjectToString(wrapperResponse));
             LOG.info("Response sent back to requestor on queue [ {} ]", message!= null ? message.getJMSReplyTo() : "Null!!!");
         } catch (AssetException  | JMSException e) {
-            LOG.error("[ Error when getting assetGroupList from source. ] ");
+            LOG.error("Error when getting assetGroupList from source.",e);
             assetErrorEvent.fire(new AssetMessageEvent(assetMessageEvent.getMessage(), createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when on findAndSendAssetIdsForGroupGuid " + e.getMessage())));
         }
     }

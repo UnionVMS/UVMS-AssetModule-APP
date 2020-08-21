@@ -102,7 +102,7 @@ public class AssetDomainModelBean {
         try {
             Integer.parseInt(id);
         } catch (NumberFormatException e) {
-            throw new InputArgumentException(id + " can not be parsed to integer");
+            throw new InputArgumentException(id + " can not be parsed to integer",e);
         }
     }
 
@@ -135,8 +135,7 @@ public class AssetDomainModelBean {
             Asset retVal = EntityToModelMapper.toAssetFromEntity(updated);
             return retVal;
         } catch (AssetDaoException e) {
-            LOG.error("[ Error when updating asset. ] {}", e.getMessage());
-            throw new AssetModelException(e.getMessage());
+            throw new AssetModelException("Error when updating asset."+e.getMessage(),e);
         }
     }
 
@@ -254,6 +253,7 @@ public class AssetDomainModelBean {
             getAssetEntityById(asset.getAssetId());
             return updateAsset(asset, username);
         } catch (NoAssetEntityFoundException e) {
+            LOG.info("Cannot update asset, creating one",e);
             return createAsset(asset, username);
         }
     }
@@ -309,6 +309,7 @@ public class AssetDomainModelBean {
                 messages.add("An asset with this CFR value already exists.");
             }
         } catch (NoAssetEntityFoundException e) {
+            LOG.info("OK",e);
             // OK
         }
 
@@ -317,6 +318,7 @@ public class AssetDomainModelBean {
                 messages.add("An asset with this IMO value already exists.");
             }
         } catch (NoAssetEntityFoundException e) {
+            LOG.info("OK",e);
             // OK
         }
 
@@ -325,6 +327,7 @@ public class AssetDomainModelBean {
                 messages.add("An asset with this MMSI value already exists.");
             }
         } catch (NoAssetEntityFoundException e) {
+            LOG.info("OK",e);
             // OK
         }
         try {
@@ -332,6 +335,7 @@ public class AssetDomainModelBean {
                 messages.add("An asset with this IRCS value already exists.");
             }
         } catch (NoAssetEntityFoundException e) {
+            LOG.info("OK",e);
             // OK
         }
 
@@ -350,16 +354,9 @@ public class AssetDomainModelBean {
             return ;
         }
 
-        AssetEntity assetEntity = null;
-        try {
-            // get an object based on what type of id it has
-            assetEntity = getAssetEntityById(assetId);
+        AssetEntity assetEntity = getAssetEntityById(assetId);
             // remove it based on its db identity
             assetDao.deleteAsset(assetEntity);
-        } catch (NoAssetEntityFoundException e) {
-            LOG.warn(e.toString(), e);
-            throw e;
-        }
 
     }
 
@@ -375,13 +372,8 @@ public class AssetDomainModelBean {
                     "Cannot get asset  because date   is null.");
         }
 
-        try {
-            FlagState flagState = assetDao.getAssetFlagStateByIdAndDate(assetGuid, date);
-            return flagState;
-        } catch (AssetDaoException e) {
-            LOG.warn(e.toString(), e);
-            throw e;
-        }
+        FlagState flagState = assetDao.getAssetFlagStateByIdAndDate(assetGuid, date);
+        return flagState;
     }
 
     public Asset getAssetByIdAndDate(AssetId assetId, Date date) throws AssetModelException {
@@ -390,7 +382,7 @@ public class AssetDomainModelBean {
             Asset asset = EntityToModelMapper.toAssetFromEntity(assetEntity);
             return asset;
         } catch (AssetDaoException e) {
-            throw new AssetModelException(e.toString());
+            throw new AssetModelException(e.getMessage(),e);
         }
     }
 
@@ -399,7 +391,7 @@ public class AssetDomainModelBean {
             AssetHistory assetHistory = assetDao.getAssetHistoryFromAssetGuidAndOccurrenceDate(assetGuid, occurrenceDate);
             return assetHistory != null ? EntityToModelMapper.toAssetFromAssetHistory(assetHistory) : null;
         } catch (AssetDaoException e) {
-            throw new AssetModelException(e.toString());
+            throw new AssetModelException(e.getMessage(),e);
         }
     }
 

@@ -38,8 +38,7 @@ public class AssetOutQueueConsumerBean extends AbstractConsumer implements Asset
         try {
             return getMessage(correlationId, type, TIMEOUT);
         } catch (Exception e) {
-            LOG.error("[ Error when retrieving message. ] {}", e.getMessage());
-            throw new AssetMessageException("Error when retrieving message: " + e.getMessage());
+            throw new AssetMessageException("Error when retrieving message: " + e.getMessage(),e);
         }
     }
 
@@ -48,8 +47,7 @@ public class AssetOutQueueConsumerBean extends AbstractConsumer implements Asset
         try {
             return getMessage(correlationId, type);
         } catch (MessageException e) {
-            LOG.error("[ Error when getting config message. ] {}", e.getMessage());
-            throw new ConfigMessageException(e.getMessage());
+            throw new ConfigMessageException(e.getMessage(),e);
         }
     }
 

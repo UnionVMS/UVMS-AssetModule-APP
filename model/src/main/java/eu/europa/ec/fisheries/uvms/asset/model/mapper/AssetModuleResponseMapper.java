@@ -69,7 +69,7 @@ public class AssetModuleResponseMapper {
             AssetFault fault = JAXBMarshaller.unmarshallTextMessage(response, AssetFault.class);
             throw new AssetModelValidationException(fault.getCode() + " : " + fault.getFault());
         } catch (AssetModelMarshallException e) {
-            //everything is well
+            LOG.info("Could not unmarshall message: " + response );
         }
     }
 
@@ -79,8 +79,7 @@ public class AssetModuleResponseMapper {
             GetAssetModuleResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, GetAssetModuleResponse.class);
             return mappedResponse.getAsset();
         } catch (AssetModelMarshallException | JMSException e) {
-            LOG.error("[ Error when mapping response to single asset response. ] {}", e.getMessage());
-            throw new AssetModelMapperException("Error when returning asset from response in ResponseMapper: " + e.getMessage());
+            throw new AssetModelMapperException("Error when returning asset from response in ResponseMapper: " + e.getMessage(),e);
         }
     }
 
@@ -90,8 +89,7 @@ public class AssetModuleResponseMapper {
             ListAssetResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, ListAssetResponse.class);
             return mappedResponse.getAsset();
         } catch (AssetModelMarshallException | JMSException e) {
-            LOG.error("[ Error when mapping response to list asset response. ] {}", e.getMessage());
-            throw new AssetModelMapperException("Error when returning assetList from response in ResponseMapper: " + e.getMessage());
+            throw new AssetModelMapperException("Error when returning assetList from response in ResponseMapper: " + e.getMessage(),e );
         }
     }
 
@@ -101,8 +99,7 @@ public class AssetModuleResponseMapper {
             BatchAssetListResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, BatchAssetListResponse.class);
             return mappedResponse.getBatchList();
         } catch (AssetModelMarshallException | JMSException e) {
-            LOG.error("[ Error when mapping response to list asset response. ] {}", e.getMessage());
-            throw new AssetModelMapperException("Error when returning assetList from response in ResponseMapper: " + e.getMessage());
+            throw new AssetModelMapperException("Error when returning assetList from response in ResponseMapper: " + e.getMessage(),e);
         }
     }
 
@@ -112,8 +109,7 @@ public class AssetModuleResponseMapper {
             ListAssetGroupResponse mappedResponse = JAXBMarshaller.unmarshallTextMessage(response, ListAssetGroupResponse.class);
             return mappedResponse.getAssetGroup();
         } catch (AssetModelMarshallException | JMSException e) {
-            LOG.error("[ Error when mapping response to list asset response. ] {}", e.getMessage());
-            throw new AssetModelMapperException("Error when returning assetList from response in ResponseMapper: " + e.getMessage());
+            throw new AssetModelMapperException("Error when returning assetList from response in ResponseMapper: " + e.getMessage(),e);
         }
     }
 

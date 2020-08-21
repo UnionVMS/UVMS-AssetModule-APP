@@ -17,4 +17,8 @@ public class AssetModelMarshallException extends AssetModelMapperException {
 	public AssetModelMarshallException(String message) {
 		super(message);
 	}
+
+	public AssetModelMarshallException(String message, Throwable cause) {
+		super(message,cause);
+	}
 }

@@ -120,8 +120,8 @@ public class AssetDataSourceRequestMapper {
             histId.setEventId(guid);
             return histId;
         } catch (NullPointerException e) {
-            LOG.error("[ Error when creating history asset ID. ] {}", e.getMessage());
-            throw new AssetModelMapperException(e.getMessage());
+            LOG.error(" Error when creating history asset ID." + e.getMessage(),e);
+            throw new AssetModelMapperException(" Error when creating history asset ID." + guid,e);
         }
     }
 
@@ -141,8 +141,7 @@ public class AssetDataSourceRequestMapper {
             request.setId(createHistoryAssetId(assetHistoryGuid));
             return JAXBMarshaller.marshallJaxBObjectToString(request);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset history by ID. ] {}", e.getMessage());
-            throw new AssetModelMapperException(e.getMessage());
+            throw new AssetModelMapperException(e.getMessage(),e);
         }
     }
 

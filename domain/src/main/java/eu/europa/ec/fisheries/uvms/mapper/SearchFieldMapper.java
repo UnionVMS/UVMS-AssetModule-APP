@@ -110,7 +110,7 @@ public class SearchFieldMapper {
         	try {
 				value = GearFishingTypeEnum.getValue(searchValue);
 			} catch (AssetModelValidationException e) {
-				throw new AssetDaoMappingException("GearType couldn't be transformed to valid search value");
+				throw new AssetDaoMappingException("GearType couldn't be transformed to valid search value",e);
 			}
         }
         value = value.replace("-", "");

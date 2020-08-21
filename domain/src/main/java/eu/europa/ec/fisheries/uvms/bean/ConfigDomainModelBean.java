@@ -57,7 +57,7 @@ public class ConfigDomainModelBean  {
             }
             return licenseTypes;
         } catch (AssetDaoException e) {
-            throw new ConfigModelException("Couldn't fetch license types " + e.getMessage());
+            throw new ConfigModelException("Couldn't fetch license types " + e.getMessage(),e);
         }
     }
 
@@ -70,7 +70,7 @@ public class ConfigDomainModelBean  {
             }
             return flagStateList;
         } catch (AssetDaoException e) {
-            throw new ConfigModelException("Couldn't fetch flag states " + e.getMessage());
+            throw new ConfigModelException("Couldn't fetch flag states " + e.getMessage(),e);
         }
     }
 
@@ -88,7 +88,7 @@ public class ConfigDomainModelBean  {
             }
             return settings;
         } catch (AssetDaoException e) {
-            throw new ConfigModelException("Couldn't fetch settings " + e.getMessage());
+            throw new ConfigModelException("Couldn't fetch settings " + e.getMessage(),e);
         }
     }
 

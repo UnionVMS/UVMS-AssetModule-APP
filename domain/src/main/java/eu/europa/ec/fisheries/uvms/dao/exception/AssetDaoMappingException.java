@@ -22,4 +22,8 @@ public class AssetDaoMappingException extends AssetModelException {
         super(message);
     }
 
+    public AssetDaoMappingException(String message, Throwable cause) {
+        super(message,cause);
+    }
+
 }

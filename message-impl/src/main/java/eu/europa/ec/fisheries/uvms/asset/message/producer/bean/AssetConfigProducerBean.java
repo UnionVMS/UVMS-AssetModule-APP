@@ -35,7 +35,7 @@ public class AssetConfigProducerBean extends AbstractProducer implements ConfigM
         try {
             return sendModuleMessage(textMsg, assetInQueue);
         } catch (MessageException e) {
-            log.error("[ERROR] Error while trying to send message to Config! Check MdrConfigProducerBeanImpl..");
+            log.error("[ERROR] Error while trying to send message to Config! Check MdrConfigProducerBeanImpl..",e);
         }
         return StringUtils.EMPTY;
     }

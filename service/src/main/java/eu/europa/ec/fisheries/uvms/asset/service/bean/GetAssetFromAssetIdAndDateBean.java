@@ -75,7 +75,7 @@ public class GetAssetFromAssetIdAndDateBean {
             messageProducer.sendModuleResponseMessageOv(event.getMessage(), AssetModuleResponseMapper.mapAssetModuleResponse(response));
 
         } catch (AssetException e) {
-            LOG.error("[ Error when getting assetGroupList from source. ] ");
+            LOG.error("Error when getting assetGroupList from source. ",e);
             assetErrorEvent.fire(new AssetMessageEvent(event.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting GetAssetFromAssetIdAndDate [ " + e.getMessage())));
         }
     }

@@ -60,7 +60,7 @@ public class AssetHistoryResource {
             LOG.info("Getting asset history list by asset ID: {}",assetId);
             return new ResponseDto(assetHistoryService.getAssetHistoryListByAssetId(assetId, maxNbr), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset history list by asset ID. {}]",assetId);
+            LOG.error("Error when getting asset history list by asset ID:" + assetId,e);
             return ErrorHandler.getFault(e);
         }
     }
@@ -74,7 +74,7 @@ public class AssetHistoryResource {
             LOG.info("Getting asset history list by asset GUID: {} Date: {}",assetGuid, dateStr);
             return new ResponseDto(assetHistoryService.getFlagStateByIdAndDate(assetGuid, DateUtils.parseToUTCDate( dateStr, DateUtils.FORMAT) ), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset history list by asset ID. {}]",assetGuid);
+            LOG.error("Error when getting asset history list by asset ID:" + assetGuid,e);
             return ErrorHandler.getFault(e);
         }
     }
@@ -89,7 +89,7 @@ public class AssetHistoryResource {
         try {
             return new ResponseDto(assetHistoryService.getAssetByIdAndDate(type, value , DateUtils.parseToUTCDate(dateStr,DateUtils.FORMAT)), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset {}{}{} ]from cfr and date", type, value, dateStr );
+            LOG.error("Error when getting asset from cfr and date with type: " + type + " value:" + value + " and date: "+ dateStr,e );
             return ErrorHandler.getFault(e);
         }
     }
@@ -113,7 +113,7 @@ public class AssetHistoryResource {
             LOG.info("Getting asset history by asset history guid: {}",guid);
             return new ResponseDto(assetHistoryService.getAssetHistoryByAssetHistGuid(guid), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting asset history by asset history guid. {}] ",guid);
+            LOG.error("[ Error when getting asset history by asset history guid with guid: " + guid,e);
             return ErrorHandler.getFault(e);
         }
     }

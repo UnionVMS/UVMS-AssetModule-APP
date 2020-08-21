@@ -21,7 +21,7 @@ public enum UnitTonnage {
 			try {
 				return UnitTonnage.valueOf(grossTonnageUnit);
 			} catch (IllegalArgumentException e) {
-				throw new AssetModelValidationException("Non valid gross tonnage unit");
+				throw new AssetModelValidationException("Non valid gross tonnage unit",e);
 			}
 		}
 		return UnitTonnage.LONDON;

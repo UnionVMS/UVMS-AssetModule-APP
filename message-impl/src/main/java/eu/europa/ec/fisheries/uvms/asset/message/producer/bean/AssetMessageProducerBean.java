@@ -68,7 +68,7 @@ public class AssetMessageProducerBean extends AbstractProducer implements AssetM
             }
             return null;
         } catch (Exception e) {
-            LOG.error("[ Error when sending message {} ] {}",text, e.getMessage());
+            LOG.error(" Error when sending message: " + text, e);
             return null;
         }
     }
@@ -84,8 +84,7 @@ public class AssetMessageProducerBean extends AbstractProducer implements AssetM
             }
             return null;
         } catch (Exception e) {
-            LOG.error("[ Error when sending message {} ] {}",text, e.getMessage());
-            throw new AssetMessageException(e.getMessage());
+            throw new AssetMessageException("Error when sending message ",e);
         }
     }
 
@@ -96,7 +95,7 @@ public class AssetMessageProducerBean extends AbstractProducer implements AssetM
             LOG.info("Sending message back to recipient from VesselModule with correlationId {} on queue: {}", message.getJMSMessageID(), message.getJMSReplyTo());
             sendResponseMessageToSender(message, text);
         } catch (JMSException | MessageException e) {
-            LOG.error("[ Error when returning module asset request. ] {} {}", e.getMessage(), e.getStackTrace());
+            LOG.error(" Error when returning module asset request. " + e.getMessage(), e);
         }
     }
 
@@ -108,9 +107,9 @@ public class AssetMessageProducerBean extends AbstractProducer implements AssetM
             String data = JAXBMarshaller.marshallJaxBObjectToString(message.getFault());
             sendResponseMessageToSender(jmsMessage, data);
         } catch (JMSException | AssetModelMarshallException | MessageException e) {
-            LOG.error("[ Error when returning Error message to recipient. ] {} ", e.getMessage());
+            LOG.error("Error when returning Error message to recipient. " + e.getMessage(),e);
         } catch (EJBTransactionRolledbackException e) {
-            LOG.error("[ Error when returning Error message to recipient. Usual cause is NoAssetEntityFoundException ] {} ", e.getMessage());
+            LOG.error("Error when returning Error message to recipient. Usual cause is NoAssetEntityFoundException " + e.getMessage(),e);
         }
     }
 

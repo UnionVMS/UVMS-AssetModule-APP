@@ -18,4 +18,8 @@ public class InputArgumentException extends AssetModelException {
 		super(message);
 	}
 
+	public InputArgumentException(String message,Throwable cause) {
+		super(message,cause);
+	}
+
 }

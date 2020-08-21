@@ -62,7 +62,7 @@ public class AssetGroupsForAssetEventBean {
             messageProducer.sendModuleResponseMessageOv(message.getMessage(), AssetModuleResponseMapper.mapToAssetGroupsForAssetResponse(assetGroupsForAssets));
             LOG.info("Response sent back to request on queue [ {} ]", jmsMessage!= null ? jmsMessage.getJMSReplyTo() : "Null!!!");
         } catch (JMSException | AssetException e) {
-            LOG.error("[ Error when getting JMS response from source. ] ");
+            LOG.error("Error when getting JMS response from source. ",e);
             assetErrorEvent.fire(new AssetMessageEvent(message.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting AssetGroupsForAssetEventBean [ " + e.getMessage())));
         }
     }

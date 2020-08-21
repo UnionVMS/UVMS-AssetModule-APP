@@ -17,4 +17,8 @@ public class AssetModelValidationException extends AssetModelMapperException {
 	public AssetModelValidationException(String message) {
 		super(message);
 	}
+
+	public AssetModelValidationException(String message, Throwable cause) {
+		super(message,cause);
+	}
 }

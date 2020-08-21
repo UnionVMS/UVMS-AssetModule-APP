@@ -55,7 +55,7 @@ public class ConfigResource {
         try {
             return new ResponseDto(ConfigSearchField.values(), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting config search fields. ]");
+            LOG.error("Error when getting config search fields.",e);
             return ErrorHandler.getFault(e);
         }
     }
@@ -69,7 +69,7 @@ public class ConfigResource {
         	List<Config> configuration = configService.getConfiguration();
             return new ResponseDto(ConfigMapper.mapConfiguration(configuration), ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting config search fields. ] ");
+            LOG.error("Error when getting config search fields. ",e);
             return ErrorHandler.getFault(e);
         }
     }
@@ -83,7 +83,7 @@ public class ConfigResource {
         	Map<String, String> parameters = configService.getParameters();
             return new ResponseDto(parameters, ResponseCodeConstant.OK);
         } catch (Exception e) {
-            LOG.error("[ Error when getting config search fields. ] ");
+            LOG.error("Error when getting config search fields. ",e);
             return ErrorHandler.getFault(e);
         }
     }

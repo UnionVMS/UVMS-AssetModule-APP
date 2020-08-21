@@ -56,7 +56,7 @@ public class GetAssetEventBean {
             LOG.debug("Got message to AssetModule, Executing Get asset from datasource {}", dataSource);
             asset = service.getAssetById(assetId, dataSource);
         } catch (AssetException e) {
-            LOG.error("[ Error when getting asset from source {}. ] ", dataSource);
+            LOG.error("Error when getting asset from source " + dataSource ,e);
             assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting asset from source : " + dataSource + " Error message: " + e.getMessage())));
             messageSent = true;
             asset = null;
@@ -67,7 +67,7 @@ public class GetAssetEventBean {
                 Asset upsertedAsset = service.upsertAsset(asset, dataSource.name());
                 asset.getAssetId().setGuid(upsertedAsset.getAssetId().getGuid());
             } catch (AssetException e) {
-                LOG.error("[ Couldn't upsert asset in internal ]");
+                LOG.error("Couldn't upsert asset in internal ",e);
                 assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, e.getMessage())));
                 messageSent = true;
             }
@@ -78,7 +78,7 @@ public class GetAssetEventBean {
                 messageProducer.sendModuleResponseMessageOv(textMessage, AssetModuleResponseMapper.mapAssetModuleResponse(asset));
                 LOG.info("Response sent back to requestor on queue [ {} ]", textMessage!= null ? textMessage.getJMSReplyTo() : "Null!!!");
             } catch (AssetModelMapperException | JMSException e) {
-                LOG.error("[ Error when mapping asset ] ");
+                LOG.error(" Error when mapping asset ",e);
                 assetErrorEvent.fire(new AssetMessageEvent(textMessage, AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when mapping asset" + e.getMessage())));
             }
         }
@@ -99,8 +99,8 @@ public class GetAssetEventBean {
             }
             return AssetDataSourceQueue.INTERNAL;
         } catch (ConfigServiceException e) {
-            LOG.error("[ Error when deciding data flow. ] ");
-            throw new AssetServiceException(e.getMessage());
+            LOG.error("Error when deciding data flow. ",e);
+            throw new AssetServiceException(e.getMessage(),e);
         }
     }
 }

@@ -60,7 +60,7 @@ public class GetFlagstateByIdAndDateBean {
             // put it on response queue
             messageProducer.sendModuleResponseMessageOv(event.getMessage(), AssetModuleResponseMapper.mapFlagStateModuleResponse(response));
         } catch (NumberFormatException | AssetException | ClassCastException e) {
-            LOG.error("[ Error when getting FlagSate. ] ");
+            LOG.error("Error when getting FlagSate.",e);
             assetErrorEvent.fire(new AssetMessageEvent(event.getMessage(), AssetModuleResponseMapper.createFaultMessage(FaultCode.ASSET_MESSAGE, "Exception when getting FlagSate [ " + e.getMessage())));
         }
 
