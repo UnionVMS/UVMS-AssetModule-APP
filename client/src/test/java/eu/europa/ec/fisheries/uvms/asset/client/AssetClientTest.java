@@ -372,8 +372,8 @@ public class AssetClientTest extends AbstractClientTest {
         AssetMTEnrichmentResponse response = assetClient.collectAssetMT(request);
 
         assertNotNull(response);
-        assertNull(response.getAssetHistoryId());
-        assertNull(response.getAssetUUID());
+        assertNotNull(response.getAssetHistoryId());
+        assertNotNull(response.getAssetUUID());
     }
 
     @Test
