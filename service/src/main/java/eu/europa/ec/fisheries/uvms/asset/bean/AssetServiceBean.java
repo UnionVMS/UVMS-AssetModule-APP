@@ -404,7 +404,7 @@ public class AssetServiceBean {
 
     private boolean shouldANewShipBeCreated(AssetMTEnrichmentRequest request, Asset asset, MobileTerminalTypeEnum transponderType){
         return asset == null &&
-                    (request.getMmsiValue() == null || request.getMmsiValue().length() <= MMSI_MAX_LENGHT) &&
+                (request.getMmsiValue() == null || request.getMmsiValue().length() <= MMSI_MAX_LENGHT) &&
                 (transponderType == null || !transponderType.equals(MobileTerminalTypeEnum.INMARSAT_C));
     }
 
