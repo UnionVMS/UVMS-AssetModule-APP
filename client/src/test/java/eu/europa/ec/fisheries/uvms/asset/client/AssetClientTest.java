@@ -360,6 +360,24 @@ public class AssetClientTest extends AbstractClientTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void createNewAssetWoMmsiFromFlux(){
+        AssetMTEnrichmentRequest request = new AssetMTEnrichmentRequest();
+        request.setFlagState("SWE");
+        request.setTranspondertypeValue("FLUX");
+        request.setPluginType("FLUX");
+        request.setUser("FLUX");
+        request.setCfrValue("CFR756051784");
+        request.setIrcsValue("F1234591");
+        request.setExternalMarking("EXT3");
+        AssetMTEnrichmentResponse response = assetClient.collectAssetMT(request);
+
+        assertNotNull(response);
+        assertNull(response.getAssetHistoryId());
+        assertNull(response.getAssetUUID());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void createNewAssetOnUnknownWithVeryLongIRCS(){
         AssetMTEnrichmentRequest request = new AssetMTEnrichmentRequest();
         request.setMmsiValue("123456789");
