@@ -96,9 +96,10 @@ public class PollServiceBean {
     }
 
     public CreatePollResultDto createPoll(PollRequestType poll) {
-        
 
-        List<PollResponseType> createdPolls = validateAndCreatePolls(poll);
+        throw new RuntimeException("The ability to poll has been turned OFF on the test server for the summer of 2020 at the request of Antonia");
+
+        /*List<PollResponseType> createdPolls = validateAndCreatePolls(poll);
 
         List<String> unsentPolls = new ArrayList<>();
         List<String> sentPolls = new ArrayList<>();
@@ -128,7 +129,7 @@ public class PollServiceBean {
         result.setSentPolls(sentPolls);
         result.setUnsentPolls(unsentPolls);
         result.setUnsentPoll(!unsentPolls.isEmpty());
-        return result;
+        return result;*/
     }
 
     public List<PollDto> getRunningProgramPolls() {

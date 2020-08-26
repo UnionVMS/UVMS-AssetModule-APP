@@ -3,7 +3,6 @@ package eu.europa.ec.fisheries.uvms.asset.client.model;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 public class AssetMTEnrichmentResponse implements Serializable {
 
@@ -17,7 +16,7 @@ public class AssetMTEnrichmentResponse implements Serializable {
     private String assetHistoryId = null;
     private String flagstate = null;
     private String vesselType = null;
-    private boolean longTermParked;
+    private boolean parked;
 
     private String externalMarking = null;
     private String gearType = null;
@@ -202,11 +201,11 @@ public class AssetMTEnrichmentResponse implements Serializable {
         this.mobileTerminalIsInactive = mobileTerminalIsInactive;
     }
 
-    public boolean getLongTermParked() {
-        return longTermParked;
+    public boolean getParked() {
+        return parked;
     }
 
-    public void setLongTermParked(boolean longTermParked) {
-        this.longTermParked = longTermParked;
+    public void setParked(boolean parked) {
+        this.parked = parked;
     }
 }

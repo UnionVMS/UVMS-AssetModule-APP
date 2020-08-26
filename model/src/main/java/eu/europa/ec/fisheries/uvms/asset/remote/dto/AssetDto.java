@@ -13,14 +13,7 @@ package eu.europa.ec.fisheries.uvms.asset.remote.dto;
 
 import eu.europa.ec.fisheries.uvms.asset.model.constants.UnitTonnage;
 
-import javax.json.bind.annotation.JsonbProperty;
-import javax.json.bind.annotation.JsonbTypeSerializer;
-import javax.persistence.*;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.time.Instant;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 public class AssetDto {
@@ -139,7 +132,7 @@ public class AssetDto {
 
     private Long nationalId;
 
-    private Boolean longTermParked;
+    private Boolean parked;
 
     public UUID getId() {
         return id;
@@ -598,10 +591,10 @@ public class AssetDto {
     }
 
     public Boolean isLongTermParked() {
-        return longTermParked;
+        return parked;
     }
 
-    public void setLongTermParked(Boolean longTermParked) {
-        this.longTermParked = longTermParked;
+    public void setParked(Boolean parked) {
+        this.parked = parked;
     }
 }
