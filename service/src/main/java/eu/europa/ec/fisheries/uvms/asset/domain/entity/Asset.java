@@ -281,7 +281,7 @@ public class Asset implements Serializable {
     @Column(name = "national_id")
     private Long nationalId;
 
-    @Column(name = "long_term_parked")
+    @Column(name = "parked")
     private Boolean parked = false;
 
     @PrePersist
