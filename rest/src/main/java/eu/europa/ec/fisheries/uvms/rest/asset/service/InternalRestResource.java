@@ -168,7 +168,7 @@ public class InternalRestResource {
     @POST
     @Path("asset")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response upsertAsset(AssetBO assetBo) throws Exception {
+    public Response upsertAsset(AssetBO assetBo) {
         try {
             AssetBO upsertedAsset = assetService.upsertAssetBO(assetBo, (assetBo.getAsset().getUpdatedBy() == null ? "UVMS (REST)" : assetBo.getAsset().getUpdatedBy()));
             return Response.ok(upsertedAsset).build();

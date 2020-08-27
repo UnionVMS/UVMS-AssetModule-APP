@@ -420,7 +420,7 @@ public class AssetDTO {
         this.nationalId = nationalId;
     }
 
-    public Boolean isLongTermParked() {
+    public Boolean isParked() {
         return parked;
     }
 

@@ -774,7 +774,7 @@ public class Asset implements Serializable {
         return parked;
     }
 
-    public void setParked(Boolean longTermParked) {
-        this.parked = longTermParked;
+    public void setParked(Boolean parked) {
+        this.parked = parked;
     }
 }
