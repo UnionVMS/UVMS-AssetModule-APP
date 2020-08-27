@@ -12,7 +12,7 @@
 
         <renameColumn  newColumnName="parked"
                        oldColumnName="long_term_parked"
-                       tableName="asset"/>
+                       tableName="asset_aud"/>
 
     </changeSet>
 
