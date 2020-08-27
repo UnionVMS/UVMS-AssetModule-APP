@@ -30,7 +30,7 @@ public class AssetConfigHelper implements ConfigHelper {
     @Inject
     private PropertiesBean propertiesBean;
 
-    @PersistenceContext
+    @PersistenceContext(unitName = "assetPU")
     protected EntityManager em;
 
     @Override

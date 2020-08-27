@@ -5,7 +5,9 @@
 
     <persistence-unit name="assetPU" transaction-type="JTA">
         <jta-data-source>jdbc/uvms_asset</jta-data-source>
+        <class>eu.europa.ec.fisheries.uvms.config.service.entity.Parameter</class>
         <shared-cache-mode>ALL</shared-cache-mode>
+
         <properties>
             <property name="hibernate.dialect" value="eu.europa.ec.fisheries.uvms.util.PostgreSQL94CCustomDialect"/>
             <property name="hibernate.cache.use_second_level_cache" value="true"/>
