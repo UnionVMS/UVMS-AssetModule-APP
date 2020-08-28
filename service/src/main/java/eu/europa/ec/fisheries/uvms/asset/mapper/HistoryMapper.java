@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.asset.mapper;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeHistoryRow;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeType;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChannelChangeHistory;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ChannelDto;
@@ -34,7 +35,7 @@ public class HistoryMapper {
 
     public static List<ChangeHistoryRow> assetChangeHistory(List<Asset> histories) {
         try {
-            List<Field> fields = listMembers(histories.get(0));
+            List<Field> fields = listMembers(Asset.class);
             List<ChangeHistoryRow> returnList = new ArrayList<>(histories.size());
 
             Asset previousAsset = null;
@@ -81,12 +82,20 @@ public class HistoryMapper {
 
     public static List<ChangeHistoryRow> mobileTerminalChangeHistory(List<MobileTerminalDto> histories) {
         try {
-            List<Field> fields = listMembers(histories.get(0));
+            List<Field> fields = listMembers(MobileTerminalDto.class);
             List<ChangeHistoryRow> returnList = new ArrayList<>(histories.size());
 
             MobileTerminalDto previousMt = null;
             for (MobileTerminalDto mt : histories) {
                 if (previousMt == null) {
+                    if (mt != null && mt.getUpdatetime().equals(mt.getCreateTime())) {
+                        ChangeHistoryRow row = new ChangeHistoryRow(mt.getUpdateuser(), mt.getUpdatetime());
+                        row.setHistoryId(mt.getHistoryId());
+                        row.setId(mt.getId());
+                        row.setChangeType(ChangeType.CREATED);
+                        row.setSnapshot(mt);
+                        returnList.add(row);
+                    }
                     previousMt = mt;
                     continue;
                 }
@@ -116,6 +125,7 @@ public class HistoryMapper {
                         }
                     }
                 }
+                row.setChangeType(ChangeType.UPDATED);
                 row.setSnapshot(mt);
                 returnList.add(row);
                 previousMt = mt;
@@ -139,7 +149,7 @@ public class HistoryMapper {
             if(sameChannelInNewSet.isPresent()) {
                 if(!channelDto.getHistoryId().equals(sameChannelInNewSet.get().getHistoryId())) {
                     channelChangeHistory.setChanges(channelChangeHistory(Arrays.asList(channelDto, sameChannelInNewSet.get())).get(0).getChanges());
-                    channelChangeHistory.setChangeType("UPDATED");
+                    channelChangeHistory.setChangeType(ChangeType.UPDATED);
                 }
 
                 workingNewSet.remove(sameChannelInNewSet.get());
@@ -149,7 +159,7 @@ public class HistoryMapper {
                 creatorAndTimeChannel.setUpdateUser(channelDto.getUpdateUser());
                 creatorAndTimeChannel.setUpdateTime(channelDto.getUpdateTime());
                 channelChangeHistory.setChanges(channelChangeHistory(Arrays.asList(channelDto, creatorAndTimeChannel)).get(0).getChanges());
-                channelChangeHistory.setChangeType("REMOVED");
+                channelChangeHistory.setChangeType(ChangeType.REMOVED);
 
             }
             if (channelChangeHistory.getChanges() != null && !channelChangeHistory.getChanges().isEmpty()) {
@@ -160,7 +170,7 @@ public class HistoryMapper {
         for (ChannelDto channelDto : workingNewSet) {   // new channels that where not in the old set
             ChannelChangeHistory newChannelAddition = new ChannelChangeHistory();
             newChannelAddition.setChanges(channelChangeHistory(Arrays.asList(new ChannelDto(), channelDto)).get(0).getChanges());
-            newChannelAddition.setChangeType("CREATED");
+            newChannelAddition.setChangeType(ChangeType.CREATED);
 
             returnMap.put(channelDto.getId(), newChannelAddition);
         }
@@ -169,7 +179,7 @@ public class HistoryMapper {
 
     public static List<ChangeHistoryRow> channelChangeHistory(List<ChannelDto> histories) {
         try {
-            List<Field> fields = listMembers(histories.get(0));
+            List<Field> fields = listMembers(ChannelDto.class);
             List<ChangeHistoryRow> returnList = new ArrayList<>(histories.size());
 
             ChannelDto previousChannel = null;
@@ -210,10 +220,10 @@ public class HistoryMapper {
     }
 
 
-    private static List<Field> listMembers(Object entity){
+    private static <T> List<Field> listMembers(Class<T> clazz){
         List<Field> fields = new ArrayList<>();
         try {
-            Field[] declaredFields = entity.getClass().getDeclaredFields();
+            Field[] declaredFields = clazz.getDeclaredFields();
             for (Field field : declaredFields) {
                 if(!field.getName().contains("this") && !field.isSynthetic() &&
                         field.getModifiers() != Modifier.STATIC + Modifier.PUBLIC + Modifier.FINAL
@@ -222,7 +232,7 @@ public class HistoryMapper {
                 }
             }
         } catch (Exception e){
-            throw new RuntimeException("Error getting the fields of object: " + entity.getClass(), e);
+            throw new RuntimeException("Error getting the fields of object: " + clazz, e);
         }
         return fields;
     }

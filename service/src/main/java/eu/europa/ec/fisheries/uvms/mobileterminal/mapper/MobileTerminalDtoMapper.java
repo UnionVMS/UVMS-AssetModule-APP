@@ -19,12 +19,11 @@ public class MobileTerminalDtoMapper {
         Map<UUID, ChangeHistoryRow> changes = new HashMap<>(mts.size());
         MobileTerminalDto previousMT = null;
         for (MobileTerminalDto mobileTerminal : mobileTerminalDtos) {
-            if(previousMT == null) {
-                previousMT = mobileTerminal;
-                continue;
+            List<ChangeHistoryRow> changeHistory = HistoryMapper.mobileTerminalChangeHistory(Arrays.asList(previousMT, mobileTerminal));
+            if (!changeHistory.isEmpty()) {
+                ChangeHistoryRow changeHistoryRow = changeHistory.get(0);
+                changes.put(mobileTerminal.getHistoryId(), changeHistoryRow);
             }
-            ChangeHistoryRow changeHistoryRow = HistoryMapper.mobileTerminalChangeHistory(Arrays.asList(previousMT, mobileTerminal)).get(0);
-            changes.put(mobileTerminal.getHistoryId(), changeHistoryRow);
             previousMT = mobileTerminal;
         }
 

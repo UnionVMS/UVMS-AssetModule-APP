@@ -13,6 +13,7 @@ package eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.service;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeHistoryRow;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeType;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChannelChangeHistory;
 import eu.europa.ec.fisheries.uvms.asset.util.JsonBConfiguratorAsset;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
@@ -38,7 +39,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.Duration;
 import java.util.*;
-
+import java.util.stream.Collectors;
 import static javax.ws.rs.core.Response.Status.OK;
 import static junit.framework.TestCase.assertNotNull;
 import static org.hamcrest.CoreMatchers.is;
@@ -742,13 +743,61 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         Map<UUID, ChangeHistoryRow> mtRevisions = new JsonBConfiguratorAsset().getContext(null)
                 .fromJson(json, new HashMap<UUID, ChangeHistoryRow>(){}.getClass().getGenericSuperclass());
 
-        assertEquals(3, mtRevisions.size());
-        assertTrue(mtRevisions.values().stream().allMatch(row -> row.getChanges().size() == 2));
-        assertTrue(mtRevisions.values().stream().allMatch((row -> row.getHistoryId() != null)));
+        assertEquals(5, mtRevisions.size());
+        List<ChangeHistoryRow> updateRevisions = mtRevisions.values().stream()
+                .filter(row -> row.getChangeType().equals(ChangeType.UPDATED)).collect(Collectors.toList());
+        assertTrue(updateRevisions.stream().allMatch(row -> row.getChanges().size() == 2));
+        assertTrue(updateRevisions.stream().allMatch((row -> row.getHistoryId() != null)));
 
         assertTrue(mtRevisions.values().stream().anyMatch((row -> row.getId().equals(created1.getId()))));
         assertTrue(mtRevisions.values().stream().anyMatch((row -> row.getId().equals(created2.getId()))));
 
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getMobileTerminalRevisionsByAssetIdSingleRevision() {
+        MobileTerminal mt1 = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        MobileTerminal created1 = getWebTargetExternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(mt1), MobileTerminal.class);
+
+        created1.setComment("new comment");
+        Response updatedResponse = getWebTargetExternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(created1), Response.class);
+        assertEquals(200, updatedResponse.getStatus());
+        
+        Asset asset = createAndRestBasicAsset();
+
+        getWebTargetExternal()
+                .path("/mobileterminal")
+                .path(created1.getId().toString())
+                .path("assign")
+                .path(asset.getId().toString())
+                .queryParam("comment", "assignTerminal1")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .put(Entity.json(""), MobileTerminal.class);
+
+        Response response = getWebTargetExternal()
+                .path("/mobileterminal/history/getMtHistoryForAsset")
+                .path(asset.getId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Response.class);
+
+        String json = response.readEntity(String.class);
+        Map<UUID, ChangeHistoryRow> mtRevisions = new JsonBConfiguratorAsset().getContext(null)
+                .fromJson(json, new HashMap<UUID, ChangeHistoryRow>(){}.getClass().getGenericSuperclass());
+
+        assertEquals(1, mtRevisions.size());
+        assertTrue(mtRevisions.values().stream().allMatch(row -> row.getChangeType().equals(ChangeType.UPDATED)));
     }
 
     @Test
@@ -805,8 +854,10 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         Map<UUID, ChangeHistoryRow> mtRevisions = new JsonBConfiguratorAsset().getContext(null)
                 .fromJson(json, new HashMap<UUID, ChangeHistoryRow>(){}.getClass().getGenericSuperclass());
 
-        assertEquals(2, mtRevisions.size());
-        assertTrue(mtRevisions.values().stream().allMatch(row -> row.getChanges().size() == 2));
+        assertEquals(3, mtRevisions.size());
+        List<ChangeHistoryRow> updateRevisions = mtRevisions.values().stream()
+                .filter(row -> row.getChangeType().equals(ChangeType.UPDATED)).collect(Collectors.toList());
+        assertTrue(updateRevisions.stream().allMatch(row -> row.getChanges().size() == 2));
 
     }
 
@@ -1209,18 +1260,18 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         //System.out.println(mTChangesResponse.readEntity(String.class));
         List<ChangeHistoryRow> mtChanges = mTChangesResponse.readEntity(new GenericType<List<ChangeHistoryRow>>() {});
 
-        assertEquals(2, mtChanges.size());
-        assertEquals(1, mtChanges.get(0).getChannelChanges().size());
+        assertEquals(3, mtChanges.size());
+        assertEquals(1, mtChanges.get(2).getChannelChanges().size());
 
-        Optional<ChannelChangeHistory> nineChangesChannel = mtChanges.get(0).getChannelChanges().values().stream()
+        Optional<ChannelChangeHistory> nineChangesChannel = mtChanges.get(1).getChannelChanges().values().stream()
                 .filter(list -> list.getChanges().size() == 9).findAny();
         assertTrue(nineChangesChannel.isPresent());
-        assertTrue(nineChangesChannel.get().getChangeType().equals("CREATED"));
+        assertTrue(nineChangesChannel.get().getChangeType().equals(ChangeType.CREATED));
         assertTrue(nineChangesChannel.get().getChanges().stream().allMatch(item ->item.getOldValue() == null));
         assertTrue(nineChangesChannel.get().getChanges().stream().allMatch(item ->item.getNewValue() != null));
 
-        assertEquals(2, mtChanges.get(1).getChanges().size());
-        assertEquals(1, mtChanges.get(1).getChannelChanges().size());
+        assertEquals(2, mtChanges.get(2).getChanges().size());
+        assertEquals(1, mtChanges.get(2).getChannelChanges().size());
     }
 
 
@@ -1266,14 +1317,14 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
        // System.out.println(mTChangesResponse.readEntity(String.class));
         List<ChangeHistoryRow> mtChanges = mTChangesResponse.readEntity(new GenericType<List<ChangeHistoryRow>>() {});
 
-        assertEquals(1, mtChanges.size());
-        assertEquals(1, mtChanges.get(0).getChannelChanges().size());
+        assertEquals(2, mtChanges.size());
+        assertEquals(1, mtChanges.get(1).getChannelChanges().size());
 
         //one subclass should have 9 changes
-        Optional<ChannelChangeHistory> nineChangesChannel = mtChanges.get(0).getChannelChanges().values().stream()
+        Optional<ChannelChangeHistory> nineChangesChannel = mtChanges.get(1).getChannelChanges().values().stream()
                 .filter(list -> list.getChanges().size() == 9).findAny();
         assertTrue(nineChangesChannel.isPresent());
-        assertTrue(nineChangesChannel.get().getChangeType().equals("REMOVED"));
+        assertTrue(nineChangesChannel.get().getChangeType().equals(ChangeType.REMOVED));
         assertTrue(nineChangesChannel.get().getChanges().stream().allMatch(item ->item.getOldValue() != null));
         assertTrue(nineChangesChannel.get().getChanges().stream().allMatch(item ->item.getNewValue() == null));
     }
@@ -1340,18 +1391,19 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         List<ChangeHistoryRow> mtChanges = mTChangesResponse.readEntity(new GenericType<List<ChangeHistoryRow>>() {});
 
         assertNotNull(mtChanges);
-        assertEquals(3, mtChanges.size());
+        assertEquals(4, mtChanges.size());
 
-        assertEquals("user", mtChanges.get(0).getUpdatedBy());
-        assertEquals(2, mtChanges.get(0).getChanges().size());
-        assertEquals(mobileTerminal.getId(), mtChanges.get(0).getId());
-        assertNotNull(mtChanges.get(0).getHistoryId());
+        assertEquals("user", mtChanges.get(1).getUpdatedBy());
+        assertEquals(2, mtChanges.get(1).getChanges().size());
+        assertEquals(mobileTerminal.getId(), mtChanges.get(1).getId());
+        assertNotNull(mtChanges.get(1).getHistoryId());
+        assertEquals(ChangeType.UPDATED, mtChanges.get(1).getChangeType());
 
-        assertEquals("user", mtChanges.get(2).getUpdatedBy());
-        assertEquals(1, mtChanges.get(2).getChanges().size());
-        assertEquals(mobileTerminal.getId(), mtChanges.get(2).getId());
-        assertNotNull(mtChanges.get(2).getHistoryId());
-        assertTrue(mtChanges.get(2).getChanges().stream().anyMatch(item -> item.getNewValue().equals(asset2.getId().toString())));
+        assertEquals("user", mtChanges.get(3).getUpdatedBy());
+        assertEquals(1, mtChanges.get(3).getChanges().size());
+        assertEquals(mobileTerminal.getId(), mtChanges.get(3).getId());
+        assertNotNull(mtChanges.get(3).getHistoryId());
+        assertTrue(mtChanges.get(3).getChanges().stream().anyMatch(item -> item.getNewValue().equals(asset2.getId().toString())));
     }
 
     @Test
