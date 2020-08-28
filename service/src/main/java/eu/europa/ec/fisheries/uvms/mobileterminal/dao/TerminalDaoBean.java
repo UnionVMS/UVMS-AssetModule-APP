@@ -155,9 +155,18 @@ public class TerminalDaoBean {
 
     public MobileTerminal getMobileTerminalByRequest(AssetMTEnrichmentRequest request) {
         try {
-            return em.createNamedQuery(MobileTerminal.FIND_BY_DNID_AND_MEMBER_NR_AND_TYPE, MobileTerminal.class)
-                    .setParameter("dnid", Integer.parseInt(request.getDnidValue()))
-                    .setParameter("memberNumber", Integer.parseInt(request.getMemberNumberValue()))
+            Integer dnid = null;
+            if (request.getDnidValue() != null) {
+                dnid =Integer.parseInt(request.getDnidValue());
+            }
+            Integer memberNumber = null;
+            if (request.getMemberNumberValue() != null) {
+                memberNumber = Integer.parseInt(request.getMemberNumberValue());
+            }
+            return em.createNamedQuery(MobileTerminal.FIND_BY_DNID_AND_MEMBER_NR_OR_SERIALNUMBER_AND_TYPE, MobileTerminal.class)
+                    .setParameter("dnid", dnid)
+                    .setParameter("memberNumber", memberNumber)
+                    .setParameter("serialNumber", request.getSerialNumberValue())
                     .setParameter("mobileTerminalType", MobileTerminalTypeEnum.valueOf(request.getTranspondertypeValue()))
                     .getSingleResult();
         } catch (NoResultException nre) {
