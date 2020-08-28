@@ -163,7 +163,7 @@ public class AssetRestResourceQueryTest extends AbstractAssetRestTest {
     @OperateOnDeployment("normal")
     public void getAllAssetsThatAreLongTermParkedTest() {
         Asset asset = AssetHelper.createBasicAsset();
-        asset.setLongTermParked(true);
+        asset.setParked(true);
         Asset createdParkedAsset = sendAssetToCreation(asset);
 
         asset = AssetHelper.createBasicAsset();

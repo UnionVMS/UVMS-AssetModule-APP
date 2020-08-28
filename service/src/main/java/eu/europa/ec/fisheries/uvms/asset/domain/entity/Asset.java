@@ -281,8 +281,8 @@ public class Asset implements Serializable {
     @Column(name = "national_id")
     private Long nationalId;
 
-    @Column(name = "long_term_parked")
-    private Boolean longTermParked = false;
+    @Column(name = "parked")
+    private Boolean parked = false;
 
     @PrePersist
     private void generateNewHistoryId() {
@@ -770,11 +770,11 @@ public class Asset implements Serializable {
         this.nationalId = nationalId;
     }
 
-    public Boolean getLongTermParked() {
-        return longTermParked;
+    public Boolean getParked() {
+        return parked;
     }
 
-    public void setLongTermParked(Boolean longTermParked) {
-        this.longTermParked = longTermParked;
+    public void setParked(Boolean parked) {
+        this.parked = parked;
     }
 }

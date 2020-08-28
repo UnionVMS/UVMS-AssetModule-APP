@@ -73,7 +73,7 @@ public class AssetDTO {
     private String prodOrgName;
     private String comment;
     private Long nationalId;
-    private Boolean longTermParked;
+    private Boolean parked;
 
     public UUID getId() {
         return id;
@@ -420,11 +420,11 @@ public class AssetDTO {
         this.nationalId = nationalId;
     }
 
-    public Boolean isLongTermParked() {
-        return longTermParked;
+    public Boolean isParked() {
+        return parked;
     }
 
-    public void setLongTermParked(Boolean longTermParked) {
-        this.longTermParked = longTermParked;
+    public void setParked(Boolean parked) {
+        this.parked = parked;
     }
 }
