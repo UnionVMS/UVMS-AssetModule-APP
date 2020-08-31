@@ -2,6 +2,7 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.mapper;
 
 import eu.europa.ec.fisheries.uvms.asset.mapper.HistoryMapper;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeHistoryRow;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeType;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
@@ -19,11 +20,20 @@ public class MobileTerminalDtoMapper {
         Map<UUID, ChangeHistoryRow> changes = new HashMap<>(mts.size());
         MobileTerminalDto previousMT = null;
         for (MobileTerminalDto mobileTerminal : mobileTerminalDtos) {
-            List<ChangeHistoryRow> changeHistory = HistoryMapper.mobileTerminalChangeHistory(Arrays.asList(previousMT, mobileTerminal));
-            if (!changeHistory.isEmpty()) {
-                ChangeHistoryRow changeHistoryRow = changeHistory.get(0);
-                changes.put(mobileTerminal.getHistoryId(), changeHistoryRow);
+            if(previousMT == null) {
+                if (mobileTerminal.getUpdatetime().equals(mobileTerminal.getCreateTime())) {
+                    ChangeHistoryRow row = new ChangeHistoryRow(mobileTerminal.getUpdateuser(), mobileTerminal.getUpdatetime());
+                    row.setHistoryId(mobileTerminal.getHistoryId());
+                    row.setId(mobileTerminal.getId());
+                    row.setSnapshot(mobileTerminal);
+                    row.setChangeType(ChangeType.CREATED);
+                    changes.put(mobileTerminal.getHistoryId(), row);
+                }
+                previousMT = mobileTerminal;
+                continue;
             }
+            ChangeHistoryRow changeHistoryRow = HistoryMapper.mobileTerminalChangeHistory(Arrays.asList(previousMT, mobileTerminal)).get(0);
+            changes.put(mobileTerminal.getHistoryId(), changeHistoryRow);
             previousMT = mobileTerminal;
         }
 

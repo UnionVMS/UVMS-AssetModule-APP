@@ -746,6 +746,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertEquals(5, mtRevisions.size());
         List<ChangeHistoryRow> updateRevisions = mtRevisions.values().stream()
                 .filter(row -> row.getChangeType().equals(ChangeType.UPDATED)).collect(Collectors.toList());
+        assertEquals(3, updateRevisions.size());
         assertTrue(updateRevisions.stream().allMatch(row -> row.getChanges().size() == 2));
         assertTrue(updateRevisions.stream().allMatch((row -> row.getHistoryId() != null)));
 
@@ -857,6 +858,7 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertEquals(3, mtRevisions.size());
         List<ChangeHistoryRow> updateRevisions = mtRevisions.values().stream()
                 .filter(row -> row.getChangeType().equals(ChangeType.UPDATED)).collect(Collectors.toList());
+        assertEquals(2, updateRevisions.size());
         assertTrue(updateRevisions.stream().allMatch(row -> row.getChanges().size() == 2));
 
     }
