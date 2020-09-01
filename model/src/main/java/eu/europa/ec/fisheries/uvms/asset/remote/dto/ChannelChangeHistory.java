@@ -4,19 +4,19 @@ import java.util.List;
 import java.util.UUID;
 
 public class ChannelChangeHistory {
-    String changeType;
 
+    private ChangeType changeType;
     private UUID id;
     private UUID historyId;
 
     List<ChangeHistoryItem> changes;
 
 
-    public String getChangeType() {
+    public ChangeType getChangeType() {
         return changeType;
     }
 
-    public void setChangeType(String changeType) {
+    public void setChangeType(ChangeType changeType) {
         this.changeType = changeType;
     }
 
