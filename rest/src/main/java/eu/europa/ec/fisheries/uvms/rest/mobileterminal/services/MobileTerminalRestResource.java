@@ -23,7 +23,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.MobileTerminalSta
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDtoMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalRevisionsDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchKeyValue;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeHistoryRow;
 import eu.europa.ec.fisheries.uvms.asset.mapper.HistoryMapper;
@@ -45,7 +44,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -320,8 +322,10 @@ public class MobileTerminalRestResource {
         try {
             List<MobileTerminal> mobileTerminalRevisions = mobileTerminalService.getMobileTerminalRevisions(id, maxNbr);
             List<MobileTerminalDto> dtos = MobileTerminalDtoMapper.mapToMobileTerminalDtos(mobileTerminalRevisions);
-            List<ChangeHistoryRow> changeHistory = HistoryMapper.mobileTerminalChangeHistory(dtos);
-            String returnString = jsonb.toJson(changeHistory);
+            Map<UUID, ChangeHistoryRow> changeHistory = HistoryMapper.mobileTerminalChangeHistory(dtos);
+            ArrayList<ChangeHistoryRow> changes = new ArrayList<>(changeHistory.values());
+            changes.sort(Comparator.comparing(ChangeHistoryRow::getUpdateTime));
+            String returnString = jsonb.toJson(changes);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting mobile terminal history by terminalId ] {}", ex.getMessage(), ex);

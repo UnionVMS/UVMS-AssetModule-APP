@@ -80,21 +80,21 @@ public class HistoryMapper {
 
 
 
-    public static List<ChangeHistoryRow> mobileTerminalChangeHistory(List<MobileTerminalDto> histories) {
+    public static Map<UUID, ChangeHistoryRow> mobileTerminalChangeHistory(List<MobileTerminalDto> histories) {
         try {
             List<Field> fields = listMembers(MobileTerminalDto.class);
-            List<ChangeHistoryRow> returnList = new ArrayList<>(histories.size());
+            Map<UUID, ChangeHistoryRow> returnMap = new HashMap<>();
 
             MobileTerminalDto previousMt = null;
             for (MobileTerminalDto mt : histories) {
                 if (previousMt == null) {
-                    if (mt != null && mt.getUpdatetime().equals(mt.getCreateTime())) {
+                    if (mt.getUpdatetime().equals(mt.getCreateTime())) {
                         ChangeHistoryRow row = new ChangeHistoryRow(mt.getUpdateuser(), mt.getUpdatetime());
                         row.setHistoryId(mt.getHistoryId());
                         row.setId(mt.getId());
                         row.setChangeType(ChangeType.CREATED);
                         row.setSnapshot(mt);
-                        returnList.add(row);
+                        returnMap.put(mt.getHistoryId(), row);
                     }
                     previousMt = mt;
                     continue;
@@ -127,11 +127,11 @@ public class HistoryMapper {
                 }
                 row.setChangeType(ChangeType.UPDATED);
                 row.setSnapshot(mt);
-                returnList.add(row);
+                returnMap.put(mt.getHistoryId(), row);
                 previousMt = mt;
             }
 
-            return returnList;
+            return returnMap;
         }catch (IllegalAccessException e){
             throw new RuntimeException(e);
         }
