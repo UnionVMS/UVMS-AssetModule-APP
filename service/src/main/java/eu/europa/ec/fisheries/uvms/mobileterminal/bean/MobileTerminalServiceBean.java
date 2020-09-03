@@ -430,7 +430,8 @@ public class MobileTerminalServiceBean {
     }
 
     public MobileTerminal getMobileTerminalByAssetMTEnrichmentRequest(AssetMTEnrichmentRequest request) {
-        if (request.getDnidValue() == null || request.getMemberNumberValue() == null) {
+        if (request.getDnidValue() == null && request.getMemberNumberValue() == null
+                && request.getSerialNumberValue() == null) {
             return null;
         }
         return terminalDao.getMobileTerminalByRequest(request);

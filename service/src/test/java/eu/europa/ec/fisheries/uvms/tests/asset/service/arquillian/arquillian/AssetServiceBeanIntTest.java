@@ -709,6 +709,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         AssetMTEnrichmentRequest request = createRequest(nonExisting);
         request.setDnidValue(null);
         request.setMemberNumberValue(null);
+        request.setSerialNumberValue(null);
         request.setTranspondertypeValue(null);
         AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
         assertTrue(response.getAssetName().startsWith("Unknown"));
@@ -733,6 +734,22 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         AssetMTEnrichmentRequest request = createRequest(mobileTerminalUnlinked);
         AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
         assertThat(response.getAssetName(), CoreMatchers.is(CoreMatchers.nullValue()));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void collectAssetMTRequestIridiumTransponder() {
+        Asset asset = createAsset();
+        MobileTerminal iridiumTerminal = testPollHelper.createBasicMobileTerminal();
+        iridiumTerminal.setMobileTerminalType(MobileTerminalTypeEnum.IRIDIUM);
+        iridiumTerminal.setAsset(asset);
+        iridiumTerminal = mobileTerminalService.createMobileTerminal(iridiumTerminal, "TEST");
+
+        AssetMTEnrichmentRequest request = new AssetMTEnrichmentRequest();
+        request.setTranspondertypeValue(iridiumTerminal.getMobileTerminalType().toString());
+        request.setSerialNumberValue(iridiumTerminal.getSerialNo());
+        AssetMTEnrichmentResponse response = assetService.collectAssetMT(request);
+        assertThat(response.getAssetUUID(), CoreMatchers.is(asset.getId().toString()));
     }
 
     private AssetMTEnrichmentRequest createRequest(MobileTerminal mobileTerminal) {
