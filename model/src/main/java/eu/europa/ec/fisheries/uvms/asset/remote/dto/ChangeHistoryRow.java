@@ -9,6 +9,7 @@ public class ChangeHistoryRow {
     private Instant updateTime;
     private UUID id;
     private UUID historyId;
+    private ChangeType changeType;
 
     private Map<UUID, ChannelChangeHistory> channelChanges = new HashMap<>();
 
@@ -83,5 +84,13 @@ public class ChangeHistoryRow {
 
     public void setHistoryId(UUID historyId) {
         this.historyId = historyId;
+    }
+
+    public ChangeType getChangeType() {
+        return changeType;
+    }
+
+    public void setChangeType(ChangeType changeType) {
+        this.changeType = changeType;
     }
 }

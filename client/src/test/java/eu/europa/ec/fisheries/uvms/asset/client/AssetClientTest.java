@@ -415,7 +415,7 @@ public class AssetClientTest extends AbstractClientTest {
     public void collectAssetMtTest(){
         AssetBO assetBo = new AssetBO();
         assetBo.setAsset(AssetHelper.createBasicAsset());
-        assetBo.getAsset().setLongTermParked(true);
+        assetBo.getAsset().setParked(true);
 
         AssetBO upsertAssetBo = assetClient.upsertAsset(assetBo);
 
@@ -432,7 +432,7 @@ public class AssetClientTest extends AbstractClientTest {
         assertTrue(response.getFlagstate().equals(upsertAssetBo.getAsset().getFlagStateCode()));
         assertEquals(upsertAssetBo.getAsset().getMmsi(), response.getMmsi());
 
-        assertTrue(response.getLongTermParked());
+        assertTrue(response.getParked());
     }
 
     @Test

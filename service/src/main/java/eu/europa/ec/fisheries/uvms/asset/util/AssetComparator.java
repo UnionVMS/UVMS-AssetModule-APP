@@ -77,6 +77,6 @@ public class AssetComparator {
                 Objects.equals(asset1.getProdOrgCode(), asset2.getProdOrgCode()) &&
                 Objects.equals(asset1.getProdOrgName(), asset2.getProdOrgName()) &&
                 Objects.equals(asset1.getNationalId(), asset2.getNationalId()) &&
-                Objects.equals(asset1.getLongTermParked(), asset2.getLongTermParked());
+                Objects.equals(asset1.getParked(), asset2.getParked());
     }
 }

@@ -171,8 +171,9 @@ public class MobileTerminal implements Serializable {
 	@PrePersist
 	private void atPrePersist() {
 		this.historyId = UUID.randomUUID();
-		this.createTime = Instant.now().truncatedTo(ChronoUnit.MILLIS);
-		this.updatetime = Instant.now();
+		Instant now = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+		this.createTime = now;
+		this.updatetime = now;
 	}
 
 	@PreUpdate

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd"
+                   logicalFilePath="changelog/v6.7.20/db-changelog-rename-long-term-parked.xml">
+
+    <changeSet id="rename long term parked to parked" author="joemat">
+        <renameColumn  newColumnName="parked"
+                       oldColumnName="long_term_parked"
+                       tableName="asset"/>
+
+        <renameColumn  newColumnName="parked"
+                       oldColumnName="long_term_parked"
+                       tableName="asset_aud"/>
+
+    </changeSet>
+
+</databaseChangeLog>
