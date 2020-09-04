@@ -55,6 +55,13 @@ public class AssetClientTest extends AbstractClientTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void getNonExistantAssetTest() {
+        AssetDTO asset = assetClient.getAssetById(AssetIdentifier.GUID, UUID.randomUUID().toString());
+        assertNull(asset);
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void upsertAssetTest() {
         AssetBO assetBo = new AssetBO();
         assetBo.setAsset(AssetHelper.createBasicAsset());

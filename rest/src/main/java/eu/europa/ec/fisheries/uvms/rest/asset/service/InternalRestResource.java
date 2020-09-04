@@ -18,10 +18,10 @@ import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.CustomCode;
-import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.dto.*;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
+import eu.europa.ec.fisheries.uvms.asset.util.JsonBConfiguratorAsset;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
-import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
@@ -69,7 +69,7 @@ public class InternalRestResource {
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
     @PostConstruct
     public void init() {
-        jsonb =  new JsonBConfigurator().getContext(null);
+        jsonb =  new JsonBConfiguratorAsset().getContext(null);
     }
 
     @GET
@@ -79,7 +79,8 @@ public class InternalRestResource {
         try {
             AssetIdentifier assetId = AssetIdentifier.valueOf(type.toUpperCase());
             Asset asset = assetService.getAssetById(assetId, id);
-            return Response.ok(asset).build();
+            String json = jsonb.toJson(asset);
+            return Response.ok(json).build();
         } catch (Exception e) {
             LOG.error("getAssetById", e);
             return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
