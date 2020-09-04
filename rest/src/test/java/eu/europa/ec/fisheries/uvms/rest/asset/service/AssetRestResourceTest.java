@@ -113,6 +113,19 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void getNonExistantAssetByIdTest() {
+        Asset fetchedAsset = getWebTargetExternal()
+                .path("asset")
+                .path(UUID.randomUUID().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Asset.class);
+
+        assertNull(fetchedAsset);
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void getVesselTypeTest() {
         Asset asset = AssetHelper.createBasicAsset();
         String vesselType = "VesselTypeTest";
