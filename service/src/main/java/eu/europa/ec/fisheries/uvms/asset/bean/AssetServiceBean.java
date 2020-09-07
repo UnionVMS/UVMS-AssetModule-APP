@@ -405,7 +405,7 @@ public class AssetServiceBean {
     private boolean shouldANewShipBeCreated(AssetMTEnrichmentRequest request, Asset asset, MobileTerminalTypeEnum transponderType){
         return asset == null &&
                 (request.getMmsiValue() == null || request.getMmsiValue().length() <= MMSI_MAX_LENGHT) &&
-                transponderType != null;
+                transponderType == null;
     }
 
     private void enrichAssetAndMobileTerminal(AssetMTEnrichmentRequest request,
