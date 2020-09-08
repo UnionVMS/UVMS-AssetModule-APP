@@ -72,7 +72,7 @@ public class Channel implements Serializable {
 	private UUID historyId;
 
 	@Column(name="archived")
-	private Boolean archived;
+	private Boolean archived = false;
 
 	@Column(name="updattime")
 	private Instant updateTime;
@@ -90,7 +90,7 @@ public class Channel implements Serializable {
 	private String name;
 
 	@Column(name="active")
-	private boolean active;
+	private boolean active = true;
 
 	@Column(name="chan_def")
 	private boolean defaultChannel;
