@@ -399,32 +399,7 @@ public class MobileTerminal implements Serializable {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		MobileTerminal that = (MobileTerminal) o;
-		return Objects.equals(id, that.id) &&
-				Objects.equals(historyId, that.historyId) &&
-				Objects.equals(plugin, that.plugin) &&
-				Objects.equals(archived, that.archived) &&
-				Objects.equals(active, that.active) &&
-				source == that.source &&
-				mobileTerminalType == that.mobileTerminalType &&
-				Objects.equals(updatetime, that.updatetime) &&
-				Objects.equals(createTime, that.createTime) &&
-				Objects.equals(updateuser, that.updateuser) &&
-				Objects.equals(serialNo, that.serialNo) &&
-				Objects.equals(satelliteNumber, that.satelliteNumber) &&
-				Objects.equals(antenna, that.antenna) &&
-				Objects.equals(transceiverType, that.transceiverType) &&
-				Objects.equals(softwareVersion, that.softwareVersion) &&
-				Objects.equals(channels, that.channels) &&
-				Objects.equals(asset, that.asset) &&
-				Objects.equals(assetUUID, that.assetUUID) &&
-				Objects.equals(comment, that.comment) &&
-				Objects.equals(eastAtlanticOceanRegion, that.eastAtlanticOceanRegion) &&
-				Objects.equals(westAtlanticOceanRegion, that.westAtlanticOceanRegion) &&
-				Objects.equals(pacificOceanRegion, that.pacificOceanRegion) &&
-				Objects.equals(indianOceanRegion, that.indianOceanRegion) &&
-				Objects.equals(installDate, that.installDate) &&
-				Objects.equals(uninstallDate, that.uninstallDate) &&
-				Objects.equals(installedBy, that.installedBy);
+		return Objects.equals(id, that.id);
 	}
 
 	@Override

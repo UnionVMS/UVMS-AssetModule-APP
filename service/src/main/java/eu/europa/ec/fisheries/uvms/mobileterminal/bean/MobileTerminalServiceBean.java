@@ -18,7 +18,6 @@ import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.asset.mapper.AssetDtoMapper;
-import eu.europa.ec.fisheries.uvms.asset.mapper.HistoryMapper;
 import eu.europa.ec.fisheries.uvms.asset.message.AuditProducer;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.AssetDto;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.ChangeHistoryRow;
@@ -35,8 +34,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.MobileTerminalDtoMapper
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollDtoMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.MobileTerminalRevisionsDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchKeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -450,7 +447,7 @@ public class MobileTerminalServiceBean {
 
     public Map<UUID, ChangeHistoryRow> getMobileTerminalRevisionsByAssetId(UUID assetId, int maxNbr) {
         Map<UUID, ChangeHistoryRow> revisionsMap = new HashMap<>();
-        List<MobileTerminal> mtList = terminalDao.getMobileTerminalRevisionByAssetId(assetId);
+        List<MobileTerminal> mtList = terminalDao.getAllMobileTerminalsWithARelationToAsset(assetId);
 
         mtList.forEach(terminal -> {
             List<MobileTerminal> revisions = terminalDao.getMobileTerminalRevisionsRelevantToAsset(terminal.getId(), assetId);
