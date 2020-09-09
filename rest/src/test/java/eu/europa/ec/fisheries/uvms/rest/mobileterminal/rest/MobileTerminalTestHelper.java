@@ -69,6 +69,7 @@ public class MobileTerminalTestHelper {
         channel.setLesDescription("Thrane&Thrane");
         channel.setDnid(Integer.parseInt("1" + generateARandomStringWithMaxLength(4)));
         channel.setArchived(false);
+        channel.setActive(true);
         channel.setConfigChannel(true);
         channel.setDefaultChannel(true);
         channel.setPollChannel(true);

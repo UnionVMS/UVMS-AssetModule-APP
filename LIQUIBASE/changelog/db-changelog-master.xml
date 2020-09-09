@@ -44,5 +44,6 @@
     <include file="v6.7.14/db-changelog-licence-name.xml" relativeToChangelogFile="true"/>
     <include file="v6.7.17/db-changelog-comment-to-text.xml" relativeToChangelogFile="true"/>
     <include file="v6.7.20/db-changelog-rename-long-term-parked.xml" relativeToChangelogFile="true"/>
+    <include file="v6.7.22/db-changelog-activate-channels.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

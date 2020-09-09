@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd"
+                   logicalFilePath="changelog/v6.7.22/db-changelog-activate-channels.xml">
+
+    <changeSet id="activate channels" author="peerik">
+        <update tableName="channel">
+            <column  name="active" valueBoolean="true"/>
+        </update>
+        <update tableName="channel_aud">
+            <column  name="active" valueBoolean="true"/>
+        </update>
+        <update tableName="channel">
+            <column  name="archived" valueBoolean="false"/>
+            <where>archived is null</where>
+        </update>
+        <update tableName="channel_aud">
+            <column  name="archived" valueBoolean="false"/>
+            <where>archived is null</where>
+        </update>
+    </changeSet>
+
+</databaseChangeLog>
