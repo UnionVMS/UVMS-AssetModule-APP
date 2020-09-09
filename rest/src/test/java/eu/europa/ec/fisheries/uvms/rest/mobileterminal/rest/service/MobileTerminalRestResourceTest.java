@@ -1265,12 +1265,12 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertEquals(3, mtChanges.size());
         assertEquals(1, mtChanges.get(2).getChannelChanges().size());
 
-        Optional<ChannelChangeHistory> tenChangesChannel = mtChanges.get(1).getChannelChanges().values().stream()
-                .filter(list -> list.getChanges().size() == 10).findAny();
-        assertTrue(tenChangesChannel.isPresent());
-        assertTrue(tenChangesChannel.get().getChangeType().equals(ChangeType.CREATED));
-        assertTrue(tenChangesChannel.get().getChanges().stream().allMatch(item ->item.getOldValue() == null));
-        assertTrue(tenChangesChannel.get().getChanges().stream().allMatch(item ->item.getNewValue() != null));
+        Optional<ChannelChangeHistory> eightChangesChannel = mtChanges.get(1).getChannelChanges().values().stream()
+                .filter(list -> list.getChanges().size() == 8).findAny();
+        assertTrue(eightChangesChannel.isPresent());
+        assertTrue(eightChangesChannel.get().getChangeType().equals(ChangeType.CREATED));
+        assertTrue(eightChangesChannel.get().getChanges().stream().allMatch(item ->item.getOldValue() == null));
+        assertTrue(eightChangesChannel.get().getChanges().stream().allMatch(item ->item.getNewValue() != null));
 
         assertEquals(2, mtChanges.get(2).getChanges().size());
         assertEquals(1, mtChanges.get(2).getChannelChanges().size());
@@ -1322,13 +1322,13 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
         assertEquals(2, mtChanges.size());
         assertEquals(1, mtChanges.get(1).getChannelChanges().size());
 
-        //one subclass should have 10 changes
-        Optional<ChannelChangeHistory> tenChangesChannel = mtChanges.get(1).getChannelChanges().values().stream()
-                .filter(list -> list.getChanges().size() == 10).findAny();
-        assertTrue(tenChangesChannel.isPresent());
-        assertTrue(tenChangesChannel.get().getChangeType().equals(ChangeType.REMOVED));
-        assertTrue(tenChangesChannel.get().getChanges().stream().allMatch(item ->item.getOldValue() != null));
-        assertTrue(tenChangesChannel.get().getChanges().stream().allMatch(item ->item.getNewValue() == null));
+        //one subclass should have 8 changes
+        Optional<ChannelChangeHistory> eightChangesChannel = mtChanges.get(1).getChannelChanges().values().stream()
+                .filter(list -> list.getChanges().size() == 8).findAny();
+        assertTrue(eightChangesChannel.isPresent());
+        assertTrue(eightChangesChannel.get().getChangeType().equals(ChangeType.REMOVED));
+        assertTrue(eightChangesChannel.get().getChanges().stream().allMatch(item ->item.getOldValue() != null));
+        assertTrue(eightChangesChannel.get().getChanges().stream().allMatch(item ->item.getNewValue() == null));
     }
 
     @Test

@@ -9,7 +9,7 @@ public class ChannelDto {
 
     private UUID historyId;
 
-    private Boolean archived;
+    private Boolean archived = false;
 
     private Instant updateTime;
 
@@ -19,7 +19,7 @@ public class ChannelDto {
 
     private String name;
 
-    private boolean active;
+    private boolean active = true;
 
     private boolean defaultChannel;
 
