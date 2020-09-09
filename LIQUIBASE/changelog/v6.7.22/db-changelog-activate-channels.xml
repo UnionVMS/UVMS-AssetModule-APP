@@ -12,6 +12,14 @@
         <update tableName="channel_aud">
             <column  name="active" valueBoolean="true"/>
         </update>
+        <update tableName="channel">
+            <column  name="archived" valueBoolean="false"/>
+            <where>archived is null</where>
+        </update>
+        <update tableName="channel_aud">
+            <column  name="archived" valueBoolean="false"/>
+            <where>archived is null</where>
+        </update>
     </changeSet>
 
 </databaseChangeLog>
