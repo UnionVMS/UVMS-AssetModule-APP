@@ -11,7 +11,7 @@
 	
 	<assembly-descriptor>
 		<interceptor-binding>
-			<ejb-name>AssetGroupServiceBean</ejb-name>
+			<ejb-name>AssetFilterServiceBean</ejb-name>
 			<interceptor-class>net.bull.javamelody.MonitoringInterceptor</interceptor-class>
 		</interceptor-binding>
 		<interceptor-binding>
@@ -56,6 +56,10 @@
 		</interceptor-binding>
 		<interceptor-binding>
 			<ejb-name>AssetDao</ejb-name>
+			<interceptor-class>net.bull.javamelody.MonitoringInterceptor</interceptor-class>
+		</interceptor-binding>
+		<interceptor-binding>
+			<ejb-name>TerminalDaoBean</ejb-name>
 			<interceptor-class>net.bull.javamelody.MonitoringInterceptor</interceptor-class>
 		</interceptor-binding>
 	</assembly-descriptor>
