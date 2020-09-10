@@ -147,13 +147,14 @@ public class TerminalDaoBean {
     }
 
     @SuppressWarnings("unchecked")
-    public List<MobileTerminal> getAllMobileTerminalsWithARelationToAsset(UUID assetId) {
+    public List<UUID> getAllMobileTerminalIdsWithARelationToAsset(UUID assetId) {
         AuditReader auditReader = AuditReaderFactory.get(em);
         AuditQuery query = auditReader.createQuery()
                 .forRevisionsOfEntity(MobileTerminal.class, true, true)
-                .add(AuditEntity.property("asset_id").eq(assetId));
-        return (List<MobileTerminal>) query.getResultList()
-                .stream().distinct().collect(Collectors.toList());
+                .add(AuditEntity.property("asset_id").eq(assetId))
+                .addProjection(AuditEntity.id().distinct());
+
+        return  query.getResultList();
     }
 
     public MobileTerminal getMobileTerminalByRequest(AssetMTEnrichmentRequest request) {

@@ -447,10 +447,10 @@ public class MobileTerminalServiceBean {
 
     public Map<UUID, ChangeHistoryRow> getMobileTerminalRevisionsByAssetId(UUID assetId, int maxNbr) {
         Map<UUID, ChangeHistoryRow> revisionsMap = new HashMap<>();
-        List<MobileTerminal> mtList = terminalDao.getAllMobileTerminalsWithARelationToAsset(assetId);
+        List<UUID> mtList = terminalDao.getAllMobileTerminalIdsWithARelationToAsset(assetId);
 
-        mtList.forEach(terminal -> {
-            List<MobileTerminal> revisions = terminalDao.getMobileTerminalRevisionsRelevantToAsset(terminal.getId(), assetId);
+        mtList.forEach(terminalID -> {
+            List<MobileTerminal> revisions = terminalDao.getMobileTerminalRevisionsRelevantToAsset(terminalID, assetId);
             revisions.sort(Comparator.comparing(MobileTerminal::getCreateTime));
             revisions.forEach(this::sortChannels);
             if (revisions.size() > maxNbr) {
