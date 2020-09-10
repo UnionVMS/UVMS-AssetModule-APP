@@ -78,7 +78,7 @@ public class AssetServiceBean {
     @Inject
     private MobileTerminalServiceBean mobileTerminalService;
 
-    @EJB
+    @Inject
     private InternalRestTokenHandler tokenHandler;
 
     @Inject
