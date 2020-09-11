@@ -10,32 +10,30 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.rest.asset;
 
-import eu.europa.ec.fisheries.uvms.asset.util.JsonBConfiguratorAsset;
-import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.ExchangeModuleRestMock;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.UnionVMSMock;
-import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.UserRestMock;
-import eu.europa.ec.fisheries.uvms.rest.security.InternalRestTokenHandler;
+import java.io.File;
+import javax.inject.Inject;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
 import org.eu.ingwar.tools.arquillian.extension.suite.annotations.ArquillianSuiteDeployment;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
-
-import javax.ejb.EJB;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import java.io.File;
+import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.ExchangeModuleRestMock;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.UnionVMSMock;
+import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.UserRestMock;
+import eu.europa.ec.fisheries.uvms.rest.security.InternalRestTokenHandler;
 
 @ArquillianSuiteDeployment
 public abstract class AbstractAssetRestTest {
 
     private String token;
 
-    @EJB
+    @Inject
     private InternalRestTokenHandler tokenHandler;
 
     protected WebTarget getWebTargetExternal() {

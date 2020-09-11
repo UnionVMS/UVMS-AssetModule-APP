@@ -18,8 +18,7 @@ import eu.europa.ec.fisheries.uvms.rest.security.InternalRestTokenHandler;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.jms.Destination;
 import javax.jms.JMSContext;
@@ -39,7 +38,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-@Stateless
+@RequestScoped
 public class AssetClient {
 
     private WebTarget webTarget;
@@ -53,7 +52,7 @@ public class AssetClient {
     @Resource(mappedName = "java:/jms/queue/UVMSAssetEvent")
     private Destination destination;
 
-    @EJB
+    @Inject
     private InternalRestTokenHandler tokenHandler;
 
     @PostConstruct
