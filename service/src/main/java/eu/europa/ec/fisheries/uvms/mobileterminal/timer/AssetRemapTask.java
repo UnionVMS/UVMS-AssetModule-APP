@@ -33,8 +33,8 @@ public class AssetRemapTask {
         List<AssetRemapMapping> deleteMappings = new ArrayList<>();
 
         for (AssetRemapMapping mapping : mappings) {
-            assetService.remapAssetsInMovement(mapping.getOldAssetId().toString(), mapping.getNewAssetId().toString());
-            if(Instant.now().isAfter(mapping.getCreatedDate().plus(3, ChronoUnit.HOURS))){
+            int remappedMovements = assetService.remapAssetsInMovement(mapping.getOldAssetId().toString(), mapping.getNewAssetId().toString());
+            if(remappedMovements == 0 && Instant.now().isAfter(mapping.getCreatedDate().plus(3, ChronoUnit.HOURS))){
                 deleteMappings.add(mapping);
             }
         }

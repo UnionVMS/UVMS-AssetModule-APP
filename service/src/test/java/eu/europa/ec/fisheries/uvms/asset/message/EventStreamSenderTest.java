@@ -111,7 +111,9 @@ public class EventStreamSenderTest extends BuildAssetServiceDeployment {
 
 
         registerSubscriber();
+        System.setProperty("MovementsRemapped", "0");
         assetRemapTask.remap();
+        System.clearProperty("MovementsRemapped");
         message = (TextMessage)listenOnEventStream(5000l);
         assertNotNull(message);
         assertEquals("Merged Asset", message.getStringProperty(MessageConstants.EVENT_STREAM_EVENT));
