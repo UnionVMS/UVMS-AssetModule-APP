@@ -380,13 +380,6 @@ public class AssetServiceBean {
             asset = getAssetByCfrIrcsOrMmsi(createAssetId(request));
         }
 
-        if (isPluginTypeWithoutMobileTerminal(request.getPluginType()) && asset != null) {
-            MobileTerminal mobileTerminal = mobileTerminalService.findMobileTerminalByAsset(asset.getId());
-            if (mobileTerminal != null) {
-                terminal = mobileTerminal;
-            }
-        }
-
         MobileTerminalTypeEnum transponderType = getTransponderType(request);
         if (shouldANewShipBeCreated(request,asset, transponderType)) {
             asset = AssetUtil.createNewAssetFromRequest(request, assetDao.getNextUnknownShipNumber());
@@ -595,25 +588,6 @@ public class AssetServiceBean {
         }
 
         return asset;
-    }
-
-    private boolean isPluginTypeWithoutMobileTerminal(String pluginType) {
-        if (pluginType == null) {
-            return true;
-        }
-        try {
-            PluginType type = PluginType.valueOf(pluginType);
-            switch (type) {
-                case MANUAL:
-                case NAF:
-                case OTHER:
-                    return true;
-                default:
-                    return false;
-            }
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
     }
 
     // if more than 1 hit put data from ais into fartyg2record

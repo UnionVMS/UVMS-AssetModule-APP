@@ -50,7 +50,6 @@ import java.util.UUID;
 	@NamedQuery(name= MobileTerminal.FIND_ALL, query = "SELECT m FROM MobileTerminal m"),
 	@NamedQuery(name=MobileTerminal.FIND_BY_ID, query="SELECT m FROM MobileTerminal m WHERE m.id = :id"),
 	@NamedQuery(name=MobileTerminal.FIND_BY_SERIAL_NO, query="SELECT m FROM MobileTerminal m WHERE m.serialNo = :serialNo"),
-	@NamedQuery(name=MobileTerminal.FIND_BY_ASSET_ID, query="SELECT m FROM MobileTerminal m WHERE m.asset.id = :assetId"),
 	@NamedQuery(name=MobileTerminal.FIND_BY_UNASSIGNED, query="SELECT m FROM MobileTerminal m WHERE m.asset IS NULL"),
 	@NamedQuery(name=MobileTerminal.FIND_BY_DNID_AND_MEMBER_NR_OR_SERIALNUMBER_AND_TYPE,
             query="SELECT DISTINCT m FROM MobileTerminal m LEFT OUTER JOIN Channel c ON m.id = c.mobileTerminal.id " +
@@ -63,7 +62,6 @@ public class MobileTerminal implements Serializable {
 	public static final String FIND_BY_ID = "Mobileterminal.findById";
 	public static final String FIND_BY_SERIAL_NO = "Mobileterminal.findBySerialNo";
 	public static final String FIND_BY_UNASSIGNED = "Mobileterminal.findByUnassigned";
-	public static final String FIND_BY_ASSET_ID = "Mobileterminal.findByAssetId";
 	public static final String FIND_BY_DNID_AND_MEMBER_NR_OR_SERIALNUMBER_AND_TYPE = "Mobileterminal.findByDnidAndMemberNumberOrSerialNumberAndType";
 
 

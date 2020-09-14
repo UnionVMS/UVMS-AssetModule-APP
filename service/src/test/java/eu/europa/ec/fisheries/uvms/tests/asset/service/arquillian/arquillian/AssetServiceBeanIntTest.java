@@ -567,20 +567,6 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
-    public void testGetMobileTerminalByConnectId() {
-        Asset asset = createAsset();
-        MobileTerminal mobileTerminal = createMobileTerminal(asset);
-        asset.getMobileTerminals().add(mobileTerminal);
-        assetService.updateAsset(asset, "TEST", "TEST_COMMENT");
-        MobileTerminal fetchedTerminal = mobileTerminalService.findMobileTerminalByAsset(asset.getId());
-        assertNotNull(fetchedTerminal);
-        assertNotNull(fetchedTerminal.getId());
-        UUID fetchedUUID = fetchedTerminal.getId();
-        assertEquals(mobileTerminal.getId(), fetchedUUID);
-    }
-
-    @Test
-    @OperateOnDeployment("normal")
     public void testGetRequiredEnrichment() {
         // create stuff so we can create a valid rawMovement
         Asset asset = createAsset();

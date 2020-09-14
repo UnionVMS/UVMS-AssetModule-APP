@@ -90,13 +90,6 @@ public class TerminalDaoBean {
             return query.getResultList();
     }
 
-    public MobileTerminal findMobileTerminalByAsset(UUID assetId) {
-        List<MobileTerminal> ret = em.createNamedQuery(MobileTerminal.FIND_BY_ASSET_ID, MobileTerminal.class)
-                .setParameter("assetId", assetId).getResultList();
-        if (ret.size() > 0) return ret.get(0);
-        return null;
-    }
-
     public List<MobileTerminal> getMobileTerminalListWithNoActiveAsset() {
         return em.createNamedQuery(MobileTerminal.FIND_BY_UNASSIGNED, MobileTerminal.class)
                 .getResultList();
