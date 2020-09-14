@@ -45,6 +45,11 @@
                     </modules>
                     <skinnyWars>true</skinnyWars>
                     <defaultLibBundleDir>APP-INF/lib</defaultLibBundleDir>
+                    <archive>
+                        <manifestEntries>
+                            <Logging-Profile>asset</Logging-Profile>
+                        </manifestEntries>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>

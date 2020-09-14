@@ -11,7 +11,7 @@
         <groupId>fish.focus.uvms.maven</groupId>
         <artifactId>uvms-pom</artifactId>
         <relativePath />
-        <version>3.3</version>
+        <version>3.4</version>
     </parent>
 
     <properties>
@@ -20,7 +20,7 @@
     	<docker.liquibase.changeLogFile>LIQUIBASE/changelog/db-changelog-master.xml</docker.liquibase.changeLogFile>
         <docker.liquibase.db.user>asset</docker.liquibase.db.user>
         <docker.liquibase.db.passwd>asset</docker.liquibase.db.passwd>
-        <uvms.pom.version>3.3</uvms.pom.version>
+        <uvms.pom.version>3.4</uvms.pom.version>
         <usm4uvms.version>4.1.2</usm4uvms.version>
         <uvms.common.version>4.1.7</uvms.common.version>
         <uvms.config.version>4.1.2</uvms.config.version>
@@ -43,12 +43,6 @@
 			<dependency>
 				<groupId>fish.focus.uvms.maven</groupId>
 				<artifactId>uvms-pom-gis-deps</artifactId>
-				<version>${uvms.pom.version}</version>
-				<type>pom</type>
-			</dependency>
-			<dependency>
-				<groupId>fish.focus.uvms.maven</groupId>
-				<artifactId>uvms-pom-logging-deps</artifactId>
 				<version>${uvms.pom.version}</version>
 				<type>pom</type>
 			</dependency>
@@ -80,12 +74,6 @@
                 <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
                 <artifactId>uvms-commons-date</artifactId>
                 <version>${uvms.common.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>29.0-jre</version>
-                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
