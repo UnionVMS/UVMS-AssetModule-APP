@@ -422,10 +422,6 @@ public class MobileTerminalServiceBean {
         return response;
     }
 
-    public MobileTerminal findMobileTerminalByAsset(UUID assetid) {
-        return terminalDao.findMobileTerminalByAsset(assetid);
-    }
-
     public MobileTerminal getMobileTerminalByAssetMTEnrichmentRequest(AssetMTEnrichmentRequest request) {
         if (request.getDnidValue() == null && request.getMemberNumberValue() == null
                 && request.getSerialNumberValue() == null) {
