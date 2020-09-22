@@ -160,6 +160,19 @@ public class AssetClient {
         return response.readEntity(AssetDTO.class);
     }
 
+    public List<AssetDTO> getAssetsAtDate(List<UUID> assetIdList, Instant date) {
+        String formattedDate = DateUtils.dateToEpochMilliseconds(date);
+        Response response = webTarget
+                .path("assets")
+                .path(formattedDate)
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
+                .post(Entity.json(assetIdList), Response.class);
+
+        checkForErrorResponse(response);
+        return response.readEntity(new GenericType<List<AssetDTO>>() {});
+    }
+
     public AssetDTO getAssetHistoryByAssetHistGuid(UUID historyId) {
         Response response = webTarget
                 .path("history")

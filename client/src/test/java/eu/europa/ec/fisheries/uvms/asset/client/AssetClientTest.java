@@ -145,7 +145,7 @@ public class AssetClientTest extends AbstractClientTest {
                 .filter(a -> a.getHistoryId().equals(secondAssetBo.getAsset().getHistoryId()))
                 .count());
     }
-    
+
     @Test
     @OperateOnDeployment("normal")
     public void getAssetFromAssetIdAndDateTest() {
@@ -161,7 +161,89 @@ public class AssetClientTest extends AbstractClientTest {
         assertThat(assetHistory.getId(), CoreMatchers.is(firstAssetBo.getAsset().getId()));
         assertThat(assetHistory.getHistoryId(), CoreMatchers.is(firstAssetBo.getAsset().getHistoryId()));
     }
-    
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetsAtDateTest() {
+        AssetDTO asset = AssetHelper.createBasicAsset();
+        AssetBO assetBo = new AssetBO();
+        assetBo.setAsset(asset);
+        AssetBO firstAssetBo = assetClient.upsertAsset(assetBo);
+
+        List<AssetDTO> assets = assetClient.getAssetsAtDate(Arrays.asList(firstAssetBo.getAsset().getId()), Instant.now());
+        assertThat(assets.size(), CoreMatchers.is(1));
+        AssetDTO assetDto = assets.get(0);
+        assertThat(assetDto.getId(), CoreMatchers.is(firstAssetBo.getAsset().getId()));
+        assertThat(assetDto.getHistoryId(), CoreMatchers.is(firstAssetBo.getAsset().getHistoryId()));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetsAtDateWithTwoRevisionsTest() {
+        AssetDTO asset = AssetHelper.createBasicAsset();
+        AssetBO assetBo = new AssetBO();
+        assetBo.setAsset(asset);
+        AssetBO firstAssetBo = assetClient.upsertAsset(assetBo);
+        firstAssetBo.getAsset().setName(UUID.randomUUID().toString());
+        Instant timestamp = Instant.now();
+        assetClient.upsertAsset(firstAssetBo);
+
+        List<AssetDTO> assets = assetClient.getAssetsAtDate(Arrays.asList(firstAssetBo.getAsset().getId()), timestamp);
+        assertThat(assets.size(), CoreMatchers.is(1));
+        AssetDTO assetDto = assets.get(0);
+        assertThat(assetDto.getId(), CoreMatchers.is(firstAssetBo.getAsset().getId()));
+        assertThat(assetDto.getHistoryId(), CoreMatchers.is(firstAssetBo.getAsset().getHistoryId()));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetsAtCurrentDateWithTwoRevisionsTest() {
+        AssetDTO asset = AssetHelper.createBasicAsset();
+        AssetBO assetBo = new AssetBO();
+        assetBo.setAsset(asset);
+        AssetBO firstAssetBo = assetClient.upsertAsset(assetBo);
+        firstAssetBo.getAsset().setName(UUID.randomUUID().toString());
+        assetClient.upsertAsset(firstAssetBo);
+
+        List<AssetDTO> assets = assetClient.getAssetsAtDate(Arrays.asList(firstAssetBo.getAsset().getId()), Instant.now());
+        assertThat(assets.size(), CoreMatchers.is(1));
+        AssetDTO assetDto = assets.get(0);
+        assertThat(assetDto.getId(), CoreMatchers.is(firstAssetBo.getAsset().getId()));
+        assertThat(assetDto.getHistoryId(), CoreMatchers.is(CoreMatchers.not(firstAssetBo.getAsset().getHistoryId())));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetsAtPastDateTest() {
+        AssetDTO asset = AssetHelper.createBasicAsset();
+        AssetBO assetBo = new AssetBO();
+        assetBo.setAsset(asset);
+        AssetBO firstAssetBo = assetClient.upsertAsset(assetBo);
+
+        List<AssetDTO> assets = assetClient.getAssetsAtDate(Arrays.asList(firstAssetBo.getAsset().getId()), Instant.now().minus(10, ChronoUnit.HOURS));
+        assertThat(assets.size(), CoreMatchers.is(1));
+        AssetDTO assetDto = assets.get(0);
+        assertThat(assetDto.getId(), CoreMatchers.is(firstAssetBo.getAsset().getId()));
+        assertThat(assetDto.getHistoryId(), CoreMatchers.is(firstAssetBo.getAsset().getHistoryId()));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetsAtPastDateWithTwoRevisionsTest() {
+        AssetDTO asset = AssetHelper.createBasicAsset();
+        AssetBO assetBo = new AssetBO();
+        assetBo.setAsset(asset);
+        AssetBO firstAssetBo = assetClient.upsertAsset(assetBo);
+        firstAssetBo.getAsset().setName(UUID.randomUUID().toString());
+        assetClient.upsertAsset(firstAssetBo);
+
+        List<AssetDTO> assets = assetClient.getAssetsAtDate(Arrays.asList(firstAssetBo.getAsset().getId()), Instant.now().minus(10, ChronoUnit.HOURS));
+        assertThat(assets.size(), CoreMatchers.is(1));
+        AssetDTO assetDto = assets.get(0);
+        assertThat(assetDto.getId(), CoreMatchers.is(firstAssetBo.getAsset().getId()));
+        assertThat(assetDto.getHistoryId(), CoreMatchers.is(firstAssetBo.getAsset().getHistoryId()));
+    }
+
     @Test
     @OperateOnDeployment("normal")
     public void getAssetHistoryByAssetHistGuidTest() {

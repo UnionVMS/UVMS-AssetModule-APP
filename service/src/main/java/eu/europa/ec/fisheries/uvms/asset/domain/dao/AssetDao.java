@@ -21,10 +21,7 @@ import org.hibernate.envers.query.criteria.MatchMode;
 import javax.ejb.Stateless;
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaBuilder.Trimspec;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -533,27 +530,42 @@ public class AssetDao {
     public Asset getAssetFromAssetIdAtDate(AssetIdentifier assetId, String value, Instant date) {
         Asset asset = getAssetFromAssetId(assetId, value);
         if (asset != null) {
-            return getAssetAtDate(asset, date);
+            return getAssetAtDate(asset.getId(), date);
         } else {
             return null;
         }
     }
 
-    public Asset getAssetAtDate(Asset asset, Instant instant) {
+    @SuppressWarnings("unchecked")
+    public List<Asset> getAssetsAtDate(List<UUID> assetIds, Instant date) {
+        AuditReader auditReader = AuditReaderFactory.get(em);
+        Number revision;
+        try {
+            revision = auditReader.getRevisionNumberForDate(Date.from(date));
+        } catch (RevisionDoesNotExistException ex) {
+            revision = 1;
+        }
+        return auditReader.createQuery()
+            .forEntitiesAtRevision(Asset.class, revision)
+            .add(AuditEntity.property("id").in(assetIds))
+            .getResultList();
+    }
+
+    public Asset getAssetAtDate(UUID assetId, Instant instant) {
         Date date = Date.from(instant);
         AuditReader auditReader = AuditReaderFactory.get(em);
         try {
-            return auditReader.find(Asset.class, asset.getId(), date);
+            return auditReader.find(Asset.class, assetId, date);
         } catch (RevisionDoesNotExistException ex) {
-            return getFirstRevision(asset);
+            return getFirstRevision(assetId);
         }
     }
 
-    public Asset getFirstRevision(Asset asset) {
+    public Asset getFirstRevision(UUID assetId) {
         AuditReader auditReader = AuditReaderFactory.get(em);
-        List<Number> revisions = auditReader.getRevisions(Asset.class, asset.getId());
+        List<Number> revisions = auditReader.getRevisions(Asset.class, assetId);
         if (!revisions.isEmpty()) {
-            return auditReader.find(Asset.class, asset.getId(), revisions.get(0));
+            return auditReader.find(Asset.class, assetId, revisions.get(0));
         }
         return null;
     }

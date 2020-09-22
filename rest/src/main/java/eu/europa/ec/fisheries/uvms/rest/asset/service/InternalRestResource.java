@@ -153,6 +153,21 @@ public class InternalRestResource {
         }
     }
 
+    @POST
+    @Path("assets/{date}")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
+    public Response getAssetsAtDate(@PathParam("date") String date,
+                                    List<UUID> assetIdList) {
+        try {
+            Instant instant = DateUtils.stringToDate(date);
+            List<Asset> assetsAtDate = assetService.getAssetsAtDate(assetIdList, instant);
+            return Response.ok(jsonb.toJson(assetsAtDate)).build();
+        } catch (Exception e) {
+            LOG.error("getAssetFromAssetIdAndDate", e);
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();
+        }
+    }
+
     @GET
     @Path("history/{guid}")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)

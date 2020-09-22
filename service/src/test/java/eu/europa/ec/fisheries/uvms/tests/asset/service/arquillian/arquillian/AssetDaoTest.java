@@ -334,12 +334,31 @@ public class AssetDaoTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
+    public void getAssetsAtDateSingleAssetTest() throws Exception {
+        Asset asset = AssetTestsHelper.createBasicAsset();
+        asset = assetDao.createAsset(asset);
+        commit();
+
+        List<Asset> assetsAtDate = assetDao.getAssetsAtDate(Arrays.asList(asset.getId()), Instant.now());
+        Asset assetAtDate = assetsAtDate.get(0);
+
+        assertThat(assetAtDate.getId(), is(notNullValue()));
+
+        assertThat(assetAtDate.getName(), is(asset.getName()));
+        assertThat(assetAtDate.getCfr(), is(asset.getCfr()));
+        assertThat(assetAtDate.getActive(), is(asset.getActive()));
+        assetDao.deleteAsset(asset);
+        commit();
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void getAssetAtDateSingleAssetTest() throws Exception {
         Asset asset = AssetTestsHelper.createBasicAsset();
         asset = assetDao.createAsset(asset);
         commit();
 
-        Asset assetAtDate = assetDao.getAssetAtDate(asset, Instant.now());
+        Asset assetAtDate = assetDao.getAssetAtDate(asset.getId(), Instant.now());
 
         assertThat(assetAtDate.getId(), is(notNullValue()));
 
@@ -361,7 +380,7 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.updateAsset(asset);
         commit();
 
-        Asset assetAtDate = assetDao.getAssetAtDate(asset, Instant.now().minus(1, ChronoUnit.DAYS));
+        Asset assetAtDate = assetDao.getAssetAtDate(asset.getId(), Instant.now().minus(1, ChronoUnit.DAYS));
 
         assertThat(assetAtDate.getId(), is(notNullValue()));
 
@@ -394,10 +413,10 @@ public class AssetDaoTest extends TransactionalTests {
         commit();
         Instant secondDate = Instant.now();
 
-        Asset assetAtFirstDate = assetDao.getAssetAtDate(asset2, firstDate);
+        Asset assetAtFirstDate = assetDao.getAssetAtDate(asset2.getId(), firstDate);
         assertThat(assetAtFirstDate.getName(), is(firstName));
 
-        Asset assetAtSecondDate = assetDao.getAssetAtDate(asset2, secondDate);
+        Asset assetAtSecondDate = assetDao.getAssetAtDate(asset2.getId(), secondDate);
         assertThat(assetAtSecondDate.getName(), is(newName));
 
         assetDao.deleteAsset(asset1);
