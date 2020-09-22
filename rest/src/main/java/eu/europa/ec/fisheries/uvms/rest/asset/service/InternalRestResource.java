@@ -24,6 +24,7 @@ import eu.europa.ec.fisheries.uvms.asset.util.JsonBConfiguratorAsset;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CreatePollResultDto;
+import eu.europa.ec.fisheries.uvms.rest.asset.mapper.CustomAssetAdapter;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import io.swagger.annotations.ApiParam;
@@ -36,6 +37,8 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
+import javax.json.bind.JsonbConfig;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -50,7 +53,7 @@ import java.util.stream.Collectors;
 @Produces(value = {MediaType.APPLICATION_JSON})
 public class InternalRestResource {
 
-    private final static Logger LOG = LoggerFactory.getLogger(InternalRestResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(InternalRestResource.class);
 
     @Inject
     private AssetServiceBean assetService;
@@ -65,11 +68,13 @@ public class InternalRestResource {
     AssetDao assetDao;
 
     private Jsonb jsonb;
+    private Jsonb customJsonb;
 
     //needed since eager fetch is not supported by AuditQuery et al, so workaround is to serialize while we still have a DB session active
     @PostConstruct
     public void init() {
         jsonb =  new JsonBConfiguratorAsset().getContext(null);
+        customJsonb = JsonbBuilder.create(new JsonbConfig().withAdapters(new CustomAssetAdapter()));
     }
 
     @GET
@@ -161,7 +166,7 @@ public class InternalRestResource {
         try {
             Instant instant = DateUtils.stringToDate(date);
             List<Asset> assetsAtDate = assetService.getAssetsAtDate(assetIdList, instant);
-            return Response.ok(jsonb.toJson(assetsAtDate)).build();
+            return Response.ok(customJsonb.toJson(assetsAtDate)).build();
         } catch (Exception e) {
             LOG.error("getAssetFromAssetIdAndDate", e);
             return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(e)).header("MDC", MDC.get("requestId")).build();

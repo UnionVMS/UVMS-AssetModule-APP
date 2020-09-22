@@ -19,7 +19,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.tests.TransactionalTests;
-
+import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -348,6 +348,24 @@ public class AssetDaoTest extends TransactionalTests {
         assertThat(assetAtDate.getCfr(), is(asset.getCfr()));
         assertThat(assetAtDate.getActive(), is(asset.getActive()));
         assetDao.deleteAsset(asset);
+        commit();
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetsAtDateTwoAssetTest() throws Exception {
+        Asset asset = AssetTestsHelper.createBasicAsset();
+        asset = assetDao.createAsset(asset);
+        Asset asset2 = AssetTestsHelper.createBasicAsset();
+        asset2 = assetDao.createAsset(asset2);
+        commit();
+
+        List<Asset> assetsAtDate = assetDao.getAssetsAtDate(Arrays.asList(asset.getId(), asset2.getId()), Instant.now());
+
+        assertThat(assetsAtDate.size(), CoreMatchers.is(2));
+
+        assetDao.deleteAsset(asset);
+        assetDao.deleteAsset(asset2);
         commit();
     }
 
