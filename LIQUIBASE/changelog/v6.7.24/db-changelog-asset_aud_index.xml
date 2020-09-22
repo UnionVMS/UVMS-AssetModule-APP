@@ -3,11 +3,23 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd"
-                   logicalFilePath="changelog/v6.7.23/db-changelog-activate-channels.xml">
+                   logicalFilePath="changelog/v6.7.24/db-changelog-asset_aud_index.xml">
 
     <changeSet id="asset_aud timestamp index" author="johsod">
         <createIndex indexName="asset_aud_updatetime_idx" tableName="asset_aud">
             <column name="updatetime"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="asset_aud id index" author="peerik">
+        <createIndex indexName="asset_aud_id_idx" tableName="asset_aud">
+            <column name="id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="asset_aud rev index" author="peerik">
+        <createIndex indexName="asset_aud_rev_idx" tableName="asset_aud">
+            <column name="rev"/>
         </createIndex>
     </changeSet>
 

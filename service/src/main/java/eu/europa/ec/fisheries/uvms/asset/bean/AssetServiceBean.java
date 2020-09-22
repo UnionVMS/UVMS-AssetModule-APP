@@ -51,6 +51,8 @@ import javax.ws.rs.core.Response;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Stateless
 public class AssetServiceBean {
@@ -265,6 +267,13 @@ public class AssetServiceBean {
         if (asset != null && asset.getMobileTerminals() != null)
             asset.getMobileTerminals().size(); // force to load children. FetchType.EAGER didn't work.
         return asset;
+    }
+
+    public List<Asset> getAssetsAtDate(List<UUID> assetIds, Instant date) {
+        List<Asset> assets = assetDao.getAssetsAtDate(assetIds, date);
+        Map<UUID, Asset> assetIdMap = assets.stream().collect(Collectors.toMap(Asset::getId, Function.identity()));
+        assetIds.stream().forEach(assetId -> assetIdMap.computeIfAbsent(assetId, id -> assetDao.getFirstRevision(id)));
+        return new ArrayList<>(assetIdMap.values());
     }
 
     public Asset getAssetById(UUID id) {
