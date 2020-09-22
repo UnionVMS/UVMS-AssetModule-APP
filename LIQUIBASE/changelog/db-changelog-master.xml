@@ -45,5 +45,6 @@
     <include file="v6.7.17/db-changelog-comment-to-text.xml" relativeToChangelogFile="true"/>
     <include file="v6.7.20/db-changelog-rename-long-term-parked.xml" relativeToChangelogFile="true"/>
     <include file="v6.7.22/db-changelog-activate-channels.xml" relativeToChangelogFile="true"/>
+    <include file="v6.7.24/db-changelog-asset_aud_index.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
