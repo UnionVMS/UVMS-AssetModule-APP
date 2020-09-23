@@ -25,10 +25,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Stateless
@@ -177,7 +174,7 @@ public class AssetModelMapper {
         prodOrg.setName(assetEntity.getProdOrgName());
         assetModel.setProducer(prodOrg);
         
-        List<Note> notes = assetService.getNotesForAsset(assetEntity.getId());
+        Collection<Note> notes = assetService.getNotesForAsset(assetEntity.getId()).values();
         for (Note note : notes) {
             AssetNotes assetNote = new AssetNotes();
             assetNote.setId(note.getId().toString());

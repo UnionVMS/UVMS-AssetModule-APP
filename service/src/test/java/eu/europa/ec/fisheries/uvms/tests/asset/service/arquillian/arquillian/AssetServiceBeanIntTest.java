@@ -471,7 +471,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Note note = AssetTestsHelper.createBasicNote();
         assetService.createNoteForAsset(asset.getId(), note, "test");
 
-        List<Note> notes = assetService.getNotesForAsset(asset.getId());
+        Map<UUID, Note> notes = assetService.getNotesForAsset(asset.getId());
         assertEquals(1, notes.size());
     }
 
@@ -487,7 +487,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         Note note2 = AssetTestsHelper.createBasicNote();
         assetService.createNoteForAsset(asset.getId(), note2, "test");
 
-        List<Note> notes = assetService.getNotesForAsset(asset.getId());
+        Map<UUID, Note> notes = assetService.getNotesForAsset(asset.getId());
         assertEquals(2, notes.size());
     }
 
@@ -500,13 +500,55 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         assetService.createNoteForAsset(asset.getId(), AssetTestsHelper.createBasicNote(), "test");
         assetService.createNoteForAsset(asset.getId(), AssetTestsHelper.createBasicNote(), "test");
 
-        List<Note> notes = assetService.getNotesForAsset(asset.getId());
+        Map<UUID, Note> notes = assetService.getNotesForAsset(asset.getId());
         assertEquals(2, notes.size());
 
-        assetService.deleteNote(notes.get(0).getId());
+        Note toBeDeleted = notes.values().iterator().next();
+        assetService.deleteNote(toBeDeleted.getId(), toBeDeleted.getCreatedBy());
 
         notes = assetService.getNotesForAsset(asset.getId());
         assertEquals(1, notes.size());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void deleteSomeoneElsesNoteTest() {
+        Asset asset = AssetTestsHelper.createBasicAsset();
+        asset = assetService.createAsset(asset, "test");
+
+        assetService.createNoteForAsset(asset.getId(), AssetTestsHelper.createBasicNote(), "test");
+
+        Map<UUID, Note> notes = assetService.getNotesForAsset(asset.getId());
+        assertEquals(1, notes.size());
+
+        Note toBeDeleted = notes.values().iterator().next();
+        try {
+            assetService.deleteNote(toBeDeleted.getId(), "Someone else");
+            fail();
+        }catch (Exception e){
+            assertTrue(e.getMessage().contains("Can only delete notes created by the same user"));
+        }
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void updateSomeoneElsesNoteTest() {
+        Asset asset = AssetTestsHelper.createBasicAsset();
+        asset = assetService.createAsset(asset, "test");
+
+        assetService.createNoteForAsset(asset.getId(), AssetTestsHelper.createBasicNote(), "test");
+
+        Map<UUID, Note> notes = assetService.getNotesForAsset(asset.getId());
+        assertEquals(1, notes.size());
+
+        Note toBeUpdated = notes.values().iterator().next();
+        toBeUpdated.setNote("Something completely different");
+        try {
+            assetService.updateNote(toBeUpdated, "Someone else");
+            fail();
+        }catch (Exception e){
+            assertTrue(e.getMessage().contains("Can only change notes created by the same user"));
+        }
     }
 
     @Test

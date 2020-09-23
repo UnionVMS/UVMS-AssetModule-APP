@@ -29,10 +29,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.hamcrest.CoreMatchers.is;
@@ -875,9 +872,10 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         assertNotNull(response);
         assertEquals(200, response.getStatus());
 
-        List<Note> fetchedNotes = response.readEntity(new GenericType<List<Note>>() {});
+        Map<String, Note> fetchedNotes = response.readEntity(new GenericType<Map<String, Note>>() {});
         assertThat(fetchedNotes.size(), is(1));
-        assertThat(fetchedNotes.get(0).getNote(), is(createdNote.getNote()));
+        Note fetchedNote = fetchedNotes.values().iterator().next();
+        assertThat(fetchedNote.getNote(), is(createdNote.getNote()));
     }
     
     @Test
@@ -937,7 +935,7 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         assertNotNull(response);
         assertEquals(200, response.getStatus());
 
-        List<Note> fetchedNotes = response.readEntity(new GenericType<List<Note>>() {});
+        Map<String, Note> fetchedNotes = response.readEntity(new GenericType<Map<String, Note>>() {});
         assertThat(fetchedNotes.size(), is(1));
 
         // Delete note
@@ -963,7 +961,7 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         assertNotNull(response);
         assertEquals(200, response.getStatus());
 
-        fetchedNotes = response.readEntity(new GenericType<List<Note>>() {});
+        fetchedNotes = response.readEntity(new GenericType<Map<String, Note>>() {});
         assertThat(fetchedNotes.size(), is(0));
     }
 

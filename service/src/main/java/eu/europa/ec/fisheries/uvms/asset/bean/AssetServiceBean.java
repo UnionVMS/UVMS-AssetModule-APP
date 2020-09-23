@@ -313,10 +313,10 @@ public class AssetServiceBean {
         return revisions;
     }
 
-    public List<Note> getNotesForAsset(UUID assetId) {
-        Asset asset = assetDao.getAssetById(assetId);
-        nullValidation(asset, "Could not find any asset with id: " + assetId);
-        return noteDao.getNotesByAsset(asset);
+    public Map<UUID, Note> getNotesForAsset(UUID assetId) {
+        List<Note> notesByAsset = noteDao.getNotesByAsset(assetId);
+        Map<UUID, Note> noteMap = notesByAsset.stream().collect(Collectors.toMap(Note::getId, Function.identity()));
+        return noteMap;
     }
 
     public Note createNoteForAsset(UUID assetId, Note note, String username) {
@@ -329,13 +329,21 @@ public class AssetServiceBean {
     }
 
     public Note updateNote(Note note, String username) {
+        Note oldNote = noteDao.findNote(note.getId());
+        if(oldNote != null && !oldNote.getCreatedBy().equals(username)){
+            throw new IllegalArgumentException("Can only change notes created by the same user");
+        }
         note.setCreatedBy(username);
         return noteDao.updateNote(note);
     }
 
-    public void deleteNote(UUID id) {
+    public void deleteNote(UUID id, String username) {
         Note note = noteDao.findNote(id);
         nullValidation(note, "Could not find any note with id: " + id);
+        if(!note.getCreatedBy().equals(username)){
+            throw new IllegalArgumentException("Can only delete notes created by the same user");
+        }
+
         noteDao.deleteNote(note);
     }
 
