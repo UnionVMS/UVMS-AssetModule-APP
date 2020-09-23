@@ -1260,7 +1260,9 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         assertEquals(200, mTChangesResponse.getStatus());
         //System.out.println(mTChangesResponse.readEntity(String.class));
-        List<ChangeHistoryRow> mtChanges = mTChangesResponse.readEntity(new GenericType<List<ChangeHistoryRow>>() {});
+        Map<UUID, ChangeHistoryRow> mtChangesResponse = mTChangesResponse.readEntity(new GenericType<Map<UUID, ChangeHistoryRow>>() {});
+        List<ChangeHistoryRow> mtChanges = new ArrayList<>(mtChangesResponse.values());
+        mtChanges.sort(Comparator.comparing(ChangeHistoryRow::getUpdateTime));
 
         assertEquals(3, mtChanges.size());
         assertEquals(1, mtChanges.get(2).getChannelChanges().size());
@@ -1317,7 +1319,9 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
 
         assertEquals(200, mTChangesResponse.getStatus());
        // System.out.println(mTChangesResponse.readEntity(String.class));
-        List<ChangeHistoryRow> mtChanges = mTChangesResponse.readEntity(new GenericType<List<ChangeHistoryRow>>() {});
+        Map<UUID, ChangeHistoryRow> mtChangesResponse = mTChangesResponse.readEntity(new GenericType<Map<UUID, ChangeHistoryRow>>() {});
+        List<ChangeHistoryRow> mtChanges = new ArrayList<>(mtChangesResponse.values());
+        mtChanges.sort(Comparator.comparing(ChangeHistoryRow::getUpdateTime));
 
         assertEquals(2, mtChanges.size());
         assertEquals(1, mtChanges.get(1).getChannelChanges().size());
@@ -1390,7 +1394,9 @@ public class MobileTerminalRestResourceTest extends AbstractAssetRestTest {
                 .get();
 
         assertEquals(200, mTChangesResponse.getStatus());
-        List<ChangeHistoryRow> mtChanges = mTChangesResponse.readEntity(new GenericType<List<ChangeHistoryRow>>() {});
+        Map<UUID, ChangeHistoryRow> mtChangesResponse = mTChangesResponse.readEntity(new GenericType<Map<UUID, ChangeHistoryRow>>() {});
+        List<ChangeHistoryRow> mtChanges = new ArrayList<>(mtChangesResponse.values());
+        mtChanges.sort(Comparator.comparing(ChangeHistoryRow::getUpdateTime));
 
         assertNotNull(mtChanges);
         assertEquals(4, mtChanges.size());
