@@ -43,6 +43,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Path("/asset")
@@ -399,7 +400,7 @@ public class AssetRestResource {
     @RequiresFeature(UnionVMSFeature.viewVesselsAndMobileTerminals)
     public Response getNotesForAsset(@ApiParam(value="The id of asset to retrieve notes", required = true)  @PathParam("id") UUID assetId) {
         try {
-            List<Note> notes = assetService.getNotesForAsset(assetId);
+            Map<UUID, Note> notes = assetService.getNotesForAsset(assetId);
             return Response.ok(notes).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error while getting notes for asset {}. {}] ", assetId, e);
@@ -469,7 +470,7 @@ public class AssetRestResource {
     @RequiresFeature(UnionVMSFeature.manageVessels)
     public Response deleteNote(@ApiParam(value="Id of note to be deleted", required=true) @PathParam("id") UUID id)  throws Exception {
         try {
-            assetService.deleteNote(id);
+            assetService.deleteNote(id, servletRequest.getRemoteUser());
             return Response.ok().header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
             LOG.error("Error deleting note.", e);

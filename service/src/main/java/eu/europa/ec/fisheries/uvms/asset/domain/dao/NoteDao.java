@@ -10,7 +10,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.domain.dao;
 
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Note;
 
 import javax.ejb.Stateless;
@@ -43,9 +42,9 @@ public class NoteDao {
         em.remove(note);
     }
 
-    public List<Note> getNotesByAsset(Asset asset) {
+    public List<Note> getNotesByAsset(UUID assetId) {
         TypedQuery<Note> query = em.createNamedQuery(Note.FIND_BY_ASSET, Note.class);
-        query.setParameter("assetId", asset.getId());
+        query.setParameter("assetId", assetId);
         return query.getResultList();
     }
 }
