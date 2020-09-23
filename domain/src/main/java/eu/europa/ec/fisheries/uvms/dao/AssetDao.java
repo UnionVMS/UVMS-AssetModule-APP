@@ -134,6 +134,8 @@ public interface AssetDao {
 
     AssetHistory getAssetHistoryByGuid(String guid) throws AssetDaoException;
 
+    AssetHistory getAssetHistoryByHashKey(String hashKey) throws AssetDaoException;
+
     /**
      * Get assetHistories by multiple vesselHistoryIds - guids
      *

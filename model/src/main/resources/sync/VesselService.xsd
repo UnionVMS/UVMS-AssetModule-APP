@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Published by JAX-WS RI (http://jax-ws.java.net). RI's version is JAX-WS RI 2.3.0-wls122140-b190328.0053 svn-revision#unknown. -->
+<xsd:schema xmlns:ns0="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://ec.europa.eu/mare/fisheries/vessel/common/v1.0">
+    <xsd:complexType name="getVesselCoreData">
+        <xsd:sequence>
+            <xsd:element name="Selector" type="ns0:SelectorType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="getVesselCoreDataResponse">
+        <xsd:sequence>
+            <xsd:element name="VesselCoreDataPage" type="ns0:VesselCoreDataPageType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="getVesselExtendedData">
+        <xsd:sequence>
+            <xsd:element name="Selector" type="ns0:SelectorType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="getVesselExtendedDataResponse">
+        <xsd:sequence>
+            <xsd:element name="VesselExtendedDataPage" type="ns0:VesselExtendedDataPageType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="getVesselPhotos">
+        <xsd:sequence>
+            <xsd:element name="Selector" type="ns0:SelectorType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="getVesselPhotosResponse">
+        <xsd:sequence>
+            <xsd:element name="VesselExtendedDataPage" type="ns0:VesselExtendedDataPageType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="FleetDataServiceException">
+        <xsd:sequence>
+            <xsd:element name="message" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="ApplicationException.Type" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="errors" type="ns0:ServiceError" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="SelectorType">
+        <xsd:sequence>
+            <xsd:element name="projectionFields" type="xsd:string" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+            <xsd:element name="predicates" type="ns0:PredicateType" minOccurs="0" maxOccurs="unbounded"
+                         nillable="true"/>
+            <xsd:element name="ordering" type="ns0:OrderByType" minOccurs="0"/>
+            <xsd:element name="dateRange" type="ns0:DateRangeType" minOccurs="0"/>
+            <xsd:element name="paging" type="ns0:PagingType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="PredicateType">
+        <xsd:sequence>
+            <xsd:element name="field" type="xsd:string"/>
+            <xsd:element name="operator" type="ns0:PredicateType.Operator"/>
+            <xsd:element name="values" type="xsd:string" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="OrderByType">
+        <xsd:sequence>
+            <xsd:element name="field" type="xsd:string"/>
+            <xsd:element name="sortOrder" type="ns0:SortOrderType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="DateRangeType">
+        <xsd:sequence>
+            <xsd:element name="startDate" type="xsd:string"/>
+            <xsd:element name="endDate" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="PagingType">
+        <xsd:sequence>
+            <xsd:element name="offset" type="xsd:int" minOccurs="0"/>
+            <xsd:element name="maxResults" type="xsd:int" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="VesselCoreDataPageType">
+        <xsd:complexContent>
+            <xsd:extension base="ns0:PageType">
+                <xsd:sequence>
+                    <xsd:element name="VesselEvent" type="ns0:VesselEventType" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="PageType">
+        <xsd:sequence>
+            <xsd:element name="pageSize" type="xsd:int"/>
+            <xsd:element name="totalNumOfEntries" type="xsd:int"/>
+            <xsd:element name="pageType" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="VesselExtendedDataPageType">
+        <xsd:complexContent>
+            <xsd:extension base="ns0:PageType">
+                <xsd:sequence>
+                    <xsd:element name="VesselEvent" type="ns0:VesselEventType" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="VesselEventType">
+        <xsd:sequence>
+            <xsd:element name="EventType" type="xsd:string"/>
+            <xsd:element name="OccurrenceDateTime" type="xsd:date"/>
+            <xsd:element name="EventActiveIndicator" type="ns0:BooleanType"/>
+            <xsd:element name="EventLastIndicator" type="ns0:BooleanType"/>
+            <xsd:element name="RelatedVesselTransportMeans" type="ns0:VesselTransportMeansType"/>
+            <xsd:element name="RelatedVesselHistoricalCharacteristic" type="ns0:VesselHistoricalCharacteristicType"
+                         minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="VesselTransportMeansType">
+        <xsd:sequence>
+            <xsd:element name="CFR" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="UVI" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="RegistrationNumber" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="ExternalMarking" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="IRCS" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="MMSI" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="HaskKey" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="FFAVesselId" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="ThirdPartyVesselID" type="ns0:ThirdPartyVesselIDType" minOccurs="0"/>
+            <xsd:element name="VesselName" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="VesselType" type="xsd:string"/>
+            <xsd:element name="VesselSpeed" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="TrawlingSpeed" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="RegistrationVesselCountry" type="xsd:string"/>
+            <xsd:element name="SpecifiedRegistrationEvent" type="ns0:RegistrationEventType" minOccurs="0"
+                         maxOccurs="unbounded"/>
+            <xsd:element name="SpecifiedConstructionEvent" type="ns0:ConstructionEventType" minOccurs="0"/>
+            <xsd:element name="AttachedVesselEngine" type="ns0:VesselEngineType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="SpecifiedVesselDimensions" type="ns0:VesselDimensionsType" minOccurs="0"/>
+            <xsd:element name="OnBoardFishingGear" type="ns0:FishingGearType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="ApplicableVesselAdministrativeCharacteristics"
+                         type="ns0:VesselAdministrativeCharacteristicsType" minOccurs="0"/>
+            <xsd:element name="ApplicableVesselEquipmentCharacteristics" type="ns0:VesselEquipmentCharacteristicsType"
+                         minOccurs="0"/>
+            <xsd:element name="ApplicableVesselTechnicalCharacteristics" type="ns0:VesselTechnicalCharacteristicsType"
+                         minOccurs="0"/>
+            <xsd:element name="ApplicableVesselStorageCharacteristics" type="ns0:VesselStorageCharacteristicsType"
+                         minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="SpecifiedVesselCrew" type="ns0:VesselCrewType" minOccurs="0"/>
+            <xsd:element name="SpecifiedContactParty" type="ns0:ContactPartyType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="VesselPhoto" type="ns0:VesselPhotoType" minOccurs="0" maxOccurs="unbounded"
+                         nillable="true"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ThirdPartyVesselIDType">
+        <xsd:sequence>
+            <xsd:element name="AIDCP" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="CCALMR" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="CCBSP" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="CCSBT" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="GFCM" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="IATTC" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="ICCAT" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="IOTC" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="NAFO" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="NASCO" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="NEAFC" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="SEAFO" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="SIOFA" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="SPRFMO" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="WCPFC" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="MeasureType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:decimal">
+                <xsd:attribute name="unitCode" type="xsd:token"/>
+                <xsd:attribute name="unitCodeListVersionID" type="xsd:token"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="RegistrationEventType">
+        <xsd:sequence>
+            <xsd:element name="OccurrenceDateTime" type="xsd:date" minOccurs="0"/>
+            <xsd:element name="RelatedRegistrationLocation" type="ns0:RegistrationLocationType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="RegistrationLocationType">
+        <xsd:sequence>
+            <xsd:element name="CountryOfImpExpID" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="PlaceOfRegistrationPortID" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="PlaceOfRegistration" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ConstructionEventType">
+        <xsd:sequence>
+            <xsd:element name="OccurrenceDateTime" type="xsd:date"/>
+            <xsd:element name="RelatedConstructionLocation" type="ns0:ConstructionLocationType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ConstructionLocationType">
+        <xsd:sequence>
+            <xsd:element name="PlaceOfContructionID" type="xsd:string"/>
+            <xsd:element name="ConstructionAddress" type="ns0:StructuredAddressType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="StructuredAddressType">
+        <xsd:sequence>
+            <xsd:element name="CityName" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="CountryID" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="PostOfficeBox" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="PostalArea" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="StreetName" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="VesselEngineType">
+        <xsd:sequence>
+            <xsd:element name="Role" type="ns0:FluxVesselEngineRoleType"/>
+            <xsd:element name="Power" type="ns0:MeasureType"/>
+            <xsd:element name="EngineMark" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="EngineModel" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="PropellerType" type="ns0:VesselEnginePropellerType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="VesselDimensionsType">
+        <xsd:sequence>
+            <xsd:element name="LOA" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="LBP" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="LRE" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="OtherLength" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="TonnageGT" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="OtherTonnage" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="GTS" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="NT" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="NRT" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="CarryingTonnage" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="Depth" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="MouldedDepth" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="Draught" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="Breadth" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="DeadWeight" type="ns0:MeasureType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="FishingGearType">
+        <xsd:sequence>
+            <xsd:element name="GearType" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="GearRole" type="ns0:FluxGearRoleType" minOccurs="0"/>
+            <xsd:element name="GearCharacteristic" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="VesselAdministrativeCharacteristicsType">
+        <xsd:sequence>
+            <xsd:element name="LicenceIndicator" type="ns0:BooleanType"/>
+            <xsd:element name="Segment" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="TypeOfExport" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="PublicAidCode" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="DateOfEntryIntoService" type="xsd:date" minOccurs="0"/>
+            <xsd:element name="VesselPurchaseYear" type="xsd:date" minOccurs="0"/>
+            <xsd:element name="NationalAuthorisationName" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="VesselEquipmentCharacteristicsType">
+        <xsd:sequence>
+            <xsd:element name="IRCSIndicator" type="ns0:BooleanType"/>
+            <xsd:element name="VMSIndicator" type="ns0:BooleanType" minOccurs="0"/>
+            <xsd:element name="ERSIndicator" type="ns0:BooleanType" minOccurs="0"/>
+            <xsd:element name="AISIndicator" type="ns0:BooleanType" minOccurs="0"/>
+            <xsd:element name="NavigEqTypeDetails" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="CommEquipmentDetails" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="FishFinderEquipmentDetails" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="DeckMachineryDetails" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="VMSSatOperatorCode" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="FishProcessEquipmentDetails" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="FishProcessingLineType" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="RefrigerationEquipmentDetails" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="SafetyEquipmentDetails" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="HelicopterRegNum" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="AircraftRegNum" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="VMSManufacturerName" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="VMSModelName" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="VMSSatOperatorTxt" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="VMSSerialNumber" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="VMSSoftwareVersion" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="VMSFeatures" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="SupportVesselSkiffLength" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="SupportVesselSkiffEnginePower" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="SpeedBoatLength" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="SpeedBoatEnginePower" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="FuelTankCapacity" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="NrOfFishHolds" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="NrOfFishLights" type="ns0:MeasureType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="VesselTechnicalCharacteristicsType">
+        <xsd:sequence>
+            <xsd:element name="HullMaterial" type="xsd:int" minOccurs="0"/>
+            <xsd:element name="ProcessingClass" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="VesselStorageCharacteristicsType">
+        <xsd:sequence>
+            <xsd:element name="StorageMethod" type="ns0:StorageMethodType" minOccurs="0"/>
+            <xsd:element name="StorageCapacity" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="StorageTemperature" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="StorageNumberOfUnits" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="FishHoldCapacity" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="FishHoldTemperature" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="FishHoldNumberOfUnits" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="FreezingCapacity" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="FreezingTemperature" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="FreezingNumberOfUnits" type="ns0:MeasureType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="StorageMethodType">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="listID" type="xsd:token"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="VesselCrewType">
+        <xsd:sequence>
+            <xsd:element name="CrewSize" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="CrewSizeMax" type="ns0:MeasureType" minOccurs="0"/>
+            <xsd:element name="CrewSizeMin" type="ns0:MeasureType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ContactPartyType">
+        <xsd:sequence>
+            <xsd:element name="ContactRole" type="ns0:FluxContactRoleType" minOccurs="0"/>
+            <xsd:element name="Name" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="NationalityCountryID" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="IMOCompanyNumber" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="SpecifiedContactPerson" type="ns0:ContactPersonType" minOccurs="0"/>
+            <xsd:element name="SpecifiedStructuredAddress" type="ns0:StructuredAddressType" minOccurs="0"/>
+            <xsd:element name="URIEmailCommunication" type="ns0:EmailCommunicationType" minOccurs="0"
+                         maxOccurs="unbounded"/>
+            <xsd:element name="SpecifiedUniversalCommunication" type="ns0:UniversalCommunicationType" minOccurs="0"
+                         maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ContactPersonType">
+        <xsd:sequence>
+            <xsd:element name="FamilyName" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="EmailCommunicationType">
+        <xsd:sequence>
+            <xsd:element name="EmailAddress" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="UniversalCommunicationType">
+        <xsd:sequence>
+            <xsd:element name="PhoneNumber" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="FaxNumber" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="TelexNumber" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="RadioFrequency" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="SatellitePhoneNumber" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="VesselPhotoType">
+        <xsd:sequence>
+            <xsd:element name="PhotoVesselDescription" type="xsd:string"/>
+            <xsd:element name="VesselPhotoType" type="xsd:string"/>
+            <xsd:element name="PictureTakenDate" type="xsd:date"/>
+            <xsd:element xmlns:ns1="http://www.w3.org/2005/05/xmlmime" name="VesselPhotoData" type="xsd:base64Binary"
+                         ns1:expectedContentTypes="image/jpeg"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="VesselHistoricalCharacteristicType">
+        <xsd:sequence>
+            <xsd:element name="Type" type="xsd:string"/>
+            <xsd:element name="DateOfHistoricalData" type="xsd:date"/>
+            <xsd:element name="PreviousFlagState" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="PreviousIRCS" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="PreviousVesselName" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="PreviousOwnerName" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="PreviousOwnerAddress" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ServiceError" abstract="true">
+        <xsd:sequence>
+            <xsd:element name="errorString" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="ServiceError.Type" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="EntityNotFound">
+        <xsd:complexContent>
+            <xsd:extension base="ns0:ServiceError">
+                <xsd:sequence>
+                    <xsd:element name="reason" type="ns0:EntityNotFound.Reason" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="InternalError">
+        <xsd:complexContent>
+            <xsd:extension base="ns0:ServiceError">
+                <xsd:sequence>
+                    <xsd:element name="reason" type="ns0:InternalError.Reason" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="SelectorError">
+        <xsd:complexContent>
+            <xsd:extension base="ns0:ServiceError">
+                <xsd:sequence>
+                    <xsd:element name="reason" type="ns0:SelectorError.Reason" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="OperatorError">
+        <xsd:complexContent>
+            <xsd:extension base="ns0:ServiceError">
+                <xsd:sequence>
+                    <xsd:element name="reason" type="ns0:OperatorError.Reason" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="RequestError">
+        <xsd:complexContent>
+            <xsd:extension base="ns0:ServiceError">
+                <xsd:sequence>
+                    <xsd:element name="reason" type="ns0:RequestError.Reason" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="NullError">
+        <xsd:complexContent>
+            <xsd:extension base="ns0:ServiceError">
+                <xsd:sequence>
+                    <xsd:element name="reason" type="ns0:NullError.Reason" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="DateError">
+        <xsd:complexContent>
+            <xsd:extension base="ns0:ServiceError">
+                <xsd:sequence>
+                    <xsd:element name="reason" type="ns0:DateError.Reason" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:element name="getVesselCoreData" type="ns0:getVesselCoreData"/>
+    <xsd:element name="getVesselCoreDataResponse" type="ns0:getVesselCoreDataResponse"/>
+    <xsd:element name="getVesselExtendedData" type="ns0:getVesselExtendedData"/>
+    <xsd:element name="getVesselExtendedDataResponse" type="ns0:getVesselExtendedDataResponse"/>
+    <xsd:element name="getVesselPhotos" type="ns0:getVesselPhotos"/>
+    <xsd:element name="getVesselPhotosResponse" type="ns0:getVesselPhotosResponse"/>
+    <xsd:element name="FleetDataServiceExceptionFault" type="ns0:FleetDataServiceException" nillable="true"/>
+    <xsd:element name="partialFailure" type="xsd:string" nillable="true"/>
+    <xsd:element name="clientId" type="xsd:string" nillable="true"/>
+    <xsd:simpleType name="PredicateType.Operator">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="EQUALS"/>
+            <xsd:enumeration value="NOT_EQUALS"/>
+            <xsd:enumeration value="IN"/>
+            <xsd:enumeration value="NOT_IN"/>
+            <xsd:enumeration value="GREATER_THAN"/>
+            <xsd:enumeration value="LESS_THAN"/>
+            <xsd:enumeration value="GREATER_THAN_EQUALS"/>
+            <xsd:enumeration value="LESS_THAN_EQUALS"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="SortOrderType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="ASC"/>
+            <xsd:enumeration value="DESC"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="BooleanType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="Y"/>
+            <xsd:enumeration value="N"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="FluxVesselEngineRoleType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="MAIN"/>
+            <xsd:enumeration value="AUX"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="VesselEnginePropellerType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="FIX"/>
+            <xsd:enumeration value="VAR"/>
+            <xsd:enumeration value="DUC"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="FluxGearRoleType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="MAIN"/>
+            <xsd:enumeration value="AUX"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="FluxContactRoleType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="OWNER"/>
+            <xsd:enumeration value="OPERATOR"/>
+            <xsd:enumeration value="MASTER"/>
+            <xsd:enumeration value="AGENT"/>
+            <xsd:enumeration value="CONSTRUCT"/>
+            <xsd:enumeration value="REG_AUTH"/>
+            <xsd:enumeration value="VESSEL"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="EntityNotFound.Reason">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="RECORD_NOT_FOUND"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="InternalError.Reason">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="UNEXPECTED_INTERNAL_ERROR"/>
+            <xsd:enumeration value="UNKNOWN"/>
+            <xsd:enumeration value="DOWNTIME"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="SelectorError.Reason">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="INVALID_OR_NULL_SELECTOR_IN_REQUEST"/>
+            <xsd:enumeration value="INVALID_OR_NULL_PREDICATE_IN_REQUEST"/>
+            <xsd:enumeration value="INVALID_PROJECTION_FIELD_PROVIDED"/>
+            <xsd:enumeration value="INVALID_PREDICATE_FIELD"/>
+            <xsd:enumeration value="INVALID_PREDICATE_OPERATOR"/>
+            <xsd:enumeration value="NOT_SUPPORTED_PREDICATE_OPERATOR"/>
+            <xsd:enumeration value="INVALID_PREDICATE_VALUE"/>
+            <xsd:enumeration value="MISSING_PREDICATE_VALUES"/>
+            <xsd:enumeration value="MISSING_PREDICATE_OPERATOR"/>
+            <xsd:enumeration value="MISSING_PREDICATE_FIELD"/>
+            <xsd:enumeration value="INVALID_SORT_FIELD_PROVIDED"/>
+            <xsd:enumeration value="INVALID_PREDICATE_DATE_VALUE"/>
+            <xsd:enumeration value="DATE_RANGE_NOT_SUPPORTED"/>
+            <xsd:enumeration value="INVALID_SORT_FIELD_NAME"/>
+            <xsd:enumeration value="INVALID_SORT_ORDER_BY_CLAUSE"/>
+            <xsd:enumeration value="INVALID_MAX_RESULTS_IN_PAGING_CLAUSE"/>
+            <xsd:enumeration value="INVALID_OFFSET_IN_PAGING_CLAUSE"/>
+            <xsd:enumeration value="UNKNOWN_ERROR"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="OperatorError.Reason">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="OPERATOR_NOT_SUPPORTED"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="RequestError.Reason">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="INVALID_INPUT"/>
+            <xsd:enumeration value="UNKNOWN"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="NullError.Reason">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="NULL_VALUE"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="DateError.Reason">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="INVALID_DATE_VALUE"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+</xsd:schema>

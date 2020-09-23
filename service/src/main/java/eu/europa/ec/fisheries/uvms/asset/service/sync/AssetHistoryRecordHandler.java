@@ -1,0 +1,388 @@
+package eu.europa.ec.fisheries.uvms.asset.service.sync;
+
+import javax.ejb.EJB;
+import javax.enterprise.context.ApplicationScoped;
+import javax.transaction.Transactional;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
+import eu.europa.ec.fisheries.uvms.dao.AssetDao;
+import eu.europa.ec.fisheries.uvms.dao.FishingGearDao;
+import eu.europa.ec.fisheries.uvms.dao.FishingGearTypeDao;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.CarrierSourceEnum;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetEntity;
+import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
+import eu.europa.ec.fisheries.uvms.entity.model.Carrier;
+import eu.europa.ec.fisheries.uvms.entity.model.FishingGear;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
+
+@ApplicationScoped
+@Slf4j
+public class AssetHistoryRecordHandler {
+
+    private static final String FLEETSYNC = "fleetsync";
+    private static final int TTL_IN_MINUTES = 30;
+
+    private List<FishingGear> allFishingGear = null;
+    private Instant lastUpdateOfAllFishingGear = Instant.now().minus(TTL_IN_MINUTES, ChronoUnit.MINUTES);
+
+    @EJB
+    private AssetDao assetDao;
+
+    @EJB
+    private FishingGearTypeDao fishingGearTypeDao;
+
+    @EJB
+    private FishingGearDao fishingGearDao;
+
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public void handleRecord(AssetHistory assetHistoryRecord) {
+        AssetHistory assetHistory = getAssetHistoryByHashKey(assetHistoryRecord);
+        if (assetHistory != null) {
+            // asset history found
+            updateExistingAssetHistoryEntry(assetHistory, assetHistoryRecord);
+        } else {
+            AssetEntity assetByCfr = getAssetByCfr(assetHistoryRecord);
+            if (assetByCfr != null) {
+                // asset with CFR exists attach new history to it
+                addNewAssetHistoryEntry(assetHistoryRecord, assetByCfr);
+            } else {
+                // create new asset entity and attach the history update to it
+                AssetEntity assetEntity = createAssetEntityFrom(assetHistoryRecord);
+                saveNewAssetEntity(assetHistoryRecord, assetEntity);
+            }
+        }
+    }
+
+
+    private void addNewAssetHistoryEntry(AssetHistory assetHistoryRecord, AssetEntity assetByCfr) {
+        setMainFishingGear(assetHistoryRecord);
+        setSubFishingGear(assetHistoryRecord);
+        assetHistoryRecord.getContactInfo().forEach(c -> c.setAsset(assetHistoryRecord));
+        assetHistoryRecord.setAsset(assetByCfr);
+        Optional<AssetHistory> anyEventMoreRecent = assetByCfr.getHistories().stream()
+                .filter(e -> e.getDateOfEvent().toInstant().isAfter(assetHistoryRecord.getDateOfEvent().toInstant()))
+                .findAny();
+        if (anyEventMoreRecent.isPresent()) {
+            assetHistoryRecord.setActive(false);
+        } else {
+            assetHistoryRecord.setActive(true);
+            assetHistoryRecord.getAsset().getHistories().stream()
+                    .filter(e -> e.getDateOfEvent().toInstant().isBefore(assetHistoryRecord.getDateOfEvent().toInstant()))
+                    .collect(Collectors.toList())
+                    .forEach(e -> e.setActive(false));
+            // update the main asset fields accordingly
+            updateAssetFieldsFromActiveHistory(assetByCfr, assetHistoryRecord);
+        }
+        assetByCfr.getHistories().add(assetHistoryRecord);
+    }
+
+    private void updateAssetFieldsFromActiveHistory(AssetEntity assetByCfr, AssetHistory assetHistoryRecord) {
+        assetByCfr.setCFR(assetHistoryRecord.getCfr());
+        assetByCfr.setUvi(assetHistoryRecord.getUvi());
+        assetByCfr.setIRCS(assetHistoryRecord.getIrcs());
+        assetByCfr.setIccat(assetHistoryRecord.getIccat());
+        assetByCfr.setGfcm(assetHistoryRecord.getGfcm());
+        assetByCfr.setMMSI(assetHistoryRecord.getMmsi());
+        assetByCfr.setUpdatedBy(assetHistoryRecord.getUpdatedBy());
+
+        assetByCfr.setIMO(assetHistoryRecord.getImo());
+        assetByCfr.setIrcsIndicator(assetHistoryRecord.getIrcsIndicator());
+        assetByCfr.setConstructionPlace(assetHistoryRecord.getPortOfRegistration());
+        assetByCfr.setHullMaterial(assetHistoryRecord.getHullMaterial());
+        // check dates +1 or year etc
+        assetByCfr.setConstructionYear(Optional.ofNullable(assetHistoryRecord.getConstructionDate()).map(v -> String.valueOf(v.getYear() + 1900)).orElse(null));
+        assetByCfr.setCommissionDay(Optional.ofNullable(assetHistoryRecord.getCommissionDate()).map(v -> StringUtils.leftPad(String.valueOf(v.getDate()), 2, "0")).orElse(null));
+        assetByCfr.setCommissionMonth(Optional.ofNullable(assetHistoryRecord.getCommissionDate()).map(v -> StringUtils.leftPad(String.valueOf(v.getMonth() + 1), 2, "0")).orElse(null));
+        assetByCfr.setCommissionYear(Optional.ofNullable(assetHistoryRecord.getCommissionDate()).map(v -> String.valueOf(v.getYear() + 1900)).orElse(null));
+//        asset.setUpdateTime();
+    }
+
+    private AssetEntity getAssetByCfr(AssetHistory assetHistoryRecord) {
+        AssetEntity assetByCfr;
+        try {
+            assetByCfr = assetDao.getAssetByCfr(assetHistoryRecord.getCfr());
+        } catch (AssetDaoException ex) {
+            assetByCfr = null;
+        }
+        return assetByCfr;
+    }
+
+    private AssetHistory getAssetHistoryByHashKey(AssetHistory assetHistoryRecord) {
+        AssetHistory assetHistory;
+        try {
+            assetHistory = assetDao.getAssetHistoryByHashKey(assetHistoryRecord.getHashKey());
+        } catch (AssetDaoException e) {
+            assetHistory = null;
+        }
+        return assetHistory;
+    }
+
+    private void saveNewAssetEntity(AssetHistory assetHistoryRecord, AssetEntity assetEntity) {
+        try {
+            assetDao.createAsset(assetEntity);
+        } catch (AssetDaoException e) {
+            log.error("Could not create asset for new history entry with hashKey {}", assetHistoryRecord.getHashKey());
+        }
+    }
+
+    private AssetEntity createAssetEntityFrom(AssetHistory assetHistoryRecord) {
+        AssetEntity asset = new AssetEntity();
+        asset.setCFR(assetHistoryRecord.getCfr());
+        asset.setUvi(assetHistoryRecord.getUvi());
+        asset.setIRCS(assetHistoryRecord.getIrcs());
+        asset.setIccat(assetHistoryRecord.getIccat());
+        asset.setGfcm(assetHistoryRecord.getGfcm());
+        asset.setMMSI(assetHistoryRecord.getMmsi());
+        asset.setUpdatedBy(assetHistoryRecord.getUpdatedBy());
+
+
+        asset.setIMO(assetHistoryRecord.getImo());
+        asset.setIrcsIndicator(assetHistoryRecord.getIrcsIndicator());
+        asset.setConstructionPlace(assetHistoryRecord.getPortOfRegistration());
+        asset.setHullMaterial(assetHistoryRecord.getHullMaterial());
+        // check dates +1 or year etc
+        asset.setConstructionYear(Optional.ofNullable(assetHistoryRecord.getConstructionDate()).map(v -> String.valueOf(v.getYear() + 1900)).orElse(null));
+        asset.setCommissionDay(Optional.ofNullable(assetHistoryRecord.getCommissionDate()).map(v -> StringUtils.leftPad(String.valueOf(v.getDate()), 2, "0")).orElse(null));
+        asset.setCommissionMonth(Optional.ofNullable(assetHistoryRecord.getCommissionDate()).map(v -> StringUtils.leftPad(String.valueOf(v.getMonth() + 1), 2, "0")).orElse(null));
+        asset.setCommissionYear(Optional.ofNullable(assetHistoryRecord.getCommissionDate()).map(v -> String.valueOf(v.getYear() + 1900)).orElse(null));
+//        asset.setUpdateTime();
+
+        Carrier carrier = new Carrier();
+        carrier.setUpdatedBy(FLEETSYNC);
+        carrier.setSource(CarrierSourceEnum.XEU); // from where this value?
+        carrier.setActive(true); // from where this value?
+//        carrier.setUpdatetime();
+        asset.setCarrier(carrier);
+        asset.setNotes(new ArrayList<>());
+
+        List<AssetHistory> assetHistoryList = new ArrayList<>();
+        assetHistoryRecord.setActive(true); // since it is the only one
+        assetHistoryList.add(assetHistoryRecord);
+        asset.setHistories(assetHistoryList);
+
+        if (assetHistoryRecord.getContactInfo() != null) {
+            assetHistoryRecord.getContactInfo().forEach(c -> c.setAsset(assetHistoryRecord));
+        }
+
+        setMainFishingGear(assetHistoryRecord);
+        setSubFishingGear(assetHistoryRecord);
+        assetHistoryRecord.setType(GearFishingTypeEnum.UNKNOWN);
+        assetHistoryRecord.setAsset(asset);
+
+        return asset;
+    }
+
+    private void setMainFishingGear(AssetHistory assetHistoryRecord) {
+        List<FishingGear> allFishingGear = getAllFishingGear(); // need to cache this
+        Optional<FishingGear> fishingGearMain = allFishingGear.stream()
+                .filter(g -> g.getCode().equals(assetHistoryRecord.getMainFishingGear().getCode())).findFirst();
+        fishingGearMain.ifPresent(g -> {
+            assetHistoryRecord.setMainFishingGear(fishingGearMain.get());
+        });
+    }
+
+    private void setSubFishingGear(AssetHistory assetHistoryRecord) {
+        Optional<FishingGear> fishingGearSub = getAllFishingGear().stream()
+                .filter(g -> g.getCode().equals(assetHistoryRecord.getSubFishingGear().getCode())).findFirst();
+        fishingGearSub.ifPresent(g -> {
+            assetHistoryRecord.setSubFishingGear(fishingGearSub.get());
+        });
+    }
+
+    private void updateExistingAssetHistoryEntry(AssetHistory assetHistory, AssetHistory assetHistoryRecord) {
+        updateEventInfoIfDiff(assetHistory, assetHistoryRecord);
+        updateContactInfoIfDiff(assetHistory, assetHistoryRecord);
+        updateVesselIdentifiersIfDiff(assetHistory, assetHistoryRecord);
+        updatePhysicalCharacteristicsIfDiff(assetHistory, assetHistoryRecord);
+        updateLicenseInfoIfDiff(assetHistory, assetHistoryRecord);
+        updateIndicatorsIfDiff(assetHistory, assetHistoryRecord);
+        updateFishingGearIfDiff(assetHistory, assetHistoryRecord);
+        updateInfoIfDiff(assetHistory, assetHistoryRecord);
+    }
+
+    private void updateEventInfoIfDiff(AssetHistory assetHistory, AssetHistory assetHistoryRecord) {
+        if (assetHistoryRecord.getDateOfEvent() != null && !assetHistoryRecord.getDateOfEvent().equals(assetHistory.getDateOfEvent())) {
+            assetHistory.setDateOfEvent(assetHistoryRecord.getDateOfEvent());
+        }
+        if (assetHistoryRecord.getEventCode() != null && !assetHistoryRecord.getEventCode().equals(assetHistory.getEventCode())) {
+            assetHistory.setEventCode(assetHistoryRecord.getEventCode());
+        }
+
+        Optional<AssetHistory> anyEventMoreRecent = assetHistory.getAsset().getHistories().stream()
+                .filter(e -> e.getDateOfEvent().toInstant().isAfter(assetHistoryRecord.getDateOfEvent().toInstant()))
+                .findAny();
+
+        if (anyEventMoreRecent.isPresent()) {
+            assetHistory.setActive(false);
+        } else {
+            assetHistory.setActive(true);
+            assetHistory.getAsset().getHistories().stream()
+                    .filter(e -> e.getDateOfEvent().toInstant().isBefore(assetHistoryRecord.getDateOfEvent().toInstant()))
+                    .collect(Collectors.toList())
+                    .forEach(e -> e.setActive(false));
+            // update the main asset fields accordingly
+            updateAssetFieldsFromActiveHistory(assetHistory.getAsset(), assetHistoryRecord);
+
+        }
+        if (assetHistoryRecord.getGuid() != null && !assetHistoryRecord.getGuid().equals(assetHistory.getGuid())) {
+            assetHistory.setGuid(assetHistoryRecord.getGuid());
+        }
+        if (assetHistoryRecord.getUpdateTime() != null && !assetHistoryRecord.getUpdateTime().equals(assetHistory.getUpdateTime())) {
+            assetHistory.setUpdateTime(assetHistoryRecord.getUpdateTime());
+        }
+        if (assetHistoryRecord.getUpdatedBy() != null && !assetHistoryRecord.getUpdatedBy().equals(assetHistory.getUpdatedBy())) {
+            assetHistory.setUpdatedBy(assetHistoryRecord.getUpdatedBy());
+        }
+    }
+
+    private void updateInfoIfDiff(AssetHistory assetHistory, AssetHistory assetHistoryRecord) {
+        if (assetHistoryRecord.getTypeOfExport() != null && !assetHistoryRecord.getTypeOfExport().equals(assetHistory.getTypeOfExport())) {
+            assetHistory.setTypeOfExport(assetHistoryRecord.getTypeOfExport());
+        }
+        if (assetHistoryRecord.getGfcm() != null && !assetHistoryRecord.getGfcm().equals(assetHistory.getGfcm())) {
+            assetHistory.setGfcm(assetHistoryRecord.getGfcm());
+        }
+
+        if (assetHistoryRecord.getSegment() != null && !assetHistoryRecord.getSegment().equals(assetHistory.getSegment())) {
+            assetHistory.setSegment(assetHistoryRecord.getSegment());
+        }
+//        if (assetHistoryRecord.getSegmentOfAdministrativeDecision() != null && !assetHistoryRecord.getSegmentOfAdministrativeDecision().equals(assetHistory.getSegmentOfAdministrativeDecision())) {
+//            assetHistory.setSegmentOfAdministrativeDecision(assetHistoryRecord.getSegmentOfAdministrativeDecision());
+//        }
+    }
+
+    private void updateFishingGearIfDiff(AssetHistory assetHistory, AssetHistory assetHistoryRecord) {
+        assetHistory.setType(GearFishingTypeEnum.UNKNOWN);
+        if (assetHistoryRecord.getMainFishingGear() != null && !assetHistoryRecord.getMainFishingGear().getCode().equals(assetHistory.getMainFishingGear().getCode())) {
+            setMainFishingGear(assetHistoryRecord);
+            assetHistory.setMainFishingGear(assetHistoryRecord.getMainFishingGear());
+        }
+        if (assetHistoryRecord.getSubFishingGear() != null && !assetHistoryRecord.getSubFishingGear().getCode().equals(assetHistory.getSubFishingGear().getCode())) {
+            setSubFishingGear(assetHistoryRecord);
+            assetHistory.setSubFishingGear(assetHistoryRecord.getSubFishingGear());
+        }
+    }
+
+    private List<FishingGear> getAllFishingGear() {
+        if (allFishingGear == null || Instant.now().isAfter(lastUpdateOfAllFishingGear.plus(TTL_IN_MINUTES, ChronoUnit.MINUTES))) {
+            allFishingGear = fishingGearDao.getAllFishingGear();
+        }
+        return allFishingGear;
+    }
+
+    private void updateIndicatorsIfDiff(AssetHistory assetHistory, AssetHistory assetHistoryRecord) {
+        if (assetHistoryRecord.getHasVms() != null && !assetHistoryRecord.getHasVms().equals(assetHistory.getHasVms())) {
+            assetHistory.setHasVms(assetHistoryRecord.getHasVms());
+        }
+        if (assetHistoryRecord.getPublicAid() != null && !assetHistoryRecord.getPublicAid().equals(assetHistory.getPublicAid())) {
+            assetHistory.setPublicAid(assetHistoryRecord.getPublicAid());
+        }
+        if (assetHistoryRecord.getMmsi() != null && !assetHistoryRecord.getMmsi().equals(assetHistory.getMmsi())) {
+            assetHistory.setMmsi(assetHistoryRecord.getMmsi());
+        }
+        if (assetHistoryRecord.getImo() != null && !assetHistoryRecord.getImo().equals(assetHistory.getImo())) {
+            assetHistory.setImo(assetHistoryRecord.getImo());
+        }
+    }
+
+    private void updateLicenseInfoIfDiff(AssetHistory assetHistory, AssetHistory assetHistoryRecord) {
+        if (assetHistoryRecord.getHasLicence() != null && !assetHistoryRecord.getHasLicence().equals(assetHistory.getHasLicence())) {
+            assetHistory.setHasLicence(assetHistoryRecord.getHasLicence());
+        }
+        if (assetHistoryRecord.getCountryOfRegistration() != null && !assetHistoryRecord.getCountryOfRegistration().equals(assetHistory.getCountryOfRegistration())) {
+            assetHistory.setCountryOfRegistration(assetHistoryRecord.getCountryOfRegistration());
+        }
+        if (assetHistoryRecord.getPortOfRegistration() != null && !assetHistoryRecord.getPortOfRegistration().equals(assetHistory.getPortOfRegistration())) {
+            assetHistory.setPortOfRegistration(assetHistoryRecord.getPortOfRegistration());
+        }
+        if (assetHistoryRecord.getCountryOfImportOrExport() != null && !assetHistoryRecord.getCountryOfImportOrExport().equals(assetHistory.getCountryOfImportOrExport())) {
+            assetHistory.setCountryOfImportOrExport(assetHistoryRecord.getCountryOfImportOrExport());
+        }
+        if (assetHistoryRecord.getLicenceType() != null && !assetHistoryRecord.getLicenceType().equals(assetHistory.getLicenceType())) {
+            assetHistory.setLicenceType(assetHistoryRecord.getLicenceType());
+        }
+
+        if (assetHistoryRecord.getRegistrationNumber() != null && !assetHistoryRecord.getRegistrationNumber().equals(assetHistory.getRegistrationNumber())) {
+            assetHistory.setLicenceType(assetHistoryRecord.getRegistrationNumber());
+        }
+    }
+
+    private void updatePhysicalCharacteristicsIfDiff(AssetHistory assetHistory, AssetHistory assetHistoryRecord) {
+        if (assetHistoryRecord.getLengthOverAll() != null && !assetHistoryRecord.getLengthOverAll().equals(assetHistory.getLengthOverAll())) {
+            assetHistory.setLengthOverAll(assetHistoryRecord.getLengthOverAll());
+        }
+        if (assetHistoryRecord.getLengthBetweenPerpendiculars() != null && !assetHistoryRecord.getLengthBetweenPerpendiculars().equals(assetHistory.getLengthBetweenPerpendiculars())) {
+            assetHistory.setLengthBetweenPerpendiculars(assetHistoryRecord.getLengthBetweenPerpendiculars());
+        }
+        if (assetHistoryRecord.getPowerOfMainEngine() != null && !assetHistoryRecord.getPowerOfMainEngine().equals(assetHistory.getPowerOfMainEngine())) {
+            assetHistory.setPowerOfMainEngine(assetHistoryRecord.getPowerOfMainEngine());
+        }
+        if (assetHistoryRecord.getPowerOfAuxEngine() != null && !assetHistoryRecord.getPowerOfAuxEngine().equals(assetHistory.getPowerOfAuxEngine())) {
+            assetHistory.setPowerOfAuxEngine(assetHistoryRecord.getPowerOfAuxEngine());
+        }
+        if (assetHistoryRecord.getGrossTonnage() != null && !assetHistoryRecord.getGrossTonnage().equals(assetHistory.getGrossTonnage())) {
+            assetHistory.setGrossTonnage(assetHistoryRecord.getGrossTonnage());
+        }
+        if (assetHistoryRecord.getOtherTonnage() != null && !assetHistoryRecord.getOtherTonnage().equals(assetHistory.getOtherTonnage())) {
+            assetHistory.setOtherTonnage(assetHistoryRecord.getOtherTonnage());
+        }
+        if (assetHistoryRecord.getGrossTonnageUnit() != null && !assetHistoryRecord.getGrossTonnageUnit().equals(assetHistory.getGrossTonnageUnit())) {
+            assetHistory.setGrossTonnageUnit(assetHistoryRecord.getGrossTonnageUnit());
+        }
+        if (assetHistoryRecord.getSafteyGrossTonnage() != null && !assetHistoryRecord.getSafteyGrossTonnage().equals(assetHistory.getSafteyGrossTonnage())) {
+            assetHistory.setSafteyGrossTonnage(assetHistoryRecord.getSafteyGrossTonnage());
+        }
+    }
+
+    private void updateContactInfoIfDiff(AssetHistory assetHistory, AssetHistory assetHistoryRecord) {
+        if (assetHistoryRecord.getOwnerName() != null && !assetHistoryRecord.getOwnerName().equals(assetHistory.getOwnerName())) {
+            assetHistory.setOwnerName(assetHistoryRecord.getOwnerName());
+        }
+        if (assetHistoryRecord.getOwnerAddress() != null && !assetHistoryRecord.getOwnerAddress().equals(assetHistory.getOwnerAddress())) {
+            assetHistory.setOwnerAddress(assetHistoryRecord.getOwnerAddress());
+        }
+        if (assetHistoryRecord.getAssetAgentAddress() != null && !assetHistoryRecord.getAssetAgentAddress().equals(assetHistory.getAssetAgentAddress())) {
+            assetHistory.setAssetAgentAddress(assetHistoryRecord.getAssetAgentAddress());
+        }
+//        if (assetHistoryRecord.getAssetAgentIsAlsoOwner() != null && !assetHistoryRecord.getAssetAgentIsAlsoOwner().equals(assetHistory.getAssetAgentIsAlsoOwner())) {
+//            assetHistory.setAssetAgentIsAlsoOwner(assetHistoryRecord.getAssetAgentIsAlsoOwner());
+//        }
+
+        if (assetHistoryRecord.getContactInfo() != null) {
+            assetHistory.getContactInfo().clear();
+            assetHistoryRecord.getContactInfo().forEach(e -> {
+                assetHistory.getContactInfo().add(e);
+                e.setAsset(assetHistory);
+            });
+        }
+    }
+
+    private void updateVesselIdentifiersIfDiff(AssetHistory assetHistory, AssetHistory assetHistoryRecord) {
+        if (assetHistoryRecord.getName() != null && !assetHistoryRecord.getName().equals(assetHistory.getName())) {
+            assetHistory.setName(assetHistoryRecord.getName());
+        }
+        if (assetHistoryRecord.getUvi() != null && !assetHistoryRecord.getUvi().equals(assetHistory.getUvi())) {
+            assetHistory.setUvi(assetHistoryRecord.getUvi());
+        }
+        if (assetHistoryRecord.getIrcs() != null && !assetHistoryRecord.getIrcs().equals(assetHistory.getIrcs())) {
+            assetHistory.setIrcs(assetHistoryRecord.getIrcs());
+        }
+        if (assetHistoryRecord.getExternalMarking() != null && !assetHistoryRecord.getExternalMarking().equals(assetHistory.getExternalMarking())) {
+            assetHistory.setExternalMarking(assetHistoryRecord.getExternalMarking());
+        }
+        if (assetHistoryRecord.getCfr() != null && !assetHistoryRecord.getCfr().equals(assetHistory.getCfr())) {
+            assetHistory.setCfr(assetHistoryRecord.getCfr());
+        }
+        if (assetHistoryRecord.getIccat() != null && !assetHistoryRecord.getIccat().equals(assetHistory.getIccat())) {
+            assetHistory.setIccat(assetHistoryRecord.getIccat());
+        }
+    }
+}

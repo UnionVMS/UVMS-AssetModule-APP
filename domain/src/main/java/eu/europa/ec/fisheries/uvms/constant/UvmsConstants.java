@@ -25,6 +25,7 @@ public class UvmsConstants {
     public static final String ASSET_FIND_BY_UVI = "Asset.findByUvi";
     public static final String ASSET_FIND_BY_GFCM = "Asset.findByGfcm";
 
+    public static final String ASSETHISTORY_FIND_BY_HASH_KEY = "Assethistory.findByHashKey";
     public static final String ASSETHISTORY_FIND_BY_GUID = "Assethistory.findByGuid";
     public static final String ASSETHISTORY_FIND_BY_MULTIPLE_GUIDS = "Assethistory.batchFindMultipleByGuid";
     public static final String ASSETHISTORY_FIND_BY_CRITERIA = "Assethistory.findByCriteria";

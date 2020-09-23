@@ -180,6 +180,18 @@ public class AssetDaoBean extends Dao implements AssetDao {
     }
 
     @Override
+    public AssetHistory getAssetHistoryByHashKey(String hashKey) throws AssetDaoException {
+        try {
+            TypedQuery<AssetHistory> query = em.createNamedQuery(UvmsConstants.ASSETHISTORY_FIND_BY_HASH_KEY, AssetHistory.class);
+            query.setParameter("hashKey", hashKey);
+            AssetHistory singleResult = query.getSingleResult();
+            return singleResult;
+        } catch (NoResultException e) {
+            throw new NoAssetEntityFoundException("No asset history found for " + hashKey);
+        }
+    }
+
+    @Override
     public List<AssetHistory> getAssetHistoriesByGuids(List<String> guids) throws AssetDaoException {
         try {
             TypedQuery<AssetHistory> query = em.createNamedQuery(UvmsConstants.ASSETHISTORY_FIND_BY_MULTIPLE_GUIDS, AssetHistory.class);

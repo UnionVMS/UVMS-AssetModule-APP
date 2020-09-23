@@ -11,7 +11,27 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.entity.model;
 
-import javax.persistence.*;
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -25,6 +45,7 @@ import eu.europa.ec.fisheries.uvms.constant.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.constant.UvmsConstants;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.EventCodeEnum;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.GearFishingTypeEnum;
+import eu.europa.ec.fisheries.uvms.entity.asset.types.HullMaterialEnum;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.PublicAidEnum;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.SegmentFUP;
 import eu.europa.ec.fisheries.uvms.entity.asset.types.TypeOfExportEnum;
@@ -39,6 +60,7 @@ import org.hibernate.annotations.FetchMode;
 @Entity
 @Table(name = "Assethistory")
 @NamedQueries({
+    @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_HASH_KEY, query = "SELECT v FROM AssetHistory v WHERE v.hashKey = :hashKey"),
     @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_GUID, query = "SELECT v FROM AssetHistory v WHERE v.guid = :guid"),
     @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_MULTIPLE_GUIDS, query = "SELECT v FROM AssetHistory v WHERE v.guid IN :guids"),
     @NamedQuery(name = UvmsConstants.ASSETHISTORY_FIND_BY_GUIDS, query = " SELECT DISTINCT vh FROM AssetHistory vh  INNER JOIN FETCH vh.asset v INNER JOIN FETCH v.carrier c WHERE c.active = '1' AND vh.active = '1' AND v.guid  IN :guids"),
@@ -243,7 +265,7 @@ public class AssetHistory implements Serializable {
     private String mmsi;
 
 
-    @OneToMany(mappedBy = "assetHistory", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "assetHistory", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @NotNull
     private List<ContactInfo> contactInfo;
 
@@ -259,11 +281,24 @@ public class AssetHistory implements Serializable {
     @Column(name = "assethist_gfcm")
     private String gfcm;
 
+    @Size(max = 256)
+    @Column(name = "hash_key")
+    private String hashKey;
 
+    @Transient
+    private String placeOfConstruction;
 
+    @Transient
+    private String ircsIndicator;
 
+    @Transient
+    private HullMaterialEnum hullMaterial;
 
+    @Transient
+    private Date constructionDate;
 
+    @Transient
+    private Date commissionDate;
 
     public AssetHistory() {
     }
@@ -672,8 +707,51 @@ public class AssetHistory implements Serializable {
 
     public void setGfcm(String gfcm) { this.gfcm = gfcm; }
 
+    public String getPlaceOfConstruction() {
+        return placeOfConstruction;
+    }
 
+    public HullMaterialEnum getHullMaterial() {
+        return hullMaterial;
+    }
 
+    public void setHullMaterial(HullMaterialEnum hullMaterial) {
+        this.hullMaterial = hullMaterial;
+    }
 
+    public void setPlaceOfConstruction(String placeOfConstruction) {
+        this.placeOfConstruction = placeOfConstruction;
+    }
 
+    public String getIrcsIndicator() {
+        return ircsIndicator;
+    }
+
+    public void setIrcsIndicator(String ircsIndicator) {
+        this.ircsIndicator = ircsIndicator;
+    }
+
+    public Date getConstructionDate() {
+        return constructionDate;
+    }
+
+    public void setConstructionDate(Date constructionDate) {
+        this.constructionDate = constructionDate;
+    }
+
+    public Date getCommissionDate() {
+        return commissionDate;
+    }
+
+    public void setCommisionDate(Date commissionDate) {
+        this.commissionDate = commissionDate;
+    }
+
+    public String getHashKey() {
+        return hashKey;
+    }
+
+    public void setHashKey(String hashKey) {
+        this.hashKey = hashKey;
+    }
 }

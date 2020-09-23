@@ -19,6 +19,7 @@
 	<properties>
 		<wsdl.contract.name>AssetModuleService</wsdl.contract.name>
 		<wsdl.source.name>AssetDataSourceService</wsdl.source.name>
+		<wsdl.sync.name>Dev_VesselService</wsdl.sync.name>
 		<binding.xml>binding-date.xml</binding.xml>
 		<jaxb2-basics.version>0.9.5</jaxb2-basics.version>
 	</properties>
@@ -97,6 +98,27 @@
 									<extraargs>
 										<extraarg>-xjc-Xcommons-lang</extraarg>
 										<extraarg>-xjc-Xcommons-lang:ToStringStyle=SHORT_PREFIX_STYLE</extraarg>										
+									</extraargs>
+								</wsdlOption>
+							</wsdlOptions>
+						</configuration>
+						<goals>
+							<goal>wsdl2java</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>generate-asset-sync-sources</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<wsdlOptions>
+								<wsdlOption>
+									<wsdl>${basedir}/src/main/resources/sync/${wsdl.sync.name}.wsdl</wsdl>
+									<bindingFiles>
+										<bindingFile>${basedir}/src/main/resources/${binding.xml}</bindingFile>
+									</bindingFiles>
+									<extraargs>
+										<extraarg>-xjc-Xcommons-lang</extraarg>
+										<extraarg>-xjc-Xcommons-lang:ToStringStyle=SHORT_PREFIX_STYLE</extraarg>
 									</extraargs>
 								</wsdlOption>
 							</wsdlOptions>
