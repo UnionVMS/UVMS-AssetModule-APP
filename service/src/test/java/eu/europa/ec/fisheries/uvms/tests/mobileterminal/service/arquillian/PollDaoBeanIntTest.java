@@ -113,8 +113,12 @@ public class PollDaoBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void testGetPollById_willFailWithNull() {
-        PollBase poll = pollDao.getPollById(null);
-        assertNull(poll);
+        try {
+            PollBase poll = pollDao.getPollById(null);
+            fail();
+        } catch (Exception e) {
+            assertTrue(e.getMessage().contains("id to load is required for loading"));
+        }
     }
 
     @Test
