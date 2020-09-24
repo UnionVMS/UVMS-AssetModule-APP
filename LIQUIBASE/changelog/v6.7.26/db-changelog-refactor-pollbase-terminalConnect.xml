@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd"
+                   logicalFilePath="changelog/v6.7.26/db-changelog-refactor-pollbase-terminalConnect.xml">
+
+    <changeSet id="refactor pollbase terminalConnect to assetId of type uuid " author="joemat">
+        <renameColumn  newColumnName="asset_id"
+                       oldColumnName="connect_id"
+                       tableName="pollbase"/>
+
+        <modifyDataType  columnName="asset_id"
+                         newDataType="uuid"
+                         tableName="pollbase"/>
+
+
+    </changeSet>
+
+</databaseChangeLog>

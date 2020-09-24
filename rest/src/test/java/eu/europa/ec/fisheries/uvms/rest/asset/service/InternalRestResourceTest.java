@@ -6,6 +6,7 @@ import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.SanePollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
@@ -362,5 +363,55 @@ public class InternalRestResourceTest extends AbstractAssetRestTest {
         assertEquals(500, response.getStatus());
         String s = response.readEntity(String.class);
         assertTrue(s.contains("Null"));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAllPollsForAnAsset() {
+        Asset asset = AssetHelper.createBasicAsset();
+        asset = createAsset(asset);
+        MobileTerminal mt = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mt.setAsset(asset);
+
+        Jsonb jsonb = new JsonBConfigurator().getContext(null); //for some reason serializing the mt gives a stack overflow error while serializing using the client, so we do it manually b4 instead
+        String json = jsonb.toJson(mt);
+
+        Response mtResponse = getWebTargetInternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
+                .post(Entity.json(json), Response.class);
+        assertEquals(200, mtResponse.getStatus());
+
+        CreatePollResultDto response = getWebTargetInternal()
+                .path("/internal")
+                .path("createPollForAsset")
+                .path(asset.getId().toString())
+                .queryParam("username", "Test User")
+                .queryParam("comment", "Test comment")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
+                .post(Entity.json(""), CreatePollResultDto.class);
+
+        assertNotNull(response);
+
+        List<SanePollDto> pollList =  getWebTargetInternal()
+                .path("/internal")
+                .path("pollListForAsset")
+                .path(asset.getId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
+                .get( new GenericType<List<SanePollDto>>() {});
+
+        assertEquals(1, pollList.size());
+        assertEquals(response.getSentPolls().get(0), pollList.get(0).getId().toString());
+    }
+
+    private Asset createAsset(Asset asset){
+        return getWebTargetInternal()
+                .path("/asset")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
+                .post(Entity.json(asset), Asset.class);
     }
 }

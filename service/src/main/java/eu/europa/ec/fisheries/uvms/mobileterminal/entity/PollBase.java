@@ -30,20 +30,18 @@ import java.util.UUID;
 @XmlRootElement
 @NamedQueries({
         @NamedQuery(name = PollBase.FIND_ALL, query = "SELECT p FROM PollBase p"),
-        @NamedQuery(name = PollBase.FIND_BY_ID, query = "SELECT p FROM PollBase p WHERE p.id = :id"),
         @NamedQuery(name = PollBase.FIND_BY_TYPE, query = "SELECT p FROM PollBase p WHERE p.pollTypeEnum = :pollTypeEnum"),
-        @NamedQuery(name = PollBase.FIND_BY_COMMENT, query = "SELECT p FROM PollBase p WHERE p.comment = :pollComment"),
         @NamedQuery(name = PollBase.FIND_BY_CREATE_DATE, query = "SELECT p FROM PollBase p WHERE p.updateTime = :pollCreated"),
         @NamedQuery(name = PollBase.FIND_BY_USER, query = "SELECT p FROM PollBase p WHERE p.creator = :pollUserCreator"),
+        @NamedQuery(name = PollBase.FIND_BY_ASSET_IN_TIMESPAN, query = "SELECT p FROM PollBase p WHERE p.assetId = :assetId AND p.updateTime BETWEEN :start AND :stop"),
 })
 public class PollBase implements Serializable {
 
     public static final String FIND_ALL = "Poll.findAll";
-    public static final String FIND_BY_ID = "Poll.findById";
     public static final String FIND_BY_TYPE = "Poll.findByPollType";
-    public static final String FIND_BY_COMMENT = "Poll.findByPollComment";
     public static final String FIND_BY_CREATE_DATE = "Poll.findByPollCreated";
     public static final String FIND_BY_USER = "Poll.findByPollUserCreator";
+    public static final String FIND_BY_ASSET_IN_TIMESPAN = "Poll.findByAssetInTimespan";
 
     @Id
     @GeneratedValue(generator = "POLLBASE_UUID")
@@ -74,8 +72,8 @@ public class PollBase implements Serializable {
     @Column(name = "upuser")
     private String updatedBy;
 
-    @Column(name = "connect_id")
-    private String terminalConnect;
+    @Column(name = "asset_id")
+    private UUID assetId;
 
     @Column(name = "poll_type")
     @Enumerated(EnumType.STRING)
@@ -143,12 +141,12 @@ public class PollBase implements Serializable {
         this.updatedBy = updatedBy;
     }
 
-    public String getTerminalConnect() {
-        return terminalConnect;
+    public UUID getAssetId() {
+        return assetId;
     }
 
-    public void setTerminalConnect(String terminalConnect) {
-        this.terminalConnect = terminalConnect;
+    public void setAssetId(UUID terminalConnect) {
+        this.assetId = terminalConnect;
     }
 
     public PollTypeEnum getPollTypeEnum() {
@@ -171,13 +169,13 @@ public class PollBase implements Serializable {
                 Objects.equals(updateTime, pollBase.updateTime) &&
                 Objects.equals(mobileterminal, pollBase.mobileterminal) &&
                 Objects.equals(updatedBy, pollBase.updatedBy) &&
-                Objects.equals(terminalConnect, pollBase.terminalConnect) &&
+                Objects.equals(assetId, pollBase.assetId) &&
                 Objects.equals(pollTypeEnum, pollBase.pollTypeEnum);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, comment, creator, channelId, updateTime, mobileterminal, updatedBy, terminalConnect, pollTypeEnum);
+        return Objects.hash(id, comment, creator, channelId, updateTime, mobileterminal, updatedBy, assetId, pollTypeEnum);
     }
 }

@@ -23,6 +23,9 @@ import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.util.JsonBConfiguratorAsset;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.SanePollDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollBase;
+import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollEntityToModelMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.CustomAssetAdapter;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
@@ -351,6 +354,21 @@ public class InternalRestResource {
         } catch (Exception ex) {
             LOG.error("[ Error when creating poll for {}] {}", assetId, ex);
             return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();
+        }
+    }
+
+    @GET
+    @Path("/pollListForAsset/{assetId}")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
+    public Response getPollBySearchCriteria(@PathParam("assetId") UUID assetId) {
+        LOG.info("Get poll list for asset:{}", assetId);
+        try {
+            List<PollBase> byAssetInTimespan = pollServiceBean.getAllPollsForAssetForTheLastDay(assetId);
+            List<SanePollDto> sanePollDtos = PollEntityToModelMapper.toSanePollDto(byAssetInTimespan);
+            return Response.ok(sanePollDtos).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception ex) {
+            LOG.error("[ Error when getting all polls for asset {}] {}",assetId, ex.getStackTrace());
+            throw ex;
         }
     }
 }

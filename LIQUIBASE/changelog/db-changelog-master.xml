@@ -46,5 +46,6 @@
     <include file="v6.7.20/db-changelog-rename-long-term-parked.xml" relativeToChangelogFile="true"/>
     <include file="v6.7.22/db-changelog-activate-channels.xml" relativeToChangelogFile="true"/>
     <include file="v6.7.24/db-changelog-asset_aud_index.xml" relativeToChangelogFile="true"/>
+    <include file="v6.7.26/db-changelog-refactor-pollbase-terminalConnect.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
