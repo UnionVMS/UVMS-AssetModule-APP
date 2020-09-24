@@ -323,9 +323,7 @@ public class MobileTerminalRestResource {
             List<MobileTerminal> mobileTerminalRevisions = mobileTerminalService.getMobileTerminalRevisions(id, maxNbr);
             List<MobileTerminalDto> dtos = MobileTerminalDtoMapper.mapToMobileTerminalDtos(mobileTerminalRevisions);
             Map<UUID, ChangeHistoryRow> changeHistory = HistoryMapper.mobileTerminalChangeHistory(dtos);
-            ArrayList<ChangeHistoryRow> changes = new ArrayList<>(changeHistory.values());
-            changes.sort(Comparator.comparing(ChangeHistoryRow::getUpdateTime));
-            String returnString = jsonb.toJson(changes);
+            String returnString = jsonb.toJson(changeHistory);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting mobile terminal history by terminalId ] {}", ex.getMessage(), ex);
