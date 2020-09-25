@@ -194,8 +194,6 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         //Create program poll
         PollRequestType input = createProgramPoll(createdMT);
 
-        String s = JsonbBuilder.create().toJson(input);
-        System.out.println(s);
         CreatePollResultDto createdPoll = createPoll(input);
 
         assertNotNull(createdPoll);
@@ -347,7 +345,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         ListCriteria pollIdCriteria = createListCriteria(SearchKey.POLL_ID, pollGuid);
         pollSearchCriteria.getCriterias().add(pollIdCriteria);
 
-        ListCriteria userCriteria = createListCriteria(SearchKey.USER, "Test User");
+        ListCriteria userCriteria = createListCriteria(SearchKey.USER, "user");
         pollSearchCriteria.getCriterias().add(userCriteria);
 
         input.setPollSearchCriteria(pollSearchCriteria);
@@ -587,14 +585,13 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         PollRequestType pollRequest = new PollRequestType();
         pollRequest.setPollType(type);
         pollRequest.setComment("Test Comment");
-        pollRequest.setUserName("Test User");
+        pollRequest.setUserName("user");
         return pollRequest;
     }
 
     private void constructPollMobileTerminalAndAddToRequest(PollRequestType request, MobileTerminal terminal) {
         PollMobileTerminal pmt = new PollMobileTerminal();
         pmt.setComChannelId(terminal.getChannels().iterator().next().getId().toString());
-        pmt.setConnectId(terminal.getAssetUUID());
         pmt.setMobileTerminalId(terminal.getId().toString());
         request.getMobileTerminals().add(pmt);
     }

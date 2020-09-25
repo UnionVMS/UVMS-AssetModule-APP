@@ -79,17 +79,16 @@ public class PollServiceBean {
             throw new IllegalArgumentException("No pollable channel for this active MT: " + mt.getId() + " , unable to poll");
         }
 
-        PollRequestType prt = buildPollRequest(assetId, pollType, username, comment, mt, channel);
+        PollRequestType prt = buildPollRequest(pollType, username, comment, mt, channel);
 
         return createPoll(prt);
     }
 
-    private PollRequestType buildPollRequest(UUID assetId, PollType pollType, String username,
+    private PollRequestType buildPollRequest(PollType pollType, String username,
                                              String comment, MobileTerminal mt, Channel channel) {
         PollRequestType prt = new PollRequestType();
         prt.setPollType(pollType);
         PollMobileTerminal pollMobileTerminal = new PollMobileTerminal();
-        pollMobileTerminal.setConnectId(assetId.toString());
         pollMobileTerminal.setMobileTerminalId(mt.getId().toString());
         pollMobileTerminal.setComChannelId(channel.getId().toString());
         prt.setUserName(username);
