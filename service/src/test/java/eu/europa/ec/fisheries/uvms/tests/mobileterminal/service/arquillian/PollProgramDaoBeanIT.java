@@ -340,10 +340,10 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
         ProgramPoll pp = new ProgramPoll();
         MobileTerminal mobileTerminal = createMobileTerminalHelper(mobileTerminalSerialNo);
 
-        String terminalConnect = UUID.randomUUID().toString();
+        UUID terminalConnect = UUID.randomUUID();
         pp.setChannelId(UUID.randomUUID());
         pp.setMobileterminal(mobileTerminal);
-        pp.setTerminalConnect(terminalConnect);
+        pp.setAssetId(terminalConnect);
         pp.setFrequency(1);
         pp.setLatestRun(latestRun);
         pp.setPollState(PollStateEnum.STARTED);

@@ -20,6 +20,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dao.ChannelDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollProgramDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.SanePollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollDto;
@@ -36,6 +37,8 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Stateless
@@ -539,5 +542,10 @@ public class PollServiceBean {
             responseList.add(PollEntityToModelMapper.mapToPollResponseType(pollProgram, mobileTerminal));
         }
         return responseList;
+    }
+
+    public List<PollBase> getAllPollsForAssetForTheLastDay(UUID assetId){
+        return pollDao.findByAssetInTimespan(assetId, Instant.now().minus(1, ChronoUnit.DAYS), Instant.now());
+
     }
 }

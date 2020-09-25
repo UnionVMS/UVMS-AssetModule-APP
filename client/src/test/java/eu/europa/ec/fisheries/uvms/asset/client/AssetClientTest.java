@@ -548,6 +548,16 @@ public class AssetClientTest extends AbstractClientTest {
         assertEquals("[]", output);
     }
 
+    @Test
+    @OperateOnDeployment("normal")
+    public void pollsForAssetInTheLastDay(){
+
+        List<SanePollDto> output = assetClient.getPollsForAssetInTheLastDay(UUID.randomUUID());
+
+        assertNotNull(output);
+        assertEquals(0, output.size());
+    }
+
 
     private String createAsset(){
         AssetBO assetBo = new AssetBO();

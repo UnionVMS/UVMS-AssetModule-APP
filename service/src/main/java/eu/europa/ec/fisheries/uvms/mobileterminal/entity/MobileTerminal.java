@@ -136,8 +136,9 @@ public class MobileTerminal implements Serializable {
 	@JoinColumn(name="asset_id", foreignKey = @ForeignKey(name = "MobileTerminal_Asset_FK"))
 	private Asset asset;
 
+	//only for use in json mapping, DO NOT USE OTHERWISE
 	@Transient
-	private String assetUUID;		//renamed to avoid a conflict in yasson
+	private String assetUUID;		//renamed to avoid a conflict in yasson,
 
 	@Column(name = "comment")
 	private String comment;

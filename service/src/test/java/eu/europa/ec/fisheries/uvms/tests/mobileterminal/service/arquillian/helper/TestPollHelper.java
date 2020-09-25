@@ -263,10 +263,10 @@ public class TestPollHelper {
         }
         MobileTerminal mobileTerminal = createAndPersistMobileTerminal(asset);
 
-        String terminalConnect = UUID.randomUUID().toString();
+        UUID terminalConnect = UUID.randomUUID();
         pp.setMobileterminal(mobileTerminal);
         pp.setChannelId(UUID.randomUUID());
-        pp.setTerminalConnect(terminalConnect);
+        pp.setAssetId(terminalConnect);
         pp.setUpdatedBy("TEST");
         pp.setComment("Comment");
         pp.setFrequency(1);

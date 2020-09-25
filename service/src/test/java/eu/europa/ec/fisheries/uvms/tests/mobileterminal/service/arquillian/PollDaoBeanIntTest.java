@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 import java.time.Instant;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -112,8 +113,12 @@ public class PollDaoBeanIntTest extends TransactionalTests {
     @Test
     @OperateOnDeployment("normal")
     public void testGetPollById_willFailWithNull() {
-        PollBase poll = pollDao.getPollById(null);
-        assertNull(poll);
+        try {
+            PollBase poll = pollDao.getPollById(null);
+            fail();
+        } catch (Exception e) {
+            assertTrue(e.getMessage().contains("id to load is required for loading"));
+        }
     }
 
     @Test
@@ -408,6 +413,32 @@ public class PollDaoBeanIntTest extends TransactionalTests {
         String sql = PollSearchMapper.createSelectSearchSql(listOfPollSearchKeyValue, true, PollTypeEnum.MANUAL_POLL);
         List<PollBase> pollList = pollDao.getPollListSearchPaginated(page, listSize, sql, listOfPollSearchKeyValue);
         assertNotNull(pollList);
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void findByAssetInTimespan() {
+        PollBase poll = createPollHelper();
+        poll.setAssetId(UUID.randomUUID());
+        pollDao.createPoll(poll);
+        em.flush();
+
+        List<PollBase> byAssetInTimespan = pollDao.findByAssetInTimespan(poll.getAssetId(), Instant.now().minus(1, ChronoUnit.DAYS), Instant.now());
+        assertEquals(1, byAssetInTimespan.size());
+        assertEquals(poll.getId(), byAssetInTimespan.get(0).getId());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void findByAssetInTimespanPollOutsideOfTimespan() {
+        PollBase poll = createPollHelper();
+        poll.setAssetId(UUID.randomUUID());
+        poll.setUpdateTime(Instant.now().minus(25, ChronoUnit.HOURS));
+        pollDao.createPoll(poll);
+        em.flush();
+
+        List<PollBase> byAssetInTimespan = pollDao.findByAssetInTimespan(poll.getAssetId(), Instant.now().minus(1, ChronoUnit.DAYS), Instant.now());
+        assertEquals(0, byAssetInTimespan.size());
     }
 
     @Inject

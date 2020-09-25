@@ -14,20 +14,18 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.mapper;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.mobileterminal.constants.MobileTerminalConstants;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dto.SanePollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.ConfigurationPoll;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollBase;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.ProgramPoll;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PollEntityToModelMapper {
-
-    private final static String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss Z";
-//    private final static String DATE_TIME_FORMAT_WO_TIMEZONE = "yyyy-MM-dd HH:mm:ss";
 
     public static PollResponseType mapToPollResponseType(ProgramPoll program, MobileTerminal mobileTerminal) {
         PollResponseType response = mapEntityToPollResponseType(program, mobileTerminal);
@@ -118,5 +116,24 @@ public class PollEntityToModelMapper {
         attr.setKey(key);
         attr.setValue(value);
         return attr;
+    }
+
+    public static  List<SanePollDto> toSanePollDto(List<PollBase> polls){
+        return polls.stream().map(poll -> toSanePollDto(poll)).collect(Collectors.toList());
+    }
+
+    public static SanePollDto toSanePollDto(PollBase poll){
+        SanePollDto dto = new SanePollDto();
+        dto.setAssetId(poll.getAssetId());
+        dto.setChannelId(poll.getChannelId());
+        dto.setComment(poll.getComment());
+        dto.setCreator(poll.getCreator());
+        dto.setId(poll.getId());
+        dto.setMobileterminalId(poll.getMobileterminal().getId());
+        dto.setPollTypeEnum(poll.getPollTypeEnum());
+        dto.setUpdatedBy(poll.getUpdatedBy());
+        dto.setUpdateTime(poll.getUpdateTime());
+
+        return dto;
     }
 }

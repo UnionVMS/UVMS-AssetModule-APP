@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.dao;
 
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollBase;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
@@ -22,6 +23,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -41,13 +43,7 @@ public class PollDaoBean  {
     }
 
 	public PollBase getPollById(UUID id) {
-		try {
-			TypedQuery<PollBase> query = em.createNamedQuery(PollBase.FIND_BY_ID, PollBase.class);
-			query.setParameter("id", id);
-			return query.getSingleResult();
-		} catch (NoResultException e) {
-			return null;
-		}
+		return em.find(PollBase.class, id);
 	}
 
 	public Long getPollListSearchCount(String sql, List<PollSearchKeyValue> searchKeyValues) {
@@ -97,5 +93,13 @@ public class PollDaoBean  {
 				query.setParameter(sqlReplaceToken, keyValue.getValues());
 			}
 		}
+	}
+
+	public List<PollBase> findByAssetInTimespan(UUID assetId, Instant start, Instant stop){
+		TypedQuery<PollBase> query = em.createNamedQuery(PollBase.FIND_BY_ASSET_IN_TIMESPAN, PollBase.class);
+		query.setParameter("assetId", assetId);
+		query.setParameter("start", start);
+		query.setParameter("stop", stop);
+		return query.getResultList();
 	}
 }

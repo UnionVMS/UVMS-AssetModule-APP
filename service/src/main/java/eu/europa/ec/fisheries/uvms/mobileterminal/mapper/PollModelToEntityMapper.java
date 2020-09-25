@@ -117,7 +117,7 @@ public class PollModelToEntityMapper {
             T poll = clazz.newInstance();
             poll.setChannelId(UUID.fromString(channelGuid));
             poll.setMobileterminal(terminal);
-            poll.setTerminalConnect(terminal.getAssetUUID());
+            poll.setAssetId(terminal.getAsset() != null ? terminal.getAsset().getId() : null);
             poll.setComment(requestType.getComment());
             poll.setCreator(requestType.getUserName());
             poll.setUpdatedBy(requestType.getUserName());
