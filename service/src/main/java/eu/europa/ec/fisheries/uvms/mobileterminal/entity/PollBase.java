@@ -50,6 +50,7 @@ public class PollBase implements Serializable {
     private UUID id;
 
     @Column(name = "comment")
+    @NotNull
     private String comment;
 
     @Size(max = 60)

@@ -265,6 +265,9 @@ public class PollServiceBean {
         if (mobileTerminalEntity == null) {
             throw new IllegalArgumentException("No mobile terminal connected to this poll request or the mobile terminal can not be found, for mobile terminal id: " + pollTerminal.getMobileTerminalId());
         }
+        if(mobileTerminalEntity.getAsset() == null){
+            throw new IllegalArgumentException("This mobile terminal is not connected to any asset");
+        }
         return mobileTerminalEntity;
     }
 
@@ -290,6 +293,9 @@ public class PollServiceBean {
             MobileTerminal mobileTerminalEntity = terminalDao.getMobileTerminalById(UUID.fromString(pollTerminal.getMobileTerminalId()));
             if(mobileTerminalEntity == null){
                 throw new IllegalArgumentException("No mobile terminal connected to this poll request or the mobile terminal can not be found, for mobile terminal id: " + pollTerminal.getMobileTerminalId());
+            }
+            if(mobileTerminalEntity.getAsset() == null){
+                throw new IllegalArgumentException("This mobile terminal is not connected to any asset");
             }
             checkPollable(mobileTerminalEntity);
             ProgramPoll programPoll = PollModelToEntityMapper.mapToProgramPoll(mobileTerminalEntity, pollTerminal.getComChannelId(), pollRequest);
