@@ -74,6 +74,7 @@ public class PollRestResource {
     public Response createPoll(PollRequestType createPoll)  throws Exception {
         LOG.info("Create poll invoked in rest layer:{}",createPoll);
         try {
+            createPoll.setUserName(request.getRemoteUser());
             CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(createPoll);
             return Response.ok(createPollResultDto).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {

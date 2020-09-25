@@ -27,6 +27,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.json.bind.JsonbBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
@@ -193,6 +194,8 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         //Create program poll
         PollRequestType input = createProgramPoll(createdMT);
 
+        String s = JsonbBuilder.create().toJson(input);
+        System.out.println(s);
         CreatePollResultDto createdPoll = createPoll(input);
 
         assertNotNull(createdPoll);
