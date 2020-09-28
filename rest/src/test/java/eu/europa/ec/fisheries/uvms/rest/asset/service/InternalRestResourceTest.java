@@ -387,15 +387,17 @@ public class InternalRestResourceTest extends AbstractAssetRestTest {
                 .post(Entity.json(json), Response.class);
         assertEquals(200, mtResponse.getStatus());
 
+        SimpleCreatePoll createPoll = new SimpleCreatePoll();
+        createPoll.setComment("Test comment");
+
         CreatePollResultDto response = getWebTargetInternal()
                 .path("/internal")
                 .path("createPollForAsset")
                 .path(asset.getId().toString())
                 .queryParam("username", "Test User")
-                .queryParam("comment", "Test comment")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
-                .post(Entity.json(""), CreatePollResultDto.class);
+                .post(Entity.json(createPoll), CreatePollResultDto.class);
 
         assertNotNull(response);
 
