@@ -33,7 +33,6 @@ public class PollDataSourceRequestMapper {
         PollMobileTerminal pollMobileTerminal = new PollMobileTerminal();
         pollMobileTerminal.setComChannelId(channelId);
         pollMobileTerminal.setMobileTerminalId(mobileTerminalId);
-        pollMobileTerminal.setConnectId(connectId);
 
         poll.getMobileTerminals().add(pollMobileTerminal);
 

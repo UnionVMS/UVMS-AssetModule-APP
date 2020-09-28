@@ -379,7 +379,6 @@ public class PollServiceBeanIntTest extends TransactionalTests {
 
         MobileTerminal mobileTerminal = testPollHelper.createAndPersistMobileTerminal(asset);
         PollMobileTerminal pmt = new PollMobileTerminal();
-        pmt.setConnectId(asset.getId().toString());
         pmt.setMobileTerminalId(mobileTerminal.getId().toString());
 
         Set<Channel> channels = mobileTerminal.getChannels();

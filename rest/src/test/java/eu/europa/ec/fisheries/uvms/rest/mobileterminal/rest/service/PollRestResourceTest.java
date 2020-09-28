@@ -19,7 +19,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.asset.filter.AppError;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CommentDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.SimpleCreatePoll;
 import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.MobileTerminalTestHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -80,7 +80,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         Asset asset = createAndRestBasicAsset();
         createAndRestMobileTerminal(asset);
 
-        CommentDto pollDto = new CommentDto();
+        SimpleCreatePoll pollDto = new SimpleCreatePoll();
         pollDto.setComment("Test comment");
 
         CreatePollResultDto createdPoll = getWebTargetExternal()
@@ -102,11 +102,13 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
     public void createPollUsingOnlyAssetWOaMTTest() {
         Asset asset = createAndRestBasicAsset();
 
+        SimpleCreatePoll pollDto = new SimpleCreatePoll();
+        pollDto.setComment("Test comment");
+
         Response response = getWebTargetExternal()
                 .path("poll")
                 .path("createPollForAsset")
                 .path(asset.getId().toString())
-                .queryParam("comment", "Test comment")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
                 .post(Entity.json(""), Response.class);
@@ -115,6 +117,50 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         assertEquals(200, response.getStatus());
         Integer code  = response.readEntity(AppError.class).code;
         assertThat(code, is(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void createProgramPollUsingOnlyAssetTest() {
+        Asset asset = createAndRestBasicAsset();
+        MobileTerminal mt = createAndRestMobileTerminal(asset);
+
+        SimpleCreatePoll pollDto = new SimpleCreatePoll();
+        pollDto.setComment("Test comment");
+        pollDto.setPollType(PollType.PROGRAM_POLL);
+        pollDto.setFrequency(555);
+        pollDto.setStartDate(Instant.now());
+        pollDto.setEndDate(Instant.now().plus(1, ChronoUnit.DAYS));
+
+        CreatePollResultDto createdPoll = getWebTargetExternal()
+                .path("poll")
+                .path("createPollForAsset")
+                .path(asset.getId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .post(Entity.json(pollDto), CreatePollResultDto.class);
+
+        assertNotNull(createdPoll);
+
+        assertEquals(1, createdPoll.getUnsentPolls().size());
+        String pollId = createdPoll.getUnsentPolls().get(0);
+
+        ProgramPoll retVal = getWebTargetExternal()
+                .path("/poll/program/")
+                .path(pollId)
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(ProgramPoll.class);
+
+        assertNotNull(retVal.getId());
+        assertEquals(asset.getId(), retVal.getAssetId());
+        assertEquals(mt.getId(), retVal.getMobileterminal().getId());
+
+        assertEquals(pollDto.getComment(), retVal.getComment());
+        assertEquals(pollDto.getFrequency(), retVal.getFrequency());
+        assertEquals(pollDto.getStartDate().truncatedTo(ChronoUnit.MILLIS), retVal.getStartDate());
+        assertEquals(pollDto.getEndDate().truncatedTo(ChronoUnit.MILLIS), retVal.getStopDate());
+
     }
 
     @Test
@@ -344,7 +390,7 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         ListCriteria pollIdCriteria = createListCriteria(SearchKey.POLL_ID, pollGuid);
         pollSearchCriteria.getCriterias().add(pollIdCriteria);
 
-        ListCriteria userCriteria = createListCriteria(SearchKey.USER, "Test User");
+        ListCriteria userCriteria = createListCriteria(SearchKey.USER, "user");
         pollSearchCriteria.getCriterias().add(userCriteria);
 
         input.setPollSearchCriteria(pollSearchCriteria);
@@ -584,14 +630,13 @@ public class PollRestResourceTest extends AbstractAssetRestTest {
         PollRequestType pollRequest = new PollRequestType();
         pollRequest.setPollType(type);
         pollRequest.setComment("Test Comment");
-        pollRequest.setUserName("Test User");
+        pollRequest.setUserName("user");
         return pollRequest;
     }
 
     private void constructPollMobileTerminalAndAddToRequest(PollRequestType request, MobileTerminal terminal) {
         PollMobileTerminal pmt = new PollMobileTerminal();
         pmt.setComChannelId(terminal.getChannels().iterator().next().getId().toString());
-        pmt.setConnectId(terminal.getAssetUUID());
         pmt.setMobileTerminalId(terminal.getId().toString());
         request.getMobileTerminals().add(pmt);
     }

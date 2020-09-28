@@ -21,7 +21,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.ProgramPoll;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollDtoMapper;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CommentDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.SimpleCreatePoll;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
 import org.slf4j.Logger;
@@ -74,6 +74,7 @@ public class PollRestResource {
     public Response createPoll(PollRequestType createPoll)  throws Exception {
         LOG.info("Create poll invoked in rest layer:{}",createPoll);
         try {
+            createPoll.setUserName(request.getRemoteUser());
             CreatePollResultDto createPollResultDto = pollServiceBean.createPoll(createPoll);
             return Response.ok(createPollResultDto).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
@@ -85,11 +86,13 @@ public class PollRestResource {
     @POST
     @Path("createPollForAsset/{assetId}")
     @RequiresFeature(UnionVMSFeature.managePolls)
-    public Response createPollForAsset(@PathParam("assetId") String assetId, CommentDto pollDto)  throws Exception {
+    public Response createPollForAsset(@PathParam("assetId") String assetId, SimpleCreatePoll pollDto) {
         try {
             UUID asset = UUID.fromString(assetId);
             String username = request.getRemoteUser();
-            return Response.ok(pollServiceBean.createPollForAsset(asset, PollType.MANUAL_POLL, username, pollDto.getComment())).header("MDC", MDC.get("requestId")).build();
+            CreatePollResultDto createdPoll = pollServiceBean.createPollForAsset(asset, pollDto, username);
+            return Response.ok(createdPoll)
+                    .header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when creating poll for {}] {}",assetId, ex);
             throw ex;

@@ -28,6 +28,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.*;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.ListResponseDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.SimpleCreatePoll;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.PollSearchKeyValue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.poll.PollSearchMapper;
 import org.slf4j.Logger;
@@ -68,7 +69,7 @@ public class PollServiceBean {
     @EJB
     private ChannelDaoBean channelDao;
 
-    public CreatePollResultDto createPollForAsset(UUID assetId, PollType pollType, String username, String comment){
+    public CreatePollResultDto createPollForAsset(UUID assetId, SimpleCreatePoll createPoll, String username){
         MobileTerminal mt = mobileTerminalServiceBean.getActiveMTForAsset(assetId);
 
         if(mt == null) {
@@ -79,23 +80,43 @@ public class PollServiceBean {
             throw new IllegalArgumentException("No pollable channel for this active MT: " + mt.getId() + " , unable to poll");
         }
 
-        PollRequestType prt = buildPollRequest(assetId, pollType, username, comment, mt, channel);
+        PollRequestType prt = buildPollRequest(createPoll, username, mt, channel);
 
         return createPoll(prt);
     }
 
-    private PollRequestType buildPollRequest(UUID assetId, PollType pollType, String username,
-                                             String comment, MobileTerminal mt, Channel channel) {
+    private PollRequestType buildPollRequest(SimpleCreatePoll createPoll, String username,
+                                             MobileTerminal mt, Channel channel) {
         PollRequestType prt = new PollRequestType();
-        prt.setPollType(pollType);
+        prt.setPollType(createPoll.getPollType() != null ? createPoll.getPollType() : PollType.MANUAL_POLL);
         PollMobileTerminal pollMobileTerminal = new PollMobileTerminal();
-        pollMobileTerminal.setConnectId(assetId.toString());
         pollMobileTerminal.setMobileTerminalId(mt.getId().toString());
         pollMobileTerminal.setComChannelId(channel.getId().toString());
         prt.setUserName(username);
-        prt.setComment(comment);
+        prt.setComment(createPoll.getComment());
         prt.getMobileTerminals().add(pollMobileTerminal);
+
+        setPollRequestAttributes(prt, createPoll);
+
         return prt;
+    }
+
+    private void setPollRequestAttributes(PollRequestType pollRequest, SimpleCreatePoll createPoll){
+        switch (createPoll.getPollType()){
+            case PROGRAM_POLL:
+                pollRequest.getAttributes().add(createPollAttribute(PollAttributeType.FREQUENCY, "" + createPoll.getFrequency()));
+                pollRequest.getAttributes().add(createPollAttribute(PollAttributeType.START_DATE, "" + createPoll.getStartDate().toEpochMilli()));
+                pollRequest.getAttributes().add(createPollAttribute(PollAttributeType.END_DATE, "" + createPoll.getEndDate().toEpochMilli()));
+                break;
+            default:
+        }
+    }
+
+    private PollAttribute createPollAttribute(PollAttributeType key, String value){
+        PollAttribute attribute = new PollAttribute();
+        attribute.setKey(key);
+        attribute.setValue(value);
+        return attribute;
     }
 
     public CreatePollResultDto createPoll(PollRequestType poll) {
@@ -266,9 +287,8 @@ public class PollServiceBean {
         if (mobileTerminalEntity == null) {
             throw new IllegalArgumentException("No mobile terminal connected to this poll request or the mobile terminal can not be found, for mobile terminal id: " + pollTerminal.getMobileTerminalId());
         }
-        String connectId = mobileTerminalEntity.getAsset().getId().toString();
-        if (pollTerminal.getConnectId() == null || !pollTerminal.getConnectId().equals(connectId)) {
-            throw new IllegalStateException("Terminal " + mobileTerminalEntity.getId() + " can not be polled, because it is not linked to asset " + connectId);
+        if(mobileTerminalEntity.getAsset() == null){
+            throw new IllegalArgumentException("This mobile terminal is not connected to any asset");
         }
         return mobileTerminalEntity;
     }
@@ -296,9 +316,8 @@ public class PollServiceBean {
             if(mobileTerminalEntity == null){
                 throw new IllegalArgumentException("No mobile terminal connected to this poll request or the mobile terminal can not be found, for mobile terminal id: " + pollTerminal.getMobileTerminalId());
             }
-            String connectId = mobileTerminalEntity.getAsset().getId().toString();
-            if (!pollTerminal.getConnectId().equals(connectId)) {
-                throw new IllegalStateException("Terminal " + mobileTerminalEntity.getId() + " can not be polled, because it is not linked to asset " + connectId);
+            if(mobileTerminalEntity.getAsset() == null){
+                throw new IllegalArgumentException("This mobile terminal is not connected to any asset");
             }
             checkPollable(mobileTerminalEntity);
             ProgramPoll programPoll = PollModelToEntityMapper.mapToProgramPoll(mobileTerminalEntity, pollTerminal.getComChannelId(), pollRequest);

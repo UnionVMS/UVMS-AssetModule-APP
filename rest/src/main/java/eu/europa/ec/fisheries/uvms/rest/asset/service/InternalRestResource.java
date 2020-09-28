@@ -27,6 +27,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dto.SanePollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollBase;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollEntityToModelMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CreatePollResultDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.SimpleCreatePoll;
 import eu.europa.ec.fisheries.uvms.rest.asset.mapper.CustomAssetAdapter;
 import eu.europa.ec.fisheries.uvms.rest.security.RequiresFeature;
 import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeature;
@@ -347,10 +348,10 @@ public class InternalRestResource {
     @POST
     @Path("createPollForAsset/{id}")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response createPollForAsset(@PathParam("id") String assetId, @QueryParam("username") String username, @QueryParam("comment") String comment) {
+    public Response createPollForAsset(@PathParam("id") String assetId, @QueryParam("username") String username, SimpleCreatePoll createPoll) {
         try {
             UUID asset = UUID.fromString(assetId);
-            return Response.ok(pollServiceBean.createPollForAsset(asset, PollType.AUTOMATIC_POLL, username, comment)).build();
+            return Response.ok(pollServiceBean.createPollForAsset(asset, createPoll, username)).build();
         } catch (Exception ex) {
             LOG.error("[ Error when creating poll for {}] {}", assetId, ex);
             return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();

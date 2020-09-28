@@ -9,6 +9,7 @@ import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.SanePollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.SimpleCreatePoll;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetMatcher;
@@ -331,15 +332,17 @@ public class InternalRestResourceTest extends AbstractAssetRestTest {
                 .post(Entity.json(json), Response.class);
         assertEquals(200, mtResponse.getStatus());
 
+        SimpleCreatePoll createPoll = new SimpleCreatePoll();
+        createPoll.setComment("test comment");
+
         CreatePollResultDto response = getWebTargetInternal()
                 .path("/internal")
                 .path("createPollForAsset")
                 .path(asset.getId().toString())
                 .queryParam("username", "Test User")
-                .queryParam("comment", "Test comment")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
-                .post(Entity.json(""), CreatePollResultDto.class);
+                .post(Entity.json(createPoll), CreatePollResultDto.class);
 
         assertNotNull(response);
     }
@@ -349,16 +352,17 @@ public class InternalRestResourceTest extends AbstractAssetRestTest {
     public void createPollNonexistantAssetTest() {
         UUID assetId = UUID.randomUUID();
 
+        SimpleCreatePoll createPoll = new SimpleCreatePoll();
+        createPoll.setComment("Error test comment");
 
         Response response = getWebTargetInternal()
                 .path("/internal")
                 .path("createPollForAsset")
                 .path(assetId.toString())
                 .queryParam("username", "Test User")
-                .queryParam("comment", "Error test comment")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
-                .post(Entity.json(""), Response.class);
+                .post(Entity.json(createPoll), Response.class);
 
         assertEquals(500, response.getStatus());
         String s = response.readEntity(String.class);
@@ -383,15 +387,17 @@ public class InternalRestResourceTest extends AbstractAssetRestTest {
                 .post(Entity.json(json), Response.class);
         assertEquals(200, mtResponse.getStatus());
 
+        SimpleCreatePoll createPoll = new SimpleCreatePoll();
+        createPoll.setComment("Test comment");
+
         CreatePollResultDto response = getWebTargetInternal()
                 .path("/internal")
                 .path("createPollForAsset")
                 .path(asset.getId().toString())
                 .queryParam("username", "Test User")
-                .queryParam("comment", "Test comment")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
-                .post(Entity.json(""), CreatePollResultDto.class);
+                .post(Entity.json(createPoll), CreatePollResultDto.class);
 
         assertNotNull(response);
 

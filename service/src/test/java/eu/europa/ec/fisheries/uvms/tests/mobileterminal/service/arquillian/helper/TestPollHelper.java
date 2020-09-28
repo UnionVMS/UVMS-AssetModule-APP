@@ -99,7 +99,6 @@ public class TestPollHelper {
 
         MobileTerminal mobileTerminal = createAndPersistMobileTerminal(asset);
         PollMobileTerminal pmt = new PollMobileTerminal();
-        pmt.setConnectId(asset.getId().toString());
         pmt.setMobileTerminalId(mobileTerminal.getId().toString());
         Channel channel = mobileTerminal.getChannels().iterator().next();
         pmt.setComChannelId(channel.getId().toString());

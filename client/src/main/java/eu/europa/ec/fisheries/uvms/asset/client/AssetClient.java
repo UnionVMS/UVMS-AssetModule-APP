@@ -196,15 +196,18 @@ public class AssetClient {
         return response.readEntity(AssetBO.class);
     }
 
-    public String createPollForAsset(UUID assetId, String username, String comment) {
+    public String createPollForAsset(UUID assetId, String username, String comment, PollType pollType) {
+        SimpleCreatePoll createPoll = new SimpleCreatePoll();
+        createPoll.setComment(comment);
+        createPoll.setPollType(pollType);
+
         Response response = webTarget
                 .path("createPollForAsset")
                 .path(assetId.toString())
                 .queryParam("username", username)
-                .queryParam("comment", comment)
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
-                .post(Entity.json(""), Response.class);
+                .post(Entity.json(createPoll), Response.class);
 
         checkForErrorResponse(response);
         CreatePollResultDto createdPollResponse = response.readEntity(CreatePollResultDto.class);

@@ -63,7 +63,6 @@
     
     <xsd:complexType name="PollMobileTerminal">
         <xsd:sequence>
-            <xsd:element name="connectId" type="xsd:string"/>
             <xsd:element name="mobileTerminalId" type="xsd:string"/>
             <xsd:element name="comChannelId" type="xsd:string"/> 
         </xsd:sequence>
