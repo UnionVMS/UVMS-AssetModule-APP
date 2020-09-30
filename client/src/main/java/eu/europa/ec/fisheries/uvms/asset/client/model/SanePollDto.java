@@ -19,7 +19,7 @@ public class SanePollDto {
 
     private UUID mobileterminalId;
 
-    private String updatedBy;
+    private String createTime;
 
     private PollTypeEnum pollTypeEnum;
 
@@ -79,12 +79,12 @@ public class SanePollDto {
         this.mobileterminalId = mobileterminalId;
     }
 
-    public String getUpdatedBy() {
-        return updatedBy;
+    public String getCreateTime() {
+        return createTime;
     }
 
-    public void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy;
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 
     public PollTypeEnum getPollTypeEnum() {

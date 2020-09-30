@@ -15,7 +15,7 @@ public class SanePollDto {
 
     private UUID channelId;
 
-    private Instant updateTime;
+    private Instant createTime;
 
     private UUID assetId;
 
@@ -57,12 +57,12 @@ public class SanePollDto {
         this.channelId = channelId;
     }
 
-    public Instant getUpdateTime() {
-        return updateTime;
+    public Instant getCreateTime() {
+        return createTime;
     }
 
-    public void setUpdateTime(Instant updateTime) {
-        this.updateTime = updateTime;
+    public void setCreateTime(Instant createTime) {
+        this.createTime = createTime;
     }
 
     public UUID getAssetId() {

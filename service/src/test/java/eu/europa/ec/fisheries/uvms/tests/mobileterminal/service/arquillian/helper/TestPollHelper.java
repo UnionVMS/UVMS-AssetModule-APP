@@ -273,7 +273,7 @@ public class TestPollHelper {
         pp.setPollState(PollStateEnum.STARTED);
         pp.setStartDate(startDate);
         pp.setStopDate(stopDate);
-        pp.setUpdateTime(latestRun);
+        pp.setCreateTime(latestRun);
         pp.setUpdatedBy("TEST");
         pp.setPollTypeEnum(PollTypeEnum.PROGRAM_POLL);
         return pp;

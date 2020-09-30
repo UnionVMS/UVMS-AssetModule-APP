@@ -1,14 +1,12 @@
 package eu.europa.ec.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollBase;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.PollSearchField;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.PollSearchKeyValue;
 import eu.europa.ec.fisheries.uvms.mobileterminal.search.poll.PollSearchMapper;
 import eu.europa.ec.fisheries.uvms.tests.TransactionalTests;
-import eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian.AssetTestsHelper;
 import eu.europa.ec.fisheries.uvms.tests.mobileterminal.service.arquillian.helper.TestPollHelper;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.core.StringContains;
@@ -26,7 +24,6 @@ import javax.ejb.EJBTransactionRolledbackException;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 import java.time.Instant;
-import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -433,7 +430,7 @@ public class PollDaoBeanIntTest extends TransactionalTests {
     public void findByAssetInTimespanPollOutsideOfTimespan() {
         PollBase poll = createPollHelper();
         poll.setAssetId(UUID.randomUUID());
-        poll.setUpdateTime(Instant.now().minus(25, ChronoUnit.HOURS));
+        poll.setCreateTime(Instant.now().minus(25, ChronoUnit.HOURS));
         pollDao.createPoll(poll);
         em.flush();
 
@@ -445,7 +442,7 @@ public class PollDaoBeanIntTest extends TransactionalTests {
     private TestPollHelper testPollHelper;
     private PollBase createPollHelper() {
         PollBase poll = new PollBase();
-        poll.setUpdateTime(Instant.now());
+        poll.setCreateTime(Instant.now());
         poll.setUpdatedBy("testUser");
         poll.setChannelId(UUID.randomUUID());
         poll.setMobileterminal(testPollHelper.createAndPersistMobileTerminal(null));

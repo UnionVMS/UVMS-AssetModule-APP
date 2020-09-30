@@ -349,7 +349,7 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
         pp.setPollState(PollStateEnum.STARTED);
         pp.setStartDate(startDate);
         pp.setStopDate(stopDate);
-        pp.setUpdateTime(latestRun);
+        pp.setCreateTime(latestRun);
         pp.setUpdatedBy("TEST");
 
         return pp;
