@@ -13,15 +13,21 @@ public class SanePollDto {
 
     private UUID channelId;
 
-    private Instant updateTime;
+    private Instant createTime;
 
     private UUID assetId;
 
     private UUID mobileterminalId;
 
-    private String createTime;
+    private String updatedBy;
 
     private PollTypeEnum pollTypeEnum;
+
+    private Integer frequency;
+
+    private Instant startDate;
+
+    private Instant endDate;
 
     public UUID getId() {
         return id;
@@ -55,12 +61,12 @@ public class SanePollDto {
         this.channelId = channelId;
     }
 
-    public Instant getUpdateTime() {
-        return updateTime;
+    public Instant getCreateTime() {
+        return createTime;
     }
 
-    public void setUpdateTime(Instant updateTime) {
-        this.updateTime = updateTime;
+    public void setCreateTime(Instant createTime) {
+        this.createTime = createTime;
     }
 
     public UUID getAssetId() {
@@ -79,12 +85,12 @@ public class SanePollDto {
         this.mobileterminalId = mobileterminalId;
     }
 
-    public String getCreateTime() {
-        return createTime;
+    public String getUpdatedBy() {
+        return updatedBy;
     }
 
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
     }
 
     public PollTypeEnum getPollTypeEnum() {
@@ -93,5 +99,29 @@ public class SanePollDto {
 
     public void setPollTypeEnum(PollTypeEnum pollTypeEnum) {
         this.pollTypeEnum = pollTypeEnum;
+    }
+
+    public Integer getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(Integer frequency) {
+        this.frequency = frequency;
+    }
+
+    public Instant getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Instant startDate) {
+        this.startDate = startDate;
+    }
+
+    public Instant getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Instant endDate) {
+        this.endDate = endDate;
     }
 }

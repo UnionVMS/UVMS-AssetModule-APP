@@ -25,6 +25,12 @@ public class SanePollDto {
 
     private PollTypeEnum pollTypeEnum;
 
+    private Integer frequency;
+
+    private Instant startDate;
+
+    private Instant endDate;
+
     public UUID getId() {
         return id;
     }
@@ -95,5 +101,29 @@ public class SanePollDto {
 
     public void setPollTypeEnum(PollTypeEnum pollTypeEnum) {
         this.pollTypeEnum = pollTypeEnum;
+    }
+
+    public Integer getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(Integer frequency) {
+        this.frequency = frequency;
+    }
+
+    public Instant getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Instant startDate) {
+        this.startDate = startDate;
+    }
+
+    public Instant getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Instant endDate) {
+        this.endDate = endDate;
     }
 }
