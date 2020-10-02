@@ -11,32 +11,24 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.rest;
 
-import eu.europa.ec.fisheries.uvms.asset.rest.service.AssetFacadeResource;
-import eu.europa.ec.fisheries.uvms.asset.rest.service.AssetGroupResource;
-import eu.europa.ec.fisheries.uvms.asset.rest.service.AssetHistoryResource;
-import eu.europa.ec.fisheries.uvms.asset.rest.service.AssetResource;
-import eu.europa.ec.fisheries.uvms.asset.rest.service.ConfigResource;
-import eu.europa.ec.fisheries.uvms.commons.rest.filter.EncodingResponseFilter;
-import eu.europa.ec.fisheries.uvms.rest.security.UnionVMSFeatureFilter;
-
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
+import eu.europa.ec.fisheries.uvms.asset.rest.exception.mapper.AssetFacadeExceptionMapper;
+import eu.europa.ec.fisheries.uvms.asset.rest.service.AssetFacadeResource;
+import eu.europa.ec.fisheries.uvms.commons.rest.filter.EncodingResponseFilter;
 
-@ApplicationPath("/rest")
-public class AssetActivator extends Application {
+@ApplicationPath("/gateway")
+public class AssetActivatorInternal extends Application {
 
     private final Set<Object> singletons = new HashSet<>();
     private final Set<Class<?>> set = new HashSet<>();
 
-    public AssetActivator() {
-        set.add(AssetResource.class);
-        set.add(AssetHistoryResource.class);
-        set.add(AssetGroupResource.class);
-        set.add(ConfigResource.class);
-        set.add(UnionVMSFeatureFilter.class);
+    public AssetActivatorInternal() {
+        set.add(AssetFacadeResource.class);
+        set.add(AssetFacadeExceptionMapper.class);
         set.add(EncodingResponseFilter.class);
     }
 
