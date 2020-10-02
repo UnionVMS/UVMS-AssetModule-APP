@@ -9,23 +9,21 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.asset.exception;
+package eu.europa.ec.fisheries.uvms.asset.model.exception;
 
-
-import javax.ws.rs.ProcessingException;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 
 /**
  **/
-public class AssetServiceException extends AssetException {
+public class AssetRestClientException extends AssetException {
 	private static final long serialVersionUID = 1L;
 
-	public AssetServiceException(String message) {
+	public AssetRestClientException(String message) {
         super(message);
     }
 
-    public AssetServiceException(String s, Throwable e) {
+    public AssetRestClientException(String s, Throwable e) {
         super(s, e);
     }
 }
