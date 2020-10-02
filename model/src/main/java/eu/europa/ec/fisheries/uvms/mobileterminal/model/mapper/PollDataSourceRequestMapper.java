@@ -22,7 +22,7 @@ public class PollDataSourceRequestMapper {
         PollRequestType poll = new PollRequestType();
         poll.setPollType(PollType.AUTOMATIC_POLL);
         poll.setComment(pollProgram.getComment());
-        poll.setUserName(pollProgram.getUserName());
+        poll.setUserName("Program Poll, user: " + pollProgram.getUserName());
 
         poll.getAttributes().addAll(pollProgram.getAttributes());
 
