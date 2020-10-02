@@ -15,6 +15,8 @@ import eu.europa.ec.fisheries.schema.exchange.common.v1.AcknowledgeTypeType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.*;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.MobileTerminalType;
 import eu.europa.ec.fisheries.schema.mobileterminal.types.v1.PluginCapabilityType;
+import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.message.AuditProducer;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.ChannelDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollDaoBean;
@@ -69,15 +71,22 @@ public class PollServiceBean {
     @EJB
     private ChannelDaoBean channelDao;
 
+    @Inject
+    private AssetServiceBean assetServiceBean;
+
     public CreatePollResultDto createPollForAsset(UUID assetId, SimpleCreatePoll createPoll, String username){
         MobileTerminal mt = mobileTerminalServiceBean.getActiveMTForAsset(assetId);
 
         if(mt == null) {
-            throw new IllegalArgumentException("No active MT for asset: " + assetId + " , unable to poll");
+            Asset assetById = assetServiceBean.getAssetById(assetId);
+            if(assetById == null) {
+                throw new IllegalArgumentException("No asset with id: " + assetId + " found, unable to poll");
+            }
+            throw new IllegalArgumentException("No active MT for asset: " + assetById.getName() + " (" + assetById.getIrcs() + ") , unable to poll");
         }
         Channel channel = mobileTerminalServiceBean.getPollableChannel(mt);
         if(channel == null) {
-            throw new IllegalArgumentException("No pollable channel for this active MT: " + mt.getId() + " , unable to poll");
+            throw new IllegalArgumentException("No pollable channel for this active MT: " + mt.getSerialNo() + " , unable to poll");
         }
 
         PollRequestType prt = buildPollRequest(createPoll, username, mt, channel);
