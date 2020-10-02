@@ -202,7 +202,7 @@
     </pluginManagement>
   </build>
   <modules>
-    <module>ejb-client</module>
+    <module>rest-client</module>
     <module>model</module>
     <module>LIQUIBASE</module>
     <module>domain</module>

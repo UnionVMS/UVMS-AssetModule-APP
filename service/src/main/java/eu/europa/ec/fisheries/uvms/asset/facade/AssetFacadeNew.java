@@ -1,7 +1,22 @@
+/*
+ Developed by the European Commission - Directorate General for Maritime Affairs and Fisheries @ European Union, 2015-2020.
+
+ This file is part of the Integrated Fisheries Data Management (IFDM) Suite. The IFDM Suite is free software: you can redistribute it
+ and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of
+ the License, or any later version. The IFDM Suite is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ details. You should have received a copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
+ */
 package eu.europa.ec.fisheries.uvms.asset.facade;
 
 
-import eu.europa.ec.fisheries.uvms.asset.ejb.client.IAssetFacade;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.GetAssetListResponseDto;
@@ -15,23 +30,17 @@ import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.ejb.*;
-import java.util.ArrayList;
-import java.util.List;
-
+@ApplicationScoped
 @Slf4j
-@Stateless
-@Remote(IAssetFacade.class)
-public class AssetFacade implements IAssetFacade {
+public class AssetFacadeNew {
 
-    @EJB
+    @Inject
     private AssetDao assetDao;
 
-    @EJB
+    @Inject
     private AssetDomainModelBean assetDomainModel;
 
 
-    @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public List<Asset> findHistoryOfAssetByCfr(String cfr) {
         List<Asset> assetList = new ArrayList<>();
@@ -44,12 +53,11 @@ public class AssetFacade implements IAssetFacade {
         return assetList;
     }
 
-    @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public List<Asset> findHistoryOfAssetBy(String reportDate, String cfr, String regCountry, String ircs, String extMark, String iccat,String uvi) {
+    public List<Asset> findHistoryOfAssetBy(String reportDate, String cfr, String regCountry, String ircs, String extMark, String iccat, String uvi) {
         List<Asset> assets = new ArrayList<>();
         try {
-            List<AssetHistory> assetHistories = assetDao._getAssetHistoryByCriteria(reportDate, cfr, regCountry, ircs, extMark, iccat,uvi);
+            List<AssetHistory> assetHistories = assetDao._getAssetHistoryByCriteria(reportDate, cfr, regCountry, ircs, extMark, iccat, uvi);
             assets = EntityToModelMapper.toAssetFromAssetHistory(assetHistories);
         } catch (AssetDaoException e) {
             log.error("Exception calling _getAssetHistoryByCriteria", e);
@@ -57,7 +65,6 @@ public class AssetFacade implements IAssetFacade {
         return assets;
     }
 
-    @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public ListAssetResponse getAssetList(AssetListQuery query) {
         try {
@@ -74,7 +81,6 @@ public class AssetFacade implements IAssetFacade {
         }
     }
 
-    @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public List<Asset> getAssetGroup(List<AssetGroup> assetGroupQuery) {
         try {
