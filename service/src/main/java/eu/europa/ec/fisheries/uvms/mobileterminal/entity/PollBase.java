@@ -31,15 +31,13 @@ import java.util.UUID;
 @NamedQueries({
         @NamedQuery(name = PollBase.FIND_ALL, query = "SELECT p FROM PollBase p"),
         @NamedQuery(name = PollBase.FIND_BY_TYPE, query = "SELECT p FROM PollBase p WHERE p.pollTypeEnum = :pollTypeEnum"),
-        @NamedQuery(name = PollBase.FIND_BY_CREATE_DATE, query = "SELECT p FROM PollBase p WHERE p.updateTime = :pollCreated"),
         @NamedQuery(name = PollBase.FIND_BY_USER, query = "SELECT p FROM PollBase p WHERE p.creator = :pollUserCreator"),
-        @NamedQuery(name = PollBase.FIND_BY_ASSET_IN_TIMESPAN, query = "SELECT p FROM PollBase p WHERE p.assetId = :assetId AND p.updateTime BETWEEN :start AND :stop"),
+        @NamedQuery(name = PollBase.FIND_BY_ASSET_IN_TIMESPAN, query = "SELECT p FROM PollBase p WHERE p.assetId = :assetId AND p.createTime BETWEEN :start AND :stop"),
 })
 public class PollBase implements Serializable {
 
     public static final String FIND_ALL = "Poll.findAll";
     public static final String FIND_BY_TYPE = "Poll.findByPollType";
-    public static final String FIND_BY_CREATE_DATE = "Poll.findByPollCreated";
     public static final String FIND_BY_USER = "Poll.findByPollUserCreator";
     public static final String FIND_BY_ASSET_IN_TIMESPAN = "Poll.findByAssetInTimespan";
 
@@ -61,8 +59,8 @@ public class PollBase implements Serializable {
     @NotNull
     private UUID channelId;
 
-    @Column(name = "updattim")
-    private Instant updateTime;
+    @Column(name = "createtime")
+    private Instant createTime;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "mobileterminal_id", foreignKey = @ForeignKey(name = "PollBase_MobileTerminal_FK"))
@@ -118,12 +116,12 @@ public class PollBase implements Serializable {
         this.channelId = channelId;
     }
 
-    public Instant getUpdateTime() {
-        return updateTime;
+    public Instant getCreateTime() {
+        return createTime;
     }
 
-    public void setUpdateTime(Instant updateTime) {
-        this.updateTime = updateTime;
+    public void setCreateTime(Instant updateTime) {
+        this.createTime = updateTime;
     }
 
     public MobileTerminal getMobileterminal() {
@@ -167,7 +165,7 @@ public class PollBase implements Serializable {
                 Objects.equals(comment, pollBase.comment) &&
                 Objects.equals(creator, pollBase.creator) &&
                 Objects.equals(channelId, pollBase.channelId) &&
-                Objects.equals(updateTime, pollBase.updateTime) &&
+                Objects.equals(createTime, pollBase.createTime) &&
                 Objects.equals(mobileterminal, pollBase.mobileterminal) &&
                 Objects.equals(updatedBy, pollBase.updatedBy) &&
                 Objects.equals(assetId, pollBase.assetId) &&
@@ -177,6 +175,6 @@ public class PollBase implements Serializable {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, comment, creator, channelId, updateTime, mobileterminal, updatedBy, assetId, pollTypeEnum);
+        return Objects.hash(id, comment, creator, channelId, createTime, mobileterminal, updatedBy, assetId, pollTypeEnum);
     }
 }

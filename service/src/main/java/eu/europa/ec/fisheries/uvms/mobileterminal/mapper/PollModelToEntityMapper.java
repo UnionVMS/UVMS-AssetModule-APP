@@ -122,7 +122,7 @@ public class PollModelToEntityMapper {
             poll.setCreator(requestType.getUserName());
             poll.setUpdatedBy(requestType.getUserName());
             poll.setPollTypeEnum(EnumMapper.getPollTypeFromModel(requestType.getPollType()));
-            poll.setUpdateTime(Instant.now());
+            poll.setCreateTime(Instant.now());
             return poll;
         } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException("Error when creating Poll instance of type: " + clazz.getTypeName(), e);

@@ -132,7 +132,7 @@ public class PollEntityToModelMapper {
         dto.setMobileterminalId(poll.getMobileterminal().getId());
         dto.setPollTypeEnum(poll.getPollTypeEnum());
         dto.setUpdatedBy(poll.getUpdatedBy());
-        dto.setUpdateTime(poll.getUpdateTime());
+        dto.setCreateTime(poll.getCreateTime());
 
         return dto;
     }
