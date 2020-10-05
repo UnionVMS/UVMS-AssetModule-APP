@@ -122,7 +122,7 @@ public interface AssetDao {
     /**
      * replacement for the above method, used by remote ejb only
      */
-    List<AssetHistory> _getAssetHistoryByCriteria(String reportDate, String cfr, String regCountry, String ircs, String extMark, String iccat) throws AssetDaoException;
+    List<AssetHistory> _getAssetHistoryByCriteria(String reportDate, String cfr, String regCountry, String ircs, String extMark, String iccat,String uvi) throws AssetDaoException;
 
     /**
      * Get assetHistory by vesselHistoryId - guid

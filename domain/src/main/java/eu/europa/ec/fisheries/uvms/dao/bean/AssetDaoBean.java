@@ -213,7 +213,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
     }
 
     @Override
-    public List<AssetHistory> _getAssetHistoryByCriteria(String reportDate, String cfr, String regCountry, String ircs, String extMark, String iccat) {
+    public List<AssetHistory> _getAssetHistoryByCriteria(String reportDate, String cfr, String regCountry, String ircs, String extMark, String iccat,String uvi) {
         List<AssetHistory> resultList = new ArrayList<>();
         try {
             TypedQuery<AssetHistory> query = em.createNamedQuery(UvmsConstants.ASSETHISTORY_FIND_BY_CRITERIA, AssetHistory.class);
@@ -223,7 +223,7 @@ public class AssetDaoBean extends Dao implements AssetDao {
             query.setParameter("GFCM", null);
             query.setParameter("ICCAT", iccat);
             query.setParameter("IMO", null);
-            query.setParameter("UVI", null);
+            query.setParameter("UVI", uvi);
             query.setParameter("FLAG_STATE", regCountry);
             query.setParameter("DATE", reportDate);
             resultList = query.getResultList();
