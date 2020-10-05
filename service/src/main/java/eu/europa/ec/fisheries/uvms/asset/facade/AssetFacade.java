@@ -46,10 +46,10 @@ public class AssetFacade implements IAssetFacade {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public List<Asset> findHistoryOfAssetBy(String reportDate, String cfr, String regCountry, String ircs, String extMark, String iccat) {
+    public List<Asset> findHistoryOfAssetBy(String reportDate, String cfr, String regCountry, String ircs, String extMark, String iccat,String uvi) {
         List<Asset> assets = new ArrayList<>();
         try {
-            List<AssetHistory> assetHistories = assetDao._getAssetHistoryByCriteria(reportDate, cfr, regCountry, ircs, extMark, iccat);
+            List<AssetHistory> assetHistories = assetDao._getAssetHistoryByCriteria(reportDate, cfr, regCountry, ircs, extMark, iccat,uvi);
             assets = EntityToModelMapper.toAssetFromAssetHistory(assetHistories);
         } catch (AssetDaoException e) {
             log.error("Exception calling _getAssetHistoryByCriteria", e);

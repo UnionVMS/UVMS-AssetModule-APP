@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface IAssetFacade {
     List<Asset> findHistoryOfAssetByCfr(String cfr);
-    List<Asset> findHistoryOfAssetBy(String reportDate, String cfr, String regCountry, String ircs, String extMark, String iccat);
+    List<Asset> findHistoryOfAssetBy(String reportDate, String cfr, String regCountry, String ircs, String extMark, String iccat,String uvi);
     ListAssetResponse getAssetList(AssetListQuery query);
     List<Asset> getAssetGroup(List<AssetGroup> assetGroupQuery);
 }
