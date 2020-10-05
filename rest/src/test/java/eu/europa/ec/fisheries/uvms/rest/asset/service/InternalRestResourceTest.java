@@ -9,6 +9,7 @@ import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.SanePollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.SimpleCreatePoll;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
@@ -32,6 +33,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -411,6 +414,62 @@ public class InternalRestResourceTest extends AbstractAssetRestTest {
 
         assertEquals(1, pollList.size());
         assertEquals(response.getSentPolls().get(0), pollList.get(0).getId().toString());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getProgramPollForAnAsset() {
+        Asset asset = AssetHelper.createBasicAsset();
+        asset = createAsset(asset);
+        MobileTerminal mt = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mt.setAsset(asset);
+
+        Jsonb jsonb = new JsonBConfigurator().getContext(null);
+        String json = jsonb.toJson(mt);
+
+        Response mtResponse = getWebTargetInternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
+                .post(Entity.json(json), Response.class);
+        assertEquals(200, mtResponse.getStatus());
+
+        Integer frequency = 100;
+        Instant startDate = Instant.now().minus(1, ChronoUnit.HOURS).truncatedTo(ChronoUnit.MILLIS);
+        Instant endDate = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+        SimpleCreatePoll createPoll = new SimpleCreatePoll();
+        createPoll.setPollType(PollType.PROGRAM_POLL);
+        createPoll.setFrequency(frequency);
+        createPoll.setStartDate(startDate);
+        createPoll.setEndDate(endDate);
+        createPoll.setComment("Test comment");
+
+        CreatePollResultDto response = getWebTargetInternal()
+                .path("/internal")
+                .path("createPollForAsset")
+                .path(asset.getId().toString())
+                .queryParam("username", "Test User")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
+                .post(Entity.json(createPoll), CreatePollResultDto.class);
+
+        assertNotNull(response);
+
+        List<SanePollDto> pollList =  getWebTargetInternal()
+                .path("/internal")
+                .path("pollListForAsset")
+                .path(asset.getId().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
+                .get( new GenericType<List<SanePollDto>>() {});
+
+        assertEquals(1, pollList.size());
+        assertEquals(response.getUnsentPolls().get(0), pollList.get(0).getId().toString());
+        assertEquals(PollTypeEnum.PROGRAM_POLL, pollList.get(0).getPollTypeEnum());
+        assertEquals(frequency, pollList.get(0).getFrequency());
+        assertEquals(startDate, pollList.get(0).getStartDate());
+        assertEquals(endDate, pollList.get(0).getEndDate());
     }
 
     private Asset createAsset(Asset asset){

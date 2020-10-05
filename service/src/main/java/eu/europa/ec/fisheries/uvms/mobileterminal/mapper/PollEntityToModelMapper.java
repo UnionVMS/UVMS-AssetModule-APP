@@ -134,6 +134,13 @@ public class PollEntityToModelMapper {
         dto.setUpdatedBy(poll.getUpdatedBy());
         dto.setCreateTime(poll.getCreateTime());
 
+        if (PollTypeEnum.PROGRAM_POLL.equals(poll.getPollTypeEnum())) {
+            ProgramPoll programPoll = (ProgramPoll) poll;
+            dto.setFrequency(programPoll.getFrequency());
+            dto.setStartDate(programPoll.getStartDate());
+            dto.setEndDate(programPoll.getStopDate());
+        }
+
         return dto;
     }
 }
