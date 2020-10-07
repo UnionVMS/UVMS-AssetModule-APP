@@ -20,7 +20,7 @@ import eu.europa.ec.fisheries.uvms.asset.rest.exception.mapper.AssetFacadeExcept
 import eu.europa.ec.fisheries.uvms.asset.rest.service.AssetFacadeResource;
 import eu.europa.ec.fisheries.uvms.commons.rest.filter.EncodingResponseFilter;
 
-@ApplicationPath("/gateway")
+@ApplicationPath("/internal")
 public class AssetActivatorInternal extends Application {
 
     private final Set<Object> singletons = new HashSet<>();
