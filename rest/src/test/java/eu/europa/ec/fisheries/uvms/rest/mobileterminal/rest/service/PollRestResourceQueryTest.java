@@ -13,6 +13,7 @@ import eu.europa.ec.fisheries.uvms.rest.mobileterminal.rest.dto.PollTestHelper;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -252,6 +253,49 @@ public class PollRestResourceQueryTest extends AbstractAssetRestTest {
 
     @Test
     @OperateOnDeployment("normal")
+    public void getProgramPollByTerminalTypeAndAssetIdCriteria() {
+
+        Asset asset = createAndRestBasicAsset();
+        MobileTerminal createdMT = createAndRestMobileTerminal(asset);
+        PollRequestType pollRequestType = PollTestHelper.createProgramPoll(createdMT);
+        PollTestHelper.constructPollMobileTerminalAndAddToRequest(pollRequestType, createdMT);
+
+        CreatePollResultDto createdPoll = createPoll(pollRequestType);
+
+        assertNotNull(createdPoll);
+
+        String pollGuid;
+        if(createdPoll.isUnsentPoll()){
+            pollGuid = createdPoll.getUnsentPolls().get(0);
+        } else {
+            pollGuid = createdPoll.getSentPolls().get(0);
+        }
+
+        PollListQuery input = PollTestHelper.createPollListQueryWithPagination();
+
+        PollSearchCriteria pollSearchCriteria = new PollSearchCriteria();
+        pollSearchCriteria.setIsDynamic(true);
+
+        ListCriteria pollIdCriteria = PollTestHelper.createListCriteria(SearchKey.POLL_TYPE, PollType.PROGRAM_POLL.value());
+        pollSearchCriteria.getCriterias().add(pollIdCriteria);
+
+        ListCriteria userCriteria = PollTestHelper.createListCriteria(SearchKey.TERMINAL_TYPE, createdMT.getMobileTerminalType().name());
+        pollSearchCriteria.getCriterias().add(userCriteria);
+
+        userCriteria = PollTestHelper.createListCriteria(SearchKey.CONNECT_ID, asset.getId().toString());
+        pollSearchCriteria.getCriterias().add(userCriteria);
+
+        input.setPollSearchCriteria(pollSearchCriteria);
+
+        PollChannelListDto pollChannelListDto = getPollList(input);
+        assertNotNull(pollChannelListDto);
+
+        assertEquals(pollGuid, pollChannelListDto.getPollableChannels().get(0).getPoll().getValues().get(2).getValue());
+        assertEquals(createdMT.getId().toString(), pollChannelListDto.getPollableChannels().get(0).getMobileTerminalId());
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void getPollBySearchCriteria() {
         PollRequestType pollRequestType = PollTestHelper.createPollRequestType(PollType.MANUAL_POLL);
         Asset asset = createAndRestBasicAsset();
@@ -286,6 +330,47 @@ public class PollRestResourceQueryTest extends AbstractAssetRestTest {
         assertEquals(pollGuid, pollChannelListDto.getPollableChannels().get(0).getPoll().getValues().get(2).getValue());
         assertEquals(createdMT.getId().toString(), pollChannelListDto.getPollableChannels().get(0).getMobileTerminalId());
     }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getPollByIdOrUser() {
+        PollRequestType pollRequestType = PollTestHelper.createPollRequestType(PollType.MANUAL_POLL);
+        Asset asset = createAndRestBasicAsset();
+        MobileTerminal createdMT = createAndRestMobileTerminal(asset);
+
+        PollTestHelper.constructPollMobileTerminalAndAddToRequest(pollRequestType, createdMT);
+
+        CreatePollResultDto createdPoll = createPoll(pollRequestType);
+
+        assertNotNull(createdPoll);
+
+        String pollGuid;
+        if(createdPoll.isUnsentPoll()){
+            pollGuid = createdPoll.getUnsentPolls().get(0);
+        } else {
+            pollGuid = createdPoll.getSentPolls().get(0);
+        }
+
+        PollListQuery input = PollTestHelper.createPollListQueryWithPagination();
+
+        PollSearchCriteria pollSearchCriteria = new PollSearchCriteria();
+        pollSearchCriteria.setIsDynamic(false);
+
+        ListCriteria pollIdCriteria = PollTestHelper.createListCriteria(SearchKey.POLL_ID, pollGuid);
+        pollSearchCriteria.getCriterias().add(pollIdCriteria);
+
+        pollIdCriteria = PollTestHelper.createListCriteria(SearchKey.USER, "Not the same user");
+        pollSearchCriteria.getCriterias().add(pollIdCriteria);
+
+        input.setPollSearchCriteria(pollSearchCriteria);
+
+        PollChannelListDto pollChannelListDto = getPollList(input);
+        assertNotNull(pollChannelListDto);
+
+        assertEquals(pollGuid, pollChannelListDto.getPollableChannels().get(0).getPoll().getValues().get(2).getValue());
+        assertEquals(createdMT.getId().toString(), pollChannelListDto.getPollableChannels().get(0).getMobileTerminalId());
+    }
+
 
     private MobileTerminal createAndRestMobileTerminal(Asset asset) {
         MobileTerminal response = MobileTerminalTestHelper.createRestMobileTerminal(getWebTargetExternal(), asset, getTokenExternal());
