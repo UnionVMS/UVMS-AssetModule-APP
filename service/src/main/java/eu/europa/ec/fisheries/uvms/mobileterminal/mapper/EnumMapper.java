@@ -11,9 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.mapper;
 
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollStatus;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 
 public class EnumMapper {
@@ -62,19 +60,4 @@ public class EnumMapper {
         throw new NullPointerException("PollType parameter is null");
     }
 
-    public static PollStateEnum getPollStateTypeFromModel(PollStatus model) {
-        if (model != null) {
-            switch (model) {
-            case STARTED:
-                return PollStateEnum.STARTED;
-            case STOPPED:
-                return PollStateEnum.STOPPED;
-            case ARCHIVED:
-                return PollStateEnum.ARCHIVED;
-            default:
-                throw new IllegalArgumentException("Couldn't map enum (from model) in " + PollStateEnum.class.getName());
-            }
-        }
-        throw new NullPointerException("PollStatus parameter is null");
-    }
 }

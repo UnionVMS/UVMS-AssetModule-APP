@@ -7,7 +7,6 @@ import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSourceEnum;
@@ -270,7 +269,7 @@ public class TestPollHelper {
         pp.setComment("Comment");
         pp.setFrequency(1);
         pp.setLatestRun(latestRun);
-        pp.setPollState(PollStateEnum.STARTED);
+        pp.setPollState(ProgramPollStatus.STARTED);
         pp.setStartDate(startDate);
         pp.setStopDate(stopDate);
         pp.setCreateTime(latestRun);

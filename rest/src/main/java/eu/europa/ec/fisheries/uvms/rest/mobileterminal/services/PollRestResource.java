@@ -16,6 +16,7 @@ import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollProgramDaoBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollEntityToModelMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollDto;
@@ -116,10 +117,11 @@ public class PollRestResource {
     @PUT
     @Path("{pollProgramId}/start/")
     @RequiresFeature(UnionVMSFeature.managePolls)
-    public Response startProgramPoll(@PathParam("pollProgramId") String pollId)  throws Exception{
+    public Response startProgramPoll(@PathParam("pollProgramId") String pollId) {
         LOG.info("Start poll invoked in rest layer:{}",pollId);
         try {
-            PollResponseType pollResponse = pollServiceBean.startProgramPoll(pollId, request.getRemoteUser());
+            ProgramPoll program = pollServiceBean.startProgramPoll(pollId, request.getRemoteUser());
+            PollResponseType pollResponse = PollEntityToModelMapper.mapToPollResponseType(program);
             PollDto poll = PollDtoMapper.mapPoll(pollResponse);
             return Response.ok(poll).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
@@ -131,10 +133,11 @@ public class PollRestResource {
     @PUT
     @Path("{pollProgramId}/stop/")
     @RequiresFeature(UnionVMSFeature.managePolls)
-    public Response stopProgramPoll(@PathParam("pollProgramId") String pollId)  throws Exception{
+    public Response stopProgramPoll(@PathParam("pollProgramId") String pollId) {
         LOG.info("Stop poll invoked in rest layer:{}",pollId);
         try {
-            PollResponseType pollResponse = pollServiceBean.stopProgramPoll(pollId, request.getRemoteUser());
+            ProgramPoll program = pollServiceBean.stopProgramPoll(pollId, request.getRemoteUser());
+            PollResponseType pollResponse = PollEntityToModelMapper.mapToPollResponseType(program);
             PollDto poll = PollDtoMapper.mapPoll(pollResponse);
             return Response.ok(poll).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
@@ -146,11 +149,12 @@ public class PollRestResource {
     @PUT
     @Path("{pollProgramId}/archive/")
     @RequiresFeature(UnionVMSFeature.managePolls)
-    public Response archiveProgramPoll(@PathParam("pollProgramId") String pollId)  throws Exception{
+    public Response archiveProgramPoll(@PathParam("pollProgramId") String pollId) {
         // This gives a poll the status "ARCHIVED"
         LOG.info("Archive poll invoked in rest layer:{}",pollId);
         try {
-            PollResponseType pollResponse = pollServiceBean.inactivateProgramPoll(pollId, request.getRemoteUser());
+            ProgramPoll program = pollServiceBean.inactivateProgramPoll(pollId, request.getRemoteUser());
+            PollResponseType pollResponse = PollEntityToModelMapper.mapToPollResponseType(program);
             PollDto poll = PollDtoMapper.mapPoll(pollResponse);
             return Response.ok(poll).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
@@ -162,7 +166,7 @@ public class PollRestResource {
     @POST
     @Path("/list")
     @RequiresFeature(UnionVMSFeature.viewMobileTerminalPolls)
-    public Response getPollBySearchCriteria(PollListQuery query)  throws Exception{
+    public Response getPollBySearchCriteria(PollListQuery query) {
         LOG.info("Get poll by search criteria invoked in rest layer:{}",query);
         try {
         	PollChannelListDto pollChannelList = pollServiceBean.getPollBySearchCriteria(query);
@@ -176,7 +180,7 @@ public class PollRestResource {
     @POST
     @Path("/getPollable")
     @RequiresFeature(UnionVMSFeature.viewMobileTerminalPolls)
-    public Response getPollableChannels(PollableQuery query)  throws Exception{
+    public Response getPollableChannels(PollableQuery query) {
         LOG.info("Get pollables invoked in rest layer:{}",query);
         try {
             PollChannelListDto pollChannelList = mobileTerminalServiceBean.getPollableMobileTerminal(query);
@@ -190,7 +194,7 @@ public class PollRestResource {
     @GET
     @Path("/program/{pollProgramId}")
     @RequiresFeature(UnionVMSFeature.viewMobileTerminalPolls)
-    public Response getPollProgram(@PathParam("pollProgramId") String pollProgramId)  throws Exception{
+    public Response getPollProgram(@PathParam("pollProgramId") String pollProgramId) {
         try {
             ProgramPoll pollProgram = pollProgramDao.getProgramPollByGuid(pollProgramId);
             String returnString = jsonb.toJson(pollProgram);

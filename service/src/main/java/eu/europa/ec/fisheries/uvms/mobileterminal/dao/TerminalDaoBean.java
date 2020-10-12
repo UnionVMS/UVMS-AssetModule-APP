@@ -45,13 +45,7 @@ public class TerminalDaoBean {
     private EntityManager em;
 
     public MobileTerminal getMobileTerminalById(UUID id) {
-        try {
-            TypedQuery<MobileTerminal> query = em.createNamedQuery(MobileTerminal.FIND_BY_ID, MobileTerminal.class);
-            query.setParameter("id", id);
-            return query.getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
+        return em.find(MobileTerminal.class, id);
     }
 
     public MobileTerminal getMobileTerminalBySerialNo(String serialNo) {
@@ -62,10 +56,6 @@ public class TerminalDaoBean {
         } catch (NoResultException e) {
             return null;
         }
-    }
-
-    private void forceLoad(){
-
     }
 
     public void removeMobileTerminalAfterTests(String guid) {

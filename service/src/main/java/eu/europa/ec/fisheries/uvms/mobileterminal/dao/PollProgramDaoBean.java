@@ -53,25 +53,7 @@ public class PollProgramDaoBean {
     public List<ProgramPoll> getProgramPollRunningAndStarted()  {
         TypedQuery<ProgramPoll> query = em.createNamedQuery(ProgramPoll.PROGRAM_FIND_RUNNING_AND_STARTED, ProgramPoll.class);
         query.setParameter("currentDate", Instant.now());
-        List<ProgramPoll> pollPrograms = query.getResultList();
-        List<ProgramPoll> validPollPrograms = new ArrayList<>();
-
-        for (ProgramPoll pollProgram : pollPrograms) {
-            Instant lastRun = pollProgram.getLatestRun();
-            Integer frequency = pollProgram.getFrequency();
-            Instant now = Instant.now();
-
-            long lastRunEpoch = lastRun == null ? 0 : lastRun.getEpochSecond();
-            long nowEpoch = now.getEpochSecond();
-
-            boolean createPoll = lastRun == null || nowEpoch >= lastRunEpoch + frequency;
-
-            if (createPoll) {
-                pollProgram.setLatestRun((lastRunEpoch == 0) ? Instant.now().truncatedTo(ChronoUnit.MINUTES) : Instant.ofEpochSecond(lastRunEpoch + frequency));
-                validPollPrograms.add(pollProgram);
-            }
-        }
-        return validPollPrograms;
+        return query.getResultList();
     }
 
     public ProgramPoll getProgramPollByGuid(String guid) {
