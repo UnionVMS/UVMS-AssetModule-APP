@@ -19,6 +19,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -66,7 +67,7 @@ public class PollProgramDaoBean {
             boolean createPoll = lastRun == null || nowEpoch >= lastRunEpoch + frequency;
 
             if (createPoll) {
-                pollProgram.setLatestRun((lastRunEpoch == 0) ? pollProgram.getStartDate() : Instant.ofEpochSecond(lastRunEpoch + frequency));
+                pollProgram.setLatestRun((lastRunEpoch == 0) ? Instant.now().truncatedTo(ChronoUnit.MINUTES) : Instant.ofEpochSecond(lastRunEpoch + frequency));
                 validPollPrograms.add(pollProgram);
             }
         }
