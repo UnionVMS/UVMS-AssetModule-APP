@@ -13,9 +13,9 @@ package eu.europa.ec.fisheries.uvms.mobileterminal.mapper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollAttribute;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.ProgramPollStatus;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.*;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +29,7 @@ public class PollModelToEntityMapper {
     public static ProgramPoll mapToProgramPoll(MobileTerminal terminal, String channelGuid, PollRequestType requestType) {
         ProgramPoll programPoll = createPoll(terminal, channelGuid, requestType, ProgramPoll.class);
 
-        programPoll.setPollState(PollStateEnum.STARTED);
+        programPoll.setPollState(ProgramPollStatus.STARTED);
         programPoll.setLatestRun(null);
 
         List<PollAttribute> attributes = requestType.getAttributes();

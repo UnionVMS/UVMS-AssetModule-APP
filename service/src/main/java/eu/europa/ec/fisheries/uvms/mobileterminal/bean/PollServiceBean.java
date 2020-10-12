@@ -22,7 +22,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.dao.ChannelDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollProgramDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
-import eu.europa.ec.fisheries.uvms.mobileterminal.dto.SanePollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollChannelListDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollDto;
@@ -170,44 +169,44 @@ public class PollServiceBean {
         return PollDtoMapper.mapPolls(pollResponse);
     }
 
-    public PollResponseType startProgramPoll(String pollId, String username) {
+    public ProgramPoll startProgramPoll(String pollId, String username) {
 
         PollId pollIdType = new PollId();
         pollIdType.setGuid(pollId);
-        PollResponseType startedPoll = setStatusPollProgram(pollIdType, PollStatus.STARTED);
+        ProgramPoll startedPoll = setStatusPollProgram(pollIdType, ProgramPollStatus.STARTED);
         try {
-            String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollStarted(startedPoll.getPollId().getGuid(), username);
+            String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollStarted(startedPoll.getId().toString(), username);
             auditProducer.sendModuleMessage(auditData);
         } catch (Exception e) {
-            LOG.error("Failed to send audit log message due tue: " + e + "! Poll with guid {} was started", startedPoll.getPollId().getGuid());
+            LOG.error("Failed to send audit log message due tue: " + e + "! Poll with guid {} was started", startedPoll.getId().toString());
         }
         return startedPoll;
     }
 
-    public PollResponseType stopProgramPoll(String pollId, String username){
+    public ProgramPoll stopProgramPoll(String pollId, String username){
 
         PollId pollIdType = new PollId();
         pollIdType.setGuid(pollId);
-        PollResponseType stoppedPoll = setStatusPollProgram(pollIdType, PollStatus.STOPPED);
+        ProgramPoll stoppedPoll = setStatusPollProgram(pollIdType, ProgramPollStatus.STOPPED);
         try {
-            String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollStopped(stoppedPoll.getPollId().getGuid(), username);
+            String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollStopped(stoppedPoll.getId().toString(), username);
             auditProducer.sendModuleMessage(auditData);
         } catch (Exception e) {
-            LOG.error("Failed to send audit log message due tue: " + e + "! Poll with guid {} was stopped", stoppedPoll.getPollId().getGuid());
+            LOG.error("Failed to send audit log message due tue: " + e + "! Poll with guid {} was stopped", stoppedPoll.getId().toString());
         }
         return stoppedPoll;
     }
 
-    public PollResponseType inactivateProgramPoll(String pollId, String username){
+    public ProgramPoll inactivateProgramPoll(String pollId, String username){
 
         PollId pollIdType = new PollId();
         pollIdType.setGuid(pollId);
-        PollResponseType inactivatedPoll = setStatusPollProgram(pollIdType, PollStatus.ARCHIVED);
+        ProgramPoll inactivatedPoll = setStatusPollProgram(pollIdType, ProgramPollStatus.ARCHIVED);
         try {
-            String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollInactivated(inactivatedPoll.getPollId().getGuid(), username);
+            String auditData = AuditModuleRequestMapper.mapAuditLogProgramPollInactivated(inactivatedPoll.getId().toString(), username);
             auditProducer.sendModuleMessage(auditData);
         } catch (Exception e) {
-            LOG.error("Failed to send audit log message due tue: " + e + "! Poll with guid {} was inactivated", inactivatedPoll.getPollId().getGuid());
+            LOG.error("Failed to send audit log message due tue: " + e + "! Poll with guid {} was inactivated", inactivatedPoll.getId().toString());
         }
         return inactivatedPoll;
     }
@@ -217,11 +216,7 @@ public class PollServiceBean {
         return PollDtoMapper.pollListResponseToPollChannelListDto(pollResponse);
     }
 
-    public List<PollResponseType> timer() {
-        return getPollProgramRunningAndStarted();
-    }
-
-    private MobileTerminal mapPollableTerminal(UUID guid) {
+    private MobileTerminal getMobileTerminalById(UUID guid) {
         return terminalDao.getMobileTerminalById(guid);
     }
 
@@ -377,9 +372,8 @@ public class PollServiceBean {
         List<PollResponseType> responseList = new ArrayList<>();
         for (Map.Entry<ProgramPoll, MobileTerminal> next : map.entrySet()) {
             ProgramPoll pollProgram = next.getKey();
-            MobileTerminal mobileTerminalType = next.getValue();
             pollProgramDao.createProgramPoll(pollProgram);
-            responseList.add(PollEntityToModelMapper.mapToPollResponseType(pollProgram, mobileTerminalType));
+            responseList.add(PollEntityToModelMapper.mapToPollResponseType(pollProgram));
         }
         return responseList;
     }
@@ -437,7 +431,7 @@ public class PollServiceBean {
         for (PollBase poll : pollList) {
             try {
                 MobileTerminal mobileTerminalEntity = poll.getMobileterminal();
-                MobileTerminal mobileTerminal = mapPollableTerminal(mobileTerminalEntity.getId());
+                MobileTerminal mobileTerminal = getMobileTerminalById(mobileTerminalEntity.getId());
 
                 PollResponseType pollType = PollEntityToModelMapper.mapToPollResponseType(poll, mobileTerminal);
                 pollResponseList.add(pollType);
@@ -476,12 +470,11 @@ public class PollServiceBean {
         }
     }
 
-    public List<PollResponseType> getPollProgramRunningAndStarted() {
-        List<ProgramPoll> pollPrograms = pollProgramDao.getProgramPollRunningAndStarted();
-        return getResponseList(pollPrograms);
+    public List<ProgramPoll> getPollProgramRunningAndStarted() {
+        return pollProgramDao.getProgramPollRunningAndStarted();
     }
 
-    public PollResponseType setStatusPollProgram(PollId id, PollStatus state) {
+    public ProgramPoll setStatusPollProgram(PollId id, ProgramPollStatus state) {
         if (id == null || id.getGuid() == null || id.getGuid().isEmpty()) {
             throw new NullPointerException("No poll id given");
         }
@@ -490,8 +483,6 @@ public class PollServiceBean {
         }
 
         ProgramPoll program = pollProgramDao.getProgramPollByGuid(id.getGuid());
-        MobileTerminal terminal = program.getMobileterminal();
-        MobileTerminal mobileTerminal = mapPollableTerminal(terminal.getId());
 
         switch (program.getPollState()) {
             case ARCHIVED:
@@ -502,9 +493,9 @@ public class PollServiceBean {
 
         // TODO: check terminal/comchannel?
 
-        program.setPollState(EnumMapper.getPollStateTypeFromModel(state));
+        program.setPollState(state);
 
-        return PollEntityToModelMapper.mapToPollResponseType(program, mobileTerminal);
+        return program;
     }
 
     public ListResponseDto getMobileTerminalPollableList(PollableQuery query) {
@@ -565,9 +556,7 @@ public class PollServiceBean {
     private List<PollResponseType> getResponseList(List<ProgramPoll> pollPrograms)  {
         List<PollResponseType> responseList = new ArrayList<>();
         for (ProgramPoll pollProgram : pollPrograms) {
-                MobileTerminal terminal = pollProgram.getMobileterminal();
-            MobileTerminal mobileTerminal = mapPollableTerminal(terminal.getId());
-            responseList.add(PollEntityToModelMapper.mapToPollResponseType(pollProgram, mobileTerminal));
+            responseList.add(PollEntityToModelMapper.mapToPollResponseType(pollProgram));
         }
         return responseList;
     }

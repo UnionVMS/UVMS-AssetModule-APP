@@ -9,26 +9,24 @@ the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the impl
 FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a
 copy of the GNU General Public License along with the IFDM Suite. If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.europa.ec.fisheries.uvms.mobileterminal.model.mapper;
+package eu.europa.ec.fisheries.uvms.mobileterminal.mapper;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollMobileTerminal;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollResponseType;
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.ProgramPoll;
 
 public class PollDataSourceRequestMapper {
 
-    public static PollRequestType mapCreatePollRequest(PollResponseType pollProgram) {
+    public static PollRequestType createPollFromProgram(ProgramPoll pollProgram) {
         PollRequestType poll = new PollRequestType();
         poll.setPollType(PollType.AUTOMATIC_POLL);
         poll.setComment(pollProgram.getComment());
-        poll.setUserName("Program Poll, user: " + pollProgram.getUserName());
+        poll.setUserName("Program Poll, user: " + pollProgram.getUpdatedBy());
 
-        poll.getAttributes().addAll(pollProgram.getAttributes());
-
-        String connectId = pollProgram.getMobileTerminal().getConnectId();
-        String mobileTerminalId = pollProgram.getMobileTerminal().getMobileTerminalId().getGuid();
-        String channelId = pollProgram.getMobileTerminal().getChannels().get(0).getGuid();
+        String mobileTerminalId = pollProgram.getMobileterminal().getId().toString();
+        String channelId = pollProgram.getChannelId().toString();
 
         PollMobileTerminal pollMobileTerminal = new PollMobileTerminal();
         pollMobileTerminal.setComChannelId(channelId);

@@ -18,7 +18,6 @@ import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollProgramDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.ProgramPoll;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.timer.PollTimerTask;
 import eu.europa.ec.fisheries.uvms.tests.TransactionalTests;
 import eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian.AssetTestsHelper;
@@ -31,7 +30,6 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 import java.time.Instant;
-import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
@@ -68,6 +66,23 @@ public class PollTimerTaskTest extends TransactionalTests {
         long autoPollCount = polls.stream().filter(p -> p.getPollType().equals(PollType.AUTOMATIC_POLL)).count();
 
         assertEquals(1, autoPollCount);
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void runPollTimerTaskRecentLastRunNoPollCreated() {
+        Asset asset = assetDao.createAsset(AssetTestsHelper.createBasicAsset());
+        ProgramPoll pollProgram = pollHelper.createProgramPoll(asset.getId().toString(),
+                Instant.now().minus(1, ChronoUnit.HOURS), Instant.now().plus(1, ChronoUnit.HOURS),
+                Instant.now().plus(1, ChronoUnit.MINUTES));
+        pollDao.createProgramPoll(pollProgram);
+
+        new PollTimerTask(pollService).run();
+
+        List<PollResponseType> polls = getAllPolls(asset.getId());
+        long autoPollCount = polls.stream().filter(p -> p.getPollType().equals(PollType.AUTOMATIC_POLL)).count();
+
+        assertEquals(0, autoPollCount);
     }
     
     @Test
@@ -129,7 +144,7 @@ public class PollTimerTaskTest extends TransactionalTests {
         new PollTimerTask(pollService).run();
 
         ProgramPoll fetchedPollProgram = pollDao.getProgramPollByGuid(pollProgram.getId().toString());
-        assertThat(fetchedPollProgram.getPollState(), CoreMatchers.is(PollStateEnum.ARCHIVED));
+        assertThat(fetchedPollProgram.getPollState(), CoreMatchers.is(ProgramPollStatus.ARCHIVED));
     }
     
     private List<PollResponseType> getAllPolls(UUID connectId) {

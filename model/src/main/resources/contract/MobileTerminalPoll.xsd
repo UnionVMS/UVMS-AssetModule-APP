@@ -85,7 +85,7 @@
         </xsd:complexContent>
     </xsd:complexType>
     
-    <xsd:simpleType name="PollStatus">
+    <xsd:simpleType name="ProgramPollStatus">
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="STARTED"/>
             <xsd:enumeration value="STOPPED"/>
@@ -164,7 +164,7 @@
                 <xsd:extension base="mobterm:MobileTerminalBaseRequest">
                     <xsd:sequence>
                         <xsd:element name="pollId" type="poll:PollId"/>
-                        <xsd:element name="status" type="poll:PollStatus"/>
+                        <xsd:element name="status" type="poll:ProgramPollStatus"/>
                     </xsd:sequence>
                 </xsd:extension>
             </xsd:complexContent>
