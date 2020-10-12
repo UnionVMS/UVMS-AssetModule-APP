@@ -5,6 +5,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollProgramDaoBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollEntityToModelMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.PollKey;
@@ -128,18 +129,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
 
         pollProgramDao.createProgramPoll(pollProgram);
 
-        PollResponseType responseType = pollServiceBean.startProgramPoll(pollProgram.getId().toString(), pollProgram.getUpdatedBy());
-        List<PollAttribute> attributes = responseType.getAttributes();
-
-        boolean ok = false;
-        for(PollAttribute attribute : attributes) {
-            if(attribute.getKey().toString().equalsIgnoreCase(PollAttributeType.PROGRAM_RUNNING.toString())) {
-                assertEquals(attribute.getValue(), "TRUE");
-                ok = true;
-            }
-        }
-        assertTrue(ok);
+        ProgramPoll responseType = pollServiceBean.startProgramPoll(pollProgram.getId().toString(), pollProgram.getUpdatedBy());
         assertNotNull(responseType);
+        assertEquals(ProgramPollStatus.STARTED, responseType.getPollState());
     }
 
     @Test
@@ -159,7 +151,8 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         pollProgramDao.createProgramPoll(pollProgram);
         UUID guid = pollProgram.getId();
 
-        PollResponseType pollResponse = pollServiceBean.startProgramPoll(guid.toString(), username);
+        ProgramPoll program = pollServiceBean.startProgramPoll(guid.toString(), username);
+        PollResponseType pollResponse = PollEntityToModelMapper.mapToPollResponseType(program);
         PollDto startedProgramPoll = PollDtoMapper.mapPoll(pollResponse);
         assertNotNull(startedProgramPoll);
 
@@ -182,18 +175,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
 
         pollProgramDao.createProgramPoll(pollProgram);
 
-        PollResponseType responseType = pollServiceBean.stopProgramPoll(pollProgram.getId().toString(), pollProgram.getUpdatedBy());
-        List<PollAttribute> attributes = responseType.getAttributes();
-
-        boolean ok = false;
-        for(PollAttribute attribute : attributes) {
-            if(attribute.getKey().toString().equalsIgnoreCase(PollAttributeType.PROGRAM_RUNNING.toString())) {
-                assertEquals(attribute.getValue(), "FALSE");
-                ok = true;
-            }
-        }
-        assertTrue(ok);
+        ProgramPoll responseType = pollServiceBean.stopProgramPoll(pollProgram.getId().toString(), pollProgram.getUpdatedBy());
         assertNotNull(responseType);
+        assertEquals(ProgramPollStatus.STOPPED, responseType.getPollState());
     }
 
     @Test
@@ -213,11 +197,13 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         pollProgramDao.createProgramPoll(pollProgram);
         UUID guid = pollProgram.getId();
 
-        PollResponseType pollResponse = pollServiceBean.startProgramPoll(guid.toString(), username);
+        ProgramPoll program = pollServiceBean.startProgramPoll(guid.toString(), username);
+        PollResponseType pollResponse = PollEntityToModelMapper.mapToPollResponseType(program);
         PollDto startedProgramPoll = PollDtoMapper.mapPoll(pollResponse);
         assertNotNull(startedProgramPoll);
 
-        pollResponse = pollServiceBean.stopProgramPoll(String.valueOf(guid), username);
+        program = pollServiceBean.stopProgramPoll(String.valueOf(guid), username);
+        pollResponse = PollEntityToModelMapper.mapToPollResponseType(program);
         PollDto stoppedProgramPoll = PollDtoMapper.mapPoll(pollResponse);
         assertNotNull(stoppedProgramPoll);
 
@@ -239,18 +225,9 @@ public class PollServiceBeanIntTest extends TransactionalTests {
 
         pollProgramDao.createProgramPoll(pollProgram);
 
-        PollResponseType responseType = pollServiceBean.inactivateProgramPoll(pollProgram.getId().toString(), pollProgram.getUpdatedBy());
-        List<PollAttribute> attributes = responseType.getAttributes();
-
-        boolean ok = false;
-        for(PollAttribute attribute : attributes) {
-            if(attribute.getKey().toString().equalsIgnoreCase(PollAttributeType.PROGRAM_RUNNING.toString())) {
-                assertEquals(attribute.getValue(), "FALSE");
-                ok = true;
-            }
-        }
-        assertTrue(ok);
+        ProgramPoll responseType = pollServiceBean.inactivateProgramPoll(pollProgram.getId().toString(), pollProgram.getUpdatedBy());
         assertNotNull(responseType);
+        assertEquals(ProgramPollStatus.ARCHIVED, responseType.getPollState());
     }
 
     @Test
@@ -270,7 +247,8 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         pollProgramDao.createProgramPoll(pollProgram);
         UUID guid = pollProgram.getId();
 
-        PollResponseType pollResponse = pollServiceBean.startProgramPoll(guid.toString(), username);
+        ProgramPoll program = pollServiceBean.startProgramPoll(guid.toString(), username);
+        PollResponseType pollResponse = PollEntityToModelMapper.mapToPollResponseType(program);
         PollDto startedProgramPoll = PollDtoMapper.mapPoll(pollResponse);
         assertNotNull(startedProgramPoll);
 
@@ -278,7 +256,8 @@ public class PollServiceBeanIntTest extends TransactionalTests {
         boolean isRunning = validatePollKeyValue(values, PollKey.PROGRAM_RUNNING, "true");
         assertTrue(isRunning);
 
-        pollResponse = pollServiceBean.inactivateProgramPoll(String.valueOf(guid), username);
+        program = pollServiceBean.inactivateProgramPoll(String.valueOf(guid), username);
+        pollResponse = PollEntityToModelMapper.mapToPollResponseType(program);
         PollDto inactivatedProgramPoll = PollDtoMapper.mapPoll(pollResponse);
         assertNotNull(inactivatedProgramPoll);
 
@@ -300,22 +279,13 @@ public class PollServiceBeanIntTest extends TransactionalTests {
 
         pollProgramDao.createProgramPoll(pollProgram);
 
-        List<PollResponseType> responseTypeList = pollServiceBean.timer();
+        List<ProgramPoll> responseList = pollServiceBean.getPollProgramRunningAndStarted();
 
-        assertNotNull(responseTypeList);
-        assertEquals(1, responseTypeList.size());
+        assertNotNull(responseList);
+        assertEquals(1, responseList.size());
 
-        List<PollAttribute> attributes = responseTypeList.get(0).getAttributes();
-        assertNotNull(attributes);
+        assertEquals(ProgramPollStatus.STARTED, responseList.get(0).getPollState());
 
-        boolean ok = false;
-        for(PollAttribute attribute : attributes) {
-            if(attribute.getKey().toString().equalsIgnoreCase(PollAttributeType.PROGRAM_RUNNING.toString())) {
-                assertEquals(attribute.getValue(), "TRUE");
-                ok = true;
-            }
-        }
-        assertTrue(ok);
     }
 
     @Test

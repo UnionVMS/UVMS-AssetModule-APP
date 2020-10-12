@@ -1,5 +1,6 @@
 package eu.europa.ec.fisheries.uvms.tests.mobileterminal.service.arquillian;
 
+import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.ProgramPollStatus;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.MobileTerminalPluginDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollProgramDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
@@ -7,7 +8,6 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminalPlugin;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.ProgramPoll;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.MobileTerminalTypeEnum;
-import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollStateEnum;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.constants.TerminalSourceEnum;
 import eu.europa.ec.fisheries.uvms.tests.TransactionalTests;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
@@ -208,7 +208,7 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
 
         String mobileTerminalSerialNumber = createSerialNumber();
         ProgramPoll pollProgram = createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
-        pollProgram.setPollState(PollStateEnum.ARCHIVED);
+        pollProgram.setPollState(ProgramPollStatus.ARCHIVED);
 
         pollProgramDao.createProgramPoll(pollProgram);
         em.flush();
@@ -237,32 +237,6 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
         boolean found = pollPrograms.stream().anyMatch(pp -> pollProgram.getId().equals(pp.getId()));
 
         assertTrue(found);
-    }
-
-    @Test
-    @OperateOnDeployment("normal")
-    public void getPollProgramRunningAndStarted_ShouldFailWhenLatestRunBiggerThenNow() {
-
-        Date now = new Date();
-        cal.setTime(now);
-
-        Instant startDate = getStartDate();
-
-        cal.set(Calendar.DAY_OF_MONTH, 20);
-        cal.set(Calendar.YEAR, latestRunYear + 3);
-        Instant latestRun = Instant.now();
-
-        Instant stopDate = getStopDate();
-
-        String mobileTerminalSerialNumber = createSerialNumber();
-        ProgramPoll pollProgram = createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
-
-        pollProgramDao.createProgramPoll(pollProgram);
-        em.flush();
-
-        List<ProgramPoll> pollPrograms = pollProgramDao.getProgramPollRunningAndStarted();
-
-        assertTrue(pollPrograms.isEmpty());
     }
 
     @Test
@@ -304,7 +278,7 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
 
         String mobileTerminalSerialNumber = createSerialNumber();
         ProgramPoll pollProgram = createPollProgramHelper(mobileTerminalSerialNumber, startDate, stopDate, latestRun);
-        pollProgram.setPollState(PollStateEnum.STOPPED);
+        pollProgram.setPollState(ProgramPollStatus.STOPPED);
 
         pollProgramDao.createProgramPoll(pollProgram);
         em.flush();
@@ -346,11 +320,12 @@ public class PollProgramDaoBeanIT extends TransactionalTests {
         pp.setAssetId(terminalConnect);
         pp.setFrequency(1);
         pp.setLatestRun(latestRun);
-        pp.setPollState(PollStateEnum.STARTED);
+        pp.setPollState(ProgramPollStatus.STARTED);
         pp.setStartDate(startDate);
         pp.setStopDate(stopDate);
         pp.setCreateTime(latestRun);
         pp.setUpdatedBy("TEST");
+        pp.setComment("Test Comment");
 
         return pp;
     }
