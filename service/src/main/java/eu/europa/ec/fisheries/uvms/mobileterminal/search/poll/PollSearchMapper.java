@@ -137,7 +137,8 @@ public class PollSearchMapper {
 				}
 				if(keyValue.getSearchField().equals(PollSearchField.POLL_TYPE) &&
 						(searchTable.equals(SearchTable.CONFIGURATION_POLL) ||
-						searchTable.equals(SearchTable.SAMPLING_POLL)) ||
+						searchTable.equals(SearchTable.SAMPLING_POLL) ||
+						searchTable.equals(SearchTable.PROGRAM_POLL)) ||
 						keyValue.getSearchField().equals(PollSearchField.POLL_ID)) {
 					builder.append(searchTable.getTableAlias()).append(".")
 							.append(keyValue.getSearchField().getSqlColumnName());

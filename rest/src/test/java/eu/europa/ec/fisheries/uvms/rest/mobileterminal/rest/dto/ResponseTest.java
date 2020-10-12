@@ -44,7 +44,7 @@ public class ResponseTest {
     private final MTResponseDto SUCCESS_RESULT_GET_BY_ID;
 
     private final MobileTerminalType MOBILE_TERMINAL_DTO = MockData.createMobileTerminalDto(MOBILE_TERMINAL_ID_INT);
-    private final MTListResponse MOBILE_TERMINAL_LIST_RESPONSE = ResponseTestPollHelper.createMTListResponse();
+    private final MTListResponse MOBILE_TERMINAL_LIST_RESPONSE = PollTestHelper.createMTListResponse();
 
     public ResponseTest() {
         SUCCESS_RESULT_UPDATE = new MTResponseDto<>(MOBILE_TERMINAL_DTO, MTResponseCode.OK);
