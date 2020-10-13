@@ -149,12 +149,12 @@
             <version>${uvms.asset.module.version}</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-            <artifactId>asset-ejb-client</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>compile</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>-->
+<!--            <artifactId>asset-ejb-client</artifactId>-->
+<!--            <version>${project.parent.version}</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>
