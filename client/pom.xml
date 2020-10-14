@@ -15,14 +15,12 @@
 
 	<properties>
 		<docker.dev.stop.phase>verify</docker.dev.stop.phase>
-		<docker.dev.prestop.phase>install</docker.dev.prestop.phase>
 	</properties>
 
     <dependencies>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.commons</groupId>
             <artifactId>uvms-commons-date</artifactId>
-            <version>${uvms.common.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -55,15 +53,9 @@
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-            <artifactId>asset-rest</artifactId>
+            <artifactId>asset-module</artifactId>
             <version>${project.parent.version}</version>
-            <type>war</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>eu.europa.ec.fisheries.uvms.asset</groupId>
-            <artifactId>asset-service</artifactId>
-            <version>${project.parent.version}</version>
+            <classifier>classes</classifier>
             <scope>test</scope>
         </dependency>
         <dependency>

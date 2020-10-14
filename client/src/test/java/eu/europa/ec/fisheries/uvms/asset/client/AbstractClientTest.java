@@ -26,13 +26,8 @@ public abstract class AbstractClientTest {
     public static Archive<?> createDeployment() {
 
         WebArchive testWar = ShrinkWrap.create(WebArchive.class, "asset.war");
-        testWar.merge(ShrinkWrap.createFromZipFile(WebArchive.class, 
-                Maven.configureResolver().loadPomFromFile("pom.xml")
-                    .resolve("eu.europa.ec.fisheries.uvms.asset:asset-rest:war:?")
-                    .withoutTransitivity().asSingleFile()));
-        
         File[] files = Maven.configureResolver().loadPomFromFile("pom.xml")
-                .resolve("eu.europa.ec.fisheries.uvms.asset:asset-service")
+                .resolve("eu.europa.ec.fisheries.uvms.asset:asset-module:jar:classes:?")
                 .withTransitivity().asFile();
         testWar.addAsLibraries(files);
 
