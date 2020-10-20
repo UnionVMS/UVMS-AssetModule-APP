@@ -59,6 +59,7 @@ public class AssetRestClientImpl implements AssetClient {
     private static final String IRCS = "ircs";
     private static final String EXT_MARK = "extMark";
     private static final String ICCAT = "iccat";
+    private static final String UVI = "uvi";
     private static final String ASSET_GUID = "assetGuid";
 
     private AssetRestClientConfig config;
@@ -101,7 +102,7 @@ public class AssetRestClientImpl implements AssetClient {
 
     @SneakyThrows
     @Override
-    public List<Asset> findHistoryOfAssetBy(String reportDate, String cfr, String regCountry, String ircs, String extMark, String iccat) {
+    public List<Asset> findHistoryOfAssetBy(String reportDate, String cfr, String regCountry, String ircs, String extMark, String iccat, String uvi) {
         try {
             Response response = webTarget
                     .path(FIND_ASSET_HISTORY_BY_CRITERIA_PATH)
@@ -111,6 +112,7 @@ public class AssetRestClientImpl implements AssetClient {
                     .queryParam(IRCS, ircs)
                     .queryParam(EXT_MARK, extMark)
                     .queryParam(ICCAT, iccat)
+                    .queryParam(UVI, uvi)
                     .request()
                     .accept(MediaType.APPLICATION_JSON)
                     .get(Response.class);

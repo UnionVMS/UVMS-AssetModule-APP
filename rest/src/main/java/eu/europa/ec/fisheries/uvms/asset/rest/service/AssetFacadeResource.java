@@ -113,10 +113,11 @@ public class AssetFacadeResource {
                                             @QueryParam("regCountry") String regCountry,
                                             @QueryParam("ircs") String ircs,
                                             @QueryParam("extMark") String extMark,
-                                            @QueryParam("iccat") String iccat) throws AssetFacadeException {
+                                            @QueryParam("iccat") String iccat,
+                                            @QueryParam("uvi") String uvi) throws AssetFacadeException {
         try {
             LOG.info("Getting asset list by cfr:{}", cfr);
-            return assetFacade.findHistoryOfAssetBy(reportDate, cfr, regCountry, ircs, extMark, iccat);
+            return assetFacade.findHistoryOfAssetBy(reportDate, cfr, regCountry, ircs, extMark, iccat, uvi);
         } catch (SQLGrammarException e) { // should be caught at dao level or facade
             throw new AssetFacadeException(AssetError.SQL_ERROR, e.getMessage());
         } catch (Exception e) {

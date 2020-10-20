@@ -20,7 +20,7 @@ import eu.europa.ec.fisheries.wsdl.asset.types.BatchAssetListResponseElement;
 public interface AssetClient {
     List<Asset> findHistoryOfAssetByCfr(String cfr);
 
-    List<Asset> findHistoryOfAssetBy(String reportDate, String cfr, String regCountry, String ircs, String extMark, String iccat);
+    List<Asset> findHistoryOfAssetBy(String reportDate, String cfr, String regCountry, String ircs, String extMark, String iccat, String uvi);
 
     List<BatchAssetListResponseElement> getAssetListBatch(List<AssetListQuery> assetBatchRequest);
 
