@@ -191,7 +191,12 @@ public class AssetDomainModelBean {
         boolean isDynamic = query.getAssetSearchCriteria().isIsDynamic();
 
         List<SearchKeyValue> searchFields = SearchFieldMapper.createSearchFields(query.getAssetSearchCriteria().getCriterias());
-        String sql = SearchFieldMapper.createSelectSearchSql(searchFields, isDynamic);
+        String sql;
+        if (query.getOrderByCriteria() != null && query.getOrderByCriteria().getOrderByParam() != null) {
+            sql = SearchFieldMapper.createSelectSearchSqlWithSorting(searchFields, isDynamic, query.getOrderByCriteria());
+        } else {
+            sql = SearchFieldMapper.createSelectSearchSql(searchFields, isDynamic);
+        }
 
         String countSql = SearchFieldMapper.createCountSearchSql(searchFields, isDynamic);
         Long numberOfAssets = assetDao.getAssetCount(countSql, searchFields);
