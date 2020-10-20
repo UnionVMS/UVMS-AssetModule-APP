@@ -46,6 +46,32 @@ public class GetAssetEventBean {
     @AssetMessageErrorEvent
     private Event<AssetMessageEvent> assetErrorEvent;
 
+    public Asset getAsset(AssetId assetId) throws AssetServiceException {
+        LOG.info("Getting asset.");
+        AssetDataSourceQueue dataSource = null;
+        Asset asset;
+        try {
+            dataSource = decideDataflow(assetId);
+            LOG.debug("Got message to AssetModule, Executing Get asset from datasource {}", dataSource);
+            asset = service.getAssetById(assetId, dataSource);
+        } catch (AssetException e) {
+            LOG.error("[ Error when getting asset from source {}. ] ", dataSource);
+            throw new AssetServiceException("Exception when getting asset from source : " + dataSource + " Error message: " + e.getMessage());
+        }
+
+        if (asset != null && !dataSource.equals(AssetDataSourceQueue.INTERNAL)) {
+            try {
+                Asset upsertedAsset = service.upsertAsset(asset, dataSource.name());
+                asset.getAssetId().setGuid(upsertedAsset.getAssetId().getGuid());
+            } catch (AssetException e) {
+                LOG.error("[ Couldn't upsert asset in internal ]");
+                throw new AssetServiceException(e.getMessage());
+            }
+        }
+        return asset;
+    }
+
+
     public void getAsset(TextMessage textMessage, AssetId assetId) {
         LOG.info("Getting asset.");
         AssetDataSourceQueue dataSource = null;
