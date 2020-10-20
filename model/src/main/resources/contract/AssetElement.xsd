@@ -209,9 +209,17 @@
         <xsd:sequence>
             <xsd:element name="pagination" type="AssetListPagination" minOccurs="1" maxOccurs="1"/>
             <xsd:element name="assetSearchCriteria" type="AssetListCriteria" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="orderByCriteria" type="OrderByCriteria" minOccurs="0" maxOccurs="1"/>
         </xsd:sequence>
     </xsd:complexType>
-    
+
+    <xsd:complexType name="OrderByCriteria">
+        <xsd:sequence>
+            <xsd:element name="orderByParam" type="ConfigSearchField"/>
+            <xsd:element name="isOrderByDescOrder" type="xsd:boolean" />
+        </xsd:sequence>
+    </xsd:complexType>
+
     <xsd:complexType name="AssetListCriteria">
         <xsd:sequence>
             <xsd:element name="isDynamic" type="xsd:boolean" minOccurs="0" maxOccurs="1"/>
