@@ -14,6 +14,7 @@ package eu.europa.ec.fisheries.uvms.asset.rest.service;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -23,7 +24,14 @@ import java.util.List;
 import eu.europa.ec.fisheries.uvms.asset.facade.AssetFacadeNew;
 import eu.europa.ec.fisheries.uvms.asset.rest.error.AssetError;
 import eu.europa.ec.fisheries.uvms.asset.rest.exception.AssetFacadeException;
+import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
+import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetEventBean;
+import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
+import eu.europa.ec.fisheries.wsdl.asset.types.BatchAssetListResponseElement;
 import org.hibernate.exception.SQLGrammarException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +44,51 @@ public class AssetFacadeResource {
 
     @Inject
     private AssetFacadeNew assetFacade;
+
+    @Inject
+    private GetAssetEventBean getAssetEventBean;
+
+    @Inject
+    private AssetService assetService;
+
+    @Inject
+    private AssetGroupService assetGroupService;
+
+    @GET
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("/get-asset-groups-by-asset-guid")
+    public List<AssetGroup> findAssetGroupsByAssetGuid(@QueryParam("assetGuid") String assetGuid) throws AssetFacadeException {
+        try {
+            LOG.info("Getting asset group list by asset guid:{}", assetGuid);
+            return assetGroupService.getAssetGroupListByAssetGuid(assetGuid);
+        } catch (Exception e) {
+            throw new AssetFacadeException(AssetError.ASSET_ERROR, "Exception when getting getAssetGroupsByAssetGuid [ " + e.getMessage() + "]");
+        }
+    }
+
+    @POST
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("/find-asset-by-id")
+    public Asset findAssetById(AssetId assetId) throws AssetFacadeException {
+        try {
+            LOG.info("Getting asset");
+            return getAssetEventBean.getAsset(assetId);
+        } catch (Exception e) {
+            throw new AssetFacadeException(AssetError.ASSET_ERROR, e.getMessage());
+        }
+    }
+
+    @POST
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("/get-asset-list-by-connect-ids")
+    public List<BatchAssetListResponseElement> getAssetListBatch(List<AssetListQuery> assetBatchRequest) throws AssetFacadeException {
+        try {
+            LOG.info("Getting asset list batch");
+            return assetService.getAssetListBatch(assetBatchRequest);
+        } catch (Exception e) {
+            throw new AssetFacadeException(AssetError.UNKNOWN_ERROR, e.getMessage());
+        }
+    }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -60,10 +113,11 @@ public class AssetFacadeResource {
                                             @QueryParam("regCountry") String regCountry,
                                             @QueryParam("ircs") String ircs,
                                             @QueryParam("extMark") String extMark,
-                                            @QueryParam("iccat") String iccat) throws AssetFacadeException {
+                                            @QueryParam("iccat") String iccat,
+                                            @QueryParam("uvi") String uvi) throws AssetFacadeException {
         try {
             LOG.info("Getting asset list by cfr:{}", cfr);
-            return assetFacade.findHistoryOfAssetBy(reportDate, cfr, regCountry, ircs, extMark, iccat);
+            return assetFacade.findHistoryOfAssetBy(reportDate, cfr, regCountry, ircs, extMark, iccat, uvi);
         } catch (SQLGrammarException e) { // should be caught at dao level or facade
             throw new AssetFacadeException(AssetError.SQL_ERROR, e.getMessage());
         } catch (Exception e) {
