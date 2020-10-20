@@ -21,6 +21,7 @@ import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory_;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroupSearchField;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListCriteriaPair;
 import eu.europa.ec.fisheries.wsdl.asset.types.ConfigSearchField;
+import eu.europa.ec.fisheries.wsdl.asset.types.OrderByCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,6 +94,28 @@ public class SearchFieldMapper {
         }
     }
 
+    private static void enrichWithOrderBySqlClause(StringBuilder stringBuilder, OrderByCriteria orderByCriteria) throws AssetDaoMappingException {
+
+        try {
+            SearchFields searchField = getSearchFields(orderByCriteria.getOrderByParam());
+            stringBuilder.append(" ORDER BY ").
+                    append(searchField.getSearchTable().getTableAlias()).
+                    append(".").
+                    append(getSearchFields(orderByCriteria.getOrderByParam()).getFieldName()).
+                    append(orderByCriteria.isIsOrderByDescOrder() ? " DESC" : " ASC");
+
+        } catch (AssetSearchMapperException e) {
+            throw new AssetDaoMappingException("Non valid order by criteria");
+        }
+    }
+
+    private static void enrichWithSelectAndFromSqlClause(StringBuilder stringBuilder, List<SearchKeyValue> searchFields, boolean isDynamic, Date dateOfEvent){
+        stringBuilder
+                .append("SELECT DISTINCT {asset_history_alias}")
+                .append(createSearchSql(searchFields, isDynamic, true, dateOfEvent));
+
+    }
+
     public static SearchKeyValue mapSearchFieldForAssetListCriteria(AssetListCriteriaPair pair, Map<SearchFields, SearchKeyValue> searchKeys) throws AssetDaoMappingException {
         if (pair == null || pair.getKey() == null || pair.getValue() == null) {
             throw new AssetSearchMapperException("Non valid search criteria");
@@ -156,6 +179,14 @@ public class SearchFieldMapper {
             }
         }
         return false;
+    }
+
+    public static String createSelectSearchSqlWithSorting(List<SearchKeyValue> searchFields, boolean isDynamic, OrderByCriteria orderByCriteria) throws AssetDaoMappingException {
+        StringBuilder stringBuilder = new StringBuilder();
+        enrichWithSelectAndFromSqlClause(stringBuilder, searchFields, isDynamic, null);
+        enrichWithOrderBySqlClause(stringBuilder, orderByCriteria);
+
+        return replaceParams(stringBuilder);
     }
 
     public enum JoinType {
@@ -267,12 +298,11 @@ public class SearchFieldMapper {
      * @return
      */
     public static String createSelectSearchSql(List<SearchKeyValue> searchFields, boolean isDynamic, Date dateOfEvent) {
-        StringBuilder buffer = new StringBuilder();
-        buffer.append("SELECT DISTINCT {asset_history_alias}");
-        buffer.append(createSearchSql(searchFields, isDynamic, true, dateOfEvent));
-        buffer.append(" ORDER BY {asset_history_alias}.").append(AssetHistory_.ID).append(" DESC");
-        String query = replaceParams(buffer);
-        LOG.debug("Primary SQL full: {}",query);
+        StringBuilder stringBuilder = new StringBuilder();
+        enrichWithSelectAndFromSqlClause(stringBuilder, searchFields, isDynamic, dateOfEvent);
+        stringBuilder.append(" ORDER BY {asset_history_alias}.").append(AssetHistory_.ID).append(" DESC");
+        String query = replaceParams(stringBuilder);
+        LOG.debug("Primary SQL full: {}", query);
         return query;
     }
 
