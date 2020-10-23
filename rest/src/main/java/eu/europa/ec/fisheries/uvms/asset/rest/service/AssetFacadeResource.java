@@ -32,6 +32,7 @@ import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.wsdl.asset.types.BatchAssetListResponseElement;
+import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
 import org.hibernate.exception.SQLGrammarException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,6 +120,41 @@ public class AssetFacadeResource {
             LOG.info("Getting asset list by cfr:{}", cfr);
             return assetFacade.findHistoryOfAssetBy(reportDate, cfr, regCountry, ircs, extMark, iccat, uvi);
         } catch (SQLGrammarException e) { // should be caught at dao level or facade
+            throw new AssetFacadeException(AssetError.SQL_ERROR, e.getMessage());
+        } catch (Exception e) {
+            throw new AssetFacadeException(AssetError.UNKNOWN_ERROR, e.getMessage());
+        }
+    }
+
+
+    @POST
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("/get-asset-list-by-query")
+    public ListAssetResponse getAssetListByQuery(AssetListQuery query) throws AssetFacadeException {
+        try {
+            LOG.info("Getting asset list by query: " + query.toString());
+            return assetFacade.getAssetList(query);
+        } catch (SQLGrammarException e) { // should be caught at dao level or facade
+            throw new AssetFacadeException(AssetError.SQL_ERROR, e.getMessage());
+        } catch (Exception e) {
+            throw new AssetFacadeException(AssetError.UNKNOWN_ERROR, e.getMessage());
+        }
+    }
+
+
+    @POST
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("/find-asset-by-asset-group-list")
+    public List<Asset> getAssetGroup(List<AssetGroup> assetGroupQuery) throws AssetFacadeException {
+        try {
+            LOG.info("Received the following AssetGroup List");
+            int i =1;
+            for(AssetGroup assetGroup: assetGroupQuery) {
+                LOG.info("Received " + i + " element from list with data: " + assetGroup.toString());
+                i++;
+            }
+            return assetFacade.getAssetGroup(assetGroupQuery);
+        } catch (SQLGrammarException e) {
             throw new AssetFacadeException(AssetError.SQL_ERROR, e.getMessage());
         } catch (Exception e) {
             throw new AssetFacadeException(AssetError.UNKNOWN_ERROR, e.getMessage());

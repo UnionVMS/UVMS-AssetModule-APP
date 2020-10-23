@@ -40,6 +40,7 @@ import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.wsdl.asset.types.BatchAssetListResponseElement;
+import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,6 +53,8 @@ public class AssetRestClientImpl implements AssetClient {
     private static final String FIND_ASSET_BY_ID_PATH = "/find-asset-by-id";
     private static final String GET_ASSET_LIST_BATCH_BY_CONNECT_IDS_PATH = "/get-asset-list-by-connect-ids";
     private static final String GET_ASSET_GROUP_LIST_BY_ASSET_GUID_PATH = "/get-asset-groups-by-asset-guid";
+    private static final String GET_ASSET_LIST_BY_ASSET_LIST_QUERY = "/get-asset-list-by-query";
+    private static final String GET_ASSET_LIST_BY_ASSET_GROUP_LIST = "/find-asset-by-asset-group-list";
 
     private static final String REPORT_DATE = "reportDate";
     private static final String CFR = "cfr";
@@ -199,6 +202,53 @@ public class AssetRestClientImpl implements AssetClient {
             throw new AssetRestClientException("Error response from server", e);
         }
     }
+
+    @SneakyThrows
+    @Override
+    public ListAssetResponse getAssetListByQuery(AssetListQuery query) {
+        try {
+            Response response = webTarget
+                    .path(GET_ASSET_LIST_BY_ASSET_LIST_QUERY)
+                    .request()
+                    .accept(MediaType.APPLICATION_JSON)
+                    .post(Entity.json(query), Response.class);
+
+            return handleListAssetResponse(response);
+        } catch (ResponseProcessingException e) {
+            log.error("Error processing response from server");
+            throw new AssetRestClientException("Error response processing from server", e);
+        } catch (ProcessingException e) {
+            log.error("I/O error processing response");
+            throw new AssetRestClientException("I/O error processing response ", e);
+        } catch (WebApplicationException e) {
+            log.error("Error response from server");
+            throw new AssetRestClientException("Error response from server", e);
+        }
+    }
+
+    @SneakyThrows
+    @Override
+    public List<Asset> getAssetGroup(List<AssetGroup> assetGroupQuery) {
+        try {
+            Response response = webTarget
+                    .path(GET_ASSET_LIST_BY_ASSET_GROUP_LIST)
+                    .request()
+                    .accept(MediaType.APPLICATION_JSON)
+                    .post(Entity.json(assetGroupQuery), Response.class);
+
+            return handleResponse(response);
+        } catch (ResponseProcessingException e) {
+            log.error("Error processing response from server");
+            throw new AssetRestClientException("Error response processing from server", e);
+        } catch (ProcessingException e) {
+            log.error("I/O error processing response");
+            throw new AssetRestClientException("I/O error processing response ", e);
+        } catch (WebApplicationException e) {
+            log.error("Error response from server");
+            throw new AssetRestClientException("Error response from server", e);
+        }
+    }
+
     private List<Asset> handleResponse(Response response) throws AssetRestClientException {
         handleNotOKStatusCode(response);
         List<Asset> assetHistory = response.readEntity(new GenericType<List<Asset>>() {
@@ -229,6 +279,14 @@ public class AssetRestClientImpl implements AssetClient {
         });
         response.close();
         return assetListBatchResponse;
+    }
+
+    private ListAssetResponse handleListAssetResponse(Response response) throws AssetRestClientException {
+        handleNotOKStatusCode(response);
+        ListAssetResponse listAssetResponse = response.readEntity(new GenericType<ListAssetResponse>() {
+        });
+        response.close();
+        return listAssetResponse;
     }
 
     private void handleNotOKStatusCode(Response response) throws AssetRestClientException {
