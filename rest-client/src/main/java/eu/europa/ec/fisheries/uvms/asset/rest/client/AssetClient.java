@@ -16,6 +16,7 @@ import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.wsdl.asset.types.BatchAssetListResponseElement;
+import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
 
 public interface AssetClient {
     List<Asset> findHistoryOfAssetByCfr(String cfr);
@@ -27,4 +28,8 @@ public interface AssetClient {
     Asset getAsset(AssetId assetId);
 
     List<AssetGroup> getAssetGroupListByAssetGuid(String assetGuid);
+
+    ListAssetResponse getAssetListByQuery(AssetListQuery query);
+
+    List<Asset> getAssetGroup(List<AssetGroup> assetGroupQuery);
 }
