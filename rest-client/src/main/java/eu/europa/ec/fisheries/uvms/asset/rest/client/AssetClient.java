@@ -9,13 +9,11 @@
  */
 package eu.europa.ec.fisheries.uvms.asset.rest.client;
 
-import java.util.List;
-
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.wsdl.asset.types.BatchAssetListResponseElement;
+import eu.europa.ec.fisheries.wsdl.asset.module.*;
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
+
+import java.util.List;
 
 public interface AssetClient {
     List<Asset> findHistoryOfAssetByCfr(String cfr);
@@ -27,4 +25,15 @@ public interface AssetClient {
     Asset getAsset(AssetId assetId);
 
     List<AssetGroup> getAssetGroupListByAssetGuid(String assetGuid);
+
+    FindVesselIdsByAssetHistGuidResponse findVesselIdsByAssetHistGuid(FindVesselIdsByAssetHistGuidRequest request);
+
+    FindVesselIdsByMultipleAssetHistGuidsResponse findVesselIdsByMultipleAssetHistGuid(FindVesselIdsByMultipleAssetHistGuidsRequest request);
+
+    FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse findAssetHistGuidByAssetGuidAndOccurrenceDate(FindAssetHistGuidByAssetGuidAndOccurrenceDateRequest request);
+
+    AssetGroupsForAssetResponse findAssetGroupsForAsset(AssetGroupsForAssetRequest request);
+
+    AssetIdsForGroupGuidResponseElement findAssetIdentifiersForGroupGuid(AssetIdsForGroupRequest request);
+
 }

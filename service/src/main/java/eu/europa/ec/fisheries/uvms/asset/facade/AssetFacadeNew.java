@@ -19,16 +19,20 @@ import java.util.List;
 
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetDaoException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
+import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleResponseMapper;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.GetAssetListResponseDto;
+import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
+import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.bean.AssetDomainModelBean;
 import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.uvms.mapper.EntityToModelMapper;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
+import eu.europa.ec.fisheries.wsdl.asset.module.*;
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import lombok.extern.slf4j.Slf4j;
+
+import static eu.europa.ec.fisheries.uvms.mapper.EntityToModelMapper.toAssetIdsForGroupGuidResponseElement;
 
 @ApplicationScoped
 @Slf4j
@@ -39,6 +43,12 @@ public class AssetFacadeNew {
 
     @Inject
     private AssetDomainModelBean assetDomainModel;
+
+    @Inject
+    private AssetHistoryService assetHistoryService;
+
+    @Inject
+    private AssetService assetService;
 
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -91,4 +101,72 @@ public class AssetFacadeNew {
         }
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public FindVesselIdsByAssetHistGuidResponse findHistoryOfAssetsByGuids(FindVesselIdsByAssetHistGuidRequest request) {
+        try {
+            Asset asset = assetHistoryService.getAssetHistoryByAssetHistGuid(request.getAssetHistoryGuid());
+            FindVesselIdsByAssetHistGuidResponse response =
+                    AssetModuleResponseMapper.mapFindVesselIdsByAssetHistGuidResponse(asset);
+            log.info("[INFO] Finding history of multiple assets by their guids..");
+            return response;
+        } catch (AssetException e) {
+            return new FindVesselIdsByAssetHistGuidResponse();
+        }
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public FindVesselIdsByMultipleAssetHistGuidsResponse findHistoriesOfAssetsByGuids(
+            FindVesselIdsByMultipleAssetHistGuidsRequest request) {
+        log.info("[INFO] Finding history asset by its guid..");
+        try {
+            List<Asset> assets = assetHistoryService.getAssetHistoriesByAssetHistGuids(request.getAssetHistoryGuids());
+            AssetModuleResponseMapper.createFindVesselIdsByAssetHistGuidResponse(assets);
+            return AssetModuleResponseMapper.mapFindVesselIdsByAssetHistGuidResponse(assets);
+        } catch (AssetException e) {
+            e.printStackTrace();
+            return new FindVesselIdsByMultipleAssetHistGuidsResponse();
+        }
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse findHistoryOfAssetsByGuidAndDate(FindAssetHistGuidByAssetGuidAndOccurrenceDateRequest request) {
+        try {
+            Asset asset = assetHistoryService.getAssetHistoryByAssetIdAndOccurrenceDate(request.getAssetGuid(), request.getOccurrenceDate());
+            FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse response =
+                    AssetModuleResponseMapper.mapFindAssetHistGuidByAssetGuidAndOccurrenceDateResponse(asset);
+            log.info("[INFO] Finding history of asset by its guid and date..");
+            return response;
+        } catch (AssetException e) {
+            return new FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse();
+        }
+    }
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public AssetGroupsForAssetResponse findAssetGroupsForAsset(AssetGroupsForAssetRequest request) {
+        try {
+            List<AssetGroupsForAssetResponseElement> assetGroupsForAssets =
+                    assetService.findAssetGroupsForAssets(request.getAssetGroupsForAssetQueryElement());
+            AssetGroupsForAssetResponse response =
+                    AssetModuleResponseMapper.mapToAssetGroupsForResponse(assetGroupsForAssets);
+            log.info("[INFO] Finding group for asset..");
+            return response;
+        } catch (AssetException e) {
+            return new AssetGroupsForAssetResponse();
+        }
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public AssetIdsForGroupGuidResponseElement findAssetIdentifiersForGroupGuid(AssetIdsForGroupRequest request) {
+        try {
+            AssetIdsForGroupGuidQueryElement queryElement = request.getAssetIdsForGroupGuidQueryElement();
+
+            AssetListPagination pagination = queryElement.getPagination();
+            AssetIdsForGroupGuidResponseElement responseElement = toAssetIdsForGroupGuidResponseElement(
+                    assetService.findAssetHistoriesByGuidAndOccurrenceDate(queryElement.getAssetGuid(),
+                            queryElement.getOccurrenceDate(),pagination.getPage(),pagination.getListSize()));
+            log.info("[INFO] Finding asset identifiers for group guid..");
+            return responseElement;
+        } catch (AssetException e) {
+            return new AssetIdsForGroupGuidResponseElement();
+        }
+    }
 }

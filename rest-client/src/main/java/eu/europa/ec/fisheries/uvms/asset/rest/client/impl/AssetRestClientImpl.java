@@ -36,10 +36,8 @@ import eu.europa.ec.fisheries.uvms.config.event.ConfigSettingEvent;
 import eu.europa.ec.fisheries.uvms.config.event.ConfigSettingUpdatedEvent;
 import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
-import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
-import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
-import eu.europa.ec.fisheries.wsdl.asset.types.BatchAssetListResponseElement;
+import eu.europa.ec.fisheries.wsdl.asset.module.*;
+import eu.europa.ec.fisheries.wsdl.asset.types.*;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,7 +50,11 @@ public class AssetRestClientImpl implements AssetClient {
     private static final String FIND_ASSET_BY_ID_PATH = "/find-asset-by-id";
     private static final String GET_ASSET_LIST_BATCH_BY_CONNECT_IDS_PATH = "/get-asset-list-by-connect-ids";
     private static final String GET_ASSET_GROUP_LIST_BY_ASSET_GUID_PATH = "/get-asset-groups-by-asset-guid";
-
+    private static final String GET_ASSET_HISTORY_LIST_BY_GUIDS = "/assets/history/by-guids";
+    private static final String GET_ASSET_HISTORY_BY_GUID = "/asset/history/by-guid";
+    private static final String GET_ASSET_HISTORY_BY_GUID_AND_DATE = "/asset/history/by-guid-and-date";
+    private static final String GET_ASSET_GROUPS_FOR_ASSET = "/asset/groups";
+    private static final String GET_ASSET_IDENTIFIERS_FOR_GROUP_GUID = "/asset/identifiers/group/by-guid";
     private static final String REPORT_DATE = "reportDate";
     private static final String CFR = "cfr";
     private static final String REG_COUNTRY = "regCountry";
@@ -61,7 +63,7 @@ public class AssetRestClientImpl implements AssetClient {
     private static final String ICCAT = "iccat";
     private static final String UVI = "uvi";
     private static final String ASSET_GUID = "assetGuid";
-
+    private static final String ASSET_GUIDS = "assetGuids";
     private AssetRestClientConfig config;
 
     private WebTarget webTarget;
@@ -199,12 +201,174 @@ public class AssetRestClientImpl implements AssetClient {
             throw new AssetRestClientException("Error response from server", e);
         }
     }
+
+    @SneakyThrows
+    @Override
+    public FindVesselIdsByAssetHistGuidResponse findVesselIdsByAssetHistGuid(FindVesselIdsByAssetHistGuidRequest request) {
+        try {
+            Response response = webTarget
+                    .path(GET_ASSET_HISTORY_BY_GUID)
+                    .request()
+                    .accept(MediaType.APPLICATION_JSON)
+                    .post(Entity.json(request), Response.class);
+
+            return handleFindVesselIdsByAssetHistGuid(response);
+        } catch (ResponseProcessingException e) {
+            log.error("Error processing response from server");
+            throw new AssetRestClientException("Error response processing from server", e);
+        } catch (ProcessingException e) {
+            log.error("I/O error processing response");
+            throw new AssetRestClientException("I/O error processing response ", e);
+        } catch (WebApplicationException e) {
+            log.error("Error response from server");
+            throw new AssetRestClientException("Error response from server", e);
+        }
+    }
+
+    @SneakyThrows
+    @Override
+    public FindVesselIdsByMultipleAssetHistGuidsResponse findVesselIdsByMultipleAssetHistGuid(FindVesselIdsByMultipleAssetHistGuidsRequest request) {
+        try {
+            Response response = webTarget
+                    .path(GET_ASSET_HISTORY_LIST_BY_GUIDS)
+                    .request()
+                    .accept(MediaType.APPLICATION_JSON)
+                    .post(Entity.json(request), Response.class);
+
+            return handleFindVesselIdsByMultipleAssetHistGuidsResponse(response);
+        } catch (ResponseProcessingException e) {
+            log.error("Error processing response from server");
+            throw new AssetRestClientException("Error response processing from server", e);
+        } catch (ProcessingException e) {
+            log.error("I/O error processing response");
+            throw new AssetRestClientException("I/O error processing response ", e);
+        } catch (WebApplicationException e) {
+            log.error("Error response from server");
+            throw new AssetRestClientException("Error response from server", e);
+        }
+    }
+
+    @SneakyThrows
+    @Override
+    public FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse findAssetHistGuidByAssetGuidAndOccurrenceDate(FindAssetHistGuidByAssetGuidAndOccurrenceDateRequest request) {
+        try {
+            Response response = webTarget
+                    .path(GET_ASSET_HISTORY_BY_GUID_AND_DATE)
+                    .request()
+                    .accept(MediaType.APPLICATION_JSON)
+                    .post(Entity.json(request), Response.class);
+
+            return handleFindAssetHistGuidByAssetGuidAndOccurrenceDateResponse(response);
+        } catch (ResponseProcessingException e) {
+            log.error("Error processing response from server");
+            throw new AssetRestClientException("Error response processing from server", e);
+        } catch (ProcessingException e) {
+            log.error("I/O error processing response");
+            throw new AssetRestClientException("I/O error processing response ", e);
+        } catch (WebApplicationException e) {
+            log.error("Error response from server");
+            throw new AssetRestClientException("Error response from server", e);
+        }
+    }
+
+    @SneakyThrows
+    @Override
+    public AssetGroupsForAssetResponse findAssetGroupsForAsset(AssetGroupsForAssetRequest request) {
+        try {
+            Response response = webTarget
+                    .path(GET_ASSET_GROUPS_FOR_ASSET)
+                    .request()
+                    .accept(MediaType.APPLICATION_JSON)
+                    .post(Entity.json(request), Response.class);
+
+            return handleAssetGroupsForAssetResponse(response);
+        } catch (ResponseProcessingException e) {
+            log.error("Error processing response from server");
+            throw new AssetRestClientException("Error response processing from server", e);
+        } catch (ProcessingException e) {
+            log.error("I/O error processing response");
+            throw new AssetRestClientException("I/O error processing response ", e);
+        } catch (WebApplicationException e) {
+            log.error("Error response from server");
+            throw new AssetRestClientException("Error response from server", e);
+        }
+    }
+
+    @SneakyThrows
+    @Override
+    public AssetIdsForGroupGuidResponseElement findAssetIdentifiersForGroupGuid(AssetIdsForGroupRequest request) {
+        try {
+            Response response = webTarget
+                    .path(GET_ASSET_IDENTIFIERS_FOR_GROUP_GUID)
+                    .request()
+                    .accept(MediaType.APPLICATION_JSON)
+                    .post(Entity.json(request), Response.class);
+
+            return handleAssetIdsForGroupGuidResponseElement(response);
+        } catch (ResponseProcessingException e) {
+            log.error("Error processing response from server");
+            throw new AssetRestClientException("Error response processing from server", e);
+        } catch (ProcessingException e) {
+            log.error("I/O error processing response");
+            throw new AssetRestClientException("I/O error processing response ", e);
+        } catch (WebApplicationException e) {
+            log.error("Error response from server");
+            throw new AssetRestClientException("Error response from server", e);
+        }
+    }
+
+
     private List<Asset> handleResponse(Response response) throws AssetRestClientException {
         handleNotOKStatusCode(response);
         List<Asset> assetHistory = response.readEntity(new GenericType<List<Asset>>() {
         });
         response.close();
         return assetHistory;
+    }
+
+    private FindVesselIdsByAssetHistGuidResponse handleFindVesselIdsByAssetHistGuid(Response response)
+            throws AssetRestClientException {
+        handleNotOKStatusCode(response);
+        FindVesselIdsByAssetHistGuidResponse vesselIdsByAssetHistGuidResponse = response.
+                readEntity(FindVesselIdsByAssetHistGuidResponse.class);
+        response.close();
+        return vesselIdsByAssetHistGuidResponse;
+    }
+
+    private FindVesselIdsByMultipleAssetHistGuidsResponse handleFindVesselIdsByMultipleAssetHistGuidsResponse(Response response)
+            throws AssetRestClientException {
+        handleNotOKStatusCode(response);
+        FindVesselIdsByMultipleAssetHistGuidsResponse vesselIdsByMultipleAssetHistGuidsResponse = response.
+                readEntity(FindVesselIdsByMultipleAssetHistGuidsResponse.class);
+        response.close();
+        return vesselIdsByMultipleAssetHistGuidsResponse;
+    }
+
+    private FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse handleFindAssetHistGuidByAssetGuidAndOccurrenceDateResponse(Response response)
+            throws AssetRestClientException {
+        handleNotOKStatusCode(response);
+        FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse findAssetHistGuidByAssetGuidAndOccurrenceDateResponse =
+                response.readEntity(FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse.class);
+        response.close();
+        return findAssetHistGuidByAssetGuidAndOccurrenceDateResponse;
+    }
+
+    private AssetGroupsForAssetResponse handleAssetGroupsForAssetResponse(Response response)
+            throws AssetRestClientException {
+        handleNotOKStatusCode(response);
+        AssetGroupsForAssetResponse assetGroupsForAssetResponse =
+                response.readEntity(AssetGroupsForAssetResponse.class);
+        response.close();
+        return assetGroupsForAssetResponse;
+    }
+
+    private AssetIdsForGroupGuidResponseElement handleAssetIdsForGroupGuidResponseElement(Response response)
+            throws AssetRestClientException {
+        handleNotOKStatusCode(response);
+        AssetIdsForGroupGuidResponseElement assetIdsForGroupGuidResponseElement =
+                response.readEntity(AssetIdsForGroupGuidResponseElement.class);
+        response.close();
+        return assetIdsForGroupGuidResponseElement;
     }
 
     private List<AssetGroup> handleAssetGroupListResponse(Response response) throws AssetRestClientException {
