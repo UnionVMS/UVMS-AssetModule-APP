@@ -11,7 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.rest.service;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -26,16 +25,24 @@ import java.util.List;
 
 import eu.europa.ec.fisheries.uvms.asset.facade.AssetFacadeNew;
 import eu.europa.ec.fisheries.uvms.asset.rest.error.AssetError;
-import eu.europa.ec.fisheries.uvms.asset.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.asset.rest.exception.AssetFacadeException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
-import eu.europa.ec.fisheries.uvms.asset.service.bean.AssetHistoryServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetEventBean;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupsForAssetRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupsForAssetResponse;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetIdsForGroupRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistGuidByAssetGuidAndOccurrenceDateRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByAssetHistGuidRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByAssetHistGuidResponse;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByMultipleAssetHistGuidsRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByMultipleAssetHistGuidsResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdsForGroupGuidResponseElement;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.wsdl.asset.types.BatchAssetListResponseElement;
 import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
@@ -114,7 +121,6 @@ public class AssetFacadeResource {
         }
     }
 
-
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @Path("/find-asset-history-by-criteria")
@@ -135,6 +141,65 @@ public class AssetFacadeResource {
         }
     }
 
+    @POST
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("/asset/history/by-guid")
+    public FindVesselIdsByAssetHistGuidResponse findHistoryOfAssetsByGuids(FindVesselIdsByAssetHistGuidRequest request) throws AssetFacadeException {
+        try {
+            LOG.info("Find History Of Assets By Guids:{}", request);
+            return assetFacade.findHistoryOfAssetsByGuids(request);
+        } catch (Exception e) {
+            throw new AssetFacadeException(AssetError.UNKNOWN_ERROR, e.getMessage());
+        }
+    }
+
+    @POST
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("/assets/history/by-guids")
+    public FindVesselIdsByMultipleAssetHistGuidsResponse findHistoriesOfAssetsByGuids(FindVesselIdsByMultipleAssetHistGuidsRequest request) throws AssetFacadeException {
+        try {
+            LOG.info("Find Histories Of Assets By Guids:{}", request);
+            return assetFacade.findHistoriesOfAssetsByGuids(request);
+        } catch (Exception e) {
+            throw new AssetFacadeException(AssetError.UNKNOWN_ERROR, e.getMessage());
+        }
+    }
+
+    @POST
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("/asset/history/by-guid-and-date")
+    public FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse findHistoryOfAssetsByGuidAndDate(FindAssetHistGuidByAssetGuidAndOccurrenceDateRequest request) throws AssetFacadeException {
+        try {
+            LOG.info("Find History Of Assets By Guid And Date:{}", request);
+            return assetFacade.findHistoryOfAssetsByGuidAndDate(request);
+        } catch (Exception e) {
+            throw new AssetFacadeException(AssetError.UNKNOWN_ERROR, e.getMessage());
+        }
+    }
+
+    @POST
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("/asset/groups/")
+    public AssetGroupsForAssetResponse findAssetGroupsForAsset(AssetGroupsForAssetRequest request) throws AssetFacadeException {
+        try {
+            LOG.info("Find Asset Groups For Asset:{}", request);
+            return assetFacade.findAssetGroupsForAsset(request);
+        } catch (Exception e) {
+            throw new AssetFacadeException(AssetError.UNKNOWN_ERROR, e.getMessage());
+        }
+    }
+
+    @POST
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    @Path("/asset/identifiers/group/by-guid")
+    public AssetIdsForGroupGuidResponseElement findAssetIdentifiersForGroupGuid(AssetIdsForGroupRequest request) throws AssetFacadeException {
+        try {
+            LOG.info("Find Asset Identifiers For Group Guid:{}", request);
+            return assetFacade.findAssetIdentifiersForGroupGuid(request);
+        } catch (Exception e) {
+            throw new AssetFacadeException(AssetError.UNKNOWN_ERROR, e.getMessage());
+        }
+    }
 
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON})

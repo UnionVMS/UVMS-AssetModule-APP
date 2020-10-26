@@ -135,6 +135,12 @@ public class AssetModuleResponseMapper {
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 
+    public static AssetGroupsForAssetResponse mapToAssetGroupsForResponse(List<AssetGroupsForAssetResponseElement> assetGroupList)  throws AssetModelMarshallException {
+        AssetGroupsForAssetResponse response = new AssetGroupsForAssetResponse();
+        response.getAssetGroupsForAssetResponseElementList().addAll(assetGroupList);
+        return response;
+    }
+
     public static String mapToAssetGroupListResponse(List<AssetGroup> assetGroup) throws AssetModelMarshallException {
         ListAssetGroupResponse response = new ListAssetGroupResponse();
         response.getAssetGroup().addAll(assetGroup);
@@ -208,6 +214,13 @@ public class AssetModuleResponseMapper {
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 
+    public static FindVesselIdsByAssetHistGuidResponse mapFindVesselIdsByAssetHistGuidResponse(Asset asset) throws AssetModelMarshallException {
+        FindVesselIdsByAssetHistGuidResponse response = new FindVesselIdsByAssetHistGuidResponse();
+        VesselIdentifiersHolder identifiersHolder = assetToVesselIdentifierHolder(asset);
+        response.setIdentifiers(identifiersHolder);
+        return response;
+    }
+
     public static String createFindVesselIdsByAssetHistGuidResponse(List<Asset> assets) throws AssetModelMarshallException {
         FindVesselIdsByMultipleAssetHistGuidsResponse response = new FindVesselIdsByMultipleAssetHistGuidsResponse();
         List<AssetHistGuidIdWithVesselIdentifiers> identifiers = assets.stream().map(asset -> {
@@ -220,12 +233,32 @@ public class AssetModuleResponseMapper {
         return JAXBMarshaller.marshallJaxBObjectToString(response);
     }
 
+    public static FindVesselIdsByMultipleAssetHistGuidsResponse mapFindVesselIdsByAssetHistGuidResponse(List<Asset> assets) throws AssetModelMarshallException {
+        FindVesselIdsByMultipleAssetHistGuidsResponse response = new FindVesselIdsByMultipleAssetHistGuidsResponse();
+        List<AssetHistGuidIdWithVesselIdentifiers> identifiers = assets.stream().map(asset -> {
+            AssetHistGuidIdWithVesselIdentifiers guidWithIds = new AssetHistGuidIdWithVesselIdentifiers();
+            guidWithIds.setAssetHistGuid(asset.getEventHistory().getEventId());
+            guidWithIds.setIdentifiers(assetToVesselIdentifierHolder(asset));
+            return guidWithIds;
+        }).collect(Collectors.toList());
+        response.getIdentifiers().addAll(identifiers);
+        return response;
+    }
+
     public static String createFindAssetHistGuidByAssetGuidAndOccurrenceDateResponse(Asset asset) throws AssetModelMarshallException {
         FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse response = new FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse();
         if(asset != null) {
             response.setAssetHistGuid(asset.getEventHistory().getEventId());
         }
         return JAXBMarshaller.marshallJaxBObjectToString(response);
+    }
+
+    public static FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse mapFindAssetHistGuidByAssetGuidAndOccurrenceDateResponse(Asset asset) throws AssetModelMarshallException {
+        FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse response = new FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse();
+        if(asset != null) {
+            response.setAssetHistGuid(asset.getEventHistory().getEventId());
+        }
+        return response;
     }
 
     private static VesselIdentifiersHolder assetToVesselIdentifierHolder(Asset asset) {
