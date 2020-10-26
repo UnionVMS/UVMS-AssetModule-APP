@@ -30,6 +30,7 @@ public class AssetActivatorInternal extends Application {
         set.add(AssetFacadeResource.class);
         set.add(AssetFacadeExceptionMapper.class);
         set.add(EncodingResponseFilter.class);
+        set.add(ObjectMapperContextResolver.class);
     }
 
     @Override

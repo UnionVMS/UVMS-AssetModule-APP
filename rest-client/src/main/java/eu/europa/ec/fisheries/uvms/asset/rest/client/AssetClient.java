@@ -13,8 +13,18 @@ import java.util.Date;
 import java.util.List;
 
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupsForAssetRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetGroupsForAssetResponse;
+import eu.europa.ec.fisheries.wsdl.asset.module.AssetIdsForGroupRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistGuidByAssetGuidAndOccurrenceDateRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByAssetHistGuidRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByAssetHistGuidResponse;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByMultipleAssetHistGuidsRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.FindVesselIdsByMultipleAssetHistGuidsResponse;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdsForGroupGuidResponseElement;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.wsdl.asset.types.BatchAssetListResponseElement;
 import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
@@ -31,6 +41,17 @@ public interface AssetClient {
     Asset getAsset(AssetId assetId);
 
     List<AssetGroup> getAssetGroupListByAssetGuid(String assetGuid);
+
+    FindVesselIdsByAssetHistGuidResponse findVesselIdsByAssetHistGuid(FindVesselIdsByAssetHistGuidRequest request);
+
+    FindVesselIdsByMultipleAssetHistGuidsResponse findVesselIdsByMultipleAssetHistGuid(FindVesselIdsByMultipleAssetHistGuidsRequest request);
+
+    FindAssetHistGuidByAssetGuidAndOccurrenceDateResponse findAssetHistGuidByAssetGuidAndOccurrenceDate(FindAssetHistGuidByAssetGuidAndOccurrenceDateRequest request);
+
+    AssetGroupsForAssetResponse findAssetGroupsForAsset(AssetGroupsForAssetRequest request);
+
+    AssetIdsForGroupGuidResponseElement findAssetIdentifiersForGroupGuid(AssetIdsForGroupRequest request);
+
 
     ListAssetResponse getAssetListByQuery(AssetListQuery query);
 

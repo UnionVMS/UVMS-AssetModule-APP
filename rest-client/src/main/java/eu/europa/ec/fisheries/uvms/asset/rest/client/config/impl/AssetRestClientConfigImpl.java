@@ -35,6 +35,10 @@ public class AssetRestClientConfigImpl implements AssetRestClientConfig {
 
     @Override
     public boolean isEndpointUpdateEvent(String endpointSettingKey) {
+        if (endpointSettingKey == null) {
+            return false;
+        }
+
         return endpointSettingKey.equalsIgnoreCase(ASSET_GATEWAY_ENDPOINT_PARAMETER_KEY);
     }
 
