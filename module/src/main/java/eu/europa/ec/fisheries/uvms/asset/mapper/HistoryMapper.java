@@ -28,6 +28,7 @@ public class HistoryMapper {
     public static final String MOBILE_TERMINAL_CHANNEL_FIELD = "channels";
     public static final String MOBILE_TERMINAL_HISTORY_ID = "historyId";
     public static final String MOBILE_TERMINAL_ASSET_ID = "assetId";
+    public static final String MOBILE_TERMINAL_COMMENT = "comment";
 
     public static final String CHANNEL_UPDATER_FIELD = "updateUser";
     public static final String CHANNEL_UPDATE_TIME_FIELD = "updateTime";
@@ -98,6 +99,7 @@ public class HistoryMapper {
                         if (mt.getAssetId() != null) {
                             row.addNewItem(MOBILE_TERMINAL_ASSET_ID, null, mt.getAssetId());
                         }
+                        row.addNewItem(MOBILE_TERMINAL_COMMENT, null, mt.getComment());
                         returnMap.put(mt.getHistoryId(), row);
                     }
                     previousMt = mt;
