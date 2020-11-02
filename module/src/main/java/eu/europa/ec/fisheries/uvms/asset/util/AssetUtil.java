@@ -14,7 +14,7 @@ public class AssetUtil {
         asset.setName((request.getAssetName() == null) ? ("Unknown: " + shipNumber) : request.getAssetName());
         asset.setUpdateTime(Instant.now());
         asset.setSource(CarrierSource.INTERNAL.toString());
-        asset.setUpdatedBy("UVMS");
+        asset.setUpdatedBy("Movement from source: " + request.getPluginType());
         asset.setFlagStateCode((request.getFlagState() == null) ? ("UNK") : request.getFlagState());
         asset.setActive(true);
         asset.setCfr(request.getCfrValue());
