@@ -241,6 +241,19 @@ public class AssetDaoTest extends TransactionalTests {
 
     @Test
     @OperateOnDeployment("normal")
+    public void getAssetByMmsiOrIrcsWithIrcsFormatNLLNNNN() {
+        Asset asset1 = AssetTestsHelper.createBiggerAsset();
+        asset1.setIrcs("3FB" + AssetTestsHelper.getRandomIntegers(4));
+        asset1 = assetDao.createAsset(asset1);
+        assertThat(asset1.getId(), is(notNullValue()));
+
+        List<Asset> fetchedAsset = assetDao.getAssetByMmsiOrIrcs(null, asset1.getIrcs());
+        assertEquals(1, fetchedAsset.size());
+        assertTrue(fetchedAsset.get(0).getId().equals(asset1.getId()));
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
     public void updateAssetTest() throws Exception {
         Asset asset = AssetTestsHelper.createBiggerAsset();
         asset = assetDao.createAsset(asset);
