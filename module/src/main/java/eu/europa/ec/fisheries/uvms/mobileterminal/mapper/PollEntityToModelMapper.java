@@ -123,6 +123,9 @@ public class PollEntityToModelMapper {
     }
 
     public static SanePollDto toSanePollDto(PollBase poll){
+        if(poll == null){
+            return null;
+        }
         SanePollDto dto = new SanePollDto();
         dto.setAssetId(poll.getAssetId());
         dto.setChannelId(poll.getChannelId());

@@ -558,6 +558,15 @@ public class AssetClientTest extends AbstractClientTest {
         assertEquals(0, output.size());
     }
 
+    @Test
+    @OperateOnDeployment("normal")
+    public void pollsInfoDay(){
+
+        SanePollDto output = assetClient.getPollInfo(UUID.randomUUID());
+
+        assertNull(output);
+    }
+
 
     private String createAsset(){
         AssetBO assetBo = new AssetBO();

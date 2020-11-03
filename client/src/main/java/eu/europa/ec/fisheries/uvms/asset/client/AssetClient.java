@@ -352,6 +352,19 @@ public class AssetClient {
         return response.readEntity(new GenericType<List<SanePollDto>>() {});
     }
 
+    public SanePollDto getPollInfo(UUID pollId){
+        Response response = webTarget
+                .path("pollInfo")
+                .path(pollId.toString())
+                .request(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
+                .get(Response.class);
+
+        checkForErrorResponse(response);
+        return response.readEntity(SanePollDto.class);
+    }
+
     private void checkForErrorResponse(Response response){
         if(response.getStatus() != 200){
             throw new RuntimeException("Statuscode from asset was: " + response.getStatus() + " with payload " + response.readEntity(String.class));
