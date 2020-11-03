@@ -472,6 +472,55 @@ public class InternalRestResourceTest extends AbstractAssetRestTest {
         assertEquals(endDate, pollList.get(0).getEndDate());
     }
 
+    @Test
+    @OperateOnDeployment("normal")
+    public void getPollInfo() {
+        Asset asset = AssetHelper.createBasicAsset();
+        asset = createAsset(asset);
+        MobileTerminal mt = MobileTerminalTestHelper.createBasicMobileTerminal();
+        mt.setAsset(asset);
+
+        Jsonb jsonb = new JsonBConfigurator().getContext(null); //for some reason serializing the mt gives a stack overflow error while serializing using the client, so we do it manually b4 instead
+        String json = jsonb.toJson(mt);
+
+        Response mtResponse = getWebTargetInternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
+                .post(Entity.json(json), Response.class);
+        assertEquals(200, mtResponse.getStatus());
+
+        SimpleCreatePoll createPoll = new SimpleCreatePoll();
+        createPoll.setComment("Test comment");
+
+        CreatePollResultDto response = getWebTargetInternal()
+                .path("/internal")
+                .path("createPollForAsset")
+                .path(asset.getId().toString())
+                .queryParam("username", "Test User")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
+                .post(Entity.json(createPoll), CreatePollResultDto.class);
+
+        assertNotNull(response);
+        String pollId = response.getSentPolls().get(0);
+
+        SanePollDto poll =  getWebTargetInternal()
+                .path("/internal")
+                .path("pollInfo")
+                .path(pollId)
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
+                .get( SanePollDto.class);
+
+        assertEquals(pollId, poll.getId().toString());
+        assertEquals(asset.getId(), poll.getAssetId());
+        assertEquals(createPoll.getComment(), poll.getComment());
+    }
+
+
+
+
     private Asset createAsset(Asset asset){
         return getWebTargetInternal()
                 .path("/asset")

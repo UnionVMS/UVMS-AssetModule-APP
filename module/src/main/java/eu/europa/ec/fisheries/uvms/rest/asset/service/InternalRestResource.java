@@ -23,6 +23,7 @@ import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.util.JsonBConfiguratorAsset;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.SanePollDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollBase;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollEntityToModelMapper;
@@ -70,6 +71,9 @@ public class InternalRestResource {
 
     @Inject
     AssetDao assetDao;
+
+    @Inject
+    PollDaoBean pollDaoBean;
 
     private Jsonb jsonb;
     private Jsonb customJsonb;
@@ -361,7 +365,7 @@ public class InternalRestResource {
     @GET
     @Path("/pollListForAsset/{assetId}")
     @RequiresFeature(UnionVMSFeature.manageInternalRest)
-    public Response getPollBySearchCriteria(@PathParam("assetId") UUID assetId) {
+    public Response getPollListByAsset(@PathParam("assetId") UUID assetId) {
         LOG.info("Get poll list for asset:{}", assetId);
         try {
             List<PollBase> byAssetInTimespan = pollServiceBean.getAllPollsForAssetForTheLastDay(assetId);
@@ -369,7 +373,22 @@ public class InternalRestResource {
             return Response.ok(sanePollDtos).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting all polls for asset {}] {}",assetId, ex.getStackTrace());
-            throw ex;
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();
+        }
+    }
+
+    @GET
+    @Path("/pollInfo/{pollId}")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
+    public Response getPollInfo(@PathParam("pollId") UUID pollId) {
+        LOG.info("Get poll info for poll: {}", pollId);
+        try {
+            PollBase poll = pollDaoBean.getPollById(pollId);
+            SanePollDto sanePollDto = PollEntityToModelMapper.toSanePollDto(poll);
+            return Response.ok(customJsonb.toJson(sanePollDto)).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception ex) {
+            LOG.error("[ Error when getting info for poll {}] {}", pollId, ex.getStackTrace());
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();
         }
     }
 }
