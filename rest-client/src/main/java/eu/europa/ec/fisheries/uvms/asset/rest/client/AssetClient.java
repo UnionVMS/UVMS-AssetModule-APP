@@ -9,6 +9,7 @@
  */
 package eu.europa.ec.fisheries.uvms.asset.rest.client;
 
+import java.util.Date;
 import java.util.List;
 
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
@@ -17,6 +18,8 @@ import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
 import eu.europa.ec.fisheries.wsdl.asset.types.BatchAssetListResponseElement;
 import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
+
+import javax.ws.rs.QueryParam;
 
 public interface AssetClient {
     List<Asset> findHistoryOfAssetByCfr(String cfr);
@@ -32,4 +35,8 @@ public interface AssetClient {
     ListAssetResponse getAssetListByQuery(AssetListQuery query);
 
     List<Asset> getAssetGroup(List<AssetGroup> assetGroupQuery);
+
+    Asset getAssetFromAssetGuidAndDate(String assetGuid, Date occurrenceDate);
+
+    Asset getAssetFromAssetHistGuid(String assetHistId);
 }

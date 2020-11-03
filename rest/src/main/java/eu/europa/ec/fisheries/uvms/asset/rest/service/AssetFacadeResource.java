@@ -11,21 +11,27 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.rest.service;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import java.util.Date;
 import java.util.List;
 
 import eu.europa.ec.fisheries.uvms.asset.facade.AssetFacadeNew;
 import eu.europa.ec.fisheries.uvms.asset.rest.error.AssetError;
+import eu.europa.ec.fisheries.uvms.asset.rest.error.ErrorHandler;
 import eu.europa.ec.fisheries.uvms.asset.rest.exception.AssetFacadeException;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetGroupService;
+import eu.europa.ec.fisheries.uvms.asset.service.AssetHistoryService;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
+import eu.europa.ec.fisheries.uvms.asset.service.bean.AssetHistoryServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.service.bean.GetAssetEventBean;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
@@ -54,6 +60,9 @@ public class AssetFacadeResource {
 
     @Inject
     private AssetGroupService assetGroupService;
+
+    @Inject
+    private AssetHistoryService assetHistoryService;
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
@@ -160,6 +169,34 @@ public class AssetFacadeResource {
             throw new AssetFacadeException(AssetError.UNKNOWN_ERROR, e.getMessage());
         }
     }
+
+
+    @GET
+    @Path("/find-asset-by-guid-occurrence-date")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Asset getAssetFromAssetGuidAndDate(@QueryParam("assetGuid") String assetGuid, @QueryParam("occurrenceDate") Date occurrenceDate) throws AssetFacadeException {
+        try {
+            return assetHistoryService.getAssetHistoryByAssetIdAndOccurrenceDate(assetGuid, occurrenceDate);
+        } catch (Exception e) {
+            throw new AssetFacadeException(AssetError.UNKNOWN_ERROR, "Error when getting asset with assetGuid: " + assetGuid + " and occurrenceDate: " + occurrenceDate);
+        }
+    }
+
+
+    @GET
+    @Path("/find-asset-by-asset-hist-id")
+    @Consumes(value = {MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
+    public Asset getAssetFromAssetHistId(@QueryParam("assetHistId") String assetHistId) throws AssetFacadeException {
+        try {
+            return assetHistoryService.getAssetHistoryByAssetHistGuid(assetHistId);
+        } catch (Exception e) {
+            throw new AssetFacadeException(AssetError.UNKNOWN_ERROR, "Error when getting asset with assetHistId: " + assetHistId);
+        }
+    }
+
+
 
 
 }

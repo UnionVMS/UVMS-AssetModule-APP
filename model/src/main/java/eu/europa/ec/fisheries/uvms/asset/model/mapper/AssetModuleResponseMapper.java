@@ -194,6 +194,13 @@ public class AssetModuleResponseMapper {
             return JAXBMarshaller.marshallJaxBObjectToString(upsertResponse);
     }
 
+    public static FindVesselIdsByAssetHistGuidResponse createFindVesselIdsByAssetHistGuidResponseObject(Asset asset) {
+        FindVesselIdsByAssetHistGuidResponse response = new FindVesselIdsByAssetHistGuidResponse();
+        VesselIdentifiersHolder identifiersHolder = assetToVesselIdentifierHolder(asset);
+        response.setIdentifiers(identifiersHolder);
+        return response;
+    }
+
     public static String createFindVesselIdsByAssetHistGuidResponse(Asset asset) throws AssetModelMarshallException {
         FindVesselIdsByAssetHistGuidResponse response = new FindVesselIdsByAssetHistGuidResponse();
         VesselIdentifiersHolder identifiersHolder = assetToVesselIdentifierHolder(asset);
