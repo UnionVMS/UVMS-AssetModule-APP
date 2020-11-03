@@ -14,6 +14,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.ws.rs.ProcessingException;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -24,6 +25,7 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ContextResolver;
+import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -56,6 +58,8 @@ public class AssetRestClientImpl implements AssetClient {
     private static final String GET_ASSET_GROUP_LIST_BY_ASSET_GUID_PATH = "/get-asset-groups-by-asset-guid";
     private static final String GET_ASSET_LIST_BY_ASSET_LIST_QUERY = "/get-asset-list-by-query";
     private static final String GET_ASSET_LIST_BY_ASSET_GROUP_LIST = "/find-asset-by-asset-group-list";
+    private static final String FIND_ASSET_FROM_ASSET_GUID_AND_DATE = "/find-asset-by-guid-occurrence-date";
+    private static final String FIND_ASSET_BU_ASSET_HIST_ID = "/find-asset-by-asset-hist-id";
 
     private static final String REPORT_DATE = "reportDate";
     private static final String CFR = "cfr";
@@ -65,6 +69,9 @@ public class AssetRestClientImpl implements AssetClient {
     private static final String ICCAT = "iccat";
     private static final String UVI = "uvi";
     private static final String ASSET_GUID = "assetGuid";
+    private static final String OCCURENCE_DATE = "occurrenceDate";
+    private static final String ASSET_HISTORY_ID = "assetHistId";
+
 
     private AssetRestClientConfig config;
 
@@ -238,6 +245,56 @@ public class AssetRestClientImpl implements AssetClient {
                     .post(Entity.json(assetGroupQuery), Response.class);
 
             return handleResponse(response);
+        } catch (ResponseProcessingException e) {
+            log.error("Error processing response from server");
+            throw new AssetRestClientException("Error response processing from server", e);
+        } catch (ProcessingException e) {
+            log.error("I/O error processing response");
+            throw new AssetRestClientException("I/O error processing response ", e);
+        } catch (WebApplicationException e) {
+            log.error("Error response from server");
+            throw new AssetRestClientException("Error response from server", e);
+        }
+    }
+
+    @SneakyThrows
+    @Override
+    public Asset getAssetFromAssetGuidAndDate(String assetGuid, Date occurrenceDate) {
+        try {
+            Response response = webTarget
+                    .path(FIND_ASSET_FROM_ASSET_GUID_AND_DATE)
+                    .queryParam(ASSET_GUID, assetGuid)
+                    .queryParam(OCCURENCE_DATE, occurrenceDate)
+                    .request()
+                    .accept(MediaType.APPLICATION_JSON)
+                    .get(Response.class);
+
+            return handleAssetResponse(response);
+        } catch (ResponseProcessingException e) {
+            log.error("Error processing response from server");
+            throw new AssetRestClientException("Error response processing from server", e);
+        } catch (ProcessingException e) {
+            log.error("I/O error processing response");
+            throw new AssetRestClientException("I/O error processing response ", e);
+        } catch (WebApplicationException e) {
+            log.error("Error response from server");
+            throw new AssetRestClientException("Error response from server", e);
+        }
+    }
+
+
+    @SneakyThrows
+    @Override
+    public Asset getAssetFromAssetHistGuid(String assetHistGuid) {
+        try {
+            Response response = webTarget
+                    .path(FIND_ASSET_BU_ASSET_HIST_ID)
+                    .queryParam(ASSET_HISTORY_ID, assetHistGuid)
+                    .request()
+                    .accept(MediaType.APPLICATION_JSON)
+                    .get(Response.class);
+
+            return handleAssetResponse(response);
         } catch (ResponseProcessingException e) {
             log.error("Error processing response from server");
             throw new AssetRestClientException("Error response processing from server", e);
