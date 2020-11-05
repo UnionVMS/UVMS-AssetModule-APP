@@ -11,7 +11,6 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.rest.asset.service;
 
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType;
-import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType;
 import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.bean.CustomCodesServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
@@ -24,7 +23,9 @@ import eu.europa.ec.fisheries.uvms.asset.util.JsonBConfiguratorAsset;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.PollServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dao.PollDaoBean;
+import eu.europa.ec.fisheries.uvms.mobileterminal.dao.TerminalDaoBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.SanePollDto;
+import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.PollBase;
 import eu.europa.ec.fisheries.uvms.mobileterminal.mapper.PollEntityToModelMapper;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CreatePollResultDto;
@@ -74,6 +75,9 @@ public class InternalRestResource {
 
     @Inject
     PollDaoBean pollDaoBean;
+
+    @Inject
+    TerminalDaoBean terminalDaoBean;
 
     private Jsonb jsonb;
     private Jsonb customJsonb;
@@ -385,9 +389,30 @@ public class InternalRestResource {
         try {
             PollBase poll = pollDaoBean.getPollById(pollId);
             SanePollDto sanePollDto = PollEntityToModelMapper.toSanePollDto(poll);
-            return Response.ok(customJsonb.toJson(sanePollDto)).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(jsonb.toJson(sanePollDto)).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting info for poll {}] {}", pollId, ex.getStackTrace());
+            return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();
+        }
+    }
+
+
+    @GET
+    @Path("/mobileTerminalAtDate/{mtId}")
+    @RequiresFeature(UnionVMSFeature.manageInternalRest)
+    public Response getMobileTerminalAtDate(@PathParam("mtId") UUID mtId, @QueryParam("date") String date) {
+        LOG.info("Get MT {} at date {}", mtId, date);
+        try {
+            Instant instant = (date == null ? Instant.now() : DateUtils.stringToDate(date));
+            MobileTerminal mtAtDate = terminalDaoBean.getMtAtDate(mtId, instant);
+            if(mtAtDate != null) {
+                mtAtDate.getChannels().size();  //to force load
+                mtAtDate.setPlugin(null);       //since the plugin for some reason does not want to be serialized
+            }
+            String returnString = jsonb.toJson(mtAtDate);
+            return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
+        } catch (Exception ex) {
+            LOG.error("[ Error when MT {} at date {}] {}", mtId, date, ex.getStackTrace());
             return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();
         }
     }
