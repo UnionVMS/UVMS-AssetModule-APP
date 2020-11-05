@@ -920,15 +920,6 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
                 .get(Note.class);
 
         assertNull(aNote);
-
-        String s = getWebTargetExternal()
-                .path("asset")
-                .path("note")
-                .path(UUID.randomUUID().toString())
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
-                .get(String.class);
-        assertTrue("call output: " + s, false);
     }
     
     @Test
