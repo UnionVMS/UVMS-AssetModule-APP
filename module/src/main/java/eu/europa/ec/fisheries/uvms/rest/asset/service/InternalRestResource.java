@@ -389,7 +389,7 @@ public class InternalRestResource {
         try {
             PollBase poll = pollDaoBean.getPollById(pollId);
             SanePollDto sanePollDto = PollEntityToModelMapper.toSanePollDto(poll);
-            return Response.ok(customJsonb.toJson(sanePollDto)).header("MDC", MDC.get("requestId")).build();
+            return Response.ok(jsonb.toJson(sanePollDto)).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
             LOG.error("[ Error when getting info for poll {}] {}", pollId, ex.getStackTrace());
             return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();
