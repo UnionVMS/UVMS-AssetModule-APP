@@ -758,8 +758,8 @@ public class AssetServiceBean {
     }
 
     public Note getNoteById(UUID id) {
+        nullValidation(id, "Cant search for noteId: " + id);
         Note note = noteDao.findNote(id);
-        nullValidation(note, "Could not find any note with id: " + id);
         return note;
     }
 
