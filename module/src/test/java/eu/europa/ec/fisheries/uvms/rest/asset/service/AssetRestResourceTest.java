@@ -906,6 +906,30 @@ public class AssetRestResourceTest extends AbstractAssetRestTest {
         
         assertEquals(aNote.getId(), createdNote.getId());
     }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getNonexistantNote() {
+        // Get note by id
+        Note aNote = getWebTargetExternal()
+                .path("asset")
+                .path("note")
+                .path(UUID.randomUUID().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(Note.class);
+
+        assertNull(aNote);
+
+        String s = getWebTargetExternal()
+                .path("asset")
+                .path("note")
+                .path(UUID.randomUUID().toString())
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenExternal())
+                .get(String.class);
+        assertTrue("call output: " + s, false);
+    }
     
     @Test
     @OperateOnDeployment("normal")
