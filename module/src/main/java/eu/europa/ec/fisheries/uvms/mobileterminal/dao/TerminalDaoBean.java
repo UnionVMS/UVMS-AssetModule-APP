@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.mobileterminal.dao;
 
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFieldType;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetMTEnrichmentRequest;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
@@ -22,6 +23,7 @@ import eu.europa.ec.fisheries.uvms.mobileterminal.search.MTSearchKeyValue;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.exception.AuditException;
+import org.hibernate.envers.exception.RevisionDoesNotExistException;
 import org.hibernate.envers.query.AuditAssociationQuery;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
@@ -343,5 +345,25 @@ public class TerminalDaoBean {
         }
         return null;
     }
+
+    public MobileTerminal getMtAtDate(UUID mtId, Instant instant) {
+        Date date = Date.from(instant);
+        AuditReader auditReader = AuditReaderFactory.get(em);
+        try {
+            return auditReader.find(MobileTerminal.class, mtId, date);
+        } catch (RevisionDoesNotExistException ex) {
+            return getFirstRevision(mtId);
+        }
+    }
+
+    public MobileTerminal getFirstRevision(UUID mtId) {
+        AuditReader auditReader = AuditReaderFactory.get(em);
+        List<Number> revisions = auditReader.getRevisions(MobileTerminal.class, mtId);
+        if (!revisions.isEmpty()) {
+            return auditReader.find(MobileTerminal.class, mtId, revisions.get(0));
+        }
+        return null;
+    }
+
 
 }

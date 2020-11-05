@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
 package eu.europa.ec.fisheries.uvms.asset.client;
 
 import eu.europa.ec.fisheries.uvms.asset.client.model.*;
+import eu.europa.ec.fisheries.uvms.asset.client.model.mt.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.asset.client.model.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
@@ -363,6 +364,20 @@ public class AssetClient {
 
         checkForErrorResponse(response);
         return response.readEntity(SanePollDto.class);
+    }
+
+    public MobileTerminal getMtAtDate(UUID mtId, Instant date){
+        Response response = webTarget
+                .path("mobileTerminalAtDate")
+                .path(mtId.toString())
+                .queryParam("date", "" + date.toEpochMilli())
+                .request(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
+                .get(Response.class);
+
+        checkForErrorResponse(response);
+        return response.readEntity(MobileTerminal.class);
     }
 
     private void checkForErrorResponse(Response response){

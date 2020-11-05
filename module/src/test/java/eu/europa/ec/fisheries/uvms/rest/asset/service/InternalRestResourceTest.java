@@ -518,6 +518,49 @@ public class InternalRestResourceTest extends AbstractAssetRestTest {
         assertEquals(createPoll.getComment(), poll.getComment());
     }
 
+    @Test
+    @OperateOnDeployment("normal")
+    public void getMtAtDate() {
+        MobileTerminal mt = MobileTerminalTestHelper.createBasicMobileTerminal();
+
+        Jsonb jsonb = new JsonBConfigurator().getContext(null); //for some reason serializing the mt gives a stack overflow error while serializing using the client, so we do it manually b4 instead
+        String json = jsonb.toJson(mt);
+
+        Response mtResponse = getWebTargetInternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
+                .post(Entity.json(json), Response.class);
+        assertEquals(200, mtResponse.getStatus());
+
+        Instant timestamp = Instant.now();
+
+        MobileTerminal createdTerminal = mtResponse.readEntity(MobileTerminal.class);
+        createdTerminal.setAntenna("Different antenna");
+
+        json = jsonb.toJson(createdTerminal);
+        mtResponse = getWebTargetInternal()
+                .path("mobileterminal")
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
+                .put(Entity.json(json), Response.class);
+        assertEquals(200, mtResponse.getStatus());
+
+        Response historicalResponse =  getWebTargetInternal()
+                .path("/internal")
+                .path("mobileTerminalAtDate")
+                .path(createdTerminal.getId().toString())
+                .queryParam("date", "" + timestamp.toEpochMilli())
+                .request(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
+                .get(Response.class);
+        assertEquals(200, historicalResponse.getStatus());
+
+        MobileTerminal historicalTerminal = historicalResponse.readEntity(MobileTerminal.class);
+        assertEquals(createdTerminal.getId(), historicalTerminal.getId());
+        assertEquals(mt.getAntenna(), historicalTerminal.getAntenna());
+    }
+
 
 
 

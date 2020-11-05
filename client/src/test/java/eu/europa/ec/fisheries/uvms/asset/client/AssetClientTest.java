@@ -1,6 +1,7 @@
 package eu.europa.ec.fisheries.uvms.asset.client;
 
 import eu.europa.ec.fisheries.uvms.asset.client.model.*;
+import eu.europa.ec.fisheries.uvms.asset.client.model.mt.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.asset.client.model.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.client.model.search.SearchFields;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
@@ -560,9 +561,18 @@ public class AssetClientTest extends AbstractClientTest {
 
     @Test
     @OperateOnDeployment("normal")
-    public void pollsInfoDay(){
+    public void pollsInfo(){
 
         SanePollDto output = assetClient.getPollInfo(UUID.randomUUID());
+
+        assertNull(output);
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getMtAtDateRandomId(){
+
+        MobileTerminal output = assetClient.getMtAtDate(UUID.randomUUID(), Instant.now());
 
         assertNull(output);
     }
