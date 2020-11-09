@@ -13,20 +13,20 @@ package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
 import java.time.Instant;
 import java.util.UUID;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "fishinglicence")
-@NamedQuery(name = FishingLicence.FIND_BY_ASSET, query = "SELECT l FROM FishingLicence l WHERE l.assetId = :assetId")
+@NamedQueries({
+        @NamedQuery(name = FishingLicence.FIND_BY_ASSET, query = "SELECT l FROM FishingLicence l WHERE l.assetId = :assetId"),
+        @NamedQuery(name = FishingLicence.COUNT_VALID_LICENCE_IN_LIST, query = "SELECT COUNT(l) FROM FishingLicence l WHERE l.assetId in :assetId AND current_timestamp() BETWEEN l.fromDate AND l.toDate"),
+        @NamedQuery(name = FishingLicence.COUNT_INVALID_LICENCE_IN_LIST, query = "SELECT COUNT(l) FROM FishingLicence l WHERE l.assetId in :assetId AND NOT (current_timestamp() BETWEEN l.fromDate AND l.toDate)"),
+})
 public class FishingLicence {
 
     public static final String FIND_BY_ASSET = "FishingLicence.findByAsset";
+    public static final String COUNT_VALID_LICENCE_IN_LIST = "FishingLicence.countValidLicenceInList";
+    public static final String COUNT_INVALID_LICENCE_IN_LIST = "FishingLicence.countInvalidLicenceInList";
 
     @Id
     @GeneratedValue

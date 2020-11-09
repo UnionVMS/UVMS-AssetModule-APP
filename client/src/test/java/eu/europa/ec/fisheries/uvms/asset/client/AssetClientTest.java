@@ -577,6 +577,18 @@ public class AssetClientTest extends AbstractClientTest {
         assertNull(output);
     }
 
+    @Test
+    @OperateOnDeployment("normal")
+    public void assetStatistics(){
+
+        AssetStatistics output = assetClient.assetStatistics();
+
+        assertNotNull(output);
+        assertNotNull(output.getAmountOfVMSAsset());
+        assertNotNull(output.getAmountOfVMSAssetsWithInactiveLicense());
+        assertNotNull(output.getAmountOfVMSAssetsWithLicense());
+    }
+
 
     private String createAsset(){
         AssetBO assetBo = new AssetBO();

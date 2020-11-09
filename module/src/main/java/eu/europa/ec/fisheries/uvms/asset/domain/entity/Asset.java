@@ -50,6 +50,7 @@ import static eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset.*;
           @NamedQuery(name = ASSET_FIND_BY_MMSI_OR_IRCS, query = "SELECT a FROM Asset a WHERE (a.ircs = :ircs OR a.mmsi = :mmsi) AND a.active = true"),
           @NamedQuery(name = ASSET_MICRO_ASSET_BY_LIST, query = "SELECT new eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset(a.id, a.flagStateCode, a.name, a.vesselType, a.ircs, a.cfr, a.externalMarking, a.lengthOverAll ) FROM Asset a WHERE a.id in :idList"),
           @NamedQuery(name = ASSET_ALL_AVAILABLE_VESSEL_TYPES, query = "SELECT DISTINCT a.vesselType FROM Asset a"),
+          @NamedQuery(name = ASSET_ID_OF_ALL_VMS_ASSETS, query = "SELECT a.id FROM Asset a where a.mobileTerminals IS NOT EMPTY"),
 })
 public class Asset implements Serializable {
 
@@ -67,6 +68,7 @@ public class Asset implements Serializable {
     public static final String ASSET_MICRO_ASSET_BY_LIST = "Asset.microAssetByList";
     public static final String ASSET_FIND_BY_MMSI_OR_IRCS = "Asset.findByMmsiOrIrcs";
     public static final String ASSET_ALL_AVAILABLE_VESSEL_TYPES = "Asset.allAvailableVesselTypes";
+    public static final String ASSET_ID_OF_ALL_VMS_ASSETS = "Asset.idOfAllVmsAssets";
 
     private static final long serialVersionUID = -320627625723663100L;
 

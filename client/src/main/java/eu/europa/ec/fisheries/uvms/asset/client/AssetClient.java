@@ -380,6 +380,18 @@ public class AssetClient {
         return response.readEntity(MobileTerminal.class);
     }
 
+    public AssetStatistics assetStatistics(){
+        Response response = webTarget
+                .path("assetStatistics")
+                .request(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, tokenHandler.createAndFetchToken("user"))
+                .get(Response.class);
+
+        checkForErrorResponse(response);
+        return response.readEntity(AssetStatistics.class);
+    }
+
     private void checkForErrorResponse(Response response){
         if(response.getStatus() != 200){
             throw new RuntimeException("Statuscode from asset was: " + response.getStatus() + " with payload " + response.readEntity(String.class));

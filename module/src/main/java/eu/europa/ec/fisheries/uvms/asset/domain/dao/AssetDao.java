@@ -4,6 +4,7 @@ import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetRemapMapping;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.FishingLicence;
 import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.*;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
@@ -594,5 +595,22 @@ public class AssetDao {
 
     public ContactInfo getContactById(UUID contactId) {
         return em.find(ContactInfo.class, contactId);
+    }
+
+    public List<UUID> getIdOfAssetsWithConnectedMobileterminal(){
+        TypedQuery<UUID> query = em.createNamedQuery(Asset.ASSET_ID_OF_ALL_VMS_ASSETS, UUID.class);
+        return query.getResultList();
+    }
+
+    public Long numberOfValidLicencesInList(List<UUID> assetIds){
+        TypedQuery<Long> query = em.createNamedQuery(FishingLicence.COUNT_VALID_LICENCE_IN_LIST, Long.class);
+        query.setParameter("assetId", assetIds);
+        return query.getSingleResult();
+    }
+
+    public Long numberOfInvalidLicencesInList(List<UUID> assetIds){
+        TypedQuery<Long> query = em.createNamedQuery(FishingLicence.COUNT_INVALID_LICENCE_IN_LIST, Long.class);
+        query.setParameter("assetId", assetIds);
+        return query.getSingleResult();
     }
 }

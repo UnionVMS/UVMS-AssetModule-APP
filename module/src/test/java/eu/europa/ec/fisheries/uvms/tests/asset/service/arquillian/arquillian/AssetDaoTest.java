@@ -10,15 +10,19 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian;
 
-import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFields;
-import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchLeaf;
-import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
-import eu.europa.ec.fisheries.uvms.asset.model.constants.UnitTonnage;
+import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
+import eu.europa.ec.fisheries.uvms.asset.domain.entity.FishingLicence;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.uvms.asset.model.constants.UnitTonnage;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFields;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchLeaf;
+import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.tests.TransactionalTests;
+import eu.europa.ec.fisheries.uvms.tests.mobileterminal.service.arquillian.helper.TestPollHelper;
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -42,6 +46,15 @@ public class AssetDaoTest extends TransactionalTests {
 
     @Inject
     private AssetDao assetDao;
+
+    @Inject
+    MobileTerminalServiceBean mobileTerminalService;
+
+    @Inject
+    private TestPollHelper testPollHelper;
+
+    @Inject
+    AssetServiceBean assetServiceBean;
 
     @Test
     @OperateOnDeployment("normal")
@@ -1116,6 +1129,7 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.deleteAsset(asset);
         commit();
     }
+
     @Test
     @OperateOnDeployment("normal")
     public void getAssetListFuzzySearchExternalMarkingWithInactivated() throws Exception {
@@ -1438,7 +1452,99 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.deleteAsset(asset3);
         commit();
     }
-    
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void getAssetsWithMT() throws Exception {
+
+        Asset assetWithMt = AssetTestsHelper.createBasicAsset();
+        Asset assetWoMt = AssetTestsHelper.createBasicAsset();
+
+        assetDao.createAsset(assetWithMt);
+        createMobileTerminal(assetWithMt);
+        assetDao.createAsset(assetWoMt);
+
+        List<UUID> assetIds = assetDao.getIdOfAssetsWithConnectedMobileterminal();
+
+        assertTrue(assetIds.contains(assetWithMt.getId()));
+        assertFalse(assetIds.contains(assetWoMt.getId()));
+
+    }
+
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void countLicenceInAssetList() throws Exception {
+
+        FishingLicence licence = AssetTestsHelper.createFishingLicence();
+        licence.setAssetId(UUID.randomUUID());
+        assetServiceBean.createFishingLicence(licence);
+
+        assertEquals(Long.valueOf(1l), assetDao.numberOfValidLicencesInList(Arrays.asList(licence.getAssetId())));
+
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void countLicenceInAssetListSeveralLicences() throws Exception {
+
+        FishingLicence licence = AssetTestsHelper.createFishingLicence();
+        licence.setAssetId(UUID.randomUUID());
+        assetServiceBean.createFishingLicence(licence);
+
+        licence = AssetTestsHelper.createFishingLicence();
+        licence.setAssetId(UUID.randomUUID());
+        assetServiceBean.createFishingLicence(licence);
+
+        licence = AssetTestsHelper.createFishingLicence();
+        licence.setAssetId(UUID.randomUUID());
+        assetServiceBean.createFishingLicence(licence);
+
+        assertEquals(Long.valueOf(1l), assetDao.numberOfValidLicencesInList(Arrays.asList(licence.getAssetId())));
+
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void countLicenceInAssetListSeveralLicencesAndAskingForLicencisThatDontExist() throws Exception {
+
+        FishingLicence licence = AssetTestsHelper.createFishingLicence();
+        licence.setAssetId(UUID.randomUUID());
+        assetServiceBean.createFishingLicence(licence);
+
+        licence = AssetTestsHelper.createFishingLicence();
+        licence.setAssetId(UUID.randomUUID());
+        assetServiceBean.createFishingLicence(licence);
+
+        licence = AssetTestsHelper.createFishingLicence();
+        licence.setAssetId(UUID.randomUUID());
+        assetServiceBean.createFishingLicence(licence);
+
+        assertEquals(Long.valueOf(0l), assetDao.numberOfValidLicencesInList(Arrays.asList(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID())));
+
+    }
+
+    @Test
+    @OperateOnDeployment("normal")
+    public void countInvalidLicenceInAssetList() throws Exception {
+
+        FishingLicence licence = AssetTestsHelper.createFishingLicence();
+        licence.setAssetId(UUID.randomUUID());
+        licence.setFromDate(Instant.now().minus(5, ChronoUnit.MINUTES));
+        licence.setToDate(Instant.now().minus(1, ChronoUnit.MINUTES));
+        assetServiceBean.createFishingLicence(licence);
+
+        assertEquals(Long.valueOf(1l), assetDao.numberOfInvalidLicencesInList(Arrays.asList(licence.getAssetId())));
+
+    }
+
+    private MobileTerminal createMobileTerminal(Asset asset) {
+        MobileTerminal mobileTerminal = testPollHelper.createBasicMobileTerminal();
+        mobileTerminal.setAsset(asset);
+        return mobileTerminalService.createMobileTerminal(mobileTerminal, "TEST");
+    }
+
+
     private void commit() throws Exception {
         userTransaction.commit();
         userTransaction.begin();
