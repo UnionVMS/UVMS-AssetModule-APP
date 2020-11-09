@@ -11,6 +11,15 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.service.bean;
 
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.jms.TextMessage;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.google.common.collect.Lists;
 import eu.europa.ec.fisheries.uvms.asset.exception.AssetServiceException;
 import eu.europa.ec.fisheries.uvms.asset.exception.InputArgumentException;
@@ -22,26 +31,34 @@ import eu.europa.ec.fisheries.uvms.asset.message.mapper.AuditModuleRequestMapper
 import eu.europa.ec.fisheries.uvms.asset.message.producer.AssetMessageProducer;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException;
 import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelException;
+import eu.europa.ec.fisheries.uvms.asset.model.exception.AssetModelMarshallException;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceRequestMapper;
 import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetDataSourceResponseMapper;
+import eu.europa.ec.fisheries.uvms.asset.model.mapper.AssetModuleRequestMapper;
+import eu.europa.ec.fisheries.uvms.asset.model.mapper.JAXBMarshaller;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.GetAssetListResponseDto;
 import eu.europa.ec.fisheries.uvms.asset.service.AssetService;
 import eu.europa.ec.fisheries.uvms.audit.model.exception.AuditModelMarshallException;
 import eu.europa.ec.fisheries.uvms.bean.AssetDomainModelBean;
+import eu.europa.ec.fisheries.uvms.commons.message.api.MessageException;
 import eu.europa.ec.fisheries.uvms.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.dao.exception.NoAssetEntityFoundException;
 import eu.europa.ec.fisheries.uvms.entity.model.AssetHistory;
 import eu.europa.ec.fisheries.wsdl.asset.group.AssetGroup;
-import eu.europa.ec.fisheries.wsdl.asset.types.*;
+import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetGroupsForAssetQueryElement;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetGroupsForAssetResponseElement;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetHistoryId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetIdType;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListGroupByFlagStateResponse;
+import eu.europa.ec.fisheries.wsdl.asset.types.AssetListQuery;
+import eu.europa.ec.fisheries.wsdl.asset.types.BatchAssetListResponseElement;
+import eu.europa.ec.fisheries.wsdl.asset.types.ListAssetResponse;
+import eu.europa.ec.fisheries.wsdl.asset.types.NoteActivityCode;
+import eu.europa.ec.fisheries.wsdl.asset.types.ZeroBasedIndexListAssetResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.jms.TextMessage;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Stateless
 public class AssetServiceBean implements AssetService {
@@ -50,6 +67,9 @@ public class AssetServiceBean implements AssetService {
 
     @EJB
     private AssetMessageProducer messageProducer;
+
+    @EJB
+    private ReportingProducerBean reportingProducer;
 
     @EJB
     private AssetQueueConsumer receiver;
@@ -71,6 +91,7 @@ public class AssetServiceBean implements AssetService {
     public Asset createAsset(Asset asset, String username) throws AssetException {
         LOG.debug("Creating asset.");
         Asset createdAsset = assetDomainModel.createAsset(asset, username);
+        sendAssetUpdateToReporting(createdAsset);
         try {
             String auditData = AuditModuleRequestMapper.mapAuditLogAssetCreated(createdAsset.getAssetId().getGuid(), username);
             messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
@@ -122,7 +143,7 @@ public class AssetServiceBean implements AssetService {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * TODO : This is just a first iteration of a batch service! For loop should be avoided somehow!
      *
      * @param requestQuery
@@ -167,6 +188,7 @@ public class AssetServiceBean implements AssetService {
     @Override
     public Asset updateAsset(Asset asset, String username, String comment) throws AssetException {
         Asset updatedAsset = updateAssetInternal(asset, username);
+        sendAssetUpdateToReporting(updatedAsset);
         logAssetUpdated(updatedAsset, comment, username);
         return updatedAsset;
     }
@@ -174,6 +196,7 @@ public class AssetServiceBean implements AssetService {
     @Override
     public Asset archiveAsset(Asset asset, String username, String comment) throws AssetException {
         Asset archivedAsset = updateAssetInternal(asset, username);
+        sendAssetUpdateToReporting(archivedAsset);
         logAssetArchived(archivedAsset, comment, username);
         return archivedAsset;
     }
@@ -184,6 +207,17 @@ public class AssetServiceBean implements AssetService {
             messageProducer.sendModuleMessage(auditData, ModuleQueue.AUDIT);
         } catch (AuditModelMarshallException e) {
             LOG.error("Failed to send audit log message! Asset with guid {} was updated ", asset.getAssetId().getGuid());
+        }
+    }
+
+    private void sendAssetUpdateToReporting(Asset asset) {
+        try {
+            Map<String, String> params = new HashMap<>();
+            params.put("mainTopic", "reporting");
+            params.put("subTopic", "asset");
+            reportingProducer.sendMessageToSpecificQueueSameTx(AssetModuleRequestMapper.createUpsertAssetModuleResponse(asset), reportingProducer.getDestination(), null, params);
+        } catch (MessageException | AssetModelMarshallException e) {
+            LOG.error("Could not send asset update to reporting", e);
         }
     }
 
@@ -211,7 +245,7 @@ public class AssetServiceBean implements AssetService {
         Asset storedAsset = assetDomainModel.getAssetById(asset.getAssetId());
         switch (storedAsset.getSource()) {
             case INTERNAL:
-                 updatedAsset = assetDomainModel.updateAsset(asset, username);
+                updatedAsset = assetDomainModel.updateAsset(asset, username);
                 break;
             default:
                 throw new AssetServiceException("Not allowed to update");
@@ -253,7 +287,7 @@ public class AssetServiceBean implements AssetService {
 
         LOG.debug("GETTING ASSET BY ID: {} : {} at {}.", assetId.getType(), assetId.getValue(), source.name());
 
-        switch (source){
+        switch (source) {
             case INTERNAL:
                 assetById = assetDomainModel.getAssetById(assetId);
                 break;
@@ -269,7 +303,6 @@ public class AssetServiceBean implements AssetService {
     }
 
     /**
-     *
      * @param guid
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
@@ -288,7 +321,6 @@ public class AssetServiceBean implements AssetService {
     }
 
     /**
-     *
      * @param groups
      * @return
      * @throws eu.europa.ec.fisheries.uvms.asset.model.exception.AssetException
@@ -318,8 +350,7 @@ public class AssetServiceBean implements AssetService {
     }
 
     @Override
-    public void deleteAsset(AssetId assetId) throws AssetException
-    {
+    public void deleteAsset(AssetId assetId) throws AssetException {
         assetDomainModel.deleteAsset(assetId);
     }
 
@@ -340,7 +371,7 @@ public class AssetServiceBean implements AssetService {
 
     @Override
     public List<AssetHistory> findAssetHistoriesByGuidAndOccurrenceDate(String guid, Date occurrenceDate, int page, int listSize) throws AssetException {
-        return assetDomainModel.getAssetListSearchPaginated(guid,occurrenceDate,page,listSize);
+        return assetDomainModel.getAssetListSearchPaginated(guid, occurrenceDate, page, listSize);
     }
 
 }

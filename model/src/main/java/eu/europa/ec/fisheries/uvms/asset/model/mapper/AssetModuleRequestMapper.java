@@ -32,6 +32,7 @@ import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetGroupListByAssetGuidRequ
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetListByAssetGroupsRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.GetAssetModuleRequest;
 import eu.europa.ec.fisheries.wsdl.asset.module.UpsertAssetModuleRequest;
+import eu.europa.ec.fisheries.wsdl.asset.module.UpsertAssetModuleResponse;
 import eu.europa.ec.fisheries.wsdl.asset.module.UpsertFishingGearModuleRequest;
 import eu.europa.ec.fisheries.wsdl.asset.types.Asset;
 import eu.europa.ec.fisheries.wsdl.asset.types.AssetId;
@@ -125,6 +126,12 @@ public class AssetModuleRequestMapper {
         criteria.setKey(key);
         criteria.setValue(value);
         return criteria;
+    }
+
+    public static String createUpsertAssetModuleResponse(Asset asset) throws AssetModelMarshallException {
+        UpsertAssetModuleResponse upsertAssetModuleResponse = new UpsertAssetModuleResponse();
+        upsertAssetModuleResponse.setAsset(asset);
+        return JAXBMarshaller.marshallJaxBObjectToString(upsertAssetModuleResponse);
     }
 
     public static String createUpsertAssetModuleRequest(Asset asset, String username) throws AssetModelMarshallException {
