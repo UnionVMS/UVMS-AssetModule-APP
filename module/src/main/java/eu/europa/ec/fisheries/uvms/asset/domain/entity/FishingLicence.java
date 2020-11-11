@@ -19,14 +19,12 @@ import javax.persistence.*;
 @Table(name = "fishinglicence")
 @NamedQueries({
         @NamedQuery(name = FishingLicence.FIND_BY_ASSET, query = "SELECT l FROM FishingLicence l WHERE l.assetId = :assetId"),
-        @NamedQuery(name = FishingLicence.COUNT_VALID_LICENCE_IN_LIST, query = "SELECT COUNT(l) FROM FishingLicence l WHERE l.assetId in :assetId AND current_timestamp() BETWEEN l.fromDate AND l.toDate"),
-        @NamedQuery(name = FishingLicence.COUNT_INVALID_LICENCE_IN_LIST, query = "SELECT COUNT(l) FROM FishingLicence l WHERE l.assetId in :assetId AND NOT (current_timestamp() BETWEEN l.fromDate AND l.toDate)"),
+        @NamedQuery(name = FishingLicence.FIND_BY_ASSETS, query = "SELECT l FROM FishingLicence l WHERE l.assetId IN :assetId"),
 })
 public class FishingLicence {
 
     public static final String FIND_BY_ASSET = "FishingLicence.findByAsset";
-    public static final String COUNT_VALID_LICENCE_IN_LIST = "FishingLicence.countValidLicenceInList";
-    public static final String COUNT_INVALID_LICENCE_IN_LIST = "FishingLicence.countInvalidLicenceInList";
+    public static final String FIND_BY_ASSETS = "FishingLicence.findByAssets";
 
     @Id
     @GeneratedValue

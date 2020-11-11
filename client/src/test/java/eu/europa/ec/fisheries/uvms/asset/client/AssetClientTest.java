@@ -536,7 +536,7 @@ public class AssetClientTest extends AbstractClientTest {
         String output = assetClient.getMicroAssetList(assetIdList);
 
         assertEquals(51, output.split("assetName").length);
-        assertEquals(8001, output.length());
+        assertEquals(8901, output.length());
     }
 
     @Test
@@ -575,18 +575,6 @@ public class AssetClientTest extends AbstractClientTest {
         MobileTerminal output = assetClient.getMtAtDate(UUID.randomUUID(), Instant.now());
 
         assertNull(output);
-    }
-
-    @Test
-    @OperateOnDeployment("normal")
-    public void assetStatistics(){
-
-        AssetStatistics output = assetClient.assetStatistics();
-
-        assertNotNull(output);
-        assertNotNull(output.getAmountOfVMSAsset());
-        assertNotNull(output.getAmountOfVMSAssetsWithInactiveLicense());
-        assertNotNull(output.getAmountOfVMSAssetsWithLicense());
     }
 
 

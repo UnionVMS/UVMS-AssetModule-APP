@@ -11,6 +11,7 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.asset.bean;
 
+import eu.europa.ec.fisheries.uvms.asset.constants.ParameterKey;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.ContactInfoDao;
@@ -21,6 +22,8 @@ import eu.europa.ec.fisheries.uvms.asset.message.event.UpdatedAssetEvent;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
 import eu.europa.ec.fisheries.uvms.asset.util.AssetComparator;
 import eu.europa.ec.fisheries.uvms.asset.util.AssetUtil;
+import eu.europa.ec.fisheries.uvms.config.exception.ConfigServiceException;
+import eu.europa.ec.fisheries.uvms.config.service.ParameterService;
 import eu.europa.ec.fisheries.uvms.mobileterminal.bean.MobileTerminalServiceBean;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.Channel;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
@@ -32,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -801,19 +805,6 @@ public class AssetServiceBean {
         } catch (NoResultException e) {
             return null;
         }
-    }
-
-    public AssetStatistics getAssetStatistics(){
-        List<UUID> assetIds = assetDao.getIdOfAssetsWithConnectedMobileterminal();
-        Long nrValidLicences = assetDao.numberOfValidLicencesInList(assetIds);
-        Long nrInvalidLicences = assetDao.numberOfInvalidLicencesInList(assetIds);
-
-        AssetStatistics statistics = new AssetStatistics();
-        statistics.setAmountOfVMSAsset((long)assetIds.size());
-        statistics.setAmountOfVMSAssetsWithLicense(nrValidLicences);
-        statistics.setAmountOfVMSAssetsWithInactiveLicense(nrInvalidLicences);
-
-        return statistics;
     }
 
     private void nullValidation(Object obj, String message) {

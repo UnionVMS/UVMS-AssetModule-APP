@@ -40,6 +40,7 @@ public abstract class AssetHelper {
 
         assetEntity.setProdOrgCode("ORGCODE");
         assetEntity.setProdOrgName("ORGNAME");
+        assetEntity.setHasLicence(true);
 
         return assetEntity;
     }

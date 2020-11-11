@@ -5,12 +5,11 @@ import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollRequestType
 import eu.europa.ec.fisheries.schema.mobileterminal.polltypes.v1.PollType;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
-import eu.europa.ec.fisheries.uvms.asset.dto.AssetStatistics;
 import eu.europa.ec.fisheries.uvms.commons.date.JsonBConfigurator;
 import eu.europa.ec.fisheries.uvms.mobileterminal.dto.SanePollDto;
-import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.types.PollTypeEnum;
+import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.CreatePollResultDto;
 import eu.europa.ec.fisheries.uvms.mobileterminal.model.dto.SimpleCreatePoll;
 import eu.europa.ec.fisheries.uvms.rest.asset.AbstractAssetRestTest;
 import eu.europa.ec.fisheries.uvms.rest.asset.AssetHelper;
@@ -555,42 +554,6 @@ public class InternalRestResourceTest extends AbstractAssetRestTest {
         assertEquals(createdTerminal.getId(), historicalTerminal.getId());
         assertEquals(mt.getAntenna(), historicalTerminal.getAntenna());
     }
-
-    @Test
-    @OperateOnDeployment("normal")
-    public void getAssetStatistics() {      //just checking that the endpoint exists, there are better tests for the logic in pollRestResources
-        Asset asset = AssetHelper.createBasicAsset();
-        asset = getWebTargetInternal()
-                .path("/asset")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
-                .post(Entity.json(asset), Asset.class);
-        MobileTerminal mt = MobileTerminalTestHelper.createBasicMobileTerminal();
-        mt.setAsset(asset);
-
-        Jsonb jsonb = new JsonBConfigurator().getContext(null); //for some reason serializing the mt gives a stack overflow error while serializing using the client, so we do it manually b4 instead
-        String json = jsonb.toJson(mt);
-
-        Response mtResponse = getWebTargetInternal()
-                .path("mobileterminal")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenInternal())
-                .post(Entity.json(json), Response.class);
-        assertEquals(200, mtResponse.getStatus());
-
-        AssetStatistics response = getWebTargetInternal()
-                .path("/internal")
-                .path("assetStatistics")
-                .request(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, getTokenInternalRest())
-                .get(AssetStatistics.class);
-
-        assertNotNull(response);
-        assertTrue(response.getAmountOfVMSAsset() > 0);
-        assertNotNull(response.getAmountOfVMSAssetsWithInactiveLicense());
-        assertNotNull(response.getAmountOfVMSAssetsWithLicense());
-    }
-
 
     private Asset createAsset(Asset asset){
         return getWebTargetInternal()

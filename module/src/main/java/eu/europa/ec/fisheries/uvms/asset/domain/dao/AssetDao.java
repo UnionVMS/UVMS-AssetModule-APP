@@ -602,15 +602,4 @@ public class AssetDao {
         return query.getResultList();
     }
 
-    public Long numberOfValidLicencesInList(List<UUID> assetIds){
-        TypedQuery<Long> query = em.createNamedQuery(FishingLicence.COUNT_VALID_LICENCE_IN_LIST, Long.class);
-        query.setParameter("assetId", assetIds);
-        return query.getSingleResult();
-    }
-
-    public Long numberOfInvalidLicencesInList(List<UUID> assetIds){
-        TypedQuery<Long> query = em.createNamedQuery(FishingLicence.COUNT_INVALID_LICENCE_IN_LIST, Long.class);
-        query.setParameter("assetId", assetIds);
-        return query.getSingleResult();
-    }
 }
