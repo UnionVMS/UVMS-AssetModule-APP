@@ -4,11 +4,9 @@ import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetRemapMapping;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.ContactInfo;
-import eu.europa.ec.fisheries.uvms.asset.domain.entity.FishingLicence;
 import eu.europa.ec.fisheries.uvms.asset.dto.MicroAsset;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.*;
 import eu.europa.ec.fisheries.uvms.commons.date.DateUtils;
-
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.exception.AuditException;
@@ -25,7 +23,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
 import java.math.BigInteger;
 import java.time.Instant;
 import java.util.*;
@@ -595,11 +592,6 @@ public class AssetDao {
 
     public ContactInfo getContactById(UUID contactId) {
         return em.find(ContactInfo.class, contactId);
-    }
-
-    public List<UUID> getIdOfAssetsWithConnectedMobileterminal(){
-        TypedQuery<UUID> query = em.createNamedQuery(Asset.ASSET_ID_OF_ALL_VMS_ASSETS, UUID.class);
-        return query.getResultList();
     }
 
 }
