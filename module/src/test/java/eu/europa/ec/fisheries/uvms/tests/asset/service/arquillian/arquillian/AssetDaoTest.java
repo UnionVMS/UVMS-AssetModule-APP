@@ -10,13 +10,13 @@ copy of the GNU General Public License along with the IFDM Suite. If not, see <h
  */
 package eu.europa.ec.fisheries.uvms.tests.asset.service.arquillian.arquillian;
 
-import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFields;
-import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchLeaf;
-import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
-import eu.europa.ec.fisheries.uvms.asset.model.constants.UnitTonnage;
 import eu.europa.ec.fisheries.uvms.asset.domain.dao.AssetDao;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.Asset;
 import eu.europa.ec.fisheries.uvms.asset.domain.mapper.SearchKeyValue;
+import eu.europa.ec.fisheries.uvms.asset.model.constants.UnitTonnage;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchBranch;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFields;
+import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchLeaf;
 import eu.europa.ec.fisheries.uvms.mobileterminal.entity.MobileTerminal;
 import eu.europa.ec.fisheries.uvms.tests.TransactionalTests;
 import org.hamcrest.CoreMatchers;
@@ -1116,6 +1116,7 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.deleteAsset(asset);
         commit();
     }
+
     @Test
     @OperateOnDeployment("normal")
     public void getAssetListFuzzySearchExternalMarkingWithInactivated() throws Exception {
@@ -1438,7 +1439,7 @@ public class AssetDaoTest extends TransactionalTests {
         assetDao.deleteAsset(asset3);
         commit();
     }
-    
+
     private void commit() throws Exception {
         userTransaction.commit();
         userTransaction.begin();

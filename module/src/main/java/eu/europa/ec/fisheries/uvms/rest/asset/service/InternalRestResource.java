@@ -412,7 +412,7 @@ public class InternalRestResource {
             String returnString = jsonb.toJson(mtAtDate);
             return Response.ok(returnString).header("MDC", MDC.get("requestId")).build();
         } catch (Exception ex) {
-            LOG.error("[ Error when MT {} at date {}] {}", mtId, date, ex.getStackTrace());
+            LOG.error("[ Error when getting MT {} at date {}] {}", mtId, date, ex.getStackTrace());
             return Response.status(500).entity(ExceptionUtils.getRootCauseMessage(ex)).header("MDC", MDC.get("requestId")).build();
         }
     }

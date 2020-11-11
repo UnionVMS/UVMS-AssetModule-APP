@@ -103,12 +103,11 @@ public class EventStreamSenderTest extends BuildAssetServiceDeployment {
         MicroAsset newAsset = jsonb.fromJson(message.getText(), MicroAsset.class);
 
         AssetRemapMapping assetRemapMapping = new AssetRemapMapping();
-        assetRemapMapping.setOldAssetId(UUID.fromString(oldAsset.getAssetId()));
-        assetRemapMapping.setNewAssetId(UUID.fromString(newAsset.getAssetId()));
+        assetRemapMapping.setOldAssetId(oldAsset.getAssetId());
+        assetRemapMapping.setNewAssetId(newAsset.getAssetId());
         assetRemapMapping.setCreatedDate(Instant.now().minus(4, ChronoUnit.HOURS));
 
         assetRemapMapping = assetDao.createAssetRemapMapping(assetRemapMapping);
-
 
         registerSubscriber();
         System.setProperty("MovementsRemapped", "0");
@@ -119,8 +118,8 @@ public class EventStreamSenderTest extends BuildAssetServiceDeployment {
         assertEquals("Merged Asset", message.getStringProperty(MessageConstants.EVENT_STREAM_EVENT));
 
         AssetMergeInfo mergeInfo = jsonb.fromJson(message.getText(), AssetMergeInfo.class);
-        assertEquals(oldAsset.getAssetId(), mergeInfo.getOldAssetId());
-        assertEquals(newAsset.getAssetId(), mergeInfo.getNewAssetId());
+        assertEquals(oldAsset.getAssetId().toString(), mergeInfo.getOldAssetId());
+        assertEquals(newAsset.getAssetId().toString(), mergeInfo.getNewAssetId());
 
     }
 

@@ -41,7 +41,7 @@ public class EventStreamSender {
     public void updatedAsset(@Observes(during = TransactionPhase.AFTER_SUCCESS) @UpdatedAssetEvent Asset asset){
         try {
             if (asset != null) {
-                MicroAsset micro = new MicroAsset(asset.getId(), asset.getFlagStateCode(), asset.getName(), asset.getVesselType(), asset.getIrcs(), asset.getCfr(), asset.getExternalMarking(), asset.getLengthOverAll());
+                MicroAsset micro = new MicroAsset(asset.getId(), asset.getFlagStateCode(), asset.getName(), asset.getVesselType(), asset.getIrcs(), asset.getCfr(), asset.getExternalMarking(), asset.getLengthOverAll(), asset.getHasLicence());
                 String outgoingJson = jsonb.toJson(micro);
                 sendMessageOnEventStream(outgoingJson, "Updated Asset");
             }

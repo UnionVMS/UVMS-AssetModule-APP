@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public class MicroAsset {
 
-    String assetId;
+    UUID assetId;
     String flagstate;
     String assetName;
     String vesselType;
@@ -12,9 +12,10 @@ public class MicroAsset {
     String cfr;
     String externalMarking;
     Double lengthOverAll;
+    Boolean hasLicence;
 
-    public MicroAsset(UUID assetId, String flagstate, String assetName, String vesselType, String ircs, String cfr, String externalMarking, Double lengthOverAll) {
-        this.assetId = assetId.toString();
+    public MicroAsset(UUID assetId, String flagstate, String assetName, String vesselType, String ircs, String cfr, String externalMarking, Double lengthOverAll, Boolean hasLicence) {
+        this.assetId = assetId;
         this.flagstate = flagstate;
         this.assetName = assetName;
         this.vesselType = vesselType;
@@ -22,16 +23,17 @@ public class MicroAsset {
         this.cfr = cfr;
         this.externalMarking = externalMarking;
         this.lengthOverAll = lengthOverAll;
+        this.hasLicence = hasLicence;
     }
 
     public MicroAsset() {
     }
 
-    public String getAssetId() {
+    public UUID getAssetId() {
         return assetId;
     }
 
-    public void setAssetId(String assetId) {
+    public void setAssetId(UUID assetId) {
         this.assetId = assetId;
     }
 
@@ -89,5 +91,13 @@ public class MicroAsset {
 
     public void setLengthOverAll(Double lengthOverAll) {
         this.lengthOverAll = lengthOverAll;
+    }
+
+    public Boolean getHasLicence() {
+        return hasLicence;
+    }
+
+    public void setHasLicence(Boolean hasLicence) {
+        this.hasLicence = hasLicence;
     }
 }

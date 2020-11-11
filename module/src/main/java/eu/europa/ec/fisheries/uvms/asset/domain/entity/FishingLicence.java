@@ -13,20 +13,18 @@ package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
 import java.time.Instant;
 import java.util.UUID;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "fishinglicence")
-@NamedQuery(name = FishingLicence.FIND_BY_ASSET, query = "SELECT l FROM FishingLicence l WHERE l.assetId = :assetId")
+@NamedQueries({
+        @NamedQuery(name = FishingLicence.FIND_BY_ASSET, query = "SELECT l FROM FishingLicence l WHERE l.assetId = :assetId"),
+        @NamedQuery(name = FishingLicence.FIND_BY_ASSETS, query = "SELECT l FROM FishingLicence l WHERE l.assetId IN :assetId"),
+})
 public class FishingLicence {
 
     public static final String FIND_BY_ASSET = "FishingLicence.findByAsset";
+    public static final String FIND_BY_ASSETS = "FishingLicence.findByAssets";
 
     @Id
     @GeneratedValue

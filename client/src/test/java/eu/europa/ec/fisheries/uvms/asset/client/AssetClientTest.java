@@ -536,7 +536,7 @@ public class AssetClientTest extends AbstractClientTest {
         String output = assetClient.getMicroAssetList(assetIdList);
 
         assertEquals(51, output.split("assetName").length);
-        assertEquals(8001, output.length());
+        assertEquals(8901, output.length());
     }
 
     @Test
