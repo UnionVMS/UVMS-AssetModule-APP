@@ -7,6 +7,8 @@ import java.util.UUID;
 
 import javax.json.*;
 import javax.json.bind.adapter.JsonbAdapter;
+
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetFilterValueType;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterValue;
@@ -24,24 +26,26 @@ public class AssetFilterRestResponseAdapter implements JsonbAdapter<AssetFilter,
     		Set<AssetFilterValue> assetFilterValues = assetFilterQuery.getValues();
 
     		for(AssetFilterValue assetFilterValue : assetFilterValues) {
-    			if(!assetFilterQuery.getIsNumber()) {
+    			if(assetFilterQuery.getValueType().equals(AssetFilterValueType.STRING)){
 					JsonReader jsonReader = Json.createReader(new StringReader(assetFilterValue.getValueString()));
 					JsonValue object = jsonReader.readValue();
 					jsonValueArray.add(object);
 					jsonReader.close();
-        		}
-    			else {
-    				JsonObject jsonValueObject = Json.createObjectBuilder()
-        				.add("operator", assetFilterValue.getOperator())
-        				.add("value", assetFilterValue.getValueNumber())
-        				.build();
+				} else if (assetFilterQuery.getValueType().equals(AssetFilterValueType.BOOLEAN)){
+    				Boolean b = Boolean.valueOf(assetFilterValue.getValueString());
+					jsonValueArray.add(b);
+				} else {
+					JsonObject jsonValueObject = Json.createObjectBuilder()
+							.add("operator", assetFilterValue.getOperator())
+							.add("value", assetFilterValue.getValueNumber())
+							.build();
 
-    				jsonValueArray.add(jsonValueObject);
-        		}
+					jsonValueArray.add(jsonValueObject);
+				}
     		}
     		JsonObject jsonQueryBuilder =  Json.createObjectBuilder()
     			.add("inverse", assetFilterQuery.getInverse())
-    			.add("isNumber", assetFilterQuery.getIsNumber())
+    			.add("valueType", assetFilterQuery.getValueType().name())
     			.add("type", assetFilterQuery.getType())
     			.add("values", jsonValueArray.build())
     			.build();
@@ -73,12 +77,12 @@ public class AssetFilterRestResponseAdapter implements JsonbAdapter<AssetFilter,
 
 			JsonObject jsonQueryObject = jsonQuery.asJsonObject();
 			Set<AssetFilterValue> valuesFromJson = new HashSet<AssetFilterValue>();
-			boolean isNumberValues = jsonQueryObject.getBoolean("isNumber");
+			AssetFilterValueType valueType = AssetFilterValueType.valueOf(jsonQueryObject.getString("valueType").toUpperCase());
 
 			AssetFilterQuery assetFilterQuery = new AssetFilterQuery();
 			assetFilterQuery.setAssetFilter(assetFilter);
 			assetFilterQuery.setInverse(jsonQueryObject.getBoolean("inverse"));
-			assetFilterQuery.setIsNumber(isNumberValues);
+			assetFilterQuery.setValueType(valueType);
 			assetFilterQuery.setType(jsonQueryObject.getString("type"));
 
 			JsonArray valuesJsonArray = jsonQueryObject.getJsonArray("values");
@@ -86,9 +90,11 @@ public class AssetFilterRestResponseAdapter implements JsonbAdapter<AssetFilter,
 			for(JsonValue jsonValue : valuesJsonArray) {
 
 				AssetFilterValue assetFilterValue = new AssetFilterValue();
-				if(isNumberValues == false) {
+				if(valueType.equals(AssetFilterValueType.STRING)) {
 					assetFilterValue.setValueString(jsonValue.toString());
-				}else {
+				} else if(valueType.equals(AssetFilterValueType.BOOLEAN)) {
+					assetFilterValue.setValueString(jsonValue.getValueType().toString());
+				} else {
 					JsonObject jsonValueObject = jsonValue.asJsonObject();
 					assetFilterValue.setOperator(jsonValueObject.getString("operator"));
 				    if(jsonValueObject.get("value").getClass().getTypeName().contains("Number")) {

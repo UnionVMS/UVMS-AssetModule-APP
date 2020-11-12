@@ -5,6 +5,8 @@ import java.util.Set;
 
 import javax.json.*;
 import javax.json.bind.adapter.JsonbAdapter;
+
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetFilterValueType;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilter;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterList;
 import eu.europa.ec.fisheries.uvms.asset.domain.entity.AssetFilterQuery;
@@ -24,23 +26,27 @@ public class AssetFilterListRestResourceAdapter implements JsonbAdapter<AssetFil
 	    		Set<AssetFilterValue> assetFilterValues = assetFilterQuery.getValues();
 	    		
 	    		for(AssetFilterValue assetFilterValue : assetFilterValues) {
-	    			if(!assetFilterQuery.getIsNumber()) {
+					if(assetFilterQuery.getValueType().equals(AssetFilterValueType.STRING)){
 						JsonReader jsonReader = Json.createReader(new StringReader(assetFilterValue.getValueString()));
 						JsonValue object = jsonReader.readValue();
 						jsonValueArray.add(object);
 						jsonReader.close();
-	        		}
-	    			else {
-	    				JsonObject jsonValueObject = Json.createObjectBuilder()
-	        				.add("operator", assetFilterValue.getOperator())
-	        				.add("value", assetFilterValue.getValueNumber())
-	        				.build();
-	    				jsonValueArray.add(jsonValueObject);
-	        		}
+					} else if (assetFilterQuery.getValueType().equals(AssetFilterValueType.BOOLEAN)){
+						Boolean b = Boolean.valueOf(assetFilterValue.getValueString());
+						jsonValueArray.add(b);
+					} else {
+						JsonObject jsonValueObject = Json.createObjectBuilder()
+								.add("operator", assetFilterValue.getOperator())
+								.add("value", assetFilterValue.getValueNumber())
+								.build();
+
+						jsonValueArray.add(jsonValueObject);
+					}
 	    		}
+
 	    		JsonObject jsonQueryBuilder =  Json.createObjectBuilder()
 	    			.add("inverse", assetFilterQuery.getInverse())
-	    			.add("isNumber", assetFilterQuery.getIsNumber())
+	    			.add("valueType", assetFilterQuery.getValueType().name())
 	    			.add("type", assetFilterQuery.getType())
 	    			.add("values", jsonValueArray.build())
 	    			.build();

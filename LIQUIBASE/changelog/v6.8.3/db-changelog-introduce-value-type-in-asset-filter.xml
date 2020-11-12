@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd"
+                   logicalFilePath="changelog/v6.8.3/db-changelog-introduce-value-type-in-asset-filter.xml">
+
+    <changeSet id="introduce value type in asset filter" author="joemat">
+        <addColumn tableName = "assetfilterquery">
+            <column name = "value_type" type = "clob"/>
+        </addColumn>
+
+        <update tableName="assetfilterquery">
+            <column name="value_type" value="STRING"/>
+            <where>isnumber='false'</where>
+        </update>
+
+        <update tableName="assetfilterquery">
+            <column name="value_type" value="NUMBER"/>
+            <where>isnumber='true'</where>
+        </update>
+
+        <dropColumn tableName="assetfilterquery" columnName="isnumber"/>
+
+    </changeSet>
+
+</databaseChangeLog>

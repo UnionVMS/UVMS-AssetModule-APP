@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import eu.europa.ec.fisheries.schema.exchange.plugin.types.v1.PluginType;
 import eu.europa.ec.fisheries.uvms.asset.bean.AssetFilterServiceBean;
 import eu.europa.ec.fisheries.uvms.asset.bean.AssetServiceBean;
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetFilterValueType;
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetIdentifier;
 import eu.europa.ec.fisheries.uvms.asset.dto.AssetBO;
 import eu.europa.ec.fisheries.uvms.asset.remote.dto.search.SearchFields;
@@ -836,7 +837,7 @@ public class AssetServiceBeanIntTest extends TransactionalTests {
         assetFilterValue.setValueString(asset.getId().toString());
 
         assetFilterQuery.setType("GUID");
-        assetFilterQuery.setIsNumber(false);
+        assetFilterQuery.setValueType(AssetFilterValueType.STRING);
         assetFilterQuery.setValues(new HashSet(Arrays.asList(assetFilterValue)));
         assetFilterServiceBean.createAssetFilterQuery(filter.getId(), assetFilterQuery);
 

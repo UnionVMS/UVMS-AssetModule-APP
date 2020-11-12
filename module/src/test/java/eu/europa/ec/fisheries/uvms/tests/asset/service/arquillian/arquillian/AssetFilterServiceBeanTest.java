@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import javax.ejb.EJB;
 
+import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetFilterValueType;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Before;
@@ -53,7 +54,7 @@ public class AssetFilterServiceBeanTest extends TransactionalTests{
     	AssetFilterQuery assetFilterQuery = new AssetFilterQuery();
         assetFilterQuery.setAssetFilter(af);
         assetFilterQuery.setType("GUID");
-        assetFilterQuery.setIsNumber(true);
+        assetFilterQuery.setValueType(AssetFilterValueType.NUMBER);
         assetFilterQuery.setInverse(false);
         return assetFilterService.createAssetFilterQuery(af.getId(), assetFilterQuery);
     }
@@ -62,6 +63,7 @@ public class AssetFilterServiceBeanTest extends TransactionalTests{
 	    afv.setValueString(testValue);
 	    return assetFilterService.createAssetFilterValue(parentAssetFilterQueryId, afv);
 	}
+
 	@Test
     @OperateOnDeployment("normal")
     public void deleteAssetFilterById() {

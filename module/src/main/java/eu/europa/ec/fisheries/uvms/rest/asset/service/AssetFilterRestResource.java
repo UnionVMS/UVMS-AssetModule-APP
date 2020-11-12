@@ -249,7 +249,7 @@ public class AssetFilterRestResource {
             String response = jsonb.toJson(fetchedAssetFilterValue);
             return Response.ok(response).header("MDC", MDC.get("requestId")).build();
         } catch (Exception e) {
-            LOG.error("Error when creating AssetFilterValue. ", e);
+            LOG.error("Error when getting AssetFilterValue. ", e);
             throw e;
         }
     }
