@@ -1,21 +1,19 @@
 package eu.europa.ec.fisheries.uvms.asset.domain.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class AssetFilterList implements Serializable {
 
 	private static final long serialVersionUID = 95262131085841494L;
 	
-	private List<AssetFilter> assetFilterList = new ArrayList<AssetFilter>();
+	private Map<UUID, AssetFilter> savedFilters = new HashMap<>();
 
-	public List<AssetFilter> getAssetFilterList() {
-		return assetFilterList;
+	public Map<UUID, AssetFilter> getSavedFilters() {
+		return savedFilters;
 	}
 
-	public void setAssetFilterList(List<AssetFilter> assetFilterList) {
-		this.assetFilterList = assetFilterList;
+	public void setSavedFilters(Map<UUID, AssetFilter> savedFilters) {
+		this.savedFilters = savedFilters;
 	}
-
 }

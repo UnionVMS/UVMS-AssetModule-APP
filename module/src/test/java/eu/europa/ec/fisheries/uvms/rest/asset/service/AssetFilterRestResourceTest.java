@@ -16,7 +16,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import eu.europa.ec.fisheries.uvms.asset.domain.constant.AssetFilterValueType;
-import eu.europa.ec.fisheries.uvms.rest.asset.util.AssetFilterListRestResourceAdapter;
 import eu.europa.ec.fisheries.uvms.rest.asset.util.AssetFilterRestResponseAdapter;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -41,7 +40,7 @@ public class AssetFilterRestResourceTest extends AbstractAssetRestTest{
 	
    @Before
     public void setup() {
-	   JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter(), new AssetFilterListRestResourceAdapter());
+	   JsonbConfig config = new JsonbConfig().withAdapters(new AssetFilterRestResponseAdapter());
        jsonb = JsonbBuilder.create(config);
 	   assetFilter = AssetHelper.createBasicAssetFilter("Test name");
 	   assetFilter = createAssetFilter(assetFilter);
